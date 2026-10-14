@@ -1,8 +1,10 @@
 # Hadosh Production Contexts — song production
 
-**Who Owns Your Toaster?** is a music-video working example from [Hadosh Academy](https://hadi-nayebi.github.io/). It follows the web, social media and personal AI tools, asking who keeps the final say.
+**Who Owns the Toaster?** is a music-video working example from [Hadosh Academy](https://hadi-nayebi.github.io/). It follows the web, social media and personal AI tools, asking who keeps the final say.
 
 This branch preserves the earlier personal dashboard used to develop and choose the song, before the later lyrics-first video workspace. The point is not to build a complete production system: software is cheap enough to make a temporary, good-enough tool around one person and one project. It is a context example to study, run and adapt with your own agent—not a one-click generator. Human direction, revisions, timing correction and visual review are part of the workflow.
+
+[Watch the finished music video](https://youtu.be/fg2cV8sh3kY)
 
 ## Choose a workflow
 
