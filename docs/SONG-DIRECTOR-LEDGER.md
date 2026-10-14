@@ -1,29 +1,10 @@
-# Adapt the production pattern
+# Earlier dashboard context index
 
-| Step | Input | Work and review | Durable output |
-|---|---|---|---|
-| Message | Owner's idea and references | Choose the story and audience | Context and decisions |
-| Song | Lyrics, sections, musical direction | Iterate outside/inside the dashboard; compare takes | Selected lyric and recording |
-| Timing | Exact audio and optional stems | Estimate words/beats, then correct by listening | Recording-bound anchors |
-| Visual planning | Small scene descriptions | Infographics, corrections, clear boundaries | Consolidated visual plans |
-| Artwork | Plans and continuity references | Backgrounds, cutouts, image sequences | Assets with provenance |
-| Performance | Anchors and scene assets | Camera, typography, lighting, rhythm | Live HTML preview |
-| Polish | Timestamped feedback | Watch transitions; preserve good decisions | Selected checkpoint |
-| Release | Selected checkpoint | Export, inspect and listen end-to-end | Master, captions, thumbnail, copy |
+The released version of this Markdown file was a duplicate generic workflow that pointed to later files absent from this branch. It was not a chronological director ledger. This correction does not reconstruct missing historical notes or modify the retained JSON scene records.
 
-## Implementation map
+- [Branch-specific workflow](../WORKFLOW.md): available stages, exports and legacy-analysis boundaries.
+- [Development narrative and evidence](https://github.com/hadi-nayebi/hadosh-production-contexts/blob/main/docs/DEVELOPMENT-STORY.md): how the first machinery informed the later restart.
+- `src/canvas/song/liveStage/director-ledger.json`: retained scene context from this snapshot. It includes historical proposals and status; it is not a present approval or a command to apply those scenes to another song.
+- `public/scene-plans/`: the public package also includes later illustrative assets. File presence does not mean every asset was used by this earlier dashboard.
 
-- `src/canvas/song/`: original context, lyric, music and review stages.
-- `src/canvas/song/lyricFocus/`: later recording-specific word timing and scene workflow.
-- `SceneVideoFrame.tsx`: scene composition and lifetimes.
-- `WordVideoRemotion.tsx`: frame-clock export of the same scene implementation.
-- `stemAnalysis.ts`: retained rhythmic evidence, not a generic live stem separator.
-- `InstructionCortex.tsx`: words forming a file/network metaphor, with deterministic beat-indexed activity.
-- `public/scene-plans/`: visual plans and their earlier alternatives.
-- `scripts/render-release.mjs`: release-render example. Its temporary-directory and Chrome defaults reflect the original Linux workstation; adapt them to your environment.
-
-## Media and saved state
-
-A clean clone does not contain the original workstation's `.origin` audio files or browser localStorage. Import/attach your own inputs. Export reproducible preview JSON from the Source panel before rendering; it includes scene choices and timing. The public example preserves patterns, not a promise of the original soundtrack playing immediately.
-
-For another song, replace candidate records, lyrics, scene boundaries, timing and media URLs together. Do not keep hardcoded example hashes as the identity of your own audio. Review the code's selected-take assumptions before reuse.
+For a new project keep a small real ledger: timestamp/passsage, owner's observation, proposed change, chosen action, source/timing identity, evidence and decision. Do not overwrite the historical example with new approvals.

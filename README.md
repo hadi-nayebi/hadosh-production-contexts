@@ -46,3 +46,7 @@ Start with [START-HERE.md](START-HERE.md). Ask your agent to inspect this workin
 The dashboard is a personal tool, with song-specific data, local media paths and experimental features. It needs adaptation; hosted multi-user deployment and automatic music-provider integration are not promised. A port to another agent is engineering work, not a model-name switch.
 
 Code is MIT licensed. See [ASSETS.md](ASSETS.md) for the separate status of artwork, trademarks and music. No credentials, private feedback logs, original audio stems or private repository history are included.
+
+## Development context
+
+Read the [development story](https://github.com/hadi-nayebi/hadosh-production-contexts/blob/main/docs/DEVELOPMENT-STORY.md) and [different-song handoffs](https://github.com/hadi-nayebi/hadosh-production-contexts/blob/main/docs/ANOTHER-SONG.md). This branch includes first-pass visual machinery as well as song development; its public Git history is a curated snapshot, not the original iteration history. [WORKFLOW.md](WORKFLOW.md) lists only this branch’s implementation and export paths.
