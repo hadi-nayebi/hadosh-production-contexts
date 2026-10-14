@@ -230,7 +230,7 @@ export default function Productions() {
                 scene. Local media must match those references. This is a live preview, not a frozen
                 video render.
               </p>
-              <a href={`https://github.com/hadi-nayebi/hadosh-production-contexts>
+              <a href={`https://github.com/hadi-nayebi/hadosh-production-contexts`}>
                 Source revision {s.sourceCommit.slice(0, 7)}
               </a>
               <pre>

@@ -2,7 +2,7 @@
 
 **Who Owns Your Toaster?** is a music-video working example from [Hadosh Academy](https://hadi-nayebi.github.io/). It follows the web, social media and personal AI tools, asking who keeps the final say.
 
-This branch contains the personal dashboard and illustrated video workflow. It is a context example to study, run and adapt with your own agent—not a one-click generator. Human direction, revisions, timing correction and visual review are part of the workflow.
+This branch contains the personal dashboard and illustrated video workflow. The point is not to build a complete production system: software is cheap enough to make a temporary, good-enough tool around one person and one project. It is a context example to study, run and adapt with your own agent—not a one-click generator. Human direction, revisions, timing correction and visual review are part of the workflow.
 
 ## Choose a workflow
 

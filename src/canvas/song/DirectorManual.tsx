@@ -26,7 +26,7 @@ export default function DirectorManual() {
           if (url.endsWith("director-ledger.json")) return ledgerUrl;
           if (url.startsWith("https://") || url.startsWith("#")) return url;
           const path = url.startsWith("../") ? url.slice(3) : `docs/${url}`;
-          return `https://github.com/hadi-nayebi/hadosh-production-contexts
+          return `https://github.com/hadi-nayebi/hadosh-production-contexts`;
         }}
       >
         {manual}
