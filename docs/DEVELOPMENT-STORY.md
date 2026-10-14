@@ -12,7 +12,7 @@ The initial pilot used the toaster as a concrete analogy for power, models and h
 
 The message broadened into a journey through the web, social feeds and AI. Hadi asked for more verses and simpler vocabulary so the meaning would land without requiring the listener to decode the metaphor. Musical direction became part of the context too: diction, groove, rests and room for visual transitions mattered alongside the words. [E2]
 
-The later selected closing was much shorter: “Who owns the toaster?” followed by choosing the power, model and rules. That change explains why older artifacts use the working title *Who Owns Your Toaster?* while the published title uses *the*. Historical drafts remain evidence of a decision, not contradictory instructions for a new song. [E3]
+The later closing was much shorter: “Who owns the toaster?” followed by choosing the power, model and rules. Older artifacts retained the working title *Who Owns Your Toaster?*. The public title was corrected to *Who Owns the Toaster?* after Hadi explicitly asked why the title did not match the lyric at 01:51 UTC on October 14 (October 13 in America/Detroit). The closing revision and title correction are separate recorded decisions; the former does not establish the cause of the latter. Historical drafts remain evidence, not contradictory instructions for a new song. [E3]
 
 ## 2. Build machinery, then learn by using it
 
@@ -26,7 +26,9 @@ The first visual machinery developed editable words, layered objects, camera mov
 
 On October 12, Hadi requested an isolated lyrics-first restart. The new interface began with the title and one passage at a time. It preserved alternatives and revision history instead of treating the restart as permission to discard prior work. Arrangement and later audio work followed explicit review of the words. [E3]
 
-The saved handoff reports 22 vocal units plus six intended instrumental markers. Those markers described desired structure; they were not measured timestamps. The final selected lyric packet was handed to the generation workflow with its own hash and revision evidence. This was a more focused second pass informed by using the first tool, not an automatic cleanup of the first dashboard. [E3]
+An intermediate handoff, labelled “final” at that checkpoint, reports 22 approved vocal units plus six intended instrumental markers and preserves a lyric-packet hash. Those markers described desired structure, not measured timestamps. Later human decisions superseded that packet: the V0 scope record and posted candidate lyrics omit the added fourth parts of the social, workshop and harness verses, giving a 4–3–3–3–1 verse-part structure with intro, choruses and instrumental intentions separate. The intermediate approval remains historical evidence; it is not the final film’s lyric identity. [E3]
+
+The later source reconciliation distinguished posted lyrics from embedded performance lyrics and raw recognition. Both V0 baseline performance packages contain 16 sections; the 3:51 baseline records 77 phrases/401 words and the 3:58 baseline records 79 phrases/414 words. Their performance representations retain refrain repetitions absent from the common posted text. These are source-bound baseline annotation counts, not an assertion that every word was listening-verified or that the later rendered annotation never changed. This was a focused second pass informed by using the first tool, followed by further human and source-driven revisions. [E3, E5]
 
 ## 4. Bind the work to the actual recording
 
