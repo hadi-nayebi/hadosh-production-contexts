@@ -34,3 +34,9 @@ Code is MIT licensed. Artwork and third-party logos have separate provenance and
 Explore [Hadosh Academy](https://hadi-nayebi.github.io/) and [Origin](https://github.com/hadi-nayebi/origin), the dashboard-and-harness starting point behind this style of personal software.
 
 [Watch the music video](https://youtu.be/fg2cV8sh3kY)
+
+## How we developed it
+
+[Development story](docs/DEVELOPMENT-STORY.md) follows lyric exploration, the first machinery, the lyrics-first restart and the final film. [Build a different song](docs/ANOTHER-SONG.md) turns those lessons into practical handoffs. [Evidence and limits](docs/EVIDENCE.md) distinguishes public snapshots from original development history.
+
+The context includes more than the delivered film: alternatives, corrections, plans and decisions constructed actively by the human with the model. No measured ratio or automatic result is claimed.
