@@ -11,6 +11,6 @@ Executed in the existing public checkout:
 - `npm run build` — TypeScript and Vite passed; existing large-bundle warnings remain.
 - `git diff --check` — passed.
 
-The build used existing installed dependencies through a local ignored symlink and host Node v22.21.0, below package.json's declared minimum. It is not a clean `npm ci` or supported-version installation claim. New clones must use the declared Node range and install their own dependencies. The tracked absolute symlink and tracked Python bytecode are removed by this change; their presence in released history is not rewritten.
+The build used existing installed dependencies through a local ignored symlink and host Node v22.21.0 first, then passed again under supported Node v24.15.0. It is not a clean `npm ci` installation claim. New clones must use the declared Node range and install their own dependencies. The tracked absolute symlink and tracked Python bytecode are removed by this change; their presence in released history is not rewritten.
 
 No generation, paid provider calls, fresh sample/full render, upload, merge or social publication was performed. Browser UI behavior is unchanged. End-to-end render verification on another system still requires authorized audio, saved state and a sample review.
