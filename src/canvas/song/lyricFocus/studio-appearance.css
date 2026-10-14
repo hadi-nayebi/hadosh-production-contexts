@@ -1,0 +1,490 @@
+/* Reading and editing surfaces share the recording desk's quiet blue palette. */
+.timing-json-input {
+  max-width: 760px;
+  margin: 20px auto;
+  text-align: left;
+}
+.timing-json-input label {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+.timing-json-input input[type="file"] {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+.timing-json-input textarea {
+  width: 100%;
+  min-height: 120px;
+  box-sizing: border-box;
+}
+.candidate-studio {
+  --studio-line: #bccbd5;
+  --studio-control: #e3ecf2;
+  --studio-accent: #245d7b;
+  --studio-action-text: #ffffff;
+}
+html[data-canvas-theme="dark"] .candidate-studio {
+  --studio-line: #425563;
+  --studio-control: #26343e;
+  --studio-accent: #b0d3e8;
+  --studio-action-text: #172832;
+}
+html[data-canvas-theme] .candidate-studio .candidate-lyric-review {
+  padding: 44px 24px;
+}
+html[data-canvas-theme] .candidate-studio .candidate-lyric-review .lyric-sheet {
+  box-sizing: border-box;
+  width: min(100%, 880px);
+  padding: 24px 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.candidate-studio .candidate-lyric-review .lyric-passage {
+  margin: 0;
+  padding: 12px 0 28px;
+  font-size: clamp(26px, 3.4vw, 42px);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.candidate-studio .candidate-lyric-review .lyric-context {
+  margin-top: 12px;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--studio-line);
+}
+html[data-canvas-theme] .candidate-studio .lyric-tools button {
+  background: var(--studio-control);
+  border: 1px solid var(--studio-line);
+  border-radius: 8px;
+  min-width: 48px;
+}
+html[data-canvas-theme] .candidate-studio .lyric-tools button:hover:not(:disabled) {
+  border-color: var(--studio-accent);
+}
+html[data-canvas-theme] .candidate-studio .lyric-continue {
+  background: var(--studio-accent);
+  color: var(--studio-action-text);
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+}
+html[data-canvas-theme] .candidate-studio .lyric-continue:hover {
+  filter: brightness(1.08);
+}
+.candidate-studio .candidate-lyric-review .lyric-state {
+  line-height: 1.6;
+  margin: 18px 0 10px;
+}
+html[data-canvas-theme] .candidate-studio .lyric-options > summary {
+  border-radius: 6px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+html[data-canvas-theme] .candidate-studio .candidate-header {
+  border-bottom: 1px solid var(--studio-line);
+}
+html[data-canvas-theme] .candidate-studio .candidate-source-nav button[aria-current="step"] {
+  background: var(--studio-control);
+  box-shadow: inset 0 -2px var(--studio-accent);
+  border-radius: 6px 6px 0 0;
+}
+@media (max-width: 600px) {
+  html[data-canvas-theme] .candidate-studio .candidate-lyric-review {
+    padding: 64px 12px 28px;
+    align-items: flex-start;
+  }
+  html[data-canvas-theme] .candidate-studio .candidate-lyric-review .lyric-sheet {
+    padding: 24px 16px;
+  }
+  .candidate-studio .candidate-lyric-review .lyric-passage {
+    font-size: 26px;
+  }
+}
+
+/* Keep the reading surface plain; hierarchy belongs to type and working controls. */
+.candidate-studio .candidate-lyric-review .lyric-tools {
+  gap: 8px;
+  align-items: center;
+}
+html[data-canvas-theme] .candidate-studio .lyric-tools button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  min-height: 48px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.candidate-studio .lyric-tools button > span {
+  font-size: 18px;
+}
+.candidate-studio .lyric-location,
+.candidate-studio .lyric-review-status {
+  display: block;
+}
+.candidate-studio .lyric-location {
+  color: var(--canvas-fg, #243c50);
+  font-size: 15px;
+}
+.candidate-studio .lyric-location > span {
+  margin-left: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.candidate-studio .lyric-review-status {
+  margin-top: 4px;
+  font-size: 13px;
+}
+html[data-canvas-theme] .candidate-studio .hide-lyric-tools {
+  color: var(--canvas-muted, #526a7b);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.candidate-studio .candidate-lyric-review .lyric-options {
+  padding: 20px 0;
+  border-top: 1px solid var(--studio-line);
+  border-bottom: 1px solid var(--studio-line);
+  text-align: left;
+}
+.candidate-studio .lyric-options > label {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+.candidate-studio .lyric-options select {
+  width: 100%;
+  min-width: 0;
+}
+html[data-canvas-theme] .candidate-studio .lyric-options > button {
+  border-color: var(--studio-line);
+  margin: 0 8px 8px 0;
+}
+@media (max-width: 380px) {
+  html[data-canvas-theme] .candidate-studio .lyric-tools button {
+    padding: 10px;
+    min-width: 44px;
+  }
+  .candidate-studio .lyric-tools {
+    gap: 6px;
+  }
+}
+
+/* Glyphs share the selected interval's own band; no auxiliary panel. */
+.interval-actions {
+  position: absolute;
+  top: 0;
+  height: 32%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  z-index: 7;
+  pointer-events: none;
+  container-type: size;
+  container-name: interval-controls;
+}
+.interval-actions.word {
+  top: auto;
+  bottom: 0;
+  height: 28%;
+}
+html[data-canvas-theme] .candidate-studio .interval-actions button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: 0 1px 3px #000;
+  width: 44px;
+  min-width: 0;
+  flex: 0 0 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  font-size: 15px;
+}
+/* 100px label + two 44px targets + 44px edge handles + 12px breathing room. */
+.interval-actions button:last-child {
+  margin-right: 22px;
+}
+@container interval-controls (min-width: 244px) and (min-height: 44px) {
+  html[data-canvas-theme] .candidate-studio .interval-actions button {
+    display: inline-flex;
+  }
+}
+.interval-actions svg {
+  filter: drop-shadow(0 1px 2px #000);
+  flex-shrink: 0;
+}
+html[data-canvas-theme] .candidate-studio .interval-actions button:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: -5px;
+}
+.full-audio-view .clip-handles .word-boundary-marker:disabled {
+  opacity: 0.35;
+}
+.full-audio-view .timeline-region.selected[data-unlocked="false"] {
+  border-style: dashed;
+}
+
+.timing-notice {
+  max-width: 1000px;
+  margin: 12px auto;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+@container (min-width: 244px) {
+  .timeline-region.selected .region-label {
+    max-width: calc(100% - 132px);
+  }
+}
+
+/* Full-audio actions stay compact; readable identity/status lives below the plot. */
+.full-audio-tools {
+  gap: 4px;
+}
+.full-audio-tools > button,
+.full-audio-view .timeline-zoom button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+.full-audio-view .spectrogram-toolbar {
+  justify-content: flex-end;
+}
+.full-audio-status {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+  margin-top: 8px;
+}
+.full-audio-selection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.full-audio-selection h3,
+.full-audio-selection p {
+  font-size: 13px;
+  margin: 0;
+}
+.full-audio-selection > button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+.full-audio-view .spectrogram-playhead {
+  z-index: 8;
+}
+html[data-canvas-theme] .candidate-studio .seek-playhead-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: white;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: ew-resize;
+  text-shadow: 0 1px 3px black;
+}
+.full-audio-tools > .manual-beat-controls {
+  width: auto;
+}
+.full-audio-tools > .manual-beat-controls:has([role="group"]) {
+  flex-basis: 100%;
+}
+.full-audio-view .source-spectrogram {
+  margin-top: 8px;
+}
+.full-audio-view .full-audio-selection {
+  margin-top: 8px;
+}
+
+/* Lyrics workspace: song identity, passage location, then the reading surface. */
+.candidate-studio.phase-1 {
+  --lyric-paper: #ffffff;
+  --lyric-ground: #e8eff4;
+  background: var(--lyric-ground);
+  padding-bottom: 32px;
+}
+html[data-canvas-theme="dark"] .candidate-studio.phase-1 {
+  --lyric-paper: #19232b;
+  --lyric-ground: #111920;
+  background: var(--lyric-ground);
+}
+html[data-canvas-theme] .candidate-studio.phase-1 .candidate-header {
+  max-width: 1120px;
+  padding: 28px 64px 20px 24px;
+  align-items: center;
+  gap: 18px 28px;
+}
+.lyric-workspace-title {
+  flex: 1 1 400px;
+}
+.lyric-workspace-title h1 {
+  margin: 0;
+  font:
+    400 clamp(23px, 3vw, 32px)/1.25 Georgia,
+    serif;
+}
+.lyric-workspace-title p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--canvas-muted, #526a7b);
+}
+.candidate-studio.phase-1 .candidate-header > label {
+  flex: 0 1 300px;
+  min-width: 0;
+  color: var(--canvas-muted, #526a7b);
+}
+.candidate-studio.phase-1 .candidate-source-nav {
+  flex: 1 0 100%;
+  justify-content: flex-start;
+}
+html[data-canvas-theme] .candidate-studio .candidate-lyric-review {
+  min-height: 0;
+  padding: 32px 24px;
+  align-items: flex-start;
+  background: transparent;
+}
+html[data-canvas-theme] .candidate-studio .candidate-lyric-review .lyric-sheet {
+  width: min(100%, 1000px);
+  padding: 24px 40px 32px;
+  background: var(--lyric-paper);
+  border: 1px solid var(--studio-line);
+  border-radius: 14px;
+}
+.lyric-sheet-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.lyric-sheet-heading label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--canvas-muted, #526a7b);
+}
+.candidate-studio .lyric-sheet-heading select {
+  margin: 0;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  font-size: 14px;
+  background: var(--studio-control);
+  border-color: var(--studio-line);
+}
+.lyric-position {
+  font-size: 24px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.lyric-position > span {
+  font-size: 14px;
+  color: var(--canvas-muted, #526a7b);
+}
+.lyric-reading-progress {
+  height: 3px;
+  margin: 16px 0 20px;
+  background: var(--studio-line);
+}
+.lyric-reading-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--studio-accent);
+}
+.candidate-studio .candidate-lyric-review .lyric-passage {
+  padding: 12px 0 24px;
+  min-height: 140px;
+  font-size: clamp(26px, 2.8vw, 36px);
+  line-height: 1.5;
+}
+.candidate-studio .candidate-lyric-review .lyric-context {
+  max-width: none;
+  margin-top: 0;
+  padding-top: 16px;
+}
+@media (max-width: 600px) {
+  html[data-canvas-theme] .candidate-studio.phase-1 .candidate-header {
+    padding: 24px 20px 16px;
+    gap: 16px;
+  }
+  .lyric-workspace-title {
+    padding-right: 36px;
+  }
+  .candidate-studio.phase-1 .candidate-header > label {
+    flex-basis: 100%;
+  }
+  .candidate-studio.phase-1 .candidate-header select {
+    width: 100%;
+  }
+  .candidate-studio.phase-1 .candidate-source-nav {
+    gap: 2px;
+  }
+  .candidate-studio.phase-1 .candidate-source-nav button {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  html[data-canvas-theme] .candidate-studio .candidate-lyric-review {
+    padding: 20px 12px;
+  }
+  html[data-canvas-theme] .candidate-studio .candidate-lyric-review .lyric-sheet {
+    padding: 18px 16px 24px;
+  }
+  .lyric-sheet-heading {
+    gap: 12px;
+  }
+  .lyric-sheet-heading label {
+    display: grid;
+    gap: 4px;
+  }
+  .candidate-studio .lyric-sheet-heading select {
+    width: 100%;
+  }
+  .candidate-studio .candidate-lyric-review .lyric-passage {
+    padding: 12px 0 32px;
+    font-size: 26px;
+  }
+}
+
+/* A pending database commit blocks another edit, without adding visual chrome. */
+.timing-save-scope {
+  display: contents;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+/* Quiet persistent context; expanded detail never competes with the timeline. */
+.timing-status-bar {
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  margin-top:12px; padding:10px 0; border-top:1px solid color-mix(in srgb, currentColor 12%, transparent);
+  font-size:11px; line-height:1.5; color:var(--muted, #a5aaa9);
+  font-variant-numeric:tabular-nums;
+}
+.timing-status-clock { color:var(--text, #e8ece9); }
+.timing-status-mode { border-left:1px solid color-mix(in srgb, currentColor 20%, transparent); padding-left:14px; }
+.timing-status-save.is-dirty { color:#dbbf78; }
+.timing-status-save.has-error { color:#ed9f98; }
+.timing-status-details { margin-left:auto; position:relative; }
+.timing-status-details summary { cursor:pointer; list-style:none; text-decoration:underline; text-underline-offset:3px; }
+.timing-status-details > div { position:absolute; z-index:20; right:0; bottom:30px; width:min(370px, 80vw); padding:18px; border:1px solid color-mix(in srgb, currentColor 24%, transparent); border-radius:10px; background:var(--bg, #111315); color:var(--text, #e8ece9); box-shadow:0 12px 35px #0005; overflow-wrap:anywhere; }
+.timing-status-details p { margin:8px 0 0; }
+@media(max-width:600px) { .timing-status-bar { gap:7px 12px; } .timing-status-progress { flex-basis:70%; } }

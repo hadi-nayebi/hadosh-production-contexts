@@ -1,0 +1,28 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {bundle} from '@remotion/bundler';
+import {selectComposition,renderMedia,renderStill} from '@remotion/renderer';
+const [propsPath,outDir,mode='sample']=process.argv.slice(2);
+if(!propsPath||!outDir)throw Error('Usage: node scripts/render-release.mjs snapshot.json output-directory [sample|full]');
+const props=JSON.parse(fs.readFileSync(propsPath));
+if(!props.scenePlan)throw Error('Scene plan required; refusing words-only export');
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const audio=await fetch(props.audioUrl);if(!audio.ok)throw Error('Audio unavailable');
+const bytes=Buffer.from(await audio.arrayBuffer());if(hash(bytes)!==props.playbackSha256)throw Error('Native audio hash mismatch');
+fs.mkdirSync(outDir,{recursive:true});
+const temp=fs.mkdtempSync('/dev/shm/toaster-release-');
+const empty=path.join(temp,'empty');fs.mkdirSync(empty);
+const serveUrl=await bundle({entryPoint:path.resolve('src/canvas/song/lyricFocus/word-video-entry.tsx'),publicDir:empty,outDir:path.join(temp,'bundle'),enableCaching:false});
+// Link retained artwork instead of copying gigabytes of previous render media.
+for(const name of fs.readdirSync('public'))fs.symlinkSync(path.resolve('public',name),path.join(serveUrl,name));
+fs.writeFileSync(path.join(serveUrl,'release-audio.wav'),bytes);
+props.audioUrl='/release-audio.wav';
+const opts={serveUrl,inputProps:props,browserExecutable:'/opt/google/chrome/chrome',concurrency:2,timeoutInMilliseconds:90000};
+const composition={...await selectComposition({...opts,id:'WordPreview'}),width:1920,height:1080,fps:60};
+const start=Date.now();
+const frames=mode==='sample'?[9000,9119]:[0,composition.durationInFrames-1];
+for(const t of (mode==='sample'?[2,18,60,76,99,112,130,150,196,221,226,237]:[]))await renderStill({...opts,composition,frame:Math.floor(t*60),output:path.join(outDir,`check-${t}.jpg`),imageFormat:'jpeg'});
+await renderMedia({...opts,composition,frameRange:frames,codec:'h264',crf:18,audioBitrate:'320k',pixelFormat:'yuv420p',outputLocation:path.join(outDir,mode==='sample'?'timing-sample.mp4':'who-owns-your-toaster-1080p60.mp4'),onProgress:({progress})=>{const p=Math.floor(progress*100);if(p%5===0&&p!==globalThis.lastPct){globalThis.lastPct=p;console.log(`Render ${p}%`);}}});
+fs.writeFileSync(path.join(outDir,`${mode}-receipt.json`),JSON.stringify({mode,frames,seconds:(Date.now()-start)/1000,propsSha256:hash(fs.readFileSync(propsPath)),audioSha256:props.playbackSha256,width:1920,height:1080,fps:60,temporaryDirectory:temp},null,2));
+console.log('Completed',mode);

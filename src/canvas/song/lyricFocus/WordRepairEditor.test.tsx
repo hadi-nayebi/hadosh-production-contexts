@@ -1,0 +1,35 @@
+import {newWordRepair} from "./wordRepair";
+import {afterEach,it,expect,vi} from 'vitest';
+import {render,screen,fireEvent,cleanup} from '@testing-library/react';
+import WordRepairEditor from './WordRepairEditor';
+import sources from './v0Performance.json';
+import type {Annotation} from './audioAnnotation';
+import {wordTiming} from './wordTiming';
+afterEach(()=>{cleanup();vi.restoreAllMocks();localStorage.clear();});
+it('keeps newly typed fields and blocks navigation on storage failure; retry recovers',()=>{
+ const a=sources[0].annotation as Annotation,w=wordTiming(a).intervals[0],label=a.items.find(x=>x.id===w.id)!.text;
+ const unsaved=vi.fn(),active=vi.fn();
+ render(<WordRepairEditor annotation={a} storageKey="repair-test" wordId={w.id} initialEdge="start" initialValue={String(w.start)} onApply={()=>true} onActive={active} onUnsaved={unsaved}/>);
+ const write=vi.spyOn(Storage.prototype,'setItem').mockImplementation(()=>{throw Error('quota');});
+ fireEvent.change(screen.getByRole('textbox',{name:`${label} repair end`}),{target:{value:'123.4'}});
+ expect((screen.getByRole('textbox',{name:`${label} repair end`}) as HTMLInputElement).value).toBe('123.4');
+ expect(unsaved).toHaveBeenLastCalledWith(true);
+ expect(screen.getByRole('button',{name:'Save repair copy'})).toBeTruthy();
+ expect(active).not.toHaveBeenCalled();
+ write.mockRestore();fireEvent.click(screen.getByRole('button',{name:'Keep repair draft'}));
+ expect(unsaved).toHaveBeenLastCalledWith(false);
+ expect(JSON.parse(localStorage.getItem('repair-test')!).words[0].end).toBe('123.4');
+});
+it('keeps retained repair read-only and archived when starting current timing repair',()=>{
+ const a=sources[0].annotation as Annotation,w=wordTiming(a).intervals[0];
+ const retained=newWordRepair(a);retained.active=false;retained.words[0].end='99';
+ localStorage.setItem('retained',JSON.stringify(retained));
+ render(<WordRepairEditor annotation={a} storageKey="retained" wordId={w.id} initialEdge="start" initialValue={String(w.start+.01)} onApply={()=>true} onActive={()=>{}} onUnsaved={()=>{}}/>);
+ expect(screen.queryByRole('button',{name:'Apply valid repair'})).toBeNull();
+ fireEvent.click(screen.getByText('View retained repair'));
+ for(const input of screen.getAllByRole('textbox'))expect((input as HTMLInputElement).readOnly).toBe(true);
+ fireEvent.click(screen.getByRole('button',{name:'Start new repair from saved timing'}));
+ expect(JSON.parse(localStorage.getItem('retained:history')!)[0].words[0].end).toBe('99');
+ expect(JSON.parse(localStorage.getItem('retained')!).words[0].start).toBe(String(w.start+.01));
+ expect(screen.getByRole('button',{name:'Apply valid repair'})).toBeTruthy();
+});

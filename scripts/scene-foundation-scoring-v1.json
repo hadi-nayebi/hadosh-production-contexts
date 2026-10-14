@@ -1,0 +1,26 @@
+{
+  "schema": "canvas-scene-foundation-score-v1",
+  "version": 1,
+  "lockedBeforeCutSelection": true,
+  "audioAnalysis": "Reuse the existing FFmpeg/SciPy percussion-weighted spectral-flux approach. Analyze 45–220 Hz, 300–2200 Hz and 2500–7000 Hz independently; retain numerical values at every scene boundary.",
+  "score": {
+    "timingWeight": 0.7,
+    "onsetSupportWeight": 0.3,
+    "timingFormula": "100 * max(0, 1 - (distanceToNearestObservedBeatSeconds / 0.150)^2)",
+    "supportFormula": "100 * min(1, percussionFlux / local95thPercentilePercussionFlux)",
+    "aggregate": "Arithmetic mean over every internal scene boundary; do not exclude low-scoring cuts. First frame and final endpoint are not internal cuts.",
+    "beatEvidence": "Only detected percussive onsets within 75ms of the independently estimated local beat grid qualify as observed beats. Interpolated grid points alone never qualify.",
+    "zeroEvidence": "A cut without an observed beat within 150ms receives zero timing points. Silence cannot earn onset-support points."
+  },
+  "gate": {
+    "scoreMustExceed": 90,
+    "minimumEveryCut": 80,
+    "minimumShotSeconds": 2,
+    "maximumShotSeconds": 4,
+    "completeFrameCoverage": true,
+    "uniqueConsecutiveSetup": true,
+    "negativeControl": "Also score the existing sequence and a 250ms delayed cut schedule using the identical scorer. Publish all scores.",
+    "detailWork": "Locked until the numeric gate passes AND a full rough cut implements the changing shots. Passing timing does not certify oneness, story, sync perception, or creative acceptance."
+  },
+  "limitations": "Percussion estimates can retain vocal transients; tempo octave and phase may be ambiguous. Estimated beats are evidence with uncertainty, not manually verified downbeats. Musical pacing and visible scene changes require a separate full playback check."
+}

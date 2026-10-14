@@ -1,0 +1,156 @@
+import type { AuditionRound } from "./auditions";
+// Suno UI observed 2026-10-10. Audio remains local; generation is not lyric verification.
+export const currentAuditions: AuditionRound = {
+  schema: "canvas-auditions-v1",
+  title: "Combined J + K \u00b7 close Cover of E",
+  lyricRevision:
+    "R7 combines the two R6 bridges in eight sung lines. Web/social preserved. Cover settings 20% weirdness, 75% style, 80% audio. Lyrics unverified.",
+  creditsBefore: 2430,
+  creditsAfter: 2310,
+  takes: [
+    {
+      title: "L1 \u00b7 Combined lyrics",
+      style: "E favorite \u00b7 J + K bridge \u00b7 R7",
+      duration: "3:47",
+      url: "https://suno.com/song/36fd578a-f936-4ad7-97a4-2dbd05e35b2f",
+    },
+    {
+      title: "L2 \u00b7 Combined lyrics",
+      style: "E favorite \u00b7 J + K bridge \u00b7 R7",
+      duration: "3:39",
+      url: "https://suno.com/song/d0d6566b-db83-4cd7-b074-2ec1f4480cbc",
+    },
+    {
+      title: "J1 \u00b7 Sung toaster",
+      style: "E 3:48 Cover \u00b7 R6 J",
+      duration: "3:34",
+      url: "https://suno.com/song/7c20f5cb-3dd5-4e4e-9af3-efe1e0f9dc0e",
+    },
+    {
+      title: "J2 \u00b7 Sung toaster",
+      style: "E 3:48 Cover \u00b7 R6 J",
+      duration: "3:47",
+      url: "https://suno.com/song/980deb8b-3dda-47c6-b8e3-c33a972f092c",
+    },
+    {
+      title: "K1 \u00b7 Keep my work",
+      style: "E 3:48 Cover \u00b7 R6 K",
+      duration: "3:30",
+      url: "https://suno.com/song/6d8cf13f-8d14-4441-944c-e1f07586136a",
+    },
+    {
+      title: "K2 \u00b7 Keep my work",
+      style: "E 3:48 Cover \u00b7 R6 K",
+      duration: "3:36",
+      url: "https://suno.com/song/4730a619-4c4e-4df6-8734-d9729cff9066",
+    },
+    {
+      title: "G1 \u00b7 What comes with me",
+      style: "R5 G \u00b7 Funk-pop \u00b7 breaks awaiting review",
+      duration: "4:19",
+      url: "https://suno.com/song/a1786fa3-986c-47d3-a968-ea291abda1a5",
+    },
+    {
+      title: "G2 \u00b7 What comes with me",
+      style: "R5 G \u00b7 Funk-pop \u00b7 breaks awaiting review",
+      duration: "3:58",
+      url: "https://suno.com/song/91b62832-cb97-434e-bda0-ed3a7d24e862",
+    },
+    {
+      title: "H1 \u00b7 Same model my context",
+      style: "R5 H \u00b7 Funk-pop \u00b7 breaks awaiting review",
+      duration: "4:21",
+      url: "https://suno.com/song/6b0ab21e-3e61-4991-becb-53fc0e6eab18",
+    },
+    {
+      title: "H2 \u00b7 Same model my context",
+      style: "R5 H \u00b7 Funk-pop \u00b7 breaks awaiting review",
+      duration: "4:02",
+      url: "https://suno.com/song/a51b462e-881d-49dc-8982-455b4ea5addd",
+    },
+    {
+      title: "I1 \u00b7 More than another feed",
+      style: "R5 I \u00b7 Funk-pop \u00b7 breaks awaiting review",
+      duration: "4:10",
+      url: "https://suno.com/song/d9ecba16-b963-4c72-ae83-3339769fada4",
+    },
+    {
+      title: "I2 \u00b7 More than another feed",
+      style: "R5 I \u00b7 Funk-pop \u00b7 breaks awaiting review",
+      duration: "4:01",
+      url: "https://suno.com/song/8f1cfa51-d73a-45fd-91bc-39a6d0d766b5",
+    },
+    {
+      title: "D1 \u00b7 Dance Rock \u00b7 Show me first",
+      style: "R4 D \u2014 Show me first",
+      duration: "5:03",
+      url: "https://suno.com/song/0cb024a1-09ad-4e5f-aa25-4925f0c5147f",
+    },
+    {
+      title: "D2 \u00b7 Dance Rock \u00b7 Show me first",
+      style: "R4 D \u2014 Show me first",
+      duration: "4:53",
+      url: "https://suno.com/song/4ec83439-eabe-447d-945c-1317d33a373c",
+    },
+    {
+      title: "E1 \u00b7 Funk Pop \u00b7 One step at a time",
+      style: "R4 E \u2014 One step at a time",
+      duration: "3:48",
+      url: "https://suno.com/song/2553e097-fe4e-4781-bcf8-514f00f16c89",
+    },
+    {
+      title: "E2 \u00b7 Funk Pop \u00b7 One step at a time",
+      style: "R4 E \u2014 One step at a time",
+      duration: "3:54",
+      url: "https://suno.com/song/9a8fa7e1-713b-40c2-b775-47153a132173",
+    },
+    {
+      title: "F1 \u00b7 Bright Breakbeat \u00b7 Ask me before you act",
+      style: "R4 F \u2014 Ask me before you act",
+      duration: "4:32",
+      url: "https://suno.com/song/dbffacc1-ce99-4376-8da5-abba64e10cfa",
+    },
+    {
+      title: "F2 \u00b7 Bright Breakbeat \u00b7 Ask me before you act",
+      style: "R4 F \u2014 Ask me before you act",
+      duration: "4:22",
+      url: "https://suno.com/song/bbd149c7-debd-433c-91c3-698313570d0e",
+    },
+    {
+      title: "A1 \u00b7 Funk Pop",
+      style: "Funk Pop",
+      duration: "4:34",
+      url: "https://suno.com/song/4347f796-fea7-4e67-888d-29422ecca5d9",
+    },
+    {
+      title: "A2 \u00b7 Funk Pop",
+      style: "Funk Pop",
+      duration: "4:26",
+      url: "https://suno.com/song/d9d12607-5882-4d43-816f-787ed85e56e1",
+    },
+    {
+      title: "B1 \u00b7 Dance Rock",
+      style: "Dance Rock",
+      duration: "4:48",
+      url: "https://suno.com/song/4d7770fd-daf0-4c14-8467-74b781ea80c4",
+    },
+    {
+      title: "B2 \u00b7 Dance Rock",
+      style: "Dance Rock",
+      duration: "4:38",
+      url: "https://suno.com/song/a63e9da1-3af0-4475-9d36-72e0c50e400f",
+    },
+    {
+      title: "C1 \u00b7 Bright Breakbeat",
+      style: "Bright Breakbeat",
+      duration: "4:43",
+      url: "https://suno.com/song/dc6f42dd-255f-4dfb-98e2-5f5fdd6f9d9b",
+    },
+    {
+      title: "C2 \u00b7 Bright Breakbeat",
+      style: "Bright Breakbeat",
+      duration: "4:52",
+      url: "https://suno.com/song/d493562c-7425-4637-aacb-257850594e86",
+    },
+  ],
+};
