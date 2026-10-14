@@ -2,7 +2,7 @@
 
 ## Build the software your project needs
 
-This is the context behind **Who Owns Your Toaster?**, a Hadosh Academy song and music video about who keeps the final say as technology evolves.
+This is the context behind **Who Owns the Toaster?**, a Hadosh Academy song and music video about who keeps the final say as technology evolves.
 
 We built two personal dashboards around this one project. They are intentionally good-enough, project-specific software: useful while the work needs them, open to being changed, and free to be replaced. The goal is not a complete production platform.
 
@@ -33,4 +33,4 @@ Code is MIT licensed. Artwork and third-party logos have separate provenance and
 
 Explore [Hadosh Academy](https://hadi-nayebi.github.io/) and [Origin](https://github.com/hadi-nayebi/origin), the dashboard-and-harness starting point behind this style of personal software.
 
-[Video channel](https://www.youtube.com/@LetsBuildittogethersp)
+[Watch the music video](https://youtu.be/fg2cV8sh3kY)
