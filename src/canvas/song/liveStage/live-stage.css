@@ -1,0 +1,770 @@
+.live-room {
+  position: fixed;
+  inset: 0;
+  background: #122a2d;
+  color: #f0e9d5;
+  font:
+    14px/1.4 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  overflow: hidden;
+  isolation: isolate;
+}
+.live-room * {
+  box-sizing: border-box;
+}
+.live-room button,
+.live-room input,
+.live-room textarea,
+.live-room select {
+  font: inherit;
+}
+.live-room button,
+.live-room a {
+  color: inherit;
+}
+.live-room button {
+  background: transparent;
+  border: 1px solid #8ad9b933;
+  border-radius: 6px;
+  min-height: 36px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.live-room button:hover,
+.live-room button[aria-pressed="true"] {
+  background: #8ad9b922;
+  border-color: #8ad9b9;
+}
+.live-room button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.live-room :focus-visible {
+  outline: 2px solid #edbc69;
+  outline-offset: 3px;
+}
+.live-top {
+  position: absolute;
+  z-index: 5;
+  left: 24px;
+  right: 24px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.live-top a {
+  text-decoration: none;
+}
+.live-top small,
+.live-room small {
+  color: #a0bcb4;
+}
+.live-viewport {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 66px 24px 100px;
+}
+.live-artboard {
+  width: min(100%, calc((100dvh - 166px) * 16 / 9));
+  aspect-ratio: 16/9;
+  position: relative;
+}
+.is-playing .live-viewport {
+  padding: 0;
+}
+.is-playing .live-artboard {
+  width: min(100%, calc(100dvh * 16 / 9));
+}
+.live-targets {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.live-room .live-target {
+  position: absolute;
+  pointer-events: auto;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 0;
+  background: transparent;
+  min-height: 0;
+  touch-action: none;
+}
+.live-room .live-target:hover {
+  border-color: #8ad9b977;
+  background: #8ad9b90b;
+}
+.live-room .live-target[aria-pressed="true"],
+.live-room .live-target.partner {
+  border: 1px dashed #edbc69;
+  background: #edbc6909;
+  z-index: 2;
+}
+.live-room .group-target {
+  pointer-events: auto;
+  z-index: 1;
+}
+.live-context,
+.live-scenes,
+.live-document {
+  position: absolute;
+  z-index: 10;
+  width: 280px;
+  background: #183b3e;
+  border: 1px solid #87b3a666;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 12px 35px #001b;
+}
+.live-context {
+  max-height: min(400px, 65dvh);
+  overflow: auto;
+}
+.context-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.context-heading > button:first-child {
+  border: 0;
+  padding-left: 0;
+  font-weight: 600;
+}
+.context-heading small {
+  font: 11px monospace;
+}
+.live-context nav {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0;
+}
+.live-context nav button {
+  flex: 1;
+  text-transform: capitalize;
+  font-size: 12px;
+}
+.live-context p,
+.live-scenes p,
+.live-document p {
+  font-size: 12px;
+  color: #bed0c6;
+  margin: 8px 0;
+}
+.live-context label,
+.live-document label,
+.live-scenes label {
+  display: block;
+  font-size: 12px;
+}
+.live-room input:not([type="range"]),
+.live-room textarea,
+.live-room select {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  background: #102a2d;
+  color: #f0e9d5;
+  border: 1px solid #8ad9b944;
+  border-radius: 4px;
+  padding: 7px;
+  margin: 4px 0 8px;
+}
+.live-room textarea {
+  min-height: 64px;
+  resize: vertical;
+}
+.live-fields {
+  display: flex;
+  gap: 10px;
+}
+.live-fields label {
+  width: 50%;
+}
+.live-context > button {
+  margin: 3px 4px 3px 0;
+  font-size: 12px;
+}
+.live-context > small {
+  display: block;
+  font-size: 11px;
+}
+.live-transport {
+  position: absolute;
+  z-index: 6;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 96vw;
+  background: #102a2ddd;
+  border: 1px solid #8ad9b922;
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+.live-room .live-play {
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  color: #8ad9b9;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.live-transport output {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.live-transport small {
+  font-size: 11px;
+}
+.live-seek {
+  width: clamp(80px, 17vw, 260px);
+  accent-color: #8ad9b9;
+}
+.live-jog {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  position: relative;
+  padding-bottom: 14px;
+}
+.live-jog > small {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.live-room .jog-wheel {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid #8ad9b977;
+  touch-action: none;
+  padding: 5px;
+}
+.jog-wheel span {
+  display: block;
+  height: 30px;
+  color: #edbc69;
+  font-size: 8px;
+  transform-origin: center;
+}
+.live-jog > button:not(.jog-wheel) {
+  border: 0;
+  padding: 5px;
+}
+.is-playing .live-transport {
+  background: #102a2d88;
+  border: 0;
+  padding: 3px;
+  bottom: 12px;
+}
+.live-document {
+  right: 24px;
+  top: 60px;
+  width: 330px;
+}
+.live-document h2 {
+  font-size: 17px;
+  margin: 0;
+}
+.live-document a {
+  display: block;
+  font-size: 12px;
+  margin: 10px 0;
+}
+.live-document button {
+  margin: 4px;
+}
+.live-scenes {
+  left: 4%;
+  bottom: 5%;
+  width: min(420px, 90%);
+  max-height: 70dvh;
+  overflow: auto;
+}
+.scene-neighbors {
+  display: flex;
+  overflow: auto;
+  gap: 6px;
+  margin: 12px 0;
+}
+.scene-neighbors button {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+.scene-neighbors small {
+  display: block;
+}
+.scene-neighbors [aria-current="step"] {
+  border-color: #edbc69;
+}
+.live-status {
+  position: absolute;
+  z-index: 30;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 12px;
+  background: #183b3e;
+  border: 1px solid #edbc6955;
+  border-radius: 8px;
+  max-width: 80vw;
+  font-size: 12px;
+}
+.live-status button {
+  margin-left: 10px;
+}
+.is-playing .live-status {
+  bottom: 70px;
+}
+@media (max-width: 700px) {
+  .live-top {
+    left: 12px;
+    right: 12px;
+    font-size: 12px;
+  }
+  .live-viewport {
+    padding: 60px 8px 120px;
+  }
+  .live-artboard {
+    width: 100%;
+  }
+  .live-context {
+    position: fixed !important;
+    left: 12px !important;
+    top: auto !important;
+    bottom: 108px;
+    width: calc(100vw - 24px);
+    max-height: 35dvh;
+  }
+  .live-context p {
+    margin: 4px 0;
+  }
+  .live-transport {
+    gap: 5px;
+    padding: 5px 7px;
+    bottom: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 95vw;
+  }
+  .live-transport button {
+    font-size: 12px;
+  }
+  .live-seek {
+    width: 100px;
+  }
+  .live-jog {
+    padding-bottom: 12px;
+  }
+  .live-room .live-target {
+    min-width: 20px;
+    min-height: 20px;
+  }
+  .live-document {
+    right: 12px;
+    max-width: calc(100vw - 24px);
+  }
+  .live-scenes {
+    position: fixed;
+    left: 12px;
+    bottom: 110px;
+    width: calc(100vw - 24px);
+    max-height: 45dvh;
+  }
+  .is-playing .live-transport {
+    width: auto;
+  }
+  .live-status {
+    bottom: 112px;
+  }
+  .live-top > span {
+    max-width: 45vw;
+  }
+}
+
+html:has(.live-room),
+body:has(.live-room) {
+  min-width: 0;
+  overflow: hidden;
+}
+@media (max-width: 700px) {
+  .live-context {
+    bottom: 145px;
+    max-height: 33dvh;
+  }
+  .live-scenes {
+    bottom: 145px;
+  }
+  .live-status {
+    bottom: 148px;
+  }
+}
+
+.live-view-tools {
+  border: 1px solid #8ad9b944;
+  border-radius: 5px;
+  margin: 8px 0;
+  padding: 8px;
+}
+.live-view-tools legend {
+  font-size: 12px;
+}
+.live-view-tools small,
+.live-view-tools summary {
+  font-size: 11px;
+}
+
+.context-help {
+  position: relative;
+  display: inline-block;
+}
+.live-room .context-help > button {
+  border-radius: 50%;
+  font-size: 11px;
+  min-height: 24px;
+  width: 24px;
+  padding: 1px;
+}
+.context-help > [role="tooltip"] {
+  position: absolute;
+  bottom: 110%;
+  left: -15px;
+  width: 240px;
+  background: #102a2d;
+  color: #f0e9d5;
+  border: 1px solid #8ad9b966;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 50;
+  pointer-events: none;
+}
+.context-help:hover > [role="tooltip"],
+.context-help:focus-within > [role="tooltip"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.15s 0.65s;
+}
+.context-help.help-open > [role="tooltip"] {
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+}
+.live-jog .context-help > [role="tooltip"] {
+  left: -160px;
+}
+
+.live-targets {
+  overflow: clip;
+}
+
+/* Selected-object controls occupy a stable bottom dock; hover never mounts controls. */
+.live-context,
+.live-context:has(.live-tool-dock) {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  top: auto;
+  bottom: 104px;
+  width: auto;
+  height: auto;
+  max-height: 40dvh;
+  overflow: auto;
+  transform: none;
+  background: #183b3ef5;
+  padding: 10px;
+  pointer-events: auto;
+  border: 1px solid #87b3a666;
+  z-index: 10;
+}
+.selection-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px;
+}
+.selection-toolbar strong {
+  min-width: 110px;
+  max-width: 210px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.selection-toolbar button {
+  flex-shrink: 0;
+  text-transform: capitalize;
+}
+.live-context .live-tool-dock {
+  position: static;
+  width: auto;
+  max-height: 25dvh;
+  overflow: auto;
+  padding: 12px 2px 2px;
+  border-top: 1px solid #87b3a666;
+  margin-top: 8px;
+}
+.live-context .character-visibility {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+.live-context input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+.live-room.has-selection .live-viewport {
+  padding-bottom: 205px;
+}
+.live-room.has-selection .live-artboard {
+  width: min(100%, calc((100dvh - 280px) * 16 / 9));
+}
+.live-room.has-focused-tool .live-viewport {
+  padding-bottom: calc(205px + 25dvh);
+}
+.live-room.has-focused-tool .live-artboard {
+  width: min(100%, calc((75dvh - 280px) * 16 / 9));
+}
+.live-hover-name {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 5px 10px;
+  background: #102a2dee;
+  color: #fff;
+  pointer-events: none;
+  z-index: 4;
+  border-radius: 4px;
+}
+.live-layer-list {
+  position: fixed;
+  right: 16px;
+  top: 80px;
+  bottom: 110px;
+  width: min(340px, calc(100vw - 32px));
+  overflow: auto;
+  z-index: 12;
+  background: #183b3ef7;
+  border: 1px solid #87b3a666;
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.live-layer-list button {
+  text-align: left;
+  flex-shrink: 0;
+}
+.live-room .live-target[aria-pressed="true"],
+.live-room .live-target.partner {
+  z-index: auto;
+}
+.live-room .live-target:focus-visible {
+  border-color: #edbc69;
+  background: #edbc6909;
+}
+@media (max-width: 700px) {
+  .live-context,
+  .live-context:has(.live-tool-dock) {
+    position: fixed !important;
+    left: 8px !important;
+    right: 8px;
+    top: auto !important;
+    bottom: 130px;
+    width: auto;
+    transform: none !important;
+    max-height: 35dvh;
+  }
+  .selection-toolbar strong {
+    min-width: 90px;
+    max-width: 120px;
+  }
+  .live-layer-list {
+    top: 150px;
+    bottom: 135px;
+  }
+  .live-room.has-selection .live-viewport {
+    padding-bottom: 230px;
+  }
+  .live-room.has-selection .live-artboard {
+    width: min(100%, calc((100dvh - 390px) * 16 / 9));
+  }
+  .live-room.has-focused-tool .live-viewport {
+    padding-bottom: calc(230px + 20dvh);
+  }
+  .live-room.has-focused-tool .live-artboard {
+    width: min(100%, calc((80dvh - 390px) * 16 / 9));
+  }
+}
+
+.live-top .live-latest-preview {
+  padding: 8px 12px;
+  border: 1px solid #8ee6bc;
+  border-radius: 8px;
+  background: #183d31;
+  color: #d8ffe9;
+  font-weight: 700;
+}
+
+.live-top > span {
+  min-width: 0;
+  line-height: 1.35;
+}
+@media (max-width: 700px) {
+  .live-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+  }
+  .live-top > span {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    max-width: none;
+  }
+  .live-top .live-latest-preview {
+    grid-column: 1;
+    padding: 6px 8px;
+  }
+  .live-top > button {
+    grid-column: 2;
+  }
+  .live-viewport {
+    padding-top: 145px;
+  }
+  .is-playing .live-viewport {
+    padding-top: 12px;
+  }
+}
+
+/* Current identity owns the first row; version links never impersonate it. */
+.live-top {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px 12px;
+  max-width: calc(100vw - 32px);
+  left: 16px;
+  right: 16px;
+}
+.live-top .live-current-composition {
+  grid-column: 1/-1;
+  grid-row: 1;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.live-current-composition small {
+  display: block;
+  font-size: 12px;
+}
+.live-top nav {
+  display: flex;
+  gap: 8px 18px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  min-width: 0;
+}
+.live-top nav a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.live-top > button {
+  grid-column: auto;
+}
+.live-viewport {
+  padding-top: 112px;
+}
+.live-artboard {
+  width: min(100%, calc((100dvh - 212px) * 16 / 9));
+}
+.live-room.has-selection .live-artboard {
+  width: min(100%, calc((100dvh - 320px) * 16 / 9));
+}
+.live-room.has-focused-tool .live-artboard {
+  width: min(100%, calc((75dvh - 320px) * 16 / 9));
+}
+@media (max-width: 700px) {
+  .live-top {
+    grid-template-columns: 1fr auto auto;
+  }
+  .live-top .live-current-composition {
+    font-size: 14px;
+  }
+  .live-top nav {
+    gap: 5px 10px;
+  }
+  .live-viewport {
+    padding-top: 160px;
+  }
+  .live-artboard {
+    width: min(100%, calc((100dvh - 290px) * 16 / 9));
+  }
+  .live-room.has-selection .live-artboard {
+    width: min(100%, calc((100dvh - 400px) * 16 / 9));
+  }
+  .live-room.has-focused-tool .live-artboard {
+    width: min(100%, calc((80dvh - 400px) * 16 / 9));
+  }
+}
+
+@media (max-width: 700px) {
+  .live-top nav {
+    grid-column: 1/-1;
+    grid-row: 2;
+  }
+  .live-top > button {
+    grid-row: 3;
+    grid-column: auto;
+    justify-self: start;
+  }
+  .live-viewport {
+    padding-top: 190px;
+  }
+  .live-room.has-focused-tool .live-artboard {
+    width: min(100%, calc((80dvh - 440px) * 16 / 9));
+  }
+}
+
+.live-transport select[aria-label="Review chapter"] {
+  max-width: 245px;
+  background: #183637;
+  color: #f0e9d5;
+  border: 1px solid #668879;
+  border-radius: 6px;
+  padding: 8px;
+}
+@media (max-width: 640px) {
+  .live-transport select[aria-label="Review chapter"] {
+    max-width: 180px;
+  }
+}
+
+/* Keep the selected monitor word draggable when its padded targets overlap. */
+.live-room .live-target.projected-target[aria-pressed="true"] {
+  z-index: 1;
+}
+
+/* Playback controls occupy their own band instead of covering the sung words. */
+.is-playing .live-viewport {
+  padding: 0 0 72px;
+}
+.is-playing .live-artboard {
+  width: min(100%, calc((100dvh - 72px) * 16 / 9));
+}

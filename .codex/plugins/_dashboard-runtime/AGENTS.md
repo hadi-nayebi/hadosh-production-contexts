@@ -1,0 +1,30 @@
+# Origin dashboard runtime
+
+This underscore-prefixed directory is transport infrastructure, not a cognitive plugin. It may start
+the local dashboard, attach one interactive Codex process to a repository-scoped tmux session, and
+deliver bounded voice messages from durable events. It must not own feedback policy, agent state,
+user authority, or completion.
+
+Resolve exactly one Codex pane whose working directory is this repository. Never interpolate a
+feedback body into a shell command. Delivery prompts contain stable identifiers and routes only.
+Persist an outbox before delivery, serialize tmux writes, verify paste/submission, and revalidate
+the referenced event before retrying.
+
+The runtime renders voices selected by the owning cognitive plugin. It may add a unique delivery
+marker, but it must not reduce the voice to a transport notice or author policy about what Codex
+should think. Preserve every nonterminal wake regardless of history size; only bounded terminal
+delivery history may be compacted.
+
+Wake voices place the complete unique delivery marker first, before the event heading. Codex may
+collapse submitted multiline prompts into a short heading; keep exact marker evidence visible. A
+marker fragment or unrelated busy activity is not a receipt. Preserve indeterminate outcomes when
+exact marker and submission-transition evidence are unavailable; never retry blindly.
+
+Submitted long prompts can initially crop the first-line marker above the visible terminal area. Use
+the bounded configured observation budget (15 seconds by default) for submission as well as paste,
+retaining exact marker and transition checks. Expiry remains indeterminate; do not resubmit inside
+the observation loop or infer acceptance from unrelated activity.
+
+The async worker's outer timeout covers both default observation phases plus 15 seconds of headroom
+for startup, terminal commands and durable receipt writes (45 seconds total). An outer timeout still
+requires inspection of the durable outcome; it does not authorize a blind retry.
