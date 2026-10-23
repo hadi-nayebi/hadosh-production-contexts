@@ -141,3 +141,137 @@ Discussion threads are linked at repo level until per-item threads exist.
 5. **R5 — Yes.** Geometry fixed, library calm, the accent spent like
    light. This is the version Hadi should see.
 
+---
+
+## Round 6 — The Layer Rule + the Law of Three (Hadi's confirmed system)
+
+Hadi used v1 and rejected its disclosure model: the waiting-cards showed
+title + "governs" description at rest (three descriptions competing at
+once), and the focus toolbox rail was clipped outside his phone's width.
+He confirmed a visual plan instead — the Layer Rule — and added the Law
+of Three. Round 6 rebuilds the board to that system; nothing else about
+the state model changed.
+
+**The Layer Rule, implemented literally.** L0 at rest = names only: the
+DOM does not even render a description until its card is tapped (the
+interaction suite asserts the "governs" texts, every piece's next-move
+text, and every playlist job line are absent from the page's visible
+text at rest). L1: one tap reveals exactly one card — board-wide, a
+single `openKey` — with its description + at most three options, in
+place, while every neighbour stays a name. L2: a second tap on the open
+card, or its enter affordance, opens the full focus interface. The rule
+applies to every list: asks, pieces, playlists, assets, style-lab tests.
+
+**The Law of Three, implemented literally.** The main page is now
+exactly three sections: (1) **Current asks** — the three open input
+requests across all projects; (2) **Projects & videos** — three pieces
+at rest (closest to published first), the rest behind an expand
+affordance; filters live *inside* the expansion, and the playlist
+filter hides behind its own expansion toggle; (3) **Playlists** —
+three at rest, all nine behind expansion. Each playlist is a repeating
+job: expanding it speaks the job in one line and shows its current
+pieces as nodes on a horizontal stage timeline (Idea → … → Published,
+all ten stages always drawn), scrollable on phone, tappable into the
+piece. Section headers carry zero actions; the page header carries
+exactly three (Library, Style Lab, Discussions). The old stage-column
+board, the always-on filter rows, and the Style Lab strip are gone from
+the main page — the Lab is its own layered view now. Kept intact: the
+void, focus view, drawers, the synced looping compare, OPEVC tracks,
+deep links, and the video as its HTML-canvas artifact in focus.
+
+**Interaction QC — the new evidence standard.** Screenshot QA is what
+let v1's clipped toolbox ship, so round 6 drives the page in a real
+headless-Chromium session at 390×844 and 1440×900 and *opens
+everything*: 102 assertions (`qc/r6-interaction-report.md`), all
+passing on the final build. Highlights: both compare videos verified
+playing, in sync (drift 0.01s), and wrapping past their ends; every
+drawer (Checks/Script/Listen/Links/Comment) opened and measured fully
+inside the viewport on both widths; the timeline verified scrollable
+(scrollLeft 0→300) with its container in-viewport; three separate
+no-horizontal-overflow audits. First run was 93/100, and the failures
+earned their keep — one was a **real bug no assertion had caught**: after
+any focus visit, the toolbox rail stayed painted across the overview's
+bottom (author `display:flex` defeats the UA `[hidden]` rule). The proof
+screenshots showed it; the fix (`#rail[hidden]{display:none}`) plus a
+computed-style guard assertion closed it, and the tainted frames were
+re-shot and re-inspected by eye. A second real gap the tests exposed:
+Ep.1's Listen drawer was a file link that would 404 on Pages — its
+script-read is now embedded and plays in place.
+
+Verdict — **Yes, this is the best we can do — and this time "best" is
+measured, not asserted.** The rest frame (`qc/r6-rest-phone.png`) is the
+plan Hadi approved, pixel for pixel: three sections, names only, the
+asks as three big titles in the void. The L1 frames show one card lit
+and its neighbours still names. The honest limits that remain: reveal
+motion is still a fade, not physics; playlist node titles truncate at
+phone width (the full title is one tap away, in the piece); the desktop
+timeline fits whole at 1440px, so its scroll is a phone behaviour.
+None of these compete with the two laws — and the laws are the design.
+
+6. **R6 — Yes.** The Layer Rule + Law of Three, interaction-tested:
+   names only at rest, one reveal at a time, three sections — and every
+   control opened and measured, not photographed closed.
+
+
+## Round 6 — addendum (same day): multi-view, stage-attached A/Bs, comment flow
+
+Three confirmed inputs from Hadi landed after the round-6 build above
+and were folded in before the re-push. The verdict at the end of the
+round stands; this records what changed and the adaptations made.
+
+**Multi-view principle (Hadi).** The per-piece JSON object is the
+single truth; the board renders it through deliberate views the user
+moves between: (1) the 3-section main page, (2) a **Kanban view** —
+pieces as cards across the ten stage columns, names-only at rest, the
+same L1/L2 behaviour as everywhere else (it reuses the one card
+component, so there is nothing new to learn), (3) the per-piece
+**Timeline** inside focus view — the piece's cycles as a scrollable
+horizontal history: finished cycles read as past, the current node
+glows, future cycles are ghosted, and each cycle carries its O·P·E·V·C
+phase pips. Views are modes, not sections: the header now holds a
+segmented **Board / Kanban** switch as ONE of its three controls
+(the Discussions header button yielded its slot; Discussions lives on
+inside asks and drawers), and Timeline lives inside focus, per the
+brief. Adaptations, noted per instructions: the main page's playlist
+stage-timelines and the focus Timeline are two different timelines
+and stay distinct (playlist = where pieces sit across stages; focus
+Timeline = one piece's own history). The future-ghost treatment is
+implemented but no piece in the current records carries a planned
+future cycle, so it is unexercised by live data — recorded honestly
+rather than dressed up.
+
+**A/Bs attach to stages/cycles (Hadi).** `input_requests` now carry
+optional `piece_id` + `cycle` + `stage` (set on all three open
+requests, in both the state file and its generator). A piece's
+Timeline shows a marker where a cycle carries an open A/B or verdict:
+the Ep.2 A/B sits on the v3's cycle 1 (`⚖ A/B open · Action #19`,
+clicking opens the compare in place); the DIR verdict — attached by
+stage, not cycle — marks each DIR piece's current cycle
+(`✦ Input open · Action #16`, clicking routes home and opens the ask).
+
+**Comment flow (Hadi's correction).** Archer never creates
+discussion threads and never needs a GitHub login. Every item's
+Comment affordance is now a **"Comment on GitHub →"** link to the
+repo's new-discussion composer with the item's title prefilled
+(`.../discussions/new?title=...`); Hadi, signed in as himself, writes
+the first comment — the thread is born — and Archer only reads
+threads afterward (public repo, readable without a login). No board
+copy implies threads are created for him. The `?category=` parameter
+was deliberately omitted: no Discussions category slug is on record,
+and a guessed slug risks a dead composer; the plain fallback is the
+same composer one tap earlier. The pushed README's feedback sentence
+was reworded to match this flow. Also added in this push, on the
+`dashboard` branch only: a root-level `index.html` that redirects
+`./dashboard/`, so the Pages site root lands on the board.
+
+**Evidence update.** The suite grew 102 → 132 assertions with the
+fold-ins (Kanban open/reveal/scroll/enter, Timeline pips + both
+marker styles + their click routes, both Comment-link checks, the
+3-control header) and the final build passes **132/132** at both
+widths (`qc/r6-interaction-report.md`, addendum). One timing flake
+(compare loop-wrap, cold profile) failed once and passed on re-run
+of the identical build; it is classified in the report, not hidden.
+
+Verdict, reaffirmed — **R6: Yes.** One truth, three views, two laws;
+every control opened and measured; comments flow out to GitHub and
+decisions flow back — nothing pretend in between.
