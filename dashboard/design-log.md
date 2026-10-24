@@ -459,3 +459,74 @@ public ID recovered (4C2Tfyx2JYc, 8 views); intro v3 at 9 views, 85.0%
 average viewed, +1 subscriber; Lesson 1 poster/board at 11/14 views;
 vocab v3 at 26 views with its live description recovered verbatim into the
 context annex. Scoreboard and link checks crossed with that evidence.
+
+## Round 12 — the board plays the HTML scenes (2026-10-24)
+
+Hadi's phone hit YouTube's bot wall on the board ("Sign in to confirm
+you're not a bot" — signed-out embeds are walled, unlisted copies
+hardest). His ruling, same night: the board must PLAY THE HTML SCENE
+itself, not a rendered MP4 and not a YouTube embed. The scene is the
+actual production file (H-01) — self-contained text with embedded audio,
+so it pushes through the text-only connector and plays from Pages with
+no sign-in. Supersedes the unlisted-embed review scheme for scene-built
+pieces; rendered MP4s live on YouTube only (publishing) + locally.
+
+Implementation: scenes staged under dashboard/scenes/ (8 pieces:
+eo-ep1-i7's v3 rebuild, eo-ep2-v3, eo-ep3, eo-ep4, eo-trailer v2, wd-01
+v3, soa-01 v3, intro-v3). The focus player prefers the scene (iframe in
+the 9:16 frame + caption "Playing the HTML scene — the actual
+production file" + a Watch-on-YouTube link when an ID exists), then the
+YouTube embed, then the local render. State carries "scene" per piece;
+build_board's SCENES map mirrors the VIDEO pattern. A scene counts as
+the web-playable copy everywhere media is gated (media_missing,
+compare visibility). The Ep.2 A/B compare goes simple side-by-side for
+this pair — v3 plays its scene, v2 plays its YouTube copy; the dual-sync
+controls retire for scene pairs (nothing to sync — each side plays
+itself) and stay intact for any future non-scene pairing.
+
+KNOWN GAP: the DIR trio has NO scenes — those pieces were rendered in
+Python before the scene pipeline, so they still play via YouTube embed
+tonight. DIR scene rebuild is queued; until it lands, #16/#38/#43 carry
+that caveat.
+
+Round 12 addendum — the second wall (same night): the giscus comment box
+demands "Sign in with GitHub" inside the phone's in-app browser, so the
+feedback door was walled too. Every ask reveal, the focus "Waiting on
+you" panel, and the Your-input drawer now carry a first-class no-sign-in
+path — "No sign-in needed — answer in your chat with Archer: just send
+this item's number (#NN) and your pick" — and the giscus box is demoted
+below it under the heading "…or comment here (needs GitHub sign-in)"
+(it still works when he's signed in on desktop). Verdicts by stable
+action number in chat are the primary channel; Archer logs/closes them
+against the board items.
+
+Round 12 addendum — chunked scene delivery (Job S2, same night): round
+12 as built could not ship. The GitHub connector rejects any single
+file over 1,779,898 bytes (measured at the push attempt), and every
+scene HTML is 2–7 MB — so the monolithic scenes under dashboard/scenes/
+could never land, and the remote branch still held round 11.
+
+Design: split each scene at build time into connector-safe text
+chunks of at most 1,500,000 bytes (scene_chunks.py, driven by
+stage_push.py). UTF-8 safety rule: a cut lands only immediately before
+an ASCII byte (< 0x80) — never a UTF-8 continuation byte — so every
+chunk is independently valid UTF-8 and concatenation restores the
+source byte-for-byte; the chunker asserts per-chunk decodability and
+sha256(concat) == sha256(source) on every build. Parts are staged as
+dashboard/scenes/<base>.p00, .p01, … — part counts: eo-ep1-v3 4,
+eo-ep2-v3 3, eo-ep3 3, eo-ep4 3, eo-trailer-v2 2, wd-01-v3 5,
+soa-01-v3 5, intro-v3 2 (27 parts, 33,366,253 bytes total). A tiny
+scenes/manifest.json maps each scene file name to {parts, sha256,
+bytes} — the verification record; the player itself takes the part
+count from the page data (the "scene_parts" field build_board stamps
+from the same chunker, next to the existing "scene" base name).
+
+Player: scene iframes no longer point at the scene file. On first
+open, the board fetches the parts in order (relative URLs from the
+dashboard folder), joins them, builds a Blob (text/html) and sets the
+iframe src to the object URL; object URLs are cached per scene for
+the session. A quiet "Loading the scene…" line fills the frame until
+the scene document loads. No page reference to any monolithic scene
+URL remains. Focus player and the compare's v3 side both go through
+this loader; captions, the Watch-on-YouTube link, and the no-sign-in
+chat path are unchanged.
