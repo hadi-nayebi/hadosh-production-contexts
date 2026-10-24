@@ -364,3 +364,38 @@ passing** at both widths (report addendum 2), including data-driven
 gate tests — the waiting set is compared against the state's own
 derived visibility, so a future ask that fails its checklist fails
 the suite if it ever renders as waiting.
+
+## Round 6 — addendum 3: audio delivery (blocker + flag), live state
+
+The five ear-stage mp3s are staged at `dashboard/assets/audio/` in
+the push tree, and the state's `audio_file` fields point at them —
+but they are NOT on Pages: the connector's snapshot pusher accepts
+UTF-8 text only, the MCP exposes no blob/tree API, and this machine
+holds no git credential. Rather than ship dead links, the generator
+embeds the staged bytes into the page (`AUDIO_DELIVERY = "embed"`,
+web-sized re-encodes kept under `assets-web/` so the snapshot stays
+under the pusher's body limit — a first attempt at full size was
+refused with HTTP 413). The Listen drawer plays in place, locally
+and on Pages, from the exact files that will ship. When any
+binary-capable path exists (app-token git push, or a connector
+update), the follow-up is mechanical: push the five staged mp3s,
+flip `AUDIO_DELIVERY` to `"file"`, rebuild, push. Recorded as a
+tooling debt, not a design change — the media rule's intent (real
+files, relative links) stands in the state and the staging tree.
+
+Live at close of round: root redirect ✓, new board at /dashboard/
+✓, new state served ✓, unlisted review copies resolve via oEmbed
+✓. Pushes this round: `ebe1f463` (structure) → `d09477a9` (media /
+giscus / gates) → `bd5daf75` (audio delivery).
+
+## Round 7 — Exhaustion run state update (2026-10-23 evening, Archer)
+
+Hadi driving; ordered ALL unblocked work exhausted. Landed in state this round:
+- Ep.1 v3 HTML rebuild complete + QC-passed (cycle on eo-ep1-i7; replacement gated on the Ep.2 template verdict, #19).
+- WD-01 + SOA-01 v3 HTML rebuilds complete (stage → qc; overflow defect impossible by construction — asserts + pixel scan, 0 violation frames).
+- Ep.3 + Ep.4: scripts v2 (signature fixes, Ep.3 claim resolved honestly) + HTML-scene builds QC-passed (stage → qc; publish verdicts Hadi's).
+- Script factory: SOA-02..05 Phase 0 + scripts (facts live-verified), speech teaser v2, WD-02..05 v2 polish (canon flags untouched), intro v4 draft (new piece, 31 total).
+- Production contexts shipped: Ep.2 v3 scene (branch wordanim/eo-ep2-v3, 0b9aa4c), trailer v2 scene (wordanim/eo-trailer-v2, d53f790).
+- Per-scene segmented renderer proven (one-scene fix ≈40s vs ~17 min).
+- Published-debt audit: 171 open items (143 crossable now, 6 time-gated, 9 rebuild/blocked, 13 historical) — crossings in progress (retro-QC job), land next round.
+- Process law added by Hadi: GitHub writes batched — local staging, ONE push per repo per round.
