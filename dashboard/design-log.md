@@ -418,3 +418,24 @@ checks crossed with evidence, 16 marked na with reasons — Job G); SOA-02…05
 titles set from their drafted scripts; Lesson 1's public YouTube IDs recovered
 from the 2026-10-22 A/B review record and wired in; trailer scene link fixed
 to v2. New ask kind: "question" (canon rulings + the Lesson 1 pair).
+
+## Round 9 — context COVERAGE: the denominator gets audited (2026-10-23, night)
+
+Hadi's challenge: Q1 counted the decisions already listed (~16/piece) — but
+what about decisions never surfaced at all (his example: subscribe/like symbol
+overlays, pause lengths)? Job R1 built a reference decision model (73 classes;
+practice-triangulated): a short of ours embodies ~240–450 auditable decisions
+(Tier 1+2). Job R2 re-audited three pieces instance-by-instance: eo-ep2-v3
+406 instances, 87.2% covered · dir-01 225, 84.0% · vocab-v3 137, 81.0% — and
+found 3 record-vs-deliverable MISMATCHES (the context layer as a verification
+instrument): Ep.2's end-card tease carried Ep.3's old working title (FIXED,
+re-rendered, verified on the delivered file: "OUTLIVED", −14.02/−1.82), the
+DIR annex named wrong ghost labels (record corrected), vocab's spec promises
+~3.5s/language vs ~2.0s delivered (Hadi's call — Action #40). State now
+carries `context_v2` for the three audited pieces (instance coverage,
+mismatch count, absent classes open). Job R3 packaged the 9 taste decisions
+the model located as Actions #35–#43 — #35 is the engagement-overlay
+adopt-or-waive A/B with real comparison clips (the class had 0 instances in
+every piece ever built and was never decided). Ten absent-by-default classes
+are on record (SFX layer, publish time-of-day, loop seam, auto-captions…),
+held open on the Bench until decided or consciously waived.
