@@ -116,7 +116,7 @@ footer{max-width:1460px; margin:0 auto; padding:44px 30px 48px; color:var(--fain
 #focus.open .inner{transform:none}
 .f-top{display:flex; justify-content:space-between; align-items:center; gap:10px}
 .f-stage{font-size:11.5px; letter-spacing:.3em; text-transform:uppercase; color:var(--accent); text-align:right}
-.artifact{display:flex; justify-content:center; margin:30px 0 8px; position:relative}
+.artifact{display:flex; flex-direction:column; align-items:center; justify-content:center; margin:30px 0 8px; position:relative}
 .artifact video{height:min(62vh,680px); max-width:92vw; border-radius:20px; background:#000;
   box-shadow:0 30px 80px -30px rgba(0,0,0,.95), 0 0 90px -18px var(--glow)}
 .beat{max-width:21ch; text-align:center; font-size:clamp(27px,4.6vw,44px); font-weight:250;
@@ -159,7 +159,7 @@ footer{max-width:1460px; margin:0 auto; padding:44px 30px 48px; color:var(--fain
 #cmp{display:none; margin-top:8px}
 #cmp.open{display:block}
 .cmp-grid{display:flex; gap:18px; justify-content:center; align-items:flex-start}
-.cmp-cell{flex:0 1 auto; text-align:center}
+.cmp-cell{flex:0 1 auto; text-align:center; width:min(400px,44vw)}
 .cmp-cell video{height:min(56vh,600px); width:auto; max-width:92vw; border-radius:18px; background:#000;
   box-shadow:0 24px 60px -26px rgba(0,0,0,.95), 0 0 70px -20px var(--glow)}
 .cmp-lab{font-size:11.5px; letter-spacing:.26em; text-transform:uppercase; color:var(--dim); margin-bottom:9px}
@@ -239,13 +239,30 @@ footer{max-width:1460px; margin:0 auto; padding:44px 30px 48px; color:var(--fain
 .scenecap a:hover{text-decoration:underline}
 .cmp-cell .yt-slot{aspect-ratio:9/16; max-height:56vh; margin:0 auto; border-radius:14px; overflow:hidden; background:#000}
 .cmp-cell .yt-slot iframe{width:100%; height:100%; border:0; display:block}
-.cmp-cell .scene-slot{aspect-ratio:9/16; max-height:56vh; margin:0 auto; border-radius:14px; overflow:hidden; background:#000; position:relative}
-.cmp-cell .scene-slot iframe{width:100%; height:100%; border:0; display:block}
+.cmp-cell .scene-slot{aspect-ratio:9/16; width:100%; margin:0 auto; border-radius:14px; overflow:hidden; background:#000; position:relative}
+.cmp-cell .scene-slot iframe{border:0; display:block}
 /* chunked scene delivery (S2): the frame shows a quiet loading line
    while its parts are fetched and reassembled into a Blob */
-.scenewrap{position:relative}
-.sceneload{position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center;
+.scenewrap{position:relative; width:min(400px,92vw,37.125vh); margin:12px auto 0; aspect-ratio:9/16;
+  border-radius:18px; overflow:hidden; background:#000; box-shadow:0 24px 60px -18px rgba(0,0,0,.8)}
+/* FIT (BOARD-PLAY, 2026-10-24): a scene's stage is a fixed 1080x1920 canvas.
+   The iframe is laid out at that full size and scaled down to the wrapper, so
+   the WHOLE stage is visible at any viewport — no crop, no internal scrollbars. */
+iframe.scene-frame.fit{position:absolute; left:0; top:0; width:1080px; height:1920px; border:0;
+  transform-origin:0 0; background:#000}
+.sceneload{position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center;
   background:#000; color:var(--dim); font-size:13px; letter-spacing:.05em; text-align:center; padding:0 20px}
+/* board-owned play control: a scene only advances once its own Play button is
+   tapped (it lives below the stage, unreachable) — the board forwards the tap */
+.sceneplay{position:absolute; z-index:4; left:50%; top:50%; transform:translate(-50%,-50%);
+  background:rgba(10,10,16,.66); border:1px solid rgba(124,231,255,.55); color:var(--ink);
+  border-radius:999px; padding:15px 30px; font-size:17.5px; letter-spacing:.04em; cursor:pointer;
+  backdrop-filter:blur(8px); box-shadow:0 0 34px -6px var(--glow); transition:all .3s var(--ease);
+  font-family:inherit; white-space:nowrap}
+.sceneplay:hover{background:rgba(124,231,255,.22)}
+.sceneplay.playing{left:12px; top:auto; bottom:12px; transform:none; padding:8px 15px; font-size:13.5px;
+  background:rgba(10,10,16,.55); box-shadow:none}
+.sceneplay[hidden]{display:none}
 /* giscus comment box inside the drawer */
 .giscus-wrap{margin-top:14px; min-height:150px}
 .giscus-wrap iframe.giscus-frame{width:100%; border:0}
@@ -657,6 +674,57 @@ function sceneObjectURL(base, parts){
     .then(ts=>URL.createObjectURL(new Blob([ts.join("")],{type:"text/html"})));
   return sceneObjURLs[base];
 }
+/* ---------- scene FIT + PLAY (BOARD-PLAY, 2026-10-24) ----------
+   A scene's stage is a fixed 1080x1920 canvas and the scene declares a
+   1080-wide viewport, so an unfitted iframe shows a scrollable centre crop
+   (Hadi, live on #19). The board scales the full-size iframe into its
+   9/16 wrapper. A scene also never advances on load: its timeline runs on
+   its audio clock, started by its own Play button — which sits in the
+   scene's chrome BELOW the stage. The board therefore owns the visible
+   play control and forwards the tap to the scene's own button
+   (#playbtn in seven scenes, #play in intro-v3). */
+function fitSceneFrame(fr){
+  const wrap=fr.parentElement; if(!wrap) return;
+  const w=wrap.clientWidth; if(!w) return;
+  fr.style.transform=`scale(${w/1080})`;
+}
+function fitAllScenes(){ document.querySelectorAll("iframe.scene-frame.fit").forEach(fitSceneFrame); }
+window.addEventListener("resize", fitAllScenes);
+window.addEventListener("orientationchange", ()=>setTimeout(fitAllScenes, 60));
+function sceneDoc(fr){ try{ return fr.contentDocument; }catch(e){ return null; } }
+function sceneState(fr){
+  const d=sceneDoc(fr); if(!d) return null;
+  const a=d.querySelector("audio");
+  const btn=d.querySelector("#playbtn, #play");
+  if(!a && !d.querySelector("#stage")) return null;
+  return { playing: !!(a && !a.paused && !a.ended), t: a ? a.currentTime : 0,
+           ready: d.readyState==="complete" || !!a, btn };
+}
+function attachScenePlay(fr){
+  const wrap=fr.parentElement; if(!wrap || wrap.querySelector(".sceneplay")) return;
+  const b=document.createElement("button");
+  b.type="button"; b.className="sceneplay"; b.textContent="▶ Tap to play"; b.hidden=true;
+  b.setAttribute("aria-label","Play the scene");
+  b.onclick=()=>{
+    const st=sceneState(fr);
+    if(st && st.btn) st.btn.click();
+    else { const d=sceneDoc(fr); const a=d && d.querySelector("audio");
+      if(a){ if(a.paused) a.play(); else a.pause(); } }
+    setTimeout(()=>refreshScenePlay(fr), 250);
+  };
+  wrap.appendChild(b);
+  fr._playBtn=b;
+  if(fr._playMon) clearInterval(fr._playMon);
+  fr._playMon=setInterval(()=>{ if(!fr.isConnected){ clearInterval(fr._playMon); return; } refreshScenePlay(fr); }, 600);
+}
+function refreshScenePlay(fr){
+  const b=fr._playBtn; if(!b) return;
+  const st=sceneState(fr);
+  if(!st || !st.ready){ b.hidden=true; return; }
+  b.hidden=false;
+  b.classList.toggle("playing", st.playing);
+  b.textContent = st.playing ? "❚❚ Pause" : "▶ Tap to play";
+}
 function hydrateScenes(root){
   (root||document).querySelectorAll("iframe.scene-frame[data-scene]").forEach(fr=>{
     if(fr.dataset.hydrated) return;
@@ -664,9 +732,10 @@ function hydrateScenes(root){
     const note=document.createElement("div");
     note.className="sceneload"; note.textContent="Loading the scene…";
     fr.parentElement.appendChild(note);
+    fitSceneFrame(fr);
     sceneObjectURL(fr.dataset.scene, parseInt(fr.dataset.parts||"1",10))
       .then(url=>{
-        fr.addEventListener("load", ()=>{ if((fr.src||"").indexOf("blob:")===0) note.remove(); });
+        fr.addEventListener("load", ()=>{ if((fr.src||"").indexOf("blob:")===0){ note.remove(); fitSceneFrame(fr); attachScenePlay(fr); } });
         fr.src=url;
       })
       .catch(()=>{ note.textContent="The scene could not be loaded here — the rendered video is on YouTube."; });
@@ -680,7 +749,7 @@ function openFocus(p, wantCompare){
   document.title = p.title+" — Production";
   const c=counts(p);
   const art = p.scene
-    ? `<div class="ytwrap scenewrap"><iframe class="scene-frame" data-scene="${p.scene}" data-parts="${p.scene_parts||1}" title="${esc(p.title)} — HTML scene" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>` +
+    ? `<div class="scenewrap"><iframe class="scene-frame fit" scrolling="no" data-scene="${p.scene}" data-parts="${p.scene_parts||1}" title="${esc(p.title)} — HTML scene" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>` +
       `<div class="scenecap">▶ Playing the HTML scene — the actual production file. The rendered video is on YouTube.${p.youtube_id?` <a href="https://www.youtube.com/watch?v=${p.youtube_id}" target="_blank" rel="noopener">Watch on YouTube ↗</a>`:""}</div>`
     : p.youtube_id
     ? `<div class="ytwrap"><iframe src="https://www.youtube-nocookie.com/embed/${p.youtube_id}?rel=0&playsinline=1" title="${esc(p.title)}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
@@ -861,7 +930,7 @@ function showCompare(p){
   // side plays its own copy. Side-by-side, each played on its own.
   if(A.scene || B.scene){
     const scell=x=>`<div class="cmp-cell"><div class="cmp-lab"><b>${tag(x)}</b> · ${esc(x.title)}</div>
-      ${x.scene?`<div class="scene-slot"><iframe class="scene-frame" data-scene="${x.scene}" data-parts="${x.scene_parts||1}" title="${esc(x.title)} — HTML scene" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
+      ${x.scene?`<div class="scene-slot"><iframe class="scene-frame fit" scrolling="no" data-scene="${x.scene}" data-parts="${x.scene_parts||1}" title="${esc(x.title)} — HTML scene" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
         : x.youtube_id?`<div class="yt-slot"><iframe src="https://www.youtube-nocookie.com/embed/${x.youtube_id}?rel=0&playsinline=1" title="${esc(x.title)} — YouTube copy" allow="encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
         :`<video src="${x.video}" poster="${x.poster||""}" controls playsinline preload="metadata"></video>`}</div>`;
     $("#artZone").style.display="none";
