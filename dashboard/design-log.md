@@ -439,3 +439,23 @@ adopt-or-waive A/B with real comparison clips (the class had 0 instances in
 every piece ever built and was never decided). Ten absent-by-default classes
 are on record (SFX layer, publish time-of-day, loop seam, auto-captions…),
 held open on the Bench until decided or consciously waived.
+
+## Round 11 — review copies live + bestness audit lands (2026-10-23, late night)
+
+All five unlisted review copies uploaded and wired in (Ep.1 v3 gIgK52z_TB4,
+Ep.3 5qK98qCAkA0, Ep.4 sygadAbKPg8, WD-01 v3 5fW7G5UvRoM, SOA-01 v3
+3B7Bvbc30rg); Ep.3/Ep.4 publish verdicts are Actions #44/#45; #33 is fully
+ask-ready now that Ep.4 plays in focus. Hadi's BESTNESS DOCTRINE (said =
+shown; no obvious improvement left unmade) produced Job B1: 10
+said-but-not-shown moments across 11 built pieces (intro v3's context lines
+are the founding case), logged as open bestness cycles on the affected
+pieces, and a full intro v4 visual plan (real description + repo screenshots
+at the lines that name them). One script decision rides with it — Action
+#46: the proposed "point your agent at it" line for intro v4 (full vs
+compact vs none, runtime ledger shown).
+
+Round 11 addendum — Studio sweep (read-only, 2026-10-23 late): WS01 v2's
+public ID recovered (4C2Tfyx2JYc, 8 views); intro v3 at 9 views, 85.0%
+average viewed, +1 subscriber; Lesson 1 poster/board at 11/14 views;
+vocab v3 at 26 views with its live description recovered verbatim into the
+context annex. Scoreboard and link checks crossed with that evidence.
