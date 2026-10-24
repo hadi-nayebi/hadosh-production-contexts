@@ -275,3 +275,92 @@ of the identical build; it is classified in the report, not hidden.
 Verdict, reaffirmed — **R6: Yes.** One truth, three views, two laws;
 every control opened and measured; comments flow out to GitHub and
 decisions flow back — nothing pretend in between.
+
+## Round 6 — addendum 2 (same day): media wiring, giscus, the gate generalized
+
+Four more confirmed inputs landed before this push and are all in it.
+
+**Media rule, wired.** Every piece now carries `youtube_id` and/or
+`audio_file` in the state (and in `gen_state.py`, so regeneration
+keeps them). Focus view embeds the YouTube player when an ID exists;
+the compare does the same per side. Wired IDs — published/public:
+intro v3 `7x-m1idAKPU`, WO-A `YvMMTOwXeGY`, WO-B `IRHIduGQun4`,
+vocab v3 `xX4-60ily0Y`, Ep.1 i7 `sbLhrz2e6lw`, Ep.2 plate
+`0JspT5oOgsk`, Earth One trailer `4ovgwcMxGxk`. Unlisted review
+copies: Ep.2 v3 `U_PAgerHCSg`, DIR-01 `5l9Ix4ei1fc`, DIR-02
+`OMGCSeKFPcY`, DIR-03 `mAKlyG8rItI`, WD-01 `qMkp23FBAGU`, SOA-01
+`FqKaqYxvw_8`. NOT wired, deliberately: the stale Studio draft IDs
+(the fixed copies replace them), and WS01 v2 + the Lesson 1 pair —
+their public IDs were searched for in the state and every upload
+package on 2026-10-23 and are recorded nowhere; they sit on the
+Bench as media-pending until the IDs are supplied. Ear-stage audio
+ships as files (`dashboard/assets/audio/`, 5 mp3s) and the Listen
+drawer plays them in place from the relative link; the base64 embeds
+are gone (page: 3.82 MB → 0.20 MB). The compare keeps sync-looping
+where the platform allows: YouTube sides load through the IFrame API
+as muted autoplaying players under one Play/Pause/Restart control
+set with a 1.2s drift corrector; if the API cannot load, each side
+falls back to a plain looping embed and the note on the compare says
+so — recorded here per the brief, not hidden.
+
+**Comments in place (giscus).** The outbound-link design (addendum
+1) is superseded: the Comment drawer carries the giscus box itself.
+Config, obtained from giscus.app's own categories API for this repo
+(the config form could not be driven from this VM's headless browser
+— its proxy tunnel refuses external sites — so the values come from
+giscus's API + the public REST repo object, cross-checked):
+repo `hadi-nayebi/hadosh-production-contexts`, repo-id
+`R_kgDOVIbF0A`, category **General** (`DIC_kwDOVIbF0M4DJdf7`;
+Announcements/Ideas/Q&A also exist — General is the open-posting
+default), mapping `specific`, term = piece id, reactions off, input
+on top, theme `transparent_dark`. Hadi installed the giscus app on
+the repo 2026-10-23; Discussions was already enabled. Zero outbound
+discussion links remain anywhere on the board (asserted).
+
+**Context completeness — the audit.** Each seeded ask was audited
+against (question / artifacts / record / comment box): all three
+reveals now state THE QUESTION first, then governs, then context
+lines (Ep.2: the law's origin + both copies playable in the compare;
+DIR: the Oneness verdict + fix lines — stereo re-wrap, dynaudnorm
+removal, parity 1.30/1.91/2.29 dB, label collisions, DIR-01 cover —
+plus the stale-draft warning; teaser: v1's 10/100 and why, v2's
+rebuild logic, where the text and audio live). Each piece's focus
+view carries a waiting panel with the same question + context and a
+Comment button — the box sits in the same view as the artifacts it
+judges.
+
+**The gate, generalized — checklist-gated visibility.** Every ask
+carries an `ask_checklist` (per type: ab_test / verdict /
+script_score), evaluated from evidence only. At this push: Ep.2 A/B
+5/5 pass, DIR verdict 4/4 pass (its media item crossed the hour the
+unlisted IDs landed), teaser script_score 5/5 pass — so all three
+render as waiting. The DIR ask spent part of the day on the Bench
+with "Artifact playable in focus" pending; the mechanism, not the
+outcome, is the deliverable. Pieces show their stage gate
+(open/blocked) and published pieces carry their checklist debt
+visibly — the debt list at this push (open checks, of total):
+intro-v3 15/28 · ws01-v2 20/28 · wo-a 20/28 · wo-b 21/28 ·
+lesson1-poster 22/28 · lesson1-board 21/27 · vocab-v3 20/29 ·
+eo-ep1-i7 14/30 (3 failing) · eo-ep2-v2 18/30 (3 failing). Debt is
+visibility, not remediation — retro-QC cycles work it off.
+
+**Thresholds + audience views + completion filters.** The generator
+stamps a `gate` on every node: for asks and lab tests,
+`gate.required` = the ids of the whole package checklist (the
+threshold IS full crossing for anything that asks for his judgment);
+for pieces, the name gate is `identity` alone (title/channel/
+playlist/stage — all 30 cross it, so the catalogue never vanishes),
+while the stage gate, debt, media and compare gates stamp separately
+and bite on surfaces, not on the piece's existence. The two audience
+views are the view switch itself: Board/Kanban = Hadi's view
+(gate-crossed only), Bench = everything, missing named — the hash
+carries the mode (`#/bench`). Completion filters (Completed /
+Active / Pending — exactly three chips, inside the pieces expansion)
+classify by checklist: all crossed = completed (4 pieces), none =
+pending (0), else active (26).
+
+Evidence: the interaction suite now runs **170 assertions, 170
+passing** at both widths (report addendum 2), including data-driven
+gate tests — the waiting set is compared against the state's own
+derived visibility, so a future ask that fails its checklist fails
+the suite if it ever renders as waiting.
