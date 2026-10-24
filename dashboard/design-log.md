@@ -399,3 +399,22 @@ Hadi driving; ordered ALL unblocked work exhausted. Landed in state this round:
 - Per-scene segmented renderer proven (one-scene fix ≈40s vs ~17 min).
 - Published-debt audit: 171 open items (143 crossable now, 6 time-gated, 9 rebuild/blocked, 13 historical) — crossings in progress (retro-QC job), land next round.
 - Process law added by Hadi: GitHub writes batched — local staging, ONE push per repo per round.
+
+## Round 8 — context layer lands on the board (2026-10-23, late evening)
+
+Hadi's directive: every element of every video — transcript line, scene count,
+prose per scene, image changes, visual elements, packaging — carries a written
+rationale from a named source (Hadi / rule / content / pattern / Archer), and
+anything without one counts as random. Job Q1 audited all 31 pieces (497
+elements); Job Q2 filled 46 of 56 random elements from the pieces' own records;
+Job Q3 converted the Hadi-side gaps into 8 new board input spaces (Actions
+#27–#34). Result: board context completeness 98.0%, randomness 0.020 (10
+elements left: 3 await Hadi's answers below, 3 are build-time counts for
+unbuilt scripts, 1 lives only in Studio, 3 belong to the rejected teaser v1).
+State now carries a per-piece `context` object (scores, random elements named,
+five structural parameters each marked follows / deviation-with-reason /
+deviation-without-reason). Also this round: retro-QC crossings applied (49
+checks crossed with evidence, 16 marked na with reasons — Job G); SOA-02…05
+titles set from their drafted scripts; Lesson 1's public YouTube IDs recovered
+from the 2026-10-22 A/B review record and wired in; trailer scene link fixed
+to v2. New ask kind: "question" (canon rulings + the Lesson 1 pair).
