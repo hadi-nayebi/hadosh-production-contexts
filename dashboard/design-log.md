@@ -665,3 +665,55 @@ wait panel (they had none). Waiting pool: 20 crossed asks — 3 in
 focus, 17 parked. Folded into the same staged round as the
 final-form pass; still staged only, fired by the main chat with
 Hadi's taps.
+
+## Round 18 — the badge gate (Hadi's rule, 2026-10-25 — JOB BADGE-GATE)
+
+A question now has to EARN its place in front of Hadi. Every ask
+carries an eight-item dyslexic-friendly badge checklist (one plain
+line says what this is; the question is one sentence; options side
+by side in full with what each pick does; the recommendation before
+any context; no process jargon before the choice; the specimen shows
+at phone size; decidable in under five minutes, measured; the deep
+link lands on this ask), and the badge is DERIVED by the generator,
+never hand-set: three items are verified computationally (the WHAT
+is one line of ≤35 words; the question carries exactly one
+sentence-ending mark; the measured load — decision-block words at
+the 120 wpm planning rate plus the recorded specimen seconds —
+totals under 300 s). The home focus draws only from badged asks;
+parked asks without the badge carry a plain "not ready yet" marker.
+All 22 open asks were iterated against the checklist (wording only —
+no substance, option, or recommendation changed): 20 earn the
+badge. Two stay honestly unbadged, both on the specimen item: #33
+(the Ep.4 ink choice is visual and the ask itself carries no frame)
+and #35 (the subscribe-overlay B side cannot be seen on the board —
+its bell loop is a local file; the ask's earlier claim that both
+loops play in the compare did not survive verification and was
+removed, and #56's answer line was corrected to its own
+recommendation, B).
+
+The same round adds the per-ask deep link: #/ask/<request-id> opens
+the board with that exact ask expanded in place — focus, parked, or
+Bench — so a chat link can never land on the home page by mistake
+(the failure Hadi hit with #54's link).
+
+Folded in the same day (Hadi, ~12:03 ET): the EDITOR PASS badge for
+transcript-bearing asks — script approvals, re-scores, publish
+calls, spoken-line verdicts (11 of the 22). Five items: a written
+editor simulation whose objections are resolved or honestly
+carried; a pause map whose sizes come from the researched doctrine;
+no question answered in the same breath; a measured navigation
+budget (~10%, 20% hard cap); one learning sentence the piece
+teaches. A transcript-bearing ask without it does not surface in
+the top 3. First audit: none of the 11 could earn it — no editor
+simulation existed for any version, and the pause-map item stood
+pending-doctrine. JOB EP1-EDITOR-PASS then landed the doctrine,
+the Ep.1 pause map, and Editor Simulation #2 = PASS on the v5
+draft, so Action #54 was re-pointed from v4 to v5 (11 performance
+lines, 204 words; content 82 / delivery 78 against v4's 80 / 35)
+and carries the first earned editor badge, back at focus rank 1.
+The other ten stay parked on the editor marker with their missing
+items named; their turns follow Ep.1's pattern. Focus as staged:
+#54 (v5 script) + #29 (SOA-03 fact line); #53 parks on the editor
+badge despite its dyslexic badge. Suite qc/r38 on the staged tree:
+876/876, exit 0 — R21 green, census 23 playable / 0 non-HTML. Staged
+only as b27; the main chat fires it without a "go" pause.
