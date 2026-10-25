@@ -530,3 +530,138 @@ the scene document loads. No page reference to any monolithic scene
 URL remains. Focus player and the compare's v3 side both go through
 this loader; captions, the Watch-on-YouTube link, and the no-sign-in
 chat path are unchanged.
+
+## Round 13 — structural verdicts on the records (2026-10-24)
+
+JOB STRUCT-2-APPLY landed a chosen story structure, with its reason, on
+all 18 board records — the structure layer of the decision model stopped
+being implicit. The same round absorbed two verdict outcomes into the
+records: Action #16 (the DIR trio's i2 scripts) was answered by Hadi —
+NOT approved — and closed, and Action #43 (the DIR geometry proposal)
+was invalidated by its own audit and closed. Ask #36 was split so its
+parts could be judged separately, and #38 was re-based onto the two
+pieces its specimens actually live in (ws01-v2 + wd-01).
+
+## Round 14 — SOA-01 closing bridge (2026-10-24)
+
+SOA-01's scene gained its closing-bridge edition and DIR-01 gained its
+script cycle note. The round landed in three sub-batches (board, then
+state + manifest + first scene part, then the remaining parts), and the
+first sub-batch briefly preceded its state — a half-applied window Hadi
+hit on his phone. The lesson became standing law and shaped every round
+since: rounds ship consolidated, index + state + manifest move as the
+first atomic unit, and a round is never left half-applied.
+
+## Round 15 — scenes actually play on the phone (2026-10-24)
+
+JOB BOARD-PLAY fixed phone playback properly: the scene player fits the
+whole stage inside the player (fit-to-player transform, house border
+visible, no page-level scrolling to reach the controls), the focus
+layout stacks on phone widths, and the tap-to-play overlay forwards to
+the scene's own play button instead of swallowing the tap. Suite r17
+479/479. The push was index-only — state and manifest were already
+byte-identical to live — and verification was byte-identity plus the
+phone suite against the identical bytes.
+
+## Round 16 — the consolidated round (2026-10-24)
+
+Hadi's one-package directive: one packaged round per work session,
+fired by the main chat with his approval taps, never a drip of
+per-file pushes. Contents: the printing teaser v2 integrated as a
+board piece with Action #20 re-pointed at the built video; JOB
+ASK-GATE's four judgment fields on every ask checklist (objective
+stated / alternatives exhausted / value vs blocking footprint /
+specimen verified playing), with readiness derived generically from
+them — an ask that fails the judgment gate waits on the Bench with the
+missing field named, which is where the two bare canon asks (#27/#28)
+sit by Hadi's own ruling; SOA-02/04/05 scenes staged at QC stage.
+Suite r18 499/499; final head e944fdeb.
+
+## Round 17 — decision format, the mandate payload, and zero non-HTML (2026-10-24)
+
+The biggest round so far, shipped in two pushes in one sitting (b24,
+then b25; final head 5441721c, verified byte-identical staged == repo
+== Pages both times). It consolidated everything staged since round 16:
+
+- JOB BOARD-INFO: every piece carries an info panel — verbatim
+  objective, weighted-randomness score, decision counts, and the
+  checklist split into waiting / bookkeeping / open — so the numbers
+  Hadi judges by sit on the page where he decides.
+- JOB ASK-FORMAT: the decision-format law applied to every ask on the
+  board — one plain line of what this is, the question in one
+  sentence, the options side by side with their full exact text and
+  what each pick does, Archer's recommendation, and how to answer.
+  Process prose no longer stands between the reader and the choice.
+- The 4–5-hour mandate payload: Track A (SOA facts refreshed to the
+  current Gallup 52% / 15% everywhere; the Non-HTML counter built and
+  shown on home and Bench; cold-audit fixes F1–F5), Track B/C (the
+  v4 scenes wired as the asks' specimens; new asks #55/#56/#57), and
+  JOB BOARD-WIRING's scene backfill, which took the census to
+  23 playable · 23 HTML · 0 non-HTML.
+- JOB B24-EP4-REFRESH: the corrected Ep.4 v4 scene (scrim ordering
+  fixed, full ink depth restored) replaced the first render.
+- b25: OBS-01-A gained its decision ask (Action #59), and the stale
+  pointers left by #16's closing were repointed (DIR trio → #53;
+  vocab v3 → #40/#41).
+
+Suite: r31/r32 — 860/860, R21 gate green.
+
+## Final-form pass — b26 (2026-10-25)
+
+Hadi, driving: "do everything remaining that needs to be fixed… make
+the dashboard into its final form… so that when I'm reviewing I'm
+reviewing almost the final forms." JOB FINAL-BOARD audited the live
+round-17 build end to end — every view, all 31 focus pages, all 25
+open asks — and fixed everything fixable without his verdict:
+
+- Stale version pointers corrected: Ep.2's replacement is the v4
+  build everywhere it is named (piece next-move and the v3 piece's
+  title now read v4); Ep.1's next move names its real gate (Action
+  #54, the v4 script — the superseded v3 rebuild no longer named).
+- Evidence that described the pre-round-17 world corrected: the DIR
+  trio's ear-checklist lines now record that #16 was answered (not
+  approved, closed) instead of "queued/pending"; four specimen
+  evidence lines now say the build they verified is live as round 17;
+  the Ep.2 compare evidence no longer claims a YouTube embed — both
+  sides play scenes.
+- Records that lagged their own filed evidence brought current:
+  ws01-v2's 48-hour scoreboard read (filed 2026-10-24) is marked read
+  with its numbers; WO-A/WO-B next moves record the first A/B
+  comparison read as done; wd-01 and soa-01 next moves describe their
+  actual state (QC-passed, in the Tuesday set) instead of a rebuild
+  that already happened.
+- Two publish asks' action references normalized to the board's
+  "Action #NN" form (#44, #45).
+- The footer now tells the truth about how verdicts arrive: through
+  the chat with Archer — the Discussions wording dated from before
+  the chat-verdict doctrine.
+- This log itself was two rounds behind; rounds 13–17 are recorded
+  above from the push manifests and job records.
+
+Suite r33 on the staged b26 tree (see the job record for the count);
+the Bench still holds exactly the two gated canon asks. Staged only —
+the main chat fires b26 with Hadi's approval taps when he parks.
+
+## Top-3 focus (Hadi's rule, 2026-10-25 — JOB TOP3-FOCUS)
+
+Twenty open asks were overwhelming. The home asks surface now shows
+only the TOP 3 crossed asks, in rank order, in full Decision Format;
+the rest park under a collapsed "N parked" head as compact rows
+(number + title) that open in place, and surface as the ranked ones
+clear. The ranking is state data — a `focus_rank` field on the ask
+record, read by the render — so promotion is a state edit (close the
+cleared asks, re-rank the pool), never a code change. Initial ranking
+(Archer's, by the priority doctrine — the Monday-build unlockers):
+#54 Ep.1 v4 script = 1, #53 Direction trio scripts = 2, #29 SOA-03
+fact line = 3. The counters read focus-first ("3 waiting on you" +
+the parked count); piece pages keep their own asks; the Bench is
+unchanged (the two gated canon asks are holds, not part of the pool).
+Two records were created so the ranking has real asks to point at:
+#54 and #53 existed only as piece next_move lines — req-ep1-v4-script
+and req-dir-trio-scripts now carry their full Decision Format blocks,
+grounded in the v4 script draft (C1–C5) and the three rebuild script
+docs; as a side effect dir-02 and dir-03 focus pages gain the #53
+wait panel (they had none). Waiting pool: 20 crossed asks — 3 in
+focus, 17 parked. Folded into the same staged round as the
+final-form pass; still staged only, fired by the main chat with
+Hadi's taps.
