@@ -808,3 +808,43 @@ re-verified every staged field against the on-disk records before
 staging (count in the JOB B29 report). Suite + phone-size eyeball
 on the staged tree are recorded in the same report. Staged only
 as b29; the main chat fires it without a "go" pause.
+
+## Round 21 — b30: Ep.2's dwell fix ships — the engine overlap repair (2026-10-25 — JOB EO-ENGINE-OVERLAP)
+
+Round 20 recorded the stop: JOB B29's carry-over plan for Ep.2 v4
+measured clean on paper (dwell 44 → 1) but the EO scene engine
+rendered only the first phrase whose window contains t, so the
+render broke word-sync and the delivered files were restored
+byte-identical. This round carries the repair, and only that.
+
+The first-match loop is removed from all nine EO build sources
+(the shared `engine_v4.js` and the Ep.1 / Ep.2 / Ep.3 / Ep.4 /
+printing-teaser / trailer builders, including the Ep.2 builder's
+embedded engine copy): every phrase whose [start, end) window
+contains t now renders, the two co-visible phrases sit in
+alternate bands so they never share one, and z-order follows
+phrase start — the semantics the fastlane template already
+proved in the catalogue rebuilds. A permanent guard joins the
+checklist as **C-06 BOUNDARY SYNC** (v2.18): a boundary probe on
+the scene plus a pixel proof on the delivered file, required on
+any build whose plan carries overlapping phrase windows; the
+missing compartment is recorded in the decision model as 9.12
+(phrase co-visibility semantics).
+
+Ep.2 v4 is re-rendered through the fixed engine from B29's plan
+— only the 55 carry-over phrase ends and the engine change;
+audio stream, word starts, prose, duration and frame count are
+byte-invariant — and the delivered file passes the full proof:
+DOM probe and delivered-file pixel proof both 56 boundaries /
+55 overlaps / 0 failures (the DOM probe fails 119 checks on a
+negative control with the loop restored); dwell stands at the
+one named residual (#55, the final phrase, content-end-capped —
+craft-baseline CB-14 register), median hold 1.46 s; V-17 clean
+(amber 5.85–10.27:1; `dies;` 4.10:1 at rendered geometry; cover
+6.08 / 5.81); loudness unchanged at −14.02 LUFS / TP −1.82 dBTP.
+Ep.2's record gains the closing verify cycle (n=6); the C-05(a)
+miss recorded at b29 is closed, and the piece stands ready for
+the publish wave. The pre-fix render is kept in files/ as
+`*_postchip`. No other record changes; focus ranks do not move
+(#54 / #53 / #29 stand). Staged only as b30; the main chat fires
+it with the b29 round, without a "go" pause.
