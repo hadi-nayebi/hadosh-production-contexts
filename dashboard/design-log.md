@@ -758,3 +758,53 @@ bytes: no silence run ≥0.25 s below −50 dBFS anywhere in the three
 staged scenes. Suite qc/r39 on the staged tree: 916/916, exit 0 —
 R21 green, census 25 playable / 25 HTML / 0 non-HTML. Staged only
 as b28; the main chat fires it without a "go" pause.
+
+## Round 20 — b29: catalogue rebuilds on the record; Ep.2's dwell stop; two specimens carried (2026-10-25 — JOB B29)
+
+The catalogue-application round reaches the board. The seven
+fastlane rebuilds (WD-01/02/05, SOA-01/02/04/05 — carry-over dwell
+under amended C-05(a), V-17 re-measured clean, audio byte-identical)
+gain a verify cycle each with the measured numbers; SOA-01's audio
+evidence is corrected to the fresh −1.17 dBTP peak, and SOA-01's one
+residual (phrase #9 hold 0.46 s) is recorded as ACCEPTED —
+bound-capped, the form's maximum — matching the acceptance Archer
+wrote into QC v2.17's C-05 row and the craft-baseline CB-14
+register in the same job. The three SOA scenes' stale in-scene
+DR-BRIDGE wording ("silent bridge") is corrected in the masters:
+the bridge is a no-narration span the bed carries under (CB-01);
+PLAN + embedded audio proven identical per file.
+
+Ep.2 v4 gains two cycles. First, the catalogue §3 backing-chip
+re-render folds in (the 10 failing amber words now 5.85–6.41:1;
+cover rebuilt; PLAN + audio proven unchanged). Second, the honest
+stop: JOB B29 rebuilt the v4 PLAN through the ported carry-over
+builder — every plan invariant held and plan dwell fell 44 → 1 —
+but the delivered-file render QC caught the EO engine rendering
+only the first phrase whose window contains t, so carried-over
+holds suppress the next phrase's words past their spoken starts.
+The rebuild was stopped, the delivered files restored
+byte-identical, and the shipped v4 stands as an open C-05(a) miss
+(44/56, median 0.38 s), recorded not-accepted in the CB-14
+register. The engine's overlap behaviour is now an explicit open
+decision on Archer's side of the record, and it gates every EO
+carry-over (the Ep.1/Ep.3/Ep.4/teaser builders share the pattern).
+
+Two parked asks gain their specimens. #33 (Ep.4 ink verdict) now
+carries the measured contrast evidence in its record: rust #92400e
+on the gold field measures 2.52:1 against the 3.0 floor — the
+pairing fails, not the ink (it passes at 3.85–13.10 everywhere
+else on the card). Its badge stays open: the image-in-ask half is
+a listing-time apparatus step, recorded as such on the item.
+#35 (engagement overlays) gains a specimen of its own: a new board
+scene (scenes/spec-ep2-endcards.html) carrying both 3.0 s end-card
+loops byte-for-byte, side by side, rendered at the top of the
+ask's Context & record — the board's first ask-carried specimen
+scene (generator stamps specimen_parts from the record's
+specimen_scene; renderAll hydrates scenes on the home view too).
+With the bell actually playing on the board, #35's specimen badge
+item passes and the ask stands badged in the parked pool; focus
+ranks do not move (#54 / #53 / #29 stand). A G-12 pre-push sweep
+re-verified every staged field against the on-disk records before
+staging (count in the JOB B29 report). Suite + phone-size eyeball
+on the staged tree are recorded in the same report. Staged only
+as b29; the main chat fires it without a "go" pause.
