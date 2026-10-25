@@ -717,3 +717,44 @@ items named; their turns follow Ep.1's pattern. Focus as staged:
 badge despite its dyslexic badge. Suite qc/r38 on the staged tree:
 876/876, exit 0 — R21 green, census 23 playable / 0 non-HTML. Staged
 only as b27; the main chat fires it without a "go" pause.
+
+## Round 19 — b28: #53 returns with its editor badge; WD builds folded (2026-10-25)
+
+JOB DIR-EDITOR-PASS gave the Direction trio its Stage-2 delivery
+layer: the v2 drafts (files/short-dir01-rebuild-script-v2.md,
+-dir02-, -dir03-) inherit the reworked Stage-1 content word-for-word
+and add a recorded pause map (8,400 / 6,900 / 6,300 ms), intonation
+intent per line, and Editor Simulations #1 + #2. Simulation #2
+returns PASS on all three (delivery ≈76 / 74 / 78, up from
+≈40 / 38 / 45), so Action #53's editor badge is EARNED and the ask
+returns to the focus at rank 2 — the focus is again exactly three:
+#54 (Ep.1 v5), #53 (DIR trio v2), #29 (SOA-03 fact line). Carried
+honestly in the ask's record: the navigation item passes on the
+hard cap, not the target — DIR-01 is clean at 11/136 = 8.1%;
+DIR-02's closing referral recounts to 13/128 = 10.2% (the badge-gate
+audit's 0% does not survive the recount) and DIR-03's to 12/88 =
+13.6% by the full-line count, both recorded as content note CN-1; a
+1–2 word referral trim is Hadi's content call inside the ask
+(Option B), not an editor-pass fix. DIR-03's Projector capture
+stays a build-phase dependency (CN-2, DR-EVIDENCE). The ask's load
+was recomputed from the v2 drafts and re-stamped: decision block
+235 words = 118 s + specimen 176 s = 294 s, under the 300 s bar.
+
+The two Word Definitions builds fold in from their packets: WD-02
+'What Is a Prompt?' and WD-05 'What Is a Tool?' move from script
+stubs to full qc-stage records (checklists 17 pass / 1 bookkeeping /
+5 waiting / 3 open of 26, and 15 / 2 / 5 / 5 of 27; scene element
+audits 56/56 and 65/65; WD-05's L6 Skills-vs-Tools ruling and
+cover-phrase flag ride as recorded open items). Every audio figure
+in the three WD records is the POST-silence-fix measurement from
+JOB TEMPLATE-SILENCE-FIX (WD-01 −14.34 / −1.01, WD-02 −14.20 /
+−1.55, WD-05 −14.27 / −1.01; durations unchanged), and WD-01's
+cycle log gains the CB-01 silence-fix cycle. Both new scenes are
+wired (SCENES + SCENE_SOURCES) and play on the board; all three WD
+scene masters were re-embedded with the FIXED programme audio in
+this round (the files/ HTMLs still carried the pre-fix holed MP3s)
+and their board editions regenerated — verified on the staged
+bytes: no silence run ≥0.25 s below −50 dBFS anywhere in the three
+staged scenes. Suite qc/r39 on the staged tree: 916/916, exit 0 —
+R21 green, census 25 playable / 25 HTML / 0 non-HTML. Staged only
+as b28; the main chat fires it without a "go" pause.
