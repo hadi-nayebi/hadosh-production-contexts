@@ -1198,6 +1198,18 @@ for (const ph of PLAN.phrases) {
     s.style.fontSize = w.size + 'px'; s.style.color = w.col;
     s.style.left = w.cx + 'px'; s.style.top = w.cy + 'px';
     s.style.zIndex = 4;
+    /* V-17 BACKING STANDARD (JOB DWELL-CONTRAST-FIX, 2026-10-25): the
+       amber accent over a photographic plate measured 1.95–2.28 against
+       the 3.0 floor (MEASURE-SWEEP) and no lighter amber passes the
+       lightest plate fields — the accent word therefore carries the
+       standard chip: rgba(14,10,7,.60) behind the glyphs. Measured
+       worst case after treatment: 5.79 (Ep.2 cover field) — margin
+       +2.79 over the floor. The ink itself does not change. */
+    if (w.col === '#ffb040') {
+      s.style.background = 'rgba(14,10,7,.60)';
+      s.style.padding = '10px 28px';
+      s.style.borderRadius = '34px';
+    }
     if (w.shadow) s.style.textShadow = '3px 4px 0 rgba(30,20,14,.45)';
     stage.appendChild(s); wordEls.push(s); return s;
   });
@@ -1210,12 +1222,50 @@ function makeCard(id, plate, lines) {
   const bg = document.createElement('div');
   bg.className = 'platecard'; bg.style.backgroundImage = `url(${PLATE_URIS[plate]})`;
   c.appendChild(bg);
-  for (const [text, y, sz, col] of lines) {
-    const d = document.createElement('div');
-    d.className = 'cardtext'; d.textContent = text;
-    d.style.top = (y - sz/2) + 'px'; d.style.fontSize = sz + 'px'; d.style.color = col;
-    c.appendChild(d);
+  /* V-17 BACKING STANDARD (see word creation): amber card lines over
+     a plate need the chip. A RUN of adjacent amber lines (the cover's
+     two thesis lines sit 105 px apart — closer than one chip's
+     height, so per-line pills would overlap and double-darken) gets
+     ONE shared chip div behind the whole run, sized from the canvas
+     measure of its widest line. A lone amber line gets a pill span. */
+  const runs = [];
+  lines.forEach((L, i) => {
+    if (L[3] !== '#ffb040') return;
+    const last = runs[runs.length - 1];
+    if (last && i === last.end + 1 && L[1] - lines[last.end][1] < 1.6 * L[2]) last.end = i;
+    else runs.push({start: i, end: i});
+  });
+  const grouped = new Set();
+  const cardMeasureCtx = document.createElement('canvas').getContext('2d');
+  for (const run of runs) {
+    if (run.end === run.start) continue;
+    const f = lines[run.start], l = lines[run.end];
+    let w = 0;
+    for (let i = run.start; i <= run.end; i++) {
+      cardMeasureCtx.font = `${lines[i][2]}px "Patrick Hand", cursive`;
+      w = Math.max(w, cardMeasureCtx.measureText(lines[i][0]).width);
+      grouped.add(i);
+    }
+    const chip = document.createElement('div');
+    chip.style.cssText = 'position:absolute; left:50%; transform:translateX(-50%);' +
+      `top:${f[1] - f[2]/2 - 14}px; height:${(l[1] - f[1]) + l[2] + 28}px;` +
+      `width:${Math.ceil(w) + 76}px; background:rgba(14,10,7,.60); border-radius:44px;`;
+    c.appendChild(chip);
   }
+  lines.forEach(([text, y, sz, col], li) => {
+    const d = document.createElement('div');
+    d.className = 'cardtext';
+    d.style.top = (y - sz/2) + 'px'; d.style.fontSize = sz + 'px'; d.style.color = col;
+    if (col === '#ffb040' && !grouped.has(li)) {
+      const s = document.createElement('span');
+      s.textContent = text;
+      s.style.background = 'rgba(14,10,7,.60)';
+      s.style.padding = '8px 34px 12px';
+      s.style.borderRadius = '44px';
+      d.appendChild(s);
+    } else d.textContent = text;
+    c.appendChild(d);
+  });
   stage.appendChild(c); return c;
 }
 const openCard = makeCard('opencard','firewide',[
