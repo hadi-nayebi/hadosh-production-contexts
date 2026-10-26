@@ -8,7 +8,7 @@ a derivative export of this package.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions
 - **Title:** What Is a Token?
-- **Stage:** assembled package (package verification not yet run) —
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-4) — in-package editability absent, a named gap against the full deliverable criteria —
   CLONE-VERIFIED candidate audio, locked delivered transcript,
   shipped scene (the v3 HTML-scene build, from the i2-locked
   script text), verified clone render in-branch. The piece itself
