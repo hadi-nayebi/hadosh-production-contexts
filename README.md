@@ -1,20 +1,15 @@
-# lesson1-poster — video package
+# lesson1-poster — "Lesson 1 — The Harness, Poster Version" (Lessons — Agentic Literacy)
 
-This branch is the file system of one video (board piece lesson1-poster).
+**Stage: metadata layer landed — the decision scaffold; the package assembles layer by layer from here.**
 
-The package is the deliverable alongside the video. It grows in
-developmental order — metadata first (objective, message,
-structure), then transcript, then audio and visuals — and this
-branch's git history is the video's development history.
+This branch is one video's complete production package, in the repository's standard shape (metadata → transcript → decisions → audio → scene → render). What has landed so far is the top layer only: `metadata.json`, the decision scaffold — the piece's objective, message, structural and standing decisions, each with its reason and its record, and the fields the evidence does not settle carried visibly OPEN in their true kind.
 
-Opened 2026-10-26 under Hadi's all-31-branches ruling: every video
-gets its own branch, and each branch is developed through the
-layers in order. The objective is defined first: a video without
-one produces every later layer in its absence. Decisions at each
-layer are made from the piece's own evidence — its transcript,
-earlier versions, and the recorded style/delivery references.
+**This package is partial by design, and says so from its first layer.** Three honest states ride in the scaffold itself:
 
-Evidence state at opening: Guide voice; element-level decisions only. Parked lesson lane.
+- **The decisions layer will be incomplete.** The element level is fully recorded (15/15 — context audit, 2026-10-23) but **no per-word decision record exists for this piece anywhere**: the word layer ships as a named absence (0/127) with its authoring task stated — and, unlike the DIR trio, there is no rebuild for that task to sequence with; it is conditional on a future lane iteration the owner has not opened. Authoring word decisions is new decision work, and this migration does not author them.
+- **The piece stands in ONE state, not two.** A finished, PUBLISHED artefact — the poster telling of Lesson 1, live on the flagship channel, guide voice, final-as-published under the standing never-re-edit rule for published Lesson 1, in a parked lane. There is no decided rebuild riding beside it. What remains open is of two kinds only: layers the pre-doctrine build never decided (hook form, orientation, delivery structure, in-piece referral, audience, words), and one owner's verdict that governs two packages at once — `pair_verdict`, Action #34 (the Lesson 1 pair: keep both versions public, or does one form win?).
+- **The voice is GUIDE, final.** No Pelican job exists for this piece; the voice registry scopes it OUT of the clone-upgrade sprint (parked lane; never re-edited; final-as-published legacy) — a recorded standing decision, carried as the decided field `voice_state`, with the designed swap path (music-only twin at the exact in-mix bed level + the timing-map cue sheet) recorded in the audio layer if the owner ever rules otherwise.
 
-Stage: 0 — opened. The metadata layer is the first development
-step.
+The piece itself: Lesson 1 of 'Lessons — Agentic Literacy' on the flagship channel — the harness INTRODUCE piece, told through Hadi's own two-panel poster artwork (Artificial vs Augmented AGI): the same pieces built two ways, standing apart or worn as yours. Its objective is GROUNDED in the catalogue objectives audit, which grades its alignment Partial — the poster performs the claim, and the orientation and referral layers are absent (STRUCT-2: REWORK, with the fixes directed at the lane's next iteration, not at this never-re-edited artefact).
+
+Every field in `metadata.json` carries its source: a decided field cites the record that settles it; an open field carries an empty rationale and a record field that says, in its own kind, why it is open (the audit mark that stands against it; the record that does not exist; a whole layer absent with its task; a ruling still pending).
