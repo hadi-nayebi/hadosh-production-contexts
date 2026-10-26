@@ -13,8 +13,8 @@ a derivative export of this package.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 187 / 191**
-  - metadata scaffold: 7 / 11 fields decided (`metadata.json`)
+- **Decided / total decision fields: 189 / 191**
+  - metadata scaffold: 9 / 11 fields decided (`metadata.json`)
   - element decisions: 65 / 65 elements carry a record
     (`decisions/decisions.json` — 12 decision records; the scene
     DEC coverage header's figure — its classes name the 53 scene
@@ -28,11 +28,6 @@ a derivative export of this package.
     word objects in this scene)
 - **Open fields, named** (undecided decision fields — a coverage
   inventory; it does not by itself measure the rendered result):
-  - `delivery_structure` — no pause map / delivery-pass record
-    exists for this piece; the build job names it a clean
-    candidate for the delivery retrofit once the doctrine lands
-  - `scene_decomposition` — the scene ships as one self-contained
-    file; splitting it is a future, separately recorded decision
   - `skills_tools_canon` — Action #28 / canon O-1: the Skills-vs-
     Tools ruling embodied at L6 (and L3's one word) is
     PROVISIONAL, derived from Hadi's own library and shipped for
@@ -43,6 +38,22 @@ a derivative export of this package.
     UNSENT.' vs the shipped frame's plan-verbatim state line:
     flagged by the build job, carried as a pending board
     extra_check; an overlay line is a separate decision
+
+Finishing decisions, 2026-10-26 (JOB FINISH-FIELDS-1 — dated
+finishing decisions, recorded as such, not backfilled history;
+see `metadata.json` for the full values, reasoning and evidence):
+  - `delivery_structure` — DECIDED as the delivery structure of
+    record, measured off the delivered artifact: nine lines on
+    DR-AUDIO's measured timeline (inter-line gaps 0.35–0.45,
+    ENDPAD 1.10), one decided visual beat per line (B1–B9), the
+    C-05 phrase system, the silent 3.0 s bridge. No separate
+    pause-map pass was ever performed; a future retrofit amends
+    this by a new dated decision.
+  - `scene_decomposition` — DECIDED as the compartment inventory
+    the shipped file itself embodies (container / per-line beat
+    compartments B1–B9 / bridge / word-animation layer / audio /
+    in-page decision layer / player chrome); the scene stays one
+    self-contained file (DR-CONTAINER, H-01).
 
 Every decided field carries a rationale and a named source
 (research / agent reasoning / Hadi's taste). Open fields stay
