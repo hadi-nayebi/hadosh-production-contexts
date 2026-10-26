@@ -9,14 +9,12 @@ a derivative export of this package.
 - **Piece:** teaser-print-v2 · Earth One channel · The Planet's Story —
   Observations
 - **Title:** Two Identical Bibles
-- **Stage:** assembled package (package verification not yet run) — CLONE-VERIFIED candidate audio,
-  locked transcript, shipped scene (the v3 build), verified clone
-  render in-branch.
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-3) — in-package editability absent, a named gap against the full deliverable criteria — CLONE-VERIFIED candidate audio, locked transcript, shipped scene (the v3 build), verified clone render in-branch.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 150 / 153**
-  - metadata scaffold: 7 / 10 fields decided (`metadata.json`)
+- **Decided / total decision fields: 150 / 154**
+  - metadata scaffold: 7 / 11 fields decided (`metadata.json`)
   - element decisions: 26 / 26 elements carry a record
     (`decisions/decisions.json` — 26 decision records)
   - word decisions: 117 / 117 words carry a recorded treatment or
@@ -27,6 +25,11 @@ a derivative export of this package.
     exists for this piece
   - `scene_decomposition` — the scene ships as one self-contained
     file; splitting it is a future, separately recorded decision
+  - `onset_repairs` — the first phrase window opens +530 ms after
+    the first word's spoken onset (window 1.95 s vs word start
+    1.42 s; measured by JOB PACKAGE-VERIFY-3's playback probe,
+    2026-10-26); fix = windows open at first-word onset at the
+    next plan rebuild — the same class eo-ep2 and eo-ep3 carry
   - `v3_verdict` — Action #20: the v3 improvement build (the
     shipped scene here) awaits Hadi's re-judgment; the v2 build
     scored 85/100 with headroom above 95 demanded
