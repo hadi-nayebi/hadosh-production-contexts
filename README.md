@@ -9,7 +9,7 @@ a derivative export of this package.
 - **Piece:** eo-ep2-v3 (board record) · Earth One channel ·
   The Planet's Story — Observations
 - **Title:** The Story Was the First Backup
-- **Stage:** assembled package (package verification not yet run) — locked transcript, shipped scene,
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-2) — in-package editability absent, a named gap against the full deliverable criteria — locked transcript, shipped scene,
   verified render. The delivered build speaks the **guide voice**
   (clone upgrade Tier B) and carries the catalogue's richest open
   record: ten named open fields, two of them accepted by nobody.
