@@ -848,3 +848,58 @@ the publish wave. The pre-fix render is kept in files/ as
 `*_postchip`. No other record changes; focus ranks do not move
 (#54 / #53 / #29 stand). Staged only as b30; the main chat fires
 it with the b29 round, without a "go" pause.
+
+## Round 22 — b31: the journey repair + checkbox doctrine (2026-10-25 — JOB BOARD-JOURNEY-REPAIR)
+
+Hadi's tap-through on Action #53 failed live (board verdict 0/100):
+the dashboard's ask, the ask page, and the DIR-01 piece page
+presented three different experiences of one action — the piece
+page showed Action #39 (fire ambience) because the renderer picked
+the first open ask in array order linked to the piece, and the
+route carried no arrival context. The full audit (JOB
+BOARD-JOURNEY-AUDIT) found 15 of 22 open asks divergent, 7 pieces
+with ask collisions, specimens absent from the decision surface,
+and a hand-written fourth copy of every gate in next_move.what.
+
+This round implements the audit's repair spec and Hadi's CHECKBOX
+DOCTRINE (~22:31 ET): (1) arrival context in the route (?ask=<id>) —
+a piece page presents the ask the reader arrived from, in the
+waiting panel and the comment drawer alike; (2) primary_request
+designated per piece and wait_queue stamped by the generator —
+ask selection is a lookup, never array order; an "Also waiting"
+strip names every other linked ask on the piece page; (3) the
+specimen is a first-class part of the decision record (scene /
+audio / text / compare), rendered inside the decision block —
+#53 carries the three v2 script texts, #54 the v5 clone-voice
+take (staged as a real file under assets/audio/) plus the v5
+script; publish and re-score verdicts carry their exact build's
+scene; #19 names its compare pair; (4) the Script drawer is
+versioned and opens on the version under judgment; (5)
+next_move.what for Hadi-owned pieces is GENERATED from the
+primary ask record — the gate sentence has one source; (6)
+#/ask/<id> for a not-ready ask lands on the question itself (a
+dedicated ask view), never the Bench landing; (7) ONE state
+dialect ships: production-state.json in the push tree is the
+stamped state extracted byte-for-byte from the built page.
+
+Visibility is now a pure filter over per-item CHECKS (checkbox
+doctrine): every ask carries journey_consistent,
+arrival_context_honored, specimen_present (where required),
+specimen_playable_phone (where required),
+decision_format_complete, dyslexia_format,
+links_land_on_question; every piece carries journey_consistent,
+voice_clone_verified, loudness_verified, fit_verified. Boxes
+default null; the only writer of PASSes is the checker
+(scripts/journey_check.py), which EXECUTES each box (headless
+journeys at phone size, record computations, file measurements)
+and records {result, at, against, evidence}. A PASS whose
+`against` hash no longer matches the artifact recomputes to
+stale at build time and the item unsurfaces. Items failing
+checks appear only in the not-ready area with their open boxes
+named. The #33 stamp contradiction is resolved at its source
+(the phone-size badge item was stale; measured pass, evidence
+recorded) and the class is now impossible — visibility has one
+source. #19's transcript_bearing is corrected (form A/B, one
+shared transcript). State surgery by hand only
+(backup: production-state.backup-2026-10-25-pre-b31-journey.json);
+build_info.py never ran. Staged only as b31; the main chat fires.
