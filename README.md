@@ -8,7 +8,7 @@ a derivative export of this package.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-1) — in-package editability PROVEN 2026-10-26 (JOB EDITABILITY-1: the scene carries an inspector over its own PLAN + word-decision data — inspect → edit → save → reopen, rendered change exact; ?render inert; re-verification of the layered bytes queued as PACKAGE-VERIFY-6). CLONE-VERIFIED audio, locked
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-1) and re-verified on the current head's bytes 2026-10-26 (JOB PACKAGE-VERIFY-6) — in-package editability (b) PROVEN on branch bytes (JOB PACKAGE-VERIFY-6, re-running the JOB EDITABILITY-1 gate against the committed layered scene: inspector joins PLAN ↔ word-decision records 1:1 on all 81 words; edit → save → reopen rendered the change exact at +200.0 px; no-overlay playback pixel-identical to the master scene; ?render fully inert; stripping the additive layer restores the master scene byte-for-byte). CLONE-VERIFIED audio, locked
   transcript, shipped scene, verified render.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
