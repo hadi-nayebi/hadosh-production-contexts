@@ -903,3 +903,50 @@ source. #19's transcript_bearing is corrected (form A/B, one
 shared transcript). State surgery by hand only
 (backup: production-state.backup-2026-10-25-pre-b31-journey.json);
 build_info.py never ran. Staged only as b31; the main chat fires.
+
+## Round 23 — b32: the three genuine residuals (2026-10-26 — JOB B32-RESIDUALS)
+
+The b31 live after-run decomposed its strict 145 fails and named
+exactly three genuine board residuals; this round closes them.
+
+(1) 19-AB5 — the #19 compare surface presented two raw specimens
+with no computed differences, which the DIFF-NATIVE rule bans.
+Piece records eo-ep2-v2/eo-ep2-v3 now carry `compare_diff` — four
+difference rows + a "same in both" line, every line computed from
+the two served scene files' own data (plate geometry + 32 chunks
++ 141 tokens/22 amber on the plate side; 56 phrases + 139 words,
+per-word start/size/place on the v4 side; word sequences identical
+after the two em-dash tokens; embedded narration waveforms
+correlate 0.9999 at the same 54.549 s). showCompare renders the
+panel (data-testid="cmp-diff") between the cells and the controls,
+on both compare branches.
+
+(2) E1 text walls ×8 (#27/#28/#31/#39/#41/#44/#53/#55) — decision
+texts over the 320-char single-block ceiling, byte-identical since
+the baseline. Fixed in the RENDERER only: chunkText() splits any
+decision text over the limit at sentence boundaries (then clause
+boundaries), every word verbatim and in order, rendered as sibling
+paragraph blocks (.dwhat/.dq/.dtext/.dcons/.drec/.dhow). No
+decision content was edited. Pre-measured board-wide: max rendered
+block 319 chars, zero unsplittable blocks, word-sequence equality
+asserted for every text. Note for gate consumers: a reader that
+extracts only the FIRST .dtext/.drec element of a card now reads
+the first paragraph — the full text is all present, in order, as
+sibling blocks.
+
+(3) #39's missing ambience demo — req-sfx-ambience is now
+specimen_required with two audio specimens. Option B is Ep.2
+exactly as it ships (voice + bed only), extracted from the
+delivered v4 file (sha 36c28eb2…), fire lines L1–L7 (0–26.95 s).
+Option A is the same passage with a fire ambience layer mixed at
+the DR-GAP-SFX proposal's −26 dB under the voice; the crackle is
+GENERATED for this demo (synthesized — no ambience stem exists in
+the record; the stems that exist are voice.wav + bed.wav) and the
+specimen label says so in plain words, on the surface. Calibrated:
+crackle RMS −43.43 dB against the passage's −17.43 dB span RMS,
+peaks ≤ −16.1 dBFS; A/B integrated loudness −14.41/−14.38 LUFS.
+The checker's audio probe now indexes per audio entry (an ask
+with two audio specimens probes each element, not the first
+twice). State surgery by hand only (backup:
+production-state.backup-2026-10-26-pre-b32.json); build_info.py
+never ran. Staged only as b32; the main chat fires.
