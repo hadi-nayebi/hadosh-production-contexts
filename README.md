@@ -16,7 +16,7 @@ this branch's words.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** phase 2 of 7 — metadata complete: architecture + style + question decided. The transcript consolidation follows.
+- **Stage:** phase 3 of 7 — transcript settled by consolidation; editor pass recorded; pause map measured. The scene follows.
 
 ## The idea
 
@@ -84,6 +84,21 @@ of those users rents the layer they use, and owns none of it).
   bridge / word layer / audio / decision layer / chrome), to be
   embodied in phase 4.
 
+
+## Transcript (phase 3 — settled)
+
+Settled by open consolidation (`transcript/consolidation.md`): the
+first draft's delivered text was weighed as Candidate A against a
+question-led Candidate B, line by line, against the objective,
+the architecture and the audience decided in phases 1–2. B failed
+on structure; A was adopted **as a conclusion, not a copy** — with
+two conditions recorded (fact currency; L5's length disposition).
+The settled text, windows and both word-count rulers are in
+`transcript/transcript.md`; the editor pass and the measured
+pause map are in `transcript/delivery.md`. Headline delivery
+facts: contiguous windows at report pace, exactly one designed
+silence (0.827 s, after the aphorism), navigation load 5.9%.
+
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
 Rulers for this branch, fixed now so later counts never move the
@@ -93,9 +108,10 @@ tokens of the settled transcript excluding standalone em-dash
 tokens; the transcript carries 84 mechanical tokens — both rulers
 stated in `transcript/transcript.md` when it lands).
 
-- **At this phase: 10 / 135 decided** — scaffold 10 / 10 (all
-  fields decided, each with rationale + source in
-  `metadata.json`); element and word layers not yet built.
+- **At this phase: 10 / 135 decided** — scaffold 10 / 10;
+  element and word layers not yet built. The settled transcript
+  is not part of the 135-field ruler (its words enter the count
+  when their per-word decisions land in phase 5).
 - **Open scaffold fields: none.**
 
 Alignment, in words: the branch now knows what this video is
