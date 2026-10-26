@@ -1,6 +1,6 @@
 # lesson1-poster — "Lesson 1 — The Harness, Poster Version" (Lessons — Agentic Literacy)
 
-**Stage: assembled package — PARTIAL (word decisions absent; element decisions complete): metadata + delivered transcript + decision records + published programme audio + shipped scene + published render in branch.** Package verification has not been run on this branch and is not claimed.
+**Stage: assembled package — PARTIAL (word decisions absent; element decisions complete): metadata + delivered transcript + decision records + published programme audio + shipped scene + published render in branch — end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-13): byte identity, coverage arithmetic (22/157; scaffold 7/15, elements 15/15, words 0/127), render re-measured (47.400 s; −14.89 LUFS / −1.05 dBTP — the published file’s own figures, exact against the script doc), scene play probe clean, word-layer absence verified against the workspace records, and the distinguishing records confirmed at their sources (transcript reconciliation word-for-word; publish_verdict and pair_verdict against the board record; accepted_exceptions empty against ledger §5 read directly in the departments repo).**
 
 This branch is one video's complete production package, in the repository's standard shape. The package describes the piece as it stands — and this piece stands in **one state**, which the package keeps plain:
 
