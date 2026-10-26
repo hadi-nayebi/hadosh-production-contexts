@@ -10,7 +10,7 @@ intro-v4 stands in one state: **an unbuilt script + a complete visual plan.** Th
 
 Scaffold fields 13/19 decided · element decisions 12/13 recorded with reasons · word decisions 0/195 (layer absent-by-development — named, not padded) · **total 25/227**.
 
-## Open fields, named (undecided decision fields — a coverage inventory, not a quality score)
+## Open fields, named (undecided decision fields — a coverage inventory, not an alignment score)
 
 - **academy_beat_wording** — **the owner's call (board Action #30)**: L12 as written calls the channel "the public front of Hadosh Academy" — the Evolution Plan's own phrase, with a façade-reading risk the draft itself flags (§6.1); the logged swap is "the video home of Hadosh Academy". *Blocker: Hadi's ear — the call already rides the board ask (req-intro-v4-academy-wording); recorded here in its true kind, not taken, not re-asked.*
 - **proposed_line** — **the owner's call (board Action #46)**: the visual plan's proposed "point your agent at it" line (22 spoken words; compact variant 14) — adopt {none / compact / full / full + the pre-logged L7 cut}, or not at all. The plan drafts it; the script file is deliberately unedited by it. *Blocker: Hadi's adoption call — and it gates the build: narration cannot lock until it lands (visual plan §6.2).*
