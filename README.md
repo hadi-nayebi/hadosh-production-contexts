@@ -18,7 +18,7 @@ verdict is this rebuild's reason to exist.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions lane
 - **Title:** What Is a Token?
-- **Stage:** phase 4 of 7 — scene.
+- **Stage:** phase 5 of 7 — decisions.
 
 ## The idea
 
@@ -68,6 +68,12 @@ narration's verb.
   defects found and fixed (word-gap physics, question-tile
   collision, cut overlap, counter centring, sub-label wrap,
   expansion placement), 9 frames re-shot and verified.
+- **P5 — decisions.** Every decision field of the package
+  recorded with its reason: generated from the scene's own PLAN,
+  **167 fields = 10 scaffold + 30 elements + 127 words (16
+  principals)**. The randomness register
+  (`decisions/randomness-register.md` at phase 7) names what
+  stays open — the owner's ear verdict above all.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
@@ -76,10 +82,13 @@ scaffold fields + the scene's elements + the settled transcript's
 spoken words** (spoken-word ruler: whitespace tokens excluding
 standalone em-dash tokens).
 
-- **At this phase: scaffold 10 / 10 decided; scene elements
-  30 / 30 recorded with homes and reasons;** the settled
-  transcript stands at 127 spoken words (their per-word
-  decisions are recorded at phase 5); the audio is decided at
-  phase 6 (five settled lines carry verifier-passed takes
-  facing the cryptographic reuse test; three synthesize fresh);
-  the render at phase 7.
+- **At this phase: 167 / 167 decision fields decided**
+  (10 scaffold + 30 elements + 127 words, 16 of them
+  principals) — computed, not asserted: the word count is the
+  settled transcript's spoken words, the element count is the
+  scene record's, and coverage closes only when every field
+  carries a recorded reason.
+- **Open, named:** the audio (phase 6 — five settled lines
+  carry verifier-passed takes facing the cryptographic reuse
+  test; three synthesize fresh), the render (phase 7), and the
+  register's open items (the owner's ear verdict first).
