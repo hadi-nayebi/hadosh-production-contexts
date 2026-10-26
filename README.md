@@ -8,13 +8,13 @@ a derivative export of this package.
 
 - **Piece:** wd-02 · flagship channel · Word Definitions
 - **Title:** What Is a Prompt?
-- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-3) — in-package editability absent, a named gap against the full deliverable criteria — CLONE-VERIFIED candidate audio, locked transcript, shipped scene (the v1 build, from script v3), verified clone render in-branch. The piece itself sits at board
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-3) — in-package editability absent, a named gap against the full deliverable criteria — CLONE-VERIFIED candidate audio, delivered transcript (NOT established — owner verdict 2026-10-26, see below), shipped scene (the v1 build, from script v3), verified clone render in-branch. The piece itself sits at board
   stage qc, unpublished.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 191 / 195**
-  - metadata scaffold: 7 / 11 fields decided (`metadata.json`)
+- **Decided / total decision fields: 190 / 195**
+  - metadata scaffold: 6 / 11 fields decided (`metadata.json`)
   - element decisions: 67 / 67 elements carry a record
     (`decisions/decisions.json` — 11 decision records; the scene
     DEC coverage header's figure — its classes name the 56 scene
@@ -70,3 +70,10 @@ with their acceptor and a revisability note.
 | `audio/` | Clone candidate programme audio + provenance | Pelican jobs (registered + L1 ICL) + the CLONE-VERIFIED registry entry + batch-1 take/fit records + the WD level-rule rebuild |
 | `scene/` | The shipped scene (v1 build), byte-identical + provenance | `files/short-wd02-prompt-v1-scene.html` (sha256 in `scene/scene.json`; board edition hash recorded beside it — the edition's bytes differ) |
 | `render/` | The verified clone render in-branch + verification measurements | `files/wd-02-clone-v1.mp4` (CLONE-VERIFIED); delivered guide render `files/short-wd02-prompt-v1.mp4` cited by hash |
+
+## Owner verdict (Hadi, 2026-10-26 — supersedes the transcript's settled status)
+
+- **Action #78 — style direction: Variant B.** Judging the exp-01 specimens (lines 1–3), Hadi picked the A59-grammar treatment: "more artistic" than the shipped family. The direction is adopted for this lane; the experiment record carries the verdict.
+- **The transcript is NOT established.** In his words, the transcript "is not very useful… this is not how I would describe what prompt is." The delivered text's definition is rejected as content; redevelopment of the transcript comes before any further build on this piece. This package's "locked/delivered transcript" wording records PROVENANCE (which text the shipped artifacts speak), not owner acceptance. The scaffold's `message` field is reopened accordingly (coverage below).
+- **Ear verdict on the clone render:** the lines 1–3 segment mixes voice character — it starts in one voice and shifts (the ICL-regenerated line audibly differs from the registered-voice takes) — and the clone reads "very unenergetic and very monotonic." The CLONE-VERIFIED stamp certifies the fit/verification standard (words, fit, loudness), not vocal consistency or energy; both defects are recorded here as owner findings. His direction: a better-developed transcript is what generates better audio with better intonation.
+- **Priority:** this piece is parked by the same ruling — effort goes to the more developed videos first.

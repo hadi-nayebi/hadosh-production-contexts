@@ -187,3 +187,7 @@ agreed evidence order, the next step is Hadi's judgment on the pair
 a variant is shipped. Confounds if ever uploaded: same piece, same
 audio, same length — the pair is matched on everything except the
 visual layer by construction.
+
+## Verdict (Hadi, 2026-10-26 — Action #78)
+
+**Variant B.** Hadi's words in substance: B is better, "more artistic." The A59-grammar direction is adopted for the Word Definitions lane. The same ruling found the piece's transcript not useful (not his description of what a prompt is) and its clone render mixed in voice character and monotonic — the piece is parked for transcript redevelopment; the direction verdict stands independently of the piece's state.
