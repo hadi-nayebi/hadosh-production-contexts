@@ -14,9 +14,7 @@ piece anywhere, so the word layer ships as a named absence
 other layer is complete. The partial state is the honest state;
 filling the word layer is new decision work, not assembly.
 
-- **Stage:** assembled package — PARTIAL: decisions layer
-  incomplete (word decisions absent) (package verification not
-  yet run)
+- **Stage:** assembled package — PARTIAL: decisions layer incomplete (word decisions absent); end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-5) — in-package editability absent, a named gap against the full deliverable criteria (file-level data→render linkage proven through the scene's timing data; this scene family carries no per-word positional data) — CLONE-VERIFIED candidate audio, locked transcript, shipped scene, verified clone render in-branch.
 - **Public:** https://youtube.com/shorts/7x-m1idAKPU — the public
   link still serves the guide-era render; the verified clone
   render in this package is built but unpublished.
