@@ -1723,5 +1723,423 @@ document.getElementById('ctxbtn').addEventListener('click', () => {
  ]
 }
 </script>
+<!-- ================================================================
+  PACKAGE EDITABILITY LAYER — soa-01 (JOB EDITABILITY-1)
+  Purely additive block: inserted once, immediately before </body>.
+  No shipped byte is modified; deleting this block restores the
+  shipped master exactly (sha256 8a84c408…).
+
+  Behaviour by mode:
+  - ?render        : layer is fully inert — shipped data only, so the
+                     house render pipeline can never be altered by a
+                     saved browser overlay.
+  - (no flag)      : if a saved edit overlay exists in localStorage it
+                     is applied to the scene's own PLAN + word-decision
+                     container before the first frame is shown; no UI.
+  - ?edit=1        : overlay applied + the package editor UI opens —
+                     inspect an object (click a rendered word, or pick
+                     it in the list), edit its OWNED data (PLAN cx/cy/
+                     key/start/end + the word-decision record's
+                     treatment and grounds.effect), Save (localStorage),
+                     Export (package-shaped files for commit-back),
+                     Reset (back to shipped data).
+  The layer never throws into playback: any layer error is contained
+  and, outside edit mode, silent.
+  ================================================================ -->
+<style id="pkg-editor-style">
+body.pkgedit .word { pointer-events: auto !important; cursor: pointer; }
+.word.pkg-sel { outline: 3px solid #ffb040; outline-offset: 3px; z-index: 60; }
+#pkgEd { position: fixed; top: 12px; right: 12px; width: 408px; max-height: calc(100vh - 24px);
+  overflow-y: auto; z-index: 9999; background: #171512; color: #ece7da;
+  border: 1px solid #4a4436; border-radius: 10px; padding: 14px 16px;
+  font-family: 'DejaVu Sans', sans-serif; font-size: 14px; line-height: 1.45;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6); }
+#pkgEd h3 { margin: 0 0 2px; font-size: 17px; color: #ffb040; }
+#pkgEd h4 { margin: 14px 0 6px; font-size: 14px; color: #ffb040; }
+#pkgEd .sub { color: #bdb49e; font-size: 12.5px; }
+#pkgEdStatus { margin: 8px 0; padding: 7px 9px; background: #201d17; border-radius: 6px; font-size: 13px; }
+#pkgEd button { background: #2b271e; color: #ece7da; border: 1px solid #57503e; border-radius: 6px;
+  padding: 6px 10px; font-size: 13px; cursor: pointer; margin: 2px 2px 2px 0; }
+#pkgEd button:hover { background: #3a3426; }
+#pkgEd button.primary { background: #6b4d12; border-color: #ffb040; color: #fff; }
+#pkgEd label { display: block; margin: 7px 0 2px; color: #bdb49e; font-size: 12.5px; }
+#pkgEd input[type=number], #pkgEd input[type=text] { width: 110px; background: #0f0e0c; color: #ece7da;
+  border: 1px solid #57503e; border-radius: 5px; padding: 5px 7px; font-size: 14px; }
+#pkgEd input[type=text].wide, #pkgEd textarea { width: calc(100% - 16px); }
+#pkgEd textarea { background: #0f0e0c; color: #ece7da; border: 1px solid #57503e; border-radius: 5px;
+  padding: 5px 7px; font-size: 13px; min-height: 52px; }
+#pkgEd .row2 { display: flex; gap: 12px; flex-wrap: wrap; }
+#pkgEd .grounds { background: #201d17; border-radius: 6px; padding: 8px 10px; font-size: 13px; }
+#pkgEd .grounds b { color: #ffb040; font-weight: normal; }
+#pkgEd .wlist { max-height: 240px; overflow-y: auto; border: 1px solid #37332a; border-radius: 6px; }
+#pkgEd .wlist button { display: block; width: 100%; text-align: left; border: none; border-bottom: 1px solid #26231c;
+  border-radius: 0; margin: 0; background: transparent; font-size: 13px; padding: 5px 9px; }
+#pkgEd .wlist button.sel { background: #6b4d12; color: #fff; }
+#pkgEd .eline { display: flex; gap: 6px; align-items: center; margin: 3px 0; font-size: 13px; }
+#pkgEd .eline .eid { flex: 1; color: #ece7da; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#pkgEd .eline input[type=number] { width: 74px; }
+#pkgEd .err { color: #ff8a7a; }
+#pkgEdErr { position: fixed; top: 12px; right: 12px; z-index: 9999; background: #3a1512; color: #ffd9d2;
+  border: 1px solid #ff8a7a; border-radius: 8px; padding: 10px 12px; max-width: 420px;
+  font-family: 'DejaVu Sans', sans-serif; font-size: 13px; }
+</style>
+<script id="pkg-editor">
+(function () {
+  "use strict";
+  var LSKEY = "soa-01-edits-v1";
+  var params = new URLSearchParams(location.search);
+  var EDIT = params.has("edit");
+  var RENDER = params.has("render");
+  function fail(err) {
+    try { console.error("[pkg-editor]", err); } catch (e) {}
+    if (EDIT) {
+      var d = document.createElement("div");
+      d.id = "pkgEdErr";
+      d.textContent = "Package editor failed to start: " + (err && err.message || err);
+      document.body.appendChild(d);
+    }
+  }
+  function init() {
+    if (RENDER) return; // the shipped render is immutable: layer inert
+    if (typeof PLAN === "undefined" || typeof renderAt !== "function") return;
+
+    /* ---- owned data handles (the package's own carriage) ---- */
+    var contEl = document.getElementById("word-decision-container");
+    var CONT = JSON.parse(contEl.textContent);           // word-decision records
+    var flat = [];                                        // PLAN order == container order
+    PLAN.phrases.forEach(function (ph, pi) {
+      ph.words.forEach(function (w, wi) { flat.push({ pi: pi, wi: wi, w: w }); });
+    });
+
+    /* ---- shipped baselines (for diffing + reset semantics) ---- */
+    function snapWords() {
+      return flat.map(function (f) {
+        return { cx: f.w.cx, cy: f.w.cy, key: !!f.w.key, start: f.w.start, end: f.w.end };
+      });
+    }
+    function snapElems() {
+      var o = {};
+      PLAN.elements.forEach(function (e) { o[e.id] = { on: e.on, off: e.off }; });
+      return o;
+    }
+    function snapDecs() {
+      return CONT.words.map(function (cw) {
+        return { treatment: cw.treatment, effect: (cw.grounds || {}).effect || "" };
+      });
+    }
+    var baseW = snapWords(), baseE = snapElems(), baseD = snapDecs();
+
+    /* ---- overlay: load + apply ---- */
+    function loadOverlay() {
+      try {
+        var raw = localStorage.getItem(LSKEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+    function syncSpan(f) {
+      var span = PLAN.phrases[f.pi]._els[f.wi];
+      if (!span) return;
+      span.style.left = f.w.cx + "px";
+      span.style.top = f.w.cy + "px";
+      span.style.color = f.w.key ? "#ffb040" : "#e9e5da";
+    }
+    function applyOverlay(ov) {
+      if (!ov) return;
+      if (ov.planWords) Object.keys(ov.planWords).forEach(function (k) {
+        var f = flat[+k - 1]; if (!f) return;
+        Object.assign(f.w, ov.planWords[k]); syncSpan(f);
+      });
+      if (ov.planElements) Object.keys(ov.planElements).forEach(function (id) {
+        var e = PLAN.elements.find(function (x) { return x.id === id; });
+        if (e) Object.assign(e, ov.planElements[id]);
+      });
+      if (ov.decisions) Object.keys(ov.decisions).forEach(function (k) {
+        var cw = CONT.words[+k - 1]; if (!cw) return;
+        var d = ov.decisions[k];
+        if (typeof d.treatment === "string") cw.treatment = d.treatment;
+        if (typeof d.effect === "string") { cw.grounds = cw.grounds || {}; cw.grounds.effect = d.effect; }
+      });
+      try { renderAt(audio.currentTime); } catch (e) {}
+    }
+    function currentOverlay() {
+      var ov = { version: 1, piece: "soa-01", savedAt: new Date().toISOString(),
+                 planWords: {}, planElements: {}, decisions: {} };
+      flat.forEach(function (f, idx) {
+        var b = baseW[idx], d = {};
+        ["cx", "cy", "key", "start", "end"].forEach(function (k) {
+          var cur = k === "key" ? !!f.w[k] : f.w[k];
+          if (cur !== b[k]) d[k] = cur;
+        });
+        if (Object.keys(d).length) ov.planWords[String(idx + 1)] = d;
+      });
+      PLAN.elements.forEach(function (e) {
+        var b = baseE[e.id], d = {};
+        if (e.on !== b.on) d.on = e.on;
+        if (e.off !== b.off) d.off = e.off;
+        if (Object.keys(d).length) ov.planElements[e.id] = d;
+      });
+      CONT.words.forEach(function (cw, idx) {
+        var b = baseD[idx], d = {};
+        if (cw.treatment !== b.treatment) d.treatment = cw.treatment;
+        var eff = (cw.grounds || {}).effect || "";
+        if (eff !== b.effect) d.effect = eff;
+        if (Object.keys(d).length) ov.decisions[String(idx + 1)] = d;
+      });
+      if (!Object.keys(ov.planWords).length) delete ov.planWords;
+      if (!Object.keys(ov.planElements).length) delete ov.planElements;
+      if (!Object.keys(ov.decisions).length) delete ov.decisions;
+      return ov;
+    }
+    function overlayEmpty(ov) {
+      return !ov.planWords && !ov.planElements && !ov.decisions;
+    }
+
+    var saved = loadOverlay();
+    if (saved) applyOverlay(saved);
+
+    /* ---- test/automation handle (also the pattern's programmatic API) ---- */
+    window.__pkgEditor = {
+      key: LSKEY, flat: flat, cont: CONT,
+      currentOverlay: currentOverlay,
+      applyOverlay: applyOverlay,
+      buildWordDecisions: function () {
+        var decided = CONT.words.filter(function (cw) {
+          return typeof cw.treatment === "string" && cw.treatment.trim().length;
+        }).length;
+        return {
+          piece: CONT.piece, doctrine: CONT.doctrine, source: CONT.source,
+          coverage: { decided: decided, total: CONT.words.length,
+                      pct: CONT.words.length ? +(100 * decided / CONT.words.length).toFixed(1) : 0 },
+          words: CONT.words,
+          provenance: {
+            extracted_from: "in-package editor export (scene/index.html, ?edit=1) — the shipped word-decision container with editor edits applied",
+            base: "shipped word-decision container in this scene file (branch video/soa-01)",
+            exported_at: new Date().toISOString()
+          }
+        };
+      }
+    };
+
+    if (!EDIT) return; // normal playback: overlay (if any) applied, no UI
+
+    /* ================= EDIT MODE UI ================= */
+    document.body.classList.add("pkgedit");
+    var panel = document.createElement("div");
+    panel.id = "pkgEd";
+    panel.innerHTML =
+      "<h3>Package editor — soa-01</h3>" +
+      "<div class='sub'>Edit mode (?edit=1). You are editing this package's OWN data: " +
+      "the scene's PLAN (positions, timings, key flags, element windows) and its word-decision " +
+      "records (treatments + grounds). Reasoning: each word's grounds show below; element Decision " +
+      "Records live in the scene's own context panel (button at the foot of the page).</div>" +
+      "<div id='pkgEdStatus'></div>" +
+      "<div>" +
+      "<button id='pkgEdSave' class='primary'>Save</button>" +
+      "<button id='pkgEdExpW'>Export word-decisions.json</button>" +
+      "<button id='pkgEdExpP'>Export plan-edits.json</button>" +
+      "<button id='pkgEdReset'>Reset to shipped data</button>" +
+      "</div>" +
+      "<h4>Word inspector</h4>" +
+      "<div id='pkgEdWordHead' class='sub'>Click a word on the stage, or pick one in the list below.</div>" +
+      "<div id='pkgEdGrounds' class='grounds' style='display:none'></div>" +
+      "<div id='pkgEdForm' style='display:none'>" +
+      "<div class='row2'>" +
+      "<span><label>cx (px)</label><input type='number' id='pkgF_cx' step='1'></span>" +
+      "<span><label>cy (px)</label><input type='number' id='pkgF_cy' step='1'></span>" +
+      "<span><label>key (accent + pop)</label><input type='checkbox' id='pkgF_key'></span>" +
+      "</div>" +
+      "<div class='row2'>" +
+      "<span><label>start (s)</label><input type='number' id='pkgF_start' step='0.01'></span>" +
+      "<span><label>end (s)</label><input type='number' id='pkgF_end' step='0.01'></span>" +
+      "<span><label>&nbsp;</label><button id='pkgEdSeek'>▶ Seek to word</button></span>" +
+      "</div>" +
+      "<label>treatment (word-decision record)</label>" +
+      "<input type='text' class='wide' id='pkgF_treatment'>" +
+      "<label>grounds — effect (word-decision record)</label>" +
+      "<textarea id='pkgF_effect'></textarea>" +
+      "<div style='margin-top:8px'><button id='pkgEdApply' class='primary'>Apply change</button> " +
+      "<span id='pkgEdMsg' class='sub'></span></div>" +
+      "</div>" +
+      "<h4>Words (81) — click to inspect</h4>" +
+      "<div class='wlist' id='pkgEdList'></div>" +
+      "<h4>Element windows (PLAN.elements)</h4>" +
+      "<div class='sub'>On/off times the renderer obeys. The reasoning for each element class is in " +
+      "the Decision Records (context panel, foot of page).</div>" +
+      "<div id='pkgEdElems'></div>" +
+      "<div style='margin-top:6px'><button id='pkgEdApplyElems'>Apply element times</button></div>";
+    document.body.appendChild(panel);
+
+    var statusEl = document.getElementById("pkgEdStatus");
+    function setStatus() {
+      var ov = currentOverlay();
+      var savedOv = loadOverlay();
+      if (!overlayEmpty(ov)) {
+        var sameAsSaved = savedOv && JSON.stringify(ov.planWords || {}) === JSON.stringify(savedOv.planWords || {}) &&
+          JSON.stringify(ov.planElements || {}) === JSON.stringify(savedOv.planElements || {}) &&
+          JSON.stringify(ov.decisions || {}) === JSON.stringify(savedOv.decisions || {});
+        statusEl.innerHTML = sameAsSaved
+          ? "Saved " + (savedOv.savedAt || "") + " — edits are stored in this browser (localStorage) and applied on every open. Export + commit back to make them permanent."
+          : "<span class='err'>Unsaved changes.</span> Save stores them in this browser; Export produces the package files for commit-back.";
+      } else {
+        statusEl.textContent = savedOv
+          ? "Live data matches the saved overlay."
+          : "Shipped data — no edits saved in this browser.";
+      }
+    }
+
+    /* ---- word list ---- */
+    var listEl = document.getElementById("pkgEdList");
+    var rowBtns = [];
+    CONT.words.forEach(function (cw, idx) {
+      var b = document.createElement("button");
+      b.textContent = "#" + cw.i + "  " + cw.w + "  · line " + cw.line + " · " + (cw.treatment || "").split("—")[0].trim();
+      b.addEventListener("click", function () { selectWord(idx); });
+      listEl.appendChild(b); rowBtns.push(b);
+    });
+
+    /* ---- inspector ---- */
+    var sel = -1;
+    var headEl = document.getElementById("pkgEdWordHead");
+    var groundsEl = document.getElementById("pkgEdGrounds");
+    var formEl = document.getElementById("pkgEdForm");
+    var msgEl = document.getElementById("pkgEdMsg");
+    function clearSelSpans() {
+      document.querySelectorAll(".word.pkg-sel").forEach(function (s) { s.classList.remove("pkg-sel"); });
+      rowBtns.forEach(function (b) { b.classList.remove("sel"); });
+    }
+    function selectWord(idx) {
+      sel = idx;
+      clearSelSpans();
+      var f = flat[idx], cw = CONT.words[idx];
+      var span = PLAN.phrases[f.pi]._els[f.wi];
+      if (span) span.classList.add("pkg-sel");
+      rowBtns[idx].classList.add("sel");
+      rowBtns[idx].scrollIntoView({ block: "nearest" });
+      headEl.textContent = "Word #" + cw.i + " — “" + cw.w + "” · line " + cw.line +
+        " · phrase " + (f.pi + 1) + " · shipped cx " + baseW[idx].cx + ", cy " + baseW[idx].cy;
+      var g = cw.grounds || {};
+      groundsEl.style.display = "block";
+      groundsEl.innerHTML = "<b>Reasoning (decision record)</b><br>" +
+        "Treatment: " + escapeHtml(cw.treatment || "") + "<br>" +
+        "Tempo: " + escapeHtml(g.tempo || "") + "<br>" +
+        "Effect: " + escapeHtml(g.effect || "") + "<br>" +
+        "Story function: " + escapeHtml(g.story_function || "");
+      formEl.style.display = "block";
+      document.getElementById("pkgF_cx").value = f.w.cx;
+      document.getElementById("pkgF_cy").value = f.w.cy;
+      document.getElementById("pkgF_key").checked = !!f.w.key;
+      document.getElementById("pkgF_start").value = f.w.start;
+      document.getElementById("pkgF_end").value = f.w.end;
+      document.getElementById("pkgF_treatment").value = cw.treatment || "";
+      document.getElementById("pkgF_effect").value = g.effect || "";
+      msgEl.textContent = "";
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    /* click a rendered word on the stage to inspect it */
+    document.getElementById("stage").addEventListener("click", function (e) {
+      var t = e.target;
+      if (!t || !t.classList || !t.classList.contains("word")) return;
+      for (var idx = 0; idx < flat.length; idx++) {
+        var f = flat[idx];
+        if (PLAN.phrases[f.pi]._els[f.wi] === t) { selectWord(idx); break; }
+      }
+    });
+    document.getElementById("pkgEdSeek").addEventListener("click", function () {
+      if (sel < 0) return;
+      var f = flat[sel];
+      try { audio.currentTime = f.w.start; } catch (e) {}
+      renderAt(Math.min(f.w.start + 0.3, f.w.end));
+    });
+    document.getElementById("pkgEdApply").addEventListener("click", function () {
+      if (sel < 0) return;
+      var f = flat[sel], cw = CONT.words[sel];
+      var cx = parseFloat(document.getElementById("pkgF_cx").value);
+      var cy = parseFloat(document.getElementById("pkgF_cy").value);
+      var st = parseFloat(document.getElementById("pkgF_start").value);
+      var en = parseFloat(document.getElementById("pkgF_end").value);
+      if (![cx, cy, st, en].every(isFinite)) { msgEl.innerHTML = "<span class='err'>Numbers only.</span>"; return; }
+      if (!(st >= 0 && en > st)) { msgEl.innerHTML = "<span class='err'>Need 0 ≤ start &lt; end.</span>"; return; }
+      f.w.cx = Math.round(cx); f.w.cy = Math.round(cy);
+      f.w.key = document.getElementById("pkgF_key").checked;
+      f.w.start = st; f.w.end = en;
+      cw.treatment = document.getElementById("pkgF_treatment").value;
+      cw.grounds = cw.grounds || {};
+      cw.grounds.effect = document.getElementById("pkgF_effect").value;
+      syncSpan(f);
+      try { renderAt(audio.currentTime); } catch (e) {}
+      rowBtns[sel].textContent = "#" + cw.i + "  " + cw.w + "  · line " + cw.line + " · " + (cw.treatment || "").split("—")[0].trim();
+      msgEl.textContent = "Applied (not yet saved).";
+      setStatus();
+    });
+
+    /* ---- elements ---- */
+    var elemsEl = document.getElementById("pkgEdElems");
+    var elemInputs = {};
+    PLAN.elements.forEach(function (e) {
+      var row = document.createElement("div");
+      row.className = "eline";
+      row.innerHTML = "<span class='eid'></span>";
+      row.querySelector(".eid").textContent = e.id;
+      var on = document.createElement("input"); on.type = "number"; on.step = "0.01"; on.value = e.on;
+      var off = document.createElement("input"); off.type = "number"; off.step = "0.01"; off.value = e.off;
+      row.appendChild(on); row.appendChild(off);
+      elemsEl.appendChild(row);
+      elemInputs[e.id] = { on: on, off: off };
+    });
+    document.getElementById("pkgEdApplyElems").addEventListener("click", function () {
+      var bad = null;
+      PLAN.elements.forEach(function (e) {
+        var on = parseFloat(elemInputs[e.id].on.value);
+        var off = parseFloat(elemInputs[e.id].off.value);
+        if (!isFinite(on) || !isFinite(off) || !(off > on)) { bad = e.id; return; }
+        e.on = on; e.off = off;
+      });
+      if (bad) { statusEl.innerHTML = "<span class='err'>Element " + bad + ": need on &lt; off.</span>"; return; }
+      try { renderAt(audio.currentTime); } catch (e2) {}
+      setStatus();
+    });
+
+    /* ---- save / export / reset ---- */
+    function download(name, text) {
+      var blob = new Blob([text], { type: "application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+    }
+    document.getElementById("pkgEdSave").addEventListener("click", function () {
+      var ov = currentOverlay();
+      try {
+        if (overlayEmpty(ov)) localStorage.removeItem(LSKEY);
+        else localStorage.setItem(LSKEY, JSON.stringify(ov));
+      } catch (e) {
+        statusEl.innerHTML = "<span class='err'>localStorage unavailable in this context (" +
+          escapeHtml(e.message) + ") — use Export; the exported files are the save path.</span>";
+        return;
+      }
+      setStatus();
+    });
+    document.getElementById("pkgEdExpW").addEventListener("click", function () {
+      download("word-decisions.json", JSON.stringify(window.__pkgEditor.buildWordDecisions(), null, 1));
+    });
+    document.getElementById("pkgEdExpP").addEventListener("click", function () {
+      var ov = currentOverlay();
+      ov._about = "PLAN commit-back overlay for scene/index.html (soa-01). planWords keys are the package's word index i (1-based; PLAN flat order == word-decision container order). Apply each field onto the PLAN literal's word, and planElements by element id; apply `decisions` onto decisions/word-decisions.json + the in-scene word-decision container (treatment / grounds.effect). After applying, clear this browser's saved overlay (Reset) and re-run the package verification.";
+      download("plan-edits.json", JSON.stringify(ov, null, 1));
+    });
+    document.getElementById("pkgEdReset").addEventListener("click", function () {
+      try { localStorage.removeItem(LSKEY); } catch (e) {}
+      location.reload();
+    });
+
+    setStatus();
+  }
+  try { init(); } catch (e) { fail(e); }
+})();
+</script>
+
 </body>
 </html>
