@@ -18,7 +18,7 @@ verdict is this rebuild's reason to exist.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions lane
 - **Title:** What Is a Token?
-- **Stage:** phase 3 of 7 — transcript consolidation.
+- **Stage:** phase 4 of 7 — scene.
 
 ## The idea
 
@@ -50,35 +50,36 @@ narration's verb.
   bookend); style decided (A59 spine + cinematic typography for
   the number + 2D cut). **Scaffold 10/10.**
 - **P3 — transcript consolidation.** Candidate A drafted fresh
-  from the architecture FIRST (9 lines / 131 words — full-sentence
-  hook, plain question, count before mechanism, split close);
-  Candidate B (this morning's redevelopment i3) weighed second
-  with provenance; the delivered text read LAST as evidence only.
-  **Settled: 8 lines / 127 spoken words** — B contributes six
-  lines whole, A wins the question's form ("So what is one
-  token?" — the "one" that welds it to the payoff) and the
-  stakes' restored ending ("at once"); the convergence is stated
-  honestly in the consolidation (§5): the owner's complaint was
-  never the definition, and the rebuild's divergence lives where
-  his verdict pointed. Editor pass run; narrative architecture
-  recorded as design (§6); pause map sized (1.30 s think beat;
-  0.90 s suspenses before the count and the return; 1.00 s
-  concept shift). The owner's text rule recorded and checked:
-  the word banned from synthesis text occurs zero times.
+  from the architecture first; Candidate B weighed second with
+  provenance; the delivered text read last as evidence only.
+  **Settled: 8 lines / 127 spoken words**; editor pass run;
+  pause map sized (1.30 s think beat; 0.90 s suspenses; 1.00 s
+  concept shift). The owner's text rule checked: zero
+  occurrences of the banned word.
+- **P4 — scene.** One self-contained HTML file (1080×1920,
+  deterministic `renderAt(t)`, `?edit=1` inspector) authored to
+  the compartment prescription: the monument (ghost 3.2 + gold
+  QUADRILLION), the question tile inside the receded number, the
+  persistent token piece (defined → scanned → riding the
+  stream), the public cut of "unhappiness", the performed count
+  (five tiles, the fifth the full stop), the stakes grid, the
+  stream, the silent bridge. **30 elements**, each with a home
+  and a reason in `scene/scene.json`. QA: 16 frames viewed, six
+  defects found and fixed (word-gap physics, question-tile
+  collision, cut overlap, counter centring, sub-label wrap,
+  expansion placement), 9 frames re-shot and verified.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
 Rulers (fixed at phase 1): **decision fields = 10 metadata
-scaffold fields + the scene's elements (counted at the scene
-phase) + the settled transcript's spoken words** (spoken-word
-ruler: whitespace tokens excluding standalone em-dash tokens).
+scaffold fields + the scene's elements + the settled transcript's
+spoken words** (spoken-word ruler: whitespace tokens excluding
+standalone em-dash tokens).
 
-- **At this phase: scaffold 10 / 10 decided;** the settled
+- **At this phase: scaffold 10 / 10 decided; scene elements
+  30 / 30 recorded with homes and reasons;** the settled
   transcript stands at 127 spoken words (their per-word
-  decisions are recorded at phase 5); the scene, element and
-  audio layers are not yet built.
-- **Open, named:** the scene (phase 4), the element and word
-  decisions (phase 5), the audio (phase 6 — five settled lines
-  carry verifier-passed takes from the candidate's job and face
-  the cryptographic reuse test; three lines synthesize fresh),
-  the render (phase 7).
+  decisions are recorded at phase 5); the audio is decided at
+  phase 6 (five settled lines carry verifier-passed takes
+  facing the cryptographic reuse test; three synthesize fresh);
+  the render at phase 7.
