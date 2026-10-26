@@ -18,7 +18,7 @@ verdict is this rebuild's reason to exist.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions lane
 - **Title:** What Is a Token?
-- **Stage:** phase 6 of 7 — audio.
+- **Render:** `render/wd-01-rebuild.mp4` — 57.07 s, 1080×1920.
 
 ## The idea
 
@@ -40,40 +40,64 @@ narration's verb.
 > **Teach that a token is the chunk of text a machine counts —
 > until the quadrillion makes sense.** (17 words)
 
-## Where the branch stands
+## The journey (this branch's phases)
 
-- **P1 — metadata: idea + objective.** Objective, message and
-  audience decided; the rest of the scaffold OPEN with routes.
+- **P1 — metadata: idea + objective.** The lane's purpose, the
+  owner's structure, and the audience (the chat-AI user who
+  keeps meeting the word "token" and assumes it means "word").
+  Objective, message and audience decided; the rest of the
+  scaffold opened with routes.
 - **P2 — architecture + style + question.** Eight moves in the
-  owner's bookend; narrative architecture designed (promise /
-  motivated transitions / SCALE → UNIT → SCALE arc / recall by
-  bookend); style decided (A59 spine + cinematic typography for
-  the number + 2D cut). **Scaffold 10/10.**
+  owner's bookend; the narrative architecture designed on
+  purpose (opening promise, motivated transitions, SCALE →
+  UNIT → SCALE arc, recall by bookend); style decided (A59
+  spine — one persistent token piece; cinematic typography
+  rationed to the number; 2D graphics for the cut; whiteboard
+  weighed and rejected). **Scaffold 10/10.**
 - **P3 — transcript consolidation.** Candidate A drafted fresh
-  from the architecture first; Candidate B weighed second with
-  provenance; the delivered text read last as evidence only.
-  **Settled: 8 lines / 127 spoken words**; editor pass run;
-  pause map sized (1.30 s think beat; 0.90 s suspenses; 1.00 s
-  concept shift). The owner's text rule checked: zero
-  occurrences of the banned word.
-- **P4 — scene.** One self-contained HTML file (1080×1920,
-  deterministic `renderAt(t)`, `?edit=1` inspector) authored to
-  the compartment prescription: the monument (ghost 3.2 + gold
-  QUADRILLION), the question tile inside the receded number, the
-  persistent token piece (defined → scanned → riding the
-  stream), the public cut of "unhappiness", the performed count
-  (five tiles, the fifth the full stop), the stakes grid, the
-  stream, the silent bridge. **30 elements**, each with a home
-  and a reason in `scene/scene.json`. QA: 16 frames viewed, six
-  defects found and fixed (word-gap physics, question-tile
-  collision, cut overlap, counter centring, sub-label wrap,
-  expansion placement), 9 frames re-shot and verified.
-- **P5 — decisions.** Every decision field of the package
-  recorded with its reason: generated from the scene's own PLAN,
-  **167 fields = 10 scaffold + 30 elements + 127 words (16
-  principals)**. The randomness register
-  (`decisions/randomness-register.md` at phase 7) names what
-  stays open — the owner's ear verdict above all.
+  from the architecture FIRST (full-sentence hook, plain
+  question, count before mechanism, split close); Candidate B
+  (this morning's redevelopment draft, built under the owner's
+  structure direction) weighed second with provenance; the
+  delivered text read LAST as evidence only. **Settled: 8
+  lines / 127 spoken words** — B contributes six lines whole;
+  A wins the question's form ("So what is one token?" — the
+  "one" the payoff answers) and the stakes' restored ending
+  ("at once"); the convergence is stated honestly in the
+  consolidation (§5). Editor pass run; pause map sized from
+  the doctrine's classes (1.30 s think beat; 0.90 s suspenses;
+  1.00 s concept shift). The owner's text rule recorded and
+  checked: the word banned from synthesis text occurs zero
+  times.
+- **P4 — scene.** One self-contained HTML file (deterministic
+  `renderAt(t)`, `?edit=1` inspector): the monument, the
+  question inside the receded number, the persistent token
+  piece, the public cut of "unhappiness", the performed count
+  (five tiles; the fifth is the full stop), the stakes grid,
+  the stream, the silent bridge. **30 elements**, each with a
+  home and a reason. QA: 16 frames viewed, six defects found
+  and fixed, 9 frames re-shot and verified.
+- **P5 — decisions.** All **167 decision fields** recorded
+  with reasons (10 scaffold + 30 elements + 127 words, 16 of
+  them principals), generated from the scene's own PLAN so the
+  record and the file cannot drift.
+- **P6 — audio.** Five lines entered by the cryptographic
+  reuse test (settled text byte-identical to verifier-passed
+  takes; file hashes verified); three lines synthesized fresh
+  in one registered-mode job — including the count line, whose
+  earlier audio never qualified (take 1 passed at ASR 1.0; no
+  ICL anywhere, so one voice character throughout). Every line
+  fits at atempo 1.000; programme over the piece's own
+  continuous bed, mastered to −14.45 LUFS / TP −1.40.
+- **P7 — render + verification + state** (this phase). The
+  render was made from this branch's files only and verified
+  on the delivered file; two build defects were caught by the
+  verification itself and corrected as recorded events (a
+  first assembly's stem placement, caught by the onset probe;
+  an AAC true-peak overshoot, corrected with headroom). The
+  divergence summary (`render/divergence-summary.md`) states
+  how this build differs from the first draft, decision by
+  decision — and where it deliberately converges, and why.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
@@ -82,23 +106,12 @@ scaffold fields + the scene's elements + the settled transcript's
 spoken words** (spoken-word ruler: whitespace tokens excluding
 standalone em-dash tokens).
 
-- **At this phase: 167 / 167 decision fields decided**
-  (10 scaffold + 30 elements + 127 words, 16 of them
-  principals) — computed, not asserted: the word count is the
-  settled transcript's spoken words, the element count is the
-  scene record's, and coverage closes only when every field
-  carries a recorded reason.
-- **P6 — audio.** Decided line by line: five lines passed the
-  cryptographic reuse test (settled text byte-identical to a
-  verifier-passed take's requested text; the take files hash to
-  the source job's records) — L1, L3, L4, L7, L8. Three lines
-  synthesized fresh in one registered-mode job (seed 7101):
-  L2 (the rewritten question), L6 (the restored "at once") and
-  L5 — the count, whose earlier audio never qualified; its
-  take 1 passed at ASR 1.0, no ICL needed, so all eight lines
-  carry the one registered voice character. Every line fits at
-  atempo 1.000. Programme over the piece's own continuous bed,
-  mastered to **−14.45 LUFS / TP −1.40 dBTP** (the delivered MP4 measures −14.47 / −1.28 — phase 7)
-  (`audio/audio.json` carries the proofs and the chain).
-- **Open, named:** the render (phase 7) and the register's
-  open items (the owner's ear verdict first).
+- **167 / 167 decision fields decided** (10 scaffold + 30
+  elements + 127 words, 16 of them principals).
+- **Open items** live in `decisions/randomness-register.md` —
+  first of them the **owner's ear verdict**: every line is
+  verifier-passed, fitted and mastered, and none of that
+  certifies how the clone sounds across the piece. Also open:
+  the owner's transcript verdict, the word-timing derivation
+  caveat (±~100 ms), the figure's live value, the bridge
+  target's own rebuild, lane furniture.
