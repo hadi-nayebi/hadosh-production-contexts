@@ -18,8 +18,8 @@ a derivative export of this package.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 146 / 150**
-  - metadata scaffold: 6 / 10 fields decided (`metadata.json`)
+- **Decided / total decision fields: 149 / 150**
+  - metadata scaffold: 9 / 10 fields decided (`metadata.json`)
   - element decisions: 39 / 39 elements carry a record
     (`decisions/decisions.json` — 8 decision records; the scene
     DEC coverage header's figure — its classes' numbered entries
@@ -39,18 +39,31 @@ a derivative export of this package.
     misconception as a phase-0 decision; the board's phase-0
     item stands pending (the misconception is performed at L2,
     never named as an audience record)
-  - `delivery_structure` — no pause map / delivery-pass record
-    exists for this piece; the build's gaps are build facts,
-    not per-gap decisions
-  - `scene_decomposition` — the scene ships as one self-contained
-    file; splitting it is a future, separately recorded decision
-  - `transcript_line_divergence` — the script of record's table
-    and the board transcript state 7 lines; the delivered scene
-    speaks 6 (the "directions" line absent, the close
-    rewritten). The reconciliation audit records the absence as
-    recorded nowhere before the audit; the script doc's own i2
-    note and the scene's DR-SCRIPT stand beside that finding,
-    unreconciled. Full account in `transcript/transcript.md`
+
+Finishing decisions, 2026-10-26 (JOB FINISH-FIELDS-1 — dated
+finishing decisions, recorded as such, not backfilled history;
+see `metadata.json` for the full values, reasoning and evidence):
+  - `delivery_structure` — DECIDED as the delivery structure of
+    record, measured off the delivered artifact: contiguous locked
+    line windows (question → correction → contrast → live count
+    → four-tile stakes → restated definition), the C-05 phrase
+    system, the silent 3.0 s bridge. No separate pause-map pass
+    was ever performed; a future retrofit amends this by a new
+    dated decision.
+  - `scene_decomposition` — DECIDED as the compartment inventory
+    the shipped file itself embodies (container / per-line
+    compartments / bridge / word-animation layer / audio /
+    in-page decision layer incl. the standalone word-decision
+    container / player chrome); the scene stays one
+    self-contained file (DR-CONTAINER, H-01).
+  - `transcript_line_divergence` — CLOSED as a recorded
+    reconciliation: the delivered six lines govern the delivered
+    artifact (scene PLAN + voice registry kit + DR-SCRIPT agree);
+    the script's i2 note already recorded the deletion/absorption
+    the draft table never reflected. The script table and board
+    transcript themselves are NOT updated by this closure — that
+    remains a documentation repair outside this package. Full
+    account stays in `transcript/transcript.md`.
 
 Every decided field carries a rationale and a named source
 (research / agent reasoning / Hadi's taste). Open fields stay
