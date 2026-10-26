@@ -25,8 +25,8 @@ governing records.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 186 / 190**
-  - metadata scaffold: 8 / 12 fields decided (`metadata.json`)
+- **Decided / total decision fields: 187 / 191**
+  - metadata scaffold: 9 / 13 fields decided (`metadata.json`)
   - element decisions: 18 / 18 elements carry a record
     (`decisions/decisions.json` — the 2026-10-23 context audit's
     inventory, carried verbatim)
