@@ -16,7 +16,7 @@ this branch's words.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** phase 4 of 7 — scene compartmentalized: every beat has a home. Visual details and word decisions follow.
+- **Stage:** phase 5 of 7 — every visual detail has a record and every word a decision; the randomness register names what remains. Audio and the render derivative follow.
 
 ## The idea
 
@@ -114,6 +114,24 @@ and what changes around the code in this branch (authority moves
 to `decisions/`; the decided narration lives in `audio/`; phase 7
 splices the editor layer).
 
+
+## Visual details (phase 5 — decided)
+
+- `decisions/decisions.json` — 11 element decision records
+  covering all 44 scene elements (script · audio · word
+  placement · width guarantee · timing · container · title ·
+  cover · role · bridge · bed extension), each with its
+  alternatives and the evidence that would change it. One accepted
+  exception rides with them (phrase #9's bound-capped hold).
+- `decisions/word-decisions.json` — all 81 spoken words of the
+  settled transcript carry a treatment or a deliberate as-is, with
+  grounds computed from each word's own measured timing and
+  phrase role (9 key pops, 72 deliberate as-is).
+- `decisions/randomness-register.md` — what the counts cannot
+  see, named: the lane style verdict (owner), fact currency,
+  derivative assembly, audience confidence, onset drift, editor
+  limits — each with its removal route.
+
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
 Rulers for this branch, fixed now so later counts never move the
@@ -123,15 +141,15 @@ tokens of the settled transcript excluding standalone em-dash
 tokens; the transcript carries 84 mechanical tokens — both rulers
 stated in `transcript/transcript.md` when it lands).
 
-- **At this phase: 10 / 135 decided** — scaffold 10 / 10;
-  element and word layers not yet built. The settled transcript
-  is not part of the 135-field ruler (its words enter the count
-  when their per-word decisions land in phase 5).
-- **Open scaffold fields: none.**
+- **At this phase: 135 / 135 counted fields decided** — scaffold
+  10 / 10 · elements 44 / 44 · words 81 / 81.
+- **Open counted fields: none.** Open items beyond the counted
+  rulers live in the randomness register (R-1…R-6), named with
+  their routes — a full count is not a claim of zero randomness.
 
-Alignment, in words: the branch now knows what this video is
-for, what it says, who it talks to, and how it is built — form,
-style, delivery and destination are all decided. What does not
-exist yet is the thing itself: no transcript has been settled in
-this branch, and no scene, word or sound has been given a home.
-That is phases 3–6, in order.
+Alignment, in words: every decision this branch counts has now
+been made and reasoned in the open — what the video is for, what
+it says, how it looks, word by word. What remains is sound and
+consequence: the voice record and the render derivative (phase
+6), the means to edit all of it (phase 7), and the six named
+items in the randomness register, none of which hides.
