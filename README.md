@@ -14,7 +14,7 @@ a derivative export of this package.
   (clone upgrade Tier B) and carries the catalogue's richest open
   record: ten named open fields, two of them accepted by nobody.
 
-## The two metrics (computed from this package)
+## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
 - **Decided / total decision fields: 166 / 176**
   - metadata scaffold: 7 / 17 fields decided (`metadata.json`)
@@ -23,7 +23,7 @@ a derivative export of this package.
     build record)
   - word decisions: 139 / 139 words carry a recorded treatment or
     a deliberate as-is (`decisions/word-decisions.json`)
-- **Open fields (randomness remaining), named:**
+- **Open fields, named** (undecided decision fields — a coverage inventory; it does not by itself measure the rendered result):
   - `banned_formula_L12` — the locked narration speaks the banned
     formula at L12 (≈44.85–49.94 s); ship named / hold / trim is
     Action #57, and **nobody has accepted it**
