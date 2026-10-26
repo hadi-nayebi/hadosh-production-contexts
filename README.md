@@ -1,6 +1,6 @@
 # WS01-V2 — "A Word Is a Direction" (flagship · Workshop beats) — REBUILD
 
-**Status: rebuild in progress — phase 3 of 7 (transcript). Nothing is published by this job: the publish gate is the owner's.**
+**Status: rebuild in progress — phase 5 of 7 (decisions + register). Nothing is published by this job: the publish gate is the owner's.**
 
 ## The journey in this branch's history
 
@@ -8,6 +8,10 @@
 2. **P1 — metadata: identification + idea.** The piece this branch builds is **ws01-v2, "A Word Is a Direction"** — identified from the catalogue records (see `metadata.json` → `identification`): wd-02's referral record names it as its target verbatim; the built bridge card prints its exact title; its subject is DIRECTION itself (the trio — dir-01/02/03 — each presuppose the concept: one word's swing, relatedness-as-angle, arithmetic on directions); and the direction sphere is the WS01 emblem, born in this piece's v2 produced form. The job brief framed the trio as candidates; the records resolve it to ws01-v2 and the tension is flagged in the identification record, not smoothed over. Objective (19 words): "Teach that a direction is what text becomes inside the machine — an arrow that context points and instructions re-point." Message: "A word is a direction." Audience decided from the objective (the wd-02 graduate's question + the cold viewer); the rest of the scaffold OPEN with routes.
 3. **P2 — architecture + question.** Six moves prescribed from the objective (problem → failed row → turn → reveal → widening → steering + the check), with the narrative architecture designed deliberately: opening promise, a stated reason for every transition, the arc, and the ending/recall (the opening sentence returns reversed). Style decided as a RECORDED EXPERIMENT: 2D graphics spine + whiteboard draw-on construction (blueprint register) — deliberately not the A59 spine soa-01/wd-02 spent; hypothesis recorded (a geometry concept is learned by watching it being built). Delivery: guided-construction cadence (the experiment's delivery half). End referral: dir-01 (the wd-02 pair-loop weighed and rejected with reasons). Title stands; cover = the sphere frame, line "WORDS POINT." Scene decomposition prescribed with its continuity law: the sphere, once born at the reveal, never leaves the frame. Scaffold 10/10.
 4. **P3 — transcript consolidation.** Fresh draft written from the architecture first (12 lines, 205 words); the evidence weighed after: the LOCKED v2 script NOT adopted wholesale (runtime spent twice on the widening; the check absent — it predates the owner's 2026-10-26 doctrine; no recall joint), five adoptions named openly (L1 verbatim by derivation + the owner's gate record; cast, axis names, scale shape as lane grammar; the essence as the close). Editor pass run (joints, said=shown, stake, jargon, "lives" scan — zero). Pause map set: guided-construction cadence, two construction beats (0.85 s / 1.00 s), 10.00 s of designed silence total.
+5. **P4 — the scene.** One self-contained HTML file (83.7 KB, no external references) embodying the phase-2 decomposition: 25 elements across compartments C0–C8 + the word-animation band, every element with a home, a role and a timing in `scene/scene.json`; the PLAN (per-word timings from the phase-6 segmentation) embedded; deterministic `renderAt(t)` / `window.__seek` under `?render`; the edit layer under `?edit=1`. The continuity law holds in the build: the sphere is born at L6's "direction" and never leaves the frame.
+6. **P5 — decisions + register.** Decisions counted from the build's own rulers: **244** (10 scaffold + 25 elements + 209 words; 28 principals named). The register carries the owner's open items (ear, transcript verdict, publication, the experiment's judgment), two recorded events from the audio phase and the build's interruption (below), and what this build closed against the first build (delivery decided, the check present, clone voice throughout, word animation not caption blocks).
+
+**Recorded event — the interruption.** The job that built P1–P4 (and the phase-6 audio, in scratch) was killed by a daemon restart mid-render on 2026-10-26 (~16:51–17:13 ET), 1,624 of 2,526 frames captured, no restart checkpoint. Nothing on record was lost. A recovery job verified the surviving phases and audio before adopting them (every check passed; nothing repaired) and completed P5–P7, including a fresh render. The full account stands in `decisions/randomness-register.md`.
 
 ## Package map (as the phases land)
 
@@ -20,4 +24,4 @@
 
 ## Counts, in the open
 
-Package coverage = counts of recorded decisions (a completeness ruler, never a quality score). Counted at the closing phase from this build's own rulers.
+Package coverage = counts of recorded decisions (a completeness ruler, never a quality score). Counted at the closing phase from this build's own rulers: **244** (10 scaffold + 25 elements + 209 words; 28 principals).
