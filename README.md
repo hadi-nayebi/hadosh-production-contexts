@@ -10,7 +10,7 @@ wd-04 stands in one state: **an unbuilt script.** The piece was written on 2026-
 
 Scaffold fields 9/15 decided · element decisions 12/12 recorded with reasons · word decisions 0/115 (layer absent-by-development — named, not padded) · **total 21/142**.
 
-## Open fields, named (undecided decision fields — a coverage inventory, not a quality score)
+## Open fields, named (undecided decision fields — a coverage inventory, not an alignment score)
 
 - **audience** — the misconception is named in the script's own gate (The Rude Robot, N-06); the audience itself was never settled as a record, and the board's phase-0 check stands pending. *Blocker: a phase-0 audience+misconception pass in the board record.*
 - **delivery_structure** — no pause map or delivery decision exists; the script carries a duration projection only (≈42 s speech at guide pace), and there are no locked line timings to decide against. *Blocker: the build — narration + locked timings first.*
