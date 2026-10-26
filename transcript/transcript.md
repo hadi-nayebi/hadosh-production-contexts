@@ -1,100 +1,30 @@
-# WD-01 — locked transcript (6 delivered lines, 101 spoken words, 37 phrases) — with the 7-line divergence carried openly
+# wd-01 — What Is a Token? — transcript (REDEVELOPED build, script i3)
 
-Text of record for the DELIVERED artifact: the six lines below —
-the locked i2 text as the shipped scene speaks it. The scene's
-PLAN (`scene/index.html`) and the voice registry kit
-(`hidden_files/voice-upgrade/registry.json` pieces[wd-01].lines)
-carry the same six lines word for word, and the shipped scene's
-own DR-SCRIPT names the locked text "all 6 lines". Timings:
-the registry kit (start → window end per line; phrase counts
-from the same kit's PLAN extraction — the scene PLAN agrees:
-37 phrases, 101 word objects). The final QC confirmed the
-delivered close verbatim on the delivered file (T-16 PASS).
+**Status: the working script of the REDEVELOPED build (JOB WD01-REDEVELOP-1, 2026-10-26) — draft i3, NOT locked; the transcript closes only on the owner's verdict.** The delivered build's account (six spoken lines, script i2) is preserved at `transcript/superseded/transcript-delivered-6-lines.md` and remains the truthful record of that build. Redevelopment source of record: `transcript/source-script.md` (byte copy of the job's script doc, incl. the Stage-1 decisions, the editor pass, and the pause map).
 
-Source script document: `transcript/source-script.md`, a byte
-copy of `files/short-wd01-token-script.md` (sha256
-b5591390166ca47ded01ea1ed1be60756ac4f74623439076d82e1086a37956d1),
-carried byte-identical and unedited — including the parts that
-diverge from the delivered artifact, below.
+**Standing: audio is BLOCKED at L5 (no qualifying take — see `audio/audio.json`); no programme audio and no render exist for this build yet.** Seven of eight lines are synthesized and verifier-passed; their fitted timings below are measured. L5's timings are ESTIMATES (basis stated) pending its take.
 
-## THE DIVERGENCE (script states 7 lines; the delivered scene speaks 6)
+## The script (8 lines, 132 spoken words)
 
-The general rule (script governs text, registry governs
-timings) meets its exception here, and the exception is the
-record. The script doc's draft table states SEVEN lines; the
-board transcript (`production-state.json`
-pieces[wd-01].transcript) carries the same seven lines
-verbatim. The delivered scene speaks SIX. The two unspoken
-script lines are:
+| line | start | end | words | text |
+|---|---|---|---|---|
+| L1 | 2.00 | 7.12 | 15 | More than three point two quadrillion. That's how many tokens Google's machines process every month. |
+| L2 | 7.62 | 10.90 | 12 | So what is a token, that there can be quadrillions of them? |
+| L3 | 12.20 | 17.96 | 20 | Not a word. A token is a chunk of text — sometimes a whole word, often just a piece of one. |
+| L4 | 18.46 | 25.26 | 19 | The machine doesn't read letters, and it doesn't read words. It reads tokens. In English, about four characters each. |
+| L5 | 26.16 | 30.24 | 9 | Count with me: The. Machine. Reads. Tokens. Five tokens. |
+| L6 | 30.74 | 36.57 | 20 | Everything is measured in tokens: what the model reads, what it writes, what you pay, how much it can hold. |
+| L7 | 37.57 | 45.10 | 21 | Right now, machines that think in language think in tokens. Every word they read, every word they write, moves as tokens. |
+| L8 | 46.00 | 51.25 | 16 | More than three point two quadrillion of those — every month. Now you know what one is. |
 
-- Script L6: "And remember directions? A token is the smallest
-  piece of text that gets one." — ABSENT from the delivered
-  artifact. Nothing in the delivered scene speaks it.
-- Script L7: "A token: a chunk of text, counted by machines."
-  — not spoken as written; the delivered close (L6 below) is
-  its rewrite: "So that's a token: not a word — a chunk of
-  text, counted by machines."
+Starts are re-locked to the measured fitted takes: each start = the previous line's fitted end + the pause map's decided gap (F1 500 ms · F3 think beat 1,300 ms after L2 · F4 900 ms before L5 and before L8 · F2 1,000 ms before L7), so the decided pauses hold by construction. Content ends 51.25; +0.80 s hold; the silent NEXT bridge runs 52.05–55.05 (packaging, T-16 — outside the arc). **Total 55.05 s.**
 
-The 2026-10-26 reconciliation audit records the absence as
-"recorded nowhere before the audit"
-(hidden_files/jobs/2026-10-26-package-reconciliation.md,
-wd-01 row). Two complicating records stand beside that
-finding, cited here and NOT reconciled with it:
+**The count, settled (DR-COUNT-FIVE):** "The machine reads tokens." tokenizes to FIVE tokens — The / machine / reads / tokens / **.** — the fifth token is the full stop. The scene performs exactly that (four word tiles + the full-stop tile; the counter locks on 5).
 
-1. The script doc's own appended "Iteration i2" note
-   (2026-10-22) records a deletion decision for the i2 build:
-   the old L6 "DELETED, along with its sphere scene", the old
-   L7 "absorbed" into a new L6 with exactly the delivered
-   wording — Hadi's critique (the i1 ending dropped
-   "directions", a concept this short never builds) and the
-   T-16 fix. So a decision record exists, inside the same
-   document whose draft table still presents seven lines as
-   "the script" and whose table was never updated; the board
-   transcript still carries all seven lines today.
-2. The shipped scene's DR-SCRIPT calls the locked text
-   "Script — all 6 lines … (files/short-wd01-token-script.md,
-   i2/i1 text)" — the artifact's own record sides with six.
+**Fact of record (DR-HOOK-NUMBER):** "more than 3.2 quadrillion tokens per month" — Sundar Pichai, Google I/O 2026 keynote (May 2026), across all Google AI surfaces; trajectory 9.7 trillion/month (2024) → 480 trillion (2025) → 3.2 quadrillion (2026), ≈330× in two years. Scope note: processed ≠ unique generated text. The narration carries the sourced form ("More than three point two quadrillion"); the on-screen source line names Google I/O 2026.
 
-Which text governs what: the DELIVERED six lines govern the
-delivered artifact (this transcript, the audio layer, the
-verification layer). The script doc governs the piece's
-history and is carried unedited. This package does not repair
-the divergence — no record updates the script table or the
-board transcript — it ships it as the scaffold's open field
-`transcript_line_divergence`.
+**Navigation: 0 of 132 words (0%)** — the closing bridge is packaging metadata (T-16), not spoken navigation.
 
-Counts, each under its own ruler: (1) the script table's
-mechanical count: **112 tokens** over 7 lines (per line
-5/21/13/23/27/14/9 — including the 2 standalone em-dash
-tokens at L2/L4). (2) Spoken words in the delivered artifact:
-**101** (per line 5/20/13/22/27/14), the registry kit's and
-the scene PLAN's word objects. The arithmetic closes:
-112 − 2 dashes − 14 (the directions line) − 9 (script L7)
-+ 14 (the delivered L6 rewrite) = 101. (3) The registry's
-line texts strip the 2 em dashes the script and the board
-transcript carry (L2, L4); the spoken text is identical. The
-dashes carry no word objects and — per this piece's own
-word-decision container — no word decisions (unlike WD-02,
-whose container decided its dashes as DROP-PUNCT entries).
-Narration ends at the last window end, 34.658 s; the silent
-3.0 s NEXT bridge and the container outro carry the file to
-41.998 s (final QC method note: content lines + 3.0 s silent
-bridge + outro = 41.998 s).
+## Divergence from the delivered build (narrated, not silent)
 
-L1 — start 2.2 s → window end 3.74 s · 5 words · 2 phrases
-Quick: what is a token?
-
-L2 — start 3.74 s → window end 8.94 s · 20 words · 7 phrases
-Not a word. A token is a chunk of text — sometimes a whole word, often just a piece of one.
-
-L3 — start 8.94 s → window end 12.92 s · 13 words · 5 phrases
-The machine doesn't read letters, and it doesn't read words. It reads tokens.
-
-L4 — start 12.92 s → window end 22.84 s · 22 words · 8 phrases
-In English, one token is roughly four characters — about three-quarters of a word. Count with me: The. Machine. Reads. Tokens. Five tokens.
-
-L5 — start 22.84 s → window end 30.0 s · 27 words · 10 phrases
-Why should you care? Because everything is measured in tokens: what the model reads, what it writes, what you pay, how much it can hold at once.
-
-L6 — start 30.0 s → window end 34.658 s · 14 words · 5 phrases
-So that's a token: not a word — a chunk of text, counted by machines.
+The delivered build spoke SIX lines (i2's table said seven; the delivered six govern that build). The redevelopment speaks EIGHT lines / 132 words (delivered: 101 words). What changed and why (owner's direction, 2026-10-26; full reasoning in `source-script.md` §2): the cold question opener is replaced by the sourced number (the question survives as L2, earned by the hook); the settled definition (L3) and machine's-eye lines carry over nearly verbatim; the rule + count are split so the count performs alone (L5); the stakes survive compressed to one line (L6); the "three-quarters of a word" gloss is dropped (the performed count teaches size); i2's restatement close is absorbed by the bookend (the piece must not close twice). The old texts live at `transcript/superseded/` — labeled, byte-exact, never edited.

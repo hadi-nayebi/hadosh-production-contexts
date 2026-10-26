@@ -1,96 +1,33 @@
-# WD-01 — "What Is a Token?" (Word Definitions)
+# wd-01 — What Is a Token?
 
-**Video package — branch `video/wd-01`.** This file system IS the
-video's production layer: it ships with the video (the published
-description links this branch), and this branch's commit history is
-the video's development history, in developmental order. The MP4 is
-a derivative export of this package.
+**Stage: REDEVELOPED (2026-10-26, JOB WD01-REDEVELOP-1) — new transcript (quadrillion hook, bookend structure), base-layer style decision recorded, new scene built and frame-verified; AUDIO BLOCKED at L5 — no programme audio, NO RENDER. Awaiting: L5 take resolution → assembly → render → the owner's ear/eye. Publish state unchanged: UNPUBLISHED (board stage: qc).**
 
-- **Piece:** wd-01 · flagship channel · Word Definitions
-- **Title:** What Is a Token?
-- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-4) — in-package editability (b) PROVEN on branch bytes (JOB EDITABILITY-2: inspector joins PLAN ↔ word-decision records 1:1 on all 101 words; edit → save → reopen rendered the change exact at +200.0 px; no-overlay playback pixel-identical to the master scene; ?render fully inert; stripping the additive layer restores the master scene byte-for-byte; gate re-run against the committed layered scene and every leg re-passed on the branch bytes, JOB PACKAGE-VERIFY-7, 2026-10-26) —
-  CLONE-VERIFIED candidate audio, locked delivered transcript,
-  shipped scene (the v3 HTML-scene build, from the i2-locked
-  script text), verified clone render in-branch. The piece itself
-  sits at board stage qc, unpublished; its one divergence of
-  record — the script's 7 lines against the delivered 6 — is
-  carried openly below and in the scaffold.
+The owner judged the delivered build directly (2026-10-26): the visualization scored **10 at most** ("absolutely zero style in this video as an explainer"), and he directed the rebuild — open on the quadrillions of tokens Google processes every month, enter the definition through the number, and come back to the number at the end. This package is that rebuild. The delivered build is SUPERSEDED, not deleted: its script, transcript account, and decision files are preserved byte-exact under `transcript/superseded/` and `decisions/superseded/`, and its render candidate (`files/wd-01-clone-v1.mp4`, −14.34 LUFS) remains the only render of record until the redeveloped build renders. Its CLONE-VERIFIED standing describes the superseded build only.
 
-## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
+## What the redeveloped build is
 
-- **Decided / total decision fields: 149 / 150**
-  - metadata scaffold: 9 / 10 fields decided (`metadata.json`)
-  - element decisions: 39 / 39 elements carry a record
-    (`decisions/decisions.json` — 8 decision records; the scene
-    DEC coverage header's figure — its classes' numbered entries
-    sum to 37 plus the unnumbered script class, so the header
-    does not decompose; the board audit independently counts
-    39/39, and the 2026-10-23 context audit counts 18/18 under
-    an older ruler. All three rulers are cited in the file's
-    provenance, not merged)
-  - word decisions: 101 / 101 spoken words carry a recorded
-    decision (`decisions/word-decisions.json` — the standalone
-    container restored by board round b33; the script's 2
-    em-dash tokens are punctuation and carry no word objects
-    in this scene)
-- **Open fields, named** (undecided decision fields — a coverage
-  inventory; it does not by itself measure the rendered result):
-  - `audience` — no record names this piece's audience or
-    misconception as a phase-0 decision; the board's phase-0
-    item stands pending (the misconception is performed at L2,
-    never named as an audience record)
+- **Transcript (i3):** 8 lines, 132 spoken words. Hook = the sourced fact (more than 3.2 quadrillion tokens/month, Google I/O 2026) → entry question → the settled definition → machine's-eye + ≈4-character rule → performed count (five tokens; the fifth is the full stop) → stakes (reads / writes / pay / hold) → the turn (machines think in tokens) → bookend return. Pause map with researched sizes; starts re-locked to measured takes so the decided pauses hold by construction. Total 55.05 s incl. the silent bridge.
+- **Style (base layer, `metadata.json` → `style`):** A59 motion-graphics grammar as the spine (one persistent tile-object system with semantic continuity) + cinematic typography reserved for the number (the monument) + a 2D cut at the definition. Discussion, alternatives (incl. whiteboard — not chosen, still under the owner's Action #79 judgment), and reasoning are recorded in the field and in `decisions/decisions.json` (DR-STYLE).
+- **Scene:** new self-contained HTML — 41 elements, all decided; frame-verified by eye at 17 timestamps (hook / definition / count / bookend among them); visual onset probe on the locked start passes. No audio embedded yet.
+- **Audio:** 7 of 8 lines synthesized via Pelican (verifier-passed, alignment 1.0) and fit Tier A. **L5 is blocked:** its registered take failed ASR (a real merge), and its one allowed ICL regeneration failed the server's final-words check on the sole artifact '5' vs 'five' — with the errored audio not retrievable from this client (diagnostics 404). Per the fit standard the piece is Tier B: nothing was assembled, nothing was forced. Full evidence: `audio/audio.json`; disposition routes (owner/Dot) in DR-AUDIO-L5-BLOCK.
 
-Finishing decisions, 2026-10-26 (JOB FINISH-FIELDS-1 — dated
-finishing decisions, recorded as such, not backfilled history;
-see `metadata.json` for the full values, reasoning and evidence):
-  - `delivery_structure` — DECIDED as the delivery structure of
-    record, measured off the delivered artifact: contiguous locked
-    line windows (question → correction → contrast → live count
-    → four-tile stakes → restated definition), the C-05 phrase
-    system, the silent 3.0 s bridge. No separate pause-map pass
-    was ever performed; a future retrofit amends this by a new
-    dated decision.
-  - `scene_decomposition` — DECIDED as the compartment inventory
-    the shipped file itself embodies (container / per-line
-    compartments / bridge / word-animation layer / audio /
-    in-page decision layer incl. the standalone word-decision
-    container / player chrome); the scene stays one
-    self-contained file (DR-CONTAINER, H-01).
-  - `transcript_line_divergence` — CLOSED as a recorded
-    reconciliation: the delivered six lines govern the delivered
-    artifact (scene PLAN + voice registry kit + DR-SCRIPT agree);
-    the script's i2 note already recorded the deletion/absorption
-    the draft table never reflected. The script table and board
-    transcript themselves are NOT updated by this closure — that
-    remains a documentation repair outside this package. Full
-    account stays in `transcript/transcript.md`.
+## Coverage (counts of recorded decisions — never alignment)
 
-Every decided field carries a rationale and a named source
-(research / agent reasoning / Hadi's taste). Open fields stay
-visibly open — they are the named remainder, not hidden gaps.
-No accepted exception rides with this piece (the exceptions
-ledger names no wd-01 entry; `decisions/decisions.json`
-records the empty set with its revisability note).
-
-## How to play
-
-- **The scene:** open `scene/index.html` in any browser — one
-  self-contained file; it plays the piece (guide-era audio, as
-  shipped) and shows its decision records in-page.
-- **The voice:** `audio/narration.m4a` — the CLONE-VERIFIED
-  candidate programme audio, extracted from the candidate render.
-- **The render:** `render/render.mp4` — the CLONE-VERIFIED
-  candidate itself, copied in-branch (2,467,777 B), with its
-  measurements in `render/verification.json`. The delivered
-  guide-voice render is cited there by hash.
-
-## Provenance index
-
-| Path | What it is | Source of record |
+| layer | decided | open |
 |---|---|---|
-| `metadata.json` | Decision scaffold (objective → hook → structure → open fields) | the piece's script doc (Phase 1 treatment + W-section + i2 iteration) + catalogue objectives audit + STRUCT-2 + board record + reconciliation audit (per-field citations inside) |
-| `transcript/` | Locked delivered transcript (6 lines) + its source script document | the delivered scene's PLAN + voice registry kit govern the delivered text; the script doc is carried byte-identical — its 7-line table and the divergence account live in `transcript/transcript.md` |
-| `decisions/` | Element decision records + per-word decisions | the shipped scene's own DEC block (8 records) + its standalone word-decision container (101 entries, b33-restored), extracted verbatim |
-| `audio/` | Clone candidate programme audio + provenance | Pelican jobs (registered + L1 ICL) + the CLONE-VERIFIED registry entry + batch-1 take/fit records + the WD level-rule rebuild |
-| `scene/` | The shipped scene (v3 build), byte-identical + provenance | `files/short-wd01-token-v3-scene.html` (sha256 in `scene/scene.json`; board edition hash recorded beside it — the edition's bytes differ) |
-| `render/` | The verified clone render in-branch + verification measurements | `files/wd-01-clone-v1.mp4` (CLONE-VERIFIED); delivered guide render `files/short-wd01-token-v3.mp4` cited by hash |
+| scaffold fields (metadata.json) | 10 / 11 | `audience` — still unnamed by any record; the redevelopment does not invent it |
+| scene elements | 41 / 41 | — |
+| words (decisions/word-decisions.json) | 132 / 132 | — (L5's 9 word timings are estimates, basis stated per record) |
+| **total** | **183 / 184** | |
+
+## Supersession map
+
+| was | now |
+|---|---|
+| script i2 / delivered 6 lines (101 words) | script i3 / 8 lines (132 words) — old texts at `transcript/superseded/` |
+| decisions of the delivered build (8 records) | `decisions/superseded/decisions-delivered-build.json`; new records govern the redeveloped build |
+| word layer, 101 words | word layer, 132 words — old at `decisions/superseded/word-decisions-delivered-101.json` |
+| scene (master sha 3ecf0475…) | new `scene/index.html` (sha in `scene/scene.json`) |
+| render candidate + CLONE-VERIFIED | unchanged files, now describing the superseded build; the redeveloped build has NO render and NO clone standing |
+
+`experiments/` is untouched by the redevelopment.
