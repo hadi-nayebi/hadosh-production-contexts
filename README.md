@@ -1,20 +1,12 @@
-# wd-02 — video package
+# WD-02 — "What Is a Prompt?" (Word Definitions)
 
-This branch is the file system of one video (board piece wd-02).
+**Video package — branch `video/wd-02`.** This file system IS the
+video's production layer: it ships with the video (the published
+description links this branch), and this branch's commit history is
+the video's development history, in developmental order. The MP4 is
+a derivative export of this package.
 
-The package is the deliverable alongside the video. It grows in
-developmental order — metadata first (objective, message,
-structure), then transcript, then audio and visuals — and this
-branch's git history is the video's development history.
-
-Opened 2026-10-26 under Hadi's all-31-branches ruling: every video
-gets its own branch, and each branch is developed through the
-layers in order. The objective is defined first: a video without
-one produces every later layer in its absence. Decisions at each
-layer are made from the piece's own evidence — its transcript,
-earlier versions, and the recorded style/delivery references.
-
-Evidence state at opening: CLONE-VERIFIED; transcript, decisions, scene and render in place. Scaffold assembly is the first development step.
-
-Stage: 0 — opened. The metadata layer is the first development
-step.
+- **Piece:** wd-02 · flagship channel · Word Definitions
+- **Title:** What Is a Prompt?
+- **Stage:** package opened — metadata layer landed; transcript,
+  decisions, audio, scene and render layers follow in order.
