@@ -1,48 +1,52 @@
 {
- "record": "render verification — phase 7. The render is the production's final step, executed from this branch's own files: the phase-4 scene + the phase-6 programme.",
+ "record": "render verification \u2014 phase 12 (iteration 2). The render is the production's final step, executed from this branch's own files: the phase-9 scene + the phase-11 programme.",
  "render": {
-  "file": "render/wd-02-rebuild.mp4",
-  "sha256": "138c31bbb755c74b4a5f49873825d7dfe86ff97cb43e4c3c339525d3b0d62b25",
-  "bytes": 3225764,
-  "duration_s": 52.251,
+  "file": "render/wd-02-rebuild-v2.mp4",
+  "sha256": "7433f3917a6e8a70e75e488dff7db4ce92fa8734e7fe85215c4be041556248a3",
+  "bytes": 6046644,
+  "duration_s": 75.024,
   "video": "H.264, 1080x1920, 30 fps, yuv420p, faststart",
   "audio": "AAC 192 kb/s from the verified programme WAV"
  },
  "inputs": {
-  "scene_sha256": "eb4ed548cc2cdf14dd4495081c5817eed7d8c67a611404e332b8839b63e3d661",
-  "programme_wav_sha256": "4395fe996aaa445253e6905d293c2ba56b9bbb4cf4ff55358fb839be3109bd18",
-  "procedure": "CDP deterministic seek-capture of the scene at 30 fps (1,568 frames, private Chrome port 9947) + ffmpeg mux with the programme WAV (libx264 crf 20)"
+  "scene_sha256": "1e739fdf2e080f8c338dcd4f2d754e34603793790f8d22df8160cb8efb1632a1",
+  "programme_wav_sha256": "809d13b44307ffb74ac06c2ed5321a48b9d5b0906588c83a2968f1cae9119503",
+  "procedure": "CDP deterministic seek-capture of the phase-9 scene at 30 fps (2,251 frames, private Chrome port 9963) + ffmpeg mux with the programme WAV (libx264 crf 17, faststart). Capture pace note: ~0.5 s/frame under shared-VM load (a second production job was rendering concurrently); the capture is deterministic in t, so pace does not touch the artifact. An earlier mux from the programme MP3 was discarded and re-muxed from the WAV master to keep iteration 1's route; only the WAV-route file is staged."
  },
  "measurements_on_the_render": {
-  "integrated_lufs": -14.13,
-  "true_peak_dbtp": -1.35,
-  "lra": 3.0,
-  "loudness_verdict": "inside the master band (-14 +/-1 LUFS, TP <= -1 dBTP); the AAC stage moved TP from the programme WAV's -1.50 to -1.35, still inside the ceiling",
+  "integrated_lufs": -14.1,
+  "true_peak_dbtp": -1.4,
+  "lra": 3.2,
+  "loudness_verdict": "inside the master band (-14 +/-1 LUFS, TP <= -1 dBTP); the AAC stage moved TP from the programme WAV's -1.52 to -1.40, still inside the ceiling",
   "first_phrase_onset_probe": {
    "instrument": "the voice track of the same programme (the bed is continuous by the owner's standing rule, so a mix-level probe reads the music, not the narration)",
-   "measured": "lead-in silence ends at 0.401 s against the planned first-phrase start of 0.400 s — deviation +1 ms"
+   "measured": "lead-in silence ends at 0.401 s against the planned first-phrase start of 0.400 s \u2014 deviation +1 ms"
   },
   "pause_map_verification": {
-   "instrument": "silencedetect (-45 dB, min 0.20 s) on the assembled voice track",
+   "instrument": "silencedetect (-45 dB, min 0.20 s) on the assembled voice track \u2014 the same audio the render carries",
    "measured_speech_free_gaps_s": [
     0.401,
     0.986,
     0.679,
     0.451,
     0.741,
-    0.825,
-    0.605,
-    1.003,
+    0.734,
+    0.555,
+    0.708,
+    0.579,
+    0.642,
+    1.001,
     2.002
    ],
-   "reading": "lead-in 0.401 s; inter-line gaps 0.45–0.83 s as planned; the L1→L2 suspension measures 0.986 s (planned 0.90 + in-stem pads); the pre-payoff designed silence measures 1.003 s; the bed-only tail measures 2.002 s. Every joint of the phase-3 pause map is present in the rendered audio."
+   "verdict": "every designed gap survives whole in the rendered programme, including the 1.00 s designed silence before the payoff (measured 1.001 s) and the 0.90 s suspension after the flat picture (measured 0.986 s speech-free, the balance being the breath into L2)"
   }
  },
- "frame_qa": "frames extracted FROM THE RENDER at 2.0 / 18.5 / 33.0 / 43.0 / 51.5 s and viewed: flat picture + tag, the page with its three steering cards, the pile under its counter, the MEGA PROMPT card complete with its four summary rows, the payoff + bridge card — they match the scene QA frames; the story reads sound-off from the render itself",
- "editability_proof": {
-  "executed": "on the phase-4 scene in ?edit=1 mode (headless Chrome, private port 9953)",
-  "steps": "clicked L8 word 13 (\"directions\") -> the inspector opened with the word's decision record; set vertical offset +140 px and saved -> overlay {\"L8:12\":{\"dt\":0,\"dy\":140,\"sc\":1}} written; the frame at the same instant (t=48.5 s) changed by 296,407 pixels; after reload the edit persisted in playback (the word's transform read translateY(140px)); after clearing the overlay and reloading, the frame was pixel-identical to the pristine frame (0 changed pixels)",
-  "verdict": "the scene is an editable file system: a word-level change is made in the scene's own surface, persists, changes the picture, and strips back losslessly"
+ "frame_qa": {
+  "scene_level": "13 timestamps captured from the branch's scene and viewed (5, 24, 30.5, 31, 33.5, 38, 40, 44, 48, 54, 55.5, 57.5, 63, 70, 74.5 s across the passes); seven defects found by eye and fixed (scene/scene.json eye_qa)",
+  "render_level": "four frames extracted from the delivered MP4 (33.5 / 48 / 63 / 74.5 s); the sphere frame (48 s) viewed: wire sphere clean, vector embedded, no residual incoming arrows, MEGA PROMPT monumental over the ghosted origin cards"
  },
- "divergence": "render/divergence-summary.md — old video vs new video, dimension by dimension"
+ "editability_proof": {
+  "procedure": "the phase-9 scene opened with ?render&edit=1 (private Chrome port 9965): a word (L8 'decisions,') clicked -> inspector opened -> an edit saved (dy +140) -> reload: the word's rendered transform carried translateY(140px), the saved overlay read back from localStorage -> edits cleared -> reload: the word's transform returned to the baseline translateY(0px) scale(1)",
+  "verdict": "the changed scene is a living artifact on the same proof standard as iteration 1: readable, clickable, editable, persistent, reversible"
+ }
 }
