@@ -9,7 +9,7 @@ a derivative export of this package.
 - **Piece:** eo-ep3 · Earth One channel · The Planet's Story —
   Observations
 - **Title:** The Message That Outlived Its Maker
-- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-2) — in-package editability absent, a named gap against the full deliverable criteria — CLONE-VERIFIED candidate audio,
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-2) and re-verified on the onset-repaired bytes 2026-10-26 (JOB PACKAGE-VERIFY-6: phrase-1 window independently re-probed — word 1 first visible at audioT 1.573 s against its 1.42 s spoken onset, inside the probe's established scatter; the repair's two-value confinement re-proven byte-exact) — in-package editability absent, a named gap against the full deliverable criteria — CLONE-VERIFIED candidate audio,
   locked transcript, shipped scene, renders cited by hash
   (both exceed the in-branch size ceiling; see `render/`).
 
