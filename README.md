@@ -1,20 +1,13 @@
-# wd-04 — video package
+# wd-04 — "What Is Context?" (Word Definitions)
 
-This branch is the file system of one video (board piece wd-04).
+**Stage: metadata layer landed — the decision scaffold; the package assembles layer by layer from here.**
 
-The package is the deliverable alongside the video. It grows in
-developmental order — metadata first (objective, message,
-structure), then transcript, then audio and visuals — and this
-branch's git history is the video's development history.
+This package is a **development package for an unbuilt piece**. wd-04 stands in one state: a script at polish draft i2 (2026-10-23) — never built, never voiced, never rendered. What this branch holds at this commit is the metadata layer; the transcript and decision layers follow in this assembly, and the audio, scene and render layers land as named **absence records** (absent-by-development, with the build as their sequenced next step) — not as padding, and never as claims.
 
-Opened 2026-10-26 under Hadi's all-31-branches ruling: every video
-gets its own branch, and each branch is developed through the
-layers in order. The objective is defined first: a video without
-one produces every later layer in its absence. Decisions at each
-layer are made from the piece's own evidence — its transcript,
-earlier versions, and the recorded style/delivery references.
+Honest states landing with this scaffold, stated here so the layers below never have to be re-read to find them:
 
-Evidence state at opening: Unbuilt script (draft i1 to i2). Development starts at the objective.
-
-Stage: 0 — opened. The metadata layer is the first development
-step.
+- The governing script is a **polish-round draft** (i2). It governs as this piece's development transcript; it is not locked, and nothing in this package locks it.
+- The word-decision layer is **absent-by-development (0/115 spoken words)** — its object, the built scene, does not exist yet.
+- The voice state is **NONE** — no narration exists in any voice. The voice registry's sequence stands: build the scene first, then the kit.
+- **One owner call rides the package**, exactly as the piece's own script flags it (⚠️ box, v2): the NEXT-bridge routing — WD-05 (tool) as written, or the Lessons lane's harness piece. Recorded OPEN in the scaffold (field `end_referral`); not taken here.
+- The lane's adopted style direction (A59 grammar, #78) is recorded in the scaffold as the lane decision it is; the piece-level style choice belongs to the build.
