@@ -16,7 +16,7 @@ this branch's words.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** phase 3 of 7 — transcript settled by consolidation; editor pass recorded; pause map measured. The scene follows.
+- **Stage:** phase 4 of 7 — scene compartmentalized: every beat has a home. Visual details and word decisions follow.
 
 ## The idea
 
@@ -98,6 +98,21 @@ The settled text, windows and both word-count rulers are in
 pause map are in `transcript/delivery.md`. Headline delivery
 facts: contiguous windows at report pace, exactly one designed
 silence (0.827 s, after the aphorism), navigation load 5.9%.
+
+
+## Scene (phase 4 — compartmentalized)
+
+`scene/index.html` renders the settled transcript as the
+compartment inventory phase 2 decided: container · six per-line
+compartments (dateline / number / habit-crowd / turn-crowd / chat
+box / payoff split) · bridge · word-animation layer · audio ·
+in-page decision layer · chrome. The code is extracted from the
+first draft's shipped scene and verified element-by-element
+against the decided inventory — the extraction note in
+`scene/scene.json` states what was extracted, what was verified,
+and what changes around the code in this branch (authority moves
+to `decisions/`; the decided narration lives in `audio/`; phase 7
+splices the editor layer).
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
