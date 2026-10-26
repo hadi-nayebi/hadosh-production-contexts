@@ -1,49 +1,77 @@
-# SOA-01 — settled transcript (this branch)
+# SOA-01 — settled transcript (CAUSAL, phase 11, 2026-10-26)
 
-Status: **SETTLED in this branch** — phase 3, 2026-10-26, by the
-consolidation in `transcript/consolidation.md` (Candidate A adopted
-after open weighing against a question-led Candidate B; the
-adoption's reasoning is recorded there, line by line).
+Status: **SETTLED by the causal consolidation**
+(`transcript/consolidation-causal.md`): drafted from the
+prescribed structure (phase 9) before the first draft's text was
+re-read; the per-line account against that text is §3 of the
+consolidation. This text supersedes phase 3's settled text (the
+first draft's delivered text, adopted there as Candidate A).
 
-Line windows are the settled delivery windows: locked line starts
-from the voice record (`hidden_files/voice-upgrade/registry.json`,
-pieces.soa-01.lines), each window ending at the next line's start.
-The measured pause map derived from these windows is in
-`transcript/delivery.md`.
+**81 spoken words** (spoken ruler: whitespace tokens excluding
+standalone em-dash tokens — this text carries none) ·
+**81 mechanical tokens** (the two rulers coincide here; stated
+because the branch's practice is to state both). 10 lines.
+Count note: the consolidation's first hand-count said 83; the
+machine count (the word-timing pass over the settled text)
+caught the error before this phase closed — L1 is 9 words and
+L5 is 10. The settled count is 81, identical in size to the
+first draft's 81: the divergence between the two texts is
+allocation and address, not length.
+Narration is second-person throughout; navigation 0%.
 
-Total duration: 34.348 s · 6 lines.
-Word counts, both rulers stated: **81 spoken words** (whitespace
-tokens excluding the 3 standalone em-dash tokens) · **84 mechanical
-tokens** (all whitespace tokens, em-dashes counted).
+Line starts are **locked at the audio phase** (phase 14) from
+the measured fitted takes, per the pause map in
+`transcript/delivery.md`; the starts of record live there and in
+`audio/audio.json`, and the scene's PLAN carries them
+(`scene/scene.json`).
 
-## L1 — 2.20 s → 4.86 s · 5 spoken words
+## L1 — (M1, the number)
 
-State of adoption — October 2026.
+One point two billion people use ChatGPT every week.
 
-## L2 — 4.86 s → 7.68 s · 9 spoken words
+## L2 — (M1, the mirror)
 
-One point two billion people used ChatGPT this week.
+You are one of them.
 
-## L3 — 7.68 s → 12.64 s · 17 spoken words
+## L3 — (M2, the container)
 
-Not tried it once. Used it — this week. A billion people, every week, talking to a model.
+Everything you have built there lives inside their chat box.
 
-## L4 — 12.64 s → 16.46 s · 14 spoken words
+## L4 — (M2, the inventory)
 
-And here is the part nobody counts: nearly every one of them rents it.
+Your instructions. Your memory. Your files.
 
-## L5 — 16.46 s → 23.98 s · 25 spoken words
+## L5 — (M3, the test)
 
-The chat box is the thinnest harness there is. Their instructions, their memory, their files — all on someone else's terms, gone when the tab closes.
+If that account closed tonight, what would still be yours?
 
-## L6 — 23.98 s → 28.006 s · 11 spoken words
+## L6 — (M3, the answer — after the designed silence)
 
-Adoption is total. Ownership is zero. That's the state of adoption.
+Nothing. It was all rented.
 
-## After L6 — no narration
+## L7 — (M4, the model)
 
-- 28.006 → 28.833 s: the designed silence (0.827 s) — see the
-  pause map.
-- 28.833 → 30.848 s: silent bridge card (bed only) — the end
-  referral decided in `metadata.json` fields.end_referral.
-- 30.848 → 34.348 s: outro compartment (bed only).
+The model supplies the intelligence.
+
+## L8 — (M4, the layer)
+
+Everything that makes it yours lives in the layer around it.
+
+## L9 — (M5, the alternative)
+
+That layer can live as files on your own machine.
+
+## L10 — (M6, the payoff)
+
+You use it every week. You own none of it.
+
+## Bridge card (screen text, not narration)
+
+Headline: **WHO OWNS YOUR LAYER?**
+Sub-line: "The long answer: Who Owns the Toaster? →"
+Target: 'Who Owns the Toaster?' (fg2cV8sh3kY), flagship channel.
+Appears at the payoff's hold, over bed only (phase-9 end_referral).
+
+## On-screen source line (with L1, lane's dated-fact law)
+
+"1.2 billion weekly ChatGPT users — OpenAI DevDay · Sep 29, 2026"

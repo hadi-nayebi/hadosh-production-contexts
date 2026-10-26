@@ -1,67 +1,43 @@
-# SOA-01 — delivery record: editor pass + pause map (phase 3, 2026-10-26)
+# SOA-01 — delivery record + pause map (CAUSAL, phase 11; starts locked at phase 14)
 
-## Editor pass
+Delivery is the second stage of the two-stage transcript model:
+the content settled in `transcript/transcript.md`; this file
+decides how it is timed and paused. The pattern was prescribed
+in phase 9 (delivery_structure); this file sizes it.
 
-Simulated demanding human short-form editor, run against the
-settled transcript before it was allowed to stand. The editor's
-standing questions: Does it teach one thing? Does the hook arrive
-before a scroll does? Is any line fat? Is the navigation load
-honest? Does it read sound-off (visual layer's burden, noted)?
+## The gap plan (silence between one line's fitted end and the next line's start)
 
-- **One thing.** Yes — adoption is total, ownership is zero; every
-  line either builds the scale or turns it. No line teaches a
-  second lesson. PASS.
-- **Hook timing.** The number lands at 4.86 s, after a 2.66 s
-  dateline. An editor flags any pre-hook cost; the disposition is
-  recorded, not waved: the dateline is the lane's report signature
-  and the credibility frame that makes L2 a fact rather than a
-  claim — and at 2.66 s it is inside short-form tolerance for a
-  lane the viewer learns to recognize. PASS, with the trade named.
-- **Fat.** One flag: **L5 is 25 spoken words**, half again the
-  next-longest line. Disposition: KEPT, deliberately. L5 is the
-  mechanism — the only line that explains *what* renting means —
-  and its three-part list (instructions / memory / files) is paced
-  on screen by three chips arriving in the chat-box compartment,
-  so the eye is given the line in three bites while the ear takes
-  it in one breath-group chain. Cutting a list item would cut a
-  canon category; splitting the line would break the six-beat
-  architecture. The flag and its disposition are recorded in the
-  consolidation as well.
-- **Suspense.** The turn (L4) is planted after the scale is felt;
-  "the part nobody counts" is a genuine tease with a 3.8 s fuse to
-  the mechanism. PASS.
-- **Navigation budget.** The bridge card is 2.015 s of 34.348 s =
-  5.9% — inside the ≤10% budget (20% hard cap). PASS.
-- **Close.** L6 restates fact + gap in one aphorism (the W-05
-  return), then silence, then the ask. No trailing summary. PASS.
-
-**Editor-pass verdict: PASS** — one flag (L5 length), disposition
-recorded above and in the consolidation.
-
-## Pause map
-
-Every pause is a recorded decision: location, size, function.
-Sizes are measured from the settled line windows
-(`transcript/transcript.md`); contiguity is a decision, not a
-default.
-
-| Joint | Size | Function |
+| Joint | Gap | Function |
 |---|---|---|
-| Intro compartment → L1 (0 → 2.20 s) | 2.20 s, not narration silence | The container's intro plays before the report opens; the dateline's start is the piece's first spoken moment. |
-| L1 → L2 | 0.00 s (contiguous windows) | Report pace: the fact follows the dateline without a breath — a wire report does not pause between its date and its news. |
-| L2 → L3 | 0.00 s | The correction rhythm ("Not tried it once") must strike while the number is still ringing; a gap would let the viewer file L2 as trivia. |
-| L3 → L4 | 0.00 s | The turn is planted mid-breath by design — "And here is the part nobody counts" continues L3's sentence-energy so the turn feels discovered, not announced. |
-| L4 → L5 | 0.00 s | The tease pays off immediately; the mechanism is the answer to L4's promise, and delay would read as stalling. |
-| L5 → L6 | 0.00 s | The aphorism closes the mechanism's breath: L5 ends "gone when the tab closes" and L6 delivers the verdict on it in the same forward motion. |
-| L6 → bridge card (28.006 → 28.833 s) | **0.827 s designed silence** | The piece's one spent silence: the aphorism is allowed to land — and be silently repeated by the viewer — before any ask is made. This is the pause that makes the close a close. |
-| Bridge card (28.833 → 30.848 s) | 2.015 s silent (bed only) | The referral is read, not heard; narration stays out of the ask's way. Music bed is continuous throughout — pauses are narration events only; the bed never stops. |
-| Bridge → end (30.848 → 34.348 s) | 3.500 s bed-only outro | The container's outro compartment; the piece ends on the brand, not on a word. |
+| lead-in (bed + monument assemble) | L1 starts 1.20 s | The number monument assembles in near-silence over the bed before a word is spoken — the hook's first step is visual. |
+| L1 → L2 | 0.55 s | The turn: fact stated, a beat, then it is about YOU. |
+| L2 → L3 | 0.70 s | Mirror absorbed; the explanation begins. |
+| L3 → L4 | 0.35 s | Inventory ticks follow the container closely. |
+| L4 → L5 | 0.80 s | The inventory settles; the test is set up as a change of register. |
+| L5 → L6 | **1.00 s — DESIGNED SILENCE** | The viewer answers the test themselves before the narration does. The piece's most expensive second; it is the mechanism of M3. |
+| L6 → L7 | 0.70 s | Verdict absorbed; the naming begins. |
+| L7 → L8 | 0.45 s | The two halves of the naming stay one thought. |
+| L8 → L9 | 0.70 s | The alternative arrives as its own beat. |
+| L9 → L10 | **1.00 s — DESIGNED SILENCE** | Pre-payoff: the verdict is not crowded by the alternative. |
+| tail (after L10) | 2.40 s | Payoff held in cinematic type; the bridge card appears over bed only. |
 
-Within-line delivery: phrases of ≤3 words arrive at the spoken
-moment in two alternating lower bands; a completed phrase HOLDS
-while the next reveals and clears when the phrase after next
-starts (rule C-05). One accepted exception rides with this rule:
-phrase #9 ("week, talking to") holds 0.46 s against the 0.50 s
-floor — bound-capped by its successor's start, the form's maximum;
-accepted on the record (exceptions ledger #1) and carried in
-`decisions/decisions.json`.
+Within-line delivery decisions: L4's three fragments are three
+beats (each item lands as its object lands — the punctuation is
+the delivery instruction); L6's two sentences are verdict then
+ground ("Nothing." / "It was all rented."), the first landing
+alone. All other lines are delivered as single statements at
+the clone's natural pace — tempo is never forced beyond the fit
+standard's arithmetic (phase 14's fit table: every line fits at
+atempo 1.0 by construction of this map: each window = fitted
+duration + its gap, and every gap ≥ 0.35 s exceeds the standard's
+0.15 s guard + 0.02 s margin).
+
+## Locking rule
+
+Absolute starts are computed at the audio phase from the
+measured, trimmed takes: start(L1) = 1.20; start(Ln+1) =
+start(Ln) + fitted_duration(Ln) + gap(Ln→Ln+1). The locked
+starts are recorded in `audio/audio.json` (phase 14) and in the
+scene's PLAN (`scene/scene.json`, phase 12 — the scene is
+authored against this same map, its word entries following the
+media clock of the assembled programme).
