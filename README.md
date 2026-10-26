@@ -1,18 +1,13 @@
-# eo-ep3 — video package
+# EO-EP3 — "The Message That Outlived Its Maker" (Earth One)
 
-This branch is the file system of one video: Earth One Episode 3
-("The First Message"), board piece eo-ep3.
+**Video package — branch `video/eo-ep3`.** This file system IS the
+video's production layer: it ships with the video (the published
+description links this branch), and this branch's commit history is
+the video's development history, in developmental order. The MP4 is
+a derivative export of this package.
 
-The package is the deliverable alongside the video. It grows in
-developmental order — metadata, transcript, audio, visuals,
-verification — and this branch's git history is the video's
-development history.
-
-Opened 2026-10-26 under Hadi's migration directive: every video
-gets its own branch and its own file system; contents are assembled
-from the video's real production records, committed in the order
-the layers are built, with the original artifacts cited per layer.
-Nothing here is backdated; provenance lives in the records each
-layer cites. Open fields ship visibly open.
-
-Stage: 0 — opened. Every field is open until its layer lands.
+- **Piece:** eo-ep3 · Earth One channel · The Planet's Story —
+  Observations
+- **Title:** The Message That Outlived Its Maker
+- **Stage:** package opened — metadata layer landed; transcript,
+  decisions, audio, scene and render layers follow in order.
