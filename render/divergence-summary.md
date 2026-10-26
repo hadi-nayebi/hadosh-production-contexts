@@ -1,57 +1,36 @@
-# Divergence summary — iteration 2 vs iteration 1 (and vs the first draft)
+# WD-02 iteration 3 — joint-level divergence: v3 → v4
 
-*Progressive consolidation made visible: iteration 2 is a revision of
-iteration 1, not a new build. Its reason is the owner's verdict on
-iteration 1 (60–70, "the transcript still needs improvement") plus his
-two expansions of the same hours. What iteration 1 established stands;
-what it stated vaguely is now performed.*
+The whole revision, at the level the owner's finding named — the
+JOINTS. Of the 13 architecture units the phase-13 map audited,
+exactly two were condemned; exactly those two changed. Everything
+else — nine lines byte-identical, every gap size, every content
+beat — stands.
 
-## Line level (transcript v1 → v3)
+| Unit | v3 | v4 | Why |
+|---|---|---|---|
+| U0 opening (L1–L2) | "Most people think a prompt is the first sentence…" → "It is not. A prompt is a direction" | **unchanged** | Map: INTENTIONAL — the promise is the destination; the correction lands in ~8 s. |
+| J1 L1→L2 | denial joint, 0.90 s suspension | unchanged | INTENTIONAL. |
+| J2 L2→L3 | claim → performed case | unchanged | INTENTIONAL. |
+| J3 L3→L4 | steer → steer again | unchanged | INTENTIONAL. |
+| J4 L4→L5 | "Meanwhile" widen | unchanged | INTENTIONAL. |
+| **J5 L5→L7** | **"And as the session runs, a chain summary keeps forming…"** — a topic change signposted by the weakest connector; the accumulation L5 ends on is never stated in the word layer until the payoff | **"Nothing you steer is lost. As the session runs, a chain summary keeps forming — each version folds the last stretch into the one before."** | **CONDEMNED → FIXED (F1).** L6's retirement (iteration 2, measured) removed the joint's hinge; the hinge is restored inside L7's head at 4 content words, in the piece's own steering verb. The mechanism sentence is v3's, byte-identical from "As the session runs". L7: 20 → 24 spoken words; new take (registered, alignment 1.0); the question-chain L2→L12 is unbroken. |
+| J6 L7→L8 | instrument picked up and turned | unchanged | INTENTIONAL. |
+| J7 L8→L9 | extraction → earned naming | unchanged | INTENTIONAL. |
+| J8 L9→L10 | naming → use | unchanged | INTENTIONAL. |
+| J9 L10→L11 | use → vista; L11 the densest line | unchanged | INTENTIONAL WITH CAVEAT (density recorded on the map; owner-content-driven; not revised). |
+| J10 L11→L12 | verdict joint, 1.00 s designed silence | unchanged | INTENTIONAL. |
+| U-ARC | evidence → instrument → proof ramp; one hole at J5 | ramp stands; **hole closed by F1** | INTENTIONAL WITH CAVEAT, caveat discharged by the J5 fix. |
+| **U-END recall** | **"That is what a prompt really is: not one sentence — all the directions you gave to re-steer the work."** — recalls the definition completely; the mega prompt, the object the whole second half names and uses, absent from the close | **"…all the directions you gave to re-steer the work, gathered into one mega prompt."** | **CONDEMNED (incomplete) → FIXED (F2).** Only the payoff's tail extends (+5 words); the bookend now pivots on "one" (not ONE sentence → into ONE mega prompt) and the piece's last word is the name it defined. L12: 19 → 24 spoken words; new take via the line's one ICL residual (registered ×2 rejected by the verifier on the line-final "mega prompt" tokenization — phase 14's record). |
 
-| Lines | Fate |
-|---|---|
-| L1–L5 (78 words) | **Survive verbatim** — the flat picture, the turn, the performed steering, the context stream. The base layer the owner scored 60–70 stands untouched. |
-| v1 L6 ("So a prompt does not happen once… It accumulates") | **RETIRED** under the owner's length discipline, on measured facts (programme with it: 83.41 s). Its claim is performed by L7's chaining and restated by the payoff. Text + take stand in iteration 1's phases as the rollback point (consolidation §8.4). |
-| v1 L7 (the gathering: "Take every prompt… chain them into one summary") | **Replaced by L7+L8+L9 (55 words)** — the gathering is no longer asserted, it is MECHANIZED: L7 the chain summary forming (each version folds the last stretch into the one before), L8 the extraction (the summary instruction draws out decisions / feature requests / criticisms), L9 the naming (the mega prompt = the prompt itself, summarized into all its key aspects). |
-| — | **NEW L10 (21 words)** — the mega prompt IN USE (expansion #2): its text streams underneath the work; the agent is checked against it — on its direction, or drifting. |
-| — | **NEW L11 (19 words)** — injection + the zoom-out (expansions #1+#2): one mega prompt per job, each a direction of its own, building across sessions. It absorbs the expansion-#1 practice line, which was synthesized then retired pre-lock. |
-| v1 L8 (payoff) | **Survives verbatim as L12** — the definition the whole piece earns, in the owner's terms. |
+**Net:** 196 spoken words (v3: 187); 78.588 s (v3: 75.024;
++3.564 s, all at the two condemned joints); 9 of 11 takes reused
+under the cryptographic reuse test; scene adjusted only where
+the line changes forced it (choreography re-anchored to the new
+word times; the payoff block raised 150 px to restore the bridge
+clearance the longer payoff consumed); decisions 237/237
+(20 principals).
 
-Net: 128 → 187 spoken words; 52.251 s → 75.024 s (the growth the owner's
-own expansions required, after the length discipline removed what the
-mechanism made redundant — register R-10 names the figure for his verdict).
-
-## Visual level
-
-- **The gathering is shown, not described:** a chain summary card forms
-  over the pile; fold chips fly in as the version pill ticks V1→V2→V3;
-  three aspect cards slide out of the summary at their spoken words.
-- **The mega prompt has the lane's emblem:** the direction sphere (the
-  WS01 emblem — a wireframe ball with a direction embedded, spin-vector
-  style; provenance checked against the WS01 record, consolidation §8.1)
-  replaces iteration 1's label-card: three incoming arrows combine into
-  the one embedded gold vector as the name lands.
-- **Use + verification are shown:** the mega prompt's text streams in a
-  ruled band underneath the sphere; the work's heading arrow rides it —
-  tilts rust in drift, is pulled back gold onto the sphere's exact
-  vector angle at "direction,".
-- **The zoom-out is shown:** an inject-ghost sphere flies out at
-  "Inject"; the camera pulls back into three job frames, each with its
-  own sphere at its own vector angle, under the owner's caption.
-- **The ending changed by the owner's instruction:** the bridge no
-  longer relays to WD-04; it plugs the Direction piece — "NEXT — how a
-  prompt can be a direction / A WORD IS A DIRECTION →" (ws01-v2). The
-  WD-04 derivation in iteration 1's metadata is superseded on record
-  (register R-9).
-
-## Vs the first draft
-
-Everything iteration 1's divergence summary established stands (the
-rejected definition survives nowhere; the objective, the six-move
-spine — now five moves with M5 absorbed — the A59 grammar, the
-owner's voice in registered mode). Iteration 2's addition is the
-mechanism's second half: iteration 1 taught that the directions
-accumulate and can be gathered; iteration 2 shows HOW the gathering
-works (chain summary + extraction), WHAT the gathered thing is (the
-direction sphere), and WHAT IT IS FOR (the stream underneath the work,
-the drift check, the vista of jobs).
+**Publish standing, unchanged by this iteration:** iteration
+2's build remains publish-eligible of record under the owner's
+>80 rule (his score: 80–81) and ships Tuesday unless he scores
+v4 above it first.

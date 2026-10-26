@@ -1,75 +1,92 @@
-# WD-02 — "What Is a Prompt?" (Word Definitions) — REBUILD, ITERATION 2
+# WD-02 — "What Is a Prompt?" (Word Definitions) — REBUILD, ITERATION 3
 
-**Status: iteration 2 complete — the owner's 60–70 verdict on iteration 1
-answered with a recorded revision: the transcript's gathering half
-rebuilt as a mechanism, the mega prompt given the lane's direction
-emblem and shown in use, the ending re-plugged to the Direction piece.
-Rendered from this branch's own files. Nothing is published: the publish
-gate is the owner's (register R-1/R-2).**
+**Status: iteration 3 complete — the owner's 80–81 verdict on iteration 2
+answered at the exact layer he named: the transcript's NARRATIVE
+ARCHITECTURE audited joint by joint (phase 13), the two condemned joints
+repaired in transcript v4 (phase 14), the scene adjusted only where the
+line changes forced it (phase 15). Rendered from this branch's own
+files. Iteration 2's build remains publish-eligible of record under his
+>80 rule and ships Tuesday unless he scores v4 above it first; the
+publish gate on v4 is his verdict (register R-1/R-2).**
 
 ## Why this iteration exists (the revision event)
 
-Iteration 1 (phases 1–7) stands in this branch's history as the accepted
-reference. On 2026-10-26 the owner scored it **60–70** — "getting
-better… the transcript still needs improvement" — and expanded the
-concept twice in the following minutes (chain summary properly;
-extraction of decisions / feature requests / criticisms; the mega
-prompt as a compartmentalized, injectable practice; then the zoom-out,
-the in-use stream + drift verification, the wire-sphere direction
-symbol, and a length discipline). Under progressive consolidation,
-accepted work is a reference and rollback point, not a seal: phases
-8–12 are that revision, appended — iteration 1's phases are untouched.
+Iteration 2 (phases 8–12) stands in this branch's history as the
+accepted reference. On 2026-10-26 the owner scored it **80–81** —
+"barely passing… at the low end of the acceptance level" — set the
+standing rule that **anything above 80 publishes**, and located the
+remaining defect precisely: the transcript's narrative architecture —
+the opening, the transitions, the arc, the ending, the recall — "seems
+to be still not de-randomized… random right now and not intentional."
+He offered another iteration now, later, or in parallel; the call was
+NOW, in parallel, because this piece is the wave's pattern-setter and
+the architecture layer defined here becomes standard. Under
+progressive consolidation, phases 13–15 are that revision, appended —
+iterations 1 and 2 are untouched.
 
-## The iteration's journey (phases 8–12)
+## The iteration's journey (phases 13–15)
 
-9. **P8 — feedback-impact + transcript v3.** The phase opens with the
-   impact analysis (objective UNCHANGED — the expansions deepen its
-   mechanism; spine, definition, style stand). v3: 11 sounding lines /
-   187 spoken words. L1–L5 and the payoff survive verbatim; the
-   gathering is mechanized (L7 chain summary, L8 extraction, L9 the
-   naming); L10 (in use) and L11 (injection + zoom-out) are new; v1's
-   L6 is retired on measured length facts (83.41 s with it) with its
-   reasoning on record. Editor pass, pause map re-derived, "lives"
-   checked (zero).
-10. **P9 — scene v2.** The mechanism SHOWN: the summary card forms and
-    folds (V1→V2→V3), the aspect cards extract at their spoken words,
-    the direction sphere (WS01 emblem, provenance checked) forms as
-    the arrows combine into its embedded vector, the text stream runs
-    underneath with the drift-check arrow, the vista of job frames
-    opens. 31 elements (20 carried, 11 new, 3 retired named). Eye-QA:
-    13+ timestamps viewed; seven defects caught and fixed.
-11. **P10 — decisions.** 228 of 228 (10 scaffold + 31 elements + 187
-    words; 18 principal words).
-12. **P11 — audio.** Reuse test per line: six takes reused under
-    cryptographic proof; five lines synthesized fresh (registered
-    mode, two jobs, all verifier-passed, variants enumerated). Fit at
-    atempo 1.000 everywhere; pause map verified on the voice track;
-    programme −14.10 LUFS / TP −1.52 over the continuous bed.
-13. **P12 — render + closing.** The MP4 rendered from THIS branch's
-    scene + programme WAV (75.024 s; −14.10 LUFS / TP −1.40 measured
-    on the render); editability proof executed on the changed scene;
-    divergence summary; this README; the register updated (R-1/R-2
-    carry his 60–70 on iteration 1 and await his verdict on iteration
-    2; R-9 the referral supersession; R-10 the duration, named).
+14. **P13 — the architecture map.** TRANSCRIPT NARRATIVE ARCHITECTURE
+    named as a layer of the decision model — distinct from content and
+    from delivery — and v3 audited against it: 13 units (the opening,
+    ten inter-line joints, the arc, the ending + recall). **9
+    INTENTIONAL outright; 2 INTENTIONAL WITH CAVEATS (J9's density;
+    the arc's ramp, its hole charged to J5); 2 CONDEMNED — J5
+    (L5→L7), where L6's measured retirement had removed the
+    accumulation's hinge, and the ending's recall, which restated the
+    definition but never named the mega prompt.** Fixes specified:
+    F1 (hinge inside L7's head), F2 (recall clause at L12's tail).
+    Metadata's story and delivery structures now cite the layer.
+15. **P14 — transcript v4 + audio.** Nine lines stand byte-identical;
+    L7 gains "Nothing you steer is lost." (24 words) and L12 gains
+    "…, gathered into one mega prompt." (24 words) — 196 spoken words.
+    The editor pass ran on the joints themselves ("does every joint
+    earn its place?"). Audio by the reuse test: nine takes carried
+    through iteration 2's processed stems; L7 synthesized fresh
+    (registered, alignment 1.0); L12 — after two registered attempts
+    were rejected by the verifier on the line-final "mega prompt"
+    tokenization — took the line's one ICL residual (alignment 1.0,
+    zero mismatches; disclosed, riding the owner's ear on R-1). No
+    gap size changed; the pause map re-verifies whole on the voice
+    track (onset +1 ms); programme −14.29 LUFS / TP −1.49 over the
+    continuous bed; the banned word checked at zero.
+16. **P15 — scene + decisions + render + state.** PLAN replaced with
+    the v4 lock; every choreography anchor from L7's folds onward
+    re-derived from the new word times with iteration 2's event
+    offsets preserved; principals move to L7's "chain"/"summary" and
+    L12's "directions"/"mega"/"prompt.". One element revised by force
+    (the payoff block raised 150 px — F2's third payoff line had
+    overlapped the bridge card; eye-QA caught it pre-render and the
+    re-shot frames verify the clearance). Decisions: **237 of 237**
+    (10 scaffold + 31 elements + 196 words; 20 principals).
+    Editability proof executed on the changed scene. Render:
+    wd-02-rebuild-v3.mp4 — 78.588 s, loudness measured on the
+    delivered MP4 in `render/verification.json`. The register records
+    his 80–81, the publish standing, and **R-12: the narrative
+    architecture layer itself**, this audit its first application.
 
-## Package map (iteration-2 phases; phases 1–7 stand as iteration 1)
+## Package map (iteration-3 phases; phases 1–12 stand as iterations 1–2)
 
-- `phases/phase-08/` — metadata.json (scaffold, revised in the open) +
-  transcript/ (consolidation.md with the feedback-impact analysis and
-  both expansions recorded, transcript.md = v3, delivery.md = v3 map).
-- `phases/phase-09/scene/` — index.html (39,820 B) + scene.json (31
-  elements, compartment account, QA log).
-- `phases/phase-10/decisions/` — decisions.json (all 187 words).
-- `phases/phase-11/audio/` — audio.json (reuse proof, jobs, trims,
-  fit, bed, measurements) + programme.mp3.
-- `phases/phase-12/` — README.md (this file) + decisions/
-  randomness-register.md + render/ (wd-02-rebuild-v2.mp4 +
-  verification.json + divergence-summary.md).
+- `phases/phase-13/` — metadata.json (scaffold evolved in the open) +
+  transcript/architecture-map.md (the audit: 13 units, verdicts,
+  fixes F1/F2).
+- `phases/phase-14/` — transcript/ (consolidation.md with the
+  feedback-impact analysis and the per-joint account, transcript.md =
+  v4, delivery.md = the carried map with v4's locked starts) + audio/
+  (audio.json — reuse proof, the L7/L12 job records incl. L12's two
+  verifier rejections and its ICL residual, fit, bed, measurements +
+  programme.mp3).
+- `phases/phase-15/` — README.md (this file) + scene/ (index.html,
+  40,288 B + scene.json) + decisions/ (decisions.json — all 196 words;
+  randomness-register.md) + render/ (wd-02-rebuild-v3.mp4 +
+  verification.json + divergence-summary.md — the v3→v4 joint-level
+  diff).
 
 ## Counts, in the open
 
 Package coverage = counts of recorded decisions (a completeness ruler,
-never a quality score): **228 of 228** on this iteration's rulers
-(10 scaffold + 31 elements + 187 words). The quality question is the
+never a quality score): **237 of 237** on this iteration's rulers
+(10 scaffold + 31 elements + 196 words). The quality question is the
 owner's next verdict — the register names what it rides on (R-1 his
-ear, R-2 his eye on v3, R-10 the 75.024 s duration).
+ear on the programme incl. L12's ICL line, R-2 his eye on v4 against
+v3's publish standing, R-10 the 78.588 s duration).
