@@ -13,19 +13,14 @@ a derivative export of this package.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 152 / 154**
-  - metadata scaffold: 9 / 11 fields decided (`metadata.json`)
+- **Decided / total decision fields: 153 / 154**
+  - metadata scaffold: 10 / 11 fields decided (`metadata.json`)
   - element decisions: 26 / 26 elements carry a record
     (`decisions/decisions.json` — 26 decision records)
   - word decisions: 117 / 117 words carry a recorded treatment or
     a deliberate as-is (`decisions/word-decisions.json`)
 - **Open fields, named** (undecided decision fields — a coverage
   inventory; it does not by itself measure the rendered result):
-  - `onset_repairs` — the first phrase window opens +530 ms after
-    the first word's spoken onset (window 1.95 s vs word start
-    1.42 s; measured by JOB PACKAGE-VERIFY-3's playback probe,
-    2026-10-26); fix = windows open at first-word onset at the
-    next plan rebuild — the same class eo-ep2 and eo-ep3 carry
   - `v3_verdict` — Action #20: the v3 improvement build (the
     shipped scene here) awaits Hadi's re-judgment; the v2 build
     scored 85/100 with headroom above 95 demanded
@@ -46,6 +41,19 @@ see `metadata.json` for the full values, reasoning and evidence):
     deliberately unused element layer / word layer / container /
     PLAN+CONFIG scene engine / audio / in-page decision layer /
     player chrome); the scene stays one self-contained file.
+
+Onset repair, 2026-10-26 (JOB ONSET-REPAIR-1 — the plan rebuild
+this field's fix rode on; see `metadata.json` fields.onset_repairs
+for the full evidence record):
+  - `onset_repairs` — CLOSED. PLAN phrase-1 window open moved
+    1.95 s -> 1.42 s (the first word's spoken onset) and the
+    opening-card gate moved with it (1.6 s -> 1.42 s); the
+    candidate render was re-rendered from the repaired scene
+    (house capture, libx264 CRF 19, the verified clone programme
+    audio stream byte-identical), re-probed at word 1's onset
+    within probe precision and re-measured at the delivered
+    duration/loudness. Package re-verification of the repaired
+    bytes rides JOB PACKAGE-VERIFY-6.
 
 Every decided field carries a rationale and a named source
 (research / agent reasoning / Hadi's taste). Open fields stay
