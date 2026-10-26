@@ -9,7 +9,7 @@ a derivative export of this package.
 - **Piece:** eo-ep2-v3 (board record) · Earth One channel ·
   The Planet's Story — Observations
 - **Title:** The Story Was the First Backup
-- **Stage:** complete package — locked transcript, shipped scene,
+- **Stage:** assembled package (package verification not yet run) — locked transcript, shipped scene,
   verified render. The delivered build speaks the **guide voice**
   (clone upgrade Tier B) and carries the catalogue's richest open
   record: ten named open fields, two of them accepted by nobody.
@@ -87,4 +87,4 @@ are carried above as scaffold fields.
 | `decisions/` | Element decision records + per-word decisions + the C-06 build record + exception/open records + evidence citations | the shipped scene's own DEC block, extracted verbatim; QC + ledger records appended with citations |
 | `audio/` | Delivered programme audio + Tier B provenance | the delivered MP4's audio stream; Pelican jobs from the voice registry |
 | `scene/` | The shipped scene, byte-identical + provenance | `files/earthone-ep02-v4-scene.html` (sha256 in `scene/scene.json`) |
-| `render/` | The delivered render + its verification measurements | `files/earthone-ep02-v4-wordanim.mp4` + delivered-file measurements + Dot's independent verification |
+| `render/` | The delivered render + its verification measurements | `files/earthone-ep02-v4-wordanim.mp4` + delivered-file measurements + Dot's independent verification of supplied stills and source records (not the MP4 bytes, playback or audio) |
