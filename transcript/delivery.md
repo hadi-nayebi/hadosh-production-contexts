@@ -1,65 +1,74 @@
-# WD-02 — delivery record + pause map, ITERATION 2 (phase 8, as amended for expansion #2; starts locked at phase 11)
+# WD-02 — delivery record + pause map, ITERATION 3 (phase 14; starts locked at the audio phase)
 
 Delivery is the second stage of the two-stage transcript
 model: the content settled in `transcript/transcript.md`; this
-file decides how it is timed and paused. Iteration 1's map
-stands for every joint whose lines survive (L1–L6, and the
-payoff's tail); the M6 joints are derived from the new beats'
-functions — chain → extraction → naming (expansion #1), then
-use → vista (expansion #2). The music bed is continuous
-throughout — pauses are narration events, never bed cuts (the
-owner's standing rule).
+file decides how it is timed and paused. **Iteration 3 changes
+no gap size and no delivery decision**: the phase-13
+architecture map condemned two joints' LOGIC (J5's missing
+hinge; the ending's recall coverage) and no joint's TIMING.
+Iteration 2's map therefore stands entire — every joint keeps
+its gap and its function; the absolute starts after L7 shift
+because L7's and L12's takes measure longer, and the starts
+below are recomputed from the measured takes under the locking
+rule. The music bed is continuous throughout — pauses are
+narration events, never bed cuts (the owner's standing rule).
 
-## The gap plan (silence between one line's end and the next line's start)
+## The gap plan (unchanged from iteration 2) and the locked starts
 
-| Joint | Gap | Function |
-|---|---|---|
-| lead-in (bed only) | L1 starts 0.40 s | Unchanged from iteration 1: settle before the misconception. |
-| L1 → L2 | **0.90 s — SUSPENSION** | Unchanged: the viewer-think beat before the correction. |
-| L2 → L3 | 0.60 s | Unchanged: claim → concrete case. |
-| L3 → L4 | 0.45 s | Unchanged: inside the performed example — the tightest joint. |
-| L4 → L5 | 0.70 s | Unchanged: example → mechanism widen. |
-| L5 → L7 | 0.70 s | Mechanism → the gathering's machinery: the merged joint of iteration 2 (L6 retired, §8.4) — the context stream is still moving as the chain summary begins to form from it; sized between the old mechanism→claim (0.80) and claim→instrument (0.60) joints it replaces. |
-| L7 → L8 | 0.55 s | Chain → extraction: one instrument, picked up and turned — working pace; the object (the summary) does not change, only its use. |
-| L8 → L9 | 0.70 s | Extraction → naming: the three aspects must land before the name is given, or the mega prompt reads as a label instead of a conclusion. The widest joint inside M6. |
-| L9 → L10 | 0.55 s | Naming → use: the named object goes to work at working pace — no contemplation gap; the piece now shows what the mega prompt DOES. |
-| L10 → L11 | 0.60 s | Use → the vista: the frame pulls back (the scene's zoom-out); a breath sized for the scale change, so the widening reads as a move, not a cut. |
-| L11 → L12 | **1.00 s — DESIGNED SILENCE** | Pre-payoff: iteration 1's most expensive second, migrated to the new last joint (it stood at L7→L8 in iteration 1, at L10→L11 in expansion #1's draft). The vista settles; then the definition restates. |
-| tail (after L12) | 2.00 s | Payoff held; the bridge card (the Direction plug) appears over bed only. |
+| Joint | Gap | Function (carried) | Line start (locked) |
+|---|---|---|---|
+| lead-in (bed only) | L1 starts 0.40 s | Settle before the misconception. | L1 0.400 |
+| L1 → L2 | **0.90 s — SUSPENSION** | The viewer-think beat before the correction. | L2 4.964 |
+| L2 → L3 | 0.60 s | Claim → concrete case. | L3 9.299 |
+| L3 → L4 | 0.45 s | Inside the performed example — the tightest joint. | L4 14.168 |
+| L4 → L5 | 0.70 s | Example → mechanism widen. | L5 19.994 |
+| L5 → L7 | 0.70 s | Mechanism → the gathering: in v4 the hinge sentence now OPENS L7, so this joint delivers the viewer to the claim ("Nothing you steer is lost") before the machinery — the gap's size was already the merged joint's size in iteration 2; its function completes. | L7 28.589 |
+| L7 → L8 | 0.55 s | Chain → extraction: one instrument, picked up and turned. | L8 37.379 |
+| L8 → L9 | 0.70 s | Extraction → naming: the aspects land before the name. | L9 45.698 |
+| L9 → L10 | 0.55 s | Naming → use, at working pace. | L10 52.248 |
+| L10 → L11 | 0.60 s | Use → the vista: a breath sized for the scale change. | L11 60.608 |
+| L11 → L12 | **1.00 s — DESIGNED SILENCE** | Pre-payoff: the vista settles; then the verdict — now carrying the recall clause — restates. | L12 68.677 |
+| tail (after L12) | 2.00 s | Payoff held; the bridge card (the Direction plug) appears over bed only. | total 78.588 |
 
-## Within-line delivery decisions
+Measured on the assembled voice track (phase 14 audio record):
+every designed gap survives whole — speech-free gaps
+0.401 / 0.986 / 0.679 / 0.451 / 0.741 / 0.722 / 0.610 / 0.708 /
+0.579 / 0.642 / 1.001 / 2.003 s against the plan above (the
+L7→L8 joint measures 0.610 speech-free against 0.55 designed —
+the new take's tail breath, inside the family's measured
+behavior from iteration 2); first-phrase onset +1 ms.
 
-- **L7's two fold beats:** "keeps forming" states the
-  continual process; the em-dash joint is a breath point,
-  then "each version folds…" performs the repetition. The
-  scene's two fold events fire on "folds" and on the line's
-  tail ("the one before") — the mechanism is seen twice
-  inside one line.
-- **L8's list** is delivered as three level beats (decisions /
-  feature requests / criticisms) — the summary instruction's
-  yield, enumerated, not rushed; the scene pulls one aspect
-  stream per beat.
-- **L9's colon** is the naming pause: "the mega prompt:" —
-  then the definition of the object follows in the same line.
-  The sphere forms on "mega prompt" (phase 9).
-- **L10's colon** is the verdict joint: "checked against it:"
-  — then the two outcomes, level and unhurried ("on its
-  direction, or drifting"). The scene performs one check
-  across the line: the work arrow tilts (drift), is pulled
-  back (on direction).
-- **L11's semicolon + em-dash:** injection first (the
-  portable act), then the keeping ("for every job"), then —
-  after the dash — the vista's conclusion ("a direction of
-  its own"), which the scene's zoom performs simultaneously.
-- All other within-line decisions are iteration 1's, carried
+## Within-line delivery decisions (iteration 3's deltas only)
+
+- **L7's hinge beat (NEW):** the line now opens with a full
+  stop after "lost." — a complete sentence, given its own
+  weight before the mechanism sentence begins ("As the session
+  runs…"). The take itself carries the sentence break (four
+  speech segments measured: hinge / chain clause / fold
+  clause / tail); no editorial pause was inserted — the
+  delivery is the take's own, as with every line. The two fold
+  beats inside the mechanism sentence are iteration 2's,
+  carried (the scene's fold events fire on "folds" and on the
+  line's tail, re-anchored to the new take's word times at
+  phase 15).
+- **L12's recall clause (NEW):** the clause rides the payoff's
+  existing fall — "…, gathered into one mega prompt." is
+  delivered inside the verdict's cadence, not as a tag after
+  it: the take's segmentation shows the line as one arc (five
+  segments, no sentence break before "gathered"). The designed
+  silence before the line and the 2.00 s tail after it are
+  unchanged.
+- All other within-line decisions are iteration 2's, carried
   (L2's two beats; L4's fragments; L5's em-dash breath points;
-  the payoff's own joints — its take is reused).
+  L8's three level list beats; L9's colon; L10's colon verdict;
+  L11's semicolon + em-dash).
 
 ## Locking rule
 
-Unchanged from iteration 1: absolute starts are computed at
-the audio phase from the measured, trimmed takes: start(L1) =
-0.40; start(Ln+1) = start(Ln) + trimmed_duration(Ln) +
-gap(Ln→Ln+1). Locked starts are recorded in `audio/audio.json`
-(phase 11) and in the scene's PLAN (`scene/scene.json`,
-phase 9 — the scene is authored against this same map).
+Unchanged from iterations 1–2: absolute starts are computed
+at the audio phase from the measured, trimmed takes:
+start(L1) = 0.40; start(Ln+1) = start(Ln) +
+trimmed_duration(Ln) + gap(Ln→Ln+1). Locked starts are
+recorded in `audio/audio.json` (phase 14) and in the scene's
+PLAN (`scene/scene.json`, phase 15 — the scene is authored
+against this same map).
