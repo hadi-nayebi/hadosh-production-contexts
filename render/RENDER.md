@@ -7,11 +7,19 @@ cites them by hash + workspace path instead of copying bytes
 ## The CLONE-VERIFIED candidate render
 
 - Path: `files/eo-ep3-clone-v1.mp4`
-- SHA-256: `293423e1ff60b93892088cb1a1b95e475bdfaa5af36245de57d873c2e3dc6b2c`
-- Bytes: 43770507 · Duration: 62.34 s
-- Measured (registry, re-measured 2026-10-26, identical to
-  at-build): −14.82 LUFS integrated, −1.30 dBTP.
+- SHA-256: `ac79636898b9dcb73274ef5d0c88820086e83f4ef2d2285bcf33712ee14e1a28`
+- Bytes: 26007231 · Duration: 62.34 s
+- Measured (JOB ONSET-REPAIR-1, 2026-10-26, the verification method —
+  loudnorm input_i/input_tp): -14.82 LUFS integrated,
+  -1.3 dBTP.
 - This is the render whose audio `audio/narration.m4a` carries.
+- **Onset repair (2026-10-26, JOB ONSET-REPAIR-1):** this candidate was
+  re-rendered from the onset-repaired scene (phrase-1 window opens at
+  the first word's spoken onset, 1.42 s; see `metadata.json`
+  fields.onset_repairs, now decided). The superseded candidate
+  (sha256 `293423e1ff60b93892088cb1a1b95e475bdfaa5af36245de57d873c2e3dc6b2c`,
+  43,770,507 B, 62.34 s, −14.82 LUFS / −1.30 dBTP) is superseded, not
+  erased: its identity stands here and in `render/verification.json`.
 
 ## The delivered (shipped) render — guide voice
 
