@@ -10,7 +10,7 @@ soa-03 stands in one state: **an unbuilt, fact-refreshed script.** The piece was
 
 Scaffold fields 9/16 decided · element decisions 12/13 recorded with reasons · word decisions 0/92 (layer absent-by-development — named, not padded) · **total 21/121**.
 
-## Open fields, named (undecided decision fields — a coverage inventory, not a quality score)
+## Open fields, named (undecided decision fields — a coverage inventory, not an alignment score)
 
 - **audience** — the misconception is named in the script's own declaration (The Occasional Dip, N-06); the audience itself was never settled as a record, and the board checklist carries no audience item for this piece. *Blocker: a phase-0 audience+misconception pass recorded for the piece.*
 - **delivery_structure** — no pause map or delivery decision exists; the script carries a runtime projection only, whose word figure does not reproduce over the governing text (92 spoken counted; the doc says ≈80). *Blocker: the build — narration + locked timings first.*
