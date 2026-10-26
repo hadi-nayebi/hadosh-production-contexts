@@ -1,29 +1,29 @@
-# SOA-01 — settled transcript (CAUSAL, phase 11, 2026-10-26)
+# SOA-01 — settled transcript (FINAL MERGED BUILD, phase 23, 2026-10-26)
 
-Status: **SETTLED by the causal consolidation**
-(`transcript/consolidation-causal.md`): drafted from the
-prescribed structure (phase 9) before the first draft's text was
-re-read; the per-line account against that text is §3 of the
-consolidation. This text supersedes phase 3's settled text (the
-first draft's delivered text, adopted there as Candidate A).
+Status: **THE PIECE'S FINAL TEXT** — the merge of the A/B
+candidates V1 and V2 under the owner's verdict (action #83,
+2026-10-26 ~14:59 ET), consolidated at phase 20
+(`experiments/ab-2026-10-26/merge-consolidation.md` — the
+per-line merge account, the editor pass, the double-claim
+test) and promoted here at phase 23. It supersedes the
+phase-11 causal text as the piece of record; that text and
+both A/B candidates remain in history as references and
+rollback points.
 
-**81 spoken words** (spoken ruler: whitespace tokens excluding
-standalone em-dash tokens — this text carries none) ·
-**81 mechanical tokens** (the two rulers coincide here; stated
-because the branch's practice is to state both). 10 lines.
-Count note: the consolidation's first hand-count said 83; the
-machine count (the word-timing pass over the settled text)
-caught the error before this phase closed — L1 is 9 words and
-L5 is 10. The settled count is 81, identical in size to the
-first draft's 81: the divergence between the two texts is
-allocation and address, not length.
-Narration is second-person throughout; navigation 0%.
+**119 spoken words** (spoken ruler: whitespace tokens
+excluding standalone em-dash tokens) · **123 mechanical
+tokens** (4 standalone em dashes). 13 lines. Narration is
+second-person throughout; the spoken relay is ≈15% of spoken
+words (owner-directed exception, inside the 20% hard cap —
+phase 20 §3). The owner text rule holds: zero occurrences of
+the banned word (machine-scanned before synthesis).
 
-Line starts are **locked at the audio phase** (phase 14) from
-the measured fitted takes, per the pause map in
-`transcript/delivery.md`; the starts of record live there and in
-`audio/audio.json`, and the scene's PLAN carries them
-(`scene/scene.json`).
+Line starts are **locked at the audio phase** (phase 21) from
+the measured fitted takes OF EACH VOICE, per the pause map in
+`transcript/delivery.md`; the starts of record live there and
+in `audio/audio.json`, and each scene's PLAN carries its own
+voice's timings (`scene/scene.json` — clone;
+`scene/scene-default.json` — default).
 
 ## L1 — (M1, the number)
 
@@ -35,7 +35,7 @@ You are one of them.
 
 ## L3 — (M2, the container)
 
-Everything you have built there lives inside their chat box.
+Everything you have built there sits inside their chat box.
 
 ## L4 — (M2, the inventory)
 
@@ -53,25 +53,26 @@ Nothing. It was all rented.
 
 The model supplies the intelligence.
 
-## L8 — (M4, the layer)
+## L8 — (M4, the layer — NAMED; from V1)
 
-Everything that makes it yours lives in the layer around it.
+Everything that makes it yours sits in the layer around it — the harness.
 
-## L9 — (M5, the alternative)
+## L9 — (M5a, the claim; from V1)
 
-That layer can live as files on your own machine.
+That harness belongs to you — not to them.
 
-## L10 — (M6, the payoff)
+## L10 — (M5b, the act; from V2)
+
+Move that harness onto your own computer.
+
+## L11 — (M5c, the swap — performed as proof; from V2)
+
+Then change the model tomorrow. The harness stays — and it is still yours.
+
+## L12 — (M6, the payoff)
 
 You use it every week. You own none of it.
 
-## Bridge card (screen text, not narration)
+## L13 — (M6, the relay; from V2)
 
-Headline: **WHO OWNS YOUR LAYER?**
-Sub-line: "The long answer: Who Owns the Toaster? →"
-Target: 'Who Owns the Toaster?' (fg2cV8sh3kY), flagship channel.
-Appears at the payoff's hold, over bed only (phase-9 end_referral).
-
-## On-screen source line (with L1, lane's dated-fact law)
-
-"1.2 billion weekly ChatGPT users — OpenAI DevDay · Sep 29, 2026"
+Follow Hadosh Academy to learn how — capture more of your harness locally, with control and transparency over it.

@@ -1,39 +1,67 @@
-# soa-01 — "1.2 Billion Renters" (State of Adoption) — CAUSAL REBUILD + A/B EVOLUTION
+# soa-01 — "You use it every week. You own none of it."
 
-**Status: causal redo complete (phases 8–15) and now carrying an OPEN A/B evolution layer (phases 16–19, JOB SOA01-AB-1, 2026-10-26). The settled build of record is still the phase-15 build. The A/B set — two transcript candidates × the clone voice, plus the recommended transcript in Archer's default voice — sits in `experiments/ab-2026-10-26/` as an open owner judgment (register R-9/R-10); nothing in it is pre-decided, and no phase of this evolution changes the settled build until the owner's verdict lands in a later phase.**
+*A build journal: how this 54-second short was produced from its own file system, decision by decision. The git history of this branch **is** the workflow — every phase below is one commit, and the commit order is the production order.*
 
-## The journey in this branch's history
+**Piece:** soa-01 · **Lane:** Earth One — State of Adoption · **Status: FINAL — the merged build is the piece of record, in TWO voice versions, queued for Tuesday publication as two videos** (the owner's voice experiment; `render/publication-queue.md`)
 
-1. Empty root (the owner's from-scratch order).
-2. P1 — metadata: objective / message / audience (provisionally stood; see P8).
-3. P2–P7 — the first build's layers. **SUPERSEDED-BY-CAUSAL-REDO** (owner's ruling, 2026-10-26 ~12:40 ET: its decisions ran backwards, video → context — guaranteeing an identical output, which is a failed rebuild by definition).
-4. **P8 — objective pressure test + re-derivation.** Objective (20 words): "Make every AI user in the 1.2 billion see a renter in the mirror — and ask who owns their layer." Message: "You use it every week. You own none of it."
-5. **P9 — architecture prescribed from the objective** (six moves, the vanishing test, two designed silences, question-first bridge).
-6. **P10 — style decided from the menu against the objective:** cinematic typography (number, payoff) + motion graphics A59 grammar (objects).
-7. **P11 — transcript consolidated from the structure:** 10 lines / 81 words; editor pass; delivery + pause map.
-8. **P12 — new scene built to the prescription** (single file, 26 elements).
-9. **P13 — decisions:** 117 of 117 (10 scaffold + 26 elements + 81 words; 14 principal words).
-10. **P14 — audio:** all 10 lines synthesized fresh; programme mastered to −14.56 LUFS / TP −1.49.
-11. **P15 — render + closing:** the MP4 rendered from THIS branch's scene + programme; verification with input hashes; divergence summary.
-12. **P16 — A/B transcript consolidation (the owner's 2026-10-26 ~13:23 direction).** Feedback-impact analysis first (objective unchanged; message layer revised in three named ways; M4/M5/M6 move, M1/M3 explicitly unchanged; the open R-9 dependency named). Two candidates, both obeying the direction — the harness named subtly, ownership landed, the local-build/model-swap consequence, the Academy relay — and the owner text rule (the banned word) applied: **V1** (113 spoken words; the name lands at the ring; the payoff keeps the final verdict position) and **V2** (111 spoken words; ownership is the destination; the swap performed as proof). Recommendation recorded: V1. Both stay candidates in `experiments/ab-2026-10-26/`.
-13. **P17 — voice A/B production.** Both candidates synthesized fresh in the clone (24/24 first-take verified, zero ICL — no voice-character mixing), V1 also in Archer's default voice; three programmes over the piece's bed, mastered −14.55 / −14.46 / −14.36 LUFS, TP −1.50 each; pause maps verified on the voice tracks.
-14. **P18 — renders.** Each candidate scene is a parameterized variant of the settled scene (same design system; PLAN from its own measured takes; the drawn layer is NAMED on screen at its naming beat — V1 "THE HARNESS", V2 "YOUR HARNESS" + core-swap visual; the Academy tag carries the relay). Three specimens rendered and measured: three specimens, each 1080x1920@30, measured on the rendered file —
-  - T1-clone (V1 x clone): 50.000 s, -14.57 LUFS, TP -1.44, sha256 055cf292ce114a67…
-  - T2-clone (V2 x clone): 48.863 s, -14.46 LUFS, TP -1.43, sha256 0a7259e4c3b79416…
-  - T1-default (V1 x Archer's default): 46.090 s, -14.36 LUFS, TP -1.49, sha256 6a9b05baf97be7ef…
-  (full hashes + onset probes + frame QA in the verification record)
-15. **P19 — this state:** README + register; the A/B set recorded as an open owner judgment with its route (his verdict closes the transcript and voice axes in a later phase; a default-voice win carries R-9 visibly).
+---
 
-## Package map
+## Objective
 
-- `metadata.json` — the scaffold at its phase-11 state (the A/B layer does not change it).
-- `transcript/` — consolidation-causal.md, transcript.md (settled text), delivery.md (settled pause map).
-- `scene/` — index.html (the settled scene of record) + scene.json.
-- `decisions/` — decisions.json (settled build) + randomness-register.md (evolved by P19).
-- `audio/` — audio.json (settled programme) + programme.mp3.
-- `render/` — verification.json + divergence-summary.md (settled build). MP4: `render/soa-01-causal-rebuild.mp4`.
-- `experiments/ab-2026-10-26/` — the A/B layer: consolidation.md + transcript-v1.md + transcript-v2.md (P16); audio/audio-ab.json + the three programme MP3s (P17); scene-t1-clone/ + scene-t2-clone/ + scene-t1-default/ + render/ with the three specimen MP4s and render-ab-verification.json (P18).
+> **Make every AI user in the 1.2 billion see a renter in the mirror — and ask who owns their layer.**
 
-## Counts, in the open
+The piece exists to produce one moment: a ChatGPT user recognizes that everything they have built inside the product is held on rented ground — and immediately afterwards learns that the part that makes the AI *theirs* has a name (**the harness**), belongs to them, and can sit on their own computer. Success is not a view count; it is that recognition, followed by the question the bridge card asks out loud: *Who Owns Your Layer?*
 
-Settled build coverage (its own rulers): **117 of 117** (10 scaffold + 26 elements + 81 words). A/B variants carry their OWN rulers, stated in their scene records (27 elements each — the 26 inherited plus the new academy tag; 117 / 114 / 117 mechanical words) and are not added to the settled count. Open items are carried in the register — R-1 (lane style, the owner's), R-6 (the settled L2 ICL line, the owner's ear), R-9/R-10 (this A/B set).
+*(Consolidated with the owner across the founding sprint and recorded at phase 1 (P1). The objective has not changed since; what changed — twice, deliberately — is how well the piece serves it.)*
+
+## The message
+
+**You use it every week. You own none of it.**
+
+The message is one line, and it is the payoff: it is withheld until the final movement, after the mirror, the vanishing test, the naming of the layer, the claim, the act, and the performed proof have each done their work — so that when it lands, it lands as a verdict the viewer has already proven to themselves.
+
+## The structure (six moves)
+
+**M1 — The number, then the mirror.** 1.2 billion weekly users; *you are one of them.* Scale first, then personal.
+**M2 — The container and the inventory.** Everything built sits inside their chat box: instructions, memory, files — named as property.
+**M3 — The vanishing test.** If the account closed tonight, what survives? One full second of designed silence for the viewer's own answer — then the verdict: *Nothing. It was all rented.*
+**M4 — The naming.** The model supplies the intelligence; everything that makes it yours sits in the layer around it — **the harness**. The word enters the language here, casually, the way true things are named.
+**M5 — The claim, the act, the proof.** *That harness belongs to you — not to them.* Move it onto your own computer. Then change the model tomorrow: the harness stays, and it is still yours — the swap is **performed on screen** as the proof, not described.
+**M6 — The payoff and the relay.** The message, in final-verdict position. Then the bridge, in the owner's own terms: capture more of your harness locally, **with control and transparency over it** — and the long answer one tap away: *Who Owns the Toaster?*
+
+## The journey (phases = commits)
+
+1. **Objective** — the piece's reason to exist, stated and tested against the published first draft.
+2. **Metadata layer** — before any transcript existed: identity, lane, audience, the owner's voice — and the gap between what the metadata claimed and what the first draft delivered.
+3. **Transcript consolidation** — the first-draft text, and the argument against it, line by line.
+4. **Visual storytelling** — the same argument made against the first draft's frames.
+5. **Word decisions** — every word of the first text, decided or flagged.
+6. **Scene** — the first draft's scene, preserved as evidence.
+7. **Render** — the first draft's render, and the three absences visible in it.
+8. **The causal redo: re-founded metadata** — the lane's canon applied as law, not as notes; the published original retired to evidence, consulted last.
+9. **The audience, decided** — one viewer, one moment of recognition; sound-off legibility as a designed property.
+10. **The style decision** — cinematic typography + the A59 motion-grammar, derived from the objective. *(The lane's base style stays the owner's open call — register R-1.)*
+11. **Transcript consolidation, causal** — the text rebuilt from the objective: 10 lines, 81 words, **zero lines surviving from the first draft**. Every line carries its derivation.
+12. **The scene, causal** — authored fresh from the transcript's own plan (no code reused): the number as a monument, the vanishing test **shown**, the layer as a drawn ring, the payer change made visible.
+13. **Word decisions, causal** — 117 of 117 decided (10 scaffold + 26 elements + 81 words).
+14. **Audio, causal** — every line synthesized fresh in the owner's cloned voice (Pelican, registered mode, verified per line); silence treated as a placed asset; the designed second of silence at the test, measured.
+15. **Render, causal** — the branch's own MP4, rendered from its own files and verified against them: 35.540 s, −14.56 LUFS.
+16. **The A/B set, opened** — the owner's direction on the redo ("better… you are getting in the right direction") sent the piece one evolution further: name the layer **the harness**, the customization layer belongs to the viewer, the close relays in his terms. Two transcript candidates × two voices, as a designed comparison — not a coin flip.
+17. **The owner-voice specimens** — both candidates synthesized line-by-line in the cloned voice (24/24 verified takes, zero ICL), assembled on locked starts, mastered.
+18. **The default-voice specimen + the renders** — the third specimen, and all three rendered and verified: same film grammar, the candidates' differences **shown** (the label timing, the fused naming, the performed swap), diff computed word-by-word for the owner's ruling.
+19. **The set delivered** — three specimens to the owner's ear and eye, with a recommendation on the record (transcript V1, voice clone) and the open risks named (R-9, R-10).
+20. **The merge consolidation** — the owner's verdict (action #83): he liked all three specimens; V2's delivery "a bit better"; the ruling was **MERGE** — one more complete text — in **both voices**, published as **two videos**: a real-world test of whether the voice changes the audience. The merged text (13 lines, 119 words) is accounted line by line: V1 keeps the naming and the claim (the subtle introduction; the opposition named), V2 keeps the act, the performed proof, and the relay in his own words; the shared spine and the payoff are untouched.
+21. **Audio, final** — the merged text synthesized in both voices: the clone 13/13 first-take verified on Pelican (seed 7400, registered mode, zero ICL); the default voice from the stock TTS. Both programmes fitted on locked starts over the same bed, pause maps verified joint by joint on both voice tracks. One deliberate deviation, on the record: the default programme was level-matched (+0.35 dB scalar) to the clone's loudness, so Tuesday's experiment compares voices, not volume. Totals: clone 53.921 s, default 49.474 s.
+22. **Renders, final** — the merged scene (the two-stage label flip: **THE HARNESS** at the naming word, **YOUR HARNESS** at the claim; the ring tints as the move is spoken; the core swaps to **ANOTHER MODEL** at the swap's own word) rendered with each programme: `soa-01-final-clone.mp4` (53.921 s, −14.36 LUFS, TP −1.38) and `soa-01-final-default.mp4` (49.467 s, −14.38 LUFS, TP −1.12) — loudness matched within 0.02 dB; naming, claim, swap, relay and bridge frames viewed from both; the editability contract re-proven on the final scene.
+23. **Promotion + publication prep** — this phase: the merged build becomes the piece of record (`transcript/`, `scene/`, `audio/`, `render/` below); register R-9 and R-10 closed by the owner's ruling; the standing pattern he set recorded — **the voice-variant choice (clone / default / both) is a per-video decision**. Tuesday's queue holds two videos with titles and full descriptions drafted (`render/publication-queue.md`). Nothing uploads from this job; the owner reviews the final version first.
+
+## The numbers that close the piece
+
+- **Transcript:** 13 lines · 119 spoken words · zero survivals from the first draft remain a fact of phase 11; the final text is a *merge*, whose every line's source is on the record.
+- **Decisions:** 160 of 160 (10 scaffold + 27 elements + 123 words; 19 principal words carry the story's weight).
+- **Audio:** two programmes over one bed; the two designed silences measure 1.003 s and 1.053 s in the clone programme.
+- **Renders:** 1080×1920 @ 30 fps; clone 53.921 s / −14.36 LUFS / TP −1.38; default 49.467 s / −14.38 LUFS / TP −1.12.
+
+## What this branch taught the workflow
+
+The file-system history is the deliverable: objective → metadata → transcript → visuals → audio → render, in that order, each layer prescribing the next, the original consulted last and only as evidence. Progressive consolidation, not a frozen waterfall: accepted layers stay reference points, and a genuine discovery downstream revises upstream **on the record** — this piece revised its transcript twice after "settled" (the owner's naming direction, then his merge verdict), each time as a new phase with its reason and consequences exposed, never as a silent edit. And the voice ruling generalizes: which voice a video carries is a decision, made per video, by the owner — this branch is where that pattern was set.
