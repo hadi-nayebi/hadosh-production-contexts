@@ -9,14 +9,14 @@ a derivative export of this package.
 - **Piece:** eo-ep3 · Earth One channel · The Planet's Story —
   Observations
 - **Title:** The Message That Outlived Its Maker
-- **Stage:** assembled package (package verification not yet run) — CLONE-VERIFIED candidate audio,
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-2) — in-package editability absent, a named gap against the full deliverable criteria — CLONE-VERIFIED candidate audio,
   locked transcript, shipped scene, renders cited by hash
   (both exceed the in-branch size ceiling; see `render/`).
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 190 / 197**
-  - metadata scaffold: 6 / 13 fields decided (`metadata.json`)
+- **Decided / total decision fields: 190 / 198**
+  - metadata scaffold: 6 / 14 fields decided (`metadata.json`)
   - element decisions: 24 / 24 elements carry a record
     (`decisions/decisions.json` — 24 decision records)
   - word decisions: 160 / 160 words carry a recorded treatment or
@@ -29,6 +29,11 @@ a derivative export of this package.
     exists for this piece
   - `scene_decomposition` — the scene ships as one self-contained
     file; splitting it is a future, separately recorded decision
+  - `onset_repairs` — the first phrase window opens +530 ms after
+    the first word's spoken onset (window 1.95 s vs word start
+    1.42 s; measured by JOB PACKAGE-VERIFY-2's playback probe,
+    2026-10-26); fix = windows open at first-word onset at the
+    next plan rebuild — the same class eo-ep2 carries
   - `orientation_line` — STRUCT-2 H3 weak: no standalone
     orientation line; the title card + series container carry it
   - `publication_attribution` — the CC BY-SA block (Pettakere Cave
