@@ -8,7 +8,7 @@ a derivative export of this package.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** complete package — CLONE-VERIFIED audio, locked
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-1) — in-package editability absent, a named gap against the full deliverable criteria. CLONE-VERIFIED audio, locked
   transcript, shipped scene, verified render.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
