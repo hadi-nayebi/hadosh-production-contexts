@@ -1,22 +1,50 @@
 {
- "piece": "soa-01",
- "status": "ASSEMBLY-PENDING — defined, not yet executed in this branch (see render/RENDER.md). No measurement below is claimed for a file this branch has produced.",
- "derivative_definition": "render/render.mp4 — produced from THIS branch's scene/index.html (at ?render, overlays inert) + the clone programme audio of audio/audio.json, per render/RENDER.md.",
- "targets": "1080×1920 @ 30 fps · duration 34.348 ± 0.05 s · −14 ±1 LUFS integrated · true peak ≤ −1 dBTP · AAC audio",
- "reference_measurement_set": {
-  "source": "the first draft's delivered file — the same scene code + the same programme audio this branch carries, assembled under the same standard; the assembly target, cited not claimed",
-  "path": "files/soa01-clone-v1.mp4",
-  "sha256": "5b67bea3fc93109e9ea98b36610c0ec3bbc7236d93db8f6f189c96f55491068d",
-  "bytes": 2200688,
-  "duration_s": 34.348,
-  "lufs_integrated": -14.42,
-  "true_peak_dbtp": -1.46,
-  "asr_check": "79/79 tokens in order, zero deletions/insertions (ASR token ruler)",
-  "measured": "on the delivered file itself, 2026-10-26 (identical to at-build values)"
+ "record": "render verification \u2014 phase 15 (causal redo). The render is the production's final step, executed from this branch's own files: the phase-12 scene + the phase-14 programme.",
+ "render": {
+  "file": "render/soa-01-causal-rebuild.mp4",
+  "sha256": "397e01b13f15d34f3c128da5041f41b3afcfec7e967a8c67b1c0cfab6c980ac4",
+  "bytes": 2407135,
+  "duration_s": 35.54,
+  "video": "H.264, 1080x1920, 30 fps, yuv420p, faststart",
+  "audio": "AAC 192 kb/s from the verified programme WAV"
  },
- "on_assembly": [
-  "Re-measure the produced file (duration / LUFS / TP) and replace this status with the measured values + the produced file's sha256.",
-  "Run the onset probe (register R-5; tolerance C-02 ±120 ms) and record the result here.",
-  "Strike register item R-3 in decisions/randomness-register.md with this file as the removing record."
- ]
+ "inputs": {
+  "scene_sha256": "713073396fd58ed33bdd25d4664e1ee3f441004a43f264e81b361f03e74ba682",
+  "programme_wav_sha256": "b74e5ae586f70c5c10f8dded84a0af6030dd5e4b57842e8da71a646afa29896f",
+  "procedure": "CDP deterministic seek-capture of the scene at 30 fps (1,066 frames, private Chrome port 9927/9933) + ffmpeg mux with the programme WAV (libx264 crf 20)"
+ },
+ "measurements_on_the_render": {
+  "integrated_lufs": -14.56,
+  "true_peak_dbtp": -1.33,
+  "lra": 3.1,
+  "loudness_verdict": "inside the master band (-14 +/-1 LUFS, TP <= -1 dBTP); the AAC stage moved TP from the programme WAV's -1.49 to -1.33, still inside the ceiling",
+  "first_phrase_onset_probe": {
+   "instrument": "the voice track of the same programme (the bed is continuous by the owner's standing rule, so a mix-level probe reads the music, not the narration)",
+   "measured": "lead-in silence ends at 1.202 s against the planned first-phrase start of 1.200 s \u2014 deviation +2 ms, far inside the C-02 tolerance of +/-120 ms"
+  },
+  "pause_map_verification": {
+   "instrument": "silencedetect (-45 dB, min 0.20 s) on the assembled voice track",
+   "measured_speech_free_gaps_s": [
+    1.202,
+    0.557,
+    0.741,
+    0.353,
+    0.805,
+    1.076,
+    0.706,
+    0.529,
+    0.763,
+    1.002,
+    2.402
+   ],
+   "reading": "lead-in 1.202 s; inter-line gaps 0.35-0.81 s as planned; the two designed silences measure 1.076 s and 1.002 s; the bed-only tail measures 2.402 s. Every joint of the phase-11 pause map is present in the rendered audio."
+  }
+ },
+ "frame_qa": "frames extracted FROM THE RENDER at 2.5 / 19.8 / 25.8 / 34.5 s and viewed: monument+source, Nothing.+RENTED, layer ring, payoff+bridge \u2014 they match the scene QA frames; the story reads sound-off from the render itself",
+ "editability_proof": {
+  "executed": "on the phase-12 scene in ?edit=1 mode (headless Chrome, private port)",
+  "steps": "clicked L8 word 9 (\"layer\") -> the inspector opened with the word's decision record; set vertical offset +140 px and saved -> overlay {\"L8:8\":{\"dt\":0,\"dy\":140,\"sc\":1}} written; the frame at the same instant changed by 58,041 pixels; after reload the edit persisted in playback; after clearing the overlay and reloading, the frame was pixel-identical to the pristine frame (0 changed pixels)",
+  "verdict": "the scene is an editable file system: a word-level change is made in the scene's own surface, persists, changes the picture, and strips back losslessly"
+ },
+ "divergence": "render/divergence-summary.md \u2014 old video vs new video, dimension by dimension"
 }
