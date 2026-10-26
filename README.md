@@ -9,7 +9,7 @@ a derivative export of this package.
 - **Piece:** teaser-print-v2 · Earth One channel · The Planet's Story —
   Observations
 - **Title:** Two Identical Bibles
-- **Stage:** complete package — CLONE-VERIFIED candidate audio,
+- **Stage:** assembled package (package verification not yet run) — CLONE-VERIFIED candidate audio,
   locked transcript, shipped scene (the v3 build), verified clone
   render in-branch.
 
