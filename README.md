@@ -1,6 +1,6 @@
 # dir-03 — "You Can Do Math With Meaning" (Direction Series)
 
-**Stage: assembled package — PARTIAL (word decisions absent; element decisions complete): metadata + delivered transcript + decision records + delivered guide-voice audio + shipped scene + delivered render in branch.** Package verification has not been run on this branch and is not claimed.
+**Stage: assembled package — PARTIAL (word decisions absent; element decisions complete): metadata + delivered transcript + decision records + delivered guide-voice audio + shipped scene + delivered render in branch; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-11) — the word-layer absence claim itself verified against the workspace records (the absence is total: no Tier-2 instance record exists for this piece either); editability (a) proven for the data the renderer consumes (plates/segments) by direct edit test; the carried plan word objects are not renderer input (confirmed by direct test); editability (b) absent.**
 
 This branch is one video's complete production package, in the repository's standard shape. The package describes the piece as it stands — and this piece stands in **two states at once**, which the package keeps strictly separate:
 
