@@ -8,42 +8,41 @@ consulted last; its transcript was rejected by the owner as content.
 
 - **Piece:** wd-02 · flagship channel · Word Definitions lane
 - **Title:** What Is a Prompt?
-- **Stage:** phase 3 of 7 — transcript consolidation.
+- **Stage:** phase 4 of 7 — scene (visual storytelling).
 
 ## Where the branch stands
 
-- **Settled transcript:** 8 lines / 128 spoken words
-  (`transcript/transcript.md`) — the owner's definition taught
-  as six moves: the flat picture, the turn (a prompt is a
-  direction), the steering performed, the context underneath,
-  accumulation, the gathering (chain summary = the mega prompt)
-  and the payoff.
-- **Consolidation, in the open** (`transcript/consolidation.md`):
-  Candidate A drafted fresh from the architecture first (7 lines
-  / 106 words); Candidate B — this morning's redevelopment draft
-  from the owner's definition — weighed second; the rejected i3
-  text read last, as evidence only (zero lines shared; its
-  definition is the antithesis). The settled text coincides with
-  Candidate B on all 8 lines, each with an independent per-line
-  derivation; §5 of the consolidation states why that
-  convergence is not the ratification failure this rebuild
-  exists to correct.
-- **Delivery:** the pause map is decided (`transcript/delivery.md`)
-  — a 0.90 s suspension after the flat picture, a 1.00 s designed
-  silence before the payoff, tight joints inside the performed
-  steering; starts lock at the audio phase.
-- **Owner text rule recorded:** the word "lives" is banned in
-  synthesis text (2026-10-26, ~13:24 ET) — the settled text
-  carries zero occurrences (consolidation §7).
+- **Scene built to the prescription** (`scene/index.html`, one
+  self-contained file, 24,816 bytes): seven compartments following
+  the six moves — the flat picture drawn (a lone card tagged THE
+  PROMPT), the turn (tag struck, re-tagged FIRST DIRECTION, the
+  arrow), the steering performed (the card + three steering cards
+  landing on a page that warms and shortens), the context stream
+  (produced, continued, compacted, bent), accumulation (the same
+  cards stacked, ghosts behind, "FOUR DIRECTIONS — AND
+  COUNTING"), the gathering (a gold spine chains the stack; the
+  MEGA PROMPT card holds the same four directions as its summary
+  rows; cinematic type at the gathering and the payoff only), and
+  the silent bridge to WD-04.
+- **Semantic continuity is implemented, not illustrated:** one
+  DOM element is the prompt card through all five of its roles;
+  the steering cards keep their identity from page to stream to
+  pile to mega card; the stream is one ribbon, extended and bent,
+  never re-drawn.
+- **Frame QA:** ten frames viewed; four defects found by eye and
+  fixed before any render (a landed card covering the page label;
+  the stream row overlapping the stream label; the chain bar
+  reading as a strikethrough; the mega card too short for its
+  fourth row + payoff type colliding with its title) — the log
+  is in `scene/scene.json`.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **At this phase:** scaffold 10 / 10 decided; the settled
-  transcript's 128 spoken words are on record (their per-word
-  visual decisions land at phase 5). Scene elements are counted
-  at phase 4.
+- **At this phase:** scaffold 10 / 10; scene elements 25 / 25
+  decided (`scene/scene.json`); the settled transcript's 128
+  words are timed in the scene's PLAN (their per-word decisions
+  land at phase 5).
 - **Open items, named:** the owner's verdict on the settled
-  transcript — Candidate B never received it, and this build
-  does not pre-judge it; the item is carried in the phase-7
-  randomness register (the journey completes; the publish gate
-  stays his). Everything else proceeds in phase order.
+  transcript and his ear verdict on the assembled programme —
+  both carried in the phase-7 register; the publish gate stays
+  his.

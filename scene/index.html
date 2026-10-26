@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>WD-02 (rebuild) — What Is a Prompt?</title>
+<style>
+  html,body{margin:0;padding:0;background:#05060a;width:1080px;height:1920px;overflow:hidden}
+  #stage{position:relative;width:1080px;height:1920px;background:radial-gradient(ellipse 900px 1200px at 540px 860px,#10131f 0%,#05060a 70%);
+    font-family:Georgia,'Times New Roman',serif;color:#f2ead8}
+  .furniture{position:absolute;left:0;width:1080px;text-align:center;font-family:Helvetica,Arial,sans-serif;
+    letter-spacing:6px;font-size:25px;color:#8b93a7}
+  #seriesTop{top:104px} #seriesTop b{color:#d8b25c;font-weight:600}
+  /* C1/C2 the prompt card (the spine object) */
+  #card0{position:absolute;width:460px;height:250px;border-radius:22px;background:#1d2436;border:3px solid #5a6a8c;
+    box-sizing:border-box;opacity:0;z-index:6}
+  #card0 .dots{position:absolute;top:20px;left:26px;font-family:Helvetica,Arial,sans-serif;font-size:22px;color:#5a6a8c;letter-spacing:8px}
+  #card0 .bars{position:absolute;top:86px;left:34px;width:392px}
+  #card0 .bars div{height:20px;border-radius:10px;background:#39445f;margin-bottom:22px}
+  #card0 .face{position:absolute;top:96px;left:0;width:460px;text-align:center;font-size:43px;font-style:italic;color:#f5efe0;display:none}
+  #tagOld,#tagNew{position:absolute;width:340px;text-align:center;font-family:Helvetica,Arial,sans-serif;font-weight:700;
+    font-size:30px;letter-spacing:5px;padding:13px 0;border-radius:12px;opacity:0;z-index:7}
+  #tagOld{background:#39445f;color:#e8e2d0}
+  #tagNew{background:#d8b25c;color:#231d08}
+  #tagStrike{position:absolute;height:6px;background:#e2725b;border-radius:3px;opacity:0;z-index:8;transform-origin:left center}
+  #arrow{position:absolute;opacity:0;z-index:5}
+  /* C3 the work page + steering cards */
+  #page{position:absolute;left:240px;top:680px;width:600px;height:520px;border:3px solid #4a5468;border-radius:26px;
+    background:rgba(20,24,38,.72);opacity:0;z-index:2}
+  #page .plabel{position:absolute;top:148px;left:0;width:600px;text-align:center;font-family:Helvetica,Arial,sans-serif;
+    letter-spacing:5px;font-size:24px;color:#9aa3b8}
+  #page .pbar{position:absolute;top:190px;left:60px;height:16px;width:480px;border-radius:8px;background:#39445f}
+  .scard{position:absolute;width:400px;height:84px;border-radius:14px;background:#232c44;border:2px solid #5a6a8c;
+    font-family:Helvetica,Arial,sans-serif;font-size:31px;letter-spacing:3px;color:#e8e2d0;
+    display:flex;align-items:center;padding-left:28px;box-sizing:border-box;opacity:0;z-index:6}
+  .scard .ic{color:#d8b25c;margin-right:16px;font-size:30px}
+  /* C4 the context stream */
+  #streamLabel{position:absolute;left:0;top:1158px;width:1080px;text-align:center;font-family:Helvetica,Arial,sans-serif;
+    letter-spacing:6px;font-size:23px;color:#8b93a7;opacity:0;z-index:3}
+  .blk{position:absolute;top:1210px;width:76px;height:54px;border-radius:10px;background:#2a3350;border:2px solid #46557a;opacity:0;z-index:3}
+  /* C5 accumulation furniture */
+  #counter{position:absolute;left:0;top:586px;width:1080px;text-align:center;font-family:Helvetica,Arial,sans-serif;
+    font-size:34px;letter-spacing:6px;color:#e9c46a;opacity:0;z-index:5}
+  .ghost{position:absolute;width:400px;height:84px;border-radius:14px;border:2px dashed #5a6a8c;background:transparent;opacity:0;z-index:4}
+  #chain{position:absolute;width:8px;height:380px;background:#d8b25c;border-radius:4px;opacity:0;z-index:8;transform-origin:center top}
+  /* C6 the mega prompt */
+  #mega{position:absolute;left:190px;top:520px;width:700px;height:700px;border-radius:28px;background:#1a2138;
+    border:4px solid #d8b25c;box-sizing:border-box;opacity:0;z-index:9}
+  #mega .mtitle{margin-top:44px;text-align:center;font-size:88px;font-weight:700;letter-spacing:6px;color:#e9c46a;line-height:1.05}
+  #mega .msub{margin-top:16px;text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:25px;letter-spacing:5px;color:#9aa3b8}
+  #mega .mrow{margin:22px auto 0;width:520px;border:2px solid #5a6a8c;border-radius:12px;background:#232c44;
+    font-family:Helvetica,Arial,sans-serif;font-size:28px;letter-spacing:2px;color:#e8e2d0;padding:15px 22px;box-sizing:border-box}
+  /* word band + payoff */
+  .w{display:inline-block;opacity:0}
+  .w.pr{color:#e9c46a;font-weight:700}
+  #band{position:absolute;left:90px;top:1300px;width:900px;height:300px;z-index:10}
+  .lineLayer{position:absolute;left:0;top:0;width:900px;text-align:center;font-size:52px;line-height:1.45}
+  .lineLayer .w.pr{font-size:58px}
+  #layer-L5{font-size:45px} #layer-L5 .w.pr{font-size:51px}
+  #payoff{position:absolute;left:60px;top:900px;width:960px;text-align:center;z-index:10}
+  #payoff .prow1{font-size:60px;line-height:1.35}
+  #payoff .prow2{font-size:66px;line-height:1.3;margin-top:30px}
+  #payoff .prow2 .w.pr{font-size:104px}
+  /* C7 bridge */
+  #bridge{position:absolute;left:140px;top:1330px;width:800px;text-align:center;border-top:2px solid #4a5468;padding-top:42px;opacity:0;z-index:10}
+  #bridge .q{font-size:58px;font-weight:700;letter-spacing:2px;color:#f5efe0}
+  #bridge .a{margin-top:18px;font-family:Helvetica,Arial,sans-serif;font-size:30px;color:#9aa3b8}
+  #bridge .a b{color:#d8b25c}
+  /* edit inspector */
+  #inspector{position:absolute;left:40px;bottom:40px;width:1000px;background:#0d1017;border:2px solid #d8b25c;border-radius:14px;
+    color:#e8e2d0;font-family:Helvetica,Arial,sans-serif;font-size:26px;padding:22px 26px;display:none;z-index:50}
+  #inspector input{font-size:24px;width:110px;background:#161b28;color:#fff;border:1px solid #5a6a8c;border-radius:6px;padding:4px 8px}
+  #inspector button{font-size:24px;background:#d8b25c;border:0;border-radius:6px;padding:6px 18px;margin-left:10px}
+</style></head><body>
+<div id="stage">
+  <div class="furniture" id="seriesTop">EARTH ONE &middot; <b>WORD DEFINITIONS</b></div>
+  <div id="card0"><div class="dots">&#9679;&#9679;&#9679;</div>
+    <div class="bars"><div style="width:88%"></div><div style="width:64%"></div><div style="width:76%"></div></div>
+    <div class="face">&ldquo;build me a page&rdquo;</div></div>
+  <div id="tagOld">THE PROMPT</div><div id="tagNew">FIRST DIRECTION</div><div id="tagStrike"></div>
+  <svg id="arrow" width="220" height="60" viewBox="0 0 220 60">
+    <line id="arrowLine" x1="6" y1="30" x2="186" y2="30" stroke="#d8b25c" stroke-width="7"
+      stroke-dasharray="180" stroke-dashoffset="180"/>
+    <polygon points="182,12 218,30 182,48" fill="#d8b25c"/></svg>
+  <div id="page"><div class="plabel">THE PAGE BEING BUILT</div><div class="pbar" id="pbar"></div></div>
+  <div class="scard" id="card1"><span class="ic">&#9656;</span>WARMER</div>
+  <div class="scard" id="card2"><span class="ic">&#9656;</span>SHORTER</div>
+  <div class="scard" id="card3"><span class="ic">&#9656;</span>FOR MY MOTHER</div>
+  <div id="streamLabel">THE CONTEXT — PRODUCED, CONTINUED, COMPACTED</div>
+  <div id="counter">FOUR DIRECTIONS — AND COUNTING</div>
+  <div class="ghost" id="ghost1"></div><div class="ghost" id="ghost2"></div>
+  <div id="chain"></div>
+  <div id="mega"><div class="mtitle">MEGA<br>PROMPT</div>
+    <div class="msub">CHAIN SUMMARY — ONE SESSION, GATHERED</div>
+    <div class="mrow">&#9656; BUILD ME A PAGE</div><div class="mrow">&#9656; WARMER</div>
+    <div class="mrow">&#9656; SHORTER</div><div class="mrow">&#9656; FOR MY MOTHER</div></div>
+  <div id="payoff"><div class="prow1" id="pay1"></div><div class="prow2" id="pay2"></div></div>
+  <div id="bridge"><div class="a">NEXT — the thing being steered all along</div>
+    <div class="q">WHAT IS CONTEXT? &rarr;</div></div>
+  <div id="band"></div>
+  <div id="inspector"></div>
+</div>
+<script type="application/json" id="dec-records">
+{"piece":"wd-02","build":"from-scratch rebuild (JOB REBUILD-WD02)","note":"In-page decision layer: every compartment and every word carries its record in scene/scene.json and decisions/decisions.json; this block is the scene's own summary of where its decisions live. Click a word in ?edit=1 mode to see its record and adjust it."}
+</script>
+<script>
+const PLAN = {"total": 52.251, "lines": {"L1": {"start": 0.4, "end": 4.064, "mode": "band", "words": [{"w": "Most", "t": 0.4, "e": 0.636, "p": 0}, {"w": "people", "t": 0.636, "e": 0.966, "p": 0}, {"w": "think", "t": 0.966, "e": 1.249, "p": 0}, {"w": "a", "t": 1.249, "e": 1.343, "p": 0}, {"w": "prompt", "t": 1.343, "e": 1.673, "p": 1}, {"w": "is", "t": 1.673, "e": 1.815, "p": 0}, {"w": "the", "t": 1.815, "e": 2.003, "p": 0}, {"w": "first", "t": 2.003, "e": 2.286, "p": 0}, {"w": "sentence", "t": 2.286, "e": 2.711, "p": 0}, {"w": "you", "t": 2.711, "e": 2.9, "p": 0}, {"w": "type", "t": 2.9, "e": 3.135, "p": 0}, {"w": "into", "t": 3.135, "e": 3.371, "p": 0}, {"w": "the", "t": 3.371, "e": 3.56, "p": 0}, {"w": "chat.", "t": 3.56, "e": 3.843, "p": 0}]}, "L2": {"start": 4.964, "end": 8.699, "mode": "band", "words": [{"w": "It", "t": 4.964, "e": 5.015, "p": 0}, {"w": "is", "t": 5.345, "e": 5.495, "p": 0}, {"w": "not.", "t": 5.495, "e": 5.744, "p": 0}, {"w": "A", "t": 5.744, "e": 5.844, "p": 0}, {"w": "prompt", "t": 5.844, "e": 6.194, "p": 0}, {"w": "is", "t": 6.194, "e": 6.344, "p": 0}, {"w": "a", "t": 6.344, "e": 6.443, "p": 0}, {"w": "direction", "t": 6.443, "e": 6.943, "p": 1}, {"w": "it", "t": 6.943, "e": 7.092, "p": 0}, {"w": "points", "t": 7.092, "e": 7.442, "p": 0}, {"w": "the", "t": 7.442, "e": 7.641, "p": 0}, {"w": "context", "t": 7.641, "e": 8.041, "p": 0}, {"w": "somewhere.", "t": 8.041, "e": 8.59, "p": 0}]}, "L3": {"start": 9.299, "end": 13.718, "mode": "band", "words": [{"w": "Say:", "t": 9.518, "e": 9.784, "p": 0}, {"w": "build", "t": 9.784, "e": 10.104, "p": 0}, {"w": "me", "t": 10.104, "e": 10.263, "p": 0}, {"w": "a", "t": 10.263, "e": 10.37, "p": 0}, {"w": "page.", "t": 10.37, "e": 10.689, "p": 0}, {"w": "That", "t": 10.689, "e": 10.955, "p": 0}, {"w": "is", "t": 10.955, "e": 11.115, "p": 0}, {"w": "one", "t": 11.448, "e": 11.687, "p": 0}, {"w": "direction", "t": 11.687, "e": 12.284, "p": 1}, {"w": "the", "t": 12.284, "e": 12.523, "p": 0}, {"w": "work", "t": 12.523, "e": 12.822, "p": 0}, {"w": "starts", "t": 12.822, "e": 13.24, "p": 0}, {"w": "moving.", "t": 13.24, "e": 13.718, "p": 0}]}, "L4": {"start": 14.168, "end": 19.294, "mode": "band", "words": [{"w": "Then", "t": 14.168, "e": 14.421, "p": 0}, {"w": "you", "t": 14.421, "e": 14.623, "p": 0}, {"w": "steer", "t": 14.623, "e": 14.927, "p": 1}, {"w": "again:", "t": 14.927, "e": 15.281, "p": 0}, {"w": "warmer.", "t": 15.592, "e": 16.006, "p": 0}, {"w": "Shorter.", "t": 16.006, "e": 16.471, "p": 0}, {"w": "For", "t": 16.881, "e": 17.091, "p": 0}, {"w": "my", "t": 17.091, "e": 17.249, "p": 0}, {"w": "mother,", "t": 17.249, "e": 17.671, "p": 0}, {"w": "not", "t": 18.035, "e": 18.3, "p": 0}, {"w": "for", "t": 18.3, "e": 18.565, "p": 0}, {"w": "engineers.", "t": 18.565, "e": 19.294, "p": 0}]}, "L5": {"start": 19.994, "end": 27.889, "mode": "band", "words": [{"w": "Meanwhile", "t": 19.994, "e": 20.045, "p": 0}, {"w": "the", "t": 20.367, "e": 20.585, "p": 0}, {"w": "agent", "t": 20.585, "e": 20.911, "p": 0}, {"w": "keeps", "t": 20.911, "e": 21.237, "p": 0}, {"w": "producing", "t": 21.237, "e": 21.78, "p": 0}, {"w": "the", "t": 21.78, "e": 21.998, "p": 0}, {"w": "context", "t": 21.998, "e": 22.433, "p": 1}, {"w": "continuing", "t": 22.433, "e": 23.031, "p": 0}, {"w": "it,", "t": 23.173, "e": 23.359, "p": 0}, {"w": "compacting", "t": 23.359, "e": 23.869, "p": 0}, {"w": "it", "t": 23.869, "e": 24.008, "p": 0}, {"w": "and", "t": 24.008, "e": 24.193, "p": 0}, {"w": "every", "t": 24.193, "e": 24.472, "p": 0}, {"w": "prompt", "t": 24.472, "e": 24.796, "p": 0}, {"w": "you", "t": 25.213, "e": 25.392, "p": 0}, {"w": "add", "t": 25.392, "e": 25.572, "p": 0}, {"w": "bends", "t": 25.572, "e": 25.842, "p": 1}, {"w": "it", "t": 25.842, "e": 25.977, "p": 0}, {"w": "a", "t": 25.977, "e": 26.067, "p": 0}, {"w": "new", "t": 26.067, "e": 26.247, "p": 0}, {"w": "way.", "t": 26.247, "e": 26.471, "p": 0}]}, "L6": {"start": 28.689, "end": 36.374, "mode": "band", "words": [{"w": "So", "t": 28.689, "e": 28.744, "p": 0}, {"w": "a", "t": 29.103, "e": 29.215, "p": 0}, {"w": "prompt", "t": 29.215, "e": 29.606, "p": 0}, {"w": "does", "t": 29.606, "e": 29.885, "p": 0}, {"w": "not", "t": 29.885, "e": 30.108, "p": 0}, {"w": "happen", "t": 30.108, "e": 30.499, "p": 0}, {"w": "once,", "t": 30.499, "e": 30.834, "p": 0}, {"w": "at", "t": 30.834, "e": 31.001, "p": 0}, {"w": "the", "t": 31.001, "e": 31.224, "p": 0}, {"w": "start.", "t": 31.39, "e": 31.616, "p": 0}, {"w": "It", "t": 31.616, "e": 31.713, "p": 0}, {"w": "accumulates", "t": 31.713, "e": 32.1, "p": 1}, {"w": "direction", "t": 32.524, "e": 33.076, "p": 0}, {"w": "after", "t": 33.076, "e": 33.407, "p": 0}, {"w": "direction,", "t": 33.407, "e": 34.013, "p": 0}, {"w": "across", "t": 34.013, "e": 34.399, "p": 0}, {"w": "the", "t": 34.399, "e": 34.62, "p": 0}, {"w": "whole", "t": 34.62, "e": 34.951, "p": 0}, {"w": "job.", "t": 35.189, "e": 36.373, "p": 0}]}, "L7": {"start": 36.974, "end": 42.906, "mode": "band", "words": [{"w": "Take", "t": 36.974, "e": 37.025, "p": 0}, {"w": "every", "t": 37.448, "e": 37.741, "p": 0}, {"w": "prompt", "t": 37.741, "e": 38.083, "p": 0}, {"w": "from", "t": 38.083, "e": 38.327, "p": 0}, {"w": "a", "t": 38.327, "e": 38.425, "p": 0}, {"w": "session,", "t": 38.425, "e": 38.864, "p": 0}, {"w": "chain", "t": 38.864, "e": 39.158, "p": 0}, {"w": "them", "t": 39.158, "e": 39.402, "p": 0}, {"w": "into", "t": 39.702, "e": 39.961, "p": 0}, {"w": "one", "t": 39.961, "e": 40.168, "p": 0}, {"w": "summary,", "t": 40.168, "e": 40.633, "p": 0}, {"w": "and", "t": 40.633, "e": 40.84, "p": 0}, {"w": "you", "t": 40.84, "e": 41.047, "p": 0}, {"w": "hold", "t": 41.047, "e": 41.306, "p": 0}, {"w": "the", "t": 41.483, "e": 41.818, "p": 0}, {"w": "mega", "t": 41.818, "e": 42.237, "p": 1}, {"w": "prompt.", "t": 42.237, "e": 42.907, "p": 1}]}, "L8": {"start": 43.906, "end": 50.251, "mode": "payoff", "words": [{"w": "That", "t": 43.906, "e": 44.155, "p": 0}, {"w": "is", "t": 44.155, "e": 44.305, "p": 0}, {"w": "what", "t": 44.305, "e": 44.554, "p": 0}, {"w": "a", "t": 44.554, "e": 44.654, "p": 0}, {"w": "prompt", "t": 44.654, "e": 45.002, "p": 0}, {"w": "really", "t": 45.173, "e": 45.513, "p": 0}, {"w": "is:", "t": 45.513, "e": 45.706, "p": 0}, {"w": "not", "t": 45.706, "e": 45.9, "p": 0}, {"w": "one", "t": 46.54, "e": 46.751, "p": 0}, {"w": "sentence", "t": 46.751, "e": 47.224, "p": 0}, {"w": "all", "t": 47.224, "e": 47.435, "p": 0}, {"w": "the", "t": 47.435, "e": 47.645, "p": 0}, {"w": "directions", "t": 47.75, "e": 48.405, "p": 1}, {"w": "you", "t": 48.405, "e": 48.643, "p": 0}, {"w": "gave", "t": 48.643, "e": 48.941, "p": 0}, {"w": "to", "t": 48.941, "e": 49.12, "p": 0}, {"w": "re-steer", "t": 49.12, "e": 49.655, "p": 0}, {"w": "the", "t": 49.655, "e": 49.894, "p": 0}, {"w": "work.", "t": 49.894, "e": 50.251, "p": 0}]}}};
+const TOTAL = PLAN.total;
+// ---------- timeline helpers (deterministic in t) ----------
+function seg(t, a, b){ return t<=a?0 : t>=b?1 : (t-a)/(b-a); }
+function ease(x){ return 1-Math.pow(1-x,3); }
+function clamp01(x){ return x<0?0 : x>1?1 : x; }
+// keyframe sampler: states [[t,x,y,sc,o],...] held outside, eased between
+function kf(t, states){
+  if (t <= states[0][0]) { const s=states[0]; return {x:s[1],y:s[2],sc:s[3],o:s[4]}; }
+  for (let i=1;i<states.length;i++){
+    if (t <= states[i][0]){
+      const a=states[i-1], b=states[i], u=ease((t-a[0])/(b[0]-a[0]));
+      return {x:a[1]+(b[1]-a[1])*u, y:a[2]+(b[2]-a[2])*u, sc:a[3]+(b[3]-a[3])*u, o:a[4]+(b[4]-a[4])*u};
+    }
+  }
+  const s=states[states.length-1]; return {x:s[1],y:s[2],sc:s[3],o:s[4]};
+}
+function place(id, s){ const el=document.getElementById(id); if(!el) return;
+  el.style.left=s.x+'px'; el.style.top=s.y+'px'; el.style.opacity=s.o;
+  el.style.transform=`scale(${s.sc})`; el.style.transformOrigin='top left'; }
+// ---------- build word spans ----------
+const band=document.getElementById('band');
+const overlays = JSON.parse(localStorage.getItem('wd02-edit')||'{}');
+const wordEls={};
+for (const [lid, L] of Object.entries(PLAN.lines)){
+  let host;
+  if (L.mode==='payoff'){ host=null; }
+  else { host=document.createElement('div'); host.className='lineLayer'; host.id='layer-'+lid; band.appendChild(host); }
+  L.words.forEach((w,i)=>{
+    const s=document.createElement('span'); s.className='w'+(w.p?' pr':''); s.textContent=w.w;
+    s.dataset.lid=lid; s.dataset.idx=i;
+    if (L.mode==='payoff'){ const p = i<10 ? document.getElementById('pay1') : document.getElementById('pay2');
+      p.appendChild(s); p.appendChild(document.createTextNode(' ')); }
+    else { host.appendChild(s); host.appendChild(document.createTextNode(' ')); }
+    wordEls[lid+':'+i]=s;
+  });
+}
+// stream blocks (C4)
+const blocks=[];
+for (let i=0;i<10;i++){ const d=document.createElement('div'); d.className='blk'; d.id='blk'+i;
+  d.style.left=(120+i*86)+'px'; document.getElementById('stage').appendChild(d); blocks.push(d); }
+const BLK_T = [21.24, 21.55, 21.85, 22.00, 22.43, 22.75, 24.47, 25.84, 26.07, 26.25];
+const BLK_BEND = [0,0,0,0,0,0,0,18,36,54];
+// card keyframes (see scene.json C1-C6 choreography record)
+const KF = {
+  card0: [[0.00,310,368,1,0],[0.50,310,368,1,0],[0.95,310,340,1,1],[11.69,310,340,1,1],
+          [12.35,290,636,0.62,1],[19.99,290,636,0.62,1],[20.70,105,1030,0.44,1],
+          [31.71,105,1030,0.44,1],[32.50,340,700,0.90,1],[41.82,340,700,0.90,1],[42.35,340,700,0.90,0]],
+  card1: [[15.20,60,916,1,0],[15.59,60,916,1,0],[15.97,300,916,1,1],[19.99,300,916,1,1],
+          [20.70,325,1056,0.50,1],[31.71,325,1056,0.50,1],[32.50,356,806,1,1],[41.82,356,806,1,1],[42.35,356,806,1,0]],
+  card2: [[15.60,-40,1010,1,0],[16.01,-40,1010,1,0],[16.42,300,1010,1,1],[19.99,300,1010,1,1],
+          [20.70,545,1056,0.50,1],[31.71,545,1056,0.50,1],[32.50,332,912,1,1],[41.82,332,912,1,1],[42.35,332,912,1,0]],
+  card3: [[16.40,-160,1104,1,0],[16.88,-160,1104,1,0],[17.32,300,1104,1,1],[19.99,300,1104,1,1],
+          [20.70,765,1056,0.50,1],[31.71,765,1056,0.50,1],[32.50,348,1018,1,1],[41.82,348,1018,1,1],[42.35,348,1018,1,0]]
+};
+function renderAt(t){
+  // C1/C2 card + tags + arrow
+  place('card0', kf(t, KF.card0));
+  const face = t >= 9.78;
+  document.querySelector('#card0 .face').style.display = face ? 'block' : 'none';
+  document.querySelector('#card0 .bars').style.display = face ? 'none' : 'block';
+  // tags ride under the card while it is home; they retire when the card flies (11.69)
+  const tagIn = seg(t,1.34,1.62), tagOut = seg(t,11.55,11.69);
+  const oldO = tagIn*(1-seg(t,6.44,6.70))*(1-tagOut), newO = seg(t,6.44,6.80)*(1-tagOut);
+  const tg=document.getElementById('tagOld'); tg.style.left='370px'; tg.style.top='622px'; tg.style.opacity=oldO;
+  const tn=document.getElementById('tagNew'); tn.style.left='370px'; tn.style.top='622px'; tn.style.opacity=newO;
+  const st=document.getElementById('tagStrike');
+  st.style.left='386px'; st.style.top='646px'; st.style.width='308px';
+  st.style.opacity = seg(t,5.50,5.62)*(1-seg(t,6.44,6.70))*(1-tagOut);
+  st.style.transform = `scaleX(${ease(seg(t,5.50,5.78))})`;
+  const ar=document.getElementById('arrow');
+  ar.style.left='806px'; ar.style.top='436px';
+  ar.style.opacity = seg(t,6.44,6.70)*(1-tagOut);
+  document.getElementById('arrowLine').style.strokeDashoffset = String(180*(1-seg(t,6.44,7.15)));
+  // C3 page: in at 'page.' (10.37), warmer glow at 15.59, header bar shortens at 16.01, out as the stream rises
+  const pin = seg(t,10.37,10.85), pout = seg(t,19.99,20.70);
+  const page=document.getElementById('page');
+  page.style.opacity = pin*(1-pout);
+  page.style.transform = `translateY(${26*(1-ease(pin)) + 18*ease(pout)}px)`;
+  const warm = seg(t,15.59,16.10);
+  page.style.borderColor = warm>0 ? '#c98a4b' : '#4a5468';
+  page.style.boxShadow = `0 0 ${90*warm}px rgba(216,150,60,${0.45*warm})`;
+  document.getElementById('pbar').style.width = (480 - 190*seg(t,16.01,16.50))+'px';
+  // steering cards
+  place('card1', kf(t, KF.card1)); place('card2', kf(t, KF.card2)); place('card3', kf(t, KF.card3));
+  // C4 stream: label + blocks; compaction squeeze at 23.36; bend offsets after 25.57; dims at L6; gone at payoff
+  const sDim = 1 - 0.65*seg(t,28.69,29.30), sOut = 1 - seg(t,43.60,44.20);
+  const lab=document.getElementById('streamLabel'); lab.style.opacity = seg(t,22.00,22.40)*sDim*sOut;
+  const squeeze = seg(t,23.36,23.90);
+  blocks.forEach((b,i)=>{
+    const e = seg(t, BLK_T[i], BLK_T[i]+0.28);
+    b.style.opacity = ease(e)*sDim*sOut;
+    b.style.transform = `translate(${-i*3.2*squeeze}px, ${24*(1-ease(e)) + BLK_BEND[i]*seg(t,25.57,26.30)}px) scaleX(${1-0.16*squeeze}) scale(${0.82+0.18*ease(e)})`;
+  });
+  // C5 counter + ghosts
+  const cnt=document.getElementById('counter');
+  cnt.style.opacity = seg(t,31.71,32.10)*(1-seg(t,38.60,39.10));
+  const g1=document.getElementById('ghost1'); g1.style.left='372px'; g1.style.top='668px';
+  g1.style.opacity = 0.55*seg(t,32.52,32.90)*(1-seg(t,41.82,42.30));
+  const g2=document.getElementById('ghost2'); g2.style.left='388px'; g2.style.top='636px';
+  g2.style.opacity = 0.40*seg(t,33.41,33.80)*(1-seg(t,41.82,42.30));
+  // C6 chain: draws across the pile at 'chain' (38.86), retires as the mega card enters
+  const ch=document.getElementById('chain');
+  ch.style.left='322px'; ch.style.top='712px';
+  ch.style.opacity = seg(t,38.86,39.10)*(1-seg(t,41.82,42.30));
+  ch.style.transform = `scaleY(${ease(seg(t,38.86,39.70))})`;
+  // C6 mega card: in at 'mega' (41.82) cinematic scale-in; recedes behind the payoff at L8
+  const mgIn = seg(t,41.82,42.60), mgRec = seg(t,43.90,44.45);
+  const mega=document.getElementById('mega');
+  mega.style.opacity = ease(mgIn)*(1-0.72*mgRec);
+  mega.style.transform = `translateY(${30*(1-ease(mgIn)) - 150*mgRec}px) scale(${(0.90+0.10*ease(mgIn))*(1-0.22*mgRec)})`;
+  // C7 bridge: in during the tail
+  const br=document.getElementById('bridge');
+  br.style.opacity = seg(t,50.70,51.30);
+  br.style.transform = `translateY(${22*(1-ease(seg(t,50.70,51.30)))}px)`;
+  // words
+  for (const [lid, L] of Object.entries(PLAN.lines)){
+    const lineEnd = L.end + 0.28;
+    const clear = L.mode==='payoff' ? 0 : seg(t, lineEnd, lineEnd+0.30);
+    L.words.forEach((w,i)=>{
+      const el = wordEls[lid+':'+i]; const ov = overlays[lid+':'+i]||{};
+      const wt = w.t + (ov.dt||0);
+      const e = seg(t, wt, wt+0.28);
+      let o = ease(e)*(1-clear);
+      if (L.mode==='payoff'){ o = ease(e); }
+      el.style.opacity = o;
+      el.style.transform = `translateY(${24*(1-ease(e)) + (ov.dy||0)}px) scale(${(0.82+0.18*ease(e)) * (ov.sc||1)})`;
+      el.style.fontSize = ov.fs ? ov.fs+'px' : '';
+    });
+  }
+}
+// ---------- clock / seek ----------
+const params = new URLSearchParams(location.search);
+let startStamp = null;
+function frame(ts){ if (startStamp===null) startStamp=ts; const t=(ts-startStamp)/1000;
+  if (t <= TOTAL) { renderAt(t); requestAnimationFrame(frame); } else renderAt(TOTAL); }
+if (params.has('render')){ window.__seek = (t)=>{ renderAt(t); }; renderAt(0); }
+else { requestAnimationFrame(frame); }
+// ---------- edit mode ----------
+if (params.has('edit')){
+  document.querySelectorAll('.w').forEach(el=>{
+    el.style.pointerEvents='auto'; el.style.cursor='pointer';
+    el.addEventListener('click', ()=>{
+      const lid=el.dataset.lid, idx=el.dataset.idx, key=lid+':'+idx;
+      const w = PLAN.lines[lid].words[idx]; const ov = overlays[key]||{};
+      const ins=document.getElementById('inspector'); ins.style.display='block';
+      ins.innerHTML = `<b>${lid} word ${Number(idx)+1}: &ldquo;${w.w}&rdquo;</b> &middot; decided: ${w.p?'PRINCIPAL (A59 entry, gold)':'deliberate as-is (standard entry)'} &middot; spoken at ${w.t.toFixed(2)}s (PLAN, from the measured take)<br>`+
+      `start offset (s) <input id="e_dt" type="number" step="0.05" value="${ov.dt||0}"> vertical (px) <input id="e_dy" type="number" step="2" value="${ov.dy||0}"> scale <input id="e_sc" type="number" step="0.05" value="${ov.sc||1}">`+
+      `<button id="e_save">Save</button><button id="e_clear">Clear all edits</button><div style="margin-top:8px;color:#9aa3b8">Edits save to this browser (localStorage) and change playback immediately; export by committing the changed values into scene.json's PLAN.</div>`;
+      document.getElementById('e_save').onclick=()=>{ overlays[key]={dt:parseFloat(document.getElementById('e_dt').value)||0, dy:parseFloat(document.getElementById('e_dy').value)||0, sc:parseFloat(document.getElementById('e_sc').value)||1};
+        localStorage.setItem('wd02-edit', JSON.stringify(overlays)); renderAt(PLAN.lines[lid].start+0.01); };
+      document.getElementById('e_clear').onclick=()=>{ localStorage.removeItem('wd02-edit'); location.reload(); };
+    });
+  });
+}
+</script></body></html>
