@@ -8,7 +8,7 @@ a derivative export of this package.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions
 - **Title:** What Is a Token?
-- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-4) — in-package editability (b) PROVEN 2026-10-26 (JOB EDITABILITY-2: inspector joins PLAN ↔ word-decision records 1:1 on all 101 words; edit → save → reopen rendered the change exact at +200.0 px; no-overlay playback pixel-identical to the master scene; ?render fully inert; stripping the additive layer restores the master scene byte-for-byte) — PENDING main-agent commit + verification pass —
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-4) — in-package editability (b) PROVEN on branch bytes (JOB EDITABILITY-2: inspector joins PLAN ↔ word-decision records 1:1 on all 101 words; edit → save → reopen rendered the change exact at +200.0 px; no-overlay playback pixel-identical to the master scene; ?render fully inert; stripping the additive layer restores the master scene byte-for-byte; gate re-run against the committed layered scene and every leg re-passed on the branch bytes, JOB PACKAGE-VERIFY-7, 2026-10-26) —
   CLONE-VERIFIED candidate audio, locked delivered transcript,
   shipped scene (the v3 HTML-scene build, from the i2-locked
   script text), verified clone render in-branch. The piece itself
