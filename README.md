@@ -17,9 +17,37 @@ in it develops the piece toward a build.
   for it), and it is quoted in this package labeled as such.
 - **Stage:** assembled package — a rejection record, assembled
   2026-10-26 (JOB MIGRATION-30) from the piece's own records.
-  Package verification has not been run on this package, and no
-  verification is claimed anywhere in it. The piece it records
-  will never be built, voiced, rendered or published.
+  Package verification run 2026-10-26 (JOB PACKAGE-VERIFY-21):
+  REJECTION-RECORD-VERIFIED — the record verified on the branch
+  bytes: the verdict chain quote-checked at its sources (board
+  checklist 'Hadi verdict / score', status fail, evidence
+  "10/100 — REJECTED: signature phrases, no wow, no suspense,
+  sequential delivery"; the board's cycle note and its standing,
+  verbatim; the 2026-10-23 daily log's Action #18 section, with
+  "Full rewrite ordered" and the three laws the critique
+  produced); the successor citation confirmed both ways
+  (teaser-print-v2's package cites v1's rejection and its
+  attack list in the words this package records); the ask
+  voice note confirmed as cited evidence only (566,821 B,
+  sha256 00f4f0d9…) — the branch carries no audio layer and no
+  narration exists; the gate-vs-ear contradiction confirmed in
+  the draft document itself and carried openly, neither side
+  presented as the whole story; coverage arithmetic recomputed
+  from the branch files (19/144; scaffold 11/15, elements
+  8/11, words 0/118) and the rejected script's own counts
+  reproduced exactly (121 mechanical / 118 spoken, 3
+  standalone em-dash tokens); the combined audio/scene/render
+  absence confirmed explicit in this README, in
+  render/verification.json and in metadata.json, and the word
+  layer's absent-by-rejection record confirmed terminal; no
+  objectives-audit row exists for this piece and no grade is
+  claimed; ledger §5 read directly in the departments repo
+  ('teaser-print-v1' occurs nowhere in it), so
+  accepted_exceptions is correctly EMPTY. Items 4, 5 and 7 of
+  the standing checklist have no object in this package —
+  there is no render, scene or build to measure, play or
+  edit — and are recorded as such, not skipped. The piece it
+  records will never be built, voiced, rendered or published.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
