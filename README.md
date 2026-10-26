@@ -8,7 +8,7 @@ a derivative export of this package.
 
 - **Piece:** soa-02 · flagship channel · State of Adoption
 - **Title:** Half the Country Has Walked In
-- **Stage:** assembled package (package verification not yet run) —
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-4) — in-package editability absent, a named gap against the full deliverable criteria —
   locked transcript, shipped scene (the v1 HTML-scene build, from
   the locked draft-i1 script text), delivered guide-voice render
   in-branch. The clone upgrade is **Tier B** — dead lines L2 + L3,
