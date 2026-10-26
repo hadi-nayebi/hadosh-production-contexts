@@ -16,7 +16,7 @@ this branch's words.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** phase 5 of 7 — every visual detail has a record and every word a decision; the randomness register names what remains. Audio and the render derivative follow.
+- **Stage:** phase 6 of 7 — voice decided (the owner's clone, by citation) and the render derivative defined. Editability and the final state follow.
 
 ## The idea
 
@@ -131,6 +131,25 @@ splices the editor layer).
   see, named: the lane style verdict (owner), fact currency,
   derivative assembly, audience confidence, onset drift, editor
   limits — each with its removal route.
+
+
+## Audio + render (phase 6 — decided, assembly pending)
+
+- **Voice:** Hadi's cloned voice (Pelican `hadi-master`), per-line
+  takes fitted under the CLONE-VERIFIED fit standard — all six
+  lines Tier A in the first draft's verified build, extracted
+  here **by citation** (`audio/audio.json`: job IDs, hashes, the
+  standard, and the failed first assembly the standard exists
+  because of). No audio binaries are staged; nothing is
+  re-rolled.
+- **The derivative:** `render/RENDER.md` defines the MP4 as a
+  procedure over this branch's own files (scene at `?render` +
+  the cited programme audio), with targets and the onset probe.
+  `render/verification.json` holds the reference measurement set
+  (the first draft's delivered file: 34.348 s, −14.42 LUFS,
+  −1.46 dBTP) — **cited, not claimed: this branch's derivative
+  is defined, assembly pending (main agent)**, and the register
+  (R-3) names exactly that.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
