@@ -1,20 +1,15 @@
-# vocab-v3 — video package
+# vocab-v3 — "I Drink Water in 5 Languages" (Earth One — Vocabulary Packs)
 
-This branch is the file system of one video (board piece vocab-v3).
+**Stage: metadata layer landed — the decision scaffold; the package assembles layer by layer from here.**
 
-The package is the deliverable alongside the video. It grows in
-developmental order — metadata first (objective, message,
-structure), then transcript, then audio and visuals — and this
-branch's git history is the video's development history.
+This branch is one video's complete production package, in the repository's standard shape (metadata → transcript → decisions → audio → scene → render). What has landed so far is the top layer only: `metadata.json`, the decision scaffold — the piece's objective, message, structural and standing decisions, each with its reason and its record, and the fields the evidence does not settle carried visibly OPEN in their true kind.
 
-Opened 2026-10-26 under Hadi's all-31-branches ruling: every video
-gets its own branch, and each branch is developed through the
-layers in order. The objective is defined first: a video without
-one produces every later layer in its absence. Decisions at each
-layer are made from the piece's own evidence — its transcript,
-earlier versions, and the recorded style/delivery references.
+**This package is partial by design, and says so from its first layer.** Three honest states ride in the scaffold itself:
 
-Evidence state at opening: Guide voice, held on a separate Hadi decision (clone voice on non-English words). No per-piece transcript document exists.
+- **The decisions layer will be incomplete.** The element level is nearly complete (14/15 — context audit, 2026-10-23; the one random element is the published description's unwritten rationale, gated on Action #41) but **no per-word decision record exists for this piece anywhere**: the word layer ships as a named absence (0/30) with its authoring task stated. The build's decisional grain is the sentence line and the target word; authoring word decisions is new decision work, and this migration does not author them.
+- **Two versions travel under this piece.** The DELIVERED build — the v3 sentence build (one sentence × five languages × two passes, PIL-composited, 27.348 s), published at https://youtube.com/shorts/xX4-60ily0Y by Hadi's direct instruction (2026-10-22) and named by him a standard-setting floor piece — is the piece this package assembles. The v1 PILOT (one word × five languages, 15.400 s) was published once, rejected by Hadi within the hour and pulled to Private, and survives as the earlier version. Standing records conflate the two — the board serves a backfill scene OF THE PILOT for this piece (the sentence build has no HTML scene), the voice registry's kit cites the pilot's file, the catalogue decision table's loudness column is the pilot's — and the package carries the conflation openly in every layer it touches, corrected nowhere at source.
+- **The voice is GUIDE, and the clone upgrade is HELD.** The registry holds the upgrade as Hadi's separate decision — whether the English clone voice speaks the non-English words is his call — recorded as the decided field `voice_state`. The registry's stated basis ("5 single-word pronunciations") describes the pilot's audio; the published build speaks 10 sentence pronunciations; the hold's substance is unaffected.
 
-Stage: 0 — opened. The metadata layer is the first development
-step.
+The piece itself: Earth One's vocabulary drill — one simple sentence in Turkish, Persian, English, German and French, heard, seen and said back across two passes — the specimen the 'Words in 5 Languages' lane copies. Its objective is GROUNDED in the catalogue objectives audit, which grades its alignment Partial: the delivered pacing (~2.0 s per language vs the spec's ~3.5 s) short-changes the repetition the objective promises — mismatch M3, board Action #40, this piece's primary request, carried OPEN in `delivery_structure`. STRUCT-2 grades the piece SOUND: the drill IS the structure.
+
+Every field in `metadata.json` carries its source: a decided field cites the record that settles it; an open field carries an empty rationale and a record field that says, in its own kind, why it is open (the audit mark that stands against it; the record that does not exist; a whole layer absent with its task; a ruling still pending).
