@@ -8,7 +8,7 @@ a derivative export of this package.
 
 - **Piece:** eo-ep4 · Earth One channel · The Planet's Story — Observations
 - **Title:** A Song Remembers What Words Forget
-- **Stage:** assembled package (package verification not yet run) —
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-4) — in-package editability absent, a named gap against the full deliverable criteria —
   locked transcript, shipped scene (the v4 HTML-scene build, from
   the locked v2 script text), delivered guide-voice render
   in-branch. The clone upgrade is **Tier B** — one dead line (L10,
@@ -21,8 +21,8 @@ a derivative export of this package.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 189 / 198**
-  - metadata scaffold: 6 / 15 fields decided (`metadata.json`)
+- **Decided / total decision fields: 189 / 199**
+  - metadata scaffold: 6 / 16 fields decided (`metadata.json`)
   - element decisions: 18 / 18 elements carry a record
     (`decisions/decisions.json` — 18 decision records; the scene
     DEC coverage header's figure — its classes' numbered entries
@@ -49,6 +49,12 @@ a derivative export of this package.
     per-gap delivery decisions
   - `scene_decomposition` — the scene ships as one self-contained
     file; splitting it is a future, separately recorded decision
+  - `onset_repairs` — the first phrase window opens +330 ms after
+    the first word's spoken onset (window 1.95 s vs word start
+    1.62 s; measured by JOB PACKAGE-VERIFY-4's playback probe,
+    2026-10-26); fix = windows open at first-word onset at the
+    next plan rebuild — the same class eo-ep2, eo-ep3 and
+    teaser-print-v2 carry
   - `orientation_line` — STRUCT-2 classes H3 = W: orientation by
     container/title card only, no orientation line exists, and no
     in-scene record closes the question (optional polish per the
