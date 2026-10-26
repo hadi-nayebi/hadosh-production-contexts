@@ -13,8 +13,8 @@ a derivative export of this package.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 131 / 134**
-  - metadata scaffold: 6 / 9 fields decided (`metadata.json`)
+- **Decided / total decision fields: 133 / 134**
+  - metadata scaffold: 8 / 9 fields decided (`metadata.json`)
   - element decisions: 44 / 44 elements carry a record
     (`decisions/decisions.json` — 11 decision records)
   - word decisions: 81 / 81 words carry a recorded treatment or a
@@ -22,10 +22,21 @@ a derivative export of this package.
 - **Open fields, named** (undecided decision fields — a coverage inventory; it does not by itself measure the rendered result):
   - `audience` — the record never named the audience or the
     misconception (board phase-0 check still pending)
-  - `delivery_structure` — no pause map / delivery-pass record
-    exists for this piece
-  - `scene_decomposition` — the scene ships as one self-contained
-    file; splitting it is a future, separately recorded decision
+
+Finishing decisions, 2026-10-26 (JOB FINISH-FIELDS-1 — dated
+finishing decisions, recorded as such, not backfilled history;
+see `metadata.json` for the full values, reasoning and evidence):
+  - `delivery_structure` — DECIDED as the delivery structure of
+    record, measured off the delivered artifact: contiguous locked
+    line windows (dateline → number → restatement → turn →
+    mechanism → aphoristic close), the C-05 phrase system, the
+    silent bridge. No separate pause-map pass was ever performed;
+    a future retrofit amends this by a new dated decision.
+  - `scene_decomposition` — DECIDED as the compartment inventory
+    the shipped file itself embodies (container / per-line
+    compartments / bridge / word-animation layer / audio /
+    in-page decision layer / player chrome); the scene stays one
+    self-contained file (DR-CONTAINER, H-01).
 
 Every decided field carries a rationale and a named source
 (research / agent reasoning / Hadi's taste). Open fields stay
