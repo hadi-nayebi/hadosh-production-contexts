@@ -16,7 +16,7 @@ this branch's words.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** phase 1 of 7 — metadata: idea + objective.
+- **Stage:** phase 2 of 7 — metadata complete: architecture + style + question decided. The transcript consolidation follows.
 
 ## The idea
 
@@ -53,6 +53,37 @@ of those users rents the layer they use, and owns none of it).
    coverage computed from this branch's own records; remaining
    opens named with their routes.
 
+
+## Architecture + style (phase 2 — decided)
+
+- **Role:** APPLY — the ownership doctrine applied to one dated
+  fact; the lane reports, it does not re-teach the doctrine.
+- **The question the video answers:** *How many people use AI
+  every week — and how many of them own any of the layer they use
+  it through?*
+- **Story structure:** dateline → the number → habit made
+  visceral → the turn ("the part nobody counts") → mechanism
+  (the chat box) → payoff (ADOPTION TOTAL / OWNERSHIP ZERO) →
+  silent bridge card.
+- **Hook form:** the number itself — 1.2 billion, huge, dated,
+  sourced — arriving at L2 after the lane's dateline.
+- **Style direction:** motion graphics + 2D graphics (starting-set
+  mix): dot-crowd counter, the crowd greying to a lit handful at
+  the turn, the chat-box compartment, the split-screen payoff;
+  word animation in the lower band. Cinematic typography is an
+  open specimen question for the owner (exp-02), NOT this piece's
+  decided style — the full discussion is in `metadata.json`.
+- **Delivery structure:** contiguous line windows at report pace;
+  one designed silence (0.827 s) after the aphorism, before the
+  silent bridge; phrase system per C-05. The measured pause map
+  lands with the transcript (phase 3).
+- **End referral:** the silent bridge card to "Who Owns the
+  Toaster?" — 5.9% of the piece, inside the navigation budget.
+- **Scene form:** one self-contained HTML file, decomposed as a
+  compartment inventory (container / six line compartments /
+  bridge / word layer / audio / decision layer / chrome), to be
+  embodied in phase 4.
+
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
 Rulers for this branch, fixed now so later counts never move the
@@ -62,17 +93,14 @@ tokens of the settled transcript excluding standalone em-dash
 tokens; the transcript carries 84 mechanical tokens — both rulers
 stated in `transcript/transcript.md` when it lands).
 
-- **At this phase: 3 / 135 decided** — scaffold 3 / 10
-  (`objective`, `message`, `audience`); element and word layers
-  not yet built.
-- **Open fields, named (undecided decision fields — a coverage
-  inventory, not an alignment score):** `role` ·
-  `story_structure` · `hook_form` · `style_direction` ·
-  `delivery_structure` · `end_referral` · `scene_decomposition`
-  — each with its route recorded in `metadata.json`. The element
-  and word layers are unbuilt, not undecided; their phases are
-  named in the phase map above.
+- **At this phase: 10 / 135 decided** — scaffold 10 / 10 (all
+  fields decided, each with rationale + source in
+  `metadata.json`); element and word layers not yet built.
+- **Open scaffold fields: none.**
 
-Alignment, in words: the branch currently knows what this video is
-for, what it says, and who it is talking to. Everything about how
-it is built is still to be decided — in the open, in order.
+Alignment, in words: the branch now knows what this video is
+for, what it says, who it talks to, and how it is built — form,
+style, delivery and destination are all decided. What does not
+exist yet is the thing itself: no transcript has been settled in
+this branch, and no scene, word or sound has been given a home.
+That is phases 3–6, in order.
