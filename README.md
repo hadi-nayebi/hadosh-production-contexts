@@ -11,7 +11,7 @@ a derivative export of this package.
 - **Stage:** complete package — CLONE-VERIFIED audio, locked
   transcript, shipped scene, verified render.
 
-## The two metrics (computed from this package)
+## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
 - **Decided / total decision fields: 131 / 134**
   - metadata scaffold: 6 / 9 fields decided (`metadata.json`)
@@ -19,7 +19,7 @@ a derivative export of this package.
     (`decisions/decisions.json` — 11 decision records)
   - word decisions: 81 / 81 words carry a recorded treatment or a
     deliberate as-is (`decisions/word-decisions.json`)
-- **Open fields (randomness remaining), named:**
+- **Open fields, named** (undecided decision fields — a coverage inventory; it does not by itself measure the rendered result):
   - `audience` — the record never named the audience or the
     misconception (board phase-0 check still pending)
   - `delivery_structure` — no pause map / delivery-pass record
