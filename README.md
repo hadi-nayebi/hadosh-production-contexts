@@ -15,8 +15,8 @@ a derivative export of this package.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 190 / 198**
-  - metadata scaffold: 6 / 14 fields decided (`metadata.json`)
+- **Decided / total decision fields: 192 / 198**
+  - metadata scaffold: 8 / 14 fields decided (`metadata.json`)
   - element decisions: 24 / 24 elements carry a record
     (`decisions/decisions.json` — 24 decision records)
   - word decisions: 160 / 160 words carry a recorded treatment or
@@ -25,10 +25,6 @@ a derivative export of this package.
   inventory; it does not by itself measure the rendered result):
   - `audience` — the records source the facts but never named the
     audience or the misconception (board phase-0 check pending)
-  - `delivery_structure` — no pause map / delivery-pass record
-    exists for this piece
-  - `scene_decomposition` — the scene ships as one self-contained
-    file; splitting it is a future, separately recorded decision
   - `onset_repairs` — the first phrase window opens +530 ms after
     the first word's spoken onset (window 1.95 s vs word start
     1.42 s; measured by JOB PACKAGE-VERIFY-2's playback probe,
@@ -42,6 +38,22 @@ a derivative export of this package.
   - `rescore_verdict` — Action #55: the v4 exemplar rebuild is
     unscored; Hadi's re-score governs
   - `publish_verdict` — Action #44: publish rides the re-score
+
+Finishing decisions, 2026-10-26 (JOB FINISH-FIELDS-1 — dated
+finishing decisions, recorded as such, not backfilled history;
+see `metadata.json` for the full values, reasoning and evidence):
+  - `delivery_structure` — DECIDED as the delivery structure of
+    record, measured off the delivered artifact: scene-led
+    narration over the PLAN timeline (inter-line gaps 0.40–0.60 s),
+    the L4 mid-line plate cut, the per-phrase scene states of the
+    L10 bookend, the ≤3-word phrase system. No separate pause-map
+    pass was ever performed; a future retrofit amends this by a
+    new dated decision.
+  - `scene_decomposition` — DECIDED as the compartment inventory
+    the shipped file itself embodies (plate layer incl. the real
+    Pettakere photograph component / word layer / container /
+    PLAN+CONFIG scene engine / audio / in-page decision layer /
+    player chrome); the scene stays one self-contained file.
 
 Every decided field carries a rationale and a named source
 (research / agent reasoning / Hadi's taste). Open fields stay
