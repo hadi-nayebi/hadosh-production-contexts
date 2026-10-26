@@ -2,7 +2,7 @@
 
 **This package is PARTIAL, and says so first: its decisions layer is incomplete — the word-decisions layer is ABSENT (0 of 131 words carry a recorded decision), because no per-word decision record exists for this piece anywhere in its records. Everything else in the package is complete and verified as far as its records go; nothing here claims the word layer exists.**
 
-**Stage: assembled package — PARTIAL: decisions layer incomplete (word decisions absent) (package verification not yet run).**
+**Stage: assembled package — PARTIAL: decisions layer incomplete (word decisions absent); end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-5) — in-package editability absent, a named gap against the full deliverable criteria (file-level data→render linkage proven through the caption-chunk data the renderer consumes; the scene's plan word objects are carried data, not consumed by the renderer).**
 
 Public: https://youtube.com/shorts/YvMMTOwXeGY — the workshop long-form's opening beat (flagship channel; playlist "Workshop — Beats from the Workshop Video"), published 2026-10-21 as version A of the A/B pair against wo-b (industrial framing). The public video still serves the guide-era render; the render in this package is the verified clone candidate — built, verified, and unpublished.
 
