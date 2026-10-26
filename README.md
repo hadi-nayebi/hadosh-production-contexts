@@ -16,7 +16,7 @@ this branch's words.
 
 - **Piece:** soa-01 · flagship channel · State of Adoption lane
 - **Title:** 1.2 Billion People Use AI Every Week. Almost None Own It.
-- **Stage:** phase 6 of 7 — voice decided (the owner's clone, by citation) and the render derivative defined. Editability and the final state follow.
+- **Stage:** phase 7 of 7 — COMPLETE JOURNEY. The package is editable in its own scene; its final state is stated below. The render derivative is defined and cited — assembly pending (main agent), named as such, not dressed as a product.
 
 ## The idea
 
@@ -151,6 +151,41 @@ splices the editor layer).
   is defined, assembly pending (main agent)**, and the register
   (R-3) names exactly that.
 
+
+## Editability (phase 7 — the package can be changed, and the change changes the video)
+
+`scene/index.html` now carries the editor layer (spliced as one
+block before `</body>`; stripping it restores the phase-4 master
+byte-for-byte). Open the scene with `?edit=1`: click any rendered
+word → its decision record opens beside the form → edit its
+position, timing, key status or treatment rationale → Save →
+reopen: the rendered change is simply there, in a new browser
+process, measured exact in the pattern's proof (word #1 moved
++200.0 px; no-overlay frames pixel-identical to master). Element
+windows (`on`/`off`) edit the same way; Export produces the
+package-shaped files for committing an edit back into this
+branch (the path is written in `scene/scene.json`). Under
+`?render` the layer is fully inert — a browser overlay can never
+alter a render.
+
+## Final state of this branch
+
+The journey is complete: empty branch → metadata (idea,
+objective, audience, architecture, style, question) → transcript
+consolidation (candidates weighed in the open) → scene
+compartments → element + word decisions with a randomness
+register → voice by citation + a defined render derivative →
+an editable scene. Every file in this branch was written or
+decided here, dated 2026-10-26; the first draft survives only as
+cited evidence inside the records that extracted from it.
+
+**What this branch does NOT claim:** a produced MP4. The
+derivative is defined as a procedure over this branch's files
+(`render/RENDER.md`) with its reference measurements cited from
+the first draft's delivered file; assembly is the main agent's
+step, and `render/verification.json` will carry the produced
+file's own measurements when it happens.
+
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
 Rulers for this branch, fixed now so later counts never move the
@@ -160,15 +195,35 @@ tokens of the settled transcript excluding standalone em-dash
 tokens; the transcript carries 84 mechanical tokens — both rulers
 stated in `transcript/transcript.md` when it lands).
 
-- **At this phase: 135 / 135 counted fields decided** — scaffold
-  10 / 10 · elements 44 / 44 · words 81 / 81.
-- **Open counted fields: none.** Open items beyond the counted
-  rulers live in the randomness register (R-1…R-6), named with
-  their routes — a full count is not a claim of zero randomness.
+- **Final: 135 / 135 counted fields decided** — scaffold
+  10 / 10 · elements 44 / 44 · words 81 / 81, every one with a
+  rationale and a named source inside this branch.
+- **Open counted fields: none.**
 
-Alignment, in words: every decision this branch counts has now
-been made and reasoned in the open — what the video is for, what
-it says, how it looks, word by word. What remains is sound and
-consequence: the voice record and the render derivative (phase
-6), the means to edit all of it (phase 7), and the six named
-items in the randomness register, none of which hides.
+## Open fields, named (undecided decision fields — a coverage inventory, not an alignment score)
+
+None inside the counted rulers. Beyond them, the randomness
+register (`decisions/randomness-register.md`) names what remains,
+each with its removal route:
+
+- **R-1** the SOA lane's style direction — cinematic typography
+  specimen awaits the owner's verdict (A/B, owner).
+- **R-2** fact currency — re-verify the 1.2B figure, or invoke
+  the recorded fallback, before any re-publish/re-render after
+  2026-Q4 (best practice).
+- **R-3** the render derivative's assembly — defined, pending
+  (execution, main agent).
+- **R-4** audience confidence — reasoning-grade, not
+  measurement-grade; revisited only on contradicting Studio
+  evidence.
+- **R-5** clone-audio word onsets vs PLAN starts — onset probe
+  at assembly (best practice; tolerance ±120 ms).
+- **R-6** editor-layer limits — accepted as the pattern's terms;
+  the commit-back path is their removal route.
+
+Alignment, in words: this branch began empty and now holds a
+video whose every counted decision was made in the open, in
+developmental order, with its reasoning attached — and whose
+remaining unknowns are six named items with named routes, not a
+fog. The randomness that remains is the randomness that is
+written down.

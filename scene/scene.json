@@ -1,11 +1,11 @@
 {
  "piece": "soa-01",
  "file": "scene/index.html",
- "phase": "phase 4 (2026-10-26) — scene compartmentalization",
+ "phase": "phase 7 (2026-10-26) — editability layer spliced (delta over phase 4)",
  "what_this_file_is": "The branch's scene: one self-contained HTML file (1080×1920) that plays the settled transcript and renders it for the derivative. It carries its decision records in-page (#decisions + #word-decision-container) — the same JSON this branch records in decisions/ (phase 5), kept verbatim-equal by package invariant.",
  "extraction_note": "EXTRACTED, NOT COPIED AS SETTLED. The code is extracted from the first draft's shipped scene (files/short-soa01-renters-v3-scene.html, sha256 8a84c408d7bf9bec069604774e4a1361dd69047ccc465d8a157fa69563f07743, 7,318,714 B) and is byte-identical to it at this phase. What was extracted: the whole engine and compartment set — container, six per-line compartments, bridge, word-animation layer, audio compartment, decision layer, chrome. Why extraction is the honest move here: phase 2 decided the compartment inventory FROM THE ARCHITECTURE first, and the extracted scene was then verified against that inventory element-by-element (the inventory below, checked against the file's DOM ids and its own decision records) — every decided compartment exists, and no compartment exists that the architecture did not decide. What was changed at this phase: NOTHING in the code. What changes around the code in this branch: (1) authority — the branch's decisions/ files (phase 5) are the record of authority; the in-scene blocks ride as the scene's carriage of the same records; (2) the audio the scene embeds for standalone preview is the first draft's guide-era programme audio — this branch's decided narration is the clone programme audio recorded in audio/ (phase 6), and the render derivative pairs the scene with it (the first draft's own DR-AUDIO ladder did exactly this); (3) phase 7 splices the editability layer into this file. If a future decision changes any compartment, it changes here by commit and the inventory below is updated in the same commit.",
- "sha256": "8a84c408d7bf9bec069604774e4a1361dd69047ccc465d8a157fa69563f07743",
- "bytes": 7318714,
+ "sha256": "5eb88028363c7208e8c5abaeb080d484bdcae6e6814567795f14779a7ecd5f2e",
+ "bytes": 7340140,
  "play": "Open scene/index.html in a browser — one self-contained file (all media embedded); it plays the piece. Add ?edit=1 after phase 7 for the editor layer; ?render keeps every overlay inert for the house render pipeline.",
  "compartment_inventory": [
   {
@@ -124,5 +124,13 @@
    "serves": "standalone play/inspection outside the render pipeline"
   }
  ],
- "inventory_verification": "Checked 2026-10-26 against the extracted file: every element id above is present in the DOM/PLAN; the scene's own records count 44 elements in 11 decision records (coverage classes: script 1 cited + scene components 33 + word placements 2 + audio 1 + packaging 2 + container 1, per the scene's #decisions coverage block — the element layer's own accounting, adopted as phase 5's denominator)."
+ "inventory_verification": "Checked 2026-10-26 against the extracted file: every element id above is present in the DOM/PLAN; the scene's own records count 44 elements in 11 decision records (coverage classes: script 1 cited + scene components 33 + word placements 2 + audio 1 + packaging 2 + container 1, per the scene's #decisions coverage block — the element layer's own accounting, adopted as phase 5's denominator).",
+ "editability": {
+  "what": "The in-scene editor layer (pattern: hidden_files/finishing/soa-01/editability/PATTERN.md — inspect an object → edit its OWNED data → save → reopen → the rendered change appears, with the reasoning layer linked to the outcome). Modes: ?render = fully inert; no flag = a saved overlay applies before the first frame; ?edit=1 = the editor UI opens (click a word span or its list row → inspector shows its decision record beside the form; edit cx/cy/key/start/end + treatment/effect per word, on/off per element; Save writes a sparse diff to localStorage key 'soa-01-edits-v1'; Export produces package-shaped word-decisions.json + plan-edits.json for commit-back).",
+  "delta_over_phase_4": "One contiguous block (21,425 B editor layer + 1 newline = +21,426 B) inserted immediately before </body>: master 7,318,714 B / sha256 8a84c408… → this file 7,340,140 B / sha256 5eb88028…. Stripping the block restores the phase-4 master byte-for-byte (verified in the pattern's proof).",
+  "proof": "PROVEN on this exact scene code (JOB EDITABILITY-1, measurements in hidden_files/finishing/soa-01/editability/proof/measurements.json): no-overlay frames pixel-identical to master at t=3.0 and t=13.5 (0 differing pixels); edit word #1 'State' cx 314→514 through the UI → save → reopen in a new browser process → rendered delta exactly +200.0 px; export parsed-equal to the package word-decisions except the edited word; reset restores shipped data; 0 page errors across all legs.",
+  "data_contract_verified": "PLAN phrases[].words[] {w,start,end,key,cx,cy} + elements[] {id,on,off}; window.renderAt exposed; #word-decision-container 1:1 with the flat PLAN word order for all 81 words; #decisions + #stage present; single </body> splice point.",
+  "commit_back": "Export both files → replace decisions/word-decisions.json with the exported file AND the in-scene container block with the same JSON (verbatim-equal is a package invariant) → apply plan-edits.json to the PLAN literal → update this file's sha256/bytes → Reset in the browser → re-verify.",
+  "known_limits": "Named in decisions/randomness-register.md R-6 (the pattern's §6 terms)."
+ }
 }
