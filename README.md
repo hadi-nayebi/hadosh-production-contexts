@@ -1,20 +1,7 @@
-# wd-03 — video package
+# wd-03 — "What Is a Model?" (Word Definitions)
 
-This branch is the file system of one video (board piece wd-03).
+**Stage: metadata layer landed — the decision scaffold; the package assembles layer by layer from here.**
 
-The package is the deliverable alongside the video. It grows in
-developmental order — metadata first (objective, message,
-structure), then transcript, then audio and visuals — and this
-branch's git history is the video's development history.
+This branch is the development package for one video: "What Is a Model?", a Word Definitions short on the flagship channel (Let's Build It Together). This piece stands in NO built state — it is a SCRIPT: drafted (i1), polished (i2, the governing draft), narrative-gate-passed in both drafts, and never built, voiced, or rendered. Its package is therefore a DEVELOPMENT package, assembled honestly from the layers that exist: the decision scaffold (this layer), the development transcript (the governing script, with the superseded draft carried beside it), the decision records its development produced, and — for the audio, scene and render layers, which do not exist yet — named absence records with the build as their next step. Nothing is padded; nothing is fabricated.
 
-Opened 2026-10-26 under Hadi's all-31-branches ruling: every video
-gets its own branch, and each branch is developed through the
-layers in order. The objective is defined first: a video without
-one produces every later layer in its absence. Decisions at each
-layer are made from the piece's own evidence — its transcript,
-earlier versions, and the recorded style/delivery references.
-
-Evidence state at opening: Unbuilt script (draft i2). Development starts at the objective: no audio, scene or render exists.
-
-Stage: 0 — opened. The metadata layer is the first development
-step.
+The scaffold's coverage as it stands: 10 of 15 fields decided (the objective — decided first, per the standing order — the message, the role, the beat-sheet story structure, the withheld-object hook, the fused orientation, the silent-card referral, the script reconciliation, the lane's adopted A59 style direction, and the truthful voice state: NONE, no narration exists in any voice). Five fields stand open, named here so the silences are legible from the start: `audience` (the misconception is named in the script's gate; the board's phase-0 audience check was never passed), `delivery_structure` (absent-by-development — no performed text, no timings, no pause map exists), `accuracy_flag` (L3's "billions of words" — flagged by the script doc itself, the objectives audit and the script-factory report as the owner's minor wording call; the governing text stands with the flag attached), `publish_verdict` (no build exists to judge), and `word_decisions` (layer absent-by-development — 0 of the script's 119 spoken words carry a per-word decision; the authoring task is sequenced at the build).
