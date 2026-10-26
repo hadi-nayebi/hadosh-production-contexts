@@ -18,7 +18,7 @@ verdict is this rebuild's reason to exist.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions lane
 - **Title:** What Is a Token?
-- **Stage:** phase 2 of 7 — metadata: architecture + style + question.
+- **Stage:** phase 3 of 7 — transcript consolidation.
 
 ## The idea
 
@@ -32,10 +32,8 @@ now our machines processing language are thinking in tokens — this
 many quadrillion tokens a month", and **come back to the number at
 the end** (bookend). The figure is sourced: **more than 3.2
 quadrillion tokens per month** — Sundar Pichai, Google I/O 2026
-keynote; the trajectory runs 9.7 trillion/month (2024) → 480
-trillion (2025) → 3.2 quadrillion (2026). The scope distinction is
-part of the fact: *processed* ≠ unique generated text — the
-narration's verb ("process") carries it.
+keynote; *processed* ≠ unique generated text, carried in the
+narration's verb.
 
 ## The objective (5–20 words)
 
@@ -44,46 +42,43 @@ narration's verb ("process") carries it.
 
 ## Where the branch stands
 
-- **P1 — metadata: idea + objective.** Objective (17 words),
-  message ("A token is a chunk of text the machine counts.") and
-  audience decided from the lane's purpose and the owner's
-  structure direction; the rest of the scaffold OPEN with routes.
-- **P2 — architecture + style + question.** Eight moves prescribed
-  from the objective inside the owner's bookend (the number → the
-  question → the definition → the machine's eye + the rule → the
-  performed count → the stakes → the turn → the return), with the
-  narrative architecture designed on purpose: the opening promise
-  (M8 pays M2's question word-for-word), motivated transitions
-  (every move is the previous move's consequence), the arc
-  SCALE → UNIT → SCALE, and recall by bookend. The viewer's
-  question; the hook form (the fragment-first sourced number);
-  delivery pattern sized from the pause doctrine's classes; the
-  WD-04 referral derived from M7's stream. Style: the lane's A59
-  adoption recorded as an owner-decided input (#78, won on wd-02's
-  specimens); this piece's mix decided against the objective —
-  A59 motion-graphics spine (ONE persistent token-piece object) +
-  cinematic typography rationed to the number + 2D graphics as the
-  cut's rendering hand; whiteboard, collage, 3D/isometric rejected
-  with reasons. **Scaffold 10/10.**
+- **P1 — metadata: idea + objective.** Objective, message and
+  audience decided; the rest of the scaffold OPEN with routes.
+- **P2 — architecture + style + question.** Eight moves in the
+  owner's bookend; narrative architecture designed (promise /
+  motivated transitions / SCALE → UNIT → SCALE arc / recall by
+  bookend); style decided (A59 spine + cinematic typography for
+  the number + 2D cut). **Scaffold 10/10.**
+- **P3 — transcript consolidation.** Candidate A drafted fresh
+  from the architecture FIRST (9 lines / 131 words — full-sentence
+  hook, plain question, count before mechanism, split close);
+  Candidate B (this morning's redevelopment i3) weighed second
+  with provenance; the delivered text read LAST as evidence only.
+  **Settled: 8 lines / 127 spoken words** — B contributes six
+  lines whole, A wins the question's form ("So what is one
+  token?" — the "one" that welds it to the payoff) and the
+  stakes' restored ending ("at once"); the convergence is stated
+  honestly in the consolidation (§5): the owner's complaint was
+  never the definition, and the rebuild's divergence lives where
+  his verdict pointed. Editor pass run; narrative architecture
+  recorded as design (§6); pause map sized (1.30 s think beat;
+  0.90 s suspenses before the count and the return; 1.00 s
+  concept shift). The owner's text rule recorded and checked:
+  the word banned from synthesis text occurs zero times.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-Rulers for this branch, fixed at phase 1 so later counts never
-move the goalposts: **decision fields = 10 metadata scaffold
-fields + the scene's elements (counted at the scene phase) + the
-settled transcript's spoken words** (spoken-word ruler: whitespace
-tokens of the settled transcript excluding standalone em-dash
-tokens; both rulers stated in `transcript/transcript.md` when it
-lands).
+Rulers (fixed at phase 1): **decision fields = 10 metadata
+scaffold fields + the scene's elements (counted at the scene
+phase) + the settled transcript's spoken words** (spoken-word
+ruler: whitespace tokens excluding standalone em-dash tokens).
 
-- **At this phase: scaffold 10 / 10 decided.** The transcript,
-  scene, element and word layers are not yet built.
-- **Open, named:** the transcript itself (phase 3 — candidates
-  weighed in the open), the scene (phase 4), the element and word
-  decisions (phase 5), the audio (phase 6), the render (phase 7).
-
-Alignment, in words: the branch knows what this video is for, what
-it says, who it is talking to, how it is structured, how it looks,
-how it is delivered and where it points next. What remains is to
-settle its words, build its scene, decide its details, voice it,
-and render it — in that order, in the open.
+- **At this phase: scaffold 10 / 10 decided;** the settled
+  transcript stands at 127 spoken words (their per-word
+  decisions are recorded at phase 5); the scene, element and
+  audio layers are not yet built.
+- **Open, named:** the scene (phase 4), the element and word
+  decisions (phase 5), the audio (phase 6 — five settled lines
+  carry verifier-passed takes from the candidate's job and face
+  the cryptographic reuse test; three lines synthesize fresh),
+  the render (phase 7).
