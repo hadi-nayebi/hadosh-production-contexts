@@ -18,7 +18,7 @@ verdict is this rebuild's reason to exist.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions lane
 - **Title:** What Is a Token?
-- **Stage:** phase 5 of 7 — decisions.
+- **Stage:** phase 6 of 7 — audio.
 
 ## The idea
 
@@ -88,7 +88,17 @@ standalone em-dash tokens).
   settled transcript's spoken words, the element count is the
   scene record's, and coverage closes only when every field
   carries a recorded reason.
-- **Open, named:** the audio (phase 6 — five settled lines
-  carry verifier-passed takes facing the cryptographic reuse
-  test; three synthesize fresh), the render (phase 7), and the
-  register's open items (the owner's ear verdict first).
+- **P6 — audio.** Decided line by line: five lines passed the
+  cryptographic reuse test (settled text byte-identical to a
+  verifier-passed take's requested text; the take files hash to
+  the source job's records) — L1, L3, L4, L7, L8. Three lines
+  synthesized fresh in one registered-mode job (seed 7101):
+  L2 (the rewritten question), L6 (the restored "at once") and
+  L5 — the count, whose earlier audio never qualified; its
+  take 1 passed at ASR 1.0, no ICL needed, so all eight lines
+  carry the one registered voice character. Every line fits at
+  atempo 1.000. Programme over the piece's own continuous bed,
+  mastered to **−14.45 LUFS / TP −1.40 dBTP** (the delivered MP4 measures −14.47 / −1.28 — phase 7)
+  (`audio/audio.json` carries the proofs and the chain).
+- **Open, named:** the render (phase 7) and the register's
+  open items (the owner's ear verdict first).

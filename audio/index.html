@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>WD-01 — What Is a Token? (rebuild scene)</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#e8e6df;--gold:#e8b64c;--dim:#9a97a3;--slate:#6f7d94;--panel:#141824;--line:#2a3040}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#0b0e14}
+body{font-family:'Archivo',system-ui,sans-serif;color:var(--ink)}
+#stage{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 30%,#12172a 0%,#0b0e14 62%)}
+#vignette{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 45%,transparent 55%,rgba(0,0,0,.5) 100%)}
+#field{position:absolute;inset:0}
+.pdot{position:absolute;border-radius:50%;background:#8fa3c8}
+#furniture{position:absolute;top:104px;left:0;width:1080px;text-align:center;font-size:25px;letter-spacing:.42em;color:var(--dim);font-weight:600}
+#ghost{position:absolute;top:470px;left:0;width:1080px;text-align:center;font-weight:800;color:#aebadd;letter-spacing:.01em}
+#quadrillion{position:absolute;top:952px;left:0;width:1080px;text-align:center;font-size:96px;font-weight:800;letter-spacing:.14em;color:var(--gold)}
+#contextline{position:absolute;top:1108px;left:0;width:1080px;text-align:center;font-size:31px;letter-spacing:.18em;color:var(--slate);font-weight:600}
+#sourceline{position:absolute;top:1188px;left:90px;width:900px;text-align:center;font-size:26px;line-height:1.45;color:var(--dim)}
+#question{position:absolute;left:290px;top:688px;width:500px;padding:34px 0;text-align:center;border:3px dashed rgba(232,182,76,.55);border-radius:22px;font-size:62px;font-weight:800;letter-spacing:.06em;color:var(--ink);background:rgba(20,24,36,.55)}
+#piece{position:absolute;width:300px;height:190px;border:3px solid #46506a;border-radius:26px;background:var(--panel);text-align:center}
+#piece .plabel{position:absolute;left:0;width:300px;top:66px;font-size:44px;font-weight:600;letter-spacing:.08em;color:var(--ink)}
+#piece .psub{position:absolute;left:0;width:300px;top:130px;font-size:19px;letter-spacing:.12em;color:var(--dim)}
+#cutword{position:absolute;top:835px;left:0;width:1080px;text-align:center;font-size:88px;font-weight:600;color:var(--ink);white-space:nowrap}
+#cutword span{display:inline-block;position:relative}
+#cutword .tick{position:absolute;left:8%;bottom:-26px;width:84%;height:5px;background:var(--gold);border-radius:3px;opacity:0}
+#scanbar-l,#scanbar-r{position:absolute;top:540px;width:8px;height:520px;background:rgba(232,182,76,.5);border-radius:4px}
+#scanline{position:absolute;top:560px;width:6px;height:480px;background:var(--gold);border-radius:3px;box-shadow:0 0 26px rgba(232,182,76,.75)}
+#chars{position:absolute;left:340px;top:1096px;width:400px;padding:20px 0;text-align:center;border:2px solid var(--line);border-radius:999px;background:var(--panel);font-size:31px;font-weight:600;letter-spacing:.1em;color:var(--ink)}
+#invite{position:absolute;top:520px;left:0;width:1080px;text-align:center;font-size:34px;letter-spacing:.34em;color:var(--dim);font-weight:600}
+.tile{position:absolute;width:150px;height:150px;border:3px solid #46506a;border-radius:22px;background:var(--panel);text-align:center;font-weight:600;color:var(--ink)}
+#counter{position:absolute;top:985px;left:0;width:1080px;text-align:center;font-size:54px;font-weight:800;letter-spacing:.2em}
+#counter .num{color:#454c60;margin:0 10px}
+#counter .verdict{display:block;margin-top:16px;color:var(--gold);letter-spacing:.12em}
+.stake{position:absolute;width:360px;height:210px;border:3px solid #333b52;border-radius:24px;background:var(--panel);text-align:center}
+.stake .sbig{position:absolute;left:0;width:360px;top:52px;font-size:47px;font-weight:800;letter-spacing:.08em;color:#77809a}
+.stake .ssub{position:absolute;left:0;width:360px;top:128px;font-size:25px;color:var(--dim)}
+#streamlab{position:absolute;top:600px;left:0;width:1080px;text-align:center;font-size:35px;letter-spacing:.3em;color:var(--slate);font-weight:600}
+#stream{position:absolute;top:690px;left:0;width:1080px;height:200px;overflow:hidden}
+.srect{position:absolute;width:120px;height:76px;border:2px solid #3d4a68;border-radius:14px;background:rgba(20,24,36,.85)}
+#bridge{position:absolute;left:160px;top:730px;width:760px;height:380px;border:3px solid rgba(232,182,76,.5);border-radius:28px;background:rgba(16,19,29,.94);text-align:center}
+#bridge .beyebrow{position:absolute;left:40px;width:680px;top:64px;font-size:27px;letter-spacing:.24em;color:var(--gold);font-weight:600;line-height:1.5}
+#bridge .bhead{position:absolute;left:40px;width:680px;top:168px;font-size:64px;font-weight:800;letter-spacing:.04em;color:var(--ink)}
+#bridge .barrow{position:absolute;left:40px;width:680px;top:272px;font-size:52px;color:var(--gold)}
+#words{position:absolute;left:100px;width:880px;top:1300px;text-align:center;font-weight:600;line-height:1.3;color:var(--ink)}
+#words .wline{display:none}
+#words span{display:inline-block;margin:0 .22em}
+#editor{position:absolute;top:0;right:0;width:330px;background:rgba(10,12,18,.96);border-left:2px solid var(--line);color:var(--ink);font-size:22px;padding:18px;display:none;z-index:99}
+#editor h3{font-size:24px;margin-bottom:10px;color:var(--gold)}
+#editor label{display:block;margin:10px 0 4px;color:var(--dim)}
+#editor input[type=range]{width:100%}
+#editor button{margin-top:14px;width:100%;padding:10px;font-size:20px;background:var(--gold);border:0;border-radius:8px;font-weight:700;cursor:pointer}
+#editor .row{color:var(--dim);font-size:19px}
+</style></head>
+<body>
+<div id="stage" data-eid="st-void"></div>
+<div id="vignette"></div>
+<div id="field" data-eid="st-field"></div>
+<div id="furniture" data-eid="ln-furniture">EARTH ONE · WORD DEFINITIONS</div>
+<div id="ghost" data-eid="wd-ghost">3.2</div>
+<div id="quadrillion" data-eid="wd-quadrillion">QUADRILLION</div>
+<div id="contextline" data-eid="wd-trillion">A QUADRILLION IS A THOUSAND TRILLION</div>
+<div id="sourceline" data-eid="wd-source">Google processes more than 3.2 quadrillion tokens a month<br>— Google I/O 2026</div>
+<div id="question" data-eid="wd-question">ONE TOKEN?</div>
+<div id="piece" data-eid="wd-token-piece"><div class="plabel">token</div><div class="psub" id="piecesub">A CHUNK OF TEXT</div></div>
+<div id="cutword" data-eid="wd-cutword"><span data-eid="wd-piece-un">un<i class="tick"></i></span><span data-eid="wd-piece-happi">happi<i class="tick"></i></span><span data-eid="wd-piece-ness">ness<i class="tick"></i></span></div>
+<div id="scanbar-l" data-eid="wd-scanner"></div><div id="scanbar-r"></div><div id="scanline"></div>
+<div id="chars" data-eid="wd-chars">≈ 4 CHARACTERS EACH</div>
+<div id="invite" data-eid="wd-invite">COUNT WITH ME</div>
+<div class="tile" data-eid="wd-tile-1">The</div><div class="tile" data-eid="wd-tile-2">machine</div>
+<div class="tile" data-eid="wd-tile-3">reads</div><div class="tile" data-eid="wd-tile-4">tokens</div>
+<div class="tile" data-eid="wd-tile-5">.</div>
+<div id="counter" data-eid="wd-counter"><span class="num">1</span><span class="num">2</span><span class="num">3</span><span class="num">4</span><span class="num">5</span><span class="verdict" id="verdict"> — FIVE TOKENS</span></div>
+<div class="stake" data-eid="wd-stake-reads"><div class="sbig">READS</div><div class="ssub">what the model reads</div></div>
+<div class="stake" data-eid="wd-stake-writes"><div class="sbig">WRITES</div><div class="ssub">what it writes</div></div>
+<div class="stake" data-eid="wd-stake-pay"><div class="sbig">YOU PAY</div><div class="ssub">what you pay</div></div>
+<div class="stake" data-eid="wd-stake-hold"><div class="sbig">HOLDS</div><div class="ssub">how much it can hold at once</div></div>
+<div id="streamlab" data-eid="wd-stream-label">THINKING IN TOKENS</div>
+<div id="stream" data-eid="wd-stream"></div>
+<div id="bridge" data-eid="wd-bridge"><div class="beyebrow">NEXT — THE STREAM THOSE TOKENS MOVE IN</div><div class="bhead">WHAT IS CONTEXT?</div><div class="barrow">→</div></div>
+<div id="words"></div>
+<div id="editor"><h3 id="ed-title">element</h3>
+<label>x offset <span class="row" id="v-dx"></span></label><input type="range" id="r-dx" min="-400" max="400" value="0">
+<label>y offset <span class="row" id="v-dy"></span></label><input type="range" id="r-dy" min="-400" max="400" value="0">
+<label>scale <span class="row" id="v-sc"></span></label><input type="range" id="r-sc" min="40" max="220" value="100">
+<label>opacity <span class="row" id="v-op"></span></label><input type="range" id="r-op" min="0" max="100" value="100">
+<label>font size <span class="row" id="v-fs"></span></label><input type="range" id="r-fs" min="12" max="120" value="40">
+<button id="ed-copy">COPY OVERRIDES JSON</button>
+<button id="ed-clear" style="background:#333b52;color:#e8e6df">CLEAR OVERRIDES</button>
+<div class="row" style="margin-top:10px">click an element, drag sliders — saved locally; Copy hands the JSON back to Archer.</div></div>
+<script>
+const PLAN = [[{"w": "More", "t": 2.0, "e": 2.253, "p": 0}, {"w": "than", "t": 2.253, "e": 2.506, "p": 0}, {"w": "three", "t": 2.506, "e": 2.822, "p": 0}, {"w": "point", "t": 2.822, "e": 3.139, "p": 0}, {"w": "two", "t": 3.139, "e": 3.328, "p": 0}, {"w": "quadrillion.", "t": 3.328, "e": 4.024, "p": 1}, {"w": "That's", "t": 4.176, "e": 4.516, "p": 0}, {"w": "how", "t": 4.516, "e": 4.686, "p": 0}, {"w": "many", "t": 4.686, "e": 4.912, "p": 0}, {"w": "tokens", "t": 4.912, "e": 5.252, "p": 0}, {"w": "Google's", "t": 5.252, "e": 5.705, "p": 0}, {"w": "machines", "t": 5.705, "e": 6.158, "p": 0}, {"w": "process", "t": 6.158, "e": 6.554, "p": 0}, {"w": "every", "t": 6.554, "e": 6.837, "p": 0}, {"w": "month.", "t": 6.837, "e": 7.12, "p": 0}], [{"w": "So", "t": 7.776, "e": 7.953, "p": 0}, {"w": "what", "t": 7.953, "e": 8.308, "p": 0}, {"w": "is", "t": 8.308, "e": 8.485, "p": 0}, {"w": "one", "t": 8.485, "e": 8.751, "p": 1}, {"w": "token?", "t": 8.751, "e": 9.194, "p": 1}], [{"w": "Not", "t": 10.544, "e": 10.772, "p": 0}, {"w": "a", "t": 10.772, "e": 10.849, "p": 0}, {"w": "word.", "t": 10.849, "e": 11.153, "p": 0}, {"w": "A", "t": 11.153, "e": 11.229, "p": 0}, {"w": "token", "t": 11.767, "e": 12.139, "p": 1}, {"w": "is", "t": 12.139, "e": 12.288, "p": 0}, {"w": "a", "t": 12.288, "e": 12.362, "p": 0}, {"w": "chunk", "t": 12.362, "e": 12.734, "p": 1}, {"w": "of", "t": 12.734, "e": 12.883, "p": 0}, {"w": "text,", "t": 12.883, "e": 13.18, "p": 0}, {"w": "sometimes", "t": 13.18, "e": 13.85, "p": 0}, {"w": "a", "t": 13.85, "e": 13.924, "p": 0}, {"w": "whole", "t": 13.924, "e": 14.296, "p": 0}, {"w": "word,", "t": 14.296, "e": 14.594, "p": 0}, {"w": "often", "t": 14.594, "e": 14.966, "p": 0}, {"w": "just", "t": 14.966, "e": 15.263, "p": 0}, {"w": "a", "t": 15.263, "e": 15.337, "p": 0}, {"w": "piece", "t": 15.337, "e": 15.709, "p": 0}, {"w": "of", "t": 15.709, "e": 15.858, "p": 0}, {"w": "one.", "t": 15.858, "e": 16.081, "p": 0}], [{"w": "The", "t": 17.063, "e": 17.285, "p": 0}, {"w": "machine", "t": 17.285, "e": 17.803, "p": 0}, {"w": "doesn't", "t": 17.803, "e": 18.321, "p": 0}, {"w": "read", "t": 18.321, "e": 18.617, "p": 0}, {"w": "letters,", "t": 18.617, "e": 19.134, "p": 0}, {"w": "and", "t": 19.134, "e": 19.356, "p": 0}, {"w": "it", "t": 19.356, "e": 19.504, "p": 0}, {"w": "doesn't", "t": 19.504, "e": 20.022, "p": 0}, {"w": "read", "t": 20.022, "e": 20.318, "p": 0}, {"w": "words.", "t": 20.318, "e": 20.688, "p": 0}, {"w": "It", "t": 20.688, "e": 20.836, "p": 0}, {"w": "reads", "t": 20.836, "e": 21.206, "p": 0}, {"w": "tokens.", "t": 21.81, "e": 22.202, "p": 1}, {"w": "In", "t": 22.202, "e": 22.333, "p": 0}, {"w": "English,", "t": 22.333, "e": 22.79, "p": 0}, {"w": "about", "t": 22.79, "e": 23.117, "p": 0}, {"w": "four", "t": 23.117, "e": 23.378, "p": 0}, {"w": "characters", "t": 23.378, "e": 24.032, "p": 0}, {"w": "each.", "t": 24.032, "e": 24.293, "p": 0}], [{"w": "Count", "t": 25.193, "e": 25.695, "p": 0}, {"w": "with", "t": 25.695, "e": 26.096, "p": 0}, {"w": "me:", "t": 26.649, "e": 26.79, "p": 1}, {"w": "The.", "t": 26.79, "e": 27.003, "p": 1}, {"w": "Machine.", "t": 27.003, "e": 27.499, "p": 1}, {"w": "Reads.", "t": 27.843, "e": 28.36, "p": 1}, {"w": "Tokens.", "t": 28.595, "e": 29.16, "p": 1}, {"w": "Five", "t": 29.499, "e": 29.887, "p": 0}, {"w": "tokens.", "t": 29.887, "e": 30.47, "p": 0}], [{"w": "Everything", "t": 31.07, "e": 31.879, "p": 0}, {"w": "is", "t": 31.879, "e": 32.041, "p": 0}, {"w": "measured", "t": 32.041, "e": 32.688, "p": 0}, {"w": "in", "t": 32.688, "e": 32.85, "p": 0}, {"w": "tokens:", "t": 33.042, "e": 33.47, "p": 1}, {"w": "what", "t": 33.47, "e": 33.755, "p": 0}, {"w": "the", "t": 33.755, "e": 33.969, "p": 0}, {"w": "model", "t": 33.969, "e": 34.326, "p": 0}, {"w": "reads,", "t": 34.326, "e": 34.682, "p": 0}, {"w": "what", "t": 34.682, "e": 34.968, "p": 0}, {"w": "it", "t": 34.968, "e": 35.11, "p": 0}, {"w": "writes,", "t": 35.11, "e": 35.538, "p": 0}, {"w": "what", "t": 35.538, "e": 35.824, "p": 0}, {"w": "you", "t": 35.824, "e": 36.038, "p": 0}, {"w": "pay,", "t": 36.038, "e": 36.252, "p": 0}, {"w": "how", "t": 36.598, "e": 36.806, "p": 0}, {"w": "much", "t": 36.806, "e": 37.084, "p": 0}, {"w": "it", "t": 37.084, "e": 37.223, "p": 0}, {"w": "can", "t": 37.223, "e": 37.431, "p": 0}, {"w": "hold", "t": 37.431, "e": 37.709, "p": 0}, {"w": "at", "t": 37.709, "e": 37.848, "p": 0}, {"w": "once.", "t": 37.848, "e": 38.126, "p": 0}], [{"w": "Right", "t": 39.126, "e": 39.496, "p": 0}, {"w": "now,", "t": 39.496, "e": 39.718, "p": 0}, {"w": "machines", "t": 39.718, "e": 40.309, "p": 0}, {"w": "that", "t": 40.309, "e": 40.605, "p": 0}, {"w": "think", "t": 40.605, "e": 40.975, "p": 0}, {"w": "in", "t": 40.975, "e": 41.123, "p": 0}, {"w": "language", "t": 41.123, "e": 41.714, "p": 0}, {"w": "think", "t": 41.714, "e": 42.084, "p": 0}, {"w": "in", "t": 42.084, "e": 42.232, "p": 0}, {"w": "tokens.", "t": 42.232, "e": 42.676, "p": 1}, {"w": "Every", "t": 43.054, "e": 43.388, "p": 0}, {"w": "word", "t": 43.388, "e": 43.654, "p": 0}, {"w": "they", "t": 43.654, "e": 43.921, "p": 0}, {"w": "read,", "t": 43.921, "e": 44.188, "p": 0}, {"w": "every", "t": 44.583, "e": 45.014, "p": 0}, {"w": "word", "t": 45.014, "e": 45.358, "p": 0}, {"w": "they", "t": 45.358, "e": 45.703, "p": 0}, {"w": "write,", "t": 45.969, "e": 46.29, "p": 0}, {"w": "moves", "t": 46.29, "e": 46.612, "p": 0}, {"w": "as", "t": 46.612, "e": 46.74, "p": 0}, {"w": "tokens.", "t": 46.74, "e": 47.126, "p": 1}], [{"w": "More", "t": 48.026, "e": 48.301, "p": 0}, {"w": "than", "t": 48.301, "e": 48.576, "p": 0}, {"w": "three", "t": 48.576, "e": 48.919, "p": 0}, {"w": "point", "t": 48.919, "e": 49.263, "p": 0}, {"w": "two", "t": 49.263, "e": 49.469, "p": 0}, {"w": "quadrillion", "t": 49.469, "e": 50.225, "p": 1}, {"w": "of", "t": 50.225, "e": 50.362, "p": 0}, {"w": "those,", "t": 50.362, "e": 50.706, "p": 0}, {"w": "every", "t": 50.706, "e": 51.05, "p": 0}, {"w": "month.", "t": 51.05, "e": 51.393, "p": 0}, {"w": "Now", "t": 51.831, "e": 52.051, "p": 0}, {"w": "you", "t": 52.051, "e": 52.27, "p": 0}, {"w": "know", "t": 52.27, "e": 52.563, "p": 0}, {"w": "what", "t": 52.563, "e": 52.856, "p": 0}, {"w": "one", "t": 52.856, "e": 53.075, "p": 1}, {"w": "is.", "t": 53.075, "e": 53.222, "p": 0}]];
+const LINE_END = [7.12, 9.244, 16.304, 24.293, 30.52, 38.126, 47.126, 53.272];
+const LINE_FONT = [40, 64, 50, 46, 56, 44, 44, 40];
+const DUR = 57.072;
+const $ = id => document.getElementById(id);
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function kf(t, keys){ // keys: [[time, value], ...] linear
+  if(t<=keys[0][0]) return keys[0][1];
+  for(let i=1;i<keys.length;i++){ if(t<=keys[i][0]){ const [t0,v0]=keys[i-1],[t1,v1]=keys[i]; return v0+(v1-v0)*(t-t0)/(t1-t0); } }
+  return keys[keys.length-1][1];
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+// particle field (deterministic)
+(function(){ const rnd = mulberry32(20261026); const f = $('field');
+  for(let i=0;i<46;i++){ const d=document.createElement('div'); d.className='pdot';
+    const s=2+rnd()*3.5; d.style.width=d.style.height=s+'px';
+    d.style.left=(40+rnd()*1000)+'px'; d.style.top=(180+rnd()*1560)+'px';
+    d.style.opacity=(0.05+rnd()*0.13).toFixed(2); f.appendChild(d); } })();
+// stream texture (deterministic flowing mini-rects inside the wd-stream element)
+const STREAM_RECTS=[];
+(function(){ const s=$('stream'); for(let i=0;i<7;i++){ const d=document.createElement('div'); d.className='srect';
+  d.style.top=(18+(i%3)*58)+'px'; s.appendChild(d); STREAM_RECTS.push(d); } })();
+// word layer build
+const wordsEl=$('words'); const lineEls=[];
+PLAN.forEach((line,li)=>{ const div=document.createElement('div'); div.className='wline';
+  div.style.fontSize=LINE_FONT[li]+'px';
+  line.forEach(w=>{ const sp=document.createElement('span'); sp.textContent=w.w; div.appendChild(sp); });
+  wordsEl.appendChild(div); lineEls.push(div); });
+const E = {}; document.querySelectorAll('[data-eid]').forEach(el=>{ E[el.dataset.eid]=el; });
+function setT(el,x,y,s){ el.style.transform=`translate(${x}px,${y}px) scale(${s})`; }
+function base(el){ el.style.left=''; el.style.top=''; }
+// static homes
+(function(){ const P=E['wd-token-piece']; P.style.left='390px'; P.style.top='705px';
+  $('scanbar-l').style.left='292px'; $('scanbar-r').style.left='780px';
+  const tiles=['wd-tile-1','wd-tile-2','wd-tile-3','wd-tile-4','wd-tile-5'];
+  tiles.forEach((id,i)=>{ const el=E[id]; el.style.left=(133+i*166)+'px'; el.style.top='685px';
+    el.style.fontSize=(id==='wd-tile-5')?'64px':'31px'; el.style.paddingTop=(id==='wd-tile-5')?'26px':'52px'; });
+  const stakes={'wd-stake-reads':[150,590],'wd-stake-writes':[570,590],'wd-stake-pay':[150,880],'wd-stake-hold':[570,880]};
+  for(const id in stakes){ E[id].style.left=stakes[id][0]+'px'; E[id].style.top=stakes[id][1]+'px'; }
+})();
+const STARTS=[2.0,7.62,10.544,16.804,25.193,31.02,39.126,48.026];
+function renderAt(t){
+  // ---- C1 monument (states: assemble / recede / return)
+  const ghost=$('ghost'), quad=$('quadrillion'), ctx=$('contextline'), src=$('sourceline');
+  let gOp, gScale, gFont=470, gText='3.2';
+  if(t<7.3){ gOp=kf(t,[[0,0],[0.9,0.13]]); gScale=kf(t,[[0,0.94],[0.9,1]]); }
+  else if(t<10.2){ gOp=0.06; gScale=0.965; }
+  else if(t<47.9){ gOp=0; gScale=0.965; }
+  else if(t<51.83){ gOp=kf(t,[[47.9,0],[48.6,0.13]]); gScale=0.99; }
+  else { gOp=kf(t,[[51.83,0.13],[52.2,0.05],[52.5,0.13],[53.9,0.13],[54.4,0]]); gScale=1; }
+  if(t>=51.83){ gText='3,200,000,000,000,000'; gFont=57; }
+  ghost.textContent=gText; ghost.style.fontSize=gFont+'px';
+  ghost.style.top=(gFont<100?'700px':'470px'); ghost.style.opacity=gOp; ghost.style.transform=`scale(${gScale})`;
+  let qOp, qY=0;
+  if(t<7.3){ qOp=kf(t,[[0.9,0],[1.7,1]]); }
+  else if(t<10.2){ qOp=0.3; qY=-26; }
+  else if(t<47.9){ qOp=0; qY=-26; }
+  else if(t<53.9){ qOp=kf(t,[[48.1,0],[48.9,1]]); qY=0; }
+  else { qOp=kf(t,[[53.9,1],[54.4,0]]); }
+  quad.style.opacity=qOp; quad.style.transform=`translateY(${qY}px)`;
+  quad.style.letterSpacing=(0.14 - 0.05*clamp((t-0.9)/0.8,0,1)*(t<10?1:0))+'em';
+  ctx.style.opacity = (t<7.3)? kf(t,[[3.3,0],[4.05,1]]) : (t<10.2? 0.35 : (t<47.9?0: kf(t,[[48.3,0],[49.0,0.9],[53.9,0.9],[54.4,0]])));
+  src.style.opacity = (t<7.3)? kf(t,[[4.2,0],[4.95,1]]) : (t<10.2? 0.3 : (t<47.9?0: kf(t,[[48.5,0],[49.2,0.85],[53.9,0.85],[54.4,0]])));
+  // ---- C2 question tile
+  const qn=$('question');
+  qn.style.opacity=kf(t,[[7.7,0],[8.45,1],[10.15,1],[10.55,0]]);
+  setT(qn,0,kf(t,[[7.7,26],[8.45,0]]),kf(t,[[7.7,0.96],[8.45,1]]));
+  // ---- token piece (shared object: C3 home, C4 scanner, C7 mini)
+  const P=E['wd-token-piece'], sub=$('piecesub');
+  let px=390, py=705, ps=1, pOp=0, pGold=0;
+  if(t>=11.6 && t<16.45){ pOp=kf(t,[[11.6,0],[12.35,1]]);
+    py = 705 + kf(t,[[13.18,0],[13.6,-145]]); ps=1+kf(t,[[15.75,0],[15.95,0.06],[16.25,0]]); pGold=kf(t,[[15.75,0],[15.95,1],[16.45,0]]);
+    sub.textContent = t<15.75 ? 'A CHUNK OF TEXT' : 'A PIECE OF ONE COUNTS TOO'; }
+  else if(t>=16.45 && t<24.6){ pOp=kf(t,[[16.45,1],[16.8,1]]); px=kf(t,[[16.45,-700],[18.2,390]]); py=705;
+    pGold=kf(t,[[21.7,0],[21.85,1],[22.3,0]]); sub.textContent='THE UNIT IT READS'; }
+  else if(t>=39.2 && t<47.95){ pOp=kf(t,[[39.2,0],[39.9,1],[47.6,1],[47.95,0]]); px=390; py=695; ps=0.5+kf(t,[[46.29,0],[46.6,0.05],[47.1,0]]);
+    pGold=kf(t,[[46.29,0],[46.6,1],[47.3,0]]); sub.textContent='THE UNIT IT THINKS IN'; }
+  P.style.opacity=pOp; P.style.left=px+'px'; P.style.top=py+'px';
+  P.style.transform=`scale(${ps})`; P.style.borderColor=pGold>0.4?'#e8b64c':'#46506a';
+  // ---- C3 the cut
+  const cw=$('cutword');
+  cw.style.opacity=kf(t,[[13.3,0],[13.9,1],[15.8,1],[16.3,0]]);
+  const spread=kf(t,[[14.55,0],[15.1,26]]);
+  const spans=cw.querySelectorAll('span');
+  spans[0].style.transform=`translateX(${-spread}px)`; spans[1].style.transform='none';
+  spans[2].style.transform=`translateX(${spread}px)`;
+  cw.querySelectorAll('.tick').forEach(tk=>{ tk.style.opacity=kf(t,[[14.7,0],[15.15,0.95]]); });
+  // ---- C4 scanner
+  const sb=E['wd-scanner']; const sbR=$('scanbar-r'), sl=$('scanline');
+  const sbOp=kf(t,[[16.8,0],[17.25,1],[24.5,1],[24.95,0]]);
+  sb.style.opacity=sbOp; sbR.style.opacity=sbOp;
+  sl.style.opacity=(t>20.6&&t<22.0)? kf(t,[[20.6,0],[20.75,1],[21.85,1],[22.0,0]]) : 0;
+  sl.style.left=kf(t,[[20.6,395],[21.85,682]])+'px';
+  $('chars').style.opacity=kf(t,[[22.2,0],[22.75,1],[24.5,1],[24.95,0]]);
+  $('invite').style.opacity=kf(t,[[25.25,0],[25.9,1],[26.6,1],[27.0,0]]);
+  // ---- C5 count tiles + counter
+  const land=[26.79,27.0,27.84,28.6,29.2];
+  ['wd-tile-1','wd-tile-2','wd-tile-3','wd-tile-4','wd-tile-5'].forEach((id,i)=>{ const el=E[id];
+    el.style.opacity=kf(t,[[land[i]-0.28,0],[land[i],1],[30.6,1],[31.0,0]]);
+    el.style.transform=`translateY(${kf(t,[[land[i]-0.28,-46],[land[i],0]])}px)`;
+    el.style.borderColor=(t>=land[i]&&t<31.0)?'#e8b64c':'#46506a'; });
+  const nums=$('counter').querySelectorAll('.num');
+  nums.forEach((n,i)=>{ n.style.color=(t>=land[i])?'#e8b64c':'#454c60'; n.style.opacity=kf(t,[[25.6,0],[26.1,1],[30.6,1],[31.0,0]]); });
+  $('verdict').style.opacity=kf(t,[[29.45,0],[29.95,1],[30.6,1],[31.0,0]]);
+  $('counter').style.opacity=kf(t,[[25.6,0],[26.1,1],[30.6,1],[31.0,0]]);
+  // ---- C6 stakes
+  const lightT={'wd-stake-reads':34.33,'wd-stake-writes':35.11,'wd-stake-pay':36.04,'wd-stake-hold':37.43};
+  for(const id in lightT){ const el=E[id];
+    el.style.opacity=kf(t,[[31.05,0],[31.65,1],[38.55,1],[39.05,0]]);
+    const lit=t>=lightT[id]&&t<39.05;
+    el.style.borderColor=lit?'#e8b64c':'#333b52';
+    el.querySelector('.sbig').style.color=lit?'#e8e6df':'#77809a'; }
+  // ---- C7 stream
+  $('streamlab').style.opacity=kf(t,[[39.35,0],[39.95,1],[47.5,1],[47.95,0]]);
+  const sOp=kf(t,[[39.25,0],[39.9,0.9],[47.5,0.9],[47.95,0]]);
+  $('stream').style.opacity=sOp;
+  STREAM_RECTS.forEach((d,i)=>{ const cyc=((t-39.3)+i*0.57)%4.0; const x=-160+(cyc/4.0)*1400;
+    d.style.left=x+'px'; d.style.opacity=(t>39.3&&t<47.95)?0.85:0; });
+  // ---- C8 bridge
+  $('bridge').style.opacity=kf(t,[[54.1,0],[54.7,1]]);
+  // ---- word layer (A59 caption rule)
+  let li=-1; for(let i=0;i<8;i++){ if(t>=STARTS[i]-0.03 && t<LINE_END[i]+((i<7)?0:0.75)) li=i; }
+  lineEls.forEach((div,i)=>{ div.style.display=(i===li)?'block':'none'; });
+  if(li>=0){ const line=PLAN[li]; const spans=lineEls[li].querySelectorAll('span');
+    line.forEach((w,wi)=>{ const sp=spans[wi]; if(!sp) return;
+      if(t<w.t){ sp.style.opacity=0.32; sp.style.color='#e8e6df'; sp.style.transform='none'; }
+      else if(t<w.e){ sp.style.opacity=1; sp.style.color='#e8b64c'; sp.style.transform='scale(1.07)'; }
+      else { sp.style.opacity=0.92; sp.style.color='#e8e6df'; sp.style.transform='none'; }
+      if(w.p && t>=w.t){ sp.style.color='#e8b64c'; } }); }
+  // ---- editor overrides
+  if(window.__ovr){ for(const id in window.__ovr){ const el=E[id]; if(!el) continue; const o=window.__ovr[id];
+    const cur=el.style.transform||''; el.style.transform=cur+` translate(${o.dx||0}px,${o.dy||0}px) scale(${o.sc||1})`;
+    if(o.op!==undefined) el.style.opacity=o.op; if(o.fs) el.style.fontSize=o.fs+'px'; } }
+  if(window.__renderMode){ document.title='t='+t.toFixed(2); }
+}
+// interactive driver (human viewing): a simple clock
+let playing=false, t0=0, off=0;
+function frame(){ if(playing){ const t=off+(performance.now()-t0)/1000; if(t<=DUR){ renderAt(t); requestAnimationFrame(frame);} else { playing=false; } } }
+document.addEventListener('click',e=>{ if(window.__editMode) return;
+  if(!playing){ t0=performance.now(); playing=true; requestAnimationFrame(frame);} else { off+= (performance.now()-t0)/1000; playing=false; } });
+renderAt(0);
+// ---- editor (?edit=1)
+if(new URLSearchParams(location.search).has('edit')){ window.__editMode=true;
+  window.__ovr=JSON.parse(localStorage.getItem('wd01-edit')||'{}');
+  $('editor').style.display='block'; renderAt(parseFloat(new URLSearchParams(location.search).get('t')||'0'));
+  let sel=null; const R={dx:$('r-dx'),dy:$('r-dy'),sc:$('r-sc'),op:$('r-op'),fs:$('r-fs')};
+  document.querySelectorAll('[data-eid]').forEach(el=>{ el.style.cursor='pointer';
+    el.addEventListener('click',ev=>{ ev.stopPropagation(); sel=el.dataset.eid; $('ed-title').textContent=sel;
+      const o=window.__ovr[sel]||{}; R.dx.value=o.dx||0; R.dy.value=o.dy||0; R.sc.value=(o.sc||1)*100; R.op.value=(o.op===undefined?1:o.op)*100; R.fs.value=o.fs||40; sync(); }); });
+  function sync(){ if(!sel) return; const o={dx:+R.dx.value,dy:+R.dy.value,sc:+R.sc.value/100,op:+R.op.value/100,fs:+R.fs.value};
+    window.__ovr[sel]=o; localStorage.setItem('wd01-edit',JSON.stringify(window.__ovr));
+    $('v-dx').textContent=o.dx; $('v-dy').textContent=o.dy; $('v-sc').textContent=o.sc; $('v-op').textContent=o.op; $('v-fs').textContent=o.fs;
+    renderAt(parseFloat(new URLSearchParams(location.search).get('t')||'0')); }
+  Object.values(R).forEach(r=>r.addEventListener('input',sync));
+  $('ed-copy').addEventListener('click',()=>{ navigator.clipboard.writeText(JSON.stringify(window.__ovr)); $('ed-copy').textContent='COPIED ✓'; });
+  $('ed-clear').addEventListener('click',()=>{ window.__ovr={}; localStorage.removeItem('wd01-edit'); renderAt(0); });
+}
+if(new URLSearchParams(location.search).has('render')){ window.__renderMode=true;
+  window.__seek=t=>{ renderAt(t); return document.title; }; }
+</script></body></html>
