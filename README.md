@@ -9,7 +9,7 @@ a derivative export of this package.
 - **Piece:** eo-ep3 · Earth One channel · The Planet's Story —
   Observations
 - **Title:** The Message That Outlived Its Maker
-- **Stage:** complete package — CLONE-VERIFIED candidate audio,
+- **Stage:** assembled package (package verification not yet run) — CLONE-VERIFIED candidate audio,
   locked transcript, shipped scene, renders cited by hash
   (both exceed the in-branch size ceiling; see `render/`).
 
