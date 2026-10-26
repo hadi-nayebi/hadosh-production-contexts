@@ -8,9 +8,7 @@ a derivative export of this package.
 
 - **Piece:** wd-05 · flagship channel · Word Definitions
 - **Title:** What Is a Tool?
-- **Stage:** assembled package (package verification not yet run) —
-  CLONE-VERIFIED candidate audio, locked transcript, shipped scene
-  (the v1 build, from script v3), verified clone render in-branch.
+- **Stage:** assembled package; end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-3) — in-package editability absent, a named gap against the full deliverable criteria — CLONE-VERIFIED candidate audio, locked transcript, shipped scene (the v1 build, from script v3), verified clone render in-branch.
   The piece itself sits at board stage qc, unpublished.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
