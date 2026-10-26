@@ -18,7 +18,7 @@ verdict is this rebuild's reason to exist.
 
 - **Piece:** wd-01 · flagship channel · Word Definitions lane
 - **Title:** What Is a Token?
-- **Stage:** phase 1 of 7 — metadata: idea + objective.
+- **Stage:** phase 2 of 7 — metadata: architecture + style + question.
 
 ## The idea
 
@@ -42,53 +42,48 @@ narration's verb ("process") carries it.
 > **Teach that a token is the chunk of text a machine counts —
 > until the quadrillion makes sense.** (17 words)
 
-## The phase map (this branch's developmental order)
+## Where the branch stands
 
-1. **Metadata — idea + objective** (this commit): the scaffold
-   opens; objective, message and audience are decided; the rest
-   stands honestly OPEN with named routes.
-2. **Metadata — architecture + style + question:** story structure
-   prescribed from the objective (the owner's bookend), hook form,
-   the question the video answers, the style decision (the lane's
-   adopted A59 direction is an owner-decided input; this piece's
-   treatment mix is decided here), delivery pattern, end referral,
-   scene form.
-3. **Transcript consolidation:** candidates weighed in the open
-   (a fresh draft from the architecture first; this morning's
-   redevelopment draft as Candidate B; the delivered text as
-   evidence only); the settled transcript; editor pass; pause map;
-   the narrative architecture (opening promise, motivated
-   transitions, arc, recall) designed on purpose and recorded.
-4. **Scene:** built to the prescription — one self-contained HTML
-   file, compartments with homes, under the A59 grammar.
-5. **Visual details:** an element record for every visual element,
-   a decision for every word, and the randomness register.
-6. **Audio:** the voice decision; synthesis or reuse under the fit
-   standard (cryptographic reuse test per line), each line
-   accounted for.
-7. **Render + editability + final state:** the MP4 rendered from
-   this branch's own files; the in-scene editor layer with its
-   proof; coverage computed from this branch's own records;
-   remaining opens named with their routes.
+- **P1 — metadata: idea + objective.** Objective (17 words),
+  message ("A token is a chunk of text the machine counts.") and
+  audience decided from the lane's purpose and the owner's
+  structure direction; the rest of the scaffold OPEN with routes.
+- **P2 — architecture + style + question.** Eight moves prescribed
+  from the objective inside the owner's bookend (the number → the
+  question → the definition → the machine's eye + the rule → the
+  performed count → the stakes → the turn → the return), with the
+  narrative architecture designed on purpose: the opening promise
+  (M8 pays M2's question word-for-word), motivated transitions
+  (every move is the previous move's consequence), the arc
+  SCALE → UNIT → SCALE, and recall by bookend. The viewer's
+  question; the hook form (the fragment-first sourced number);
+  delivery pattern sized from the pause doctrine's classes; the
+  WD-04 referral derived from M7's stream. Style: the lane's A59
+  adoption recorded as an owner-decided input (#78, won on wd-02's
+  specimens); this piece's mix decided against the objective —
+  A59 motion-graphics spine (ONE persistent token-piece object) +
+  cinematic typography rationed to the number + 2D graphics as the
+  cut's rendering hand; whiteboard, collage, 3D/isometric rejected
+  with reasons. **Scaffold 10/10.**
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-Rulers for this branch, fixed now so later counts never move the
-goalposts: **decision fields = 10 metadata scaffold fields + the
-scene's elements (counted at the scene phase) + the settled
-transcript's spoken words** (spoken-word ruler: whitespace tokens
-of the settled transcript excluding standalone em-dash tokens;
-both rulers stated in `transcript/transcript.md` when it lands).
+Rulers for this branch, fixed at phase 1 so later counts never
+move the goalposts: **decision fields = 10 metadata scaffold
+fields + the scene's elements (counted at the scene phase) + the
+settled transcript's spoken words** (spoken-word ruler: whitespace
+tokens of the settled transcript excluding standalone em-dash
+tokens; both rulers stated in `transcript/transcript.md` when it
+lands).
 
-- **At this phase: 3 fields decided** — scaffold 3 / 10
-  (`objective`, `message`, `audience`); the architecture, scene,
-  element and word layers are not yet built.
-- **Open fields, named (undecided decision fields — a coverage
-  inventory, not an alignment score):** `role` · `story_structure`
-  · `hook_form` · `style_direction` · `delivery_structure` ·
-  `end_referral` · `scene_decomposition` — each with its route
-  recorded in `metadata.json`.
+- **At this phase: scaffold 10 / 10 decided.** The transcript,
+  scene, element and word layers are not yet built.
+- **Open, named:** the transcript itself (phase 3 — candidates
+  weighed in the open), the scene (phase 4), the element and word
+  decisions (phase 5), the audio (phase 6), the render (phase 7).
 
-Alignment, in words: the branch currently knows what this video is
-for, what it says, and who it is talking to. Everything about how
-it is built is still to be decided — in the open, in order.
+Alignment, in words: the branch knows what this video is for, what
+it says, who it is talking to, how it is structured, how it looks,
+how it is delivered and where it points next. What remains is to
+settle its words, build its scene, decide its details, voice it,
+and render it — in that order, in the open.
