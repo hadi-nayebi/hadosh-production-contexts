@@ -1,5 +1,13 @@
 # WD-02 — locked transcript (8 lines, 117 counted words, 115 spoken words, 42 phrases)
 
+> **REDEVELOPMENT NOTE (2026-10-26):** the text below is the record
+> of the SHIPPED build's transcript — provenance, not acceptance.
+> The owner rejected this definition of "prompt" as content and
+> supplied his own (direction, accumulated); the proposed
+> replacement draft is `transcript/redevelopment-draft-2026-10-26.md`,
+> awaiting his verdict. Nothing in this file has changed.
+
+
 Text of record: the locked script v3 (i3) (`transcript/source-script.md`,
 a byte copy of `files/short-wd02-prompt-script-v3.md`, sha256
 4310f6dbb06a01ecd284017d9a80da6f5a894b17b435b7bb5fd9e17e15fbc54e).
