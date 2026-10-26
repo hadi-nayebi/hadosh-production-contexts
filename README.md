@@ -10,7 +10,7 @@ The piece in one line: the objective (decided first in the scaffold, from the ca
 
 Scaffold fields 10/15 decided · element decisions 12/12 recorded with reasons · word decisions 0/119 (layer absent-by-development — named, not padded) · **total 22/146**.
 
-Open fields, named (undecided decision fields — a coverage inventory, not a quality score — a field is open because a decision has not been taken or a layer has not been authored, and each names its blocker):
+## Open fields, named (undecided decision fields — a coverage inventory, not an alignment score)
 
 - `accuracy_flag` — L3's "billions of words": flagged by the script doc itself ("HADI'S CALL (minor — not a canon block)"), the objectives audit (the piece's Partial grade rests on it) and the script-factory report (owner-call item 5) as the owner's wording preference. The remedy is written in the doc (drop "billions of"). The governing text stands, flag attached, until he rules.
 - `audience` — the misconception IS named in the script's gate (The Window Illusion) and the gate presumes a viewer (you, tapping the glass), but no record settles the audience, and the board's phase-0 check "Audience + misconception named" stands pending. Blocker: a phase-0 pass in the board record — lane-gate work.
