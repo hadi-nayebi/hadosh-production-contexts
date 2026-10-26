@@ -2,7 +2,7 @@
 
 **This package is PARTIAL, and says so first: its decisions layer is incomplete — the word-decisions layer is ABSENT (0 of 323 words carry a recorded decision), because no per-word decision record exists for this piece anywhere in its records. Everything else in the package is complete and verified as far as its records go; nothing here claims the word layer exists.**
 
-**Stage: assembled package — PARTIAL: decisions layer incomplete (word decisions absent) (package verification not yet run).**
+**Stage: assembled package — PARTIAL: decisions layer incomplete (word decisions absent); end-to-end checks 1–6 verified 2026-10-26 on this branch's bytes (JOB PACKAGE-VERIFY-6) — the word-layer absence claim itself verified against the workspace records; editability (a) proven for the data the renderer consumes (plates/segments): the carried plan word objects are not renderer input (the scene's own account, confirmed by direct edit test); in-package editability (b) absent.**
 
 **Video package — branch `video/ws01-v2`.** This file system IS the video's production layer: it ships with the video, and this branch's commit history is the video's development history, in developmental order. The MP4 is a derivative export of this package.
 
