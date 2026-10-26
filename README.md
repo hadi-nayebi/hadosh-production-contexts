@@ -1,6 +1,6 @@
 # WS01-V2 — "A Word Is a Direction" (flagship · Workshop beats) — REBUILD
 
-**Status: rebuild in progress — phase 6 of 7 (audio). Nothing is published by this job: the publish gate is the owner's.**
+**Status: rebuild COMPLETE — phase 7 of 7 (render). Nothing is published by this job: the publish gate is the owner's.**
 
 ## The journey in this branch's history
 
@@ -11,18 +11,19 @@
 5. **P4 — the scene.** One self-contained HTML file (83.7 KB, no external references) embodying the phase-2 decomposition: 25 elements across compartments C0–C8 + the word-animation band, every element with a home, a role and a timing in `scene/scene.json`; the PLAN (per-word timings from the phase-6 segmentation) embedded; deterministic `renderAt(t)` / `window.__seek` under `?render`; the edit layer under `?edit=1`. The continuity law holds in the build: the sphere is born at L6's "direction" and never leaves the frame.
 6. **P5 — decisions + register.** Decisions counted from the build's own rulers: **244** (10 scaffold + 25 elements + 209 words; 28 principals named). The register carries the owner's open items (ear, transcript verdict, publication, the experiment's judgment), two recorded events from the audio phase and the build's interruption (below), and what this build closed against the first build (delivery decided, the check present, clone voice throughout, word animation not caption blocks).
 7. **P6 — audio.** All 12 lines synthesized fresh in the owner's cloned voice (`hadi-master` v1, registered mode only, ZERO ICL regenerations), across three Pelican jobs: job -a passed 9 lines first-take; its three failures were each resolved on the record — L2 re-synthesized in job -b with the cast numerals spelled out for synthesis (the settled text unchanged; passed 1.0), L10 re-synthesized in job -b (passed 0.88), and L8 — failed twice on swallowed -ed participles — REWORDED as REVISION 1 (consolidation §7) and passed in job -c at 1.0. No line needed tempo correction. Programme 84.197 s over a continuous bed; the pause map verified joint-by-joint against the assembled starts (13 of 13 exact); measured on the delivered file at **−14.50 LUFS / −1.13 dBTP**. Full per-line provenance in `audio/audio.json`.
+8. **P7 — render + editability + state.** Rendered fresh from this branch's staged scene + programme (CDP capture, 2,526 frames; the recovery's capture was itself interrupted at frame 1,288 and resumed — seam pair byte-identical). MP4: 1080×1920@30, 84.200 s, **−14.51 LUFS / −1.06 dBTP measured on the delivered file**. Key frames viewed by the recovery job's own eyes (opening, the sphere at the reveal, the scale, the payoff, the bridge-card close — the phase-2 referral decision confirmed in the picture). Editability proven on the staged scene (a 120/−80 px word edit persists across reload; cleared to baseline exactly). Divergence summary in `render/divergence-summary.md`.
 
-**Recorded event — the interruption.** The job that built P1–P4 (and this phase's audio, in scratch) was killed by a daemon restart mid-render on 2026-10-26 (~16:51–17:13 ET), 1,624 of 2,526 frames captured, no restart checkpoint. Nothing on record was lost. A recovery job verified the surviving phases and audio before adopting them (every check passed; nothing repaired) and completed P5–P7, including a fresh render. The full account stands in `decisions/randomness-register.md`.
+**Recorded event — the interruption.** The job that built P1–P4 (and the phase-6 audio, in scratch) was killed by a daemon restart mid-render on 2026-10-26 (~16:51–17:13 ET), 1,624 of 2,526 frames captured, no restart checkpoint. Nothing on record was lost. A recovery job verified the surviving phases and audio before adopting them (every check passed; nothing repaired) and completed P5–P7, including a fresh render. The full account stands in `decisions/randomness-register.md`.
 
-## Package map (as the phases land)
+## Package map
 
 - `metadata.json` — the scaffold (10 fields; phase notes record the journey).
 - `transcript/` — consolidation.md, transcript.md (settled text), delivery.md (pause map).
 - `scene/` — index.html (the scene of record) + scene.json.
 - `decisions/` — decisions.json + randomness-register.md.
 - `audio/` — audio.json + programme.mp3.
-- `render/` — the MP4 derivative + verification.json + divergence-summary.md.
+- `render/` — ws01-v2-rebuild.mp4 + verification.json + divergence-summary.md.
 
 ## Counts, in the open
 
-Package coverage = counts of recorded decisions (a completeness ruler, never a quality score). Counted at the closing phase from this build's own rulers: **244** (10 scaffold + 25 elements + 209 words; 28 principals).
+Package coverage = counts of recorded decisions (a completeness ruler, never a quality score). Counted from this build's own rulers: **244** (10 scaffold + 25 elements + 209 words; 28 principals).
