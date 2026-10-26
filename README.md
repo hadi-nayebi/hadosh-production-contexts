@@ -13,9 +13,7 @@ this piece anywhere, so the word layer ships as a named absence
 other layer is complete. The partial state is the honest state;
 filling the word layer is new decision work, not assembly.
 
-- **Stage:** assembled package — PARTIAL: decisions layer
-  incomplete (word decisions absent) (package verification not
-  yet run)
+- **Stage:** assembled package — PARTIAL: decisions layer incomplete (word decisions absent); end-to-end checks 1–6 verified 2026-10-26 (JOB PACKAGE-VERIFY-5) — in-package editability absent, a named gap against the full deliverable criteria (file-level data→render linkage proven through the in-scene PLAN) — CLONE-VERIFIED candidate audio (the delivered render of record), locked transcript, shipped scene, verified clone render in-branch.
 - **Public:** https://youtube.com/shorts/4ovgwcMxGxk — public as
   the Earth One channel trailer. The upload is the v2 guide
   build's; the verified clone render in this package is the
@@ -26,8 +24,8 @@ filling the word layer is new decision work, not assembly.
 
 ## Coverage (computed from this package — counts of recorded decisions with reasons, not observed alignment)
 
-- **Decided / total decision fields: 25 / 158**
-  - metadata scaffold: 6 / 12 fields decided (`metadata.json`)
+- **Decided / total decision fields: 25 / 159**
+  - metadata scaffold: 6 / 13 fields decided (`metadata.json`)
   - element decisions: 19 / 19 elements carry a record
     (`decisions/decisions.json` — the 2026-10-23 context audit's
     inventory, carried verbatim)
@@ -43,6 +41,14 @@ filling the word layer is new decision work, not assembly.
     exists for this piece
   - `scene_decomposition` — the scene ships as one self-contained
     file; splitting it is a future, separately recorded decision
+  - `onset_repairs` — the first phrase window opens +470 ms after
+    the first word's spoken onset (window 1.95 s vs spoken start
+    1.48 s in the piece's own timing record; confirmed by JOB
+    PACKAGE-VERIFY-5's playback probe, 2026-10-26 — words 2–4
+    align exactly, the offset is phrase-1 specific); fix =
+    windows open at first-word onset at the next plan rebuild —
+    the same class eo-ep2, eo-ep3, teaser-print-v2 and eo-ep4
+    carry
   - `word_decisions` — the absent layer itself: 127 words with
     timings on record and no treatment decisions; the authoring
     task is stated in the field and in
