@@ -1,69 +1,96 @@
-# PHASE 7 — STATE: register, divergence, and the render's honest history
+# PHASE 4 — VISUAL STORYTELLING: the illustrated world, performed
 
-**Status: LANDED as the state phase** — the randomness register
-(`decisions/randomness-register.md`) and the divergence summary
-(`render/divergence-summary.md`) are this phase's deliverables. The
-render of record lives in **phase 8**; the history below says why,
-plainly.
+**Status: LANDED** (scene built to the phase-2 prescription; frames viewed by
+the building agent's own eyes; the audio-locked final scene lands at phase 6
+from the same generator).
 
-## The first render — what actually happened
+## What this phase built
 
-A first render WAS completed from the phase-6 scene: 3,130 frames
-captured at 30 fps on a private Chrome port (true 1080×1920 via
-device-metrics override + captureBeyondViewport; every frame validated
-at exactly 1080×1920). Two facts disqualify it as the render of record:
+One self-contained HTML file — `scene/index.html` (≈7.0 MB with the final
+timings) — holding every visual decision of the piece in six compartments
+(phase 2's decomposition): C0 the plates, C1 the actors, C2 the performed
+transformations, C3 the word animation, C4 the labels, C5 the cards + bug,
+plus the editor layer. `scene/scene.json` is the element-by-element record
+(66 elements, each with its compartment, its reason, and its moment). The
+audio programme is NOT in this file (the lane embeds audio at phase 6 in its
+published-HTML form; this branch's phase 6 carries the programme beside the
+locked scene — the deviation, if any, is the phase-6 record's to state).
 
-1. **It predates the owner's style correction** (2026-10-26 ~19:40 ET —
-   motion graphics, not presentation; the screenshot test). The
-   phase-6 scene carried beats the correction condemns as presentation
-   holds; phase 8 audits them beat by beat, fixes them, and re-renders.
-2. **Its delivered file no longer exists.** The first mux was in fact
-   valid (28.09 MB) and WAS verified that night: container 104.308 s
-   1080×1920@30; loudness on the MP4 −14.29 LUFS / TP −1.83; the
-   plate-absence scan passed (zero persistent uniform rows in the i7
-   plate zone); text scans clean (the pause section of that run used a
-   cluster-index method whose 0.842 s "worst delta" was later diagnosed
-   as an assignment artifact and correctly re-measured on the same stem
-   by the windowed probe — worst +0.27 s, lengthening only; see
-   phase 8). A later re-mux attempt overwrote the good file with a
-   truncated, corrupt one (`moov atom not found`), which is the file
-   found in staging and deleted in this session. Either way the render
-   was superseded by the correction; the figures above belong to the
-   pre-revision scene and are recorded here so the history is true.
+## The plate form — absent by construction
 
-Nothing was delivered to the owner from the first render. The render of
-record — from the revised phase-8 scene, with loudness, pause, and
-plate-absence verification measured on the delivered file — is
-`phases/phase-08/render/eo-ep1-rebuild.mp4` with its
-`verification.json`.
+There is **no caption-band element anywhere in the file**: no element spans
+the frame's width at the bottom carrying text across lines. Narration text
+exists only as per-line word groups (`.words`), each anchored in its beat's
+planned negative space (y 430–640, inside the safe rect), at most 3 words on
+screen, cleared before the next phrase. Defect D1 is answered by
+construction and verified on rendered frames at phase 7 (including a
+bottom-band inspection of the delivered MP4).
 
-## The state of the piece
+## Performed transformations (C2) — as built
 
-- Decisions: 360/360 (phase 5; regenerated against the phase-8 scene at
-  phase 8 — the generator runs from the shipped scene's own PLAN, so
-  the record follows the file). Scaffold: 10/10 (phase 2, carried).
-- The register carries the honest remainder: the owner's ear (R-1 —
-  the clone programme, L1's ICL line named) and his verdict/score
-  (R-2); the fact-basis debt (R-4, the 5,500-year figure's dated source
-  pass, inherited from the old package's pending check); plate
-  regeneration (R-5 — the water plate's centre AND the row plate's
-  destroyed calf head, the latter found by the phase-8 screenshot-test
-  audit and routed out of frame); the figure's absence (R-6, decided,
-  flagged); the runtime against the lane's length discipline (R-7 —
-  104.31 s, density justification on record at phase 3); and the
-  standing caveats (R-3 word timings ±~100 ms inside lines; R-8 the
-  suspension is timed and measured — its feel is the owner's ear).
-- Runtime note: at 104.31 s this is the lane's longest episode shape.
-  Nothing essential debuts after the 60% mark except the carry, which
-  the owner's Ending Standard mandates. If the owner orders a
-  tightening iteration, the file system makes it a phase-3 revision
-  with its downstream re-checks — the branch is built for exactly that.
+- **T-copy:** inside L5, at the copy sentence ("When the animal had
+  young…"), the lion plate crossfades to the generational row — one body
+  becomes three generations at the words that say it.
+- **T-route:** on the water plate, 24 dots draw themselves from the calf to
+  the pool across "copied by watching, and by walking it, again and again",
+  then the pool ripples. The dots fade out WITH their plate (a defect caught
+  in QA — dots surviving into the dusk and end-card frames — fixed and
+  re-verified).
+- **T-light:** a shade layer deepens across the fatal rule; the dusk plate's
+  push-in HALTS across the sting — motion itself stops for "There was no
+  backup."
+- **T-dawn:** the finale plate (the opening light, returned) crossfades in
+  for the epitaph; the title's payoff is lettered in two steps.
+- **The still body (C1):** the piece's one true cutout — the spotted deer
+  lying still, eyes closed — fades in as the fatal rule speaks, holds
+  through the sting, leaves across the plain statement.
 
-## What did NOT happen
+## Artwork — evidence, routed honestly
 
-Nothing was uploaded. No Studio state was touched. The public i7
-(`sbLhrz2e6lw`) stands exactly as it stood; its fate is the owner's
-explicit call at his gate. The divergence summary
-(`render/divergence-summary.md`) states, layer by layer, how this build
-differs from that public — including the plate-form's removal by
-construction.
+The scene's art is the piece's own generated artwork (the v3 generation's
+plates + the still-body cutout), embedded as data URIs. Three plates carry
+generation damage, and the scene answers for each on the record:
+
+- **figure plate — NOT USED.** Its centre is smeared through. The figure
+  beat is re-cast onto the generational row plate; the human figure never
+  appears (the rebuild's world is the animals' — the only humans implied
+  are the viewers).
+- **dusk plate — zoomed ≥1.15** so its shattered foreground band stays out
+  of frame; verified on QA frames.
+- **water plate — centre damage** (the mother's neck dissolves, with a
+  floating fragment). The scene lays the mother's soft ground-shadow over
+  the junction and tightens the frame (zoom 1.06→1.12). The damage is
+  muted, not erased — a plate regeneration is the real fix and stands open
+  in the register (R-5) rather than being hidden.
+
+The lane's other "cutouts" were audited and rejected as actors: the
+herd/lion/row element files are rectangular multi-animal tiles, not
+single-animal cutouts (viewed, recorded at phase 2's amendment) — so the
+copy is performed by the generational crossfade, not by a pasted sticker.
+
+## Type
+
+Patrick Hand throughout — the lane's hand lettering — embedded as a
+woff2 @font-face extracted from the piece's own v3 scene file (286 KB), so
+the scene never depends on a network font. (First QA pass caught the
+fallback serif when the font was loaded from a CDN link in the headless
+renderer; the embedded face is the fix, verified on re-captured frames.)
+
+## QA (frames viewed by the building agent)
+
+Captured at true 1080×1920 (device-metrics override + captureBeyondViewport)
+on a private Chrome port, at 18 timestamps across the piece. Defects found
+and fixed in this phase: (1) route dots never cleared (survived into dusk +
+end card) → windowed to their plate; (2) font fell back to serif → embedded
+face; (3) word-group stacking (two groups visible at once, 5 words) → group
+tails shortened to 0.12 s; (4) the EARTH ONE bug washed out on light plates
+→ dark outline shadow stack; (5) water-plate damage → the shadow repair
+above. The sting frame, the epitaph frame, the copy crossfade, the route
+mid-draw, the opening and end cards were each viewed and pass.
+
+## Coverage at this phase
+
+Scaffold 10/10 (carried). Scene elements 66/66 homed. Words: the scene's
+plan carries all 259 words with per-word timing slots and principal marks;
+the per-word DECISION record lands at phase 5, generated from this plan so
+the record and the shipped file cannot drift.
