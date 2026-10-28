@@ -55,3 +55,12 @@ deb57354c57b8b4bf954752ade6a7f0ee10f96491780c423041bdaf1da4c7596  soa01-scenes/w
 e6278a8cb2abaee366b337f44a68ff887f7638e41a908a8b7bd3ed15ec2048a8  soa01-scenes/work/adjusted-style/S14.png
 db9aab629aeb0c5a849d2910028a5c4916499c7c780460986b7be033fa8a108d  soa01-scenes/work/adjusted-style/S15.png
 888bfd98cc6e2ede10120d48cef61eaa6adb68f72bf1253694ab46285c4b9fe7  soa01-scenes/work/adjusted-style/specimen-clip.mp4
+
+## Ending revision + visual plans (2026-10-28)
+Final film WITH ending: sha256 52dc131e76f298a1fb8f1d5218e3ac7b2b18a800b4a7b157a1fa6bd1fe672ceb (full-film-v4.mp4, 88.66 s, -14.54 LUFS / -1.12 dBTP; delivered copy: who-owns-your-harness-full-film-with-ending.mp4, identical bytes).
+927853cdc7ab713b5afe4305af2eafbd816c5f98c7a72d487d1273eaa6a44127  soa01-scenes/scenes/S34.png
+1cb0963855de33be285026e7810e587304f38dd49e6a09011b16a8f161946caa  soa01-scenes/scenes/S35.png
+7336e1aaf7f276cdb5a56d232b51e961dc05ed4d16ed8e456ae6d8fe19fcce3b  soa01-scenes/scenes/S36.png
+005560e88ed2e2acc6232253a0c5392755ecfab371e15d820eb19a477f1f5fc7  soa01-scenes/work/ending-specimen.mp4
+fc89910259f4e758655ef36f754feeb7020482473638e7cd4be68cc8fa02ba14  soa01-scenes/work/visual-plan/story-map-panel-1.png
+8c7b1837bb6926193971081622f137f3129923859dab0fe189c016e7ed077af1  soa01-scenes/work/visual-plan/story-map-panel-2.png

@@ -546,3 +546,174 @@ is decided in a piece's own plan, that piece's undecided count is NOT zero.*
     Render-list counts are not evidence. (Lesson of record: E7 DISTILLED
     had zero on-screen life in the first build while its gate reported
     34/34.)
+
+---
+
+## Revision — 2026-10-28 (ending revision): the Hadosh Academy close
+
+*Recorded revision, appended BEFORE the build, per the causal model —
+§6/§7's rows are NOT rewritten; this section supersedes the tail design
+(S33's C-1b tail-hold and E22's final-fade-only exit) wherever the two
+differ. Everything upstream of L21 is untouched.*
+
+**Authority.** The owner's #112 verdict (2026-10-28 ~16:06 ET): the film
+is "a very good example" and publishable, CONDITIONAL on a better
+ending — "make a connection to Hadosh Academy at the end… follow us to
+learn more about the ways to bring more of the harness to your control…
+plug in the Hadosh Academy at the end." The governing standard
+(MEMORY ★ ENDING STANDARD): an ending must CARRY the viewer — invite
+onward to a named next thing AND plug the Academy in the piece's own
+terms; a silent bridge card alone does not satisfy it, and a cold
+viewer must understand what the Academy is from the ending itself
+(no bare name-drop). The old tail failed that standard: the mantra
+completed over S33 and the film simply faded — an invitation to
+contemplate (L19–L21), with no onward step and no Academy.
+
+**Design of the close.** The mantra (L19–L21) still completes exactly
+as built — it is the film's argument arriving. Then a held breath,
+then two new spoken lines (L22–L23) over three new scenes (S34–S36):
+the plug states what the Academy teaches in the film's own terms
+(the harness, under your control — the owner's substance, nearly
+verbatim), and the follow line names the onward step and closes on
+the mantra's own action (build your own). The final image is the
+doorway onward: the way from this film into the Academy's teaching,
+left open.
+
+### The plug lines (content + marked synthesis text)
+
+**L22 — (the plug: the Academy named, its teaching stated)**
+- **Clean:** At Hadosh Academy, we teach you to bring the harness under your own control.
+- **Marked:** At HADOSH ACADEMY, we teach you to bring the harness under your own control.
+- **Intent:** one primary stress — the name itself, set in caps as a
+  single stress unit (a proper noun is one stress, as HARNESS was at
+  L8; the name is this line's poster moment, E23a). The comma after
+  the name is its breath: the institution lands, then the promise.
+  The promise clause rides level — a statement of fact, not a sell.
+  No exclamation, no ellipsis (the film's standing foreclosures).
+- **Why this shape:** a cold viewer who has just learned what the
+  harness is hears, in one breath, who teaches it and what the
+  teaching does (brings the harness under YOUR control — L18's
+  "without asking anyone" cashed as a curriculum). 13 words.
+
+**L23 — (the follow: the onward step + the takeaway action)**
+- **Clean:** Follow Hadosh Academy — build your own.
+- **Marked:** Follow Hadosh Academy — build your OWN.
+- **Intent:** the em dash is the pivot breath (L8's precedent: dash =
+  the turn before the point lands). One caps stress: OWN — the word
+  the whole film turns on (L11 "your own computer", L16 "yours"),
+  landing the L20 mantra's command as the viewer's own next act.
+  The name rides level here — it was already posterised one beat
+  earlier; repeating the stress would spend it.
+- 6 words. Banned-word scan on L22+L23: **0** ("lives" 0).
+
+### The closing scenes (this film's §2 style; STYLE BLOCK verbatim)
+
+*Text-treatment decisions are stated per scene per the gap-hunt
+appendix row 2 (writing surfaces carry an explicit decision).*
+
+| # | Line | Switch-in anchor | Scene shows |
+|---|---|---|---|
+| S34 | L22 | L22 start ("At") | The finished layer — a spread of glowing pages and cards — lifting off the owner's desk and opening toward the viewer like doors swinging toward camera, warm gold light spilling out. The film's world opens to admit the viewer. **Text treatment:** page/card faces blank or abstract marks only, no letterforms. |
+| S35 | L22 | the word "bring" (the promise clause's joint) | The owner's hands drawing the opened layer in over their own desk, taking hold of its edges — the harness being brought under the owner's control, warm work light. **Text treatment:** pages blank / abstract marks only. |
+| S36 | L23 | L23 start ("Follow") | Evening calm, wide: the home room at rest, the layer open on the desk glowing softly, and in the background a door standing open, warm light beyond it — the way onward, left open. Holds through the tail (the C-1b tail-hold exception transfers from S33 to S36; S33's scored exception lapses — it no longer holds the tail). **Text treatment:** no dominant writing surface; desk pages marks-only. |
+
+Subject reasons: S34 turns S14/S26's settled layer back toward the
+viewer — the plug is an act of opening, and the image performs it.
+S35 gives the plug's verb ("bring… under your own control") a literal
+pair of hands: custody taken, the L29/L30 gesture completed at the
+scale of the whole layer. S36 rhymes with S33 (evening calm, the home)
+and adds the one element S33 lacked — the open door — so the last
+frame is an invitation, not a full stop.
+
+### The closing word events (enriched palette; dosage stays in band)
+
+| # | Line | Event text | Face | Zone | Direction | Scale | Anchor | Exit |
+|---|---|---|---|---|---|---|---|---|
+| E23a | L22 | HADOSH ACADEMY (all gold — the name is one stress unit, as the mantra strikes are) | MANTRA | Z-TC | SWELL (0.80 → 1.08 over 0.40 s, settle → 1.00 over 0.20 s — the E22 strikes' trajectory, slowed for a two-word poster) | HERO | "Hadosh" | HOLD to line end, then fade 0.30 |
+| E23b | L22 | UNDER YOUR **CONTROL** (CONTROL gold) | BASE | Z-LC | RISE | STANDARD | "under" | line end |
+| E24 | L23 | BUILD **YOUR OWN** (YOUR OWN gold) | BASE | Z-C | RISE | STANDARD | "build" | HOLD through the tail; leaves only in the final fade — the film's last type is the viewer's takeaway action, succeeding E22 in that office |
+
+- **E22 consequential change:** the mantra strikes no longer leave
+  only in the final fade (there is now film after them). They HOLD
+  through the post-L21 breath and exit with the standard 0.30 s fade
+  completing at S34's switch anchor. Their form, seats, anchors are
+  unchanged.
+- **Dosage accounting:** expressive tally becomes 8 of 37 event
+  entries (E23a joins the seven); the two new lines add ≈9 s of
+  mostly calm screen, so the layer's realised intensity stays at the
+  ≈15% calibration, inside the owner's 10–20% band. The poster is
+  spent on the name — the one moment the ending standard requires
+  to be unmissable — and nowhere else in the close.
+
+### The splice design (sample-exact construction; anchors measured after)
+
+- **Cut point:** the current v4 raw assembly is kept whole through
+  the end of L21's voice (measured on the v4 master: "it." ends
+  79.06). Everything before that sample is byte-identical in
+  behaviour: same scenes, switches, events, audio.
+- **The breath:** 0.90 s of bed follows L21 — the mantra gets its
+  held beat before the close begins (between the designed silence
+  after L5, 1.20 s, and the post-L8 gap, 0.873 s; a full second
+  would start a new film, less would rush the mantra's landing).
+- **Block construction** (the Academy assembly's own method, as
+  assemble_v4): [breath 0.90 · L22 take · gap 0.55 · L23 take ·
+  tail 2.00] of voice-track (silence where no voice) + a bed patch
+  of the same total length, looped from the programme's own gap
+  material exactly as the L8 block's bed was made; spliced to the
+  kept head with the standing 0.010 s splice crossfade. Gap 0.55
+  (the follow follows the plug closely — one gesture, two beats;
+  the programme's inter-line gaps run 0.3–0.9). Tail 2.00 s = the
+  locked tail value, transferred to the new end.
+- **Voice level:** each new take's active-speech RMS is matched to
+  the shipped master's L8 span reference, the identical calibration
+  that produced the current film's L8 (assemble_v4's method).
+- **Mastering:** the programme's deterministic chain of record
+  (master_v4's method: final 1.00 s cosine fade applied at the NEW
+  end, fixed gain solved to target, fixed-ceiling 0.805 lookahead
+  limiter) → ≈ −14.5 LUFS / TP ≤ −1 dBTP. Video final fade likewise
+  moves to the new final 1.00 s.
+- **New runtime (estimate, locks at build from the measured
+  takes):** 79.06 + 0.90 + L22 (≈4.8) + 0.55 + L23 (≈2.2) + 2.00 ≈
+  **89.5 s** (recorded estimate band 89–91 s).
+- **Dwell check on the estimate (C-1):** S33 78.28→L22 start ≈
+  1.68 s ✓ (floor 1.4); S34 ≈ 2.7 s ✓; S35 ≈ 2.7 s (incl. the 0.55
+  gap in its window) ✓; S36 ≈ 4.2 s incl. tail ✓ (ceiling 5.0,
+  C-1b transferred). Final dwells lock from measured anchors.
+
+### Audit of the ending compartment — UNDECIDED = 0
+
+Decided above: plug text (clean + marked, per line) · banned-word
+scan · line count and order · breath length · inter-line gap · tail
+length and its transfer · cut point · bed construction · voice-match
+reference · mastering chain and targets · final-fade placement ·
+3 scene rows (subject + reason + text treatment + switch anchor) ·
+3 event rows (text, segments/ink, face, zone, direction +
+trajectory, scale, anchor, exit) · E22's consequential exit ·
+expressive tally and calibration accounting · C-1b transfer ·
+runtime estimate. The PACKAGE compartment (gap-hunt appendix row 3)
+remains open by design — it belongs to the publish step, which is
+not this job. **UNDECIDED = 0 for the ending compartment.**
+
+### Verification plan (for this build)
+
+1. Scene acceptance for S34–S36 per §2 + appendix row 1 (subject
+   fidelity by eye against the scored rows) and row 2 (text
+   treatment): ink share ≥ 0.55; one dominant subject; no legible
+   text; no close-up face; phone-size (390×693) legibility of
+   E23a/E23b/E24 over their scenes. One regeneration per scene on
+   failure, then the failure is reported.
+2. ASR fit of both new takes ≥ 0.85 (faster-whisper small, the L8
+   gate); word anchors for L22/L23 Whisper-measured on the new
+   master (measure pass extended); switch anchors locked from
+   measurement, not estimate.
+3. Presence by probe (appendix row 10) for E23a, E23b, E24, and a
+   re-probe of E22a/b/c — frame probes inside each residence
+   window against the scene-only composite, the fidelity probe's
+   method.
+4. Switch audit including S34/S35/S36: every crossfade's 50% mix
+   point within 0.15 s of its scored anchor.
+5. Loudness/format on the final MP4: ≈ −14.5 LUFS (±0.25), TP ≤
+   −1 dBTP, 1080×1920@30, full decode clean; duration = the new
+   locked total.
+6. Ending specimen extracted (the final ≈20 s, all layers) and
+   the plug moment frame-checked at phone size.
