@@ -489,12 +489,21 @@ arc ≈ 640 px ÷ 0.35 s ≈ **1,830 px/s** · Book–Note II: arc ≈ 600 px
 ≈ **800 px/s** · Scene E Folder–NewNode: arc ≈ 300 px ÷ 0.40 s ≈
 **750 px/s**. Pool points, Scene D clause 3 (windows assigned here —
 the spec required arrival by 59.40): Folder II's point travels
-Book→Folder II 58.65–59.05 (≈ 640 px, ≈ **1,600 px/s**, SETTLE) ·
+Book→Folder II 58.65–59.05 (≈ 701 px, ≈ **1,753 px/s**, SETTLE) ·
 Note II's point Book→Note II 58.90–59.30 (≈ 600 px, ≈ **1,500 px/s**)
 · the Folder II–Note II point 59.05–59.40 (≈ 280 px, ≈ **800 px/s**).
 Scene D clause 1's pool point is already windowed in the spec
 (55.75–56.15; arc 213 px ≈ 533 px/s). Link shimmer and traffic speeds
 are the grammar's (120 px/s; 75 px/s at maturity).
+
+> **Correction (2026-10-28, recorded by Archer after the two-paragraph
+> build):** the Book→Folder II pool-point arc above was originally stated
+> as ≈640 px / ≈1,600 px/s. The score's own slot geometry gives ≈701 px
+> on the base radii, hence ≈1,753 px/s over the scored 0.40 s window. The
+> build followed the scored endpoints, window, and SETTLE profile, so the
+> rendered movement was always the decided one; only this derived figure
+> was wrong. No decision changes. (Source: build report
+> `hidden_files/jobs/2026-10-28-two-paragraph-build.md`, defect 1.)
 
 ### Residences — the remaining rows
 
