@@ -1,0 +1,876 @@
+{
+ "audio_spec": {
+  "anchors": "Whisper-measure the re-assembled programme and lock; phase-4 words-lens.json allocations are the cross-check, not the source",
+  "asr_gate": "Whisper ASR fit >= 0.85 per line against the locked text before assembly is accepted; a failing line is re-synthesized WHOLE, never patched",
+  "assembly": "delivery-map gaps locked (lead 1.20, tail 2.40, 1.60 s held pause after L18; L19 intra-line breath is a take fact); branch chain: trim (silencedetect -45 dB cluster-merge) -> acompressor (-16 dB, ratio 3) -> measured scalar -> alimiter LAST (0.70, level 0); bed loop-extended 3 s crossfades at a single measured scalar 13 dB under voice mix, never stops; joins: splice 0.010 s · bed loop 0.30 s · master fade 1.0 s cosine",
+  "master": "~-14 LUFS integrated, TP <= -1 dBTP; deterministic gain only (guarantee by construction)",
+  "takes_of_record": "phase-4 line takes stand for 20 lines; L10 superseded by R-5 take phases/phase-04/audio/line-L10-r5-default.wav (4.982 s, takes-r5.json)",
+  "text": "§0 lock, 207 words; the word 'lives' banned in synthesis text (absent — scan 0)",
+  "voice": "default avocado_v2:MAI_03 (standing ruling; clone = later A/B variant); one voice, whole lines, no seams"
+ },
+ "cast": {
+  "generation": "build prep only — this job specs, does not generate",
+  "lens_only_specs": [
+   {
+    "asset": "Earth",
+    "spec": "canvas 1200x1200, disc d>=1100 centred; night side lit, city-speckle field in the painting, pale limb, engraved family grade; uses d560 open · d90 dome reflection alpha .18 · d150 glass reflection alpha .30 · d150 close"
+   },
+   {
+    "asset": "Watcher Silhouette",
+    "spec": "canvas 600x900; seated figure, pure silhouette, ONE dark value, no interior detail, no face, no species cues, no costume; figure in lower 70% of canvas; use w130 at (905,1420) alpha <=.85; added detail = spec failure"
+   },
+   {
+    "asset": "Observatory Glass",
+    "spec": "full-frame 1080x1920 overlay; curved edge rounded frame inset 28, corner r120; glass alpha <=.10, sheen gradient, faint reflection smear upper-left; transparent centre; NO HUD markings"
+   },
+   {
+    "asset": "Platform Habitat dome",
+    "spec": "canvas 900x900; dome d840 base y880; blue glass alpha working .14–.22; engraved frame ribs; NO door geometry (the seal is the spec)"
+   },
+   {
+    "asset": "Owner Habitat dome",
+    "spec": "same geometry; green-warm glass; door aperture left base w150 h260; warm interior glow as separate layer alpha .25–.45"
+   },
+   {
+    "asset": "Habitat interior plate",
+    "spec": "canvas 1000x700; desk + computer mass, bench, shelving; solid painted masses, family grade, no cast baked in; serves L11 + L15"
+   },
+   {
+    "asset": "Instrument dial",
+    "spec": "72 ticks (every 5 deg, every 6th x1.6), ring d880 stroke 6, ice; canvas 1000x1000 transparent; may be code-drawn from this spec at build"
+   },
+   {
+    "asset": "Glyph mark",
+    "spec": "gold ring, canvas 256x256, ring d200 stroke 14, gold #D9A94E family; no other detail"
+   },
+   {
+    "asset": "Viewport reticle",
+    "spec": "full-frame 1080x1920; corner brackets inset 36, arm 90, stroke 3, ice; transparent elsewhere"
+   },
+   {
+    "asset": "Exhibit Case (Lens grade)",
+    "spec": "shared Case re-graded: saturation x.55, bright x.92, door seam painted out (sealed); grade values are the decision"
+   }
+  ],
+  "shared_by_reference": "Academy cast paintings (Thinker forms x4 · Model disc · node paintings Book/Cards/Folder/Note + II forms · Exhibit Case · Work Exhibits House/Plan/Tool · Paper Specimens) under soa01-academy/specimen/cast-design-1/assets/ + canonical flow module soa01-academy/phases/phase-A2/flow-mechanism/flow_module.py (imported unchanged, cold grade). Subject law: faceless, generic, hat permitted (owner decision #104)."
+ },
+ "governing_closure": [
+  {
+   "closure": "DECIDED — six named curves only; code map eio->TRAVEL, eout->SETTLE, ein->LAUNCH, eoutback(1.2)->STAMP, bump->SWELL, lin->CONST; STAMP foreclosed per-event (plaque law)",
+   "id": "M22-L",
+   "var": "easing vocabulary"
+  },
+  {
+   "closure": "DECIDED — uniform bake dt 1/30 s, linear interpolation",
+   "id": "M23-L",
+   "var": "realization fidelity"
+  },
+  {
+   "closure": "DECIDED — +/-1 frame of the Whisper-measured anchor; unmeasurable anchors do not ship as estimates",
+   "id": "M24-L",
+   "var": "sync tolerance"
+  },
+  {
+   "closure": "DECIDED — LINEAR crossfades only at scored durations (A->B .50, B->C .40, C->D .50, D->E .40, E->F .50, F->G .40); G->H is not a join (held pause + scored drift)",
+   "id": "M25-L",
+   "var": "transitions"
+  },
+  {
+   "closure": "DECIDED — fixed frame; ONE scored exception: the L19 world-group pull-back + L20 dissolve (Scene L-H); the frame itself never moves",
+   "id": "M26-L",
+   "var": "camera"
+  },
+  {
+   "closure": "DECIDED — none anywhere in this version; the reveal's slowness is the event, not anticipation",
+   "id": "M8-L",
+   "var": "anticipation"
+  },
+  {
+   "closure": "DECIDED — every arrival: scored settle / scored glow decay / recorded hard stop (one: Confined Thread at 'theirs?', L-B)",
+   "id": "M10-L",
+   "var": "settle"
+  },
+  {
+   "closure": "DECIDED — SETTLE/LAUNCH/SWELL/LINEAR only",
+   "id": "M11-L",
+   "var": "opacity shapes"
+  },
+  {
+   "closure": "DECIDED — SWELL the one pulse shape; else TRAVEL/SETTLE value ramps",
+   "id": "M12-L",
+   "var": "brightness shapes"
+  },
+  {
+   "closure": "FORECLOSED — 0 deg everywhere (no gear; Earth/dial/Watcher do not rotate)",
+   "id": "M13-L",
+   "var": "rotation"
+  },
+  {
+   "closure": "DECIDED — Noto Serif Display Bold (hero/verdict/contrast/recommendation) + Noto Sans Mono (microtype); DejaVu foreclosed for type events",
+   "id": "§9A.2-L",
+   "var": "typefaces"
+  },
+  {
+   "closure": "FORECLOSED in this version — the analyst does not stamp (phase-3/5 dialect law); Lens type is set, filed, logged",
+   "id": "§9A.3-A-L",
+   "var": "plaques/tiles"
+  },
+  {
+   "closure": "DECIDED — shared cast by reference; 10 Lens-only assets score-specified with boxes + failure conditions; generation at build prep",
+   "id": "§10A-L",
+   "var": "asset design"
+  },
+  {
+   "closure": "DECIDED — falloff shared; vignette 0.26 Lens value; glint/sheen shared; points r7/8, trails foreclosed; gold reserved",
+   "id": "§10B-L",
+   "var": "light"
+  },
+  {
+   "closure": "DECIDED — no spoken plug (text names no Academy); watermark scored at L-H; description entailed (phase-3 publication record)",
+   "id": "ending",
+   "var": "Earth One compliance"
+  },
+  {
+   "closure": "FORECLOSED — SFX layer · ambience beds · word-by-word subtitle containers · pictured narrator/creature/face reveal · Recommendation Current set-piece at close · reticle return after reveal",
+   "id": "foreclosures",
+   "var": "§12/§14-L"
+  }
+ ],
+ "md_source": "directors-score-L01-L21.md (this JSON mirrors it; the MD governs on any conflict)",
+ "movement_grammar": {
+  "idle": {
+   "lens_deviations": [
+    "case chips float +/-3 px SWELL (unlinked layer drift — scored, Scene L-B)",
+    "the Watcher does not breathe (outside the specimen's physics — scored stillness)",
+    "Earth does not rotate; 2% speckle shimmer set fixed at bake"
+   ],
+   "links": "shimmer front 120 px/s CONST, one per link, phase-offset by slot",
+   "model_halo": "SWELL +/- .05, period 4.2 s",
+   "nodes": "breathe scale 1 +/- 0.008 SWELL, period 5.0 + 0.7*slot-index s",
+   "type": "never breathes",
+   "web_traffic": "120 px/s CONST; 75 px/s from L16 (maturity)"
+  },
+  "node_birth": "condensation: scale .35->1.0 + alpha 0->1 SETTLE, overshoot peak 1.05 at 85% of window; ring breathes +5% radii TRAVEL-value per birth",
+  "opacity": "SETTLE in / LAUNCH out / SWELL pulses / LINEAR joins + form crossfades only",
+  "profiles": {
+   "CONST": "linear",
+   "LAUNCH": [
+    0.55,
+    0,
+    1,
+    0.45
+   ],
+   "SETTLE": [
+    0.22,
+    1,
+    0.36,
+    1
+   ],
+   "STAMP": "easeOutBack s=1.2 — in vocabulary, FORECLOSED per-event in this version (plaque law)",
+   "SWELL": "sinusoidal value pulse",
+   "TRAVEL": [
+    0.42,
+    0,
+    0.58,
+    1
+   ]
+  },
+  "velocity_convention": "v_avg = path length / duration, stated as a number at every travel"
+ },
+ "persistent_furniture": [
+  {
+   "id": "reticle",
+   "spec": "corner brackets inset 36, arm 90, stroke 3, ice, alpha .28, decided stillness; live frame 0 -> dissolves LAUNCH 73.97–74.97 in the reveal; never returns (decided)"
+  },
+  {
+   "id": "glyph",
+   "spec": "gold ring; placements: (962,300) d34 L1 corner · etched on core (618,700) d40 L7–L8 + L13–L14 replay · reflection (905,1395) d30 L8 · inline in HUD d22 L9–L14 · glowing on glass (838,640) d44 L19 · signature (540,1010) d54 after L21"
+  },
+  {
+   "id": "specimen_grid",
+   "spec": "alpha .05; absent in Scene L-A (foreclosed), fades in 9.71–10.21, holds L-B..L-G, out inside the reveal"
+  },
+  {
+   "id": "hud_log_line",
+   "spec": "\"OBSERVATION • SUBJECTS: 02 • STATUS: ACTIVE\" + glyph inline; mono 22, ice alpha .75, at (100,300); in SETTLE 32.34–32.84; holds L9–L14; out LAUNCH 54.19–54.69"
+  }
+ ],
+ "piece": "soa-01-lens",
+ "reaudit_closure": {
+  "entailed_or_locked": [
+   "objective/premise/narrator/message (phase-1)",
+   "transcript (locked here)",
+   "timeline + gaps (phase-4 + delivery map)",
+   "audio chain (phase-4)",
+   "description (phase-3 publication)"
+  ],
+  "governing_closures_decided_or_foreclosed": 17,
+  "movement_staging_rows_decided": 61,
+  "owner": 0,
+  "type_absences_foreclosed_with_reasons": 9,
+  "type_rows_decided": 15,
+  "undecided": 0
+ },
+ "scenes": [
+  {
+   "id": "L-A",
+   "join_in": "none (open)",
+   "lines": [
+    "L1",
+    "L2"
+   ],
+   "name": "The Planet Field",
+   "rows": [
+    {
+     "at": "(540,830) d560",
+     "el": "Earth",
+     "spec": "decided stillness; rotation foreclosed; speckle shimmer 2% SWELL +/-.15 periods 3–7 s; limb glow alpha .18 const"
+    },
+    {
+     "el": "Usage streams",
+     "spec": "rise from lit limb, CONST 240 px/s, dash scroll 300 px/s; count 3 @2.15 -> 7 @2.88 -> 12 @4.08; thin alpha->.40 TRAVEL-value 5.83–6.63; out LAUNCH 8.91–9.41"
+    },
+    {
+     "at": "(735,905) w54",
+     "el": "Thinker Profile",
+     "spec": "breathing idle; population before subject"
+    },
+    {
+     "el": "Thinker -> Address form",
+     "spec": "rim bright .55->1.0 SWELL 7.74–8.54; form crossfade LINEAR 7.90–8.40; scale 54->68 TRAVEL"
+    }
+   ],
+   "sound_off": "a planet, a count filed over it, one small figure singled out",
+   "span_s": [
+    0.0,
+    9.71
+   ],
+   "type": [
+    {
+     "entry": "\"1.2\" alpha SETTLE 2.15–2.45; BILLION letters stagger from 2.88 + i*0.04; microtype SETTLE 3.30–3.70",
+     "exit": "recede scale->.82 alpha->.55 seat->(540,360) TRAVEL 5.83–6.43; out LAUNCH 8.20–8.91",
+     "id": "T-L1",
+     "seat": "(540,430)",
+     "text": "\"1.2 BILLION\" + microtype \"FIELD LOG · POPULATION, WEEKLY\""
+    },
+    {
+     "entry": "phrase groups alpha SETTLE 0.25 s in spoken order 5.99–8.60; \"Earth,\" bright pulse x1.15 SWELL on its hold 6.93–7.74",
+     "exit": "alpha LAUNCH 9.20–9.71",
+     "id": "T-L2",
+     "seat": "(540,560)/(540,660)",
+     "text": "L2 full text, two lines, cap 64"
+    }
+   ]
+  },
+  {
+   "id": "L-B",
+   "join_in": "LINEAR crossfade 0.50 s",
+   "lines": [
+    "L3",
+    "L4",
+    "L5",
+    "L6"
+   ],
+   "name": "The Case Field",
+   "rows": [
+    {
+     "at": "(540,1010) box 620x760",
+     "el": "Exhibit Case",
+     "spec": "glass alpha .16, sheen per §10B.5; in alpha SETTLE + scale .97->1.0 TRAVEL 9.71–10.51; greys bright->.62 TRAVEL-value 18.23–19.03 (on 'closed'); dies bright->.30 21.52–22.22; withdraws scale->.94 alpha->.55 TRAVEL 22.92–23.92"
+    },
+    {
+     "at": "Cards (430,880) w120 · Book (560,1010) w130 · Folder (440,1150) w115",
+     "el": "Case chips x3 (Book/Cards/Folder, shared paintings)",
+     "spec": "links FORECLOSED (unlinked layer); float idle +/-3 px SWELL periods 4.1/5.3/4.7; inventory pulses: bright x1.30 SWELL attack .15 on instructions. 13.86 / memory. 15.07 / files. 16.11, decay to held 1.08; dim bright->.70 at L5; alpha->0 LAUNCH 21.69–22.39"
+    },
+    {
+     "at": "(215,1080) w210",
+     "el": "Thinker Working",
+     "spec": "outside the glass line; breathing idle; bright .80->1.0 at L6 22.92–23.92; decided stillness during L5 wait"
+    },
+    {
+     "el": "Stream — Confined Thread (bandC w10)",
+     "spec": "circulates inside case perimeter, scroll CONST 120 px/s; slows ->30 px/s TRAVEL-value 18.23–19.23; HARD STOP at 'theirs?' 19.98 (M10-L recorded stop)"
+    },
+    {
+     "el": "Specimen surface + grid",
+     "spec": "cold pool (540,1230) rx620 ry150 alpha .08; grid alpha .05 in SETTLE 9.71–10.21"
+    }
+   ],
+   "sound_off": "what they built sits sealed behind glass, labelled someone else's; the light dies; the verdict stands alone",
+   "span_s": [
+    9.71,
+    24.07
+   ],
+   "type": [
+    {
+     "entry": "alpha SETTLE on the words 'someone else's chat box' (build-measured), complete by 13.06",
+     "exit": "dims tracking case bright; out in scene join",
+     "id": "T-L3",
+     "text": "\"SOMEONE ELSE'S CHAT BOX\" microtype 20 at case top-left (258,606)"
+    },
+    {
+     "id": "T-L4",
+     "reason": "the exhibits answer the inventory in order; type would caption a label",
+     "status": "FORECLOSED"
+    },
+    {
+     "id": "T-L5",
+     "reason": "the question hangs in a held field; type would answer it early",
+     "status": "FORECLOSED"
+    },
+    {
+     "entry": "alpha SETTLE 21.69–21.94 on 'Nothing.'; period pulse x1.10 SWELL 22.05–22.35; second line phrase groups SETTLE 22.35–23.27",
+     "exit": "alpha LAUNCH 23.77–24.07 (overlap into L7)",
+     "id": "T-L6",
+     "text": "\"Nothing.\" cap 120 (540,760) + \"It was all rented.\" cap 54 (540,860)"
+    }
+   ]
+  },
+  {
+   "id": "L-C",
+   "join_in": "LINEAR crossfade 0.40 s",
+   "lines": [
+    "L7",
+    "L8"
+   ],
+   "name": "The Mechanism Specimen",
+   "rows": [
+    {
+     "at": "(540,760) d880, 72 ticks",
+     "el": "Instrument dial",
+     "spec": "alpha .50; decided stillness"
+    },
+    {
+     "at": "(540,760) d300",
+     "el": "Model core (shared asset, cold grade)",
+     "spec": "bright .95; halo alpha .50 breathing SWELL +/-.05 4.2 s; glyph etched (618,700) d40 alpha .55"
+    },
+    {
+     "el": "Outflow pour (bandA w44)",
+     "spec": "head path [(690,760),(880,900),(900,1150),(760,1330)] ~700 px TRAVEL 24.41–25.41 v_avg ~700 px/s; scroll 900 px/s CONST; tail = head delayed 0.5 s; spread width 44->120 TRAVEL-value 25.41–25.85 alpha->.35; dissipate alpha->0 LAUNCH 25.85–26.40"
+    },
+    {
+     "at": "(300,1080) w200",
+     "el": "Thinker Profile (web-less)",
+     "spec": "web ABSENT decided; breathing only"
+    },
+    {
+     "el": "Thinker glide",
+     "spec": "(300,1080)->(540,1035) TRAVEL 26.90–27.70 ~245 px v_avg ~306 px/s"
+    },
+    {
+     "at": "ellipse (540,1010) rx300 ry210; Book (540,800) · Cards (268,905) · Folder (812,905) · Note (660,1185); w104",
+     "el": "Web SEED (4 nodes)",
+     "spec": "condense SETTLE + 5% overshoot staggered 27.07–28.40; links form alpha SETTLE + front CONST ~1400 px/s; first point Book->Cards SETTLE arrives ~29.30, pools (alpha merge .15 s, pool glow .22); grammar idle after"
+    },
+    {
+     "el": "Combed flow (bandC w36 -> 3 strands w14)",
+     "spec": "head grows core->Book SETTLE 29.60–30.30 ~280 px v_avg ~400 px/s, scroll 300; strands exit web right to ledge, scroll CONST 300, heads arrive 30.30–31.14"
+    },
+    {
+     "at": "House (865,1305) w100 · Plan (965,1315) w70 · Tool (765,1325) w76",
+     "el": "Work Exhibits First (House/Plan/Tool, shared)",
+     "spec": "condense SETTLE as strands arrive; third lands on 'harness.' 30.76; bright .85 after"
+    },
+    {
+     "at": "(905,1395) d30",
+     "el": "Glyph reflection",
+     "spec": "alpha 0->.35 SETTLE 30.76–31.14; out in join"
+    }
+   ],
+   "sound_off": "the source pours unshaped past an empty head; a layer gathers and the same stream comes out as finished work",
+   "span_s": [
+    24.07,
+    32.34
+   ],
+   "type": [
+    {
+     "id": "T-L7",
+     "reason": "the pour is the sentence; type would narrate the diagram",
+     "status": "FORECLOSED"
+    },
+    {
+     "entry": "letters stagger alpha SETTLE from 30.76 + i*0.05, complete ~31.15",
+     "exit": "alpha LAUNCH 31.84–32.34",
+     "id": "T-L8",
+     "seat": "(540,430)",
+     "text": "\"HARNESS\" cap 58 letterspace +6"
+    }
+   ]
+  },
+  {
+   "id": "L-D",
+   "join_in": "LINEAR crossfade 0.50 s",
+   "lines": [
+    "L9",
+    "L10",
+    "L11",
+    "L12"
+   ],
+   "name": "The Habitat Transect",
+   "rows": [
+    {
+     "at": "(320,1080) d420",
+     "el": "Platform Habitat (sealed dome)",
+     "spec": "blue glass alpha .18; NO door geometry (decided); in alpha SETTLE + scale .96->1.0 TRAVEL 32.34–33.14; seal sheen sweep once (glint) 36.93–37.43"
+    },
+    {
+     "at": "(760,1080) d420",
+     "el": "Owner Habitat (open dome)",
+     "spec": "green glass alpha .18; door aperture left base, warm glow alpha .35; in with platform dome; door glow SWELL on Thinker's arrival 40.36–40.86"
+    },
+    {
+     "el": "Emblems x2",
+     "spec": "mini gold core d90 + ring + 3 chips at each dome centre; bright .85"
+    },
+    {
+     "at": "(320,950) d90 alpha .18",
+     "el": "Earth reflection",
+     "spec": "in platform dome upper glass; stillness"
+    },
+    {
+     "at": "(540,1150) w150; web ellipse rx190 ry135, nodes w72, links alpha .60",
+     "el": "Thinker Worn Specimen",
+     "spec": "breathing/traffic 120; form crossfade Working->Profile LINEAR 35.40–35.90 (L10); glide ->(760,1130) TRAVEL 38.86–40.36 ~220 px v_avg ~147 px/s (L11, on 'Or')"
+    },
+    {
+     "el": "Stream forks x2 (bandC w14)",
+     "spec": "worn web -> each dome; form alpha SETTLE 33.14–33.94; scroll CONST 300 each; equalize exactly 300/300 from 44.34 (L12)"
+    },
+    {
+     "at": "platform dome centre (320,1080), ellipse rx150 ry105, nodes w64",
+     "el": "Custody Specimen (web copy)",
+     "spec": "condense SETTLE staggered 35.08–36.28; bright .80, links alpha .50; traffic 120 once formed"
+    },
+    {
+     "el": "Diverted strand",
+     "spec": "loops behind platform dome glass, scroll CONST 200 px/s (L10)"
+    },
+    {
+     "at": "Plan (700,1300) w66 · Tool (830,1305) w72",
+     "el": "Direct Current + bench exhibits (Plan/Tool)",
+     "spec": "strand emblem B -> web -> bench; exhibits condense SETTLE staggered 41.50–42.62"
+    },
+    {
+     "el": "THE SWAP (emblem cores)",
+     "spec": "on 'different' 42.62: cores exchange along inter-dome arc ~440 px TRAVEL 42.62–43.12 simultaneously, passing mid-arc (540,990); v_avg ~880 px/s"
+    },
+    {
+     "el": "HELD contrast (L12)",
+     "spec": "no new events after 45.14; both webs breathe identically; glass and door are the only differences on stage"
+    }
+   ],
+   "sound_off": "two glass homes, one sealed, one open; same emblem in each; the difference is the door",
+   "span_s": [
+    32.34,
+    47.14
+   ],
+   "type": [
+    {
+     "entry": "letters stagger alpha SETTLE from 33.70 + i*0.04",
+     "exit": "alpha LAUNCH 37.59–38.09",
+     "id": "T-L9",
+     "seat": "(540,452)",
+     "text": "\"TWO PLACES\" cap 54"
+    },
+    {
+     "id": "T-L10",
+     "reason": "custody forming behind glass carries it; a heading would editorialize a line that must be stated fairly",
+     "status": "FORECLOSED"
+    },
+    {
+     "id": "T-L11",
+     "reason": "the walk and the swap carry it",
+     "status": "FORECLOSED"
+    },
+    {
+     "entry": "word groups alpha SETTLE on Same 44.34 / intelligence. 44.53; second line on Two 45.14 in spoken order to 46.34",
+     "exit": "alpha LAUNCH 46.64–47.14",
+     "id": "T-L12",
+     "text": "\"Same intelligence.\" (540,452) + \"Two different homes.\" (540,540), cap 58"
+    }
+   ]
+  },
+  {
+   "id": "L-E",
+   "join_in": "LINEAR crossfade 0.40 s; habitats recede down y+140 TRAVEL 47.14–47.94, bright->.45 alpha->.50, persist behind",
+   "lines": [
+    "L13",
+    "L14"
+   ],
+   "name": "The Differentiator Return",
+   "rows": [
+    {
+     "el": "Model core greys",
+     "spec": "saturation->.25 bright->.80 TRAVEL-value 47.82–48.82 (on 'rented'); halo alpha .50->.30; restores saturation->1.0 bright->.95 50.59–51.59"
+    },
+    {
+     "el": "Rented Return (bandA w36)",
+     "spec": "head core->right edge CONST 700 px/s 48.30–49.05 (~525 px), returns same path 49.05–49.80; carries NO point (decided emptiness)"
+    },
+    {
+     "at": "(300,1180) w130 bright .70",
+     "el": "Thinker + Worn web (witnesses)",
+     "spec": "traffic 120; breathing"
+    },
+    {
+     "el": "Retained Current (bandC w36)",
+     "spec": "head core->web SETTLE 50.83–51.63 ~480 px v_avg ~600 px/s (on 'harness'); scroll 300"
+    },
+    {
+     "el": "Pool points x3",
+     "spec": "arrive staggered 51.63–53.20, pool INTO nodes: Book bright->1.35 glow .30 · Cards 1.20/.22 · Folder 1.20/.22; attack SWELL .2 s; emphasis HOLDS, no decay in scene"
+    },
+    {
+     "at": "(880,1300) w96",
+     "el": "House exhibit warms",
+     "spec": "bright .55->.75 TRAVEL-value 53.50–54.69"
+    }
+   ],
+   "sound_off": "the source's colour drains and its return is empty; the layer keeps the light it is given",
+   "span_s": [
+    47.14,
+    55.14
+   ],
+   "type": [
+    {
+     "id": "T-L13",
+     "reason": "the grey core states it; no headline mid-proof",
+     "status": "FORECLOSED"
+    },
+    {
+     "id": "T-L14",
+     "reason": "the pooling light states it; HUD furniture only",
+     "status": "FORECLOSED"
+    }
+   ]
+  },
+  {
+   "id": "L-F",
+   "join_in": "LINEAR crossfade 0.50 s",
+   "lines": [
+    "L15",
+    "L16"
+   ],
+   "name": "The Accumulation Field",
+   "rows": [
+    {
+     "at": "dome (700,1050) d500; Thinker Working (700,1120) w170; web ellipse rx300 ry210 @ (700,1010)",
+     "el": "Owner Habitat (distance)",
+     "spec": "interior plate bench/shelving; breathing idle"
+    },
+    {
+     "at": "(110,1575) mono 22 alpha .70 (furniture)",
+     "el": "Specimen labels",
+     "spec": "\"SPECIMEN A — SPARSE\" in SETTLE 55.14; A out LAUNCH .30 at 58.60 as \"SPECIMEN B — ACCUMULATED\" in SETTLE"
+    },
+    {
+     "el": "Stroke 1 — Cards II born",
+     "spec": "condense SETTLE + overshoot 55.97–56.87 (on 'adds'); ring rx 300->315 TRAVEL-value; link forms front CONST ~710 px/s; point pools ~56.60 bright->1.15 HOLD"
+    },
+    {
+     "el": "Stroke 2 — fix sharpens",
+     "spec": "fix points x2 race Folder link from both ends CONST 365 px/s from 57.56 (on 'fix'), meet ~58.04; Folder bright x1.30 SWELL attack .15 on 'sharper.' 58.17, decay to held 1.28 over .4 s"
+    },
+    {
+     "el": "Stroke 3 — Folder II / Note II born",
+     "spec": "condense 59.17–60.07 / 59.42–60.32 (on 'grows') SETTLE + overshoot; links + pooling points by 60.38; ring rx->325 ry->222; Layered Current third pass: 3 strands bandC w8 comb through 59.17–60.38 scroll CONST 300"
+    },
+    {
+     "at": "bench (640,1330) w84",
+     "el": "Paper Specimens Rough->Clean",
+     "spec": "crossfade LINEAR 59.60–60.10; House exhibit bright->.90"
+    },
+    {
+     "el": "L16 hold — accumulated",
+     "spec": "traffic ->75 px/s; Model -> Dormant Exhibit (330,830) d150 bright .50 halo alpha .15, SETTLE in 61.28–62.08; Settled Afterglow band alpha .18 SWELL +/-.02 5 s; Thinker -> Resolve form crossfade LINEAR 61.57–62.07"
+    }
+   ],
+   "sound_off": "one specimen labelled sparse; three strokes later, accumulated — the layer itself has become the asset",
+   "span_s": [
+    55.14,
+    63.8
+   ],
+   "type": [
+    {
+     "id": "T-L15",
+     "reason": "the three strokes are one accumulating gesture; headings would chop it into captions",
+     "status": "FORECLOSED"
+    },
+    {
+     "entry": "letter-stagger alpha SETTLE 62.01–62.41 (on 'asset')",
+     "exit": "holds to scene join",
+     "id": "T-L16",
+     "text": "label amendment: \" · ASSET\" appended to SPECIMEN B line, mono"
+    }
+   ]
+  },
+  {
+   "id": "L-G",
+   "join_in": "LINEAR crossfade 0.40 s",
+   "lines": [
+    "L17",
+    "L18"
+   ],
+   "name": "The Open Specimen Field",
+   "rows": [
+    {
+     "el": "Scene light rises",
+     "spec": "vignette darkening .26->.12 TRAVEL-value 63.80–64.80"
+    },
+    {
+     "el": "Web opens (radial)",
+     "spec": "nodes glide along slot rays, ellipse rx 325->430 ry 222->290 TRAVEL 63.80–64.70 (paths 60–115 px, v_avg 67–128 px/s); links stretch, alpha .70->.85 TRAVEL-value"
+    },
+    {
+     "el": "Nodes present",
+     "spec": "each bright->1.10 SWELL staggered slot order 64.50–65.74 (complete on 'hidden'); Case FORECLOSED in this scene (transparency staged as its absence); Thinker Working (540,1180) w170 inspects; afterglow alpha .12"
+    },
+    {
+     "el": "OPEN — Book handled",
+     "spec": "on 'open' 67.53: Book glides slot->(430,900), scale 1.0->1.35 TRAVEL 67.53–68.03 (~190 px v_avg ~380 px/s); cover alpha->.85"
+    },
+    {
+     "el": "READ — scan",
+     "spec": "on 'read' 68.10: Book face bright x1.25 SWELL 68.10–68.40; glint sweep (130 px, 18 deg) 68.10–68.60"
+    },
+    {
+     "el": "CHANGE — rearrange",
+     "spec": "on 'change' 68.79: Folder <-> Note exchange along arc ~390 px TRAVEL 68.79–69.29 simultaneously"
+    },
+    {
+     "el": "AT WILL — ungated run",
+     "spec": "on 'any' 69.71: handled nodes return SETTLE 69.71–70.41; traffic 120->180 px/s CONST-value ramp 69.71–70.21, holds to scene end; then the 1.60 s held pause — idles only"
+    }
+   ],
+   "sound_off": "the layer opens under glass — every node lit, handled by its owner: opened, read, rearranged, at will",
+   "span_s": [
+    63.8,
+    72.97
+   ],
+   "type": [
+    {
+     "id": "T-L17",
+     "reason": "the brightening field and presenting nodes state transparency",
+     "status": "FORECLOSED"
+    },
+    {
+     "entry": "each alpha SETTLE in on its clause word: 67.53 / 68.10 / 68.79; stack holds",
+     "exit": "all alpha LAUNCH 71.87–72.37 (the log closes before the reveal)",
+     "id": "T-L18",
+     "text": "log lines mono 24 letterspace +2 at (110,340): \"› OPEN\" / \"› READ\" / \"› CHANGE\""
+    }
+   ]
+  },
+  {
+   "close_field": {
+    "rows": [
+     {
+      "el": "Horizon + Earth (C6 third)",
+      "spec": "horizon y1420 alpha .35; Earth d150 at (540,480) alpha SETTLE in 76.03–76.93"
+     },
+     {
+      "el": "Final specimen image",
+      "spec": "Thinker Resolve + mature web (rx170 ry118, traffic 75 px/s) at (540,1300) w140, alpha SETTLE in 76.03–76.93"
+     },
+     {
+      "el": "Still-growing beat",
+      "spec": "on 'Build' 77.09: new small node condenses in close-field web SETTLE + overshoot 77.09–77.79"
+     },
+     {
+      "el": "Recommendation Current set-piece (CAST L20 note)",
+      "reason": "screen dissolved; the current's work is done — kept type + growing web remain (divergence from CAST staging note recorded, phase-3 close staging governs)",
+      "status": "FORECLOSED here"
+     },
+     {
+      "el": "Tail fade",
+      "spec": "all elements alpha->0 LINEAR 80.69–81.69 (1.0 s), riding the master cosine fade"
+     }
+    ]
+   },
+   "id": "L-H",
+   "join_in": "NONE — held pause + drift (M25-L exception); L-G composition carries in whole",
+   "lines": [
+    "L19",
+    "L20",
+    "L21"
+   ],
+   "name": "Inside the Glass — the reveal + close",
+   "reveal_R2": {
+    "lands": "L19, across the full line, on the far side of the 1.60 s held pause; earned by the reticle, glyph chain, dial, HUD, grid, dateline",
+    "rows": [
+     {
+      "el": "World group pull-back",
+      "spec": "scale 1.0->0.85 about (540,1000) TRAVEL 72.97–76.03 (3.05 s, full line); scale rate ~-0.049/s; corner travel ~150 px v_avg ~49 px/s — slowest scored travel in the film, decided"
+     },
+     {
+      "el": "Observatory Glass",
+      "spec": "curved frame inset 28, corner r120, glass alpha->.10 SETTLE 73.47–75.47; one sheen sweep 74.50–75.50"
+     },
+     {
+      "el": "Reticle dissolves",
+      "spec": "alpha .28->0 LAUNCH 73.97–74.97; never returns (decided; supersedes phase-5 record note, reason in MD)"
+     },
+     {
+      "at": "(300,470) d150 alpha .30",
+      "el": "Earth Reflected",
+      "spec": "alpha SETTLE in 74.50–75.50 (C6 second appearance)"
+     },
+     {
+      "at": "(838,640) d44",
+      "el": "Glyph glow (placement 5)",
+      "spec": "bright pulse x1.6 SWELL 75.00–75.60 -> alpha .80 held"
+     },
+     {
+      "at": "(905,1420) w130",
+      "el": "THE WATCHER",
+      "spec": "alpha 0->.85 SETTLE 74.52–75.77 (L19 second half); decided stillness — no gesture, no breath, no face; out LAUNCH with the screen dissolve 76.03–76.93 (the Receding Author)"
+     },
+     {
+      "el": "Screen dissolve",
+      "spec": "76.03–76.93 (L19->L20 gap): glass alpha->0 LAUNCH; frame alpha->0; watcher alpha->0 LAUNCH; world group scale .85->1.0 TRAVEL as close field forms"
+     }
+    ],
+    "withheld": "the vantage itself — glass, frame, watcher — never a creature or a face (phase-1 constraint)"
+   },
+   "sound_off": "the world pulls back into a picture on a curved screen — someone has been watching; the advice outlasts the screen; a ring signs the page",
+   "span_s": [
+    72.97,
+    81.69
+   ],
+   "type": [
+    {
+     "entry": "alpha SETTLE 73.30–73.70 (on 'recommendation')",
+     "exit": "alpha LAUNCH with screen dissolve 76.03–76.93",
+     "id": "T-L19a",
+     "text": "\"RECOMMENDATION\" mono 24 letterspace +4 at (540,300) — R1 as furniture"
+    },
+    {
+     "entry": "word groups alpha SETTLE in spoken order 75.08–75.93 (on 'Understand')",
+     "exit": "NONE through the dissolve — alpha holds while glass fades; re-seat TRAVEL 76.03–76.93; kept stack row 1",
+     "id": "T-L19b",
+     "seat": "(540,700) inside screen -> re-seats (540,620)",
+     "text": "\"Understand the harness.\" cap 72 ice"
+    },
+    {
+     "entry": "word groups alpha SETTLE 77.09–77.98 (on 'Build')",
+     "exit": "NONE — kept",
+     "id": "T-L20",
+     "seat": "(540,745)",
+     "text": "\"Build your own harness.\" cap 72"
+    },
+    {
+     "entry": "word groups alpha SETTLE 78.64–79.29 (on 'Keep')",
+     "exit": "NONE — kept through the tail; leaves only in the global fade",
+     "id": "T-L21",
+     "seat": "(540,870)",
+     "text": "\"Keep an eye on it.\" cap 72 (the title phrase)"
+    },
+    {
+     "entry": "alpha SETTLE 79.40–79.90 (after the final word); bright pulse x1.2 SWELL once 79.90–80.30",
+     "exit": "holds; leaves in the global fade",
+     "id": "T-SIG",
+     "text": "glyph signature d54 gold at (540,1010)"
+    },
+    {
+     "entry": "alpha SETTLE 79.90–80.60",
+     "exit": "holds through the fade",
+     "id": "watermark",
+     "text": "\"HADOSH ACADEMY\" mono 26 letterspace +4, ice alpha .35, at (540,1620) — Earth One ending compliance (connection on image + description; NO spoken plug)"
+    }
+   ]
+  }
+ ],
+ "score": "Director's Score L01-L21, derived 2026-10-28 (JOB LENS SCORE), uniform closure grain mirroring the Academy film's scores",
+ "stage_light": {
+  "band_anatomy": "bandA crop [0,0,1920,330] · bandB [0,330,1920,642] · bandC [0,60,1920,330] + flip; step max(6 px, 0.45*width), slice 2.4*step (shared §11A.5); mechanism = Academy flow module imported unchanged, graded cold",
+  "canvas": "1080x1920@30",
+  "colour_law": "deep blue-black; type ice #DCE9F2; gold reserved to model, flow, glyph",
+  "glint_sheen": "case sheen crop [0.325,0.115,0.675,0.805] alpha 0.30; glint strip 130 px, profile (1-|x|^1.6), sweep 18 deg (shared §10B.5)",
+  "glow_falloff": "radial sprite 256 px, a = (0.5 + 0.5*cos(pi*r))^1.6 (shared §10B.2)",
+  "light_points": "r 7/8 as scored; trails FORECLOSED; band heads are glow sprites at r x 3.2",
+  "safe_zone": "x [100,980], y [250,1500] subjects; furniture may sit below 1500 as scored",
+  "vignette": "centre (540,900), radii (760,1150), darkening 0.26 (Lens value; Academy 0.20)"
+ },
+ "timeline": {
+  "held_pause_after_L18_s": 1.6,
+  "lead_in_s": 1.2,
+  "line_starts_s": {
+   "L1": 1.2,
+   "L10": 34.777,
+   "L11": 38.688,
+   "L12": 44.167,
+   "L13": 47.14,
+   "L14": 50.59,
+   "L15": 55.144,
+   "L16": 61.281,
+   "L17": 63.802,
+   "L18": 67.032,
+   "L19": 72.972,
+   "L2": 5.825,
+   "L20": 76.926,
+   "L21": 78.477,
+   "L3": 9.709,
+   "L4": 13.459,
+   "L5": 17.18,
+   "L6": 21.521,
+   "L7": 24.069,
+   "L8": 26.897,
+   "L9": 32.337
+  },
+  "of_record": "phase-4 programme measured timeline (phases/phase-04/audio/starts-lens.json, durs.json, words-lens.json)",
+  "programme_total_s": 81.687,
+  "r5_delta": {
+   "delta_s": 1.671,
+   "expected_total_after_reassembly_s": 83.36,
+   "l10_programme_take_s": 3.311,
+   "l10_r5_take_s": 4.982,
+   "mandate": "Re-assemble with the R-5 L10 take at the delivery map's locked gaps; Whisper-measure all word anchors on the re-assembled programme; every scored window is anchored to a line start or named word and shifts mechanically; tolerance +/-1 frame (M24-L)",
+   "status": "FORECLOSED-by-measurement (build mandate, not an estimate)"
+  },
+  "tail_s": 2.4
+ },
+ "transcript_lock": {
+  "banned_word_scan": 0,
+  "lines": 21,
+  "lines_text": {
+   "L1": "On Earth, one point two billion people now use ChatGPT every week.",
+   "L10": "The platforms build it for them — from the subjects' own sessions — and keep it on the platform side.",
+   "L11": "Or they build it themselves, on their own computers — same model, or a different one.",
+   "L12": "Same intelligence. Two different homes.",
+   "L13": "The model is rented intelligence — the same for everyone.",
+   "L14": "A harness of their own works the other way. Everything they put into it stays.",
+   "L15": "Every session adds to it. Every fix makes it sharper. It grows and matures by use.",
+   "L16": "It becomes an asset — theirs.",
+   "L17": "On their own computers, nothing in it is hidden from them.",
+   "L18": "They can open it, read it, change it — any time, without asking anyone.",
+   "L19": "The recommendation is simple. Understand the harness.",
+   "L2": "If you are hearing this on Earth, you are probably one of them.",
+   "L20": "Build your own harness.",
+   "L21": "Keep an eye on it.",
+   "L3": "Everything they have built there sits inside someone else's chat box.",
+   "L4": "Their instructions. Their memory. Their files.",
+   "L5": "If one of those accounts closed tonight, what would still be theirs?",
+   "L6": "Nothing. It was all rented.",
+   "L7": "The model supplies the intelligence.",
+   "L8": "Everything that makes it theirs sits in the layer around it — the harness.",
+   "L9": "That harness can sit in two places."
+  },
+  "provenance": "trunk phase-28 lens draft (202w) -> phase-2 consolidation (203w, R-1 adopted, R-2/R-3/R-4 rejected on record) -> R-5 adopted 2026-10-27 at owner ruling #106 A (L10, +4w -> 207w) -> phase-4 performed (203w programme + R-5 L10 take)",
+  "spoken_words": 207,
+  "status": "LOCKED by this score, 2026-10-28",
+  "text_of_record": "phases/phase-02/transcript/transcript-lens-consolidated.md as amended by refinement R-5",
+  "trim": "DECIDED NONE on measured fit (phases/phase-02/delivery-map.md)"
+ },
+ "verification_plan": [
+  "Gate 1 staging maps per scene (boxes, never-cross: type stack vs web top, case label vs glass line, Watcher vs frame edge)",
+  "Gate 2 per-scene stills, viewed",
+  "Gate 3 frame-difference every 0.5 s — no zero-motion >= 2.0 s outside named holds (dial, stars, Watcher, Thinker waits, L12 idle span, kept stack)",
+  "Gate 4 movement audit — every motion traced to a score row; spot velocities +/-10%: outflow head ~700 px/s · swap cores ~880 px/s · pull-back corner ~49 px/s; realized-but-undecided = defect",
+  "Gate 5 phone-size 390x693 frames (address, verdict, transect, reveal mid-drift ~74.5 — must read as a picture on glass, kept stack)",
+  "Gate 6 loudness/format on the rendered file: 1080x1920@30 · -14 LUFS · TP <= -1",
+  "Sound-off viewer-learning check against the MD §7, scene by scene"
+ ],
+ "version": "Earth One — the alien-observer lens"
+}
