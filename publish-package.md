@@ -16,3 +16,9 @@ Hadosh Academy: https://hadi-nayebi.github.io/
 
 How this video was made: it was not edited together — it was derived from a production file system. Every scene, word, and decision was recorded first, then the film was rendered from that record and verified against it. The full git history of its production is open here:
 https://github.com/hadi-nayebi/hadosh-production-contexts/tree/rebuild/soa-01-scenes
+
+## Publish outcome (2026-10-28, verified in Studio after publishing)
+- LIVE: https://youtube.com/shorts/HLjOhOkhkkY — Public, published immediately Oct 28, 2026, on Let's Build It Together (@LetsBuildittogethersp, UCgcIZfxN-W2IlA61AiuVd2Q; Studio had opened on Earth One — verification caught it and switched before upload).
+- THUMBNAIL (owner refinement, supersedes the poster-frame decision above): the YOURS strongbox frame (~66 s, S27), uploaded as the custom thumbnail.
+- SETTINGS (all verified post-publish): not made for kids · not age-restricted · comments On (anyone, basic moderation) · Shorts remixing allowed · embedding allowed · Standard YouTube License · no paid promotion · subscriptions feed/notify ON · Category Education · language English · no location/date · Altered/AI content: Yes (AI label) · tags: AI harness, personal AI, ChatGPT, AI agents, own your AI, Hadosh Academy · checks: copyright none, community guidelines none.
+- Description verified in Studio, branch link present as the last line. Draft CZHBJalN_WU untouched.

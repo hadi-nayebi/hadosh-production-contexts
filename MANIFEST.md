@@ -64,3 +64,6 @@ Final film WITH ending: sha256 52dc131e76f298a1fb8f1d5218e3ac7b2b18a800b4a7b157a
 005560e88ed2e2acc6232253a0c5392755ecfab371e15d820eb19a477f1f5fc7  soa01-scenes/work/ending-specimen.mp4
 fc89910259f4e758655ef36f754feeb7020482473638e7cd4be68cc8fa02ba14  soa01-scenes/work/visual-plan/story-map-panel-1.png
 8c7b1837bb6926193971081622f137f3129923859dab0fe189c016e7ed077af1  soa01-scenes/work/visual-plan/story-map-panel-2.png
+
+## Published (2026-10-28)
+Who Owns Your Harness? — LIVE Public on Let's Build It Together (@LetsBuildittogethersp): https://youtube.com/shorts/HLjOhOkhkkY — 1:29, YOURS-strongbox custom thumbnail, settings audit verified (see publish-package.md).
