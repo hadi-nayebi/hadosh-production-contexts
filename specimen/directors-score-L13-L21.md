@@ -140,9 +140,21 @@ exact; the renderer's curve library must implement THESE, not its defaults.
 - **Statue-still Thinker** (the segment's named adaptation 5): the figure
   never moves in these scenes; CAST's hand actions and turns are carried by
   node-side motion and staging (adaptation A-R5 below).
-- **Type ration:** the film's six type events are F-T1 (L1), F-T2 NOTHING
-  (L6), F-T3 HARNESS (L8), F-T4 TWO PLACES (L9) — and here **F-T5 (L19)** and
-  **F-T6 (L20)**. Type is **deliberately absent at L13–L18 and L21**.
+- **Type — the ration is RETIRED (owner doctrine, 2026-10-28).** The
+  six-event ration (F-T1…F-T6) was an invention of the score-prep, and
+  Hadi's #108 verdict (the two-paragraph piece scored 55–60) named its
+  cost: the closing mantra — *learn it · understand it · build it · keep
+  an eye on it* — is the prime kinetic-type site of the film, and it
+  carried almost no type; L21's title phrase was scored "type leaves."
+  The ration is replaced by the standing rule: **type appears wherever
+  the words carry the story, and every appearance is fully decided**
+  (words, placement, choreography, scale, residence, exit — decision
+  model §9A). The film's type set is now: F-T1 (L1) · F-T2 NOTHING (L6)
+  · F-T3 HARNESS (L8) · F-T4 TWO PLACES (L9) · the **mantra layer** —
+  M-T1 (L18) · M-T2 UNDERSTAND + F-T5 (L19) · F-T6 (L20) · M-T3 (L21) —
+  plus per-line FORECLOSED absences, each with its reason recorded in
+  the scenes' type notes. Absence remains a decision; scarcity is no
+  longer a reason.
 - **Defect 1 (legible scale):** the bolt appears NOWHERE in L13–L21
   (decided). Every stream here is a band of width 36–44 on a stage-wide arc.
 - **Defect 3 (no unscored stillness):** every gap carries scored motion;
@@ -152,8 +164,9 @@ exact; the renderer's curve library must implement THESE, not its defaults.
 - **Defect 4 (one focus per beat):** Scene C reuses the uncrowded Mechanism
   stage; Scene D's work house is background mass at bright .55 while the web
   is the focus; L17's spacing REDUCES density as its subject.
-- **Defect 5:** all anchors measured (above). The one missing record in the
-  film (L3 word-times) belongs to the L01–L04 score and is named there.
+- **Defect 5:** all anchors measured (above). The film's one missing record
+  (L3 word-times) was discharged 2026-10-28: measured and locked in the
+  L01–L04 score (governing amendment §17A.6-A).
 
 ## New cast — object assets in the locked engraved family (no new characters)
 
@@ -176,6 +189,27 @@ steer authorizes ("add more assets"); drawing them is build work.*
   rotation centre exactly (production requirement, Gate-1 checked). In
   scene: **w 92** (r 46), mounted on the work house's wall at **(1010,1180)**.
   The workshop's one moving piece of furniture.
+
+*Expansion 2 (2026-10-28, JOB FULL-FILM SCORE CLOSURE — Hadi's order to
+expand the visual asset category, serving beats that lacked furniture):*
+
+- **`key.png` — the Key.** A single ornate brass key drawn lying
+  horizontally (bow left, bit right), cream highlights on the bow ring.
+  Serves access, made object: in the L01–L04 score's Scene B it rests
+  OUTSIDE the Case's glass on the floor at the case's base — in their
+  room, not yet his; here in Scene E it rests on the Archive Wall's base
+  ledge at **(880,1428)**, **w 120** — in reach, his. Movement rows in
+  both scores: decided stillness everywhere.
+- **`ledger.png` — the Ledger.** A heavy closed register book: navy
+  binding, brass corners and clasp, cream page-block edges, three-quarter
+  view. Serves L16 ("It becomes an asset — yours."): materializes at the
+  work-house doorstep, centre **(830,1505)**, **w 210**, and rests there
+  through Scene E's tableau.
+- **`archive-box.png` — the Archive Box.** An open brass-bound card tray,
+  cream session cards standing inside, several card edges above the rim
+  (a STATE in the artwork). Serves L15: on the workshop floor at the
+  Thinker's feet, centre **(215,1475)**, **w 230**, taking each node
+  birth as a pulse of light; carried into Scene E at the same seat.
 
 ## Named adaptations (score level, recorded — not improvised)
 
@@ -230,8 +264,13 @@ instead of vanishing.
 | nodes (emphasis) | C·2 | Pooling emphasis **HOLDS** (decided — retention means the emphasis stays): Book bright →1.35 + pool glow α →.30 (attack SWELL 0.2 s from 52.95); Cards →1.20 / .22 (53.15); Folder →1.20 / .22 (53.35); Note →1.10 / .15 (by 53.90). No decay inside the scene. |
 | link Book–Note | C·2 | Forms 53.45–53.75: α 0→.70 **SETTLE** + a formation front travels Book→Note **CONST** (arc ≈ 573 px ÷ 0.30 s ≈ 1900 px/s — a light front, decided fast). Links Cards–Book / Book–Folder: α .45 constant; idle shimmer (grammar). |
 
-**Type:** absent (decided). **Transitions:** in — crossfade from the fork
-tableau 45.933–46.733 LINEAR (A-R2); out — crossfade to Scene D
+**Type:** FORECLOSED at L13 and L14 (word-placement re-audit, 2026-10-28 —
+reasons, not ration): at L13 "rented" is *enacted* by the loop's
+consumption — nothing stays — and the word was already struck at L6–L7;
+at L14 retention is *enacted* by the pooling points coming to rest inside
+the nodes, so type would caption an enacted claim. **Transitions:** in —
+crossfade from the fork tableau 45.933–46.733 LINEAR (A-R2); out —
+crossfade to Scene D
 53.90–54.253 LINEAR, with pool point 4 completing inside it.
 
 ---
@@ -263,10 +302,14 @@ from both ends; the kink straightens across "makes it sharper." (the
 corrected Folder pulses and stays brighter). Clause 3 ("grows… matures",
 58.137–59.489): Folder II and Note II condense; three more links form; the
 web's collective glow arrives. **End state: 7 nodes, 8 links — DENSE.**
+On the floor at the Thinker's feet the **Archive Box** (§ New cast) takes
+each birth as a pulse of light — the sessions land somewhere.
 
 **Beat D·2 — L16 (60.389–62.672): the asset.** Traffic calms (periods
 × 1.6). A gold gleam sweeps the full ring on "asset" (61.195) — the web
-reads as ONE object. The Model recedes to dormant. On "yours." (62.291) a
+reads as ONE object; at the work-house doorstep the **Ledger** (§ New
+cast) materializes — the asset made thing. The Model recedes to dormant.
+On "yours." (62.291) a
 light-point travels from the web centre to the Thinker's cap brim and RESTS
 there — the L2 singling point's rhyme, closed: singled out → owner.
 
@@ -286,8 +329,14 @@ there — the L2 singling point's rhyme, closed: singled out → owner.
 | web traffic | D·1–D·2 | Link traffic points **CONST 120 px/s**; at L16 all traffic slows to **75 px/s** (maturity = calm — stated as speeds, never zero). Link shimmer per grammar. |
 | gleam sweep | D·2 | A gold rim light (span 30°, width 50) travels the full ring perimeter (≈1734 px at rx 325/ry 222) **CONST ≈ 1825 px/s**, 61.10–62.05, on "asset" (61.195). CONST is the decision: light does not accelerate. |
 | cap point (r 7) | D·2 | Path web centre (394,917) → cap brim (318,803) (≈137 px): **SETTLE**, 62.29–62.60 (v_avg ≈ 442 px/s), ends at rest ON the brim, on "yours." (62.291). Rest α .85, perfectly still, through the crossfade. |
+| Archive Box | D·1 | Present from the scene's entry at its seat (215,1475), w 230 (§ New cast): α rides the entry crossfade LINEAR to 1 by 54.253. **Decided stillness** (floor furniture; its cards are a state in the artwork). Emphasis = light only: an inner glow (GOLD disc rx 90 at its centre) pulses α 0→.18 **SWELL**, 0.5 s, at each birth (54.70 · 58.20 · 58.45) — every session that adds a node also lands in the box. Rotation 0°. |
+| the Ledger | D·2 | Absent through D·1 (α 0 — decided: the asset exists when it is named). Materializes at the work-house doorstep, centre (830,1505), w 210, foreground z above the house: α 0→1 **SETTLE** + scale .96→1.0 **SETTLE**, 60.55–61.20, complete on "asset" (61.195). Emphasis on "yours." (62.291): warm under-glow (GOLD, rx 150 at its base) α 0→.20 **SWELL**, held into the crossfade. Rotation 0°; no anticipation (facts arrive without wind-up, M8). |
 
-**Type:** absent (decided). **Transitions:** in — crossfade 53.90–54.253
+**Type:** FORECLOSED at L15 and L16 (word-placement re-audit, 2026-10-28 —
+reasons, not ration): at L15 growth is *enacted* by the ring's births and
+breaths, so type would caption an enacted claim; at L16 the gleam sweep
+and the cap point ARE the ownership image, and a YOURS stamp would break
+the beat's held quiet. **Transitions:** in — crossfade 53.90–54.253
 LINEAR (the kinked link forms inside it); out — crossfade 62.67–63.222
 LINEAR, the cap point resting, the Open Cortex spacing already beginning
 under it (Scene E).
@@ -321,18 +370,24 @@ arrangement. "any time, without asking anyone" — NO gate event: a free
 point runs the whole ring unimpeded, and a pulse ripple follows it around.
 
 **Beat E·3 — L19 (71.166–72.362): understand.** The staging widens; the
-**Recommendation Current** arcs Model → web → the work-house door; the word
-HARNESS returns as tiles over the dense web (F-T5).
+**Recommendation Current** arcs Model → web → the work-house door; the
+imperative **UNDERSTAND** strikes first as tiles (M-T2, on "Understand,"
+71.327), and the word HARNESS returns as tiles beneath it (F-T5, restaged
+to the stack) — the sentence assembles in its spoken order.
 
 **Beat E·4 — L20 (72.762–73.813): build.** BUILD stamps beneath HARNESS
-(F-T6); at the word, an eighth node sparks alight in the ring's east gap
-and links in — building is enacted, not merely said; the workshop door
-glows ready.
+(F-T6, restaged) — the stack stands complete: UNDERSTAND / HARNESS /
+BUILD, three rows held. At the word, an eighth node sparks alight in the
+ring's east gap and links in — building is enacted, not merely said; the
+workshop door glows ready.
 
-**Beat E·5 — L21 + tail (74.213–77.023): keep an eye.** Type leaves; a
-single point takes a slow orbit of the ring — a kept eye. The full cast
-holds in a LIVING tableau; the orbit continues past the last word into the
-fade.
+**Beat E·5 — L21 + tail (74.213–77.023): keep an eye.** The three stacked
+rows clear (73.95–74.30), and the final strike lands in the vacated seat:
+**KEEP AN EYE ON IT** — three word-plaques stamping in on the line's own
+words (M-T3) — and HOLDS through the tail: the title phrase is the film's
+last type, leaving only inside the global fade. Beneath it, a single
+point takes a slow orbit of the ring — a kept eye. The full cast holds in
+a LIVING tableau; the orbit continues past the last word into the fade.
 
 ### Movement spec — Scene E
 
@@ -347,18 +402,62 @@ fade.
 | scan glow (w 90) | E·2 | Reads the enlarged Cards: **CONST 720 px/s**, two full passes left→right across its 233 px width, 67.10–67.75, on "read it," (67.055). Constant speed = a reading eye does not ease. The Lens hovers above; the scan passes beneath its disc. |
 | Folder ⇄ Note | E·2 | Slot exchange: two **bowed arcs, bowed apart by 60 px** at midpoint (decided bow), **TRAVEL**, 67.95–68.70 (path ≈ 230 px, v_avg ≈ 307 px/s), on "change it" (67.812). Mid-transit separation ≥ 150 px at ≈68.32 (Gate-1 check). Links re-draw to the exchanged positions during the swap. Anticipation none — the swap is brisk and businesslike (decided). |
 | free point (r 8) | E·2 | The whole expanded ring **CONST ≈ 1842 px/s** (2026 px in 1.10 s), 68.85–69.95: it slows for NO node, stops at NO node — ungated motion is the meaning. Then a link ripple: a bright front follows around the ring **CONST ≈ 1690 px/s**, 69.0–70.2, each link's α peaking .85→1.0 SWELL as the front passes. |
+| **M-T1 OPEN IT plaque** | E·2 | **Mantra layer, first strike.** Word plaque (§9A.3-A geometry) at the Scene E type seat, centre (540,438), z above all cast. Entry on "Open" (66.429): drop 26 px **STAMP** (easeOutBack 1.2), 0.22 s, + squash scaleY .92→1.0 **SETTLE** 0.08 s; α materializes 0.10 s (M11 plaque rule). Holds while the clause completes; exit α →0 **LAUNCH** 66.90–67.05 — the seat passes to the next word. |
+| **M-T1 READ IT plaque** | E·2 | Same seat, same entry, on "read" (67.055) — stamping as the scan light begins its passes beneath the Lens. Exit α →0 **LAUNCH** 67.66–67.81. |
+| **M-T1 CHANGE IT plaque** | E·2 | Same seat, same entry, on "change" (67.812) — stamping as Folder ⇄ Note begin their exchange. Holds through the clause; exit α →0 **LAUNCH** 68.70–68.88, completing as "any time" (68.815) gives way to the free point's ungated run (68.85): type yields the stage to unimpeded motion — the exit IS the clause's meaning. |
+| Archive Box | E·1–E·5 | Carried at its seat (215,1475), α rides the entry crossfade with the room. **Decided stillness**; emphasis foreclosed in E (decided — the invitation beats belong to the Lens, the Current, and the type). Rotation 0°. |
+| the Ledger | E·1–E·5 | Carried at its doorstep seat (830,1505), foreground. Under-glow decays .20→.10 **TRAVEL-value** across E·1, then holds .10. **Decided stillness** — the asset rests in the tableau. Rotation 0°. |
+| the Key | E·1–E·5 | Rests on the Archive Wall's base ledge at (880,1428), w 120 (§ New cast): enters with the wall's redress, α 0→1 **SETTLE** inside the entry crossfade; bright .80 (a real object on a dim backdrop). **Decided stillness** in every beat; emphasis foreclosed — at L18 the free point is the event, and the key's mere presence is the access claim. Rotation 0°. |
 | staging group | E·3 | Widen: figure + web scale 1.05→.97, dy +30, **TRAVEL**, 70.60–71.60. Room furniture (wall, house, gear) does NOT widen (decided — only the figure and his layer pull back). |
 | the Lens (exit) | E·3 | Retires during the widen: path hover post (340,700) → the work-house roof (950,1030) (≈694 px), **TRAVEL**, 70.60–71.60 (v_avg ≈ 694 px/s); α →.80; then still for the rest of the film (furniture). No pop-out, no fade-out — it is put away, in view. |
 | Recommendation Current (bandA w 40) | E·3 | Head path Model (150,300) → web west edge (59,927) → work-house door (790,1330) (≈1469 px): **CONST ≈ 1335 px/s**, 71.20–72.30, with a SETTLE tail-landing in the final 0.15 s (the drape settles into the door). Flow scroll 1000 px/s; as it passes the web (71.75) the ring glow bumps +.05. Settles as a held drape: α .80, flow slows to 120 px/s — a held connection, never zero. The onward carry: the viewer's eye lands on the workshop door. |
-| F-T5 HARNESS tiles | E·3 | **The segment F-T3 movement spec, verbatim** (tile 64, pitch 70, centre (460,330); stagger-rise from 71.90 + i×0.07: rise 26 px, STAMP easeOutBack(1.2)) — the word returns with its own decided motion, assembling on "harness." (71.930). Exit shared with F-T6 (below). |
-| F-T6 BUILD tiles | E·4 | Plaques tile 72, pitch 78, centre (470,478) — larger than HARNESS (the imperative is bigger); the two words stack. Drop 30 px **STAMP** from 72.90 + 0.20 s, then squash scaleY .92→1.0 **SETTLE** 0.08 s — the NOTHING stamp's energy, gentled. Lands on "Build" (72.926). |
+| **M-T2 UNDERSTAND tiles** | E·3 | **Mantra layer, second strike.** 9 letter tiles (tile 56, pitch 62; row width 552), centre **(540,290)** — the top row of the mantra stack, z above all cast. Stagger-rise (the HARNESS family entry): from 71.27 + i×0.06, rise 26 px, **STAMP** easeOutBack(1.2), α materializes 0.10 s per tile (M11) — the first tile lands on "Understand" (71.327, ±1 frame per M24), the row complete ≈ 72.0. **Residence: holds as the stack's first row through E·4**; exit shared (below). Type never breathes (grammar). |
+| F-T5 HARNESS tiles | E·3 | **The segment F-T3 movement spec, verbatim except its seat** (tile 64, pitch 70; stagger-rise from 71.90 + i×0.07: rise 26 px, STAMP easeOutBack(1.2)) — the word returns with its own decided motion, assembling on "harness." (71.930). **Seat restaged 2026-10-28 (mantra layer): centre (460,330) → (540,438)** — the Scene E type seat, the stack's second row, directly beneath UNDERSTAND. Exit shared (below). |
+| F-T6 BUILD tiles | E·4 | Plaques tile 72, pitch 78 — larger than HARNESS (the imperative is bigger). Drop 30 px **STAMP** from 72.90 + 0.20 s, then squash scaleY .92→1.0 **SETTLE** 0.08 s — the NOTHING stamp's energy, gentled. Lands on "Build" (72.926). **Seat restaged 2026-10-28 (mantra layer): centre (470,478) → (540,586)** — the stack's third row, beneath HARNESS; its base (622) clears the web's top (662) by 40 px. Exit shared (below). |
 | eighth node (cards w 60→95) | E·4 | Birth at the ring's −30° slot, centre (759,795): the Scene D birth grammar — scale .35→1.0 **SETTLE** with 5% overshoot, α 0→1, 72.926–73.60, width growing 60→95; birth flare bright ×1.6 **SWELL** decaying to held 1.15. Link Folder–NewNode forms 73.30–73.70 (α SETTLE + CONST front). Door glow α .35→.55 **TRAVEL-value** 73.0–73.813. |
-| F-T5 + F-T6 (exit) | E·5 | Shrink-to-centre + α →0 **SETTLE**, 74.00–74.45 — begun inside the L20→L21 gap (overlap, defect-3 pattern). Type leaves before the watch begins; the stage returns to cast only. |
+| M-T2 + F-T5 + F-T6 (exit) | E·5 | All three stack rows: shrink-to-centre + α →0 **SETTLE**, **73.95–74.30** — begun inside the L20→L21 gap (overlap, defect-3 pattern), complete before "Keep" (74.376). The stack clears so the final phrase lands alone. |
+| **M-T3 KEEP AN EYE ON IT plaques** | E·5 | **Mantra layer, final strike — replaces the retired "type leaves."** Three word plaques (§9A.3-A geometry) in one row, centre **(540,438)** — HARNESS's vacated seat — gaps 24 px, z above all cast: **KEEP** stamps on "Keep" (74.376) · **AN EYE** on "eye" (74.619) · **ON IT** completing on "it." (74.940). Each: drop 26 px **STAMP** 0.22 s + squash **SETTLE** 0.08 s, α materializes 0.10 s. **Residence: the completed phrase HOLDS through the living tableau (75.023–76.023) — there is no exit event; it leaves only inside the global fade, its α riding the fade LINEAR with the cast.** The title phrase is the film's last type, watched over by the orbiting point beneath it. |
 | watch point (r 8, α .85) | E·5 | A slow full orbit of the expanded ring (centre (434,927), rx 375, ry 265; perimeter ≈ 2026 px) **CONST, period 5.2 s (≈390 px/s)**, from 74.30, starting on "eye" (74.619). Decided: the orbit is NOT required to complete — by the fade's end it has covered ≈ 52% of the ring. The watching outlives the words; that is the beat. No ease, no pulse — a kept eye is steady. |
 | full cast | tail | LIVING tableau 75.023–76.023: traffic at mature speeds (75 px/s), ring glow held .16, door glow held .55, cap point resting α .5, gear turning, lens at rest on the roof. **Global fade to void 76.023–77.023 LINEAR**, aligned with the audio tail. No freeze precedes the fade — the film ends alive, then dark. |
 
-**Type:** F-T5, F-T6 only; absent at L17, L18, L21 (decided).
+**Type:** the mantra layer + F-T5/F-T6 (M-T1 at L18 · M-T2 + F-T5 at L19 ·
+F-T6 at L20 · M-T3 at L21). FORECLOSED at L17 (word-placement re-audit,
+2026-10-28 — reason, not ration): openness at L17 is *staged* — the web
+spacing itself apart and the Lens's inspection circuit — so type would
+caption a staged claim.
 **Web state:** OPEN (L17–L18) → DENSE-invitation (L19–L21).
+
+## THE MANTRA KINETIC-TYPE LAYER (added 2026-10-28, JOB FULL-FILM SCORE CLOSURE)
+
+*Owner doctrine (Hadi, 2026-10-28, on scoring the two-paragraph piece
+55–60): intentional decisions about where the words appear — kinetic
+typography — and the closing mantra is the best place in the film for
+word animation. This layer is the repair. Its design, in one paragraph:
+the mantra is staged as a STACK that builds in spoken order at the top
+of Scene E's stage — the hands-on triad first as single word-plaques
+passing through one seat (OPEN IT → READ IT → CHANGE IT, L18, each
+exiting as its clause completes, the last yielding to the ungated free
+point); then UNDERSTAND strikes as letter tiles (L19) and HARNESS
+returns beneath it, BUILD stamps beneath that (L20) — three rows held
+together, the invitation accumulating exactly as the film says the layer
+does; then the stack clears and the final phrase lands alone in the
+vacated middle seat — KEEP AN EYE ON IT, one plaque per spoken word
+(L21) — and HOLDS through the tail, the film's last type, watched by
+the orbiting point. Placement is decided against the staging: the type
+seat (540,438) and the stack rows (y 290 / 438 / 586) sit in the stage's
+clear band — above the web's top (662), clear of the dormant Model
+(x ≤ 225), clear of the Thinker's head (top 742) — and every row's span
+fits the safe zone at phone size (glyph heights 46–72 px ≈ 17–26 px at
+390 wide, legible).*
+
+*Word-plaque geometry is closed film-wide as governing amendment
+§9A.3-A (below): height 76 px; width = the word's measured glyph width
+at 46 px cap height in the chosen face + 56 px padding (the measurement
+is a build step; the rule is the decision); corner radius 0.14 × height;
+fill NAVY `#16233C`, outline GOLD `#D9A94E` width max(2, height/20) = 4,
+letters CREAM `#F1E7CE`. Plaque entry is the gentled stamp (drop 26 px
+STAMP + squash SETTLE), promoted from F-T6; plaque α materializes at
+0.10 s under M11. Letter-tile entries keep their scored family forms.*
 
 ## The Ending Standard — compliance, stated
 
@@ -366,8 +465,9 @@ The Academy ending standard (carry the viewer onward + plug the Academy in
 the piece's own terms; no silent bridge card) is satisfied inside the
 piece's own terms: **(1)** the spoken triad IS the plug — *Understand the
 harness. Build your own harness. Keep an eye on it.* — the Academy
-invitation, verbatim canon, staged as three held strikes (tiles, birth,
-orbit), not read off a card. **(2)** The viewer is carried ONWARD visually:
+invitation, verbatim canon, staged as held strikes (the mantra type
+stack and its held final phrase, the node's birth, the watch orbit),
+not read off a card. **(2)** The viewer is carried ONWARD visually:
 the Recommendation Current lands the eye on the workshop door (L19 — the
 place where building happens); the eighth node's birth shows the way
 onward is growth (L20); the watch orbit continues past the final word
@@ -551,3 +651,6 @@ the value now lives.*
 | §17A.6 | Estimate flags | **FORECLOSED (by measurement).** L3's missing word-times are NOT an undecided variable: they are foreclosed by a measurement mandate — Whisper-measure `line-L03-default.wav` before render, lock the Cards' arrival to the measured "accumulating," record the anchors in the build's score appendix. The same mandate is extended to L12: the segment's estimated anchors (≈29.45 / ≈30.35) are re-measured when the full build re-anchors the segment block; the halo pulse and Case return land measured, not estimated. |
 | §12/§14 | Foreclosures | **FORECLOSED:** SFX layer · ambience beds (narration + bed only, lane law) · mechanical loop seam (an excerpt/film ending on a scored fade has no loop to design) · word-by-word subtitle containers (the rationed-type form forecloses them). |
 | §3–§8 | Inherited compartments | **ENTAILED.** Objective, content, script text, delivery and voice are decided upstream in the tree (transcript v3 of record, phase-A7 adoptions, verified takes, gaps record) and entailed by those records; this score set inherits them decided and does not re-open them. |
+| §9A.1-A | Type-event set (amendment, 2026-10-28) | **DECIDED — the six-event ration is RETIRED** (owner doctrine from Hadi's #108 verdict: the closing mantra is the prime kinetic-type site; type appears wherever the words carry the story, every appearance fully decided). The film's set is now: F-T1 (L1) · F-T2 NOTHING (L6) · F-T3 HARNESS (L8) · F-T4 TWO PLACES (L9) · **M-T1** OPEN IT / READ IT / CHANGE IT plaques (L18) · **M-T2** UNDERSTAND tiles + F-T5 HARNESS (L19; F-T5 seat restaged into the mantra stack) · F-T6 BUILD (L20; seat restaged) · **M-T3** KEEP AN EYE ON IT plaques (L21; held through the tail — replaces the retired "type leaves"). Every other line carries a FORECLOSED type absence with its reason in the scene type notes. §9A.2's typeface decision extends to all mantra events. |
+| §9A.3-A | Word-plaque geometry (amendment, 2026-10-28) | **DECIDED.** Height 76 px; width = the word's measured glyph width at 46 px cap height in the chosen face + 56 px total padding (the measurement is a build step; the rule is the decision); corner radius 0.14 x height; fill NAVY #16233C; outline GOLD #D9A94E, width max(2, height/20) = 4 px; letters CREAM #F1E7CE, glyph height 46 px, centred. Entry: drop 26 px STAMP (easeOutBack 1.2), 0.22 s + squash scaleY .92->1.0 SETTLE 0.08 s; alpha materializes 0.10 s (M11 plaque rule). |
+| §17A.6-A | L3 measurement (amendment, 2026-10-28) | **DISCHARGED.** The L3 mandate is executed: faster-whisper "small" measured `line-L03-default.wav` (take duration 4.260 s, matching the A7 record); the per-word anchors are recorded in the L01-L04 score's Word anchors section and the Cards' arrival is locked to the measured "accumulating" (projected 9.416). L3 word-times are DECIDED from measurement. The L12 half of the mandate stands for the build. |

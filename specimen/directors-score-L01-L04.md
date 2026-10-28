@@ -56,7 +56,7 @@ rule.
 | L3 | 6.756 | 11.016 | Everything you build there sits inside their chat box, accumulating with every session. |
 | L4 | 11.416 | 14.456 | Your instructions. Your memory. Your files. |
 
-## Word anchors — measured, with one named exception
+## Word anchors — measured (all four lines; the L3 record discharged 2026-10-28)
 
 Source: `inherited-base/phases/phase-28/scene/scene-v2-default.json` words[]
 — measured per-word times on the takes of record (the v2 default programme;
@@ -66,23 +66,28 @@ projected timeline by line-start offset.
 - **L1:** One 1.372 · point 1.589 · two 1.915 · **billion 2.214** · people
   2.649 · use 3.029 · ChatGPT 3.246 · **every 3.681** · week. ends 4.395
 - **L2:** You 5.196 · are 5.375 · one 5.415 · of 5.544 · **them. 5.606–5.837**
+- **L3:** Everything 6.756 · you 7.136 · build 7.336 · there 7.536 ·
+  sits 7.796 · inside 8.016 · their 8.396 · chat 8.596 · **box, 8.816–9.176**
+  · **accumulating 9.416–10.036** · with 10.036 · every 10.236 ·
+  **session. 10.476–10.816** — measured 2026-10-28 (see the L3 record
+  below); clause 1 = 6.756–9.176, inter-clause pause 9.176–9.416,
+  clause 2 = 9.416–11.016.
 - **L4:** Your 11.564 · **instructions. 11.781–12.763** · Your 12.763 ·
   **memory. 12.981–13.879** · Your 13.879 · **files. 14.096–14.456**
 
-**★ L3 — MISSING RECORD, named, not estimated.** No word-times record exists
-for the phase-A7 L3 take (`phases/phase-A7/audio/line-L03-default.wav`,
-4.260 s): the A7 manifest ASR-verifies the take as a whole (fit 1.000) but
-records no per-word times, and the scene file's L3 words belong to the
-superseded v2 text and take. L3's beats below are therefore scored to
-**clause windows** (clause 1 "Everything you build there sits inside their
-chat box," ≈ 6.756–9.2 · clause 2 "accumulating with every session."
-≈ 9.2–11.016 — windows, not anchors). **Build step (mandatory):**
-Whisper-measure `line-L03-default.wav` before render; lock the Cards'
-arrival (Scene B, beat 2) to the measured start of "accumulating" and the
-clause-1 drift values to the measured clause boundary; record the measured
-anchors in the build's score appendix, by the segment score's appendix
-method. Nothing in this score estimates an L3 word time (defect-5 lesson:
-sync anchors are measured, or the gap is named).
+**★ L3 — MEASURED AND LOCKED (2026-10-28, JOB FULL-FILM SCORE CLOSURE —
+the missing-record mandate discharged).** The phase-A7 L3 take
+(`phases/phase-A7/audio/line-L03-default.wav`, 4.260 s — duration matches
+the A7 record) was measured with faster-whisper "small" (the L12
+measurement's method): per-word anchors are recorded in the list above
+(take-local + 6.756 = the projected times shown). **The locks, executed:**
+the Cards' arrival (Scene B, beat 2) starts on the measured
+**"accumulating" = 9.416** (arrival window 9.416–10.516); the clause
+windows are measured — clause 1 6.756–9.176 · pause 9.176–9.416 ·
+clause 2 9.416–11.016 — and the beat windows and glow ramps below are
+keyed to them. The shelf pulse (decay 10.3–10.9) brackets the measured
+landing (10.516) as written and stands. No L3 value in this score is an
+estimate.
 
 ## Viewer-learning expectations (viewer terms, written before production)
 
@@ -101,11 +106,16 @@ sync anchors are measured, or the gap is named).
   CAST.md's "breathes / turns / gestures" rows): the figure never moves in
   these scenes; address and emphasis are carried by staging, light-points,
   and the nodes.
-- **Kinetic type is a rationed cast member (C-29).** The full film carries
-  exactly six type events (F-T1 here; F-T2 NOTHING, F-T3 HARNESS, F-T4 TWO
-  PLACES in the segment; F-T5/F-T6 in the L13–L21 score). Type is
-  **deliberately absent at L2, L3, L4** — at L3/L4 the nouns are carried by
-  the nodes themselves; type would caption the inventory.
+- **Kinetic type — the C-29 ration is RETIRED (2026-10-28, owner
+  doctrine; governing amendment §9A.1-A).** Type appears wherever the
+  words carry the story, every appearance fully decided. In these
+  scenes: F-T1 (L1) stands; type is **FORECLOSED at L2, L3, L4, each
+  with its reason** (word-placement re-audit, 2026-10-28): at L2 the
+  singling point's descent IS the line made visible — type would
+  caption the mirror; at L3 accumulation is enacted by the Cards'
+  arrival into their slot; at L4 the named objects themselves answer
+  on their words, in order — type would caption an inventory the stage
+  is already speaking.
 - **No unscored stillness (defect-3 fix pattern):** every inter-line gap
   carries scored motion; events start early / overlap into the next beat.
 - **Legible energy scale (defect-1 lesson):** no stream appears in L1–L4;
@@ -181,6 +191,10 @@ box **(622,680)–(1072,1580)**; glass rect **(762,774)–(932,1413)**; case
 group pivot at the case centre (847,1130). Nodes inside the glass: Book
 w 105 centre (847,905) · Folder w 165 centre (847,1090) · Cards w 150 centre
 (847,1262). The Thread: bandB w 16 flat on the bottom shelf.
+**The Key** (`cast-design-1/assets/key.png`, expansion 2 — scored in the
+L13–L21 score's § New cast): rests OUTSIDE the glass on the floor at the
+Case's base, centre **(600,1518)**, **w 120**, lying horizontal — in
+their room, not yet his; it carries no event in these scenes.
 
 **Entry deltas (L3 start, 6.756).** Book and Folder are placed but **loose**:
 bright .85, unsynchronised drift (dx ±10 px sine; Book period 6.3 s, Folder
@@ -189,18 +203,20 @@ is scored. Interior glow α .42 (rising: →.46 across clause 1, →.48 across
 clause 2, →.50 across L4). Thread restless: shimmer (offset 6 px sine, 4 s)
 + lateral slide ±14 px, 3.2 s period, α .30.
 
-**Beat B·1 — L3 clause 1 (window ≈ 6.756–9.2).** The room holds its loose
+**Beat B·1 — L3 clause 1 (measured window 6.756–9.416, incl. the
+inter-clause pause).** The room holds its loose
 stock: two files drifting out of sync inside the glass, the thread restless,
 the glow rising slowly. Nothing links; nothing is his to touch. The viewer
 learns the container before its contents are named.
 
-**Beat B·2 — L3 clause 2 (window ≈ 9.2–11.016).** **The Cards arrive.**
+**Beat B·2 — L3 clause 2 (measured window 9.416–11.016).** **The Cards arrive.**
 From the glass's right-edge shadow (985,1262) the Cards slide to their slot
 (847,1262): dx −138→0, α 0→1, bright .85→1.0, 1.1 s easeOut, with a soft
 shelf pulse in the interior glow (+.06, decaying 10.3–10.9) as they land.
-Scored to the clause "accumulating with every session"; the build locks the
-entry start to the measured word **"accumulating"** (see the missing-record
-note). The stock has grown by one — inside their box, on their shelf.
+Scored to the clause "accumulating with every session"; the entry start is
+**locked to the measured word "accumulating" (9.416)** — arrival window
+9.416–10.516 (see the L3 record above). The stock has grown by one —
+inside their box, on their shelf.
 
 **Beat B·3 — L4 (11.416–14.456), measured anchors.** The inventory answers,
 in the line's own order; no links form; after each answer the value returns
@@ -224,12 +240,13 @@ the segment score without a seam.
 
 | beat | window | event | sync |
 |---|---|---|---|
-| B·1 | ≈6.756–9.2 | Loose stock drifts unlinked inside the glass; thread restless; glow rising | clause window (anchors missing — named) |
-| B·2 | ≈9.2–11.016 | The Cards arrive into their slot and settle; shelf pulse | locked to "accumulating" at build (measured then) |
+| B·1 | 6.756–9.416 | Loose stock drifts unlinked inside the glass; thread restless; glow rising | measured clause window (anchors locked 2026-10-28) |
+| B·2 | 9.416–11.016 | The Cards arrive into their slot and settle; shelf pulse | locked to measured "accumulating" 9.416 |
 | B·3 | 11.416–14.456 | The inventory answers in order; all values return to the locked opening state | instructions. 11.781 · memory. 12.981 · files. 14.096 |
 | B·gap | 14.456–15.256 | Shimmer + breathing only | defect-3 pattern |
 
-**Type:** absent at L3 and L4 (decided). **Web state:** scattered (L3),
+**Type:** FORECLOSED at L3 and L4 (reasons in the standing laws above —
+the arrival and the answering nodes carry those lines). **Web state:** scattered (L3),
 scattered — nodes answer, still unlinked (L4).
 
 ## Gates for these scenes (build-time, by the segment score's method)
@@ -279,11 +296,12 @@ curve's own.*
 | Thinker · Case | B·1–B·3 | **Decided stillness** (plates). The Case's glass sheen is static; its interior glow is the moving layer (below). |
 | case interior glow | B·1–B·3 | α value changes on **TRAVEL-value** ramps: .42→.46 (clause 1 window), →.48 (clause 2), →.50 across L4 — glow never steps. Cards-landing pulse: +.06 bump, **SWELL** decay 10.3–10.9. Gap breathing (B·gap): α .50 ±.01 **SWELL**, period 4 s. |
 | Book · Folder (loose drift) | B·1 | Sinusoidal dx ±10 px **SWELL-position**, periods 6.3 s (Book) / 5.1 s (Folder) — deliberately unsynchronised (v_peak ≈ 10 / 12 px/s), with a **decided damping envelope**: amplitude ×(1→0) LINEAR across 9.5–11.016, so the drift dies as L4 approaches. Bright .85 constant during drift; →1.0 TRAVEL-value across L4's first answers (Book by 12.95, Folder by 13.879). Idle after damping: node breathing (grammar) at the locked opening state. |
-| Cards (arrival) | B·2 | Entry path: straight horizontal slide (985,1262)→(847,1262), 138 px, **SETTLE**, 1.1 s window locked to "accumulating" at build (v_avg ≈ 125 px/s, ends at rest). α 0→1 **SETTLE** on the same window; bright .85→1.0 TRAVEL-value. **Overshoot: none** (decided — furniture settles, it does not bounce). **Anticipation: none** (decided — it comes out of the glass's shadow unannounced; the platform does not warn him). Settle: a 0.15 s scale breath 1.02→1.00 SETTLE on landing (the shelf takes the weight). |
+| Cards (arrival) | B·2 | Entry path: straight horizontal slide (985,1262)→(847,1262), 138 px, **SETTLE**, 1.1 s window **9.416–10.516, locked to the measured "accumulating" (9.416)** (v_avg ≈ 125 px/s, ends at rest). α 0→1 **SETTLE** on the same window; bright .85→1.0 TRAVEL-value. **Overshoot: none** (decided — furniture settles, it does not bounce). **Anticipation: none** (decided — it comes out of the glass's shadow unannounced; the platform does not warn him). Settle: a 0.15 s scale breath 1.02→1.00 SETTLE on landing (the shelf takes the weight). |
 | Cards (lift) | B·3 | Anticipation: dip +5 px down **TRAVEL**, 11.68–11.78. Lift: dy +5→−26 (31 px) **SETTLE**, 11.78–12.28 (v_avg ≈ 62 px/s), bright →1.08 SWELL-attack. Hold at −26 to 12.30. Return: dy →0 **TRAVEL**, 12.30–13.20, bright →1.0. Sync: lift starts on "instructions." (11.781). |
 | Book (glow answer) | B·3 | No path. Emphasis channel = glow + bright: warm glow disc α 0→.28 **SWELL** attack 12.95–13.30, hold to 13.60, decay →0 by 14.456; bright 1.0→1.30 **TRAVEL-value** 12.95–13.60, decay →1.0 by 14.456. The emphasis fully returns to the locked opening value — the join is exact in motion, not just in state. |
 | Folder (slide answer) | B·3 | Entry-from-edge: straight horizontal path from +34 px east (partially clipped by the glass's right interior edge — decided: it slides INTO view, it does not fade in), dx +34→0 **SETTLE**, 13.90–14.40 (v_avg ≈ 68 px/s), α .92→1.0 SETTLE on the same window. Sync: starts on "files." (14.096). |
 | the Thread (bandB w 16) | B·1–B·gap | Two scored idle motions, always running: shimmer — texture offset ±6 px **SWELL**, period 4 s; lateral slide ±14 px **SWELL-position**, period 3.2 s. α .30→.35 **TRAVEL-value** across L4, landing on the segment opening value .35. A band is never still while it is a live thread (grammar). |
+| the Key | B·1–B·gap | **Decided stillness** (floor furniture, a plate). α 1 from the scene's fade-in; bright .80. Anticipation none; emphasis foreclosed in these scenes (decided — the inventory carries L4's emphasis; the key is noticed, not featured). Rotation 0°. |
 
 **Gate addition (per the #107 doctrine):** Gate 4 (movement audit) from the
 L13–L21 score applies here unchanged — every rendered movement traces to a
@@ -312,10 +330,14 @@ this appendix.*
 | case interior glow (all ramps) | n/a (value) | ramps land on the locked values (.50 at 14.456) — the join is exact in motion (spec) | n/a | below the nodes, above the case body |
 | the Thread (L3–gap) | n/a | α lands on .35 (the segment's opening value) on TRAVEL-value | tangent-entailed | on the bottom shelf, below the nodes |
 | Thinker + Case (all beats) | — | — | 0° | decided stillness (spec); emphasis foreclosed for both in these scenes — the number and the inventory carry the emphasis |
+| the Key (all beats) | none — decided | n/a (it never arrives; it is simply there from the fade-in) | 0° | on the floor at the Case's base, z above the floor glow, below nothing; decided stillness (movement spec) |
 
-**L3 word-times — FORECLOSED by measurement** (governing closure
-§17A.6): the missing record named in this score is a build-time
-measurement mandate, not an undecided variable.
+**L3 word-times — DECIDED, from measurement** (2026-10-28, JOB
+FULL-FILM SCORE CLOSURE; governing amendment §17A.6-A): faster-whisper
+"small" measured the A7 take; the anchors are recorded in the Word
+anchors section and the Cards' arrival is locked to the measured
+"accumulating" (9.416). The former FORECLOSED-by-measurement state is
+discharged — nothing about L3 is estimated or pending.
 
 
 ## GOVERNING CLOSURE — film-wide (RE-AUDIT, 2026-10-28)
@@ -352,3 +374,6 @@ the value now lives.*
 | §17A.6 | Estimate flags | **FORECLOSED (by measurement).** L3's missing word-times are NOT an undecided variable: they are foreclosed by a measurement mandate — Whisper-measure `line-L03-default.wav` before render, lock the Cards' arrival to the measured "accumulating," record the anchors in the build's score appendix. The same mandate is extended to L12: the segment's estimated anchors (≈29.45 / ≈30.35) are re-measured when the full build re-anchors the segment block; the halo pulse and Case return land measured, not estimated. |
 | §12/§14 | Foreclosures | **FORECLOSED:** SFX layer · ambience beds (narration + bed only, lane law) · mechanical loop seam (an excerpt/film ending on a scored fade has no loop to design) · word-by-word subtitle containers (the rationed-type form forecloses them). |
 | §3–§8 | Inherited compartments | **ENTAILED.** Objective, content, script text, delivery and voice are decided upstream in the tree (transcript v3 of record, phase-A7 adoptions, verified takes, gaps record) and entailed by those records; this score set inherits them decided and does not re-open them. |
+| §9A.1-A | Type-event set (amendment, 2026-10-28) | **DECIDED — the six-event ration is RETIRED** (owner doctrine from Hadi's #108 verdict: the closing mantra is the prime kinetic-type site; type appears wherever the words carry the story, every appearance fully decided). The film's set is now: F-T1 (L1) · F-T2 NOTHING (L6) · F-T3 HARNESS (L8) · F-T4 TWO PLACES (L9) · **M-T1** OPEN IT / READ IT / CHANGE IT plaques (L18) · **M-T2** UNDERSTAND tiles + F-T5 HARNESS (L19; F-T5 seat restaged into the mantra stack) · F-T6 BUILD (L20; seat restaged) · **M-T3** KEEP AN EYE ON IT plaques (L21; held through the tail — replaces the retired "type leaves"). Every other line carries a FORECLOSED type absence with its reason in the scene type notes. §9A.2's typeface decision extends to all mantra events. |
+| §9A.3-A | Word-plaque geometry (amendment, 2026-10-28) | **DECIDED.** Height 76 px; width = the word's measured glyph width at 46 px cap height in the chosen face + 56 px total padding (the measurement is a build step; the rule is the decision); corner radius 0.14 x height; fill NAVY #16233C; outline GOLD #D9A94E, width max(2, height/20) = 4 px; letters CREAM #F1E7CE, glyph height 46 px, centred. Entry: drop 26 px STAMP (easeOutBack 1.2), 0.22 s + squash scaleY .92->1.0 SETTLE 0.08 s; alpha materializes 0.10 s (M11 plaque rule). |
+| §17A.6-A | L3 measurement (amendment, 2026-10-28) | **DISCHARGED.** The L3 mandate is executed: faster-whisper "small" measured `line-L03-default.wav` (take duration 4.260 s, matching the A7 record); the per-word anchors are recorded in the L01-L04 score's Word anchors section and the Cards' arrival is locked to the measured "accumulating" (projected 9.416). L3 word-times are DECIDED from measurement. The L12 half of the mandate stands for the build. |

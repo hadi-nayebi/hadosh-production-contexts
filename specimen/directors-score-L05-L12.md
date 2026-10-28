@@ -63,7 +63,10 @@ designed silence, so it does not depend on any single word time.
 Sound-off legibility; composition/overlay doctrine (A-S02 stage grammar: zones,
 lanes only in negative space, the one-touch rule, one change at a time, scheduled
 emptiness); consistency law (one file per character); animation ≠ moving pictures
-(every element lives and changes itself); kinetic type as a rationed cast member;
+(every element lives and changes itself); kinetic type under the post-ration
+rule (the C-29 ration retired 2026-10-28 — governing amendment §9A.1-A: type
+wherever the words carry the story, every appearance fully decided, every
+absence foreclosed with its reason);
 the faces/heads rule (the Thinker is faceless; streams never cross a subject;
 nothing covers a head).
 
@@ -103,8 +106,9 @@ case-born lives in one group (pivot at the case centre) so the exit is one reces
 | L6 | **Case recession 4.73–6.486, easeIn:** the whole Case group scales 1.0→.80 about its centre, drifts (+50, −30), α→0 — a complete exit. Thread ember pulse at 6.05–6.30 (bright ×2.2 bump) inside the receding group. | complete on "rented." (6.486) |
 | L6 | Tiles exit 6.50–6.85: shrink to centre + fade. Crossfade to Scene 2, 6.90–7.29. | — |
 
-**Type:** T1 only (NOTHING). Deliberately absent at L5: no type — the question is
-carried by the sink. **Web state:** the web is unborn — scattered, unlinked, darkening.
+**Type:** T1 only (NOTHING). FORECLOSED at L5 (word-placement re-audit,
+2026-10-28): the question is carried by the sink — light leaving the room;
+a typed question would pre-answer what the film is asking. **Web state:** the web is unborn — scattered, unlinked, darkening.
 
 ## SCENE 2 — A-S03 · The Mechanism Stage (6.90–14.357) · L7–L8
 
@@ -127,8 +131,9 @@ nodes draw over the bolt; appendix A-6); the bolt never enters the protected ell
 | L8 | **Link 2** (arc −56°→−14°) forms 13.45–13.70; point travels 13.58–14.05. **Combed exit bands:** three lanes (bandA/bandB/bandC, width 44) leave from ring +20° fanning to the bottom-right corner (offsets −16→−105 / 0 / +105 px); heads 0→640 px, easeInOut, 13.30–14.357; pulses ride lanes 1–2 at 13.75 / 14.00 (460 px/s). The bands are still leaving as the scene crossfades (14.10–14.357) — the exit completes inside the transition. | the layer, working |
 | — | **HARNESS tiles (T2):** 7 plaques (tile 64, pitch 70) centred (700, 300); stagger-rise from 12.90 + i·0.07 (rise 26 px, easeOutBack(1.2)); the word is complete as the sweep completes; exits with the scene fade. | assembles on "harness" |
 
-**Type:** T2 only. Deliberately absent at L7: no type at the strike — the picture
-carries it. **Web state:** born during L8 — nodes arrive, link, exchange, comb.
+**Type:** T2 only. FORECLOSED at L7 (word-placement re-audit, 2026-10-28):
+no type at the strike — the bolt IS the word "intelligence" made visible;
+type would caption the picture. **Web state:** born during L8 — nodes arrive, link, exchange, comb.
 
 ## SCENE 3 — A-S04 · The Two Homes (14.10–33.17) · L9–L12
 
@@ -157,8 +162,13 @@ L8 exit at the top: a still drape [(346,830)→(700,838)] continuing down a lane
 | L11 | Approach band pulses bright on **"different" (27.52)**; **Worn Link 2** (Book–Folder) forms 27.52; point travels 27.65–28.10. **Worn links persist** from L11 on (worn = established — recorded decision, applies at full-film scale too). | "different" (27.52) |
 | L12 | **The tableau:** both Models at w 150, both present (platform Model α restored by 29.45); **both halos pulse identically 29.45–30.05** (α .55→1.0→.55, same baked parameters — sameness by construction, not by eye). The custody Case **returns** 30.35–30.95 (α→.88, scale .94→1.0; platform house bright→.92) — place one is still there; the homes are the difference. His web stays lit: a point travels Book→Folder 30.45–31.05, another Cards→Book 31.60–32.10 (tail life). **Global fade to void 32.15–33.15**, aligned with the audio master fade. | "intelligence" ≈29.45 (est.) · "two different homes" ≈30.35 (est.) |
 
-**Type:** T3 only. Deliberately absent at L10, L11, L12: no type — three type events
-in 33 s is the ration; the custody and homecoming stories are carried by the cast.
+**Type:** T3 only. FORECLOSED at L10, L11, L12 (word-placement re-audit,
+2026-10-28 — reasons, not the retired ration): at L10 custody is *enacted*
+— the cards seat, the coil winds and locks, the Thinker flinches — so type
+would caption an enacted claim; at L11 the focus-pull glide IS the line
+("or you build it yourself" happens as motion), and type would double it;
+at L12 sameness is shown by construction (the identical halo pulses), and
+a SAME tile would caption what the staging proves.
 **Web state:** worn and unlit at L9–L10 (he watches place one with his own layer
 idle — that idleness is the point); links form at L11 and persist.
 
@@ -472,6 +482,9 @@ the value now lives.*
 | §17A.6 | Estimate flags | **FORECLOSED (by measurement).** L3's missing word-times are NOT an undecided variable: they are foreclosed by a measurement mandate — Whisper-measure `line-L03-default.wav` before render, lock the Cards' arrival to the measured "accumulating," record the anchors in the build's score appendix. The same mandate is extended to L12: the segment's estimated anchors (≈29.45 / ≈30.35) are re-measured when the full build re-anchors the segment block; the halo pulse and Case return land measured, not estimated. |
 | §12/§14 | Foreclosures | **FORECLOSED:** SFX layer · ambience beds (narration + bed only, lane law) · mechanical loop seam (an excerpt/film ending on a scored fade has no loop to design) · word-by-word subtitle containers (the rationed-type form forecloses them). |
 | §3–§8 | Inherited compartments | **ENTAILED.** Objective, content, script text, delivery and voice are decided upstream in the tree (transcript v3 of record, phase-A7 adoptions, verified takes, gaps record) and entailed by those records; this score set inherits them decided and does not re-open them. |
+| §9A.1-A | Type-event set (amendment, 2026-10-28) | **DECIDED — the six-event ration is RETIRED** (owner doctrine from Hadi's #108 verdict: the closing mantra is the prime kinetic-type site; type appears wherever the words carry the story, every appearance fully decided). The film's set is now: F-T1 (L1) · F-T2 NOTHING (L6) · F-T3 HARNESS (L8) · F-T4 TWO PLACES (L9) · **M-T1** OPEN IT / READ IT / CHANGE IT plaques (L18) · **M-T2** UNDERSTAND tiles + F-T5 HARNESS (L19; F-T5 seat restaged into the mantra stack) · F-T6 BUILD (L20; seat restaged) · **M-T3** KEEP AN EYE ON IT plaques (L21; held through the tail — replaces the retired "type leaves"). Every other line carries a FORECLOSED type absence with its reason in the scene type notes. §9A.2's typeface decision extends to all mantra events. |
+| §9A.3-A | Word-plaque geometry (amendment, 2026-10-28) | **DECIDED.** Height 76 px; width = the word's measured glyph width at 46 px cap height in the chosen face + 56 px total padding (the measurement is a build step; the rule is the decision); corner radius 0.14 x height; fill NAVY #16233C; outline GOLD #D9A94E, width max(2, height/20) = 4 px; letters CREAM #F1E7CE, glyph height 46 px, centred. Entry: drop 26 px STAMP (easeOutBack 1.2), 0.22 s + squash scaleY .92->1.0 SETTLE 0.08 s; alpha materializes 0.10 s (M11 plaque rule). |
+| §17A.6-A | L3 measurement (amendment, 2026-10-28) | **DISCHARGED.** The L3 mandate is executed: faster-whisper "small" measured `line-L03-default.wav` (take duration 4.260 s, matching the A7 record); the per-word anchors are recorded in the L01-L04 score's Word anchors section and the Cards' arrival is locked to the measured "accumulating" (projected 9.416). L3 word-times are DECIDED from measurement. The L12 half of the mandate stands for the build. |
 
 ## OWNER-1 RESOLUTION — 2026-10-28 — DECIDED (Archer; #109 closed by decision, not by Hadi's ruling)
 
