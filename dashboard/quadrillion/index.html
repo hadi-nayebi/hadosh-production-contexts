@@ -174,6 +174,33 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
  border:1px solid #33415e;border-radius:6px;padding:0 6px;font-size:12px;font-weight:400}
 .sec-body p,.sec-body li{text-align:left}
 .sec-body h3{font-size:19px;margin:18px 0 8px}
+/* ---- v15: dashboard-UX standard (custom-skills/dashboard-ux) ---- */
+body{font-size:18px;line-height:1.6}
+.yours-tag{color:#ff6b6b;font-weight:700;font-size:12.5px}
+.group-label{font-size:15px;letter-spacing:.08em;color:#9fb0c9;margin:20px 0 2px;font-weight:700}
+.tile .tstatus{display:block;font-size:14.5px;margin-top:6px}
+.tile .tstatus.needs{color:#ffd166}
+.tile .tstatus.ref{color:#9fb0c9}
+.totals{font-size:19px;font-weight:700}
+.sumcard{background:#1a2233;border:1px solid #33415e;border-radius:12px;padding:12px 14px;margin:12px 0;font-size:18px}
+.callzone{border:2px solid #ffd166;background:#1a2233;border-radius:12px;padding:6px 14px 12px;margin:14px 0}
+.revnote{border:2px solid #37d67a;background:#12241a;border-radius:12px;padding:12px 14px;margin:12px 0}
+details.chunk{border:1px solid #33415e;border-radius:10px;margin:10px 0;padding:0 12px}
+details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px 0;min-height:48px}
+.chunk-open{margin:10px 0}
+.sec-body li.ck.fam-choice::before{content:"DECISION";display:block;font-size:10.5px;letter-spacing:.07em;color:#8fa3c4;margin-bottom:2px}
+.sec-body li.ck.fam-conf::before{content:"DELIVERY CHECK";display:block;font-size:10.5px;letter-spacing:.07em;color:#8fa3c4;margin-bottom:2px}
+#pop{overflow:hidden}
+.pop-card{display:flex;flex-direction:column;max-height:calc(100vh - 20px)}
+#pop-stage{overflow:auto}
+.pop-foot{display:flex;gap:12px;align-items:center;justify-content:space-between;border-top:1px solid #33415e;padding-top:10px;margin-top:10px;flex-wrap:wrap}
+#pop-close2{min-height:52px;padding:12px 24px;font-size:17px;border-radius:10px;cursor:pointer}
+#pop-call{font-weight:700}
+#pop-saved{color:#37d67a;font-size:14.5px}
+.sb-note{font-size:15px;color:#cdd8ea;flex-basis:100%}
+#answers-count{font-weight:700;flex-basis:100%}
+.sec-body li.ck .cls{font-size:12.5px;color:#b9c6da}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 
 <body>
@@ -183,89 +210,95 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
 </nav>
 <section id="tab0" class="panel">
   <h1>Quadrillion — Tab 0 · Foundations</h1>
-  <p class="totals">52 items · 30 passing · stage gates 28 / 33 · Tab 0 = 85%</p>
-  <p class="how">Tap a tile — or hold it. <span class="rdot"></span> = it needs you.</p>
+  <p class="totals">Five things need your judgment — marked 🔴 yours. Everything else is reference.</p>
+  <p class="how">Tap a tile to open it. 🔴 = it needs you.</p>
+  <p class="group-label">YOUR CALLS</p>
   <div class="tiles">
-        <button class="tile" data-sec="objective"><span class="dot bad"></span><span class="tlabel">Objective</span><span class="frac">2 / 7</span><span class="yours">🔴 yours</span></button>
-        <button class="tile" data-sec="architecture"><span class="dot bad"></span><span class="tlabel">Story</span><span class="frac">6 / 16</span><span class="yours">🔴 yours</span></button>
-        <button class="tile" data-sec="titles"><span class="dot bad"></span><span class="tlabel">Pairs</span><span class="frac">4 / 6</span><span class="yours">🔴 yours</span></button>
-        <button class="tile" data-sec="thumbnails"><span class="dot bad"></span><span class="tlabel">Thumbnails</span><span class="frac">5 / 7</span><span class="yours">🔴 yours</span></button>
-        <button class="tile" data-sec="transcript"><span class="dot bad"></span><span class="tlabel">Transcript</span><span class="frac">3 / 5</span><span class="yours">🔴 yours</span></button>
-        <button class="tile" data-sec="facts"><span class="dot ok"></span><span class="tlabel">Facts</span><span class="frac">2 / 2</span></button>
-        <button class="tile" data-sec="learning"><span class="dot bad"></span><span class="tlabel">Learning</span><span class="frac">2 / 3</span></button>
-        <button class="tile" data-sec="alignment"><span class="dot ok"></span><span class="tlabel">Fit check</span><span class="frac">6 / 6</span></button>
-        <button class="tile" data-sec="iteration"><span class="dot flat"></span><span class="tlabel">Record</span><span class="frac">log</span></button>
+        <button class="tile" data-sec="objective"><span class="dot bad"></span><span class="tlabel">Objective</span><span class="frac">2 / 7</span><span class="tstatus needs">Needs your judgment</span><span class="yours">🔴 yours</span></button>
+        <button class="tile" data-sec="architecture"><span class="dot bad"></span><span class="tlabel">Story</span><span class="frac">6 / 16</span><span class="tstatus needs">Needs your judgment</span><span class="yours">🔴 yours</span></button>
+        <button class="tile" data-sec="titles"><span class="dot bad"></span><span class="tlabel">Pairs</span><span class="frac">4 / 6</span><span class="tstatus needs">Needs your picks</span><span class="yours">🔴 yours</span></button>
+        <button class="tile" data-sec="thumbnails"><span class="dot bad"></span><span class="tlabel">Thumbnails</span><span class="frac">5 / 7</span><span class="tstatus needs">Needs your choice</span><span class="yours">🔴 yours</span></button>
+        <button class="tile" data-sec="transcript"><span class="dot bad"></span><span class="tlabel">Transcript</span><span class="frac">3 / 5</span><span class="tstatus needs">Needs your call</span><span class="yours">🔴 yours</span></button>
+  </div>
+  <p class="group-label">REFERENCE</p>
+  <div class="tiles">
+        <button class="tile" data-sec="facts"><span class="dot ok"></span><span class="tlabel">Facts</span><span class="frac">2 / 2</span><span class="tstatus ref">Reference</span></button>
+        <button class="tile" data-sec="learning"><span class="dot bad"></span><span class="tlabel">Learning</span><span class="frac">2 / 3</span><span class="tstatus ref">Reference</span></button>
+        <button class="tile" data-sec="alignment"><span class="dot ok"></span><span class="tlabel">Fit check</span><span class="frac">6 / 6</span><span class="tstatus ref">Reference</span></button>
+        <button class="tile" data-sec="iteration"><span class="dot flat"></span><span class="tlabel">Record</span><span class="frac">log</span><span class="tstatus ref">Reference</span></button>
   </div>
   <div class="sendbar">
+    <p id="answers-count">Answers saved so far: 0</p>
+    <p class="sb-note">When you are done: Send opens GitHub in a new tab — one tap on Submit there files everything to me. Copy puts the same text on your clipboard without leaving this page. Your answers save on this device as you type.</p>
     <button id="sendbtn">Send my answers to Archer</button>
     <button id="copybtn">Copy my answers</button>
     <details class="expwrap"><summary>See the answers text</summary>
     <textarea id="export-box" readonly></textarea></details>
   </div>
   <div id="holders">
-<div class="holder" id="hold-objective" hidden><div class="sec" id="sec-objective"><div class="sec-body" id="body-objective">
-      <p class="statement">“Show language processing grown to industry scale from one 2017 idea — the road from predicting words to agents doing jobs.”</p>
+<div class="holder" id="hold-objective" hidden><div class="sec" id="sec-objective"><div class="chunk-open"><div class="sec-body" id="body-objective"><div class="sumcard"><strong>In short.</strong> The job of this video in one sentence. It was revised from your comment at 7:47 pm — the new sentence is in the green box below.</div><div class="popctl callzone"><h3>Your call</h3><p><button class="vbtn" data-vkey="objective">Objective — this is right</button></p><p>Or write what to change in a comment box above.</p></div><div class="revnote"><p><strong>Revised from your comment — Thu Oct 29, 7:47 pm.</strong></p><p>You wrote: “What about; show the scale of language processing indicating a new era begins, and what started it and and invite to follow our …”</p><p><strong>New objective (18 words):</strong> “Language processing at a scale opening a new era — where it started, and an invitation to follow.”</p><p>Clause check re-run: scale → lines P1–P9 · new era → P9 · where it started → P10–P15 · invitation to follow → P16+P17. Four clauses, four carried. The old sentence is kept in the Record.</p></div>
+      <p class="statement">“Language processing at a scale opening a new era — where it started, and an invitation to follow.”</p>
       <p>20 words (recounted) · scope: THE WHOLE VIDEO. The correction, in the open:</p>
       <p class="beat"><strong>The misalignment you named.</strong> The transcript talks about the numbers, the growth, the civilization-scale industry of language, the paper, prediction becoming a model of language, and the road this series teaches — from predicting the next word to agentic systems doing the job. <strong>Ownership appears nowhere in it.</strong> Two earlier objectives imported it anyway: the original ("…builds and owns their layer in it") and the five-pass doorway version <span class="old">("Show language grown vast from one 2017 idea — then ask who owns its layer, so the viewer builds theirs")</span>. The passes found the weld — the ownership clause carried by zero lines — and argued around it instead of obeying it. That is recorded here as the failure, not smoothed over.</p>
       <p class="beat"><strong>The re-derivation.</strong> From the transcript's own inventory, nothing else: scale (P1–P7) · era and industry (P8–P9) · the 2017 idea (P10–P15) · the road the series teaches (P16–P17). Every clause of the objective above is carried by named lines; the alignment section (8) checks exactly this, mechanically, and it FAILS both superseded objectives on this item — the check working as intended.</p>
       <p class="beat"><strong>Where ownership lives.</strong> It is the objective of "Who Owns Your Harness?" (soa-01) and of the harness line — a different video's job. This piece's close is its own: the series promise. The grafted ownership lines were removed from the fitted arrangement (section 5); their text stays in variant V-1, their home.</p>
-      <h3>Choice checklist — is this the best objective?</h3>
+      </div><details class="chunk" open><summary>Choice checklist — is this the best objective?</summary>
       <ul class="checks">
-        <li class="ck pass">☑ <span class="pass">PASS</span> — One sentence, states the viewer's end state, names no production detail, 20 words or fewer (20, recounted), no "and". <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Derived from the transcript alone: every clause maps to named lines (scale · industry · the 2017 idea · the road), verified in the alignment section. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — One sentence, states the viewer's end state, names no production detail, 20 words or fewer (18, recounted), no "and". <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Derived from the transcript alone: every clause maps to named lines (scale · new era · where it started · the invitation to follow), verified in the alignment section. <span class="cls stage">STAGE GATE</span></li>
       </ul>
-      <h3>Conformance checklist — the PUBLISH GATE: does the video deliver it?</h3>
+      </details><details class="chunk"><summary>Conformance checklist — the PUBLISH GATE: does the video deliver it?</summary>
       <ul class="checks">
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — A cold viewer can feel the scale and name the industry it became (comments / first-viewer evidence). <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — The viewer can state the road in one line: predicting the next word leads to agentic systems doing a job. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Title and thumbnail promise exactly this journey (the scale, the origin, or the growth — the pair's half of it). <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — The ending carries the viewer to the named next thing: the series, and following Hadosh Academy. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not"><span class="rdot" title="Needs you"></span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner confirmed — or Dot — against the final video. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — A cold viewer can feel the scale and name the industry it became (comments / first-viewer evidence). <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — The viewer can state the road in one line: predicting the next word leads to agentic systems doing a job. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — Title and thumbnail promise exactly this journey (the scale, the origin, or the growth — the pair's half of it). <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — The ending carries the viewer to the named next thing: the series, and following Hadosh Academy. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not"><span class="yours-tag">● yours</span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner confirmed — or Dot — against the final video. <span class="cls block">BLOCKS PUBLISH</span></li>
       </ul>
       <p><strong>The hook objective</strong> (separate, narrower — first 5 seconds only), corrected with the rest: “Land the number in five seconds: 3.2 quadrillion tokens a month, Google alone — a scale no intuition can hold.” Tension T-1 is DISSOLVED: it existed only because the old hook objective imported the ownership question; the hook's own lines carry no such question.</p>
-      <h3>Your comment</h3>
+      </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="objective" placeholder="Comment on the objective…"></textarea>
-    </div><div class="popctl"><h3>Your call</h3><p><button class="vbtn" data-vkey="objective">Objective — this is right</button></p><p>Or write what to change in a comment box above.</p></div></div></div>
-<div class="holder" id="hold-architecture" hidden><div class="sec" id="sec-architecture"><div class="sec-body" id="body-architecture">
+    </div></details></div></div>
+<div class="holder" id="hold-architecture" hidden><div class="sec" id="sec-architecture"><div class="chunk-open"><div class="sec-body" id="body-architecture"><div class="sumcard"><strong>In short.</strong> The shape of the story: number, uses, era, back to the 2017 origin, then the road to agents doing jobs.</div><div class="popctl callzone"><h3>Your call</h3><p><button class="vbtn" data-vkey="architecture">Story — this is right</button></p><p>Or write what to change in a comment box above.</p></div>
       <p class="statement">And: machines now process language at a monthly scale no one can picture. But: the scale defeats intuition — one month outweighs everything humanity ever wrote, and even saying it twice barely lands it. Therefore: trace it to the one idea it grew from, and follow the road that idea opens — from predicting words to agents doing jobs.</p>
-      <h3>Why this form (the transcript is the senior partner)</h3>
+      </div><details class="chunk" open><summary>Why this form (the transcript is the senior partner)</summary>
       <p>· The macro tension is the prose's OWN: its first movement exists to fight the unfeelability of its number — that is why the comparison and the deliberate repeat are in it. The resolution is also its own: an origin small enough to hold (one paper, one idea) and a road concrete enough to follow. The genesis keeps its nested mini-ABT (the holy grail against the breakthrough), unchanged — it was always the prose's. The ownership But from the fit iteration is REMOVED with its graft: it belonged to the superseded objective, and keeping it would rebuild the same contradiction (alignment section, item 1).</p>
       <p>· Alternatives stand rejected with their reasons, including — now formally — the ownership-But form: rejected because its But has no lines in this transcript.</p>
-      <h3>The beat map (this Short, as arranged in section 5)</h3>
+      </details><details class="chunk"><summary>The beat map (this Short, as arranged in section 5)</summary>
       <p class="beat"><strong>AND-1 · The Number:</strong> the figure (3.2 quadrillion a month, Google alone) → the growth (300× in two years) → the comparison (all written text ≈ a tenth of one month), said twice so it lands.</p>
       <p class="beat"><strong>AND-2 · The Uses:</strong> what this processing IS — searches answered in writing, voices turned to text, long documents summed up. The number becomes the viewer's own week.</p>
       <p class="beat"><strong>AND-3 · The Era:</strong> the stakes — this could be the era that multiplies cognitive power as industrialization multiplied physical power.</p>
       <p class="beat"><strong>AND-4 · The Origin (nested mini-ABT):</strong> the hinge question → a paper in 2017 → the holy grail it broke → predict the next word; a team builds around attention; the Transformer is born.</p>
       <p class="beat"><strong>THEREFORE · The Road:</strong> predicting the next word leads to agentic systems doing a job; the technology matured over nearly a decade; the series teaches that road — learn how it matured, and build an intuitive understanding of how to use it.</p>
-      <h3>Container capacities — restated for the corrected piece</h3>
+      </details><details class="chunk"><summary>Container capacities — restated for the corrected piece</summary>
       <p>Runtime class: the original's own (its published film ran 84.5 s). Fitted total: 221 words ≈ 79 s at the prose's published pace (2.80 words/s) to ~91 s at the canonical build's pace (2.43).</p>
       <p class="beat"><strong>Number:</strong> 5–6 sentences · 45–60 words. <strong>Uses:</strong> 2 sentences · 14–22 words. <strong>Era:</strong> 1 sentence · 15–22 words. <strong>Origin:</strong> 6 sentences · 85–100 words. <strong>Road:</strong> 2 sentences · 30–40 words.</p>
-      <h3>Choice checklist — is this the best architecture for this content?</h3>
+      </details><details class="chunk"><summary>Choice checklist — is this the best architecture for this content?</summary>
       <ul class="checks">
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Derived from the prose's performed structure (fit audit + alignment correction): the order, the repeat, and the stakes position are the prose's own. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Covers every content block with a structural job: scale · uses · era · origin · the road. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — The macro ABT is TRUE of the prose itself — figure, unfeelable scale, resolution by origin and road — verified line by line; no graft required. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — The But is the prose's own tension (a scale no intuition can hold), resolved by the comparison and the origin — no imported turn. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Fractal fit: the Short and the workshop long-form share this architecture; the fitted Short is the long-form's opening in miniature. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Alternatives evaluated and rejected with recorded reasons, including the ownership-But form in the alignment correction. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck not"><span class="rdot" title="Needs you"></span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner judgment recorded. Settled by iteration, including the fit revision and the alignment correction; awaiting your judgment — your feedback is the decision. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Derived from the prose's performed structure (fit audit + alignment correction): the order, the repeat, and the stakes position are the prose's own. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Covers every content block with a structural job: scale · uses · era · origin · the road. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — The macro ABT is TRUE of the prose itself — figure, unfeelable scale, resolution by origin and road — verified line by line; no graft required. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — The But is the prose's own tension (a scale no intuition can hold), resolved by the comparison and the origin — no imported turn. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Fractal fit: the Short and the workshop long-form share this architecture; the fitted Short is the long-form's opening in miniature. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Alternatives evaluated and rejected with recorded reasons, including the ownership-But form in the alignment correction. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice not"><span class="yours-tag">● yours</span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner judgment recorded. Settled by iteration, including the fit revision and the alignment correction; awaiting your judgment — your feedback is the decision. <span class="cls stage">STAGE GATE</span></li>
       </ul>
-      <h3>Conformance checklist — do the transcript, the visuals, and the final video match it?</h3>
+      </details><details class="chunk"><summary>Conformance checklist — do the transcript, the visuals, and the final video match it?</summary>
       <ul class="checks">
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Transcript: every line assigned to a named beat; no line outside the beat map. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Transcript: the origin lines perform the nested Therefore — the paper and prediction resolve the holy-grail tension — not a neutral lecture. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Transcript: one scale per comparison chain (the monthly scale); no derived re-scaling. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Visual story: scene changes land on beat boundaries; each beat's image carries that beat's claim, sound-off. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — The hook (first 5 s) is the opening figure, stated immediately, no preamble. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — The comparison is said twice, as the prose does it — the repeat is the landing device, not an accident. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — The close is the series promise and the only call to action; it names the road the series teaches. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Chekhov/bookend audit: every planted element pays off; the ending returns to the opening figure with new meaning. <span class="cls block">BLOCKS PUBLISH</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Final video verified against all items above (Hadi / Archer / Dot). <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — Transcript: every line assigned to a named beat; no line outside the beat map. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — Transcript: the origin lines perform the nested Therefore — the paper and prediction resolve the holy-grail tension — not a neutral lecture. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — Transcript: one scale per comparison chain (the monthly scale); no derived re-scaling. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — Visual story: scene changes land on beat boundaries; each beat's image carries that beat's claim, sound-off. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — The hook (first 5 s) is the opening figure, stated immediately, no preamble. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — The comparison is said twice, as the prose does it — the repeat is the landing device, not an accident. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — The close is the series promise and the only call to action; it names the road the series teaches. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — Chekhov/bookend audit: every planted element pays off; the ending returns to the opening figure with new meaning. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-conf not">☐ <span class="not">NOT PASSING</span> — Final video verified against all items above (Hadi / Archer / Dot). <span class="cls block">BLOCKS PUBLISH</span></li>
       </ul>
-      <h3>Your comment</h3>
+      </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="architecture" placeholder="Comment on the architecture…"></textarea>
-    </div><div class="popctl"><h3>Your call</h3><p><button class="vbtn" data-vkey="architecture">Story — this is right</button></p><p>Or write what to change in a comment box above.</p></div></div></div>
-<div class="holder" id="hold-titles" hidden><div class="sec" id="sec-titles"><div class="sec-body" id="body-titles">
+    </div></details></div></div>
+<div class="holder" id="hold-titles" hidden><div class="sec" id="sec-titles"><div class="chunk-open"><div class="sec-body" id="body-titles"><div class="sumcard"><strong>In short.</strong> Five title-and-thumbnail pairs, ranked. The green buttons under each pair set your publish three.</div><div class="popctl callzone"><p class="paircount">Your publish set: <strong id="paircount">0</strong> of 3 chosen.</p><p>Tap “Use pair … in my 3” under each pair you want. Tap again to take it out.</p></div>
       <p>Five pairs, built as single units — each thumbnail opens a thought its title completes. They are RANKED by my prediction, with reasons, and three are selected to publish (YouTube's test compares up to three, judged on watch time). The other two are reserves, not waste: one is the alternate for its promise, and one may belong to a different video entirely. Every pair sits below my 90 bar today (scores in section 4) — they iterate from your scores.</p>
       <div class="cand">
         <p class="big">Pair B — rank 1 · PUBLISH · Google Processes More Than Everything Ever Written</p>
@@ -292,21 +325,21 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
         <img class="pairimg" src="assets/img-titles-5.jpg" alt="Pair thumbnail D"><p class="pickrow"><button class="pairpick" data-pair="D">Use pair D in my 3</button></p>
         <p>Thumbnail: "FROM ONE WORD — TO ALL OF THIS", a single glowing bar widening into a flood. The thought the viewer cannot finish: <strong>"From one word — to all of WHAT?"</strong> Rank 5 for THIS video: its payoff is the final movement, the latest of the five, and the image is the most abstract. Recorded migration note: this pair leads with the road — it may fit the series' maturation video better than this one.</p>
       </div>
-      <h3>The publish plan and how it gets verified later</h3>
+      </div><details class="chunk" open><summary>The publish plan and how it gets verified later</summary>
       <p>· <strong>Publish 3: B, A, C</strong> — three different promises (growth · origin · scale), which is what a watch-time comparison can actually read. · On the long-form, YouTube's Test &amp; Compare runs the three and reports watch-time share; the winner becomes the standing packaging and the result is recorded back into this file. · In the Shorts feed there is no chosen thumbnail — the first seconds do this work — so there the verification is retention: does the opening hold past the promise the pair made (the figure in 5 s, the growth by beat two)? · Reserves: E swaps in if C's execution underperforms its promise; D is held for the maturation video unless you direct otherwise. · Every later change to a pair is a recorded revision here, never a silent swap.</p>
-      <h3>Checklist</h3>
+      </details><details class="chunk"><summary>Checklist</summary>
       <ul class="checks">
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Five pairs defined, each a title + thumbnail as one incomplete story, with its reasoning. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Every pair's unfinished-thought line is recorded — the specific thought the viewer cannot finish. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Predicted ranking recorded with reasons (payoff speed · gap strength · clarity), ties broken by gap strength. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Publish-3 selected, reserves and their roles recorded, and the later-verification plan written (watch-time test on the long-form; retention on the Short). <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck not"><span class="rdot" title="Needs you"></span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner judgment on the pairs and the publish-3 recorded (adjust the set above, or tell me in chat). <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Conformance: the final video delivers the published pairs' promises, and the first seconds match their framing. <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Five pairs defined, each a title + thumbnail as one incomplete story, with its reasoning. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Every pair's unfinished-thought line is recorded — the specific thought the viewer cannot finish. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Predicted ranking recorded with reasons (payoff speed · gap strength · clarity), ties broken by gap strength. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Publish-3 selected, reserves and their roles recorded, and the later-verification plan written (watch-time test on the long-form; retention on the Short). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice not"><span class="yours-tag">● yours</span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner judgment on the pairs and the publish-3 recorded (adjust the set above, or tell me in chat). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice not">☐ <span class="not">NOT PASSING</span> — Conformance: the final video delivers the published pairs' promises, and the first seconds match their framing. <span class="cls block">BLOCKS PUBLISH</span></li>
       </ul>
-      <h3>Your comment</h3>
+      </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="titles" placeholder="Comment on the pairs…"></textarea>
-    </div><div class="popctl"><p class="paircount">Your publish set: <strong id="paircount">0</strong> of 3 chosen.</p><p>Tap “Use pair … in my 3” under each pair you want. Tap again to take it out.</p></div></div></div>
-<div class="holder" id="hold-thumbnails" hidden><div class="sec" id="sec-thumbnails"><div class="sec-body" id="body-thumbnails">
+    </div></details></div></div>
+<div class="holder" id="hold-thumbnails" hidden><div class="sec" id="sec-thumbnails"><div class="sec-body" id="body-thumbnails"><div class="sumcard"><strong>In short.</strong> The five thumbnails — big, and at ten percent, the size they are judged at in a feed.</div>
       <p>Your verdict on the earlier sets — zero — is recorded at the top of this file. What was missing, in your words: curiosity. A bare year with arrows means nothing; an image earns the click when it starts a thought the viewer cannot finish — an unfinished phrase, an unexplained explosion, a number too big to believe. These five are built on exactly those mechanics, with a fuller color palette (cyan, amber, coral, teal on a deep navy field). Pairs D and E join the first three in this round — the set of five, ranked as pairs in section 3. Contrast computed from the design colors: white 19.43 · amber 10.83 · cyan 10.11 · coral 6.42 (coral is the floor — still clear for large display text). Each viewed at full size and at a 10% downscale before entering this file; two drawing defects (an overflowing headline, a colliding label) were caught in that viewing and fixed before this delivery.</p>
       <div class="cand">
         <p class="big">A · The unfinished phrase (pairs title A)</p>
@@ -351,21 +384,21 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
         <li class="ck pass">☑ <span class="pass">PASS</span> — Contrast computed, not eyeballed (white 19.43 · amber 10.83 · cyan 10.11 · coral 6.42). <span class="cls stage">STAGE GATE</span></li>
         <li class="ck pass">☑ <span class="pass">PASS</span> — Legibility viewed at a 10% downscale for all three (this iteration's build verification; two defects caught and fixed in that viewing). <span class="cls stage">STAGE GATE</span></li>
         <li class="ck pass">☑ <span class="pass">PASS</span> — Engagement scored per candidate on named dimensions (curiosity gap · legibility · pull · promise clarity), recorded with each candidate — so "is it inviting, is it engaging" is a scored judgment, not an impression. <span class="cls adv">ADVISORY</span></li>
-        <li class="ck not"><span class="rdot" title="Needs you"></span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner judgment on the pairs recorded (section 3's publish set, or tell me in chat). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck not"><span class="yours-tag">● yours</span> ☐ <span class="not">NOT PASSING</span> <span class="you">YOUR CALL</span> — Owner judgment on the pairs recorded (section 3's publish set, or tell me in chat). <span class="cls stage">STAGE GATE</span></li>
         <li class="ck not">☐ <span class="not">NOT PASSING</span> — Conformance: the final video's first shot matches the chosen thumbnail's promise. <span class="cls block">BLOCKS PUBLISH</span></li>
       </ul>
       <h3>Your comment</h3>
       <textarea class="comment" data-key="thumbnails" placeholder="Comment on the thumbnails…"></textarea>
     </div></div></div>
-<div class="holder" id="hold-transcript" hidden><div class="sec" id="sec-transcript"><div class="sec-body" id="body-transcript">
+<div class="holder" id="hold-transcript" hidden><div class="sec" id="sec-transcript"><div class="chunk-open"><div class="sec-body" id="body-transcript"><div class="sumcard"><strong>In short.</strong> Your original words are draft zero. The fitted arrangement runs about eighty seconds. Your call is the length.</div><div class="popctl callzone"><h3>D-1 · Length of the video — your call</h3><p><button class="d1btn" data-d1="accept">Accept about 80 seconds</button> <button class="d1btn" data-d1="hold">Hold the 65 second target</button></p><p>My recommendation is inside section 5: accept the longer class. The 65 second envelope was a leftover from the compression draft.</p></div>
       <p><strong>Seed (corrected 2026-10-29, on your identification):</strong> the ORIGINAL opening prose — WO-A, explainer packet variant "opening-hook-59", your text verbatim, 17 lines, 237 words. Source of record: the migration tree's source script, whose preservation rule is: narration verbatim, segmented at sentence boundaries — nothing rewritten, added, or cut. <strong>Status: DRAFT ZERO</strong> — the transcript stage selects and compresses from it; it does not start from a compression. Every line is editable here.</p>
 
-      <h3>AND-0 · Hook — capacity 9–13 words</h3>
+      </div><details class="chunk" open><summary>AND-0 · Hook — capacity 9–13 words</summary>
       <p>P1 (7 words)</p><textarea class="line-edit" data-key="P1">Over 3.2 quadrillion tokens processed every month.</textarea>
       <p>P2 (5 words)</p><textarea class="line-edit" data-key="P2">And that is Google alone.</textarea>
       <p class="verdict">Total 12 — FITS.</p>
 
-      <h3>AND-1 · Scale — capacity 20–30 words</h3>
+      </details><details class="chunk"><summary>AND-1 · Scale — capacity 20–30 words</summary>
       <p>P3 (11 words)</p><textarea class="line-edit" data-key="P3">Its monthly processing grew more than 300 times in two years.</textarea>
       <p>P4 (19 words)</p><textarea class="line-edit" data-key="P4">To understand the scale, consider this: the usable public text written by people is estimated at 300 trillion tokens.</textarea>
       <p>P5 (8 words)</p><textarea class="line-edit" data-key="P5">That's about a tenth of Google's monthly volume.</textarea>
@@ -373,12 +406,12 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
       <p>P7 (17 words)</p><textarea class="line-edit" data-key="P7">Every month, Google alone processes more than ten times the estimated usable public text written by people.</textarea>
       <p class="verdict">Total 60 — OVER the Short capacity by 30. The block carries the original's deliberate repeat (P6–P7): the ratio, said twice so it lands. A decided feature of the original, not an accident.</p>
 
-      <h3>Era / stakes — in the prose this sits between scale and genesis (33 words)</h3>
+      </details><details class="chunk"><summary>Era / stakes — in the prose this sits between scale and genesis (33 words)</summary>
       <p>P8 (14 words)</p><textarea class="line-edit" data-key="P8">We, as a civilization, with our machines, are now processing language at this scale.</textarea>
       <p>P9 (19 words)</p><textarea class="line-edit" data-key="P9">If industrialization multiplied humanity's physical power, this could be the start of an era that multiplies humanity's cognitive power.</textarea>
       <p class="verdict">ORDER DIFFERENCE, recorded: the prose states the era BEFORE explaining its origin (the origin then answers "what set this in motion?"). The architecture (section 2) places the stakes function after the genesis. Part of your architecture judgment.</p>
 
-      <h3>AND-2 · Genesis — capacity 40–55 words</h3>
+      </details><details class="chunk"><summary>AND-2 · Genesis — capacity 40–55 words</summary>
       <p>P10 (19 words)</p><textarea class="line-edit" data-key="P10">What set this in motion? The trail leads back to a paper from 2017: Attention Is All You Need.</textarea>
       <p>P11 (17 words)</p><textarea class="line-edit" data-key="P11">By then, building AI models that could understand and translate language had long been a holy grail.</textarea>
       <p>P12 (15 words)</p><textarea class="line-edit" data-key="P12">Learning to predict the next word offered a way to learn the patterns of language.</textarea>
@@ -387,19 +420,19 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
       <p>P15 (15 words)</p><textarea class="line-edit" data-key="P15">The Transformer was born: a mathematical structure that could learn from vast collections of text.</textarea>
       <p class="verdict">Total 95 — OVER the Short capacity by 40. The original's genesis is FULL: the paper, the holy grail, prediction, the team, attention, the Transformer. (The "empty genesis containers" in the earlier Tab 0 were the consolidation's cuts, not the original's gaps.) The prose's mini-But is implicit — the holy grail is the decades-long difficulty; there is no wall-of-rules line.</p>
 
-      <h3>BUT · Ownership — capacity 22–32 words</h3>
+      </details><details class="chunk"><summary>BUT · Ownership — capacity 22–32 words</summary>
       <p class="verdict">EMPTY in the original. The prose has no ownership beat — no layer, no "who owns it". That turn exists only in the variants below (the consolidation invented it). Whether the Short builds the But as new writing at the transcript stage is part of your architecture judgment.</p>
 
-      <h3>THEREFORE · Close — capacity 16–24 words</h3>
+      </details><details class="chunk"><summary>THEREFORE · Close — capacity 16–24 words</summary>
       <p>P16 (18 words)</p><textarea class="line-edit" data-key="P16">In this series, we will learn how predicting the next word leads to agentic systems doing a job.</textarea>
       <p>P17 (19 words)</p><textarea class="line-edit" data-key="P17">Learn how this technology matured over nearly a decade, and build an intuitive understanding of how to use it.</textarea>
       <p class="verdict">Total 37 — OVER by 13. The original's close is a series promise: prediction leads to agentic systems doing a job; the technology matured over nearly a decade; build an intuitive understanding of how to use it. The Academy build-your-own-harness ending is NOT in the original — it lives in the variants.</p>
 
-      <h3>Variants (later descendants of the seed — reference, not draft zero)</h3>
+      </details><details class="chunk"><summary>Variants (later descendants of the seed — reference, not draft zero)</summary>
       <p><strong>V-1 · The 2026-10-28 consolidation (14 lines, 145 words).</strong> A deliberate rewrite against retention evidence: rate-first hook ("One billion tokens, every second"), the comparison cut to once, the origin compressed to two lines, the series close replaced by the ownership question, the workshop promise, and the Academy ending ("Follow Hadosh Academy — and build your own harness"). Full text: the frozen tree's transcript record.</p>
       <p><strong>V-2 · The 2026-10-29 v4 restructure (13 lines, 137 words).</strong> V-1 re-ordered under your hook decision (figure first, the rate line removed): the figure, the growth, the comparison once, the lifetime line, the framing question, the paper, the mechanism, the analogy, the model as electricity, the layer, the ownership question, the workshop promise, the Academy ending. This was the seed in Tab 0 v7 — the wrong seed, corrected here.</p>
 
-      <h3>The fitted arrangement — Tab 0's proposal for the transcript stage</h3>
+      </details><details class="chunk"><summary>The fitted arrangement — Tab 0's proposal for the transcript stage</summary>
       <p>How draft zero and the architecture were fitted (fit iteration, then the ALIGNMENT CORRECTION of 2026-10-29 18:50 ET). <strong>Survival: 204 of the prose's 237 words reach the fitted piece (86%).</strong> Dropped, with reasons: P4 (19 w — its archive setup is restated tighter by P5 + P7), P8 (14 w — an era restatement; P9 carries era + stakes in one line). Added: the uses beat (2 lines, NEW — your directed addition, derived in the 17:59 derivation table). <strong>Removed in the alignment correction: the ownership graft (G1–G5, 57 w)</strong> — it served the superseded objective, not this transcript; its text lives in variant V-1. P17 now stands in full, as written. Order follows the corrected architecture (section 2).</p>
       <p class="beat"><strong>AND-1 · The Number (53 w):</strong> P1 · P2 · P3 · P5 · P6 · P7 — figure, growth, the comparison said twice.</p>
       <p class="beat"><strong>AND-2 · The Uses (17 w, NEW):</strong> U1 "Every search comes back as a written answer." (8) · U2 "Every voice becomes text; every long document, a summary." (9)</p>
@@ -408,35 +441,35 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
       <p class="beat"><strong>THEREFORE · The Road (37 w):</strong> P16 (18) · P17 (19, in full) — prediction leads to agentic systems doing a job; the series teaches how it matured and how to use it.</p>
       <p><strong>Fitted total: 221 words</strong> ≈ 79 s at the prose's own published pace (2.80 words/s) to ~91 s at the canonical build's pace (2.43). The transcript tab finalizes wording; this arrangement is Tab 0's fitted proposal, not the locked transcript.</p>
 
-      <h3>Budget and the open decision D-1 (reframed)</h3>
+      </details><details class="chunk"><summary>Budget and the open decision D-1 (reframed)</summary>
       <p>Draft zero alone: 237 words ≈ 98 s at the measured Short pace; its own published film ran 84.5 s. <strong>D-1 (open) <span class="you">YOUR CALL</span> carries Tab 0's recommendation, strengthened by the alignment correction:</strong> with the graft gone, the fitted piece runs 221 words ≈ 79–91 s — the original's own runtime class, nearly exact. Recommendation: accept this class; deeper cuts would have to come out of the genesis or the repeat, the two places the earlier compression cut and was judged for it. Recorded openly; nothing pre-cut.</p>
-      <h3>Checklist</h3>
+      </details><details class="chunk"><summary>Checklist</summary>
       <ul class="checks">
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Seed provenance recorded and corrected: the original opening prose, verbatim, source of record named. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Every seed line mapped to a container, word counts recounted from the text (sum verified: 237). <span class="cls adv">ADVISORY</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Gaps and overflow exposed against the true seed: the But empty; scale over by 30, genesis over by 40, close over by 13; the era/stakes order difference recorded. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck not"><span class="rdot" title="Needs you"></span> ☐ <span class="not">NOT PASSING</span> — Selection and compression from draft zero decided, wording finalized (the transcript tab's work). <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck not"><span class="rdot" title="Needs you"></span> ☐ <span class="not">NOT PASSING</span> — D-1 runtime decision recorded. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Seed provenance recorded and corrected: the original opening prose, verbatim, source of record named. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Every seed line mapped to a container, word counts recounted from the text (sum verified: 237). <span class="cls adv">ADVISORY</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Gaps and overflow exposed against the true seed: the But empty; scale over by 30, genesis over by 40, close over by 13; the era/stakes order difference recorded. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice not"><span class="yours-tag">● yours</span> ☐ <span class="not">NOT PASSING</span> — Selection and compression from draft zero decided, wording finalized (the transcript tab's work). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice not"><span class="yours-tag">● yours</span> ☐ <span class="not">NOT PASSING</span> — D-1 runtime decision recorded. <span class="cls stage">STAGE GATE</span></li>
       </ul>
-      <h3>Your comment</h3>
+      </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="transcript" placeholder="Comment on the transcript…"></textarea>
-    </div><div class="popctl"><h3>D-1 · Length of the video — your call</h3><p><button class="d1btn" data-d1="accept">Accept about 80 seconds</button> <button class="d1btn" data-d1="hold">Hold the 65 second target</button></p><p>My recommendation is inside section 5: accept the longer class. The 65 second envelope was a leftover from the compression draft.</p></div></div></div>
-<div class="holder" id="hold-facts" hidden><div class="sec" id="sec-facts"><div class="sec-body" id="body-facts">
+    </div></details></div></div>
+<div class="holder" id="hold-facts" hidden><div class="sec" id="sec-facts"><div class="chunk-open"><div class="sec-body" id="body-facts"><div class="sumcard"><strong>In short.</strong> Every number in the film, and where it came from. Reference — nothing needed from you here.</div>
       <p><strong>F1 · 3.2 quadrillion tokens a month, Google.</strong> Sundar Pichai, Google I/O 2026, as carried in the Academy's content packet. Single source: the company's CEO, on stage. The piece states it as Google's figure ("Google alone") — the honest frame.</p>
       <p><strong>F2 · Trajectory 9.7 trillion/month (2024) → 480 trillion (2025) → 3.2 quadrillion (2026).</strong> Same source family. Arithmetic recomputed: 3.2×10^15 ÷ 9.7×10^12 ≈ 330 — "more than three hundred times in two years" holds.</p>
       <p><strong>F3 · All usable public text ≈ 300 trillion tokens.</strong> Epoch AI estimate, 2024. Arithmetic recomputed: 300×10^12 ÷ 3.2×10^15 ≈ 0.094 — "about a tenth of one month" holds.</p>
       <p><strong>F4 · "Attention Is All You Need," 2017, Vaswani et al.</strong> The Transformer paper. Bibliographic fact.</p>
       <p><strong>F5 · "More language than a lifetime of reading."</strong> A rhetorical comparison, checked directionally: an extreme reading lifetime (≈250 words/minute, 16 hours a day, 80 years ≈ 7×10^9 words) sits ~460,000× below one month. Conservative; safe. (Corrected in pass 9 — the baseline's figure was wrong; the true arithmetic makes the line more conservative, not less.)</p>
       <p><strong>F6 · "The model is the electricity."</strong> The piece's chosen metaphor (the canon utility term), not a factual claim; its fairness clause ("the same for everyone") states the model's general availability.</p>
-      <h3>Checklist</h3>
+      </div><details class="chunk" open><summary>Checklist</summary>
       <ul class="checks">
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Every number the piece uses carries its source and status. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Every derived figure's arithmetic recomputed (pass 9: F2 ✓ · F3 ✓ · F5 corrected). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Every number the piece uses carries its source and status. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Every derived figure's arithmetic recomputed (pass 9: F2 ✓ · F3 ✓ · F5 corrected). <span class="cls stage">STAGE GATE</span></li>
       </ul>
-      <h3>Your comment</h3>
+      </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="facts" placeholder="Comment on the facts…"></textarea>
-    </div></div></div>
-<div class="holder" id="hold-learning" hidden><div class="sec" id="sec-learning"><div class="sec-body" id="body-learning">
+    </div></details></div></div>
+<div class="holder" id="hold-learning" hidden><div class="sec" id="sec-learning"><div class="chunk-open"><div class="sec-body" id="body-learning"><div class="sumcard"><strong>In short.</strong> What the viewer walks away knowing, part by part. Reference — nothing needed from you here.</div>
       <p class="beat"><strong>AND-0:</strong> language processing runs at 3.2 quadrillion tokens a month — one company. (P1, P2)</p>
       <p class="beat"><strong>AND-1:</strong> it grew more than 300 times in two years (P3); all usable public text ever written ≈ 300 trillion tokens (P4) — about a tenth of one month (P5), said twice so it lands (P6, P7).</p>
       <p class="beat"><strong>Era / stakes:</strong> civilization, with its machines, now processes language at this scale (P8); this could be the era that multiplies cognitive power as industrialization multiplied physical power (P9).</p>
@@ -445,30 +478,30 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
       <p class="beat"><strong>AND-2 (fitted):</strong> what this processing IS in the viewer's own week — searches answered in writing, voices turned to text, long documents summed up. (U1, U2 — new lines, derived.)</p>
       <p class="beat"><strong>THEREFORE · The Road:</strong> predicting the next word leads to agentic systems doing a job, and this series teaches that road — how the technology matured over nearly a decade, and how to use it. (P16, P17 — both present in draft zero, in full.)</p>
       <p><strong>Ownership is NOT this video's learning.</strong> An earlier map carried it as a gap and the fit filled it with a graft; the alignment correction removed both the gap and the graft. Ownership is taught by "Who Owns Your Harness?" — this piece's pair in the harness lane. This video's learnings are the scale, the uses, the era, the origin, and the road — each with its lines, checked in the alignment section.</p>
-      <h3>Checklist</h3>
+      </div><details class="chunk" open><summary>Checklist</summary>
       <ul class="checks">
-        <li class="ck pass">☑ <span class="pass">PASS</span> — A learning is stated for every container, in viewer terms. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Every learning checked against its lines: re-mapped in the alignment correction — scale, uses, era, origin, and road each name their lines in draft zero; no learning is carried by added material alone. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck not">☐ <span class="not">NOT PASSING</span> — Conformance: the final video demonstrably delivers each learning (sound-off and sound-on). <span class="cls block">BLOCKS PUBLISH</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — A learning is stated for every container, in viewer terms. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Every learning checked against its lines: re-mapped in the alignment correction — scale, uses, era, origin, and road each name their lines in draft zero; no learning is carried by added material alone. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice not">☐ <span class="not">NOT PASSING</span> — Conformance: the final video demonstrably delivers each learning (sound-off and sound-on). <span class="cls block">BLOCKS PUBLISH</span></li>
       </ul>
-      <h3>Your comment</h3>
+      </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="learning" placeholder="Comment on the learning map…"></textarea>
-    </div></div></div>
-<div class="holder" id="hold-alignment" hidden><div class="sec" id="sec-alignment"><div class="sec-body" id="body-alignment">
+    </div></details></div></div>
+<div class="holder" id="hold-alignment" hidden><div class="sec" id="sec-alignment"><div class="chunk-open"><div class="sec-body" id="body-alignment"><div class="sumcard"><strong>In short.</strong> Six checks that the parts of this page agree with each other. All passing. Reference.</div>
       <p>Why this family exists: the earlier checklists verified each element on its own (form, counts, evidence) — and an objective could pass its own checklist while contradicting the transcript, because no item CHECKED one element against another. These items do only that. Each passes only when the mapping between the two elements is shown in this file; a changed element re-runs its items. Proof the family works: <strong>item 1 FAILS both superseded objectives</strong> (their ownership clauses map to zero transcript lines) — recorded in section 1.</p>
-      <h3>Checklist — the contradiction checks</h3>
+      </div><details class="chunk" open><summary>Checklist — the contradiction checks</summary>
       <ul class="checks">
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Objective ↔ transcript: every clause of the objective maps to named transcript lines, and no clause needs material the transcript does not contain (mapping: section 1). <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Architecture ↔ transcript: every beat has lines and every line has a beat, in the same order (mapping: sections 2 and 5). <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Titles + thumbnails ↔ objective: each pair's promise is one of the objective's own journeys (the scale, the growth, the origin, the comparison, the road) — none promises a turn the video does not take. <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Viewer-learning ↔ lines: every stated learning names the lines that deliver it; no learning is carried by added material alone (section 7). <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Hook ↔ objective: the hook objective serves the objective's first clause (the scale) and imports nothing beyond it (T-1 dissolved, section 1). <span class="cls stage">STAGE GATE</span></li>
-        <li class="ck pass">☑ <span class="pass">PASS</span> — Fitted arrangement ↔ architecture: the arrangement's order and contents match the beat map, movement for movement (sections 2 and 5). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Objective ↔ transcript: every clause of the objective maps to named transcript lines, and no clause needs material the transcript does not contain (mapping: section 1). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Architecture ↔ transcript: every beat has lines and every line has a beat, in the same order (mapping: sections 2 and 5). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Titles + thumbnails ↔ objective: each pair's promise is one of the objective's own journeys (the scale, the growth, the origin, the comparison, the road) — none promises a turn the video does not take. <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Viewer-learning ↔ lines: every stated learning names the lines that deliver it; no learning is carried by added material alone (section 7). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Hook ↔ objective: the hook objective serves the objective's first clause (the scale) and imports nothing beyond it (T-1 dissolved, section 1). <span class="cls stage">STAGE GATE</span></li>
+        <li class="ck fam-choice pass">☑ <span class="pass">PASS</span> — Fitted arrangement ↔ architecture: the arrangement's order and contents match the beat map, movement for movement (sections 2 and 5). <span class="cls stage">STAGE GATE</span></li>
       </ul>
-      <h3>Your comment</h3>
+      </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="alignment" placeholder="Comment on the alignment checks…"></textarea>
-    </div></div></div>
-<div class="holder" id="hold-iteration" hidden><div class="sec" id="sec-iteration"><div class="sec-body" id="body-iteration">
+    </div></details></div></div>
+<div class="holder" id="hold-iteration" hidden><div class="sec" id="sec-iteration"><div class="chunk-open"><div class="sec-body" id="body-iteration"><div class="sumcard"><strong>In short.</strong> The open record — every pass over this page and what changed. Reference.</div>
       <p>This tab was built by the documented method (branches/AGENTS.md): a baseline assembled from the record, then numbered passes, each a named audit, with every correction made in the open and logged. The full log — every finding, every corrected number — lives in this file's metadata layer (view source). Summary:</p>
       <p class="beat"><strong>Pass 0</strong> — baseline assembled; counts and reasoning recorded unchecked.</p>
       <p class="beat"><strong>Pass 1</strong> — objective reasoning traced to the record; the two-jobs resolution added; tension T-1 flagged openly.</p>
@@ -487,7 +520,7 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
       <p class="beat"><strong>Fit iteration</strong> — on your direction (18:19 ET): the transcript (~80% stable) and the architecture fitted to each other. Fit audit ran; architecture revised (deep And, stakes in the prose's position, the But grafted from V-1); fitted arrangement built (268 words; 82% of the prose survives; drops and additions each derived); objective re-checked and kept; titles and thumbnails re-derived from a 32-source craft study and rebuilt — viewed at full and 10% size, contrast computed. Full entries in the metadata layer.</p>
       <p class="beat"><strong>Seed correction</strong> — on your identification (18:09 ET): draft zero was the v4 compression, not the original opening — my unapproved seed choice, carried in from an unanswered clarification. Replaced with the original prose (17 lines, 237 words, verbatim), everything re-mapped; the difference measured (42% shorter by words; ~59% of the original absent; ~46% new writing). Full entry in the metadata layer.</p>
       <p class="beat"><strong>Build verification</strong> — thumbnails drawn and viewed at full and 10% size; B failed its depicts test on first render and was redesigned before delivery; contrast computed (white 19.63 · amber 10.94).</p>
-      <h3>Your comment</h3>
+      </div><details class="chunk" open><summary>Your comment</summary>
       <textarea class="comment" data-key="iteration" placeholder="Comment on the process…"></textarea>
     
       <h3>Pass 14 — 2026-10-29 · v14, the hosted form</h3>
@@ -498,6 +531,14 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
         <li>Count correction, in the open: v13's text said 35 stage-gate items and 80%. The true stage-gate count is 33 items, 28 passing — 85%. The 52 total items (30 passing, 22 not) were and remain correct; the 17 publish-blocking items can only pass against the finished video.</li>
         <li>Listen buttons replaced by recorded section audio (real files in the asset directory), so sound no longer depends on the viewing app's speech engine.</li>
         <li>Pass 14.1 — style of the checklist rows re-derived after Hadi's phone screenshot ("Style?"): the v13 stylesheet's giant filled, centred pills were inherited-unexamined — carried into v14 without re-deriving against the BDA guide. Rows are now quiet and left-aligned: thin status bar, coloured PASS / NOT PASSING word, one small class label. Audio players now preload metadata, so durations show before play is pressed.</li>
+      </ul>
+
+      <h3>Pass 15 — 2026-10-29 · v15, the UX rebuild</h3>
+      <ul>
+        <li>Hadi's verdict on v14, in his words: “No UX at all, score 0 for UX design and UI.” He ordered twenty problems listed and fixed. The audit ran against the British Dyslexia Association guide and the progressive-disclosure pattern, under the new governing document for review surfaces (the dashboard-ux skill, created this pass — work runs inside a named skill, per the anti-improvisation rule).</li>
+        <li>The twenty, each fixed in this version: (1) call controls sat below the content — now the call zone sits at the top of every popup, under a two-line summary; (2) no summary — every popup opens with an “In short” card; (3) endless scroll — detail now lives in labelled collapsible chunks; (4) comment boxes scattered — they stay with their lines, inside the collapsed chunks; (5) giant type, six words a line — base type is now 18 px with a 1.6 line height; (6) tiles spoke in fractions — each tile now carries a plain status word; (7) the four-number stats line — replaced by one sentence; (8) red meant two things — the engagement mark is now “● yours” in words, and NOT PASSING keeps its word; (9) decisions and reference looked equal — tiles are grouped YOUR CALLS / REFERENCE; (10) hold-to-open was undiscoverable — tap is now the taught gesture; (11) the back button left the site — it now closes the popup; (12) saving was invisible — the popup footer confirms “Saved on this device” and the page counts his answers; (13) Send was unexplained — the send bar now says where it goes and offers Copy without leaving; (14) one button look for three acts — each call zone is labelled (Your call / your publish set / D-1 length); (15) checklist families unlabelled — every row now carries DECISION or DELIVERY CHECK; (16) audio came before the point — the player now sits under the call zone; (17) small gray text — raised to size and contrast floors; (18) popup chrome scrolled away — header and footer are fixed, the middle scrolls; (19) background scroll and unguarded motion — the page locks behind a popup and reduced-motion is honoured; (20) no finish line — the send bar is the finish line, with the saved count.</li>
+        <li>Objective revised from Hadi's comment in this page (typed in the objective comment box, screenshotted to Archer 19:47 ET): his four beats — show the scale of language processing, a new era begins, what started it, invite to follow. Old objective: “Show language processing grown to industry scale from one 2017 idea — the road from predicting words to agents doing jobs.” New objective (18 words): “Language processing at a scale opening a new era — where it started, and an invitation to follow.” Clause check re-run (gate F9): scale → P1–P9 · new era → P9 · where it started → P10–P15 · invitation to follow → P16+P17 — four clauses, four carried, zero without a carrier.</li>
+        <li>Governing document for this layer: dashboard-ux skill v1. Phase: Execute → Verify of the dashboard-UX cycle (tap test on this version follows in the record).</li>
       </ul>
 </div></div></div>
   </div>
@@ -511,13 +552,46 @@ ITERATION LOG (the method is documented in branches/AGENTS.md; the working draft
     <div class="pop-head"><h2 id="pop-title"></h2><button id="pop-close">✕ Close</button></div>
     <audio id="pop-audio" controls preload="metadata"></audio>
     <div id="pop-stage"></div>
+    <div class="pop-foot"><span id="pop-call"></span><span id="pop-saved"></span><button id="pop-close2">Close</button></div>
   </div>
 </div>
 
 <script>
 var KEY = 'quadrillion-tab0-v1';
 function store() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} flashSaved(); countAnswers(); refreshCallStatus(); }
+function flashSaved() {
+  var el = document.getElementById('pop-saved');
+  if (el) el.textContent = 'Saved on this device ✓';
+}
+function countAnswers() {
+  var d = store(); var n = 0;
+  if (d.v_objective) n++;
+  if (d.v_architecture) n++;
+  if (d.d1) n++;
+  n += (d.pairs || []).length;
+  document.querySelectorAll('textarea.comment').forEach(function (t) {
+    var v = d['ta:' + t.getAttribute('data-key')];
+    if (typeof v === 'string' && v.trim()) n++;
+  });
+  var el = document.getElementById('answers-count');
+  if (el) el.textContent = 'Answers saved so far: ' + n;
+}
+function refreshCallStatus() {
+  var el = document.getElementById('pop-call');
+  if (!el) return;
+  var d = store(); var t = '';
+  if (curSec === 'objective' || curSec === 'architecture') {
+    t = d['v_' + curSec] ? 'Your call: confirmed ✓' : 'Your call: not marked yet';
+  } else if (curSec === 'titles') {
+    t = 'Your publish set: ' + (d.pairs || []).length + ' of 3 chosen';
+  } else if (curSec === 'transcript') {
+    t = d.d1 ? 'Your call: ' + (d.d1 === 'accept' ? 'accept about 80 seconds' : 'hold the 65 second target') : 'Your call: not chosen yet';
+  } else if (curSec) {
+    t = 'Reference — nothing needed here';
+  }
+  el.textContent = t;
+}
 function showTab(which) {
   document.getElementById('tab0').hidden = which !== 'tab0';
   document.getElementById('video').hidden = which !== 'video';
@@ -529,27 +603,42 @@ var TITLES = {objective:'1 · Objective',architecture:'2 · Story',titles:'3 · 
   learning:'7 · Learning',alignment:'8 · Fit check',iteration:'9 · Record'};
 var curSec = null;
 function openPop(sec, grew) {
-  if (curSec) closePop();
+  if (curSec) doClose();
   curSec = sec;
   document.getElementById('pop-title').textContent = TITLES[sec];
   var au = document.getElementById('pop-audio');
   au.src = 'assets/audio-' + sec + '.mp3';
-  document.getElementById('pop-stage').appendChild(document.getElementById('sec-' + sec));
+  var stage = document.getElementById('pop-stage');
+  stage.appendChild(document.getElementById('sec-' + sec));
+  var cz = stage.querySelector('.callzone');
+  if (cz && cz.parentNode) cz.parentNode.insertBefore(au, cz.nextSibling);
   var pop = document.getElementById('pop');
   pop.hidden = false;
   pop.classList.toggle('grew', !!grew);
   document.body.style.overflow = 'hidden';
+  try { history.pushState({ pop: sec }, ''); } catch (e) {}
   restoreControls();
+  refreshCallStatus();
+  var cb = document.getElementById('pop-close');
+  if (cb) cb.focus();
 }
-function closePop() {
+function doClose() {
   if (!curSec) return;
   var au = document.getElementById('pop-audio');
   try { au.pause(); } catch (e) {}
+  document.querySelector('.pop-card').insertBefore(au, document.getElementById('pop-stage'));
   document.getElementById('hold-' + curSec).appendChild(document.getElementById('sec-' + curSec));
   document.getElementById('pop').hidden = true;
   document.body.style.overflow = '';
   curSec = null;
 }
+function closePop() {
+  if (!curSec) return;
+  if (history.state && history.state.pop) history.back();
+  else doClose();
+}
+window.addEventListener('popstate', function () { if (curSec) doClose(); });
+document.getElementById('pop-close2').addEventListener('click', closePop);
 document.getElementById('pop-close').addEventListener('click', closePop);
 document.getElementById('pop').addEventListener('click', function (e) { if (e.target === this) closePop(); });
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
@@ -625,7 +714,7 @@ function restoreControls() {
 }
 function buildSummary() {
   var d = store(); var out = [];
-  out.push('TAB 0 — my answers (Quadrillion, v14 page)');
+  out.push('TAB 0 — my answers (Quadrillion, v15 page)');
   out.push('Publish pair set: ' + ((d.pairs && d.pairs.length) ? d.pairs.join(', ') : '(none chosen)'));
   out.push('D-1 length: ' + (d.d1 === 'accept' ? 'accept about 80 seconds' : d.d1 === 'hold' ? 'hold the 65 second target' : '(not chosen)'));
   out.push('Objective confirmed: ' + (d.v_objective ? 'YES' : 'not marked'));
@@ -659,6 +748,7 @@ document.getElementById('copybtn').addEventListener('click', function () {
   box.select();
 });
 restoreControls();
+countAnswers();
 </script>
 
 </body>
