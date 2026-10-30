@@ -151,9 +151,9 @@ ELEMENT CLASSES (intent per class; decision controls also carry per-instance not
    Verify: plays the section's own summary; position above the summary card.
 5. SUMMARY CARD — purpose: the whole section in <=2 short lines. Dyslexia: the
    only prose allowed free-visible. Verify: <=2 lines at phone width.
-6. CALL BUTTONS (objective vote, length) — purpose: record his judgment in one
-   tap. Dyslexia: the button says what happens ("Accept about 95 seconds"),
-   never "yes". Verify: label = consequence; tap visibly settles the tile.
+6. CALL BUTTONS (objective vote) — purpose: record his judgment in one
+   tap. Dyslexia: the button says what happens, never "yes". Verify:
+   label = consequence; tap visibly settles the tile.
 7. PAIR VIEWER (replaces the pair-pick wall) — purpose: judge pairs as media.
    Dyslexia: full-screen thumbnail, title at the bottom, swipe to compare, one
    pick button ("Use in my 3"). Verify: tap on Pairs opens the viewer, not text;
@@ -161,6 +161,9 @@ ELEMENT CLASSES (intent per class; decision controls also carry per-instance not
 8. COMPARTMENT HEADER (details) — purpose: hold everything beyond the 3 free
    items. Dyslexia: collapsed by default; the header is one plain line saying
    what is inside. Verify: closed at open; header <=8 words.
+   STATUS (UX loop R1): CONFORMS — no compartment is open at load in the
+   built file (the transcript final-form compartment included), verified
+   in the DOM.
 9. CHECKLIST ROW — purpose: show one check and its state. Dyslexia: rows live
    inside a compartment, never free-visible in bulk. Verify: rows reachable
    only after opening their compartment.
@@ -168,15 +171,31 @@ ELEMENT CLASSES (intent per class; decision controls also carry per-instance not
     section, labelled with the section's name; G6 consideration recorded:
     the in-page box stays (his answers persist on the page), voice notes in
     chat remain the alternative path he already uses.
+    COUNT (loop audit, 2026-10-29): comment boxes = 9. The Pairs popup
+    carries TWO (keys "thumbnails" and "titles") — a class-10 exception,
+    logged as a loop finding and KEPT: both keys are live answer keys in
+    the saved-answers store, and removing a box would orphan its saved
+    comments. The other 21 textareas on the page are the Transcript's
+    LINE-EDIT boxes (one per line) — the transcript's own editing surface
+    (dashboard standard: the transcript is editable in place); typing
+    there IS the task, so G6's alternative for them is the same chat
+    voice-note path, recorded here as the consideration.
 11. SAVED BANNER — purpose: prove the tap did something. Dyslexia: visible
     change, not a silent store. Verify: every pick/comment shows it.
 12. SEND ANSWERS — purpose: deliver his picks/comments to Archer. Dyslexia:
     ONE send path (G4) — the popup footer and the home bar are two paths;
     the rebuild keeps one. Verify: exactly one send control reachable.
+    STATUS (UX loop R1, 2026-10-29): CONFORMS — exactly one free-standing
+    send control (Send, home bar); Copy is folded inside the export
+    compartment as the fallback, per class 13.
 13. EXPORT BOX — purpose: fallback copy of his answers. Dyslexia: folded
     inside the send compartment, never a free-standing wall. Verify: collapsed.
-14. LENGTH (D-1) BUTTONS — as class 6; currently FROZEN by drift directive
-    until the totals fix is verified on the repushed file.
+    STATUS (loop R1): CONFORMS — the compartment holds the Copy button and
+    the answers text, collapsed at load.
+14. LENGTH READOUT — reclassified under G8 (v16.2): no D-1 buttons exist;
+    the Length element is a measured readout in the reference group (248
+    words, about 89 to 102 seconds). The earlier D-1 freeze record is
+    history; a derivative carries no call (G8).
 15. ABSENT CONTROLS (story) — purpose: the absence is the feature. Story is
     Archer's skill decision; no vote control exists, by the allocation rule.
     Verify: no pick/verdict control in the story screen.
@@ -193,11 +212,12 @@ derandomizing each find with a recorded intention.
 
 PLACEMENT + PARAMETER RECORDS (v1):
 P1. TILE ORDER — your calls first, in decision order: Objective (everything
-    derives from it) -> Pairs (packaging is judged against the objective) ->
-    Length (depends on the transcript's final count, so it is decided last).
-    Reference tiles follow production order: Story -> Transcript -> Facts ->
-    Learning -> Fit check -> Record. STATUS: DECIDED (this record); the built
-    order matches it.
+    derives from it) -> Pairs (packaging is judged against the objective).
+    Reference tiles follow production order: Story -> Transcript -> Length
+    (the readout sits behind the transcript it derives from, per G8) ->
+    Facts -> Learning -> Fit check -> Record. STATUS: DECIDED (this
+    record, refreshed at the G8 demotion, v16.2); the built order matches
+    it — verified in the DOM (UX loop audit, 2026-10-29).
 P2. POPUP LAYOUT — fixed order in every popup: (1) the call, (2) the sound,
     (3) the specimen, (4) compartments. Reason: he acts, hears, sees, then
     digs — never the reverse. STATUS: DECIDED as the default order
@@ -207,22 +227,24 @@ P2. POPUP LAYOUT — fixed order in every popup: (1) the call, (2) the sound,
     the viewer (class 7).
 P3. HOLD TIME 480 ms — the hold-to-open delay. Reason: long enough that a
     scroll never opens a popup by accident; short enough to feel instant.
-    STATUS: DECIDED (value from mobile practice; the missing visible hint is
-    a separate open iteration item, not a placement question).
+    STATUS: DECIDED (value from mobile practice). The visible-hint item is
+    CLOSED (UX loop R1): the how-line reads "Tap a tile to open it —
+    holding a tile works too."
 P4. SEND BAR PLACEMENT (home, under the tiles) — reason when built: send
-    after deciding. STATUS: OPEN — G4 allows one send path; the rebuild
-    removes the duplicate and this placement record closes with it.
+    after deciding. STATUS: CLOSED (UX loop R1) — one send path stands:
+    Send in the home bar; Copy folded into the export compartment as the
+    fallback (classes 12/13 conform).
 P5. CLOSE BUTTON top-right in every popup — reason: the same place as every
     app he uses; never hunted for. STATUS: DECIDED, conforms.
 P6. TILE SIZE — one column, full width. Reason: a dyslexic reader scans one
     thing per line; two columns force a choice of where to look. STATUS:
-    DECIDED; the current build does NOT conform (its grid sets two columns) —
-    the rebuild closes it; counted in the loop backlog.
+    DECIDED; CONFORMS (UX loop R1, 2026-10-29) — the tiles grid is one
+    column, verified by computed style on the built file
+    (grid-template-columns: 1fr).
 P7. THE VIEWER'S TITLE AT THE BOTTOM — reason: the image is seen first,
     whole; the title is read after, where the thumb rests. STATUS: DECIDED
-    (register class 7); built in the local v16 build (viewer present, title
-    under the image) — not yet live; the live page is v15.8 until the rebuilt
-    surface is pushed and verified.
+    (register class 7); LIVE since v16 (viewer present, title under the
+    image; verified on the served page 2026-10-29).
 
 STYLE LAYER (Hadi, 2026-10-29 ~22:09 ET — his stated taste, now metadata):
 S1. SKY-DARK: the palette is a dark sky — deep blue-black grounds, soft light
@@ -267,13 +289,14 @@ recorded here is not built.
 - Not controls (no tap outcome): status dots/tags, summary cards, checklist
   rows, the saved banner — they show state; they are never tappable.
 
-PLACEMENT VERIFICATION (2026-10-29 ~22:2x ET, against the built file):
+PLACEMENT VERIFICATION (2026-10-29 ~22:2x ET, against the built file;
+refreshed by the UX loop, R1, 2026-10-29):
 P1 tile order — verified in the build (calls in decision order, reference in
 production order). P2 — amended above. P3 hold 480 ms — the value stands in
-the page's script. P4 — OPEN, accurate (two send paths still in the build).
-P5 close top-right — verified in every popup's head. P6 — corrected: DECIDED,
-build does not conform (two-column grid); rebuild closes it. P7 — amended
-above (built locally, not yet live).
+the page's script; the visible hint stands in the how-line (R1). P4 —
+CLOSED (R1): one send path. P5 close top-right — verified in every popup's
+head. P6 — CONFORMS (R1): one column, computed on the built file. P7 —
+LIVE since v16 (above).
 
 DECIDED STYLE COMPOSITION (Hadi, 2026-10-29 ~22:20 ET — from web references
 he picked, files in tab0-work/ux-styles/refs/):
@@ -297,12 +320,88 @@ The Length element is reclassified under this rule: a measured readout
 in the reference group. An element presenting a derivative as a decision
 is a defect of the same class as an unregistered element.
 
+TYPOGRAPHY — WORD EMPHASIS (Hadi, 2026-10-29 ~22:15 ET; F33):
+T1. Emphasis marks MEANING CARRIERS only — the action word, the number,
+    the name the block turns on. Nothing else earns it.
+T2. At most 2 emphases per text block.
+T3. An emphasis is a STEP, never a shout: slightly larger, whiter against
+    the gray, bolder — the standing .w1 style.
+T4. Every emphasis is RECORDED below. An unrecorded emphasis is as random
+    as an unrecorded placement (G7); a block with no emphasis carries its
+    record too, with its reason.
+
+EMPHASIS RECORD (per standing text block; "built" = the .w1 span stands
+in the built file; UX loop R2 completed the sumcard set):
+HOME —
+- Totals line: "your judgment" (built). Carrier: whose act the page waits on.
+- How line: "needs you" (built). Carrier: the 🔴 meaning, in words (class 2).
+- Group label YOUR CALLS: none — the label is a heading; its words are the
+  whole signal.
+- Group label REFERENCE: none — same reason.
+- Answers-count line: none — one changing number in one short line, read
+  whole; the number's place never moves.
+- Send note (sb-note): none — instruction prose; the Send button directly
+  below carries the action and the accent.
+- Send button label: none — the button itself is the emphasis (accent
+  ground, full width of its row).
+- Export compartment header "See the answers text": none — a compartment
+  header (class 8); its plain line is the label.
+- Copy button label: none — a fallback button; Send carries the accent.
+- Tab buttons (Tab 0 — Foundations / Video): none — navigation labels;
+  the active tab carries its state by ground, not by word emphasis.
+TILES (9) — per tile, the label carries no intra-word emphasis (one word,
+already the tile's largest type) and the status phrase carries none either:
+the status IS the state carrier, styled as one unit (.tstatus) — a second
+emphasis inside a three-word status would shout (T3). The "● yours" tag's
+emphasis is its glow (style layer S-secondary), recorded in the theme.
+POPUP CHROME —
+- Popup title: none — it is the heading, the popup's largest type.
+- Popup call line (pop-call, dynamic): none — one state sentence, read whole.
+- Saved line "Saved on this device ✓": none — a confirmation; it appears
+  on change, and the change is the signal.
+- Verdict banner (pop-banner, dynamic): none added — its ground carries it.
+- Close buttons (top-right + footer): none — the fixed place is the
+  affordance (P5).
+VIEWER —
+- Pair title (v-title): none — the title is the specimen, set as authored.
+- Pair meta (v-meta): the SCORE NUMBER (built, all five pairs). Carrier:
+  the number his pick weighs.
+- "Use in my 3" (v-pick): none — the action button; its state change is
+  the signal (tap-outcome record).
+- Prev / Next: none — arrows + position carry the movement.
+- "Scores & notes": none — a plain label for the one door to the text popup.
+- Viewer close: none — fixed place (top right, as P5).
+SUMMARY CARDS (class 5; one carrier each, all built) —
+- Objective: "one sentence" — what the objective must be.
+- Story: "DECIDED by Archer" — whose call the section is (F26).
+- Pairs: "judged as one" — the one-decision rule (loop R2).
+- Length: "89 to 102 seconds" — the measured readout's number (G8).
+- Transcript: "248 words" — the count the form stands on (loop R2).
+- Facts: "where it came from" — provenance, the section's point (loop R2).
+- Learning: "walks away knowing" — the learning carrier (loop R2).
+- Fit check: "All passing" — the state carrier (loop R2).
+- Record: "what changed" — the record's point (loop R2).
+CALL ZONES —
+- Objective call zone: none inside — the zone's gold ground is the
+  emphasis; its button label is the consequence (class 6).
+- Story call zone's DECIDED card: "DECIDED by Archer" (built) — counted
+  with the Story sumcard family; one carrier for the decision's owner.
+STATEMENTS (specimens) —
+- Objective statement: none — the sentence is the specimen, set as authored.
+- Story statement (the ABT line): none — specimen prose, read whole.
+COUNT (loop R2): standing text blocks 45 / with a per-block emphasis
+record 45 / without 0. Emphases built: 13 .w1 spans (totals, how-line,
+9 sumcards, the Story call-zone card, 5 viewer metas counted as one
+dynamic block).
+
 ===== END UX INTENT REGISTER ===== -->
 
 <style>
 
 .w1{color:#fff;font-weight:800;font-size:1.14em}.w2{color:#8fa0bd}.dot{box-shadow:0 0 10px 2px rgba(255,120,120,.55)}.tile .yours{text-shadow:0 0 9px rgba(255,150,150,.85)}
 /* ---- v16: his style — sky-dark, glass, floating, borderless, fluffy ---- */
+.pairpick,.settlebtn,#copybtn,.pop-banner,textarea.comment,#export-box,.revnote{border:none!important}
+.pop-foot{border-top:none!important}
 body{background:radial-gradient(1200px 820px at 50% -12%, #182a4a, #0a1120 62%) fixed,#0a1120}
 .tile{border:none!important;background:rgba(148,184,255,.09);backdrop-filter:blur(10px);border-radius:26px;box-shadow:0 12px 32px rgba(0,0,0,.38);padding:20px}
 .tv-img{min-height:158px;background-image:linear-gradient(rgba(6,10,20,.18),rgba(6,10,20,.80)),url('assets/img-titles-1.jpg');background-size:cover;background-position:center}
@@ -323,7 +422,7 @@ details.chunk{border:none!important;background:rgba(255,255,255,.05);border-radi
 .vpick{background:#2f9e5f;color:#fff}
 
 /* ---- v14: tiles + hold-popup ---- */
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.tiles{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0}
 .tile{text-align:left;padding:16px;border-radius:14px;font-size:20px;min-height:104px;
  background:#1b2436;color:#e8edf7;border:1px solid #33415e;cursor:pointer;font-family:inherit}
 .tile .tlabel{font-weight:700}
@@ -419,7 +518,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
 <section id="tab0" class="panel">
   <h1>Quadrillion — Tab 0 · Foundations</h1>
   <p class="totals">Two things need <span class="w1">your judgment</span> — marked 🔴 yours. The story is decided by Archer, as craft — it sits with the reference tiles, with its record. Everything else is reference.</p>
-  <p class="how">Tap a tile to open it. 🔴 = it <span class="w1">needs you</span>.</p>
+  <p class="how">Tap a tile to open it — holding a tile works too. 🔴 = it <span class="w1">needs you</span>.</p>
   <p class="group-label">YOUR CALLS</p>
   <div class="tiles">
         <button class="tile tv-word" data-sec="objective"><span class="dot bad"></span><span class="tlabel">Objective</span><span class="frac">your vote</span><span class="tstatus needs">Needs your judgment</span><span class="yours">🔴 yours</span></button>
@@ -437,20 +536,19 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
   </div>
   <div class="sendbar">
     <p id="answers-count">Answers saved so far: 0</p>
-    <p class="sb-note">When you are done: Send opens GitHub in a new tab — one tap on Submit there files everything to me. Copy puts the same text on your clipboard without leaving this page. Your answers save on this device as you type.</p>
+    <p class="sb-note">When you are done: Send opens GitHub in a new tab — one tap on Submit there files everything to me. Your answers save on this device as you type. (A Copy button sits with the answers text below, as a fallback.)</p>
     <button id="sendbtn">Send my answers to Archer</button>
-    <button id="copybtn">Copy my answers</button>
     <details class="expwrap"><summary>See the answers text</summary>
+    <button id="copybtn">Copy my answers</button>
     <textarea id="export-box" readonly></textarea></details>
   </div>
   <div id="holders">
-<div class="holder" id="hold-objective" hidden><div class="sec" id="sec-objective"><div class="chunk-open"><div class="sec-body" id="body-objective"><div class="sumcard"><strong>In short.</strong> The job of this video in <span class="w1">one sentence</span>. It was revised from your comment at 7:47 pm — the new sentence is in the green box below.</div><div class="popctl callzone"><h3>Your call</h3><p><button class="vbtn" data-vkey="objective">Objective — this is right</button></p><p>Or write what to change in a comment box above.</p></div><div class="revnote"><p><strong>Revised from your comment — Thu Oct 29, 7:47 pm.</strong></p><p>You wrote: “What about; show the scale of language processing indicating a new era begins, and what started it and and invite to follow our …”</p><p><strong>New objective (18 words):</strong> “Language processing at a scale opening a new era — where it started, and an invitation to follow.”</p><p>Clause check re-run: scale → lines P1–P9 · new era → P9 · where it started → P10–P15 · invitation to follow → P16+P17. Four clauses, four carried. The old sentence is kept in the Record.</p></div>
-      <p class="statement">“Language processing at a scale opening a new era — where it started, and an invitation to follow.”</p>
-      </div><details class="chunk"><summary>The reasoning — why this objective</summary><p>20 words (recounted) · scope: THE WHOLE VIDEO. The correction, in the open:</p>
-      <p class="beat"><strong>The misalignment you named.</strong> The transcript talks about the numbers, the growth, the civilization-scale industry of language, the paper, prediction becoming a model of language, and the road this series teaches — from predicting the next word to agentic systems doing the job. <strong>Ownership appears nowhere in it.</strong> Two earlier objectives imported it anyway: the original ("…builds and owns their layer in it") and the five-pass doorway version <span class="old">("Show language grown vast from one 2017 idea — then ask who owns its layer, so the viewer builds theirs")</span>. The passes found the weld — the ownership clause carried by zero lines — and argued around it instead of obeying it. That is recorded here as the failure, not smoothed over.</p>
+<div class="holder" id="hold-objective" hidden><div class="sec" id="sec-objective"><div class="chunk-open"><div class="sec-body" id="body-objective"><div class="sumcard"><strong>In short.</strong> The job of this video in <span class="w1">one sentence</span>. Confirmed by you on 2026-10-29 — and the sentence in the green box below is your own wording from that evening, carried with every one of its decisions intact.</div><div class="popctl callzone"><h3>Your call</h3><p><button class="vbtn" data-vkey="objective">Objective — this is right</button></p><p>Or write what to change in a comment box above.</p></div>
+      <p class="statement">“Show language processing at a scale indicating a new era begins — its start — and invite to follow our channel.”</p>
+      </div><details class="chunk"><summary>The reasoning — why this objective</summary><div class="revnote"><p><strong>Revised from your comment — Thu Oct 29, 7:47 pm.</strong></p><p>You wrote: “What about; show the scale of language processing indicating a new era begins, and what started it and and invite to follow our …”</p><p><strong>New objective (18 words):</strong> “Show language processing at a scale indicating a new era begins — its start — and invite to follow our channel.”</p><p>Clause check re-run: scale → lines P1–P9 · new era → P9 · where it started → P10–P15 · invitation to follow → P16+P17. Four clauses, four carried. The old sentence is kept in the Record.</p></div><p>20 words (recounted) · scope: THE WHOLE VIDEO. The correction, in the open:</p>
+      <p class="beat"><strong>The misalignment you named.</strong> The transcript talks about the numbers, the growth, the civilization-scale industry of language, the paper, prediction becoming a model of language, and the road this series teaches — from predicting the next word to agentic systems doing the job. <strong>Ownership appears nowhere in it.</strong> Two earlier objectives imported it anyway: the original ("…builds and owns their layer in it") and the five-pass doorway version <span class="old">("Show language grown vast from one 2017 idea — then ask who owns its layer, so the viewer builds theirs")</span>. The passes found the weld — the ownership clause carried by zero lines — and argued around it instead of obeying it. That is recorded here as the failure, not smoothed over.</p><details class="chunk sub"><summary>Continued — tap to open</summary>
       <p class="beat"><strong>The re-derivation.</strong> From the transcript's own inventory, nothing else: scale (P1–P7) · era and industry (P8–P9) · the 2017 idea (P10–P15) · the road the series teaches (P16–P17). Every clause of the objective above is carried by named lines; the alignment section (8) checks exactly this, mechanically, and it FAILS both superseded objectives on this item — the check working as intended.</p>
-      <p class="beat"><strong>Where ownership lives.</strong> It is the objective of "Who Owns Your Harness?" (soa-01) and of the harness line — a different video's job. This piece's close is its own: the series promise. The grafted ownership lines were removed from the fitted arrangement (section 5); their text stays in variant V-1, their home.</p>
-      </details><details class="chunk"><summary>The checks — the decision and the publish gate</summary><h4>Choice checklist — is this the best objective?</h4>
+      <p class="beat"><strong>Where ownership lives.</strong> It is the objective of "Who Owns Your Harness?" (soa-01) and of the harness line — a different video's job. This piece's close is its own: the series promise. The grafted ownership lines were removed from the fitted arrangement (section 5); their text stays in variant V-1, their home.</p></details></details><details class="chunk"><summary>The checks — the decision and the publish gate</summary><h4>Choice checklist — is this the best objective?</h4>
       <ul class="checks">
         <li class="ck fam-choice pass"><span class="pass">PASS</span> — One sentence, states the viewer's end state, names no production detail, 20 words or fewer (18, recounted). <span class="cls stage">STAGE GATE</span></li>
         <li class="ck fam-choice pass"><span class="pass">PASS</span> — Derived from the transcript alone: every clause maps to named lines (scale · new era · where it started · the invitation to follow), verified in the alignment section. <span class="cls stage">STAGE GATE</span></li>
@@ -497,10 +595,9 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>The beat map (this Short, as arranged in section 5)</summary>
       <p class="beat"><strong>AND-1 · The Number:</strong> the figure (3.2 quadrillion a month, Google alone) → the growth (300× in two years) → the comparison (all written text ≈ a tenth of one month), said twice so it lands.</p>
       <p class="beat"><strong>AND-2 · The Uses:</strong> what this processing IS — searches answered in writing, voices turned to text, long documents summed up. The number becomes the viewer's own week.</p>
-      <p class="beat"><strong>AND-3 · The Era:</strong> the stakes — this could be the era that multiplies cognitive power as industrialization multiplied physical power.</p>
+      <p class="beat"><strong>AND-3 · The Era:</strong> the stakes — this could be the era that multiplies cognitive power as industrialization multiplied physical power.</p><details class="chunk sub"><summary>Continued — tap to open</summary>
       <p class="beat"><strong>AND-4 · The Origin (nested mini-ABT):</strong> the hinge question → a paper in 2017 → the holy grail it broke → predict the next word; a team builds around attention; the Transformer is born.</p>
-      <p class="beat"><strong>THEREFORE · The Road:</strong> predicting the next word leads to agentic systems doing a job; the technology matured over nearly a decade; the series teaches that road — learn how it matured, and build an intuitive understanding of how to use it.</p>
-      </details><details class="chunk"><summary>Container capacities — restated for the corrected piece</summary>
+      <p class="beat"><strong>THEREFORE · The Road:</strong> predicting the next word leads to agentic systems doing a job; the technology matured over nearly a decade; the series teaches that road — learn how it matured, and build an intuitive understanding of how to use it.</p></details></details><details class="chunk"><summary>Container capacities — restated for the corrected piece</summary>
       <p>Runtime class: the original's own (its published film ran 84.5 s). Fitted total: 248 words ≈ 89 s at the prose's published pace (2.80 words/s) to ~102 s at the canonical build's pace (2.43).</p>
       <p class="beat"><strong>Number:</strong> 5–6 sentences · 45–60 words. <strong>Uses:</strong> 2 sentences · 14–22 words. <strong>Era:</strong> 1 sentence · 15–22 words, plus the tangible beat: 4 sentences · 37 words (capacity set by Hadi's direction, 2026-10-29). <strong>Origin:</strong> 6 sentences · 85–100 words. <strong>Road:</strong> 2 sentences · 30–40 words.</p>
       </details><details class="chunk"><summary>The checks — the decision and the publish gate</summary><h4>Choice checklist — is this the best architecture for this content?</h4>
@@ -528,14 +625,14 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="architecture" placeholder="Comment on the architecture…"></textarea>
     </div></details></div></div>
-<div class="holder" id="hold-titles" hidden><div class="sec" id="sec-titles"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-titles"><div class="sumcard"><strong>In short.</strong> Five title-and-thumbnail pairs, ranked — each pair is judged as one. The green buttons under each pair set your publish three. The thumbnail scores are inside, under the pairs.</div><div class="popctl callzone"><p class="paircount">Your publish set: <strong id="paircount">0</strong> of 3 chosen.</p><p>Tap “Use pair … in my 3” under each pair you want. Tap again to take it out.</p><h3>Thumbnail detail — the scores behind each pair</h3><div class="sec-body" id="body-thumbnails">
+<div class="holder" id="hold-titles" hidden><div class="sec" id="sec-titles"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-titles"><div class="sumcard"><strong>In short.</strong> Five title-and-thumbnail pairs, ranked — each pair is <span class="w1">judged as one</span>. The green buttons under each pair set your publish three. The thumbnail scores are inside, under the pairs.</div><div class="popctl callzone"><p class="paircount">Your publish set: <strong id="paircount">0</strong> of 3 chosen.</p><p>Tap “Use pair … in my 3” under each pair you want. Tap again to take it out.</p><h3>Thumbnail detail — the scores behind each pair</h3><div class="sec-body" id="body-thumbnails">
       <p>Your verdict on the earlier sets — zero — is recorded at the top of this file. What was missing, in your words: curiosity. A bare year with arrows means nothing; an image earns the click when it starts a thought the viewer cannot finish — an unfinished phrase, an unexplained explosion, a number too big to believe. These five are built on exactly those mechanics, with a fuller color palette (cyan, amber, coral, teal on a deep navy field). Pairs D and E join the first three in this round — the set of five, ranked as pairs in section 3. Contrast computed from the design colors: white 19.43 · amber 10.83 · cyan 10.11 · coral 6.42 (coral is the floor — still clear for large display text). Each viewed at full size and at a 10% downscale before entering this file; two drawing defects (an overflowing headline, a colliding label) were caught in that viewing and fixed before this delivery.</p>
       <div class="cand">
         <p class="big">A · The unfinished phrase (pairs title A)</p>
         <img src="assets/img-thumbnails-6.jpg" alt="Thumbnail A: one small glowing page beneath a vast wall of text, IT ALL STARTED IN 2017 — the phrase unfinished">
         <p>Text: "IT ALL STARTED IN 2017" — your example, used because it is the best carrier: the sentence starts a story and stops. Started WHAT? One small glowing page sits under a wall of text that fills the sky — the disproportion is visible, the cause is not named. The title carries the answer's scale.</p>
         <p class="beat"><strong>The thought the viewer cannot finish:</strong> “It all started in 2017 — started WHAT?”</p>
-        <p><strong>My engagement score: 35/40 = 87/100 — below the 90 bar; still iterating.</strong> Curiosity gap 9 · legibility 9 · pull 8 · promise clarity 8. Gaps to 90: the scene is quiet at feed speed (pull), and the phrase needs its title to land (clarity). Your score is the verdict.</p>
+        <p><strong>My engagement score: 35/40 = 88/100 — below the 90 bar; still iterating.</strong> Curiosity gap 9 · legibility 9 · pull 8 · promise clarity 8. Gaps to 90: the scene is quiet at feed speed (pull), and the phrase needs its title to land (clarity). Your score is the verdict.</p>
         
       </div>
       <div class="cand">
@@ -543,7 +640,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
         <img src="assets/img-thumbnails-7.jpg" alt="Thumbnail B: a small 2024 bar beside a 2026 column bursting off the top of the frame, 300× IN 2 YEARS">
         <p>Text: "300× · IN 2 YEARS · 2024 / 2026" — your example: the years and the multiple, with the two bars making the growth physical (the 2026 column bursts off the top of the frame). The image never says WHAT grew; the title names it. A growth with no subject is a question.</p>
         <p class="beat"><strong>The thought the viewer cannot finish:</strong> “300× in two years — WHAT grew?”</p>
-        <p><strong>My engagement score: 36/40 = 90/100 — below the 90 bar; still iterating.</strong> Curiosity gap 8 · legibility 10 · pull 9 · promise clarity 8. The strongest of the three on pull. Gap to 90: the subject is withheld by design, so the gap caps until the title lands. Your score is the verdict.</p>
+        <p><strong>My engagement score: 36/40 = 91/100 — below the 90 bar; still iterating.</strong> Curiosity gap 8 · legibility 10 · pull 9 · promise clarity 8. The strongest of the three on pull. Gap to 90: the subject is withheld by design, so the gap caps until the title lands. Your score is the verdict.</p>
         
       </div>
       <div class="cand">
@@ -564,7 +661,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
         <p class="big">E · The comparison, staged with labels (pairs title E · reserve)</p>
         <img src="assets/img-thumbnails-10.jpg" alt="Thumbnail E: a small stack labeled EVERYTHING EVER WRITTEN against a tall tower labeled ONE MONTH">
         <p class="beat"><strong>The thought the viewer cannot finish:</strong> “One month outweighs all of it — whose month, and by how much, really?”</p>
-        <p><strong>My engagement score: 35/40 = 88/100 — below the 90 bar; still iterating.</strong> Curiosity gap 6 · legibility 10 · pull 8 · promise clarity 10. Gap to 90: the weakest open loop of the five — the image nearly closes its own story; its itch is disbelief. It is Pair C's alternate: same promise, different execution.</p>
+        <p><strong>My engagement score: 36/40 = 90/100 — below the 90 bar; still iterating.</strong> Curiosity gap 6 · legibility 10 · pull 8 · promise clarity 10. Gap to 90: the weakest open loop of the five — the image nearly closes its own story; its itch is disbelief. It is Pair C's alternate: same promise, different execution.</p>
       </div>
       <h3>Checklist</h3>
       <ul class="checks">
@@ -619,17 +716,16 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="titles" placeholder="Comment on the pairs…"></textarea>
     </div></details></div></div>
-<div class="holder" id="hold-length" hidden><div class="sec" id="sec-length"><div class="chunk-open"><div class="sec-body" id="body-length"><div class="sumcard"><strong>In short.</strong> A measurement, not a decision (Hadi's ruling, 2026-10-29): the final transcript runs 248 words — about <span class="w1">89 to 102 seconds</span> spoken. Length is a derivative: we choose what the video says and how it is built; the word count and the runtime are whatever those choices make them. Shown here as a readout only.</div><h2>Length — a measurement</h2><p><strong>The readout.</strong> The final transcript runs 248 words. Spoken at the prose's own published pace (2.80 words a second) that is about <strong>89 seconds</strong>; at the canonical build pace (2.43), about <strong>102 seconds</strong>. The original film ran 84.5.</p><p><strong>Why this section holds no decision (Hadi's ruling, 2026-10-29).</strong> Length is a derivative: we choose what the video says and how it is built — the objective, the story, the words — and the number of words is whatever those choices make it. A derivative is shown as a readout, never as a call.</p></div></div></div></div>
-<div class="holder" id="hold-transcript" hidden><div class="sec" id="sec-transcript"><div class="chunk-open"><div class="sec-body" id="body-transcript"><div class="sumcard"><strong>In short.</strong> The final form, re-cut to the adopted structure: cold open, the change made tangible, the era, the origin as a teaser, the repeat saved for the climax, the invitation. 248 words. It stands at the top of this section; comments are open.</div></div><details class="chunk" open><summary>The final transcript — as it will be spoken</summary>
+<div class="holder" id="hold-length" hidden><div class="sec" id="sec-length"><div class="chunk-open"><div class="sec-body" id="body-length"><div class="sumcard"><strong>In short.</strong> A measurement, not a decision (Hadi's ruling, 2026-10-29): the final transcript runs 248 words — about <span class="w1">89 to 102 seconds</span> spoken. Length is a derivative: we choose what the video says and how it is built; the word count and the runtime are whatever those choices make them. Shown here as a readout only.</div><details class="chunk"><summary>The measurement in full — tap to open</summary><h2>Length — a measurement</h2><p><strong>The readout.</strong> The final transcript runs 248 words. Spoken at the prose's own published pace (2.80 words a second) that is about <strong>89 seconds</strong>; at the canonical build pace (2.43), about <strong>102 seconds</strong>. The original film ran 84.5.</p><p><strong>Why this section holds no decision (Hadi's ruling, 2026-10-29).</strong> Length is a derivative: we choose what the video says and how it is built — the objective, the story, the words — and the number of words is whatever those choices make it. A derivative is shown as a readout, never as a call.</p></details></div></div></div></div>
+<div class="holder" id="hold-transcript" hidden><div class="sec" id="sec-transcript"><div class="chunk-open"><div class="sec-body" id="body-transcript"><div class="sumcard"><strong>In short.</strong> The final form, re-cut to the adopted structure: cold open, the change made tangible, the era, the origin as a teaser, the repeat saved for the climax, the invitation. <span class="w1">248 words</span>. It stands at the top of this section; comments are open.</div></div><details class="chunk"><summary>The final transcript — as it will be spoken</summary>
       <p><strong>Decided with the architecture (Pass 15.8).</strong> Re-cut to the adopted structure — trailer scaffold + what-is / what-could-be. Two changes from the fitted arrangement: the repeat moved to the climax, and the origin's mechanism line was trimmed to a teaser. Everything else stands as fitted. 248 words, about 89 to 102 seconds.</p>
       <p><strong>1 · Cold open.</strong> “Over 3.2 quadrillion tokens processed every month.” · “And that is Google alone.”</p>
-      <p><strong>2 · The change, made tangible.</strong> “Its monthly processing grew more than 300 times in two years.” · “That's about a tenth of Google's monthly volume.” · “Every search comes back as a written answer.” · “Every voice becomes text; every long document, a summary.” · “Millions of hours of speech become text.” · “Billions of searches are answered in written words.” · “Words written in one language are read in another.” · “One stream of tokens runs through all of it — like electricity through machines.”</p>
+      <p><strong>2 · The change, made tangible.</strong> “Its monthly processing grew more than 300 times in two years.” · “That's about a tenth of Google's monthly volume.” · “Every search comes back as a written answer.” · “Every voice becomes text; every long document, a summary.” · “Millions of hours of speech become text.” · “Billions of searches are answered in written words.” · “Words written in one language are read in another.” · “One stream of tokens runs through all of it — like electricity through machines.”</p><details class="chunk sub"><summary>Continued — tap to open</summary>
       <p><strong>3 · Era crest.</strong> “If industrialization multiplied humanity's physical power, this could be the start of an era that multiplies humanity's cognitive power.”</p>
       <p><strong>4 · Origin — the trailer way.</strong> “What set this in motion? The trail leads back to a paper from 2017: Attention Is All You Need.” · “By then, building AI models that could understand and translate language had long been a holy grail.” · “Learning to predict the next word offered a way to learn the patterns of language.” · “So, a team at Google built a new architecture around attention.” · “It could learn which earlier words mattered most.” <em>(trimmed from 18 words — the mechanism is the series' to teach)</em> · “The Transformer was born: a mathematical structure that could learn from vast collections of text.”</p>
-      <p><strong>5 · Climax — the repeat, saved for here.</strong> “Let me repeat that again.” · “Every month, Google alone processes more than ten times the estimated usable public text written by people.”</p>
+      <p><strong>5 · Climax — the repeat, saved for here.</strong> “Let me repeat that again.” · “Every month, Google alone processes more than ten times the estimated usable public text written by people.”</p></details><details class="chunk sub"><summary>Continued — tap to open</summary>
       <p><strong>6 · Title + invitation.</strong> “In this series, we will learn how predicting the next word leads to agentic systems doing a job.” · “Learn how this technology matured over nearly a decade, and build an intuitive understanding of how to use it.”</p>
-      <p>Dropped, as before: P4 (restated tighter by the comparison lines) and P8 (an era restatement; the crest carries it).</p>
-</details><details class="chunk"><summary>Draft zero and the earlier fitted arrangement — the record</summary>
+      <p>Dropped, as before: P4 (restated tighter by the comparison lines) and P8 (an era restatement; the crest carries it).</p></details></details><details class="chunk"><summary>Draft zero and the earlier fitted arrangement — the record</summary>
       <p><strong>Seed (corrected 2026-10-29, on your identification):</strong> the ORIGINAL opening prose — WO-A, explainer packet variant "opening-hook-59", your text verbatim, 17 lines, 237 words. Source of record: the migration tree's source script, whose preservation rule is: narration verbatim, segmented at sentence boundaries — nothing rewritten, added, or cut. <strong>Status: DRAFT ZERO</strong> — the transcript stage selects and compresses from it; it does not start from a compression. Every line is editable here.</p>
 
       </details><details class="chunk"><summary>AND-0 · Hook — capacity 9–13 words</summary>
@@ -640,26 +736,20 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>AND-1 · Scale — capacity 20–30 words</summary>
       <p>P3 (11 words)</p><textarea class="line-edit" data-key="P3">Its monthly processing grew more than 300 times in two years.</textarea>
       <p>P4 (19 words)</p><textarea class="line-edit" data-key="P4">To understand the scale, consider this: the usable public text written by people is estimated at 300 trillion tokens.</textarea>
-      <p>P5 (8 words)</p><textarea class="line-edit" data-key="P5">That's about a tenth of Google's monthly volume.</textarea>
+      <p>P5 (8 words)</p><textarea class="line-edit" data-key="P5">That's about a tenth of Google's monthly volume.</textarea><details class="chunk sub"><summary>Continued — tap to open</summary>
       <p>P6 (5 words)</p><textarea class="line-edit" data-key="P6">Let me repeat that again.</textarea>
       <p>P7 (17 words)</p><textarea class="line-edit" data-key="P7">Every month, Google alone processes more than ten times the estimated usable public text written by people.</textarea>
-      <p class="verdict">Total 60 — OVER the Short capacity by 30. The block carries the original's deliberate repeat (P6–P7): the ratio, said twice so it lands. A decided feature of the original, not an accident.</p>
-
-      </details><details class="chunk"><summary>Era / stakes — in the prose this sits between scale and genesis (33 words in draft zero; the tangible beat T1–T4, 37 words, stands in this chunk, added 2026-10-29)</summary>
+      <p class="verdict">Total 60 — OVER the Short capacity by 30. The block carries the original's deliberate repeat (P6–P7): the ratio, said twice so it lands. A decided feature of the original, not an accident.</p></details></details><details class="chunk"><summary>Era / stakes — in the prose this sits between scale and genesis (33 words in draft zero; the tangible beat T1–T4, 37 words, stands in this chunk, added 2026-10-29)</summary>
       <p>P8 (14 words)</p><textarea class="line-edit" data-key="P8">We, as a civilization, with our machines, are now processing language at this scale.</textarea>
-      <p>P9 (19 words)</p><textarea class="line-edit" data-key="P9">If industrialization multiplied humanity's physical power, this could be the start of an era that multiplies humanity's cognitive power.</textarea><p class="verdict">ADDED 2026-10-29, your direction: the tangible beat — what the 3.2 quadrillion is made of, in three areas people can picture, with the electricity image in one line. It stands after the era line and before the origin; the fitted order is otherwise unchanged.</p><p>T1 (7 words)</p><textarea class="line-edit" data-key="T1">Millions of hours of speech become text.</textarea><p>T2 (8 words)</p><textarea class="line-edit" data-key="T2">Billions of searches are answered in written words.</textarea><p>T3 (9 words)</p><textarea class="line-edit" data-key="T3">Words written in one language are read in another.</textarea><p>T4 (13 words)</p><textarea class="line-edit" data-key="T4">One stream of tokens runs through all of it — like electricity through machines.</textarea>
-      <p class="verdict">ORDER DIFFERENCE, recorded: the prose states the era BEFORE explaining its origin (the origin then answers "what set this in motion?"). The architecture (section 2) places the stakes function after the genesis. Part of your architecture judgment.</p>
-
-      </details><details class="chunk"><summary>AND-2 · Genesis — capacity 40–55 words</summary>
+      <p>P9 (19 words)</p><textarea class="line-edit" data-key="P9">If industrialization multiplied humanity's physical power, this could be the start of an era that multiplies humanity's cognitive power.</textarea><p class="verdict">ADDED 2026-10-29, your direction: the tangible beat — what the 3.2 quadrillion is made of, in three areas people can picture, with the electricity image in one line. It stands after the era line and before the origin; the fitted order is otherwise unchanged.</p><details class="chunk sub"><summary>Continued — tap to open</summary><p>T1 (7 words)</p><textarea class="line-edit" data-key="T1">Millions of hours of speech become text.</textarea><p>T2 (8 words)</p><textarea class="line-edit" data-key="T2">Billions of searches are answered in written words.</textarea><p>T3 (9 words)</p><textarea class="line-edit" data-key="T3">Words written in one language are read in another.</textarea></details><details class="chunk sub"><summary>Continued — tap to open</summary><p>T4 (13 words)</p><textarea class="line-edit" data-key="T4">One stream of tokens runs through all of it — like electricity through machines.</textarea>
+      <p class="verdict">ORDER DIFFERENCE, recorded: the prose states the era BEFORE explaining its origin (the origin then answers "what set this in motion?"). The architecture (section 2) places the stakes function after the genesis. Part of your architecture judgment.</p></details></details><details class="chunk"><summary>AND-2 · Genesis — capacity 40–55 words</summary>
       <p>P10 (19 words)</p><textarea class="line-edit" data-key="P10">What set this in motion? The trail leads back to a paper from 2017: Attention Is All You Need.</textarea>
       <p>P11 (17 words)</p><textarea class="line-edit" data-key="P11">By then, building AI models that could understand and translate language had long been a holy grail.</textarea>
-      <p>P12 (15 words)</p><textarea class="line-edit" data-key="P12">Learning to predict the next word offered a way to learn the patterns of language.</textarea>
+      <p>P12 (15 words)</p><textarea class="line-edit" data-key="P12">Learning to predict the next word offered a way to learn the patterns of language.</textarea><details class="chunk sub"><summary>Continued — tap to open</summary>
       <p>P13 (11 words)</p><textarea class="line-edit" data-key="P13">So, a team at Google built a new architecture around attention.</textarea>
       <p>P14 (18 words)</p><textarea class="line-edit" data-key="P14">It could learn which earlier words mattered and pay more attention to them when predicting the next one.</textarea>
-      <p>P15 (15 words)</p><textarea class="line-edit" data-key="P15">The Transformer was born: a mathematical structure that could learn from vast collections of text.</textarea>
-      <p class="verdict">Total 95 — OVER the Short capacity by 40. The original's genesis is FULL: the paper, the holy grail, prediction, the team, attention, the Transformer. (The "empty genesis containers" in the earlier Tab 0 were the consolidation's cuts, not the original's gaps.) The prose's mini-But is implicit — the holy grail is the decades-long difficulty; there is no wall-of-rules line.</p>
-
-      </details><details class="chunk"><summary>BUT · Ownership — capacity 22–32 words</summary>
+      <p>P15 (15 words)</p><textarea class="line-edit" data-key="P15">The Transformer was born: a mathematical structure that could learn from vast collections of text.</textarea></details><details class="chunk sub"><summary>Continued — tap to open</summary>
+      <p class="verdict">Total 95 — OVER the Short capacity by 40. The original's genesis is FULL: the paper, the holy grail, prediction, the team, attention, the Transformer. (The "empty genesis containers" in the earlier Tab 0 were the consolidation's cuts, not the original's gaps.) The prose's mini-But is implicit — the holy grail is the decades-long difficulty; there is no wall-of-rules line.</p></details></details><details class="chunk"><summary>BUT · Ownership — capacity 22–32 words</summary>
       <p class="verdict">EMPTY in the original. The prose has no ownership beat — no layer, no "who owns it". That turn exists only in the variants below (the consolidation invented it). Whether the Short builds the But as new writing at the transcript stage is part of your architecture judgment.</p>
 
       </details><details class="chunk"><summary>THEREFORE · Close — capacity 16–24 words</summary>
@@ -674,13 +764,11 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>The fitted arrangement — Tab 0's earlier proposal for the transcript stage (SUPERSEDED by the decided architecture and the final transcript in this tab: 248 words; this block's rows sum to the pre-trim 258 and stand as the fit-iteration record)</summary>
       <p>How draft zero and the architecture were fitted (fit iteration, then the ALIGNMENT CORRECTION of 2026-10-29 18:50 ET). <strong>Survival: 204 of the prose's 237 words reach the fitted piece (86%); with the Uses lines and the tangible beat, the fitted piece totals 248 words.</strong> Dropped, with reasons: P4 (19 w — its archive setup is restated tighter by P5 + P7), P8 (14 w — an era restatement; P9 carries era + stakes in one line). Added: the uses beat (2 lines, NEW — your directed addition, derived in the 17:59 derivation table) · the tangible beat (4 lines, T1–T4, NEW 2026-10-29 — your direction; homed in AND-3 · The Era). <strong>Removed in the alignment correction: the ownership graft (G1–G5, 57 w)</strong> — it served the superseded objective, not this transcript; its text lives in variant V-1. P17 now stands in full, as written. Order follows the corrected architecture (section 2).</p>
       <p class="beat"><strong>AND-1 · The Number (53 w):</strong> P1 · P2 · P3 · P5 · P6 · P7 — figure, growth, the comparison said twice.</p>
-      <p class="beat"><strong>AND-2 · The Uses (17 w, NEW):</strong> U1 "Every search comes back as a written answer." (8) · U2 "Every voice becomes text; every long document, a summary." (9)</p>
+      <p class="beat"><strong>AND-2 · The Uses (17 w, NEW):</strong> U1 "Every search comes back as a written answer." (8) · U2 "Every voice becomes text; every long document, a summary." (9)</p><details class="chunk sub"><summary>Continued — tap to open</summary>
       <p class="beat"><strong>AND-3 · The Era (19 w + the tangible beat, 37 w):</strong> P9 — the stakes analogy; T1 · T2 · T3 · T4 — what the scale is made of (added 2026-10-29, Hadi's direction).</p>
       <p class="beat"><strong>AND-4 · The Origin (95 w):</strong> P10 · P11 · P12 · P13 · P14 · P15 — hinge, grail, prediction, team, attention, Transformer.</p>
-      <p class="beat"><strong>THEREFORE · The Road (37 w):</strong> P16 (18) · P17 (19, in full) — prediction leads to agentic systems doing a job; the series teaches how it matured and how to use it.</p>
-      <p><strong>Fitted total: 248 words</strong> ≈ 89 s at the prose's own published pace (2.80 words/s) to ~102 s at the canonical build's pace (2.43). The transcript tab finalizes wording; this arrangement is Tab 0's fitted proposal, not the locked transcript.</p>
-
-      </details><details class="chunk"><summary>Budget and the open decision D-1 (reframed)</summary>
+      <p class="beat"><strong>THEREFORE · The Road (37 w):</strong> P16 (18) · P17 (19, in full) — prediction leads to agentic systems doing a job; the series teaches how it matured and how to use it.</p></details><details class="chunk sub"><summary>Continued — tap to open</summary>
+      <p><strong>Fitted total: 248 words</strong> ≈ 89 s at the prose's own published pace (2.80 words/s) to ~102 s at the canonical build's pace (2.43). The transcript tab finalizes wording; this arrangement is Tab 0's fitted proposal, not the locked transcript.</p></details></details><details class="chunk"><summary>Budget and the open decision D-1 (reframed)</summary>
       <p>Draft zero alone: 237 words ≈ 98 s at the measured Short pace; its own published film ran 84.5 s. <strong>D-1 (open) <span class="you">YOUR CALL</span> carries Tab 0's recommendation, strengthened by the alignment correction:</strong> with the graft gone, the fitted piece runs 248 words ≈ 89–102 s — the original's own runtime class, nearly exact. Recommendation: accept this class; deeper cuts would have to come out of the genesis or the repeat, the two places the earlier compression cut and was judged for it. Recorded openly; nothing pre-cut.</p>
       </details><details class="chunk"><summary>The checks — the decision and the publish gate</summary><h4>Checklist</h4>
       <ul class="checks">
@@ -693,7 +781,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="transcript" placeholder="Comment on the transcript…"></textarea>
     </div></details></div></div>
-<div class="holder" id="hold-facts" hidden><div class="sec" id="sec-facts"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-facts"><div class="sumcard"><strong>In short.</strong> Every number in the film, and where it came from. Reference — nothing needed from you here.</div>
+<div class="holder" id="hold-facts" hidden><div class="sec" id="sec-facts"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-facts"><div class="sumcard"><strong>In short.</strong> Every number in the film, and <span class="w1">where it came from</span>. Reference — nothing needed from you here.</div>
       <p><strong>F1 · 3.2 quadrillion tokens a month, Google.</strong> Sundar Pichai, Google I/O 2026, as carried in the Academy's content packet. Single source: the company's CEO, on stage. The piece states it as Google's figure ("Google alone") — the honest frame.</p>
       <p><strong>F2 · Trajectory 9.7 trillion/month (2024) → 480 trillion (2025) → 3.2 quadrillion (2026).</strong> Same source family. Arithmetic recomputed: 3.2×10^15 ÷ 9.7×10^12 ≈ 330 — "more than three hundred times in two years" holds.</p>
       <p><strong>F3 · All usable public text ≈ 300 trillion tokens.</strong> Epoch AI estimate, 2024. Arithmetic recomputed: 300×10^12 ÷ 3.2×10^15 ≈ 0.094 — "about a tenth of one month" holds.</p>
@@ -708,7 +796,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="facts" placeholder="Comment on the facts…"></textarea>
     </div></details></div></div>
-<div class="holder" id="hold-learning" hidden><div class="sec" id="sec-learning"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-learning"><div class="sumcard"><strong>In short.</strong> What the viewer walks away knowing, part by part. Reference — nothing needed from you here.</div>
+<div class="holder" id="hold-learning" hidden><div class="sec" id="sec-learning"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-learning"><div class="sumcard"><strong>In short.</strong> What the viewer <span class="w1">walks away knowing</span>, part by part. Reference — nothing needed from you here.</div>
       <p class="beat"><strong>AND-0:</strong> language processing runs at 3.2 quadrillion tokens a month — one company. (P1, P2)</p>
       <p class="beat"><strong>AND-1:</strong> it grew more than 300 times in two years (P3); all usable public text ever written ≈ 300 trillion tokens (P4) — about a tenth of one month (P5), said twice so it lands (P6, P7).</p>
       <p class="beat"><strong>Era / stakes:</strong> civilization, with its machines, now processes language at this scale (P8); this could be the era that multiplies cognitive power as industrialization multiplied physical power (P9).</p>
@@ -726,7 +814,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="learning" placeholder="Comment on the learning map…"></textarea>
     </div></details></div></div>
-<div class="holder" id="hold-alignment" hidden><div class="sec" id="sec-alignment"><div class="chunk-open"><div class="sec-body" id="body-alignment"><div class="sumcard"><strong>In short.</strong> Six checks that the parts of this page agree with each other. All passing. Reference.</div>
+<div class="holder" id="hold-alignment" hidden><div class="sec" id="sec-alignment"><div class="chunk-open"><div class="sec-body" id="body-alignment"><div class="sumcard"><strong>In short.</strong> Six checks that the parts of this page agree with each other. <span class="w1">All passing</span>. Reference.</div>
       <p>Why this family exists: the earlier checklists verified each element on its own (form, counts, evidence) — and an objective could pass its own checklist while contradicting the transcript, because no item CHECKED one element against another. These items do only that. Each passes only when the mapping between the two elements is shown in this file; a changed element re-runs its items. Proof the family works: <strong>item 1 FAILS both superseded objectives</strong> (their ownership clauses map to zero transcript lines) — recorded in section 1.</p>
       </div><details class="chunk"><summary>The checks — the decision and the publish gate</summary><h4>Checklist — the contradiction checks</h4>
       <ul class="checks">
@@ -740,7 +828,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       </details><details class="chunk"><summary>Your comment</summary>
       <textarea class="comment" data-key="alignment" placeholder="Comment on the alignment checks…"></textarea>
     </div></details></div></div>
-<div class="holder" id="hold-iteration" hidden><div class="sec" id="sec-iteration"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-iteration"><div class="sumcard"><strong>In short.</strong> The open record — every pass over this page and what changed. Reference.</div>
+<div class="holder" id="hold-iteration" hidden><div class="sec" id="sec-iteration"><details class="chunk"><summary>The reasoning — tap to open</summary><div class="sec-body" id="body-iteration"><div class="sumcard"><strong>In short.</strong> The open record — every pass over this page and <span class="w1">what changed</span>. Reference.</div>
       <p>This tab was built by the documented method (branches/AGENTS.md): a baseline assembled from the record, then numbered passes, each a named audit, with every correction made in the open and logged. The full log — every finding, every corrected number — lives in this file's metadata layer (view source). Summary:</p>
       <p class="beat"><strong>Pass 0</strong> — baseline assembled; counts and reasoning recorded unchecked.</p>
       <p class="beat"><strong>Pass 1</strong> — objective reasoning traced to the record; the two-jobs resolution added; tension T-1 flagged openly.</p>
@@ -776,9 +864,9 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
       <ul>
         <li>Hadi's verdict on v14, in his words: “No UX at all, score 0 for UX design and UI.” He ordered twenty problems listed and fixed. The audit ran against the British Dyslexia Association guide and the progressive-disclosure pattern, under the new governing document for review surfaces (the dashboard-ux skill, created this pass — work runs inside a named skill, per the anti-improvisation rule).</li>
         <li>The twenty, each fixed in this version: (1) call controls sat below the content — now the call zone sits at the top of every popup, under a two-line summary; (2) no summary — every popup opens with an “In short” card; (3) endless scroll — detail now lives in labelled collapsible chunks; (4) comment boxes scattered — they stay with their lines, inside the collapsed chunks; (5) giant type, six words a line — base type is now 18 px with a 1.6 line height; (6) tiles spoke in fractions — each tile now carries a plain status word; (7) the four-number stats line — replaced by one sentence; (8) red meant two things — the engagement mark is now “● yours” in words, and NOT PASSING keeps its word; (9) decisions and reference looked equal — tiles are grouped YOUR CALLS / REFERENCE; (10) hold-to-open was undiscoverable — tap is now the taught gesture; (11) the back button left the site — it now closes the popup; (12) saving was invisible — the popup footer confirms “Saved on this device” and the page counts his answers; (13) Send was unexplained — the send bar now says where it goes and offers Copy without leaving; (14) one button look for three acts — each call zone is labelled (Your call / your publish set / D-1 length); (15) checklist families unlabelled — every row now carries DECISION or DELIVERY CHECK; (16) audio came before the point — the player now sits under the call zone; (17) small gray text — raised to size and contrast floors; (18) popup chrome scrolled away — header and footer are fixed, the middle scrolls; (19) background scroll and unguarded motion — the page locks behind a popup and reduced-motion is honoured; (20) no finish line — the send bar is the finish line, with the saved count.</li>
-        <li>Objective revised from Hadi's comment in this page (typed in the objective comment box, screenshotted to Archer 19:47 ET): his four beats — show the scale of language processing, a new era begins, what started it, invite to follow. Old objective: “Show language processing grown to industry scale from one 2017 idea — the road from predicting words to agents doing jobs.” New objective (18 words): “Language processing at a scale opening a new era — where it started, and an invitation to follow.” Clause check re-run (gate F9): scale → P1–P9 · new era → P9 · where it started → P10–P15 · invitation to follow → P16+P17 — four clauses, four carried, zero without a carrier.</li>
+        <li>Objective revised from Hadi's comment in this page (typed in the objective comment box, screenshotted to Archer 19:47 ET): his four beats — show the scale of language processing, a new era begins, what started it, invite to follow. Old objective: “Show language processing grown to industry scale from one 2017 idea — the road from predicting words to agents doing jobs.” New objective (18 words): “Show language processing at a scale indicating a new era begins — its start — and invite to follow our channel.” Clause check re-run (gate F9): scale → P1–P9 · new era → P9 · where it started → P10–P15 · invitation to follow → P16+P17 — four clauses, four carried, zero without a carrier.</li>
         <li>Governing document for this layer: dashboard-ux skill v1. Phase: Execute → Verify of the dashboard-UX cycle (tap test on this version follows in the record).</li>
-      </ul>
+      </ul><details class="chunk sub"><summary>Continued — tap to open</summary>
 
       <h3>Pass 15.1 — 2026-10-29 · the pill rows, root-caused</h3>
       <ul>
@@ -801,7 +889,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
         <li>The progress checker's flag, verified on the artifact: five current-facing fitted totals outside the transcript body still read 221 words / 86% / ~79–91 s after the tangible beat landed. The v15.3 figure replaces had covered the transcript body's own strings; one cross-body pattern silently matched nothing (its dash differed from the file's). All five are corrected now — the alignment checkpoint line, both "Fitted total" lines (architecture and transcript), the alignment recommendation line, and the survival line (which now states both bases: 204 of 237 prose words survive = 86%; the fitted piece totals 258 words with the Uses lines and the tangible beat). The Era beat's listing and capacity now carry the tangible beat (37 words, capacity set by Hadi's direction).</li>
         <li>Left untouched, deliberately: the dated iteration-record entries keep the figures of their date (they describe the state when written), and one fit-iteration parenthesis (268 words) describes that iteration's own reading pool. The distinction — current-facing text must be current; dated record text is history — is the audit's rule, stated here so the next figure change re-runs this same sweep: search the whole file for the old figure, classify every hit, update the current-facing ones, log it.</li>
         <li>Lesson for the builder: a replace that must fire carries an assert. Two of this day's figure errors were silent non-firing replaces.</li>
-      </ul>
+      </ul></details><details class="chunk sub"><summary>Continued — tap to open</summary>
 
       <h3>Pass 15.5 — 2026-10-29 · the recount sweep, completed (drift order 20:45 ET)</h3>
       <ul>
@@ -822,7 +910,7 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
         <li>The withdrawn Pass 15.3 candidate set is replaced in section 2 by the methodology record and the procedure's three candidates. Governing document: the story-architecture-selection skill (~/workspace/custom-skills/story-architecture-selection/SKILL.md), distilled from the 2026-10-29 sourced research report. The derivation: Candidate B — trailer scaffold with the Duarte oscillation — 14 of 14 on the procedure's criteria; A 13; C 11. Six frameworks eliminated as container, each by its named test (recorded in the section).</li>
         <li>Scope counts for the record, all pieces, architecture candidates presented to Hadi to date: total 9 — the nested-ABT decision of the 16:33 ET pass (1, no methodology record), the Pass 15.3 set (5, no methodology record — withdrawn), the Pass 15.7 set (3, methodology record in this file, this section). With a methodology record at presentation: 3. Without: 6, all Quadrillion, all superseded or withdrawn.</li>
         <li>Nothing in the fitted arrangement was re-cut in this pass: candidate B's two proposed re-cuts (the repeat to the climax slot; the origin trimmed to specifics) wait for Hadi's judgment of the derivation. The architecture choice checklist item stays NOT PASSING — the call is his, now on method-derived options.</li>
-      </ul>
+      </ul></details><details class="chunk sub"><summary>Continued — tap to open</summary>
 
       <h3>Pass 15.8 — 2026-10-29 · allocation + disclosure</h3>
       <ul>
@@ -833,23 +921,28 @@ details.chunk>summary{cursor:pointer;font-weight:700;font-size:18px;padding:14px
         <li>Known residue: the section audio files for Story and Transcript predate this pass's decisions (they narrate the earlier summaries); the Length section's audio is new. Phone-width rendering remains verified only by Hadi's own phone — his screenshot this hour is what caught the wall.</li>
       </ul>
 
-<details class="chunk"><summary>Pass 15.10 — Tab 0 story closure + the style layer (2026-10-29)</summary>
+
+
+
+
+
+
+
+</div></details></details><details class="chunk"><summary>Pass 15.10 — Tab 0 story closure + the style layer (2026-10-29)</summary>
 <p><strong>Story audit at Tab 0 — every Archer-side story decision is closed: 11 of 11.</strong> Architecture (Candidate B) · the six-movement map · chunk order with the repeat at the climax · P14 trimmed to its short form · P4 and P8 dropped · the tangible beat with the electricity line as its peak · the hook (P1+P2) · the payoff split (mini-payoff in the piece, the main payoff to the series) · the ending slot (P16+P17) · the ABT diagnostic · <strong>and the uses form, closed in this pass: the short forms U1/U2 stand in the final transcript; expanded Variant B is rejected — its middle line lengthens the montage beat and breaks the escalation pace.</strong></p>
 <p><strong>The next stage is named: the DELIVERY pass.</strong> Its scope: speakability — word swaps made only so the lines deliver better aloud, transitions, and pauses. Zero to some changes; the content (what is said, and in what order) is frozen from Tab 0. Visuals come after it.</p>
-<p><strong>The style layer stands in the UX intent register</strong> (in this file's register comment): his style — floating, borderless, sky-dark, glass and translucent, fluffy — as tokens S1–S5 with a per-component style checklist. The rebuild and the 50-iteration loop verify every component against it.</p>
-<p>His calls, unchanged: objective (a check, correctable) · pairs (open) · length (frozen under the drift directive until the totals fix is verified on the republished file).</p>
-</details>
-
-<details class="chunk"><summary>Pass 15.11 — v16 shipped; records repaired (2026-10-29)</summary>
+<p><strong>The style layer stands in the UX intent register</strong> (in this file's register comment): his style — floating, borderless, sky-dark, glass and translucent, fluffy — as tokens S1–S5 with a per-component style checklist. The rebuild and the 50-iteration loop verify every component against it.</p><details class="chunk sub"><summary>Continued — tap to open</summary>
+<p>His calls, unchanged: objective (a check, correctable) · pairs (open) · length (frozen under the drift directive until the totals fix is verified on the republished file).</p></details></details><details class="chunk"><summary>Pass 15.11 — v16 shipped; records repaired (2026-10-29)</summary>
 <p><strong>The style mix, built and live.</strong> The page was rebuilt under Hadi's recorded style pick (web references, 22:20 ET): Reference 1's glass as the primary look, Reference 3's calm one-at-a-time arrangement, Reference 4's glow on secondary elements only. The Pairs tile opens a full-screen viewer (thumbnail, title at the bottom, swipe, pick, scores-and-notes into the popup). Sections carry named arrangement variants — A call-first (Objective, Facts, Fit check), B specimen-first (Length, Transcript), C summary-first (Story, Learning, Record) — for his in-use judgment. Word emphasis applied per the register's typography record. Dom test executed on the built file: 25 of 25 checks pass (evidence: tab0-work/domtest16-result.md). Pushed in an announced window, commit 986ebd73; live read-back verified — viewer, style composition, and emphasis present on the served page.</p>
 <p><strong>Records repaired.</strong> (1) The fitted-arrangement block in the Transcript tab is labelled SUPERSEDED: its rows sum to the pre-trim 258 words; the decided arrangement is the final transcript, 248 words. (2) The builder had overwritten the v15.8 delivery copy with v16 content under the same filename; the v15.8 copy is restored from pushed commit 25cdc609 (180,803 bytes, sha256 13f76834), and the builder now writes each version's copy under its own versioned name. (3) The placement verification P1–P7 is filed in tab0-work/ux-ledger.md; P7 (viewer title at the bottom) is live in v16.</p>
-</details>
-
-<details class="chunk"><summary>Pass 15.12 — Pairs iterated three rounds; Length demoted to a derivative (2026-10-29)</summary>
+</details><details class="chunk"><summary>Pass 15.12 — Pairs iterated three rounds; Length demoted to a derivative (2026-10-29)</summary>
 <p><strong>Pairs — three iteration rounds on Hadi's order</strong> (“you are missing key very obvious low hanging fruit… what can you add to these images”). ROUND 1 — ADD the physical carrier each image lacked: B gained the arc arrow from the tiny 2024 bar bursting past the tower's top, and the tower now crops off the frame; C stopped being text-only and gained the balance scale — a small stack of books riding high, a glowing stack slamming its pan down; D's funnel was flipped into an expansion — one gold word-bar feeding a widening field; E's tidy bars became a wide pile of real books against the tower; A's token wall gained an eruption gradient out of the paper. ROUND 2 — decode pass at full and 10% size, viewed by Archer: A's gradient made unmistakable with light-streams from the page; C's headline moved clear of the image and its books enlarged; E's books rebuilt with spines and page lines until they read as books. ROUND 3 — titles re-checked against the new images (no title repeats its thumbnail; every gap still open) and the set re-scored with click-reasoning records: <strong>B 90</strong> (the arrow makes the growth an event, not a chart) · <strong>C 89</strong> (the scale states the imbalance physically; the number alone rides as text) · <strong>E 88</strong> (the book pile gives “everything ever written” a mass) · <strong>A 87</strong> (the eruption now reads; the phrase still needs its title) · <strong>D 86</strong> (the expansion reads; its subject stays abstract). Publish three, re-ranked: <strong>B, C, E</strong>. The earlier images stay in the branch assets as the record; the viewer now shows the iterated set.</p>
 <p><strong>Length is a derivative — the Length call is abolished (Hadi's ruling, 2026-10-29 ~22:37 ET).</strong> “We don't choose the number of words; we choose other things, and the number of words is whatever it is.” The Length tile moves to Reference as a measured readout (248 words ≈ 89–102 s); its decision buttons are removed. The register gains the general rule: a derivative (word count, runtime, scene count) is a readout, never a decision tile — decisions are the choices that cause the numbers. His calls on this page are now two: the Objective and the Pairs.</p>
-</details>
-</div></div></div>
+</details><details class="chunk"><summary>Pass 15.13 — His answers recorded; Tab 0 judged state (2026-10-29)</summary>
+<p><strong>His answers arrived through the page's Send-answers export (22:48 ET).</strong> OBJECTIVE: confirmed — and reworded in his own dictation: “show the scale of language processing indicating a new era begins, and what started it and invite to follow our channel.” The standing objective is that wording, carried under the dictation-fidelity gate: carrier check 8 elements / 8 carried / 0 dropped (show · the scale of language processing · indicating · a new era begins · what started it · invite · to follow · our channel). Grammar repairs only, each listed: word order (language processing at a scale), the origin clause compressed to “its start”, his doubled “and” repaired. Standing text (19 words): <strong>Show language processing at a scale indicating a new era begins — its start — and invite to follow our channel.</strong> Clause check against the final transcript: 4 clauses / 4 carried (scale shown: P1–P3, P5, P7 · era indicated: P9, in the indicating mood — “could be the start of an era” · its start: P10–P15 · invite to follow our channel: P16+P17, the series invitation). The alignment family was re-run against this objective: 6 of 6 PASS; “show” is recorded as a duty on the visual layer — the scale must be demonstrated, not stated.</p>
+<p><strong>PAIRS: his exported publish set is {C}.</strong> Recorded exactly as exported. (The publish set completes when he picks in the viewer; my ranked recommendation after six rounds stands beside his pick, not over it: B 91 · E 90 · C 89 · A 88 · D 86 — publish three B, E, C.) Rounds 4–6 (his order): B and E gained ONE COMPANY on the thumbnail — his directed addition; C's books enlarged until they read as books; A's paper enlarged; D's connector marks removed. D-1: not chosen — the Length call no longer exists (derivative rule). STORY: not marked — decided by Archer; the allocation held.</p>
+<p><strong>The 50-iteration dyslexia loop closed the same evening</strong> (record: tab0-work/ux-ledger.md): 6 rounds, the sixth finding zero problems — disclosure 54 levels / 54 passing; functional suite 32/32; the loop's deepest find was in the raw markup: the Record's comment compartment stood unclosed in the source (51 opens / 50 closes) under silently-repairing DOM tests. Tab 0's remaining step is Hadi's review of the completed phase.</p>
+</details></div></div>
   </div>
 </section>
 <section id="video" class="panel" hidden>
@@ -1071,11 +1164,11 @@ function refreshBanner() {
 }
 
 var PAIRS = [
- {id:'B', img:'assets/img-titles2-1.jpg', title:'Google Processes More Than Everything Ever Written', meta:'Pair B · my score <span class="w1">90</span> · publish'},
- {id:'C', img:'assets/img-titles2-2.jpg', title:'One Month vs. Everything Humanity Ever Wrote', meta:'Pair C · my score <span class="w1">89</span> · publish'},
- {id:'E', img:'assets/img-titles2-3.jpg', title:'One Month of Google vs. Everything Ever Written', meta:'Pair E · my score <span class="w1">88</span> · publish'},
- {id:'A', img:'assets/img-titles2-4.jpg', title:'3.2 Quadrillion Tokens a Month — Google Alone', meta:'Pair A · my score <span class="w1">87</span> · reserve'},
- {id:'D', img:'assets/img-titles2-5.jpg', title:'Predicting the Next Word Became Agents Doing Jobs', meta:'Pair D · my score <span class="w1">86</span> · reserve'}
+ {id:'B', img:'assets/img-titles3-1.jpg', title:'Google Processes More Than Everything Ever Written', meta:'Pair B · my score <span class="w1">91</span> · publish'},
+ {id:'C', img:'assets/img-titles3-2.jpg', title:'One Month vs. Everything Humanity Ever Wrote', meta:'Pair C · my score <span class="w1">89</span> · publish'},
+ {id:'E', img:'assets/img-titles3-3.jpg', title:'One Month of Google vs. Everything Ever Written', meta:'Pair E · my score <span class="w1">90</span> · publish'},
+ {id:'A', img:'assets/img-titles3-4.jpg', title:'3.2 Quadrillion Tokens a Month — Google Alone', meta:'Pair A · my score <span class="w1">88</span> · reserve'},
+ {id:'D', img:'assets/img-titles3-5.jpg', title:'Predicting the Next Word Became Agents Doing Jobs', meta:'Pair D · my score <span class="w1">86</span> · reserve'}
 ];
 var vIdx = 0, viewerBypass = false;
 function renderViewer() {
