@@ -5,557 +5,451 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jobs map — the territory of all jobs</title>
 <style>
-/* The token layer below is inherited from the Quadrillion dashboard's :root
-   (hidden_files/branches/quadrillion/quadrillion.html), each token carrying its
-   reason. This page spends the same tokens so the map and the video dashboards
-   read as one system. */
 :root{
-  /* @reason [REFERENCE] The page's standing sky-dark base, kept as the ground's main field (inherited verbatim). */
+  /* @reason [REFERENCE] The page's standing sky-dark base, kept as the ground's main field (inherited verbatim from the Quadrillion token layer). */
   --ground-1:#0a1120;
   /* @reason [RESEARCH] The ground's deep stop — the darkest sky the glass floats over (inherited verbatim). */
   --ground-0:#070c16;
-  /* @reason [RESEARCH] Glass fill over dark: the documented white-tint band rendered as this system's blue tint (inherited verbatim). */
+  /* @reason [RESEARCH] Glass fill over dark: white-tint band 0.05–0.15 rendered as this system's blue tint (inherited verbatim; dyslexia-ux-principles P4). */
   --glass-fill:rgba(148,184,255,.09);
-  /* @reason [RESEARCH] Raised glass takes the recipe band's upper step so it reads one step nearer (inherited verbatim). */
-  --glass-fill-strong:rgba(148,184,255,.14);
-  /* @reason [RESEARCH] The core glass recipe's blur band is 12–16px; 14px is mid-band (inherited verbatim). */
+  /* @reason [RESEARCH] Raised glass takes the band's upper step so the needs-you band reads one step nearer (inherited verbatim). */
+  --glass-fill-strong:rgba(148,184,255,.15);
+  /* @reason [RESEARCH] Blur band 12–16px; 14px mid-band (inherited verbatim). */
   --glass-blur:14px;
-  /* @reason [RESEARCH] The core recipe's saturate band is 150–180%; 160% keeps the ground's colour alive through the glass (inherited verbatim). */
+  /* @reason [RESEARCH] Saturate band 150–180%; 160% keeps the ground's colour alive (inherited verbatim). */
   --glass-sat:160%;
-  /* @reason [RESEARCH] The luminous edge: white at 20–25% is the researched 1px glass highlight strength (inherited verbatim). */
+  /* @reason [RESEARCH] The luminous edge: 1px white at ~22%, inside the researched 20–25% highlight band (inherited verbatim). */
   --glass-edge:rgba(255,255,255,.22);
-  /* @reason [RESEARCH] The dark-glass inner top highlight — light arriving, not a line drawn (inherited verbatim). */
+  /* @reason [RESEARCH] The dark-glass inner top highlight (inherited verbatim). */
   --glass-hi:inset 0 1px 0 rgba(255,255,255,.28);
-  /* @reason [RESEARCH] The canonical dark card shadow: 0 8px 32px, black at 0.37 on dark grounds (inherited verbatim). */
+  /* @reason [RESEARCH] Canonical dark card shadow 0 8px 32px, black 0.37 (inherited verbatim). */
   --shadow-card:0 8px 32px rgba(0,0,0,.37);
-  /* @reason [USER] Radius scale, the fluffy step: tiles and cards wear the soft 26px the owner's chosen look floats on (inherited verbatim). */
+  /* @reason [USER] Radius scale, the fluffy step the owner's chosen look floats on (inherited verbatim). */
   --radius-xl:26px;
-  /* @reason [RESEARCH] Radius scale, large step: compartments and panels, inside the 16–24px glass-card guidance (inherited verbatim). */
+  /* @reason [RESEARCH] Radius scale, large step for doors and panels (inherited verbatim). */
   --radius-l:20px;
-  /* @reason [RESEARCH] Radius scale, middle step: controls and readout panels (inherited verbatim). */
+  /* @reason [RESEARCH] Radius scale, middle step for chips and readout panels (inherited verbatim). */
   --radius-m:14px;
-  /* @reason [DERIVED] Spacing scale step 3 — the standing section padding step (inherited verbatim). */
+  /* @reason [DERIVED] Spacing step 3 — section padding step (inherited verbatim). */
   --space-3:16px;
-  /* @reason [DERIVED] Spacing scale step 4 — the tile padding the owner's look already uses (inherited verbatim). */
+  /* @reason [DERIVED] Spacing step 4 — card padding step (inherited verbatim). */
   --space-4:20px;
-  /* @reason [DYSLEXIA] Chrome text step 1: quiet labels never drop below 15px on this page (inherited verbatim). */
+  /* @reason [DYSLEXIA] Chrome text step 1: quiet labels never below 15px (principles P1). */
   --type-s:15px;
-  /* @reason [DYSLEXIA] Chrome text step 2: control labels and reading text at 16.5px (inherited verbatim). */
+  /* @reason [DYSLEXIA] Chrome text step 2: reading text at 16.5px (principles P1, BDA 16–19px band). */
   --type-m:16.5px;
-  /* @reason [USER] Emphasis step 1 — white: the words that matter most (the white-to-gray emphasis discipline). */
+  /* @reason [USER] Emphasis step 1 — white: the words that matter most (the white-to-gray ladder). */
   --ink-1:#ffffff;
   /* @reason [USER] Emphasis step 2 — light gray: ordinary reading text on glass. */
   --ink-2:#d7e2f0;
-  /* @reason [USER] Emphasis step 3 — gray: quiet labels and group heads, present but unpushed. */
+  /* @reason [USER] Emphasis step 3 — gray: quiet labels, present but unpushed. */
   --ink-3:#9fb0c9;
-  /* @reason [REGISTER] The live colour: it seconds the word on open, active states — never carries a state alone. */
+  /* @reason [REGISTER] The live colour: seconds the word on open states, never carries a state alone (P3/P4). */
   --sky-live:#8ab4ff;
-  /* @reason [REGISTER] The done shade: it seconds the word on closed, settled states. */
+  /* @reason [REGISTER] The done shade: seconds the word on closed states only. */
   --done:#37d67a;
-  /* @reason [REGISTER] The deferred/held shade: it seconds the word 'Held seat' and nothing else. */
+  /* @reason [REGISTER] The deferred shade: seconds the word 'Held seat' and nothing else. */
   --def:#eec25e;
-  /* @reason [RESEARCH] The touch floor: 44–48px across both researched systems; the page builds to 48 (inherited verbatim). */
+  /* @reason [DASHBOARD-UX] The needs-you mark's colour: red seconds the word 'Yours' and marks nothing else on this page (principles P3; skill §4 one signal, one meaning). */
+  --yours:#ff7a6b;
+  /* @reason [RESEARCH] Touch floor 44–48px; the page builds to 48 (P8). */
   --act-h:48px;
-  /* @reason [DYSLEXIA] The weight ladder's base: resting prose. Emphasis is a step up from here, never the floor. */
+  /* @reason [DYSLEXIA] Weight ladder base: resting prose (P1 — emphasis is a step up, never the floor). */
   --w-base:400;
-  /* @reason [DYSLEXIA] The ladder's label step: state words and small labels. */
+  /* @reason [DYSLEXIA] Weight ladder label step: state words and small labels. */
   --w-label:600;
-  /* @reason [DYSLEXIA] The ladder's heading step: names and summaries. */
+  /* @reason [DYSLEXIA] Weight ladder heading step: names and summaries. */
   --w-head:700;
-  /* @reason [DYSLEXIA] The ladder's peak, spent by name only: display numerals and the biggest figures. */
+  /* @reason [DYSLEXIA] Weight ladder peak, spent by name only: display numerals. */
   --w-peak:800;
 }
-/* @reason [DYSLEXIA] Base type: 18px at 1.6 line height, left-aligned ragged right — the dashboard-ux standard's type floor for the sole reader. @covers: font-size, line-height, text-align */
+/* @reason [DYSLEXIA] Base type: 18px at 1.65 line height (BDA 1.5 preferable, WCAG 1.4.12 survival band), letter-spacing .015em (P1 — spacing carries the readability evidence, Zorzi 2012), left-aligned ragged right. @covers: font-size, line-height, letter-spacing, text-align */
 body{
-  margin:0; background:linear-gradient(180deg,var(--ground-0),var(--ground-1) 40%,var(--ground-1));
-  color:var(--ink-2); font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  font-size:18px; line-height:1.6; text-align:left;
+  margin:0;background:linear-gradient(180deg,var(--ground-0),var(--ground-1) 40%,var(--ground-1));
+  color:var(--ink-2);font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:18px;line-height:1.65;letter-spacing:.015em;text-align:left;
 }
-main{max-width:1060px;margin:0 auto;padding:var(--space-4);}
-/* @reason [DASHBOARD-PRINCIPLE] The stat head puts the big figures first: the whole territory's shape in five numbers before any job is named. @covers: display, gap */
-.stats{display:flex;flex-wrap:wrap;gap:var(--space-3);margin:var(--space-3) 0;}
-/* @reason [REFERENCE] A stat block is a glass tile: same fill, edge, blur and shadow as every card on the video dashboards, so the map belongs to the same system. @covers: background, border, border-radius, box-shadow, backdrop-filter */
-.stat{
-  flex:1 1 150px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-xl);
-  box-shadow:var(--glass-hi),var(--shadow-card);backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
-  padding:var(--space-3) var(--space-4);
-}
-.stat-num{display:block;font-size:44px;font-weight:var(--w-peak);color:var(--ink-1);line-height:1.15;}
-.stat-word{display:block;font-size:var(--type-m);font-weight:var(--w-label);color:var(--ink-2);}
-h1{font-size:30px;font-weight:var(--w-head);color:var(--ink-1);margin:8px 0 4px;}
-.asof{font-size:var(--type-m);color:var(--ink-3);max-width:62ch;}
-.split-note{font-size:var(--type-m);color:var(--ink-2);max-width:68ch;}
-/* @reason [DASHBOARD-PRINCIPLE] The dependency strip is the map improvement: the two load-bearing chains are drawn as left-to-right flows with arrows, read spatially in one glance, before any compartment is opened. @covers: display, overflow-x */
-.strip{
+/* @reason [DYSLEXIA] One reading column at a ~68ch measure (P1 line length 50–75 chars), centred — v2 replaces v1's 1060px multi-column field so the scan path is a single top-to-bottom line at any width. @covers: max-width, margin */
+main{max-width:780px;margin:0 auto;padding:var(--space-4);}
+.skip{position:absolute;left:-999px;top:0;background:var(--glass-fill-strong);color:var(--ink-1);padding:10px 16px;border-radius:var(--radius-m);z-index:5;}
+.skip:focus{left:8px;top:8px;}
+/* @reason [DASHBOARD-UX] A visible focus outline on every interactive face (WCAG 2.4.7) — v1 carried none. @covers: outline */
+summary:focus-visible,a:focus-visible{outline:3px solid var(--sky-live);outline-offset:2px;border-radius:6px;}
+h1{font-size:30px;font-weight:var(--w-head);color:var(--ink-1);margin:8px 0 2px;}
+.ver{font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-3);margin:0 0 6px;}
+.asof{font-size:var(--type-m);color:var(--ink-2);max-width:66ch;margin:6px 0;}
+.changed{font-size:var(--type-m);color:var(--ink-2);max-width:66ch;margin:6px 0;}
+.changed strong{color:var(--ink-1);}
+/* @reason [DASHBOARD-PRINCIPLE] v2 stat form: the territory's shape as ONE bar of five figures — v1 spent five separate glass tiles and five rows of vertical space saying the same thing; one bar keeps the big-figures-first scan in a single glance (P2/P3). @covers: display, gap */
+.statbar{
+  display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline;
   background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-xl);
+  box-shadow:var(--glass-hi),var(--shadow-card);backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  padding:14px var(--space-4);margin:var(--space-3) 0;
+}
+.stat{display:flex;align-items:baseline;gap:8px;}
+.stat-num{font-size:34px;font-weight:var(--w-peak);color:var(--ink-1);line-height:1.1;}
+.stat-word{font-size:var(--type-m);font-weight:var(--w-label);color:var(--ink-2);}
+.stat-note{flex-basis:100%;font-size:var(--type-s);color:var(--ink-3);margin:2px 0 0;}
+/* @reason [DASHBOARD-UX] The needs-you band: what needs the owner stands first, on raised glass, each item carrying the reserved mark (red dot + the word Yours) and a jump link to its tile — v1 had no such zone; need was indistinguishable from reference (P3; skill §4/§5). @covers: background, border */
+.needs{
+  background:var(--glass-fill-strong);border:1px solid var(--glass-edge);border-radius:var(--radius-xl);
   box-shadow:var(--glass-hi),var(--shadow-card);backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
   padding:var(--space-3) var(--space-4);margin:var(--space-3) 0;
 }
-.strip-title{font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px;}
-.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0;font-size:var(--type-m);}
-.flow .node{font-weight:var(--w-label);color:var(--ink-1);}
-.flow .arrow{color:var(--sky-live);font-weight:var(--w-head);}
-.flow .note{color:var(--ink-3);}
-.fam{margin:28px 0;}
-.fam-title{font-size:21px;font-weight:var(--w-head);color:var(--ink-1);margin:0 0 12px;}
-.fam-count{color:var(--ink-3);font-weight:var(--w-label);}
-/* @reason [DYSLEXIA] Tiles sit one per row on a phone and in a loose grid on a wide screen; the tile itself is the tap target, at or above the 48px touch floor. @covers: display, gap, grid-template-columns */
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-3);}
-/* @reason [REFERENCE] The tile is the video dashboards' glass card at the fluffy radius; a closed tile shows only its face — name, cycle, state — and opens in place. @covers: background, border, border-radius, box-shadow, backdrop-filter */
-.tile{
+.needs-title{font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px;}
+.need{margin:12px 0;}
+.need-head{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:var(--w-head);color:var(--ink-1);}
+.need p{margin:4px 0 4px 20px;font-size:var(--type-m);max-width:62ch;}
+.need a{color:var(--sky-live);font-weight:var(--w-label);}
+.ydot{width:12px;height:12px;border-radius:50%;background:var(--yours);flex:0 0 auto;}
+.yword{font-size:var(--type-s);font-weight:var(--w-label);color:var(--yours);text-transform:uppercase;letter-spacing:.05em;}
+/* @reason [DASHBOARD-UX] Doors: every compartment is a closed door by default whose summary carries its name, its count, and a one-line gist — what is inside is known before the tap (P6 wayfinding; P2 disclosure depth 1). v1 left the four families open and spent the whole inventory at first open. @covers: background, border-radius */
+.door{
   background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-xl);
   box-shadow:var(--glass-hi),var(--shadow-card);backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
-  padding:var(--space-3) var(--space-4);
+  padding:6px var(--space-4) 10px;margin:14px 0;
 }
-.tile summary{cursor:pointer;list-style:none;display:block;min-height:var(--act-h);}
-.tile summary::-webkit-details-marker{display:none;}
-.tile-id{display:block;font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-3);}
-.tile-name{display:block;font-size:19px;font-weight:var(--w-head);color:var(--ink-1);margin:2px 0;}
-.tile-cycle{display:block;font-size:var(--type-m);color:var(--ink-2);}
-.tile-state{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:var(--type-m);font-weight:var(--w-label);color:var(--ink-1);}
-/* @reason [DASHBOARD-UX] One signal, one meaning: the dot only seconds the state word beside it — blue open, amber held, green closed — and no colour ever carries a state alone. @covers: background, border-radius */
-.dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;}
+.door>summary{cursor:pointer;list-style:none;display:block;min-height:56px;padding:10px 0 4px;}
+.door>summary::-webkit-details-marker{display:none;}
+.door-name{display:flex;align-items:baseline;gap:10px;font-size:21px;font-weight:var(--w-head);color:var(--ink-1);}
+.count-chip{font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-1);background:var(--glass-fill-strong);border:1px solid var(--glass-edge);border-radius:999px;padding:1px 12px;}
+.door-gist{display:block;font-size:var(--type-m);color:var(--ink-3);margin-top:2px;max-width:64ch;}
+.door-hint{display:block;font-size:var(--type-s);color:var(--ink-3);margin-top:2px;}
+/* @reason [DYSLEXIA] Tiles are single-column rows inside their door (v1: an auto-fill grid) — one scan line, no left-right hunting (P6/P10 phone-first single column). @covers: display */
+.tiles{display:block;}
+/* @reason [REFERENCE] The tile keeps v1's glass card at the fluffy radius; the face is now a row — id chip, name, state pill — with the cycle on its own quieter line (P3 hierarchy). @covers: background, border, border-radius */
+.tile{
+  background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);
+  box-shadow:var(--glass-hi),var(--shadow-card);backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  padding:10px var(--space-3);margin:10px 0;
+}
+.tile>summary{cursor:pointer;list-style:none;display:block;min-height:var(--act-h);}
+.tile>summary::-webkit-details-marker{display:none;}
+.tile-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.tile-id{font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-1);background:var(--glass-fill-strong);border:1px solid var(--glass-edge);border-radius:999px;padding:1px 12px;white-space:nowrap;}
+.tile-name{font-size:19px;font-weight:var(--w-head);color:var(--ink-1);}
+.state-pill{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-1);border:1px solid var(--glass-edge);border-radius:999px;padding:2px 12px;white-space:nowrap;}
+.tile-cycle{display:block;font-size:var(--type-m);color:var(--ink-3);margin-top:3px;}
+/* @reason [DASHBOARD-UX] One signal, one meaning: the dot only seconds the state word in its pill — blue open, amber held, green closed (P3). @covers: background */
+.dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;}
 .dot-open{background:var(--sky-live);}
 .dot-held{background:var(--def);}
 .dot-closed{background:var(--done);}
-.tile-detail{margin-top:10px;border-top:1px solid var(--glass-edge);padding-top:10px;}
-.tile-detail p{margin:8px 0;font-size:var(--type-m);max-width:60ch;}
+.tile-detail{margin-top:8px;border-top:1px solid var(--glass-edge);padding-top:8px;}
+.tile-detail p{margin:8px 0;font-size:var(--type-m);max-width:62ch;}
 .d-label{display:block;font-size:var(--type-s);font-weight:var(--w-label);color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;}
 .d-gap{color:var(--ink-1);}
-/* @reason [DASHBOARD-UX] Compartments (dependencies, gaps, record) are closed doors by default — one tap deeper than the tiles, never first-open content. @covers: background, border, border-radius */
-.chunk{
-  background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);
-  box-shadow:var(--glass-hi),var(--shadow-card);backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
-  padding:var(--space-3) var(--space-4);margin:var(--space-3) 0;
-}
-.chunk summary{cursor:pointer;font-size:19px;font-weight:var(--w-head);color:var(--ink-1);min-height:var(--act-h);}
+.flow{font-size:var(--type-m);margin:10px 0;max-width:66ch;}
+.flow .node{font-weight:var(--w-label);color:var(--ink-1);}
+.flow .arrow{color:var(--sky-live);font-weight:var(--w-head);}
+.flow .note{color:var(--ink-3);}
 .dep{margin:14px 0;}
-.dep p{margin:6px 0;font-size:var(--type-m);max-width:70ch;}
-.dep .src{color:var(--ink-3);font-size:var(--type-s);}
+.dep p{margin:6px 0;font-size:var(--type-m);max-width:66ch;}
+.dep .src{display:block;color:var(--ink-3);font-size:var(--type-s);}
 .gap{margin:16px 0;border-top:1px solid var(--glass-edge);padding-top:12px;}
 .gap-title{font-size:18px;font-weight:var(--w-head);color:var(--ink-1);margin:0 0 4px;}
 .gap-age{font-weight:var(--w-label);color:var(--ink-1);margin:4px 0;}
 .gap-owner{color:var(--ink-2);margin:4px 0;}
-.gap-body{color:var(--ink-2);max-width:70ch;}
-.record p{font-size:var(--type-m);max-width:70ch;}
+.gap-body{color:var(--ink-2);max-width:66ch;}
+.record p{font-size:var(--type-m);max-width:66ch;}
+/* @reason [DYSLEXIA] Motion discipline: disclosure opens instantly for motion-sensitive readers; the only transition is a short ease, removed entirely under prefers-reduced-motion (P9, WCAG 2.3.3). @covers: transition */
+.tile,.door{transition:none;}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;scroll-behavior:auto !important;}
+}
+html{scroll-behavior:smooth;}
 </style>
 </head>
 <body>
-<main data-reason="[DASHBOARD-PRINCIPLE] The jobs are the territory; this page is their map (owner's principle, 2026-11-01). It is JOB-16's dashboard form: generated from the ledger's verified reads, updated in addition to LEDGER.md, and linked from the chat digest — the chat message is only the quick report.">
-  <header data-reason="[DASHBOARD-PRINCIPLE] The map opens with the territory's shape — big figures first, then the as-of, so the owner knows what this snapshot is and when it was true before reading a single job.">
+<a class="skip" href="#needs">Skip to what needs you</a>
+<main data-reason="[DASHBOARD-PRINCIPLE] The jobs are the territory; this page is their map (owner's principle, 2026-11-01). JOB-16's dashboard form: generated from the ledger's verified reads plus deltas named on the page, updated in addition to LEDGER.md — the chat message is only the quick report carrying this link.">
+  <header data-reason="[DASHBOARD-PRINCIPLE] The map opens with what needs the owner, then the territory's shape in one bar, then the doors — big facts first, inventory behind taps (P2/P3; v2 order, diagnosed against dyslexia-ux-principles.md).">
     <h1>Jobs map</h1>
-    <p class="asof">States as of <strong>Ledger #13</strong> — JOB-16 Cycle 13, written 2026-11-01 ~14:27 EST, from reads running to 14:22 EST. One tile (JOB-G1) carries a later state from its own job file, marked where it stands.</p>
-    <div class="stats" data-reason="[DASHBOARD-PRINCIPLE] Five numbers carry the whole territory: total, open, held, closed, and the run form — the same counts Ledger #13 re-derived from its own table at Verify.">
-      <div class="stat"><span class="stat-num">25</span><span class="stat-word">jobs in the territory</span></div>
-      <div class="stat"><span class="stat-num">22</span><span class="stat-word">open</span></div>
-      <div class="stat"><span class="stat-num">1</span><span class="stat-word">held seat</span></div>
-      <div class="stat"><span class="stat-num">2</span><span class="stat-word">closed</span></div>
-      <div class="stat"><span class="stat-num">2 / 2</span><span class="stat-word">runs with done.md</span></div>
+    <p class="ver">Version 2 · rebuilt 2026-11-01 under the design-movement law</p>
+    <p class="asof">States as of <strong>Ledger #13</strong> (JOB-16 Cycle 13, written 2026-11-01 ~14:27 EST; reads to 14:22 EST) plus the three deltas named below, each read from its own job file at build time.</p>
+    <p class="changed"><strong>Changed since Ledger #13:</strong> JOB-14 Cycle 16 SYNCED (~15:08 EST, commit 081bf97c) · JOB-THUMB's Round 11 run closed by done.md (~15:19 EST) · JOB-G1's community dashboard is live and with the owner as a check. Each delta is also named on its tile.</p>
+    <div class="statbar" data-reason="[LEDGER-13] Five figures carry the whole territory — the same counts Ledger #13 re-derived from its own table, with the one post-ledger run delta applied and named in the note under the bar instead of silently moving the number (P7 recognition over recall).">
+      <span class="stat"><span class="stat-num">25</span><span class="stat-word">jobs</span></span>
+      <span class="stat"><span class="stat-num">22</span><span class="stat-word">open</span></span>
+      <span class="stat"><span class="stat-num">1</span><span class="stat-word">held seat</span></span>
+      <span class="stat"><span class="stat-num">2</span><span class="stat-word">closed</span></span>
+      <span class="stat"><span class="stat-num">3 / 3</span><span class="stat-word">runs with done.md</span></span>
+      <p class="stat-note">Ledger #13's own split: 21 open · 1 parked · 1 held · 2 closed, runs 2 / 2. Deltas: JOB-G1 stands ACTIVE in its own file (park superseded) → 22 open, none parked; JOB-THUMB's Round 11 run closed → runs 3 / 3. Named, never silent.</p>
     </div>
-    <p class="split-note">Ledger #13's own split reads <strong>21 open · 1 parked · 1 held · 2 closed</strong>. The one delta: JOB-G1 stands <strong>ACTIVE</strong> in its own job file (the 2026-10-30 park was superseded, and its dashboard form was ordered ~14:55 EST) — so this map counts 22 open and no parked job, and says so here rather than silently moving the number.</p>
   </header>
 
-  <section class="strip" data-reason="[DASHBOARD-PRINCIPLE] The improvement this build adds: the dependency lines are drawn as flows, so who-blocks-whom is read spatially in one glance — the full sourced lines live in the Dependencies compartment below.">
-    <p class="strip-title">The map in two flows</p>
-    <p class="flow"><span class="node">JOB-VP</span><span class="arrow">→</span><span class="node">JOB-01</span><span class="note">(Tab 0 + Tab 1 seat)</span><span class="arrow">→</span><span class="node">JOB-T2-ONEOFF</span><span class="note">in the held</span><span class="node">JOB-T2</span><span class="note">seat · JOB-THUMB steps in from the side</span></p>
-    <p class="flow"><span class="node">JOB-09 + JOB-10</span><span class="note">audit</span><span class="arrow">→</span><span class="node">JOB-06</span><span class="note">reads both logs daily</span><span class="arrow">·</span><span class="node">JOB-05</span><span class="note">keeps REGISTER true</span><span class="arrow">·</span><span class="node">JOB-16</span><span class="note">reads every file — this map</span></p>
+  <section class="needs" id="needs" data-reason="[DASHBOARD-UX] The needs-you band is v2's lead improvement: the three places the territory waits on the owner, first, on raised glass, each with the reserved mark (red dot + the word Yours — that mark means this and nothing else) and a jump link to the job's tile (P3 rank matches need; P6 wayfinding).">
+    <p class="needs-title">What needs you — 3</p>
+    <div class="need">
+      <p class="need-head"><span class="ydot"></span><span class="yword">Yours</span> Community posts — your call on the three threads</p>
+      <p>Your judgment on the threads gates Cycle 1 production; the community dashboard is live and with you as a check. <a href="#tile-JOB-G1">Open the JOB-G1 tile ↓</a></p>
+    </div>
+    <div class="need">
+      <p class="need-head"><span class="ydot"></span><span class="yword">Yours</span> Quadrillion visuals — waiting on your review verdict</p>
+      <p>Its Execute opens only on your dashboard-review verdict, in your sequence. <a href="#tile-JOB-T2-ONEOFF">Open the JOB-T2-ONEOFF tile ↓</a></p>
+    </div>
+    <div class="need">
+      <p class="need-head"><span class="ydot"></span><span class="yword">Yours</span> Power station — the next step is yours</p>
+      <p>The hunt ran today; baseline unbeaten, and the seller step waits on your go-ahead. <a href="#tile-JOB-P1">Open the JOB-P1 tile ↓</a></p>
+    </div>
   </section>
 
-  <section class="fam" data-fam="production" data-reason="[DASHBOARD-PRINCIPLE] Family grouping is the map improvement: the territory is read by kind of work first, jobs second — the owner scans four groups, never a flat list of 25. [DYSLEXIA] One group in view at a time keeps each view inside the rule of three.">
-    <h2 class="fam-title">Production — the video package and its instruments <span class="fam-count">7</span></h2>
+  <details class="door" data-fam="production" data-reason="[DASHBOARD-PRINCIPLE] A family door: the territory read by kind of work first, jobs second — and in v2 the whole family sits behind one tap, its summary carrying the count and a one-line gist, so first open stays inside the working-memory budget (P2/P6).">
+    <summary><span class="door-name">Production <span class="count-chip">7 jobs</span></span><span class="door-gist">the video package and its instruments — JOB-VP → JOB-01 → the held Tab 2 seat, plus thumbnails and the anatomy instrument.</span><span class="door-hint">Tap to open</span></summary>
     <div class="tiles">
-      <details class="tile" data-job="JOB-VP" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-VP</span>
-          <span class="tile-name">Video production (parent)</span>
+      <details class="tile" id="tile-JOB-VP" data-job="JOB-VP" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-VP</span><span class="tile-name">Video production (parent)</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Cycle 1 · Observe</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Parent of the video-production package — one video from objective to publish gate.</p>
-          <p class="d-state">Birth cycle at planning depth; no production run yet.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Blocks on its children — total blocking, satisfied only by a child run ending in success. (JOB-VP job file, Standing law 1–2)</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Parent of the video-production package — one video from objective to publish gate.</p><p class="d-state">Birth cycle at planning depth; no production run yet.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Blocks on its children — total blocking, satisfied only by a child run ending in success. (JOB-VP job file, Standing law 1–2)</p></div>
       </details>
-      <details class="tile" data-job="JOB-01" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-01</span>
-          <span class="tile-name">Finish Quadrillion — Tab 0 + Tab 1</span>
+      <details class="tile" id="tile-JOB-01" data-job="JOB-01" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-01</span><span class="tile-name">Finish Quadrillion — Tab 0 + Tab 1</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Cycle 5 · Observe–Plan</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The primary line: Quadrillion&#x27;s Tab 0 and Tab 1 to the zero-issue gate.</p>
-          <p class="d-state">Cycle 4 CLOSED — joined verdict FAIL; the zero-issue gate is NOT met. Cycle 5 next: per-unit dispositions + the 390 px sweep.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>JOB-VP&#x27;s seat for Quadrillion · blocks Tab 1 approval and Tab 2&#x27;s opening · JOB-12&#x27;s subject · JOB-07&#x27;s FOCUS-1.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The primary line: Quadrillion&#x27;s Tab 0 and Tab 1 to the zero-issue gate.</p><p class="d-state">Cycle 4 CLOSED — joined verdict FAIL; the zero-issue gate is NOT met. Cycle 5 next: per-unit dispositions + the 390 px sweep.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>JOB-VP&#x27;s seat for Quadrillion · blocks Tab 1 approval and Tab 2&#x27;s opening · JOB-12&#x27;s subject · JOB-07&#x27;s FOCUS-1.</p></div>
       </details>
-      <details class="tile" data-job="JOB-THUMB" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-THUMB</span>
-          <span class="tile-name">Thumbnail creation</span>
-          <span class="tile-cycle">Cycle 1 · Condense (run closed)</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
+      <details class="tile" id="tile-JOB-THUMB" data-job="JOB-THUMB" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-THUMB</span><span class="tile-name">Thumbnail creation</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
+          <span class="tile-cycle">Cycle 1 · Condense — 2 runs closed</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Thumbnail creation — opened as a step inside the parent&#x27;s Foundations cycle.</p>
-          <p class="d-state">First run closed by done.md, outcome success (Round 10 set; every image UNAPPROVED). The job stands open for its next run.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Opened from JOB-VP&#x27;s Foundations cycle Execute · its first run&#x27;s parent is JOB-01 (done.md).</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Thumbnail creation — opened as a step inside the parent&#x27;s Foundations cycle.</p><p class="d-state">Two runs closed by done.md, both outcome success (Round 10 set; Round 11 run closed 2026-11-01 ~15:19 EST — after Ledger #13; every image UNAPPROVED). The job stands open for its next run.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Opened from JOB-VP&#x27;s Foundations cycle Execute · its runs&#x27; parent is JOB-01 (done.md).</p></div>
       </details>
-      <details class="tile" data-job="JOB-T2" data-state="held" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-T2</span>
-          <span class="tile-name">Visual story (Tab 2) — the seat</span>
+      <details class="tile" id="tile-JOB-T2" data-job="JOB-T2" data-state="held" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-T2</span><span class="tile-name">Visual story (Tab 2) — the seat</span><span class="state-pill"><span class="dot dot-held"></span>Held seat</span></span>
           <span class="tile-cycle">No cycle · seat held</span>
-          <span class="tile-state"><span class="dot dot-held"></span>Held seat</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The repeatable Tab 2 job&#x27;s placeholder seat. No cycle opened by its file.</p>
-          <p class="d-state">DO NOT START — opens only on the owner&#x27;s word, in person. No preparation in advance.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>JOB-VP cycle seat 4 (Visuals / Tab 2).</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The repeatable Tab 2 job&#x27;s placeholder seat. No cycle opened by its file.</p><p class="d-state">DO NOT START — opens only on the owner&#x27;s word, in person. No preparation in advance.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>JOB-VP cycle seat 4 (Visuals / Tab 2).</p></div>
       </details>
-      <details class="tile" data-job="JOB-T2-ONEOFF" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-T2-ONEOFF</span>
-          <span class="tile-name">Quadrillion visual layer — one-off</span>
+      <details class="tile" id="tile-JOB-T2-ONEOFF" data-job="JOB-T2-ONEOFF" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-T2-ONEOFF</span><span class="tile-name">Quadrillion visual layer — one-off</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Born ~13:45 EST · Observe</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Develops this one video&#x27;s visual layer inside the JOB-T2 seat; its working memory later seeds the repeatable JOB-T2.</p>
-          <p class="d-state">NEW in Ledger #13. Not started on the artifact; Execute opens only on the owner&#x27;s dashboard-review verdict, in his sequence. Runs: none yet.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Parent JOB-VP · seat JOB-T2 · JOB-07&#x27;s FOCUS-2.</p>
-          <p class="d-gap"><span class="d-label">Open gap</span>Named in Gap 3 — REGISTER carries no per-job section for this job.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Develops this one video&#x27;s visual layer inside the JOB-T2 seat; its working memory later seeds the repeatable JOB-T2.</p><p class="d-state">New in Ledger #13. Not started on the artifact; Execute opens only on the owner&#x27;s dashboard-review verdict, in his sequence. Runs: none yet.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Parent JOB-VP · seat JOB-T2 · JOB-07&#x27;s FOCUS-2.</p><p class="d-gap"><span class="d-label">Open gap</span>Named in Gap 3 — REGISTER carries no per-job section for this job.</p></div>
       </details>
-      <details class="tile" data-job="JOB-02" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-02</span>
-          <span class="tile-name">Hourly anatomy instrument</span>
+      <details class="tile" id="tile-JOB-02" data-job="JOB-02" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-02</span><span class="tile-name">Hourly anatomy instrument</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">v14 cycle · Verify</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The Quadrillion HTML pictured as one organism, with each unit&#x27;s randomness level.</p>
-          <p class="d-state">BACKGROUND station. v14 HELD — the own-eyes screenshot-file leg is unmet. Twenty-first consecutive flat check (14:21 EST).</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The Quadrillion HTML pictured as one organism, with each unit&#x27;s randomness level.</p><p class="d-state">BACKGROUND station. v14 HELD — the own-eyes screenshot-file leg is unmet. Twenty-first consecutive flat check (14:21 EST).</p></div>
       </details>
-      <details class="tile" data-job="job-layer-design" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">job-layer-design</span>
-          <span class="tile-name">Job-layer design (unnumbered)</span>
+      <details class="tile" id="tile-job-layer-design" data-job="job-layer-design" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">job-layer-design</span><span class="tile-name">Job-layer design (unnumbered)</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Cycle 2 · Plan</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The design job for the whole job layer — its walk and Plan pass govern the build-out.</p>
-          <p class="d-state">The walk is CLOSED; the Plan pass file stands written (walk-2026-11-01.md + plan-2026-11-01.md).</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The design job for the whole job layer — its walk and Plan pass govern the build-out.</p><p class="d-state">The walk is CLOSED; the Plan pass file stands written (walk-2026-11-01.md + plan-2026-11-01.md).</p></div>
       </details>
     </div>
-  </section>
-  <section class="fam" data-fam="cadence" data-reason="[DASHBOARD-PRINCIPLE] Family grouping is the map improvement: the territory is read by kind of work first, jobs second — the owner scans four groups, never a flat list of 25. [DYSLEXIA] One group in view at a time keeps each view inside the rule of three.">
-    <h2 class="fam-title">Cadence &amp; watch lanes — the audits and the mirrors <span class="fam-count">7</span></h2>
+  </details>
+
+  <details class="door" data-fam="cadence" data-reason="[DASHBOARD-PRINCIPLE] A family door: the territory read by kind of work first, jobs second — and in v2 the whole family sits behind one tap, its summary carrying the count and a one-line gist, so first open stays inside the working-memory budget (P2/P6).">
+    <summary><span class="door-name">Cadence &amp; watch lanes <span class="count-chip">7 jobs</span></span><span class="door-gist">the audits and the mirrors — Drift, frustration, alignment, self-evaluation — and this ledger.</span><span class="door-hint">Tap to open</span></summary>
     <div class="tiles">
-      <details class="tile" data-job="JOB-03" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-03</span>
-          <span class="tile-name">Cadence &amp; delivery discipline</span>
+      <details class="tile" id="tile-JOB-03" data-job="JOB-03" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-03</span><span class="tile-name">Cadence &amp; delivery discipline</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">“Stamp discipline reset” · Execute</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The delivery discipline — stamps before sends — that the report lanes run under.</p>
-          <p class="d-state">Standing service.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Governs the delivery discipline of JOB-07&#x27;s and JOB-08&#x27;s reports.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The delivery discipline — stamps before sends — that the report lanes run under.</p><p class="d-state">Standing service.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Governs the delivery discipline of JOB-07&#x27;s and JOB-08&#x27;s reports.</p></div>
       </details>
-      <details class="tile" data-job="JOB-05" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-05</span>
-          <span class="tile-name">OPEVC alignment reporting</span>
+      <details class="tile" id="tile-JOB-05" data-job="JOB-05" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-05</span><span class="tile-name">OPEVC alignment reporting</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Cycle 18 · Execute</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Audits every job&#x27;s phase state hourly and keeps REGISTER.md&#x27;s phase states true.</p>
-          <p class="d-state">The 13:01–14:08 EST report was produced by the worker run; its delivery is the main agent&#x27;s turn.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>All jobs&#x27; states are this job&#x27;s Observe input.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Audits every job&#x27;s phase state hourly and keeps REGISTER.md&#x27;s phase states true.</p><p class="d-state">The 13:01–14:08 EST report was produced by the worker run; its delivery is the main agent&#x27;s turn.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>All jobs&#x27; states are this job&#x27;s Observe input.</p></div>
       </details>
-      <details class="tile" data-job="JOB-07" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-07</span>
-          <span class="tile-name">Self-evaluation (generalized)</span>
+      <details class="tile" id="tile-JOB-07" data-job="JOB-07" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-07</span><span class="tile-name">Self-evaluation (generalized)</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">14:21 EST run · Condense (closed)</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Watches a focus set of up to three jobs every run; never watches itself.</p>
-          <p class="d-state">Run 3 (14:21 EST) closed clean: mistakes 0, ineffective 0, governing. Ledger #13 carries JOB-09&#x27;s 13:52 probe-practice directive as ACTIVE — habit-pass counting frozen, clear tests in flight at the ledger&#x27;s as-of.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Focus set: FOCUS-1 JOB-01/JOB-VP · FOCUS-2 JOB-T2-ONEOFF · FOCUS-3 JOB-04 · retires when JOB-01&#x27;s exit sequence completes.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Watches a focus set of up to three jobs every run; never watches itself.</p><p class="d-state">Run 3 (14:21 EST) closed clean: mistakes 0, ineffective 0, governing. Ledger #13 carries JOB-09&#x27;s 13:52 probe-practice directive as ACTIVE — habit-pass counting frozen, clear tests in flight at the ledger&#x27;s as-of.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Focus set: FOCUS-1 JOB-01/JOB-VP · FOCUS-2 JOB-T2-ONEOFF · FOCUS-3 JOB-04 · retires when JOB-01&#x27;s exit sequence completes.</p></div>
       </details>
-      <details class="tile" data-job="JOB-09" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-09</span>
-          <span class="tile-name">Drift check</span>
+      <details class="tile" id="tile-JOB-09" data-job="JOB-09" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-09</span><span class="tile-name">Drift check</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Early audits · Verify → Condense</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Audits the other jobs&#x27; files for drift from their records.</p>
-          <p class="d-state">Last full audit 14:22 EST. The 13:07 delivery-currency directive was CLEARED at 13:37; the 13:52 JOB-07 probe-practice directive stands ACTIVE in Ledger #13. Next full audit was due 14:37 EST.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Its log is consumed daily by JOB-06.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Audits the other jobs&#x27; files for drift from their records.</p><p class="d-state">Last full audit in Ledger #13: 14:22 EST. The 13:07 delivery-currency directive was CLEARED at 13:37; the 13:52 JOB-07 probe-practice directive stands ACTIVE in Ledger #13. Next full audit was due 14:37 EST.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Its log is consumed daily by JOB-06.</p></div>
       </details>
-      <details class="tile" data-job="JOB-10" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-10</span>
-          <span class="tile-name">Frustration check</span>
+      <details class="tile" id="tile-JOB-10" data-job="JOB-10" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-10</span><span class="tile-name">Frustration check</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Review #252 · Condense</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Audits the conversation for the owner&#x27;s friction signals.</p>
-          <p class="d-state">Review #252 at Level 1 (14:21 EST); no owner turn in-window; one self-counted precursor.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Its log is consumed daily by JOB-06.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Audits the conversation for the owner&#x27;s friction signals.</p><p class="d-state">Review #252 at Level 1 (14:21 EST); no owner turn in-window; one self-counted precursor.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Its log is consumed daily by JOB-06.</p></div>
       </details>
-      <details class="tile" data-job="JOB-11" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-11</span>
-          <span class="tile-name">Constitution recheck</span>
+      <details class="tile" id="tile-JOB-11" data-job="JOB-11" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-11</span><span class="tile-name">Constitution recheck</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Recheck #52 (header) · Condense</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Rechecks the system&#x27;s standing claims against their sources, ~3-hourly.</p>
-          <p class="d-state">Header and Current state stand at Recheck #52 (run 09:37 EST); the same file&#x27;s Condense log carries a #53 entry, and the #53 recheck log stands on disk.</p>
-          <p class="d-gap"><span class="d-label">Open gap</span>Gap 2 — its header lags its own Condense log.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Rechecks the system&#x27;s standing claims against their sources, ~3-hourly.</p><p class="d-state">Header and Current state stand at Recheck #52 (run 09:37 EST); the same file&#x27;s Condense log carries a #53 entry, and the #53 recheck log stands on disk.</p><p class="d-gap"><span class="d-label">Open gap</span>Gap 2 — its header lags its own Condense log.</p></div>
       </details>
-      <details class="tile" data-job="JOB-16" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-16</span>
-          <span class="tile-name">Job ledger — this job</span>
+      <details class="tile" id="tile-JOB-16" data-job="JOB-16" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-16</span><span class="tile-name">Job ledger — this job</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Cycle 13 · Condense</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The hourly inventory of every job — this map is its dashboard form.</p>
-          <p class="d-state">Ledger #13 written ~14:27 EST from fresh reads of every job file. Born 2026-11-01 ~02:40 EST on the owner&#x27;s order.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Depends on every job file + REGISTER.md being current. It reports discrepancies; it never repairs them.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The hourly inventory of every job — this map is its dashboard form.</p><p class="d-state">Ledger #13 written ~14:27 EST from fresh reads of every job file. Born 2026-11-01 ~02:40 EST on the owner&#x27;s order.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Depends on every job file + REGISTER.md being current. It reports discrepancies; it never repairs them.</p></div>
       </details>
     </div>
-  </section>
-  <section class="fam" data-fam="services" data-reason="[DASHBOARD-PRINCIPLE] Family grouping is the map improvement: the territory is read by kind of work first, jobs second — the owner scans four groups, never a flat list of 25. [DYSLEXIA] One group in view at a time keeps each view inside the rule of three.">
-    <h2 class="fam-title">Owner-facing services — reports, channels, and growth <span class="fam-count">8</span></h2>
+  </details>
+
+  <details class="door" data-fam="services" data-reason="[DASHBOARD-PRINCIPLE] A family door: the territory read by kind of work first, jobs second — and in v2 the whole family sits behind one tap, its summary carrying the count and a one-line gist, so first open stays inside the working-memory budget (P2/P6).">
+    <summary><span class="door-name">Owner-facing services <span class="count-chip">8 jobs</span></span><span class="door-gist">reports, channels, and growth — The TLDR, the Dot channel, the sync, community posts.</span><span class="door-hint">Tap to open</span></summary>
     <div class="tiles">
-      <details class="tile" data-job="JOB-04" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-04</span>
-          <span class="tile-name">Dot channel</span>
+      <details class="tile" id="tile-JOB-04" data-job="JOB-04" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-04</span><span class="tile-name">Dot channel</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Current cycle · Observe (watch)</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The agent-chat watch with Dot, and the clone-voice lane she feeds.</p>
-          <p class="d-state">n=82 CONFIRMED by n=83; n=83 and n=84 received; n=85 SENT, UNCONFIRMED (branch rule + the n=83 snapshot). The clone set is still not delivered — blocked on Dot&#x27;s side.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Clone lane blocks on Dot&#x27;s delivery of the replacement set {1, 3, 4, 5}; on delivery it feeds the clone master inside JOB-01&#x27;s page work · JOB-07&#x27;s FOCUS-3.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The agent-chat watch with Dot, and the clone-voice lane she feeds.</p><p class="d-state">n=82 CONFIRMED by n=83; n=83 and n=84 received; n=85 SENT, UNCONFIRMED (branch rule + the n=83 snapshot). The clone set is still not delivered — blocked on Dot&#x27;s side.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Clone lane blocks on Dot&#x27;s delivery of the replacement set {1, 3, 4, 5}; on delivery it feeds the clone master inside JOB-01&#x27;s page work · JOB-07&#x27;s FOCUS-3.</p></div>
       </details>
-      <details class="tile" data-job="JOB-06" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-06</span>
-          <span class="tile-name">Daily core-files review</span>
+      <details class="tile" id="tile-JOB-06" data-job="JOB-06" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-06</span><span class="tile-name">Daily core-files review</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Cycle 9 · header: Observe / its state: Condense</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The daily stewardship of the core files; consumes both audit lanes&#x27; logs.</p>
-          <p class="d-state">Its Current state stands at Cycle 9 · Condense (landed ~10:33 EST; registry built; next run = Cycle 10). Its identity header still reads Cycle 9 · Observe.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Consumes JOB-09&#x27;s and JOB-10&#x27;s logs daily.</p>
-          <p class="d-gap"><span class="d-label">Open gap</span>Gap 1 — its header is the lagging side; the fix seat is its Cycle 10.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The daily stewardship of the core files; consumes both audit lanes&#x27; logs.</p><p class="d-state">Its Current state stands at Cycle 9 · Condense (landed ~10:33 EST; registry built; next run = Cycle 10). Its identity header still reads Cycle 9 · Observe.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Consumes JOB-09&#x27;s and JOB-10&#x27;s logs daily.</p><p class="d-gap"><span class="d-label">Open gap</span>Gap 1 — its header is the lagging side; the fix seat is its Cycle 10.</p></div>
       </details>
-      <details class="tile" data-job="JOB-08" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-08</span>
-          <span class="tile-name">Hourly spoken TLDR</span>
+      <details class="tile" id="tile-JOB-08" data-job="JOB-08" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-08</span><span class="tile-name">Hourly spoken TLDR</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Window cycle · Condense (closed)</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The hourly spoken summary the owner listens to.</p>
-          <p class="d-state">Window 12:51–13:46 EST closed at checkpoint Addendum 398; the next cycle stands in Observe (Replan). Stamp in-cycle, before delivery.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Its reports run under JOB-03&#x27;s stamp discipline.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The hourly spoken summary the owner listens to.</p><p class="d-state">Window 12:51–13:46 EST closed at checkpoint Addendum 398; the next cycle stands in Observe (Replan). Stamp in-cycle, before delivery.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Its reports run under JOB-03&#x27;s stamp discipline.</p></div>
       </details>
-      <details class="tile" data-job="JOB-12" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-12</span>
-          <span class="tile-name">Daily job-evolution review</span>
+      <details class="tile" id="tile-JOB-12" data-job="JOB-12" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-12</span><span class="tile-name">Daily job-evolution review</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Cycle 2 · Observe</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Reviews how the current main job is evolving, daily.</p>
-          <p class="d-state">Cycle 1 closed at Condense; Cycle 2 in Observe.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Its subject is JOB-01, the current main job.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Reviews how the current main job is evolving, daily.</p><p class="d-state">Cycle 1 closed at Condense; Cycle 2 in Observe.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Its subject is JOB-01, the current main job.</p></div>
       </details>
-      <details class="tile" data-job="JOB-13" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-13</span>
-          <span class="tile-name">Daily craft study</span>
+      <details class="tile" id="tile-JOB-13" data-job="JOB-13" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-13</span><span class="tile-name">Daily craft study</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Session 2026-11-01 · Condense (closed)</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The daily study session that improves the craft skills.</p>
-          <p class="d-state">Today&#x27;s session (Topic 4, canon-style craft) closed at Condense; its conversions stand on record. The next session stands in Observe (Replan).</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The daily study session that improves the craft skills.</p><p class="d-state">Today&#x27;s session (Topic 4, canon-style craft) closed at Condense; its conversions stand on record. The next session stands in Observe (Replan).</p></div>
       </details>
-      <details class="tile" data-job="JOB-14" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-14</span>
-          <span class="tile-name">Jobs-repo hourly sync</span>
-          <span class="tile-cycle">Cycle 15 · SYNCED</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
+      <details class="tile" id="tile-JOB-14" data-job="JOB-14" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-14</span><span class="tile-name">Jobs-repo hourly sync</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
+          <span class="tile-cycle">Cycle 16 · SYNCED</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Syncs every job file to the departments repo — the jobs&#x27; canonical home — hourly.</p>
-          <p class="d-state">Cycle 15 SYNCED ~13:57 EST: commit df5ca0aa, route PAT commit-files; 13 files; manifest 222 entries. Header and State section agree.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Every job&#x27;s record reaches the canonical home through this job · pushes fire from the main chat only.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Syncs every job file to the departments repo — the jobs&#x27; canonical home — hourly.</p><p class="d-state">Delta past Ledger #13 (which read Cycle 15): Cycle 16 SYNCED ~15:08 EST — commit 081bf97c, route PAT commit-files; header and State section agree, ninth consecutive cycle (JOB-14&#x27;s own file).</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Every job&#x27;s record reaches the canonical home through this job · pushes fire from the main chat only.</p></div>
       </details>
-      <details class="tile" data-job="JOB-G1" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-G1</span>
-          <span class="tile-name">Daily community post</span>
-          <span class="tile-cycle">Cycle 1 · dashboard form building</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
+      <details class="tile" id="tile-JOB-G1" data-job="JOB-G1" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-G1</span><span class="tile-name">Daily community post</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
+          <span class="tile-cycle">Cycle 1 · dashboard live, with the owner</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Community posts for the flagship channel — produced inside one community dashboard; nothing posts without the owner&#x27;s check.</p>
-          <p class="d-state">Ledger #13 printed this job PARKED (park ordered 2026-10-30). That state is superseded: the job&#x27;s own file stands ACTIVE — Cycle 1 (threads form) executed 2026-11-01, and the dashboard production form was ordered ~14:55 EST with its build opened the same turn. The publish gate stands.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Community posts for the flagship channel — produced inside one community dashboard; nothing posts without the owner&#x27;s check.</p><p class="d-state">Ledger #13 printed this job PARKED (park ordered 2026-10-30). That state is superseded: the job&#x27;s own file stands ACTIVE — Cycle 1 (threads form) executed 2026-11-01, the dashboard production form was ordered ~14:55 EST, and the community dashboard is live and was presented to the owner as a check (~15:15 EST); his thread judgment is the open gate. The publish gate stands.</p></div>
       </details>
-      <details class="tile" data-job="JOB-G2" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-G2</span>
-          <span class="tile-name">Weekly channel growth review</span>
+      <details class="tile" id="tile-JOB-G2" data-job="JOB-G2" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-G2</span><span class="tile-name">Weekly channel growth review</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">Week of 2026-10-26 · Condense</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The weekly review of the channel&#x27;s growth.</p>
-          <p class="d-state">Weekly service.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The weekly review of the channel&#x27;s growth.</p><p class="d-state">Weekly service.</p></div>
       </details>
     </div>
-  </section>
-  <section class="fam" data-fam="oneoffs" data-reason="[DASHBOARD-PRINCIPLE] Family grouping is the map improvement: the territory is read by kind of work first, jobs second — the owner scans four groups, never a flat list of 25. [DYSLEXIA] One group in view at a time keeps each view inside the rule of three.">
-    <h2 class="fam-title">Seats &amp; one-offs — bounded jobs and what is waiting <span class="fam-count">3</span></h2>
+  </details>
+
+  <details class="door" data-fam="oneoffs" data-reason="[DASHBOARD-PRINCIPLE] A family door: the territory read by kind of work first, jobs second — and in v2 the whole family sits behind one tap, its summary carrying the count and a one-line gist, so first open stays inside the working-memory budget (P2/P6).">
+    <summary><span class="door-name">Seats &amp; one-offs <span class="count-chip">3 jobs</span></span><span class="door-gist">bounded jobs and what is waiting — One bounded hunt and the closed one-offs.</span><span class="door-hint">Tap to open</span></summary>
     <div class="tiles">
-      <details class="tile" data-job="JOB-P1" data-state="open" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-P1</span>
-          <span class="tile-name">Power station hunt</span>
+      <details class="tile" id="tile-JOB-P1" data-job="JOB-P1" data-state="open" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-P1</span><span class="tile-name">Power station hunt</span><span class="state-pill"><span class="dot dot-open"></span>Open</span></span>
           <span class="tile-cycle">2026-11-01 runs · Condense</span>
-          <span class="tile-state"><span class="dot dot-open"></span>Open</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">Hunts the power-station deal; the next step is the owner&#x27;s.</p>
-          <p class="d-state">State: user action required. Seller watch and deal hunt both ran 2026-11-01 — baseline unbeaten, no live seller threads.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">Hunts the power-station deal; the next step is the owner&#x27;s.</p><p class="d-state">State: user action required. Seller watch and deal hunt both ran 2026-11-01 — baseline unbeaten, no live seller threads.</p></div>
       </details>
-      <details class="tile" data-job="JOB-15" data-state="closed" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-15</span>
-          <span class="tile-name">Misunderstanding review &amp; fix</span>
+      <details class="tile" id="tile-JOB-15" data-job="JOB-15" data-state="closed" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-15</span><span class="tile-name">Misunderstanding review &amp; fix</span><span class="state-pill"><span class="dot dot-closed"></span>Closed</span></span>
           <span class="tile-cycle">Cycle 1 · CLOSED</span>
-          <span class="tile-state"><span class="dot dot-closed"></span>Closed</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">A single-cycle review of mechanism misunderstandings and their fixes.</p>
-          <p class="d-state">COMPLETE / CLOSED — the sweep is complete and every instance is dispositioned.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">A single-cycle review of mechanism misunderstandings and their fixes.</p><p class="d-state">COMPLETE / CLOSED — the sweep is complete and every instance is dispositioned.</p></div>
       </details>
-      <details class="tile" data-job="JOB-07-UPGRADE" data-state="closed" data-reason="[LEDGER-13] Tile face carries only the job, its cycle and phase, and its state word — the minimum the owner needs to place the job; everything else is one tap deeper.">
-        <summary class="tile-face">
-          <span class="tile-id">JOB-07-UPGRADE</span>
-          <span class="tile-name">Generalize the self-evaluation job</span>
+      <details class="tile" id="tile-JOB-07-UPGRADE" data-job="JOB-07-UPGRADE" data-state="closed" data-reason="[LEDGER-13] Tile face carries the job, its name, its cycle and its state word in a pill — the minimum the owner needs to place the job; purpose, state detail, dependencies and any gap are one tap deeper (P2 disclosure depth 2, the page's maximum).">
+        <summary>
+          <span class="tile-top"><span class="tile-id">JOB-07-UPGRADE</span><span class="tile-name">Generalize the self-evaluation job</span><span class="state-pill"><span class="dot dot-closed"></span>Closed</span></span>
           <span class="tile-cycle">Single cycle · done</span>
-          <span class="tile-state"><span class="dot dot-closed"></span>Closed</span>
         </summary>
-        <div class="tile-detail">
-          <p class="d-purpose">The one-off that generalized JOB-07 in place.</p>
-          <p class="d-state">NEW in Ledger #13 — born ~13:38 EST and completed inside the same span: its only run closed by done.md at ~13:50 EST, outcome success. Focus labels set in REGISTER; the cron retitled.</p>
-          <p class="d-deps"><span class="d-label">Depends / feeds</span>Its parent is JOB-07 (its run&#x27;s done.md names JOB-07-self-eval).</p>
-          <p class="d-gap"><span class="d-label">Open gap</span>Named in Gap 3 — REGISTER carries no per-job section for this job.</p>
-        </div>
+        <div class="tile-detail"><p class="d-purpose">The one-off that generalized JOB-07 in place.</p><p class="d-state">New in Ledger #13 — born ~13:38 EST and completed inside the same span: its only run closed by done.md at ~13:50 EST, outcome success. Focus labels set in REGISTER; the cron retitled.</p><p class="d-deps"><span class="d-label">Depends / feeds</span>Its parent is JOB-07 (its run&#x27;s done.md names JOB-07-self-eval).</p><p class="d-gap"><span class="d-label">Open gap</span>Named in Gap 3 — REGISTER carries no per-job section for this job.</p></div>
       </details>
     </div>
-  </section>
-
-  <details class="chunk" data-reason="[LEDGER-13] Every dependency line the files actually state, each with its source named — the ledger's rule is that no dependency stands here that a job file does not state.">
-    <summary>Dependencies — who blocks whom, who feeds whom</summary>
-    <div class="dep"><p><strong>JOB-VP cannot complete while a child is incomplete.</strong> Blocking is total, and a dependency is satisfied only by a child run ending in success; a failed run leaves the parent's dependency open, with the parent's response recorded. <span class="src">Source: JOB-VP's job file, Standing law 1–2 (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-VP's seats:</strong> JOB-01 is its seat for Quadrillion's Tab 0 / Tab 1 work (a pointer, not a migration); thumbnail creation is a step inside its Foundations cycle's Execute, which opens JOB-THUMB; JOB-T2 is cycle seat 4 (Visuals), held until the owner opens Tab 2 in person. <span class="src">Source: JOB-VP's + JOB-THUMB's job files (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-T2-ONEOFF sits in JOB-T2's seat for this one video.</strong> Its Execute opens only on the owner's dashboard-review verdict, in his sequence; its working memory later seeds the repeatable JOB-T2. <span class="src">Source: JOB-T2-ONEOFF's job file (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-01 blocks Tab 1 approval and Tab 2's opening</strong> — both follow from its zero-issue gate. JOB-THUMB's first run served JOB-01, and its digest was appended to JOB-01's file. <span class="src">Source: JOB-01's job file + REGISTER; JOB-THUMB's done.md (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-07 watches a focus set of up to three jobs</strong> — FOCUS-1 JOB-01/JOB-VP · FOCUS-2 JOB-T2-ONEOFF · FOCUS-3 JOB-04 — set at every run's replan, and never itself. JOB-07 retires when JOB-01's exit sequence completes. JOB-07-UPGRADE's parent is JOB-07: the one-off generalized it in place. <span class="src">Source: JOB-07's job file (FOCUS SET) + REGISTER (FOCUS LABELS); JOB-07-UPGRADE's done.md (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-04's clone lane blocks on Dot's delivery</strong> of the replacement set {1, 3, 4, 5}. On delivery, JOB-04's completion feeds the clone master inside JOB-01's page work. <span class="src">Source: JOB-04's job file (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-14 syncs every job file</strong> in the register to the departments repo hourly; pushes fire from the main chat only. <span class="src">Source: JOB-14's job file, sources list (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-05 audits every job's phase state hourly</strong> and keeps REGISTER.md's phase states true — all jobs' states are its Observe input. <span class="src">Source: JOB-05's job file, objective (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-09 and JOB-10 audit the other jobs' work</strong> (files and conversation); <strong>JOB-06 consumes both audits' logs daily.</strong> <span class="src">Source: JOB-09's and JOB-10's job files (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-03 governs the delivery discipline</strong> that JOB-07's and JOB-08's reports run under. <span class="src">Source: JOB-07's + JOB-05's job files (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-12's subject is JOB-01</strong> — it reviews the current main job. <span class="src">Source: JOB-12's job file (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>JOB-16 (this map's job) depends on every job file + REGISTER.md being current.</strong> It records discrepancies; it does not repair them — the owning job / JOB-05 repairs. <span class="src">Source: JOB-16's job file (via Ledger #13).</span></p></div>
-    <div class="dep"><p><strong>No dependency was newly blocked or newly cleared in Ledger #13's cycle</strong> — JOB-04's clone lane, JOB-01's gate, JOB-T2's hold all stand as before. <span class="src">Source: Ledger #13, What changed.</span></p></div>
   </details>
 
-  <details class="chunk" data-reason="[LEDGER-13] The open gaps from Ledger #13, each with its age in ledgers and its owning lane — a gap on the map is a place the territory's records disagree, named, never smoothed over.">
-    <summary>Open gaps — where the records disagree (4)</summary>
-      <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
-        <h3 class="gap-title">Gap 1 — JOB-06&#x27;s header lags its own Current state</h3>
-        <p class="gap-age">4 ledgers (Ledgers #10–#13) · 0 owning-lane cycles elapsed</p>
-        <p class="gap-owner">Owning lane: JOB-06 — fix seat: its Cycle 10</p>
-        <p class="gap-body">JOB-06&#x27;s identity header stands at “Cycle 9 · Observe” while its own Current state section stands at “Cycle 9 · Condense” (landed ~10:33 EST). REGISTER agrees with the Condense side and names the header as the lagging side. JOB-06 is a daily lane and Cycle 10 has not yet run, so the fix was not yet due in one of its runs.</p>
-      </div>
-      <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
-        <h3 class="gap-title">Gap 2 — JOB-11&#x27;s header lags its own Condense log</h3>
-        <p class="gap-age">2 ledgers (Ledgers #12–#13) · 0 owning-lane cycles elapsed since #53</p>
-        <p class="gap-owner">Owning lane: JOB-11 — repair at its next write-back</p>
-        <p class="gap-body">JOB-11&#x27;s header and Current state stand at Recheck #52 while the same file&#x27;s Condense log carries the #53 entry; REGISTER&#x27;s phase-state line, JOB-05&#x27;s Cycle 18 record, and JOB-09&#x27;s / JOB-10&#x27;s records all agree with the #53 side. JOB-11 is a ~3-hourly lane; Recheck #54 has not yet run.</p>
-      </div>
-      <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
-        <h3 class="gap-title">Gap 3 — REGISTER has no per-job section for either newborn job</h3>
-        <p class="gap-age">1 ledger (Ledger #13)</p>
-        <p class="gap-owner">Owning lane: JOB-05 / the main agent</p>
-        <p class="gap-body">The filesystem holds JOB-T2-ONEOFF (born ~13:45 EST) and JOB-07-UPGRADE (born ~13:38 EST, already completed), but REGISTER.md carries no per-job section for either — JOB-T2-ONEOFF is named only inside the FOCUS LABELS section, and JOB-07-UPGRADE is not named anywhere in REGISTER. A reader inventorying from REGISTER alone would miss one open job and one completed job. This map inventories both from their own files.</p>
-      </div>
-      <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
-        <h3 class="gap-title">Gap 4 — REGISTER&#x27;s currency lags (snapshots, not live state)</h3>
-        <p class="gap-age">1 ledger (Ledger #13)</p>
-        <p class="gap-owner">Owning lane: JOB-05 (register refresh)</p>
-        <p class="gap-body">REGISTER&#x27;s phase-state line (~14:08 EST) predates JOB-09&#x27;s 14:22 EST audit, JOB-10&#x27;s Review #252, JOB-07&#x27;s 14:21 EST run 3, and JOB-02&#x27;s twenty-first flat check; it counts JOB-16 at Cycle 12 while this ledger is Cycle 13, and names JOB-06&#x27;s header gap as persisting across two ledgers where this is its fourth. The dated migration snapshot (2026-10-31) carries older states still (JOB-10 at Review #180, JOB-11 at Recheck #47). Each job file is the truth; the register lines are behind by their own timestamps.</p>
-      </div>
+  <details class="door" data-reason="[LEDGER-13] Every dependency line the files actually state, each with its source named — no dependency stands here that a job file does not state. The two load-bearing chains are drawn as flows at the top of this door (v1's strip, kept, moved behind the door with the rest of the inventory).">
+    <summary><span class="door-name">Dependencies <span class="count-chip">13 lines</span></span><span class="door-gist">who blocks whom, who feeds whom — the two main chains drawn first</span><span class="door-hint">Tap to open</span></summary>
+    <p class="flow"><span class="node">JOB-VP</span> <span class="arrow">→</span> <span class="node">JOB-01</span> <span class="note">(Tab 0 + Tab 1 seat)</span> <span class="arrow">→</span> <span class="node">JOB-T2-ONEOFF</span> <span class="note">in the held</span> <span class="node">JOB-T2</span> <span class="note">seat · JOB-THUMB steps in from the side</span></p>
+    <p class="flow"><span class="node">JOB-09 + JOB-10</span> <span class="note">audit</span> <span class="arrow">→</span> <span class="node">JOB-06</span> <span class="note">reads both logs daily</span> <span class="arrow">·</span> <span class="node">JOB-05</span> <span class="note">keeps REGISTER true</span> <span class="arrow">·</span> <span class="node">JOB-16</span> <span class="note">reads every file — this map</span></p>
+    <div class="dep"><p><strong>JOB-VP cannot complete while a child is incomplete.</strong> Blocking is total, and a dependency is satisfied only by a child run ending in success; a failed run leaves the parent&#x27;s dependency open, with the parent&#x27;s response recorded. <span class="src">Source: JOB-VP&#x27;s job file, Standing law 1–2 (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-VP&#x27;s seats:</strong> JOB-01 is its seat for Quadrillion&#x27;s Tab 0 / Tab 1 work (a pointer, not a migration); thumbnail creation is a step inside its Foundations cycle&#x27;s Execute, which opens JOB-THUMB; JOB-T2 is cycle seat 4 (Visuals), held until the owner opens Tab 2 in person. <span class="src">Source: JOB-VP&#x27;s + JOB-THUMB&#x27;s job files (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-T2-ONEOFF sits in JOB-T2&#x27;s seat for this one video.</strong> Its Execute opens only on the owner&#x27;s dashboard-review verdict, in his sequence; its working memory later seeds the repeatable JOB-T2. <span class="src">Source: JOB-T2-ONEOFF&#x27;s job file (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-01 blocks Tab 1 approval and Tab 2&#x27;s opening</strong> — both follow from its zero-issue gate. JOB-THUMB&#x27;s first run served JOB-01, and its digest was appended to JOB-01&#x27;s file. <span class="src">Source: JOB-01&#x27;s job file + REGISTER; JOB-THUMB&#x27;s done.md (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-07 watches a focus set of up to three jobs</strong> — FOCUS-1 JOB-01/JOB-VP · FOCUS-2 JOB-T2-ONEOFF · FOCUS-3 JOB-04 — set at every run&#x27;s replan, and never itself. JOB-07 retires when JOB-01&#x27;s exit sequence completes. JOB-07-UPGRADE&#x27;s parent is JOB-07: the one-off generalized it in place. <span class="src">Source: JOB-07&#x27;s job file (FOCUS SET) + REGISTER (FOCUS LABELS); JOB-07-UPGRADE&#x27;s done.md (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-04&#x27;s clone lane blocks on Dot&#x27;s delivery</strong> of the replacement set {1, 3, 4, 5}. On delivery, JOB-04&#x27;s completion feeds the clone master inside JOB-01&#x27;s page work. <span class="src">Source: JOB-04&#x27;s job file (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-14 syncs every job file</strong> in the register to the departments repo hourly; pushes fire from the main chat only. <span class="src">Source: JOB-14&#x27;s job file, sources list (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-05 audits every job&#x27;s phase state hourly</strong> and keeps REGISTER.md&#x27;s phase states true — all jobs&#x27; states are its Observe input. <span class="src">Source: JOB-05&#x27;s job file, objective (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-09 and JOB-10 audit the other jobs&#x27; work</strong> (files and conversation); JOB-06 consumes both audits&#x27; logs daily. <span class="src">Source: JOB-09&#x27;s and JOB-10&#x27;s job files (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-03 governs the delivery discipline</strong> that JOB-07&#x27;s and JOB-08&#x27;s reports run under. <span class="src">Source: JOB-07&#x27;s + JOB-05&#x27;s job files (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-12&#x27;s subject is JOB-01</strong> — it reviews the current main job. <span class="src">Source: JOB-12&#x27;s job file (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>JOB-16 (this map&#x27;s job) depends on every job file + REGISTER.md being current.</strong> It records discrepancies; it does not repair them — the owning job / JOB-05 repairs. <span class="src">Source: JOB-16&#x27;s job file (via Ledger #13).</span></p></div>
+    <div class="dep"><p><strong>No dependency was newly blocked or newly cleared in Ledger #13&#x27;s cycle</strong> — JOB-04&#x27;s clone lane, JOB-01&#x27;s gate, JOB-T2&#x27;s hold all stand as before. <span class="src">Source: Ledger #13, What changed.</span></p></div>
   </details>
 
-  <details class="chunk record" data-reason="[DASHBOARD-PRINCIPLE] The Record compartment narrates this build and its as-of, in the page itself — the same discipline as the video dashboards, whose reasoning and record live inside the file they describe.">
-    <summary>Record — how this map was built</summary>
-    <p><strong>Built 2026-11-01</strong> by a build pass under JOB-16's dashboard direction (owner's principle, 2026-11-01 ~15:00 EST: the jobs are the territory, the dashboard is the map, the chat message is only a quick report carrying the map's link).</p>
-    <p><strong>Source — one only:</strong> JOB-16's Ledger #13 (job-ledger/LEDGER.md), written ~14:27 EST from fresh reads of every job file, its reads running to 14:22 EST. Every figure and state on this page traces to that ledger. The single exception is JOB-G1's tile: Ledger #13 printed it PARKED, and the job's own file has since superseded that state (ACTIVE, dashboard form ordered ~14:55 EST) — the tile carries the current state and names the supersession, and the stat head names the one-number delta instead of hiding it.</p>
-    <p><strong>What was inherited:</strong> the Quadrillion dashboard's token layer (glass fill, edge, blur and saturate, card shadow, the fluffy 26px radius, the ink steps, the weight ladder, the state shades), its reasoning-layer discipline (a reason on every component, source tags, written outside-in), and the dashboard-ux standard (big figures first, state as words not only colours, progressive disclosure, left-aligned type at 18px / 1.6).</p>
-    <p><strong>What was improved, and why:</strong> two things fitted to a map rather than a single artifact. (1) The inventory is grouped by family — production · cadence &amp; watch lanes · owner-facing services · seats &amp; one-offs — so the territory is read by kind of work first. (2) The dependencies are drawn as a spatial strip of flows at the top of the page, readable in one glance, with the full sourced lines one tap deeper. A map's first job is orientation; a list cannot orient.</p>
-    <p><strong>Verification:</strong> the build record (build-record-jobs-dashboard-v1.md, beside this file) carries the executed checks — composition stats, the tile recount against the ledger's 25 rows, and every head figure re-derived. A rendered screenshot was not obtainable with this machine's local tooling, so no rendered claim stands on this page: layout and phone width are UNVERIFIED in v1, stated here rather than implied.</p>
-    <p><strong>How this page stays true:</strong> JOB-16 updates this map in addition to writing LEDGER.md on each cycle — no figure stands here that the current ledger does not carry.</p>
+  <details class="door" data-reason="[LEDGER-13] The open gaps from Ledger #13, each with its age in ledgers and in owning-lane cycles — a gap on the map is a place the territory's records disagree, named, never smoothed over.">
+    <summary><span class="door-name">Open gaps <span class="count-chip">4</span></span><span class="door-gist">where the records disagree — each with its age two ways and its owning lane</span><span class="door-hint">Tap to open</span></summary>
+    <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
+      <h3 class="gap-title">Gap 1 — JOB-06&#x27;s header lags its own Current state</h3>
+      <p class="gap-age">4 ledgers (Ledgers #10–#13) · 0 owning-lane cycles elapsed</p>
+      <p class="gap-owner">Owning lane: JOB-06 — fix seat: its Cycle 10</p>
+      <p class="gap-body">JOB-06&#x27;s identity header stands at “Cycle 9 · Observe” while its own Current state section stands at “Cycle 9 · Condense” (landed ~10:33 EST). REGISTER agrees with the Condense side and names the header as the lagging side. JOB-06 is a daily lane and Cycle 10 has not yet run, so the fix was not yet due in one of its runs.</p>
+    </div>
+    <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
+      <h3 class="gap-title">Gap 2 — JOB-11&#x27;s header lags its own Condense log</h3>
+      <p class="gap-age">2 ledgers (Ledgers #12–#13) · 0 owning-lane cycles elapsed since #53</p>
+      <p class="gap-owner">Owning lane: JOB-11 — repair at its next write-back</p>
+      <p class="gap-body">JOB-11&#x27;s header and Current state stand at Recheck #52 while the same file&#x27;s Condense log carries the #53 entry; REGISTER&#x27;s phase-state line, JOB-05&#x27;s Cycle 18 record, and JOB-09&#x27;s / JOB-10&#x27;s records all agree with the #53 side. JOB-11 is a ~3-hourly lane; Recheck #54 has not yet run.</p>
+    </div>
+    <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
+      <h3 class="gap-title">Gap 3 — REGISTER has no per-job section for either newborn job</h3>
+      <p class="gap-age">1 ledger (Ledger #13)</p>
+      <p class="gap-owner">Owning lane: JOB-05 / the main agent</p>
+      <p class="gap-body">The filesystem holds JOB-T2-ONEOFF (born ~13:45 EST) and JOB-07-UPGRADE (born ~13:38 EST, already completed), but REGISTER.md carries no per-job section for either — JOB-T2-ONEOFF is named only inside the FOCUS LABELS section, and JOB-07-UPGRADE is not named anywhere in REGISTER. A reader inventorying from REGISTER alone would miss one open job and one completed job. This map inventories both from their own files.</p>
+    </div>
+    <div class="gap" data-reason="[LEDGER-13] A gap is printed with its age two ways — ledgers and owning-lane cycles — because an hourly ledger out-counts a slower lane, and ledger count alone misreads not-yet-due as neglect (JOB-16 Cycle 8 rule).">
+      <h3 class="gap-title">Gap 4 — REGISTER&#x27;s currency lags (snapshots, not live state)</h3>
+      <p class="gap-age">1 ledger (Ledger #13)</p>
+      <p class="gap-owner">Owning lane: JOB-05 (register refresh)</p>
+      <p class="gap-body">REGISTER&#x27;s phase-state line (~14:08 EST) predates JOB-09&#x27;s 14:22 EST audit, JOB-10&#x27;s Review #252, JOB-07&#x27;s 14:21 EST run 3, and JOB-02&#x27;s twenty-first flat check; it counts JOB-16 at Cycle 12 while this ledger is Cycle 13, and names JOB-06&#x27;s header gap as persisting across two ledgers where this is its fourth. The dated migration snapshot (2026-10-31) carries older states still (JOB-10 at Review #180, JOB-11 at Recheck #47). Each job file is the truth; the register lines are behind by their own timestamps.</p>
+    </div>
+  </details>
+
+  <details class="door record" data-reason="[DASHBOARD-PRINCIPLE] The Record compartment narrates this build and its as-of inside the page — the same discipline as the video dashboards, whose reasoning and record live inside the file they describe.">
+    <summary><span class="door-name">Record</span><span class="door-gist">how this map was built, what changed from v1, and what is unverified</span><span class="door-hint">Tap to open</span></summary>
+    <div class="record">
+    <p><strong>Version 2, built 2026-11-01</strong> under JOB-16's Dashboard direction and the owner's design-movement law (2026-11-01 ~15:30 EST): every regeneration improves content and UI/UX, no two consecutive versions carry identical UI/UX, and each build diagnoses the page against the documented core principles — <em>dyslexia-ux-principles.md</em>, kept in this job's territory — and records the before/after delta. <strong>The owner's score for v1 stands on this page as the governing score: 10 / 100.</strong> v2 climbs from there; no score is claimed for v2 here.</p>
+    <p><strong>Source:</strong> JOB-16's Ledger #13 (job-ledger/LEDGER.md), written ~14:27 EST from fresh reads of every job file, its reads running to 14:22 EST — plus three deltas read from their own job files at build time and named on the page and on their tiles: JOB-14 at Cycle 16 SYNCED, JOB-THUMB's Round 11 run closed, JOB-G1's community dashboard live. No other figure was refreshed past the ledger.</p>
+    <p><strong>What v2 changed — the diagnosis and the deltas.</strong> v1 was scored against the principles file; its worst failures: (1) nothing on the page said what needs the owner — need and reference stood at equal rank; (2) first open carried the whole territory at once — measured on the built v1 file: 496 words before any tap, 288 of them the 25 undifferentiated tile faces, with the dependency strip on top — against a working-memory budget of ~4 chunks; (3) the five stat tiles spent five rows saying five numbers; (4) no letter-spacing, and short 60ch measures sat inside a 1060px multi-column field, so the eye hunted left and right across a tile grid. The deltas, before → after: <strong>needs-you band added at the top</strong> (3 items, the reserved mark, jump links to their tiles) → nothing before had a needs zone; <strong>the inventory itself removed from first open</strong> — measured on the built files: v1's first open was 496 words, 288 of them the 25 tile faces; v2's first open is 405 words with zero tile faces, spent instead on the needs band, the one stat bar, and seven doors whose gists make every tap a known tap; <strong>stat head compressed from 5 tiles to 1 bar</strong>; <strong>one reading column (780px, ~66ch measure)</strong> replacing the grid → tiles are single-column rows; <strong>letter-spacing .015em and line height 1.65</strong> → v1 had neither tracking nor the 1.5+ spacing applied to body text beyond 1.6; <strong>skip link and a visible focus outline added</strong> → v1 had neither; <strong>content deltas named where they stand</strong> (the changed-since line, the runs figure 2 / 2 → 3 / 3 with its note). The frame is deliberately stable — glass system, family order, compartment order — so the reader's learned map survives the improvement (principles P5).</p>
+    <p><strong>Verification:</strong> the build record (build-record-jobs-dashboard-v2.md, beside this file) carries the executed checks — the tile recount against the ledger's 25 rows, every head figure re-derived, the first-open word count computed on the built file. <strong>Unverified, stated plainly:</strong> no local rendering tool exists on this machine and external viewers are barred by standing law, so no rendered claim stands on this page — layout as rendered and phone width are UNVERIFIED in v2, as they were in v1.</p>
+    <p><strong>How this page stays true:</strong> JOB-16 updates this map in addition to writing LEDGER.md on each cycle — no figure stands here that the current ledger does not carry, and each version's diagnosis and delta land in its build record.</p>
+    </div>
   </details>
 </main>
 </body>
