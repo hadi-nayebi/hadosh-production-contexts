@@ -28,10 +28,10 @@
   --radius-l:22px;
   /* @reason [DYSLEXIA] The page padding: 20px of clear space at every edge, so no tile touches a screen edge and the first screen reads as four floating objects, not a filled rectangle. */
   --space-page:20px;
-  /* @reason [DYSLEXIA] The gap between tiles: 14px — enough air that each tile reads as its own object, tight enough that all four tiles and the heading fit one phone screen (about 701px of composed height against a 740px viewport floor). */
-  --space-gap:14px;
-  /* @reason [DYSLEXIA] The tile padding: 20px inside every tile, so text never crowds the glass edge and the tap target stays far above the 48px minimum. */
-  --space-tile:20px;
+  /* @reason [DYSLEXIA] The gap between tiles: 10px — enough air that each tile reads as its own object; compressed in v11 (hunt H5) so the whole first screen composes under the 740px viewport the health strip names: main padding 20 + health tile 80 (its 70 + one gap) + heading 55 (45 + one gap) + four tiles at 130.5 + three gaps = about 707px composed. */
+  --space-gap:10px;
+  /* @reason [DYSLEXIA] The tile padding: 12px inside every tile (compressed from 20px in v11, hunt H5, so all four tiles fit the first screen at about 707px composed against the 740px viewport); text keeps clear of the glass edge and the tap target stays far above the 48px minimum. */
+  --space-tile:12px;
   /* @reason [DYSLEXIA] The primary ink: near-white on the dark ground — maximum contrast for the names, the words he scans first. */
   --ink-1:#F4F7FB;
   /* @reason [DYSLEXIA] The secondary ink: a light grey-blue for the one-line descriptions — visibly quieter than the names, still high contrast on the dark ground, so emphasis is carried by shade as well as size. */
@@ -89,9 +89,9 @@ h1{font-size:var(--size-h1);font-weight:var(--w-name);text-align:left;margin:0 0
 /* @reason [DYSLEXIA] The tile state: block, state size and weight, amber ink, 10px below the line — the state stands apart from the description because it answers a different question: what awaits behind this tap, right now.
    @covers: display, margin-top, font-size, font-weight, color */
 .tstate{display:block;margin-top:10px;font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state)}
-/* @reason [USER] The health tile's seat: a slim glass bar in the tile material (fill, edge, inset highlight, card shadow, blur) at the state size and weight in the secondary ink — since v5 it is a DOOR, not a readout (RCA-148, the owner's form amendment of 2026-11-01), and since the 2026-11-02 popup conversion the full strip stands in the popup this tile raises over the page, behind one tap on its face; its relative seat anchors the hidden switch inside it. Its horizontal padding spends the community health tile's own 16px (the transfer source's value), not the tile token — the wider text seat is what lets the one-line face hold. One gap token below it before the heading.
-   @covers: background, border, border-radius, box-shadow, -webkit-backdrop-filter, backdrop-filter, padding, font-size, font-weight, color, margin, position */
-.health{background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);box-shadow:var(--glass-hi),var(--shadow-card);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));padding:10px 16px;font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-2);margin:0 0 var(--space-gap);position:relative}
+/* @reason [USER] The health tile's seat: a slim glass bar in the tile material (fill, edge, inset highlight, card shadow — NO blur: a filtered ancestor becomes the containing block for fixed descendants, so in v10 the popup's fixed seat resolved against this slim bar instead of the screen and rendered cut off at the viewport top, its dim trapped behind the card and its close control over the page's heading — rendered failure, main-agent browser check 2026-11-02; the blur lives on the popup card alone) at the state size and weight in the secondary ink — since v5 it is a DOOR, not a readout (RCA-148, the owner's form amendment of 2026-11-01), and since the 2026-11-02 popup conversion the full strip stands in the popup this tile raises over the page, behind one tap on its face; its relative seat anchors the hidden switch inside it. Its horizontal padding spends the community health tile's own 16px (the transfer source's value), not the tile token — the wider text seat is what lets the one-line face hold. One gap token below it before the heading.
+   @covers: background, border, border-radius, box-shadow, padding, font-size, font-weight, color, margin, position */
+.health{background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);box-shadow:var(--glass-hi),var(--shadow-card);padding:10px 16px;font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-2);margin:0 0 var(--space-gap);position:relative}
 /* @reason [BEST-PRACTICE] The popup's switch: a real checkbox, visually hidden by the clip pattern — never display:none, so keyboard focus still reaches it — checked and unchecked by the face, close and scrim labels, and its checked state is the popup's one open condition. This page has never carried a script; the conversion keeps it that way, the mechanism is native form behaviour.
    @covers: position, width, height, overflow, clip, clip-path, white-space */
 .health-toggle{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
@@ -101,36 +101,36 @@ h1{font-size:var(--size-h1);font-weight:var(--w-name);text-align:left;margin:0 0
 /* @reason [DYSLEXIA] The keyboard focus ring for the health tile: when the hidden switch holds focus, its face wears the same 3px amber outline the tiles use — focus stays a drawn state, never a browser default acting on an invisible control.
    @covers: outline, outline-offset */
 .health-toggle:focus-visible + .health-face{outline:3px solid var(--ink-state);outline-offset:3px}
-/* @reason [USER] The popup layer (the owner's popup law, 2026-11-02): a fixed seat over the whole screen that renders only while the switch is checked (the open-state rule below) — the full strip stands OVER the page, the page itself never grows, and his place in the tile stack waits untouched beneath it. Its dim is the ground deepened — rgba(3,6,12,.66) — so the covered page recedes and the card is the only reading object; the page padding token centres the card with clear space at every edge.
+/* @reason [USER] The popup layer (the owner's popup law, 2026-11-02): a fixed seat over the whole screen that renders only while the switch is checked (the open-state rule below) — the full strip stands OVER the page, the page itself never grows, and his place in the tile stack waits untouched beneath it. Its dim is the ground deepened — rgba(3,6,12,.66) — so the covered page recedes and the card is the only reading object; the page padding token gives the card clear space at every edge and a top margin, so its first line starts on screen at any viewport height. The seat is the viewport's only while no ancestor between this layer and the root carries filter, transform or backdrop-filter — the tile's own blur was removed in v11 to keep that true (build-record-v11.md).
    @covers: position, inset, display, align-items, justify-content, padding, background, z-index */
-.health-pop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:var(--space-page);background:rgba(3,6,12,.66);z-index:50}
+.health-pop{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;padding:var(--space-page);background:rgba(3,6,12,.66);z-index:50}
 /* @reason [USER] The open state: the checked switch raises the popup — one selector is the whole mechanism, so the behaviour the build record's exercise measures is exactly the behaviour this rule states.
    @covers: display */
 .health-toggle:checked ~ .health-pop{display:flex}
 /* @reason [DYSLEXIA] The scrim's seat: it fills the popup layer behind the card, so a tap anywhere outside the card lands on it and closes the popup by unchecking the switch — it needs no visible styling of its own, because the dim it wears is the layer rule's own background.
    @covers: position, inset, cursor */
 .health-scrim{position:absolute;inset:0;cursor:pointer}
-/* @reason [DYSLEXIA] The popup card: the tile's own glass (fill, edge, inset highlight, card shadow, blur) at the column's own 560px measure, so the full strip reads inside one raised object in the page's own material; its relative seat lifts it above the scrim, and the tile padding token keeps the strip off the glass edge.
-   @covers: position, background, border, border-radius, box-shadow, -webkit-backdrop-filter, backdrop-filter, padding, max-width, width */
-.health-card{position:relative;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);box-shadow:var(--glass-hi),var(--shadow-card);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));padding:var(--space-tile);max-width:560px;width:100%}
-/* @reason [DYSLEXIA] The close control: a label for the same switch, drawn in the tile's glass at the state size and weight in the primary ink — a full-width target at the 48px act floor at the card's foot, so the way back is as easy to hit as the way in, and its one word names the act.
-   @covers: display, align-items, justify-content, min-height, margin, padding, background, border, border-radius, cursor, color, font-size, font-weight */
-.health-close{display:flex;align-items:center;justify-content:center;min-height:48px;margin:14px 0 0;padding:6px 16px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);cursor:pointer;color:var(--ink-1);font-size:var(--size-state);font-weight:var(--w-state)}
-/* @reason [DYSLEXIA] The strip inside the card: one short step below the card's top edge — the default paragraph margins would bury the numbers in air; 8px keeps the strip attached to the card as one readout.
+/* @reason [DYSLEXIA] The popup card: the tile's own glass (fill, edge, inset highlight, card shadow, blur) at the column's own 560px measure, so the full strip reads inside one raised object in the page's own material; its relative seat lifts it above the scrim, and the tile padding token keeps the strip off the glass edge. Its height is capped at 90vh and the strip scrolls inside the card, so the card's first line is on screen at any viewport height — the v10 card, uncapped inside its mis-seated layer, ran off the top of the screen (build-record-v11.md).
+   @covers: position, background, border, border-radius, box-shadow, -webkit-backdrop-filter, backdrop-filter, padding, max-width, width, max-height, overflow-y */
+.health-card{position:relative;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);box-shadow:var(--glass-hi),var(--shadow-card);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));padding:var(--space-tile);max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
+/* @reason [DYSLEXIA] The close control: a label for the same switch, drawn in the tile's glass at the state size and weight in the primary ink — a full-width target at the 48px act floor standing at the card's HEAD, sticky at the card's top, so the way back is on screen before the strip's first line and stays on screen while the strip scrolls beneath it (its own blur keeps it readable over the moving text); at the card's foot in v10 it sat wherever the overflowing card ended — over the page's own heading text on the rendered page (build-record-v11.md). Its one word names the act.
+   @covers: display, align-items, justify-content, min-height, margin, padding, background, border, border-radius, cursor, color, font-size, font-weight, position, top, z-index, -webkit-backdrop-filter, backdrop-filter */
+.health-close{display:flex;align-items:center;justify-content:center;min-height:48px;margin:0 0 12px;padding:6px 16px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);cursor:pointer;color:var(--ink-1);font-size:var(--size-state);font-weight:var(--w-state);position:sticky;top:0;z-index:1;-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
+/* @reason [DYSLEXIA] The strip inside the card: one short step below the close control at the card's head — the default paragraph margins would bury the numbers in air; 8px keeps the strip attached to the card as one readout.
    @covers: margin */
 .health p{margin:8px 0 0}
 </style>
 </head>
-<body data-reason="[DYSLEXIA] The body is one phone-first column and nothing else: the first screen is the heading, the health strip the owner ordered at the top of every dashboard (2026-11-01), plus the four dashboard tiles — no prose, no doors, no second surface competing with the one job of this page, jumping to a dashboard.">
+<body data-reason="[DYSLEXIA] The body is one phone-first column and nothing else: the first screen is the heading, the health strip the owner ordered at the top of every dashboard (2026-11-01), plus the four dashboard tiles — no prose, no doors, no second surface competing with the one job of this page, jumping to a dashboard. Its reasoning scope covers descendants without their own reason — in practice the one structural element that carries none: the checklist JSON data block the owner's HTML checklist standard (2026-11-02) mandates at the file's end, whose opening tag the delivery gate matches exactly and so cannot carry attributes of its own." data-reason-scope="descendants">
 <main data-reason="[DYSLEXIA] The main landmark wraps the whole hub: one column, one heading, the health strip, one stack of tiles — landmarked so assistive tech and the reader both get the same single-list structure.">
-<div class="health" data-reason="[USER] The health tile — his order of 2026-11-01: every dashboard shows its health at its top, explicit reasoning first, then inherited, then uncovered — his word for uncovered is random — with the accuracy state, the dyslexia/UX state and the owner state beside them (the seven fields of RCA-141, Review #264) — AS AMENDED by his form rulings: RCA-148 (2026-11-01) set the form as one compact tile whose face carries only the headline shares in one line, and his popup law of 2026-11-02 then set the opening form for every dashboard: a tap opens a nested popup OVER the current view, place kept, depth never in page length — so the full seven-field strip now stands in the popup card this tile raises, and the page beneath never grows. It prints this file's own scanner counts, re-measured on the converted file's final bytes (build-record-v10.md) — print and scan stand at a fixed point, the tile itself inside the count it prints.">
+<div class="health" data-reason="[USER] The health tile — his order of 2026-11-01: every dashboard shows its health at its top, explicit reasoning first, then inherited, then uncovered — his word for uncovered is random — with the accuracy state, the dyslexia/UX state and the owner state beside them (the seven fields of RCA-141, Review #264) — AS AMENDED by his form rulings: RCA-148 (2026-11-01) set the form as one compact tile whose face carries only the headline shares in one line, and his popup law of 2026-11-02 then set the opening form for every dashboard: a tap opens a nested popup OVER the current view, place kept, depth never in page length — so the full seven-field strip now stands in the popup card this tile raises, and the page beneath never grows. It prints this file's own scanner counts, re-measured on the converted file's final bytes (build-record-v11.md) — print and scan stand at a fixed point, the tile itself inside the count it prints.">
 <input class="health-toggle" type="checkbox" id="health-toggle" aria-label="Health details" data-reason="[BEST-PRACTICE] The tile's switch: a real checkbox under the face — tapping the face, the close control or the scrim checks and unchecks it, and its checked state is the popup's one open condition, so the whole mechanism is native form behaviour on a page that carries no script.">
-<label class="health-face" for="health-toggle" data-reason="[DYSLEXIA] The tile's face: the headline shares alone — explicit reasoning first, then random — in the strip's own words, the same one line the summary face carried before the conversion, holding one line at the tile's phone seat; the chevron after the words is the visible signal that the tile opens, the role the native disclosure triangle played in the details form.">Health · 100% reasoned · 0% random <span aria-hidden="true" data-reason="[DYSLEXIA] The chevron: one glyph set apart from the headline words — the affordance that this face opens, never part of the figures it follows.">›</span></label>
+<label class="health-face" for="health-toggle" data-reason="[DYSLEXIA] The tile's face: the headline shares alone — explicit reasoning first, then random — in the strip's own words, the same one line the summary face carried before the conversion, holding one line at the tile's phone seat; the chevron after the words is the visible signal that the tile opens, the role the native disclosure triangle played in the details form.">Health · 97.2% reasoned · 0% random · Checks 3/9 <span aria-hidden="true" data-reason="[DYSLEXIA] The chevron: one glyph set apart from the headline words — the affordance that this face opens, never part of the figures it follows.">›</span></label>
 <div class="health-pop" data-reason="[USER] The popup (his popup law, 2026-11-02): the full strip lifted out of the page flow into a fixed layer over the page — the first screen keeps its composed height open or shut, and closing returns him to the exact tile he tapped, his place kept.">
 <label class="health-scrim" for="health-toggle" aria-label="Close health details" data-reason="[DYSLEXIA] The scrim: the dimmed field around the card is itself a close control — a tap anywhere outside the card unchecks the switch, so the popup never traps him behind one small target."></label>
 <div class="health-card" data-reason="[DYSLEXIA] The card: the strip's reading object — the seven fields entire, at the page's own measures, raised over the dimmed hub so the numbers are read against quiet, not against the tiles beneath.">
-<p data-reason="[USER] The full strip, one tap behind the face: the seven fields of RCA-141 in their standing order — total blocks, the reasoning shares explicit first, the accuracy state, the dyslexia/UX state, the owner state — every figure this file's own, measured by the reasoning scanner on this file's final bytes (build-record-v10.md). The dyslexia/UX figures describe the NEW first open: the tile's one-line face in place of the nine-line wall.">Health · 35 blocks · explicitly reasoned 100% · inherited 0% · uncovered (random) 0% · accuracy: UNMEASURED · dyslexia/UX: 50 words at first open · first screen ≈783px composed vs the 740px viewport — the tile's named cost · rendered UNVERIFIED · owner: no score stands for this page</p>
-<label class="health-close" for="health-toggle" data-reason="[DYSLEXIA] The close control: one plain word at the card's foot on a full-width target — the way back to the hub is labelled, never a gesture he must guess.">Close</label>
+<label class="health-close" for="health-toggle" data-reason="[DYSLEXIA] The close control: one plain word at the card's head on a full-width target, sticky at the card's top — the way back to the hub is labelled and always on screen, never a gesture he must guess.">Close</label>
+<p data-reason="[USER] The full strip, one tap behind the face: the seven fields of RCA-141 in their standing order — total blocks, the reasoning shares explicit first, the accuracy state, the dyslexia/UX state, the owner state — every figure this file's own, measured by the reasoning scanner on this file's final bytes (build-record-v11.md). The dyslexia/UX figures describe the NEW first open: the tile's one-line face in place of the nine-line wall.">Health · 36 blocks · explicitly reasoned 97.2% · inherited 2.8% · uncovered (random) 0% · accuracy: UNMEASURED · dyslexia/UX: 77 words at first open · first screen ≈707px composed vs the 740px viewport — all four tiles on the first screen · rendered UNVERIFIED · owner: no score stands for this page</p>
 </div>
 </div>
 </div>
@@ -139,12 +139,12 @@ h1{font-size:var(--size-h1);font-weight:var(--w-name);text-align:left;margin:0 0
 <a class="tile" href="https://hadi-nayebi.github.io/hadosh-production-contexts/dashboard/quadrillion/" data-reason="[USER] Tile 1, Quadrillion, first because it is his live lane today: its review is open while he drives, and this tile is the fix for the link he kept losing. The whole tile is the link — the largest possible tap target.">
 <span class="tname" data-reason="[DYSLEXIA] The name Quadrillion in the tile's strongest type: the piece name is how he recognises this door.">Quadrillion</span>
 <span class="tline" data-reason="[DYSLEXIA] The one line under the name says what this dashboard is — the video dashboard — in three words, so recognition needs no memory of earlier chats.">The video dashboard</span>
-<span class="tstate" data-reason="[USER] The state line carries the tile's current truth: v49 is LIVE (pushed 2026-11-02, served identical to its staged file) — Tab 1 rebuilt into Tab 0's form (tiles up front, popup doors, nothing expanding in place beyond the reference's own one) and landed through the reviewer-panel gate, all six seats PASS in writing; the cloned-voice player stands in the tab for his ear verdict; the read-along runs a new follow engine whose phone-width scenario record stands at 0 of 6 measured — his phone pass (play, scroll during it, let it sit) is the closing check and no fixed claim stands before it; the checklist at 133 = 92 pass / 40 not / 1 deferred under a health face of 37.3% explicitly reasoned · 0% random — and his Tab 0 / Tab 1 score stands at 60; two things await, named not hidden: his ear verdict on the cloned voice, and his bed pick on the listening board (the masters stand frozen on the bed leg, RCA-150) — he knows what awaits before he taps.">v49 live · Tab 1 rebuilt · panel passed · score 60</span>
+<span class="tstate" data-reason="[USER] The state line carries the tile's current truth: v49 is LIVE (pushed 2026-11-02, served identical to its staged file) — Tab 1 rebuilt into Tab 0's form (tiles up front, popup doors, nothing expanding in place beyond the reference's own one) and landed through the reviewer-panel gate, all six seats PASS in writing; the cloned-voice player stands in the tab for his ear verdict; the read-along runs a new follow engine whose phone-width scenario record stands at 0 of 6 measured — his phone pass (play, scroll during it, let it sit) is the closing check and no fixed claim stands before it; the checklist at 133 = 92 pass / 40 not / 1 deferred under a health face of 37.3% explicitly reasoned · 0% random — his Tab 0 / Tab 1 score of 60 was given on 2026-11-01, BEFORE this rebuild — the rebuilt Tab 1 stands unscored, so no score prints beside it (hunt H4); what awaits, named not hidden: his phone pass on the rebuilt player, his ear verdict on the cloned voice, and his bed pick on the listening board (the masters stand frozen on the bed leg, RCA-150) — he knows what awaits before he taps.">v49 live · Tab 1 rebuilt · panel passed · phone pass + ear verdict open</span>
 </a>
 <a class="tile" href="https://hadi-nayebi.github.io/hadosh-production-contexts/dashboard/community/" data-reason="[USER] Tile 2, Community posts: the shared dashboard for all community-post work, second because its judgment flow is the next lane after the video review. The whole tile is the link.">
 <span class="tname" data-reason="[DYSLEXIA] The name Community posts in the tile's strongest type: it names the work, not the job code, so the door reads in his words.">Community posts</span>
 <span class="tline" data-reason="[DYSLEXIA] The one line says what waits inside — posts and threads to judge — so the tile promises exactly the judgment surface, nothing else.">Posts and threads to judge</span>
-<span class="tstate" data-reason="[USER] The state line carries the tile's current truth: v7 is LIVE (commit 806b95c9) — the FORM REBUILD: the v6 form he scored 10 and withdrew (first screen an image and a title line, not the post; buttons-only paging; every post also listed in full beneath) has been replaced — one post per screen, the whole post (image, full text, details) at first glance, real touch swipe, no list beneath — and the tile stands for his score of the rebuilt form, stated before the tap.">v7 live · form rebuilt · for your score</span>
+<span class="tstate" data-reason="[USER] The state line carries the tile's current truth: v7 is LIVE (commit 806b95c9) — the FORM REBUILD of the v6 form he scored 10 and withdrew — and v7 itself FAILED his phone pass on 2026-11-02 (~09:15 EST): two slides stood side by side, both clipped, at about 390px; the 'one post per screen' and 'swipe works' claims stand withdrawn, and the v8 rebuild is charged in JOB-G1. The tile states the failure and the rebuild (hunt H3, the state derived from the target surface's current record) — it no longer invites a score on a form he has already judged.">v7 live · failed your phone pass · v8 rebuild in progress</span>
 </a>
 <a class="tile" href="https://hadi-nayebi.github.io/hadosh-production-contexts/dashboard/jobs/" data-reason="[USER] Tile 3, Jobs map: the map of the whole job system, third — it is his overview door, used when he wants the territory rather than one piece of work. The whole tile is the link.">
 <span class="tname" data-reason="[DYSLEXIA] The name Jobs map in the tile's strongest type: map is the owner's own word for what a dashboard is — the map of the jobs territory.">Jobs map</span>
@@ -158,5 +158,88 @@ h1{font-size:var(--size-h1);font-weight:var(--w-name);text-align:left;margin:0 0
 </div>
 </div>
 </main>
+<script type="application/json" id="archer-checklist">
+{
+ "standard": "html-checklist-v1",
+ "content_hash": "1eec7aebb5cbef0913515a408d221421653afe5d4005db8e5e3d050021081766",
+ "checks": [
+  {
+   "id": "FORM-FIRST-GLANCE",
+   "label": "First glance carries the verdict (one screen, no hunting)",
+   "state": "UNCHECKED"
+  },
+  {
+   "id": "POPUP-MECHANIC",
+   "label": "Tap opens a popup; the page flow never grows (no in-place walls)",
+   "state": "PASS",
+   "instrument": "jsdom exercise (exercise-health-v3.js): flow-word delta + computed-style assertions",
+   "evidence": "build-record-v11.md exercise table: flow words constant at 77 on open/close/scrim; card max-height 90vh + overflow-y auto (computed); Close is the card's first child, sticky; no filtering ancestor on .health (rule-text scan)",
+   "checked_at": "2026-11-02T09:30:24-05:00"
+  },
+  {
+   "id": "CONTROLS-EXERCISED",
+   "label": "Every control exercised on the rendered page",
+   "state": "UNCHECKED"
+  },
+  {
+   "id": "GESTURE-LAYOUT",
+   "label": "Pager/gesture geometry measured in a real layout engine (slide == viewport width)",
+   "state": "UNCHECKED",
+   "applies": false,
+   "reason": "No pager, carousel or swipe surface exists on this page; its interactive elements are outbound link tiles and the health popup."
+  },
+  {
+   "id": "PHONE-WIDTH-RENDER",
+   "label": "Rendered and measured at phone width (~390px)",
+   "state": "UNCHECKED"
+  },
+  {
+   "id": "PAIR-PARITY",
+   "label": "Paired elements behave identically (regular/clone class parity)",
+   "state": "UNCHECKED",
+   "applies": false,
+   "reason": "No paired elements exist on this page — no regular/clone or mix/bed-alone pairs; four independent link tiles."
+  },
+  {
+   "id": "CONTENT-CURRENCY",
+   "label": "Every printed figure and state is current",
+   "state": "PASS",
+   "instrument": "programmatic print-vs-scan assertion (reasoning_audit.py JSON)",
+   "evidence": "build-record-v11.md: printed 36 blocks, 97.2% / 2.8% / 0% == reasoning-audit-hub-v11.json — MATCH",
+   "checked_at": "2026-11-02T09:30:24-05:00"
+  },
+  {
+   "id": "REASONING-COMPLETE",
+   "label": "Reasoning layer complete (scanner verdict COMPLETE)",
+   "state": "PASS",
+   "instrument": "reasoning_audit.py (component + CSS coverage scanner)",
+   "evidence": "reasoning-audit-hub-v11.json: 36 = 35 explicit / 1 inherited / 0 uncovered; CSS 110/110; verdict COMPLETE",
+   "checked_at": "2026-11-02T09:30:24-05:00"
+  },
+  {
+   "id": "STYLE-TOKENS",
+   "label": "House style tokens match the reference dashboard",
+   "state": "UNCHECKED"
+  },
+  {
+   "id": "MEDIA-PLAYS",
+   "label": "Every media element plays",
+   "state": "UNCHECKED",
+   "applies": false,
+   "reason": "No media or player elements exist on this page."
+  },
+  {
+   "id": "HEALTH-TILE",
+   "label": "Health tile: one line, opens a popup, count current",
+   "state": "UNCHECKED"
+  },
+  {
+   "id": "SOLE-READER",
+   "label": "Sole-reader pass — one read, phone, no backtracking",
+   "state": "UNCHECKED"
+  }
+ ]
+}
+</script>
 </body>
 </html>
