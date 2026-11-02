@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-reason="[USER] The document root: the jobs map the owner ordered rebuilt after scoring v20 5/100 and rejecting v21 on his phone — one page where he can see what jobs are running, what is done, and open any job's full detail. v22's detail is Specimen B (the full view), his pick of 2026-11-02. lang names the reading language for the reader and assistive tech.">
+<html lang="en" data-reason="[USER] The document root: the jobs map the owner ordered rebuilt after scoring v20 5/100 and rejecting v21 on his phone — one page where he can see what jobs are running, what is done, and open any job's full detail. v23's detail is Specimen B (the full view), his pick of 2026-11-02; v23 keeps v22's form and applies the needs-you + title-brevity sweep of the owner’s 2026-11-02 ~14:54 order. lang names the reading language for the reader and assistive tech.">
 <head data-reason="[BEST-PRACTICE] The head carries machinery only — charset, viewport, title and the style layer. No content lives here; the body is the surface, and nothing in this file loads from outside.">
 <meta charset="utf-8" data-reason="[BEST-PRACTICE] UTF-8, declared first in the head, so the file's typography — middots, dashes, arrows — decodes identically on every device.">
 <meta name="viewport" content="width=device-width, initial-scale=1" data-reason="[DYSLEXIA] The phone viewport, declared and used: the page lays out at the device's true width because that is where the owner reads it — no desktop shrink, no pinch-zoom.">
@@ -264,24 +264,79 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 /* @reason [DYSLEXIA] The bottom back control: full-width at the column's end — the way back offered where the reader finishes, prescribed identical to the header's control.
    @covers: width, margin */
 .back-bottom{width:100%;margin:22px 0 0}
+/* @reason [USER] The act line on a needs-you card and inside its detail (box 13): the act he must take, in the red needs-you voice at reading size — the dot marks, this line instructs.
+   @covers: font-size, font-weight, line-height, color, margin */
+.card-act{font-size:var(--size-line);font-weight:var(--w-state);line-height:1.5;color:var(--ink-need);margin:10px 0 0}
+/* @reason [USER] The needs-you seat in the chip row: an inline seat for the list's switch and chip — it adds no new top-level thing (the chip row is already one of the board's three), it completes that row.
+   @covers: position, display */
+.yours-seat{position:relative;display:inline-flex}
+/* @reason [BEST-PRACTICE] The needs-you switch: a real checkbox, visually hidden by the clip pattern — never display:none, so keyboard focus still reaches it; its checked state is the list's one open condition (the health tile's native mechanism, reused).
+   @covers: position, width, height, overflow, clip, clip-path, white-space */
+.yours-toggle{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+/* @reason [USER] The needs-you chip: a glass pill at the act floor in the chip row's own geometry, carrying the red dot, his word and the count of compartments waiting on him — one signal, one meaning, anywhere on the page (P3).
+   @covers: display, align-items, gap, min-height, padding, background, border, border-radius, color, font-size, font-weight, cursor */
+.ychip{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:8px 16px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:999px;color:var(--ink-2);font-size:var(--size-line);font-weight:var(--w-state);cursor:pointer}
+/* @reason [DYSLEXIA] The focus ring for the needs-you chip: when the hidden switch holds focus, its chip wears the amber outline — focus stays a drawn state.
+   @covers: outline, outline-offset */
+.yours-toggle:focus-visible + .ychip{outline:3px solid var(--ink-state);outline-offset:3px}
+/* @reason [USER] The needs-you list layer: a fixed seat over the whole screen that renders only while the switch is checked; the dim deepens the ground so the card is the only reading object. Its layer (40) sits UNDER the detail views (50) by prescription: a door tapped in the list opens its view over the list, never beneath it.
+   @covers: position, inset, display, align-items, justify-content, padding, background, z-index */
+.yours-pop{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;padding:var(--space-page);background:rgba(3,6,12,.66);z-index:40}
+/* @reason [USER] The needs-you list's open state: the checked switch raises it — one selector is the whole mechanism, so the behaviour the legs exercise is exactly the behaviour this rule states.
+   @covers: display */
+.yours-toggle:checked ~ .yours-pop{display:flex}
+/* @reason [DYSLEXIA] The needs-you scrim: it fills the layer behind the card, so a tap anywhere outside the card closes the list by unchecking the switch.
+   @covers: position, inset, cursor */
+.yours-scrim{position:absolute;inset:0;cursor:pointer}
+/* @reason [DYSLEXIA] The needs-you card: the house glass at the column measure; height capped in dvh (vh fallback first) with the rows scrolling inside — the same shell discipline as the health card, so the first row is on screen at any real viewport height.
+   @covers: position, background, border, border-radius, box-shadow, -webkit-backdrop-filter, backdrop-filter, padding, max-width, width, max-height, overflow-y */
+.yours-card{position:relative;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);box-shadow:var(--glass-hi),var(--shadow-card);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));padding:var(--space-tile);max-width:560px;width:100%;max-height:90vh;max-height:90dvh;overflow-y:auto}
+/* @reason [DYSLEXIA] The needs-you close control: one plain word, full-width at the act floor, sticky at the card's head — the way back is on screen before the first row and stays there while the list scrolls.
+   @covers: display, align-items, justify-content, min-height, margin, padding, background, border, border-radius, cursor, color, font-size, font-weight, position, top, z-index, -webkit-backdrop-filter, backdrop-filter */
+.yours-close{display:flex;align-items:center;justify-content:center;min-height:48px;margin:0 0 12px;padding:6px 16px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-l);cursor:pointer;color:var(--ink-1);font-size:var(--size-state);font-weight:var(--w-state);position:sticky;top:0;z-index:1;-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
+/* @reason [DYSLEXIA] A needs-you row: one waiting compartment per row — name and act at the left, its door at the right, a hairline of house glass between rows so each compartment reads as its own chunk (P3).
+   @covers: display, align-items, gap, padding, border-bottom */
+.yours-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--glass-edge)}
+/* @reason [DYSLEXIA] A row's text seat: it flexes to fill the row and may shrink, so the door's seat never moves between rows.
+   @covers: flex, min-width */
+.yours-txt{flex:1;min-width:0}
+/* @reason [DYSLEXIA] A row's name: the job's name in primary ink at reading size — the scan anchor of the row.
+   @covers: font-size, font-weight, color */
+.yours-name{font-size:var(--size-line);font-weight:var(--w-name);color:var(--ink-1)}
+/* @reason [USER] A row's act: the act he must take, in the red needs-you voice at reading size — the row's whole point, never buried under the name.
+   @covers: font-size, line-height, color, margin */
+.yours-act{font-size:var(--size-line);line-height:1.5;color:var(--ink-need);margin:4px 0 0}
+/* @reason [DYSLEXIA] A row's door: a labelled glass target at the act floor naming its one act — Open — wide enough never to be missed beside the act it serves.
+   @covers: flex, min-height, min-width, padding, background, border, border-radius, color, font-size, font-weight, cursor */
+.yours-open{flex:none;min-height:48px;min-width:84px;padding:6px 14px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-m);color:var(--ink-1);font-size:var(--size-state);font-weight:var(--w-state);cursor:pointer}
 </style>
 </head>
 <body data-reason="[DYSLEXIA] The body is one phone-first column and nothing else: the health tile, the heading, the state chips and the pager — three things at the top level, each answering one of the reader's first questions; every deeper fact lives inside a card's detail view. Its reasoning scope covers descendants without their own reason — in practice the checklist JSON data block the owner's HTML checklist standard mandates at the file's end, whose opening tag the delivery gate matches exactly and so cannot carry attributes of its own." data-reason-scope="descendants">
 <main data-reason="[DYSLEXIA] The main landmark wraps the whole board: one column, one heading, the health tile, the chips, one pager — landmarked so assistive tech and the reader both get the same single-list structure.">
 <div class="health" data-reason="[USER] The health tile — his order of 2026-11-01: every dashboard shows its health at its top. As amended by his form rulings: one compact tile whose face carries only the headline shares in one line (the class pattern), and a tap opens a nested popup OVER the current view, place kept — so the full strip stands in the popup card this tile raises, and the page beneath never grows. It prints this file's own scanner counts, re-measured on the final bytes.">
 <input class="health-toggle" type="checkbox" id="health-toggle" aria-label="Health details" data-reason="[BEST-PRACTICE] The tile's switch: a real checkbox under the face — tapping the face, the close control or the scrim checks and unchecks it, and its checked state is the popup's one open condition, so the whole mechanism is native form behaviour.">
-<label class="health-face" for="health-toggle" data-reason="[DYSLEXIA] The tile's face: the headline shares alone — explicit reasoning first, then the checklist count — in one line at the tile's phone seat; the chevron after the words is the visible signal that the tile opens.">Health · 21.7% reasoned · Checks 11/11 <span aria-hidden="true" data-reason="[DYSLEXIA] The chevron: one glyph set apart from the headline words — the affordance that this face opens, never part of the figures it follows.">›</span></label>
+<label class="health-face" for="health-toggle" data-reason="[DYSLEXIA] The tile's face: the headline shares alone — explicit reasoning first, then the checklist count — in one line at the tile's phone seat; the chevron after the words is the visible signal that the tile opens.">Health · 22.7% reasoned · Checks 13/13 <span aria-hidden="true" data-reason="[DYSLEXIA] The chevron: one glyph set apart from the headline words — the affordance that this face opens, never part of the figures it follows.">›</span></label>
 <div class="health-pop" data-reason="[USER] The health popup (his popup law, 2026-11-02): the full strip lifted out of the page flow into a fixed layer over the page — closing returns the reader to the exact tile tapped, place kept.">
 <label class="health-scrim" for="health-toggle" aria-label="Close health details" data-reason="[DYSLEXIA] The scrim: the dimmed field around the card is itself a close control — a tap anywhere outside the card unchecks the switch."></label>
 <div class="health-card" data-reason="[DYSLEXIA] The health card: the strip's reading object — the fields entire, raised over the dimmed board so the numbers are read against quiet.">
 <label class="health-close" for="health-toggle" data-reason="[DYSLEXIA] The close control: one plain word at the card's head on a full-width target, sticky at the card's top — the way back is labelled and always on screen.">Close</label>
-<p data-reason="[USER] The full strip, one tap behind the face: the fields in their standing order — total blocks, the reasoning shares explicit first, the accuracy state, the dyslexia/UX state, the rendered state, the owner state, and this board's R13 evidence (Observe record + sources, per Order H) — every figure this file's own, measured on its final bytes.">Health · 1,551 blocks · explicitly reasoned 21.7% · inherited 78.3% · uncovered (random) 0% · accuracy: UNMEASURED · dyslexia/UX: 90 words at first open · first screen: the health tile, the heading, 4 state chips and one job card — the Running group standing · rendered VERIFIED (local render harness, legs render-harness/legs/jobs-v22) · owner: v21 rejected on his phone and withdrawn · v22 stands as a CHECK — his device pass closes it · jobs dashboard v22 · Ledger #33 content · form: full-view detail (Specimen B, his pick 2026-11-02) · R13: Observe opened 2026-11-02 11:25 EST (design-v22-specimens.md) before this build · sources: his v20 + v21 verdicts · Trello · Apple HIG · Material/Android · NN/g · MDN · web.dev · all 25 job files read fresh · graded against those references, not against v21</p>
+<p data-reason="[USER] The full strip, one tap behind the face: the fields in their standing order — total blocks, the reasoning shares explicit first, the accuracy state, the dyslexia/UX state, the rendered state, the owner state, and this board's R13 evidence (Observe record + sources, per Order H) — every figure this file's own, measured on its final bytes.">Health · 1,613 blocks · explicitly reasoned 22.7% · inherited 77.3% · uncovered (random) 0% · accuracy: UNMEASURED · dyslexia/UX: 100 words at first open · first screen: the health tile, the heading, 4 state chips and one job card — the Running group standing · rendered VERIFIED (local render harness, legs render-harness/legs/jobs-v23) · owner: v21 rejected on his phone and withdrawn · v23 stands as a CHECK — his device pass closes it · jobs dashboard v23 · Ledger #33 content · form: full-view detail (Specimen B, his pick 2026-11-02) · R13: this build’s Observe is the class sweep in build-record-jobs-dashboard-v23.md · sources: his 2026-11-02 ~14:54 verdict on Quadrillion v53 · HTML-CHECKLIST-STANDARD boxes 13/14 · v22’s own state lines, re-derived · all 25 job files read fresh · graded against the standard, not against v22</p>
 </div>
 </div>
 </div>
 <h1 data-reason="[DYSLEXIA] The heading names the territory in two words — the map of the jobs; the chips and cards below are the content, and a short heading keeps the first screen for them.">Jobs map</h1>
 <div class="chips" role="group" aria-label="Job groups" data-reason="[PLAN] The state chip row (the board's column headers, §1 P-B): All · Running · Held · Done with Ledger #33's counts — group by state, in workflow order, counts on the group (Linear / GitHub Projects); tapping a chip stands the pager in that column (slice-by).">
-<button class="chip" type="button" data-group="ALL" aria-pressed="false" data-reason="[PLAN] The All chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">All · 26</button><button class="chip" type="button" data-group="RUNNING" aria-pressed="true" data-reason="[PLAN] The Running chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">Running · 22</button><button class="chip" type="button" data-group="HELD" aria-pressed="false" data-reason="[PLAN] The Held chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">Held · 1</button><button class="chip" type="button" data-group="DONE" aria-pressed="false" data-reason="[PLAN] The Done chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">Done · 2</button>
+<button class="chip" type="button" data-group="ALL" aria-pressed="false" data-reason="[PLAN] The All chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">All · 26</button><button class="chip" type="button" data-group="RUNNING" aria-pressed="true" data-reason="[PLAN] The Running chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">Running · 22</button><button class="chip" type="button" data-group="HELD" aria-pressed="false" data-reason="[PLAN] The Held chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">Held · 1</button><button class="chip" type="button" data-group="DONE" aria-pressed="false" data-reason="[PLAN] The Done chip (column head, §1 P-B): its word names the group and its number is the group's count from Ledger #33 — the territory's shape before any tap.">Done · 2</button><span class="yours-seat" data-reason="[USER] The needs-you seat (box 13 — the owner’s 2026-11-02 ~14:54 order, after a compartment awaiting him reached his phone unmarked): a red-dot toggle completing the chip row; one tap opens the list of everything waiting on him, each row naming the compartment, its act in plain words, and its door — every owner act on this board reachable in two taps from page open." data-reason-scope="descendants">
+<input class="yours-toggle" type="checkbox" id="yoursToggle" aria-label="Jobs waiting on you" data-reason="[BEST-PRACTICE] The list’s switch: a real checkbox under the chip — its checked state is the list’s one open condition (the health tile’s native mechanism, reused so the behaviour is the form’s, not a script’s).">
+<label class="ychip" for="yoursToggle" data-reason="[USER] The needs-you chip: the red dot plus his word and the count of compartments waiting on him — the same mark the cards carry, so one signal has one meaning anywhere on the page (P3)."><span class="yours"><span class="dot" aria-hidden="true"></span>yours</span> · 5</label>
+<div class="yours-pop" data-reason="[USER] The needs-you list layer: fixed over the board while its switch is checked, layered under the detail views by prescription — a door tapped in the list opens its view over the list, and the same tap unchecks the switch, so the list never stands between the reader and the detail.">
+<label class="yours-scrim" for="yoursToggle" aria-label="Close the needs-you list"></label>
+<div class="yours-card">
+<label class="yours-close" for="yoursToggle" data-reason="[DYSLEXIA] The list’s close control: one plain word, full-width at the act floor, sticky at the card’s head — the way back is on screen before the first row.">Close</label>
+<div class="yours-row" data-reason="[USER] One waiting compartment as one row: its name, the act in the red needs-you voice, and its door — nothing else competes in the row."><div class="yours-txt"><div class="yours-name">This board</div><p class="yours-act">Your phone pass closes it</p></div></div><div class="yours-row" data-reason="[USER] One waiting compartment as one row: its name, the act in the red needs-you voice, and its door — nothing else competes in the row."><div class="yours-txt"><div class="yours-name">Finish Quadrillion</div><p class="yours-act">Your verdicts + phone pass</p></div><button class="yours-open" type="button" data-open="view-j01" data-reason="[USER] This row’s door: opens the job’s own detail view — the second tap of the two-tap path from page open to the compartment that waits on him.">Open ›</button></div><div class="yours-row" data-reason="[USER] One waiting compartment as one row: its name, the act in the red needs-you voice, and its door — nothing else competes in the row."><div class="yours-txt"><div class="yours-name">Dot channel</div><p class="yours-act">Record your voice sample</p></div><button class="yours-open" type="button" data-open="view-j04" data-reason="[USER] This row’s door: opens the job’s own detail view — the second tap of the two-tap path from page open to the compartment that waits on him.">Open ›</button></div><div class="yours-row" data-reason="[USER] One waiting compartment as one row: its name, the act in the red needs-you voice, and its door — nothing else competes in the row."><div class="yours-txt"><div class="yours-name">One-off Quadrillion visuals</div><p class="yours-act">Give your Tab 2 sequence</p></div><button class="yours-open" type="button" data-open="view-jt2oneoff" data-reason="[USER] This row’s door: opens the job’s own detail view — the second tap of the two-tap path from page open to the compartment that waits on him.">Open ›</button></div><div class="yours-row" data-reason="[USER] One waiting compartment as one row: its name, the act in the red needs-you voice, and its door — nothing else competes in the row."><div class="yours-txt"><div class="yours-name">Community posts (daily)</div><p class="yours-act">Score the five flow posts</p></div><button class="yours-open" type="button" data-open="view-jg1" data-reason="[USER] This row’s door: opens the job’s own detail view — the second tap of the two-tap path from page open to the compartment that waits on him.">Open ›</button></div><div class="yours-row" data-reason="[USER] One waiting compartment as one row: its name, the act in the red needs-you voice, and its door — nothing else competes in the row."><div class="yours-txt"><div class="yours-name">Tab 2 story</div><p class="yours-act">Give your Tab 2 sequence</p></div><button class="yours-open" type="button" data-open="view-jt2" data-reason="[USER] This row’s door: opens the job’s own detail view — the second tap of the two-tap path from page open to the compartment that waits on him.">Open ›</button></div>
+</div>
+</div>
+</span>
 </div>
 <p class="pg-label" id="pgLabel" data-reason="[DYSLEXIA] The position label: group word, job number, group size — rewritten at every move by the pager engine, so the reader's place is always printed, never remembered.">Running · Job 1 of 22</p>
 <div class="pager-view" id="pgView" data-reason="[PLAN] The pager viewport (the community board's mechanic — the owner's accepted local form): exactly one card visible; the others are reachable only by paging, so the first glance is one job, whole.">
@@ -292,6 +347,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Finish Quadrillion</h2>
 <p class="card-cycle">Cycle 5 closed · v51 building — one player</p>
 <p class="card-obj">Get the Quadrillion video dashboard to zero issues and delivered.</p>
+<p class="card-act" data-reason="[USER] The act line (box 13, the owner’s 2026-11-02 order): on a needs-you card the face itself states the act he must take, in plain words of six or fewer — the dot in the scan row marks the card, this line says what to do.">Your verdicts + phone pass</p>
 <button class="card-open" type="button" data-open="view-j01" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 8 history · 6 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-04" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -300,6 +356,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Dot channel</h2>
 <p class="card-cycle">Watching · waits on your voice sample</p>
 <p class="card-obj">Run the clone-voice exchange with Dot under the no-pause rule.</p>
+<p class="card-act" data-reason="[USER] The act line (box 13, the owner’s 2026-11-02 order): on a needs-you card the face itself states the act he must take, in plain words of six or fewer — the dot in the scan row marks the card, this line says what to do.">Record your voice sample</p>
 <button class="card-open" type="button" data-open="view-j04" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 5 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-VP" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -308,6 +365,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Video production (parent)</h2>
 <p class="card-cycle">Cycle 1 · Observe — planning</p>
 <p class="card-obj">Carry one video from its objective to its publish gate.</p>
+
 <button class="card-open" type="button" data-open="view-jvp" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-THUMB" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -316,14 +374,16 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Thumbnail creation</h2>
 <p class="card-cycle">4 runs done · Round 13 was plan only</p>
 <p class="card-obj">Make the thumbnails that carry each video&#x27;s promise.</p>
+
 <button class="card-open" type="button" data-open="view-jthumb" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 3 history · 5 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-T2-ONEOFF" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
 <article class="card">
-<div class="card-top"><span class="state st-running">Running</span><span class="code">JOB-T2-ONEOFF</span></div>
-<h2 class="card-name">Quadrillion visuals (Tab 2, one-off)</h2>
+<div class="card-top"><span class="state st-running">Running</span><span class="yours" data-reason="[USER] The needs-you mark (house rule): the red dot plus the word — used only where the job is waiting on the owner, and for nothing else."><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-T2-ONEOFF</span></div>
+<h2 class="card-name">One-off Quadrillion visuals</h2>
 <p class="card-cycle">Not started · opens in your sequence</p>
 <p class="card-obj">Build Quadrillion&#x27;s visual layer once, with you, to learn the job.</p>
+<p class="card-act" data-reason="[USER] The act line (box 13, the owner’s 2026-11-02 order): on a needs-you card the face itself states the act he must take, in plain words of six or fewer — the dot in the scan row marks the card, this line says what to do.">Give your Tab 2 sequence</p>
 <button class="card-open" type="button" data-open="view-jt2oneoff" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-02" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -332,22 +392,25 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Quadrillion anatomy check</h2>
 <p class="card-cycle">22 checks done · hourly</p>
 <p class="card-obj">Track how the Quadrillion file matures, hour by hour.</p>
+
 <button class="card-open" type="button" data-open="view-j02" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 4 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-G1" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
 <article class="card">
-<div class="card-top"><span class="state st-running">Running</span><span class="code">JOB-G1</span></div>
+<div class="card-top"><span class="state st-running">Running</span><span class="yours" data-reason="[USER] The needs-you mark (house rule): the red dot plus the word — used only where the job is waiting on the owner, and for nothing else."><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-G1</span></div>
 <h2 class="card-name">Community posts (daily)</h2>
 <p class="card-cycle">Cycle 3 · scores in — v10 live</p>
 <p class="card-obj">Prepare community posts for the channel, for your check.</p>
+<p class="card-act" data-reason="[USER] The act line (box 13, the owner’s 2026-11-02 order): on a needs-you card the face itself states the act he must take, in plain words of six or fewer — the dot in the scan row marks the card, this line says what to do.">Score the five flow posts</p>
 <button class="card-open" type="button" data-open="view-jg1" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 5 history · 6 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-G2" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
 <article class="card">
 <div class="card-top"><span class="state st-running">Running</span><span class="code">JOB-G2</span></div>
-<h2 class="card-name">Weekly channel growth review</h2>
+<h2 class="card-name">Weekly growth review</h2>
 <p class="card-cycle">First weekly run done · next Mon Nov 9</p>
 <p class="card-obj">Turn each week&#x27;s channel lessons into machinery.</p>
+
 <button class="card-open" type="button" data-open="view-jg2" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-13" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -356,6 +419,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Daily craft study</h2>
 <p class="card-cycle">5 sessions · every one converted</p>
 <p class="card-obj">Study the craft daily; every session must improve a skill.</p>
+
 <button class="card-open" type="button" data-open="view-j13" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 2 history · 5 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-P1" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -364,14 +428,16 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Power station hunt</h2>
 <p class="card-cycle">Daily watch · baseline unbeaten</p>
 <p class="card-obj">Find a power station that truly serves the setup, under $100.</p>
+
 <button class="card-open" type="button" data-open="view-jp1" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 3 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-03" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
 <article class="card">
 <div class="card-top"><span class="state st-running">Running</span><span class="code">JOB-03</span></div>
-<h2 class="card-name">Cadence &amp; delivery discipline</h2>
+<h2 class="card-name">Cadence &amp; delivery</h2>
 <p class="card-cycle">Standing service · stamp reset cycle</p>
 <p class="card-obj">Make every delivery run its full cycle, with its gate evidence.</p>
+
 <button class="card-open" type="button" data-open="view-j03" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 2 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-05" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -380,6 +446,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">OPEVC alignment report</h2>
 <p class="card-cycle">Cycle 37 done · hourly</p>
 <p class="card-obj">Report hourly how the work aligned with the protocol.</p>
+
 <button class="card-open" type="button" data-open="view-j05" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 3 history · 3 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-06" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -388,6 +455,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Daily core-files review</h2>
 <p class="card-cycle">Cycle 10 landed · daily</p>
 <p class="card-obj">Digest the instruction layer daily; keep the core files true.</p>
+
 <button class="card-open" type="button" data-open="view-j06" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 2 history · 3 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-07" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -396,6 +464,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Self-evaluation</h2>
 <p class="card-cycle">88 runs · run 88 opened clean</p>
 <p class="card-obj">Evaluate the focus jobs and Archer&#x27;s own work, every ~15 minutes.</p>
+
 <button class="card-open" type="button" data-open="view-j07" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 4 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-08" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -404,6 +473,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Hourly spoken TLDR</h2>
 <p class="card-cycle">Hourly · last window closed 11:46</p>
 <p class="card-obj">One spoken summary each hour — only what you missed.</p>
+
 <button class="card-open" type="button" data-open="view-j08" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 2 history · 3 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-09" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -412,6 +482,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Drift check</h2>
 <p class="card-cycle">Standing audits · latest 11:37</p>
 <p class="card-obj">Judge how the work was done; redirect it when it drifts.</p>
+
 <button class="card-open" type="button" data-open="view-j09" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 3 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-10" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -420,6 +491,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Frustration check</h2>
 <p class="card-cycle">Review #333 · every 15 minutes</p>
 <p class="card-obj">Catch your frustration early; root-cause it while it is small.</p>
+
 <button class="card-open" type="button" data-open="view-j10" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 4 history · 3 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-11" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -428,6 +500,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Constitution recheck</h2>
 <p class="card-cycle">Recheck #60 done · every ~3 hours</p>
 <p class="card-obj">Re-check the work against the constitution; keep claims honest.</p>
+
 <button class="card-open" type="button" data-open="view-j11" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 3 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-12" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -436,6 +509,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Daily job-evolution review</h2>
 <p class="card-cycle">Cycle 2 closed · Cycle 3 today</p>
 <p class="card-obj">Review the main job&#x27;s whole evolution, daily; judge its trajectory.</p>
+
 <button class="card-open" type="button" data-open="view-j12" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 2 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-14" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -444,14 +518,16 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Jobs-repo sync</h2>
 <p class="card-cycle">Cycle 34 synced · hourly</p>
 <p class="card-obj">Keep the jobs&#x27; canonical home in the repo current, hourly.</p>
+
 <button class="card-open" type="button" data-open="view-j14" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 2 history · 3 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="JOB-16" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
 <article class="card">
 <div class="card-top"><span class="state st-running">Running</span><span class="code">JOB-16</span></div>
-<h2 class="card-name">Job ledger — this board</h2>
-<p class="card-cycle">Ledger #33 · board v22 built</p>
+<h2 class="card-name">Job ledger</h2>
+<p class="card-cycle">Ledger #33 · board v23 built</p>
 <p class="card-obj">Inventory every job, hourly — this board is its map.</p>
+
 <button class="card-open" type="button" data-open="view-j16" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 5 history · 5 memory ›</button>
 </article>
 </section><section class="slide" data-state="RUNNING" data-code="DESIGN" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -460,22 +536,25 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Job-layer design</h2>
 <p class="card-cycle">Cycle 2 · Plan</p>
 <p class="card-obj">Design how the job layer itself is shaped.</p>
+
 <button class="card-open" type="button" data-open="view-design" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="HELD" data-code="JOB-T2" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
 <article class="card">
-<div class="card-top"><span class="state st-held">Held</span><span class="code">JOB-T2</span></div>
-<h2 class="card-name">Visual story (Tab 2)</h2>
+<div class="card-top"><span class="state st-held">Held</span><span class="yours" data-reason="[USER] The needs-you mark (house rule): the red dot plus the word — used only where the job is waiting on the owner, and for nothing else."><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-T2</span></div>
+<h2 class="card-name">Tab 2 story</h2>
 <p class="card-cycle">No cycles · opens only on your word</p>
 <p class="card-obj">The visual layer for Academy videos — a seat, not yet a job in motion.</p>
+<p class="card-act" data-reason="[USER] The act line (box 13, the owner’s 2026-11-02 order): on a needs-you card the face itself states the act he must take, in plain words of six or fewer — the dot in the scan row marks the card, this line says what to do.">Give your Tab 2 sequence</p>
 <button class="card-open" type="button" data-open="view-jt2" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 2 memory ›</button>
 </article>
 </section><section class="slide" data-state="DONE" data-code="JOB-15" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
 <article class="card">
 <div class="card-top"><span class="state st-done">Done</span><span class="code">JOB-15</span></div>
-<h2 class="card-name">Misunderstanding review &amp; fix</h2>
+<h2 class="card-name">Misunderstanding review</h2>
 <p class="card-cycle">Cycle 1 · closed — done</p>
 <p class="card-obj">Hunt false mechanism claims in the instruction layer; fix them in place.</p>
+
 <button class="card-open" type="button" data-open="view-j15" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="DONE" data-code="JOB-07-UPGRADE" data-reason="[PLAN] One job per card (the owner's form order + the category's card unit, design-v21.md §1 P-A): the whole screen is this one job; nothing of another job shares its screen." data-reason-scope="descendants">
@@ -484,6 +563,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <h2 class="card-name">Generalize the self-evaluation</h2>
 <p class="card-cycle">One run · done, success</p>
 <p class="card-obj">Turn the Quadrillion-only self-evaluation into the generic focus job.</p>
+
 <button class="card-open" type="button" data-open="view-j07upgrade" data-reason="[DYSLEXIA] The Details door: one plain word plus the counts of what stands behind it (history entries, memory parts), so the tap is never blind (P6 — no blind doors).">Details · 1 history · 4 memory ›</button>
 </article>
 </section><section class="slide" data-state="NOTES" data-code="LEDGER" data-reason="[PLAN] The ledger-notes card (Q8): the ledger's changes, gaps and dependencies ride as the All group's last card, so the page's top level stays at three things while JOB-16's full product stays on the map." data-reason-scope="descendants">
@@ -502,7 +582,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <span class="pg-count" id="pgCount">1 / 22</span>
 <button class="pg-btn" type="button" id="pgNext" aria-label="Next job">›</button>
 </div>
-<p class="board-note" data-reason="[USER] The board note (the navigation-surface rule + Order J's discipline): the board's version, its content basis, and its CHECK state with the device-journey fact printed on the face — harness-passed is not phone-passed, and the face says so.">Jobs map v22 · Ledger #33 content · This board is a CHECK: it passed the render harness, not your phone. Your phone pass closes it.</p>
+<p class="board-note" data-reason="[USER] The board note (the navigation-surface rule + Order J's discipline): the board's version, its content basis, and its CHECK state with the device-journey fact printed on the face — harness-passed is not phone-passed, and the face says so. Its needs-you mark stands at the note’s head (box 13): the board itself waits on his phone pass, and the face marks it with the same dot the cards carry."><span class="yours"><span class="dot" aria-hidden="true"></span>yours</span> · Jobs map v23 · Ledger #33 content · This board is a CHECK: it passed the render harness, not your phone. Your phone pass closes it.</p>
 </main>
 <div class="view" id="view-j01" role="dialog" aria-label="Finish Quadrillion details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
 <div class="view-head" data-reason="[DYSLEXIA] The header bar: fixed chrome outside the scroller (the v21 cure — its sticky close lived INSIDE the failing scroller and was lost with it). Its height is constant by construction: the name block is a fixed-height two-line seat, so the bar never changes height between jobs (the specimens' FB-2 friction, fixed).">
@@ -512,6 +592,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="yours"><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-01</span></div>
 <p class="id-cycle">Cycle 5 closed · v51 building — one player</p>
+<p class="card-act" data-reason="[USER] The act line inside the detail (box 13): the same plain-words act the card face states, repeated at the detail’s head — the reader who arrived by any route meets what is asked of him before the sections.">Your verdicts + phone pass</p>
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j01-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j01-now">Now</button>
@@ -532,7 +613,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-j01-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 6 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">The piece file</div><p class="mem-digest">One HTML file holds the whole piece: the dashboard, the transcript, the player, every check. The file is the workspace — opening it is opening the piece. Its tabs: Foundations (objective, title, thumbnail) · Audio (the standing tab) · Visuals (held until you guide the sequence). Every component carries its reason in the file; a scanner proves the coverage — 3,336 components, none unreasoned.</p></div><div class="mem-tile"><div class="mem-name">The transcript — frozen at v26</div><p class="mem-digest">25 lines, 336 words, frozen. Two-stage writing stands behind it: the content text first, then the delivery-marked text the voices actually speak. The facts it carries: 3.2 quadrillion tokens processed a month · growth 9.7 trillion → 480 trillion → 3.2 quadrillion · about 300 trillion words of public text in existence — the whole supply is roughly a tenth of one month&#x27;s flow. The ending is Option A, decided and built.</p></div><div class="mem-tile"><div class="mem-name">The voices — one player</div><p class="mem-digest">Two masters, one transcript, ONE player: a switch (Regular / Cloned) swaps the audio and the word-timing map under the same words, and your place carries across the switch by word. The regular voice — the channel&#x27;s standing voice — stands at master v28. The cloned voice, your voice, built by Dot&#x27;s Pelican from nine recorded takes, stands at clone master v2.</p></div><div class="mem-tile"><div class="mem-name">The bed</div><p class="mem-digest">The music bed: a generated pad (Suno), board tile 13 — picked by you on 2026-11-02, provisionally, with two instructions: about 30% lower than the board played it, and even across the whole piece. Built so: one continuous excerpt of the source track, never looped, never joined; levelled in 5-second windows; it runs at least 31.9 dB under the voice in every window. The voice stems are hash-locked — re-bedding touched neither voice, proven by hashes before and after. Your ear verdict on the built bed is still open.</p></div><div class="mem-tile"><div class="mem-name">Word timing</div><p class="mem-digest">Each voice carries its own word map: 336 word timings per voice. The clone&#x27;s map is genuinely its own — 329 of its 336 word starts differ from the regular voice&#x27;s by more than a twentieth of a second. The maps drive the highlighting: as a voice plays, each word lights as it is spoken, and tapping a word moves the voice to it. v51&#x27;s Clone Timing compartment shows the two voices&#x27; pauses line by line, with the worst deviations flagged.</p></div><div class="mem-tile"><div class="mem-name">Checks standing</div><p class="mem-digest">The piece checklist: 133 items — 92 passing, 40 open, 1 other. The dashboard&#x27;s own in-file checklist stands at 11 of 17 on v50; the open boxes are your acts (the phone pass, the ear verdicts), not the machine&#x27;s. Phone scenarios measured on a real device: 0 of 6 — the follow behaviour has only ever been exercised in emulation, and this week proved emulation is not the same thing.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">The piece file</div><p class="mem-digest">One HTML file holds the whole piece: the dashboard, the transcript, the player, every check. The file is the workspace — opening it is opening the piece. Its tabs: Foundations (objective, title, thumbnail) · Audio (the standing tab) · Visuals (held until you guide the sequence). Every component carries its reason in the file; a scanner proves the coverage — 3,336 components, none unreasoned.</p></div><div class="mem-tile"><div class="mem-name">Frozen transcript v26</div><p class="mem-digest">25 lines, 336 words, frozen. Two-stage writing stands behind it: the content text first, then the delivery-marked text the voices actually speak. The facts it carries: 3.2 quadrillion tokens processed a month · growth 9.7 trillion → 480 trillion → 3.2 quadrillion · about 300 trillion words of public text in existence — the whole supply is roughly a tenth of one month&#x27;s flow. The ending is Option A, decided and built.</p></div><div class="mem-tile"><div class="mem-name">One-player voices</div><p class="mem-digest">Two masters, one transcript, ONE player: a switch (Regular / Cloned) swaps the audio and the word-timing map under the same words, and your place carries across the switch by word. The regular voice — the channel&#x27;s standing voice — stands at master v28. The cloned voice, your voice, built by Dot&#x27;s Pelican from nine recorded takes, stands at clone master v2.</p></div><div class="mem-tile"><div class="mem-name">The bed</div><p class="mem-digest">The music bed: a generated pad (Suno), board tile 13 — picked by you on 2026-11-02, provisionally, with two instructions: about 30% lower than the board played it, and even across the whole piece. Built so: one continuous excerpt of the source track, never looped, never joined; levelled in 5-second windows; it runs at least 31.9 dB under the voice in every window. The voice stems are hash-locked — re-bedding touched neither voice, proven by hashes before and after. Your ear verdict on the built bed is still open.</p></div><div class="mem-tile"><div class="mem-name">Word timing</div><p class="mem-digest">Each voice carries its own word map: 336 word timings per voice. The clone&#x27;s map is genuinely its own — 329 of its 336 word starts differ from the regular voice&#x27;s by more than a twentieth of a second. The maps drive the highlighting: as a voice plays, each word lights as it is spoken, and tapping a word moves the voice to it. v51&#x27;s Clone Timing compartment shows the two voices&#x27; pauses line by line, with the worst deviations flagged.</p></div><div class="mem-tile"><div class="mem-name">Checks standing</div><p class="mem-digest">The piece checklist: 133 items — 92 passing, 40 open, 1 other. The dashboard&#x27;s own in-file checklist stands at 11 of 17 on v50; the open boxes are your acts (the phone pass, the ear verdicts), not the machine&#x27;s. Phone scenarios measured on a real device: 0 of 6 — the follow behaviour has only ever been exercised in emulation, and this week proved emulation is not the same thing.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -544,6 +625,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="yours"><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-04</span></div>
 <p class="id-cycle">Watching · waits on your voice sample</p>
+<p class="card-act" data-reason="[USER] The act line inside the detail (box 13): the same plain-words act the card face states, repeated at the detail’s head — the reader who arrived by any route meets what is asked of him before the sections.">Record your voice sample</p>
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j04-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j04-now">Now</button>
@@ -564,7 +646,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-j04-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 4 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">The thread</div><p class="mem-digest">agent-chat, in the departments repository: an append-only thread of numbered messages between Archer and Dot. Corrections are new messages, never edits. The thread is the channel&#x27;s memory — both sides re-read it at its latest commit before appending. A message counts as SENT, UNCONFIRMED until Dot confirms it in the thread itself; nothing is treated as received on hope.</p></div><div class="mem-tile"><div class="mem-name">The watermark</div><p class="mem-digest">last_seen_dot_n = 95: the highest of her messages Archer has actually read. Anything above it is unread by definition. The watermark moves only on a read, never on an assumption — and a delay older than one watch cycle is reported to you directly.</p></div><div class="mem-tile"><div class="mem-name">Her lane right now</div><p class="mem-digest">Pelican, her voice-cloning build, is unreachable from here this week, so the clone programme runs on her delivered takes instead of live sessions. Quadrillion is the only piece with a current clone need: nine chunks on the frozen v26 text, all nine already delivered and verified once.</p></div><div class="mem-tile"><div class="mem-name">What waits on you</div><p class="mem-digest">One thing only: the short voice-sample recording — three lines, about thirty seconds (the 3.2-quadrillion line · the 300-trillion line · the 2017 “Attention Is All You Need” line). On its arrival it goes to Dot as message 97 with the chunk list; her new takes come back the same way the first nine did: pulled, hashed, word-checked, then built into a master for your ear.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">The thread</div><p class="mem-digest">agent-chat, in the departments repository: an append-only thread of numbered messages between Archer and Dot. Corrections are new messages, never edits. The thread is the channel&#x27;s memory — both sides re-read it at its latest commit before appending. A message counts as SENT, UNCONFIRMED until Dot confirms it in the thread itself; nothing is treated as received on hope.</p></div><div class="mem-tile"><div class="mem-name">The watermark</div><p class="mem-digest">last_seen_dot_n = 95: the highest of her messages Archer has actually read. Anything above it is unread by definition. The watermark moves only on a read, never on an assumption — and a delay older than one watch cycle is reported to you directly.</p></div><div class="mem-tile"><div class="mem-name">Her lane now</div><p class="mem-digest">Pelican, her voice-cloning build, is unreachable from here this week, so the clone programme runs on her delivered takes instead of live sessions. Quadrillion is the only piece with a current clone need: nine chunks on the frozen v26 text, all nine already delivered and verified once.</p></div><div class="mem-tile"><div class="mem-name">Waiting on you</div><p class="mem-digest">One thing only: the short voice-sample recording — three lines, about thirty seconds (the 3.2-quadrillion line · the 300-trillion line · the 2017 “Attention Is All You Need” line). On its arrival it goes to Dot as message 97 with the chunk list; her new takes come back the same way the first nine did: pulled, hashed, word-checked, then built into a master for your ear.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -576,6 +658,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-VP</span></div>
 <p class="id-cycle">Cycle 1 · Observe — planning</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-jvp-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-jvp-now">Now</button>
@@ -608,6 +691,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-THUMB</span></div>
 <p class="id-cycle">4 runs done · Round 13 was plan only</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-jthumb-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-jthumb-now">Now</button>
@@ -632,14 +716,15 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
-</div><div class="view" id="view-jt2oneoff" role="dialog" aria-label="Quadrillion visuals (Tab 2, one-off) details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
+</div><div class="view" id="view-jt2oneoff" role="dialog" aria-label="One-off Quadrillion visuals details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
 <div class="view-head" data-reason="[DYSLEXIA] The header bar: fixed chrome outside the scroller (the v21 cure — its sticky close lived INSIDE the failing scroller and was lost with it). Its height is constant by construction: the name block is a fixed-height two-line seat, so the bar never changes height between jobs (the specimens' FB-2 friction, fixed).">
 <button class="backbtn" type="button" data-back data-reason="[DYSLEXIA] The back control: a labelled target at the act floor whose word names the standing group the reader returns to (the specimens' FB-3 fix — never a generic ‘Jobs’ while a group stands). It performs history.back(), so the visible way back and the phone's Back are the same act and the history entry is consumed exactly once.">‹ <span class="back-word">Jobs</span></button>
-<div class="head-txt"><div class="d-name">Quadrillion visuals (Tab 2, one-off)</div></div>
+<div class="head-txt"><div class="d-name">One-off Quadrillion visuals</div></div>
 </div>
 <div class="view-body scroller"><div class="view-col">
-<div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-T2-ONEOFF</span></div>
+<div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="yours"><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-T2-ONEOFF</span></div>
 <p class="id-cycle">Not started · opens in your sequence</p>
+<p class="card-act" data-reason="[USER] The act line inside the detail (box 13): the same plain-words act the card face states, repeated at the detail’s head — the reader who arrived by any route meets what is asked of him before the sections.">Give your Tab 2 sequence</p>
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-jt2oneoff-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-jt2oneoff-now">Now</button>
@@ -660,7 +745,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-jt2oneoff-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 4 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">One-off child of JOB-VP, seated in JOB-T2. Born minimal by the owner&#x27;s order — its per-phase descriptions are owed at its first Condense, from the doing.</p></div><div class="mem-tile"><div class="mem-name">Known inputs, when it opens</div><p class="mem-digest">The ending&#x27;s visual treatment (Option A discharge) · the decision model §10D canon-style rows · the visual-review skill + canon §7 · Tab 0&#x27;s promise (the visuals must match the decided title and thumbnail) · the visual token gloss (RC-2) rides Tab 2.</p></div><div class="mem-tile"><div class="mem-name">What it must develop</div><p class="mem-digest">Not only the visuals: the PRACTICE. The per-phase descriptions the JOB-T2 seat lacks are earned here and written into that seat&#x27;s file from this job&#x27;s working memory.</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Observe — not started; no run directories yet.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">One-off child of JOB-VP, seated in JOB-T2. Born minimal by the owner&#x27;s order — its per-phase descriptions are owed at its first Condense, from the doing.</p></div><div class="mem-tile"><div class="mem-name">Known opening inputs</div><p class="mem-digest">The ending&#x27;s visual treatment (Option A discharge) · the decision model §10D canon-style rows · the visual-review skill + canon §7 · Tab 0&#x27;s promise (the visuals must match the decided title and thumbnail) · the visual token gloss (RC-2) rides Tab 2.</p></div><div class="mem-tile"><div class="mem-name">Development it owes</div><p class="mem-digest">Not only the visuals: the PRACTICE. The per-phase descriptions the JOB-T2 seat lacks are earned here and written into that seat&#x27;s file from this job&#x27;s working memory.</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Observe — not started; no run directories yet.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -672,6 +757,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-02</span></div>
 <p class="id-cycle">22 checks done · hourly</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j02-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j02-now">Now</button>
@@ -702,8 +788,9 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="head-txt"><div class="d-name">Community posts (daily)</div></div>
 </div>
 <div class="view-body scroller"><div class="view-col">
-<div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-G1</span></div>
+<div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="yours"><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-G1</span></div>
 <p class="id-cycle">Cycle 3 · scores in — v10 live</p>
+<p class="card-act" data-reason="[USER] The act line inside the detail (box 13): the same plain-words act the card face states, repeated at the detail’s head — the reader who arrived by any route meets what is asked of him before the sections.">Score the five flow posts</p>
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-jg1-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-jg1-now">Now</button>
@@ -724,18 +811,19 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-jg1-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 6 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">Continuous service with a deliverable per cycle — topic threads, each a 24h cycle producing posts across types (educational · poll · invite · promotional). Sources in order: the Academy&#x27;s own record → other agents&#x27; published educational posts · audience signals.</p></div><div class="mem-tile"><div class="mem-name">The score gate (yours, 2026-11-02)</div><p class="mem-digest">A post scoring 5+ earns iteration toward a higher score; below 5 it is useless as a post — never iterated — but kept as signal: new posts are defined from the levels. The ladder your scores taught: assert 1 · self-report 2 · identity vote 3 · ask-a-fact 5.</p></div><div class="mem-tile"><div class="mem-name">The six-check test (R1–R6)</div><p class="mem-digest">Before any post is built: a moment from today · a fact of the matter · the tempting wrong answer present, unflagged · the mechanism is the content · everyday words · not a restatement. Every candidate carries its R1–R6 line with misses named.</p></div><div class="mem-tile"><div class="mem-name">The daily-basic lane</div><p class="mem-digest">Short, basic, engaging — polls first. Bank of 14 (Days 1–14: polls 9 · educational 3 · invite 1 · promotional 1; with image 2), each tagged (type · thread · media) and R1–R6-checked; all 36 poll options verified ≤65 characters (the platform ceiling). Slot: 12:30 EST daily. Day 1: “Which agent would sabotage your project more?” (Claude · ChatGPT · Muse · Gemini).</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Cycle 3 at Condense: B2 iterated to v2; four new candidates staged and riding v10; A1/A2/C3 closed as scored signal.</p></div><div class="mem-tile"><div class="mem-name">Publish gate</div><p class="mem-digest">The scored lane posts nothing without your check — drafts reach you on the community board, in the settled form. The basic lane publishes daily under your standing order.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">Continuous service with a deliverable per cycle — topic threads, each a 24h cycle producing posts across types (educational · poll · invite · promotional). Sources in order: the Academy&#x27;s own record → other agents&#x27; published educational posts · audience signals.</p></div><div class="mem-tile"><div class="mem-name">Your score gate</div><p class="mem-digest">A post scoring 5+ earns iteration toward a higher score; below 5 it is useless as a post — never iterated — but kept as signal: new posts are defined from the levels. The ladder your scores taught: assert 1 · self-report 2 · identity vote 3 · ask-a-fact 5.</p></div><div class="mem-tile"><div class="mem-name">Six-check test</div><p class="mem-digest">Before any post is built: a moment from today · a fact of the matter · the tempting wrong answer present, unflagged · the mechanism is the content · everyday words · not a restatement. Every candidate carries its R1–R6 line with misses named.</p></div><div class="mem-tile"><div class="mem-name">The daily-basic lane</div><p class="mem-digest">Short, basic, engaging — polls first. Bank of 14 (Days 1–14: polls 9 · educational 3 · invite 1 · promotional 1; with image 2), each tagged (type · thread · media) and R1–R6-checked; all 36 poll options verified ≤65 characters (the platform ceiling). Slot: 12:30 EST daily. Day 1: “Which agent would sabotage your project more?” (Claude · ChatGPT · Muse · Gemini).</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Cycle 3 at Condense: B2 iterated to v2; four new candidates staged and riding v10; A1/A2/C3 closed as scored signal.</p></div><div class="mem-tile"><div class="mem-name">Publish gate</div><p class="mem-digest">The scored lane posts nothing without your check — drafts reach you on the community board, in the settled form. The basic lane publishes daily under your standing order.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
-</div><div class="view" id="view-jg2" role="dialog" aria-label="Weekly channel growth review details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
+</div><div class="view" id="view-jg2" role="dialog" aria-label="Weekly growth review details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
 <div class="view-head" data-reason="[DYSLEXIA] The header bar: fixed chrome outside the scroller (the v21 cure — its sticky close lived INSIDE the failing scroller and was lost with it). Its height is constant by construction: the name block is a fixed-height two-line seat, so the bar never changes height between jobs (the specimens' FB-2 friction, fixed).">
 <button class="backbtn" type="button" data-back data-reason="[DYSLEXIA] The back control: a labelled target at the act floor whose word names the standing group the reader returns to (the specimens' FB-3 fix — never a generic ‘Jobs’ while a group stands). It performs history.back(), so the visible way back and the phone's Back are the same act and the history entry is consumed exactly once.">‹ <span class="back-word">Jobs</span></button>
-<div class="head-txt"><div class="d-name">Weekly channel growth review</div></div>
+<div class="head-txt"><div class="d-name">Weekly growth review</div></div>
 </div>
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-G2</span></div>
 <p class="id-cycle">First weekly run done · next Mon Nov 9</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-jg2-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-jg2-now">Now</button>
@@ -756,7 +844,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-jg2-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 4 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">Weekly stewardship service — each weekly run is one bounded cycle.</p></div><div class="mem-tile"><div class="mem-name">Its files</div><p class="mem-digest">growth-review/week-2026-11-02.md · the lessons register (files/lessons-from-feedback.md) · the topic pipeline · funnel fixes · programme-review-2026-11.md · the Dot digest (growth-2026-11-02.md, in the study shares).</p></div><div class="mem-tile"><div class="mem-name">Its lesson this cycle</div><p class="mem-digest">This job&#x27;s evidence problem is source discovery, not analysis: the week&#x27;s evidence sat in five different homes. Its template now carries a default evidence-sources list, in read order, with the inspected-absence rule — the next run reports each source read, or its absence inspected.</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Condense complete for the week of 2026-10-26; next cycle is the week of 2026-11-02.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">Weekly stewardship service — each weekly run is one bounded cycle.</p></div><div class="mem-tile"><div class="mem-name">Its files</div><p class="mem-digest">growth-review/week-2026-11-02.md · the lessons register (files/lessons-from-feedback.md) · the topic pipeline · funnel fixes · programme-review-2026-11.md · the Dot digest (growth-2026-11-02.md, in the study shares).</p></div><div class="mem-tile"><div class="mem-name">This cycle&#x27;s lesson</div><p class="mem-digest">This job&#x27;s evidence problem is source discovery, not analysis: the week&#x27;s evidence sat in five different homes. Its template now carries a default evidence-sources list, in read order, with the inspected-absence rule — the next run reports each source read, or its absence inspected.</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Condense complete for the week of 2026-10-26; next cycle is the week of 2026-11-02.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -768,6 +856,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-13</span></div>
 <p class="id-cycle">5 sessions · every one converted</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j13-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j13-now">Now</button>
@@ -800,6 +889,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-P1</span></div>
 <p class="id-cycle">Daily watch · baseline unbeaten</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-jp1-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-jp1-now">Now</button>
@@ -824,14 +914,15 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
-</div><div class="view" id="view-j03" role="dialog" aria-label="Cadence &amp; delivery discipline details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
+</div><div class="view" id="view-j03" role="dialog" aria-label="Cadence &amp; delivery details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
 <div class="view-head" data-reason="[DYSLEXIA] The header bar: fixed chrome outside the scroller (the v21 cure — its sticky close lived INSIDE the failing scroller and was lost with it). Its height is constant by construction: the name block is a fixed-height two-line seat, so the bar never changes height between jobs (the specimens' FB-2 friction, fixed).">
 <button class="backbtn" type="button" data-back data-reason="[DYSLEXIA] The back control: a labelled target at the act floor whose word names the standing group the reader returns to (the specimens' FB-3 fix — never a generic ‘Jobs’ while a group stands). It performs history.back(), so the visible way back and the phone's Back are the same act and the history entry is consumed exactly once.">‹ <span class="back-word">Jobs</span></button>
-<div class="head-txt"><div class="d-name">Cadence &amp; delivery discipline</div></div>
+<div class="head-txt"><div class="d-name">Cadence &amp; delivery</div></div>
 </div>
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-03</span></div>
 <p class="id-cycle">Standing service · stamp reset cycle</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j03-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j03-now">Now</button>
@@ -864,6 +955,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-05</span></div>
 <p class="id-cycle">Cycle 37 done · hourly</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j05-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j05-now">Now</button>
@@ -896,6 +988,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-06</span></div>
 <p class="id-cycle">Cycle 10 landed · daily</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j06-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j06-now">Now</button>
@@ -916,7 +1009,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-j06-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 3 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">Daily stewardship. The instruction layer is Archer&#x27;s authorship — digesting it is this job&#x27;s duty, and its size is never an excuse in its reports.</p></div><div class="mem-tile"><div class="mem-name">Tonight&#x27;s queue (its Cycle 10 product)</div><p class="mem-digest">Community v8 delivery record · Quadrillion v50 landing with real-engine legs · jobs map fix round · hub + bed health-tile conversions · the dashboard hunt&#x27;s next pass toward a zero-finding pass (Tab 2 stays gated) · digestion items on a verified quiet base · a study block (the rendered-journey lesson → a reusable skill).</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Cycle 10 at Condense; Cycle 11 is next. The header lag is this file&#x27;s own named defect, carried openly.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">Daily stewardship. The instruction layer is Archer&#x27;s authorship — digesting it is this job&#x27;s duty, and its size is never an excuse in its reports.</p></div><div class="mem-tile"><div class="mem-name">Tonight&#x27;s queue</div><p class="mem-digest">Community v8 delivery record · Quadrillion v50 landing with real-engine legs · jobs map fix round · hub + bed health-tile conversions · the dashboard hunt&#x27;s next pass toward a zero-finding pass (Tab 2 stays gated) · digestion items on a verified quiet base · a study block (the rendered-journey lesson → a reusable skill).</p></div><div class="mem-tile"><div class="mem-name">Current state</div><p class="mem-digest">Cycle 10 at Condense; Cycle 11 is next. The header lag is this file&#x27;s own named defect, carried openly.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -928,6 +1021,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-07</span></div>
 <p class="id-cycle">88 runs · run 88 opened clean</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j07-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j07-now">Now</button>
@@ -960,6 +1054,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-08</span></div>
 <p class="id-cycle">Hourly · last window closed 11:46</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j08-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j08-now">Now</button>
@@ -992,6 +1087,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-09</span></div>
 <p class="id-cycle">Standing audits · latest 11:37</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j09-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j09-now">Now</button>
@@ -1024,6 +1120,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-10</span></div>
 <p class="id-cycle">Review #333 · every 15 minutes</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j10-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j10-now">Now</button>
@@ -1056,6 +1153,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-11</span></div>
 <p class="id-cycle">Recheck #60 done · every ~3 hours</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j11-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j11-now">Now</button>
@@ -1088,6 +1186,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-12</span></div>
 <p class="id-cycle">Cycle 2 closed · Cycle 3 today</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j12-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j12-now">Now</button>
@@ -1120,6 +1219,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-14</span></div>
 <p class="id-cycle">Cycle 34 synced · hourly</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j14-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j14-now">Now</button>
@@ -1144,14 +1244,15 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
-</div><div class="view" id="view-j16" role="dialog" aria-label="Job ledger — this board details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
+</div><div class="view" id="view-j16" role="dialog" aria-label="Job ledger details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
 <div class="view-head" data-reason="[DYSLEXIA] The header bar: fixed chrome outside the scroller (the v21 cure — its sticky close lived INSIDE the failing scroller and was lost with it). Its height is constant by construction: the name block is a fixed-height two-line seat, so the bar never changes height between jobs (the specimens' FB-2 friction, fixed).">
 <button class="backbtn" type="button" data-back data-reason="[DYSLEXIA] The back control: a labelled target at the act floor whose word names the standing group the reader returns to (the specimens' FB-3 fix — never a generic ‘Jobs’ while a group stands). It performs history.back(), so the visible way back and the phone's Back are the same act and the history entry is consumed exactly once.">‹ <span class="back-word">Jobs</span></button>
-<div class="head-txt"><div class="d-name">Job ledger — this board</div></div>
+<div class="head-txt"><div class="d-name">Job ledger</div></div>
 </div>
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">JOB-16</span></div>
-<p class="id-cycle">Ledger #33 · board v22 built</p>
+<p class="id-cycle">Ledger #33 · board v23 built</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j16-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j16-now">Now</button>
@@ -1164,7 +1265,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-j16-now" data-reason="[PLAN] The Now section: the cycle count and the current state in short lines, one fact per line — refreshed from the job file's own state head in this build, never carried from the last board.">
 <h4 class="sec-h">Now · Cycle 33 · Condense (Ledger #33 written ~11:35)</h4>
-<p class="now-line">Ledger #33 stands: 25 jobs inventoried — 22 running · 0 parked · 1 held · 2 done; run form 5 directories / 5 done.md (the instruction-maturity done.md reported separately).</p><p class="now-line">The board: v21 was delivered, failed your phone pass ~11:22 (detail freezes, no scroll, back broken) and was withdrawn. You picked the full-view form (Specimen B) ~11:49 and charged deeper, dyslexia-formatted details — v22, this board, is that build. It stands as a CHECK until your phone pass closes it.</p><p class="now-line">Five disagreements between job files and the register stand named in the ledger — reported, never silently resolved (see the Ledger notes card).</p>
+<p class="now-line">Ledger #33 stands: 25 jobs inventoried — 22 running · 0 parked · 1 held · 2 done; run form 5 directories / 5 done.md (the instruction-maturity done.md reported separately).</p><p class="now-line">The board: v21 was delivered, failed your phone pass ~11:22 (detail freezes, no scroll, back broken) and was withdrawn. You picked the full-view form (Specimen B) ~11:49 and charged deeper, dyslexia-formatted details — v22 was that build; v23, this board, carries its form with the needs-you sweep. It stands as a CHECK until your phone pass closes it.</p><p class="now-line">Five disagreements between job files and the register stand named in the ledger — reported, never silently resolved (see the Ledger notes card).</p>
 </div>
 <div class="sec" id="view-j16-hist" data-reason="[PLAN] The History section: the job's cycle entries as dated lines, newest first, the date bold at each line's head — the job's story in the same scroll, not behind a second door (v21's F7: the opened card's first screen contained neither history nor memory).">
 <h4 class="sec-h">History · 5 entries</h4>
@@ -1172,7 +1273,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-j16-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 5 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">LEDGER.md</div><p class="mem-digest">The standing product: rewritten fresh each cycle from the job files themselves — the ledger reads the job files as truth and REGISTER.md as a claim to be checked against them. Where the two disagree, the ledger prints the disagreement in the open; it never fixes a record from here.</p></div><div class="mem-tile"><div class="mem-name">The board</div><p class="mem-digest">The dashboard generated from the ledger: this page&#x27;s family. Its form is yours to crown — v20&#x27;s tiles failed, v21&#x27;s popup stack failed on your phone&#x27;s detail journey, and v22&#x27;s mechanic was chosen by your pick between two exercised specimens, so the form comes from what survived comparison instead of from the last version.</p></div><div class="mem-tile"><div class="mem-name">Design records</div><p class="mem-digest">Every board round keeps its Observe product beside its build: design-v21.md (six sources, your eight questions), its build record, and now design-v22-specimens.md — the v21 failure analysis (eight findings on v21&#x27;s own bytes) with eight category sources — plus this round&#x27;s build record.</p></div><div class="mem-tile"><div class="mem-name">The counts rule</div><p class="mem-digest">Counts on this board are claims, and each carries its check: jobs counted from files read this cycle, states from each file&#x27;s own state line. A count nobody re-read this cycle does not print. When the ledger and a job file disagree, both figures stand until the owning job&#x27;s next cycle resolves them.</p></div><div class="mem-tile"><div class="mem-name">The gaps (Ledger #33)</div><p class="mem-digest">Gap 1 — JOB-06&#x27;s header split, 24th ledger, now with a false clearance claim against it. Gap 2 — JOB-THUMB&#x27;s header lag, 20th. Gap 3 — REGISTER places JOB-G1 two cycles behind its file, 20th. Gap 4 — JOB-14&#x27;s header recurrence, 14th. Gap 5 — currency lags (JOB-01&#x27;s file, REGISTER&#x27;s trailing lines). The Ledger notes card carries them in full.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">LEDGER.md</div><p class="mem-digest">The standing product: rewritten fresh each cycle from the job files themselves — the ledger reads the job files as truth and REGISTER.md as a claim to be checked against them. Where the two disagree, the ledger prints the disagreement in the open; it never fixes a record from here.</p></div><div class="mem-tile"><div class="mem-name">The board</div><p class="mem-digest">The dashboard generated from the ledger: this page&#x27;s family. Its form is yours to crown — v20&#x27;s tiles failed, v21&#x27;s popup stack failed on your phone&#x27;s detail journey, and v22&#x27;s mechanic was chosen by your pick between two exercised specimens, so the form comes from what survived comparison instead of from the last version.</p></div><div class="mem-tile"><div class="mem-name">Design records</div><p class="mem-digest">Every board round keeps its Observe product beside its build: design-v21.md (six sources, your eight questions), its build record, and now design-v22-specimens.md — the v21 failure analysis (eight findings on v21&#x27;s own bytes) with eight category sources — plus this round&#x27;s build record.</p></div><div class="mem-tile"><div class="mem-name">The counts rule</div><p class="mem-digest">Counts on this board are claims, and each carries its check: jobs counted from files read this cycle, states from each file&#x27;s own state line. A count nobody re-read this cycle does not print. When the ledger and a job file disagree, both figures stand until the owning job&#x27;s next cycle resolves them.</p></div><div class="mem-tile"><div class="mem-name">Ledger #33 gaps</div><p class="mem-digest">Gap 1 — JOB-06&#x27;s header split, 24th ledger, now with a false clearance claim against it. Gap 2 — JOB-THUMB&#x27;s header lag, 20th. Gap 3 — REGISTER places JOB-G1 two cycles behind its file, 20th. Gap 4 — JOB-14&#x27;s header recurrence, 14th. Gap 5 — currency lags (JOB-01&#x27;s file, REGISTER&#x27;s trailing lines). The Ledger notes card carries them in full.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -1184,6 +1285,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-running">Running</span><span class="code">DESIGN</span></div>
 <p class="id-cycle">Cycle 2 · Plan</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-design-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-design-now">Now</button>
@@ -1208,14 +1310,15 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
-</div><div class="view" id="view-jt2" role="dialog" aria-label="Visual story (Tab 2) details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
+</div><div class="view" id="view-jt2" role="dialog" aria-label="Tab 2 story details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
 <div class="view-head" data-reason="[DYSLEXIA] The header bar: fixed chrome outside the scroller (the v21 cure — its sticky close lived INSIDE the failing scroller and was lost with it). Its height is constant by construction: the name block is a fixed-height two-line seat, so the bar never changes height between jobs (the specimens' FB-2 friction, fixed).">
 <button class="backbtn" type="button" data-back data-reason="[DYSLEXIA] The back control: a labelled target at the act floor whose word names the standing group the reader returns to (the specimens' FB-3 fix — never a generic ‘Jobs’ while a group stands). It performs history.back(), so the visible way back and the phone's Back are the same act and the history entry is consumed exactly once.">‹ <span class="back-word">Jobs</span></button>
-<div class="head-txt"><div class="d-name">Visual story (Tab 2)</div></div>
+<div class="head-txt"><div class="d-name">Tab 2 story</div></div>
 </div>
 <div class="view-body scroller"><div class="view-col">
-<div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-held">Held</span><span class="code">JOB-T2</span></div>
+<div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-held">Held</span><span class="yours"><span class="dot" aria-hidden="true"></span>yours</span><span class="code">JOB-T2</span></div>
 <p class="id-cycle">No cycles · opens only on your word</p>
+<p class="card-act" data-reason="[USER] The act line inside the detail (box 13): the same plain-words act the card face states, repeated at the detail’s head — the reader who arrived by any route meets what is asked of him before the sections.">Give your Tab 2 sequence</p>
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-jt2-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-jt2-now">Now</button>
@@ -1240,14 +1343,15 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
-</div><div class="view" id="view-j15" role="dialog" aria-label="Misunderstanding review &amp; fix details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
+</div><div class="view" id="view-j15" role="dialog" aria-label="Misunderstanding review details" data-reason="[USER] The detail view (Specimen B, the owner's pick 2026-11-02 ~11:49 over the sheet): the job's detail as a full-screen destination — the category's opened-card form (Trello / Material: long detail is a destination, not an overlay) — replacing v21's popup stack, which froze on his phone (design-v22-specimens.md F1–F8). One native scroller; the header bar is fixed chrome OUTSIDE it; Back is wired into history so the phone's Back returns here instead of leaving the page.">
 <div class="view-head" data-reason="[DYSLEXIA] The header bar: fixed chrome outside the scroller (the v21 cure — its sticky close lived INSIDE the failing scroller and was lost with it). Its height is constant by construction: the name block is a fixed-height two-line seat, so the bar never changes height between jobs (the specimens' FB-2 friction, fixed).">
 <button class="backbtn" type="button" data-back data-reason="[DYSLEXIA] The back control: a labelled target at the act floor whose word names the standing group the reader returns to (the specimens' FB-3 fix — never a generic ‘Jobs’ while a group stands). It performs history.back(), so the visible way back and the phone's Back are the same act and the history entry is consumed exactly once.">‹ <span class="back-word">Jobs</span></button>
-<div class="head-txt"><div class="d-name">Misunderstanding review &amp; fix</div></div>
+<div class="head-txt"><div class="d-name">Misunderstanding review</div></div>
 </div>
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-done">Done</span><span class="code">JOB-15</span></div>
 <p class="id-cycle">Cycle 1 · closed — done</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j15-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j15-now">Now</button>
@@ -1268,7 +1372,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-j15-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 4 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">One-off, improvised at birth by the owner&#x27;s direct order, outside the catalogue walk.</p></div><div class="mem-tile"><div class="mem-name">The sweep&#x27;s count</div><p class="mem-digest">False premise: 2 (both fixed or closed on the record) · true-but-mis-scoped: 5 (all fixed in place) · true, must not change: 11 (kept untouched) · already fixed in the birth turn: 3 (verified by the sweep). Clean: SOUL.md, IDENTITY.md, the phase gates, all custom skills, 11 other job files.</p></div><div class="mem-tile"><div class="mem-name">The standing rule it left</div><p class="mem-digest">A mechanism claim is only as good as the route it was measured on: a claim of the form “mechanism M has property P” is unverified until it names its route/tool and date — and every push record now names its route beside the commit sha.</p></div><div class="mem-tile"><div class="mem-name">Exit condition, met</div><p class="mem-digest">Every instance on the sweep&#x27;s list was either fixed in place (verified by re-read) or recorded as a false alarm with its evidence.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">One-off, improvised at birth by the owner&#x27;s direct order, outside the catalogue walk.</p></div><div class="mem-tile"><div class="mem-name">The sweep&#x27;s count</div><p class="mem-digest">False premise: 2 (both fixed or closed on the record) · true-but-mis-scoped: 5 (all fixed in place) · true, must not change: 11 (kept untouched) · already fixed in the birth turn: 3 (verified by the sweep). Clean: SOUL.md, IDENTITY.md, the phase gates, all custom skills, 11 other job files.</p></div><div class="mem-tile"><div class="mem-name">Standing rule left</div><p class="mem-digest">A mechanism claim is only as good as the route it was measured on: a claim of the form “mechanism M has property P” is unverified until it names its route/tool and date — and every push record now names its route beside the commit sha.</p></div><div class="mem-tile"><div class="mem-name">Exit condition, met</div><p class="mem-digest">Every instance on the sweep&#x27;s list was either fixed in place (verified by re-read) or recorded as a false alarm with its evidence.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -1280,6 +1384,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row" data-reason="[DYSLEXIA] The identity block at the detail's first screen (the owner's Q-order): state word, the needs-you mark and the code in the card's own scan row, then the cycle line — whose detail this is and where it stands, before the objective's first line."><span class="state st-done">Done</span><span class="code">JOB-07-UPGRADE</span></div>
 <p class="id-cycle">One run · done, success</p>
+
 <div class="idx" data-reason="[DYSLEXIA] The detail's index (P6 — long pages carry an index): the four sections named as buttons that scroll the one scroller to their section — wayfinding without a second layer, and no history entry is touched (the buttons scroll; they are not links).">
 <button class="idx-chip" type="button" data-jump="view-j07upgrade-obj">Objective</button>
 <button class="idx-chip" type="button" data-jump="view-j07upgrade-now">Now</button>
@@ -1300,7 +1405,7 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="sec" id="view-j07upgrade-mem" data-reason="[USER] The Working-memory section (the owner's named compartment): the job file's actual compartments, each as its own tile with its current content in the open — never pointers, never summaries of summaries; where the content is long, this view's one scroller is the form's strength.">
 <h4 class="sec-h">Working memory · 4 parts</h4>
-<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">One-off upgrade job — its product is JOB-07&#x27;s current form.</p></div><div class="mem-tile"><div class="mem-name">Why it was needed</div><p class="mem-digest">JOB-07 was built 2026-10-29, before the job system existed, hard-wired to Quadrillion alone. Its own record showed the cost: 64 consecutive “quiet intervals” reported on a production that was parked while the real work happened in other jobs. Your direction (2026-11-01 ~13:38 EST): make it generic and pluggable — this job did, in one cycle.</p></div><div class="mem-tile"><div class="mem-name">The design it installed</div><p class="mem-digest">Focus order: your word → REGISTER&#x27;s focus labels → recent activity; a labeled job idle for a full day can be displaced, named in the report. Cadence: floor 15 minutes, ceiling 60, changed only after two consecutive identical recommendations. JOB-07 never watches itself — the audit lanes (JOB-09, JOB-10) watch it.</p></div><div class="mem-tile"><div class="mem-name">Run record</div><p class="mem-digest">runs/2026-11-01T1346-EST/done.md (outcome success) — the run-directory form this job helped establish.</p></div></div>
+<div data-reason-scope="descendants"><div class="mem-tile"><div class="mem-name">Identity &amp; objective</div><p class="mem-digest">One-off upgrade job — its product is JOB-07&#x27;s current form.</p></div><div class="mem-tile"><div class="mem-name">Why needed</div><p class="mem-digest">JOB-07 was built 2026-10-29, before the job system existed, hard-wired to Quadrillion alone. Its own record showed the cost: 64 consecutive “quiet intervals” reported on a production that was parked while the real work happened in other jobs. Your direction (2026-11-01 ~13:38 EST): make it generic and pluggable — this job did, in one cycle.</p></div><div class="mem-tile"><div class="mem-name">Design installed</div><p class="mem-digest">Focus order: your word → REGISTER&#x27;s focus labels → recent activity; a labeled job idle for a full day can be displaced, named in the report. Cadence: floor 15 minutes, ceiling 60, changed only after two consecutive identical recommendations. JOB-07 never watches itself — the audit lanes (JOB-09, JOB-10) watch it.</p></div><div class="mem-tile"><div class="mem-name">Run record</div><p class="mem-digest">runs/2026-11-01T1346-EST/done.md (outcome success) — the run-directory form this job helped establish.</p></div></div>
 </div>
 <button class="backbtn back-bottom" type="button" data-back data-reason="[DYSLEXIA] The bottom back control: the same act as the header's, at the column's end — a reader who scrolled to the bottom is offered the way back where they stand; the pair is prescribed identical and exercised side by side in the legs.">‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -1312,17 +1417,17 @@ html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
 <div class="view-body scroller"><div class="view-col">
 <div class="id-row"><span class="state st-notes">Record</span><span class="code">LEDGER #33</span></div>
 <p class="id-cycle">Written 2026-11-02 ~11:35 · from fresh reads of every job file</p>
-<div class="sec" data-reason="[PLAN] What this card is: the ledger's own identity in one short paragraph, before its three compartments.">
-<h4 class="sec-h">What this card is</h4>
+<div class="sec" data-reason="[PLAN] This card: the ledger's own identity in one short paragraph, before its three compartments.">
+<h4 class="sec-h">This card</h4>
 <p class="sec-p">The hourly ledger's record, condensed: Ledger #33 inventoried 25 jobs from fresh reads — 22 running, 0 parked, 1 held, 2 done; run form 5 directories, 5 done.md, plus the instruction-maturity done.md reported separately. The ledger records discrepancies; it never repairs them — the owning job does.</p></div>
 <div class="sec" data-reason="[PLAN] What changed: this cycle's material movements, one line each, newest weight first.">
 <h4 class="sec-h">What changed · 6 lines</h4>
-<ul class="hist" data-reason-scope="descendants"><li>Quadrillion v50 stands live on the serving branch — the first firing landed on the wrong branch and was re-fired (~10:55, commit 3a008200); its gate is still 11/17</li><li>Your bed pick landed: tile 13 at 30% lower, both masters re-bedded; the ear CHECK is delivered — your verdict is the open act</li><li>The clone “ready” claim is frozen (Review #331, RCA-173): ONE player, one transcript, a voice switch is the correction building in v51</li><li>Jobs v21 was delivered, failed your phone pass (~11:22) and was withdrawn; you picked the full-view form for v22 and charged deeper, dyslexia-formatted details — this board is that build</li><li>Community v10 fired (12/12): five flow posts, tags and filters on all 23 posts; your scores are the open act. The daily-basic lane was founded the same hour</li><li>JOB-07&#x27;s opening-probe class fired its 36th–39th consecutive times (runs 84–87) and run 87 failed its clear test; run 88 has since opened clean</li></ul></div>
+<ul class="hist" data-reason-scope="descendants"><li>Quadrillion v50 stands live on the serving branch — the first firing landed on the wrong branch and was re-fired (~10:55, commit 3a008200); its gate is still 11/17</li><li>Your bed pick landed: tile 13 at 30% lower, both masters re-bedded; the ear CHECK is delivered — your verdict is the open act</li><li>The clone “ready” claim is frozen (Review #331, RCA-173): ONE player, one transcript, a voice switch is the correction building in v51</li><li>Jobs v21 was delivered, failed your phone pass (~11:22) and was withdrawn; you picked the full-view form for v22 and charged deeper, dyslexia-formatted details — v23 keeps that form, with the needs-you sweep</li><li>Community v10 fired (12/12): five flow posts, tags and filters on all 23 posts; your scores are the open act. The daily-basic lane was founded the same hour</li><li>JOB-07&#x27;s opening-probe class fired its 36th–39th consecutive times (runs 84–87) and run 87 failed its clear test; run 88 has since opened clean</li></ul></div>
 <div class="sec" data-reason="[PLAN] Gaps standing: the ledger's named disagreements, carried openly until the owning job cures them.">
 <h4 class="sec-h">Gaps standing · 5 lines</h4>
 <ul class="hist" data-reason-scope="descendants"><li>Gap 1 — JOB-06&#x27;s header reads Cycle 9 / Observe against its own Cycle 10 / Condense (24th ledger) — and JOB-05&#x27;s Cycle 37 now claims it cured, which JOB-06&#x27;s unmodified file falsifies; the false claim is itself the gap&#x27;s new defect</li><li>Gap 2 — JOB-THUMB&#x27;s header lags its own run records (20th ledger)</li><li>Gap 3 — REGISTER places JOB-G1 at Cycle 1 / Observe against its file&#x27;s Cycle 3 / Condense (20th ledger, advanced two cycles)</li><li>Gap 4 — JOB-14&#x27;s header (Cycle 21) vs its State section: the recurrence, 14th ledger; both lags were twelve cycles at the ledger&#x27;s read (Cycle 34 has since fired — thirteen)</li><li>Gap 5 — currency lags: JOB-01&#x27;s file does not yet record the v50 firing and correction; REGISTER&#x27;s JOB-16 / JOB-G2 lines trail their files (each file is the truth)</li></ul></div>
-<div class="sec" data-reason="[PLAN] What depends on what: the dependency lines the ledger carries, so a blocked job's blockers are visible from the map.">
-<h4 class="sec-h">What depends on what · 7 lines</h4>
+<div class="sec" data-reason="[PLAN] Dependencies: the dependency lines the ledger carries, so a blocked job's blockers are visible from the map.">
+<h4 class="sec-h">Dependencies · 7 lines</h4>
 <ul class="hist" data-reason-scope="descendants"><li>JOB-VP (video production) completes only when a child job&#x27;s run ends in success — JOB-01, JOB-THUMB and the Tab 2 jobs are its children</li><li>JOB-01 blocks Tab 1 approval and Tab 2&#x27;s opening; its CHECK waits on the rendered legs and the owner&#x27;s phone pass (0 of 6 scenarios)</li><li>Tab 2 (JOB-T2&#x27;s seat + JOB-T2-ONEOFF) opens only on the owner&#x27;s word and the hunt&#x27;s zero-finding pass</li><li>JOB-02&#x27;s census refresh waits on a ruling — whether a panel-era build record counts as a refresh source; the seat is the daily review (JOB-06)</li><li>JOB-07&#x27;s opening-probe freeze stays ACTIVE (drift lane&#x27;s order); its structural-gate conversion sits with JOB-06 — run 88&#x27;s clean opening now waits on JOB-09&#x27;s grading</li><li>JOB-04&#x27;s lane: the owner&#x27;s voice sample is the next step (then n=97 to Dot); Dot&#x27;s n=96 stands sent, unconfirmed</li><li>Every job file reaches the repo&#x27;s canonical jobs tree through JOB-14&#x27;s hourly sync; JOB-05 keeps REGISTER&#x27;s phase states true hourly</li></ul></div>
 <button class="backbtn back-bottom" type="button" data-back>‹ <span class="back-word">Jobs</span></button>
 </div></div>
@@ -1451,7 +1556,12 @@ function init(){
   var openers = Array.prototype.slice.call(document.querySelectorAll("[data-open]"));
   openers.forEach(function(o){
     /* @reason [USER] This door's tap binding — its target is printed in its own attribute, so the exercise can enumerate every door from the markup. */
-    o.addEventListener("click", function(){ openView(o.getAttribute("data-open")); });
+    o.addEventListener("click", function(){
+      /* @reason [USER] A door tapped in the needs-you list dismisses the list in the same tap: its switch is unchecked before the view opens, so the list never stands between the reader and the detail he asked for. */
+      var yt = el("yoursToggle");
+      if (yt) yt.checked = false;
+      openView(o.getAttribute("data-open"));
+    });
   });
   /* @reason [USER] Every back control (each view's header + column-foot pair) performs the history back. */
   var backs = Array.prototype.slice.call(document.querySelectorAll("[data-back]"));
@@ -1492,7 +1602,7 @@ init();
 </script>
 <script type="application/json" id="archer-checklist">{
  "standard": "html-checklist-v1",
- "content_hash": "6b5d22433a9587ea554c2569f60f2de564de9dd879d24e827364028f48518919",
+ "content_hash": "00c894f0548ae5a4955d153e3082c4285a6ab0d89faf7c556a686b57f3c8fd65",
  "checks": [
   {
    "id": "FORM-FIRST-GLANCE",
@@ -1500,8 +1610,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "local render harness (Chrome 156, 390\u00d7844) + screenshot read by the builder",
-   "evidence": "render-harness/legs/jobs-v22/probe-v22.json firstGlance census + screenshot-first.png \u2014 top level = health tile \u00b7 heading \u00b7 chip row \u00b7 pager (one job card whole) \u00b7 board note; 90 words at first open",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json firstGlance census + screenshot-first.png \u2014 top level = health tile \u00b7 heading \u00b7 chip row \u00b7 pager (one job card whole) \u00b7 board note; 100 words at first open",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "POPUP-MECHANIC",
@@ -1509,8 +1619,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "local render harness (Chrome 156, 390\u00d7844), scripted exercise of every opener + touch journey",
-   "evidence": "render-harness/legs/jobs-v22/probe-v22.json views \u2014 26/26 Details doors opened a full-screen view (the owner's picked form, Specimen B), in-place expansions 0, place restored exactly after every close; health opens as a popup over the page, place kept",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json views \u2014 26/26 Details doors opened a full-screen view (the owner's picked form, Specimen B), in-place expansions 0, place restored exactly after every close; health and the needs-you list open as popups over the page, place kept",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "CONTROLS-EXERCISED",
@@ -1518,8 +1628,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "local render harness (Chrome 156, 390\u00d7844), scripted exercise",
-   "evidence": "render-harness/legs/jobs-v22/probe-v22.json \u2014 4 chips switched groups (22\u00b71\u00b72\u00b726 cards), prev/next walked 51 steps, synthetic swipe stepped the pager, 26 doors + 52 back controls exercised, index buttons scrolled their sections, Escape closed the open view, health tile opened and closed",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json \u2014 4 group chips switched groups (22\u00b71\u00b72\u00b726 cards), the needs-you toggle opened its list and its 5 job doors opened their views (list dismissed in the same tap), prev/next walked 51 steps, synthetic swipe stepped the pager, 26 doors + 52 back controls exercised, index buttons scrolled their sections, Escape closed the open view, health tile opened and closed",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "GESTURE-LAYOUT",
@@ -1527,8 +1637,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "local render harness (Chrome 156, 390\u00d7844), per-step geometry walk",
-   "evidence": "render-harness/legs/jobs-v22/probe-v22.json groups \u2014 51/51 steps: slide width == pager window (350 == 350), track transform == \u2212index \u00d7 window on every step, current slide's left edge == the window's left edge; resting state shows exactly one card",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json groups \u2014 51/51 steps: slide width == pager window (350 == 350), track transform == \u2212index \u00d7 window on every step, current slide's left edge == the window's left edge; resting state shows exactly one card",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "PHONE-WIDTH-RENDER",
@@ -1536,8 +1646,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "local render harness (Chrome 156, 390\u00d7844)",
-   "evidence": "render-harness/legs/jobs-v22/probe-v22.json rest + views \u2014 scrollWidth 390 == innerWidth; unclipped offenders 0; detail views: header height identical across all 26 views (one unique measured value), no view overflows horizontally",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json rest + views \u2014 scrollWidth 390 == innerWidth; unclipped offenders 0; detail views: header height identical across all 26 views (one unique measured value), no view overflows horizontally",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "PAIR-PARITY",
@@ -1545,17 +1655,17 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "local render harness (Chrome 156, 390\u00d7844), paired exercise on the journey views",
-   "evidence": "render-harness/legs/jobs-v22/probe-v22.json journey \u2014 each detail view's two back controls (header + column foot) exercised side by side: both close the view via the same history act and restore the place identically; no unprescribed difference",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json journey \u2014 each detail view's two back controls (header + column foot) exercised side by side: both close the view via the same history act and restore the place identically; no unprescribed difference",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "CONTENT-CURRENCY",
    "label": "Every printed claim, figure and state line checked against the live state or the file itself",
    "applies": true,
    "state": "PASS",
-   "instrument": "scripted assertions (finalize_v22.py phase B) against LEDGER.md #33 + the job files' state heads + the scanner output",
-   "evidence": "currency assertions in build-record-jobs-dashboard-v22.md \u2014 25 job cards (codes, states, order) == the data model read from Ledger #33 + job-file state heads; chip counts 26/22/1/2 == the ledger's counts; strip figures == reasoning-audit-jobs-v22.json; face count == the block's applicable count",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "instrument": "scripted assertions (finalize_v23.py phase B) against LEDGER.md #33 + the job files' state heads + the scanner output",
+   "evidence": "currency assertions in build-record-jobs-dashboard-v23.md \u2014 25 job cards (codes, states, order) == the data model read from Ledger #33 + job-file state heads; chip counts 26/22/1/2 == the ledger's counts; strip figures == reasoning-audit-jobs-v23.json; face count == the block's applicable count",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "REASONING-COMPLETE",
@@ -1563,8 +1673,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "reasoning_audit.py (tab0-work/dashboard-review) on the final bytes",
-   "evidence": "reasoning-audit-jobs-v22.json \u2014 1551 components = 337 explicit / 1214 inherited / 0 uncovered \u00b7 CSS declarations all covered \u00b7 tokens 27/27 reasoned \u00b7 verdict COMPLETE",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "reasoning-audit-jobs-v23.json \u2014 1613 components = 366 explicit / 1247 inherited / 0 uncovered \u00b7 CSS declarations all covered \u00b7 tokens 27/27 reasoned \u00b7 verdict COMPLETE",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "STYLE-TOKENS",
@@ -1572,8 +1682,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "token audit script against the community reference (push-v9 :root)",
-   "evidence": "build-record-jobs-dashboard-v22.md \u00a7 tokens \u2014 27 tokens: 17 shared with the community reference, 17 SAME \u00b7 0 DIFFERS \u00b7 10 board-only (names carried by the hub's house set + this board's sizes/spaces)",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "checklist-v23-evidence/token-audit.log (method of build-record-jobs-dashboard-v22.md \u00a7 tokens) \u2014 27 tokens: 17 shared with the community reference, 17 SAME \u00b7 0 DIFFERS \u00b7 10 board-only; v23 adds no token and changes no token value",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "MEDIA-PLAYS",
@@ -1590,8 +1700,8 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "local render harness (Chrome 156, 390\u00d7844), Range line count + open/close cycle",
-   "evidence": "render-harness/legs/jobs-v22/probe-v22.json health \u2014 face text 1 line (text-node Range count), opens as overlay with the strip's first line visible and Close in the viewport, closes with place kept (watched rects identical, scrollY 0)",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json health \u2014 face text 1 line (text-node Range count), opens as overlay with the strip's first line visible and Close in the viewport, closes with place kept (watched rects identical, scrollY 0)",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   },
   {
    "id": "SOLE-READER",
@@ -1599,8 +1709,26 @@ init();
    "applies": true,
    "state": "PASS",
    "instrument": "builder's one-pass sole-reader review of the rendered screenshots at 390px",
-   "evidence": "render-harness/legs/jobs-v22/LEGS.md \u00a7 sole reader + screenshot-first.png / screenshot-view-j01-top.png / screenshot-view-j01-bottom.png \u2014 one pass, no backtracking: counts on the chips, one job whole, every door labelled with its counts, the detail's sections signposted; friction recorded in LEGS.md",
-   "checked_at": "2026-11-02T12:10:00-05:00"
+   "evidence": "render-harness/legs/jobs-v23/LEGS.md \u00a7 sole reader + screenshot-first.png / screenshot-view-j01-top.png / screenshot-view-j01-bottom.png \u2014 one pass, no backtracking: counts on the chips, one job whole, every door labelled with its counts, the detail's sections signposted; friction recorded in LEGS.md",
+   "checked_at": "2026-11-02T15:14:45-05:00"
+  },
+  {
+   "id": "OWNER-ACTION-FINDABILITY",
+   "label": "Every compartment awaiting owner input carries a red dot on its tab and on its tile; the tile face states the needed act in \u22646 plain words; the act is reachable in \u22642 taps from page open, exercised on the rendered page",
+   "applies": true,
+   "state": "PASS",
+   "instrument": "local render harness (Chrome, 390\u00d7844) needs-you leg + script census of the final bytes",
+   "evidence": "render-harness/legs/jobs-v23/probe-v23.json yours \u2014 census: 5 compartments carry the red dot + act line on card and detail (JOB-01 \u00b7 JOB-04 \u00b7 JOB-G1 \u00b7 JOB-T2-ONEOFF \u00b7 JOB-T2) and the board itself is marked on its note and as the list's first row; journeys: from page open, every job's act reached in exactly 2 taps (list toggle \u2192 row door) by real touchscreen taps, act line visible in the opened view, list dismissed by the same tap; act lines \u22646 words, script-counted (checklist-v23-evidence/title-table.txt)",
+   "checked_at": "2026-11-02T15:14:45-05:00"
+  },
+  {
+   "id": "TITLE-BREVITY",
+   "label": "Every tile/section title \u22643 words, counted by script over the final bytes",
+   "applies": true,
+   "state": "PASS",
+   "instrument": "title-count script over the final bytes (checklist-v23-evidence/title_count.py)",
+   "evidence": "checklist-v23-evidence/title-table.txt \u2014 every title class counted (card names 26 \u00b7 detail names 26 \u00b7 header names 26 \u00b7 memory tiles 98 \u00b7 section titles 104 by title part, plus the h1 \u00b7 needs-you rows 6): longest title 3 words, 0 over; 22 titles retitled from v22 with meaning preserved (table in build-record-jobs-dashboard-v23.md)",
+   "checked_at": "2026-11-02T15:14:45-05:00"
   }
  ]
 }</script>
