@@ -2201,9 +2201,13 @@ var t1cur = -1;
 var t1sel = -1;
 /* @reason [DYSLEXIA] Follow's standing flag: read-along starts ON (hearing the piece means watching it land) and yields to his own scroll - t1SetFollow is its only mover; this is only its state. */
 var t1Follow = true;   // Round 5 (census 55): read-along auto-scroll follows playback until the reader scrolls by hand
+/* @reason [USER] The line the follow view last centred, known by its words' offsetTop: the owner's ruling (2026-11-02) — the sounding line stays at the centre of the view, so the view moves on every line change; this number is how a line change is known, and follow re-arming clears it so the current line centres at once. */
+var t1LineY = null;
 /* @reason [DYSLEXIA] The only mover of follow state (J-6): it flips the flag and the bar toggle's pressed state and wash together, so the state is always visible where it can be changed. Word taps never call it. */
 function t1SetFollow(v) {
   t1Follow = v;
+  /* @reason [DERIVED] Re-arming follow forgets the last centred line: the next sounding word re-centres its line even mid-line, so pressing play lands the eye on the line at once. */
+  if (v) t1LineY = null;
   /* @reason [DERIVED] The bar's Follow toggle, fetched at the flip: the mover writes the flag and the button together, so it reads the button fresh each time. */
   var fb = document.getElementById('tb-follow');
   if (fb) { fb.setAttribute('aria-pressed', String(v)); fb.classList.toggle('on', v); }
@@ -2230,10 +2234,9 @@ function t1HighlightAt(t) {
   if (t1cur >= 0 && t1ws[t1cur]) t1ws[t1cur].classList.remove('on');
   t1cur = idx;
   if (idx >= 0 && t1ws[idx]) { t1ws[idx].classList.add('on');
-    if (t1Follow) { var r = null; try { r = t1ws[idx].getBoundingClientRect(); } catch (e) {}
-      /* @reason [MEASURED] Out of view is judged against the band the reader can actually see: inside the page scroller, its own rect less the docked transport's measured band at the foot (anchorBandB, kept current by fitAnchor); outside the scroller, the window's edges as before. A word the dock covers is out of view, whatever the window's edges say. */
-      var sc42 = document.getElementById('main'), in42 = !!(sc42 && sc42.contains(t1ws[idx])), out42 = !r || (in42 ? (r.bottom < sc42.getBoundingClientRect().top || r.top > sc42.getBoundingClientRect().bottom - (window.anchorBandB || 0)) : (r.bottom < 0 || r.top > window.innerHeight));
-      if (out42) { try { t1ws[idx].scrollIntoView({block: 'center', behavior: 'smooth'}); } catch (e) {} } } }
+    if (t1Follow) { var ly42 = null; try { ly42 = t1ws[idx].offsetTop; } catch (e) {}
+      /* @reason [USER] The owner's ruling (2026-11-02), replacing the Round 5 off-screen trigger he watched fail on his phone: the sounding line stays at the centre of the view — the view scrolls on EVERY line change, so the line never drifts down the screen and then jumps back in one huge shift at the edge. Line identity is the word's offsetTop (words on one visual line share it, within a pixel or two); inside one line the view does not move at all, and his own scroll still yields follow entirely (the wheel/touchmove rule above). */
+      if (ly42 !== null && (t1LineY === null || Math.abs(ly42 - t1LineY) > 2)) { t1LineY = ly42; try { t1ws[idx].scrollIntoView({block: 'center', behavior: 'smooth'}); } catch (e) {} } } }
   /* @reason [DERIVED] The mini bar's text seat, fetched at the write: the sounding word is announced where his eye already is. */
   var mt = document.getElementById('t1mini-tx');
   if (mt) { if (idx >= 0 && t1ws[idx]) { mt.textContent = '▶ Word ' + (idx + 1) + ' of 336 · ‘' + t1ws[idx].textContent + '’ · ' + T1E[idx][0].toFixed(2) + ' s'; } else if (!t1au.paused) { mt.textContent = '· · · ' + t1FmtPos(t) + ' of ' + t1FmtPos(Math.round(t1Dur())) + ' — between words'; } else { t1MiniSel(); } }
