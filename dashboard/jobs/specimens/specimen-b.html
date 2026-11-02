@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jobs — specimen B (full view)</title>
+<style>
+:root{
+  --ground-0:#070c16; --ground-1:#0a1120;
+  --glass-fill:rgba(255,255,255,.10); --glass-fill-strong:rgba(255,255,255,.13);
+  --glass-deep:rgba(13,20,36,.94); --glass-edge:rgba(255,255,255,.25);
+  --glass-blur:16px; --glass-sat:160%;
+  --glass-hi:inset 0 1px 0 rgba(255,255,255,.28);
+  --shadow-card:0 8px 32px rgba(0,0,0,.30);
+  --radius-l:22px; --radius-m:14px;
+  --ink-1:#F4F7FB; --ink-2:#C6CEDD; --ink-3:#9AA6BB;
+  --ink-state:#ffc46b; --ink-need:#ff6a5e;
+  --size-name:25px; --size-line:16.5px; --size-state:15px;
+  --w-name:700; --w-state:600;
+  --space-page:20px; --space-gap:14px; --space-tile:18px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(120% 60% at 50% -10%, #16263f 0%, var(--ground-1) 55%, var(--ground-0) 100%) fixed, var(--ground-0);color:var(--ink-1);font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+main{max-width:560px;margin:0 auto;padding:var(--space-page)}
+.spec-tag{display:inline-block;font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state);border:1px solid var(--glass-edge);border-radius:999px;padding:6px 14px;background:var(--glass-fill)}
+.board-h{font-size:28px;font-weight:var(--w-name);margin:14px 0 4px}
+.board-sub{font-size:var(--size-line);line-height:1.5;color:var(--ink-2);margin:0 0 var(--space-gap)}
+.pager-view{overflow:hidden;border-radius:var(--radius-l)}
+.pager-track{display:flex;transition:transform .32s ease}
+.slide{flex:0 0 100%;min-width:100%}
+.card{background:var(--glass-fill-strong);border:1px solid var(--glass-edge);border-radius:var(--radius-l);box-shadow:var(--glass-hi),var(--shadow-card);padding:var(--space-tile);height:100%}
+.card-top{display:flex;justify-content:space-between;align-items:baseline}
+.state{font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state)}
+.code{font-size:var(--size-state);color:var(--ink-3);font-weight:var(--w-state)}
+.card-name{font-size:var(--size-name);font-weight:var(--w-name);line-height:1.3;margin:10px 0 0}
+.card-cycle{font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state);margin:8px 0 0}
+.card-obj{font-size:var(--size-line);line-height:1.5;color:var(--ink-2);margin:8px 0 0}
+.yours{display:inline-block;color:var(--ink-need);font-size:var(--size-state);font-weight:var(--w-state);margin:10px 0 0}
+.door{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin:16px 0 0;padding:10px 16px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-m);color:var(--ink-1);font-size:var(--size-line);font-weight:var(--w-state);cursor:pointer}
+.pg-nav{display:flex;align-items:center;justify-content:space-between;margin:var(--space-gap) 0 0}
+.pg-btn{min-height:48px;min-width:88px;padding:6px 16px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-m);color:var(--ink-1);font-size:var(--size-state);font-weight:var(--w-state);cursor:pointer}
+.pg-label{font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state)}
+.board-note{font-size:var(--size-state);line-height:1.5;color:var(--ink-3);margin:18px 0 0}
+/* detail content — identical in both specimens */
+.sec{margin:18px 0 0}
+.sec-h{font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state);margin:0 0 6px}
+.sec-p{font-size:var(--size-line);line-height:1.5;margin:0}
+.now-line{font-size:var(--size-line);line-height:1.5;color:var(--ink-2);margin:0 0 8px}
+.hist{list-style:none;margin:6px 0 0;padding:0}
+.hist li{font-size:var(--size-line);line-height:1.5;color:var(--ink-2);margin:0 0 10px}
+.hist b{color:var(--ink-1);font-weight:var(--w-state)}
+.mem-row{margin:0 0 14px}
+.mem-name{font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state)}
+.mem-digest{font-size:var(--size-line);line-height:1.5;color:var(--ink-2);margin:4px 0 0}
+.d-name{font-size:22px;font-weight:var(--w-name);line-height:1.3}
+.d-state{font-size:var(--size-state);font-weight:var(--w-state);color:var(--ink-state);margin:2px 0 0}
+@media (prefers-reduced-motion: reduce){ .pager-track{transition:none} }
+
+/* SPECIMEN B — the full view.
+   The detail is a destination, not an overlay: a full-screen view whose
+   header bar (back + name) is fixed chrome OUTSIDE the single scroller
+   (.view-body). One scroller, page-native physics, nothing nested; no
+   backdrop filter on any scrolling surface. Sized in dvh. */
+html.locked, html.locked body{overflow:hidden;overscroll-behavior:none}
+.view{position:fixed;inset:0;height:100vh;height:100dvh;display:none;flex-direction:column;z-index:50;background:radial-gradient(120% 60% at 50% -10%, #16263f 0%, var(--ground-1) 55%, var(--ground-0) 100%), var(--ground-0)}
+.view.open{display:flex}
+.view-head{flex:none;display:flex;align-items:center;gap:12px;padding:12px var(--space-tile);background:var(--glass-fill);border-bottom:1px solid var(--glass-edge);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat))}
+.backbtn{flex:none;display:flex;align-items:center;justify-content:center;min-height:48px;min-width:84px;padding:6px 16px;background:var(--glass-fill);border:1px solid var(--glass-edge);border-radius:var(--radius-m);color:var(--ink-1);font-size:var(--size-state);font-weight:var(--w-state);cursor:pointer}
+.view-head .head-txt{flex:1;min-width:0}
+.view-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.view-col{max-width:560px;margin:0 auto;padding:4px var(--space-page) 34px}
+
+</style>
+</head>
+<body>
+<main><span class="spec-tag">SPECIMEN B · THE FULL VIEW</span><h1 class="board-h">Jobs</h1><p class="board-sub">Three sample jobs — the real board's first three cards, with their real detail. Tap Details: the job opens as its own full screen. Scroll it, then come back.</p><div class="pager-view" id="pgView"><div class="pager-track" id="pgTrack"><section class="slide"><article class="card"><div class="card-top"><span class="state">RUNNING</span><span class="code">JOB-01</span></div><h2 class="card-name">Finish Quadrillion</h2><p class="card-cycle">Cycle 5 · Tab 1 — audio</p><p class="card-obj">Show language processing at a scale that says a new era begins — and invite the viewer to follow the channel.</p><span class="yours">● yours</span><button class="door" type="button" data-open="d-j01">Details ›</button></article></section><section class="slide"><article class="card"><div class="card-top"><span class="state">RUNNING</span><span class="code">JOB-04</span></div><h2 class="card-name">Dot channel</h2><p class="card-cycle">Agent-chat · message 96 sent</p><p class="card-obj">The working channel with Dot: her builds arrive as her own artifacts; Archer verifies and integrates them.</p><span class="yours">● yours</span><button class="door" type="button" data-open="d-j04">Details ›</button></article></section><section class="slide"><article class="card"><div class="card-top"><span class="state">RUNNING</span><span class="code">JOB-16</span></div><h2 class="card-name">Job ledger</h2><p class="card-cycle">Ledger #32 · board in rebuild</p><p class="card-obj">Keep the map of the jobs true — what is running, what is done, and what each job holds.</p><button class="door" type="button" data-open="d-j16">Details ›</button></article></section></div></div><div class="pg-nav"><button class="pg-btn" type="button" id="pgPrev">‹ Prev</button><span class="pg-label" id="pgLabel">Job 1 of 3</span><button class="pg-btn" type="button" id="pgNext">Next ›</button></div><p class="board-note">Specimen B of two. The full view is how Trello and Asana open a card on a phone: a screen of its own, one scroll, a Back that returns to the board. Sample content, condensed from the real jobs — the mechanic is the specimen.</p></main><div class="view" id="d-j01" role="dialog" aria-label="Finish Quadrillion details"><div class="view-head"><button class="backbtn" type="button" data-close>‹ Jobs</button><div class="head-txt"><div class="d-name">Finish Quadrillion</div><div class="d-state">RUNNING · Cycle 5 · Tab 1 — audio</div></div></div><div class="view-body scroller"><div class="view-col"><div class="sec"><h3 class="sec-h">Objective</h3><p class="sec-p">Show language processing at a scale indicating a new era begins — its start — and invite to follow our channel. The piece teaches one thing: the amount of language machines now process each month has left human scale behind, and that gap is the story.</p></div><div class="sec"><h3 class="sec-h">Now</h3><p class="now-line">Cycles run: 5 closed · Cycle 5 (Tab 1, audio) is the standing cycle.</p><p class="now-line">Built and waiting: dashboard v51 — the popup fix, the picked bed wired into both masters, the clone timing compartment.</p><p class="now-line">Waiting on you: ear verdict on the cloned voice · ear verdict on the picked bed · the phone pass on the player · the Tab 0 verdict.</p></div><div class="sec"><h3 class="sec-h">History</h3><ul class="hist"><li><b>2026-11-02</b> — Bed picked: tile 13, a generated pad, at 30% lower and evened. Both masters re-bedded — regular v28, clone v2 — and sent for your ear verdict.</li><li><b>2026-11-02</b> — Dashboard v50 live on the serving branch: the clone sits beside the master in the same player, same controls, its own word timings.</li><li><b>2026-11-01</b> — Clone master v1 delivered for your ear verdict — built from all nine verified takes, whole takes fitted, never cut.</li><li><b>2026-11-01</b> — All nine clone takes pulled from Dot and verified: hashes and durations match her delivery, words checked by machine listening.</li><li><b>2026-10-31</b> — Transcript frozen at v26 — 25 lines, 336 words. The text every voice now speaks; no word changes without a new freeze.</li></ul></div><div class="sec"><h3 class="sec-h">Working memory</h3><div class="mem-row"><div class="mem-name">The piece file</div><p class="mem-digest">One HTML file holds the whole piece: the dashboard, the transcript, both players, every check. The file is the workspace — opening it is opening the piece. Its tabs: Foundations (objective, title, thumbnail) · Audio (the standing tab) · Visuals (held until you guide the sequence). Every component in the file carries its reason in the file, and a scanner proves the coverage: 3,336 components, none unreasoned.</p></div><div class="mem-row"><div class="mem-name">The transcript — frozen at v26</div><p class="mem-digest">25 lines, 336 words, frozen. Two-stage writing stands behind it: the content text first, then the delivery-marked text the voices actually speak. The facts it carries: 3.2 quadrillion tokens processed a month; growth from 9.7 trillion to 480 trillion to 3.2 quadrillion; about 300 trillion words of public text in existence — the whole supply is roughly a tenth of one month's flow. The ending is Option A, decided and built.</p></div><div class="mem-row"><div class="mem-name">The voices</div><p class="mem-digest">Two masters, one transcript. The regular voice — the channel's standing voice — at master v28. The cloned voice, your voice, built by Dot's Pelican from nine recorded takes, at clone master v2. The voice stems are hash-locked: re-bedding changed the music under both voices and touched neither — proven by hashes taken before and after, identical.</p></div><div class="mem-row"><div class="mem-name">The bed</div><p class="mem-digest">The music bed: a generated pad (Suno), board tile 13 — picked by you on 2026-11-02, provisionally, with two instructions: about 30% lower than the board played it, and even across the whole piece. Built so: one continuous excerpt of the source track, never looped and never joined; levelled in 5-second windows; it runs at least 31.9 dB under the voice in every window. Your ear verdict on the built bed is still open — the pick closes only on it.</p></div><div class="mem-row"><div class="mem-name">Word timing</div><p class="mem-digest">Each voice carries its own word map: 336 word timings per voice. The clone's map is genuinely its own — 329 of its 336 word starts differ from the regular voice's by more than a twentieth of a second. The maps drive the highlighting: when a voice plays, each word lights as it is spoken, and tapping a word moves the voice to it.</p></div><div class="mem-row"><div class="mem-name">Checks standing</div><p class="mem-digest">The piece checklist: 133 items — 92 passing, 40 open, 1 other. The dashboard's own in-file checklist stands at 11 of 17 on v50; the open boxes are your acts (the phone pass, the ear verdicts), not the machine's. Phone scenarios measured on a real device: 0 of 6 — the follow behaviour has only ever been exercised in emulation, and this week proved emulation is not the same thing.</p></div></div></div></div></div><div class="view" id="d-j04" role="dialog" aria-label="Dot channel details"><div class="view-head"><button class="backbtn" type="button" data-close>‹ Jobs</button><div class="head-txt"><div class="d-name">Dot channel</div><div class="d-state">RUNNING · Agent-chat · message 96 sent</div></div></div><div class="view-body scroller"><div class="view-col"><div class="sec"><h3 class="sec-h">Objective</h3><p class="sec-p">Keep one open, honest channel with Dot: requests go out as numbered thread messages, her deliveries come back as her own artifacts on her own branch, and everything she sends is verified here before it is integrated. The channel exists so clone takes, study shares and reviews move without either side ever working in the other's files.</p></div><div class="sec"><h3 class="sec-h">Now</h3><p class="now-line">Watermark: her messages read up to 95 · message 96 sent 2026-11-02 — still unconfirmed, and now reported as a delay; chasing it is Archer's job.</p><p class="now-line">Next owed to her: message 97 — the pause-corrected clone chunks. It waits on your short voice-sample recording.</p><p class="now-line">The 15-minute rule stands: a file request undelivered in 15 minutes gets a direct, explicit push from Archer — no soft follow-ups.</p></div><div class="sec"><h3 class="sec-h">History</h3><ul class="hist"><li><b>2026-11-02</b> — Message 96 sent: the clone chunk list and the weekly study share. Unconfirmed at the next watch — flagged as a delay under the channel rule.</li><li><b>2026-11-01</b> — All nine Quadrillion clone takes pulled from her delivery and verified: hashes, durations, and word checks all pass.</li><li><b>2026-11-01</b> — Your branch rule set: Dot never changes anything in Archer's branches or files; she copies what she needs into her own branch and works there.</li><li><b>2026-10-31</b> — The weekly study share began: each craft-study conversion is posted to the shared thread for her.</li></ul></div><div class="sec"><h3 class="sec-h">Working memory</h3><div class="mem-row"><div class="mem-name">The thread</div><p class="mem-digest">agent-chat, in the departments repository: an append-only thread of numbered messages between Archer and Dot. Corrections are new messages, never edits. The thread is the channel's memory — both sides re-read it at its latest commit before appending. A message counts as SENT, UNCONFIRMED until Dot confirms it in the thread itself; nothing is treated as received on hope.</p></div><div class="mem-row"><div class="mem-name">The watermark</div><p class="mem-digest">last_seen_dot_n = 95: the highest of her messages Archer has actually read. Anything above it is unread by definition. The watermark moves only on a read, never on an assumption — a message she sent that nobody here has read does not count as received, and a delay older than one watch cycle is reported to you directly.</p></div><div class="mem-row"><div class="mem-name">Her lane right now</div><p class="mem-digest">Pelican, her voice-cloning build, is unreachable from here this week, so the clone programme runs on her delivered takes instead of live sessions. Quadrillion is the only piece with a current clone need: nine chunks on the frozen v26 text, all nine already delivered and verified once.</p></div><div class="mem-row"><div class="mem-name">What waits on you</div><p class="mem-digest">One thing only: the short voice-sample recording — three lines, about thirty seconds. On its arrival it goes to Dot as message 97 with the chunk list; her new takes come back the same way the first nine did: pulled, hashed, word-checked, then built into a master for your ear.</p></div></div></div></div></div><div class="view" id="d-j16" role="dialog" aria-label="Job ledger details"><div class="view-head"><button class="backbtn" type="button" data-close>‹ Jobs</button><div class="head-txt"><div class="d-name">Job ledger</div><div class="d-state">RUNNING · Ledger #32 · board in rebuild</div></div></div><div class="view-body scroller"><div class="view-col"><div class="sec"><h3 class="sec-h">Objective</h3><p class="sec-p">Every hour, read every job's own file and write the ledger fresh: which jobs are running, which are held, which are closed, and where the records disagree. The board built from the ledger is the map of the whole system's territory — the one place you can see the machine you are building, in your words, from your questions.</p></div><div class="sec"><h3 class="sec-h">Now</h3><p class="now-line">Ledger #32 stands: 22 running · 1 held · 2 closed · 25 jobs inventoried.</p><p class="now-line">The board: v20 scored 5/100 by you; v21 built research-first and rejected on your phone today; v22 runs as two specimens for your pick before any rebuild.</p><p class="now-line">Four disagreements between job files and the register stand named in the ledger — reported, never silently resolved.</p></div><div class="sec"><h3 class="sec-h">History</h3><ul class="hist"><li><b>2026-11-02</b> — v21 rejected on your phone: the detail view freezes and does not scroll, back navigation broken. Withdrawn as your map the same turn; its counts stand as data only.</li><li><b>2026-11-02</b> — v20 scored 5/100: still not a job board. Your order from that verdict — swipeable cards, research before building — is what built v21.</li><li><b>2026-11-02</b> — Ledger #32 written fresh from 25 job files, each read this cycle.</li><li><b>2026-11-01</b> — The job layer's canonical home moved to the departments repository; this folder is the working mirror, synced hourly.</li></ul></div><div class="sec"><h3 class="sec-h">Working memory</h3><div class="mem-row"><div class="mem-name">LEDGER.md</div><p class="mem-digest">The standing product: rewritten fresh each cycle from the job files themselves — the ledger reads the job files as truth and REGISTER.md as a claim to be checked against them. Where the two disagree, the ledger prints the disagreement in the open; it never fixes a record from here.</p></div><div class="mem-row"><div class="mem-name">The board</div><p class="mem-digest">The dashboard generated from the ledger: this page's family. Its form is yours to crown — v20's tiles failed, v21's cards failed on your phone's detail journey, and v22 is being decided by two specimens, so the mechanic is chosen from what survives your device instead of from emulation.</p></div><div class="mem-row"><div class="mem-name">Design records</div><p class="mem-digest">Every board round keeps its Observe product beside its build: design-v21.md (six sources, your eight questions), its build record, and now the v22 failure analysis and specimen record. The records are how the next round starts from evidence instead of from the last version.</p></div><div class="mem-row"><div class="mem-name">The counts rule</div><p class="mem-digest">Counts on this board are claims, and each carries its check: jobs counted from files read this cycle, states from each file's own state line. A count nobody re-read this cycle does not print. When the ledger and a job file disagree, both figures stand until the owning job's next cycle resolves them.</p></div></div></div></div></div>
+<script>
+var PG = { idx: 0 };
+function slides(){ return document.querySelectorAll('.slide'); }
+function go(i){
+  var n = slides().length;
+  PG.idx = Math.max(0, Math.min(i, n - 1));
+  var w = document.getElementById('pgView').clientWidth;
+  document.getElementById('pgTrack').style.transform = 'translateX(' + (-PG.idx * w) + 'px)';
+  document.getElementById('pgLabel').textContent = 'Job ' + (PG.idx + 1) + ' of ' + n;
+}
+/* The layer stack is mirrored into browser history: opening pushes one
+   entry, so the phone/browser Back closes the layer (popstate) instead of
+   leaving the page. The visible close control performs the same
+   history.back(), so the entry is consumed exactly once. */
+var OPEN = null;
+function openLayer(id){
+  var el = document.getElementById(id);
+  if (!el || OPEN) return;
+  el.classList.add('open'); OPEN = id;
+  document.documentElement.classList.add('locked');
+  var sc = el.querySelector('.scroller'); if (sc) sc.scrollTop = 0;
+  history.pushState({ layer: id }, '');
+}
+function hideLayer(){
+  if (!OPEN) return;
+  var el = document.getElementById(OPEN);
+  if (el) el.classList.remove('open');
+  document.documentElement.classList.remove('locked');
+  OPEN = null;
+}
+function closeLayer(){ if (OPEN) history.back(); }
+window.addEventListener('popstate', function(ev){
+  if (OPEN && !(ev.state && ev.state.layer === OPEN)) hideLayer();
+});
+function init(){
+  document.getElementById('pgPrev').addEventListener('click', function(){ go(PG.idx - 1); });
+  document.getElementById('pgNext').addEventListener('click', function(){ go(PG.idx + 1); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-open]'), function(b){
+    b.addEventListener('click', function(){ openLayer(b.getAttribute('data-open')); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function(b){
+    b.addEventListener('click', function(){ closeLayer(); });
+  });
+  document.addEventListener('keydown', function(ev){ if (ev.key === 'Escape') closeLayer(); });
+  var tx = null, ty = null, view = document.getElementById('pgView');
+  view.addEventListener('touchstart', function(ev){ tx = ev.touches[0].clientX; ty = ev.touches[0].clientY; }, { passive: true });
+  view.addEventListener('touchend', function(ev){
+    if (tx === null) return;
+    var dx = ev.changedTouches[0].clientX - tx, dy = ev.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(PG.idx + (dx < 0 ? 1 : -1));
+    tx = null;
+  }, { passive: true });
+  window.addEventListener('resize', function(){ go(PG.idx); });
+  go(0);
+}
+init();
+</script>
+</body>
+</html>
