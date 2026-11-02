@@ -58,24 +58,24 @@
 body{ margin:0; background:linear-gradient(180deg,var(--ground-0),var(--ground-1) 30%); color:var(--ink-2); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-size:18px; line-height:1.6; letter-spacing:var(--track); }
 /* @reason [DYSLEXIA] One reading column, 760px at the centre — the house dashboards' column, wide enough for a tile's two players, narrow enough that a line never runs away from a dyslexic reader. @covers: max-width, margin, padding */
 main{ max-width:760px; margin:0 auto; padding:18px 22px 64px; }
-/* @reason [OWNER-ORDER] The health tile, first inside main — the owner's standing order for every dashboard (2026-11-01, RCA-141 as amended ~20:03 EST): the strip's content entire, its form one compact tile whose face is one line; AS AMENDED by his popup law of 2026-11-02, the full strip stands in the popup this tile raises over the page, behind one tap on its face, and the page never grows. It spends the house glass so it reads as this page's furniture, not a pasted badge; its relative seat anchors the hidden switch inside it. @covers: background, border, border-radius, box-shadow, backdrop-filter, padding, font-size, font-weight, line-height, color, margin, position */
-.health{ background:var(--glass-fill); border:1px solid var(--glass-edge); border-radius:var(--radius-m); box-shadow:var(--glass-hi),var(--shadow-card); backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)); padding:10px 16px; font-size:15px; font-weight:var(--w-label); line-height:1.5; color:var(--ink-2); margin:0 0 18px; position:relative; }
+/* @reason [OWNER-ORDER] The health tile, first inside main — the owner's standing order for every dashboard (2026-11-01, RCA-141 as amended ~20:03 EST): the strip's content entire, its form one compact tile whose face is one line; AS AMENDED by his popup law of 2026-11-02, the full strip stands in the popup this tile raises over the page, behind one tap on its face, and the page never grows. It spends the house glass so it reads as this page's furniture, not a pasted badge; its relative seat anchors the hidden switch inside it. It carries NO backdrop-filter of its own: a filtered ancestor becomes the containing block for fixed descendants, so in v2 the popup's fixed seat resolved against this one-line tile instead of the screen — rendered cut off at the viewport top, its dim trapped behind the card, its close control over the page's intro (rendered failure, main-agent browser check 2026-11-02); the blur lives on the popup card alone and the tile keeps the glass fill, edge, highlight and shadow. @covers: background, border, border-radius, box-shadow, padding, font-size, font-weight, line-height, color, margin, position */
+.health{ background:var(--glass-fill); border:1px solid var(--glass-edge); border-radius:var(--radius-m); box-shadow:var(--glass-hi),var(--shadow-card); padding:10px 16px; font-size:15px; font-weight:var(--w-label); line-height:1.5; color:var(--ink-2); margin:0 0 18px; position:relative; }
 /* @reason [BEST-PRACTICE] The popup's switch: a real checkbox, visually hidden by the clip pattern — never display:none, so keyboard focus still reaches it — checked and unchecked by the face, close and scrim labels; its checked state is the popup's one open condition. This page carries no script (its strip says so of its players); the conversion keeps that true — the mechanism is native form behaviour. @covers: position, width, height, overflow, clip, clip-path, white-space */
 .health-toggle{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
 /* @reason [DYSLEXIA] The tile's face: the label is the tap target, so it carries the 48px act floor the page's players obey, vertically centred, with the pointer cursor; its text spreads to the tile's ends so the chevron sits at the far edge as the visible signal that this tile opens (the role the native disclosure triangle played in the details form). @covers: cursor, min-height, display, align-items, justify-content */
 .health-face{ cursor:pointer; min-height:48px; display:flex; align-items:center; justify-content:space-between; }
 /* @reason [DYSLEXIA] The keyboard focus ring for the health tile: when the hidden switch holds focus, its face wears a 3px outline in the action amber — focus stays a drawn state, never a browser default acting on an invisible control. @covers: outline, outline-offset */
 .health-toggle:focus-visible + .health-face{ outline:3px solid var(--amber); outline-offset:3px; }
-/* @reason [OWNER-ORDER] The popup layer (the owner's popup law, 2026-11-02): a fixed seat over the whole screen that renders only while the switch is checked (the open-state rule below) — the full strip stands OVER the page, the page itself never grows, and his place among the tiles waits untouched beneath it. Its dim is the ground deepened — rgba(3,6,12,.66) — so the covered page recedes and the card is the only reading object. @covers: position, inset, display, align-items, justify-content, padding, background, z-index */
-.health-pop{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:var(--space-4); background:rgba(3,6,12,.66); z-index:50; }
+/* @reason [OWNER-ORDER] The popup layer (the owner's popup law, 2026-11-02): a fixed seat over the whole screen that renders only while the switch is checked (the open-state rule below) — the full strip stands OVER the page, the page itself never grows, and his place among the tiles waits untouched beneath it. Its dim is the ground deepened — rgba(3,6,12,.66) — so the covered page recedes and the card is the only reading object. The seat is the viewport's only while no ancestor between this layer and the root carries filter, transform or backdrop-filter — the tile's own blur was removed in v3 to keep that true (build-record-v3.md). The card hangs from the layer's top padding (its top margin) rather than floating centred, so the card's first line starts on screen at any viewport height. @covers: position, inset, display, align-items, justify-content, padding, background, z-index */
+.health-pop{ position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center; padding:var(--space-4); background:rgba(3,6,12,.66); z-index:50; }
 /* @reason [OWNER-ORDER] The open state: the checked switch raises the popup — one selector is the whole mechanism, so the behaviour the build record's exercise measures is exactly the behaviour this rule states. @covers: display */
 .health-toggle:checked ~ .health-pop{ display:flex; }
 /* @reason [DYSLEXIA] The scrim's seat: it fills the popup layer behind the card, so a tap anywhere outside the card lands on it and closes the popup by unchecking the switch — it needs no visible styling of its own, because the dim it wears is the layer rule's own background. @covers: position, inset, cursor */
 .health-scrim{ position:absolute; inset:0; cursor:pointer; }
-/* @reason [DYSLEXIA] The popup card: the house glass recipe (fill, luminous edge, top highlight, card shadow, card radius) at a 640px cap inside the page's 760px column, so the full strip reads inside one raised object in the page's own material; its relative seat lifts it above the scrim. @covers: position, background, border, border-radius, box-shadow, backdrop-filter, padding, max-width, width */
-.health-card{ position:relative; background:var(--glass-fill); border:1px solid var(--glass-edge); border-radius:var(--radius-l); box-shadow:var(--glass-hi),var(--shadow-card); backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)); padding:var(--space-4); max-width:640px; width:100%; }
-/* @reason [DYSLEXIA] The close control: a label for the same switch, drawn in the glass at the strip's own quiet size and label weight in peak ink — a full-width target at the 48px act floor at the card's foot, so the way back is as easy to hit as the way in, and its one word names the act. @covers: display, align-items, justify-content, min-height, margin, padding, background, border, border-radius, cursor, color, font-size, font-weight */
-.health-close{ display:flex; align-items:center; justify-content:center; min-height:48px; margin:14px 0 0; padding:6px 16px; background:var(--glass-fill); border:1px solid var(--glass-edge); border-radius:var(--radius-m); cursor:pointer; color:var(--ink-1); font-size:15px; font-weight:var(--w-label); }
+/* @reason [DYSLEXIA] The popup card: the house glass recipe (fill, luminous edge, top highlight, card shadow, card radius) at a 640px cap inside the page's 760px column, so the full strip reads inside one raised object in the page's own material; its relative seat lifts it above the scrim. Its height is capped at 90vh and the strip scrolls inside the card, so the card's first line is on screen at any viewport height — the v2 card, uncapped inside its mis-seated layer, ran off the top of the screen (build-record-v3.md). @covers: position, background, border, border-radius, box-shadow, backdrop-filter, padding, max-width, width, max-height, overflow-y */
+.health-card{ position:relative; background:var(--glass-fill); border:1px solid var(--glass-edge); border-radius:var(--radius-l); box-shadow:var(--glass-hi),var(--shadow-card); backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)); padding:var(--space-4); max-width:640px; width:100%; max-height:90vh; overflow-y:auto; }
+/* @reason [DYSLEXIA] The close control: a label for the same switch, drawn in the glass at the strip's own quiet size and label weight in peak ink — a full-width target at the 48px act floor standing at the card's HEAD, sticky at the card's top, so the way back is on screen before the strip's first line and stays on screen while the strip scrolls beneath it (its own blur keeps it readable over the moving text); at the card's foot in v2 it sat wherever the overflowing card ended — over the page's intro text on the rendered page (build-record-v3.md). Its one word names the act. @covers: display, align-items, justify-content, min-height, margin, padding, background, border, border-radius, cursor, color, font-size, font-weight, position, top, z-index, backdrop-filter */
+.health-close{ display:flex; align-items:center; justify-content:center; min-height:48px; margin:0 0 12px; padding:6px 16px; background:var(--glass-fill); border:1px solid var(--glass-edge); border-radius:var(--radius-m); cursor:pointer; color:var(--ink-1); font-size:15px; font-weight:var(--w-label); position:sticky; top:0; z-index:1; backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)); }
 /* @reason [DYSLEXIA] The strip's inner text at the same quiet size as its face — one block, one tap in, never competing with the tiles below. @covers: margin */
 .health p{ margin:6px 0 2px; }
 /* @reason [DYSLEXIA] The page's one question as the headline: peak ink at head weight, sized to hold one short line at the phone seat. @covers: font-size, line-height, margin */
@@ -94,8 +94,6 @@ h2{ font-size:24px; line-height:1.35; font-weight:var(--w-head); color:var(--ink
 .tchar{ font-size:17px; color:var(--ink-2); margin:0 0 10px; }
 /* @reason [DYSLEXIA] The headphones note on the two binaural tiles: same reading size as the character line it follows — a listening condition, stated where the tile is, not buried in the page head. @covers: font-size, margin */
 .tnote{ font-size:17px; color:var(--ink-2); margin:0 0 10px; }
-/* @reason [REGISTER] The warning line: a measured ceiling this bed fails, in the needs colour under plain words that name the measure and its limit — present only where a failure exists, never as decoration; the colour seconds the words, the words carry the fact. @covers: font-size, margin */
-.tfail{ font-size:15px; color:var(--needs); margin:0 0 10px; }
 /* @reason [DYSLEXIA] A player's label: label weight at the 15px quiet floor, base ink — it says which of the two sounds is about to play, in the moment before the press. @covers: font-size, margin */
 .plabel{ font-size:15px; font-weight:var(--w-label); color:var(--ink-2); margin:10px 0 4px; }
 /* @reason [DYSLEXIA] The players: full column width at 54px tall — above the 48px phone target floor, so a press lands on the player he meant; the browser draws its own controls inside this seat. @covers: display, width, height */
@@ -106,214 +104,213 @@ audio{ display:block; width:100%; height:54px; }
 </head>
 <body data-reason="[DYSLEXIA] The body: the reading surface and the parent statement every compartment below obeys — state as words first, nothing quiet below 15px, players above the 48px target floor, one reading column, his judgment before any reference." data-reason-scope="descendants">
 <main data-reason="[OWNER-ORDER] The listening board's single reading column: the owner's music judgment lives on this one page (his order of 2026-11-01 ~21:17 EST) — health tile first by the standing dashboard order, then the one instruction, then the two voice groups of tiles in the order he will judge them: his clone voice first, the regular voice second." data-reason-scope="descendants">
-<div class="health" data-reason="[OWNER-ORDER] The health tile — the owner's order of 2026-11-01 ~17:21 EST, formalized as RCA-141: every dashboard carries its health at its top — total building blocks, the reasoning shares with explicit first, then inherited, then uncovered (his word for uncovered is random), the accuracy state, the dyslexia/UX state, and the owner state — AS AMENDED by his form ruling of 2026-11-01 ~20:03 EST (the strip's content entire, its form one compact tile whose face carries only the headline shares in one line) and by his popup law of 2026-11-02 (a tap opens a nested popup OVER the current view, place kept, depth never in page length): the full strip now stands in the popup card this tile raises over the page, switched by the tile's own checkbox — native form behaviour, no script, as this page has always run — and the page beneath never grows. The figures it prints are this file's own as measured by the reasoning scanner (tab0-work/dashboard-review/reasoning_audit.py) on this file's final built bytes (build-record-v2.md), re-measured after the form conversion — print and scan stand at a fixed point. This tile is itself one of the counted components and carries this reason, so it stands inside the explicit share it prints." data-reason-scope="descendants">
+<div class="health" data-reason="[OWNER-ORDER] The health tile — the owner's order of 2026-11-01 ~17:21 EST, formalized as RCA-141: every dashboard carries its health at its top — total building blocks, the reasoning shares with explicit first, then inherited, then uncovered (his word for uncovered is random), the accuracy state, the dyslexia/UX state, and the owner state — AS AMENDED by his form ruling of 2026-11-01 ~20:03 EST (the strip's content entire, its form one compact tile whose face carries only the headline shares in one line) and by his popup law of 2026-11-02 (a tap opens a nested popup OVER the current view, place kept, depth never in page length): the full strip now stands in the popup card this tile raises over the page, switched by the tile's own checkbox — native form behaviour, no script, as this page has always run — and the page beneath never grows. The figures it prints are this file's own as measured by the reasoning scanner (tab0-work/dashboard-review/reasoning_audit.py) on this file's final built bytes (build-record-v3.md), re-measured after the form conversion — print and scan stand at a fixed point. This tile is itself one of the counted components and carries this reason, so it stands inside the explicit share it prints." data-reason-scope="descendants">
 <input class="health-toggle" type="checkbox" id="health-toggle" aria-label="Health details">
-<label class="health-face" for="health-toggle">Health · 18.0% reasoned · 0% random <span aria-hidden="true">›</span></label>
+<label class="health-face" for="health-toggle">Health · 19.4% reasoned · 0% random · Checks 3/12 <span aria-hidden="true">›</span></label>
 <div class="health-pop">
 <label class="health-scrim" for="health-toggle" aria-label="Close health details"></label>
 <div class="health-card">
-<p>Health · 212 components · CSS 118/118 covered · JS 0/0 covered (no script — the players are the browser's own) · explicitly reasoned 17.5% · inherited 82.5% · uncovered (random) 0% · accuracy: every tile's words and figures transcribed from the two specimen build records and re-checked against them in this build (21/21 tiles); the music's quality UNMEASURED — the owner's ear is its measure · dyslexia/UX: 99 words at first open (health face + headline + instruction line + clone heading + tile 1 complete, code-metric estimate; tile 2's name line sits at the fold edge and is not counted) · rendered UNVERIFIED · owner: no pick yet — the pick is this page's whole job</p>
 <label class="health-close" for="health-toggle">Close</label>
+<p>Health · 196 components · CSS 120/120 covered · JS 0/0 covered (no script — the players are the browser's own) · explicitly reasoned 19.4% · inherited 80.6% · uncovered (random) 0% · accuracy: every tile's words and figures transcribed from the two specimen build records and re-checked against them in this build (21/21 tiles); the music's quality UNMEASURED — the owner's ear is its measure · dyslexia/UX: 148 words at first open (health face + headline + instruction line + ranking line + clone heading + tile 1 complete, code-metric estimate; later tiles are not counted) · rendered UNVERIFIED · owner: no pick yet — the pick is this page's whole job</p>
 </div>
 </div>
 </div>
 <h1 data-reason="[DYSLEXIA] The headline: the page's whole job in four words — he is here to pick the music, and the headline says exactly that before anything else competes.">Pick the music bed</h1>
 <p class="lede" data-reason="[DYSLEXIA] The one instruction line, standing before every tile: the passage never changes, only the bed does — so any difference he hears is the music; and the answer route (a number, in chat) is stated before he starts, not after he finishes.">The same 40 seconds of the piece in every tile — only the music changes. Play the ones that catch your ear, then send me the number of the best.</p>
+<p class="lede" data-reason="[OWNER-ORDER] The ranking line (hunt B3): the owner's own ear ranking, delivered 2026-11-02 (~00:27 EST, after his 00:17 ear check) — the board states it at the top and marks every tile with its group, because the pick he is asked to make starts from his verdicts, not from the pre-verdict candidate order the tiles were dealt in; the tile numbers are unchanged, so a number he answers with still names the same tile.">Your ranking (ear check, November 2): 1 sparse felt piano · 2 Suno generated pads · 3 Suno stock windows · 4 binaural pads. Each tile shows its group; tile numbers unchanged.</p>
 <section data-reason="[OWNER-ORDER] The clone-voice group, first: the clone is the voice under judgment in this lane — his ear decides whether it carries the piece — so its twelve beds are heard and judged before the regular voice's nine. Tiles 1-3 are the binaural round's candidates (A, B, and his own Bed A pick); tiles 4-12 are the assembly round's nine beds in the candidates table's order." data-reason-scope="descendants">
 <h2 data-reason="[DYSLEXIA] The clone group's signpost: whose voice these twelve tiles carry, in peak ink — he always knows which voice he is judging.">Clone voice — your voice, cloned</h2>
 <article class="tile" data-reason="[REGISTER] Tile 1 — Candidate A of the binaural round: synthesized binaural pairs at a 6 Hz beat, chords changing at the passage&#x27;s chunk boundaries. Character and the speaker fact transcribe the binaural specimens&#x27; build record, which measures this bed FIT on every ceiling per channel. Its two players wire the round&#x27;s own mix and its bed alone raised +30 dB; players load only when pressed, so 42 files never pull at once." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">1</span>Binaural pulse — fast</p>
+<p class="tname"><span class="tnum">1</span>Binaural pulse — fast · group 4</p>
 <p class="tchar">Two soft tones, one in each ear, beating together six times a second. The chords change as the words move on.</p>
 <p class="tnote">🎧 Headphones — the pulse lives between your ears. On a speaker, you hear the pulse itself.</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-a-binaural-6hz.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-a-binaural-6hz.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-a-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-a-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 2 — Candidate B of the binaural round: binaural pairs at 2.5 Hz under a slow continuous chord drift, the round&#x27;s one headline difference from Tile 1. The warning line prints the fixed method&#x27;s onset reading AND its adjudication (two controls isolate it as an instrument artifact) — named, never hidden, per the round&#x27;s record. Players wire the round&#x27;s mix and raised bed-only files, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">2</span>Binaural pulse — slow drift</p>
+<article class="tile" data-reason="[REGISTER] Tile 2 — Candidate B of the binaural round: binaural pairs at 2.5 Hz under a slow continuous chord drift, the round&#x27;s one headline difference from Tile 1. This tile&#x27;s record line prints the fixed method&#x27;s onset reading AND its adjudication (two controls isolate it as an instrument artifact) — named, never hidden, per the round&#x27;s record. Players wire the round&#x27;s mix and raised bed-only files, loading on press only. Record line (hunt B5): ⚠ One meter reads extra beats here (2.6 a second, limit 2.0). Two control tests in the build record say that is the meter misreading a glide — not beats in the music." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">2</span>Binaural pulse — slow drift · group 4</p>
 <p class="tchar">A slower beat — two and a half times a second — while the chord colour slowly drifts away and drifts back. Nothing ever jumps.</p>
 <p class="tnote">🎧 Headphones — the slow pulse lives between your ears.</p>
-<p class="tfail">⚠ One meter reads extra beats here (2.6 a second, limit 2.0). Two control tests in the build record say that is the meter misreading a glide — not beats in the music.</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-b-binaural-2p5hz-drift.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-b-binaural-2p5hz-drift.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-b-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-b-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[OWNER-ORDER] Tile 3 — Candidate C: the owner&#x27;s own 2026-10-31 pick (Bed A, &#x27;sparse tail&#x27;, stock src 315.00 s) re-presented under this passage, because the bed that shipped in the masters was an unconsulted substitute for it and he rejected that substitute by ear. The window runs 315.00-355.00 s for the passage length; the warning line names the onset margin the extension carries, from the round&#x27;s fit record. Players wire the round&#x27;s mix and raised bed-only files, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">3</span>Bed A — your pick</p>
-<p class="tchar">Your pick from October 31 — real recorded music: the sparse tail of the stock track.</p>
-<p class="tfail">⚠ Just over the beat limit at the edges (2.1 a second, limit 2.0) — those beats live in the few seconds stretched past the window you picked.</p>
+<article class="tile" data-reason="[OWNER-ORDER] Tile 3 — Candidate C: the owner&#x27;s own 2026-10-31 pick (Bed A, &#x27;sparse tail&#x27;, stock src 315.00 s) re-presented under this passage, because the bed that shipped in the masters was an unconsulted substitute for it and he rejected that substitute by ear. The window runs 315.00-355.00 s for the passage length; the record line appended to this reason names the onset margin the extension carries, from the round&#x27;s fit record. Players wire the round&#x27;s mix and raised bed-only files, loading on press only. Record line (hunt B5): ⚠ Just over the beat limit at the edges (2.1 a second, limit 2.0) — those beats live in the few seconds stretched past the window you picked." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">3</span>Bed A — Suno stock window · group 3</p>
+<p class="tchar">Your pick on October 31, superseded by your November 2 ranking (group 3) — real recorded music: the sparse tail of the stock track.</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-c-beda-stock.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-c-beda-stock.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-c-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-c-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 4 — clone voice over gen-a (Suno generated-to-spec batch 1 A, window 49-89 s). Character and the flux failure transcribe the board candidates table, which measured this mix on the assembled file. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">4</span>Suno pad A — made to order</p>
+<article class="tile" data-reason="[REGISTER] Tile 4 — clone voice over gen-a (Suno generated-to-spec batch 1 A, window 49-89 s). Character and the flux failure transcribe the board candidates table, which measured this mix on the assembled file. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 6.7 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">4</span>Suno pad A — made to order · group 2</p>
 <p class="tchar">Suno made this to our order: a quiet focus pad, the first of a pair.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 6.7 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-gen-a.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-gen-a.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen-a-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen-a-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 5 — clone voice over gen-b (Suno generated-to-spec batch 1 B, window 65-105 s). Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">5</span>Suno pad B — made to order</p>
+<article class="tile" data-reason="[REGISTER] Tile 5 — clone voice over gen-b (Suno generated-to-spec batch 1 B, window 65-105 s). Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 7.5 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">5</span>Suno pad B — made to order · group 2</p>
 <p class="tchar">Suno made this to our order: the quiet focus pad&#x27;s twin.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 7.5 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-gen-b.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-gen-b.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen-b-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen-b-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 6 — clone voice over gen2-a (Suno generated batch 2 A, window 47-87 s). Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">6</span>Suno warm pad A</p>
+<article class="tile" data-reason="[REGISTER] Tile 6 — clone voice over gen2-a (Suno generated batch 2 A, window 47-87 s). Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 9.4 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">6</span>Suno warm pad A · group 2</p>
 <p class="tchar">Suno&#x27;s second batch: a warmer, darker pad.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 9.4 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-gen2-a.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-gen2-a.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen2-a-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen2-a-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 7 — clone voice over gen2-b (Suno generated batch 2 B, window 75-115 s): the only clone tile failing two ceilings (flux and onsets), both named on its warning line from the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">7</span>Suno warm pad B</p>
+<article class="tile" data-reason="[REGISTER] Tile 7 — clone voice over gen2-b (Suno generated batch 2 B, window 75-115 s): the only clone tile failing two ceilings (flux and onsets), both named in its record line from the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Over two calm limits: the colour changes 9.0 times a second (limit 6.0), and it beats 2.2 times a second (limit 2.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">7</span>Suno warm pad B · group 2</p>
 <p class="tchar">Suno&#x27;s second batch: the warm pad&#x27;s livelier twin.</p>
-<p class="tfail">⚠ Over two calm limits: the colour changes 9.0 times a second (limit 6.0), and it beats 2.2 times a second (limit 2.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-gen2-b.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-gen2-b.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen2-b-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen2-b-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 8 — clone voice over bed-b (local stock track, window 240-280 s, the breath-return pick). Both marginal failures (flux, window swell) are named on the warning line from the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">8</span>Stock — breath return</p>
+<article class="tile" data-reason="[REGISTER] Tile 8 — clone voice over bed-b (local stock track, window 240-280 s, the breath-return pick). Both marginal failures (flux, window swell) are named in the record line from the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Just over two limits: the colour changes 6.1 times a second (limit 6.0), and it swells 18.6 dB (limit 18)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">8</span>Stock — breath return · group 3</p>
 <p class="tchar">Stock music: the &#x27;breath return&#x27; window — calm that keeps coming back.</p>
-<p class="tfail">⚠ Just over two limits: the colour changes 6.1 times a second (limit 6.0), and it swells 18.6 dB (limit 18).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-bed-b.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-bed-b.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-bed-b-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-bed-b-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 9 — clone voice over bed-c (local stock track, window 195-235 s, the calm-body pick). The flux failure is named on the warning line from the board candidates table; every level and spectral ceiling passes. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">9</span>Stock — calm body</p>
+<article class="tile" data-reason="[REGISTER] Tile 9 — clone voice over bed-c (local stock track, window 195-235 s, the calm-body pick). The flux failure is named in the record line from the board candidates table; every level and spectral ceiling passes. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 8.1 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">9</span>Stock — calm body · group 3</p>
 <p class="tchar">Stock music: the &#x27;calm body&#x27; window.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 8.1 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-bed-c.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-bed-c.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-bed-c-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-bed-c-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 10 — clone voice over fresh-280 (local stock track, window 280-320 s): the lowest-flux 40 s window never before laid as a candidate, from this round&#x27;s full-track scan in the board candidates table. Both failures (flux, the tail&#x27;s swell) are named on the warning line. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">10</span>Stock — the calmest stretch</p>
+<article class="tile" data-reason="[REGISTER] Tile 10 — clone voice over fresh-280 (local stock track, window 280-320 s): the lowest-flux 40 s window never before laid as a candidate, from this round&#x27;s full-track scan in the board candidates table. Both failures (flux, the tail&#x27;s swell) are named in the record line. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">10</span>Stock — the calmest stretch · group 3</p>
 <p class="tchar">Stock music: the calmest unused stretch of the whole track, found by scanning all of it.</p>
-<p class="tfail">⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-fresh-280.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-fresh-280.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-fresh-280-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-fresh-280-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 11 — clone voice over fresh-290 (local stock track, window 290-330 s), the scan&#x27;s second-lowest-flux unused window; the character line names its 30 s overlap with Tile 10&#x27;s window, from the board candidates table, so a family resemblance is expected, not a surprise. Both failures are named on the warning line. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">11</span>Stock — the second calmest</p>
+<article class="tile" data-reason="[REGISTER] Tile 11 — clone voice over fresh-290 (local stock track, window 290-330 s), the scan&#x27;s second-lowest-flux unused window; the character line names its 30 s overlap with Tile 10&#x27;s window, from the board candidates table, so a family resemblance is expected, not a surprise. Both failures are named in the record line. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only. Record line (hunt B5): ⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">11</span>Stock — the second calmest · group 3</p>
 <p class="tchar">Stock music: the second-calmest unused stretch. It overlaps number 10, so the two are cousins.</p>
-<p class="tfail">⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-fresh-290.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-fresh-290.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-fresh-290-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-fresh-290-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 12 — clone voice over felt-synth: locally synthesized sparse felt-piano-style chord tones (Am-F-C-G), the assembly round&#x27;s stretch candidate and the only bed passing every measured ceiling on both voices (flux about 1.1/s, core share 0). No warning line stands because no ceiling fails; the fact is carried in the character line from the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">12</span>Felt piano — built here</p>
+<article class="tile" data-reason="[REGISTER] Tile 12 — clone voice over felt-synth: locally synthesized sparse felt-piano-style chord tones (Am-F-C-G), the assembly round&#x27;s stretch candidate and the only bed passing every measured ceiling on both voices (flux about 1.1/s, core share 0). No record line stands because no ceiling fails; the fact is carried in the character line from the board candidates table. Players wire the assembly round&#x27;s mix and the bed alone at source level, loading on press only." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">12</span>Felt piano — built here · group 1</p>
 <p class="tchar">No recording at all: soft felt-piano chords built here on the machine, one at a time — Am, F, C, G. The only bed that passes every measured calm limit.</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-clone-felt-synth.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-clone-felt-synth.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-felt-synth-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-felt-synth-raised.mp3"></audio>
 </article>
 </section>
 <section data-reason="[PLAN] The regular-voice group, second: the same nine assembly beds in the same order as Tiles 4-12, under the regular voice — the mix-and-match that lets him separate 'the bed' from 'the voice' in what he hears. Numbering continues 13-21 without restarting, so a number names exactly one tile on the whole page." data-reason-scope="descendants">
 <h2 data-reason="[DYSLEXIA] The regular group's signpost: the same beds as tiles 4-12, the other voice — the comparison the board exists to make hearable.">Regular voice</h2>
-<article class="tile" data-reason="[REGISTER] Tile 13 — regular voice over gen-a: the same bed as Tile 4 under the other voice, the mix-and-match the board exists for. Figures transcribe the board candidates table (flux 6.68; its onset reading sits exactly at the 2.0 ceiling — at, not over — so no second failure is printed). Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">13</span>Suno pad A — made to order</p>
+<article class="tile" data-reason="[REGISTER] Tile 13 — regular voice over gen-a: the same bed as Tile 4 under the other voice, the mix-and-match the board exists for. Figures transcribe the board candidates table (flux 6.68; its onset reading sits exactly at the 2.0 ceiling — at, not over — so no second failure is recorded). Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 6.7 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">13</span>Suno pad A — made to order · group 2</p>
 <p class="tchar">Suno made this to our order: a quiet focus pad, the first of a pair.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 6.7 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-gen-a.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-gen-a.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen-a-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen-a-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 14 — regular voice over gen-b, the same bed as Tile 5. Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">14</span>Suno pad B — made to order</p>
+<article class="tile" data-reason="[REGISTER] Tile 14 — regular voice over gen-b, the same bed as Tile 5. Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 7.5 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">14</span>Suno pad B — made to order · group 2</p>
 <p class="tchar">Suno made this to our order: the quiet focus pad&#x27;s twin.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 7.5 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-gen-b.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-gen-b.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen-b-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen-b-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 15 — regular voice over gen2-a, the same bed as Tile 6. Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">15</span>Suno warm pad A</p>
+<article class="tile" data-reason="[REGISTER] Tile 15 — regular voice over gen2-a, the same bed as Tile 6. Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 9.3 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">15</span>Suno warm pad A · group 2</p>
 <p class="tchar">Suno&#x27;s second batch: a warmer, darker pad.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 9.3 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-gen2-a.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-gen2-a.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen2-a-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen2-a-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 16 — regular voice over gen2-b, the same bed as Tile 7, failing the same two ceilings on this voice. Both failures are named on the warning line from the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">16</span>Suno warm pad B</p>
+<article class="tile" data-reason="[REGISTER] Tile 16 — regular voice over gen2-b, the same bed as Tile 7, failing the same two ceilings on this voice. Both failures are named in the record line from the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Over two calm limits: the colour changes 9.0 times a second (limit 6.0), and it beats 2.2 times a second (limit 2.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">16</span>Suno warm pad B · group 2</p>
 <p class="tchar">Suno&#x27;s second batch: the warm pad&#x27;s livelier twin.</p>
-<p class="tfail">⚠ Over two calm limits: the colour changes 9.0 times a second (limit 6.0), and it beats 2.2 times a second (limit 2.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-gen2-b.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-gen2-b.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-gen2-b-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-gen2-b-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 17 — regular voice over bed-b, the same bed as Tile 8. Its flux reads 6.04 — over the 6.0 limit by a hair — so the warning line says &#x27;a touch over&#x27; rather than printing a rounded 6.0 that would read as at the limit; the exact figure stands in the board candidates table. The swell failure is named beside it. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">17</span>Stock — breath return</p>
+<article class="tile" data-reason="[REGISTER] Tile 17 — regular voice over bed-b, the same bed as Tile 8. Its flux reads 6.04 — over the 6.0 limit by a hair — so the record line says &#x27;a touch over&#x27; rather than printing a rounded 6.0 that would read as at the limit; the exact figure stands in the board candidates table. The swell failure is named beside it. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Just over two limits: the colour changes a touch over 6.0 a second (the limit itself), and it swells 18.6 dB (limit 18)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">17</span>Stock — breath return · group 3</p>
 <p class="tchar">Stock music: the &#x27;breath return&#x27; window — calm that keeps coming back.</p>
-<p class="tfail">⚠ Just over two limits: the colour changes a touch over 6.0 a second (the limit itself), and it swells 18.6 dB (limit 18).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-bed-b.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-bed-b.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-bed-b-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-bed-b-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 18 — regular voice over bed-c, the same bed as Tile 9. Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">18</span>Stock — calm body</p>
+<article class="tile" data-reason="[REGISTER] Tile 18 — regular voice over bed-c, the same bed as Tile 9. Character and the flux failure transcribe the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Over the calm limit: the colour changes 8.1 times a second (limit 6.0)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">18</span>Stock — calm body · group 3</p>
 <p class="tchar">Stock music: the &#x27;calm body&#x27; window.</p>
-<p class="tfail">⚠ Over the calm limit: the colour changes 8.1 times a second (limit 6.0).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-bed-c.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-bed-c.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-bed-c-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-bed-c-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 19 — regular voice over fresh-280, the same bed as Tile 10. Both failures (flux, the tail&#x27;s swell) are named on the warning line from the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">19</span>Stock — the calmest stretch</p>
+<article class="tile" data-reason="[REGISTER] Tile 19 — regular voice over fresh-280, the same bed as Tile 10. Both failures (flux, the tail&#x27;s swell) are named in the record line from the board candidates table. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">19</span>Stock — the calmest stretch · group 3</p>
 <p class="tchar">Stock music: the calmest unused stretch of the whole track, found by scanning all of it.</p>
-<p class="tfail">⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-fresh-280.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-fresh-280.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-fresh-280-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-fresh-280-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 20 — regular voice over fresh-290, the same bed as Tile 11; the character line names the window overlap with Tile 10, as the board candidates table records it. Both failures are named on the warning line. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">20</span>Stock — the second calmest</p>
+<article class="tile" data-reason="[REGISTER] Tile 20 — regular voice over fresh-290, the same bed as Tile 11; the character line names the window overlap with Tile 10, as the board candidates table records it. Both failures are named in the record line. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only. Record line (hunt B5): ⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18)." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">20</span>Stock — the second calmest · group 3</p>
 <p class="tchar">Stock music: the second-calmest unused stretch. It overlaps number 10, so the two are cousins.</p>
-<p class="tfail">⚠ Over two limits: the colour changes 6.4 times a second (limit 6.0), and it swells 22 dB (limit 18).</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-fresh-290.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-fresh-290.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-fresh-290-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-fresh-290-raised.mp3"></audio>
 </article>
-<article class="tile" data-reason="[REGISTER] Tile 21 — regular voice over felt-synth, the same bed as Tile 12 and the board&#x27;s last tile: the only bed passing every measured ceiling on this voice too (the regular mix&#x27;s words transcribe perfectly against the clean stem in the assembly record). No warning line stands because no ceiling fails. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
-<p class="tname"><span class="tnum">21</span>Felt piano — built here</p>
+<article class="tile" data-reason="[REGISTER] Tile 21 — regular voice over felt-synth, the same bed as Tile 12 and the board&#x27;s last tile: the only bed passing every measured ceiling on this voice too (the regular mix&#x27;s words transcribe perfectly against the clean stem in the assembly record). No record line stands because no ceiling fails. Players wire the assembly round&#x27;s mix and the shared bed-alone file, loading on press only." data-reason-scope="descendants">
+<p class="tname"><span class="tnum">21</span>Felt piano — built here · group 1</p>
 <p class="tchar">No recording at all: soft felt-piano chords built here on the machine, one at a time — Am, F, C, G. The only bed that passes every measured calm limit.</p>
 <p class="plabel">▶ The mix — voice and music</p>
-<audio controls preload="none" src="assets/mix-regular-felt-synth.mp3"></audio>
+<audio controls preload="metadata" src="assets/mix-regular-felt-synth.mp3"></audio>
 <p class="plabel">▶ The bed alone — raised, so you can hear the music itself</p>
-<audio controls preload="none" src="assets/bedonly-felt-synth-raised.mp3"></audio>
+<audio controls preload="metadata" src="assets/bedonly-felt-synth-raised.mp3"></audio>
 </article>
 </section>
 <p class="foot" data-reason="[DYSLEXIA] The closing line: the answer route restated at the point where listening ends, plus the standing fact that no tile becomes the piece's bed until he picks — the pick is recorded as the music layer's evidence before any master is built.">Heard one you like? Send me its number — that bed becomes the piece's music. Nothing here is the final bed until you pick it.</p>
 </main>
+<script type="application/json" id="archer-checklist">
+{"standard":"html-checklist-v1","content_hash":"4a77eaa99fd170543c58954cadecc061800583b63d94b65041a1b43d38caf99b","checks":[
+{"id":"FORM-FIRST-GLANCE","label":"First glance at phone width: top level shows at most 3 things","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"POPUP-MECHANIC","label":"Zero in-place expansions; openers open over the page, place kept","applies":true,"state":"PASS","instrument":"jsdom exercise-health-v3.js — flow-word instrument + containing-block rule-text scan","evidence":"build-record-v3.md exercise table + B5 section: flow words constant on open/close/scrim; no trapped ancestor of the overlay","checked_at":"2026-11-02T09:36:17-05:00"},
+{"id":"CONTROLS-EXERCISED","label":"Every named control exercised on the rendered artifact or a layout-faithful engine","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"GESTURE-LAYOUT","label":"Pager/player geometry measured in a real layout engine at ~390 px","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"PHONE-WIDTH-RENDER","label":"Full page rendered at ~390 px: nothing clipped, overlapped or cut off","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"PAIR-PARITY","label":"Paired elements exercised side by side; behaviour identical unless prescribed","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"CONTENT-CURRENCY","label":"Every printed figure and state line equals the measured state (fixed point)","applies":true,"state":"PASS","instrument":"programmatic print-vs-scan assertion on the final bytes","evidence":"build-record-v3.md (B5 section): printed 196 components, CSS 120/120, 19.4% / 80.6% == reasoning-audit-bed-samples-v3.json — MATCH","checked_at":"2026-11-02T09:36:17-05:00"},
+{"id":"REASONING-COMPLETE","label":"Reasoning scanner verdict COMPLETE on the final bytes (0 uncovered)","applies":true,"state":"PASS","instrument":"reasoning_audit.py (hidden_files/tab0-work/dashboard-review)","evidence":"reasoning-audit-bed-samples-v3.json: 196 = 38 explicit / 158 inherited / 0 uncovered; CSS 120/120; verdict COMPLETE","checked_at":"2026-11-02T09:36:17-05:00"},
+{"id":"STYLE-TOKENS","label":"Token audit against the house reference (community glass) matches","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"MEDIA-PLAYS","label":"Every player/media element actually plays or renders","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"HEALTH-TILE","label":"One-line health tile present; opens as a popup, first line visible, close reachable (rendered)","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""},
+{"id":"SOLE-READER","label":"One sole-reader dyslexia pass at phone width: no hunting, no backtracking","applies":true,"state":"UNCHECKED","instrument":"","evidence":"","checked_at":""}
+]}
+</script>
 </body>
 </html>
