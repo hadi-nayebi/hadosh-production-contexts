@@ -2827,6 +2827,25 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
 .dt-rec{border:1px solid rgba(127,212,255,.35);border-radius:10px;padding:6px 11px;margin-top:9px}
 .dt-chip.st-retired{opacity:.55;border-style:dashed}
 .dt-chip.st-retired .dt-chip-ti{text-decoration:line-through}
+
+/* v62: the editor timeline under the stage — one lane per asset, blocks placed by the table records, one clock */
+.rnt{margin-top:20px}
+.rnt-box{position:relative;margin-top:10px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03);padding:8px}
+.rnt-ruler{display:flex;align-items:stretch}
+.rnt-lab{flex:0 0 104px;box-sizing:border-box;font-size:9.5px;font-weight:700;letter-spacing:.03em;color:#aeb8c6;display:flex;align-items:center;padding-right:6px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.rnt-track{position:relative;flex:1;min-height:26px}
+.rnt-ruler-track{min-height:36px;border-bottom:1px solid rgba(255,255,255,.18);cursor:pointer;touch-action:none}
+.rnt-ruler-track:focus-visible{outline:2px solid #d9a441;outline-offset:2px}
+.rnt-tick{position:absolute;top:0;width:1px;height:8px;background:rgba(255,255,255,.4)}
+.rnt-tick b{position:absolute;top:9px;left:2px;font-size:9px;font-weight:600;color:#8d99a9;white-space:nowrap}
+.rnt-tick.alt b{top:22px}
+.rnt-lane{display:flex;align-items:center;margin-top:4px}
+.rnt-block{position:absolute;top:1px;bottom:1px;display:flex;align-items:center;gap:5px;background:rgba(217,164,65,.16);border:1px solid rgba(217,164,65,.45);border-radius:6px;padding:0 6px 0 2px;cursor:pointer;overflow:hidden;text-align:left;color:#fff;font:inherit}
+.rnt-block img{height:20px;width:auto;max-width:44px;object-fit:contain;flex:none}
+.rnt-block span{font-size:10px;font-weight:700;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rnt-block.wait{opacity:.45;border-style:dashed}
+.rnt-headwrap{position:absolute;top:0;bottom:0;left:112px;right:8px;pointer-events:none}
+.rnt-head{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:#ffd94d;box-shadow:0 0 6px rgba(255,217,77,.65)}
 </style>
 <div class="t2b-wrap">
  <p class="t2b-kick">TAB 2 — THE VISUAL LAYER · v61</p>
@@ -2906,8 +2925,8 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
 <div class="rn-wrap">
  <p class="t2b-kick">RENDER — THE STAGE</p>
  <h2 class="t2b-h">Unit 1, played as HTML</h2>
- <p class="t2b-intro">This stage is Unit 1’s own, and it is built from the decision table — not from a rendered video. The backdrop is the locked paper stage. The two paper curtains hang at its sides, already open; they only stir. The “3”, the point, the “2” and the QUADRILLION band are the generated assets, each one an HTML element with its own entry in the table. Press play and the page itself plays the claim beat, on the words’ own timings. Tap any part of the stage to read its decision. The film is rendered to a video file once, at the very end — until then, this page is the stage.</p>
- <p class="rn-ver" data-reason="[OWNER] The build/table version on the face (Order AB): a presented surface can never silently be a superseded build — the reader sees which build the stage is, and which table version it plays from.">Stage build v61 · plays from table v61</p>
+ <p class="t2b-intro">This stage is Unit 1’s own, and it is built from the decision table — not from a rendered video. The backdrop is the locked paper stage. The two paper curtains hang at its sides, already open; they only stir. The “3”, the point, the “2” and the QUADRILLION band are the generated assets, each one an HTML element with its own entry in the table. Press play and the page itself plays the claim beat, on the words’ own timings. Tap any part of the stage to read its decision. Beneath the stage runs its timeline — every asset on its own lane, each block placed where its table entry says the asset appears and running for as long as it stays, the playhead riding the same clock: tap or drag the timeline’s ruler to jump the scene, tap a block to read its decision. The film is rendered to a video file once, at the very end — until then, this page is the stage.</p>
+ <p class="rn-ver" data-reason="[OWNER] The build/table version on the face (Order AB): a presented surface can never silently be a superseded build — the reader sees which build the stage is, and which table version it plays from.">Stage build v62 · plays from table v61</p>
  <div class="rn-stage" id="rnStage" data-reason="[OWNER] The stage itself, played as HTML: every part is an element carrying its generated picture, placed and moved by its decision in the table — there is no video file in this stage, and the film is rendered once, at the very end.">
   <img class="rn-wall" data-eid="u1-p1-0-6" src="assets/tab2/stage/stage-backdrop-paper-v2.webp" alt="Unit 1’s paper stage — the locked backdrop">
   <button class="rn-el rn-band" data-eid="u1-p1-1-0" aria-label="The QUADRILLION band — open its decision in the table"><img src="assets/tab2/stage/claim-band-alpha.webp" alt=""></button>
@@ -2918,6 +2937,15 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
   <button class="rn-el rn-curR" data-eid="u1-p1-0-8" aria-label="The right paper curtain — open its decision in the table"><img src="assets/tab2/stage/stage-curtainR-paper-v1.webp" alt=""></button>
   <button class="rn-play" id="rnPlay" aria-label="Play the claim beat">▶</button>
   <div class="rn-word" id="rnWord"></div>
+ </div>
+ <div class="rnt" id="rnTimeline" data-reason="[OWNER] The stage as an editor (owner, 2026-11-03 ~17:18 EST): under the preview, a conveyor-belt timeline — every asset on its own lane, its block placed by the span its table record states, the playhead riding the same scene clock; the ruler is a second scrub surface, and a block opens the asset's table card.">
+  <p class="rn-belt-h">THE TIMELINE — EVERY ASSET ON ITS OWN LANE</p>
+  <p class="rn-asset">Each lane is one asset of this scene, laid out the way an editor lays them: its block starts where the asset's entry in the table says it appears, and runs for as long as the asset stays. The line crossing the lanes is the playhead — the same clock the stage plays by. Tap or drag on the ruler to jump the scene to any moment; tap a block to read its decision in the table.</p>
+  <div class="rnt-box" id="rntBox">
+   <div class="rnt-ruler"><span class="rnt-lab">TIME</span><div class="rnt-track rnt-ruler-track" id="rntRulerTrack" role="slider" tabindex="0" aria-label="Timeline ruler — tap or drag to move the scene clock" aria-valuemin="0.56" aria-valuemax="3.42" aria-valuenow="0.56"></div></div>
+   <div id="rntLanes"></div>
+   <div class="rnt-headwrap" aria-hidden="true"><div class="rnt-head" id="rntHead"></div></div>
+  </div>
  </div>
  <div class="rn-belt">
   <p class="rn-belt-h">EVERY PART OF THIS STAGE — AND ITS DECISION IN THE TABLE</p>
@@ -3674,25 +3702,25 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
 <div hidden data-reason="[OWNER-ORDER] The in-file checklist (HTML-CHECKLIST-STANDARD, the owner's order of 2026-11-02): every box defaults UNCHECKED, any content edit resets all boxes through the content hash, and the delivery gate reads the count from this block — the state travels with the file, not in side records." data-reason-scope="descendants"><script type="application/json" id="archer-checklist">
 {
  "standard": "html-checklist-v1",
- "content_hash": "98925d65342c27374b5742d1164c3a4b3fd2c910edbcc256ebb0d58533a68e8d",
+ "content_hash": "d8c7c6f9479d95970eae92c77a3aba93d1f3f1fdf91ebf7fb01c24780dc7437e",
  "checks": [
   {
    "id": "FORM-FIRST-GLANCE",
    "label": "Top level shows at most three things — scored on the rendered page at phone width",
    "applies": true,
    "state": "PASS",
-   "instrument": "headless Chrome 390px renders of the v61 bytes, viewed by the deliverer (hidden_files/tab2-work/v61-shots/final/)",
-   "evidence": "tab2-top.png: the Video tab opens on the health tile and the decision-table explainer — one subject at first glance. render-rest-v2.png: the Render tab opens on its truth line, the version pill and one stage. Nothing competes.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "headless Chrome 390px renders of the v62 bytes, viewed by the deliverer (hidden_files/tab2-work/v62-shots/battery/ + the timeline finals timeline-rest/playing/card.png in hidden_files/tab2-work/v61-shots/final/)",
+   "evidence": "tab2-top.png: the Video tab opens on the health tile and the decision-table explainer — one subject at first glance. timeline-rest.png: the Render tab opens on its truth line, the version pill and one stage; the timeline stands below the stage as the next single subject, not a competitor. Nothing competes.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "POPUP-MECHANIC",
    "label": "Zero in-place expansions; every opener exercised; content opens over the page, place kept",
    "applies": true,
    "state": "PASS",
-   "instrument": "mechanics + playing-pass battery v61 (render-harness/battery-v61.mjs) on the v61 bytes: 571 PASS / 0 FAIL (the fix round’s rebuild; the first v61 application ran on 564) — all v60 asserts (counts updated to the expanded table) plus the v61 data asserts (complete table rows 7/7, hygiene dispositions, the BR gap entry, the placement guard), the Order AB version-label assert, the live-stage suite and the real-player scrub suite, plus the fix round’s shaped-asset canvas asserts and centre-overlay asserts (the centre button visible at rest, display:none at the mid-beat pause and after the scrub back); run pre-checklist and re-run on the final checklist-applied bytes",
-   "evidence": "Every opener exercised on the v61 bytes: all 85 decision chips (fields + source image + state word asserted per popup; the seven stage entries additionally assert their ASSET RECORD block; the retired entry asserts its RETIRED — WRONG banner), every collection (frame counts + notes), the render belt parts and the stage elements themselves (in place, over the stage). Content opens in the fixed sheet over the page; the scroller never moves. Zero in-place expansions.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "mechanics + playing-pass battery v62 (render-harness/battery-v62.mjs) on the v62 bytes: 610 PASS / 0 FAIL — all v61 asserts carried (571: the expanded table, the live-stage suite, the real-player scrub suite, the fix round’s shaped-asset and centre-overlay asserts) plus the v62 timeline suite (39): seven lanes and blocks, block-span == table-span for all 7 against the record’s printed span table, block pictures == the files the records name, playhead sync measured during play, frozen at the pause, and at 0.75s / 1.30s / 2.80s, the band’s block opening its card mid-pause, ruler taps seeking and taking the scene back to the earlier pose, restart returning clock and playhead together; run pre-checklist and re-run on the final checklist-applied bytes",
+   "evidence": "Every opener exercised on the v62 bytes: all 85 decision chips (fields + source image + state word asserted per popup; the seven stage entries additionally assert their ASSET RECORD block; the retired entry asserts its RETIRED — WRONG banner), every collection (frame counts + notes), the render belt parts, the stage elements themselves, and the timeline blocks (the band’s block opened its card mid-pause in the battery; timeline-card.png). Content opens in the fixed sheet over the page; the scroller never moves. Zero in-place expansions.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "CONTROLS-EXERCISED",
@@ -3717,9 +3745,9 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "label": "The full page rendered at ~390 px: no clipped text, no overlap, nothing cut off",
    "applies": true,
    "state": "PASS",
-   "instrument": "headless Chrome 390px renders of the v61 bytes, viewed by the deliverer (hidden_files/tab2-work/v61-shots/final/)",
-   "evidence": "During-play 390px set (play-deep, stage-midbeat-v2, stage-end-v2, spot-u1-opening, spot-u4-stage): no clipped text, no overlap that hides content; the four tab buttons fit the 390px row whole (battery geometry assert); both fixed bars (the ladder dock, the stage bar) stand clear of the content they control. The stage bar’s name was shortened in-build so it fits whole at 390px.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "headless Chrome 390px renders of the v62 bytes, viewed by the deliverer (hidden_files/tab2-work/v62-shots/battery/ + the timeline finals timeline-rest/playing/card.png in hidden_files/tab2-work/v61-shots/final/)",
+   "evidence": "During-play 390px set (play-deep, stage-midbeat, timeline-playing, spot-u1-opening, spot-u4-stage): no clipped text, no overlap that hides content; the four tab buttons fit the 390px row whole (battery geometry assert); both fixed bars stand clear of the content they control. The timeline at 390px: every lane label whole, the ruler’s word labels staggered on two rows so none collides (timeline-rest.png, viewed).",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "PAIR-PARITY",
@@ -3735,9 +3763,9 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "label": "Every printed claim, figure and state line equals the measured state (printed == measured)",
    "applies": true,
    "state": "UNCHECKED",
-   "instrument": "face-by-face comparison of printed claims against the measured state on the v61 bytes",
-   "evidence": "Corrected in this pass wherever this programme’s scope reaches: the render face (was the v58 theater stage claiming \"nothing was drawn new\"; now the live table-built stage with its version on the face), the Tab 2 kicker (v58 → v61), the count lines (U1 17 → 24, U2 16 → 17, everywhere they print), the \"asset cut\" wording (cut → made, the generation doctrine), the health face (spliced to this file’s census below). ONE known stale line remains, named not hidden: Tab 0’s frozen prose still prints the old checklist fraction — the Tab 0 slice is byte-frozen by the standing preservation rule and this programme may not edit it; the correction is owed to the round that owns Tab 0. The box therefore stays UNCHECKED.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "face-by-face comparison of printed claims against the measured state on the v62 bytes",
+   "evidence": "The render face is current and states its own split honestly (stage build v62, table v61 — both true on these bytes); the timeline’s presence is named in the section’s intro in plain words. ONE known stale line remains, named not hidden: Tab 0’s frozen prose still prints the old checklist fraction — the Tab 0 slice is byte-frozen by the standing preservation rule and this programme may not edit it; the correction is owed to the round that owns Tab 0. The box therefore stays UNCHECKED.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "REASONING-COMPLETE",
@@ -3753,9 +3781,9 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "label": "The token audit against the house reference (community glass) matches",
    "applies": true,
    "state": "PASS",
-   "instrument": ":root token block equality v60 vs v61",
-   "evidence": ":root identical: True. v61 appends component rules only (the stage, its bar, the asset-record block, the version pill), drawn in the standing palette (the Unit 1 gold of the chapter cards); no token changed.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": ":root token block equality v61 vs v62",
+   "evidence": ":root identical: True. v62 appends component rules only (the editor timeline: lanes, blocks, ruler, playhead), drawn in the standing palette (the Unit 1 gold of the chapter cards, the version pill’s yellow for the playhead); no token changed.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "MEDIA-PLAYS",
@@ -3763,17 +3791,17 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "PASS",
    "instrument": "mechanics + playing-pass battery (the ladder player exercised whole; the stage played as HTML)",
-   "evidence": "Ladder player exercised end-to-end: play/pause/resume/switch/restart, word-tap seek, follow, dock transport at depth, unit ends. The render stage carries NO media element by the owner’s order — it plays as HTML on its own scene clock: played, paused mid-beat (frozen pose measured), scrubbed backward and forward, resumed from the scrubbed moment and from scroll depth, restarted. No media src changed in v61.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "evidence": "Ladder player exercised end-to-end: play/pause/resume/switch/restart, word-tap seek, follow, dock transport at depth, unit ends. The render stage carries NO media element by the owner’s order — it plays as HTML on its own scene clock: played, paused mid-beat (frozen pose measured), scrubbed backward and forward on the bar AND on the timeline’s ruler, resumed from scrubbed moments and from scroll depth, restarted (clock and playhead together). No media src changed in v62.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "HEALTH-TILE",
    "label": "The one-line health tile is present and opens as a popup; its first line is visible and its close reachable (rendered)",
    "applies": true,
    "state": "PASS",
-   "instrument": "markup identity of the health tile block v60 vs v61 + the face splice executed in this application + 390px render",
-   "evidence": "The tile renders on the page top (tab2-top.png) and its popup machinery is byte-untouched. Its face carried the stale v54-era fraction \"Checks 16/17\" into this build; in this application the face was spliced to this file’s final census — Checks 16/24 — the count the delivery gate reads from this block. Before → after stated here and in build-record-v61.md.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "markup identity of the health tile block v61 vs v62 + the face splice executed in this application + 390px render",
+   "evidence": "The tile renders on the page top (tab2-top.png) and its popup machinery is byte-untouched. Its face already carried the true v61 fraction \"Checks 16/24\" into this build; in this application the face was spliced to this file’s final census — Checks 16/24 — the count the delivery gate reads from this block. Before → after stated here and in build-record-v62.md.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "SOLE-READER",
@@ -3781,17 +3809,17 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "PASS",
    "instrument": "deliverer read of the 390px during-play renders as sole reader",
-   "evidence": "While anything plays, the reader always knows: the unit and position (dock clock + progress), the state (playing/paused), the decisions at this moment (the strip inside the dock). On the Render tab the reader is told in plain words what the stage is, which build it is (the version pill), and that the film renders once at the end; every stage part opens its own decision on tap. The v60-era trap — a superseded stage presented as current — is closed: the face carries its build and table version. Nothing must be hunted for.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "evidence": "While anything plays, the reader always knows: the unit and position (dock clock + progress), the state (playing/paused), the decisions at this moment (the strip inside the dock). On the Render tab the reader is told in plain words what the stage is, which build it is and which table it plays from (the version pill), that the film renders once at the end — and now also where every asset of the scene lives in time: the timeline under the stage, one lane per asset, blocks placed by the table, the playhead on the same clock. Every stage part, belt part and timeline block opens its own decision on tap. Nothing must be hunted for.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB1-CLONE-PARITY",
    "label": "Tab 1: the clone plays through the master's player system — identical chrome, its own strip beneath it, highlighting and follow from the clone's own timings",
    "applies": true,
    "state": "PASS",
-   "instrument": "section slice sha256 identity v60==v61",
-   "evidence": "Tab 1 section byte-identical: True — player chrome and strips untouched by v61.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "section slice sha256 identity v61==v62",
+   "evidence": "Tab 1 section byte-identical: True — player chrome and strips untouched by v62.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB1-FOLLOW-SCENARIOS",
@@ -3808,36 +3836,36 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "label": "Tab 1: the frozen transcript span stands byte-identical (336 word spans, 25 lines)",
    "applies": true,
    "state": "PASS",
-   "instrument": "section slice sha256 identity v60==v61",
+   "instrument": "section slice sha256 identity v61==v62",
    "evidence": "Tab 1 section byte-identical: True (sha 3c92ea40a0f1).",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB1-TIMINGS-OWN",
    "label": "Tab 1: the clone's timing map comes from a verified ASR alignment of the clone master itself (25/25 lines) — never the master's map",
    "applies": true,
    "state": "PASS",
-   "instrument": "section slice sha256 identity v60==v61",
+   "instrument": "section slice sha256 identity v61==v62",
    "evidence": "Tab 1 section byte-identical: True — the clone timing map inside it is untouched.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB-CHECKLIST-STATES",
    "label": "The piece's checklist states (133) stand exactly as the accepted v49 states left them",
    "applies": true,
    "state": "PASS",
-   "instrument": "section slice sha256 identity v60==v61 (the piece checklist lives in the frozen slices)",
-   "evidence": "Tab 0 and Tab 1 sections byte-identical to v60 (tab0: True, tab1: True) — the piece’s checklist states stand exactly as the v60 bytes left them; this programme touched only the table data, the render section, the health face and this block.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "section slice sha256 identity v61==v62 (the piece checklist lives in the frozen slices)",
+   "evidence": "Tab 0 and Tab 1 sections byte-identical to v61 (tab0: True, tab1: True) — the piece’s checklist states stand exactly as the v61 bytes left them; this programme touched only the render section, the Tab 2 style block, the render engine and this block.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB2-STORYBOARD",
    "label": "Tab 2 storyboard album stands: 4 unit chapters, frames cut from the library sheets, step path with Storyboard unlocked",
    "applies": true,
    "state": "PASS",
-   "instrument": "builder assertion (collections JSON byte-identical to v60) + battery collection exercise",
-   "evidence": "Collections unchanged in v61 (COLL block byte-identical: True): each chapter head carries its IMAGE COLLECTION button (U1 12 · U2 7 · U3 19 · U4 9 frames); the battery opened every collection, counted its frames and rendered frame notes, including the \"Frame n of N\" position line.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "builder assertion (collections JSON byte-identical to v61) + battery collection exercise",
+   "evidence": "Collections unchanged in v62 (COLL block byte-identical: True): each chapter head carries its IMAGE COLLECTION button (U1 12 · U2 7 · U3 19 · U4 9 frames); the battery opened every collection, counted its frames and rendered frame notes, including the \"Frame n of N\" position line.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB2-STICKIES",
@@ -3854,8 +3882,8 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "PASS",
    "instrument": "timings census + builder + battery",
-   "evidence": "The ladder carries all 333 timed words, one per line, grouped by unit and line, pauses as space rows from the timings; the count of words with no decision covering them stands at 31, unchanged — the BR gap entry registers the bridge line’s first word as an undecided ENTRY without covering it. Battery asserted word-tap seek, live highlight and follow arrival.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "evidence": "The ladder carries all 333 timed words, one per line, grouped by unit and line, pauses as space rows from the timings; the count of words with no decision covering them stands at 31, unchanged from v61. Battery asserted word-tap seek, live highlight and follow arrival.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB2-STATUS",
@@ -3863,26 +3891,26 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "PASS",
    "instrument": "battery DOM reads of every chapter counts line + 390px renders",
-   "evidence": "Every chapter face carries its plain-words status line and counts line, read from the DOM in the battery and matched to the v61 table: U1 24 decisions / 0 undecided · U2 17 / 25 · U3 26 / 2 · U4 18 / 4. The Tab 2 kicker now reads v61 (was v58 — a superseded face line, corrected in this pass).",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "evidence": "Every chapter face carries its plain-words status line and counts line, read from the DOM in the battery and matched to the v61 table the v62 stage plays from: U1 24 decisions / 0 undecided · U2 17 / 25 · U3 26 / 2 · U4 18 / 4. The Tab 2 kicker reads v61 — the table’s version, which did not change in this render-form round; the render face states the split itself (\"Stage build v62 · plays from table v61\").",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB2-LADDER",
    "label": "Word ladder: words float one per line with pauses as space; circles on the right declare what happens at each word (0..n per word); a circle’s content opens on tap",
    "applies": true,
    "state": "PASS",
-   "instrument": "decision-table census + mechanics + playing-pass battery on the v61 bytes",
-   "evidence": "85 entries as labeled cards >= 44px; every popup exercised; 47 LOCKED (generator tamper test still refuses locked edits). v61 (build-record-v61.md): the table EXPANDED by story moment — Unit 1’s opening scene decomposed into its seven element entries, each carrying a complete asset record (description · file · starting size · target size · position · movement · appearance moment) — and three hygiene dispositions executed on locked entries as asserted overlays after lock verification: \"Curtains settle\" and \"The repeat beat\" re-described to the settled paper-stage model on Unit 1’s own frame; \"Curtains close — black\" marked RETIRED — WRONG in its record and excluded from play and the strip (asserted live at its own word). The BR bridge line gained its UNDECIDED gap entry. The PLACEMENT guard still passes for every chip.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "decision-table census + mechanics + playing-pass battery on the v62 bytes",
+   "evidence": "85 entries as labeled cards >= 44px; every popup exercised; 47 LOCKED (generator tamper test still refuses locked edits). The table content is BYTE-IDENTICAL to v61 (the builder asserted the dtData block unchanged): v62 changed no entry, added none, and re-described none. Its whole relation to the table is READING it — the stage’s new timeline is generated at runtime from the entries’ recorded spans and files (build-record-v62.md). The v61 dispositions stand as left: the seven scene-1 element entries with complete asset records; \"Curtains settle\" / \"The repeat beat\" on the settled model; \"Curtains close — black\" RETIRED — WRONG and excluded from play and the strip; the BR gap entry UNDECIDED.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "TAB2-RENDER",
    "label": "Render tab: the Unit 1 stage plays as HTML/JS — wall, curtains, valance as separate assets; stepped curtain movement on the word timings; master audio; closes to black at the unit’s end",
    "applies": true,
    "state": "PASS",
-   "instrument": "live-stage playing pass in battery v61 (played on the final bytes; controls operated mid-play; screenshots DURING play viewed by the deliverer) + reader seat R14",
-   "evidence": "The stage is Unit 1’s own, played as HTML from the table (Order AB label on the face: \"Stage build v61 · plays from table v61\"): the locked paper backdrop, the fitted paper curtains stirring within the decided degree (measured at two scene times, ≤1.05°), the generated claim assets landing/popping/rising on the P1 word timings. THE PLAYER IS REAL (owner, 2026-11-03 ~16:58 EST): play · pause (freezes the pose mid-beat) · a scrub bar dragged to ANY moment backward and forward (exercised: a real track click backward mid-play; a precise set to 0.75s rendering the earlier moment exactly; a set forward past the pause point to 2.80s) · restart; state by construction — every element’s state, the curtain angle included, is a pure function of the scene clock, proven by string-comparing the scrubbed-to-1.30 pose against the ?rnT=1.3 pose (identical). The fixed bar works at scroll depth; every element and belt part opens its table card in place; no <video>, no narration <audio>, no theater-frame reference in the section. Reader PLAYING score 82/100 (governing — re-scored in the fix round; the first v61 application scored 74 with the composition capped by the rectangle staging). FIX ROUND (2026-11-03, two defects found by the main agent’s own eyes on the v61 finals, fixed and re-verified the same pass; build-record-v61.md §10): (1) the four claim assets are staged in SHAPED (alpha) form — claim-digit3-alpha / claim-dot-alpha / claim-digit2-alpha / claim-band-alpha.webp, the cream ground flood-filled away (tab2-work/make_alpha_v61.py: flood-fill from the edges, distance-based alpha, contact shadow kept soft, canvas sizes unchanged so every recorded size and position stands), and each table entry’s file field names its alpha file. The composition limit named in the first application is LIFTED: the numerals stand free as in the settled frame, the point no longer covers the band’s middle letters (only the disc itself stands on the plate’s top edge, as decided) and QUADRILLION reads whole (stage-end-v2.png, viewed). (2) The centre play button shows ONLY in the never-played rest state (render-rest-v2.png); once play has been pressed it never overlays the scene again — paused mid-beat the scene is bare and the fixed bar carries play/pause (stage-paused-v2.png; battery-asserted at the pause and again after the scrub back). LABEL SUPERSESSION: this box’s label text still names the retired theater model (valance · master audio · closes to black) — all three are excluded by the owner’s 2026-11-03 orders and are absent by design; the label is owed a standard revision, flagged in the build record.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "instrument": "live-stage playing pass in battery v62 (played on the final bytes; controls operated mid-play; the timeline operated mid-pause; screenshots DURING play viewed by the deliverer) + reader seat R14",
+   "evidence": "The stage is Unit 1’s own, played as HTML from the table — the face states the round’s honest split: \"Stage build v62 · plays from table v61\" (the stage build advanced; the table is v61’s canon, byte-identical). The v61 stage stands as verified (locked paper backdrop; curtains stirring within the decided degree; the four claim assets in SHAPED alpha form landing/popping/rising on the P1 word timings; THE PLAYER IS REAL: play · pause · scrub any moment backward/forward · restart; state by construction, pose purity string-proven; the centre button only in the never-played rest state; the fixed bar works at scroll depth). NEW IN v62 — THE EDITOR TIMELINE (owner’s form order, 2026-11-03 ~17:18 EST: the render page is an editor — preview + toolbox + a conveyor-belt timeline where the assets stay and show where they are): under the stage, one lane per scene asset; each block is placed by the span its table record states (appearance read at runtime from the entry’s recorded rec.appear; every asset runs to the scene end, as its record states it stays) and carries the picture its record names — no second list: lane order and plain names come from the stage’s own parts list, itself generated from the entries. The playhead crosses all lanes on the SAME scene clock (set inside rnPose; sync measured <3px during play, frozen at the pause, and at 0.75s / 1.30s / 2.80s). The ruler is a second scrub surface (tap/drag seeks and holds; a tap near its start renders the earlier pose); a block tap opens the asset’s table card (the band’s opened mid-pause). Toolbox complete, in the owner’s terms: play · pause · back-to-the-beginning (restart returns clock and playhead together, asserted) · scrub (bar and ruler). Reader PLAYING score 88/100 (governing; v61’s fix round scored 82 — the ordered editor form is the rise; the remaining distance is staged-content scope — the stage plays the one decided beat of scene 1 — not a defect in what stands). No <video>, no narration <audio>, no theater-frame reference in the section. LABEL SUPERSESSION: this box’s label text still names the retired theater model (valance · master audio · closes to black) — all three are excluded by the owner’s 2026-11-03 orders and are absent by design; the label is owed a standard revision, flagged in build-record-v62.md.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   },
   {
    "id": "READER-SCORE",
@@ -3890,8 +3918,8 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "UNCHECKED",
    "instrument": "playing-pass reader seat (R14, Order X: the PLAYING score governs), phone-width during-play screenshots viewed by the deliverer",
-   "evidence": "The Render section was scored at 74/100 PLAYING in the first v61 application and re-scored at 82/100 PLAYING in the fix round (stage played, paused mid-beat with the centre overlay proven gone, scrubbed backward and forward with the earlier state screenshot, cards opened, bar operated at scroll depth; the round’s -v2 shots in v61-shots/final/). The ladder’s governing PLAYING score stands at 74/100 from the v59 programme, re-asserted mechanically on the v61 bytes. NOT PASS page-wide: the standard requires EVERY section at 60+, and the untouched sections stand on byte-identical bytes scored (STILLS-ONLY) 35 (top/health) · 40 (Tab 0) · 45 (Tab 1) in the 2026-11-03 reader review — frozen scope. The box stays UNCHECKED until a full-page reader pass scores every section at 60+.",
-   "checked_at": "2026-11-03T22:23:36+00:00"
+   "evidence": "The Render section was scored 82/100 PLAYING in the v61 fix round and 88/100 PLAYING in this v62 round (stage played, paused mid-beat, the timeline’s playhead measured on the same clock, the band’s block card opened mid-pause, ruler seeks exercised, restart returning clock and playhead together; the timeline finals in v61-shots/final/). The ladder’s governing PLAYING score stands at 74/100 from the v59 programme, re-asserted mechanically on the v62 bytes. NOT PASS page-wide: the standard requires EVERY section at 60+, and the untouched sections stand on byte-identical bytes scored (STILLS-ONLY) 35 (top/health) · 40 (Tab 0) · 45 (Tab 1) in the 2026-11-03 reader review — frozen scope. The box stays UNCHECKED until a full-page reader pass scores every section at 60+.",
+   "checked_at": "2026-11-03T22:37:54+00:00"
   }
  ]
 }
@@ -4043,7 +4071,7 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    elBand.style.transform='translateY('+Math.round(18*(1-rnGrow(t,1.14,1.82)))+'px)';
    rw.textContent=rnWordAt(t);
    rbClock.textContent='the word \u201c'+(rnWordAt(t)||'3.2')+'\u201d \u00b7 0:0'+t.toFixed(1)+' of 0:03.4';
-   rbScrub.value=t;
+   rbScrub.value=t; rntPoseBelt(t);
    var ph=t-RT0;
    elCurL.style.transform='rotate('+(0.7*Math.sin(ph*6.2832/3.7)).toFixed(2)+'deg) translate('+(3*Math.sin(ph*6.2832/3.7-0.6)).toFixed(1)+'px,'+(1.2*Math.sin(ph*6.2832/2.9)).toFixed(1)+'px)';
    elCurR.style.transform='rotate('+(-0.6*Math.sin(ph*6.2832/4.3+1.2)).toFixed(2)+'deg) translate('+(-3*Math.sin(ph*6.2832/4.3+0.5)).toFixed(1)+'px,'+(1.6*Math.sin(ph*6.2832/3.1+0.8)).toFixed(1)+'px)';
@@ -4061,7 +4089,60 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
  stage.querySelectorAll('[data-eid]').forEach(function(el){ el.addEventListener('click',function(){ rnPause(); dtShow(el.getAttribute('data-eid')); }); });
  document.querySelectorAll('.rn-part').forEach(function(b){ b.addEventListener('click',function(){ rnPause(); dtShow(b.getAttribute('data-eid')); }); });
  setInterval(function(){ if(document.getElementById('render').hidden&&!rbar.hidden){ rnPause(); rbar.hidden=true; } },400);
- window.__rn={t:function(){return rnT;},playing:function(){return rnPlaying;}};
+ /* the editor timeline (v62) — built at runtime FROM THE TABLE, not from a
+  * second list: lane order and the plain names come from the stage's parts
+  * list (itself generated from the entries); each block's span is read from
+  * its entry's recorded appearance in the in-file table (rec.appear), its
+  * picture from the entry's recorded file (rec.file), and every asset of
+  * this scene persists to the scene's end, as its record states. The
+  * playhead and the blocks' live state are set by rntPoseBelt, called from
+  * rnPose — one clock, both views, state by construction. */
+ var rntLanes=document.getElementById('rntLanes'), rntHead=document.getElementById('rntHead'),
+     rntTrack=document.getElementById('rntRulerTrack'), rntBlocks=[];
+ function rntAppear(e){ var seg=(e.rec&&e.rec.appear)||''; var m=/\(([^)]*)\)/.exec(seg);
+   var pool=m?m[1]:seg; var mm=/([0-9]+(?:\.[0-9]+)?)(?=s|–)/.exec(pool);
+   return mm?parseFloat(mm[1]):e.t0; }
+ document.querySelectorAll('.rn-part').forEach(function(b){
+   var eid=b.getAttribute('data-eid'), e=DTBY[eid]; if(!e||!e.rec)return;
+   var ap=rntAppear(e), lab=document.createElement('span');
+   lab.className='rnt-lab'; lab.textContent=b.querySelector('b').textContent;
+   var lane=document.createElement('div'); lane.className='rnt-lane';
+   var tr=document.createElement('div'); tr.className='rnt-track';
+   var blk=document.createElement('button'); blk.className='rnt-block wait';
+   blk.setAttribute('data-eid',eid);
+   blk.setAttribute('data-t0',ap.toFixed(2)); blk.setAttribute('data-t1',RT1.toFixed(2));
+   blk.style.left=((ap-RT0)/(RT1-RT0)*100)+'%'; blk.style.width=((RT1-ap)/(RT1-RT0)*100)+'%';
+   blk.setAttribute('aria-label',lab.textContent+' — on the timeline from '+ap.toFixed(2)+'s to the scene\u2019s end; open its decision in the table');
+   var im=document.createElement('img'); im.src=e.rec.file; im.alt='';
+   var nm=document.createElement('span'); nm.textContent=lab.textContent;
+   blk.appendChild(im); blk.appendChild(nm); tr.appendChild(blk);
+   lane.appendChild(lab); lane.appendChild(tr); rntLanes.appendChild(lane);
+   rntBlocks.push(blk);
+   blk.addEventListener('click',function(){ rnPause(); dtShow(eid); });
+ });
+ P1W.forEach(function(w,i){ var tk=document.createElement('span'); tk.className='rnt-tick'+(i%2?' alt':'');
+   tk.style.left=((w[0]-RT0)/(RT1-RT0)*100)+'%';
+   var lb=document.createElement('b'); lb.textContent=w[1]; tk.appendChild(lb); rntTrack.appendChild(tk); });
+ function rntPoseBelt(t){ rntHead.style.left=((t-RT0)/(RT1-RT0)*100)+'%';
+   rntTrack.setAttribute('aria-valuenow',t.toFixed(2));
+   rntBlocks.forEach(function(blk){ var on=t>=parseFloat(blk.getAttribute('data-t0'))-0.001;
+     blk.classList.toggle('live',on); blk.classList.toggle('wait',!on); }); }
+ function rntSeek(clientX){ var r=rntTrack.getBoundingClientRect();
+   var f=(clientX-r.left)/r.width; f=Math.max(0,Math.min(1,f));
+   rnPause(); rnT=RT0+f*(RT1-RT0); rnPose(rnT); }
+ var rntDrag=false;
+ rntTrack.addEventListener('pointerdown',function(ev){ rntDrag=true;
+   try{rntTrack.setPointerCapture(ev.pointerId);}catch(_){} rntSeek(ev.clientX); ev.preventDefault(); });
+ rntTrack.addEventListener('pointermove',function(ev){ if(rntDrag)rntSeek(ev.clientX); });
+ rntTrack.addEventListener('pointerup',function(){ rntDrag=false; });
+ rntTrack.addEventListener('pointercancel',function(){ rntDrag=false; });
+ rntTrack.addEventListener('keydown',function(ev){ var d=0;
+   if(ev.key==='ArrowRight')d=0.14; else if(ev.key==='ArrowLeft')d=-0.14;
+   else if(ev.key==='Home'){ rnPause(); rnT=RT0; rnPose(rnT); ev.preventDefault(); return; }
+   else if(ev.key==='End'){ rnPause(); rnT=RT1; rnPose(rnT); ev.preventDefault(); return; }
+   else return;
+   rnPause(); rnT=Math.max(RT0,Math.min(RT1,rnT+d)); rnPose(rnT); ev.preventDefault(); });
+ window.__rn={t:function(){return rnT;},playing:function(){return rnPlaying;},belt:function(){return {blocks:rntBlocks.map(function(b){return {eid:b.getAttribute('data-eid'),t0:parseFloat(b.getAttribute('data-t0')),t1:parseFloat(b.getAttribute('data-t1'))};}),head:parseFloat(rntHead.style.left)||0};}};
  var q=new URLSearchParams(location.search).get('rnT');
  if(q!==null){ var qt=parseFloat(q); if(!isNaN(qt)){ rnT=Math.min(RT1,Math.max(RT0,qt)); rnStarted=true; rnPose(rnT); play.style.display='none'; } }
  else { rnPose(RT0); rnGlyphs(); }
