@@ -2694,7 +2694,7 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
 .dt-key p,.dt-unknown p,.dt-unknown li{font-size:12.5px;line-height:1.6;color:#c8d2df}
 .dt-key p,.dt-unknown p{margin:6px 0}
 .dt-unknown ul{margin:6px 0 6px 18px;padding:0}
-.dt-strip{position:sticky;bottom:10px;z-index:40;background:rgba(13,17,26,.94);border:1px solid rgba(255,217,77,.38);border-radius:16px;padding:10px 12px;margin:14px 0 4px;backdrop-filter:blur(8px)}
+.dt-strip{z-index:40;background:rgba(13,17,26,.94);border:1px solid rgba(255,217,77,.38);border-radius:16px;padding:10px 12px;margin:14px 0 4px;backdrop-filter:blur(8px)}
 .dt-strip-h{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
 .dt-strip-k{font-size:10.5px;letter-spacing:.14em;color:#ffd94d;font-weight:800}
 .dt-strip-w{font-size:16px;font-weight:800;color:#fff}
@@ -2771,6 +2771,32 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
 .rn-belt-h{font-size:11px;letter-spacing:.14em;color:#8fa3bd;font-weight:700;margin-bottom:6px}
 .rn-asset{font-size:12.5px;line-height:1.55;color:#c8d2df;margin-top:5px}
 .rn-part{display:block;width:100%;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 11px;color:#c8d2df;font-size:12.5px;line-height:1.55;margin-top:7px;cursor:pointer}
+
+/* v59 R1: the docked transport + chrome fits (playing-experience round 1) */
+#dtbar{position:fixed;left:0;right:0;bottom:0;z-index:65;background:rgba(10,14,22,.97);border-top:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+#dtbar[hidden]{display:none}
+.dtb-in{max-width:560px;margin:0 auto}
+.dtb-row{display:flex;align-items:center;gap:8px}
+.dtb-play{width:52px;height:52px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:#ffd94d;color:#10131a;font-size:19px;font-weight:800;cursor:pointer}
+.dtb-btn{min-width:48px;height:48px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-size:15px;cursor:pointer;padding:0 12px;flex:none}
+.dtb-follow{font-size:13px;font-weight:700;color:#aeb8c6}
+.dtb-follow.on{color:#10131a;background:#8ab4ff;border-color:#8ab4ff}
+.dtb-meta{flex:1;min-width:0;display:flex;flex-direction:column}
+#dtbUnit{font-size:13.5px;font-weight:750;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dtbClock{font-size:12px;color:#aeb8c6}
+.dtb-prog{height:3px;background:rgba(255,255,255,.12);border-radius:2px;margin:8px 0 2px;overflow:hidden}
+.dtb-prog i{display:block;height:100%;width:0;background:#ffd94d}
+.dt-in-dock{position:static;margin:4px 0 0;border:none;background:none;padding:4px 0 0;backdrop-filter:none}
+.dt-in-dock .dt-strip-es{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+.dt-in-dock .dt-strip-chip{flex:none}
+.dt-chip.picked{outline:2px solid #ffd94d;outline-offset:1px}
+.dt-strip-chip.picked{outline:2px solid #ffd94d;outline-offset:1px}
+.wl-railmeta{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;color:#8fa3ba;padding:7px 1px 0}
+.wl-railcount{font-weight:700;color:#e8eef6}
+.wl-frame.sel img{box-shadow:0 0 0 2px #ffd94d}
+.dtb-close{margin-left:auto;flex:none;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:none;color:#aeb9c6;font-size:13px;line-height:1}
+.dt-in-dock .dt-strip-es{-webkit-mask-image:linear-gradient(90deg,#000 92%,rgba(0,0,0,.12));mask-image:linear-gradient(90deg,#000 92%,rgba(0,0,0,.12))}
+@media (max-width:560px){.tabs{gap:6px}.tabs button{flex:1 1 0;min-width:0;padding:12px 0;font-size:14px;letter-spacing:-.01em;text-align:center;white-space:nowrap;overflow:hidden}}
 </style>
 <div class="t2b-wrap">
  <p class="t2b-kick">TAB 2 — THE VISUAL LAYER · v58</p>
@@ -2793,9 +2819,20 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
  <ul><li>What happens — the scene, event or beat at a word</li><li>Source image — the collection picture every visual must match</li><li>Asset — the cut-out derived from that picture</li><li>Similarity — how close the built asset is to its source picture</li><li>Movement — what moves in the render, and when</li><li>Timing — the seconds each decision owns, from the word timings</li><li>State — open, decided, built, verified, locked</li><li>Light — how light behaves on each element (decision model §10B)</li><li>Cadence — how scenes follow each other (§10C)</li><li>Motion per asset per beat — paths, easing, holds (§11)</li></ul>
  <p>The full category map lives in the decision model; its extension protocol (§21) is how a new compartment gets added when a build exposes one.</p>
 </div>
- <div class="dt-strip" id="dtStrip" data-reason="The decision strip: it sits at the ladder's edge and shows every decision attached to the playhead's word or span — while playing and while paused, which is the owner's stated use: pause, then see the decisions for that moment.">
- <div class="dt-strip-h"><span class="dt-strip-k">DECISIONS AT THIS MOMENT</span><span class="dt-strip-w" id="dtWord">nothing playing yet</span><span class="dt-strip-t" id="dtTime"></span></div>
- <div class="dt-strip-es" id="dtStripEs"><span class="dt-strip-none">Press ▶ Play on a unit, then pause — the decisions for that moment land here. Or tap any word to look at its moment.</span></div>
+ <div id="dtbar" hidden data-reason="[USER] The ladder's transport, docked (v59, owner's live finding on v58): the play button scrolled away with the words — a control must not live on the same scrollable surface as the text it controls. This bar is fixed at the foot of the screen while the Video tab stands, in the page's own docked form (the Audio tab's transport bar is the pattern): play and pause, restart, the unit and its clock, follow, and the decisions at this moment stay reachable at any scroll depth.">
+ <div class="dtb-in">
+  <div class="dtb-row">
+   <button id="dtbPlay" class="dtb-play" aria-label="Play or pause the current unit">▶</button>
+   <button id="dtbRestart" class="dtb-btn" aria-label="Start this unit again">↺</button>
+   <div class="dtb-meta"><span id="dtbUnit">No unit yet</span><span id="dtbClock"></span></div>
+   <button id="dtbFollow" class="dtb-btn dtb-follow on" aria-pressed="true" aria-label="Follow the playing word">Follow</button>
+  </div>
+  <div class="dtb-prog"><i id="dtbProgFill"></i></div>
+  <div class="dt-strip dt-in-dock" id="dtStrip" data-reason="[USER] The decision strip rides inside the dock: it shows every decision attached to the playhead's word or span — while playing and while paused, which is the owner's stated use: pause, then see the decisions for that moment. In v58 it sat in the scroll flow and was gone within seconds of pressing play.">
+   <div class="dt-strip-h"><span class="dt-strip-k">DECISIONS AT THIS MOMENT</span><span class="dt-strip-w" id="dtWord">nothing playing yet</span><span class="dt-strip-t" id="dtTime"></span><button id="dtbClose" class="dtb-close" aria-label="Hide the player bar">✕</button></div>
+   <div class="dt-strip-es" id="dtStripEs"><span class="dt-strip-none">Press ▶ Play on a unit, then pause — the decisions for that moment land here. Or tap any word to look at its moment.</span></div>
+  </div>
+ </div>
 </div>
  <article class="t2b-ch" id="chapter-u1" style="--uc:#d9a441" data-reason="Unit chapter: collection first, then the word ladder — the ladder is where every visual decision for this unit is made and checked.">
   <header class="t2b-chh"><span class="t2b-n">1</span><div class="t2b-tt"><h3>THE SCALE</h3><p class="t2b-sub">Seconds 0 to 32 — how big the number is</p></div>
@@ -3590,25 +3627,25 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
 <div hidden data-reason="[OWNER-ORDER] The in-file checklist (HTML-CHECKLIST-STANDARD, the owner's order of 2026-11-02): every box defaults UNCHECKED, any content edit resets all boxes through the content hash, and the delivery gate reads the count from this block — the state travels with the file, not in side records." data-reason-scope="descendants"><script type="application/json" id="archer-checklist">
 {
  "standard": "html-checklist-v1",
- "content_hash": "d666263dc9dbaf84dc3819caab1d0c02607b190698bb3911d8812d206397398a",
+ "content_hash": "83ccff055afa0e035032fddac9d87e7ef8d292fb31aaf2bbfc02c94a139f0ca4",
  "checks": [
   {
    "id": "FORM-FIRST-GLANCE",
    "label": "Top level shows at most three things — scored on the rendered page at phone width",
    "applies": true,
    "state": "PASS",
-   "instrument": "headless Chrome 390px renders of the v58 bytes, viewed by the deliverer (hidden_files/tab2-work/v58-shots/)",
-   "evidence": "tab2-top.png: kicker + \"The decision table\" + one intro + the steps row + the decision strip — one subject at first glance. render-rest.png: one stage, one belt heading. Nothing competes.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "headless Chrome 390px renders of the v59 bytes, viewed by the deliverer (hidden_files/tab2-work/v59-shots/)",
+   "evidence": "tab2-top.png (round 6 set): the Video tab opens on the decision-table explainer and the unit index — one subject at first glance. render-rest.png: one stage, one belt heading. Nothing competes.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "POPUP-MECHANIC",
    "label": "Zero in-place expansions; every opener exercised; content opens over the page, place kept",
    "applies": true,
-   "state": "UNCHECKED",
-   "instrument": "not re-run in the v55 album round",
-   "evidence": "",
-   "checked_at": ""
+   "state": "PASS",
+   "instrument": "mechanics + playing-pass battery v59 (render-harness/battery-v59.mjs) on the v59 bytes: 476 PASS / 0 FAIL, run on the final bytes (round 6 confirmation)",
+   "evidence": "Every opener exercised on the v59 bytes: all 77 decision chips (fields + source image + state word asserted per popup), every collection (frame counts + notes), the render belt parts. Content opens in the fixed sheet over the page; the scroller never moves (place kept — the picked chip is found marked where it was tapped). Zero in-place expansions.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "CONTROLS-EXERCISED",
@@ -3633,9 +3670,9 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "label": "The full page rendered at ~390 px: no clipped text, no overlap, nothing cut off",
    "applies": true,
    "state": "PASS",
-   "instrument": "headless Chrome 390px renders of the v58 bytes, viewed by the deliverer (hidden_files/tab2-work/v58-shots/)",
-   "evidence": "7 shots at 390px (tab2-top, tab2-unknowns, tab2-u2, tab2-paused-strip, popup-entry, render-rest, render-t10): no clipped text and no overlap inside the Tab 2 and Render sections; chips sit clear of the words; the stage composes at 16:9. The shared tab rail shows its 4th pill part-way as a scroll affordance — the same chrome v57 shipped, flagged in the 2026-11-03 reader review and named here, not hidden.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "headless Chrome 390px renders of the v59 bytes, viewed by the deliverer (hidden_files/tab2-work/v59-shots/)",
+   "evidence": "During-play 390px set (play-deep, r2-far-engage, r3-strip-crowded, r5-u3-deep-paused, r5-u4-end): no clipped text, no overlap; the four tab buttons now fit the 390px row whole (battery geometry assert — the v58 slice-off is fixed); the fixed dock stands clear of the centered playing word.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "PAIR-PARITY",
@@ -3669,45 +3706,45 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "label": "The token audit against the house reference (community glass) matches",
    "applies": true,
    "state": "PASS",
-   "instrument": ":root token block equality v57 vs v58",
-   "evidence": ":root identical: True. The new Tab 2 rules reuse the same glass token family (unit colors via --uc, gold family for the strip).",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": ":root token block equality v58 vs v59",
+   "evidence": ":root identical: True. The v59 dock reuses the page tokens (unit colors via --uc, the gold family, the glass surfaces) — no new palette.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "MEDIA-PLAYS",
    "label": "Every player and media element actually plays or renders (first frame + play state)",
    "applies": true,
    "state": "PASS",
-   "instrument": "src census v57 vs v58 + mechanics battery (both players exercised)",
-   "evidence": "Census changed BY DESIGN and only as designed: the three generated stage v1 files are retired; the stage is now stage-backdrop/curtainL/curtainR/valance-v2 (crops of the collection frame u4stage-f1) and every decision chip carries its source frame as an <img>. Battery exercised the ladder player (play/pause/resume/switch/restart) and the render player (play/pause) — all media asserts passed.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "mechanics + playing-pass battery (both players exercised on the v59 bytes)",
+   "evidence": "Ladder player exercised end-to-end: play/pause/resume/switch/restart, word-tap seek, follow, dock transport at depth, unit ends. Render player: play/pause toggles asserted. No media src changed in v59 (the stage asset set is v58's v2 crops).",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "HEALTH-TILE",
    "label": "The one-line health tile is present and opens as a popup; its first line is visible and its close reachable (rendered)",
    "applies": true,
    "state": "PASS",
-   "instrument": "markup identity of the health tile block v57 vs v58 + 390px render",
-   "evidence": "health tile block identical to v57: True; its face still carries the v54-era count line (\"Checks 16/17\") — the census refill remains owed to the verification round (named, not hidden).",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "markup identity of the health tile block v58 vs v59 + 390px render",
+   "evidence": "health tile block identical to v58: True; its face still carries the v54-era count line (\"Checks 16/17\") — the census refill remains owed to the verification round (named, not hidden).",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "SOLE-READER",
    "label": "One reviewer pass as the sole dyslexic reader at phone width: no hunting, no backtracking, nothing essential hidden",
    "applies": true,
    "state": "PASS",
-   "instrument": "deliverer read of the 390px renders as sole reader",
-   "evidence": "The ladder reads as one word per line with a labeled picture card for each decision; the strip answers \"what is decided at this moment\" without hunting; the unknowns compartment states its own incompleteness in plain words.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "deliverer read of the 390px during-play renders as sole reader",
+   "evidence": "While playing, the reader always knows: the unit (dock, whole name), the position (clock + progress), the state (playing/paused), and the decisions at this moment (the strip inside the dock). Nothing must be hunted for; nothing scrolls away.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB1-CLONE-PARITY",
    "label": "Tab 1: the clone plays through the master's player system — identical chrome, its own strip beneath it, highlighting and follow from the clone's own timings",
    "applies": true,
    "state": "PASS",
-   "instrument": "section slice sha256 identity v57==v58",
-   "evidence": "Tab 1 section byte-identical: True — player chrome and strips untouched by v58.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "section slice sha256 identity v58==v59",
+   "evidence": "Tab 1 section byte-identical: True — player chrome and strips untouched by v59.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB1-FOLLOW-SCENARIOS",
@@ -3724,18 +3761,18 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "label": "Tab 1: the frozen transcript span stands byte-identical (336 word spans, 25 lines)",
    "applies": true,
    "state": "PASS",
-   "instrument": "section slice sha256 identity v57==v58",
+   "instrument": "section slice sha256 identity v58==v59",
    "evidence": "Tab 1 section byte-identical: True (sha 3c92ea40a0f1).",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB1-TIMINGS-OWN",
    "label": "Tab 1: the clone's timing map comes from a verified ASR alignment of the clone master itself (25/25 lines) — never the master's map",
    "applies": true,
    "state": "PASS",
-   "instrument": "section slice sha256 identity v57==v58",
+   "instrument": "section slice sha256 identity v58==v59",
    "evidence": "Tab 1 section byte-identical: True — the clone timing map inside it is untouched.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB-CHECKLIST-STATES",
@@ -3743,17 +3780,17 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "PASS",
    "instrument": "block parses; this application is the executed record",
-   "evidence": "The checklist block parses as JSON (24 boxes after adding READER-SCORE). Per the RESET RULE every box was first reset to UNCHECKED on the v58 bytes; the PASS states in this block are only what this round executed, each with instrument + evidence + timestamp.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "evidence": "The checklist block parses as JSON (24 boxes). Per the RESET RULE every box was first reset to UNCHECKED on the v59 bytes; the PASS states in this block are only what this programme executed, each with instrument + evidence + timestamp.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB2-STORYBOARD",
    "label": "Tab 2 storyboard album stands: 4 unit chapters, frames cut from the library sheets, step path with Storyboard unlocked",
    "applies": true,
    "state": "PASS",
-   "instrument": "builder assertion (collections JSON byte-identical to v57) + battery collection exercise",
-   "evidence": "Collections unchanged in v58 (COLL block byte-identical: True): each chapter head carries its IMAGE COLLECTION button (U1 12 · U2 7 · U3 19 · U4 9 frames); the battery opened every collection, counted its frames and rendered frame notes — all passed.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "builder assertion (collections JSON byte-identical to v58) + battery collection exercise",
+   "evidence": "Collections unchanged in v59 (COLL block byte-identical: True): each chapter head carries its IMAGE COLLECTION button (U1 12 · U2 7 · U3 19 · U4 9 frames); the battery opened every collection, counted its frames and rendered frame notes. v59 adds the position line inside the popup (\"Frame n of N\", asserted) — collection data untouched.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB2-STICKIES",
@@ -3770,8 +3807,8 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "PASS",
    "instrument": "timings census + builder + battery",
-   "evidence": "The ladder carries all 333 timed words, one per line, grouped by unit and line, pauses as space rows from the timings; battery asserted word-tap seek (lands on the tapped word, stays paused) and live highlight following the playhead.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "evidence": "The ladder carries all 333 timed words, one per line, grouped by unit and line, pauses as space rows from the timings; battery asserted word-tap seek (lands on the tapped word, stays paused), live highlight following the playhead, and follow arrival at the playing word from any depth.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB2-STATUS",
@@ -3779,35 +3816,35 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
    "applies": true,
    "state": "PASS",
    "instrument": "390px renders + DOM census",
-   "evidence": "Every chapter face carries its plain-words status line and its counts line: U1 design settled · U2 mechanism + paper style settled, pictures in discussion · U3 design settled, clean pass owed · U4 settled. Counts lines read from the DOM in the battery and matched the computed data (U1 22/0 · U2 16/25 · U3 26/2 · U4 13/4 decisions/undecided).",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "evidence": "Every chapter face carries its plain-words status line and counts line: U1 design settled · U2 mechanism + paper style settled, pictures in discussion · U3 design settled, clean pass owed · U4 settled. Counts lines read from the DOM in the battery and matched the data (U1 22/0 · U2 16/25 · U3 26/2 · U4 13/4 decisions/undecided).",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB2-LADDER",
    "label": "Word ladder: words float one per line with pauses as space; circles on the right declare what happens at each word (0..n per word); a circle’s content opens on tap",
    "applies": true,
    "state": "PASS",
-   "instrument": "v58_data census + mechanics battery (every entry exercised)",
-   "evidence": "THE DECISION TABLE: all 77 v57 circles migrated (preservation 77/77), now labeled cards (thumbnail + title + kind + state) at least 44px — battery measured every card and opened every one of the 77 popups (WHAT / SOURCE PICTURE / ASSET / SIMILARITY / MOVEMENT / WHEN all present, source image correct). 47 entries LOCKED; the generator refuses locked edits (verify_locks + tamper test in gen_v58_data.py). Real pause/resume asserted: pause keeps position (no drift, no restart), resume continues forward; unit switch resets cleanly; the decision strip populates while playing and while paused.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "decision-table census + mechanics + playing-pass battery on the v59 bytes",
+   "evidence": "All 77 entries as labeled cards >= 44px; every popup exercised; 47 LOCKED (generator tamper test still refuses locked edits). v59 (the playing-experience programme, build-record-v59.md rounds 1-6): transport is a FIXED dock outside the scroll flow (the owner's law: controllers never live on the same scrollable surface as the content they control); pause at depth keeps position (no drift/restart); the decision strip rides in the dock, alive while playing and paused, rebuilding only when the moment's decisions change; follow never fights the reader and jumps instantly to far units; button state single-sourced from the audio events. PLAYING score 74/100 (governing; rounds 5 and 6 clean).",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "TAB2-RENDER",
    "label": "Render tab: the Unit 1 stage plays as HTML/JS — wall, curtains, valance as separate assets; stepped curtain movement on the word timings; master audio; closes to black at the unit’s end",
    "applies": true,
-   "state": "PASS",
-   "instrument": "mechanics battery on the v58 bytes (headless Chrome, DOM-asserted)",
-   "evidence": "Stage rebuilt from the settled collection frame u4stage-f1: backdrop is the frame itself; curtains and valance are crops of the same frame (v2 files); no generated imagery remains in use. Battery: v2 srcs asserted, no v1 src present; stepped timeline verified via the ?rnT= hook (curtains fully parted at t=10, current word \"times\" painted — the v57 hook defect fixed; black opacity 0.67 at t=33); play/pause toggles; every belt part opens its decision entry in the table.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "state": "UNCHECKED",
+   "instrument": "mechanics battery on the v59 bytes (headless Chrome, DOM-asserted) + owner ruling 2026-11-03 ~14:58 EST",
+   "evidence": "Mechanics executed and passing: v2 srcs, stepped timeline via ?rnT= (curtains parted at t=10, word \"times\"), black close (opacity 0.67 at t=33), play/pause, belt parts open their table decisions. THE BOX STAYS UNCHECKED on the art: stage-fit DECIDED by owner — Unit 1's settled stage is the PAPER stage from its own collection frame \"The number lands\"; the current backdrop is Unit 4's red theater frame, withdrawn as Unit 1's stage. Render stage re-art owed to the assembly line, outside v59's scope.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   },
   {
    "id": "READER-SCORE",
    "label": "Screenshot reader seat: a non-builder reviewer scored every section of this page /100 from phone-width screenshots as a first-time reader (comprehension, navigation, symbol legibility); every section at 60 or above",
    "applies": true,
    "state": "UNCHECKED",
-   "instrument": "phone-width screenshot set + per-section reader scores, viewed by the deliverer (R14 seat)",
-   "evidence": "EXECUTED for the sections this build owns: LADDER 78/100 · RENDER 74/100 (verdicts + mistake list in build-record-v58.md; both at or above 60). NOT PASS page-wide: the standard requires EVERY section at 60+, and the sections v58 does not touch stand on byte-identical bytes scored 35 (top/health) · 40 (Tab 0) · 45 (Tab 1) in the 2026-11-03 reader review — their repair is outside this build's frozen scope. The box stays UNCHECKED until a full-page reader pass scores every section at 60+.",
-   "checked_at": "2026-11-03T14:07:36-0500"
+   "instrument": "playing-pass reader seat (R14, Order X: the PLAYING score governs), phone-width during-play screenshots viewed by the deliverer",
+   "evidence": "EXECUTED for the ladder as a PLAYING score: 74/100 (build-record-v59.md rounds 1-6; the v58 figure of 78 was STILLS-ONLY and is superseded). NOT PASS page-wide: the standard requires EVERY section at 60+, and the untouched sections stand on byte-identical bytes scored (STILLS-ONLY) 35 (top/health) · 40 (Tab 0) · 45 (Tab 1) in the 2026-11-03 reader review — frozen scope. The render stage carries no v59 playing score (mechanics battery-passed only). The box stays UNCHECKED until a full-page reader pass scores every section at 60+.",
+   "checked_at": "2026-11-03T14:59:00-05:00"
   }
  ]
 }
@@ -3824,6 +3861,9 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
  DT.forEach(function(e){DTBY[e.id]=e;});
  function dtStateWord(e){return e.state==='locked'?'🔒 LOCKED — settled; it cannot change':e.state.toUpperCase();}
  function dtShow(id){var e=DTBY[id];if(!e)return;
+  if(window.__dtPause)window.__dtPause();
+  document.querySelectorAll('.dt-chip.picked,.dt-strip-chip.picked').forEach(function(x){x.classList.remove('picked');});
+  document.querySelectorAll('.dt-chip[data-eid="'+id+'"],.dt-strip-chip[data-eid="'+id+'"]').forEach(function(x){x.classList.add('picked');});
   openPop(e.kindname+' · '+dtStateWord(e),e.title,
   '<img class="dt-pop-img" src="assets/tab2/'+e.source+'.webp" alt="">'+
   '<p><b>WHAT</b> — '+esc(e.what)+'</p>'+
@@ -3835,56 +3875,90 @@ document.querySelectorAll('.tbstep').forEach(function (b) {
  document.querySelectorAll('.dt-chip').forEach(function(b){b.addEventListener('click',function(ev){ev.stopPropagation();dtShow(b.getAttribute('data-eid'));});});
  var COLL={"u1": [{"img": "assets/tab2/u1p1-f1.webp", "title": "The number lands", "span": "0.6\u20133.4s", "status": "final", "notes": ["SCENE: 3.2 QUADRILLION bursts onto the paper stage. Nothing else exists yet \u2014 the scale arrives as a claim first.", "MOVE: Lights narrow: one building, alone."]}, {"img": "assets/tab2/u1p1-f2.webp", "title": "Google alone", "span": "4.0\u20136.7s", "status": "final", "notes": ["SCENE: One cardboard building under one spotlight \u2014 all of this processing is, first, one company's floor.", "MOVE: A year card drops: 2023. The building shrinks back."]}, {"img": "assets/tab2/u1p1-f3.webp", "title": "2023", "span": "7.7\u20139.2s", "status": "final", "notes": ["SCENE: Two years ago: the same building, smaller, the stage mostly empty space."]}, {"img": "assets/tab2/u1p1-f4.webp", "title": "2025", "span": "9.2\u201311.2s", "status": "final", "notes": ["SCENE: The stage crowded wall to wall \u2014 the 300\u00d7 growth reads as density, not as a number.", "NOTE: TIMING: this growth beat earns more frames in the album expansion; P3 gives it ~3.5s total."]}, {"img": "assets/tab2/u1p1-f5.webp", "title": "All public text ever", "span": "11.8\u201318.5s", "status": "final", "notes": ["SCENE: Every book, page and post humanity can read, folded into ONE mountain of written paper."]}, {"img": "assets/tab2/u1p1-f6.webp", "title": "A tenth", "span": "19.0\u201321.1s", "status": "final", "notes": ["SCENE: The mountain beside ONE month-building: the mountain is about a tenth of one month's flow. The comparison IS the frame.", "MOVE: Hold. 'Let me say that again' \u2014 the stage resets for the repeat."]}, {"img": "assets/tab2/u1p2-f1.webp", "title": "Say it again", "span": "22.4\u201323.1s", "status": "final", "notes": ["SCENE: The mountain alone, still. A breath before the repeat."]}, {"img": "assets/tab2/u1p2-f2.webp", "title": "TEN MONTHS", "span": "23.6\u201327.0s", "status": "final", "notes": ["SCENE: THE MONEY FRAME: the small mountain, and exactly TEN halls \u2014 two rows of five \u2014 each tagged 1 MONTH, under the golden 10\u00d7. Countable, not decorative."]}, {"img": "assets/tab2/u1p2-f3.webp", "title": "The repeat lands", "span": "27.0\u201329.0s", "status": "final", "notes": ["SCENE: Dark stage, the numeral huge and alone. The same fact, said again, bigger."]}, {"img": "assets/tab2/u1p2-f4.webp", "title": "The words circle", "span": "29.0\u201330.5s", "status": "final", "notes": ["SCENE: A ring of word-flags starts turning around the mountain \u2014 the same words, passing again and again."]}, {"img": "assets/tab2/u1p2-f5.webp", "title": "The circle closes", "span": "30.5\u201331.5s", "status": "final", "notes": ["SCENE: The ring now circles the mountain AND the ten halls together: every month, all public text, ten times over."]}, {"img": "assets/tab2/u1p2-f6.webp", "title": "The scale, complete", "span": "31.5\u201332.2s", "status": "final", "notes": ["SCENE: Numeral, mountain, halls, ring \u2014 the whole comparison in one held frame.", "MOVE: UNIT CHANGE: the stage darkens; a room lights up. Scale becomes work."]}], "u2": [{"img": "assets/tab2/u2chain-f1.webp", "title": "Beat 1 \u2014 the search", "span": "37.4\u201339.2s", "status": "ref", "notes": ["SCENE: Paper kitchen: she asks aloud and the answer card forms \u2014 she is USING the search. The toaster sits on the counter, plugged into the wall: present, ordinary.", "NOTE: REGENERATION: her use of the technology must read even clearer; keep the toaster seated, cord in the wall."]}, {"img": "assets/tab2/u2chain-f2.webp", "title": "The photograph", "span": "beat", "status": "ref", "notes": ["SCENE: The scene freezes into a paper photograph; the flash marks the beat. This image will live on the next room's wall.", "MOVE: ZOOM BACK: we land inside the NEXT room \u2014 this photo hangs behind the new scene."]}, {"img": "assets/tab2/u2chain-f3.webp", "title": "Beat 2 \u2014 voice to text", "span": "39.7\u201342.9s", "status": "ref", "notes": ["SCENE: The study: photo 1 pinned on the wall; the document unrolls and folds toward a summary.", "NOTE: OWNER FIXES: (1) the voice flows from the PERSON into the page \u2014 in this sheet it wrongly runs out of the toaster. (2) The diagram is THE SAME toaster \u2014 same size, same shape \u2014 drawn as a diagram, seated in the room, never floating."]}, {"img": "assets/tab2/u2chain-f4.webp", "title": "Beat 3 \u2014 read in another language", "span": "48.8\u201351.4s", "status": "ref", "notes": ["SCENE: Two photographs on the wall now; a sentence card crosses the room and is read in another language.", "NOTE: OWNER FIX: the crackling arcs are BANNED \u2014 electricity runs through the wire and around the heating elements, heat there only; nothing reaches toward a person. The garbled card text is replaced when the stream is composited from clean assets."]}, {"img": "assets/tab2/u2chain-f5.webp", "title": "The wall complete", "span": "51.4\u201357.0s", "status": "ref", "notes": ["SCENE: Three photographs in a row \u2014 the list, accumulated as evidence. The toaster beneath, quiet.", "NOTE: REGENERATION: the three photos must show the three DISTINCT scenes (this sheet repeats the kitchen)."]}, {"img": "assets/tab2/u2chain-f6.webp", "title": "Toward the panorama", "span": "58.3\u201363.1s", "status": "ref", "notes": ["SCENE: The wall opens toward the city: factories behind, word-cards streaming ahead. The panorama below is the finale's full reference."]}, {"img": "assets/tab2/u2pano.webp", "title": "THE PANORAMA", "span": "64.7\u201374.0s", "status": "ref", "notes": ["SCENE: THE FINALE REFERENCE: industrial civilization on the left, the wall of images as murals in the middle, rivers of words through the streets on the right \u2014 and a small toaster glowing in one far window.", "NOTE: FIX AT REGENERATION: the monument toaster's lightning becomes honest wiring \u2014 current in through the cable, around the elements, heat at the elements."]}], "u3": [{"img": "assets/tab2/u3p1-f1.webp", "title": "Written in sand", "span": "~74\u201376s", "status": "final", "notes": ["SCENE: 'What set this in motion?' \u2014 written in sand on the desk.", "NOTE: v1 SHEET: its baked notes and header times are placeholders; the clean pass removes them. Frame times in this chapter are allocations of the line spans."]}, {"img": "assets/tab2/u3p1-f2.webp", "title": "The wind", "span": "~76\u201378s", "status": "final", "notes": ["SCENE: A breath of wind crosses the desk; the sand sentence thins and scatters."]}, {"img": "assets/tab2/u3p1-f3.webp", "title": "The newspaper arrives", "span": "~78\u201380s", "status": "final", "notes": ["SCENE: A 2017 newspaper lands on the desk: ATTENTION IS ALL YOU NEED."]}, {"img": "assets/tab2/u3p1-f4.webp", "title": "The cut-out", "span": "~80\u201381s", "status": "final", "notes": ["SCENE: The headline is cut out of the paper."]}, {"img": "assets/tab2/u3p1-f5.webp", "title": "Pinned in the corner", "span": "~81s", "status": "final", "notes": ["SCENE: The cut-out is pinned in the corner of the desk \u2014 and STAYS for the whole unit. The lingering asset.", "MOVE: The newspaper is taken away; the story develops on the cleared desk."]}, {"img": "assets/tab2/u3p1-f6.webp", "title": "The desk, cleared", "span": "~81\u201382s", "status": "final", "notes": ["SCENE: Desk, dictionary, yarn \u2014 and the cut-out watching from its corner."]}, {"img": "assets/tab2/u3p2-f1.webp", "title": "The old dream", "span": "81.2\u201384s", "status": "final", "notes": ["SCENE: Dictionaries and phrase books: understanding language was a holy grail long before computers."]}, {"img": "assets/tab2/u3p2-f2.webp", "title": "Translation", "span": "84\u201386.5s", "status": "final", "notes": ["SCENE: A sentence carried across languages \u2014 the grail, in action."]}, {"img": "assets/tab2/u3p2-f3.webp", "title": "Predict the next word", "span": "86.5\u201390.7s", "status": "final", "notes": ["SCENE: The way in: guess the next word, and the patterns of language open up."]}, {"img": "assets/tab2/u3p2-f4.webp", "title": "The attention machine", "span": "90.7\u201394.5s", "status": "final", "notes": ["SCENE: Yarn and brass: threads run from each word back to the earlier words that matter. The architecture, as a machine."]}, {"img": "assets/tab2/u3p2-f5.webp", "title": "It learns", "span": "94.5\u2013101.2s", "status": "final", "notes": ["SCENE: The threads tighten into the right pattern \u2014 which earlier words mattered, learned from examples."]}, {"img": "assets/tab2/u3p2-f6.webp", "title": "The Transformer", "span": "101.2\u2013108.1s", "status": "final", "notes": ["SCENE: The machine complete, and named. At its edge a doorway of light opens: 'In this series\u2026' \u2014 the exit into Unit 4.", "MOVE: DOORWAY: through it, into the theater of Unit 4."]}, {"img": "assets/tab2/u3p3-f1.webp", "title": "The pieces stir", "span": "P15 finale", "status": "final", "notes": ["SCENE: Everything built on this desk begins to lift: pages, threads, word cards."]}, {"img": "assets/tab2/u3p3-f2.webp", "title": "The swirl", "span": "P15 finale", "status": "final", "notes": ["SCENE: The pieces spiral together above the table."]}, {"img": "assets/tab2/u3p3-f3.webp", "title": "The sphere forms", "span": "P15 finale", "status": "final", "notes": ["SCENE: Glass gathers at the center of the swirl \u2014 the model taking shape."]}, {"img": "assets/tab2/u3p3-f4.webp", "title": "Attention inside", "span": "P15 finale", "status": "final", "notes": ["SCENE: Inside the glass: the earlier words, joined by the bright web \u2014 attention, calculating."]}, {"img": "assets/tab2/u3p3-f5.webp", "title": "The next word", "span": "P15 finale", "status": "final", "notes": ["SCENE: One word comes OUT of the sphere, larger and brighter than everything inside: prediction, made visible.", "NOTE: This sheet invented the word CLARITY; the hero frame below does it with the sentence's own word \u2014 BANKS."]}, {"img": "assets/tab2/u3p3-f6.webp", "title": "The model, floating", "span": "P15 finale", "status": "final", "notes": ["SCENE: The sphere floats over the quiet desk; the cut-out still pinned in its corner. Unit 3 ends.", "MOVE: UNIT CHANGE: the desk dissolves into the theater doorway."]}, {"img": "assets/tab2/u3hero.webp", "title": "HERO \u2014 the model", "span": "finale", "status": "final", "notes": ["SCENE: The cleanest statement of the ending: 'The river overflowed its' streams in, the web churns inside the glass, and BANKS emerges radiant. Prime cut-out seed for the sphere."]}], "u4": [{"img": "assets/tab2/u4p1-f1.webp", "title": "The doorway", "span": "108.1\u2013110s", "status": "final", "notes": ["SCENE: Through the doorway of 'In this series': the theater again, a sentence standing on its stage."]}, {"img": "assets/tab2/u4p1-f2.webp", "title": "Prediction", "span": "110\u2013112s", "status": "final", "notes": ["SCENE: The sentence predicts itself: 'The river overflowed its\u2026' \u2014 and the next word glows before it lands: BANKS.", "NOTE: The word cards in this frame are jumbled; at composite time the sentence is rebuilt in order from the library."]}, {"img": "assets/tab2/u4p1-f3.webp", "title": "Words become instructions", "span": "112\u2013113.5s", "status": "final", "notes": ["SCENE: The word cards flip into INSTRUCTION cards: WRITE \u00b7 SUMMARIZE \u00b7 BUILD \u00b7 ANSWER."]}, {"img": "assets/tab2/u4p1-f4.webp", "title": "One agent works", "span": "113.5\u2013114.5s", "status": "final", "notes": ["SCENE: One figure takes an instruction off the line \u2014 and does it."]}, {"img": "assets/tab2/u4p1-f5.webp", "title": "Many agents", "span": "114.5\u2013115.5s", "status": "final", "notes": ["SCENE: The stage fills: figures working instructions in parallel."]}, {"img": "assets/tab2/u4p1-f6.webp", "title": "The workshop floor", "span": "115.5\u2013116.0s", "status": "final", "notes": ["SCENE: Prediction has become a floor of agentic systems, under the completed sentence.", "MOVE: The sentence stays overhead; below it, the decade passes \u2014 as tiles."]}, {"img": "assets/tab2/u4stage-f1.webp", "title": "The stage holds", "span": "116.0\u2013123.4s", "status": "final", "notes": ["SCENE: The invitation's vista: curtains, sunrise, the viewer's chair, the two promises \u2014 HOW TO USE IT \u00b7 HOW TO LIVE THROUGH IT. This scene PERSISTS; nothing in it changes."]}, {"img": "assets/tab2/u4stage-f2.webp", "title": "The tiles pass", "span": "\u22481s in A2", "status": "final", "notes": ["SCENE: TIMING LAW: the whole decade gets about ONE SECOND. Seven tiles streak through the held stage and are gone.", "NOTE: One tile in this picture misreads '2025 AGENTS' \u2014 the film's stream is composited from the seed tiles below, which are correct."]}, {"img": "assets/tab2/u4tiles.webp", "title": "The seven tiles \u2014 assets", "span": "assets", "status": "final", "notes": ["SCENE: Cut-outs in one family, made to be moved independently: 2017 the paper \u00b7 2019 the robot \u00b7 CODEX \u00b7 2022 CHATGPT \u00b7 CLI AGENTS the terminal \u00b7 2025 HOOKS the hook \u00b7 2026 AGI the sunrise."]}]};
  document.querySelectorAll('.t2b-coll').forEach(function(btn){btn.addEventListener('click',function(){
+   if(window.__dtPause)window.__dtPause();
    var frames=COLL[btn.getAttribute('data-coll')];
-   var rail='<div class="wl-frames">'+frames.map(function(f,i){return '<button class="wl-frame'+(i===0?' sel':'')+'" data-i="'+i+'"><img src="'+f.img+'" alt=""><span>'+esc(f.title)+' · '+esc(f.span)+'</span></button>';}).join('')+'</div><div class="wl-notes"></div>';
+   var rail='<div class="wl-frames">'+frames.map(function(f,i){return '<button class="wl-frame'+(i===0?' sel':'')+'" data-i="'+i+'"><img src="'+f.img+'" alt=""><span>'+esc(f.title)+' · '+esc(f.span)+'</span></button>';}).join('')+'</div><div class="wl-railmeta"><span class="wl-railcount"></span><span>slide the row sideways for every frame \u2192</span></div><div class="wl-notes"></div>';
    openPop('IMAGE COLLECTION',frames.length+' frames — tap a frame for its notes',rail);
    var notes=pop.querySelector('.wl-notes');
-   function show(i){var f=frames[i];notes.innerHTML='<p><b>'+esc(f.title)+'</b> · '+esc(f.span)+' · '+esc(f.status)+'</p>'+f.notes.map(function(n){return '<p>'+esc(n)+'</p>';}).join('');pop.querySelectorAll('.wl-frame').forEach(function(x,j){x.classList.toggle('sel',j===i);});}
+   function show(i){var f=frames[i];var rc=pop.querySelector('.wl-railcount');if(rc)rc.textContent='Frame '+(i+1)+' of '+frames.length;notes.innerHTML='<p><b>'+esc(f.title)+'</b> · '+esc(f.span)+' · '+esc(f.status)+'</p>'+f.notes.map(function(n){return '<p>'+esc(n)+'</p>';}).join('');pop.querySelectorAll('.wl-frame').forEach(function(x,j){x.classList.toggle('sel',j===i);});}
    pop.querySelectorAll('.wl-frame').forEach(function(x){x.addEventListener('click',function(){show(parseInt(x.getAttribute('data-i')));});});
    show(0);
  });});
- /* decision table: playback (real pause/resume) + the decision strip */
- var au=document.getElementById('wlAudio'),curUid=null,timer=null;
+ /* decision table: playback (real pause/resume) + the docked transport + the decision strip */
+ var au=document.getElementById('wlAudio'),curUid=null,timer=null,follow=true,dockOff=false;
  var stripW=document.getElementById('dtWord'),stripE=document.getElementById('dtStripEs'),stripT=document.getElementById('dtTime');
+ var bar=document.getElementById('dtbar'),barPlay=document.getElementById('dtbPlay'),barUnit=document.getElementById('dtbUnit'),barClock=document.getElementById('dtbClock'),barFill=document.getElementById('dtbProgFill'),barFollow=document.getElementById('dtbFollow');
+ var wrap=document.querySelector('.t2b-wrap'),mn=document.getElementById('main');
  var unitBtns={};document.querySelectorAll('.t2b-play').forEach(function(b){unitBtns[b.getAttribute('data-unit')]=b;});
+ var unitName={};document.querySelectorAll('.t2b-ch').forEach(function(ch){unitName[ch.id.replace('chapter-','')]=ch.querySelector('h3').textContent;});
+ function dtFmt(x){x=Math.max(0,Math.floor(x||0));return Math.floor(x/60)+':'+('0'+(x%60)).slice(-2);}
  function btnReset(u){if(unitBtns[u])unitBtns[u].textContent='▶ Play';}
+ function win(){var b=unitBtns[curUid];return [parseFloat(b.getAttribute('data-start')),parseFloat(b.getAttribute('data-end'))];}
+ function barSync(){if(!curUid)return;var w=win(),t=au.currentTime;
+  barPlay.textContent=au.paused?'▶':'❚❚';
+  barUnit.textContent=unitName[curUid];
+  barClock.textContent='Unit '+curUid.slice(1)+' · '+dtFmt(t-w[0])+' of '+dtFmt(w[1]-w[0])+' · '+(au.paused?'paused':'playing');
+  barFill.style.width=Math.max(0,Math.min(100,(t-w[0])/(w[1]-w[0])*100))+'%';
+  barFollow.classList.toggle('on',follow);barFollow.setAttribute('aria-pressed',follow?'true':'false');
+  barPlay.style.background=getComputedStyle(document.getElementById('chapter-'+curUid)).getPropertyValue('--uc');}
+ function barShow(){if(dockOff)return;bar.hidden=false;wrap.style.paddingBottom=(bar.offsetHeight+18)+'px';barSync();}
+ function barFit(){if(curUid&&!bar.hidden)wrap.style.paddingBottom=(bar.offsetHeight+18)+'px';}
+ function engage(){dockOff=false;barShow();}
+ window.__dtPause=function(){if(!au.paused){au.pause();if(curUid)btnReset(curUid);}barSync();};
  function stripShow(t,uid){
    var lad=document.querySelector('.wl[data-unit="'+uid+'"]');if(!lad)return;
    var act=null;lad.querySelectorAll('.wl-row').forEach(function(r){if(parseFloat(r.getAttribute('data-t'))<=t)act=r;});
-   if(!act)return;
-   stripW.textContent='“'+act.querySelector('.wl-w').textContent+'”';
+   if(!act){lad.querySelectorAll('.wl-row').forEach(function(r){if(!act&&parseFloat(r.getAttribute('data-t'))>t)act=r;});if(!act)return;}
+   stripW.textContent='\u201c'+act.querySelector('.wl-w').textContent+'\u201d';
    stripT.textContent=t.toFixed(1)+'s · Unit '+uid.slice(1);
    var es=DT.filter(function(e){return e.unit===uid&&e.t0<=t+0.001&&e.t1>=t-0.001;});
    if(!es.length){var at=parseFloat(act.getAttribute('data-t'));es=DT.filter(function(e){return e.unit===uid&&e.t0<=at+0.001;}).slice(-3);}
+   var skey=uid+'|'+(es.length?es.map(function(e){return e.id;}).join(','):'~');
+   if(skey!==stripShow._k){stripShow._k=skey;
    stripE.innerHTML=es.length?es.map(function(e){return '<button class="dt-strip-chip" data-eid="'+e.id+'"><img src="assets/tab2/'+e.source+'.webp" alt=""><span>'+esc(e.title)+'</span></button>';}).join(''):'<span class="dt-strip-none">No decision covers this moment yet.</span>';
    stripE.querySelectorAll('.dt-strip-chip').forEach(function(b){b.addEventListener('click',function(){dtShow(b.getAttribute('data-eid'));});});}
+   barFit();}
  function tick(){if(!curUid)return;var btn=unitBtns[curUid],end=parseFloat(btn.getAttribute('data-end')),t=au.currentTime;
-   if(t>=end){au.pause();btnReset(curUid);return;}
+   if(t>=end){au.pause();btnReset(curUid);barSync();return;}
    var lad=document.querySelector('.wl[data-unit="'+curUid+'"]'),act=null;
    lad.querySelectorAll('.wl-row').forEach(function(r){if(parseFloat(r.getAttribute('data-t'))<=t)act=r;});
    lad.querySelectorAll('.wl-row').forEach(function(r){r.classList.toggle('on',r===act);});
-   if(act&&!au.paused)act.scrollIntoView({block:'center',behavior:'smooth'});
-   stripShow(t,curUid);}
+   var tgt=act;if(!tgt&&follow){lad.querySelectorAll('.wl-row').forEach(function(r){if(!tgt&&parseFloat(r.getAttribute('data-t'))>t)tgt=r;});}
+   if(tgt&&follow){var _mnr=mn.getBoundingClientRect(),_rr=tgt.getBoundingClientRect(),_off=_rr.top+_rr.height/2-(_mnr.top+mn.clientHeight/2);
+   if(Math.abs(_off)>mn.clientHeight*0.7)tgt.scrollIntoView({block:'center',behavior:'auto'});
+   else if(!au.paused&&Math.abs(_off)>26)tgt.scrollIntoView({block:'center',behavior:'smooth'});}
+   stripShow(t,curUid);barSync();}
  function startTick(){if(timer)clearInterval(timer);timer=setInterval(tick,140);}
- au.addEventListener('pause',function(){if(timer){clearInterval(timer);timer=null;}});
+ au.addEventListener('pause',function(){if(timer){clearInterval(timer);timer=null;}if(curUid)btnReset(curUid);barSync();});
+ au.addEventListener('play',function(){if(curUid&&unitBtns[curUid])unitBtns[curUid].textContent='❚❚ Pause';barSync();});
  document.querySelectorAll('.t2b-play').forEach(function(btn){btn.addEventListener('click',function(){
    var uid=btn.getAttribute('data-unit'),start=parseFloat(btn.getAttribute('data-start')),end=parseFloat(btn.getAttribute('data-end'));
-   if(curUid===uid&&!au.paused){au.pause();btn.textContent='▶ Play';return;}
-   if(curUid===uid&&au.paused&&au.currentTime>=start-0.05&&au.currentTime<end){au.play();btn.textContent='❚❚ Pause';startTick();return;}
+   if(curUid===uid&&!au.paused){au.pause();btn.textContent='▶ Play';barSync();return;}
+   if(curUid===uid&&au.paused&&au.currentTime>=start-0.05&&au.currentTime<end){au.play();btn.textContent='❚❚ Pause';startTick();engage();return;}
    if(curUid&&curUid!==uid)btnReset(curUid);
-   curUid=uid;au.currentTime=start;au.play();btn.textContent='❚❚ Pause';startTick();stripShow(start,uid);
+   curUid=uid;follow=true;au.currentTime=start;au.play();btn.textContent='❚❚ Pause';startTick();engage();stripShow(start,uid);
  });});
  document.querySelectorAll('.t2b-restart').forEach(function(btn){btn.addEventListener('click',function(){
    var uid=btn.getAttribute('data-unit'),pb=unitBtns[uid],start=parseFloat(pb.getAttribute('data-start'));
    if(curUid&&curUid!==uid)btnReset(curUid);
-   curUid=uid;au.currentTime=start;au.play();pb.textContent='❚❚ Pause';startTick();stripShow(start,uid);
+   curUid=uid;follow=true;au.currentTime=start;au.play();pb.textContent='❚❚ Pause';startTick();engage();stripShow(start,uid);
  });});
+ barPlay.addEventListener('click',function(){if(curUid)unitBtns[curUid].click();});
+ document.getElementById('dtbRestart').addEventListener('click',function(){if(curUid)document.querySelector('.t2b-restart[data-unit="'+curUid+'"]').click();});
+ barFollow.addEventListener('click',function(){follow=!follow;
+   if(follow&&curUid){var lad=document.querySelector('.wl[data-unit="'+curUid+'"]'),act=lad?lad.querySelector('.wl-row.on'):null;if(act)act.scrollIntoView({block:'center',behavior:'smooth'});}
+   barSync();});
+ document.getElementById('dtbClose').addEventListener('click',function(){dockOff=true;bar.hidden=true;wrap.style.paddingBottom='';});
+ function userGrab(){if(follow&&curUid&&!au.paused){follow=false;barSync();}}
+ if(mn){mn.addEventListener('wheel',userGrab,{passive:true});mn.addEventListener('touchmove',userGrab,{passive:true});}
+ document.querySelectorAll('.dt-idx').forEach(function(a){a.addEventListener('click',userGrab);});
+ window.addEventListener('resize',barFit);
  document.querySelectorAll('.wl-row').forEach(function(r){r.addEventListener('click',function(){
    var lad=r.closest('.wl'),uid=lad.getAttribute('data-unit'),t=parseFloat(r.getAttribute('data-t'));
    if(curUid&&curUid!==uid){btnReset(curUid);au.pause();}
    curUid=uid;au.currentTime=t;if(au.paused)btnReset(uid);
    lad.querySelectorAll('.wl-row').forEach(function(x){x.classList.toggle('on',x===r);});
-   stripShow(t,uid);
+   engage();stripShow(t,uid);barSync();
  });});
  /* render stage */
  var U1W=[[0.56, "3.2"], [1.14, "quadrillion"], [1.82, "tokens"], [2.24, "processed"], [2.76, "every"], [2.99, "month"], [4.015, "And"], [4.1, "that"], [4.215, "is"], [4.36, "Google"], [4.62, "alone"], [5.53, "by"], [5.6, "Google's"], [5.945, "own"], [6.22, "count"], [7.673, "Its"], [7.8, "monthly"], [8.0, "processing"], [8.533, "grew"], [8.78, "by"], [8.853, "more"], [9.12, "than"], [9.28, "300"], [9.7, "times"], [10.3, "in"], [10.58, "two"], [10.74, "years"], [11.758, "To"], [11.8, "understand"], [12.16, "the"], [12.273, "scale"], [12.88, "consider"], [13.073, "this"], [14.013, "the"], [14.08, "usable"], [14.278, "public"], [14.7, "text"], [15.06, "written"], [15.298, "by"], [15.388, "people"], [15.8, "is"], [16.1, "estimated"], [16.52, "at"], [16.72, "300"], [17.1, "trillion"], [17.7, "tokens"], [18.998, "That's"], [19.14, "about"], [19.178, "a"], [19.4, "tenth"], [19.68, "of"], [19.96, "Google's"], [20.288, "monthly"], [20.578, "volume"], [22.428, "Let"], [22.5, "me"], [22.56, "say"], [22.7, "that"], [22.84, "again"], [23.628, "Every"], [23.8, "month"], [24.42, "Google"], [24.558, "alone"], [25.08, "processes"], [25.553, "more"], [25.94, "than"], [25.998, "ten"], [26.203, "times"], [26.84, "the"], [26.98, "estimated"], [27.34, "usable"], [27.72, "public"], [28.1, "text"], [28.42, "written"], [28.7, "by"], [28.778, "people"], [29.803, "the"], [29.86, "same"], [30.08, "words"], [30.42, "passing"], [30.92, "through"], [31.16, "again"], [31.66, "and"], [31.88, "again"]];
