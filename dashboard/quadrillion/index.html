@@ -332,7 +332,7 @@ details.rv-ud>summary::after{content:" — tap to open";font-weight:400;color:va
 details.rv-intro120>summary{padding:2px 0;font-size:16.5px}
 </style>
 <style id="v124-frames">
-#rnBallW{position:absolute;left:38.00%;top:56.30%;width:24.00%;aspect-ratio:1/1;z-index:3;transform-origin:50% 90%;opacity:0;pointer-events:none}
+#rnBallW{position:absolute;left:44.00%;top:69.47%;width:12.00%;aspect-ratio:1/1;z-index:3;transform-origin:50% 90%;opacity:0;pointer-events:none}
 #rnBallW img{position:absolute;inset:0;width:100%;height:100%}
 #rnD32G{position:absolute;left:30.50%;top:18.06%;width:41.50%;z-index:5;opacity:0;pointer-events:none;transform-origin:50% 82%}
 #rnD32G img{width:100%;display:block}
@@ -4447,53 +4447,53 @@ function rnSkinRoll(){ if(rnSkinMode!=='random') return; rnSkinPick.boom=Math.fl
   window.addEventListener('DOMContentLoaded', function(){ if(elBallW) rnBallImgs=elBallW.querySelectorAll('img'); if(elBoom) elBoomImg=elBoom.querySelector('img'); if(elBand) elBandImg=elBand.querySelector('img'); rnApplySkins(); });
  })();
 function rnPose(t){
-   var g = t<1.50 ? 0.90 : (t<1.66 ? 0.90+0.20*rnQO((t-1.50)/0.16) : 1+0.10*Math.exp(-(t-1.66)/0.06)),
+   var g = t<0.56 ? 0.90 : (t<0.72 ? 0.90+0.20*rnQO((t-0.56)/0.16) : 1+0.10*Math.exp(-(t-0.72)/0.06)),
        exP=t<=3.42?0:(t>=4.3?1:Math.min(1,(t-3.42)/0.88)),
-       opC=t<1.50?'0':String(Math.min(1,(t-1.50)/0.02)*(1-exP)), gs=g*(1-0.06*exP), ey=Math.round(6*exP), stP=t<2.24?0:(t>=2.32?1:1-Math.pow(1-(t-2.24)/0.08,3)), stD=Math.round(30*stP)/10, stS=1-0.01*stP;
+       opC=t<0.56?'0':String(Math.min(1,(t-0.56)/0.02)*(1-exP)), gs=g*(1-0.06*exP), ey=Math.round(6*exP), stP=t<2.24?0:(t>=2.32?1:1-Math.pow(1-(t-2.24)/0.08,3)), stD=Math.round(30*stP)/10, stS=1-0.01*stP;
    elD3.style.opacity=opC; elD3.style.transform='scale('+gs.toFixed(3)+')'; elD3.style.translate='0 '+ey+'px';
-   var pd=(t-1.89)/0.17, sd;
+   var pd=(t-0.95)/0.17, sd;
    if(pd<=0)sd=1; else if(pd>=1)sd=1; else sd=pd<0.6?(1+(pd/0.6)*0.05):1.05-0.05*((pd-0.6)/0.4);
    elDot.style.opacity=opC;
    elDot.style.transform='scale('+(gs*sd).toFixed(3)+') translateY('+((pd>0&&pd<1)?(-3*Math.sin(pd*Math.PI)).toFixed(1):0)+'px)'; elDot.style.translate='0 '+ey+'px';
    elD2.style.opacity=opC; elD2.style.transform='scale('+gs.toFixed(3)+')'; elD2.style.translate='0 '+ey+'px';
    elBand.style.opacity=opC;
-   elBand.style.transform='translateY('+(Math.round(18*(1-rnQO(Math.max(0,Math.min(1,(t-1.55)/0.44)))))+ey+stD)+'px) scale('+(gs*stS).toFixed(3)+')';
-   if(elBallW){ var bImg=t<1.30?0:(t<1.44?1:(t<1.52?2:(t<1.60?3:(t<1.69?4:(t<1.79?5:(t<1.90?6:(t<2.02?7:8)))))));
-     var bSc=t<0.56?1:(t<1.44?1+1.2*rnQO((t-0.56)/0.88):(t<2.05?2.2+0.7*rnQO((t-1.44)/0.61):2.9));
-     var bOp=t<2.05?1:Math.max(0,1-(t-2.05)/0.30);
-     elBallW.style.opacity=bOp.toFixed(3); elBallW.style.transform='scale('+bSc.toFixed(3)+')'; elBallW.style.display=t>=2.35?'none':'';
+   elBand.style.transform='translateY('+(Math.round(18*(1-rnQO(Math.max(0,Math.min(1,(t-0.61)/0.44)))))+ey+stD)+'px) scale('+(gs*stS).toFixed(3)+')';
+   if(elBallW){ var bImg=t<0.36?0:(t<0.50?1:(t<0.58?2:(t<0.66?3:(t<0.75?4:(t<0.85?5:(t<0.96?6:(t<1.08?7:8)))))));
+     var bSc=t<0.56?1:(t<1.17?1+0.7*rnQO((t-0.56)/0.61):1.7); /* v131 INTERIM (owner, 2026-11-05 21:42): NO pre-burst growth — the ball's size is constant at its small seat until the burst at 0.56s; only the explosion's own coded ramp (0.7 over 0.61s) survives, re-based from 1.0; the fade follows the ramp end exactly as the old block's did */
+     var bOp=t<1.17?1:Math.max(0,1-(t-1.17)/0.30);
+     elBallW.style.opacity=bOp.toFixed(3); elBallW.style.transform='scale('+bSc.toFixed(3)+')'; elBallW.style.display=t>=1.47?'none':'';
      for(var bci=0;bci<rnBallImgs.length;bci++) rnBallImgs[bci].style.display=bci===bImg?'':'none'; }
    if(elD32G&&rnSkinPick.digits===1){ elD32G.style.opacity=opC; elD32G.style.transform='scale('+gs.toFixed(3)+')'; elD32G.style.translate='0 '+ey+'px'; }
    var gb, bo2, hole=0;
-   if(t<1.50){ gb=0.22; bo2=0; }
-   else if(t<=2.10){ var gp=(t-1.50)/0.60, gg=gp>=1?1:1-Math.pow(2,-10*gp); gb=0.22+0.78*gg; bo2=RN_CAP*Math.min(1,(t-1.50)/0.25); }
-   else if(t<2.76){ var bq2=(t-2.10)/0.66; gb=1+0.03*bq2; bo2=RN_CAP; hole=30*bq2; }
-   else if(t<3.42){ gb=1.03; bo2=RN_CAP*(1-(t-2.76)/0.66); hole=30; }
+   if(t<0.56){ gb=0.22; bo2=0; }
+   else if(t<=1.16){ var gp=(t-0.56)/0.60, gg=gp>=1?1:1-Math.pow(2,-10*gp); gb=0.22+0.78*gg; bo2=RN_CAP*Math.min(1,(t-0.56)/0.25); }
+   else if(t<1.82){ var bq2=(t-1.16)/0.66; gb=1+0.03*bq2; bo2=RN_CAP; hole=30*bq2; }
+   else if(t<2.48){ gb=1.03; bo2=RN_CAP*(1-(t-1.82)/0.66); hole=30; }
    else { gb=1.03; bo2=0; hole=30; }
    elBoom.style.opacity=String(bo2.toFixed(3));
    elBoom.style.transform='scale('+gb.toFixed(3)+')';
    var mk='radial-gradient(circle at 50% 50%, transparent 0%, transparent '+hole.toFixed(1)+'%, black '+(hole+22).toFixed(1)+'%, black 100%)';
    elBoom.style.webkitMaskImage=mk; elBoom.style.maskImage=mk;
    for(var si=0;si<RN_SH.length;si++){ var S=RN_SH[si], sim=rnShards[si]; if(!sim)continue;
-     if(t<1.50||t>2.60){ sim.style.opacity='0'; continue; }
-     var fe=rnQO(Math.max(0,Math.min(1,(t-1.50)/0.50)));
+     if(t<0.56||t>1.66){ sim.style.opacity='0'; continue; }
+     var fe=rnQO(Math.max(0,Math.min(1,(t-0.56)/0.50)));
      var cx=808+(S[0]-808)*fe, cy=871+(S[1]-871)*fe;
-     if(t>2.00){ var fq=Math.min(1,(t-2.00)/0.60); cy+=S[6]*fq*fq*fq; }
-     var ss=0.55+0.45*rnQO(Math.max(0,Math.min(1,(t-1.50)/0.18)));
-     var so=t<1.56?(t-1.50)/0.06:(t>2.20?Math.max(0,(2.50-t)/0.30):1); /* v113 CURE: fade completes 1.85s, as the explosion ends (owner screenshot #15; issue I-2) */ /* v112: the shards END WITH THE EXPLOSION (owner, screenshot 15: they must disappear when the explosion finishes — they were lingering to 2.99s, still rotating in place): fade 1.70-2.30s, gone as the smoke recedes; the computed model always said the smoke swallows them at its peak */
+     if(t>1.06){ var fq=Math.min(1,(t-1.06)/0.60); cy+=S[6]*fq*fq*fq; }
+     var ss=0.55+0.45*rnQO(Math.max(0,Math.min(1,(t-0.56)/0.18)));
+     var so=t<0.62?(t-0.56)/0.06:(t>1.26?Math.max(0,(1.56-t)/0.30):1); /* v113 CURE: fade completes 1.85s, as the explosion ends (owner screenshot #15; issue I-2) */ /* v112: the shards END WITH THE EXPLOSION (owner, screenshot 15: they must disappear when the explosion finishes — they were lingering to 2.99s, still rotating in place): fade 1.70-2.30s, gone as the smoke recedes; the computed model always said the smoke swallows them at its peak */ /* v131 INTERIM: the whole shard beat rides the -0.94s un-shift with the burst (anchors above are the v112/v113 anchors minus 0.94) */
      sim.style.opacity=so.toFixed(3);
      sim.style.left=((cx-S[4]-S[2]/2)/16.16).toFixed(3)+'%';
      sim.style.top=((cy-S[5]-S[3]/2)/14.72).toFixed(3)+'%';
-     sim.style.transform='rotate('+(S[7]*Math.min(t,2.20)-S[7]*1.50).toFixed(1)+'deg) scale('+ss.toFixed(3)+')'; /* rotation freezes as the fade begins — no spinning in place */
+     sim.style.transform='rotate('+(S[7]*Math.min(t,1.26)-S[7]*0.56).toFixed(1)+'deg) scale('+ss.toFixed(3)+')'; /* rotation freezes as the fade begins — no spinning in place */
    }
    for(var bi=0;bi<2;bi++){ var bx=rnBoxes[bi]; if(!bx)continue; var B=RN_BOX[bi];
-     if(t>=2.02){ bx.style.opacity='0'; continue; }
+     if(t>=1.08){ bx.style.opacity='0'; continue; }
      var dx=0, dy=0, rot=0, bo=1;
-     if(t>1.52){ var bq=Math.min(1,(t-1.52)/0.50);
+     if(t>0.58){ var bq=Math.min(1,(t-0.58)/0.50);
        dx=(bi===0?-560:560)*rnQO(bq);
-       dy=-18*rnQO(Math.min(1,(t-1.52)/0.15))+46*bq*bq*bq;
+       dy=-18*rnQO(Math.min(1,(t-0.58)/0.15))+46*bq*bq*bq;
        rot=-70*bq;
-       if(t>1.82)bo=Math.max(0,1-(t-1.82)/0.20);
+       if(t>0.88)bo=Math.max(0,1-(t-0.88)/0.20);
      }
      bx.style.opacity=bo.toFixed(3);
      bx.style.left=((B[0]+dx)/16.16).toFixed(3)+'%';
@@ -4505,17 +4505,17 @@ function rnPose(t){
    elSign.style.transform='translateY('+Math.round(-5*(1-ps))+'px) rotate('+(-6+4*ps).toFixed(2)+'deg) scale('+(1.08-0.08*ps).toFixed(3)+')';
    var rwc=rnWordAt(t); rbClock.textContent=(rwc?('the word \u201c'+rwc+'\u201d'):'before the first word')+' \u00b7 '+rnFmt(t)+' of '+rnFmt(RT1);
    rbScrub.value=t; rntPoseBelt(t); frPose(t); rnSkinWas=rnPlaying;
-   var ph=t<1.38?(t-1.50):(t<1.50?-0.12:(t-1.62)); /* v73: the stir FREEZES across the anticipation beat (0.44-0.56s) — the stage-beat row */ /* the stir’s phase stays anchored at the beat’s first word (0.56s), so the poses inside the claim beat render exactly as built; the same stir runs on for the unit’s whole length */
+   var ph=t<0.44?(t-0.56):(t<0.56?-0.12:(t-0.68)); /* v73: the stir FREEZES across the anticipation beat (0.44-0.56s) — the stage-beat row */ /* the stir’s phase stays anchored at the beat’s first word (0.56s), so the poses inside the claim beat render exactly as built; the same stir runs on for the unit’s whole length */ /* v131 INTERIM: anchors restored to the un-shifted beat the v73 comments always described (v125 had moved the code to 1.38/1.50/1.62 without updating the comments) */
    elCurL.style.transform='rotate('+(0.7*Math.sin(ph*6.2832/3.7)).toFixed(2)+'deg) translate('+(3*Math.sin(ph*6.2832/3.7-0.6)).toFixed(1)+'px,'+(1.2*Math.sin(ph*6.2832/2.9)).toFixed(1)+'px)';
    elCurR.style.transform='rotate('+(-0.6*Math.sin(ph*6.2832/4.3+1.2)).toFixed(2)+'deg) translate('+(-3*Math.sin(ph*6.2832/4.3+0.5)).toFixed(1)+'px,'+(1.6*Math.sin(ph*6.2832/3.1+0.8)).toFixed(1)+'px)';
-   if(elFlash){ if(t<1.50||t>=1.64){ elFlash.style.opacity='0'; } else if(t<1.52){ elFlash.style.opacity=(0.85*(t-1.50)/0.02).toFixed(3); } else { var fp=(t-1.52)/0.12; elFlash.style.opacity=(0.85*(1-fp)*(1-fp)).toFixed(3); }
-     elFlash.style.transform='scale('+(0.30+0.85*rnQO(Math.max(0,Math.min(1,(t-1.50)/0.14)))).toFixed(3)+')'; }
-   if(elRing){ if(t<1.50||t>=1.99){ elRing.style.opacity='0'; } else { var rp=(t-1.50)/0.49, rg=rp>=1?1:1-Math.pow(2,-10*rp);
+   if(elFlash){ if(t<0.56||t>=0.70){ elFlash.style.opacity='0'; } else if(t<0.58){ elFlash.style.opacity=(0.85*(t-0.56)/0.02).toFixed(3); } else { var fp=(t-0.58)/0.12; elFlash.style.opacity=(0.85*(1-fp)*(1-fp)).toFixed(3); }
+     elFlash.style.transform='scale('+(0.30+0.85*rnQO(Math.max(0,Math.min(1,(t-0.56)/0.14)))).toFixed(3)+')'; }
+   if(elRing){ if(t<0.56||t>=1.05){ elRing.style.opacity='0'; } else { var rp=(t-0.56)/0.49, rg=rp>=1?1:1-Math.pow(2,-10*rp);
        elRing.style.opacity=(0.50*(1-rp)*(1-rp)).toFixed(3);
        elRing.style.transform='scale('+(0.122+0.878*rg).toFixed(3)+')';
        elRing.style.setProperty('--band',(7-5.5*rp).toFixed(2)+'%'); } }
-   var sAnt=1, sBri=1; if(t>1.38&&t<1.50){ var ap=(t-1.38)/0.12, ssA=ap*ap*(3-2*ap); sAnt=1-0.03*ssA; sBri=1-0.07*ssA; } /* v74: the breath deepens (0.985 -> 0.970) and gains the held-breath light dip (to 0.93) — row u1-p1-stage-beat */
-   var shX=0, shY=0; if(t>=1.50&&t<1.71){ var sdt=t-1.50; shX=rnShakeL(RN_SHX,sdt); shY=rnShakeL(RN_SHY,sdt); }
+   var sAnt=1, sBri=1; if(t>0.44&&t<0.56){ var ap=(t-0.44)/0.12, ssA=ap*ap*(3-2*ap); sAnt=1-0.03*ssA; sBri=1-0.07*ssA; } /* v74: the breath deepens (0.985 -> 0.970) and gains the held-breath light dip (to 0.93) — row u1-p1-stage-beat */
+   var shX=0, shY=0; if(t>=0.56&&t<0.77){ var sdt=t-0.56; shX=rnShakeL(RN_SHX,sdt); shY=rnShakeL(RN_SHY,sdt); }
    stage.style.transform=((sAnt<1)?'scale('+sAnt.toFixed(4)+') ':'')+((shX||shY)?'translate('+shX.toFixed(1)+'px,'+shY.toFixed(1)+'px)':'');
        stage.style.filter=(sBri<1)?'brightness('+sBri.toFixed(3)+')':'';
    if(elTok){ var tkO=0, tkY=-6, tkS=0.96; /* v73: the tokens word-object — settle-in on its word, the hold, out as the stamp lands (row u1-p1-tokens-object) */
