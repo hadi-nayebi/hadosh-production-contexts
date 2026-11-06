@@ -4566,9 +4566,9 @@ function rnPose(t){
    elBand.style.opacity=opC;
    elBand.style.transform='translate('+(0.8*jrem+(1-g)*(-0.5)).toFixed(1)+'px,'+(75.1*jrem+(1-g)*32.2+bY+ey+stD).toFixed(1)+'px) scale('+(gs*stS).toFixed(3)+')';
    if(elBallW){ var bImg=t<0.36?0:(t<0.50?1:(t<0.58?2:(t<0.66?3:(t<0.75?4:(t<0.85?5:(t<0.96?6:(t<1.08?7:8)))))));
-     var bSc=t<0.56?1:(t<1.17?1+0.7*rnQO((t-0.56)/0.61):1.7); /* v131 INTERIM (owner, 2026-11-05 21:42): NO pre-burst growth — the ball's size is constant at its small seat until the burst at 0.56s; only the explosion's own coded ramp (0.7 over 0.61s) survives, re-based from 1.0; the fade follows the ramp end exactly as the old block's did */
-     var bOp=t<1.17?1:Math.max(0,1-(t-1.17)/0.30);
-     elBallW.style.opacity=bOp.toFixed(3); elBallW.style.transform='scale('+bSc.toFixed(3)+')'; elBallW.style.display=t>=1.47?'none':'';
+     var bSc=1; /* v145 FIX3 (top-10 #3; diagnosis top10/fix3-diagnosis.md §RULINGS R-F3-1/2/3): the v131 interim's retained 0.7 swell ramp is DELETED, not re-based — the ball bursts at its small size and never grows; the growth belongs to the explosion's own movers (fix #2 carries it at contract size). bSc is identically 1.0 at every t */
+     var bOp=t<0.60?1:(t<0.70?(0.70-t)/0.10:0); /* v145 FIX3 (R-F3-3): full opacity held to 0.60s, then a LINEAR fade to 0 at 0.70s — the ball is gone by ~0.7s (scoreboard v3 husk cure), its mass handed to the shards; replaces the 1.17/1.47 anchors */
+     elBallW.style.opacity=bOp.toFixed(3); elBallW.style.transform='scale('+bSc.toFixed(3)+')'; elBallW.style.display=t>=0.70?'none':'';
      for(var bci=0;bci<rnBallImgs.length;bci++) rnBallImgs[bci].style.display=bci===bImg?'':'none'; }
    if(elD32G&&rnSkinPick.digits===1){ elD32G.style.opacity=opC; elD32G.style.transform='scale('+gs.toFixed(3)+')'; elD32G.style.translate=(-3.9*jrem+(1-g)*(-0.4)).toFixed(1)+'px '+(137.5*jrem+(1-g)*(-29.2)+ey).toFixed(1)+'px'; }
    var gb, bo2, hole=0;
