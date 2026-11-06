@@ -2874,7 +2874,7 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
 /* v61: the live HTML stage — Unit 1’s own paper stage + the generated claim assets */
 .rn-stage{aspect-ratio:1616/1472;background:#171310}
 .rn-wall{cursor:pointer}
-.rn-el{position:absolute;background:none;border:none;padding:0;margin:0;cursor:pointer;line-height:0;text-align:left}
+.rn-el{position:absolute;background:none;border:none;padding:0;margin:0;pointer-events:none;line-height:0;text-align:left} /* v148 PLAYERFIX (R-P-1a): stage elements are presentation only — pointer-events:none as a class, never decision buttons; decision records live on the labelled timeline/Assets surfaces */
 .rn-el img{width:100%;height:auto;display:block}
 .rn-band{left:31.64%;top:39.47%;width:37.12%;z-index:4;transform-origin:49.45% 14.27%}
 .rn-d3{left:27.04%;top:20.22%;width:25.68%;z-index:5;transform-origin:89.40% 81.93%}
@@ -2896,7 +2896,7 @@ document.getElementById('t1vclone').addEventListener('click', function () { t1Vo
 .rn-blk1{left:24.35%;top:69.63%;width:10.15%}.rn-blk2{left:31.90%;top:69.19%;width:11.01%}.rn-blk3{left:40.13%;top:69.19%;width:11.01%}.rn-blk4{left:49.05%;top:68.97%;width:11.41%}.rn-hclip{position:absolute;overflow:hidden}.rn-hclip img{width:100%;height:auto;display:block}.rn-hb{left:44.60%;top:74.75%;width:52.00%;z-index:2} /* v111: during the finale (t>=29.80) both halls layers are re-seated by the pose to the stepped-down standing seat (left 50.68% · top 22.72% · width 40%) — see the halls pose */.rn-hf{left:44.60%;top:74.75%;width:52.00%;z-index:3}.rn-ring2{left:13.11%;top:44.07%;width:73.78%;z-index:1;transform-origin:50% 100%;opacity:0}
 .rn-veil{position:absolute;left:0;top:0;width:100%;height:100%;background:#000;z-index:9;opacity:0;pointer-events:none}
 .rn-flat{left:9.46%;top:13.12%;width:85.24%;z-index:11;opacity:0}.rn-toast{left:57.35%;top:51.65%;width:34.60%;z-index:3;transform-origin:50% 100%;opacity:0}.rn-tagw{position:absolute;width:7.0%;z-index:6;opacity:0;pointer-events:none}.rn-tagw img{width:100%;height:auto;display:block}.rn-tok{z-index:3;opacity:0}.rn-shards{position:absolute;inset:0;z-index:2;pointer-events:none}.rn-shard{position:absolute;pointer-events:auto;cursor:pointer;opacity:0}.rn-box{z-index:9} /* v113 CURE: the side boxes stand IN FRONT of the curtains (owner order 2026-11-05; curtains z8) */
-.rn-play{z-index:9}
+.rn-play{z-index:40} /* v148 PLAYERFIX (R-P-1c): the play control is fenced above every stage layer (max z 11) and below the popup (#wlPop z 90) */
 .rn-bar{position:fixed;left:0;right:0;bottom:0;z-index:66;background:rgba(10,14,22,.97);border-top:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
 .rn-bar[hidden]{display:none}
 .rnb-in{max-width:560px;margin:0 auto}
@@ -4552,6 +4552,15 @@ function rnSkinRoll(){ if(rnSkinMode!=='random') return; rnSkinPick.boom=Math.fl
   ['play','rbPlay','frPlayBtn','frOv'].forEach(function(id){ var n=document.getElementById(id); if(n) n.addEventListener('click', gate); });
   window.addEventListener('DOMContentLoaded', function(){ if(elBallW) rnBallImgs=elBallW.querySelectorAll('img'); if(elBoom) elBoomImg=elBoom.querySelector('img'); if(elBand) elBandImg=elBand.querySelector('img'); rnApplySkins(); });
  })();
+var rnPosed=null;
+function rnHitLaw(){ /* v148 PLAYERFIX (R-P-1b): the hit-test law — an element at opacity ~0 is never hittable; enforced here, by the same code that sets the opacity, at the end of every rnPose */
+  if(!rnPosed){ rnPosed=[];
+    [elD3,elDot,elD2,elBand,elBallW,elD32G,elBoom,elSign,elFlash,elRing,elTok,elCalF,elCalT,elStamp,elSeal,elMtn,elBan,elHallsB,elHallsF,elRib,elRing2,elToast,elPile,elVeil,elFlat,elBld,elCity,elB23,elB25].forEach(function(e){ if(e) rnPosed.push(e); });
+    [rnShards,rnBoxes,rnTags,rnHalls1].forEach(function(a){ if(a) a.forEach(function(e){ if(e) rnPosed.push(e); }); });
+    ['rnGWord','rnSegSvg','rnStk1','rnStk2','rnStk3','rnStk4','rnStk5','rnStk6','rnBlk1','rnBlk2','rnBlk3','rnBlk4'].forEach(function(id){ var e=document.getElementById(id); if(e) rnPosed.push(e); });
+  }
+  for(var i=0;i<rnPosed.length;i++){ var e=rnPosed[i], os=e.style.opacity; if(os==='') continue; var want=(parseFloat(os)>0.02&&e.style.display!=='none')?'':'none'; if(e.style.pointerEvents!==want) e.style.pointerEvents=want; }
+}
 function rnPose(t){
    var f1x=(t<20.68)?1:(t>=21.08?0:1-rnIO((t-20.68)/0.40)), f1p=(t<23.63||t>=27.00)?0:(t<24.03?rnIO((t-23.63)/0.40):(t<=26.60?1:1-rnIO((t-26.60)/0.40))); /* v143 FIX1 shared factors (top10/fix1-diagnosis.md §RULINGS): f1x = the comparison tableau’s exit fade 20.68–21.08 (R-F4); f1p = the TEN MONTHS portrait’s fade — in 23.63–24.03, hold, out 26.60–27.00 (R-F4) */
    var tau=Math.max(0,t-0.56), spd=tau>0?1-Math.exp(-7.645*tau)*(Math.cos(11.609*tau)+0.6585*Math.sin(11.609*tau)):0, g=0.25+0.75*spd, jrem=tau>0?(1+13.9*tau)*Math.exp(-13.9*tau):1, bY=t<1.14?-16.4*(1-jrem):(t<1.264?-16.4*(1-Math.pow((t-1.14)/0.1237,2)):(t<1.82?11.37*Math.exp(-13.5*(t-1.264))*Math.sin(23.38*(t-1.264)):0)), /* v135 D1: the claim is born at the burst point — scale spring zeta=0.55 wn=13.9 (sheet S6 inversion on the live 1.14 deadline), position critically damped at the same wn, band hover/fall/settle per sheet S7 */
@@ -4677,6 +4686,7 @@ function rnPose(t){
    var elSegSvg=document.getElementById('rnSegSvg'); if(elSegSvg){ var cvO=0, cvP=0, arP=0; if(t>=8.98&&t<12.95){ cvO=segFade; var cq=Math.min(1,Math.max(0,(t-8.98)/0.60)); cvP=(Math.exp(1.2*cq)-1)/(Math.exp(1.2)-1); arP=Math.min(1,Math.max(0,(t-8.98)/1.55)); } elSegSvg.style.zIndex=segZ; elSegSvg.style.opacity=cvO.toFixed(3); var cpEl=document.getElementById('rnCurvePath'); if(cpEl) cpEl.style.strokeDashoffset=(100*(1-cvP)).toFixed(2); var apEl=document.getElementById('rnArrowPath'); if(apEl) apEl.style.strokeDashoffset=(100*(1-arP)).toFixed(2); var chEl=document.getElementById('rnCurveHead'); if(chEl) chEl.style.opacity=(cvP>=0.99?cvO:0).toFixed(3); var ahEl=document.getElementById('rnArrowHead'); if(ahEl) ahEl.style.opacity=(arP>=0.99?cvO:0).toFixed(3); } /* E5 curve: pose-driven dash draw 8.98-9.58, exponential in shape (y ~ e^3u along the rise) and in time (draw profile (e^1.2q-1)/(e^1.2-1): ~40% of the length drawn by 55% of the window, slow along the floor then accelerating up the rise). E9 time arrow: same SVG, draws evenly 8.98-10.53 along the platform front. Arrowheads appear only when their draw completes. */
    var stkW=[[9.58,-268],[9.71,-268],[9.84,-268],[9.97,-202],[10.10,-202],[10.23,-136]]; for(var si=1;si<=6;si++){ var stkEl=document.getElementById('rnStk'+si); if(!stkEl) continue; var sO=0, sY=stkW[si-1][1], sS=1; var wa=stkW[si-1][0]; if(t>=wa&&t<12.95){ sO=segFade; var sq=(t-wa)/0.30; if(sq<1){ sY=stkW[si-1][1]*(1-sq*sq*sq); } else { sY=0; var su=(t-wa-0.30)/0.06; if(su<1) sS=1-0.02*Math.sin(Math.PI*su); } } stkEl.style.zIndex=segZ; stkEl.style.opacity=sO.toFixed(3); stkEl.style.transform='translateY('+sY.toFixed(1)+'px) scale('+sS.toFixed(3)+')'; } /* E6 — the stack (sketch step 3): six copies of the building file, 3-2-1, each a cubic-in gravity fall of 0.30s from above the frame on a vertical path, staggered 0.13s, landing with a 0.06s paper-thud settle (scale 1.00->0.98->1.00, base pinned); every landed piece stands — drawn base on the floor or on the roofs below — until the group fade */
    var blkW=[10.59,10.73,10.87,11.01]; for(var bi=1;bi<=4;bi++){ var blkEl=document.getElementById('rnBlk'+bi); if(!blkEl) continue; var bO=0, bY=-268, bS=1; var ba=blkW[bi-1]; if(t>=ba&&t<12.95){ bO=segFade; var bq=(t-ba)/0.28; if(bq<1){ bY=-268*(1-bq*bq*bq); } else { bY=0; var bu=(t-ba-0.28)/0.06; if(bu<1) bS=1-0.02*Math.sin(Math.PI*bu); } } blkEl.style.zIndex=segZ; blkEl.style.opacity=bO.toFixed(3); blkEl.style.transform='translateY('+bY.toFixed(1)+'px) scale('+bS.toFixed(3)+')'; } /* E8 — the 300x (sketch step 4, LAST): four individual glyph blocks drop in reading order 10.59-11.29, each a cubic-in fall of 0.28s with the same paper-thud settle, and stand in a row on the floor between the corner building and the stack — countable objects, not a picture of a number */
+   rnHitLaw(); /* v148 PLAYERFIX (R-P-1b): every opacity this pose just set now carries its hit-test consequence */
  }
  var rnAudio=document.getElementById('wlAudio'); /* v71 (stabilization): the stage player drives the narration audio directly — play starts it, pause stops it, seeks re-point it */
    function rnGlyphs(){var g=rnPlaying?'\u275a\u275a':'\u25b6'; rbPlay.textContent=g; play.textContent=g; play.style.display=(rnPlaying||rnStarted)?'none':'';}
@@ -4765,7 +4775,7 @@ frShow(0);
   tick(); })();
 rbScrub.addEventListener('input',function(){ rnPause(); rnT=parseFloat(rbScrub.value); rnPose(rnT); if(rnAudio){ try{ rnAudio.currentTime=rnT; }catch(_){}} });
  document.getElementById('rnbClose').addEventListener('click',function(){ rbar.hidden=true; });
- stage.querySelectorAll('[data-eid]').forEach(function(el){ el.addEventListener('click',function(){ rnPause(); dtShow(el.getAttribute('data-eid')); }); });
+ /* v148 PLAYERFIX (R-P-1a): the stage [data-eid] click binding is DELETED — a tap on the stage can never open a decision popup or pause the film; dtShow stays bound only on the labelled editor surfaces (.rn-part chips, belt blocks, .dt-chip) */
  /* @reason The belt rebuilt by Workstream N (2026-11-04) to the benchmark
    (T-S1/T-S2/T-S4): lanes are ordered by the TABLE's layer decision \u2014 the
    front of the stack at the top, the background at the bottom \u2014 never by
