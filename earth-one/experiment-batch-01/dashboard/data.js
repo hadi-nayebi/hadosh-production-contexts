@@ -138,6 +138,7 @@ window.BATCH_CELLS = [
     gate: "Stamped READY G2-20261107-173020-809060-021bea20 — echo removed (opening-read gate), diagram voice-over over the focus passes (the Hindi order spoken in English words: “I door open”), boringness scan 26/26 windows above 8, all censuses green. The narration lengthened the ending under the audio fitting rule: 77 s as built.",
     file: "earthone-dlc-003-open-door-en-opening-v7.mp4",
     video: "videos/earthone-dlc-003-open-door-en-opening-v7.mp4",
+    poster: "poster-cell-07.png",
     about: "The door sentence in the Classic form — the cell that caught the echo defect, so its opening is the first to be re-proved under the new opening-read gate."
   },
   {

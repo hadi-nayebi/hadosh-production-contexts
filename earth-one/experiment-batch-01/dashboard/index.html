@@ -196,7 +196,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=3"></script>
+<script src="data.js?v=4"></script>
 <script>
 (function(){
   "use strict";
@@ -270,7 +270,9 @@
 
     var stage;
     if (cell.video){
-      stage = '<video data-src="' + esc(cell.video) + '" playsinline controls preload="none"></video>';
+      stage = '<video src="' + esc(cell.video) + '"' +
+        (cell.poster ? ' poster="' + esc(cell.poster) + '"' : '') +
+        ' playsinline controls preload="metadata"></video>';
     } else {
       stage =
         '<div class="poster">' +
@@ -393,9 +395,6 @@
     Array.prototype.forEach.call(feed.children, function(screen, j){
       var v = screen.querySelector("video");
       if (!v) return;
-      if (Math.abs(j - i) <= 1 && v.dataset.src && !v.getAttribute("src")){
-        v.setAttribute("src", v.dataset.src);
-      }
       if (j !== i && !v.paused) v.pause();
     });
   }
