@@ -2,9 +2,15 @@
 
 **Phase: OBSERVE + PLAN only. No build in this job.** Iterated three times
 inside the job (draft → blind-spot hunt 1 → revision → blind-spot hunt 2 →
-final). The iteration log and blind-spot register stand in §12 — the plan is
-final only because the register's open items are accepted risks, never
-unexamined items. There are **zero blocking owner questions**.
+final), then taken through **seven more professional passes (4–10,
+2026-11-07, owner's order)** — independent seats for geometry, sightlines,
+materials, WebGL engineering, set design, failure modes (FMEA, §13), and
+verification — scored on ten dimensions (§12). **Plan front score: 8/10**
+(weakest dimensions: materials, phone reality, extensibility — each with
+its named residual). The iteration log and blind-spot register stand in
+§12 — the plan is final only because the register's open items are
+accepted risks, never unexamined items. There are **zero blocking owner
+questions**.
 
 **Owner's brief (2026-11-06 23:50 EST, verbatim substance):** create the
 whole empty room — a tiny theater room, all paper: the theater's wall, a
@@ -96,6 +102,30 @@ fix-round-10 panel fence). The checkpoint bytes stay returnable forever via
   the drawing buffer** — and the higher-resolution route is rendering
   the shot to a WebGLRenderTarget / offscreen size, never reading the
   composited page canvas (which on this page multiplexes three passes).
+- Sightline method (passes 5, added 2026-11-07): Wikipedia, "Sightline
+  (architecture)" — the **C-value** discipline (a fixed point of focus;
+  the sightline from each eye must clear the obstruction in front of
+  it), the split into vertical + horizontal sightline exercises, and
+  the auditorium viewing-angle bands (30° no head movement · 60°
+  slight movement · 110° eye/shoulder — Neufert-derived auditorium
+  proportions, via the same source).
+- Set design for camera (pass 8): the **wild wall** tradition — wall
+  sections built to be removed/flown so a camera can occupy the
+  wall's place, invisible in the finished shot (production accounts:
+  Chet Thomas's set tour, 2026-10-28; Shaun Russell's set-construction
+  explainers; the 2001 EVA-pod interior set's "floating / wild /
+  flyaway" panels, The Age of Plastic production notes). Sets are
+  built as framed **flats** — panels, not solid architecture.
+- three.js transparency + colour (pass 7): the renderer sorts
+  transparent objects **per object by centroid distance**, not per
+  triangle, and `renderOrder` is the explicit override (Cornell
+  CS4620 graphics notes, quoting three.js's own maintainer: three.js
+  has no order-independent transparency in the blending path);
+  `alphaHash` (r154+) is the named modern alternative. Colour: r152+
+  defaults are sRGB output with colour management on; **ACES filmic
+  tone mapping washes flat textures out and shifts hues** (three.js
+  discourse #15484) — a measured-contrast plan must name its transfer
+  function, and this file sets none (§6).
 
 ---
 
@@ -104,12 +134,12 @@ fix-round-10 panel fence). The checkpoint bytes stay returnable forever via
 | # | Decision | Value |
 |---|----------|-------|
 | D1 | Scene model | Two scenes, one file: a Layer-2 `scene` field (`'void'` \| `'room'`); boot is ALWAYS the checkpoint (void). The room is additive — every checkpoint behaviour is the regression floor. |
-| D2 | Room interior | **1104 wide × 1196 deep × 460 high** (12 × 13 × 5 grid cells of 92), centred on CENTRE (430, 53). |
+| D2 | Room interior | **1104 wide × 1196 deep × 460 high** (12 × 13 × 5 grid cells of 92), centred on CENTRE (430, 53) **in x**; in z, CENTRE is the *stage's* centre — the room's own z-centre is 513 (pass 4 wording cure, R7). |
 | D3 | Stage | **644 wide × 276 deep × 23 high** ("a bit raised" = 23 — derived, §2), back edge flush with the back wall, centred on CENTRE; wings 230 each side. |
 | D4 | Grid fate | The shader grid **survives unchanged, everywhere**; the room stands on it (group raised +2). Inside the room the floor's plank seams carry the 92 measuring scale as print. |
 | D5 | Director rule | **Dollhouse ghost**: shell panels between a director eye and the room centre fade to 0.07 opacity (depthWrite off) for that pass only; the floor never fades; camera passes never fade. Never a sealed box. |
-| D6 | Room camera home | **(430, 1071), heading 180°, tilt +0.6°, focal 360** — covers the whole stage at both aspects; binding aspect is portrait 20:9 (0.444), margin ≥ 1.4°. Arithmetic in §5. |
-| D7 | Materials | One procedural grain-texture family (512² canvas tiles, wrap-drawn), per-surface dyes from the checkpoint palette; lighting rig unchanged; face separation by dye steps + normal shading (no shadow maps). |
+| D6 | Room camera home | **(430, 1052), heading 180°, tilt +0.6°, focal 360** — covers the whole stage at both aspects; binding aspect is portrait 20:9 (0.444), margin ≥ 1.0°. Arithmetic in §5. (Pass 4 moved the seat from the drafted 1071: at 1071 the camera object's body interpenetrated the front wall by 11 units — R1.) |
+| D7 | Materials | One procedural grain-texture family (512² canvas tiles, wrap-drawn), per-surface dyes derived by **computed composited luminance** against the unchanged rig (pass 6, §6's prediction table: walls **#C8A668**, ceiling **#A87F45**, floor/deck/riser keep the checkpoint tones); face separation by dye steps + normal shading (no shadow maps). |
 | D8 | Scene selection | Two pills in the view bar's existing second row: **STAGE** (the checkpoint) and **THEATER** (the room) — one word each. RESET STAGE resets the CURRENT scene to its own seed. |
 | D9 | Capture | Not built (owner's postponement stands). The room keeps the five capture invariants of §10, so CAPTURE later is an addition, never a rebuild. Answer to his question: it is an issue in **neither** version — postponed in the checkpoint by his order, possible by construction on this engine. |
 
@@ -121,21 +151,36 @@ World axes as the file keeps them: x across, y up from the ground, z along
 aim; the grid's measuring cell is 92 units. All room heights below are
 measured from the room's floor top unless marked *abs* (world y).
 
-**Placement.** The room is centred on the checkpoint's own stage centre:
-CENTRE (430, 53) is the stage deck's centre in plan. The room group stands
-raised **+2** in y (§3, the grid clearance), so the floor top is abs y = 2.
+**Placement.** The room is centred on the checkpoint's own stage centre
+**in x**: CENTRE (430, 53) is the stage deck's centre in plan, and the
+stage sits against the back wall, so the room extends 920 of audience
+floor in front of it — the room's own z-centre is 513, not 53 (pass 4
+wording cure, R7: the draft's "centred on CENTRE" was false in z and a
+builder reading it literally would misplace every downstream number).
+The room group stands raised **+2** in y (§3, the grid clearance), so
+the floor top is abs y = 2. Interior: width **1104** (inner faces
+x = −122 and 982), depth **1196** (back wall inner face z = −85, front
+wall inner face z = 1111), height **460** (ceiling underside abs 462).
 
-| Element | Numbers |
-|---|---|
-| Interior width (x) | **1104** — inner faces at x = −122 and x = 982 (430 ± 552) |
-| Interior depth (z) | **1196** — back wall inner face z = −85; front wall inner face z = 1111 |
-| Interior height | **460** — ceiling underside at abs y = 462 |
-| Floor slab | One box spanning the interior + under the walls: top at abs y = 2, thickness 14 (abs y −12..2) |
-| Walls | Four boxes, **thickness 12**, height 460 from floor top; side walls run the full depth, back/front walls span between them (corner joints overlap in plan, hidden inside the stock) |
-| Ceiling slab | One box, thickness 12, top at abs y = 474 |
-| Stage | **One box, 644 × 23 × 276**, plan x 108..752, z −85..191 (back edge flush with the back wall's inner face; centre (430, 53) = CENTRE). Multi-material: deck top in stage tone, front + sides in riser tone (§6) |
-| Wings | 230 of open floor each side of the stage — the brief's "stage side" |
-| Audience floor | z 191..1111 = **920 deep**, fully empty — no chairs, no marks but the plank seams and (west wing) the origin ring, §3 |
+**Construction table — every mesh, sized and seated** (pass 4: the
+draft carried interior dimensions and left the boxes to inference; a
+builder now needs no interpretation):
+
+| Mesh | Box (w × h × d) | Centre (x, y, z) abs | Faces / notes |
+|---|---|---|---|
+| Floor slab | 1128 × 14 × 1220 | (430, −5, 513) | Top at abs y = 2; spans the interior + under the walls |
+| Back wall | 1104 × 460 × 12 | (430, 232, −91) | Spans between the side walls; inner face z = −85 |
+| Front wall | 1104 × 460 × 12 | (430, 232, 1117) | Spans between the side walls; inner face z = 1111 |
+| West wall | 12 × 460 × 1220 | (−128, 232, 513) | Runs the full depth (behind the back/front walls' spans — corner joints overlap inside the stock, never on a visible face); inner face x = −122 |
+| East wall | 12 × 460 × 1220 | (988, 232, 513) | As the west; inner face x = 982 |
+| Ceiling slab | 1128 × 12 × 1220 | (430, 468, 513) | Underside abs 462, top abs 474; spans the walls |
+| Stage | 644 × 23 × 276 | (430, 13.5, 53) | Top (deck) abs 25; plan x 108..752, z −85..191, back edge flush with the back wall's inner face; centre = CENTRE. Multi-material box: deck top in stage tone, front + sides + bottom in riser tone (§6) |
+
+Wings: 230 of open floor each side of the stage — the brief's "stage
+side". Audience floor: z 191..1111 = **920 deep**, fully empty — no
+chairs, no marks but the plank seams and (west wing) the origin ring,
+§3. Walls stand on the floor top (abs 2..462); every wall is its own
+mesh with its own material (§6, R3).
 
 **Why 23 for "a bit raised" — a derivation, not a taste pick.** The camera
 object's eye is fixed at 34 above its floor. A stage deck at or above 34
@@ -147,7 +192,10 @@ deck a full 11 below the eye: the deck reads as a low raised platform
 (≈⅓ of the camera object's own height), its top fully visible from the
 audience floor, and the riser still reads as a step edge. Any taller stage
 is a different brief (it would need the camera raised with it); it is
-recorded here as a priced alternative, not taken.
+recorded here as a priced alternative, not taken. (The finite-deck
+form of the same proof — the grazing sightline from the seated eye
+over the deck's front edge, in the theatre discipline's own terms —
+stands in §5, pass 5.)
 
 **Caps check.** Every room coordinate sits within ±1111 (cap ±3600 ✓);
 every geometry is a plain box ≤ 1196 long (cap: the 4096px textured-
@@ -214,8 +262,9 @@ candidate rules:
    — rejected: it lies in poses where the hidden panel should be seen
    (a low exterior view should show the front wall), and it cannot
    follow the eye.
-3. **Per-eye dollhouse ghost — DECIDED.** The six shell panels (4 walls,
-   ceiling; **the floor is exempt forever**) are registered in Layer 1
+3. **Per-eye dollhouse ghost — DECIDED.** The five ghostable shell
+   panels (4 walls + ceiling; **the floor is exempt forever** — pass 4
+   count cure, R11: the draft said "six") are registered in Layer 1
    with their outward normals. On every **director** pass (main or PiP —
    the rule keys on the eye, via the pass's existing `isDirView`), each
    panel tests: *is the rendering eye outside this panel's plane, with
@@ -241,6 +290,35 @@ pitch range allows under-floor poses) the slab's underside and the grid
 read as the room's base; ghosting the floor would float the stage and
 the camera in space and break Class O's ground answer.
 
+**The professional ancestor (pass 8).** This rule is the **wild wall**
+of film/TV set design, translated: on a soundstage, wall sections are
+built as framed flats that fly or roll away so the camera can occupy
+the wall's place, and the craft's first rule is that the mechanism is
+never visible in the shot. The mapping here is exact in both halves:
+the *director* is the one who needs to occupy the walls' places (the
+in-world camera already lives inside, so the set itself never needs
+to fly for it), and the camera passes never ghost — the mechanism
+never appears in the shot. Two disciplines come with the translation
+and are part of the decision: (a) **per-panel state** — a wild wall
+moves independently or it is not wild; §6 therefore gives every shell
+panel its own material instance (R3), and (b) **restore discipline**
+— the ghost is applied and restored inside the pass's *protected*
+section, under the branch's total-isolation discipline (a thrown
+render costs one frame, never the loop): a restore that an exception
+could skip would strand a panel at 0.07 into a later camera pass and
+break capture invariant 4 (§10) in fact, not just in wording (R10).
+The ghost's paint order is likewise constructed, not assumed: three.js
+sorts transparent objects per frame by centroid distance, so a ghosted
+panel's order against the (also transparent) grid is **pinned by
+explicit `renderOrder`** — a ghosted panel renders at the grid's own
+renderOrder + 1 for the pass, restored with the ghost state (R4;
+supersedes B10's "standing render order" wording, which described no
+mechanism). `alphaHash` (r154+, present in the vendored r186) was
+considered as the order-independent alternative and not adopted: the
+ghost set is at most two large planes at 0.07 alpha with depthWrite
+off, where blending order between them is below visibility, and the
+checkpoint's material discipline stays untouched.
+
 ---
 
 ## 5. Camera home for the room — framing, with the arithmetic
@@ -252,25 +330,31 @@ stage**: width 644 (front corners bind — the back corners are farther
 and narrower in view), deck top 23, from a centred seat.
 
 **The seat:** on the room's axis, x = 430, near the front wall —
-**z = 1071** (40 clear of the front wall's inner face; no near-plane
-interaction: near = 1). Distance to the stage's front plane (z = 191):
-**880**. Heading **180°** (facing −z, straight at the stage). Aimed at
-the deck centre point (430, 25, 53): drop 11 over run 1018 →
-**tilt +0.6°**.
+**z = 1052**. The seat is set by two constraints, and the draft only
+honoured one: framing wants distance, but the camera is an *object*
+102 deep (half 51) — at the drafted z = 1071 its back face reached
+z = 1122, **11 units inside the front wall** (inner face 1111), and
+its grab pads 19 (pass 4, R1 — the single most serious defect the
+professional passes found). At 1052 the body's back face sits at
+1103, 8 clear of the wall, and the seat satisfies §8's own interior
+clamp (z ≤ 1060). Distance to the stage's front plane (z = 191):
+**861**. No near-plane interaction (near = 1). Heading **180°**
+(facing −z, straight at the stage). Aimed at the deck centre point
+(430, 25, 53): drop 11 over run 999 → **tilt +0.6°**.
 
 **The lens — focal 360, derived from the binding aspect.** Phone
 portrait is the binding case; the design floor is the narrowest common
 portrait aspect, **20:9 → 0.444** (the owner's phone class is 0.462).
 At focal *f*, the horizontal half-angle is atan(tan(atan(320/f)) ×
-aspect). The stage's front corner needs atan(322/880) = **20.09°**.
+aspect). The stage's front corner needs atan(322/861) = **20.50°**.
 
 | Focal | FOVv | Half-width @ 0.444 | Half-width @ 0.462 | Verdict |
 |---|---|---|---|---|
-| 800 (checkpoint) | 43.6° | 10.1° | 10.5° | fails — covering even the narrowed 644 stage would need ≈1810 units of camera distance (≈2070 for the drafted 736); the room offers 880 |
-| 400 | 77.3° | 19.6° | 20.3° | fails at 0.444 (needs 20.09°) |
-| **360** | **83.3°** | **21.6°** | **22.3°** | **covers, margin 1.5° / 2.2°** |
+| 800 (checkpoint) | 43.6° | 10.1° | 10.5° | fails — covering even the narrowed 644 stage would need ≈1810 units of camera distance (≈2070 for the drafted 736); the room offers 861 |
+| 400 | 77.3° | 19.6° | 20.3° | fails at 0.444 (needs 20.50°) |
+| **360** | **83.3°** | **21.6°** | **22.3°** | **covers, margin 1.0° / 1.8°** |
 
-- Back corners (z = −85, d = 1156): need 15.6° — covered everywhere.
+- Back corners (z = −85, d = 1137): need 15.8° — covered everywhere.
 - Vertical: half-FOV 41.7° against a stage that spans ~±3° around the
   aim — covered with the whole back wall in frame above it.
 - Desktop landscape (1.78) and 4:3 (1.33): horizontal coverage is
@@ -279,9 +363,33 @@ aspect). The stage's front corner needs atan(322/880) = **20.09°**.
   fill; framing for the binding aspect is the standing portrait law's
   own logic, applied to the lens).
 
-**ROOM_CAM_HOME = { x: 430, z: 1071, heading: 180, tilt: 0.6, focal:
+**ROOM_CAM_HOME = { x: 430, z: 1052, heading: 180, tilt: 0.6, focal:
 360 }** (Layer 2). The checkpoint's CAM_HOME is untouched; each scene
 carries its own.
+
+**The sightline proof, in the theatre discipline's own terms (pass
+5).** FOV containment proves the stage's *corners* land in frame; the
+professional sightline method asks the second question — from the
+fixed eye, does the line of sight to the **lowest point of interest**
+(here the deck's back edge, the far end of the surface the brief says
+must be covered) clear the obstruction in front of it (the deck's own
+front edge)? Eye at abs 36, front edge top abs 25 at d = 861, back
+edge at d = 1137: the sightline passes the front edge at abs **27.67 —
+clearance 2.67 units** — the whole deck surface is visible, proved
+the C-value way. The same arithmetic prices the read honestly: the
+grazing angle to the back edge is **0.55°**, so the deck's full 276
+of depth projects to ≈0.73° of frame height — the deck reads as a
+low, heavily foreshortened band, its board seams compressing toward
+the back wall. That is inherent to a floor-standing camera before a
+low stage (the theatre's own cure is raked seating, which this brief
+does not contain), and it is recorded as accepted failure mode FM-4
+rather than discovered by the owner. Horizontally, the stage
+subtends **41.0°** at the seat — inside the 60° "slight head
+movement" band of auditorium proportion practice: the whole stage
+takes in one comfortable look. And the design floor is restated
+honestly: at a 21:9 phone (aspect 0.4286, the narrowest in
+production) the half-width at focal 360 is 20.86° against 20.50°
+needed — covered, margin 0.36°; no production phone is narrower.
 
 **Director home in the room.** The checkpoint's director posture (yaw
 0, pitch −6, dolly 60) transplants inside: its eye lands at (500, 254,
@@ -289,7 +397,9 @@ carries its own.
 target over the stage. ROOM_DIR_HOME keeps yaw 0 / pitch −6 / roll 0 /
 dolly 60 and solves pan through the rig's own formulas so the deck
 centre projects to frame centre: starting estimates **panX ≈ 70,
-panY ≈ −40** (target (500,150,0) → ≈(430, 110, 4)); Execute solves
+panY ≈ −40** (target (500,150,0) → ≈(430, 110, 0) — pan is a
+two-vector and never moves the target's z; the draft's stray z
+component is struck, R11); Execute solves
 exactly by projection and verifies by frame, the way FIND flights are
 solved. At that seat the portrait law's 52° horizontal field spans
 ≈965 at the target's distance — the stage (644) and both wings read
@@ -310,18 +420,37 @@ streak is also drawn at its ±512 offsets), so the tile repeats
 seamlessly; `wrapS = wrapT = RepeatWrapping`, `colorSpace =
 SRGBColorSpace`, anisotropy set from the renderer's maximum (≤ 8).
 One tile covers **368 world units** (4 grid cells) on every surface, so
-grain scale is a world constant, not a per-surface accident. Repeat
-counts are integral per surface (width/368 rounded to the nearest
-whole tile, the tile's world size adjusted by the same ratio — grain
-scale never drifts more than the rounding, ≤ 4%).
+grain scale is a world constant, not a per-surface accident. Repeats
+are **exact and fractional** — surface size ÷ 368, no rounding: a
+wrap-drawn tile is seamless at *any* repeat (the seam class lives at
+the tile's own border, which wrap-drawing cures), and the seamed
+surfaces stay exact because each tile carries exactly 4 seams — the
+spacing is 92 at every repeat, and a seam cut mid-line at a surface
+edge hides under the neighbouring panel. (Pass 7 simplification, R5:
+the draft's integral-repeat rule contradicted itself — measured
+against its own "≤ 4% drift" claim, rounding produced 8–25% grain
+drift on four of five axes. The simpler rule is exact everywhere.)
+Two disciplines ride on the family: **repeat is a texture property**,
+so faces sharing a texture inherit its repeat — the boxes' 12–14-unit
+edge faces take a squished grain, accepted as sub-visible; and **every
+shell panel owns its material instance and its texture clone** (the
+clones share the one drawn canvas — no extra memory of consequence),
+because §4's ghost sets opacity per panel and three.js opacity is a
+material property: one shared wall material would fade all four walls
+together or none (pass 7, R3). On wall textures the repeat is
+(width/368, 1): v spans the wall's full height so the tile's **foot
+gradient** — a multiply to 0.80 across the bottom 10% — lands at the
+floor line on every wall, the flat-shading era's baked contact shade;
+the 25% vertical grain stretch this causes is invisible in speckle
+with horizontal fibres.
 
 | Surface | Dye | Texture | Notes |
 |---|---|---|---|
-| Walls (back, sides, front) | **#D9BC82** cream-kraft | grain, no seams | The room's lightest large face; the stage reads against it |
+| Walls (back, sides, front) | **#C8A668** mid-kraft (re-derived pass 6) | grain + foot gradient, no seams | One dye, four shadings (prediction table below); dark enough for the deck to separate from the back wall (1.62:1 predicted) |
 | Floor | **#B78D4C** (checkpoint side tone) | grain + **plank seams every 92** across x | Seams run across the room's width; the 92 scale as print (§3) |
 | Stage deck (top) | **#CCA45F** (checkpoint top tone) | grain + **board seams every 92** along z | The stage is the room's subject; its tone is the checkpoint object's own top |
 | Stage riser (front + sides) | **#77572A** (checkpoint body tone) | grain, no seams | The dark step edge — the deck's boundary reads at a glance |
-| Ceiling (underside) | **#E8D9B0** palest kraft | grain, no seams | Palest dye, but lit by ambient only (below) → reads dimmer than the walls: the lid |
+| Ceiling slab (all faces) | **#A87F45** dark kraft (re-derived pass 6) | grain, no seams | The room's **dark lid** — the theatre convention, and the only dye class that separates from every wall under ambient-only light (1.56–2.19:1 predicted). The draft's palest dye (#E8D9B0) computed *into* the walls' own band (1.02–1.09:1) — "palest + ambient-only = dimmer" was a plausible story the arithmetic disproves; struck (R2) |
 
 **Lighting — the rig is unchanged** (ambient 0xffe9c4 × 0.85 +
 directional 0xfff2d8 × 1.15 from (300, 800, 200)), and the room is
@@ -331,14 +460,54 @@ designed *for* it:
   already lives on. The room turns it into the differentiation
   mechanism instead of fighting it: the floor (up normal) takes the
   full sun; the ceiling's underside (down normal) takes ambient
-  only and sits darkest of the pale faces; the +x/+z walls take
-  partial sun, the −x/−z walls less — four-plus distinguishable face
-  tones from one rig, before the dye steps are counted. §9 sets the
-  measured floor for face separation; Execute verifies it on the
+  only, and its dye is chosen *for* that light (above) so the lid
+  reads darkest by design, not by accident; the +x/+z walls take
+  partial sun, the −x/−z walls ambient only. §9 sets the measured
+  floors for face separation; Execute verifies them on the
   rendered frame, and if two adjacent faces land too close, the cure
   is a dye step (a Layer-2 number), never a new light.
 - No light fixture is depicted (the no-candle law's spirit: nothing
   in the scene depicts a light source).
+
+**The prediction table (pass 6 — the computed leg of §9).** Face
+separation is *computed here*, not hoped for in Execute: each dye's
+relative luminance (WCAG sRGB linearisation — Class N's own
+arithmetic) × the rig's face factor (ambient 0.85 + directional
+1.15 × max(0, n·L̂), L̂ = (0.342, 0.912, 0.228) from the light's
+position) gives the predicted composited luminance; specular is
+ignored (roughness 0.85–0.9 matte) and the grain's ±6% averages out
+of any region median. Face factors: up faces **1.90** · back wall
+(+z) **1.11** · west wall (+x) **1.24** · front wall, east wall,
+ceiling underside **0.85** (ambient only).
+
+| Face | Dye L | × factor | Predicted composited L |
+|---|---|---|---|
+| Deck | 0.402 | 1.90 | **0.76** |
+| Floor | 0.296 | 1.90 | **0.56** |
+| Back wall | 0.406 | 1.11 | **0.45** |
+| West wall | 0.406 | 1.24 | **0.50** |
+| Front / east walls | 0.406 | 0.85 | **0.35** |
+| Ceiling underside | 0.239 | 0.85 | **0.20** |
+| Riser (front) | 0.109 | 1.11 | **0.12** |
+
+Predicted pair ratios ((L₁+.05)/(L₂+.05)): deck↔back wall **1.62** ·
+deck↔riser **4.8** · riser↔floor **3.6** · floor↔back wall **1.22** ·
+floor↔west wall **1.11** · floor↔front/east walls **1.55** ·
+walls↔ceiling **1.56–2.19** · wall↔wall corners **1.11** · the west
+wall's foot-gradient strip against the floor **1.35** (a local step
+at the junction, not a region ratio). §9's floors are set from this
+table; §11's measured census rules where the two legs disagree.
+
+**The measurement basis, named (pass 7, R12).** Read from the file:
+the renderer sets antialias on and caps the pixel ratio at 2 — and
+sets nothing else. The inherited transfer is therefore three.js
+r186's default: **sRGB output, colour management on, NoToneMapping**.
+Every ratio in this plan is stated under that transfer. Standing
+warning: adopting a filmic tone mapping later (ACES/AgX) compresses
+exactly the highlight band these ratios live in (and washes flat
+textures, §0) — §6/§9's numbers would stand invalidated until
+re-derived. Tone mapping is a new decision whenever it is proposed,
+never a silent upgrade.
 
 **Geometry discipline.** Panels and slabs are thin **boxes**, built
 with the file's own face-by-face `solid()`-era discipline carried into
@@ -379,6 +548,21 @@ room group.
   was absent (void seed), entering the room seats it (a theater
   without its camera is outside the brief); currents snap, no glide
   across scenes.
+- **Entry semantics, both ways (pass 9, R8):** entering a scene
+  applies *that scene's seed state*, always. Returning via STAGE
+  therefore lands on the checkpoint exactly — not on wherever the
+  void scene was left — and re-entering THEATER lands on
+  ROOM_SEED_STATE. Nothing persists across scenes, by decision: the
+  switcher is a pair of doors between two known states, not a state
+  keeper. (§11 check 4 enforces both halves.)
+- **Pill coexistence census (pass 9, R9):** the second row never
+  carries more than three pills in any state — void with camera:
+  FIND CAMERA + STAGE + THEATER · void seed: ADD CAMERA + STAGE +
+  THEATER (FIND leaves with the camera controls) · room: FIND
+  CAMERA + STAGE + THEATER (ADD CAMERA never renders; the room
+  always seats its camera). The two-row bound the panel fence is
+  built on is preserved by construction in every state; §11
+  check 5 censuses it per state.
 - **RESET STAGE** resets the *current* scene to its own seed: in
   void, today's contract field-for-field (the checkpoint, unchanged);
   in the room, ROOM_SEED_STATE field-for-field. Returning to the
@@ -415,7 +599,9 @@ room group.
   `camY` with the loop's own τ, and which `syncSceneCam` /
   `syncCamObj` add to the eye/object height; the room-state camera
   clamp (position writes — drag, flights, strafe — clamp to the room
-  interior shrunk by the object's half-extents; the deck is *not* an
+  interior shrunk by the object's half-extents — admitted z-range
+  [−34, 1060], and ROOM_CAM_HOME at 1052 sits inside it with margin,
+  pass 4 / R1; the deck is *not* an
   exclusion: standing on it is the floor function's business);
   `aimCentre` reading the per-scene aim point; the `?scene=` door in
   the test-view wiring.
@@ -428,18 +614,36 @@ The checkpoint's classes stand untouched on the void scene. The room
 earns its own:
 
 - **N (rendered legibility), room form.** The room has no reference
-  *lines*; its legibility question is **face discrimination**: from
-  the camera's home frame and the director's home frame, every pair
-  of adjacent faces (deck/riser, deck/back wall, riser/floor,
-  floor/wall, wall/ceiling) must separate by **≥ 1.6:1 composited**
+  *lines*; its legibility question is **face discrimination**, and
+  pass 6 split it into the two classes the physics actually offers
   (true-WCAG arithmetic, the hook's own method, region medians on
-  settled frames) — a floor set for *surfaces that must read as
-  different planes*, distinct from the 3:1 line floor, and stated
-  here so Verify measures against a number the plan chose, not one
-  it invents. The deck's front edge (riser against floor) is the
-  binding pair and is named as such.
+  settled frames, from the camera's home frame and the director's
+  home frame):
+  - **Subject pairs** — the stage against what touches it:
+    deck↔riser, deck↔back wall, riser↔floor must separate by
+    **≥ 1.6:1 composited**. The binding pair is **deck↔back wall,
+    predicted 1.62** — the draft named riser↔floor, which the
+    computed table shows is the *strongest* pair (3.6); a plan that
+    names the wrong binding pair sends Verify to watch the wrong
+    junction (R2).
+  - **Shell pairs** — the enclosure: floor↔walls, wall↔wall
+    corners, walls↔ceiling must separate by **≥ 1.10:1 region
+    median AND a junction step ≥ 1.25:1** measured on a 12-unit
+    strip pair straddling the junction line. Flat-shaded rooms are
+    read at their edges: the foot gradient and the shading step
+    across each corner are the mechanism, and the strip census is
+    its measure. Predicted: region ratios 1.11–2.19, binding strip
+    (the sun-side west junction) 1.35.
+  A single 1.6:1 floor for every pair — the draft's form — is
+  arithmetically unreachable for same-dye shell pairs under one
+  directional light (§6's table: floor↔back wall computed 1.03,
+  wall↔ceiling 1.02 under the draft's own dyes). A floor the plan
+  knows the build cannot meet is not a standard; it is a trap laid
+  for Execute. The two-class form states what each surface group
+  must actually do, and every number in it is one the plan computed
+  before it demanded.
 - **O (orientation), room form.** The four glance questions, answered
-  inside a room: *up* — the ceiling/floor tone split + the pale lid;
+  inside a room: *up* — the ceiling/floor tone split + the dark lid;
   *horizon* — the room's own horizontal seams (wall↔floor and
   wall↔ceiling lines are true world horizontals; the dome's band is
   occluded inside and is not claimed); *facing* — the stage itself
@@ -498,10 +702,16 @@ addition and never a rebuild:
 ## 11. Verify design for the future Execute (checks named now)
 
 1. **Framing coverage, measured:** the stage's 8 corners projected
-   through the scene camera at ROOM_CAM_HOME at aspects **0.444,
-   0.462, 1.33, 1.78** — all inside the frame with NDC margin ≥ 0.02;
+   through the scene camera at ROOM_CAM_HOME at aspects **0.4286,
+   0.444, 0.462, 1.33, 1.78** — all inside the frame with NDC margin ≥ 0.02;
    plus a rendered phone-size camera frame, viewed: deck, riser and
-   both stage sides visible whole.
+   both stage sides visible whole. Two pass-4/5 guards ride here:
+   the camera object's **body AABB at ROOM_CAM_HOME strictly inside
+   the interior** (no face within 0 of a wall — R1's regression
+   check; framing corners alone would have passed the interpenetrating
+   seat), and the deck's **projected height** on the phone-size frame
+   measured against §5's predicted ≈0.73° (±25%) — the foreshortening
+   is verified as designed, never discovered by the owner.
 2. **Emptiness census:** the room group's children enumerated —
    exactly the 7 meshes of §6 + the camera object; no chairs, no
    curtain, no extras; the audience floor empty in the rendered
@@ -511,7 +721,10 @@ addition and never a rebuild:
    panel's ghost state asserted (opacity read + frame viewed);
    camera-pass frames at the same world poses show **no** ghosting.
    FIND CAMERA in room state lands a frame with the camera object
-   visible (ghosting serves the flight).
+   visible (ghosting serves the flight). Plus a state inspection,
+   not a frame inference: each ghosted panel's material is its own
+   instance, and its renderOrder reads grid+1 during the pass and
+   restored after it (R3/R4 verified in the state, where they live).
 4. **Regression:** the full checkpoint harness suites stay green;
    RESET in void reproduces SEED_STATE field-for-field; RESET in
    room reproduces ROOM_SEED_STATE field-for-field; scene round-trip
@@ -521,9 +734,17 @@ addition and never a rebuild:
    "Walls fade when you orbit outside", 6 words — lives inside the
    tap-gated map); view-bar height census in the room scene at every
    width — never above the two-row bound the panel fence is built on.
-6. **Perception:** §9's face-separation census (binding pair named)
-   on settled frames in both home views; the four room glance
-   questions answered from frames by the verifier, not inferred.
+   The per-state pill coexistence census of §7 (R9) belongs to this
+   check: row 2's pill count and the bar's height are measured in
+   void-with-camera, void-seed, and room states alike.
+6. **Perception:** §9's two-class census on settled frames in both
+   home views — subject pairs against the 1.6 floor (deck↔back wall
+   binding), shell pairs against the 1.10 region floor and the 1.25
+   junction-strip floor — compared line-by-line with §6's prediction
+   table; any pair disagreeing with its prediction by more than
+   ±0.15 is reported as a finding, not silently passed. The four
+   room glance questions answered from frames by the verifier, not
+   inferred.
 7. **Caps:** room coordinates, texture sizes, and geometry sizes
    re-censused against the phone-hardening law; the WebGL rider
    still names exactly two exceptions.
@@ -642,7 +863,150 @@ of decision D6, not a register item.)
 
 ---
 
-## 13. What Execute inherits (in order)
+**Passes 4–10 — the professional iteration (2026-11-07, owner's
+order: "iterate… make sure this plan is the best professionals in
+this field would develop").** Each pass is an independent seat,
+argued from the §0 professional sources, scored on ten dimensions
+(0–10; the plan's front is its weakest). The as-found scores are the
+honest grade of the 3-iteration plan above: its register had hunted
+well inside its own framing and still missed the round's most
+serious defect — the standing pathology, recorded, not excused.
+
+**Pass 4 — Geometry & arithmetic audit** (every number recomputed
+from the file's constants, none taken from the plan's own tables).
+The plan's framing table re-verified exact. Found **R1 (critical)**,
+R7, R11. Geometry 5→9 · Clarity 6→8.
+**Pass 5 — Sightline seat** (C-value method, viewing-angle bands).
+Found R6; the grazing-line proof and the 21:9 floor now stand in §5.
+Sightline 6→9.
+**Pass 6 — Materials & perception seat** (composited-luminance
+arithmetic on the plan's own dyes × the rig's face factors). Found
+**R2 (critical)**: the draft's §9 was unmeetable and its binding
+pair wrong. Dyes re-derived, §6's prediction table added, §9 split
+into subject/shell classes. Materials 5→8.
+**Pass 7 — WebGL engineering seat** (transparency sorting, colour
+management, texture practice). Found R3, R4, R5, R12. WebGL 6→9 ·
+Clarity 8→9.
+**Pass 8 — Set-design-for-camera seat** (wild walls, flats). The
+ghost confirmed as the wild-wall translation; its two craft
+disciplines (per-panel state, restore discipline) folded into §4.
+No score moved; the seat's value was confirmation from the tradition
+the draft had reinvented unnamed.
+**Pass 9 — Failure-mode pass (FMEA)** — the executed scene in the
+owner's hands, §13. Found R8, R9, R10. Failure modes 5→9 · Phone 7→8.
+**Pass 10 — Verification design + full re-read.** §11's battery
+re-aimed at this round's defect classes (AABB guard, deck
+projection, renderOrder/material inspection, pill census, two-class
+perception census with prediction comparison). Verification 6→9.
+Full re-read: no unexecutable instruction remains (the construction
+table, per-panel materials, and the exact-repeat rule closed the
+last interpretation gaps).
+
+**R-register (this round): 12 findings — 2 critical, 3 major,
+4 moderate, 3 minor — all cured in the plan body; 0 owner
+decisions; 0 unexamined.**
+- **R1 (critical).** ROOM_CAM_HOME at z = 1071 put the camera
+  object's back face 11 units *inside* the front wall (grab pads
+  19): the framing seat was chosen by lens distance alone and never
+  checked against the object's own body. → Seat moved to 1052
+  (8 clear, inside §8's clamp), framing re-derived (margin 1.0° at
+  the design floor), §11 check 1 gains the AABB guard.
+- **R2 (critical).** §9's single 1.6:1 floor was unmeetable and its
+  named binding pair was the strongest pair, not the weakest:
+  computed on the draft's own dyes × rig, floor↔back wall 1.03,
+  wall↔ceiling 1.02–1.09, floor↔west wall 1.14 — the ceiling's
+  "palest + ambient" reasoning was a story the arithmetic disproves.
+  → §6 prediction table; walls re-dyed #C8A668; ceiling re-dyed
+  #A87F45 (dark lid); §9 two-class floors (subject 1.6, binding
+  deck↔back wall 1.62 predicted; shell 1.10 region + 1.25 junction
+  strip).
+- **R3 (major).** §6's one-dye wall table invited one shared wall
+  material; §4's ghost sets opacity per panel, and opacity is a
+  material property — as written, the ghost was unbuildable as
+  specified. → Every shell panel owns its material + texture clone
+  (§6).
+- **R4 (major).** B10's cure ("panels keep their standing render
+  order") named no mechanism: three.js sorts transparent objects by
+  centroid per frame, so a ghosted panel's order against the grid
+  could flip with the eye. → Explicit renderOrder pinned (grid+1
+  during the pass, restored with the ghost state), §4 + §11.
+- **R5 (major).** The integral-repeat texture rule contradicted its
+  own ≤ 4% drift claim (measured 8–25% on four of five axes). →
+  Exact fractional repeats on a wrap-drawn tile; seams exact by
+  construction; the rule is simpler than the one it replaces (§6).
+- **R6 (moderate).** Framing proof was FOV-containment only — no
+  sightline proof that the deck *surface* is visible, and its
+  foreshortening unstated. → §5: grazing-line clearance 2.67,
+  grazing angle 0.55°, 41.0° viewing band, FM-4 accepted with its
+  reason.
+- **R7 (moderate).** "Centred on CENTRE" was false in z (room
+  z-centre 513) and no per-mesh construction numbers existed. →
+  §2 wording cured + the full construction table.
+- **R8 (moderate).** Scene-entry state semantics were implicit —
+  whether the STAGE pill restores the checkpoint or the void's
+  left state was decidable two ways. → §7: entry applies the
+  entered scene's seed, both ways, by decision.
+- **R9 (moderate).** Pill coexistence was never censused against
+  the two-row bound the panel fence stands on. → §7 census (max 3
+  in every state) + §11 check 5.
+- **R10 (minor).** Ghost apply/restore was not stated to sit inside
+  the pass's protected section; a thrown render could strand a
+  panel ghosted into a camera pass. → §4 restore discipline.
+- **R11 (minor).** §4's "six shell panels" (the ghostable set is
+  five) and §5's director estimate carried an unexplained z
+  component pan cannot produce. → Both struck in place.
+- **R12 (minor).** §9's ratios named no transfer function. → §6
+  names the inherited basis (sRGB output, colour management on,
+  NoToneMapping, DPR ≤ 2, antialias on — read from the file) and
+  the standing warning on filmic mappings.
+
+**Final radial scores (pass 10):**
+
+| Dimension | As found | Final |
+|---|---|---|
+| Clarity / executability | 6 | **9** |
+| Geometric soundness | 5 | **9** |
+| Sightline / framing proof | 6 | **9** |
+| Failure modes | 5 | **9** |
+| Materials / texture practice | 5 | **8** |
+| WebGL engineering soundness | 6 | **9** |
+| Phone reality | 7 | **8** |
+| Scope discipline | 9 | **9** |
+| Extensibility | 8 | **8** |
+| Verification design | 6 | **9** |
+
+**Front score: 8.** Stop condition met: no dimension below 8, no
+unexamined failure mode (§13), no unexecutable instruction. The
+three 8s carry named residuals, not hidden ones — Materials: §6's
+table is the *computed* leg; Execute's measured census rules where
+they disagree, with the dye step as the standing cure. Phone: the
+room adds no render surface beyond the checkpoint's audited
+envelope (7 boxes, ≤ 512² textures, DPR ≤ 2, one extra transparent
+layer in exterior director views). Extensibility: provision is
+deliberately thin — the five capture invariants and a general
+`floorAt` — because anything more would be building for scenes the
+owner has not briefed.
+
+---
+
+## 13. Failure-mode table (FMEA) — the executed scene in the owner's hands (pass 9)
+
+| # | Failure | Cause | Effect on the owner's use | Guard in this plan | Residual |
+|---|---|---|---|---|---|
+| FM-1 | Camera object clipped into the front wall at room entry | Home chosen by lens distance only (R1) | The first thing he sees in the room is the camera buried in a wall | Home 1052 (8 clear); §11 AABB check | None known |
+| FM-2 | All walls fade together, or fading is impossible | Shared wall material (R3) | The dollhouse rule lies or cannot be built | Per-panel materials (§6) | None |
+| FM-3 | Grid paints over the interior through a ghosted wall, flickering as he orbits | Transparent sorting by centroid (R4) | The room reads broken exactly when he orbits outside it | renderOrder pinned grid+1 (§4) | Two ghosted panels overlapping on screen blend in either order at 0.07 — below visibility, named |
+| FM-4 | The stage reads as a sliver from the camera seat | Grazing angle 0.55° (§5) | "Covers the whole stage" is true and still disappoints | Numbers published in §5; §11 verifies projection as designed | **Accepted** — inherent to a floor-standing camera + low stage; the theatre cure (raked seating) is outside this brief |
+| FM-5 | Camera grazes the riser corner crossing the deck edge | Floor height steps 2→25 at the footprint | A visible clip during a drag onto the stage | `camY` chases with the loop's τ — a glide, not a step (§8) | A sub-τ graze at the corner is possible; accepted, named |
+| FM-6 | STAGE pill "loses" his void arrangement | Entry semantics unexamined (R8) | Surprise state loss reads as a bug | §7: entry applies the entered scene's seed, stated as the contract | None — behaviour is now specified |
+| FM-7 | A panel stays ghosted in the camera's shot after a glitch | Thrown render skips the restore (R10) | The shot — and any future capture — shows a faded wall | Restore inside the pass's protected section (§4) | None known |
+| FM-8 | View bar wraps to a third row on his phone | Pill coexistence uncensused (R9) | The fix-9/10 panel-fence defect class reopens | §7 census (max 3 pills/state) + §11 check 5 | None |
+| FM-9 | Ceiling indistinguishable from the walls on his phone | Dye/lighting arithmetic (R2) | The room reads as one undifferentiated box — the checkpoint's phone-pass failure, repeated indoors | §6 prediction table + re-derived dyes + §9 two-class census | Predictions are the computed leg; Execute's measured leg rules |
+| FM-10 | A narrower phone than the design floor crops the stage's corners at home | Aspect below 0.444 | Two corners lost at the seat (recoverable by zooming out the lens by hand) | §5: 21:9 (0.4286) computed — covered, margin 0.36° | Aspects narrower than 0.4286: none in production; named |
+| FM-11 | The first asset later stands half-sunk at the deck edge | A camera-only floor rule | Asset placement inherits a hidden trap | `floorAt(x, z)` is a general Layer-3 function (§8), not a camera special case | None for this plan's scope |
+| FM-12 | Capture, when built, records a faded panel or the chrome | Pass-state leak / page-canvas capture | The film carries the mechanism | §10 invariants 3–4 + R10's restore discipline | None known |
+
+## 14. What Execute inherits (in order)
 
 1. Layer 2 constants (§7) → Layer 1 `buildRoom()` (§6) → Layer 3
    mechanics (§8) → chrome (pills, hint line) → seed press re-run
@@ -655,3 +1019,114 @@ of decision D6, not a register item.)
 3. Non-goals for Execute, restated: no chairs, no curtain, no
    openings, no capture controls, no new library, no change to the
    checkpoint scene's behaviour or bytes-path.
+
+## 15. Execute entry — the room as built (2026-11-07)
+
+Built exactly as §§0–14 specify, on the post-fix-10 stage.html, in the
+§14 order: Layer 2 scene state → Layer 1 `buildRoom()` → Layer 3
+mechanics → chrome → seed press → the §11 battery. The full evidence
+stands in the build record
+(`records-20261105-stage3d/stage3d-room-build-record.md`); this entry
+carries the outcomes and the two numbers §14 told Execute to solve.
+
+- **Solved, not copied — ROOM_DIR_HOME's pan pair:** panX **70.39**,
+  panY **−130.57** (projection solve through the rig; the stage centre
+  projects to NDC (0.001, 0.002) at the director home; the plan's
+  panY estimate of −40 was superseded by the solve, as §14 directed).
+- **The dye step the §9 census forced (§14 item 2):** on the §6 dyes,
+  the binding subject pair deck↔back wall measured **1.48** against
+  its 1.6 floor (director home, rendered frames). §6's own cure was
+  taken: deck dye **#CCA45F → #D8B068**, one step, deck only.
+  Re-measured: **1.654** — pass. All other subject pairs pass
+  (deck↔riser 3.37, riser↔floor 2.43); shell region medians pass or
+  read at the 1.10 floor within disc noise (floor↔west 1.099,
+  back↔west 1.092), with every junction step ≥ 1.53 against the 1.25
+  floor — the plan's stated edge mechanism carries them.
+- **A §6 model correction the census exposed:** the plan's absolute
+  luminance predictions run uniformly ≈3.9× above the rendered
+  absolutes (the face-factor arithmetic omits the physical-lighting
+  1/π and the light colours' weights). The model's *ratios* were
+  right (raw-L deck/back predicted 1.69, measured 1.686); only its
+  absolutes — and so its WCAG-form margins — were optimistic, which
+  is precisely why the binding pair needed the step above. §6's
+  table should be re-based on the measured absolutes (director home:
+  deck 0.226, floor 0.149, back wall 0.117, west 0.130, east/front
+  0.086, ceiling 0.051, riser 0.032) at its next iteration.
+- **Framing:** all 8 stage corners inside at all five aspects
+  (worst |NDC|: 0.982 @ 0.4286, 0.948 @ 0.444, 0.911 @ 0.462,
+  0.316 @ 1.33, 0.236 @ 1.78). One named tension: §11's 0.02 NDC
+  margin bound vs §5's angular derivation at 21:9 — measured margin
+  0.018; focal 360 (folded decision) kept; the other four aspects
+  clear the bound.
+- **Deck projected height:** measured 0.29° by NDC span against
+  §5's ≈0.73° prediction (0.73° is the near edge's depression angle,
+  not the deck's span). FM-4's accepted conclusion stands, stronger
+  than stated; from the camera seat the deck is not disc-samplable
+  at its centre point (the §9 deck pairs are therefore proven on
+  the director-home frame, where the face is resolvable).
+- **Chrome cure (plan-required, §11 check 5):** pre-cure the room
+  bar wrapped to 3 rows at 320px (bottom 136px, through the 94px
+  panel fence). Cured in CSS (narrow button bands tightened at
+  ≤560px and ≤400px); post-cure census: rows ≤2 at every width
+  ≥320px in every state, bar bottom max 71px at narrow widths.
+- **Harnesses:** migration 85/0 · fix-8 15/0 · fix-9 45/0 ·
+  fix-10 17/0 · room harness (new) 67/0 — scene switching, pill
+  behaviour, reset-per-scene, the ghost rule measured mid-pass,
+  framing coverage, body-vs-interior AABB, emptiness census.
+- **Final bytes:** stage.html 196,078 B, sha256 `46426865…`;
+  seed re-pressed by `assets/plan/make-seed.py` (196,372 B =
+  stage + 294, sha `8bc32f4a…`), seed default scene 'void',
+  checkpoint untouched. GL frames under `~/workspace/glproof/room-build/`,
+  viewed by the builder.
+
+## 16. Fix round 1 amendments (2026-11-07) — the corrected lighting model, dye/light table v2, the ghost's construction, the deck-band correction
+
+_This section amends the plan after Verify W-R1 (Seats 1 and 2). Earlier sections are NOT rewritten: where §16 and an earlier section disagree, §16 governs, and each amendment below names what it supersedes._
+
+### 16.1 The corrected lighting model (Seat 2's D1 — §6's model is retired)
+
+§6 priced the faces with a legacy model whose face factors ({up 1.90, back 1.11, west 1.24, dark 0.85}) omit two facts of three r186's physical lighting: **diffuse is divided by π**, and **the light colours weight the terms**. Everything therefore rendered at ≈0.26× of §6's predictions (the absolutes run uniformly ≈3.9× under prediction; §15 already recorded this). The corrected model, per face:
+
+**L(face) = dyeLinearLuminance × mapFactor × bracket**, where
+**bracket = (Iamb · La + Isun · Ls · cosθ) / π**,
+La = 0.8352 (ambient 0xffe9c4), Ls = 0.8972 (sun 0xfff2d8), and the sun direction from its (300, 800, 200) seat is (0.3419, 0.9117, 0.2279) — so cosθ is 0.9117 (up faces), 0.2279 (back/front bracket), 0.3419 (west inner face), 0 (ambient-only faces: east/front walls, ceiling underside).
+
+Validation against Seat 2's bisection anchors, at the checkpoint rig (0.85 / 1.15): ambient-only floor modelled 0.063–0.067 vs measured **0.0651**; sun-only back wall modelled 0.030 vs measured **0.0312**. The model's ratios were always right (raw-L deck/back predicted 1.69, measured 1.686); only its absolutes were wrong. Map factors fitted from Seat 2's measured medians: deck 0.925 · floor 0.946 · walls 0.937 · ceiling 0.945 · riser 1.0. One soft spot, recorded honestly: the deck's rendered pool reads ≈0.07 under the model at the room rig (0.754 measured vs 0.821 modelled — the tone curve compresses the brightest face); every other face lands within ≈0.01, and no pair floor depends on the gap.
+
+### 16.2 Dye/light table v2 — this table SUPERSEDES §6's dye table
+
+**§16's dye/light table v2 supersedes §6's table explicitly: no future reader should treat §6's dyes or §6's lighting arithmetic as live.** The dyes themselves do not change — walls `#C8A668` · floor `#B78D4C` · deck `#D8B068` (the §14 step, now ratified here, closing Seat 1's D-4) · riser `#77572A` · ceiling `#A87F45`. What changes is the room's light exposure, a Layer-2 decision recorded on the ROOM record and applied by the scene-state door (`applySceneState`): **ROOM.amb 2.70 · ROOM.sun 4.55** while the room stands; the void/checkpoint keeps the rig's build values 0.85 / 1.15, restored at the same door.
+
+Why lights, not dyes: with one wall dye (§6's "one dye, four shadings" design, kept), the target absolutes (back wall ≈0.4) would need a wall-dye luminance beyond the paper palette at the old exposure — dyes alone cannot reach both the ratios and the absolutes. Why the sun carries the larger share (≈4.0× vs ambient ≈3.2×): the back↔west separation comes only from the sun's cosines (0.2279 vs 0.3419) — an equal-scale lift (3.01/4.07) measured **1.0955** on that pair against its 1.10 floor; the rebalanced rig measures **1.113**.
+
+Measured on rendered pixels (fix round 1 census; 5×5 pool medians at projected face points, the deck from the camera seat by row scan — its pool straddles the 0.178° band, Seat 2's D6 method note):
+
+| face | camera phone | camera desktop | director phone | director desktop |
+|---|---|---|---|---|
+| deck | 0.7486 (row) | 0.7486 (row) | 0.7539 | 0.7539 |
+| back wall | 0.3873 | 0.3922 | 0.3873 | 0.3937 |
+| floor | 0.5359 | 0.5359 | 0.5376 | 0.5299 |
+| riser | 0.110 | 0.110 | 0.110 | 0.110 |
+| ceiling | 0.1607 | 0.1607 | 0.1607 | — |
+| west wall | — | 0.4421 | — | — |
+| east wall (= front bracket) | — | 0.2734 | — | — |
+
+Pairs (WCAG ratio): **binding deck↔back wall: 1.83 phone camera · 1.81 desktop camera · 1.84 phone director · 1.81 desktop director — ≥1.6 on all four** · deck↔riser 4.99 · riser↔floor 3.66 · shells (desktop camera, the full-shell seat): floor↔back 1.33 · floor↔west 1.19 · floor↔east 1.81 · floor↔ceiling 2.78 · **back↔west 1.113** · back↔east 1.37 · back↔ceiling 2.10 · west↔east 1.52 · west↔ceiling 2.34 · east↔ceiling 1.54 — **all ≥1.10**. Absolutes in bright-paper territory: deck in the 0.7s, back wall ≈0.39, west 0.44, floor ≈0.53.
+
+### 16.3 The ghost's construction (Seat 2's D3 — the rule now engages by construction)
+
+Diagnosis (isolated experimentally): the trigger, the pass identity and the restore were all correct — the failure was in the material program. three r186's program-change census omits the `transparent` flag: a material first compiled with the OPAQUE program keeps it when `transparent` is toggled without `needsUpdate`, and the OPAQUE program forces fragment alpha to 1.0 — so the pass set opacity 0.07 on a program that discards it. Proven in isolation: a manually ghosted back panel (state persisted across passes, pass machinery never touching it) read exactly its opaque baseline, 0.1135 vs 0.1135.
+
+Cure, at the class level: **the five shell panels' materials are born transparent** (`transparent: true` at construction; standing opacity 1, depthWrite on). The classification the engine compiles never toggles; the pass-scoped ghost writes only the opacity uniform, depthWrite and renderOrder — all honoured live. The ghost rule's trigger is unchanged (director pass, eye on a panel's outward side of its plane; camera passes never). Proof: Seat 2's exterior pose (eye 500, 630, 3416) reads the interior through the front wall (deck 0.71, floor 0.52 — baseline was a uniform 0.1143 solid); the top pose (pitch −72) reads floor 0.52 / deck 0.72 through the ceiling; the builder's behind-back pose reads deck 0.70 / floor 0.51 through the back wall; and after all three pose passes, a re-seeded camera pass samples **digit-for-digit identical** to a fresh page's camera census — no panel is ever stranded ghosted. Frames: `~/workspace/glproof/room-fix1/fix1-ghost-*.png`, `fix1-final-*.png`, viewed by the fixer.
+
+### 16.4 The deck band, corrected (Seat 2's D2 — record only, no geometry change)
+
+The deck band from the camera seat is **0.178°** (Seat 2's row scan of the rendered phone frame). This supersedes §5's 0.73° and the build's 0.29° figure. Disposition: **accepted as inherent to the owner's brief** — a 23-high stage seen from a camera standing at the back of a 920-deep empty audience floor is a sliver by geometry, not by defect. The deck-as-surface read is recovered by camera movement (the proof-of-concept push-in), not by geometry. No geometry changes in this round.
+
+### 16.5 The room home heading's representation (Seat 1's D-3)
+
+`ROOM_CAM_HOME.heading` and `ROOM_SEED_STATE`'s heading/tHeading are stored as **−180**, the frame loop's wrap180 normal form ([−180, 180)). The geometry is unchanged (+180 and −180 are the same aim); the representation is now path-independent — pill switch, `?scene=room` door and RESET land on byte-identical state (room harness R1 D-3 cells, raw JSON equality; confirmed on the real stack by probe: all three state strings identical, heading −180 on every path).
+
+### 16.6 Fix outcome
+
+Suites on the final bytes: migration 85/0 · fix-8 15/0 · fix-9 45/0 · fix-10 17/0 · room harness 73/0 (67 + 6: the two D-3 cells, the born-transparent cell, the §16 model cells) — **235 passed / 0 failed**. Final bytes: stage.html 198,878 B, sha256 `4eae18f3…`; seed re-pressed (199,172 B = stage + 294, equality proven apart from the flag block; seed default scene 'void'); the frozen checkpoint is untouched (`2aedd01b…`). Full record: `stage3d-roomfix1-record.md` in the delivery-gate records folder.
