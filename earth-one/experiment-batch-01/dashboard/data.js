@@ -7,6 +7,20 @@
    NEVER wire a superseded/defective file as playable; a cell with video:null
    renders its poster/status card instead. */
 
+/* The standing reviewer roster — every video is checked by every seat;
+   a cell's reviews map records pass / running / fail per seat (absent = pending).
+   The dashboard shows the chips + the pass count so readiness scans at a glance. */
+window.BATCH_REVIEWS = [
+  { key: "linguist",    label: "Linguist" },
+  { key: "educator",    label: "Educator" },
+  { key: "structure",   label: "Structure" },
+  { key: "correctness", label: "Correctness" },
+  { key: "coldviewer",  label: "Cold viewer" },
+  { key: "retention",   label: "Retention" },
+  { key: "audio",       label: "Audio" },
+  { key: "packaging",   label: "Packaging" }
+];
+
 window.BATCH_META = {
   batch: "Experiment Batch 01",
   channel: "Earth One · The Daily Language Challenge",
@@ -139,6 +153,7 @@ window.BATCH_CELLS = [
     file: "earthone-dlc-003-open-door-en-opening-v7.mp4",
     video: "videos/earthone-dlc-003-open-door-en-opening-v7.mp4",
     poster: "poster-cell-07.png",
+    reviews: { linguist: "running", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "pass", audio: "pass", packaging: "pass" },
     about: "The door sentence in the Classic form — the cell that caught the echo defect, so its opening is the first to be re-proved under the new opening-read gate."
   },
   {

@@ -122,6 +122,18 @@
   .titleline{font-size:16.5px;font-weight:700;line-height:1.3}
   .titleline .meta{color:var(--amber);font-weight:700}
   .subline{font-size:12.5px;color:var(--cream-dim);margin-top:3px}
+  /* reviewer seats — small check chips + the pass count */
+  .reviews{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;align-items:center}
+  .reviews .rcount{font-size:12.5px;font-weight:800;color:var(--cream);margin-right:2px}
+  .rchip{
+    font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:999px;
+    border:1px solid var(--glass-brd);background:rgba(0,0,0,.22);color:var(--cream-dim);white-space:nowrap;
+  }
+  .rchip.pass{border-color:rgba(134,214,106,.65);color:#b9e39d}
+  .rchip.running{border-color:var(--amber);color:var(--amber)}
+  .rchip.fail{border-color:var(--terra);color:#f0a58e}
+  .poster .revcount{margin-top:12px;font-size:12.5px;font-weight:800;color:var(--cream-dim)}
+  .poster .revcount b{color:var(--cream)}
   .actions{display:flex;gap:9px;margin-top:12px}
   .fb{
     flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
@@ -196,7 +208,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=4"></script>
+<script src="data.js?v=5"></script>
 <script>
 (function(){
   "use strict";
@@ -223,6 +235,26 @@
       .replace(/"/g,"&quot;");
   }
   function taughtLine(cell){ return cell.taught.join(" · "); }
+
+  var ROSTER = window.BATCH_REVIEWS || [];
+  function reviewState(cell, key){
+    var r = cell.reviews || {};
+    return r[key] || "pending";
+  }
+  function reviewCount(cell){
+    var n = 0;
+    ROSTER.forEach(function(seat){ if (reviewState(cell, seat.key) === "pass") n++; });
+    return n;
+  }
+  function reviewsHTML(cell){
+    if (!ROSTER.length) return "";
+    var chips = ROSTER.map(function(seat){
+      var st = reviewState(cell, seat.key);
+      var mark = st === "pass" ? "✓ " : st === "running" ? "⟳ " : st === "fail" ? "✗ " : "· ";
+      return '<span class="rchip ' + st + '">' + mark + esc(seat.label) + '</span>';
+    }).join("");
+    return '<div class="reviews"><span class="rcount">Reviews ' + reviewCount(cell) + '/' + ROSTER.length + '</span>' + chips + '</div>';
+  }
 
   function issueURL(cell, verdict, comment){
     var title = "[Batch01][" + cell.id + "] " + verdict + ": " + cell.sentence + " (" + cell.opening + ")";
@@ -284,6 +316,7 @@
             '<span class="tag">' + esc(cell.lengthLabel) + '</span>' +
           '</div>' +
           '<div class="statuspill"><span class="dot' + (busy ? " pulse" : "") + '" style="background:' + color + '"></span>' + esc(cell.statusLabel) + '</div>' +
+          '<div class="revcount">Reviews <b>' + reviewCount(cell) + '/' + ROSTER.length + '</b> checks passing</div>' +
           '<div class="lands">The verified video appears here as soon as it passes its gates.</div>' +
         '</div>';
     }
@@ -311,6 +344,7 @@
           esc(cell.opening) + ' opening · ' + esc(cell.archName) + ' · ' + esc(cell.lengthLabel).replace(/\s/g," ") + '</span></div>' +
         '<div class="subline">Cell ' + String(cell.n).padStart(2,"0") + ' of ' + CELLS.length +
           ' · teaches ' + esc(taughtLine(cell)) + ' · ' + esc(cell.statusLabel) + '</div>' +
+        reviewsHTML(cell) +
         '<div class="actions">' +
           '<button class="fb like" type="button">👍 Like</button>' +
           '<button class="fb dislike" type="button">👎 Dislike</button>' +
