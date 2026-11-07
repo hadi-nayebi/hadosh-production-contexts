@@ -47,3 +47,29 @@ RESET STAGE returns here.
   framed so its view covers the whole stage. Built as its own OPEVC job
   (Observe → Plan, iterated → Execute → Verify → Condense) forking from
   this checkpoint line.
+
+## Owner direction — the studio + the layer split (2026-11-07 ~12:48–12:51 EST)
+
+- **What this project IS (owner's words, paraphrased tight):** a private
+  movie studio inside a web page — a new world. Next: test PHYSICS in it;
+  then add characters; then build our scenes in this environment — assets
+  one at a time, animated one at a time, with real physics — so placements
+  and scene creation happen here instead of being struggled over in 2D.
+- **Layer law (owner, 2026-11-07 12:48 EST):** checkpoints are LAYERED and
+  separate in git — (P) the PLATFORM checkpoint carries what every video
+  uses: the void stage, grid, camera + controls + PiP, PHOTO/REC capture,
+  the seed/reset machinery, and the physics core (fall/bounce/settle);
+  (T) the THEATER checkpoint sits on P and adds the empty paper room as a
+  scene; (S) each specific video's scene builds on T (or P) and never
+  writes its content down into P or T. Going back to P must always find
+  recording + physics intact.
+- **Measured gap at the time of the order:** checkpoint-stable-v1 holds
+  void + grid ONLY (no capture, no room); capture and the room exist only
+  merged in the working stage.html — the separation job (spawned
+  2026-11-07 ~12:55 EST) derives P and T properly, stamps each, and
+  prepares the git checkpoints for the main agent to fire.
+- **First physics test (owner's pick):** the GLASS BALL — dropped from
+  ~1 m in scale (deck height 23 units = 1 m ⇒ drop = 23 units above the
+  deck), falls under gravity, shatters on the deck — glass only, NO smoke —
+  shards settle, hold, fade. The paper side-boxes ride the same engine as
+  the second test (fall, bounce like cardboard, settle at the sides).
