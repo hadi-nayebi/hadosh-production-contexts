@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en" data-reason="[USER] One self-contained HTML file: VERSION ONE of the scene world — a relaxing void, a wireframe grid ground, and one camera the director can move. The scene is WebGL, rendered by three.js vendored as one classic script (owner's platform decision, 2026-11-06); no images, no other external assets. The same single file this branch has evolved in place since the empty stage.">
+<head data-reason="[BEST-PRACTICE] Head carries title, viewport and the file's own styles only, so the world opens identically anywhere.">
+<meta charset="utf-8" data-reason="[BEST-PRACTICE] UTF-8 for exact rendering of the file's text.">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" data-reason="[BEST-PRACTICE] The viewport declaration: the world is a fixed tool surface, fitted and scaled by the app itself — the page never scrolls or zooms under the gestures. viewport-fit=cover (2026-11-06) so the safe-area insets report the phone's own bars and the bottom controls can lift clear of them.">
+<title data-reason="[USER] The world's name: version one — void, grid, camera.">Scene — Version One · Void · Grid · Camera</title>
+<style data-reason="[BEST-PRACTICE] All styling lives in this block — the chrome only: the glass control layer, the corner frame, the chips, the failure notice and the grain. The scene itself (void, grid, camera object) is WebGL on the canvas beneath, rendered by the vendored three.js; no scene styling stands here any more. @covers html, body, #gl, .viewport, .pip, .pipTag, .camProxy, .gizmoFrame, .headChip, .originMark, .glFail, .grain, .viewbar, .focalChip, .frameGuide, .hint, .hintBtn, .hintFull, .gearBtn, .panel, .camHit, .pHead, .row, .btns, .xBtn, .on, .open">
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#070403;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+*{box-sizing:border-box}
+.viewport{position:fixed;inset:0;overflow:hidden;touch-action:none;z-index:1;cursor:grab;background:transparent}
+.viewport:active{cursor:grabbing}
+.camHit{cursor:move}
+.pip{position:fixed;left:16px;top:16px;width:320px;height:200px;border-radius:14px;border:1px solid rgba(244,233,204,.35);box-shadow:0 10px 34px rgba(0,0,0,.55);overflow:hidden;z-index:4;touch-action:none;cursor:grab}
+.pipTag{position:absolute;left:10px;top:8px;font-family:Georgia,serif;font-size:11px;letter-spacing:1.6px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.38);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(244,233,204,.25);padding:3px 9px;border-radius:999px;pointer-events:none;z-index:3}
+@media (max-width:1100px){.pip{top:60px}}
+@media (max-width:560px){.pip{width:178px;height:112px;left:10px;top:108px}}
+@media (max-height:480px){.pip{width:178px;height:112px;top:60px}}
+/* In the INTERSECTION of the two small-screen queries the corner takes the NARROW rule's top (convergence fix round 3, C-1): the max-height block above stands later in source, so at equal specificity its 60px won on a short narrow screen and the corner's top strip sat under the two-row view bar. This combined query matches only where both hold, stands after both, and restores 108px there; each single-query region keeps its own rule untouched. */
+@media (max-width:560px) and (max-height:480px){.pip{top:108px}}
+.grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:.16;mix-blend-mode:overlay;z-index:5}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.camProxy{position:absolute;background:transparent;display:none}
+.gizmoFrame{position:fixed;right:14px;top:64px;width:92px;height:92px;border-radius:14px;border:1px solid rgba(244,233,204,.25);background:rgba(20,14,8,.32);pointer-events:none;z-index:4}
+.headChip{position:fixed;right:14px;bottom:16px;font-family:Georgia,serif;font-size:13px;letter-spacing:.6px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.32);border:1px solid rgba(244,233,204,.25);padding:6px 12px;border-radius:999px;pointer-events:none;z-index:5;display:none}
+.originMark{position:fixed;width:18px;height:18px;margin:-9px 0 0 -9px;border:2px solid rgba(244,233,204,.85);border-radius:50%;pointer-events:none;z-index:5;display:none}
+.originMark::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:rgba(244,233,204,.9)}
+body.camView .headChip{bottom:64px}
+.glFail{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-family:Georgia,serif;font-size:15px;color:#F4E9CC;background:rgba(16,11,6,.94);border:1px solid rgba(244,233,204,.4);padding:14px 20px;border-radius:14px;z-index:7;display:none}
+.glFail.on{display:block}
+.viewbar{position:fixed;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:5}
+.viewbar button{font-family:Georgia,serif;font-size:14.5px;letter-spacing:.4px;padding:11px 15px;border-radius:999px;border:1px solid rgba(244,233,204,.38);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);color:#F4E9CC;cursor:pointer;box-shadow:0 2px 14px rgba(0,0,0,.25);white-space:nowrap;touch-action:manipulation}
+.viewbar button.on{background:rgba(244,233,204,.88);color:#3A2810;border-color:rgba(244,233,204,.6)}
+.viewbar button:active{transform:scale(.96)}
+.frameGuide{position:fixed;inset:66px 3.5% 60px;pointer-events:none;display:none;z-index:3;
+ background:linear-gradient(90deg,transparent 33.2%,rgba(255,240,200,.22) 33.2%,rgba(255,240,200,.22) 33.6%,transparent 33.6%,transparent 66.4%,rgba(255,240,200,.22) 66.4%,rgba(255,240,200,.22) 66.8%,transparent 66.8%),linear-gradient(180deg,transparent 33.2%,rgba(255,240,200,.22) 33.2%,rgba(255,240,200,.22) 33.6%,transparent 33.6%,transparent 66.4%,rgba(255,240,200,.22) 66.4%,rgba(255,240,200,.22) 66.8%,transparent 66.8%)}
+.frameGuide.on{display:block}
+.hint{position:fixed;left:14px;bottom:16px;max-width:min(46vw,540px);font-family:Georgia,serif;font-size:13.5px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);border:1px solid rgba(244,233,204,.25);padding:7px 14px;border-radius:14px;pointer-events:none;transition:opacity 1.2s;white-space:normal;text-align:left;line-height:1.4;z-index:5}
+/* The narrow-screen block stands after the .hint base rule by the same law that puts the safe-area block last (convergence fix round 2, census instance D7): it stood BEFORE .hint, so its .hint max-width was cascade-dead at equal specificity — the narrow hint never got its full-width allowance. Its other rules already stood after their bases and are unchanged by the move. */
+@media (max-width:560px){.viewbar{left:10px;transform:none;max-width:calc(100vw - 72px);flex-wrap:wrap}.viewbar button{font-size:11px;padding:10px 7px;letter-spacing:.2px}.viewbar{gap:6px}.hint{max-width:calc(100vw - 28px)}}
+.hintBtn{pointer-events:auto;background:rgba(244,233,204,.10);border:1px solid rgba(244,233,204,.45);color:rgba(244,233,204,.95);font-family:inherit;font-size:11px;letter-spacing:1.5px;padding:5px 12px;min-height:28px;border-radius:999px;margin-left:7px;cursor:pointer;vertical-align:baseline}
+.hintFull{display:block;margin-top:5px}
+.hintFull[hidden]{display:none}
+/* The phone's own bars and cutouts own the screen's edges and the page runs edge-to-edge beneath them (owner's screenshot, 2026-11-06: the hint's MORE tap sat behind the phone's navigation buttons, untappable). On touch devices every edge-anchored control clears them: the bottom-anchored hint and lens chip lift by the safe-area inset, never less than the standard 56px bar height, and the settings panel's bottom edge gets the same clearance through its max-height. The other three edges are cleared with MARGINS (convergence fix C10, 2026-11-06): a margin adds to whatever offset each responsive breakpoint already gives the element, where a replacement top/left/right value would fight the rules that reposition the corner and the view bar at small sizes — top chrome (view bar, gear, corner, panel) clears a top cutout or status area, and the corner, hint, chip, gear and panel clear side cutouts in landscape. A margin alone is only half a cure, though (convergence fix round 4, D-2): the two elements whose widths are viewport budgets — the hint and the panel — were shifted by their side margins without their widths narrowing, so a large side inset on a narrow window pushed the hint's right edge past the screen and the panel's left edge off it. Their max-widths therefore subtract both side insets in the blocks below (the panel's in the coarse block itself; the hint's in the coarse-and-narrow block after it, because above 560px the hint's width is a proportion cap, not a viewport budget, and only the narrow budget needs the subtraction). */
+.gearBtn{position:fixed;right:14px;top:12px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(244,233,204,.38);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);color:#F4E9CC;font-size:19px;cursor:pointer;z-index:6;box-shadow:0 2px 14px rgba(0,0,0,.25);touch-action:manipulation}
+.gearBtn:active{transform:scale(.95)}
+.focalChip{position:fixed;right:14px;bottom:16px;font-family:Georgia,serif;font-size:13px;letter-spacing:.6px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.32);border:1px solid rgba(244,233,204,.25);padding:6px 12px;border-radius:999px;pointer-events:none;z-index:5}
+.panel{position:fixed;right:14px;top:66px;width:302px;max-width:calc(100vw - 28px);max-height:calc(100vh - 126px);overflow-y:auto;border-radius:16px;border:1px solid rgba(244,233,204,.30);background:rgba(16,11,6,.94);color:#F4E9CC;font-family:Georgia,serif;padding:16px 18px;z-index:6;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4);overscroll-behavior:contain;touch-action:pan-y}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.panel{background:rgba(16,11,6,.78);-webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3)}}
+.panel.open{display:block}
+.panel .pHead{display:flex;justify-content:space-between;align-items:center;margin:0 0 4px}
+.panel .xBtn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(244,233,204,.38);background:rgba(244,233,204,.10);color:#F4E9CC;font-size:15px;cursor:pointer;line-height:1}
+.panel h3{font-size:16px;letter-spacing:.6px;margin:0 0 10px;font-weight:normal;color:rgba(244,233,204,.85)}
+.panel .row{margin:13px 0}
+.panel label{display:flex;justify-content:space-between;font-size:15.5px;margin-bottom:6px}
+.panel label output{color:#E8CF9E}
+.panel input[type=range]{width:100%;accent-color:#C9A362;height:36px}
+.panel input[type=range]::-webkit-slider-thumb{width:28px;height:28px}
+.panel .btns{display:flex;gap:8px;margin-top:14px}
+.panel .btns button{flex:1;font-family:Georgia,serif;font-size:13.5px;padding:12px 6px;border-radius:999px;border:1px solid rgba(244,233,204,.38);background:rgba(244,233,204,.10);color:#F4E9CC;cursor:pointer}
+/* Panel clearance (fix round 9, W3 Seat 2 D-1; extended to every width by fix round 10, W4 Seat 2 D-1): the open panel is fenced on BOTH edges, by bounds measured on the live stack. TOP: at ≤560px the view bar wraps, and across its whole domain (widths ≥320px) its five buttons — fixed text at a fixed size, so fixed widths (72/64/101/94/92px) — pack into at most two rows: the bar's bottom edge stands at most 86px from the top (12 + 34 + 6 + 34). The base top of 66px crossed that band by 20px and the panel covered the lower halves of AIM AT CENTRE and FIND CAMERA; here the top steps down to 94px — the bound plus an 8px margin. Above 560px the bar stands in one row (bottom 53px) and the base top of 66px already clears it by 13px, so the top fence needs no second domain. BOTTOM: the hint's MORE tap rides on the hint's last line, its top edge measured at a constant 92px above the screen's bottom on coarse pointers (56 nav lift + the 28px button + its seat) and 52px on fine. Fix round 9 fenced the bottom only in the narrow domain; above 560px the wide caps (100vh − 90px fine, 100vh − 146px coarse) let the bottom pass screen − 24px / screen − 80px and the panel covered the MORE tap itself across widths 561–630px, the only band where the horizontal ranges meet (panel left edge = width − 316px; the tap's right edge stands at 315px). The fence is now ONE rule at every width: max-height = 100vh − top − reserve, the reserve set by the pointer alone — 100px coarse, 60px fine, i.e. the tap's band (92/52) plus the same 8px margin — so the panel's bottom can never pass screen − 100px (coarse) or screen − 60px (fine) in any of the four cascade domains (base 126 = 66 + 60 · narrow 154 = 94 + 60 · coarse 166 = 66 + 100 · coarse-and-narrow 194 = 94 + 100). Where the panel's own content ends above the cap, the bottom is higher still, and the cap/content transition sits exactly where the natural bottom clears the tap by the same 8px, so no height escapes the fence; the panel scrolls inside whatever height the two fences leave. The rules stand after the .panel base rules they adjust, per the stylesheet's own cascade law. */
+@media (max-width:560px){.panel{top:94px;max-height:calc(100vh - 154px)}}
+/* The safe-area blocks stand LAST in the stylesheet by law (convergence fix round 2, R2B-1): their selectors are single-class, the same specificity as the base rules they adjust, so source order is the only thing that lets them win. Standing mid-stylesheet, the block's chip lift and panel cap were silently overridden by the later base rules — presence in the stylesheet is not a computed style; this placement is re-proven by computed-style census, not by text search. The width-compensation block (convergence fix round 4, D-2) stands after the coarse block under the same law: it must beat the narrow block's .hint max-width (line order) whenever a coarse pointer and a narrow window coincide. */
+@media (pointer:coarse){.hint{bottom:max(56px,calc(16px + env(safe-area-inset-bottom,0px)))}.focalChip{bottom:max(56px,calc(16px + env(safe-area-inset-bottom,0px)))}.panel{max-height:calc(100vh - 166px);max-width:calc(100vw - 28px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}.viewbar{margin-top:env(safe-area-inset-top,0px)}.gearBtn{margin-top:env(safe-area-inset-top,0px);margin-right:env(safe-area-inset-right,0px)}.pip{margin-top:env(safe-area-inset-top,0px);margin-left:env(safe-area-inset-left,0px)}.panel{margin-top:env(safe-area-inset-top,0px);margin-right:env(safe-area-inset-right,0px)}.hint{margin-left:env(safe-area-inset-left,0px)}.focalChip{margin-right:env(safe-area-inset-right,0px)}.headChip{bottom:max(56px,calc(16px + env(safe-area-inset-bottom,0px)));margin-right:env(safe-area-inset-right,0px)}body.camView .headChip{bottom:max(104px,calc(64px + env(safe-area-inset-bottom,0px)))}.gizmoFrame{margin-top:env(safe-area-inset-top,0px);margin-right:env(safe-area-inset-right,0px)}}
+/* Width compensation for the hint's narrow viewport budget (convergence fix round 4, D-2): at ≤560px the hint's max-width is the window minus its two 14px clearances; with a side margin of insetL now shifting the box, the budget subtracts BOTH side insets, so the right edge holds its 14px clearance from the right inset's inner edge exactly as it held it from the screen edge at inset 0 — the formula reduces to the standing calc(100vw - 28px) when both insets are 0. Scoped to coarse-and-narrow because that is the only cell where a side margin and the viewport budget coexist: fine pointers take no safe-area margins, and above 560px the hint's cap is min(46vw, 540px), a proportion that leaves more slack than any inset consumes. */
+@media (pointer:coarse) and (max-width:560px){.hint{max-width:calc(100vw - 28px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}.panel{max-height:calc(100vh - 194px)}}
+</style>
+</head>
+<body data-reason="[USER] The page body: one world rendered twice (the main view and the corner picture-in-picture), the glass control layer above them, and nothing else.">
+<canvas id="gl" data-reason="[BEST-PRACTICE] The WebGL surface: the one canvas the vendored three.js renders onto — the world scene full-screen for the main view, the world scene again into the corner's rectangle, and the orientation gizmo's own mini-scene into its frame. One canvas, one world scene (the gizmo's mini-scene is the named second scene), every view a render pass."></canvas>
+<div class="glFail" id="glFail" role="alert" data-reason="[USER] The named failure: when WebGL cannot start or its context is lost, this panel says so in plain words while the chrome stays alive — the stage never silently substitutes a lesser picture for the real render.">3D is not available on this device.</div>
+<div class="gizmoFrame" id="gizmoFrame" data-reason="[USER] The orientation gizmo's frame: a small glass square at the top right into which the render loop draws the world axes and the compass letters from the active eye's own direction, so which way is up and which way the eye faces are readable at a glance, at rest, without touching anything."></div>
+<div class="viewport" id="vpMain" data-reason="[USER] The main view: whichever eye is chosen large — the director's free view, or the camera's shot. It receives the main gestures. The picture itself is the WebGL canvas beneath; this surface is the touch layer over it.">
+  <div class="camProxy camHit" id="camProxy" data-reason="[USER] The camera's grab proxy: a transparent layer the render loop seats over the camera object's projected silhouette every frame, so a press landing on the object is a press on an element carrying the hit class the gesture door reads — the fat invisible proxy every 3D tool picks against, seated by true projection now instead of by a drawn copy of the object. It carries no look at all — its whole job is to be landed on."></div>
+</div>
+<div class="pip" id="pip" data-reason="[USER] The picture-in-picture: the OTHER view, live in the top-left corner — the camera's shot while you direct, the director's view while you look through the camera. It is the same world scene rendered a second time into this frame's rectangle of the one canvas — one world scene, every view a pass over it, so the two views can never disagree about what the world contains. Top-left because the bottom of the screen belongs to the ground action, the hint and the camera's usual seat. Drag inside it to drive the other eye (aim the camera, or orbit the director), pinch or scroll over it to zoom that eye (dolly for the director, the lens for the camera), and tap it to swap the views.">
+  <div class="pipTag" id="pipTag" data-reason="[USER] The corner view's name tag: it always says which eye the corner is showing, so the two views are never confused — and while the corner shows the camera's eye it also names that eye's lens length, the same readout the main camera view carries in its chip.">CAMERA</div>
+</div>
+<div class="frameGuide" id="frameGuide" data-reason="[USER] The framing overlay, shown only when the camera's shot fills the main view: third-lines only, no border — the whole screen IS the shot's edge, so a drawn border would invent a second, false frame; the thirds are the composition guide."></div>
+<canvas class="grain" id="grain" width="256" height="256" data-reason="[FX] Procedural film grain: canvas noise at low opacity over every picture surface — the main view and the corner view alike — beneath the controls, so flat digital colour reads as a physical surface. Decorative texture only."></canvas>
+<div class="viewbar" data-reason="[USER] The view switch, kept as small glass pills: DIRECTOR (work the scene), CAMERA (the shot fills the screen), AIM AT CENTRE (point the camera at the stage's centre point), FIND CAMERA (fly to the camera object — the always-reachable recovery). ADD CAMERA exists only in the seed state, where there is no camera yet.">
+  <button id="btnDir" class="on" aria-pressed="true" data-reason="[USER] Director: the free view is the main view; the corner shows the camera's shot.">DIRECTOR</button>
+  <button id="btnCam" aria-pressed="false" data-reason="[USER] Camera: the shot fills the main view; the corner shows the director's view.">CAMERA</button>
+  <button id="btnAim" data-reason="[USER] Aim at centre: turn and tilt the camera so its eye lands on the stage's centre point (430, 53) — the fastest way to re-find the subject after moving the camera.">AIM AT CENTRE</button>
+  <button id="btnFind" data-reason="[USER] Find camera: fly the director to the camera object — centred and close at ANY seat in the camera's full range, because the visit's flight works to its own wider bounds (derived from the full seating envelope, ±4700 pan) rather than the gesture ranges that used to strand far seats off-centre (navfix N7, 2026-11-06) — the recovery when the camera is small, far or off-frame. The focus flight existed only behind a double-tap on the very target that is hard to hit; a named button makes the recovery always reachable (2026-11-06 ergonomics audit).">FIND CAMERA</button>
+  <button id="btnAddCam" style="display:none" data-reason="[USER] Add camera: in the seed state (empty stage) this is how the camera object enters the space — it arrives at its home seat, aimed at the centre. Without it, RESET STAGE would be a one-way door.">ADD CAMERA</button>
+</div>
+<div class="focalChip" id="focalChip" style="display:none" data-reason="[USER] The lens readout: while the camera's shot fills the main view, the current focal length sits at the bottom right, so a touch user who zooms the lens by gesture can see the number they are setting — the corner tag carries the same readout when the corner shows the camera."></div>
+<div class="headChip" id="headChip" data-reason="[USER] The heading readout: the active eye's true compass direction, read from the rendered camera itself each frame — a compass point and degrees, two tokens — so which way the eye faces is stated in words at rest, beside the lens readout when the shot fills the screen."></div>
+<div class="originMark" id="originMark" style="display:none" data-reason="[USER] The origin's edge marker (fix round 8, O-3): while the world's origin stands outside the director's frame — at the shipped home framing the ground's ring sits at the frame's very edge — this ring-and-dot stands on the frame's edge on the true line toward the origin, so where the origin is stays answerable at a glance in any framing; the moment the origin itself is inside the frame, the ring on the ground carries the answer and this marker hides. A chrome instrument like the heading chip: its seat is computed from the rendered camera's own projection every frame, never guessed from state. It carries no words at all."></div>
+<button class="gearBtn" id="gearBtn" aria-label="Settings" aria-expanded="false" data-reason="[USER] The settings gear — the standard corner control of any tool: it opens or closes the panel where the navigation's speeds and smoothing are configured. Glass, like the rest of the control layer.">&#9881;</button>
+<div class="panel" id="panel" data-reason="[USER] The settings panel: the basic configuration of this tool, as every scene tool has one — look speed, zoom speed, pan speed and smoothing as sliders the director sets, plus the three reset scopes (view, camera, stage) and defaults. Its background is near-opaque by default and the glass blur is only an enhancement where the engine supports it: on the owner's phone the heavy blur over the 3D scene was the layer that failed to paint the panel's interior (2026-11-06 audit), so the panel must read perfectly with no blur at all.">
+  <div class="pHead">
+    <h3 data-reason="[BEST-PRACTICE] The panel's title: one word, so the panel's job is known at a glance.">SETTINGS</h3>
+    <button class="xBtn" id="btnClosePanel" aria-label="Close settings" data-reason="[USER] The panel's own close button: a panel that only its opener can dismiss traps the user; this closes it from inside, and pressing anywhere outside the panel closes it too — a press on the corner view closes it as well, through the corner's own handler, and that press is spent on the dismissal, so it cannot also swap the views.">&#10005;</button>
+  </div>
+  <div class="row" data-reason="[USER] Look speed: how far a drag turns the view — and how fast the camera aims when you drag the corner view.">
+    <label for="sLook">Look speed <output id="oLook">1.00&times;</output></label>
+    <input type="range" id="sLook" min="0.4" max="2" step="0.05" value="1" data-reason="[USER] Look speed slider: 0.4 to 2 times.">
+  </div>
+  <div class="row" data-reason="[USER] Zoom speed: how fast a pinch or the wheel dollies the view, and how fast the lens zooms over the corner view.">
+    <label for="sZoom">Zoom speed <output id="oZoom">1.00&times;</output></label>
+    <input type="range" id="sZoom" min="0.4" max="2" step="0.05" value="1" data-reason="[USER] Zoom speed slider: 0.4 to 2 times.">
+  </div>
+  <div class="row" data-reason="[USER] Pan speed: how far a two-finger drag slides the view, and how fast the camera slides when you drag it.">
+    <label for="sPan">Pan speed <output id="oPan">1.00&times;</output></label>
+    <input type="range" id="sPan" min="0.4" max="2" step="0.05" value="1" data-reason="[USER] Pan speed slider: 0.4 to 2 times.">
+  </div>
+  <div class="row" data-reason="[USER] Smoothing: how heavily the views chase their targets — low is direct and mechanical, high is slow and floaty. While a finger is down the chase always tightens, so dragging never feels floaty at any setting.">
+    <label for="sSmooth">Smoothing (direct &rarr; floaty) <output id="oSmooth">50</output></label>
+    <input type="range" id="sSmooth" min="0" max="100" step="1" value="50" data-reason="[USER] Smoothing slider: 0 direct to 100 floaty.">
+  </div>
+  <div class="btns" data-reason="[USER] The director aids toggle: the camera's contact shadow and its true frustum are the director's instruments, not scene content. Off by default since the owner's 2026-11-05 phone pass found them as extra stuff in the scene; one tap brings them back when placing a shot precisely.">
+    <button id="btnAids" data-reason="[USER] Aids on/off: shows or hides the camera's instruments (contact shadow, true frustum) in the director's view.">AIDS: OFF — SHADOW · FRUSTUM</button>
+  </div>
+  <div class="btns" data-reason="[USER] The panel's two resets: fly the director home, and return every setting to its default.">
+    <button id="btnHome" data-reason="[USER] Reset view: fly the director back to the centre view.">RESET VIEW</button>
+    <button id="btnDefaults" data-reason="[USER] Defaults: return every setting to its shipped value — look, zoom, pan and smoothing to their defaults, and the director aids off.">DEFAULTS</button>
+  </div>
+  <div class="btns" data-reason="[USER] The other two reset scopes, named separately because they clear different things (the pose-editor precedent: reset view, reset object, reset scene are different buttons): RESET CAMERA returns the camera object to its home seat and aim; RESET STAGE clears the space to the seed — void and grid, no objects — from which projects start.">
+    <button id="btnResetCam" data-reason="[USER] Reset camera: return the camera object to its home position, heading, tilt, roll and lens — the recovery when the camera has been dragged or flown somewhere lost.">RESET CAMERA</button>
+    <button id="btnResetStage" data-reason="[USER] Reset stage: clear the space to the seed state — the void and the grid, no camera, and the director's view back at the checkpoint's opening view. The seed is what new projects fork from; ADD CAMERA in the view bar brings the camera back.">RESET STAGE</button>
+  </div>
+</div>
+<div class="hint" id="hint" data-reason="[USER] The guide at the bottom left, under the owner's TEN-WORD LAW (2026-11-06): at most ten words stand open without a tap — the current view's first gestures plus a MORE tap; the full gesture map lives behind that tap (MORE/LESS), never poured out as a wall. While collapsed it fades to a whisper so it never competes with the scene."><span id="hintShort">Director: drag to orbit &middot; pinch to zoom &middot;</span><button class="hintBtn" id="hintBtn" type="button" data-reason="[USER] The tap that opens the full gesture map (MORE) and closes it again (LESS) — the one part of the hint that takes touches; the rest of the hint lets every press through to the scene.">MORE</button><span class="hintFull" id="hintFull" hidden>Director: drag to orbit &middot; drag the camera to move it &middot; pinch to zoom &middot; two-finger drag to pan &middot; twist two fingers to roll &middot; double-tap the camera to visit it &middot; double-tap space to fly home &middot; scroll to zoom &middot; three-finger slide zooms the lens &middot; double-tap-hold and slide to zoom one-handed &middot; arrow keys nudge the camera &middot; drag or pinch the corner to aim and zoom the camera &middot; tap the corner to swap views &middot; grid: one square 92 &middot; heavy line 460</span></div>
+<script src="assets/three-vendor.js" data-reason="[BEST-PRACTICE] The vendored three.js engine (r186): one classic script, bundled from the pinned module pair, so the stage boots from a bare file:// open — no modules, no import map, no runtime fetch. Owner's platform decision, 2026-11-06 17:39 EST: adopt three.js, vendored. Its version, byte size and sha256 stand in the branch law and the migration record."></script>
+<!-- STAGE SEED - generated from stage.html (sha256 86c784b1c841a80f) by assets/plan/make-seed.py.
+     Boots into the empty state: the void and the wireframe grid, no objects.
+     Do not edit by hand; regenerate after any stage.html change. -->
+<script>window.__STAGE_SEED__ = true;</script>
+<script data-reason="[BEST-PRACTICE] The world's single script, in three layers (owner's split order, 2026-11-06): LAYER 1 ASSETS builds everything that is seen; LAYER 2 STATE holds every number; LAYER 3 MECHANICS — rigs, the frame loop, the controls — consumes state and element handles only, so the mechanics lift out as one engine block when a project forks the seed.">
+(function () {
+  'use strict';
+  var GY = 470;           /* the ground level: every standing thing's base sits on this line */
+  var EYE = 436;          /* the camera's eye height: the centre of its lens */
+
+  /* ════════════════════════════════════════════════════════════════════════
+     LAYER 1 · ASSETS — the visual layer: everything that is SEEN.
+     The grain, and the WebGL scene the vendored three.js renders: the
+     gradient void dome, the shader grid ground, the paper camera object
+     with its contact shadow and held ring, its true frustum helper, and
+     the orientation gizmo's own small scene. This layer reads the world
+     constants above it and nothing else: it never touches state,
+     settings or gestures. A project forks the seed by replacing this
+     layer's scene while keeping the state shape and the mechanics.
+     ════════════════════════════════════════════════════════════════════════ */
+  /* @reason [FX] The grain: a 256×256 field of random warm-grey pixels drawn once on a canvas that the stylesheet stretches over the whole screen — sized explicitly (width/height 100%: inset alone does not stretch a replaced canvas element, which otherwise renders at its intrinsic 256×256 in the top-left) and layered above every picture surface, the corner view included, below the controls (convergence fix C8, 2026-11-06) — real randomness is correct here because grain IS randomness; it is the one place in this file where that is true. The builder runs GUARDED (convergence fix round 3, M-2a): it stands at the script's top level, ahead of every other statement, so an engine that refuses a 2d context — a null return or a throw — must leave a plain void and a working script, never a dead page. */
+  (function makeGrain() {
+    try {
+      var c = document.getElementById('grain'), g = c.getContext('2d');
+      if (!g) return;
+      var img = g.createImageData(256, 256), i;
+      for (i = 0; i < img.data.length; i += 4) { var v = 118 + Math.random() * 60; img.data[i] = v; img.data[i + 1] = v * 0.92; img.data[i + 2] = v * 0.78; img.data[i + 3] = 255; }
+      g.putImageData(img, 0, 0);
+    } catch (err) { }
+  })();
+
+  /* @reason [BEST-PRACTICE] The vendored engine, taken once: if the vendor script failed to load, this stands null and every engine call in the file is gated on the flag below — the chrome, the state and the gestures are plain DOM and keep working, and the failure panel names the loss instead of the stage silently becoming a lesser picture. */
+  var T3 = (typeof THREE !== 'undefined') ? THREE : null;
+  var glOK = false;
+  var renderer = null, scene = null, dirCam = null, sceneCam = null, camHelper = null, camGroup3 = null, ringMesh = null, shadowMesh = null;
+  var gizmoScene = null, gizmoCam = null;
+  var pipRect = null, gizmoRect = null;
+
+  /* @reason [USER] The held ring's handle: there is ONE world scene now, rendered once per eye, so there is one ring — the wiring's ring writer (setRing, in the control layer) writes this handle's style exactly as it wrote the two DOM rings before, both world handles it knows are this one handle, and the render loop reads the handle each frame and lights the one ring mesh in the director's pass. One write, both views correct, because the views are one world. */
+  var ringHandle = { style: { display: 'none' } };
+  var worldMain = { ring: ringHandle }, worldPip = { ring: ringHandle };
+
+  /* @reason [USER] The named failure, shown and hidden: WebGL unavailable at build, or its context lost in use, raises this panel — plain words over a live chrome — and a restored context lowers it again. The stage never falls back to a drawn imitation of the render. */
+  function showGlFail(on) { var p = document.getElementById('glFail'); if (p) p.className = 'glFail' + (on ? ' on' : ''); }
+
+  /* @reason [USER] One part of the camera object: a paper box at a camera-local offset inside the group — the group alone moves (one position, one heading rotation per frame), so the object can never tear apart. Local axes are the world's: x across, y up from the ground, z along the aim, the barrel toward +z. */
+  function camPart(parent, x, y, z, w, h, d, mats) { var m = new T3.Mesh(new T3.BoxGeometry(w, h, d), mats); m.position.set(x, y, z); parent.add(m); return m; }
+
+  /* @reason [FX] The camera's contact shadow as a texture: a soft dark radial pool drawn once on a small canvas — the same pool the ground print was, now a texture on a ground plane inside the camera's group, so it travels with the object by construction. */
+  function shadowTexture() {
+    var c = document.createElement('canvas'); c.width = 256; c.height = 256;
+    var g = c.getContext('2d'); var gr = g.createRadialGradient(128, 128, 8, 128, 128, 126);
+    gr.addColorStop(0, 'rgba(20,12,4,0.52)'); gr.addColorStop(1, 'rgba(20,12,4,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    return new T3.CanvasTexture(c);
+  }
+
+  /* @reason [BEST-PRACTICE] A letter sprite for the gizmo: the letter drawn once on a canvas, carried on a sprite so it faces whichever eye renders the gizmo — the compass letters are read, never mirrored. The letter stands on its own dark plate and the sprite runs larger than the first build's (fix round 8, O-4): at the 92px phone frame the trailing letters merged into the axis crossing behind them; the plate separates a letter from whatever it crosses, at any orientation. The gizmo eye stands at 5.6 (fix round 8, O-4 completed): at the first build's 3.4 the side letters at ±1.5 stood outside the 38° frame entirely, and at 4.6 their centres were inside but the 0.52-wide sprites' outer edges still crossed the frame's sides and the letters read clipped at the glass edge; at 5.6 the whole sprite — centre 15.0°, edge 17.4° against the 19° half-angle — stands inside the frame with margin, at every heading. */
+  function textSprite(txt) {
+    var c = document.createElement('canvas'); c.width = 128; c.height = 128;
+    var g = c.getContext('2d');
+    g.fillStyle = 'rgba(14,9,5,0.55)'; g.fillRect(8, 8, 112, 112);
+    g.font = '84px Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#F4E9CC'; g.fillText(txt, 64, 68);
+    var sp = new T3.Sprite(new T3.SpriteMaterial({ map: new T3.CanvasTexture(c), transparent: true, depthTest: false }));
+    sp.scale.set(0.52, 0.52, 1); return sp;
+  }
+
+  /* @reason [BEST-PRACTICE] The scene build, guarded whole: renderer creation, the void dome, the shader grid, the camera object, the two real cameras, the frustum helper and the gizmo scene are built here or not at all — a throw anywhere leaves glOK false, the failure panel raised by the caller, and the DOM chrome, state and gestures fully alive. The software-rasteriser choice is deliberate: failIfMajorPerformanceCaveat stands FALSE, so a weak device still gets the true stage at a lower frame rate instead of no stage — the failure shape is speed, never wrong geometry. The pixel ratio is capped at 2, antialiasing is on, and there are no post-processing chains (the capability audit's low-end discipline). */
+  function buildGL() {
+    if (!T3) return false;
+    try {
+      var canvas = document.getElementById('gl');
+      renderer = new T3.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false, powerPreference: 'high-performance', failIfMajorPerformanceCaveat: false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.autoClear = false;
+      scene = new T3.Scene();
+      scene.add(new T3.AmbientLight(0xffe9c4, 0.85));
+      var sun = new T3.DirectionalLight(0xfff2d8, 1.15); sun.position.set(300, 800, 200); scene.add(sun);
+
+      /* @reason [USER] THE VOID — a gradient backdrop dome around the world: dark below the horizon, a warm band AT the horizon, deepening upward, computed from the true view direction every pixel — so up reads up and down reads down from the paint itself, the horizon is a place in the world the eye can find, and it holds at every pitch and tilt because it is anchored to the world, not to the screen. (A screen-fixed vignette was never a horizon; the perception layer's Class O names it counterfeit.) THE ONE HORIZON (fix round 8, O-2): the brightening peaks exactly at h = 0 — the same world line the ground plane's own vanishing line lies on — so the frame holds a single horizon, not two competing lines; the below-horizon colour slopes up toward it across h −0.30..0, a haze the grid's far dissolution thins into, instead of a dark gap under a floating strip (the strip reading verify round W1 measured on the old narrow band). */
+      var domeMat = new T3.ShaderMaterial({ side: T3.BackSide, depthWrite: false,
+        uniforms: { uZen: { value: new T3.Color(0x0D0805) }, uHor: { value: new T3.Color(0x2A1A0C) }, uBel: { value: new T3.Color(0x070403) } },
+        vertexShader: [
+          'varying vec3 vDir;',
+          'void main() { vec4 wp = modelMatrix * vec4(position, 1.0); vDir = wp.xyz - cameraPosition; gl_Position = projectionMatrix * viewMatrix * wp; }'
+        ].join('\n'),
+        fragmentShader: [
+          'varying vec3 vDir;',
+          'uniform vec3 uZen; uniform vec3 uHor; uniform vec3 uBel;',
+          'void main() {',
+          '  float h = normalize(vDir).y;',
+          '  vec3 c = h > 0.0 ? mix(uHor, uZen, smoothstep(0.0, 0.65, h)) : mix(uHor, uBel, smoothstep(0.0, -0.30, h));',
+          '  c += vec3(0.52, 0.38, 0.19) * (1.0 - smoothstep(0.0, 0.07, abs(h))) * 0.80;',
+          '  gl_FragColor = vec4(c, 1.0);',
+          '  #include <tonemapping_fragment>',
+          '  #include <colorspace_fragment>',
+          '}'
+        ].join('\n') });
+      var dome = new T3.Mesh(new T3.SphereGeometry(9000, 32, 16), domeMat);
+      dome.frustumCulled = false; dome.renderOrder = -2; scene.add(dome);
+
+      /* @reason [USER] THE GROUND — the canonical shader infinite grid (the fwidth anti-aliased family every 3D tool's grid belongs to): the world's 92-unit measuring scale as the minor tier, every fifth line promoted to the major tier, and the two axis lines through the origin in the dyed-paper hues the fix-7 plan decided — terracotta for X, slate blue for Z — positive solid, negative dashed (the SketchUp sign convention), so where the origin is and which way the axes run are readable from the floor itself. Alpha is governed by TRUE distance from the rendering camera through per-tier distance WINDOWS whose ends are the tiers' own analytic 3:1 crossings in this shader's own distance (minor 2480, major 2550, axes 2240 — computed from these paint values in the canvas's encoded-space blending arithmetic, the arithmetic the page actually performs, by the fix-8 harness; verify round W1's ~1900/~2170 figures were read in a ground-projected measure under the retired alphas, and in the shader's 3D distance at the shipped alphas the crossings stand here): inside its window a tier paints at its full census alpha; across the window's last 350 units the tier dissolves by screen-door (each fragment keeps the full alpha or is discarded, by a stable hash), so no fragment anywhere ever paints BELOW the floor — a grey fade would pass through every sub-floor alpha on its way to zero, which is exactly what the old 1500→3600 smooth fade did (verify W1, N-3) — and past the window nothing paints at all: no edge, no silhouette, no rectangle, and no sub-floor paint out to any distance. The tier alphas were the plan's census values (0.65/0.80/0.85), chosen under a linear-blend assumption the engine does not keep: the page's canvas blends transparent paint in ENCODED space, which taxes every composite (fix round 8's hook-against-frame measurement: the grid's bright pixels land ×0.79 in byte value through the canvas against a linear-blend render of the same frame). RE-DERIVED AT FIX ROUND 8 (0.80/0.88/0.92): in the canvas's own encoded-space arithmetic each tier's full-intensity composite clears the floor with margin (minor/major ≈7.0:1, axes ≈4.6:1 against the floor median) and a mid-intensity line pixel over the haze still composites at ≈3.0:1 — contrast by construction in the arithmetic the page actually performs, and measurable from inside the file through the pixel hook, which now reads the page's own buffer. LINE WEIGHT (fix round 8, N-4): both line functions divide by fwidth × 1.8 — the canonical one-pixel hairline left the bright lines under 5% of the pixels in the low grazing bands (the scene camera's ground band, the empty stage's bands), so a region's 95th percentile never reached the lines however strong their colour; at 1.8 the lines carry their share of every band and the percentile floor is met by the paint that is actually the reference, at the same alphas. The plane renders from BOTH sides, so the floor exists across the director's whole pitch range and the camera's whole tilt range, from above and from below alike. */
+      var gridMat = new T3.ShaderMaterial({ transparent: true, depthWrite: false, side: T3.DoubleSide,
+        uniforms: {
+          uMinor: { value: new T3.Color(0xE2C48C) }, uMajor: { value: new T3.Color(0xE2C48C) },
+          uAxisX: { value: new T3.Color(0xC96F4A) }, uAxisZ: { value: new T3.Color(0x6E8CAE) },
+          uScale: { value: 92 }, uMajorEvery: { value: 5 },
+          uCutMinor: { value: 2480 }, uCutMajor: { value: 2550 }, uCutAxis: { value: 2240 }, uCutRoll: { value: 350 },
+          uAlphaMinor: { value: 0.80 }, uAlphaMajor: { value: 0.88 }, uAlphaAxis: { value: 0.92 }
+        },
+        vertexShader: [
+          'varying vec3 vWorld;',
+          'void main() { vec4 wp = modelMatrix * vec4(position, 1.0); vWorld = wp.xyz; gl_Position = projectionMatrix * viewMatrix * wp; }'
+        ].join('\n'),
+        fragmentShader: [
+          'varying vec3 vWorld;',
+          'uniform vec3 uMinor; uniform vec3 uMajor; uniform vec3 uAxisX; uniform vec3 uAxisZ;',
+          'uniform float uScale; uniform float uMajorEvery; uniform float uCutMinor; uniform float uCutMajor; uniform float uCutAxis; uniform float uCutRoll;',
+          'uniform float uAlphaMinor; uniform float uAlphaMajor; uniform float uAlphaAxis;',
+          'float gridLine(vec2 coord) { vec2 g = abs(fract(coord - 0.5) - 0.5) / (fwidth(coord) * 1.8); return 1.0 - min(min(g.x, g.y), 1.0); }',
+          'float axisLine(float d) { return 1.0 - min(abs(d) / (max(fwidth(d), 1e-5) * 1.8), 1.0); }',
+          'float dashPat(float v) { return step(0.5, fract(v / (uScale * 2.0))); }',
+          'float door(float w) { if (w >= 0.999) return 1.0; float hsh = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453); return hsh < w ? 1.0 : 0.0; }',
+          'void main() {',
+          '  float dist = length(vWorld - cameraPosition);',
+          '  float winMinor = 1.0 - smoothstep(uCutMinor - uCutRoll, uCutMinor, dist);',
+          '  float winMajor = 1.0 - smoothstep(uCutMajor - uCutRoll, uCutMajor, dist);',
+          '  float winAxis = 1.0 - smoothstep(uCutAxis - uCutRoll, uCutAxis, dist);',
+          '  if (winMinor <= 0.002 && winMajor <= 0.002 && winAxis <= 0.002) discard;',
+          '  vec2 coord = vWorld.xz / uScale;',
+          '  vec3 col = uMinor;',
+          '  float a = gridLine(coord) * uAlphaMinor * door(winMinor);',
+          '  float am = gridLine(coord / uMajorEvery) * uAlphaMajor * door(winMajor);',
+          '  if (am > a) { col = uMajor; a = am; }',
+          '  float aX = axisLine(vWorld.z) * uAlphaAxis * door(winAxis) * (vWorld.x < 0.0 ? dashPat(vWorld.x) : 1.0);',
+          '  if (aX > a) { col = uAxisX; a = aX; }',
+          '  float aZ = axisLine(vWorld.x) * uAlphaAxis * door(winAxis) * (vWorld.z < 0.0 ? dashPat(vWorld.z) : 1.0);',
+          '  if (aZ > a) { col = uAxisZ; a = aZ; }',
+          '  if (a <= 0.002) discard;',
+          '  gl_FragColor = vec4(col, a);',
+          '  #include <tonemapping_fragment>',
+          '  #include <colorspace_fragment>',
+          '}'
+        ].join('\n') });
+      var grid = new T3.Mesh(new T3.PlaneGeometry(12000, 12000), gridMat);
+      grid.rotation.x = -Math.PI / 2; grid.renderOrder = -1; grid.frustumCulled = false; scene.add(grid);
+
+      /* @reason [USER] The origin ring: a small pale ring printed at the axis crossing (0, 0) — the ground's own mark of where the world's centre is, part of the reference layer, visible from any working distance the fade allows. */
+      var ring0 = new T3.Mesh(new T3.RingGeometry(30, 38, 48), new T3.MeshBasicMaterial({ color: 0xF4E9CC, transparent: true, opacity: 0.85, side: T3.DoubleSide, depthWrite: false }));
+      ring0.rotation.x = -Math.PI / 2; ring0.position.y = 0.5; ring0.renderOrder = 0; scene.add(ring0);
+
+      /* @reason [USER] THE CAMERA — the one object in the world: a dark paper camera standing on the ground, built from the same part list the drawn object carried (plinth, body, lens barrel, viewfinder, dial, both glasses), at the same local offsets, in the paper palette as flat materials under the stage's grain. It is an object, not a viewpoint: the director drags it across the ground, and its eye is where its lens is. Its position and aim are state, set by hand or by instruction. */
+      var matTop = new T3.MeshStandardMaterial({ color: 0xCCA45F, roughness: 0.9 });
+      var matSide = new T3.MeshStandardMaterial({ color: 0xB78D4C, roughness: 0.9 });
+      var matBody = new T3.MeshStandardMaterial({ color: 0x77572A, roughness: 0.85 });
+      var matCamTop = new T3.MeshStandardMaterial({ color: 0x54390F, roughness: 0.85 });
+      var matDark = new T3.MeshStandardMaterial({ color: 0x38260F, roughness: 0.9 });
+      var matLens = new T3.MeshStandardMaterial({ color: 0x2E1F0E, roughness: 0.6 });
+      camGroup3 = new T3.Group();
+      camPart(camGroup3, 0, 4, 0, 118, 8, 86, matDark);
+      camPart(camGroup3, 0, 34, 45, 44, 38, 28, matLens);
+      camPart(camGroup3, 0, 34, 0, 96, 52, 64, [matSide, matSide, matCamTop, matDark, matBody, matBody]);
+      camPart(camGroup3, -20, 66, 2, 30, 14, 36, matBody);
+      camPart(camGroup3, 30, 63, -6, 16, 8, 16, matDark);
+      var glass = new T3.Mesh(new T3.CircleGeometry(11, 32), new T3.MeshStandardMaterial({ color: 0x1B3247, roughness: 0.25, metalness: 0.1 }));
+      glass.position.set(0, 34, 59.6); camGroup3.add(glass);
+      var catch1 = new T3.Mesh(new T3.CircleGeometry(3.5, 16), new T3.MeshBasicMaterial({ color: 0xCFE9FF }));
+      catch1.position.set(-4, 39, 59.8); camGroup3.add(catch1);
+      var rear = new T3.Mesh(new T3.CircleGeometry(7, 24), new T3.MeshStandardMaterial({ color: 0x1B3247, roughness: 0.25 }));
+      rear.position.set(0, 34, -32.6); rear.rotation.y = Math.PI; camGroup3.add(rear);
+      shadowMesh = new T3.Mesh(new T3.PlaneGeometry(200, 140), new T3.MeshBasicMaterial({ map: shadowTexture(), transparent: true, depthWrite: false }));
+      shadowMesh.rotation.x = -Math.PI / 2; shadowMesh.position.y = 0.4; shadowMesh.renderOrder = 1; camGroup3.add(shadowMesh);
+      ringMesh = new T3.Mesh(new T3.RingGeometry(88, 96, 48), new T3.MeshBasicMaterial({ color: 0xF5D9A8, transparent: true, opacity: 0.9, side: T3.DoubleSide, depthWrite: false }));
+      ringMesh.rotation.x = -Math.PI / 2; ringMesh.scale.set(1, 0.65, 1); ringMesh.position.y = 0.6; ringMesh.renderOrder = 2; ringMesh.visible = false; camGroup3.add(ringMesh);
+      scene.add(camGroup3);
+
+      /* @reason [BEST-PRACTICE] The two real cameras: the director's (33.9-degree vertical angle on landscape frames — the old rig's 1050 perspective over the 640 stage height, as a true camera now; on narrow frames the portrait framing law in setAspect holds its horizontal field instead) and the scene camera (its angle derived from the lens state every frame). Both far planes reach past the whole seating envelope plus the farthest dolly, so no seat can clip. */
+      dirCam = new T3.PerspectiveCamera(33.9, 1, 1, 20000);
+      sceneCam = new T3.PerspectiveCamera(43.6, 1, 1, 20000);
+      /* @reason [USER] The camera's TRUE frustum, drawn by the engine from the scene camera's own matrices — the beam and frame prints it replaces were arithmetic imitations of this; this is the thing itself. It is a director's aid: gated by the aids setting exactly as the panel's toggle governs, and drawn only in a director's pass. */
+      camHelper = new T3.CameraHelper(sceneCam);
+      camHelper.visible = false;
+      scene.add(camHelper);
+
+      /* @reason [USER] The orientation gizmo's own small scene: the three world axes as arrows in the paper axis hues (terracotta X, sand Y, slate Z) with the compass letters standing at the axis ends — north on +Z, the convention the heading chip reads. Rendered each frame from the ACTIVE eye's own direction into the gizmo frame's rectangle, so the eye's facing and the world's up are readable at rest. (The engine's ViewHelper addon was the alternative; the vendored bundle is the core library only, so the gizmo is purpose-built here — the choice is recorded in the migration record.) */
+      gizmoScene = new T3.Scene();
+      function gizmoArrow(dx, dy, dz, color) { gizmoScene.add(new T3.ArrowHelper(new T3.Vector3(dx, dy, dz), new T3.Vector3(0, 0, 0), 1, color, 0.22, 0.12)); }
+      gizmoArrow(1, 0, 0, 0xC96F4A); gizmoArrow(0, 1, 0, 0xE2C48C); gizmoArrow(0, 0, 1, 0x6E8CAE);
+      function gizmoLabel(txt, x, y, z) { var sp = textSprite(txt); sp.position.set(x, y, z); gizmoScene.add(sp); }
+      gizmoLabel('E', 1.5, 0, 0); gizmoLabel('W', -1.5, 0, 0); gizmoLabel('N', 0, 0, 1.5); gizmoLabel('S', 0, 0, -1.5);
+      gizmoCam = new T3.PerspectiveCamera(38, 1, 0.1, 100);
+
+      /* @reason [BEST-PRACTICE] Context loss is an event, not a mystery: losing the context raises the named failure panel and stops the render (the loop keeps running; its render step stands down on the flag), and the browser's restore event lowers the panel and resumes — the preventDefault on the loss is what makes restoration possible at all. */
+      canvas.addEventListener('webglcontextlost', function (ev) { ev.preventDefault(); glOK = false; showGlFail(true); });
+      canvas.addEventListener('webglcontextrestored', function () { glOK = true; showGlFail(false); });
+      glOK = true;
+      return true;
+    } catch (err) { glOK = false; return false; }
+  }
+  try { if (!buildGL()) showGlFail(true); } catch (err) { showGlFail(true); }
+
+
+  /* ════════════════════════════════════════════════════════════════════════
+     LAYER 2 · STATE — every number the setup runs on, and nothing else:
+     the director state, the camera state, the named places (CENTRE,
+     CAM_HOME) and the SEED. No behaviour lives here; the mechanics read
+     and write these objects, the assets never do.
+     ════════════════════════════════════════════════════════════════════════ */
+  /* @reason [USER] The two states of the setup. The director: six numbers (yaw, pitch, roll, pan X/Y, dolly) with wide ranges — a full circle of orbit and a dolly whose apparent size runs more than ten times from far to near. The camera object: its ground position, its heading and tilt, its roll and its lens (focal, as the perspective its view is rendered with at world scale), plus whether it is in the space at all (present). Every number exists twice — current and target — and the screen chases the targets, so all motion is one smooth flight and a test can set a target and read the result. */
+  var dir = { yaw: 0, pitch: -6, roll: 0, panX: 0, panY: 6, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 0, tPanY: 6, tDolly: 60 };
+  var cam = { x: 742, z: 150, heading: -107.3, tilt: 6, roll: 0, focal: 800, tX: 742, tZ: 150, tHeading: -107.3, tTilt: 6, tRoll: 0, tFocal: 800, present: true };
+  /* @reason [USER] The stage's centre point and the camera's home: the two named places of this world, defined once so every reader uses the same numbers: the AIM button reads CENTRE, RESET CAMERA and ADD CAMERA read CAM_HOME. (The double-tap visit reads neither — it solves its flight from the camera's own seat.) */
+  var CENTRE = { x: 430, z: 53 };
+  var CAM_HOME = { x: 742, z: 150, heading: -107.3, tilt: 6, focal: 800 };
+  /* @reason [USER] THE SEED — the empty-stage state (owner's empty-checkpoint ruling, 2026-11-06): the void and the wireframe grid, with NO objects in the space — no camera, and no lamp anywhere in the build. It is stored state, not a rebuild: RESET STAGE applies it (and homes the director's view), ADD CAMERA leaves it, and the seed file under assets/seed/ boots into it. Boot and reset read the same object, so they can never drift. Industry seeds (Unity, Blender) keep a camera in the empty scene; this one deliberately does not — the owner's seed is the space itself, and the camera is content a project adds. */
+  var SEED = { camPresent: false };
+  /* @reason [USER] THE SEED STATE, enumerated whole — the single source the boot and the reset are both proven against: every director field, every camera field, the camera ABSENT, the main view the director's. The seed file boots here (its flag sets presence from SEED, with the state literals above standing at these same home values); RESET STAGE lands here (applySeed writes these same values — targets home, currents snapped, the yaw written literally to 0). The migration harness proves the identity field by field, so boot and reset can never drift apart unnoticed. */
+  var SEED_STATE = { dir: { yaw: 0, pitch: -6, roll: 0, panX: 0, panY: 6, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 0, tPanY: 6, tDolly: 60 }, cam: { x: 742, z: 150, heading: -107.3, tilt: 6, roll: 0, focal: 800, tX: 742, tZ: 150, tHeading: -107.3, tTilt: 6, tRoll: 0, tFocal: 800 }, camPresent: false, mainRole: 'director' };
+  var mainRole = 'director';
+
+  var scaleMain = 1, scalePip = 0.3;
+
+  /* ════════════════════════════════════════════════════════════════════════
+     LAYER 3 · MECHANICS — the engine: fitting, the two camera rigs (the
+     director's orbit rig and the scene camera — both real three.js
+     cameras the state drives), the render passes (main, corner,
+     gizmo), role application, the settings store, the frame loop and
+     every control binding. This layer consumes Layer 2's state and the
+     engine handles Layer 1 built; it builds nothing and skins nothing.
+     Lifted out verbatim, this block is the seed's engine — the split
+     the owner ordered, kept honest by the seam: no mechanics code
+     above this line, no scene code below it.
+     ════════════════════════════════════════════════════════════════════════ */
+  /* @reason [BEST-PRACTICE] A clamp: every range in this file is enforced in exactly one way, so a limit read in the branch law is the limit the code applies. Every input lands on its NEAREST legal value: +Infinity returns the high bound, −Infinity the low bound, and NaN the low bound — a finite fallback, never NaN — so no computation can poison state permanently (navfix N13; the nearest-bound form is convergence fix C6, 2026-11-06). No caller depends on the old +Infinity→low behaviour: every gesture and flight input is finite by construction; only the test-view URL surface can present an infinity, and it is exactly where nearest-legal matters. */
+  function clamp(v, a, b) { if (Number.isNaN(v)) return a; if (v === Infinity) return b; if (v === -Infinity) return a; return v < a ? a : (v > b ? b : v); }
+  /* @reason [BEST-PRACTICE] The no-snap clamp, for GESTURE writes to a target a flight may legitimately have left outside the gesture range (convergence fix C3, 2026-11-06): a focus flight works to its own wider bounds, so after a far visit the director's pan or dolly target can sit beyond the gesture walls — and a plain clamp would rewrite it to the wall on the first wheel notch or pan, a thousands-of-units unasked lurch. The effective bound on each side is the wider of the law bound and the current target: movement back toward the legal range is always free, movement further out is capped at the current value, and once the target is back inside the range this is exactly clamp() again. */
+  function clampFlex(v, cur, a, b) { return clamp(v, Math.min(a, cur), Math.max(b, cur)); }
+
+  /* @reason [BEST-PRACTICE] Write-only-on-change: the frame loop computes every style every frame but only WRITES the ones whose value actually changed, cached per element. At rest the page writes nothing at all — the chase snaps its last thousandth onto each target (round 5), so rest is exact rather than asymptotic; while dragging it writes only what the drag moved. (Kept as plain efficiency. Recorded 2026-11-05 after a long bisection: the displaced-parts defect that once motivated this helper was NOT a write-frequency problem — it was a malformed .ground rule in the stylesheet whose duplicated background block made the CSS parser swallow the entire .box rule, leaving every cuboid static and flat. The fix was in the stylesheet; this helper stays because skipping no-op writes is correct on its own merits.) */
+  function setStyle(el, prop, val) { var c = el._wc || (el._wc = {}); if (c[prop] !== val) { c[prop] = val; el.style[prop] = val; } }
+
+  var q = new URLSearchParams(location.search);
+  /* @reason [BEST-PRACTICE] Test views: the URL may set any state number, so a screenshot or a driving test can reproduce an exact view — the same mechanism the verification suite uses. The door admits only FINITE numbers (convergence fix round 2, R2A-3): parseFloat('1e999') is Infinity, not NaN, so the old isNaN test alone let it through — and the two params that bypass clamp() were poisoned by it (yaw set exactly to Infinity, later NaN through the home wrap; heading NaN through the modulo, then slammed to the clamp corner by the first arrow key). A non-finite value is rejected here, at the one door, for every param alike — an infinite view does not exist, and the param's shipped default stands instead. Finiteness alone was not enough for yaw (convergence fix round 3, E-1): a finite 1e308 passed this door, and flyHome's wrap step — adding at most 180 to the target — is absorbed by a float that large, so the home flight could never bring it back; yaw therefore wraps by true modulo at this door, like heading, and no admitted value of any param can strand or poison state. */
+  function numParam(name, apply) { if (q.has(name)) { var v = parseFloat(q.get(name)); if (isFinite(v)) apply(v); } }
+  /* @reason [BEST-PRACTICE] Every test value is clamped to the same law range its gesture path enforces before it can touch state (navfix N13): an extreme link (?dolly=1050) once zeroed the camera-drag un-projection's divisor and poisoned the camera targets with NaN until reload; now an out-of-range value lands on the nearest legal value, and a non-finite value never reaches state at all — the numParam door admits only finite numbers, for the two params that bypass clamp() as strictly as for the ten that pass through it. Those two — yaw and heading — wrap by TRUE MODULO into (−180, 180] at the door (convergence fix C6 for heading; round 3, E-1, for yaw): the old ((v + 540) % 360) − 180 formula broke below −540, where the JS % keeps the dividend's sign and the "wrapped" value landed outside the range. The director's yaw stays continuous IN USE — gestures accumulate it past a full circle freely and its home flight wraps to the nearest equivalent; only this test-view door wraps its input, so a shared link can name any view a gesture can reach, and no admitted magnitude can freeze the home flight. */
+  numParam('yaw', function (v) { var w = ((v % 360) + 360) % 360; dir.tYaw = dir.yaw = w > 180 ? w - 360 : w; });
+  numParam('roll', function (v) { dir.tRoll = dir.roll = clamp(v, -180, 180); });
+  numParam('pitch', function (v) { dir.tPitch = dir.pitch = clamp(v, -89, 89); });
+  numParam('dolly', function (v) { dir.tDolly = dir.dolly = clamp(v, -6000, 1000); });
+  numParam('panx', function (v) { dir.tPanX = dir.panX = clamp(v, -1600, 1600); });
+  numParam('pany', function (v) { dir.tPanY = dir.panY = clamp(v, -1000, 1000); });
+  numParam('camx', function (v) { cam.tX = cam.x = clamp(v, -3000, 3000); });
+  numParam('camz', function (v) { cam.tZ = cam.z = clamp(v, -3000, 3000); });
+  numParam('heading', function (v) { var w = ((v % 360) + 360) % 360; cam.tHeading = cam.heading = w > 180 ? w - 360 : w; });
+  numParam('tilt', function (v) { cam.tTilt = cam.tilt = clamp(v, -70, 70); });
+  numParam('camroll', function (v) { cam.tRoll = cam.roll = clamp(v, -180, 180); });
+  numParam('focal', function (v) { cam.tFocal = cam.focal = clamp(v, 240, 1700); });
+  if (q.get('view') === 'camera') mainRole = 'camera';
+
+  var vpMain = document.getElementById('vpMain');
+  var pipEl = document.getElementById('pip');
+  var gizmoEl = document.getElementById('gizmoFrame');
+
+  /* @reason [BEST-PRACTICE] Fit: the renderer's size, the corner's and gizmo's rectangles, and the apparent scale the gesture math divides by. scaleMain keeps the shipped fit law exactly (portrait by width, larger, floored at 0.05 so a collapsed viewport can never hand the gesture math a zero divisor) because the camera-drag and pan maths are calibrated to it; scalePip likewise — the corner's apparent scale is 0.99 of its box, the shipped inset the corner gestures are calibrated to. The rectangles are measured from the corner's and gizmo's own boxes — while the stage is empty the corner is display:none and measures zero, and no rectangle is invented in that state: applyRoles refits in the same pass that brings the corner back. The reseed a fit triggers fires only when a MEASURED input actually changed (convergence fix round 2, R2A-2): the scales and the orientation this fit computed are compared against the last fit's before the reseed is invoked, so a fit that changed nothing leaves a live gesture's baselines and channel lock exactly as they stand. */
+  function fit() {
+    var portrait = innerHeight > innerWidth;
+    var pw = pipEl.clientWidth, ph = pipEl.clientHeight;
+    var prevScaleMain = scaleMain, prevScalePip = scalePip, prevPortrait = fit._portrait;
+    scaleMain = Math.max(0.05, portrait ? (innerWidth / 1000) * 1.30 : Math.min(innerWidth / 1040, innerHeight / 680) * 1.07);
+    if (pw > 0 && ph > 0) {
+      scalePip = Math.min(pw / 1000, ph / 640) * 0.99;
+      pipRect = { x: pipEl.offsetLeft || 0, y: pipEl.offsetTop || 0, w: pw, h: ph };
+    } else pipRect = null;
+    if (gizmoEl && gizmoEl.clientWidth > 0) gizmoRect = { x: gizmoEl.offsetLeft || 0, y: gizmoEl.offsetTop || 0, w: gizmoEl.clientWidth, h: gizmoEl.clientHeight };
+    if (renderer) { try { renderer.setSize(innerWidth, innerHeight, false); } catch (err) { } }
+    fit._portrait = portrait;
+    if (onFit && (scaleMain !== prevScaleMain || scalePip !== prevScalePip || portrait !== prevPortrait)) onFit();
+  }
+  /* @reason [BEST-PRACTICE] Resize arrives in bursts — a rotation fires it repeatedly while the viewport settles — so the listener only queues one fit per frame: a burst costs one layout read and one pair of transform writes, not a full fit per event. applyRoles and init still call fit() directly, because a corner returning to the screen must be scaled in the same pass, not a frame later (2026-11-06 overnight round 5). */
+  var fitQueued = false;
+  function queueFit() { if (fitQueued) return; fitQueued = true; requestAnimationFrame(function () { fitQueued = false; fit(); }); }
+  addEventListener('resize', queueFit);
+
+  /* @reason [USER] The director rig, as a true camera: every frame the director state is written onto the engine's director camera. The orbit target is the stage's centre point (500, 150, 0) carried by the pan — the pan offsets the target against the view's own right and up, the screen-space slide the transform chain performed — the eye stands off along the orbit direction by the dolly distance (the old 1050 perspective minus the dolly, floored so the eye can never sit inside the target), pitched by the pitch (the shipped −6 reads as six degrees of elevation, looking down at the stage) and yawed around the target, and the roll is applied about the view axis last. The vertical angle is the old rig's own — the 1050 perspective over the 640 stage height, 33.9 degrees — so the two engines frame the stage alike. */
+  function syncDirCam() {
+    var az = -dir.yaw * Math.PI / 180, el = -dir.pitch * Math.PI / 180;
+    var back = new T3.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
+    var fwd = back.clone().negate();
+    var right = new T3.Vector3().crossVectors(fwd, new T3.Vector3(0, 1, 0));
+    if (right.lengthSq() < 1e-6) right.set(1, 0, 0); else right.normalize();
+    var up = new T3.Vector3().crossVectors(right, fwd).normalize();
+    var target = new T3.Vector3(500, 150, 0).addScaledVector(right, -dir.panX).addScaledVector(up, dir.panY);
+    var D = Math.max(30, 1050 - dir.dolly);
+    dirCam.position.copy(target).addScaledVector(back, D);
+    dirCam.up.copy(up);
+    dirCam.lookAt(target);
+    if (dir.roll) dirCam.rotateZ(dir.roll * Math.PI / 180);
+    dirCam.updateMatrixWorld();
+  }
+  /* @reason [USER] The scene camera, written from the camera state every frame: its seat is the camera object's ground position at the eye height (GY − EYE = 34 above the ground — the lens centre the drawn object carried); its forward is the heading and tilt composed (heading by the file's own atan2 convention, which the engine's axes match exactly: forward = (sin H, −sin tilt, cos H)); its roll is applied about its own view axis; and its angle is the lens — the focal as the old perspective over the 640 stage height, 2·atan(320/focal). A test that sets the state reads the same view the owner sees, because there is only this one camera now. */
+  function syncSceneCam() {
+    var hr = cam.heading * Math.PI / 180, tr = cam.tilt * Math.PI / 180;
+    var f = new T3.Vector3(Math.sin(hr) * Math.cos(tr), -Math.sin(tr), Math.cos(hr) * Math.cos(tr));
+    sceneCam.position.set(cam.x, GY - EYE, cam.z);
+    var m = new T3.Matrix4().lookAt(sceneCam.position, new T3.Vector3().copy(sceneCam.position).add(f), new T3.Vector3(0, 1, 0));
+    sceneCam.quaternion.setFromRotationMatrix(m);
+    if (cam.roll) sceneCam.rotateZ(cam.roll * Math.PI / 180);
+    var fov = 2 * Math.atan(320 / cam.focal) * 180 / Math.PI;
+    if (Math.abs(sceneCam.fov - fov) > 0.001) { sceneCam.fov = fov; sceneCam.updateProjectionMatrix(); }
+    sceneCam.updateMatrixWorld();
+  }
+  /* @reason [USER] The camera object drawn from its state, and its grab proxy seated: the group takes the camera's ground position and heading (the engine's rotation about Y is the state's own heading convention — the same rotation the eye view uses, so the object and its view can never disagree), and the proxy — the invisible hit layer the gesture door reads — is seated over the object's projected silhouette: the drawn body's measured union plus 8 a side (x ±67, height to 81, z −51..67 in local units), its eight corners projected through the director camera into screen space, the proxy boxed on their bounds. A press on the object is a press on the proxy; a press beside it is a press on empty space again. Presence is part of the object's state: in the seed state there is no camera, the group hides and the proxy stands down — the space is empty and reads empty. */
+  function syncCamObj() {
+    camGroup3.position.set(cam.x, 0, cam.z);
+    camGroup3.rotation.y = cam.heading * Math.PI / 180;
+    camGroup3.visible = cam.present;
+    var proxy = document.getElementById('camProxy');
+    if (!proxy) return;
+    if (cam.present && mainRole === 'director') {
+      camGroup3.updateMatrixWorld();
+      var minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9, v = new T3.Vector3();
+      var xs = [-67, 67], ys = [0, 81], zs = [-51, 67], i, j, k;
+      for (i = 0; i < 2; i++) for (j = 0; j < 2; j++) for (k = 0; k < 2; k++) {
+        v.set(xs[i], ys[j], zs[k]).applyMatrix4(camGroup3.matrixWorld).project(dirCam);
+        var sx = (v.x * 0.5 + 0.5) * innerWidth, sy = (-v.y * 0.5 + 0.5) * innerHeight;
+        if (sx < minX) minX = sx; if (sx > maxX) maxX = sx; if (sy < minY) minY = sy; if (sy > maxY) maxY = sy;
+      }
+      setStyle(proxy, 'left', Math.round(minX) + 'px'); setStyle(proxy, 'top', Math.round(minY) + 'px');
+      setStyle(proxy, 'width', Math.max(4, Math.round(maxX - minX)) + 'px'); setStyle(proxy, 'height', Math.max(4, Math.round(maxY - minY)) + 'px');
+      setStyle(proxy, 'display', '');
+    } else setStyle(proxy, 'display', 'none');
+  }
+
+  /* @reason [BEST-PRACTICE] The signature of the layout the last applyRoles pass actually put on screen — the effective role plus the camera's presence. Cancellation is keyed to this signature CHANGING, not to applyRoles being CALLED (convergence fix C4, 2026-11-06): re-applying the layout already on screen — re-tapping the lit view pill to "make sure", FIND CAMERA while already directing, the test hook set to the current role — changes nothing, and a tap that changes nothing must not kill the other hand's live drag. */
+  var appliedRoleSig = null;
+  /* @reason [USER] Which eye each view shows: the main view shows the chosen role; the corner always shows the other one. The corner's tag names its eye, the framing guide belongs only to a main camera view, and the hint names the main gestures of the view you are in. */
+  function applyRoles(force) {
+    /* a genuine role change voids the live gesture and the tap chains before the views are rewritten (navfix N3/N4): state earned under the old role must never fire in the new one — the cancellation init registered runs here, at the one door every role change passes through. It runs only when the applied layout actually changes, or when the caller forces it (RESET STAGE replaces state wholesale and always cancels, even from the seed layout itself); a no-op re-application leaves every live gesture untouched (convergence fix C4). */
+    var sig = (cam.present ? mainRole : 'director') + '|' + (cam.present ? 'cam' : 'seed');
+    if (onRoleApply && (force || sig !== appliedRoleSig)) onRoleApply();
+    appliedRoleSig = sig;
+    /* @reason [USER] The seed has no camera eye: with no camera in the space the main view is the director's, the corner and the camera controls leave the screen, and ADD CAMERA is the one pill the view bar gains. */
+    if (!cam.present) mainRole = 'director';
+    var mainIsDir = mainRole === 'director';
+    /* the heading chip stacks above the lens chip exactly while the shot fills the main view: the body carries that state as a class the stylesheet reads (guarded — a document without a body in a test stub simply skips the class). */
+    if (document.body && document.body.classList) document.body.classList.toggle('camView', !mainIsDir && cam.present);
+    document.getElementById('pipTag').textContent = mainIsDir ? 'CAMERA' : 'DIRECTOR';
+    /* the frame loop's tag caches are invalidated on every role application: the loop only rewrites the tag when its cached text changes, and a role swap rewrites the tag behind its back — without this, the focal readout in the corner tag would never return after a round-trip between views (2026-11-06 verification seat). */
+    tick._pt = null; tick._ct = null;
+    document.getElementById('frameGuide').className = 'frameGuide' + (mainIsDir ? '' : ' on');
+    document.getElementById('btnDir').className = mainIsDir ? 'on' : '';
+    document.getElementById('btnCam').className = mainIsDir ? '' : 'on';
+    /* the two view pills are toggles, the other pills are actions: the pressed state is written alongside the lit class, so a non-visual reader can tell which eye is chosen — and can tell a toggle from a momentary action (2026-11-06 overnight round 6). */
+    document.getElementById('btnDir').setAttribute('aria-pressed', mainIsDir ? 'true' : 'false');
+    document.getElementById('btnCam').setAttribute('aria-pressed', mainIsDir ? 'false' : 'true');
+    document.getElementById('pip').style.display = cam.present ? '' : 'none';
+    document.getElementById('btnCam').style.display = cam.present ? '' : 'none';
+    document.getElementById('btnAim').style.display = cam.present ? '' : 'none';
+    document.getElementById('btnFind').style.display = cam.present ? '' : 'none';
+    document.getElementById('btnAddCam').style.display = cam.present ? 'none' : '';
+    document.getElementById('focalChip').style.display = (!mainIsDir && cam.present) ? '' : 'none';
+    /* THE HINT CAP LAW (the round-6 chip protection, completed as a class by fix round 8, O-1): whichever chip stack shares the hint's bottom edge, the hint's box is held short of it by that stack's own measure plus its seat plus a reading gap, so on a narrow screen the hint's lines can never run under the chip in any view. In the camera view the lens chip shares the row: its longest text (LENS 1700) is ~98px wide, seated 14px from the edge — cap 150. In the director view AND the seed state the heading chip shares the row instead: its widest reading measures ~70px on the same seat — cap 124 (70 + 14 + a 40 gap) — the first build capped only the camera view, and verify round W1 measured the unprotected director pair overlapping 564px² on a phone frame. The cap subtracts BOTH side safe-area insets as well (convergence fix round 5, D-3): this is an INLINE style write, and it governs in exactly the state where the coarse stylesheet margins shift the hint right by the left inset and the chip left by the right inset — round 4's width compensation reached the stylesheet's caps but not this one, so past 24px of combined side inset the hint's lines ran under the chip by up to 70px and the "never" above was false. An inline write is a viewport budget like any other and stands under the same safe-area law as the stylesheet; at inset 0 the formulas reduce to the standing calc(100vw - 150px) and calc(100vw - 124px). Where the stylesheet's own max-width is the smaller budget (wide screens), it governs as before — the cap binds only where the chip could actually be reached. */
+    document.getElementById('hint').style.maxWidth = (!mainIsDir && cam.present) ? 'calc(100vw - 150px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))' : 'calc(100vw - 124px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))';
+    /* @reason [USER] The hint's two disclosure levels, under the TEN-WORD LAW (2026-11-06): the SHORT level stands open — never more than ten words with the MORE tap counted — and the FULL gesture map sits behind that tap. Every role pass rewrites both levels and closes the map: a new view starts collapsed. */
+    var hintParts = !cam.present
+      ? ['Empty stage: void and grid ·', 'The empty stage: the void and the wireframe grid — nothing else stands in the space. This is the seed state projects start from. ADD CAMERA puts the camera in the space. The grid: one square is 92, the heavy line stands every 460.']
+      : mainIsDir
+      ? ['Director: drag to orbit · pinch to zoom ·', 'Director: drag to orbit · drag the camera to move it · pinch to zoom · two-finger drag to pan · twist two fingers to roll · double-tap the camera to visit it · double-tap space to fly home · scroll to zoom · three-finger slide zooms the lens · double-tap-hold and slide to zoom one-handed · arrow keys nudge the camera · drag or pinch the corner to aim and zoom the camera · tap the corner to swap views · grid: one square 92 · heavy line 460']
+      : ['Camera: drag to look · pinch to fly ·', 'Camera: drag to look · Shift-drag or right-drag slides and flies the camera · pinch or scroll to move forward and back · two-finger drag slides sideways and flies up/down · twist rolls · three-finger slide zooms the lens · double-tap levels and centres · double-tap-hold and slide to fly one-handed · arrow keys nudge the camera · drag or pinch the corner to orbit and zoom the director · tap the corner to swap views · grid: one square 92 · heavy line 460'];
+    document.getElementById('hintShort').textContent = hintParts[0];
+    document.getElementById('hintFull').textContent = hintParts[1];
+    document.getElementById('hintFull').hidden = true;
+    document.getElementById('hintBtn').textContent = 'MORE';
+    hintOpen = false;
+    /* @reason [USER] A new hint text is a new reading: whichever eye this pass just put on the main view, its gesture map returns to full strength and its fade clock restarts — a role swap, a seed change or an added camera must not present the new view's instructions at the old text's faded whisper, nor let a fade armed for the old text cut the new reading short (2026-11-06 overnight round 5). */
+    var hintNow = document.getElementById('hint');
+    hintNow.style.opacity = '';
+    if (hintTimer) clearTimeout(hintTimer);
+    hintTimer = setTimeout(function () { if (!hintOpen) document.getElementById('hint').style.opacity = 0.55; }, 6000);
+    /* @reason [BEST-PRACTICE] Refit in the same pass that shows or hides the corner: its box exists only while it is on screen, so the fit that scales its wrap must run after the display write above — a resize that happened while the stage was empty (corner hidden, box measuring zero) is repaired here the moment the corner returns, not at some later resize (2026-11-06 overnight round 2). */
+    fit();
+  }
+
+  /* @reason [USER] The settings: four numbers the director configures — look, zoom and pan speed multipliers, and smoothing — plus the aids on/off toggle; all five are persisted on this device, applied to every gesture gain and to the chase, and returnable to defaults. tau() turns the smoothing slider (0–100) into the chase's time constant in seconds (0.03–0.28). */
+  var SET = { look: 1, zoom: 1, pan: 1, smooth: 50, aids: 0 };
+  /* @reason [BEST-PRACTICE] Stored settings are loaded defensively: every slider value is parsed and clamped to its slider's range before it can reach a gain or the chase constant, and the aids toggle is accepted only as an exact 1 (anything else leaves it off), so a corrupted store can never destabilise the setup — an out-of-range number lands on the nearest legal value, and junk lands on the shipped default. */
+  try {
+    var savedSet = JSON.parse(localStorage.getItem('stage3d-settings') || '{}');
+    ['look', 'zoom', 'pan'].forEach(function (key) { var v = parseFloat(savedSet[key]); if (!isNaN(v)) SET[key] = clamp(v, 0.4, 2); });
+    var savedSmooth = parseFloat(savedSet.smooth); if (!isNaN(savedSmooth)) SET.smooth = clamp(savedSmooth, 0, 100);
+    if (parseFloat(savedSet.aids) === 1) SET.aids = 1;
+  } catch (e) { }
+  function tau() { return 0.03 + (SET.smooth / 100) * 0.25; }
+  var sliders = {}, outputs = {};
+  /* @reason [BEST-PRACTICE] Show the settings: write the stored values into the sliders and their readouts, so the panel always opens on the truth the setup is actually running. */
+  function showSettings() {
+    sliders.look.value = SET.look; sliders.zoom.value = SET.zoom; sliders.pan.value = SET.pan; sliders.smooth.value = SET.smooth;
+    outputs.look.textContent = Number(SET.look).toFixed(2) + '×'; outputs.zoom.textContent = Number(SET.zoom).toFixed(2) + '×'; outputs.pan.textContent = Number(SET.pan).toFixed(2) + '×'; outputs.smooth.textContent = SET.smooth;
+    var ab = document.getElementById('btnAids'); if (ab) ab.textContent = SET.aids ? 'AIDS: ON — SHADOW · FRUSTUM' : 'AIDS: OFF — SHADOW · FRUSTUM';
+  }
+  /* @reason [BEST-PRACTICE] Save the settings: persist the whole settings object — the four numbers and the aids toggle — on this device, silently tolerating a storage failure — a tool that cannot save still works. */
+  function saveSettings() { try { localStorage.setItem('stage3d-settings', JSON.stringify(SET)); } catch (e) { } }
+
+  /* @reason [BEST-PRACTICE] One render pass: the scene from one eye into the current viewport rectangle. The camera object stands in a director's pass only — a camera never sees itself — its held ring with it, and its frustum helper stands only there too, and only while the aids setting is on (off by default — the owner's standing verdict on extra stuff in the scene; the panel's AIDS toggle governs it exactly as it governed the prints). The pass clears its own rectangle first, so the corner and gizmo passes never smear the main view. */
+  function renderPass(camObj, isDirView) {
+    camGroup3.visible = cam.present && isDirView;
+    if (ringMesh) ringMesh.visible = camGroup3.visible && ringHandle.style.display !== 'none';
+    if (shadowMesh) shadowMesh.visible = !!SET.aids;
+    if (camHelper) { camHelper.visible = cam.present && isDirView && !!SET.aids; if (camHelper.visible) camHelper.update(); }
+    renderer.setClearColor(0x070403, 1);
+    renderer.clear(true, true);
+    renderer.render(scene, camObj);
+  }
+  /* @reason [BEST-PRACTICE] A camera's aspect, written only on change: the same engine camera serves the main view and the corner at different shapes, so each pass seats its own aspect first. THE PORTRAIT FRAMING LAW (fix round 8, O-3): the director camera's 33.9 degrees is a LANDSCAPE angle — on a tall phone frame it leaves a 16-degree horizontal slit, and the stage's reference points (the origin above all) fall outside it no matter where they stand. So on a narrow frame (aspect < 1.05) the director's VERTICAL angle becomes the free variable and widens to hold the horizontal field at the landscape value (52 degrees, capped at 100): the same stage coverage at any shape, the framing every 3D tool's portrait preview keeps. The scene camera is never touched by this law — its angle is the lens, and the lens is state. */
+  function setAspect(c, a) { var ch = Math.abs(c.aspect - a) > 0.0001; if (ch) c.aspect = a; if (c === dirCam) { var f = a < 1.05 ? Math.min(100, 2 * Math.atan(Math.tan(26 * Math.PI / 180) / a) * 180 / Math.PI) : 33.9; if (Math.abs(c.fov - f) > 0.01) { c.fov = f; ch = true; } } if (ch) c.updateProjectionMatrix(); }
+  /* @reason [USER] The heading readout: the active eye's compass direction, read from the RENDERED camera's own forward vector — never from the state that was asked for, so the chip can only ever report the view that exists. Compass point and degrees, two tokens, written only when the rounded reading changes. North is +Z, the convention the gizmo's letters stand in. */
+  var CARDINALS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  function updateHeadChip(camObj) {
+    var el = document.getElementById('headChip'); if (!el) return;
+    var f = new T3.Vector3(); camObj.getWorldDirection(f);
+    var brg = Math.atan2(f.x, f.z) * 180 / Math.PI; if (brg < 0) brg += 360;
+    var txt = CARDINALS[Math.round(brg / 45) % 8] + ' ' + ('00' + Math.round(brg)).slice(-3) + '°';
+    if (updateHeadChip._t !== txt) { updateHeadChip._t = txt; el.textContent = txt; }
+    if (el.style.display !== 'block') el.style.display = 'block';
+  }
+  /* @reason [USER] The origin marker's writer (fix round 8, O-3): project the world origin through the RENDERED director camera; while the point stands inside the frame the ground's own ring answers the glance question and the marker stays hidden; while it stands outside, the marker seats on the frame's edge along the true ray from the frame's centre through the projected point (a point behind the eye reads through the centre to the opposite edge — the direction a turn would take). It is a director's instrument: the camera's own shot makes no claim about where its frame sits in the world. Written only on change, like every chrome writer in this file. */
+  function updateOriginMark() {
+    var el = document.getElementById('originMark'); if (!el) return;
+    var show = false, sx = 0, sy = 0;
+    if (glOK && dirCam && mainRole === 'director') {
+      var v = new T3.Vector3(0, 0, 0); v.project(dirCam);
+      if (v.z < 1 && Math.abs(v.x) <= 1 && Math.abs(v.y) <= 1) { show = false; }
+      else {
+        var cx = innerWidth / 2, cy = innerHeight / 2;
+        var dx = v.z < 1 ? v.x : -v.x, dy = v.z < 1 ? -v.y : v.y;
+        if (Math.abs(dx) < 0.001 && Math.abs(dy) < 0.001) dx = -1;
+        var m = Math.max(Math.abs(dx) / (cx - 26), Math.abs(dy) / (cy - 26));
+        sx = cx + dx / m; sy = cy + dy / m; show = true;
+      }
+    }
+    var disp = show ? 'block' : 'none';
+    if (el.style.display !== disp) el.style.display = disp;
+    if (show) { var lx = Math.round(sx) + 'px', ty = Math.round(sy) + 'px'; if (el.style.left !== lx) el.style.left = lx; if (el.style.top !== ty) el.style.top = ty; }
+  }
+  /* @reason [USER] The frame's render: state synced onto the real cameras and the object, then the one WORLD scene rendered once per live surface — the main view from the chosen eye; the corner from the other eye, into the corner frame's rectangle of the same canvas — and the gizmo as a third pass, the one pass that renders a different scene: the gizmo's own mini-scene of arrows and letters, which holds no world content. One world scene in three passes (two over the world, one over the gizmo's mini-scene): the duplicated second world is gone, and with it the whole class of two-world disagreements. The step stands under the loop's isolation — a throw costs one frame, never the loop — and with no engine it is a no-op: the chrome and the chase carry on. */
+  function renderFrame() {
+    if (!glOK || !renderer) return;
+    try {
+      syncDirCam(); syncSceneCam(); syncCamObj();
+      var mainIsDir = mainRole === 'director';
+      var w = innerWidth, h = innerHeight;
+      var mainCam = mainIsDir ? dirCam : sceneCam;
+      setAspect(mainCam, w / h);
+      renderer.setScissorTest(false);
+      renderer.setViewport(0, 0, w, h);
+      renderPass(mainCam, mainIsDir);
+      if (cam.present && pipRect && pipRect.w > 0) {
+        var pipCam = mainIsDir ? sceneCam : dirCam;
+        setAspect(pipCam, pipRect.w / pipRect.h);
+        renderer.setScissorTest(true);
+        renderer.setScissor(pipRect.x, h - pipRect.y - pipRect.h, pipRect.w, pipRect.h);
+        renderer.setViewport(pipRect.x, h - pipRect.y - pipRect.h, pipRect.w, pipRect.h);
+        renderPass(pipCam, !mainIsDir);
+        renderer.setScissorTest(false);
+      }
+      if (gizmoRect && gizmoRect.w > 0) {
+        gizmoCam.quaternion.copy(mainCam.quaternion);
+        gizmoCam.position.set(0, 0, 5.6).applyQuaternion(mainCam.quaternion);
+        renderer.setScissorTest(true);
+        renderer.setScissor(gizmoRect.x, h - gizmoRect.y - gizmoRect.h, gizmoRect.w, gizmoRect.h);
+        renderer.setViewport(gizmoRect.x, h - gizmoRect.y - gizmoRect.h, gizmoRect.w, gizmoRect.h);
+        renderer.setClearColor(0x14100C, 1);
+        renderer.clear(true, true);
+        renderer.render(gizmoScene, gizmoCam);
+        renderer.setScissorTest(false);
+      }
+      updateHeadChip(mainCam);
+      updateOriginMark();
+    } catch (err) { }
+  }
+  /* @reason [BEST-PRACTICE] The pixel hook: render the current main view into a target at the drawing buffer's own size, read it back, and measure a named region's luminance — the median, the bright percentiles the grid lines live in, and their contrast ratios against the median. THE CONTRAST IS TRUE WCAG (fix round 8, N-1): every channel is linearised (the sRGB transfer function) BEFORE the relative-luminance weights are applied, through a 256-entry table — the first build weighted the raw sRGB bytes, which is not WCAG luminance and overstated every ratio it reported by roughly 1.5–1.7× (verify round W1 recomputed the same pixels both ways). THE VIEWPORT IS SEATED IN CSS PIXELS (fix round 8, N-2): the engine's setViewport takes CSS units and multiplies by the pixel ratio itself, so the buffer's own pixel count is divided back out before the call — the first build passed buffer pixels, which at any pixel ratio above 1 (every real phone; the desktop proof ran at ratio 1, where the error is invisible) rendered the frame at double scale into the target, clipped to one quadrant, and the hook measured a corner of the wrong picture while the composited frame showed the whole stage. Named regions, in view terms: full, centre, ground (the lower-middle band the floor fills), horizon (the band the horizon crosses). THE CENSUS READS THE PAGE'S OWN BUFFER (fix round 8, N-2 completed — the third and last unit this instrument had wrong): a render target, however declared, is not the page — declared sRGB, the engine seats it in a hardware sRGB framebuffer whose blending runs in linear light, while the page's canvas blends its transparent paint in encoded space and lands darker for it (measured on this build, same frame both ways: the grid's bright pixels read ×0.79 in byte value through the canvas against the target's render, the opaque dome byte-identical — the tax falls on transparent paint alone). So the hook produces the page's own frame — the full frame render, syncs, corner and gizmo passes included — and reads the canvas's drawing buffer back inside the same task, before the compositor can clear it: the numbers are the page's pixels by construction, and an independent census of the composited frame reproduces them (fix-8 record). Where no raw context exists (the test double), the declared-target path stands as the fallback through the same histogram. With no engine it reports that fact instead of inventing numbers. */
+  function samplePixels(region) {
+    if (!glOK || !renderer) return { ok: false, reason: 'webgl-unavailable' };
+    try {
+      var w = renderer.domElement.width, h = renderer.domElement.height;
+      var buf = new Uint8Array(w * h * 4);
+      var gl = renderer.getContext ? renderer.getContext() : null;
+      if (gl && gl.readPixels) {
+        /* THE PAGE'S OWN FRAME, READ FROM ITS OWN BUFFER (see the reason above): the full frame render — syncs, main pass, corner, gizmo — then the drawing buffer read back inside this same task, before the compositor can clear it. The numbers are the page's pixels by construction. */
+        renderFrame();
+        gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+      } else {
+        /* THE FALLBACK (the test double, which has no raw context): the same view rendered into a target declared in the page's encoding — the closest a target can come, short of being the page (its hardware blending still preserves more light in transparent paint than the canvas does; the reason above carries the measurement). */
+        var rt = samplePixels._rt;
+        if (!rt || rt.width !== w || rt.height !== h) {
+          if (rt) rt.dispose();
+          rt = samplePixels._rt = new T3.WebGLRenderTarget(w, h);
+          if (rt.texture) rt.texture.colorSpace = T3.SRGBColorSpace;
+          rt.samples = 4;
+        }
+        var mainIsDir = mainRole === 'director';
+        var mainCam = mainIsDir ? dirCam : sceneCam;
+        setAspect(mainCam, w / h);
+        var pr = (renderer.getPixelRatio ? renderer.getPixelRatio() : 1) || 1;
+        renderer.setRenderTarget(rt);
+        renderer.setViewport(0, 0, w / pr, h / pr);
+        renderPass(mainCam, mainIsDir);
+        renderer.readRenderTargetPixels(rt, 0, 0, w, h, buf);
+        renderer.setRenderTarget(null);
+      }
+      var name = region || 'full';
+      var rects = { full: [0, 0, w, h], centre: [w * 0.3, h * 0.3, w * 0.4, h * 0.4], ground: [w * 0.15, h * 0.52, w * 0.7, h * 0.3], horizon: [w * 0.1, h * 0.42, w * 0.8, h * 0.16] };
+      var R = rects[name] || rects.full;
+      var x0 = Math.max(0, Math.floor(R[0])), x1 = Math.min(w, Math.ceil(R[0] + R[2]));
+      var y0 = Math.max(0, Math.floor(h - (R[1] + R[3]))), y1 = Math.min(h, Math.ceil(h - R[1]));
+      var lin = samplePixels._lin;
+      if (!lin) { lin = samplePixels._lin = new Float32Array(256); for (var q8 = 0; q8 < 256; q8++) { var c8 = q8 / 255; lin[q8] = c8 <= 0.04045 ? c8 / 12.92 : Math.pow((c8 + 0.055) / 1.055, 2.4); } }
+      var hist = new Uint32Array(4096), n = 0, sum = 0, x, y, i, lum;
+      for (y = y0; y < y1; y++) { var row = y * w; for (x = x0; x < x1; x++) { i = (row + x) * 4; lum = 0.2126 * lin[buf[i]] + 0.7152 * lin[buf[i + 1]] + 0.0722 * lin[buf[i + 2]]; hist[Math.min(4095, Math.floor(lum * 4096))]++; sum += lum; n++; } }
+      function pct(p) { var need = n * p, acc = 0, b; for (b = 0; b < 4096; b++) { acc += hist[b]; if (acc >= need) return (b + 0.5) / 4096; } return 1; }
+      var p50 = pct(0.5), p95 = pct(0.95), p99 = pct(0.99);
+      return { ok: true, region: name, width: w, height: h, samples: n, mean: n ? sum / n : 0, p50: p50, p95: p95, p99: p99, contrast95: (p95 + 0.05) / (p50 + 0.05), contrast99: (p99 + 0.05) / (p50 + 0.05) };
+    } catch (err) { return { ok: false, reason: 'readback-failed' }; }
+  }
+
+  var lastT = performance.now(), pointersActive = 0, pipActive = 0;
+  /* @reason [BEST-PRACTICE] The hint's idle-fade clock, held at engine scope so every writer of the hint's text or opacity — the role application, the gesture handlers, the boot — manages the ONE clock: a fade armed for an old text or an old gesture must never fire over a new one (2026-11-06 overnight round 5). */
+  var hintTimer = null;
+  /* @reason [USER] Whether the hint's full gesture map stands open behind its MORE tap: while it is open the idle fade must not dim the text the owner is reading (2026-11-06, the ten-word law fix). */
+  var hintOpen = false;
+  /* @reason [BEST-PRACTICE] Two engine hooks into init()'s gesture scope (navfix N3/N12): the gesture state lives inside init(), but applyRoles() and fit() stand outside it — so init registers its role-boundary cancellation and its resize reseed here, and every role application and every fit runs them. Until init registers them (the boot calls), no gesture exists to cancel or reseed, and the hooks stand empty. */
+  var onRoleApply = null, onFit = null;
+  /* @reason [BEST-PRACTICE] THE file's one angle wrap, TRUE MODULO for any finite magnitude (convergence fix round 5, V2-3): ((v % 360) + 540) % 360 − 180 lands in [−180, 180) for every input — past ±540, past ±5000, at 1e308. The shifted formula it replaces — the value plus 540, modulo 360, minus 180 — silently left its range below −540, because JavaScript's % keeps the dividend's sign — the same failure the two test-view doors were cured of in rounds 2–3, surviving at this helper's one UNBOUNDED caller (flyHome, fed the director's free-accumulating yaw: from 777° the home flight targeted 360 and spun −417° instead of flying −57° to 720). The cure stands at the FUNCTION, so every caller inherits it — the gesture writes, the corner aim, the pinch classifier, flyHome, and the frame loop's seam chase, whose six inline copies of the old formula were retired into calls here (their inputs were provably in-range; now no copy of the fragile formula exists anywhere in the file to be fed an unbounded input by a future edit). It stands at ENGINE scope, before the loop, because the loop itself calls it. Gesture targets are re-wrapped at write time through it, so a heading accumulated over a long drag can never grow into the thousands and the chase always turns the short way. (The two test-view doors keep their own inline true-modulo variant by design: it lands in (−180, 180], the half-open side their C6/E-1 contract states, and it was already true modulo.) */
+  function wrap180(v) { return ((v % 360) + 540) % 360 - 180; }
+  /* @reason [USER] The frame loop — the only thing that ever moves. Every current number chases its target with a time constant from the Smoothing setting — computed from real elapsed time, not frames, so motion is identical at any refresh rate. While any finger is down the constant tightens to 0.05 s, so dragging always feels direct. Both views render every frame from the same state. Perspective lives in the two real cameras the state drives — the director's fixed angle (the old 1050 over the stage height), the eye's from the lens — so the two views agree on field of view at any size. The loop is STARTED at the end of init(), never before it: the first frame must already see bound controls and applied roles (the 2026-11-06 audit found the old order ran the first pass before either existed). */
+  function tick(now) {
+    /* the NEXT frame is requested FIRST (convergence fix round 3, M-2b): the loop's survival never depends on its body completing — a throw anywhere below costs one frame, never the loop. The request stood last before this, so any single frame error stopped the rendering permanently while the controls stayed live: a frozen picture that still answered touches. */
+    requestAnimationFrame(tick);
+    var dt = Math.min(0.05, Math.max(0, (now - lastT) / 1000) || 0.016); lastT = now;
+    /* the activity counters are recomputed from the live pointer maps every frame (navfix N23): they are a reading of the maps, never a second bookkeeping, so a pointer that somehow left without an exit event cannot leave the chase permanently tightened. init registers its two maps on the tick function at boot, since they live in its scope. */
+    if (tick._maps) { pointersActive = tick._maps.main.size; pipActive = tick._maps.pip.size; }
+    var k = 1 - Math.exp(-dt / ((pointersActive + pipActive) > 0 ? 0.05 : tau()));
+    /* @reason [BEST-PRACTICE] One chase step: move a current number one time-constant fraction toward its target — and snap the last thousandth exactly onto the target. A pure exponential approach never arrives: the current differs from its target by a shrinking fraction forever, the transform strings built from it keep differing with it, and the write-only-on-change cache keeps missing for seconds after the last input (worst at the floatiest smoothing), so the page writes styles at rest and a reader of the state never sees the number the target promised. A thousandth of a unit, degree or focal step is below anything a finger or an eye can register, so snapping it changes no motion anyone can see and makes rest exact (2026-11-06 overnight round 5). */
+    function chase(o, curKey, tgtKey) { var d = o[tgtKey] - o[curKey]; o[curKey] = Math.abs(d) < 0.001 ? o[tgtKey] : o[curKey] + d * k; }
+    chase(dir, 'yaw', 'tYaw'); chase(dir, 'pitch', 'tPitch'); chase(dir, 'panX', 'tPanX'); chase(dir, 'panY', 'tPanY'); chase(dir, 'dolly', 'tDolly');
+    chase(cam, 'x', 'tX'); chase(cam, 'z', 'tZ');
+    /* @reason [BEST-PRACTICE] The heading chases the short way around the ±180 seam: the delta is wrapped into [−180, 180) first — by the file's ONE wrap, wrap180, true modulo at the function (convergence fix round 5, V2-3) — so a 2-degree aim change across the seam is a 2-degree turn, never a near-full spin. */
+    var dHead = wrap180(cam.tHeading - cam.heading);
+    cam.heading = Math.abs(dHead) < 0.001 ? cam.tHeading : cam.heading + dHead * k;
+    /* @reason [BEST-PRACTICE] And the heading itself is wrapped back into [−180, 180) after the step, through the same wrap180: the seam chase can settle at an equivalent angle just outside the range (179 turning to −179 lands on 181), and the state contract — branch law, test hooks, any reader — promises the clamped range. The wrap is invisible to the chase, whose delta is computed modulo 360 anyway. */
+    cam.heading = wrap180(cam.heading);
+    /* @reason [BEST-PRACTICE] The two rolls chase exactly like the heading — wrapped delta with the same thousandth snap, then re-wrapped into [−180, 180) through the same wrap180 — so a twist across the seam turns the short way and the state always reads inside its range. */
+    var dRollDir = wrap180(dir.tRoll - dir.roll);
+    dir.roll = Math.abs(dRollDir) < 0.001 ? dir.tRoll : dir.roll + dRollDir * k;
+    dir.roll = wrap180(dir.roll);
+    var dRollCam = wrap180(cam.tRoll - cam.roll);
+    cam.roll = Math.abs(dRollCam) < 0.001 ? cam.tRoll : cam.roll + dRollCam * k;
+    cam.roll = wrap180(cam.roll);
+    chase(cam, 'tilt', 'tTilt'); chase(cam, 'focal', 'tFocal');
+    renderFrame();
+    var mainIsDir = mainRole === 'director';
+    /* @reason [USER] The lens readout: whichever surface currently shows the camera's eye also names its focal length, updated only when the rounded number changes — a touch user zooming the lens by gesture is never left guessing the number they set. */
+    if (cam.present) {
+      if (mainIsDir) {
+        var pt = 'CAMERA · LENS ' + Math.round(cam.focal);
+        if (tick._pt !== pt) { tick._pt = pt; document.getElementById('pipTag').textContent = pt; }
+      } else {
+        var ct = 'LENS ' + Math.round(cam.focal);
+        if (tick._ct !== ct) { tick._ct = ct; document.getElementById('focalChip').textContent = ct; }
+      }
+    }
+  }
+
+
+  /* @reason [USER] The wiring of the whole control layer: view buttons, aim, settings, and every gesture on both views are bound here, so the setup's behaviour can be audited in one place. The wiring runs in isolated groups: a failure in one group is caught and cannot take the other controls down with it (the 2026-11-06 audit: one uncaught throw anywhere in the old single chain silently killed every control on a weak phone engine). */
+  (function init() {
+    /* the pre-wiring segment runs GUARDED (convergence fix round 3, M-2c): fit, the seed boot and the first role application stand ahead of the isolated wiring groups below, and a throw in any of them must not take the whole control layer down with it — the groups still register, and the frame loop still starts at the end. */
+    try {
+      fit();
+      /* @reason [USER] The seed boot: the seed file (assets/seed/) and the ?seed=1 test view start with no camera in the space — void and grid only. The working file boots with its camera; RESET STAGE reaches this same state from inside. */
+      if (q.get('seed') === '1' || window.__STAGE_SEED__) cam.present = SEED.camPresent;
+      applyRoles();
+    } catch (err) { }
+    var panel = document.getElementById('panel');
+    try {
+      sliders = { look: document.getElementById('sLook'), zoom: document.getElementById('sZoom'), pan: document.getElementById('sPan'), smooth: document.getElementById('sSmooth') };
+      outputs = { look: document.getElementById('oLook'), zoom: document.getElementById('oZoom'), pan: document.getElementById('oPan'), smooth: document.getElementById('oSmooth') };
+      ['look', 'zoom', 'pan', 'smooth'].forEach(function (key) {
+        /* a drag fires input continuously: each event updates the setting itself and only its own row's readout (the live value every gain and the chase read), while the persist — a synchronous localStorage write of the whole store — and the full panel rewrite wait for the change event at release, so a panel drag cannot churn storage and all nine panel fields at input-event rate on a weak phone engine (2026-11-06 overnight round 5). */
+        sliders[key].addEventListener('input', function () { SET[key] = parseFloat(sliders[key].value); outputs[key].textContent = key === 'smooth' ? SET[key] : Number(SET[key]).toFixed(2) + '×'; });
+        sliders[key].addEventListener('change', saveSettings);
+      });
+      var gearBtn = document.getElementById('gearBtn');
+      /* every path that opens or closes the panel also writes the gear's expanded state, so the gear never claims the panel is shut while it stands open, or open after an outside press closed it (2026-11-06 overnight round 6). */
+      function syncGear() { gearBtn.setAttribute('aria-expanded', panel.classList.contains('open') ? 'true' : 'false'); }
+      gearBtn.addEventListener('click', function () { panel.classList.toggle('open'); syncGear(); showSettings(); });
+      document.getElementById('btnClosePanel').addEventListener('click', function () { panel.classList.remove('open'); syncGear(); });
+      /* @reason [USER] MORE/LESS: the tap that opens and closes the hint's full gesture map (the ten-word law, 2026-11-06). Opening holds the hint at full strength — the fade clock is cleared, nobody reads a map at a whisper; closing restarts the six-second fade. */
+      document.getElementById('hintBtn').addEventListener('click', function () {
+        var full = document.getElementById('hintFull');
+        hintOpen = full.hidden;
+        full.hidden = !hintOpen;
+        document.getElementById('hintBtn').textContent = hintOpen ? 'LESS' : 'MORE';
+        var hEl = document.getElementById('hint');
+        hEl.style.opacity = '';
+        if (hintTimer) clearTimeout(hintTimer);
+        if (!hintOpen) hintTimer = setTimeout(function () { if (!hintOpen) hEl.style.opacity = 0.55; }, 6000);
+      });
+      /* @reason [USER] The panel also closes when a press lands anywhere outside it and reaches the document (a press on the corner view closes it too, through the corner's own handler, and is spent there — it cannot also swap the views): a settings panel that stays open over the scene while you work is a trapped panel, and the gear is a small target to hunt for twice. */
+      document.addEventListener('pointerdown', function (e) {
+        if (panel.classList.contains('open') && !(e.target.closest && (e.target.closest('#panel') || e.target.closest('#gearBtn')))) { panel.classList.remove('open'); syncGear(); }
+      });
+      document.getElementById('btnHome').addEventListener('click', flyHome);
+      document.getElementById('btnAids').addEventListener('click', function () { SET.aids = SET.aids ? 0 : 1; showSettings(); saveSettings(); });
+      document.getElementById('btnDefaults').addEventListener('click', function () { SET.look = 1; SET.zoom = 1; SET.pan = 1; SET.smooth = 50; SET.aids = 0; showSettings(); saveSettings(); });
+      document.getElementById('btnResetCam').addEventListener('click', resetCamera);
+      document.getElementById('btnResetStage').addEventListener('click', applySeed);
+      if (q.get('panel') === 'open') { panel.classList.add('open'); syncGear(); }
+      showSettings();
+    } catch (err) { }
+
+    try {
+      document.getElementById('btnDir').addEventListener('click', function () { mainRole = 'director'; applyRoles(); });
+      document.getElementById('btnCam').addEventListener('click', function () { mainRole = 'camera'; applyRoles(); });
+      document.getElementById('btnAddCam').addEventListener('click', addCamera);
+      document.getElementById('btnFind').addEventListener('click', function () { mainRole = 'director'; applyRoles(); focusCamera(); });
+    } catch (err) { }
+    /* @reason [USER] Aim at centre: heading from the eye to the stage's centre point (CENTRE, defined once with the state) by atan2 of the offset, tilt from the eye's height over the distance — the camera re-finds the subject in one tap, and the corner view proves it. One helper, used by the AIM button and by the camera view's double-tap. */
+    function aimCentre() {
+      var dx = CENTRE.x - cam.tX, dz = CENTRE.z - cam.tZ, d = Math.sqrt(dx * dx + dz * dz) || 1;
+      cam.tHeading = wrap180(Math.atan2(dx, dz) * 180 / Math.PI);
+      cam.tTilt = clamp(Math.atan2(GY - EYE, d) * 180 / Math.PI, -70, 70);
+    }
+    try { document.getElementById('btnAim').addEventListener('click', aimCentre); } catch (err) { }
+    /* @reason [USER] Fly the camera along its own look: the camera view's forward/back movement — the object slides on the ground along its heading, so pinching or scrolling inside the shot travels through the world instead of zooming a picture of it. (The lamp keep-out disc that once guarded this move is gone with the lamp itself — the empty-checkpoint ruling, 2026-11-06: the camera is the only object in the world, so nothing stands for it to collide with.) */
+    function flyCam(step) {
+      var hr = cam.tHeading * Math.PI / 180;
+      cam.tX = clamp(cam.tX + Math.sin(hr) * step, -3000, 3000);
+      cam.tZ = clamp(cam.tZ + Math.cos(hr) * step, -3000, 3000);
+    }
+    /* @reason [USER] Reset camera: every camera target returns to the home the state defines (CAM_HOME) — seat, heading, tilt, level roll, shipped lens. The recovery for a camera dragged or flown somewhere lost; AIM alone only ever fixed the aim. */
+    function resetCamera() {
+      cam.tX = CAM_HOME.x; cam.tZ = CAM_HOME.z; cam.tHeading = CAM_HOME.heading; cam.tTilt = CAM_HOME.tilt; cam.tRoll = 0; cam.tFocal = CAM_HOME.focal;
+    }
+    /* @reason [USER] Apply the seed — RESET IS EVERYTHING (owner's empty-checkpoint ruling, 2026-11-06): the camera leaves the space AND the director's view returns to the checkpoint's opening view, snapped to the boot state exactly (targets set home, currents snapped onto them — a reset reproduces the checkpoint, it does not fly toward it). The absent camera's own numbers are normalised to the boot values too (convergence fix C9): the checkpoint's state is identical whichever path reaches it — seed boot or reset — down to the state a test hook can read. The director's yaw included (convergence fix round 3, L-1): it is written literally to 0 below, not left at the home flight's nearest equivalent — a yaw accumulated past a full turn home-wraps to 360, and the boot state reads 0. The stage becomes the empty state (void and grid) that projects fork from. Reversible by design: ADD CAMERA is the way back, so the reset is a tool, not a trap. */
+    function applySeed() {
+      cam.present = SEED.camPresent;
+      mainRole = 'director';
+      cam.tX = cam.x = CAM_HOME.x; cam.tZ = cam.z = CAM_HOME.z;
+      cam.tHeading = cam.heading = CAM_HOME.heading; cam.tTilt = cam.tilt = CAM_HOME.tilt;
+      cam.tRoll = cam.roll = 0; cam.tFocal = cam.focal = CAM_HOME.focal;
+      flyHome();
+      /* the director's yaw/target-yaw are then written LITERALLY home (convergence fix round 3, L-1): flyHome wraps the target to the NEAREST equivalent of 0, which after a long session can sit a full turn away (777 degrees home-wraps to 360, not 0) — the reset's contract is field-for-field identity with the boot state, whose yaw is 0, so the reset writes 0 itself rather than inheriting the flight's equivalent. flyHome keeps its wrap for RESET VIEW, where the short flight home is exactly the point. */
+      dir.tYaw = 0;
+      dir.yaw = dir.tYaw; dir.pitch = dir.tPitch; dir.roll = dir.tRoll; dir.panX = dir.tPanX; dir.panY = dir.tPanY; dir.dolly = dir.tDolly;
+      /* forced (convergence fix C4): a reset replaces state wholesale, so the role-boundary cancellation fires even when the stage already stands in the seed layout and the signature would not change. */
+      applyRoles(true);
+    }
+    /* @reason [USER] Add the camera back: it enters AT its home seat with its home aim — the same home RESET CAMERA restores — so an added camera and a reset camera are the same camera. Entering is not a flight: resetCamera writes only the targets, and a camera that was dragged far away before RESET STAGE would otherwise materialise at that stale seat and glide home across the stage. addCamera therefore also snaps every current to its target, so the camera's first visible frame is already home (2026-11-06 overnight round 3). */
+    function addCamera() { cam.present = true; resetCamera(); cam.x = cam.tX; cam.z = cam.tZ; cam.heading = cam.tHeading; cam.tilt = cam.tTilt; cam.roll = cam.tRoll; cam.focal = cam.tFocal; applyRoles(); }
+    /* @reason [USER] The held ring, written to both worlds at once: it lives inside the camera's group, so a director's world shows it around the held object and an eye's world hides it with the group — one write, both views correct. */
+    function setRing(on) {
+      var d = on ? '' : 'none';
+      if (worldMain.ring) worldMain.ring.style.display = d;
+      if (worldPip.ring) worldPip.ring.style.display = d;
+    }
+    /* @reason [BEST-PRACTICE] The role boundary cancels the gesture (navfix N3/N4, 2026-11-06): a role application rewrites which eye each view shows, so every scrap of gesture bookkeeping earned under the old role — the pointer maps, the live mode, the channel lock, the tap chain — is void in the new one. Both maps are emptied, capture is released per recorded id (best effort: an engine may already have dropped it), the counters are recomputed from the emptied maps, the held ring goes off, and both double-tap chains (the general chain and the camera chain) are wiped. applyRoles() is the one door every role change passes through — pills, corner swap, FIND, RESET STAGE, ADD CAMERA, the test hook — so the cancellation is registered into it (onRoleApply) and no entry point can forget it. The reset set is COMPLETE BY ENUMERATION over every gesture variable (convergence fix round 3, A-1): the corner's dismissal spend (pipSpent) stands in it — it was the one variable the set missed, and because a corner press reads it before any reseed, a spend earned before a role boundary survived into the next layout and swallowed that layout's first legitimate corner swap. */
+    function cancelGesture() {
+      pointers.forEach(function (p, id) { try { vpMain.releasePointerCapture(id); } catch (err) { } });
+      pipPointers.forEach(function (p, id) { try { pip.releasePointerCapture(id); } catch (err) { } });
+      pointers.clear(); pipPointers.clear();
+      pointersActive = 0; pipActive = 0;
+      mode = null; chanLock = null; dtPending = false; dtDrag = false;
+      lastTap = -Infinity; lastCamTap = -Infinity; tapOk = false; downHit = false; downMod = false;
+      pipMaxPtr = 0; pipTravel = 0; pipSpent = false;
+      setRing(false);
+    }
+    /* @reason [BEST-PRACTICE] A resize reseeds the live gesture (navfix N12): fit() changes the view's scale and wrap shift, so every baseline a live gesture measures from — the last position, the pinch seeds and lock reference, the lens midpoint, the corner's pinch baseline — is re-derived from the fingers' CURRENT stored positions the moment a fit lands; the gesture then continues from where the fingers are instead of jumping across the discontinuity. The stored positions are client coordinates, which a resize does not move; what must not survive the change is a delta or a classification measured across it, so the channel lock is cleared to re-classify from the reseeded landing. Registered into fit() as onFit — which fit() now invokes only when its measured inputs actually changed (convergence fix round 2, R2A-2), so this function's contract is unchanged and its trigger is honest. */
+    function reseedGestureBaselines() {
+      if (pointers.size === 1) { var rp1 = Array.from(pointers.values())[0]; lastX = rp1.x; lastY = rp1.y; }
+      if (pointers.size === 2) {
+        var rp2 = Array.from(pointers.values());
+        lastDist = Math.hypot(rp2[0].x - rp2[1].x, rp2[0].y - rp2[1].y);
+        lastMidX = (rp2[0].x + rp2[1].x) / 2; lastMidY = (rp2[0].y + rp2[1].y) / 2;
+        lastAng = Math.atan2(rp2[1].y - rp2[0].y, rp2[1].x - rp2[0].x) * 180 / Math.PI;
+        startDist = lastDist; startMidX = lastMidX; startMidY = lastMidY; startAng = lastAng; chanLock = null;
+      }
+      if (pointers.size === 3) { var rp3 = Array.from(pointers.values()); focalMidY = (rp3[0].y + rp3[1].y + rp3[2].y) / 3; }
+      if (pipPointers.size === 1) { var rq1 = Array.from(pipPointers.values())[0]; pipStartX = rq1.x; pipStartY = rq1.y; }
+      if (pipPointers.size === 2) { var rq2 = Array.from(pipPointers.values()); pipLastDist = Math.hypot(rq2[0].x - rq2[1].x, rq2[0].y - rq2[1].y); }
+    }
+    /* @reason [USER] Focus the camera object: fly the director so the camera lands at the centre of the view, close. The solve is written against the director rig the render loop drives (the migration's port of this flight, 2026-11-06): the orbit basis — back, right, up — is taken from the director's CURRENT targets in the rig's own formulas; the camera's seat offset from the stage centre is projected onto the orbit plane (the one plane of targets the pan can reach), which fixes where on the view axis the object sits; the target is seated at that projection, and the dolly is seated so the eye stands exactly 500 past the object along the axis — the object then sits on the view axis exactly, 500 from the eye, at any seat and any current angle: the same centred-and-close landing the old chain's solve produced. The solve runs from the camera's CURRENT position — the object as the owner sees it — not its targets: during a glide, the visit aims at the visible object, not at where it will be (navfix N7, 2026-11-06; the target-based solve aimed at a place the eye was not looking at). The flight is clamped to its OWN working bounds, derived from the seating envelope, not the director's gesture ranges: the seat offset reaches at most |(±3500, 116, ±3000)| ≈ 4613 at the far corner seats and a projection only shortens it, so no solved pan component can exceed 4613, and the solved dolly (550 minus that same projection, the eye's stand-off floored at the rig's own 30 where a seat lies too far behind the centre for the full 500 — centred still, farther only there) cannot leave −4063..1020 — inside the working bounds (pan ±4700, dolly −6000..5200), which therefore centre EVERY seat at EVERY angle with margin, where the gesture ranges (±1600/±1000, dolly to +1000) saturated and the recovery failed exactly where the camera was most lost. The director's gesture clamps are untouched law for gestures; after a flight lands a target beyond them, gesture writes use the no-snap clamp (clampFlex — the wider of the law bound and the current target on the side approached), so the first gesture after the visit moves by its own input and never snaps the target to the wall (convergence fix C3, 2026-11-06). Roll takes no part in the solve: it turns the view about its own axis, so it cannot move the centre the solve aims at. */
+    function focusCamera() {
+      var az = -dir.tYaw * Math.PI / 180, el = -dir.tPitch * Math.PI / 180;
+      var bx = Math.sin(az) * Math.cos(el), by = Math.sin(el), bz = Math.cos(az) * Math.cos(el);
+      var c = Math.sqrt(bx * bx + bz * bz) || 1;
+      var rx = bz / c, rz = -bx / c;
+      var ux = -bx * by / c, uy = c, uz = -bz * by / c;
+      var px = cam.x - 500, py = (GY - EYE) - 150, pz = cam.z;
+      var w = px * bx + py * by + pz * bz;
+      var gx = px - bx * w, gy = py - by * w, gz = pz - bz * w;
+      dir.tPanX = clamp(-(gx * rx + gz * rz), -4700, 4700);
+      dir.tPanY = clamp(gx * ux + gy * uy + gz * uz, -4700, 4700);
+      dir.tDolly = clamp(550 - w, -6000, 1020);
+    }
+    /* @reason [USER] Fly the director home: yaw is continuous and unbounded (a long session can sit at 540 degrees), so the home target is the nearest equivalent of 0 — the flight home turns the short way, never unwinds the whole session. */
+    function flyHome() {
+      dir.tYaw = dir.tYaw + wrap180(0 - dir.tYaw);
+      dir.tPitch = -6; dir.tRoll = 0; dir.tPanX = 0; dir.tPanY = 6; dir.tDolly = 60;
+    }
+
+    /* ---- main view gestures ---- */
+    var pointers = new Map();
+    var lastDist = 0, lastMidX = 0, lastMidY = 0, lastAng = 0, lastTap = -Infinity, lastTapX = 0, lastTapY = 0, mode = null, lastX = 0, lastY = 0;
+    /* @reason [BEST-PRACTICE] The camera tap chain (convergence fix C1, 2026-11-06): taps ON the camera object keep their own last-tap stamp, separate from the general chain's — a second on-camera tap completes the focus visit, and the two chains can never seed or complete each other. BOTH chain stamps are BORN DISARMED and cleared to the same value everywhere (convergence fix round 4, V-2): they initialise to −Infinity, and every write that clears a chain — cancelGesture, a completed double-tap, the non-tap resolution — writes −Infinity, never 0. A stamp of 0 was a lie the boot window believed: the arming test (now − stamp < TAP_WINDOW) is true for any press landing in the first 300 ms after the time origin, so the page's first drag near the origin armed the one-hand zoom on a tap that never happened. −Infinity sits inside no live window at any clock, so a chain can only ever be armed by a real tap seeding it. The stamps' coordinates (lastTapX/Y, lastCamTapX/Y) need no such guard: they are read only behind the time test, which a disarmed stamp always fails first. The press-epoch stamps are a different kind — downT, dtArmT and the corner's pipDownT are seeded by the very press that owns them, before any read, so their 0 initial values can never be believed either; they stand as they are, by that reseeding argument. */
+    var lastCamTap = -Infinity, lastCamTapX = 0, lastCamTapY = 0;
+    var downX = 0, downY = 0, downT = 0, tapOk = false, downHit = false, downMod = false;
+    var focalMidY = 0, dtDrag = false, dtPending = false, dtArmT = 0;
+    /* @reason [BEST-PRACTICE] ONE tap geometry (navfix N1/N2/N24): a double-tap is two genuine taps within TAP_DIST px and TAP_WINDOW ms of each other — the same pair of numbers feeds the double-tap action, the one-hand-zoom arming and the tap test itself, so the features it connects can never disagree about what "near" and "quick" mean. Before this, arming used 60px while the action used 40px and the tap test allowed 350ms against the corner's 300: a press could arm a zoom it could never have completed as a double-tap. */
+    var TAP_DIST = 40, TAP_WINDOW = 300;
+    /* @reason [BEST-PRACTICE] The two-finger channel reference: a pinch carries three channels at once (separation, midpoint, twist) and a natural pinch bleeds into all three — the owner got roll and pan he never asked for inside every zoom. The gesture now measures each channel as NET displacement from the landing recorded here and LOCKS to the dominant one once it is clear; until the lock, nothing applies, so classification costs the gesture's first few pixels and buys a single clean movement. Net, never a sum of absolute per-frame steps: back-and-forth jitter travels far while displacing nothing, and a sum would let jitter alone cross the thresholds and lock a channel the fingers never chose (2026-11-06 overnight round 1). */
+    var startDist = 0, startMidX = 0, startMidY = 0, startAng = 0, chanLock = null;
+    /* @reason [BEST-PRACTICE] Pointer-down decides the gesture's kind once, from where it landed: on the camera object (director view only, and not a pan-modified drag) it is a camera move; anywhere else it is a look. Deciding once at the start keeps a drag from changing meaning mid-flight. It also seeds the tap test: a tap is a single finger that lands and lifts without travelling — only genuine taps may join the double-tap test, so a drag or a pinch ending can never fly the view home by accident. */
+    try { vpMain.addEventListener('pointerdown', function (e) {
+      /* a duplicate pointerdown for an id already in the map is ignored whole (convergence fix C5, 2026-11-06): conforming engines never emit one, but if one arrives it must not overwrite the live entry and re-decide the gesture mid-flight — the membership discipline every other handler in this file already keeps. */
+      if (pointers.has(e.pointerId)) return;
+      /* the door admits exactly TWO buttons, as a CLASS (convergence fix round 5, V2-1): the primary (0) and the documented pan modification (2). Every other value — the middle button (1), the X1/X2 side buttons (3, 4), and any button a future device adds — is refused here, before registration: it never enters the gesture at all — no map entry, no capture, no mode decision, no chain contact — exactly the corner's treatment of non-primary presses since round 3 (A-2), stated at the main surface's own door as an admitted set, not an enumeration of the refused. Round 4's guard enumerated the middle button alone, curing V-1's cell; verification round 2 then walked the side buttons straight past it: a button-3 drag orbited the director, and on the camera it grabbed the object — a non-primary press choosing what a drag means, against the downMod law below. A class test cannot be walked past by a value nobody enumerated. The admitted two keep their documented meanings: the primary decides look-or-grab at the mode test below; the right button registers only to be spent on the pan (the move routing reads the door's record of it), and a modified press is invisible to the tap chains. */
+      if (e.button !== 0 && e.button !== 2) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, grab: false });
+      /* capture is attempted only AFTER the pointer is registered, in its own protected step (navfix N6): on engines where capture throws for an inactive pointer, the old order — capture first, as the handler's first statement — aborted the whole handler, the pointer never entered the map, and the gesture was silently dead until re-press. Now the pointer is in the map whatever capture does, and its moves are heard. */
+      try { vpMain.setPointerCapture(e.pointerId); } catch (err) { }
+      pointersActive = pointers.size;
+      lastX = e.clientX; lastY = e.clientY;
+      if (pointers.size === 1) {
+        downX = e.clientX; downY = e.clientY; downT = performance.now(); tapOk = (e.button === 0);
+        /* a press that dismisses the open settings panel is a dismissal, not a tap: the document closer spends this same press on closing the panel, so it must neither join nor seed the double-tap test — otherwise closing the panel and tapping the scene once more inside the window flies the view home or visits the camera, a flight the user never asked for (2026-11-06 overnight round 6). */
+        var panelOpen = panel.classList.contains('open');
+        if (panelOpen) tapOk = false;
+        /* a modified press (Shift held, or the right button) is a pan, not a tap: it never records a camera hit for the tap chain (navfix N19) — a pan that happens to land on the camera must not be able to complete a double-tap focus on release — and it never seeds the chain either (downMod, read where taps are recorded). No non-primary press may choose what a drag means: the right button and Shift choose only the pan, the documented modification — in the director view the pan itself; in the camera view that view's pan-equivalent, the camera's own strafe and fly (convergence fix round 6, V3-2: the modification means pan in BOTH views, and the camera-view branch that once ignored downMod and silently looked is converted to the door's record like every other consumer) — and every REFUSED button (the middle, the side buttons, any other value) chooses nothing at all — its press never reaches this test, having been refused at the handler's door (the admitted-set class test, convergence fix round 5, V2-1; round 4's door guard enumerated the middle button alone, and round 3's A-3 exclusion stood in both formulas before that — it closed the grab and the chains but left the mode decision resolving a middle press to 'look', so a middle drag still orbited), so refused buttons appear in neither this test nor the mode test below: the formulas name only the presses that can actually arrive. */
+        downMod = !!(e.shiftKey || e.button === 2);
+        downHit = !downMod && !!(e.target.closest && e.target.closest('.camHit'));
+        mode = (mainRole === 'director' && !(e.shiftKey || e.button === 2) && e.target.closest && e.target.closest('.camHit')) ? 'moveCam' : 'look';
+        if (mode === 'moveCam') { pointers.get(e.pointerId).grab = true; setRing(true); }
+        /* the one-hand zoom (Google Maps' double-tap-hold slide) arms only on PROOF of intent: the press lands near the previous tap AND is then held nearly still for 200ms — a tap followed instantly by a drag is just a person looking around quickly, and the old build hijacked exactly that into a zoom (2026-11-06 audit). A press that starts on the camera object never arms: dragging the object keeps its meaning. */
+        dtPending = !downHit && !panelOpen && e.button === 0 && !e.shiftKey && (performance.now() - lastTap >= 0 && performance.now() - lastTap < TAP_WINDOW) && Math.hypot(e.clientX - lastTapX, e.clientY - lastTapY) < TAP_DIST;
+        dtDrag = false; dtArmT = performance.now();
+      } else if (pointers.size < 4) { mode = 'pinch'; tapOk = false; }
+      /* a fourth (or later) finger is absorbed (navfix N11): it registers in the map but flips no mode — the live channel (the three-finger lens slide) keeps running, and when the extra finger lifts, endPointer's drop-to-three reseed resumes it cleanly. */
+      if (pointers.size === 2) {
+        var ps = Array.from(pointers.values());
+        lastDist = Math.hypot(ps[0].x - ps[1].x, ps[0].y - ps[1].y);
+        lastMidX = (ps[0].x + ps[1].x) / 2; lastMidY = (ps[0].y + ps[1].y) / 2;
+        lastAng = Math.atan2(ps[1].y - ps[0].y, ps[1].x - ps[0].x) * 180 / Math.PI;
+        startDist = lastDist; startMidX = lastMidX; startMidY = lastMidY; startAng = lastAng; chanLock = null;
+      }
+      if (pointers.size === 3) {
+        /* three fingers: the lens channel (Feather's documented three-finger swipe changes focal length) — seeded from the full three-finger landing so the slide is measured from where the fingers actually are. In the seed state there is no camera and no lens, so the channel never arms there — the same present guard the keyboard handler uses (2026-11-06 overnight round 3). */
+        if (cam.present) mode = 'focal'; tapOk = false;
+        var qs = Array.from(pointers.values());
+        focalMidY = (qs[0].y + qs[1].y + qs[2].y) / 3;
+      }
+      /* the press owns the hint while it lasts: any fade armed by an earlier gesture or the boot is cancelled here, so it cannot fire mid-drag and brighten the hint out of the dimmed state this press just set (2026-11-06 overnight round 5). */
+      if (hintTimer) clearTimeout(hintTimer);
+      /* the dim respects the OPEN MAP (convergence fix round 3, G-1): while the full gesture map stands open behind MORE, a press must not dim the text being read — the idle fade already guards hintOpen; the press-dim now does too. */
+      if (!hintOpen) document.getElementById('hint').style.opacity = 0.35;
+    });
+    /* @reason [USER] The main view's drag, routed by the kind the pointer-down decided and by the view's role — the complete navigation set. The routing honours the door's decision for the drag's whole life (convergence fix round 5, V2-2): the one sub-decision inside a look — pan versus orbit — is read from the door's own record (downMod) plus the Shift key, never from the live button mask, whose equality test once let a chorded second button convert a pan into an orbit mid-flight. Director: a camera move un-projects the finger onto the ground; a look orbits freely (yaw continuous through the full circle, pitch −89 to +89, so the director can stand anywhere, look back, look from above or below) or pans with a modified drag. Camera view: the drag looks in place (heading the full circle, tilt −70 to +70), or — under the modification, read from the same door record — pans the camera itself: the strafe sideways and the fly forward/back that this view's two-finger pan performs (round 6, V3-2). Two fingers work in both views: pinch dollies the director or flies the camera along its look, the midpoint drag pans the director or strafes the camera sideways and forward/back, and the twist between the fingers rolls the view. Travel beyond 12px from the landing point also cancels the tap test, so no drag can later masquerade as a tap. */
+    vpMain.addEventListener('pointermove', function (e) {
+      if (!pointers.has(e.pointerId)) return;
+      /* the stored entry is updated in place: it also carries the grab flag the pointer-down set (navfix N8), which a fresh object would drop. */
+      var pmv = pointers.get(e.pointerId); pmv.x = e.clientX; pmv.y = e.clientY;
+      if (pointers.size === 1) {
+        if (Math.hypot(e.clientX - downX, e.clientY - downY) > 12) tapOk = false;
+        /* the one-hand zoom's proof window: time is tested FIRST — once 200ms have passed with the press still pending, the hold is proved (pending can only have survived if no earlier move ever travelled past 12px), so the drag becomes the zoom even when its first stroke is a large one; travel past 12px BEFORE the 200ms disproves the hold (this press is a look, and stays one). Testing travel first armed the zoom only on a small move sampled after the hold, and disarmed it on exactly the stroke the hold had earned (2026-11-06 overnight round 1). */
+        if (dtPending) {
+          if (performance.now() - dtArmT >= 200) { dtDrag = true; dtPending = false; }
+          else if (Math.hypot(e.clientX - downX, e.clientY - downY) > 12) dtPending = false;
+        }
+        var dx = e.clientX - lastX, dy = e.clientY - lastY; lastX = e.clientX; lastY = e.clientY;
+        if (mode === 'moveCam' && mainRole === 'director' && cam.present) {
+          /* the camera move refuses to run outside the director view or with no camera in the space (navfix N4): a role change cancels the gesture at the boundary, and this guard is the second wall behind that cancellation — a held drag can never move the object while the owner looks through its own eye. */
+          /* move the camera on the ground, following the finger: the screen delta is first un-rolled (the rig rolls the whole view, so a rolled screen's up is not the world's up), then un-projected through the director's current yaw and pitch and divided by the apparent scale, so the camera stays under the fingertip at any angle */
+          var crl = Math.cos(dir.roll * Math.PI / 180), srl = Math.sin(dir.roll * Math.PI / 180);
+          var rdx = dx * crl + dy * srl, rdy = -dx * srl + dy * crl;
+          var yr = dir.yaw * Math.PI / 180;
+          var pr = Math.sin(dir.pitch * Math.PI / 180); if (Math.abs(pr) < 0.10) pr = pr < 0 ? -0.10 : 0.10;
+          var sApp = scaleMain * 1050 / (1050 - dir.dolly);
+          var wx = (Math.cos(yr) * rdx + Math.sin(yr) * rdy / pr) / sApp * SET.pan;
+          var wz = (Math.sin(yr) * rdx - Math.cos(yr) * rdy / pr) / sApp * SET.pan;
+          cam.tX = clamp(cam.tX + wx, -3000, 3000);
+          cam.tZ = clamp(cam.tZ + wz, -3000, 3000);
+        } else if (mode === 'look' && mainRole === 'director') {
+          if (dtDrag) {
+            /* double-tap-hold drag: the one-hand zoom — slide down dollies in, up pulls back (Google Maps' documented directions), instead of orbiting. */
+            dir.tDolly = clampFlex(dir.tDolly + dy * 2.4 * SET.zoom, dir.tDolly, -6000, 1000);
+          } else if (downMod || e.shiftKey) {
+            /* DECIDE-ONCE ROUTING (convergence fix round 5, V2-2): this pan test reads the DOOR'S record — downMod, written once at this drag's landing — plus the Shift key. The live BUTTON mask is never consulted again: it re-decided the gesture mid-flight, because a primary button chorded into a right-button pan made the mask 3, the old equality test on that mask failed, and the pan silently became an orbit — a drag changing meaning mid-flight, against the pointer-down's own stated law. A chord converts nothing now: the second press is swallowed by the duplicate guard at the door, and the routing never re-opens the door's decision. Shift is the one live input read here, by design and named as the mechanics it is: Shift is the documented modification itself, consulted identically at the door (in downMod and the mode test) and at this routing, so pressing Shift MID-DRAG still converts a look into a pan and releasing it returns to the look — while a drag that LANDED modified (downMod true: Shift held or the right button at the door) now stays a pan for its whole life, even if Shift is released mid-drag, where the old live read quietly reverted it to an orbit; the door decided it, and the drag keeps the door's meaning. The release law under a chord is endPointer's, unchanged: the gesture belongs to the pointer, not to a button, so the first release of either admitted button ends it — a non-primary release leaves both tap chains untouched (R2A-1) — and the still-held button's later moves find no membership, its own release a guarded stray. */
+            /* a pan is a screen-space drag: the rig's translate is multiplied by the fit's scaleMain on screen, so the delta is divided by it — the pan then tracks the finger at any view size, like moveCam and the camera strafe, which already divide by their apparent scales (2026-11-06 overnight round 1: undivided, the pan ran at ~½ finger speed on a portrait phone and ~1.7× on a wide desktop). */
+            dir.tPanX = clampFlex(dir.tPanX + dx * 0.9 * SET.pan / scaleMain, dir.tPanX, -1600, 1600);
+            dir.tPanY = clampFlex(dir.tPanY + dy * 0.9 * SET.pan / scaleMain, dir.tPanY, -1000, 1000);
+          } else {
+            dir.tYaw += dx * 0.075 * SET.look;
+            dir.tPitch = clamp(dir.tPitch - dy * 0.06 * SET.look, -89, 89);
+          }
+        } else if (mode === 'look' && mainRole === 'camera') {
+          if (dtDrag) {
+            /* double-tap-hold drag in the camera view: the same one-hand zoom, flown — slide down travels forward, up travels back. Its speed divides by the same focal-aware apparent scale (sEye) every other camera flight uses (navfix N15), so the camera flies at one speed whichever gesture flies it. */
+            var sEye1 = scaleMain * Math.max(0.3, cam.focal / 800);
+            flyCam(dy * 1.6 * SET.zoom / sEye1);
+          } else if (downMod || e.shiftKey) {
+            /* THE MODIFICATION MEANS PAN IN BOTH VIEWS (convergence fix round 6, V3-2 — designer decision, Archer, recorded): a modified drag in the camera view is spent on this view's pan-equivalent — the strafe and fly the two-finger pan below already performs, at the same SET.pan gain and the same focal-aware scale (sEye): the horizontal drag strafes the camera along its own right vector in the ground plane, the vertical drag flies it along its look. The rig exposes no height field — the camera's position is tX/tZ and its eye height is the constant EYE — so the view plane's vertical channel IS the fly, exactly as the two-finger pan spends it; the aim (heading, tilt) never changes under a modified drag. The writes take the no-snap clampFlex discipline of every pan/dolly write; a camera target can never sit outside its ±3000 range (every flight lands clamped), so the flex lands exactly where its sibling camera writes' plain clamp lands. This branch is the decide-once discipline's last converted consumer: the look below used to run for modified drags too, because this branch never read downMod at all — a right-button or Shift drag silently LOOKED at full primary gain, V-1's camera-view cell with the two admitted presses; now the branch reads the door's record (downMod) plus Shift, exactly as the director routing does. */
+            var sEye2 = scaleMain * Math.max(0.3, cam.focal / 800);
+            var hrM = cam.tHeading * Math.PI / 180, shM = Math.sin(hrM), chM = Math.cos(hrM);
+            var strafeM = dx * 0.9 * SET.pan / sEye2;
+            cam.tX = clampFlex(cam.tX - chM * strafeM, cam.tX, -3000, 3000);
+            cam.tZ = clampFlex(cam.tZ + shM * strafeM, cam.tZ, -3000, 3000);
+            flyCam(-dy * 0.9 * SET.pan / sEye2);
+          } else {
+            cam.tHeading = wrap180(cam.tHeading + dx * 0.30 * SET.look);
+            cam.tTilt = clamp(cam.tTilt + dy * 0.18 * SET.look, -70, 70);
+          }
+        }
+      } else if (pointers.size === 2) {
+        var ps = Array.from(pointers.values());
+        var dist = Math.hypot(ps[0].x - ps[1].x, ps[0].y - ps[1].y);
+        var midX = (ps[0].x + ps[1].x) / 2, midY = (ps[0].y + ps[1].y) / 2;
+        var ang = Math.atan2(ps[1].y - ps[0].y, ps[1].x - ps[0].x) * 180 / Math.PI;
+        var dAng = wrap180(ang - lastAng);
+        var dDist = dist - lastDist, dMidX = midX - lastMidX, dMidY = midY - lastMidY;
+        /* classify before applying: each channel is measured NET from the landing (separation change, midpoint travel, twist from the starting angle); the first to prove itself locks the gesture, and a sub-4-degree net twist never counts as roll at all (the deadzone). Twist is compared at 8px per degree — roughly the arc a degree of twist draws at a normal finger spacing — so the three measures share one scale. */
+        var netDist = Math.abs(dist - startDist), netMid = Math.hypot(midX - startMidX, midY - startMidY), netAng = Math.abs(wrap180(ang - startAng));
+        if (!chanLock) {
+          /* roll must earn its win at a real finger spacing (navfix N14): the twist comparison prices a degree at 8px of arc, which at a narrow starting separation lets natural finger rotation out-score a genuine spread — so below a 60-unit starting separation roll cannot win at all, and a narrow pinch classifies as the zoom it is. */
+          if (startDist >= 60 && netAng >= 4 && netAng * 8 >= Math.max(netDist, netMid)) chanLock = 'roll';
+          else if (netDist >= 12 && netDist >= netMid) chanLock = 'zoom';
+          else if (netMid >= 12 && netMid > netDist) chanLock = 'pan';
+        }
+        if (mainRole === 'director') {
+          if (chanLock === 'roll') dir.tRoll = wrap180(dir.tRoll + dAng * SET.look);
+          if (chanLock === 'zoom') dir.tDolly = clampFlex(dir.tDolly + dDist * 1.6 * SET.zoom, dir.tDolly, -6000, 1000);
+          if (chanLock === 'pan') {
+            dir.tPanX = clampFlex(dir.tPanX + dMidX * 0.9 * SET.pan / scaleMain, dir.tPanX, -1600, 1600);
+            dir.tPanY = clampFlex(dir.tPanY + dMidY * 0.9 * SET.pan / scaleMain, dir.tPanY, -1000, 1000);
+          }
+        } else {
+          var sEye = scaleMain * Math.max(0.3, cam.focal / 800);
+          if (chanLock === 'roll') cam.tRoll = wrap180(cam.tRoll + dAng * SET.look);
+          if (chanLock === 'zoom') flyCam(dDist * 1.8 * SET.zoom / sEye);
+          if (chanLock === 'pan') {
+            var hr2 = cam.tHeading * Math.PI / 180, sh = Math.sin(hr2), ch = Math.cos(hr2);
+            var strafe = dMidX * 0.9 * SET.pan / sEye;
+            cam.tX = clamp(cam.tX - ch * strafe, -3000, 3000);
+            cam.tZ = clamp(cam.tZ + sh * strafe, -3000, 3000);
+            flyCam(-dMidY * 0.9 * SET.pan / sEye);
+          }
+        }
+        lastDist = dist; lastMidX = midX; lastMidY = midY; lastAng = ang;
+      } else if (pointers.size === 3 && mode === 'focal' && cam.present) {
+        /* @reason [USER] Three-finger slide = the lens: it zooms the focal length (slide down zooms in — the Google Maps slide convention), the one quantity the pinch cannot reach in the camera view because the pinch flies. It works in the director view too: the lens belongs to the camera object, not to whichever view is main — while directing, the corner view shows the lens changing live. The branch also requires the camera to be present: in the seed state there is no lens, and a slide on the empty stage must not retune the absent camera (2026-11-06 overnight round 3). */
+        var rs = Array.from(pointers.values());
+        var ay = (rs[0].y + rs[1].y + rs[2].y) / 3;
+        var fdy = ay - focalMidY; focalMidY = ay;
+        cam.tFocal = clamp(cam.tFocal * Math.exp(fdy * 0.006 * SET.zoom), 240, 1700);
+      }
+    });
+    /* @reason [BEST-PRACTICE] Pointer-up resolves the gesture: only a genuine tap (single finger, at most 12px of travel, under the shared TAP_WINDOW of 300ms) joins a double-tap chain — and there are two chains, one per landing surface: two taps on empty space within TAP_WINDOW and TAP_DIST (40px) of each other act by view (fly home in the director view; level the roll and re-aim at the centre in the camera view), and two taps ON the camera object complete the camera chain and focus it; the chains never seed or complete each other, and a modified tap (Shift or right button) is invisible to both chains — it can neither seed, complete, nor break either one; a cancelled pointer never counts as a tap at all. Losing one of two fingers hands control back to the remaining finger without a jump, by re-seeding its last position — and the handed-back finger keeps its OWN kind (navfix N8): the pointer map remembers which pointer grabbed the camera, so the finger that holds the object keeps holding it (the ring stays lit), while any other survivor restarts as a look — a camera move is never INHERITED from a pinch, it is only ever continued by the finger that started it on the object. The handler first proves membership (navfix N5): an up for a pointer the map never held — a stray up, a right-button release — returns without touching the live gesture, the same guard the file's lostpointercapture handlers already use; and capture is released as each pointer leaves the map (navfix N6). A release of a NON-PRIMARY button that does end the gesture returns before any tap bookkeeping (convergence fix round 2, R2A-1): the tap test admits only the primary button, so a right- or middle-button release used to fall into the tap resolution's catch-all and wipe BOTH chains — the modified class the C2 law made invisible at seeding stayed visible, destructively, at release. On that path only the press's own hint bookkeeping is settled; the chains are neither seeded, completed, nor broken by it — exactly the invisibility the law states; and since round 6 (V3-1) the return is keyed on the door's record too — a decided-modified gesture returns on ANY admitted release, so a chorded primary release can no longer carry a modified drag into the resolution and disarm the chains. */
+    function endPointer(e, cancelled) {
+      if (!pointers.has(e.pointerId)) return;
+      try { vpMain.releasePointerCapture(e.pointerId); } catch (err) { }
+      pointers.delete(e.pointerId);
+      pointersActive = pointers.size;
+      if (pointers.size === 1) {
+        var p1 = Array.from(pointers.entries())[0]; lastX = p1[1].x; lastY = p1[1].y;
+        if (p1[1].grab && mainRole === 'director' && cam.present) { mode = 'moveCam'; }
+        else { mode = 'look'; setRing(false); }
+        dtDrag = false; dtPending = false;
+      }
+      if (pointers.size === 2) {
+        /* dropping from three fingers to two re-seeds the pinch channels, so the remaining gesture continues from where the fingers are — no jump. */
+        var ps2 = Array.from(pointers.values());
+        lastDist = Math.hypot(ps2[0].x - ps2[1].x, ps2[0].y - ps2[1].y);
+        lastMidX = (ps2[0].x + ps2[1].x) / 2; lastMidY = (ps2[0].y + ps2[1].y) / 2;
+        lastAng = Math.atan2(ps2[1].y - ps2[0].y, ps2[1].x - ps2[0].x) * 180 / Math.PI;
+        startDist = lastDist; startMidX = lastMidX; startMidY = lastMidY; startAng = lastAng; chanLock = null;
+        mode = 'pinch';
+      }
+      if (pointers.size === 3) {
+        /* dropping from four fingers to three re-seeds the lens channel the same way, so the slide resumes from the fingers' real midpoint — no focal jump. */
+        var ts3 = Array.from(pointers.values());
+        focalMidY = (ts3[0].y + ts3[1].y + ts3[2].y) / 3;
+        /* the lens state arms only while a camera exists (navfix N18) — the same present guard its sibling paths carry, applied here too so the seed state never claims a lens channel. */
+        mode = cam.present ? 'focal' : 'pinch';
+      }
+      if (pointers.size === 0) {
+        mode = null; dtPending = false; setRing(false);
+        /* the gesture is over: the hint returns to full strength at once (it is the gesture map a new user needs AFTER touching, not before), then fades to a whisper after six idle seconds. */
+        var hintEl = document.getElementById('hint');
+        hintEl.style.opacity = '';
+        if (hintTimer) clearTimeout(hintTimer);
+        hintTimer = setTimeout(function () { if (!hintOpen) hintEl.style.opacity = 0.55; }, 6000);
+        /* a non-primary release is invisible to the tap chains (convergence fix round 2, R2A-1): it returns here, before any chain bookkeeping — it neither seeds, completes, nor breaks either chain. The release that can reach this line is the RIGHT button's (its press registered, as the pan modification); a REFUSED button's release — the middle, the side buttons, any value outside the door's admitted set — never reaches it at all, because the refused press never entered the map (the door's class test, convergence fix round 5, V2-1; round 4's enumeration of the middle button was its first form) and this handler's own membership guard has already returned. A genuine primary-button drag still reaches the resolution below and breaks the chains, exactly as before. Round 6 (V3-1) keys the test on the DOOR'S RECORD as well: a gesture decided modified (downMod) returns here whichever admitted button's release ends it — a right-button pan drag chorded by the primary (duplicate-swallowed at the door: one map entry) and ended by the PRIMARY's release first carries a primary release event, so the event-only test let it fall into the resolution below, whose not-a-tap branch disarmed both chains: a modified gesture breaking a chain it was forbidden to touch, in the one release order round 5's proof never walked. The release's own button still classifies the ending release; what the gesture MEANT is read from the door's record, as the routing reads it — the decide-once discipline's last unconverted consumer, converted. The resolution's own downMod branch below now stands as the second wall behind this return, in the file's idiom. */
+        if (!cancelled && (e.button !== 0 || downMod)) { tapOk = false; return; }
+        var now = performance.now();
+        if (!cancelled && tapOk && now - downT >= 0 && now - downT < TAP_WINDOW) {
+          /* TWO TAP CHAINS, one per surface a tap can land on (convergence fix C1, 2026-11-06). A tap on EMPTY space joins the general chain: a second empty tap near it acts — fly home in the director view, level and re-aim in the camera view. A tap ON the camera object joins the camera chain: a second ON-CAMERA tap near it, inside the same TAP_WINDOW and TAP_DIST, FOCUSES the camera — the gesture the hint map teaches and the FIND button's reason records. The chains never mix: a camera tap never seeds or completes the general chain (navfix N1's cure stands — no hijacked next drag, no unasked home flight), an empty tap never completes the camera chain, and seeding one chain clears the other, so the latest tap owns the next completion. And a MODIFIED tap is invisible to both chains (convergence fix C2): downMod is consulted here, at the action, exactly as it always was at the seed — before this, a Shift-tap could complete a chain it was forbidden to seed and fire an unasked flight (home, even on the camera, where the modified press exists precisely to be unable to focus). Invisible, not destructive: it neither seeds, completes, nor breaks a chain — the pan modifier's press is spent on panning, and a chain it interrupts survives it. */
+          if (downMod) {
+            /* spent on the pan modifier: no chain state changes at all. */
+          } else if (downHit) {
+            if (mainRole === 'director' && now - lastCamTap >= 0 && now - lastCamTap < TAP_WINDOW && Math.hypot(downX - lastCamTapX, downY - lastCamTapY) < TAP_DIST) {
+              focusCamera();
+              lastCamTap = -Infinity;
+            } else { lastCamTap = now; lastCamTapX = downX; lastCamTapY = downY; }
+            lastTap = -Infinity;
+          } else {
+            /* a double-tap is two genuine taps NEAR EACH OTHER (within TAP_DIST) inside TAP_WINDOW: two quick taps on opposite sides of the screen are two taps, not a double-tap (2026-11-06 audit). */
+            if (now - lastTap >= 0 && now - lastTap < TAP_WINDOW && Math.hypot(downX - lastTapX, downY - lastTapY) < TAP_DIST) {
+              if (mainRole === 'director') flyHome();
+              else { cam.tRoll = 0; aimCentre(); }
+              lastTap = -Infinity;
+            } else { lastTap = now; lastTapX = downX; lastTapY = downY; }
+            lastCamTap = -Infinity;
+          }
+        } else { lastTap = -Infinity; lastCamTap = -Infinity; }
+        tapOk = false;
+      }
+    }
+    vpMain.addEventListener('pointerup', function (e) { endPointer(e, false); });
+    vpMain.addEventListener('pointercancel', function (e) { endPointer(e, true); });
+    /* @reason [BEST-PRACTICE] If capture is lost without an up or a cancel (browser gesture takeover, OS interruption), the pointer would stay in the map forever and poison the next gesture as a ghost second finger. A lost-capture event for a pointer still in the map cleans it up as a cancellation; one arriving after a normal release finds nothing in the map and does nothing, so a real tap's double-tap stamp is never wiped. */
+    vpMain.addEventListener('lostpointercapture', function (e) { if (pointers.has(e.pointerId)) endPointer(e, true); });
+    /* @reason [USER] The main view's wheel: in the director view it dollies (scroll down pulls back, scroll up pushes in); in the camera view it flies the camera along its look (scroll up travels forward, down travels back) — one direction convention in both views. Line-mode deltas (Firefox notches) are normalised to pixel scale first, so a notch is a notch in every browser, and page-mode deltas are normalised as ten line steps (navfix N20): before that, one page-mode step applied its raw delta — a far larger jump than a notch. The camera flight divides by the same focal-aware scale (sEye) as the pinch and the one-hand fly (navfix N15). */
+    vpMain.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      var dyM = e.deltaMode === 1 ? e.deltaY * 33 : (e.deltaMode === 2 ? e.deltaY * 330 : e.deltaY);
+      if (mainRole === 'director') dir.tDolly = clampFlex(dir.tDolly - dyM * 0.45 * SET.zoom, dir.tDolly, -6000, 1000);
+      else { var sEyeW = scaleMain * Math.max(0.3, cam.focal / 800); flyCam(-dyM * 0.9 * SET.zoom / sEyeW); }
+    }, { passive: false });
+    vpMain.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    } catch (err) { }
+
+    /* ---- corner view gestures: a working view in miniature ---- */
+    var pipPointers = new Map();
+    var pipDownT = 0, pipStartX = 0, pipStartY = 0, pipLastDist = 0, pipMaxPtr = 0, pipTravel = 0;
+    /* @reason [BEST-PRACTICE] The corner's dismissal spend (convergence fix round 2, R2A-4): a corner press that dismisses the open settings panel is spent on the dismissal — the same law the main surface has carried since round 6 — so its release cannot also complete the swap tap and replace the view the owner was only trying to un-cover. Set at the dismissal in pointerdown, read at the swap test in pipEnd, cleared when the corner's map empties. */
+    var pipSpent = false;
+    var pip = document.getElementById('pip');
+    /* registration of the engine hooks declared at Layer 3 scope: the role boundary cancels through onRoleApply, every fit reseeds through onFit, and the frame loop reads the live maps through tick._maps — all three wired here, where both maps and the corner element exist. */
+    onRoleApply = cancelGesture;
+    onFit = reseedGestureBaselines;
+    tick._maps = { main: pointers, pip: pipPointers };
+    /* @reason [USER] The corner view is a working view, never a dead preview — it takes the same pointer discipline as the main view, in miniature. BUTTON DISCIPLINE INCLUDED (convergence fix round 3, A-2): a non-primary button or a Shift-modified press is invisible on the corner exactly as a modified press is invisible to the main view's tap chains — it never enters the corner's map, so it can neither complete the swap tap nor aim or orbit the other eye; the corner has no pan channel for such a press to spend itself on, so invisibility is its whole treatment there. One finger drags the OTHER eye (aim the camera while directing; orbit the director while in the shot). Two fingers pinch that eye: while directing it zooms the camera's lens (the touch path to focal that the audit found missing — before, the lens on a phone was wheel-only, i.e. unreachable), and while in the shot it dollies the director. A clean TAP swaps the views — and a tap is strict (one finger only, under 8px of travel, under 300ms), because a small careful aim nudge is drag-shaped and the old loose test swapped the views on exactly that nudge. The corner keeps its own pointer count (pipActive), so touching it can no longer corrupt the main view's chase tightening (2026-11-06 audit: the two surfaces shared one counter). */
+    try { pip.addEventListener('pointerdown', function (e) {
+      /* a duplicate pointerdown for an id already in the corner's map is ignored whole, exactly as on the main view (convergence fix C5, 2026-11-06): it must not reseed the swap-tap test for a gesture already in flight. */
+      if (pipPointers.has(e.pointerId)) return;
+      /* a corner press dismisses an open settings panel first (navfix N21) — the same dismissal a main-view press receives from the document closer, which this press's stopPropagation would otherwise never reach, so the two surfaces dismiss identically. And the dismissal SPENDS the press (convergence fix round 2, R2A-4): mirroring the main surface's round-6 law, a press whose first job was closing the panel cannot go on to swap the views on its release. */
+      var pipDismissed = panel.classList.contains('open');
+      if (pipDismissed) { panel.classList.remove('open'); var gbP = document.getElementById('gearBtn'); if (gbP) gbP.setAttribute('aria-expanded', 'false'); }
+      /* button discipline at parity with the main surface (convergence fix round 3, A-2): a non-primary button or a Shift-modified press is invisible here — it never enters the corner's map, so it can neither complete the swap tap nor aim or orbit the other eye, and its release finds no membership and changes nothing. On the main surface such a press is spent as a pan modifier and is invisible to both tap chains; the corner has no pan channel, so invisibility is its whole treatment, and Shift follows exactly the main surface's modified-press rule. The dismissal above still stands — a modified press that closed the panel has done that one job, and no other. */
+      if (e.button !== 0 || e.shiftKey) { e.stopPropagation(); return; }
+      pipPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      /* capture after registration, in its own protected step — the same navfix N6 discipline as the main view: a throwing capture can no longer abort the corner's press. */
+      try { pip.setPointerCapture(e.pointerId); } catch (err) { }
+      pipActive = pipPointers.size;
+      if (pipPointers.size === 1) {
+        pipStartX = e.clientX; pipStartY = e.clientY; pipDownT = performance.now(); pipMaxPtr = 1; pipTravel = 0;
+        if (pipDismissed) pipSpent = true;
+      }
+      if (pipPointers.size === 2) {
+        pipMaxPtr = 2;
+        var pp = Array.from(pipPointers.values());
+        pipLastDist = Math.hypot(pp[0].x - pp[1].x, pp[0].y - pp[1].y);
+      }
+      if (pipPointers.size >= 3) pipMaxPtr = pipPointers.size; /* a press that ever held three fingers can never read as the swap tap */
+      e.stopPropagation();
+    });
+    pip.addEventListener('pointermove', function (e) {
+      if (!pipPointers.has(e.pointerId)) return;
+      var prev = pipPointers.get(e.pointerId);
+      var dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+      /* the stored position and the travel update BEFORE the camera-absent return (navfix N10): a finger held on the corner while the camera is removed and re-added must not compute its next delta from the pre-removal point, and the travel it covered meanwhile must count toward the tap test. */
+      pipPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      pipTravel = Math.max(pipTravel, Math.hypot(e.clientX - pipStartX, e.clientY - pipStartY));
+      /* no camera in the seed state: the corner is hidden then, and this guard (the keyboard handler's own) keeps its aim/lens writers from ever mutating the absent camera (2026-11-06 overnight round 3). */
+      if (!cam.present) return;
+      if (pipPointers.size === 1) {
+        if (mainRole === 'director') {
+          cam.tHeading = wrap180(cam.tHeading + dx * 0.30 * SET.look);
+          cam.tTilt = clamp(cam.tTilt + dy * 0.18 * SET.look, -70, 70);
+        } else {
+          dir.tYaw += dx * 0.075 * SET.look;
+          dir.tPitch = clamp(dir.tPitch - dy * 0.06 * SET.look, -89, 89);
+        }
+      } else if (pipPointers.size === 2) {
+        var pp = Array.from(pipPointers.values());
+        var dist2 = Math.hypot(pp[0].x - pp[1].x, pp[0].y - pp[1].y);
+        var dD = dist2 - pipLastDist; pipLastDist = dist2;
+        if (mainRole === 'director') cam.tFocal = clamp(cam.tFocal * Math.exp(dD * 0.006 * SET.zoom), 240, 1700);
+        else dir.tDolly = clampFlex(dir.tDolly + dD * 1.6 * SET.zoom, dir.tDolly, -6000, 1000);
+      }
+    });
+    /* @reason [BEST-PRACTICE] The corner gesture ends: only a strict tap swaps the views — and never a press that was spent dismissing the settings panel (convergence fix round 2, R2A-4); any drag, pinch or cancel just ends. The corner's own counter returns to zero with its own last finger, never touching the main view's. */
+    function pipEnd(e, cancelled) {
+      /* membership first, like the main view (navfix N5): a stray up must not reseed or end a live corner gesture. */
+      if (!pipPointers.has(e.pointerId)) return;
+      try { pip.releasePointerCapture(e.pointerId); } catch (err) { }
+      pipPointers.delete(e.pointerId);
+      pipActive = pipPointers.size;
+      if (pipPointers.size === 2) {
+        /* dropping from three fingers to two reseeds the pinch baseline (navfix N9), as the main view reseeds at every transition: the next pinch move measures from where the fingers are now, not from a baseline the third finger's visit left stale. */
+        var pp2 = Array.from(pipPointers.values());
+        pipLastDist = Math.hypot(pp2[0].x - pp2[1].x, pp2[0].y - pp2[1].y);
+      }
+      if (pipPointers.size === 1) {
+        var rp = Array.from(pipPointers.values());
+        pipLastDist = 0; pipTravel = 99; /* the remaining finger continues as a drag, never as a tap */
+        pipStartX = rp[0].x; pipStartY = rp[0].y;
+      }
+      if (pipPointers.size === 0) {
+        if (!cancelled && !pipSpent && pipMaxPtr === 1 && pipTravel < 8 && performance.now() - pipDownT >= 0 && performance.now() - pipDownT < 300) {
+          mainRole = (mainRole === 'director') ? 'camera' : 'director';
+          applyRoles();
+        }
+        pipMaxPtr = 0; pipSpent = false;
+      }
+    }
+    pip.addEventListener('pointerup', function (e) { pipEnd(e, false); });
+    pip.addEventListener('pointercancel', function (e) { pipEnd(e, true); });
+    pip.addEventListener('lostpointercapture', function (e) { if (pipPointers.has(e.pointerId)) pipEnd(e, true); });
+    pip.addEventListener('wheel', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (!cam.present) return; /* the seed state has no lens to zoom (2026-11-06 overnight round 3) */
+      var dyP = e.deltaMode === 1 ? e.deltaY * 33 : (e.deltaMode === 2 ? e.deltaY * 330 : e.deltaY);
+      if (mainRole === 'director') {
+        cam.tFocal = clamp(cam.tFocal * Math.exp(-dyP * 0.0012 * SET.zoom), 240, 1700);
+      } else {
+        dir.tDolly = clampFlex(dir.tDolly - dyP * 0.45 * SET.zoom, dir.tDolly, -6000, 1000);
+      }
+    }, { passive: false });
+    /* the corner suppresses the context menu exactly as the main view does (convergence fix round 3, M-4): a long-press or right-press over the corner must not summon the browser's menu over the working view — both gesture surfaces carry the prevention, proven by census, not by one surface's example. */
+    pip.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    } catch (err) { }
+
+    /* @reason [BEST-PRACTICE] The tab-hide ghost door (convergence fix round 3, M-3): a pointer that goes down and is then hidden with its tab — or stranded when the window loses focus — may never deliver its up; the pointer maps would hold it as a ghost finger, the chase would stay tightened for a hand that is no longer there, and the next press would read as a pinch with a phantom. Hiding the document or blurring the window therefore ends any live gesture through the SAME cancellation the role boundary uses, on both surfaces at once: maps emptied, chains and spends wiped, counters recomputed — the next press starts a fresh gesture, and a press straddling the hide can complete nothing. */
+    try {
+      document.addEventListener('visibilitychange', function () { if (document.hidden) cancelGesture(); });
+      addEventListener('blur', function () { cancelGesture(); });
+    } catch (err) { }
+
+    /* @reason [USER] Keyboard nudging: the precision path a mouse-and-keys director expects — the arrow keys walk the camera object in its own frame (up/down along its look, left/right across it), 10 units a press, 50 with Shift, scaled by the Pan speed setting like every other movement path (navfix N15). Ctrl/Cmd/Alt-modified arrows belong to the system and the browser and are never taken (navfix N17). */
+    try { document.addEventListener('keydown', function (e) {
+      if (!cam.present) return;
+      /* a focused slider keeps its own arrow keys: the panel's range inputs are the one keyboard-adjustable control in the file, and nudging the camera while stealing their arrows would break the settings' own keyboard path. */
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      /* a modified keystroke is not the stage's (navfix N17): Ctrl/Cmd/Alt + arrow is a browser/OS shortcut — it is neither used here nor preventDefault()ed, so the shortcut survives. Shift alone is the stage's own coarse step and still nudges. */
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      var step = (e.shiftKey ? 50 : 10) * SET.pan, used = true;
+      var hrK = cam.tHeading * Math.PI / 180, shK = Math.sin(hrK), chK = Math.cos(hrK);
+      if (e.key === 'ArrowUp') flyCam(step);
+      else if (e.key === 'ArrowDown') flyCam(-step);
+      else if (e.key === 'ArrowLeft') { cam.tX = clamp(cam.tX + chK * step, -3000, 3000); cam.tZ = clamp(cam.tZ - shK * step, -3000, 3000); }
+      else if (e.key === 'ArrowRight') { cam.tX = clamp(cam.tX - chK * step, -3000, 3000); cam.tZ = clamp(cam.tZ + shK * step, -3000, 3000); }
+      else used = false;
+      if (used) e.preventDefault();
+    });
+    } catch (err) { }
+
+    /* the frame loop starts LAST — after every control is bound and the roles are applied, so no frame ever renders an unwired state. (The hint's idle-fade clock is already running: applyRoles armed it when it wrote the hint text.) */
+    requestAnimationFrame(tick);
+  })();
+
+  /* @reason [BEST-PRACTICE] Test hooks: the verification suite drives the real page through these — set state exactly, switch roles, read the role back — so a screenshot or a driving test can reproduce an exact view. */
+  window.__stage = { dir: dir, cam: cam, setRole: function (r) { mainRole = r; applyRoles(); }, role: function () { return mainRole; }, samplePixels: samplePixels, seedState: function () { return SEED_STATE; }, gl: function () { return { ok: glOK, vendor: T3 ? 'three-r' + T3.REVISION : null }; } };
+})();
+</script>
+</body>
+</html>
