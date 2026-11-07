@@ -40,10 +40,12 @@ window.BATCH_CELLS = [
     lengthLabel: "~60 s",
     hook: "Image hook — the question first (“How many languages can you describe this image in?”), the hero image revealed on the spoken words “this image”.",
     status: "recut",
-    statusLabel: "In re-cut",
-    gate: "Re-cut (pub2) in progress to the B34/B35/B36 ending form. Not yet verified — nothing playable until the new cut passes.",
+    statusLabel: "Verified re-cut · seats running",
+    gate: "pub2 re-cut VERIFIED + stamped READY G2-20261107-180835-926935-623bc8ca (row-read 24/24, lines persist 59/59, Amendment-2 block/captions/label PASS, tail probe PASS). Still owed before final approval: the reviewer seats now running (linguist · cold viewer · retention scan) and the B38 diagram voice-over pass.",
     file: "earthone-dlc-001-eat-bread-en-opening-pub2.mp4",
-    video: null,
+    video: "videos/earthone-dlc-001-eat-bread-en-opening-pub2.mp4",
+    poster: "poster-cell-01.png",
+    reviews: { linguist: "running", educator: "running", structure: "pass", correctness: "pass", coldviewer: "running", retention: "running", audio: "pass", packaging: "pass" },
     about: "The baseline cell: the batch's reference form. Classic architecture at 60 seconds — every other cell is read against this one."
   },
   {
@@ -76,10 +78,12 @@ window.BATCH_CELLS = [
     lengthLabel: "~60 s",
     hook: "Image hook — the question first in Spanish, the hero image revealed on the spoken cue.",
     status: "recut",
-    statusLabel: "In re-cut",
-    gate: "Re-cut (pub2) in progress to the B34/B35/B36 ending form. Not yet verified — nothing playable until the new cut passes.",
+    statusLabel: "Verified re-cut · seats running",
+    gate: "pub2 re-cut VERIFIED + stamped READY G2-20261107-180836-308093-8f00892b (row-read 24/24, lines persist 59/59, Amendment-2 block/captions/label PASS, tail probe PASS). Still owed before final approval: the reviewer seats now running (linguist · cold viewer · retention scan) and the B38 diagram voice-over pass.",
     file: "earthone-dlc-001-eat-bread-es-opening-pub2.mp4",
-    video: null,
+    video: "videos/earthone-dlc-001-eat-bread-es-opening-pub2.mp4",
+    poster: "poster-cell-03.png",
+    reviews: { linguist: "running", educator: "running", structure: "pass", correctness: "pass", coldviewer: "running", retention: "running", audio: "pass", packaging: "pass" },
     about: "The baseline Classic with a Spanish opening door — tests how much the opening language itself pulls its audience."
   },
   {
