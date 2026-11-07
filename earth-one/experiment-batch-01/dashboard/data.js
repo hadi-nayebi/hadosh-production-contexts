@@ -153,11 +153,11 @@ window.BATCH_CELLS = [
     hook: "Image hook — the question first (“How many languages can you describe this image in?”), the hero image revealed on the spoken words “this image”.",
     status: "ready",
     statusLabel: "Ready for review",
-    gate: "Stamped READY G2-20261107-173020-809060-021bea20 — echo removed (opening-read gate), diagram voice-over over the focus passes (the Hindi order spoken in English words: “I door open”), boringness scan 26/26 windows above 8, all censuses green. The narration lengthened the ending under the audio fitting rule: 77 s as built.",
+    gate: "Stamped READY G2-20261107-173020-809060-021bea20 — echo removed (opening-read gate), diagram voice-over over the focus passes (the Hindi order spoken in English words: “I door open”), boringness scan 26/26 windows above 8, all censuses green. The narration lengthened the ending under the audio fitting rule: 77 s as built. LINGUIST SEAT (issue #4): FAIL, 2 line-level problems — (1) the object narration line claims the door comes first in Hindi; it is the second word (it jumps ahead of the verb) — corrected line approved by the review; (2) the Turkish card respelling marks the wrong stress (should be ah-CHUH-yoh-room). A v8 fix is in motion; the Linguist chip returns to pass only when the corrected lines verify.",
     file: "earthone-dlc-003-open-door-en-opening-v7.mp4",
     video: "videos/earthone-dlc-003-open-door-en-opening-v7.mp4",
     poster: "poster-cell-07.png",
-    reviews: { linguist: "running", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "pass", audio: "pass", packaging: "pass" },
+    reviews: { linguist: "fail", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "pass", audio: "pass", packaging: "pass" },
     about: "The door sentence in the Classic form — the cell that caught the echo defect, so its opening is the first to be re-proved under the new opening-read gate."
   },
   {
