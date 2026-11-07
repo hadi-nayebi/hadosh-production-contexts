@@ -134,9 +134,9 @@ window.BATCH_CELLS = [
     lengthLabel: "~60 s",
     hook: "Image hook — the question first (“How many languages can you describe this image in?”), the hero image revealed on the spoken words “this image”.",
     status: "inbuild",
-    statusLabel: "In build (v6)",
-    gate: "v6 in build: the withdrawn v5's echo card removed, diagram voice-over pass being added. Earlier versions were superseded and are not playable here.",
-    file: "earthone-dlc-003-open-door-en-opening-v6.mp4",
+    statusLabel: "v6 verified · narration pass (v7) in build",
+    gate: "v6 verified 2026-11-07 (echo removed, opening-read gate passed, all censuses green). The v7 pass — diagram voice-over + boringness scan — is building now; the verified v7 becomes this cell's playable video. Earlier versions were superseded and are not playable here.",
+    file: "earthone-dlc-003-open-door-en-opening-v7.mp4",
     video: null,
     about: "The door sentence in the Classic form — the cell that caught the echo defect, so its opening is the first to be re-proved under the new opening-read gate."
   },
