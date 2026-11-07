@@ -122,8 +122,14 @@
   .titleline{font-size:16.5px;font-weight:700;line-height:1.3}
   .titleline .meta{color:var(--amber);font-weight:700}
   .subline{font-size:12.5px;color:var(--cream-dim);margin-top:3px}
-  /* reviewer seats — small check chips + the pass count */
-  .reviews{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;align-items:center}
+  /* reviewer seats — readiness summary up front (one big number + failing
+     seats only); the full roster lives in the Details drawer */
+  .readiness{display:flex;align-items:baseline;gap:9px;margin-top:11px}
+  .readiness .rbig{font-size:27px;font-weight:900;color:var(--cream);line-height:1}
+  .readiness .rlab{font-size:12.5px;color:var(--cream-dim)}
+  .flags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .rnote{font-size:11.5px;color:var(--cream-dim);margin-top:7px}
+  .reviews{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center}
   .reviews .rcount{font-size:12.5px;font-weight:800;color:var(--cream);margin-right:2px}
   .rchip{
     font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:999px;
@@ -161,7 +167,7 @@
   .hint{font-size:11.5px;color:var(--cream-dim);margin-top:8px}
   /* details drawer */
   .drawer{overflow:hidden;max-height:0;transition:max-height .35s ease}
-  .drawer.open{max-height:480px}
+  .drawer.open{max-height:760px}
   .drawer .inner{padding-top:12px}
   .drow{display:flex;gap:10px;padding:7px 0;border-top:1px solid rgba(255,214,150,.12);font-size:13.5px;line-height:1.45}
   .drow .k{flex:0 0 108px;color:var(--amber);font-weight:700}
@@ -248,12 +254,29 @@
   }
   function reviewsHTML(cell){
     if (!ROSTER.length) return "";
-    var chips = ROSTER.map(function(seat){
+    var fails = [], running = 0;
+    ROSTER.forEach(function(seat){
+      var st = reviewState(cell, seat.key);
+      if (st === "fail") fails.push(seat);
+      if (st === "running") running++;
+    });
+    var h = '<div class="readiness"><span class="rbig">' + reviewCount(cell) + '/' + ROSTER.length + '</span>' +
+      '<span class="rlab">checks passing</span></div>';
+    if (fails.length) {
+      h += '<div class="flags">' + fails.map(function(seat){
+        return '<span class="rchip fail">✗ ' + esc(seat.label) + '</span>';
+      }).join("") + '</div>';
+    }
+    h += '<div class="rnote">' + (running ? running + ' running · ' : '') + 'full reviewer list in Details</div>';
+    return h;
+  }
+  function rosterHTML(cell){
+    if (!ROSTER.length) return "";
+    return '<div class="reviews">' + ROSTER.map(function(seat){
       var st = reviewState(cell, seat.key);
       var mark = st === "pass" ? "✓ " : st === "running" ? "⟳ " : st === "fail" ? "✗ " : "· ";
       return '<span class="rchip ' + st + '">' + mark + esc(seat.label) + '</span>';
-    }).join("");
-    return '<div class="reviews"><span class="rcount">Reviews ' + reviewCount(cell) + '/' + ROSTER.length + '</span>' + chips + '</div>';
+    }).join("") + '</div>';
   }
 
   function issueURL(cell, verdict, comment){
@@ -316,7 +339,7 @@
             '<span class="tag">' + esc(cell.lengthLabel) + '</span>' +
           '</div>' +
           '<div class="statuspill"><span class="dot' + (busy ? " pulse" : "") + '" style="background:' + color + '"></span>' + esc(cell.statusLabel) + '</div>' +
-          '<div class="revcount">Reviews <b>' + reviewCount(cell) + '/' + ROSTER.length + '</b> checks passing</div>' +
+          '<div class="revcount">Readiness <b>' + reviewCount(cell) + '/' + ROSTER.length + '</b> checks passing</div>' +
           '<div class="lands">The verified video appears here as soon as it passes its gates.</div>' +
         '</div>';
     }
@@ -327,6 +350,7 @@
       ["Architecture", esc(cell.arch) + " · " + esc(cell.archName)],
       ["Length", esc(cell.length) + " · " + esc(cell.lengthLabel)],
       ["Hook", esc(cell.hook)],
+      ["Reviewers", rosterHTML(cell)],
       ["Gate status", esc(cell.gate)],
       ["About this cell", esc(cell.about)]
     ].map(function(r){

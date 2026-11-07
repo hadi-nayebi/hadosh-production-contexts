@@ -18,8 +18,19 @@ window.BATCH_REVIEWS = [
   { key: "coldviewer",  label: "Cold viewer" },
   { key: "retention",   label: "Retention" },
   { key: "audio",       label: "Audio" },
+  { key: "sound",       label: "Sound design" },
   { key: "packaging",   label: "Packaging" },
-  { key: "consistency", label: "Consistency" }
+  { key: "consistency", label: "Consistency" },
+  { key: "openingending", label: "Openings & endings" },
+  { key: "accessibility", label: "Accessibility" },
+  { key: "visualvariety", label: "Visual variety" },
+  { key: "animation",   label: "Animation" },
+  { key: "pacing",      label: "Pacing" },
+  { key: "usefulness",  label: "Usefulness" },
+  { key: "thumbnail",   label: "Thumbnail" },
+  { key: "description", label: "Description" },
+  { key: "community",   label: "Community" },
+  { key: "stratification", label: "Stratification" }
 ];
 
 window.BATCH_META = {
@@ -46,7 +57,7 @@ window.BATCH_CELLS = [
     file: "earthone-dlc-001-eat-bread-en-opening-pub2.mp4",
     video: "videos/earthone-dlc-001-eat-bread-en-opening-pub2.mp4",
     poster: "poster-cell-01.png",
-    reviews: { linguist: "fail", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "pass", audio: "pass", packaging: "pass", consistency: "fail" },
+    reviews: { linguist: "fail", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "fail", audio: "pass", thumbnail: "pass", stratification: "pass", consistency: "fail", openingending: "fail", description: "fail" },
     about: "The baseline cell: the batch's reference form. Classic architecture at 60 seconds — every other cell is read against this one."
   },
   {
@@ -84,7 +95,7 @@ window.BATCH_CELLS = [
     file: "earthone-dlc-001-eat-bread-es-opening-pub2.mp4",
     video: "videos/earthone-dlc-001-eat-bread-es-opening-pub2.mp4",
     poster: "poster-cell-03.png",
-    reviews: { linguist: "fail", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "pass", audio: "pass", packaging: "pass", consistency: "fail" },
+    reviews: { linguist: "fail", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "fail", audio: "pass", thumbnail: "pass", stratification: "pass", consistency: "fail", openingending: "fail", description: "fail" },
     about: "The baseline Classic with a Spanish opening door — tests how much the opening language itself pulls its audience."
   },
   {
@@ -158,7 +169,7 @@ window.BATCH_CELLS = [
     file: "earthone-dlc-003-open-door-en-opening-v8.mp4",
     video: "videos/earthone-dlc-003-open-door-en-opening-v8.mp4",
     poster: "poster-cell-07.png",
-    reviews: { linguist: "pass", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "pass", audio: "pass", packaging: "pass", consistency: "fail" },
+    reviews: { linguist: "fail", educator: "pass", structure: "pass", correctness: "pass", coldviewer: "pass", retention: "running", audio: "pass", thumbnail: "pass", stratification: "pass", consistency: "fail", description: "fail" },
     about: "The door sentence in the Classic form — the cell that caught the echo defect, so its opening is the first to be re-proved under the new opening-read gate."
   },
   {
