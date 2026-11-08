@@ -63,6 +63,16 @@ body.camView .headChip{bottom:64px}
 .gearBtn{position:fixed;right:14px;top:12px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(244,233,204,.38);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);color:#F4E9CC;font-size:19px;cursor:pointer;z-index:6;box-shadow:0 2px 14px rgba(0,0,0,.25);touch-action:manipulation}
 .gearBtn:active{transform:scale(.95)}
 .focalChip{position:fixed;right:14px;bottom:16px;font-family:Georgia,serif;font-size:13px;letter-spacing:.6px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.32);border:1px solid rgba(244,233,204,.25);padding:6px 12px;border-radius:999px;pointer-events:none;z-index:5}
+.frameMark{position:fixed;border:2px solid rgba(244,233,204,.9);box-shadow:0 0 0 9999px rgba(0,0,0,.5);pointer-events:none;z-index:3;border-radius:2px}
+.panel.atPip{left:14px;right:auto;top:226px;max-height:calc(100vh - 250px)}
+@media (max-width:560px){.panel.atPip{left:10px;top:230px;max-height:calc(100vh - 254px)}}
+.poseRead{font-size:12.5px;line-height:1.55;padding:4px 2px 0;color:#F4E9CC}
+.pipDots{position:absolute;right:6px;top:6px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(244,233,204,.4);background:rgba(20,14,8,.55);color:#F4E9CC;font-size:14px;letter-spacing:1px;cursor:pointer;z-index:5;touch-action:manipulation}
+.pipMenu{position:fixed;left:16px;top:224px;z-index:7;display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:12px;border:1px solid rgba(244,233,204,.3);background:rgba(16,11,6,.94);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+@media (max-width:560px){.pipMenu{left:10px;top:228px}}
+.pipMenu button{font-family:Georgia,serif;font-size:13px;padding:9px 14px;border-radius:9px;border:1px solid rgba(244,233,204,.3);background:rgba(244,233,204,.08);color:#F4E9CC;cursor:pointer;text-align:left}
+.nameCard{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:8;width:300px;max-width:calc(100vw - 40px);padding:16px 18px;border-radius:16px;border:1px solid rgba(244,233,204,.3);background:rgba(16,11,6,.96);color:#F4E9CC;font-family:Georgia,serif;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.nameCard input{width:100%;box-sizing:border-box;padding:9px 10px;margin:10px 0 12px;border-radius:9px;border:1px solid rgba(244,233,204,.35);background:rgba(244,233,204,.08);color:#F4E9CC;font-size:15px;font-family:Georgia,serif}
 .panel{position:fixed;right:14px;top:66px;width:302px;max-width:calc(100vw - 28px);max-height:calc(100vh - 126px);overflow-y:auto;border-radius:16px;border:1px solid rgba(244,233,204,.30);background:rgba(16,11,6,.94);color:#F4E9CC;font-family:Georgia,serif;padding:16px 18px;z-index:6;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4);overscroll-behavior:contain;touch-action:pan-y}
 @supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.panel{background:rgba(16,11,6,.78);-webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3)}}
 .panel.open{display:block}
@@ -91,9 +101,16 @@ body.camView .headChip{bottom:64px}
 <div class="viewport" id="vpMain" data-reason="[USER] The main view: whichever eye is chosen large — the director's free view, or the camera's shot. It receives the main gestures. The picture itself is the WebGL canvas beneath; this surface is the touch layer over it.">
   <div class="camProxy camHit" id="camProxy" data-reason="[USER] The camera's grab proxy: a transparent layer the render loop seats over the camera object's projected silhouette every frame, so a press landing on the object is a press on an element carrying the hit class the gesture door reads — the fat invisible proxy every 3D tool picks against, seated by true projection now instead of by a drawn copy of the object. It carries no look at all — its whole job is to be landed on."></div>
 </div>
-<div class="pip" id="pip" data-reason="[USER] The picture-in-picture: the OTHER view, live in the top-left corner — the camera's shot while you direct, the director's view while you look through the camera. It is the same world scene rendered a second time into this frame's rectangle of the one canvas — one world scene, every view a pass over it, so the two views can never disagree about what the world contains. Top-left because the bottom of the screen belongs to the ground action, the hint and the camera's usual seat. Drag inside it to drive the other eye (aim the camera, or orbit the director), pinch or scroll over it to zoom that eye (dolly for the director, the lens for the camera), and tap it to swap the views.">
+<div class="pip" id="pip" data-reason="[USER] The picture-in-picture: the OTHER view, live in the top-left corner — the camera's shot while you direct, the director's view while you look through the camera. It is the same world scene rendered a second time into this frame's rectangle of the one canvas — one world scene, every view a pass over it, so the two views can never disagree about what the world contains. Top-left because the bottom of the screen belongs to the ground action, the hint and the camera's usual seat. Drag inside it to drive the other eye (aim the camera, or orbit the director), pinch or scroll over it to zoom that eye (dolly for the director, the lens for the camera), a single tap opens the camera's control gate at the corner and a double tap swaps the views (the tap grammar, owner steer, 2026-11-07).">
   <div class="pipTag" id="pipTag" data-reason="[USER] The corner view's name tag: it always says which eye the corner is showing, so the two views are never confused — and while the corner shows the camera's eye it also names that eye's lens length, the same readout the main camera view carries in its chip.">CAMERA</div>
+  <button class="pipDots" id="pipDots" type="button" style="display:none" aria-label="Camera menu" data-reason="[USER] The corner's menu chip (owner steer, 2026-11-07): three dots in the corner view's own corner, standing only while the corner shows the camera's eye — the aiming instrument carries its own menu: the control gate, the pose copy, the pose save. A full tap target of its own, clear of the phone's navigation; its press never reaches the corner's gesture map.">&#8226;&#8226;&#8226;</button>
 </div>
+<div class="pipMenu" id="pipMenu" style="display:none" data-reason="[USER] The corner menu (owner steer, 2026-11-07): exactly three doors — CONTROLS opens the one control gate, COPY POSE puts the camera's current pose on the clipboard as readable text and JSON, SAVE AS ISSUE&#8230; asks for a name and opens the prefilled GitHub issue that carries the pose to the agent's queue. One to three words a label, under the ten-word law.">
+  <button id="pmControls" type="button" data-reason="[USER] Controls: open the control gate — the same panel the gear opens — anchored at the corner that was tapped.">CONTROLS</button>
+  <button id="pmCopy" type="button" data-reason="[USER] Copy pose: the camera's current pose — name line, the six numbers in words, and the pose JSON — onto the clipboard, so a pose can be handed over as text exactly as it stands.">COPY POSE</button>
+  <button id="pmSave" type="button" data-reason="[USER] Save as issue: name the pose first, in the owner's own words, then the prefilled GitHub issue opens carrying that name and the pose — the durable export, beside the pin's instant on-device freeze.">SAVE AS ISSUE&#8230;</button>
+</div>
+<div class="frameMark" id="frameMark" style="display:none" data-reason="[USER] The true capture frame (owner steer, 2026-11-07): in the camera view the shot fills the screen, but the camera records 16:9 — this edge marks the largest 16:9 frame centred in the view and dims everything outside it, so what stands inside the edge is exactly what PHOTO and REC take, and what stands outside is not in the film."></div>
 <div class="frameGuide" id="frameGuide" data-reason="[USER] The framing overlay, shown only when the camera's shot fills the main view: third-lines only, no border — the whole screen IS the shot's edge, so a drawn border would invent a second, false frame; the thirds are the composition guide."></div>
 <canvas class="grain" id="grain" width="256" height="256" data-reason="[FX] Procedural film grain: canvas noise at low opacity over every picture surface — the main view and the corner view alike — beneath the controls, so flat digital colour reads as a physical surface. Decorative texture only."></canvas>
 <div class="viewbar" data-reason="[USER] The view switch, kept as small glass pills: DIRECTOR (work the scene), CAMERA (the shot fills the screen), AIM AT CENTRE (point the camera at the stage's centre point), FIND CAMERA (fly to the camera object — the always-reachable recovery). ADD CAMERA exists only in the seed state, where there is no camera yet. STAGE and THEATER are the scene pills (the room build, 2026-11-07): they choose which scene stands in the space — the checkpoint stage or the empty theater room — they sit in the bar's existing second row beside FIND CAMERA / ADD CAMERA (never a third row: the settings panel's top fence is built on the two-row bound), and entering a scene applies that scene's own seed state. PHOTO and REC are the capture pills (the capture build, 2026-11-07): they belong to the camera, so they stand at the bar's end and leave it with the camera cluster when the stage is empty.">
@@ -111,7 +128,7 @@ body.camView .headChip{bottom:64px}
 <div class="headChip" id="headChip" data-reason="[USER] The heading readout: the active eye's true compass direction, read from the rendered camera itself each frame — a compass point and degrees, two tokens — so which way the eye faces is stated in words at rest, beside the lens readout when the shot fills the screen."></div>
 <div class="originMark" id="originMark" style="display:none" data-reason="[USER] The origin's edge marker (fix round 8, O-3): while the world's origin stands outside the director's frame — at the shipped home framing the ground's ring sits at the frame's very edge — this ring-and-dot stands on the frame's edge on the true line toward the origin, so where the origin is stays answerable at a glance in any framing; the moment the origin itself is inside the frame, the ring on the ground carries the answer and this marker hides. A chrome instrument like the heading chip: its seat is computed from the rendered camera's own projection every frame, never guessed from state. It carries no words at all."></div>
 <button class="gearBtn" id="gearBtn" aria-label="Settings" aria-expanded="false" data-reason="[USER] The settings gear — the standard corner control of any tool: it opens or closes the panel where the navigation's speeds and smoothing are configured. Glass, like the rest of the control layer.">&#9881;</button>
-<div class="panel" id="panel" data-reason="[USER] The settings panel: the basic configuration of this tool, as every scene tool has one — look speed, zoom speed, pan speed and smoothing as sliders the director sets, plus the three reset scopes (view, camera, stage) and defaults. Its background is near-opaque by default and the glass blur is only an enhancement where the engine supports it: on the owner's phone the heavy blur over the 3D scene was the layer that failed to paint the panel's interior (2026-11-06 audit), so the panel must read perfectly with no blur at all.">
+<div class="panel" id="panel" data-reason="[USER] The settings panel: the basic configuration of this tool, as every scene tool has one — look speed, zoom speed, pan speed and smoothing as sliders the director sets, plus the three reset scopes (view, camera, stage) and defaults. Since the owner's 2026-11-07 steers it is also the ONE CONTROL GATE: the camera's adjustments (heading, tilt, lens, lift), the pose doors (PIN, SAVE) and the home readout stand in it; it opens from the gear in both views and from a tap on the corner view, anchored at the corner then — no camera control lives anywhere else. Its background is near-opaque by default and the glass blur is only an enhancement where the engine supports it: on the owner's phone the heavy blur over the 3D scene was the layer that failed to paint the panel's interior (2026-11-06 audit), so the panel must read perfectly with no blur at all.">
   <div class="pHead">
     <h3 data-reason="[BEST-PRACTICE] The panel's title: one word, so the panel's job is known at a glance.">SETTINGS</h3>
     <button class="xBtn" id="btnClosePanel" aria-label="Close settings" data-reason="[USER] The panel's own close button: a panel that only its opener can dismiss traps the user; this closes it from inside, and pressing anywhere outside the panel closes it too — a press on the corner view closes it as well, through the corner's own handler, and that press is spent on the dismissal, so it cannot also swap the views.">&#10005;</button>
@@ -143,12 +160,43 @@ body.camView .headChip{bottom:64px}
     <button id="btnResetCam" data-reason="[USER] Reset camera: return the camera object to its home position, heading, tilt, roll and lens — the recovery when the camera has been dragged or flown somewhere lost.">RESET CAMERA</button>
     <button id="btnResetStage" data-reason="[USER] Reset stage: clear the space to the seed state — the void and the grid, no camera, and the director's view back at the checkpoint's opening view. The seed is what new projects fork from; ADD CAMERA in the view bar brings the camera back.">RESET STAGE</button>
   </div>
+  <div id="camAdj" data-reason="[USER] The camera's own adjustments, standing in the one control gate (owner steers, 2026-11-07): the director aims the camera FROM the director view, watching the corner — so heading, tilt, lens and lift are settable here, in the panel both views open, without a round-trip into the shot. Each slider writes the camera's target through the same clamps every gesture writes through; the numbers beside them are the targets' live readouts. The block stands only while a camera stands in the scene.">
+    <div class="row" data-reason="[USER] Heading: the camera's compass aim, set directly.">
+      <label for="sHead">Heading <output id="oHead">0</output></label>
+      <input type="range" id="sHead" min="-180" max="180" step="1" value="0" data-reason="[USER] Heading slider: -180 to 180 degrees, wrapping at the seam like every heading write.">
+    </div>
+    <div class="row" data-reason="[USER] Tilt: the camera's up-down aim, set directly.">
+      <label for="sTilt">Tilt <output id="oTilt">0</output></label>
+      <input type="range" id="sTilt" min="-70" max="70" step="0.2" value="0" data-reason="[USER] Tilt slider: -70 to 70 degrees, the aim clamp's own range.">
+    </div>
+    <div class="row" data-reason="[USER] Lens: the camera's focal length, set directly.">
+      <label for="sLens">Lens <output id="oLens">800</output></label>
+      <input type="range" id="sLens" min="240" max="1700" step="5" value="800" data-reason="[USER] Lens slider: 240 to 1700, the lens clamp's own range.">
+    </div>
+    <div class="row" data-reason="[USER] Lift: the camera's height over the floor it stands over, set directly.">
+      <label for="sLift">Lift <output id="oLift">0</output></label>
+      <input type="range" id="sLift" min="0" max="360" step="1" value="0" data-reason="[USER] Lift slider: 0 to 360, the lift axis's own range.">
+    </div>
+  </div>
+  <div class="btns" data-reason="[USER] The pose doors (owner steers, 2026-11-07): PIN freezes the camera's current pose as this device's home — one tap, saved on the device; SAVE exports the current pose durably as a prefilled GitHub issue. FILM below recalls the home: the pinned pose where one stands, the shipped filming home where none does.">
+    <button id="btnPin" aria-pressed="false" data-reason="[USER] Pin: save the camera's current pose — seat, lift, heading, tilt and lens — on this device as its home. From then on the scene seats it at entry, RESET CAMERA returns to it, and FILM recalls it; the button stands lit while a pin stands, and the readout below names the home and prints its numbers.">&#128204; PIN</button>
+    <button id="btnSave" data-reason="[USER] Save: open the prefilled GitHub issue carrying the camera's current pose — the durable export of a framing, into the repository the agent reads.">SAVE</button>
+  </div>
+  <div class="poseRead" id="poseRead" data-reason="[USER] The home readout (owner steer, 2026-11-07): the home's name and its six numbers as readable text — the metadata the owner asked to see, copy and hand over. A pinned pose reads HADI'S HOME; until one is pinned, the room reads the shipped filming home the FILM preset seats.">FILMING HOME</div>
   <div class="btns" id="btnFilmRow" style="display:none" data-reason="[USER] The filming home's row in the panel (cycle 2, 2026-11-07; plan §6): one preset, one word — FILM seats the camera at the filming home, the derived pose whose frame holds exactly the stage, the curtains standing at its left and right edges and a little of the step below the deck. The row stands only in the theater (the filming home is a room pose); its button's face carries the state — lit while the camera stands at the pose, the ruling's state-on-its-face rule.">
     <button id="btnFilm" aria-pressed="false" data-reason="[USER] Film: seat the camera at the filming home (the FILM_HOME record — 430 out at 830, heading -180, tilt -4.8, lens 1080, lift 84, the eye at 120). One tap flies the camera to the pose; the button stands lit while the camera's targets stand at the pose and unlights the moment any number moves off it.">FILM</button>
   </div>
 </div>
-<div class="hint" id="hint" data-reason="[USER] The guide at the bottom left, under the owner's TEN-WORD LAW (2026-11-06): at most ten words stand open without a tap — the current view's first gestures plus a MORE tap; the full gesture map lives behind that tap (MORE/LESS), never poured out as a wall. While collapsed it fades to a whisper so it never competes with the scene."><span id="hintShort">Director: drag to orbit &middot; pinch to zoom &middot;</span><button class="hintBtn" id="hintBtn" type="button" data-reason="[USER] The tap that opens the full gesture map (MORE) and closes it again (LESS) — the one part of the hint that takes touches; the rest of the hint lets every press through to the scene.">MORE</button><span class="hintFull" id="hintFull" hidden>Director: drag to orbit &middot; drag the camera to move it &middot; pinch to zoom &middot; two-finger drag to pan &middot; twist two fingers to roll &middot; double-tap the camera to visit it &middot; double-tap space to fly home &middot; scroll to zoom &middot; three-finger slide zooms the lens &middot; double-tap-hold and slide to zoom one-handed &middot; arrow keys nudge the camera &middot; drag or pinch the corner to aim and zoom the camera &middot; tap the corner to swap views &middot; grid: one square 92 &middot; heavy line 460</span></div>
-<div class="pad" id="pad" style="display:none" data-reason="[USER] The movement pad (cycle 2, 2026-11-07 — the owner's phone-pass model): in the camera view a drag turns the camera only, so the camera's location gets its own controls — six directions in one cluster at the right edge: a diamond of forward, back, left and right (camera-relative, on the ground) and a pair for up and down on the lift axis. A tap nudges, a hold moves. Glyphs only — no word stands open on it (the ten-word law); every button names its direction to a reader through its label. It stands only in the camera view, with a camera present and the settings panel closed.">
+<div class="nameCard" id="nameCard" style="display:none" data-reason="[USER] The pose name card (owner steer, 2026-11-07): SAVE AS ISSUE asks for the pose's name in the owner's own words first — one small input on the page — and the name becomes the saved pose's title in the issue that carries it.">
+  <div data-reason="[USER] The card's ask: three words, the whole instruction.">NAME THIS POSE</div>
+  <input id="poseName" type="text" data-reason="[USER] The pose's name, in the owner's words — for example: setting one.">
+  <div class="btns" data-reason="[USER] The card's two doors: SAVE opens the prefilled issue with this name; CANCEL keeps the pose unsaved.">
+    <button id="btnNameSave" type="button" data-reason="[USER] Save: open the prefilled GitHub issue titled with this name, the pose JSON in its body.">SAVE</button>
+    <button id="btnNameCancel" type="button" data-reason="[USER] Cancel: close the card; nothing is saved.">CANCEL</button>
+  </div>
+</div>
+<div class="hint" id="hint" data-reason="[USER] The guide at the bottom left, under the owner's TEN-WORD LAW (2026-11-06): at most ten words stand open without a tap — the current view's first gestures plus a MORE tap; the full gesture map lives behind that tap (MORE/LESS), never poured out as a wall. While collapsed it fades to a whisper so it never competes with the scene."><span id="hintShort">Director: drag to orbit &middot; pinch to zoom &middot;</span><button class="hintBtn" id="hintBtn" type="button" data-reason="[USER] The tap that opens the full gesture map (MORE) and closes it again (LESS) — the one part of the hint that takes touches; the rest of the hint lets every press through to the scene.">MORE</button><span class="hintFull" id="hintFull" hidden>Director: drag to orbit &middot; drag the camera to move it &middot; pinch to zoom &middot; two-finger drag to pan &middot; twist two fingers to roll &middot; double-tap the camera to visit it &middot; double-tap space to fly home &middot; scroll to zoom &middot; three-finger slide zooms the lens &middot; double-tap-hold and slide to zoom one-handed &middot; arrow keys nudge the camera &middot; drag or pinch the corner to aim and zoom the camera &middot; tap the corner for the camera controls &middot; double-tap the corner to swap views &middot; grid: one square 92 &middot; heavy line 460</span></div>
+<div class="pad" id="pad" style="display:none" data-reason="[USER] The movement pad (cycle 2, 2026-11-07 — the owner's phone-pass model): in the camera view a drag turns the camera only, so the camera's location gets its own controls — six directions in one cluster at the right edge: a diamond of forward, back, left and right (camera-relative, on the ground) and a pair for up and down on the lift axis. A tap nudges, a hold moves. Glyphs only — no word stands open on it (the ten-word law); every button names its direction to a reader through its label. It stands in both views, with a camera present — in the director view its moves are watched landing on the camera body — and the control gate opening does not hide it: the pad is part of the gate's contents (owner steers, 2026-11-07, superseding the plan's camera-view scoping).">
   <div class="padDiamond" data-reason="[USER] The ground diamond: forward at the top, back at the bottom, left and right at the sides — the four directions read off the diamond's own shape, the way a compass rose reads.">
     <button class="padBtn pF" id="padFwd" type="button" aria-label="Move forward" data-reason="[USER] Forward: fly the camera along its own heading — a tap nudges 6 units, a hold moves at 120 units a second.">&#9650;</button>
     <button class="padBtn pL" id="padLeft" type="button" aria-label="Move left" data-reason="[USER] Left: strafe the camera along its own left, on the ground — a tap nudges 6 units, a hold moves at 120 units a second.">&#9664;</button>
@@ -198,6 +246,8 @@ body.camView .headChip{bottom:64px}
   var gizmoScene = null, gizmoCam = null;
   /* @reason [USER] The scene-content handles (the room build, 2026-11-07; platform form since the layers refactor, 2026-11-07): the group the active scene's builder builds its content under (the theater's buildRoom in Layer 1 — hidden while another scene stands; the scene switch in Layer 3 is its visibility's only writer) and the ghost registry: the shell panels with their outward normals and centres, which the pass-scoped ghost rule in Layer 3 reads. In the platform state no scene beyond the void stands, so the group stands null and the registry empty — the slot is the platform's, the content is a scene's. Handles only — every number a scene obeys lives in Layer 2. */
   var roomGroup = null, roomPanels = [];
+  /* @reason [USER] The ball scene's visual handles (the ball scene, 2026-11-07): declared HERE, with the room's handles, above the buildGL call — a handle declared below that call is re-initialised to null by its own declaration after the builder has already assigned it, orphaning the built group in the scene (measured in the ball battery's first probe round: the state machine ran perfectly and nothing rendered). */
+  var ballGroup = null, ballMesh = null, ballShadowMesh = null, ballShadowMat = null, ballGlassMat = null;
   var pipRect = null, gizmoRect = null;
 
   /* @reason [USER] The held ring's handle: there is ONE world scene now, rendered once per eye, so there is one ring — the wiring's ring writer (setRing, in the control layer) writes this handle's style exactly as it wrote the two DOM rings before, both world handles it knows are this one handle, and the render loop reads the handle each frame and lights the one ring mesh in the director's pass. One write, both views correct, because the views are one world. */
@@ -357,6 +407,8 @@ body.camView .headChip{bottom:64px}
       /* the rig's spot table, assigned at this door (cycle 2; plan §4.1): colour, intensity, seat, target, cone angle and penumbra per spot — the declaration stands with the assets, and the assignment must land before buildRoom reads it (see the declaration's note); the ROOM record carries this same table by reference. */
       ROOM_SPOTS = { key: { color: 0xffdfae, i: 4.1, x: 430, y: 440, z: 560, tx: 430, ty: 25, tz: 80, angle: 0.30, pen: 0.6 }, back: { color: 0xcfe0ff, i: 2.1, x: 430, y: 452, z: 60, tx: 430, ty: 25, tz: -30, angle: 0.30, pen: 0.7 }, washL: { color: 0xffe9c4, i: 2.4, x: 300, y: 440, z: 560, tx: 180, ty: 180, tz: 158, angle: 0.24, pen: 0.8 }, washR: { color: 0xffe9c4, i: 2.4, x: 560, y: 440, z: 560, tx: 680, ty: 180, tz: 158, angle: 0.24, pen: 0.8 } };
       buildRoom();
+      /* the ball builds with the room it belongs to (the ball scene, 2026-11-07): its group starts hidden and shows only in the room scene, under the choreography driver's hand. */
+      buildBall();
 
       /* @reason [BEST-PRACTICE] Context loss is an event, not a mystery: losing the context raises the named failure panel and stops the render (the loop keeps running; its render step stands down on the flag), and the browser's restore event lowers the panel and resumes — the preventDefault on the loss is what makes restoration possible at all. */
       canvas.addEventListener('webglcontextlost', function (ev) { ev.preventDefault(); glOK = false; showGlFail(true); });
@@ -530,6 +582,31 @@ body.camView .headChip{bottom:64px}
     }
     curtain(108, false); curtain(632, true);
   }
+  /* @reason [USER] The glass ball and its prints (the ball scene, 2026-11-07; plan stage3d-layers-plan.md §(c)): a translucent sphere — the owner's named exception for this one asset, since glass reads by translucency and one hard glint, never by paper grain — a small white highlight sphere riding inside it toward the light, and a soft shadow print on the deck beneath: the world's own print idiom, because the stage's lighting casts no shadow maps. Every material is BORN transparent (the room fix-1 lesson): the fades write opacity values only, never the flag. The group starts hidden — it belongs to the room scene and shows only there. Cycle 2's glass pass (2026-11-07, the brief's one bounded material step): the sphere and its shards are PHYSICAL glass now — a clearcoat layer and a raised specular response so the key spot can strike one hard glint off the surface — at the same colour and the same opacities, geometry untouched; whether it reads as glass under the paper rig is a measured question, answered with before/after frames in the cycle-2 build record, not assumed here. */
+  function buildBall() {
+    /* the builder reads literals, exactly as buildRoom does: buildGL runs before Layer 2 evaluates, so the BALL record cannot be read here — the record is the choreography's copy of these same numbers, and the ball battery checks the two agree */
+    ballGroup = new T3.Group();
+    ballGlassMat = new T3.MeshPhysicalMaterial({ color: 0xDCEBF5, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.35, clearcoat: 1, clearcoatRoughness: 0.06, ior: 1.5, specularIntensity: 1.2 });
+    ballMesh = new T3.Mesh(new T3.SphereGeometry(5, 40, 28), ballGlassMat);
+    ballMesh.position.set(430, 53, 53);
+    ballGroup.add(ballMesh);
+    var hiMesh = new T3.Mesh(new T3.SphereGeometry(1.3, 16, 12), new T3.MeshBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.85 }));
+    hiMesh.position.set(-1.7, 1.9, 2.3);
+    ballMesh.add(hiMesh);
+    ballShadowMat = new T3.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18, depthWrite: false });
+    ballShadowMesh = new T3.Mesh(new T3.CircleGeometry(6.5, 28), ballShadowMat);
+    ballShadowMesh.rotation.x = -Math.PI / 2;
+    ballShadowMesh.position.set(430, 25.15, 53);
+    ballShadowMesh.scale.set(0.7, 0.7, 1);
+    ballGroup.add(ballShadowMesh);
+    ballGroup.visible = false;
+    scene.add(ballGroup);
+  }
+  /* @reason [USER] One shard mesh (the ball scene, 2026-11-07): a tetrahedron of the tabled size in the ball's own glass, read at opacity 0.55 — flatter and more present than the ball itself, so a settled field of them reads as broken glass, not as beads. Born transparent like every material in this world. */
+  function ballMakeShardMesh(size) {
+    return new T3.Mesh(new T3.TetrahedronGeometry(size), new T3.MeshPhysicalMaterial({ color: 0xDCEBF5, roughness: 0.12, metalness: 0, transparent: true, opacity: 0.55, clearcoat: 1, clearcoatRoughness: 0.1, ior: 1.5, specularIntensity: 1.2 }));
+  }
+
 
 
   /* ════════════════════════════════════════════════════════════════════════
@@ -576,6 +653,8 @@ body.camView .headChip{bottom:64px}
   var ROOM_SEED_STATE = { dir: { yaw: 0, pitch: -6, roll: 0, panX: 70.39, panY: -130.57, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 70.39, tPanY: -130.57, tDolly: 60 }, cam: { x: 430, z: 1052, heading: -180, tilt: 0.6, roll: 0, focal: 360, tX: 430, tZ: 1052, tHeading: -180, tTilt: 0.6, tRoll: 0, tFocal: 360, camY: 2, tCamY: 2, lift: 0, tLift: 0 }, camPresent: true, mainRole: 'director', scene: 'room' };
   /* @reason [USER] The room's registration in the scene registry (the layers refactor, 2026-11-07): the theater scene joins the platform's registry from the theater's own block — the switch, the reset and the test door read the registry only, so the platform bytes carry the void's entry alone. */
   SCENES.room = ROOM_SEED_STATE;
+  /* @reason [USER] The ball scene's table (the ball scene, 2026-11-07; plan §(c) — every number decided in the plan, none improvised here): a glass ball of radius 5 (Ø ≈ 0.43 m at the stage's 23 units = 1 m) held over the deck's centre, its bottom 23 units (the owner's ~1 m in scale) above the deck top, dropped through the platform physics core, shattering into 14 shards whose velocities come from the seeded table (seed 20261107, drawn through physRand — the same seed, the same shatter, forever). The Layer 1 builder carries these same numbers as literals (buildGL runs before Layer 2 evaluates — buildRoom's convention), and the ball battery checks the two agree. camPose is the filming seat the plan derived from the room's geometry (eye at (430, 245) on the audience floor, heading −180, tilt −1.6, focal 1500); the battery writes it through cam state — the theater's own home is untouched. */
+  var BALL = { cx: 430, cz: 53, deckTop: 25, r: 5, startY: 53, shardCount: 14, seed: 20261107, shardRest: 0.25, shardFric: 0.25, holdT: 3.0, fadeT: 1.0, camPose: { x: 430, z: 245, heading: -180, tilt: -1.6, focal: 1500 } };
   /* @reason [USER] CAPTURE, as numbers (the capture build, 2026-11-07 — the owner's overnight order: we use the camera in the scene to record something as our proof of concept): the captured frame is 1280×720, fed to the recorder at 30 frames a second. The size is the capture's OWN, never the screen's — a photo or a recording must be the shot at one known size on any device, not whatever window the page happens to fill — and it is a standard HD frame the phone's encoder takes in real time. The mechanics live in Layer 3; plan §10's invariants are their contract (one scene graph, the camera's pose from state alone, the ghost pass-scoped, render-then-read in the same task). */
   var CAPTURE = { w: 1280, h: 720, fps: 30 };
 
@@ -736,7 +815,7 @@ body.camView .headChip{bottom:64px}
     var hintParts = !cam.present
       ? ['Empty stage: void and grid ·', 'The empty stage: the void and the wireframe grid — nothing else stands in the space. This is the seed state projects start from. ADD CAMERA puts the camera in the space. The grid: one square is 92, the heavy line stands every 460.']
       : mainIsDir
-      ? ['Director: drag to orbit · pinch to zoom ·', 'Director: drag to orbit · drag the camera to move it · pinch to zoom · two-finger drag to pan · twist two fingers to roll · double-tap the camera to visit it · double-tap space to fly home · scroll to zoom · three-finger slide zooms the lens · double-tap-hold and slide to zoom one-handed · arrow keys nudge the camera · drag or pinch the corner to aim and zoom the camera · tap the corner to swap views · grid: one square 92 · heavy line 460']
+      ? ['Director: drag to orbit · pinch to zoom ·', 'Director: drag to orbit · drag the camera to move it · pinch to zoom · two-finger drag to pan · twist two fingers to roll · double-tap the camera to visit it · double-tap space to fly home · scroll to zoom · three-finger slide zooms the lens · double-tap-hold and slide to zoom one-handed · arrow keys nudge the camera · drag or pinch the corner to aim and zoom the camera · tap the corner for the camera controls · double-tap the corner to swap views · grid: one square 92 · heavy line 460']
       : ['Camera: drag to look · pad moves ·', 'Camera: drag to look · pad moves the camera (forward, back, left, right, up, down) — tap nudges, hold moves · pinch or scroll to move forward and back · two-finger drag slides sideways and flies up/down · twist rolls · three-finger slide zooms the lens · double-tap levels and centres · arrow keys nudge the camera · drag or pinch the corner to orbit and zoom the director · tap the corner to swap views · grid: one square 92 · heavy line 460'];
     /* the room's ghost rule is undiscoverable without its line (plan B15): one six-word line rides INSIDE the room director's tap-gated map. The short lines are unchanged in every scene, so the exposed-word census the checkpoint carries stands untouched; the camera maps carry no such line — the shot never ghosts, and a map must not promise a fade the shot cannot show. */
     if (sceneNow === 'room' && cam.present && mainIsDir) hintParts = [hintParts[0], hintParts[1] + ' · walls fade when you orbit outside'];
@@ -787,6 +866,13 @@ body.camView .headChip{bottom:64px}
     if (!s) return;
     sceneNext = name;
     applySceneState(s);
+    /* the device's pinned home seats at entry (owner steer, 2026-11-07): a scene entered on a device that holds its pin opens ON the pin — targets and currents together, an entry being a cut, not a flight — through the position and lift clamps like every seat. RESET STAGE is untouched by this: it reads the seed alone, so the shipped checkpoint reproduces exactly; the pin is this device's overlay, seated by the entry door only. */
+    var pinSeat = pinPoseFor(name);
+    if (pinSeat && cam.present) {
+      cam.tX = pinSeat.x; cam.tZ = pinSeat.z; cam.tHeading = pinSeat.heading; cam.tTilt = pinSeat.tilt; cam.tRoll = 0; cam.tFocal = pinSeat.focal; cam.tLift = pinSeat.lift;
+      clampCamPos(); clampCamLift();
+      cam.x = cam.tX; cam.z = cam.tZ; cam.heading = cam.tHeading; cam.tilt = cam.tTilt; cam.roll = 0; cam.focal = cam.tFocal; cam.lift = cam.tLift;
+    }
   }
   /* @reason [USER] The dollhouse ghost, evaluated for one pass (the room build, 2026-11-07; plan §4 — the wild-wall rule): on a DIRECTOR pass only, each shell panel whose plane the rendering eye stands OUTSIDE of renders as a ghost for this pass — opacity 0.07, depthWrite off, and its render order PINNED at the grid's own + 1 (0), because the engine sorts transparent objects by centroid and an unpinned ghost's order against the grid could flip with the eye (plan R4). The room centre stands inside every panel's plane, so the eye being on a panel's outward side IS the plan's test — eye outside, centre on the far side. Camera passes never call this: the shot is the true room, always. The caller restores every panel this returns, inside the same pass, whatever the render does (plan R10) — the state this writes is pass-scoped by construction, which is capture invariant 4 (plan §10). The fade writes ONLY the opacity uniform and depthWrite, never the transparent flag: the panels' materials are born transparent (Layer 1) because this engine's program-change census omits that flag — a material compiled opaque forces fragment alpha to 1.0 no matter what opacity is later set, which is the measured W-R1 D3 failure this round cures (fix round 1, plan §16); with the classification fixed at birth, the opacity change is honoured by the compiled program live. */
   function applyRoomGhost(camObj, isDirView) {
@@ -815,17 +901,118 @@ body.camView .headChip{bottom:64px}
   /* @reason [USER] Seat the filming home (cycle 2, 2026-11-07; plan §6): every camera target written from the FILM_HOME record — seat, heading, tilt, level roll, lens and lift — through the axis's own clamps, so the pose the plan derived is the pose the camera flies to. The room's door only: outside the room it refuses whole (the checkpoint has no filming home). Called by the panel's FILM preset and by the test hook — one function, both doors, so the preset and the battery seat the identical pose. */
   function filmHome() {
     if (sceneNow !== 'room') return;
-    cam.tX = FILM_HOME.x; cam.tZ = FILM_HOME.z; cam.tHeading = FILM_HOME.heading; cam.tTilt = FILM_HOME.tilt; cam.tRoll = 0; cam.tFocal = FILM_HOME.focal; cam.tLift = FILM_HOME.lift;
+    var H = pinPoseFor('room') || FILM_HOME;
+    cam.tX = H.x; cam.tZ = H.z; cam.tHeading = H.heading; cam.tTilt = H.tilt; cam.tRoll = 0; cam.tFocal = H.focal; cam.tLift = H.lift;
     clampCamLift(); clampCamPos();
   }
   /* @reason [USER] The FILM preset's face (cycle 2, 2026-11-07): lit exactly while the camera's TARGETS stand at the filming home — the state visible on its face the owner's ruling requires — reconciled on the frame loop through the platform's tickExtra hook, on a change-only cache like the loop's other readouts, so any write that moves a target off the pose (a drag, a pad nudge, a reset) unlights it on the next frame and nothing needs to know the button exists. */
   var filmBtnCache = null;
   function syncFilmBtn() {
     var el = document.getElementById('btnFilm'); if (!el) return;
-    var at = sceneNow === 'room' && cam.tX === FILM_HOME.x && cam.tZ === FILM_HOME.z && cam.tHeading === FILM_HOME.heading && cam.tTilt === FILM_HOME.tilt && cam.tFocal === FILM_HOME.focal && cam.tLift === FILM_HOME.lift;
+    var H = pinPoseFor('room') || FILM_HOME;
+    var at = sceneNow === 'room' && cam.tX === H.x && cam.tZ === H.z && cam.tHeading === H.heading && cam.tTilt === H.tilt && cam.tFocal === H.focal && cam.tLift === H.lift;
     var want = at ? 'true' : 'false';
     if (filmBtnCache !== want) { filmBtnCache = want; el.setAttribute('aria-pressed', want); el.className = at ? 'on' : ''; }
   }
+
+  /* @reason [USER] The shard table (the ball scene, 2026-11-07; plan §(c)): fourteen rows drawn in fixed order from the seeded draw — angle spread around the full circle with a drawn jitter, horizontal speed 30–75, up speed 25–70 (apex at most 10.9 above the deck), size 1.2–2.6, spin within ±7 rad/s per axis. A pure function: the same table on every call, in the stub battery and on the phone alike. */
+  function ballShardTable() {
+    var rnd = physRand(BALL.seed), rows = [], i;
+    for (i = 0; i < BALL.shardCount; i++) {
+      var ang = (i / BALL.shardCount) * Math.PI * 2 + (rnd() - 0.5) * 0.5;
+      var hs = 30 + 45 * rnd(), us = 25 + 45 * rnd(), size = 1.2 + 1.4 * rnd();
+      rows.push({ vx: Math.cos(ang) * hs, vz: Math.sin(ang) * hs, vy: us, size: size, sx: (rnd() - 0.5) * 14, sy: (rnd() - 0.5) * 14, sz: (rnd() - 0.5) * 14 });
+    }
+    return rows;
+  }
+  /* @reason [USER] The choreography state (the ball scene, 2026-11-07): one record the driver advances — the phase, the drop's clock reading, the MEASURED fall time and impact speed read from the ball body's own firstHit, the shard bodies, and the phase clock (hold and fade run on the simulation clock, so a filmed take and a stub take choreograph identically). */
+  var ballSt = { phase: 'ready', dropT: 0, fallTime: 0, impactSpeed: 0, body: null, shards: [], phaseT: 0, hitPending: false };
+  /* @reason [USER] Clear the shard field (the ball scene, 2026-11-07): every shard body leaves the step's table and every shard mesh leaves the group — a take ends with the deck exactly as bare as it began. */
+  function ballClearShards() {
+    for (var i = 0; i < ballSt.shards.length; i++) {
+      physRemove(ballSt.shards[i].body);
+      if (ballSt.shards[i].mesh && ballGroup) ballGroup.remove(ballSt.shards[i].mesh);
+    }
+    ballSt.shards = [];
+  }
+  /* @reason [USER] Reset the take (the ball scene, 2026-11-07): the shard field clears, the ball body is (re)spawned HELD at its start — state settled, which the step skips: in this core a body at rest is a body held — glass and shadow restored to their tabled faces, the readout zeroed. */
+  function ballReset() {
+    ballClearShards();
+    if (ballSt.body) physRemove(ballSt.body);
+    ballSt.body = physSpawn({ x: BALL.cx, y: BALL.startY, z: BALL.cz, r: BALL.r, rest: 0, fric: 0, mesh: ballMesh });
+    ballSt.body.state = 'settled';
+    ballSt.body.onHit = function () { ballSt.hitPending = true; };
+    if (ballMesh) { ballMesh.visible = true; ballMesh.position.set(BALL.cx, BALL.startY, BALL.cz); }
+    if (ballGlassMat) ballGlassMat.opacity = 0.35;
+    if (ballShadowMat) ballShadowMat.opacity = 0.18;
+    if (ballShadowMesh) { ballShadowMesh.visible = true; ballShadowMesh.scale.set(0.7, 0.7, 1); }
+    ballSt.phase = 'ready'; ballSt.dropT = 0; ballSt.fallTime = 0; ballSt.impactSpeed = 0; ballSt.phaseT = 0; ballSt.hitPending = false;
+    if (ballGroup) ballGroup.visible = (sceneNow === 'room');
+  }
+  /* @reason [USER] Drop the ball (the ball scene, 2026-11-07): the held body is released — nothing is pushed, so the measured fall is the plan's fall and no other. A drop outside the ready phase is refused: a take has exactly one drop. */
+  function ballDrop() {
+    if (ballSt.phase !== 'ready' || !ballSt.body) return false;
+    ballSt.body.state = 'falling'; ballSt.body.contactT = 0;
+    ballSt.dropT = physT; ballSt.phase = 'falling';
+    return true;
+  }
+  /* @reason [USER] The shatter (the ball scene, 2026-11-07): at the ball body's first contact the take's measurements are read from its own firstHit, the ball leaves, and the fourteen tabled shards spawn at the impact point with the table's velocities — the ball's downward momentum is discarded (the shatter spends it radially; glass does not bounce as one body). The driver runs this, never the step itself: spawning inside the step's own loop would step newborn bodies in their birth sub-step. A shard's physics radius is 0.6 × its drawn size — the sphere-equivalent seat for a tumbling tetra, a named simplification of the same kind the plan tables for the boxes. */
+  function ballShatter() {
+    var hit = ballSt.body ? ballSt.body.firstHit : null;
+    ballSt.fallTime = hit ? hit.t - ballSt.dropT : 0;
+    ballSt.impactSpeed = hit ? hit.speed : 0;
+    if (ballMesh) ballMesh.visible = false;
+    if (ballSt.body) { physRemove(ballSt.body); ballSt.body = null; }
+    var rows = ballShardTable(), i;
+    for (i = 0; i < rows.length; i++) {
+      var m = null;
+      if (ballGroup) { m = ballMakeShardMesh(rows[i].size); m.position.set(BALL.cx, BALL.deckTop + rows[i].size / 2, BALL.cz); ballGroup.add(m); }
+      var b = physSpawn({ x: BALL.cx, y: BALL.deckTop + rows[i].size / 2, z: BALL.cz, r: rows[i].size * 0.6, rest: BALL.shardRest, fric: BALL.shardFric, vx: rows[i].vx, vy: rows[i].vy, vz: rows[i].vz, sx: rows[i].sx, sy: rows[i].sy, sz: rows[i].sz, mesh: m });
+      ballSt.shards.push({ body: b, mesh: m });
+    }
+    ballSt.phase = 'shards'; ballSt.phaseT = physT;
+  }
+  /* @reason [USER] The choreography driver (the ball scene, 2026-11-07): rides the frame loop on the same dt as the step it follows. It keeps the group inside its own scene, spawns the held body on first entering the room, spends the pending shatter, grounds the falling ball with its shadow print (opacity and scale linear in the height fraction, per the plan), watches the shards settle, then runs the tabled hold (3.0 s from the LAST settle) and fade (1.0 s, opacity only — the materials were born transparent) on the simulation clock, rests in done, and restores the ball to ready for the next take. */
+  function ballDriver(dt) {
+    if (ballGroup) ballGroup.visible = (sceneNow === 'room');
+    if (sceneNow !== 'room') return;
+    if (ballSt.phase === 'ready' && !ballSt.body) ballReset();
+    if (ballPlayAt !== null && ballSt.phase === 'ready' && physT >= ballPlayAt) { ballPlayAt = null; ballDrop(); }
+    if (ballSt.hitPending) { ballSt.hitPending = false; ballShatter(); }
+    if (ballSt.phase === 'falling' && ballSt.body && ballShadowMat) {
+      var fr = Math.max(0, Math.min(1, (ballSt.body.p.y - (BALL.deckTop + BALL.r)) / 23));
+      ballShadowMat.opacity = 0.34 - 0.16 * fr;
+      var sc = 1 - 0.3 * fr; ballShadowMesh.scale.set(sc, sc, 1);
+    } else if (ballSt.phase === 'shards') {
+      if (ballShadowMat && ballShadowMat.opacity > 0) ballShadowMat.opacity = Math.max(0, ballShadowMat.opacity - dt * 1.4);
+      var all = ballSt.shards.length > 0, i;
+      for (i = 0; i < ballSt.shards.length; i++) if (ballSt.shards[i].body.state !== 'settled') { all = false; break; }
+      if (all) { ballSt.phase = 'hold'; ballSt.phaseT = physT; }
+    } else if (ballSt.phase === 'hold') {
+      if (physT - ballSt.phaseT >= BALL.holdT) { ballSt.phase = 'fading'; ballSt.phaseT = physT; }
+    } else if (ballSt.phase === 'fading') {
+      var k = Math.max(0, 1 - (physT - ballSt.phaseT) / BALL.fadeT), j;
+      for (j = 0; j < ballSt.shards.length; j++) if (ballSt.shards[j].mesh) ballSt.shards[j].mesh.material.opacity = 0.55 * k;
+      if (k <= 0) { ballClearShards(); ballSt.phase = 'done'; ballSt.phaseT = physT; }
+    } else if (ballSt.phase === 'done') {
+      if (physT - ballSt.phaseT >= 0.5) ballReset();
+    }
+  }
+  /* @reason [USER] The take's readout (the ball scene, 2026-11-07): the phase, the measured fall and impact against the plan's predictions, the shard census, and the simulation clock — the battery and the film both read the take from here. */
+  function ballState() {
+    var settled = 0, i;
+    for (i = 0; i < ballSt.shards.length; i++) if (ballSt.shards[i].body.state === 'settled') settled++;
+    return { phase: ballSt.phase, fallTime: ballSt.fallTime, impactSpeed: ballSt.impactSpeed, shards: ballSt.shards.length, settled: settled, simT: physT };
+  }
+  /* @reason [USER] Start the take on the live stage (cycle 2, 2026-11-07 — the book seam's driver): the take resets, and the drop falls 2.0 s of PHYSICS time later — the film take's own hold — spent by the driver above on the same clock the choreography already keeps, so a played take and a filmed take are the same performance. Safe in any phase: a call mid-take restarts from the reset, which is the replay contract the book player will rely on. */
+  var ballPlayAt = null;
+  function ballPlay() {
+    ballReset();
+    ballPlayAt = physT + 2.0;
+    return true;
+  }
+  /* @reason [USER] THE SCENE REGISTRY — the book seam (2026-11-07, the owner's book-driven direction): the studio is becoming book-driven — a SCREENPLAY book of event objects (start/end, camera/light/audio demands, nothing random, conflicts checked) will command the scenes, executed by a book player, and THIS registry is where that player attaches: a scene registers a play() that starts its choreography from its ready state, on the live stage, at real time, restarting cleanly when called again mid-play. The ball scene is the first registration; the room is its location key. No pill calls this — the seam stands ready for the book engine, named so it can be found from the test hook as __stage.scenes. The contract, for the next scene that registers: play() takes no arguments, returns true when the take has started, and leaves the scene replayable at its ready state when the performance completes. */
+  var SCENE_REGISTRY = { room: { play: ballPlay } };
 
   /* @reason [USER] CAPTURE (the capture build, 2026-11-07; plan §10): the camera's shot, taken out of the scene — a still (PHOTO) and a recording (REC). The standing state of the feature: the lazily built kit (its render target, its own canvas, its pixel buffer, its stream and recorder — built once, on first use, so a page that never captures pays nothing) and the recording's readout (whether it stands, how many frames it has been fed, its elapsed seconds on the frame loop's own clock, the chosen mime, and the last photo and recording it produced). Every function below is guarded at its head: with no engine, or no recorder in the browser, the feature reports itself unavailable in this state and claims nothing — a refused capture, never a fabricated one. */
   var capKit = null;
@@ -1150,6 +1337,106 @@ body.camView .headChip{bottom:64px}
   /* @reason [BEST-PRACTICE] THE file's one angle wrap, TRUE MODULO for any finite magnitude (convergence fix round 5, V2-3): ((v % 360) + 540) % 360 − 180 lands in [−180, 180) for every input — past ±540, past ±5000, at 1e308. The shifted formula it replaces — the value plus 540, modulo 360, minus 180 — silently left its range below −540, because JavaScript's % keeps the dividend's sign — the same failure the two test-view doors were cured of in rounds 2–3, surviving at this helper's one UNBOUNDED caller (flyHome, fed the director's free-accumulating yaw: from 777° the home flight targeted 360 and spun −417° instead of flying −57° to 720). The cure stands at the FUNCTION, so every caller inherits it — the gesture writes, the corner aim, the pinch classifier, flyHome, and the frame loop's seam chase, whose six inline copies of the old formula were retired into calls here (their inputs were provably in-range; now no copy of the fragile formula exists anywhere in the file to be fed an unbounded input by a future edit). It stands at ENGINE scope, before the loop, because the loop itself calls it. Gesture targets are re-wrapped at write time through it, so a heading accumulated over a long drag can never grow into the thousands and the chase always turns the short way. (The two test-view doors keep their own inline true-modulo variant by design: it lands in (−180, 180], the half-open side their C6/E-1 contract states, and it was already true modulo.) */
   function wrap180(v) { return ((v % 360) + 540) % 360 - 180; }
   /* @reason [USER] The frame loop — the only thing that ever moves. Every current number chases its target with a time constant from the Smoothing setting — computed from real elapsed time, not frames, so motion is identical at any refresh rate. While any finger is down the constant tightens to 0.05 s, so dragging always feels direct. Both views render every frame from the same state. Perspective lives in the two real cameras the state drives — the director's fixed angle (the old 1050 over the stage height), the eye's from the lens — so the two views agree on field of view at any size. The loop is STARTED at the end of init(), never before it: the first frame must already see bound controls and applied roles (the 2026-11-06 audit found the old order ran the first pass before either existed). */
+  /* @reason [USER] The pinned home (owner steer, 2026-11-07): the owner's own pose, saved on this device — seat, lift, heading, tilt and lens as one record in the settings' own storage family. One tap of PIN writes it from the camera's CURRENT numbers (the pose standing on the stage, not a target it is still chasing); every home door then prefers it: a scene seats it at entry, RESET CAMERA returns to it, and FILM recalls it in the room. No pin, and every door reads the shipped homes exactly as before — the pin is a device overlay on the shipped stage, never a change to it. */
+  var POSE_KEY = 'stage3d-pose-v1';
+  function pinPose() {
+    try {
+      var p = JSON.parse(localStorage.getItem(POSE_KEY) || 'null');
+      if (p && isFinite(p.x) && isFinite(p.z) && isFinite(p.lift) && isFinite(p.heading) && isFinite(p.tilt) && isFinite(p.focal)) return p;
+    } catch (e) { }
+    return null;
+  }
+  /* @reason [USER] The pin for one scene: a pose belongs to the scene it was framed in — a room pin never seats in the void. */
+  function pinPoseFor(scene) { var p = pinPose(); return (p && p.scene === scene) ? p : null; }
+  /* @reason [USER] The camera's current pose as a pose record, read from the live numbers at the readout's own precision — two decimals on seat, lift and aim, the lens whole — so the pose the readout prints, the pin stores and the issue carries are one pose, digit for digit. */
+  function currentPose() {
+    var r2 = function (v) { return Math.round(v * 100) / 100; };
+    return { scene: sceneNow, x: r2(cam.x), z: r2(cam.z), lift: r2(cam.lift), heading: r2(cam.heading), tilt: r2(cam.tilt), focal: Math.round(cam.focal), at: new Date().toISOString() };
+  }
+  /* @reason [USER] Write the pin from the camera's current pose: PIN's one tap is the whole gesture — no confirm, no form; the readout and the button's lit face are its receipt. */
+  function savePinPose() {
+    var p = currentPose();
+    try { localStorage.setItem(POSE_KEY, JSON.stringify(p)); } catch (e) { }
+    return p;
+  }
+  /* @reason [USER] The pose as readable text (owner steer, 2026-11-07): the name line, the six numbers in words, and the pose JSON — the block COPY POSE puts on the clipboard, so a pose handed over as text says everything the doors need to seat it again. */
+  function poseText(p, name) {
+    var js = JSON.stringify({ scene: p.scene, x: p.x, z: p.z, lift: p.lift, heading: p.heading, tilt: p.tilt, focal: p.focal });
+    return name + ' \u00B7 ' + p.scene + ' \u00B7 ' + (p.at || '') + '\nX ' + p.x + ' \u00B7 Z ' + p.z + ' \u00B7 LIFT ' + p.lift + ' \u00B7 HEADING ' + p.heading + ' \u00B7 TILT ' + p.tilt + ' \u00B7 LENS ' + p.focal + '\n' + js;
+  }
+  /* @reason [USER] SAVE's door (owner steer, 2026-11-07): a prefilled GitHub issue on the production repository — title POSE, the location, the pose's name (or its timestamp where it has none); the body leaves the first line for the owner's own note and carries the pose JSON in a code block below it. The issue is the agent's queue (the DLC dashboard pattern): the durable export of a framing, beside the pin's instant on-device freeze. */
+  function openPoseIssue(name) {
+    var p = currentPose();
+    var title = 'POSE \u00B7 ' + p.scene + ' \u00B7 ' + (name || p.at);
+    var body = '(your note)\n\n```json\n' + JSON.stringify({ scene: p.scene, x: p.x, z: p.z, lift: p.lift, heading: p.heading, tilt: p.tilt, focal: p.focal }, null, 2) + '\n```\n';
+    window.open('https://github.com/hadi-nayebi/hadosh-production-contexts/issues/new?title=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(body), '_blank');
+  }
+  /* @reason [USER] The one control gate's doors (owner steers, 2026-11-07): the gear and the corner tap open the SAME panel — from the corner it stands anchored at the corner (the atPip seat), from the gear at its standing seat — and every close path clears both the open state and the anchor, so the gate never reopens wearing the other door's seat. */
+  function openGate(atPip) {
+    var panel = document.getElementById('panel'); if (!panel) return;
+    panel.classList.add('open');
+    if (atPip) panel.classList.add('atPip'); else panel.classList.remove('atPip');
+    var gb = document.getElementById('gearBtn'); if (gb) gb.setAttribute('aria-expanded', 'true');
+    showSettings(); syncGate(true);
+  }
+  function closeGate() {
+    var panel = document.getElementById('panel'); if (!panel) return;
+    panel.classList.remove('open'); panel.classList.remove('atPip');
+    var gb = document.getElementById('gearBtn'); if (gb) gb.setAttribute('aria-expanded', 'false');
+  }
+  /* @reason [USER] The control gate's faces (owner steers, 2026-11-07): everything the gate and its instruments show that the world can change behind their backs — the home readout and the pin's lit face (keyed on the stored pin itself, so a pin written in another tab lands here too), the adjustment sliders standing on the camera's targets while the gate stands open, the corner menu chip standing only while the corner shows the camera's eye, and the true capture frame's edge standing in the camera view — reconciled on the frame loop through this one reader on change-only caches, the loop's own discipline, so no writer anywhere needs to know these faces exist. */
+  var gateEls = null, gateCache = {};
+  function syncGate(force) {
+    if (!gateEls) {
+      gateEls = { panel: document.getElementById('panel'), frame: document.getElementById('frameMark'), dots: document.getElementById('pipDots'), read: document.getElementById('poseRead'), pin: document.getElementById('btnPin'), adj: document.getElementById('camAdj'),
+        sHead: document.getElementById('sHead'), sTilt: document.getElementById('sTilt'), sLens: document.getElementById('sLens'), sLift: document.getElementById('sLift'),
+        oHead: document.getElementById('oHead'), oTilt: document.getElementById('oTilt'), oLens: document.getElementById('oLens'), oLift: document.getElementById('oLift') };
+    }
+    var E = gateEls;
+    if (E.frame) {
+      var wantF = (mainRole === 'camera' && cam.present);
+      var vw = window.innerWidth || 0, vh = window.innerHeight || 0;
+      var fw = wantF ? Math.min(vw, Math.floor(vh * 16 / 9)) : 0, fh = Math.floor(fw * 9 / 16);
+      var keyF = (wantF && fw > 10) ? (fw + 'x' + fh) : 'off';
+      if (force || gateCache.f !== keyF) {
+        gateCache.f = keyF;
+        if (keyF === 'off') E.frame.style.display = 'none';
+        else { E.frame.style.display = ''; E.frame.style.left = Math.round((vw - fw) / 2) + 'px'; E.frame.style.top = Math.round((vh - fh) / 2) + 'px'; E.frame.style.width = fw + 'px'; E.frame.style.height = fh + 'px'; }
+      }
+    }
+    if (E.dots) {
+      var wantD = (mainRole === 'director' && cam.present) ? '' : 'none';
+      if (force || gateCache.d !== wantD) { gateCache.d = wantD; E.dots.style.display = wantD; }
+    }
+    var rawPin = null;
+    try { rawPin = localStorage.getItem(POSE_KEY); } catch (e) { }
+    if (force || gateCache.pin !== rawPin) {
+      gateCache.pin = rawPin;
+      var pin = pinPose();
+      if (E.read) {
+        var H = null, nm = 'NO HOME PINNED';
+        if (pin) { H = pin; nm = "HADI'S HOME"; }
+        else if (sceneNow === 'room' && typeof FILM_HOME !== 'undefined') { H = FILM_HOME; nm = 'FILMING HOME'; }
+        E.read.textContent = H ? (nm + ' \u00B7 X ' + H.x + ' \u00B7 Z ' + H.z + ' \u00B7 LIFT ' + H.lift + ' \u00B7 HEADING ' + H.heading + ' \u00B7 TILT ' + H.tilt + ' \u00B7 LENS ' + H.focal) : nm;
+      }
+      if (E.pin) { var on = !!pin; E.pin.setAttribute('aria-pressed', on ? 'true' : 'false'); E.pin.className = on ? 'on' : ''; }
+    }
+    if (E.adj) {
+      var wantA = cam.present ? '' : 'none';
+      if (force || gateCache.a !== wantA) { gateCache.a = wantA; E.adj.style.display = wantA; }
+    }
+    if (E.panel && E.panel.classList.contains('open') && cam.present) {
+      var ae = document.activeElement;
+      if (E.sHead && ae !== E.sHead) E.sHead.value = String(Math.round(cam.tHeading));
+      if (E.sTilt && ae !== E.sTilt) E.sTilt.value = String(cam.tTilt);
+      if (E.sLens && ae !== E.sLens) E.sLens.value = String(Math.round(cam.tFocal));
+      if (E.sLift && ae !== E.sLift) E.sLift.value = String(Math.round(cam.tLift));
+      if (E.oHead) E.oHead.textContent = String(Math.round(cam.tHeading)) + '\u00B0';
+      if (E.oTilt) E.oTilt.textContent = (Math.round(cam.tTilt * 10) / 10) + '\u00B0';
+      if (E.oLens) E.oLens.textContent = String(Math.round(cam.tFocal));
+      if (E.oLift) E.oLift.textContent = String(Math.round(cam.tLift));
+    }
+  }
   function tick(now) {
     /* the NEXT frame is requested FIRST (convergence fix round 3, M-2b): the loop's survival never depends on its body completing — a throw anywhere below costs one frame, never the loop. The request stood last before this, so any single frame error stopped the rendering permanently while the controls stayed live: a frozen picture that still answered touches. */
     requestAnimationFrame(tick);
@@ -1182,6 +1469,8 @@ body.camView .headChip{bottom:64px}
     captureFeed(dt);
     /* the physics core steps on the same capped dt (the layers build, 2026-11-07): one clock for the shot and the fall, so a filmed fall and a measured fall are the same fall. */
     physStep(dt);
+    /* the ball choreography rides the same frame (the ball scene, 2026-11-07): it spends the step's first hit, grounds the fall with its shadow print, and runs the hold and fade on the simulation clock. */
+    ballDriver(dt);
     var mainIsDir = mainRole === 'director';
     /* @reason [USER] The lens readout: whichever surface currently shows the camera's eye also names its focal length, updated only when the rounded number changes — a touch user zooming the lens by gesture is never left guessing the number they set. */
     if (cam.present) {
@@ -1193,12 +1482,12 @@ body.camView .headChip{bottom:64px}
         if (tick._ct !== ct) { tick._ct = ct; document.getElementById('focalChip').textContent = ct; }
       }
     }
-    /* @reason [USER] The movement pad's face and step (cycle 2, 2026-11-07; plan §2.2): the pad stands only in the camera view, with a camera present and the settings panel closed — reconciled here, on the loop, on the readouts' own change-only cache discipline, so every way the panel opens or closes (the gear, the close button, an outside press, the corner's dismissal) and every role change is covered by this one reader instead of a call scattered across the panel's doors. The step call then spends the pad's held directions for this frame (the pad's own door, in the wiring, owns the held set), and tickExtra is the hook a scene module registers its own per-frame reconciliation on — the theater's FILM face rides it. */
+    /* @reason [USER] The movement pad's face and step (cycle 2, 2026-11-07; plan §2.2): the pad stands in both views with a camera present, and the control gate opening no longer hides it — the pad is part of the gate's own contents, and the director watches its moves land on the camera body (owner steers, 2026-11-07, superseding plan \u00A72's camera-view scoping and panel suppression) — reconciled here, on the loop, on the readouts' own change-only cache discipline, so every way the panel opens or closes (the gear, the close button, an outside press, the corner's dismissal) and every role change is covered by this one reader instead of a call scattered across the panel's doors. The step call then spends the pad's held directions for this frame (the pad's own door, in the wiring, owns the held set), and tickExtra is the hook a scene module registers its own per-frame reconciliation on — the theater's FILM face rides it. */
     var padEl = document.getElementById('pad');
     if (padEl) {
-      var panelEl = document.getElementById('panel');
-      var padWant = (cam.present && mainRole === 'camera' && !(panelEl && panelEl.classList.contains('open'))) ? '' : 'none';
+      var padWant = cam.present ? '' : 'none';
       if (tick._pad !== padWant) { tick._pad = padWant; padEl.style.display = padWant; }
+      syncGate(false);
     }
     if (padStep) padStep(dt);
     if (tickExtra) tickExtra();
@@ -1229,8 +1518,8 @@ body.camView .headChip{bottom:64px}
       var gearBtn = document.getElementById('gearBtn');
       /* every path that opens or closes the panel also writes the gear's expanded state, so the gear never claims the panel is shut while it stands open, or open after an outside press closed it (2026-11-06 overnight round 6). */
       function syncGear() { gearBtn.setAttribute('aria-expanded', panel.classList.contains('open') ? 'true' : 'false'); }
-      gearBtn.addEventListener('click', function () { panel.classList.toggle('open'); syncGear(); showSettings(); });
-      document.getElementById('btnClosePanel').addEventListener('click', function () { panel.classList.remove('open'); syncGear(); });
+      gearBtn.addEventListener('click', function () { if (panel.classList.contains('open')) closeGate(); else openGate(false); });
+      document.getElementById('btnClosePanel').addEventListener('click', function () { closeGate(); });
       /* @reason [USER] MORE/LESS: the tap that opens and closes the hint's full gesture map (the ten-word law, 2026-11-06). Opening holds the hint at full strength — the fade clock is cleared, nobody reads a map at a whisper; closing restarts the six-second fade. */
       document.getElementById('hintBtn').addEventListener('click', function () {
         var full = document.getElementById('hintFull');
@@ -1244,7 +1533,8 @@ body.camView .headChip{bottom:64px}
       });
       /* @reason [USER] The panel also closes when a press lands anywhere outside it and reaches the document (a press on the corner view closes it too, through the corner's own handler, and is spent there — it cannot also swap the views): a settings panel that stays open over the scene while you work is a trapped panel, and the gear is a small target to hunt for twice. */
       document.addEventListener('pointerdown', function (e) {
-        if (panel.classList.contains('open') && !(e.target.closest && (e.target.closest('#panel') || e.target.closest('#gearBtn')))) { panel.classList.remove('open'); syncGear(); }
+        if (panel.classList.contains('open') && !(e.target.closest && (e.target.closest('#panel') || e.target.closest('#gearBtn') || e.target.closest('#nameCard')))) { closeGate(); }
+        var pmEl = document.getElementById('pipMenu'); if (pmEl && pmEl.style.display !== 'none' && !(e.target.closest && (e.target.closest('#pipMenu') || e.target.closest('#pipDots')))) pmEl.style.display = 'none';
       });
       document.getElementById('btnHome').addEventListener('click', flyHome);
       document.getElementById('btnAids').addEventListener('click', function () { SET.aids = SET.aids ? 0 : 1; showSettings(); saveSettings(); });
@@ -1252,6 +1542,30 @@ body.camView .headChip{bottom:64px}
       document.getElementById('btnResetCam').addEventListener('click', resetCamera);
       document.getElementById('btnResetStage').addEventListener('click', applySeed);
       if (q.get('panel') === 'open') { panel.classList.add('open'); syncGear(); }
+      /* @reason [USER] The gate's own wiring (owner steers, 2026-11-07): the adjustment sliders write the camera's targets through the standing clamps — heading wrapped, tilt and lens clamped to their axes' ranges, lift through its one clamp — so a slider can land the camera nowhere a gesture couldn't; PIN's tap saves the current pose and lets the loop's reader show the receipt; SAVE opens the issue with the standing home's name where one stands pinned; the corner chip raises its menu without ever entering the corner's gesture map, and the menu's three doors go to the gate, the clipboard, and the name card. Every element is guarded like the FILM door's: a registry without one of these ids wires the rest whole. */
+      var sHeadEl = document.getElementById('sHead'); if (sHeadEl) sHeadEl.addEventListener('input', function () { if (cam.present) cam.tHeading = wrap180(parseFloat(sHeadEl.value) || 0); });
+      var sTiltEl = document.getElementById('sTilt'); if (sTiltEl) sTiltEl.addEventListener('input', function () { if (cam.present) cam.tTilt = clamp(parseFloat(sTiltEl.value) || 0, -70, 70); });
+      var sLensEl = document.getElementById('sLens'); if (sLensEl) sLensEl.addEventListener('input', function () { if (cam.present) cam.tFocal = clamp(parseFloat(sLensEl.value) || 0, 240, 1700); });
+      var sLiftEl = document.getElementById('sLift'); if (sLiftEl) sLiftEl.addEventListener('input', function () { if (cam.present) { cam.tLift = parseFloat(sLiftEl.value) || 0; clampCamLift(); } });
+      var btnPinEl = document.getElementById('btnPin'); if (btnPinEl) btnPinEl.addEventListener('click', function () { savePinPose(); gateCache.pin = null; syncGate(true); });
+      var btnSaveEl = document.getElementById('btnSave'); if (btnSaveEl) btnSaveEl.addEventListener('click', function () { openPoseIssue(pinPose() ? "HADI'S HOME" : null); });
+      var pipDotsEl = document.getElementById('pipDots'), pipMenuEl = document.getElementById('pipMenu');
+      function closePipMenu() { if (pipMenuEl) pipMenuEl.style.display = 'none'; }
+      if (pipDotsEl) {
+        pipDotsEl.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+        pipDotsEl.addEventListener('click', function (e) { e.stopPropagation(); if (pipMenuEl) pipMenuEl.style.display = (pipMenuEl.style.display === 'none') ? '' : 'none'; });
+      }
+      var pmControlsEl = document.getElementById('pmControls'); if (pmControlsEl) pmControlsEl.addEventListener('click', function () { closePipMenu(); openGate(true); });
+      var pmCopyEl = document.getElementById('pmCopy'); if (pmCopyEl) pmCopyEl.addEventListener('click', function () {
+        var p = currentPose(); var txt = poseText(p, pinPoseFor(p.scene) ? "HADI'S HOME" : 'POSE');
+        function copied() { if (pmCopyEl) { pmCopyEl.textContent = 'COPIED'; setTimeout(function () { pmCopyEl.textContent = 'COPY POSE'; closePipMenu(); }, 900); } }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(copied, copied);
+        else { var ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (err) { } document.body.removeChild(ta); copied(); }
+      });
+      var nameCardEl = document.getElementById('nameCard'), poseNameEl = document.getElementById('poseName');
+      var pmSaveEl = document.getElementById('pmSave'); if (pmSaveEl) pmSaveEl.addEventListener('click', function () { closePipMenu(); if (nameCardEl) { nameCardEl.style.display = ''; if (poseNameEl) { poseNameEl.value = ''; poseNameEl.focus(); } } });
+      var btnNameSaveEl = document.getElementById('btnNameSave'); if (btnNameSaveEl) btnNameSaveEl.addEventListener('click', function () { var nm = poseNameEl ? poseNameEl.value.trim() : ''; if (nameCardEl) nameCardEl.style.display = 'none'; openPoseIssue(nm || null); });
+      var btnNameCancelEl = document.getElementById('btnNameCancel'); if (btnNameCancelEl) btnNameCancelEl.addEventListener('click', function () { if (nameCardEl) nameCardEl.style.display = 'none'; });
       showSettings();
     } catch (err) { }
 
@@ -1323,7 +1637,7 @@ body.camView .headChip{bottom:64px}
     }
     /* @reason [USER] Reset camera: every camera target returns to the CURRENT SCENE's camera home (CAM_HOME in the void, ROOM_CAM_HOME in the room — each scene carries its own home, plan §5) — seat, heading, tilt, level roll, the home's lens and its lift (the homes carry a lift since cycle 2 — 0 at the standing homes). The recovery for a camera dragged or flown somewhere lost; AIM alone only ever fixed the aim. */
     function resetCamera() {
-      var H = CAM_HOMES[sceneNow] || CAM_HOME;
+      var H = pinPoseFor(sceneNow) || CAM_HOMES[sceneNow] || CAM_HOME;
       cam.tX = H.x; cam.tZ = H.z; cam.tHeading = H.heading; cam.tTilt = H.tilt; cam.tRoll = 0; cam.tFocal = H.focal; cam.tLift = H.lift;
     }
     /* @reason [USER] Apply the seed — RESET STAGE (owner's empty-checkpoint ruling, 2026-11-06; scene-aware since the room build, 2026-11-07; plan §7): the reset returns the CURRENT SCENE to its own seed, field for field — in the void, the checkpoint exactly as it has always read (the camera leaves the space AND the director's view returns to the checkpoint's opening view, targets home and currents snapped onto them, the yaw written literally to 0 by the seed state itself rather than left at a home flight's nearest equivalent, and the absent camera's numbers normalised to the boot values, so boot and reset reproduce the checkpoint identically whichever path reaches it — convergence fixes C9 and round 3 L-1, carried by the enumerated SEED_STATE both paths read); in the room, ROOM_SEED_STATE exactly (director and camera at the room's homes, the camera standing on the audience floor). RESET never changes scene: returning to the checkpoint from the room is the STAGE pill's act, so each scene's reset contract stays pure. The write itself is applySceneState's — the one door scene entries and resets share. Reversible by design: ADD CAMERA (in the void) and the THEATER pill are the ways back, so the reset is a tool, not a trap. */
@@ -1345,6 +1659,7 @@ body.camView .headChip{bottom:64px}
       mode = null; chanLock = null; dtPending = false; dtDrag = false;
       lastTap = -Infinity; lastCamTap = -Infinity; tapOk = false; downHit = false; downMod = false;
       pipMaxPtr = 0; pipTravel = 0; pipSpent = false;
+      pipTapStamp = 0; if (pipTapTimer) { clearTimeout(pipTapTimer); pipTapTimer = null; }
       padHeld = {};
       setRing(false);
     }
@@ -1602,6 +1917,8 @@ body.camView .headChip{bottom:64px}
     var pipDownT = 0, pipStartX = 0, pipStartY = 0, pipLastDist = 0, pipMaxPtr = 0, pipTravel = 0;
     /* @reason [BEST-PRACTICE] The corner's dismissal spend (convergence fix round 2, R2A-4): a corner press that dismisses the open settings panel is spent on the dismissal — the same law the main surface has carried since round 6 — so its release cannot also complete the swap tap and replace the view the owner was only trying to un-cover. Set at the dismissal in pointerdown, read at the swap test in pipEnd, cleared when the corner's map empties. */
     var pipSpent = false;
+    /* the corner's tap-grammar state (owner steer, 2026-11-07): the first strict tap's stamp and the pending gate timer — a second tap inside the window spends the stamp on the view swap, the timer's lapse spends it on the gate. Cleared with the corner's other spends at every role boundary (cancelGesture's enumeration). */
+    var pipTapStamp = 0, pipTapTimer = null;
     var pip = document.getElementById('pip');
     /* registration of the engine hooks declared at Layer 3 scope: the role boundary cancels through onRoleApply, every fit reseeds through onFit, and the frame loop reads the live maps through tick._maps — all three wired here, where both maps and the corner element exist. */
     onRoleApply = cancelGesture;
@@ -1613,7 +1930,7 @@ body.camView .headChip{bottom:64px}
       if (pipPointers.has(e.pointerId)) return;
       /* a corner press dismisses an open settings panel first (navfix N21) — the same dismissal a main-view press receives from the document closer, which this press's stopPropagation would otherwise never reach, so the two surfaces dismiss identically. And the dismissal SPENDS the press (convergence fix round 2, R2A-4): mirroring the main surface's round-6 law, a press whose first job was closing the panel cannot go on to swap the views on its release. */
       var pipDismissed = panel.classList.contains('open');
-      if (pipDismissed) { panel.classList.remove('open'); var gbP = document.getElementById('gearBtn'); if (gbP) gbP.setAttribute('aria-expanded', 'false'); }
+      if (pipDismissed) { panel.classList.remove('open'); panel.classList.remove('atPip'); var gbP = document.getElementById('gearBtn'); if (gbP) gbP.setAttribute('aria-expanded', 'false'); }
       /* button discipline at parity with the main surface (convergence fix round 3, A-2): a non-primary button or a Shift-modified press is invisible here — it never enters the corner's map, so it can neither complete the swap tap nor aim or orbit the other eye, and its release finds no membership and changes nothing. On the main surface such a press is spent as a pan modifier and is invisible to both tap chains; the corner has no pan channel, so invisibility is its whole treatment, and Shift follows exactly the main surface's modified-press rule. The dismissal above still stands — a modified press that closed the panel has done that one job, and no other. */
       if (e.button !== 0 || e.shiftKey) { e.stopPropagation(); return; }
       pipPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -1676,8 +1993,23 @@ body.camView .headChip{bottom:64px}
       }
       if (pipPointers.size === 0) {
         if (!cancelled && !pipSpent && pipMaxPtr === 1 && pipTravel < 8 && performance.now() - pipDownT >= 0 && performance.now() - pipDownT < 300) {
-          mainRole = (mainRole === 'director') ? 'camera' : 'director';
-          applyRoles();
+          if (mainRole === 'director') {
+            /* the corner's tap grammar (owner steer, 2026-11-07): in the director view the corner shows the camera's eye, the aiming instrument — a SINGLE tap opens the control gate at the corner when its window lapses, and a DOUBLE tap inside the window takes the swap the clean tap used to fire, so reaching the controls never costs the director his seat. In the camera view the corner shows the director's eye and a clean tap still swaps straight back: the grammar belongs to the aiming surface. */
+            var nowP = performance.now();
+            if (pipTapStamp > 0 && nowP - pipTapStamp < 340) {
+              if (pipTapTimer) { clearTimeout(pipTapTimer); pipTapTimer = null; }
+              pipTapStamp = 0;
+              mainRole = 'camera';
+              applyRoles();
+            } else {
+              pipTapStamp = nowP;
+              if (pipTapTimer) clearTimeout(pipTapTimer);
+              pipTapTimer = setTimeout(function () { pipTapStamp = 0; pipTapTimer = null; openGate(true); }, 340);
+            }
+          } else {
+            mainRole = 'director';
+            applyRoles();
+          }
         }
         pipMaxPtr = 0; pipSpent = false;
       }
@@ -1727,8 +2059,8 @@ body.camView .headChip{bottom:64px}
     requestAnimationFrame(tick);
   })();
 
-  /* @reason [BEST-PRACTICE] Test hooks: the verification suite drives the real page through these — set state exactly, switch roles, read the role back — so a screenshot or a driving test can reproduce an exact view. The room build (2026-11-07) adds the scene pair (scene / setScene), the room's seed state and engine handles (roomSeedState; room — the group and the ghost registry the verify battery inspects), and the two engine cameras (cams), so the framing battery projects the stage's corners through the scene camera itself rather than through a replica. Cycle 2 (2026-11-07) adds the filming home's door (filmHome), so the framing battery seats the plan's derived pose through the same function the panel's FILM preset calls. The capture build (2026-11-07) adds the capture door (capture: photo / start / stop / state), so the battery drives the real capture path headlessly and reads its readout — the same functions the PHOTO and REC pills call. The layers build (2026-11-07) adds the physics door (physics: spawn / step / rand / clear / remove / time / bodies / PHYS), so the physics battery drives the core's real step on synthetic time and reads its measured first hits. */
-  window.__stage = { dir: dir, cam: cam, setRole: function (r) { mainRole = r; applyRoles(); }, role: function () { return mainRole; }, samplePixels: samplePixels, seedState: function () { return SEED_STATE; }, gl: function () { return { ok: glOK, vendor: T3 ? 'three-r' + T3.REVISION : null }; }, scene: function () { return sceneNow; }, setScene: setScene, roomSeedState: function () { return ROOM_SEED_STATE; }, room: function () { return { group: roomGroup, panels: roomPanels }; }, filmHome: filmHome, cams: function () { return { dir: dirCam, scene: sceneCam }; }, capture: { photo: capturePhoto, start: captureStart, stop: captureStop, state: captureState }, physics: { spawn: physSpawn, step: physStep, rand: physRand, clear: physClear, remove: physRemove, time: function () { return physT; }, bodies: function () { return physBodies; }, PHYS: PHYS } };
+  /* @reason [BEST-PRACTICE] Test hooks: the verification suite drives the real page through these — set state exactly, switch roles, read the role back — so a screenshot or a driving test can reproduce an exact view. The room build (2026-11-07) adds the scene pair (scene / setScene), the room's seed state and engine handles (roomSeedState; room — the group and the ghost registry the verify battery inspects), and the two engine cameras (cams), so the framing battery projects the stage's corners through the scene camera itself rather than through a replica. Cycle 2 (2026-11-07) adds the filming home's door (filmHome), so the framing battery seats the plan's derived pose through the same function the panel's FILM preset calls. The ball scene (2026-11-07) adds the take's door (ball: reset / drop / state / step / table / shardTable), so the physics battery and the film driver run the real choreography; cycle 2 (2026-11-07) adds the scene registry (scenes) — the book seam the coming screenplay-book player attaches to, one play() per registered scene. The capture build (2026-11-07) adds the capture door (capture: photo / start / stop / state), so the battery drives the real capture path headlessly and reads its readout — the same functions the PHOTO and REC pills call. The layers build (2026-11-07) adds the physics door (physics: spawn / step / rand / clear / remove / time / bodies / PHYS), so the physics battery drives the core's real step on synthetic time and reads its measured first hits. */
+  window.__stage = { dir: dir, cam: cam, setRole: function (r) { mainRole = r; applyRoles(); }, role: function () { return mainRole; }, samplePixels: samplePixels, seedState: function () { return SEED_STATE; }, gl: function () { return { ok: glOK, vendor: T3 ? 'three-r' + T3.REVISION : null }; }, scene: function () { return sceneNow; }, setScene: setScene, roomSeedState: function () { return ROOM_SEED_STATE; }, room: function () { return { group: roomGroup, panels: roomPanels }; }, filmHome: filmHome, cams: function () { return { dir: dirCam, scene: sceneCam }; }, capture: { photo: capturePhoto, start: captureStart, stop: captureStop, state: captureState }, physics: { spawn: physSpawn, step: physStep, rand: physRand, clear: physClear, remove: physRemove, time: function () { return physT; }, bodies: function () { return physBodies; }, PHYS: PHYS }, ball: { reset: ballReset, drop: ballDrop, state: ballState, step: ballDriver, table: BALL, shardTable: ballShardTable }, scenes: SCENE_REGISTRY };
 })();
 </script>
 </body>
