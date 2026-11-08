@@ -40,8 +40,11 @@ body.camView .headChip{bottom:64px}
 .hint{position:fixed;left:14px;bottom:16px;max-width:min(46vw,540px);font-family:Georgia,serif;font-size:13.5px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);border:1px solid rgba(244,233,204,.25);padding:7px 14px;border-radius:14px;pointer-events:none;transition:opacity 1.2s;white-space:normal;text-align:left;line-height:1.4;z-index:5}
 /* The narrow-screen block stands after the .hint base rule by the same law that puts the safe-area block last (convergence fix round 2, census instance D7): it stood BEFORE .hint, so its .hint max-width was cascade-dead at equal specificity — the narrow hint never got its full-width allowance. Its other rules already stood after their bases and are unchanged by the move. */
 @media (max-width:560px){.viewbar{left:10px;transform:none;max-width:calc(100vw - 72px);flex-wrap:wrap}.viewbar button{font-size:10.5px;padding:7px 5px;letter-spacing:.1px}.viewbar{gap:5px}.hint{max-width:calc(100vw - 28px)}}
+/* The narrow tightening (the room build, 2026-11-07): the two scene pills ride the bar's second row, and at the pre-room button size the room state's second row (FIND CAMERA + STAGE + THEATER) measured 269px against the 248px budget at 320px wide — the bar wrapped to THREE rows and its bottom edge stood at 136px, through the panel's 94px top fence (the plan's §11 check 5 two-row bound, measured on the real stack). The narrow buttons therefore take a smaller size (above), and at ≤400px — where the squeeze lives — a further step (below): the room row re-packs to ~228px and two rows everywhere, and the bar's bottom holds the fence the fix-9 census guards. The labels stay one or two words; 10px serif on a pill is small but legible, and the alternative was a bar covering the settings panel. */
 /* CAPTURE PACK, narrow (measured on the capture build's bar sweep, 2026-11-07): at 400px and under, the bar's budget is the viewport minus the gear reserve — 248px at 320px wide. The recording face widens REC by about 38px (the dot plus STOP M:SS); in DOM order the second row (FIND CAMERA / STAGE / THEATER / PHOTO / REC) then totals 271px, REC wraps to a third row, and the bar's bottom reaches 99px — past the settings panel's top fence. So the narrow band re-seats THEATER at the end of row one (row one totals 237px) and the capture row (FIND CAMERA / STAGE / PHOTO / REC) totals 219px while recording and 181px at rest: two rows and a 68px bottom in both states, in both scenes. Wider bands keep the DOM order untouched. */
-@media (max-width:400px){.viewbar{gap:4px}.viewbar button{font-size:9.5px;padding:7px 2px;letter-spacing:0}#btnFind,#btnPhoto,#btnRec{order:2}}
+@media (max-width:400px){.viewbar{gap:4px}.viewbar button{font-size:9.5px;padding:7px 2px;letter-spacing:0}#btnTheater{order:1}#btnFind,#btnStage,#btnPhoto,#btnRec{order:2}}
+/* The mid-width band (the room build, 2026-11-07): the two scene pills widen the bar — at full button size the six-pill row measures ~709px and its centred right end would crowd the gear's seat across widths 561–825px, so across 561–860px the bar's buttons take the narrow domain's own compact size (11px, tighter padding), which holds the row to ~489px in ONE row (the wrap exists only at ≤560px): the bar's bottom stands at 46px there, above the wide one-row bottom (53px) the panel fence and the corner's 60px top already clear. One rule for the whole band, disjoint from the narrow block by its min-width. */
+@media (min-width:561px) and (max-width:1100px){.viewbar button{font-size:10px;padding:9px 6px;letter-spacing:.1px}}
 /* CAPTURE PACK, mid (measured on the same sweep): at 561–720px the eight-pill row at 10px measures 569–589px wide, centred — its right edge crosses the gear button's left edge by up to 27px (worst at 600px), over a control the owner taps. Wrapping to two rows is not available in this band: above 560px the panel's top fence (66px) is built on a one-row bar. So this sub-band tightens the pills (9px, 8px 3px, gap 6px) until the row's right edge clears the gear by at least 12px across the whole band; from 721px the 10px row already clears it by 100px or more. */
 @media (min-width:561px) and (max-width:720px){.viewbar{gap:6px}.viewbar button{font-size:9px;padding:8px 3px;letter-spacing:0}}
 .hintBtn{pointer-events:auto;background:rgba(244,233,204,.10);border:1px solid rgba(244,233,204,.45);color:rgba(244,233,204,.95);font-family:inherit;font-size:11px;letter-spacing:1.5px;padding:5px 12px;min-height:28px;border-radius:999px;margin-left:7px;cursor:pointer;vertical-align:baseline}
@@ -93,12 +96,14 @@ body.camView .headChip{bottom:64px}
 </div>
 <div class="frameGuide" id="frameGuide" data-reason="[USER] The framing overlay, shown only when the camera's shot fills the main view: third-lines only, no border — the whole screen IS the shot's edge, so a drawn border would invent a second, false frame; the thirds are the composition guide."></div>
 <canvas class="grain" id="grain" width="256" height="256" data-reason="[FX] Procedural film grain: canvas noise at low opacity over every picture surface — the main view and the corner view alike — beneath the controls, so flat digital colour reads as a physical surface. Decorative texture only."></canvas>
-<div class="viewbar" data-reason="[USER] The view switch, kept as small glass pills: DIRECTOR (work the scene), CAMERA (the shot fills the screen), AIM AT CENTRE (point the camera at the stage's centre point), FIND CAMERA (fly to the camera object — the always-reachable recovery). ADD CAMERA exists only in the seed state, where there is no camera yet. PHOTO and REC are the capture pills (the capture build, 2026-11-07): they belong to the camera, so they stand at the bar's end and leave it with the camera cluster when the stage is empty.">
+<div class="viewbar" data-reason="[USER] The view switch, kept as small glass pills: DIRECTOR (work the scene), CAMERA (the shot fills the screen), AIM AT CENTRE (point the camera at the stage's centre point), FIND CAMERA (fly to the camera object — the always-reachable recovery). ADD CAMERA exists only in the seed state, where there is no camera yet. STAGE and THEATER are the scene pills (the room build, 2026-11-07): they choose which scene stands in the space — the checkpoint stage or the empty theater room — they sit in the bar's existing second row beside FIND CAMERA / ADD CAMERA (never a third row: the settings panel's top fence is built on the two-row bound), and entering a scene applies that scene's own seed state. PHOTO and REC are the capture pills (the capture build, 2026-11-07): they belong to the camera, so they stand at the bar's end and leave it with the camera cluster when the stage is empty.">
   <button id="btnDir" class="on" aria-pressed="true" data-reason="[USER] Director: the free view is the main view; the corner shows the camera's shot.">DIRECTOR</button>
   <button id="btnCam" aria-pressed="false" data-reason="[USER] Camera: the shot fills the main view; the corner shows the director's view.">CAMERA</button>
   <button id="btnAim" data-reason="[USER] Aim at centre: turn and tilt the camera so its eye lands on the stage's centre point (430, 53) — the fastest way to re-find the subject after moving the camera.">AIM AT CENTRE</button>
   <button id="btnFind" data-reason="[USER] Find camera: fly the director to the camera object — centred and close at ANY seat in the camera's full range, because the visit's flight works to its own wider bounds (derived from the full seating envelope, ±4700 pan) rather than the gesture ranges that used to strand far seats off-centre (navfix N7, 2026-11-06) — the recovery when the camera is small, far or off-frame. The focus flight existed only behind a double-tap on the very target that is hard to hit; a named button makes the recovery always reachable (2026-11-06 ergonomics audit).">FIND CAMERA</button>
   <button id="btnAddCam" style="display:none" data-reason="[USER] Add camera: in the seed state (empty stage) this is how the camera object enters the space — it arrives at its home seat, aimed at the centre. Without it, RESET STAGE would be a one-way door.">ADD CAMERA</button>
+  <button id="btnStage" class="on" aria-pressed="true" data-reason="[USER] Stage: the checkpoint scene — the void, the wireframe grid and the camera object. One of the two scene pills (the room build, 2026-11-07): entering a scene applies that scene's own seed state, so this pill always lands on the checkpoint exactly, never on wherever the void scene was left.">STAGE</button>
+  <button id="btnTheater" aria-pressed="false" data-reason="[USER] Theater: the empty paper theater room (the room build, 2026-11-07) — paper walls, a ceiling, a stage a bit raised, and the chair area empty: just the basic floor, no chairs, no curtain. The camera stands in the empty area between floor and ceiling, its view covering the whole stage. Entering it applies the room's seed state; the checkpoint stands unchanged behind the STAGE pill.">THEATER</button>
   <button id="btnPhoto" data-reason="[USER] Photo: a still of the camera's own shot (the capture build, 2026-11-07 — the owner's overnight order: use the camera in the scene to record the proof of concept). The scene camera's frame is rendered alone into the capture's own target at the capture's own size and read back in the same task, then saved as a PNG — never a screenshot of the page, which would carry the director, the corner and the gizmo instead of the shot.">PHOTO</button>
   <button id="btnRec" aria-pressed="false" data-reason="[USER] Rec: record the camera's own shot as video (the capture build, 2026-11-07). While it records, the frame loop feeds the shot — rendered alone into the capture's dedicated target and canvas, never the page canvas — into a recorder, and STOP ends it and saves a WebM. The recording state lives on the button itself: a pulsing red dot, the word STOP and the elapsed seconds, so the recording is visible exactly where it is controlled; at rest the button reads REC and its pressed state stands off."><span class="recDot" id="recDot" style="display:none"></span><span id="recFace">REC</span></button>
 </div>
@@ -137,6 +142,9 @@ body.camView .headChip{bottom:64px}
   <div class="btns" data-reason="[USER] The other two reset scopes, named separately because they clear different things (the pose-editor precedent: reset view, reset object, reset scene are different buttons): RESET CAMERA returns the camera object to its home seat and aim; RESET STAGE clears the space to the seed — void and grid, no objects — from which projects start.">
     <button id="btnResetCam" data-reason="[USER] Reset camera: return the camera object to its home position, heading, tilt, roll and lens — the recovery when the camera has been dragged or flown somewhere lost.">RESET CAMERA</button>
     <button id="btnResetStage" data-reason="[USER] Reset stage: clear the space to the seed state — the void and the grid, no camera, and the director's view back at the checkpoint's opening view. The seed is what new projects fork from; ADD CAMERA in the view bar brings the camera back.">RESET STAGE</button>
+  </div>
+  <div class="btns" id="btnFilmRow" style="display:none" data-reason="[USER] The filming home's row in the panel (cycle 2, 2026-11-07; plan §6): one preset, one word — FILM seats the camera at the filming home, the derived pose whose frame holds exactly the stage, the curtains standing at its left and right edges and a little of the step below the deck. The row stands only in the theater (the filming home is a room pose); its button's face carries the state — lit while the camera stands at the pose, the ruling's state-on-its-face rule.">
+    <button id="btnFilm" aria-pressed="false" data-reason="[USER] Film: seat the camera at the filming home (the FILM_HOME record — 430 out at 830, heading -180, tilt -4.8, lens 1080, lift 84, the eye at 120). One tap flies the camera to the pose; the button stands lit while the camera's targets stand at the pose and unlights the moment any number moves off it.">FILM</button>
   </div>
 </div>
 <div class="hint" id="hint" data-reason="[USER] The guide at the bottom left, under the owner's TEN-WORD LAW (2026-11-06): at most ten words stand open without a tap — the current view's first gestures plus a MORE tap; the full gesture map lives behind that tap (MORE/LESS), never poured out as a wall. While collapsed it fades to a whisper so it never competes with the scene."><span id="hintShort">Director: drag to orbit &middot; pinch to zoom &middot;</span><button class="hintBtn" id="hintBtn" type="button" data-reason="[USER] The tap that opens the full gesture map (MORE) and closes it again (LESS) — the one part of the hint that takes touches; the rest of the hint lets every press through to the scene.">MORE</button><span class="hintFull" id="hintFull" hidden>Director: drag to orbit &middot; drag the camera to move it &middot; pinch to zoom &middot; two-finger drag to pan &middot; twist two fingers to roll &middot; double-tap the camera to visit it &middot; double-tap space to fly home &middot; scroll to zoom &middot; three-finger slide zooms the lens &middot; double-tap-hold and slide to zoom one-handed &middot; arrow keys nudge the camera &middot; drag or pinch the corner to aim and zoom the camera &middot; tap the corner to swap views &middot; grid: one square 92 &middot; heavy line 460</span></div>
@@ -345,6 +353,11 @@ body.camView .headChip{bottom:64px}
       gizmoLabel('E', 1.5, 0, 0); gizmoLabel('W', -1.5, 0, 0); gizmoLabel('N', 0, 0, 1.5); gizmoLabel('S', 0, 0, -1.5);
       gizmoCam = new T3.PerspectiveCamera(38, 1, 0.1, 100);
 
+      /* the room builds last, inside the same guard (the room build, 2026-11-07): its group starts hidden — the checkpoint scene is the boot state — and building it after the camera object keeps the camera group first in the group order the render-pass structure reads. */
+      /* the rig's spot table, assigned at this door (cycle 2; plan §4.1): colour, intensity, seat, target, cone angle and penumbra per spot — the declaration stands with the assets, and the assignment must land before buildRoom reads it (see the declaration's note); the ROOM record carries this same table by reference. */
+      ROOM_SPOTS = { key: { color: 0xffdfae, i: 4.1, x: 430, y: 440, z: 560, tx: 430, ty: 25, tz: 80, angle: 0.30, pen: 0.6 }, back: { color: 0xcfe0ff, i: 2.1, x: 430, y: 452, z: 60, tx: 430, ty: 25, tz: -30, angle: 0.30, pen: 0.7 }, washL: { color: 0xffe9c4, i: 2.4, x: 300, y: 440, z: 560, tx: 180, ty: 180, tz: 158, angle: 0.24, pen: 0.8 }, washR: { color: 0xffe9c4, i: 2.4, x: 560, y: 440, z: 560, tx: 680, ty: 180, tz: 158, angle: 0.24, pen: 0.8 } };
+      buildRoom();
+
       /* @reason [BEST-PRACTICE] Context loss is an event, not a mystery: losing the context raises the named failure panel and stops the render (the loop keeps running; its render step stands down on the flag), and the browser's restore event lowers the panel and resumes — the preventDefault on the loss is what makes restoration possible at all. */
       canvas.addEventListener('webglcontextlost', function (ev) { ev.preventDefault(); glOK = false; showGlFail(true); });
       canvas.addEventListener('webglcontextrestored', function () { glOK = true; showGlFail(false); });
@@ -354,14 +367,177 @@ body.camView .headChip{bottom:64px}
   }
   try { if (!buildGL()) showGlFail(true); } catch (err) { showGlFail(true); }
 
+  /* @reason [FX] One paper tile, drawn once on a 512×512 canvas (the room build, 2026-11-07; plan §6): a neutral grey grain field in THREE octaves (TEXTURE v2, cycle 2, 2026-11-07; plan §3 — the owner's phone-pass finding: at any real viewing distance the room read as flat colour, because the one octave lived at pixel scale and averaged away) — per-pixel speckle at ±6% luminance, MESO mottling (~260 soft radial blobs of radius 18–70 canvas px at ±7%, the octave that survives viewing distance: at the tile's 368-unit span a blob reads 13–50 world units across), and FIBRE flecks (~900 short strokes 2–7px long at ±16%, lying within ±20° of horizontal, the paper grain's direction) over the standing faint horizontal fibre streaks — because the surface's DYE is its material colour and the tile only textures it (the plan's §6 arithmetic prices dye × light, so the tile must average to white and its speckle must average out of any region median). All three octaves ride the one seeded stream per tile KIND, so a tile is the same paper on every load; the meso and fleck octaves are wrap-drawn like the streaks, and the same canvas feeds the surface's bump map (paperBump), so the light rakes across the grain the eye sees. The tile is WRAP-DRAWN: every fibre streak is drawn across the border onto its −512 continuation, so the repeated tile shows no border seam at any repeat, integral or fractional. The kinds differ only in their print: 'wall' adds the foot gradient (a multiply down to 0.80 across the canvas's bottom tenth — under the engine's flipY the canvas's bottom is v 0, so with the wall textures' v spanning the full height the gradient lands at the floor line: the flat-shading era's baked contact shade); 'floor' rules plank seams down the u axis and 'deck' rules board seams across the v axis — a seam every 128 canvas px, which at the family's one tile = 368 world units is the grid's own 92 measuring scale surviving as print inside the room (plan §3); 'plain' carries grain only. */
+  function makePaperTile(kind) {
+    var S = 512, cv = document.createElement('canvas'); cv.width = S; cv.height = S;
+    var g = cv.getContext('2d'); if (!g) return cv;
+    var img = g.createImageData(S, S), d = img.data;
+    var seed = 987654321, ki;
+    for (ki = 0; ki < kind.length; ki++) seed = (seed * 31 + kind.charCodeAt(ki)) >>> 0;
+    function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    var i, x, y;
+    for (i = 0; i < d.length; i += 4) { var v = 246 + (rnd() - 0.5) * 30; d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = 255; }
+    /* the meso octave (texture v2): soft radial blobs, cosine falloff, wrap-drawn across the borders */
+    var bi, bx, by, br, bs, dx, dy, tx, ty, dd, ff, f2, idx;
+    for (bi = 0; bi < 260; bi++) {
+      bx = rnd() * S; by = rnd() * S; br = 18 + rnd() * 52; bs = rnd() < 0.5 ? -0.07 : 0.07;
+      var r0 = Math.ceil(br);
+      for (dy = -r0; dy <= r0; dy++) for (dx = -r0; dx <= r0; dx++) {
+        dd = Math.sqrt(dx * dx + dy * dy) / br; if (dd > 1) continue;
+        ff = 0.5 + 0.5 * Math.cos(Math.PI * dd); f2 = 1 + bs * ff;
+        tx = (((Math.floor(bx) + dx) % S) + S) % S; ty = (((Math.floor(by) + dy) % S) + S) % S;
+        idx = (ty * S + tx) * 4;
+        d[idx] = Math.min(255, d[idx] * f2); d[idx + 1] = Math.min(255, d[idx + 1] * f2); d[idx + 2] = Math.min(255, d[idx + 2] * f2);
+      }
+    }
+    for (i = 0; i < 110; i++) {
+      var fy = Math.floor(rnd() * S), fx = Math.floor(rnd() * S), len = 24 + Math.floor(rnd() * 110), lift = 1 + rnd() * 0.05, j;
+      for (j = 0; j < len; j++) {
+        var px = (fx + j) % S, idx = (fy * S + px) * 4;
+        d[idx] = Math.min(255, d[idx] * lift); d[idx + 1] = Math.min(255, d[idx + 1] * lift); d[idx + 2] = Math.min(255, d[idx + 2] * lift);
+      }
+    }
+    /* the fibre-fleck octave (texture v2): short strokes near horizontal, wrap-drawn */
+    var fi, fa, fl, fs, fx, fy, fj, px, py;
+    for (fi = 0; fi < 900; fi++) {
+      fx = rnd() * S; fy = rnd() * S; fl = 2 + rnd() * 5; fa = (rnd() - 0.5) * 0.698; fs = rnd() < 0.5 ? 0.84 : 1.16;
+      for (fj = 0; fj < fl; fj++) {
+        px = (((Math.floor(fx + Math.cos(fa) * fj)) % S) + S) % S; py = (((Math.floor(fy + Math.sin(fa) * fj)) % S) + S) % S;
+        idx = (py * S + px) * 4;
+        d[idx] = Math.min(255, d[idx] * fs); d[idx + 1] = Math.min(255, d[idx + 1] * fs); d[idx + 2] = Math.min(255, d[idx + 2] * fs);
+      }
+    }
+    function darken(idx, f) { d[idx] *= f; d[idx + 1] *= f; d[idx + 2] *= f; }
+    if (kind === 'floor' || kind === 'deck') {
+      var s, p;
+      for (s = 0; s < 4; s++) for (p = 0; p < 2; p++) {
+        var at = s * 128 + p;
+        if (kind === 'floor') { for (y = 0; y < S; y++) darken((y * S + at) * 4, 0.78); }
+        else { for (x = 0; x < S; x++) darken((at * S + x) * 4, 0.78); }
+      }
+    }
+    if (kind === 'wall') {
+      for (y = S - 52; y < S; y++) { var f = 1 - 0.20 * ((y - (S - 52)) / 51); for (x = 0; x < S; x++) darken((y * S + x) * 4, f); }
+    }
+    g.putImageData(img, 0, 0);
+    return cv;
+  }
+
+  /* @reason [BEST-PRACTICE] A room texture from a drawn tile (the room build, 2026-11-07; plan §6/R5): repeat wrapping on both axes — the wrap-drawn tile is seamless at the EXACT fractional repeat (surface size ÷ 368, no rounding: grain scale is a world constant, and the seamed kinds keep their 92 spacing at every repeat because each tile carries exactly four seams) — the sRGB encoding of the file's standing colour basis (plan §6/R12), and anisotropy at the renderer's own maximum capped at 8, which the grazing floor and deck are the surfaces it exists for. Every surface calls this for its OWN texture instance: repeat is a texture property, and the ghost rule needs per-panel materials regardless (plan §6, R3) — the instances share the one drawn canvas, so the cost is the upload, never new art. */
+  function paperTexture(cv, rx, ry) {
+    var t = new T3.CanvasTexture(cv);
+    t.wrapS = T3.RepeatWrapping; t.wrapT = T3.RepeatWrapping;
+    if (T3.SRGBColorSpace) t.colorSpace = T3.SRGBColorSpace;
+    if (t.repeat && t.repeat.set) t.repeat.set(rx, ry);
+    if (renderer && renderer.capabilities && renderer.capabilities.getMaxAnisotropy) t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    return t;
+  }
+
+  /* @reason [BEST-PRACTICE] The bump twin of a paper texture (cycle 2, 2026-11-07; plan §3): the same drawn canvas read as HEIGHT, not colour — a second texture instance over the one canvas (its own repeat, like every instance) with the colour space left linear (the empty colour space: bump data is not colour, and the sRGB decode applied to the colour map would bend the heights). bumpScale is the surface's own decision, written at each material: 0.5 on the shell and floor family, 0.8 on the curtains, whose folds are geometry first and grain second. */
+  function paperBump(cv, rx, ry) {
+    var t = paperTexture(cv, rx, ry);
+    if (t) t.colorSpace = '';
+    return t;
+  }
+
+  /* @reason [BEST-PRACTICE] THE RIG TABLE'S DECLARATION (cycle 2, 2026-11-07; plan §4.1): the name is declared here, with the assets — the ASSIGNMENT stands at the build door inside buildGL (just before the buildRoom call), because buildGL is first invoked from Layer 1's own tail, before any assignment this far down the layer could have run: a literal written here would still be undefined at the build (the measured failure this split cures — a for-in over the unassigned name is a silent no-op, so the room built with no spots at all and no error). The ROOM record (Layer 2, evaluated after the build call) carries the same table by reference — one literal, at the door, for every reader. */
+  var ROOM_SPOTS;
+
+  /* @reason [USER] THE ROOM (the room build, 2026-11-07; plan §§2/6): the empty paper theater, built ONCE at init under one group — seven meshes, thin boxes with real card edges under front-side materials (the file's load-bearing culling stands): the floor slab, the four walls, the ceiling slab, and the stage as one multi-material box (deck on top in the stage tone; front, sides and bottom in the riser tone). Centres are the plan's construction table, absolute; the floor slab's top lands at abs y 2 — the +2 raise that keeps the grid plane passing through the slab's SIDE, never coplanar with any face (plan §3). Every shell panel owns its material instance and its texture (plan R3) and stands in the ghost registry with its outward normal and centre; floor and stage never ghost. The dyes are the checkpoint camera object's own kraft family, re-derived for the room's faces in plan §6: walls #C8A668, floor #B78D4C, riser #77572A, ceiling #A87F45 the dark lid — and the deck one step brighter than §6's #CCA45F, at #D8B068: the §9 census on rendered frames measured the binding subject pair (deck↔back wall) at 1.48 against its 1.6 floor, and §6's own cure for a failed pair is a dye step, taken and recorded with its measurement in the build record (plan §14). The unchanged light rig separates the faces by dye step and normal; no shadow map exists anywhere in this engine, and no light fixture is depicted. The group starts HIDDEN: the checkpoint scene is the boot state, and the scene switch (Layer 3) is the only writer of its visibility. The five shell panels' materials are BORN transparent (transparent: true at construction; standing opacity 1, depthWrite on) for a measured engine reason (fix round 1, plan §16): three r186's program-change census omits the transparent flag, so a material compiled opaque keeps its OPAQUE program — which forces fragment alpha to 1.0 — however its opacity is set afterwards; toggling transparent at pass time therefore never reached the pixels (the W-R1 D3 ghost failure). With the classification fixed at birth, the pass-scoped ghost is an opacity-uniform and depthWrite change, both honoured live. CYCLE 2 (2026-11-07; plan §§3–5) grows the room in four named ways: the texture instances gain bump twins from the same canvases (paperBump); the shell and floor dyes gain the plan's per-face jitter (west 0.99 — the locked tight-pair value — east 1.03, front 0.99, floor 0.98, the rest 1.00), applied as channel arithmetic on the dye hex so the pair census reads the jittered dyes; the rig gains its four spots (built from the ROOM record's spot table) and their VISIBLE paper fixtures — a house bar at the spots' own z, three cans tilted onto their targets, each can's lens an emissive disc in its light's colour (the room's ONE emissive class, named), and a ceiling rosette with a drop rod carrying the back spot's can; and the stage gains its dressing — two turned poles standing on the deck at the curtain line and the gathered curtains themselves, pleated GEOMETRY (a 56-segment strip, an 8-unit sine fold every 26 units, the pair mirrored), dyed #7E3327, the room's one DoubleSide material pair, named as the exception it is. Fixtures and dressing are theatre furniture: never shell, never in the ghost registry, never transparent-born. */
+  function buildRoom() {
+    if (!T3 || !scene) return;
+    var wallCv = makePaperTile('wall'), floorCv = makePaperTile('floor'), deckCv = makePaperTile('deck'), plainCv = makePaperTile('plain'), drapeCv = makePaperTile('drape');
+    function roomMesh(w, h, dep, x, y, z, mats) { var m = new T3.Mesh(new T3.BoxGeometry(w, h, dep), mats); m.position.set(x, y, z); roomGroup.add(m); return m; }
+    /* the per-face dye jitter (cycle 2; plan §3): channel arithmetic on the hex — the census reads the jittered dye, and no colour object is needed */
+    function jitHex(hex, f) { var r = Math.min(255, Math.round(((hex >> 16) & 255) * f)), g = Math.min(255, Math.round(((hex >> 8) & 255) * f)), b = Math.min(255, Math.round((hex & 255) * f)); return (r << 16) | (g << 8) | b; }
+    function wallMat(rx, jit) { return new T3.MeshStandardMaterial({ color: jitHex(0xC8A668, jit), roughness: 0.9, map: paperTexture(wallCv, rx, 1), bumpMap: paperBump(wallCv, rx, 1), bumpScale: 0.5, transparent: true }); }
+    roomGroup = new T3.Group();
+    var floor = roomMesh(1128, 14, 1220, 430, -5, 513, new T3.MeshStandardMaterial({ color: jitHex(0xB78D4C, 0.98), roughness: 0.9, map: paperTexture(floorCv, 1128 / 368, 1220 / 368), bumpMap: paperBump(floorCv, 1128 / 368, 1220 / 368), bumpScale: 0.5 }));
+    var back = roomMesh(1104, 460, 12, 430, 232, -91, wallMat(1104 / 368, 1.00));
+    var front = roomMesh(1104, 460, 12, 430, 232, 1117, wallMat(1104 / 368, 0.99));
+    var west = roomMesh(12, 460, 1220, -128, 232, 513, wallMat(1220 / 368, 0.99));
+    var east = roomMesh(12, 460, 1220, 988, 232, 513, wallMat(1220 / 368, 1.03));
+    var ceil = roomMesh(1128, 12, 1220, 430, 468, 513, new T3.MeshStandardMaterial({ color: jitHex(0xA87F45, 1.00), roughness: 0.9, map: paperTexture(plainCv, 1128 / 368, 1220 / 368), bumpMap: paperBump(plainCv, 1128 / 368, 1220 / 368), bumpScale: 0.5, transparent: true }));
+    var deckMat = new T3.MeshStandardMaterial({ color: 0xD8B068, roughness: 0.9, map: paperTexture(deckCv, 644 / 368, 276 / 368), bumpMap: paperBump(deckCv, 644 / 368, 276 / 368), bumpScale: 0.5 });
+    var riserMat = new T3.MeshStandardMaterial({ color: 0x77572A, roughness: 0.85, map: paperTexture(plainCv, 644 / 368, 1), bumpMap: paperBump(plainCv, 644 / 368, 1), bumpScale: 0.5 });
+    var stage = roomMesh(644, 23, 276, 430, 13.5, 53, [riserMat, riserMat, deckMat, riserMat, riserMat, riserMat]);
+    floor.renderOrder = 0; stage.renderOrder = 0;
+    [back, front, west, east, ceil].forEach(function (m) { m.renderOrder = 1; });
+    roomPanels = [
+      { mesh: back, nx: 0, ny: 0, nz: -1, cx: 430, cy: 232, cz: -91 },
+      { mesh: front, nx: 0, ny: 0, nz: 1, cx: 430, cy: 232, cz: 1117 },
+      { mesh: west, nx: -1, ny: 0, nz: 0, cx: -128, cy: 232, cz: 513 },
+      { mesh: east, nx: 1, ny: 0, nz: 0, cx: 988, cy: 232, cz: 513 },
+      { mesh: ceil, nx: 0, ny: 1, nz: 0, cx: 430, cy: 468, cz: 513 }
+    ];
+    roomGroup.visible = false;
+    scene.add(roomGroup);
+    /* the rig's four spots, built from the rig table (cycle 2; plan §4): colour, intensity, seat, target, cone and penumbra are the table's — the one literal ROOM_SPOTS, declared with the assets above because the builder runs before the records exist, and carried by the ROOM record by reference; distance 0 and decay 0 are the standing decisions — no falloff, so the pair geometry stays the record's arithmetic; no spot casts a shadow (the engine has no shadow maps, anywhere). Each target joins the group beside its light, as the engine requires. */
+    var spotDefs = ROOM_SPOTS, sk;
+    for (sk in spotDefs) {
+      var sd = spotDefs[sk];
+      var sp = new T3.SpotLight(sd.color, sd.i, 0, sd.angle, sd.pen, 0);
+      sp.position.set(sd.x, sd.y, sd.z);
+      sp.target.position.set(sd.tx, sd.ty, sd.tz);
+      roomGroup.add(sp); roomGroup.add(sp.target);
+    }
+    /* the fixtures' shared body material: the poles' own dark dye on plain paper */
+    function poleMat() { return new T3.MeshStandardMaterial({ color: 0x4E3418, roughness: 0.9, map: paperTexture(plainCv, 1, 1), bumpMap: paperBump(plainCv, 1, 1), bumpScale: 0.5 }); }
+    /* one lighting can, tilted onto its target, with its emissive lens at the mouth */
+    function canAt(x, y, z, tx, ty, tz, lensColor) {
+      var can = new T3.Mesh(new T3.CylinderGeometry(9, 9, 22, 12), poleMat());
+      can.position.set(x, y, z); can.lookAt(tx, ty, tz); can.rotateX(Math.PI / 2);
+      roomGroup.add(can);
+      var dl = Math.sqrt((tx - x) * (tx - x) + (ty - y) * (ty - y) + (tz - z) * (tz - z)) || 1;
+      var lens = new T3.Mesh(new T3.CircleGeometry(7, 16), new T3.MeshBasicMaterial({ color: lensColor }));
+      lens.position.set(x + (tx - x) / dl * 11, y + (ty - y) / dl * 11, z + (tz - z) / dl * 11);
+      lens.lookAt(tx, ty, tz);
+      roomGroup.add(lens);
+    }
+    var bar = new T3.Mesh(new T3.BoxGeometry(380, 14, 14), poleMat());
+    bar.position.set(430, 447, 560); roomGroup.add(bar);
+    canAt(300, 440, 560, 180, 180, 158, 0xffe9c4);
+    canAt(430, 440, 560, 430, 25, 80, 0xffdfae);
+    canAt(560, 440, 560, 680, 180, 158, 0xffe9c4);
+    var ros = new T3.Mesh(new T3.CylinderGeometry(16, 16, 3, 16), poleMat());
+    ros.position.set(430, 461, 60); roomGroup.add(ros);
+    var rod = new T3.Mesh(new T3.CylinderGeometry(2, 2, 9, 8), poleMat());
+    rod.position.set(430, 456.5, 60); roomGroup.add(rod);
+    canAt(430, 452, 60, 430, 25, -30, 0xcfe0ff);
+    /* the poles: turned posts standing ON the deck at the curtain line, a base disc and a finial ball (plan §5) */
+    [124, 736].forEach(function (px) {
+      var pole = new T3.Mesh(new T3.CylinderGeometry(7, 7, 300, 12), poleMat());
+      pole.position.set(px, 175, 175); roomGroup.add(pole);
+      var base = new T3.Mesh(new T3.CylinderGeometry(14, 14, 6, 16), poleMat());
+      base.position.set(px, 28, 175); roomGroup.add(base);
+      var fin = new T3.Mesh(new T3.SphereGeometry(10, 12, 8), poleMat());
+      fin.position.set(px, 325, 175); roomGroup.add(fin);
+    });
+    /* the curtains (plan §5): pleated geometry, not a normal trick — a 56-segment strip whose z folds ±8 on a 26-unit wavelength, the pair mirrored; dyed #7E3327 on the drape print; DoubleSide is the room's ONE named exception (a curtain's back is seen from the stage side, and the census counts exactly two) */
+    function curtain(x0, mirror) {
+      var geo = new T3.PlaneGeometry(120, 315, 56, 1);
+      if (geo.attributes && geo.attributes.position) {
+        var pos = geo.attributes.position, vi;
+        for (vi = 0; vi < pos.count; vi++) {
+          var wx = x0 + 60 + pos.getX(vi);
+          pos.setZ(vi, 8 * Math.sin((mirror ? -1 : 1) * (2 * Math.PI * (wx - x0) / 26)));
+        }
+        if (geo.computeVertexNormals) geo.computeVertexNormals();
+      }
+      var cm = new T3.Mesh(geo, new T3.MeshStandardMaterial({ color: 0x7E3327, roughness: 0.95, map: paperTexture(drapeCv, 120 / 368, 315 / 368), bumpMap: paperBump(drapeCv, 120 / 368, 315 / 368), bumpScale: 0.8, side: T3.DoubleSide }));
+      cm.position.set(x0 + 60, 182.5, 158);
+      roomGroup.add(cm);
+    }
+    curtain(108, false); curtain(632, true);
+  }
+
 
   /* ════════════════════════════════════════════════════════════════════════
      LAYER 2 · STATE — every number the setup runs on, and nothing else:
      the director state, the camera state, the named places (CENTRE,
-     CAM_HOME) and the SEED — and, since the layers refactor
-     (2026-11-07), the scene selection and the scene registries
-     (SCENES, CAM_HOMES) a scene module extends with its own numbers.
-     No behaviour
+     CAM_HOME) and the SEED — and, since the room build (2026-11-07),
+     the scene selection, the room's numbers (ROOM, its two homes, its
+     aim point) and the room's own enumerated seed state. No behaviour
      lives here; the mechanics read and write these objects, the assets
      never do.
      ════════════════════════════════════════════════════════════════════════ */
@@ -385,8 +561,21 @@ body.camView .headChip{bottom:64px}
 
   /* @reason [USER] THE SCENE SELECTION (the room build, 2026-11-07; plan §7): the space holds one of two scenes — 'void', the checkpoint (void, grid, camera object), or 'room', the empty theater. The pair is current + target like every state in this layer, but a scene has no in-between to chase: the switch in Layer 3 writes both together and applies the entered scene's seed in the same pass. Boot is ALWAYS 'void' — the seed file is generated from this file, room code and all, so the default standing here is the seed's contract (plan §7, B14). */
   var sceneNow = 'void', sceneNext = 'void';
-  /* @reason [USER] THE AIM POINTS, one per scene (the room build, 2026-11-07; plan §§7–8, B8; platform form since the layers refactor, 2026-11-07): AIM AT CENTRE and the camera view's double-tap aim at the scene's subject centre — in the void, CENTRE on the ground (430, 0, 53). The y is the point's height, which the tilt's drop is measured against. A scene module adds its own entry beside its other numbers (the room's — the deck centre IN THE AIR (430, 25, 53), since aiming at the ground point there would drive the camera's aim into the riser — stands in the theater module). */
-  var AIM_POINTS = { void: { x: 430, z: 53, y: 0 } };
+  /* @reason [USER] THE ROOM, as numbers (the room build, 2026-11-07; plan §2): the dimensions every room mechanic reads — the floor heights the floor function returns (audience floor 2, deck 25), the deck's footprint (the floor function's step edge), the room centre the ghost test's far side is stated against, and the camera's admitted range inside the room: the interior (x −122..982, z −85..1111) shrunk by the camera object's 51-unit half-depth, so no position write can seat the body inside a wall (plan §8, R1). The meshes' own sizes stand in the plan's construction table and in Layer 1's builder. Since fix round 1 (plan §16) the record also carries the room's light exposure. RIG v3 (cycle 2, 2026-11-07; plan §4) re-prices the whole rig under the standing π-corrected model (§16 unchanged): ambient 1.35 and sun 2.60 (the void keeps the build values 0.85 / 1.15, applied at the same door), plus FOUR spots in the spots table (declared with the assets as ROOM_SPOTS — the builder runs before this record exists — and carried here by reference, one literal for both readers) — the KEY (warm, from the house bar onto the deck's centre-front), the BACK spot (cool, a top light from above the deck throwing the cyc glow onto the back wall's low strip — designed spill, read at the upper wall in the pair census, plan §17), and the two WASHES (warm, onto the curtain folds). Every spot: distance 0, decay 0 — NO falloff, a named decision: the pair geometry stays the record's arithmetic instead of an inverse-square guess — and castShadow false, as everywhere in this engine. There is NO front-of-house fill: from any house seat a fill cone wide enough to matter also strikes the back wall behind the deck and collapses the subject pair — geometrically impossible in this room, priced in the plan and not re-added. The intended absolutes and the binding-pair forecasts stand in the plan (§4.2–4.3); the verify battery reads them on rendered frames. */
+  var ROOM = { floorY: 2, deckY: 25, deckX0: 108, deckX1: 752, deckZ0: -85, deckZ1: 191, centreX: 430, centreY: 232, centreZ: 513, camMinX: -71, camMaxX: 931, camMinZ: -34, camMaxZ: 1060, amb: 1.35, sun: 2.60, spots: ROOM_SPOTS };
+  /* @reason [USER] THE ROOM'S HOMES (the room build, 2026-11-07; plan §5): the camera's room home — (430, 1052) on the room's axis near the front wall, heading −180 (facing the stage; stored on the wrap180 side of the seam — +180 and −180 are the same aim, but the frame loop's normal form is [−180, 180), so storing −180 makes the state read identically on every path that reaches the home: the D-3 representation cure, fix round 1), tilt +0.6 (the drop to the deck centre over its 999-unit run), focal 360 (derived in the plan from the binding portrait aspect: the whole stage in frame at 20:9 with margin) — and the director's room home: the checkpoint posture transplanted inside (yaw 0, pitch −6, roll 0, dolly 60) with its pan SOLVED through the rig's own formulas so the deck centre (430, 25, 53) projects to the frame's centre — panX 70.39, panY −130.57 (the plan's starting estimates were 70 / −40; the solve is exact and is re-proven by projection in the room verify battery). Each scene carries its own homes; the checkpoint's CAM_HOME is untouched. */
+  var ROOM_CAM_HOME = { x: 430, z: 1052, heading: -180, tilt: 0.6, focal: 360, lift: 0 };
+  var ROOM_DIR_HOME = { yaw: 0, pitch: -6, roll: 0, panX: 70.39, panY: -130.57, dolly: 60 };
+  /* @reason [USER] The room's registration in the camera-home registry (the layers refactor, 2026-11-07): the theater scene's home joins the platform's registry from the theater's own block, so the platform bytes carry the void's entry alone. */
+  CAM_HOMES.room = ROOM_CAM_HOME;
+  /* @reason [USER] THE FILMING HOME (cycle 2, 2026-11-07; plan §6): the derived pose a scene is FILMED from — (430, 830) on the room's axis, heading −180, tilt −4.8 (the aim RISES 4.8°: at this seat the deck's top plane would otherwise swallow the frame), focal 1080, and lift 84, which puts the eye at absolute 120 — on the deck's own centreline extended, at the deck's height above the house floor: the audience's ideal seat, floating at the step's edge. From it the 1280×720 capture frame holds exactly the stage, the curtains standing at its left and right edges, the poles inside them, and a little of the step below the deck — the plan's seven projected points and their margins stand in plan §6 and are re-proven on the settled capture frame by the cycle-2 battery. Two seatings are named, not bugs: a thin dark ceiling band rides the frame's top (the ceiling front edge crossing above the proscenium line — masking, never to be 'fixed'), and a portrait phone shows the centre strip of this landscape frame (the film frame is the capture's 16:9 by decision). The filming home is a POSE, not a seed: entering the room still lands on ROOM_CAM_HOME, RESET CAMERA still means the room home; the filming home's doors are the panel's FILM preset and the test hook (__stage.filmHome). */
+  var FILM_HOME = { x: 430, z: 830, heading: -180, tilt: -4.8, focal: 1080, lift: 84 };
+  /* @reason [USER] THE AIM POINTS, one per scene (the room build, 2026-11-07; plan §§7–8, B8): AIM AT CENTRE and the camera view's double-tap aim at the scene's subject centre — in the void, CENTRE on the ground (430, 0, 53); in the room, the deck centre IN THE AIR (430, 25, 53): aiming at the ground point there would drive the camera's aim into the riser. The y is the point's height, which the tilt's drop is measured against. */
+  var AIM_POINTS = { void: { x: 430, z: 53, y: 0 }, room: { x: 430, z: 53, y: 25 } };
+  /* @reason [USER] THE ROOM'S SEED STATE, enumerated whole like the checkpoint's (the room build, 2026-11-07; plan §7): entering the room applies exactly this — the director at ROOM_DIR_HOME, the camera PRESENT at ROOM_CAM_HOME standing on the audience floor (camY 2) — currents snapped onto targets, no glide across scenes; RESET STAGE in the room returns exactly here, field for field. Nothing persists across scenes, by decision (plan §7, R8): the two scene pills are doors between two known states, not a state keeper. The camera heading is stored as −180, the frame loop's wrap180 normal form, so the switch, the reset and the ?scene=room door all land on byte-identical state (fix round 1, D-3). */
+  var ROOM_SEED_STATE = { dir: { yaw: 0, pitch: -6, roll: 0, panX: 70.39, panY: -130.57, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 70.39, tPanY: -130.57, tDolly: 60 }, cam: { x: 430, z: 1052, heading: -180, tilt: 0.6, roll: 0, focal: 360, tX: 430, tZ: 1052, tHeading: -180, tTilt: 0.6, tRoll: 0, tFocal: 360, camY: 2, tCamY: 2, lift: 0, tLift: 0 }, camPresent: true, mainRole: 'director', scene: 'room' };
+  /* @reason [USER] The room's registration in the scene registry (the layers refactor, 2026-11-07): the theater scene joins the platform's registry from the theater's own block — the switch, the reset and the test door read the registry only, so the platform bytes carry the void's entry alone. */
+  SCENES.room = ROOM_SEED_STATE;
   /* @reason [USER] CAPTURE, as numbers (the capture build, 2026-11-07 — the owner's overnight order: we use the camera in the scene to record something as our proof of concept): the captured frame is 1280×720, fed to the recorder at 30 frames a second. The size is the capture's OWN, never the screen's — a photo or a recording must be the shot at one known size on any device, not whatever window the page happens to fill — and it is a standard HD frame the phone's encoder takes in real time. The mechanics live in Layer 3; plan §10's invariants are their contract (one scene graph, the camera's pose from state alone, the ghost pass-scoped, render-then-read in the same task). */
   var CAPTURE = { w: 1280, h: 720, fps: 30 };
 
@@ -526,6 +715,13 @@ body.camView .headChip{bottom:64px}
     /* the two view pills are toggles, the other pills are actions: the pressed state is written alongside the lit class, so a non-visual reader can tell which eye is chosen — and can tell a toggle from a momentary action (2026-11-06 overnight round 6). */
     document.getElementById('btnDir').setAttribute('aria-pressed', mainIsDir ? 'true' : 'false');
     document.getElementById('btnCam').setAttribute('aria-pressed', mainIsDir ? 'false' : 'true');
+    /* the scene pills are toggles like the view pills (the room build, 2026-11-07): STAGE stands lit in the checkpoint scene, THEATER in the room — the pressed state is written alongside the lit class, as the role pair above. */
+    document.getElementById('btnStage').className = sceneNow === 'void' ? 'on' : '';
+    document.getElementById('btnTheater').className = sceneNow === 'room' ? 'on' : '';
+    document.getElementById('btnStage').setAttribute('aria-pressed', sceneNow === 'void' ? 'true' : 'false');
+    document.getElementById('btnTheater').setAttribute('aria-pressed', sceneNow === 'room' ? 'true' : 'false');
+    /* the FILM row stands in the panel only in the room (cycle 2): the filming home is a theater pose, and the checkpoint's panel carries no row for it */
+    var bfr = document.getElementById('btnFilmRow'); if (bfr) bfr.style.display = sceneNow === 'room' ? '' : 'none';
     document.getElementById('pip').style.display = cam.present ? '' : 'none';
     document.getElementById('btnCam').style.display = cam.present ? '' : 'none';
     document.getElementById('btnAim').style.display = cam.present ? '' : 'none';
@@ -542,6 +738,8 @@ body.camView .headChip{bottom:64px}
       : mainIsDir
       ? ['Director: drag to orbit · pinch to zoom ·', 'Director: drag to orbit · drag the camera to move it · pinch to zoom · two-finger drag to pan · twist two fingers to roll · double-tap the camera to visit it · double-tap space to fly home · scroll to zoom · three-finger slide zooms the lens · double-tap-hold and slide to zoom one-handed · arrow keys nudge the camera · drag or pinch the corner to aim and zoom the camera · tap the corner to swap views · grid: one square 92 · heavy line 460']
       : ['Camera: drag to look · pad moves ·', 'Camera: drag to look · pad moves the camera (forward, back, left, right, up, down) — tap nudges, hold moves · pinch or scroll to move forward and back · two-finger drag slides sideways and flies up/down · twist rolls · three-finger slide zooms the lens · double-tap levels and centres · arrow keys nudge the camera · drag or pinch the corner to orbit and zoom the director · tap the corner to swap views · grid: one square 92 · heavy line 460'];
+    /* the room's ghost rule is undiscoverable without its line (plan B15): one six-word line rides INSIDE the room director's tap-gated map. The short lines are unchanged in every scene, so the exposed-word census the checkpoint carries stands untouched; the camera maps carry no such line — the shot never ghosts, and a map must not promise a fade the shot cannot show. */
+    if (sceneNow === 'room' && cam.present && mainIsDir) hintParts = [hintParts[0], hintParts[1] + ' · walls fade when you orbit outside'];
     document.getElementById('hintShort').textContent = hintParts[0];
     document.getElementById('hintFull').textContent = hintParts[1];
     document.getElementById('hintFull').hidden = true;
@@ -556,13 +754,15 @@ body.camView .headChip{bottom:64px}
     fit();
   }
 
-  /* @reason [USER] The floor function (the room build, 2026-11-07; plan §8; platform form since the layers refactor, 2026-11-07): the height of the floor under a ground point, written as a general Layer-3 function — in the void, the ground plane (0) everywhere. The frame loop reads it at the camera's seat every frame and feeds its target height from it, so the camera rides its floor on the loop's own constant instead of stepping or sinking (plan FM-5). It is written for any caller: a scene module's stepped floor (the room's — the deck (25) inside the stage's footprint and the audience floor (2) everywhere else — stands in the theater module) takes this body's place when its scene registers, and the first asset placed in a scene inherits the same floor (plan FM-11). */
+  /* @reason [USER] The floor function (the room build, 2026-11-07; plan §8): the height of the floor under a ground point, written as a general Layer-3 function — in the void, the ground plane (0) everywhere; in the room, the deck (25) inside the stage's footprint and the audience floor (2) everywhere else. The frame loop reads it at the camera's seat every frame and feeds its target height from it, so the camera GLIDES up the riser as it crosses the deck's edge on the loop's own constant instead of stepping or sinking (plan FM-5). It is written for any caller: the first asset placed in the room inherits the same floor (plan FM-11). */
   function floorAt(x, z) {
-    return 0;
+    if (sceneNow !== 'room') return 0;
+    return (x >= ROOM.deckX0 && x <= ROOM.deckX1 && z >= ROOM.deckZ0 && z <= ROOM.deckZ1) ? ROOM.deckY : ROOM.floorY;
   }
-  /* @reason [BEST-PRACTICE] The camera's position clamp, one door for every position write (the room build, 2026-11-07; plan §8; platform form since the layers refactor, 2026-11-07): drag, flights, strafe and keys all land here, so the admitted range is the scene's own — the checkpoint's ±3000 in the void. A scene module's tighter bounds take this body's place when its scene registers (the room's — the interior shrunk by the object's half-depth, x −71..931, z −34..1060, from its ROOM record — stand in the theater module). */
+  /* @reason [BEST-PRACTICE] The camera's position clamp, one door for every position write (the room build, 2026-11-07; plan §8): drag, flights, strafe and keys all land here, so the admitted range is the scene's own — the checkpoint's ±3000 in the void; in the room, the interior shrunk by the object's half-depth (x −71..931, z −34..1060, from Layer 2's ROOM record), so no gesture or flight can seat the camera's body inside a wall. The deck is NOT an exclusion: standing on it is the floor function's business, and the clamp's z floor (−34) is exactly the deck's back reach, so the camera can back onto the deck against the back wall. */
   function clampCamPos() {
-    cam.tX = clamp(cam.tX, -3000, 3000); cam.tZ = clamp(cam.tZ, -3000, 3000);
+    if (sceneNow === 'room') { cam.tX = clamp(cam.tX, ROOM.camMinX, ROOM.camMaxX); cam.tZ = clamp(cam.tZ, ROOM.camMinZ, ROOM.camMaxZ); }
+    else { cam.tX = clamp(cam.tX, -3000, 3000); cam.tZ = clamp(cam.tZ, -3000, 3000); }
   }
   /* @reason [USER] The camera's lift clamp (cycle 2, 2026-11-07; plan §2.3): one door for every lift-target write — the movement pad, the filming home, any future writer — admitting exactly the decided range, 0 (standing on the floor) to 360 (a full deck-height-and-more above it: the room's ceiling underside stands 437 above the audience floor, and the filming home's 84 sits well inside). A scene module never replaces this body: the range is the axis's own, not a scene's. */
   function clampCamLift() { cam.tLift = clamp(cam.tLift, 0, 360); }
@@ -576,9 +776,9 @@ body.camView .headChip{bottom:64px}
     cam.tX = seed.cam.tX; cam.tZ = seed.cam.tZ; cam.tHeading = seed.cam.tHeading; cam.tTilt = seed.cam.tTilt; cam.tRoll = seed.cam.tRoll; cam.tFocal = seed.cam.tFocal; cam.tCamY = seed.cam.tCamY; cam.tLift = seed.cam.tLift;
     cam.x = cam.tX; cam.z = cam.tZ; cam.heading = cam.tHeading; cam.tilt = cam.tTilt; cam.roll = cam.tRoll; cam.focal = cam.tFocal; cam.camY = cam.tCamY; cam.lift = cam.tLift;
     if (roomGroup) roomGroup.visible = seed.scene === 'room';
-    if (ring0) ring0.position.y = 0.5;
-    if (ambLight) ambLight.intensity = 0.85;
-    if (sunLight) sunLight.intensity = 1.15;
+    if (ring0) ring0.position.y = seed.scene === 'room' ? 2.5 : 0.5;
+    if (ambLight) ambLight.intensity = seed.scene === 'room' ? ROOM.amb : 0.85;
+    if (sunLight) sunLight.intensity = seed.scene === 'room' ? ROOM.sun : 1.15;
     applyRoles(true);
   }
   /* @reason [USER] The scene switch (the room build, 2026-11-07; plan §7; registry form since the layers refactor, 2026-11-07): the scene pills' one act — name the scene, apply ITS seed, the seed read from the SCENES registry in Layer 2 and nothing else, so a scene is a registration, not a branch in the engine. Entering a scene always applies that scene's seed state, both ways (plan §7, R8): returning to STAGE lands on the checkpoint exactly, never on wherever the void scene was left, and re-entering THEATER lands on the room's seed — the switcher is a pair of doors between two known states, not a state keeper. An unknown name is refused whole. */
@@ -587,6 +787,44 @@ body.camView .headChip{bottom:64px}
     if (!s) return;
     sceneNext = name;
     applySceneState(s);
+  }
+  /* @reason [USER] The dollhouse ghost, evaluated for one pass (the room build, 2026-11-07; plan §4 — the wild-wall rule): on a DIRECTOR pass only, each shell panel whose plane the rendering eye stands OUTSIDE of renders as a ghost for this pass — opacity 0.07, depthWrite off, and its render order PINNED at the grid's own + 1 (0), because the engine sorts transparent objects by centroid and an unpinned ghost's order against the grid could flip with the eye (plan R4). The room centre stands inside every panel's plane, so the eye being on a panel's outward side IS the plan's test — eye outside, centre on the far side. Camera passes never call this: the shot is the true room, always. The caller restores every panel this returns, inside the same pass, whatever the render does (plan R10) — the state this writes is pass-scoped by construction, which is capture invariant 4 (plan §10). The fade writes ONLY the opacity uniform and depthWrite, never the transparent flag: the panels' materials are born transparent (Layer 1) because this engine's program-change census omits that flag — a material compiled opaque forces fragment alpha to 1.0 no matter what opacity is later set, which is the measured W-R1 D3 failure this round cures (fix round 1, plan §16); with the classification fixed at birth, the opacity change is honoured by the compiled program live. */
+  function applyRoomGhost(camObj, isDirView) {
+    if (!isDirView || !roomGroup || !roomGroup.visible || !camObj || !camObj.position) return null;
+    var eye = camObj.position, out = null, i, p, m;
+    for (i = 0; i < roomPanels.length; i++) {
+      p = roomPanels[i];
+      if ((eye.x - p.cx) * p.nx + (eye.y - p.cy) * p.ny + (eye.z - p.cz) * p.nz > 0) {
+        m = p.mesh.material;
+        m.opacity = 0.07; m.depthWrite = false;
+        p.mesh.renderOrder = 0;
+        (out = out || []).push(p);
+      }
+    }
+    return out;
+  }
+  /* @reason [BEST-PRACTICE] The ghost's restore (the room build, 2026-11-07; plan §4/R10): every panel applyRoomGhost faded returns to its standing state — opacity 1, depth-writing, its standing render order 1 (its transparent classification is its birth state and is never toggled: the classification is what the engine compiled, plan §16) — in the same pass that faded it, from the pass's finally, so a thrown render cannot strand a panel at 0.07 into a later camera pass. Restoring is by the list the apply returned, never by re-testing: what was faded is what is restored, exactly. */
+  function restoreRoomGhost(list) {
+    if (!list) return;
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i].mesh.material;
+      m.opacity = 1; m.depthWrite = true;
+      list[i].mesh.renderOrder = 1;
+    }
+  }
+  /* @reason [USER] Seat the filming home (cycle 2, 2026-11-07; plan §6): every camera target written from the FILM_HOME record — seat, heading, tilt, level roll, lens and lift — through the axis's own clamps, so the pose the plan derived is the pose the camera flies to. The room's door only: outside the room it refuses whole (the checkpoint has no filming home). Called by the panel's FILM preset and by the test hook — one function, both doors, so the preset and the battery seat the identical pose. */
+  function filmHome() {
+    if (sceneNow !== 'room') return;
+    cam.tX = FILM_HOME.x; cam.tZ = FILM_HOME.z; cam.tHeading = FILM_HOME.heading; cam.tTilt = FILM_HOME.tilt; cam.tRoll = 0; cam.tFocal = FILM_HOME.focal; cam.tLift = FILM_HOME.lift;
+    clampCamLift(); clampCamPos();
+  }
+  /* @reason [USER] The FILM preset's face (cycle 2, 2026-11-07): lit exactly while the camera's TARGETS stand at the filming home — the state visible on its face the owner's ruling requires — reconciled on the frame loop through the platform's tickExtra hook, on a change-only cache like the loop's other readouts, so any write that moves a target off the pose (a drag, a pad nudge, a reset) unlights it on the next frame and nothing needs to know the button exists. */
+  var filmBtnCache = null;
+  function syncFilmBtn() {
+    var el = document.getElementById('btnFilm'); if (!el) return;
+    var at = sceneNow === 'room' && cam.tX === FILM_HOME.x && cam.tZ === FILM_HOME.z && cam.tHeading === FILM_HOME.heading && cam.tTilt === FILM_HOME.tilt && cam.tFocal === FILM_HOME.focal && cam.tLift === FILM_HOME.lift;
+    var want = at ? 'true' : 'false';
+    if (filmBtnCache !== want) { filmBtnCache = want; el.setAttribute('aria-pressed', want); el.className = at ? 'on' : ''; }
   }
 
   /* @reason [USER] CAPTURE (the capture build, 2026-11-07; plan §10): the camera's shot, taken out of the scene — a still (PHOTO) and a recording (REC). The standing state of the feature: the lazily built kit (its render target, its own canvas, its pixel buffer, its stream and recorder — built once, on first use, so a page that never captures pays nothing) and the recording's readout (whether it stands, how many frames it has been fed, its elapsed seconds on the frame loop's own clock, the chosen mime, and the last photo and recording it produced). Every function below is guarded at its head: with no engine, or no recorder in the browser, the feature reports itself unavailable in this state and claims nothing — a refused capture, never a fabricated one. */
@@ -740,15 +978,16 @@ body.camView .headChip{bottom:64px}
   /* @reason [BEST-PRACTICE] Save the settings: persist the whole settings object — the four numbers and the aids toggle — on this device, silently tolerating a storage failure — a tool that cannot save still works. */
   function saveSettings() { try { localStorage.setItem('stage3d-settings', JSON.stringify(SET)); } catch (e) { } }
 
-  /* @reason [BEST-PRACTICE] One render pass: the scene from one eye into the current viewport rectangle. The camera object stands in a director's pass only — a camera never sees itself — its held ring with it, and its frustum helper stands only there too, and only while the aids setting is on (off by default — the owner's standing verdict on extra stuff in the scene; the panel's AIDS toggle governs it exactly as it governed the prints). The pass clears its own rectangle first, so the corner and gizmo passes never smear the main view. */
+  /* @reason [BEST-PRACTICE] One render pass: the scene from one eye into the current viewport rectangle. The camera object stands in a director's pass only — a camera never sees itself — its held ring with it, and its frustum helper stands only there too, and only while the aids setting is on (off by default — the owner's standing verdict on extra stuff in the scene; the panel's AIDS toggle governs it exactly as it governed the prints). The pass clears its own rectangle first, so the corner and gizmo passes never smear the main view. The room's dollhouse ghost rides this same per-pass discipline (the room build, 2026-11-07; plan §4): on a director pass, the shell panels between the eye and the room centre are faded for this pass alone and restored in the pass's finally, so no pass can inherit another pass's fade and a thrown render cannot strand one. */
   function renderPass(camObj, isDirView) {
     camGroup3.visible = cam.present && isDirView;
     if (ringMesh) ringMesh.visible = camGroup3.visible && ringHandle.style.display !== 'none';
     if (shadowMesh) shadowMesh.visible = !!SET.aids;
     if (camHelper) { camHelper.visible = cam.present && isDirView && !!SET.aids; if (camHelper.visible) camHelper.update(); }
+    var ghosted = applyRoomGhost(camObj, isDirView);
     renderer.setClearColor(0x070403, 1);
     renderer.clear(true, true);
-    renderer.render(scene, camObj);
+    try { renderer.render(scene, camObj); } finally { restoreRoomGhost(ghosted); }
   }
   /* @reason [BEST-PRACTICE] A camera's aspect, written only on change: the same engine camera serves the main view and the corner at different shapes, so each pass seats its own aspect first. THE PORTRAIT FRAMING LAW (fix round 8, O-3): the director camera's 33.9 degrees is a LANDSCAPE angle — on a tall phone frame it leaves a 16-degree horizontal slit, and the stage's reference points (the origin above all) fall outside it no matter where they stand. So on a narrow frame (aspect < 1.05) the director's VERTICAL angle becomes the free variable and widens to hold the horizontal field at the landscape value (52 degrees, capped at 100): the same stage coverage at any shape, the framing every 3D tool's portrait preview keeps. The scene camera is never touched by this law — its angle is the lens, and the lens is state. */
   function setAspect(c, a) { var ch = Math.abs(c.aspect - a) > 0.0001; if (ch) c.aspect = a; if (c === dirCam) { var f = a < 1.05 ? Math.min(100, 2 * Math.atan(Math.tan(26 * Math.PI / 180) / a) * 180 / Math.PI) : 33.9; if (Math.abs(c.fov - f) > 0.01) { c.fov = f; ch = true; } } if (ch) c.updateProjectionMatrix(); }
@@ -1020,6 +1259,11 @@ body.camView .headChip{bottom:64px}
       document.getElementById('btnDir').addEventListener('click', function () { mainRole = 'director'; applyRoles(); });
       document.getElementById('btnCam').addEventListener('click', function () { mainRole = 'camera'; applyRoles(); });
       document.getElementById('btnAddCam').addEventListener('click', addCamera);
+      document.getElementById('btnStage').addEventListener('click', function () { setScene('void'); });
+      document.getElementById('btnTheater').addEventListener('click', function () { setScene('room'); });
+      var btnFilmEl = document.getElementById('btnFilm'); if (btnFilmEl) btnFilmEl.addEventListener('click', filmHome);
+      /* the FILM face's registration (cycle 2): syncFilmBtn rides the loop's tickExtra hook — registered HERE, in the wiring, because the hook's own declaration stands in the engine's variable line below this layer's top level and would reset a registration written there (the measured failure: the face never lit) */
+      tickExtra = syncFilmBtn;
       document.getElementById('btnFind').addEventListener('click', function () { mainRole = 'director'; applyRoles(); focusCamera(); });
     } catch (err) { }
     /* the capture pills (capture build, 2026-11-07): PHOTO takes the still; REC starts a recording and, while one stands, stops it — the toggle reads the recording state itself, so the button, the hook and the feed can never disagree about which act a tap means. The functions carry their own reasons in Layer 3. */
@@ -1483,8 +1727,8 @@ body.camView .headChip{bottom:64px}
     requestAnimationFrame(tick);
   })();
 
-  /* @reason [BEST-PRACTICE] Test hooks: the verification suite drives the real page through these — set state exactly, switch roles, read the role back — so a screenshot or a driving test can reproduce an exact view. The scene registration (the room build, 2026-11-07; registry form since the layers refactor, 2026-11-07) adds the scene pair (scene / setScene) and the two engine cameras (cams), so the framing battery projects the stage's corners through the scene camera itself rather than through a replica — a scene module extends the hook with its own handles from its own block (the room's: roomSeedState; room — the group and the ghost registry the verify battery inspects — stand in the theater module). The capture build (2026-11-07) adds the capture door (capture: photo / start / stop / state), so the battery drives the real capture path headlessly and reads its readout — the same functions the PHOTO and REC pills call. The layers build (2026-11-07) adds the physics door (physics: spawn / step / rand / clear / remove / time / bodies / PHYS), so the physics battery drives the core's real step on synthetic time and reads its measured first hits. */
-  window.__stage = { dir: dir, cam: cam, setRole: function (r) { mainRole = r; applyRoles(); }, role: function () { return mainRole; }, samplePixels: samplePixels, seedState: function () { return SEED_STATE; }, gl: function () { return { ok: glOK, vendor: T3 ? 'three-r' + T3.REVISION : null }; }, scene: function () { return sceneNow; }, setScene: setScene, cams: function () { return { dir: dirCam, scene: sceneCam }; }, capture: { photo: capturePhoto, start: captureStart, stop: captureStop, state: captureState }, physics: { spawn: physSpawn, step: physStep, rand: physRand, clear: physClear, remove: physRemove, time: function () { return physT; }, bodies: function () { return physBodies; }, PHYS: PHYS } };
+  /* @reason [BEST-PRACTICE] Test hooks: the verification suite drives the real page through these — set state exactly, switch roles, read the role back — so a screenshot or a driving test can reproduce an exact view. The room build (2026-11-07) adds the scene pair (scene / setScene), the room's seed state and engine handles (roomSeedState; room — the group and the ghost registry the verify battery inspects), and the two engine cameras (cams), so the framing battery projects the stage's corners through the scene camera itself rather than through a replica. Cycle 2 (2026-11-07) adds the filming home's door (filmHome), so the framing battery seats the plan's derived pose through the same function the panel's FILM preset calls. The capture build (2026-11-07) adds the capture door (capture: photo / start / stop / state), so the battery drives the real capture path headlessly and reads its readout — the same functions the PHOTO and REC pills call. The layers build (2026-11-07) adds the physics door (physics: spawn / step / rand / clear / remove / time / bodies / PHYS), so the physics battery drives the core's real step on synthetic time and reads its measured first hits. */
+  window.__stage = { dir: dir, cam: cam, setRole: function (r) { mainRole = r; applyRoles(); }, role: function () { return mainRole; }, samplePixels: samplePixels, seedState: function () { return SEED_STATE; }, gl: function () { return { ok: glOK, vendor: T3 ? 'three-r' + T3.REVISION : null }; }, scene: function () { return sceneNow; }, setScene: setScene, roomSeedState: function () { return ROOM_SEED_STATE; }, room: function () { return { group: roomGroup, panels: roomPanels }; }, filmHome: filmHome, cams: function () { return { dir: dirCam, scene: sceneCam }; }, capture: { photo: capturePhoto, start: captureStart, stop: captureStop, state: captureState }, physics: { spawn: physSpawn, step: physStep, rand: physRand, clear: physClear, remove: physRemove, time: function () { return physT; }, bodies: function () { return physBodies; }, PHYS: PHYS } };
 })();
 </script>
 </body>
