@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Earth One — Experiment Batch 01 · Review Dashboard</title>
-<meta name="description" content="Swipe-review dashboard for Earth One's Daily Language Challenge, Experiment Batch 01. Like, dislike and comment — feedback lands as GitHub issues.">
+<title>Earth One — Experiment Batch 02 · Review Dashboard</title>
+<meta name="description" content="Swipe-review dashboard for Earth One's Daily Language Challenge, Experiment Batch 02. Like, dislike and comment — feedback lands as GitHub issues.">
 <style>
   :root{
     --ground:#17100a;
@@ -199,7 +199,7 @@
 
 <header class="topbar">
   <div class="brand">EARTH ONE<span>The Daily Language Challenge</span></div>
-  <div class="batch"><b>Experiment Batch 01</b>review dashboard</div>
+  <div class="batch"><b>Experiment Batch 02</b>review dashboard</div>
   <div class="counter" id="counter">– / –</div>
 </header>
 
@@ -214,7 +214,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=14"></script>
+<script src="data.js?v=15"></script>
 <script>
 (function(){
   "use strict";
@@ -261,13 +261,13 @@
       if (st === "running") running++;
     });
     var h = '<div class="readiness"><span class="rbig">' + reviewCount(cell) + '/' + ROSTER.length + '</span>' +
-      '<span class="rlab">checks passing</span></div>';
+      '<span class="rlab">panel readiness — counted passes only (shadow guards never count)</span></div>';
     if (fails.length) {
       h += '<div class="flags">' + fails.map(function(seat){
         return '<span class="rchip fail">✗ ' + esc(seat.label) + '</span>';
       }).join("") + '</div>';
     }
-    h += '<div class="rnote">' + (running ? running + ' running · ' : '') + 'full reviewer list in Details</div>';
+    h += '<div class="rnote">' + (running ? running + ' running · ' : '') + 'shadow verdicts in Details, never counted · full panel list in Details</div>';
     return h;
   }
   function rosterHTML(cell){
@@ -280,7 +280,7 @@
   }
 
   function issueURL(cell, verdict, comment){
-    var title = "[Batch01][" + cell.id + "] " + verdict + ": " + cell.sentence + " (" + cell.opening + ")";
+    var title = "[Batch02][" + cell.id + "] " + verdict + ": " + cell.sentence + " (" + cell.opening + ")";
     var body = [
       "Cell: " + cell.id,
       "Video file: " + (cell.file || "not built yet"),
@@ -291,12 +291,12 @@
       (comment && comment.trim()) ? comment.trim() : "(no comment written)",
       "",
       "---",
-      "From the Experiment Batch 01 review dashboard.",
+      "From the Experiment Batch 02 review dashboard.",
       "Sentence: \"" + cell.sentence + "\" · Opening: " + cell.opening +
         " → " + taughtLine(cell) + " · Architecture: " + cell.arch + " " + cell.archName +
         " · Length: " + cell.length + " (" + cell.lengthLabel + ")"
     ].join("\n");
-    var labels = ["batch-01", "feedback", verdict].join(",");
+    var labels = ["batch-02", "feedback", verdict].join(",");
     return "https://github.com/" + REPO + "/issues/new" +
       "?title=" + encodeURIComponent(title) +
       "&body=" + encodeURIComponent(body) +
@@ -339,8 +339,8 @@
             '<span class="tag">' + esc(cell.lengthLabel) + '</span>' +
           '</div>' +
           '<div class="statuspill"><span class="dot' + (busy ? " pulse" : "") + '" style="background:' + color + '"></span>' + esc(cell.statusLabel) + '</div>' +
-          '<div class="revcount">Readiness <b>' + reviewCount(cell) + '/' + ROSTER.length + '</b> checks passing</div>' +
-          '<div class="lands">The verified video appears here as soon as it passes its gates.</div>' +
+          '<div class="revcount">Panel readiness <b>' + reviewCount(cell) + '/' + ROSTER.length + '</b> checks passing</div>' +
+          '<div class="lands">This cell is still in production — its real state is in the gate note below.</div>' +
         '</div>';
     }
 
