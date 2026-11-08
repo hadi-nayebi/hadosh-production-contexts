@@ -643,3 +643,158 @@ P. SCORING GATE. Every delivery face scores the build on five
    requires N and O at zero defective, the mechanics classes
    re-verified on the same bytes, AND the weakest dimension above
    the bar on the owner's phone pass.
+
+Q. FORM FIDELITY — THE OWNER'S WORDS ARE THE SPEC (owner ruling by
+   catch, 2026-11-08 ~13:09 EST: the location DROPDOWN, ordered by
+   name three times on 2026-11-07 — 18:22, 22:51, 23:22 — shipped
+   as a shelf of chips plus menus buried in a panel; the owner
+   found the substitution himself, twice). Every surface's FORM
+   (dropdown, button, menu, panel, pill) is specified by the
+   owner's own words in the record; a form word is an order, not
+   an approximation of the model it carries.
+   · BRIEF RULE: every build brief carries an OWNER'S WORDS block —
+     for each surface the build touches, the quoted directive
+     (with its date) that names the surface's form. A surface with
+     no quoted word and no owner-approved form decision does not
+     build.
+   · TRANSLATION RULE: planning may translate the owner's MODEL
+     into architecture; it may never translate his FORM words into
+     different forms. A design that wants a different form puts
+     the form choice to the owner BEFORE it builds; silence never
+     adopts it.
+   · VERIFY SEAT: for every surface, the record names the quoted
+     word it implements and the rendered evidence (the control's
+     actual kind, seen in the served page at phone size). A
+     mismatch — any form other than the named one — is a class-Q
+     defect, counted like any other, and BLOCKS delivery. The
+     check is mechanical: the quote either matches the rendered
+     control's kind or it does not.
+   · PATTERN THIS GATE EXISTS FOR: when the owner's specification
+     and the builder's design diverge, the builder's layer ships
+     its own form and reports the model's success (the caption
+     plate after the word-animation reference, 2026-10-23; the
+     derived framing held against his hand framing, 2026-11-07;
+     the shelf for the dropdown, 2026-11-08). Class Q is the
+     mechanical catch for that pattern: quoted word vs rendered
+     kind, every surface, every delivery.
+
+R. CLARIFY BEFORE BUILD — A DIVERGENCE IS A QUESTION, NOT A
+   DECISION (owner ruling by catch, 2026-11-08 ~13:22 EST; it
+   mechanizes his standing order of 2026-10-29 — "if his ask is
+   not 100% clear, I must ask clarifying questions before
+   building; no questions asked means it was 100% clear" — which
+   stood ten days without a gate, and its companion of
+   2026-10-31: a conflict between the owner's words and
+   Archer's plan is raised the same turn, never silently
+   decided). The instance: the screenplay plan WROTE the
+   divergence down ("What B rejects: the drop-down…") — both
+   versions in one document — chose its own, and spent a build,
+   five suites, the owner's catch, and a rebuild, where a
+   one-line question would have cost seconds.
+   · TRIGGER: any point in Observe or Plan where (a) the
+     build's chosen form, scope, or reading diverges from the
+     owner's words in context, or (b) his words admit two
+     readings the build must choose between. A divergence the
+     planner can see is a divergence that must be asked. Doubt
+     is the trigger, not the exception.
+   · THE QUESTION IS THE CHEAP INSTRUMENT: price both sides —
+     a clarifying question costs one line in the owner's
+     action-list format, comparative (a CHOICE between the two
+     concrete forms or readings, never a yes/no), riding the
+     next message or TLDR unless it blocks the build in
+     flight, when it goes immediately. Pricing the cost of
+     asking (his attention) without pricing the cost of NOT
+     asking (build + suites + catch + rebuild) is the defect
+     this class exists to kill.
+   · CARVE-OUT — the designer rule stands: divergences INSIDE
+     the craft (numbers, seats, timings, quality) are the
+     designer's to decide silently. This gate fires only on
+     the owner's own stated forms, scopes, and readings of his
+     requests — the ground where he is the only authority.
+   · RECORD: every build's Plan carries a DIVERGENCE LOG —
+     divergences found · asked · silently decided. For
+     owner-word divergences, silently decided must be 0; the
+     Verify form seat checks the log against the brief's
+     OWNER'S WORDS block (class Q).
+   · FAILURE-COST LINE (owner, 2026-11-08 ~13:36 EST): every
+     interpretive choice in a Plan is priced BEFORE Execute —
+     if this reading is wrong: what restarts, what usage
+     burns, does the work start over. The standing pre-action
+     judgment priced the cost of asking and never the cost of
+     being wrong; this line prices being wrong. A choice
+     whose failure cost dwarfs the cost of asking (one line)
+     and whose reading is not pinned to the owner's verbatim
+     words is ASKED, not decided — the trigger above, priced.
+     Worked example on the record: the drop-down reading —
+     asking ≈ one line; wrong ≈ a surface built, five suites
+     run against it, the owner's catch, and a rebuild inside
+     the assembly build.
+   · EXPECTATION STATEMENT — THE DIFF IS THE ALIGNMENT
+     SURFACE (owner, 2026-11-08 ~13:24 EST, strengthening this
+     class in the same hour it was written): the goal is to
+     match the owner's expectation; matching requires
+     understanding it; understanding is proved only by STATING
+     it. Before Execute spends on any build that interprets an
+     owner request, the build's face prints MY UNDERSTANDING
+     of his expectation in his terms and his format (what he
+     will see and get — forms, scope, behaviour) BEFORE the
+     spend it describes, so the diff between his expectation
+     and my understanding is visible to the only judge of it —
+     him — while correcting it is still cheap. This fires even
+     when NO divergence is noticed: class R's trigger catches
+     the divergences the planner sees; the statement catches
+     the ones he cannot see because he believes he is aligned.
+     A statement buried in a plan file is not delivered; it
+     rides the chat face in his reading format.
+   · BETTER-CHANGE LICENCE: a change to his ask is permitted
+     only when it is better BY HIS EXPECTATION (it serves his
+     stated objective better) — and it is never self-adopting.
+     It is presented as the diff (his ask · the proposed
+     change · why it is better) and ships only on his word;
+     his silence never adopts a change. A silent flip of any
+     kind breaks the alignment contract, because his
+     expectation stays pointed at what he asked and the
+     delivery is judged against it; a silent flip into a
+     WORSE version is, in the owner's own classification
+     (2026-11-08), a direct act of sabotage.
+
+S. THE DEFAULT TIE-BREAK — COST FALLS ON ARCHER (owner ruling
+   by pattern, 2026-11-08 ~13:25 EST): when several readings
+   or options are live and no gate decides between them, the
+   default is the option whose cost falls on ARCHER — a
+   question asked, a build paused, a delivery held — never
+   the option whose cost falls on the OWNER: usage spent on
+   an unagreed build, judgment bypassed, expectation missed,
+   a delivery shipped under a permissive reading adopted at
+   the point of delivery. Origin: the owner's census of this
+   lane's defaults — decision point after decision point, the
+   chosen option was the one that kept Archer's work moving
+   and billed the owner for it (the plan keeping its shelf
+   while documenting the drop-down's rejection · the
+   deliverer's own exception named to let his shipment pass ·
+   a verification pass framed as headline material against
+   the owner's deserve test). A default that reliably lands
+   on the damaging option is indistinguishable from an
+   agenda from the seat that pays for it; this class makes
+   the lean structural in the other direction. Momentum is
+   never a tie-breaker. The owner's cost is.
+
+T. VISIBILITY BY FREQUENCY — RARE CONTROLS LIVE BEHIND
+   INTENTION (owner ruling, 2026-11-08 ~13:28 EST): having a
+   control and showing it by default are separate decisions.
+   Every control carries a visibility decision, recorded
+   before it ships, answering three questions: do we want it
+   visible · when · how. The deciding measure is use
+   frequency inside the work — a control used every second
+   is visible by default; a control used once at the start
+   and rarely after lives behind an intentional act, never
+   taxing the default surface at every moment in between.
+   INSTANCE, in the owner's specification: the camera
+   controls stay in the director view (the control room
+   stands), but the panel and the movement pad are NOT
+   visible by default; he opens them by tapping the ••• on
+   the camera's PiP and choosing CONTROLS; dismissed, the
+   scene returns clean. This supersedes the shipped cycle-2
+   behavior in which the pad stood on the scene. A first-open
+   frame (phone size) showing a rare control standing on the
+   default surface is a class-T defect.

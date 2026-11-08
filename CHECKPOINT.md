@@ -246,3 +246,67 @@ verifier + frameMark screenshot viewed by the main agent. Owner phone pass
 owed on these bytes (bar >50). Remaining cycle-2 phases (film re-attempt,
 census re-derivation, build record, share staging, stamp) continue as a
 fresh job; browser route = glproof/browsers-restore (see publish record).
+
+## 2026-11-08 ~00:30 EST — HADI'S HOME DERIVED (pose entry defined · open 0)
+
+Solved pose {x 430 · z 361 · heading −180 · tilt −2.25 · focal 360 ·
+lift 120} — bands 3.02% stage / 2.90% ceiling-above-curtains, curtain
+edges −0.9994 / +1.0269 NDC. Plan §7.1 entry promoted draft→defined;
+§7.8 refusal premise annotated closed. Record:
+records-20261105-stage3d/stage3d-hadi-home-derivation.md; proof frame
+glproof/cycle2/hadi-home-proof.png (viewed by main agent). Open for the
+owner's eye: pole slivers at the frame edges (consequence of the spec);
+centre ceiling band reads 14.6% above the back wall.
+
+## 2026-11-08 ~14:05 EST — BOOKS BUILD CLOSED (books-step6 · 575,540 B · 7caac55e)
+
+The screenplay/books build (plan §8, steps 1–6) is closed. Final
+stage.html 575,540 B · sha256 7caac55e. Step 6 landed two changes:
+the closed-events cure (plan §2.4 — a closed event "still plays,
+still checks, still verifies"; the checker was plan-true, the
+player's §6.1 derivation was cured at nine sites) and PR-11, the
+owner's pose applied as room-default (his six numbers verbatim —
+x 430 · z 387.72 · heading −180 · tilt 0.6 · focal 360 · lift
+136.92 — wired: room entry seats it when no device PIN stands;
+hadi-home + film-home untouched; the intake record stands applied,
+appliedIn books-step6; the GitHub issue closes at publication
+naming this revision). Both specimen productions stand VERIFIED
+PASS from step 5; PROD-REVEAL-01 + SCR-REVEAL-01 + EV-00 + EV-10
+stand stable. On the final bytes: books 30/0 · verify data 35/0
+(40 by composition) · seat probe 4/0. Stated plainly: the seed
+press (the press loop ran and ended unlanded ~20:11 UTC — press
+still owed; transform proved 575,540 → 575,834), the
+browser suites on the final bytes, and the naive-use pass were
+blocked by a measured environment write fault; the verify-'all'
+single-process total stands NEVER BANKED — per-mode passes are
+the evidence. Publication waits on the ASSEMBLY build (owner's
+architecture ruling, 2026-11-08 ~13:07 EST); the boot state is
+the FIRST-OPEN build's territory. Full record:
+records-20261105-stage3d/stage3d-books-build-record.md; manifest:
+records-20261105-stage3d/stage3d-books-final-manifest.md;
+staging: records-20261105-stage3d/books-push/ (checkpoint, not a
+publication candidate).
+
+## ASSEMBLY CHECKPOINT — 2026-11-08 (the assembly build)
+
+- `stage.html` — 520,600 B · sha256 `44730dad` (prefix; full sha in the
+  checkpoint record). Seed: `assets/seed/stage-seed.html` — 520,894 B =
+  stage + 294, strip-compare proven.
+- What changed: locations are DATA, not code. The theater's books
+  (props · poses · scenes · screenplays · productions · intake · verify
+  records) stand in `assets/locations/theater/location.js`; the gym
+  stands in `assets/locations/gym/location.js` as the assembly proof (a
+  WORKSHOP-tier location added by data + one script-tag index entry,
+  zero construction code in the HTML). stage.html keeps the engine,
+  the checker, the player, the verifier, and the assembler's generic
+  recipes; it assembles whichever location the drop-down chooses and
+  disposes the previous one whole.
+- First open: the assembled paper THEATER at the owner's room-default
+  pose {x 430 · z 387.72 · heading −180 · tilt 0.6 · focal 360 ·
+  lift 136.92}; the camera panel and movement pad stand hidden behind
+  the PiP ••• → CONTROLS door (class T). EMPTY SPACE is the zero
+  location — void and grid, no data loaded.
+- Publication staging: `records-20261105-stage3d/assembly-push/`
+  (pages/ + share/assembly-v1/). Checkpoint record:
+  `records-20261105-stage3d/stage3d-assembly-checkpoint-record.md`.
+  Build record: `records-20261105-stage3d/stage3d-assembly-build-record.md`.
