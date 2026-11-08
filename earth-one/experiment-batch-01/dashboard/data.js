@@ -1,4 +1,4 @@
-/* Experiment Batch 02 — cell registry (batch06), data v17 (dashboard truthfulness refresh 2026-11-08 — cells 04/19 post-fix totals + timing state).
+/* Experiment Batch 02 — cell registry (batch06), data v18 (dashboard truthfulness refresh 2026-11-08 — cells 04/19 durations DECLARED under owner ruling R1: class-target timing framing retired, totals unchanged).
    READINESS SEMANTICS — copied verbatim from batch06/panels/*.panel.json, never upgraded:
    - The big number is PANEL READINESS: counted passes (code passes + armed guard passes).
      Shadow guard verdicts are DISPLAYED (amber, in Details) but NEVER counted as passes.
@@ -293,7 +293,7 @@ window.BATCH_CELLS = [
       "code_matrix": "pass",
       "code_composition": "pass",
       "code_variant": "pass",
-      "code_timing": "fail",
+      "code_timing": "declared",
       "code_parity": "pass",
       "code_voice": "pass",
       "code_consistency": "pass",
@@ -310,12 +310,12 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "PANEL (batch06/panels/cell04-dlc002-need-water-en.panel.json, 2026-11-08T16:50Z): panel readiness 11 counted passes — code passes 10 · code_ready=true · armed passes 1 · ready=true. Ready basis (panel, verbatim): “guard-passed: code leg clean and armed decisive guard passes counted · armed translation scope: equivalence / gloss / diagram over the interlinear — sentence surface NOT certified by this guard.” Located failing subscores: 6 (advisory shadow faces — depiction · educator · linguist_claims · reasoning INDICT in shadow; displayed, never counted). Quarantine: 2 entries excluded (verdicts that originated in other cells — never counted). PRINT STATE — a separate fact, not merged with the panel: the playable print on this page is the PRE-FIX print (sha256 12f1418f…) — it cold-failed with the fleet and does not carry the cures the panel judged. The B50 re-render is queued and environment-blocked (Chrome capture window + exec write fault; resume recorded in BUILD-RECORD). Panel-passed + print-stale: this cell is NOT a finished video. POST-FIX STATE (dashboard truthfulness note, 2026-11-08): the payoff-take cure extended this cell's record to 72.79 s and re-declared its duration class M → L; the timing checker now FAILs total_vs_duration_class (−19.1% vs the class-L target of 90 s), located under the open G2 duration-class item — the panel statement above predates that cure and is stale on the timing leg until the panel is re-run; this note re-scores nothing. Poster: frame grab — designed thumbnail pending.",
+    "gate": "PANEL (batch06/panels/cell04-dlc002-need-water-en.panel.json, 2026-11-08T16:50Z): panel readiness 11 counted passes — code passes 10 · code_ready=true · armed passes 1 · ready=true. Ready basis (panel, verbatim): “guard-passed: code leg clean and armed decisive guard passes counted · armed translation scope: equivalence / gloss / diagram over the interlinear — sentence surface NOT certified by this guard.” Located failing subscores: 6 (advisory shadow faces — depiction · educator · linguist_claims · reasoning INDICT in shadow; displayed, never counted). Quarantine: 2 entries excluded (verdicts that originated in other cells — never counted). PRINT STATE — a separate fact, not merged with the panel: the playable print on this page is the PRE-FIX print (sha256 12f1418f…) — it cold-failed with the fleet and does not carry the cures the panel judged. The B50 re-render is queued and environment-blocked (Chrome capture window + exec write fault; resume recorded in BUILD-RECORD). Panel-passed + print-stale: this cell is NOT a finished video. POST-FIX STATE (dashboard truthfulness note, 2026-11-08): the payoff-take cure extended this cell's record to 72.79 s — that total is this cell's DECLARED duration under owner ruling R1 (2026-11-08 ~13:47 EST): duration is a distribution axis, not a gate, and the duration-class target check is retired, so no class verdict applies to it. The panel statement above predates that cure; this note re-scores nothing. Poster: frame grab — designed thumbnail pending.",
     "file": "dlc002-need-water__print__en__cell04.mp4",
     "video": "videos/dlc002-need-water__print__en__cell04.mp4",
     "poster": "poster-cell-04.png",
     "status": "inbuild",
-    "statusLabel": "Panel guard-passed · print STALE (pre-fix) — re-render queued · NOT finished · post-fix timing FAIL vs class L",
+    "statusLabel": "Panel guard-passed · print STALE (pre-fix) — re-render queued · NOT finished · duration declared 72.79 s (R1)",
     "about": "Strata: A · L · O1 · E1 · V2 photo-real · M2 card flips · demographic class XL. Re-cut of DLC-002 with the B33+B35+B36+B37 cures riding; introduce segments carry the G1 voice fix. The PANEL guard-passed this cell (see Gate status) — but the print playable here is the stale pre-fix print, so this cell does not read as a finished video anywhere on this page.",
     "title": "I Need Water in 4 Languages — Learn It From English"
   },
@@ -933,7 +933,7 @@ window.BATCH_CELLS = [
       "code_matrix": "pass",
       "code_composition": "pass",
       "code_variant": "pass",
-      "code_timing": "fail",
+      "code_timing": "declared",
       "code_parity": "pass",
       "code_voice": "pass",
       "code_consistency": "pass",
@@ -950,12 +950,12 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 10 counted passes — code passes 10/10 · code_ready=true · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. No code checks outstanding. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). POST-FIX STATE (dashboard truthfulness note, 2026-11-08): the payoff-take cure extended this cell's record to 70.85 s and re-declared its duration class M → L; the timing checker now FAILs total_vs_duration_class (−21.3% vs the class-L target of 90 s), located under the open G2 duration-class item — the panel statement above predates that cure and is stale on the timing leg until the panel is re-run; this note re-scores nothing. Poster: frame grab — designed thumbnail pending.",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 10 counted passes — code passes 10/10 · code_ready=true · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. No code checks outstanding. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). POST-FIX STATE (dashboard truthfulness note, 2026-11-08): the payoff-take cure extended this cell's record to 70.85 s — that total is this cell's DECLARED duration under owner ruling R1 (2026-11-08 ~13:47 EST): duration is a distribution axis, not a gate, and the duration-class target check is retired, so no class verdict applies to it. The panel statement above predates that cure; this note re-scores nothing. Poster: frame grab — designed thumbnail pending.",
     "file": "dlc002-need-water__print__en__cell19.mp4",
     "video": "videos/dlc002-need-water__print__en__cell19.mp4",
     "poster": "poster-cell-19.png",
     "status": "inbuild",
-    "statusLabel": "Playable print · panel CODE-CLEAN — not ready (no armed guards) · post-fix timing FAIL vs class L",
+    "statusLabel": "Playable print · panel CODE-CLEAN — not ready (no armed guards) · duration declared 70.85 s (R1)",
     "about": "Strata: B · L · O2 · E2 quiz finish · V3 flat illustration · M1 floating chips · demographic class S. ZH taught probe (Mina's requested set) — pinyin + tone coaching inline on the ZH beat card. One of only two code-clean cells tonight — and still NOT ready: zero armed guard passes.",
     "title": "I Need Water in 4 Languages — Chinese Joins In"
   },
