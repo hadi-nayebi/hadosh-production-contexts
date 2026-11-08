@@ -40,16 +40,22 @@ body.camView .headChip{bottom:64px}
 .hint{position:fixed;left:14px;bottom:16px;max-width:min(46vw,540px);font-family:Georgia,serif;font-size:13.5px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);border:1px solid rgba(244,233,204,.25);padding:7px 14px;border-radius:14px;pointer-events:none;transition:opacity 1.2s;white-space:normal;text-align:left;line-height:1.4;z-index:5}
 /* The narrow-screen block stands after the .hint base rule by the same law that puts the safe-area block last (convergence fix round 2, census instance D7): it stood BEFORE .hint, so its .hint max-width was cascade-dead at equal specificity — the narrow hint never got its full-width allowance. Its other rules already stood after their bases and are unchanged by the move. */
 @media (max-width:560px){.viewbar{left:10px;transform:none;max-width:calc(100vw - 72px);flex-wrap:wrap}.viewbar button{font-size:10.5px;padding:7px 5px;letter-spacing:.1px}.viewbar{gap:5px}.hint{max-width:calc(100vw - 28px)}}
-/* The narrow tightening (the room build, 2026-11-07): the two scene pills ride the bar's second row, and at the pre-room button size the room state's second row (FIND CAMERA + STAGE + THEATER) measured 269px against the 248px budget at 320px wide — the bar wrapped to THREE rows and its bottom edge stood at 136px, through the panel's 94px top fence (the plan's §11 check 5 two-row bound, measured on the real stack). The narrow buttons therefore take a smaller size (above), and at ≤400px — where the squeeze lives — a further step (below): the room row re-packs to ~228px and two rows everywhere, and the bar's bottom holds the fence the fix-9 census guards. The labels stay one or two words; 10px serif on a pill is small but legible, and the alternative was a bar covering the settings panel. */
 /* CAPTURE PACK, narrow (measured on the capture build's bar sweep, 2026-11-07): at 400px and under, the bar's budget is the viewport minus the gear reserve — 248px at 320px wide. The recording face widens REC by about 38px (the dot plus STOP M:SS); in DOM order the second row (FIND CAMERA / STAGE / THEATER / PHOTO / REC) then totals 271px, REC wraps to a third row, and the bar's bottom reaches 99px — past the settings panel's top fence. So the narrow band re-seats THEATER at the end of row one (row one totals 237px) and the capture row (FIND CAMERA / STAGE / PHOTO / REC) totals 219px while recording and 181px at rest: two rows and a 68px bottom in both states, in both scenes. Wider bands keep the DOM order untouched. */
-@media (max-width:400px){.viewbar{gap:4px}.viewbar button{font-size:9.5px;padding:7px 2px;letter-spacing:0}#btnTheater{order:1}#btnFind,#btnStage,#btnPhoto,#btnRec{order:2}}
-/* The mid-width band (the room build, 2026-11-07): the two scene pills widen the bar — at full button size the six-pill row measures ~709px and its centred right end would crowd the gear's seat across widths 561–825px, so across 561–860px the bar's buttons take the narrow domain's own compact size (11px, tighter padding), which holds the row to ~489px in ONE row (the wrap exists only at ≤560px): the bar's bottom stands at 46px there, above the wide one-row bottom (53px) the panel fence and the corner's 60px top already clear. One rule for the whole band, disjoint from the narrow block by its min-width. */
-@media (min-width:561px) and (max-width:1100px){.viewbar button{font-size:10px;padding:9px 6px;letter-spacing:.1px}}
+@media (max-width:400px){.viewbar{gap:4px}.viewbar button{font-size:9.5px;padding:7px 2px;letter-spacing:0}#btnFind,#btnPhoto,#btnRec{order:2}}
 /* CAPTURE PACK, mid (measured on the same sweep): at 561–720px the eight-pill row at 10px measures 569–589px wide, centred — its right edge crosses the gear button's left edge by up to 27px (worst at 600px), over a control the owner taps. Wrapping to two rows is not available in this band: above 560px the panel's top fence (66px) is built on a one-row bar. So this sub-band tightens the pills (9px, 8px 3px, gap 6px) until the row's right edge clears the gear by at least 12px across the whole band; from 721px the 10px row already clears it by 100px or more. */
 @media (min-width:561px) and (max-width:720px){.viewbar{gap:6px}.viewbar button{font-size:9px;padding:8px 3px;letter-spacing:0}}
 .hintBtn{pointer-events:auto;background:rgba(244,233,204,.10);border:1px solid rgba(244,233,204,.45);color:rgba(244,233,204,.95);font-family:inherit;font-size:11px;letter-spacing:1.5px;padding:5px 12px;min-height:28px;border-radius:999px;margin-left:7px;cursor:pointer;vertical-align:baseline}
 .hintFull{display:block;margin-top:5px}
 .hintFull[hidden]{display:none}
+.panel .btns button.on{background:rgba(244,233,204,.88);color:#3A2810;border-color:rgba(244,233,204,.6)}
+/* THE MOVEMENT PAD (cycle 2, 2026-11-07; plan §2.2): one cluster at the right edge, its vertical centre at 62% of the viewport height — clear of the corner view above it, the hint and lens chip below it, and the view bar's row; the settings panel never shares the screen with it (the loop hides the pad while the panel stands open). A diamond of four ground directions and, beside it, the lift pair — six glass buttons in the view bar's own material, 48px on a side (a finger's measure), tightening to 40px — never below 40 — on short viewports. Glyphs only: no word stands open on it. */
+.pad{position:fixed;right:calc(10px + env(safe-area-inset-right,0px));top:62%;transform:translateY(-50%);display:flex;gap:6px;z-index:6;touch-action:none}
+.padDiamond{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,48px);gap:6px}
+.padLift{display:flex;flex-direction:column;justify-content:space-between}
+.padBtn{width:48px;height:48px;border-radius:14px;border:1px solid rgba(244,233,204,.38);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);color:rgba(244,233,204,.92);font-size:19px;line-height:1;cursor:pointer;padding:0}
+.padBtn:active{background:rgba(244,233,204,.35)}
+.pF{grid-area:1/2}.pL{grid-area:2/1}.pR{grid-area:2/3}.pB{grid-area:3/2}
+@media (max-height:480px){.pad{gap:4px}.padDiamond{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:4px}.padBtn{width:40px;height:40px;font-size:16px}}
 /* The phone's own bars and cutouts own the screen's edges and the page runs edge-to-edge beneath them (owner's screenshot, 2026-11-06: the hint's MORE tap sat behind the phone's navigation buttons, untappable). On touch devices every edge-anchored control clears them: the bottom-anchored hint and lens chip lift by the safe-area inset, never less than the standard 56px bar height, and the settings panel's bottom edge gets the same clearance through its max-height. The other three edges are cleared with MARGINS (convergence fix C10, 2026-11-06): a margin adds to whatever offset each responsive breakpoint already gives the element, where a replacement top/left/right value would fight the rules that reposition the corner and the view bar at small sizes — top chrome (view bar, gear, corner, panel) clears a top cutout or status area, and the corner, hint, chip, gear and panel clear side cutouts in landscape. A margin alone is only half a cure, though (convergence fix round 4, D-2): the two elements whose widths are viewport budgets — the hint and the panel — were shifted by their side margins without their widths narrowing, so a large side inset on a narrow window pushed the hint's right edge past the screen and the panel's left edge off it. Their max-widths therefore subtract both side insets in the blocks below (the panel's in the coarse block itself; the hint's in the coarse-and-narrow block after it, because above 560px the hint's width is a proportion cap, not a viewport budget, and only the narrow budget needs the subtraction). */
 .gearBtn{position:fixed;right:14px;top:12px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(244,233,204,.38);background:rgba(20,14,8,.32);-webkit-backdrop-filter:blur(10px) saturate(1.25);backdrop-filter:blur(10px) saturate(1.25);color:#F4E9CC;font-size:19px;cursor:pointer;z-index:6;box-shadow:0 2px 14px rgba(0,0,0,.25);touch-action:manipulation}
 .gearBtn:active{transform:scale(.95)}
@@ -87,14 +93,12 @@ body.camView .headChip{bottom:64px}
 </div>
 <div class="frameGuide" id="frameGuide" data-reason="[USER] The framing overlay, shown only when the camera's shot fills the main view: third-lines only, no border — the whole screen IS the shot's edge, so a drawn border would invent a second, false frame; the thirds are the composition guide."></div>
 <canvas class="grain" id="grain" width="256" height="256" data-reason="[FX] Procedural film grain: canvas noise at low opacity over every picture surface — the main view and the corner view alike — beneath the controls, so flat digital colour reads as a physical surface. Decorative texture only."></canvas>
-<div class="viewbar" data-reason="[USER] The view switch, kept as small glass pills: DIRECTOR (work the scene), CAMERA (the shot fills the screen), AIM AT CENTRE (point the camera at the stage's centre point), FIND CAMERA (fly to the camera object — the always-reachable recovery). ADD CAMERA exists only in the seed state, where there is no camera yet. STAGE and THEATER are the scene pills (the room build, 2026-11-07): they choose which scene stands in the space — the checkpoint stage or the empty theater room — they sit in the bar's existing second row beside FIND CAMERA / ADD CAMERA (never a third row: the settings panel's top fence is built on the two-row bound), and entering a scene applies that scene's own seed state. PHOTO and REC are the capture pills (the capture build, 2026-11-07): they belong to the camera, so they stand at the bar's end and leave it with the camera cluster when the stage is empty.">
+<div class="viewbar" data-reason="[USER] The view switch, kept as small glass pills: DIRECTOR (work the scene), CAMERA (the shot fills the screen), AIM AT CENTRE (point the camera at the stage's centre point), FIND CAMERA (fly to the camera object — the always-reachable recovery). ADD CAMERA exists only in the seed state, where there is no camera yet. PHOTO and REC are the capture pills (the capture build, 2026-11-07): they belong to the camera, so they stand at the bar's end and leave it with the camera cluster when the stage is empty.">
   <button id="btnDir" class="on" aria-pressed="true" data-reason="[USER] Director: the free view is the main view; the corner shows the camera's shot.">DIRECTOR</button>
   <button id="btnCam" aria-pressed="false" data-reason="[USER] Camera: the shot fills the main view; the corner shows the director's view.">CAMERA</button>
   <button id="btnAim" data-reason="[USER] Aim at centre: turn and tilt the camera so its eye lands on the stage's centre point (430, 53) — the fastest way to re-find the subject after moving the camera.">AIM AT CENTRE</button>
   <button id="btnFind" data-reason="[USER] Find camera: fly the director to the camera object — centred and close at ANY seat in the camera's full range, because the visit's flight works to its own wider bounds (derived from the full seating envelope, ±4700 pan) rather than the gesture ranges that used to strand far seats off-centre (navfix N7, 2026-11-06) — the recovery when the camera is small, far or off-frame. The focus flight existed only behind a double-tap on the very target that is hard to hit; a named button makes the recovery always reachable (2026-11-06 ergonomics audit).">FIND CAMERA</button>
   <button id="btnAddCam" style="display:none" data-reason="[USER] Add camera: in the seed state (empty stage) this is how the camera object enters the space — it arrives at its home seat, aimed at the centre. Without it, RESET STAGE would be a one-way door.">ADD CAMERA</button>
-  <button id="btnStage" class="on" aria-pressed="true" data-reason="[USER] Stage: the checkpoint scene — the void, the wireframe grid and the camera object. One of the two scene pills (the room build, 2026-11-07): entering a scene applies that scene's own seed state, so this pill always lands on the checkpoint exactly, never on wherever the void scene was left.">STAGE</button>
-  <button id="btnTheater" aria-pressed="false" data-reason="[USER] Theater: the empty paper theater room (the room build, 2026-11-07) — paper walls, a ceiling, a stage a bit raised, and the chair area empty: just the basic floor, no chairs, no curtain. The camera stands in the empty area between floor and ceiling, its view covering the whole stage. Entering it applies the room's seed state; the checkpoint stands unchanged behind the STAGE pill.">THEATER</button>
   <button id="btnPhoto" data-reason="[USER] Photo: a still of the camera's own shot (the capture build, 2026-11-07 — the owner's overnight order: use the camera in the scene to record the proof of concept). The scene camera's frame is rendered alone into the capture's own target at the capture's own size and read back in the same task, then saved as a PNG — never a screenshot of the page, which would carry the director, the corner and the gizmo instead of the shot.">PHOTO</button>
   <button id="btnRec" aria-pressed="false" data-reason="[USER] Rec: record the camera's own shot as video (the capture build, 2026-11-07). While it records, the frame loop feeds the shot — rendered alone into the capture's dedicated target and canvas, never the page canvas — into a recorder, and STOP ends it and saves a WebM. The recording state lives on the button itself: a pulsing red dot, the word STOP and the elapsed seconds, so the recording is visible exactly where it is controlled; at rest the button reads REC and its pressed state stands off."><span class="recDot" id="recDot" style="display:none"></span><span id="recFace">REC</span></button>
 </div>
@@ -136,6 +140,18 @@ body.camView .headChip{bottom:64px}
   </div>
 </div>
 <div class="hint" id="hint" data-reason="[USER] The guide at the bottom left, under the owner's TEN-WORD LAW (2026-11-06): at most ten words stand open without a tap — the current view's first gestures plus a MORE tap; the full gesture map lives behind that tap (MORE/LESS), never poured out as a wall. While collapsed it fades to a whisper so it never competes with the scene."><span id="hintShort">Director: drag to orbit &middot; pinch to zoom &middot;</span><button class="hintBtn" id="hintBtn" type="button" data-reason="[USER] The tap that opens the full gesture map (MORE) and closes it again (LESS) — the one part of the hint that takes touches; the rest of the hint lets every press through to the scene.">MORE</button><span class="hintFull" id="hintFull" hidden>Director: drag to orbit &middot; drag the camera to move it &middot; pinch to zoom &middot; two-finger drag to pan &middot; twist two fingers to roll &middot; double-tap the camera to visit it &middot; double-tap space to fly home &middot; scroll to zoom &middot; three-finger slide zooms the lens &middot; double-tap-hold and slide to zoom one-handed &middot; arrow keys nudge the camera &middot; drag or pinch the corner to aim and zoom the camera &middot; tap the corner to swap views &middot; grid: one square 92 &middot; heavy line 460</span></div>
+<div class="pad" id="pad" style="display:none" data-reason="[USER] The movement pad (cycle 2, 2026-11-07 — the owner's phone-pass model): in the camera view a drag turns the camera only, so the camera's location gets its own controls — six directions in one cluster at the right edge: a diamond of forward, back, left and right (camera-relative, on the ground) and a pair for up and down on the lift axis. A tap nudges, a hold moves. Glyphs only — no word stands open on it (the ten-word law); every button names its direction to a reader through its label. It stands only in the camera view, with a camera present and the settings panel closed.">
+  <div class="padDiamond" data-reason="[USER] The ground diamond: forward at the top, back at the bottom, left and right at the sides — the four directions read off the diamond's own shape, the way a compass rose reads.">
+    <button class="padBtn pF" id="padFwd" type="button" aria-label="Move forward" data-reason="[USER] Forward: fly the camera along its own heading — a tap nudges 6 units, a hold moves at 120 units a second.">&#9650;</button>
+    <button class="padBtn pL" id="padLeft" type="button" aria-label="Move left" data-reason="[USER] Left: strafe the camera along its own left, on the ground — a tap nudges 6 units, a hold moves at 120 units a second.">&#9664;</button>
+    <button class="padBtn pR" id="padRight" type="button" aria-label="Move right" data-reason="[USER] Right: strafe the camera along its own right, on the ground — a tap nudges 6 units, a hold moves at 120 units a second.">&#9654;</button>
+    <button class="padBtn pB" id="padBack" type="button" aria-label="Move back" data-reason="[USER] Back: fly the camera against its own heading — a tap nudges 6 units, a hold moves at 120 units a second.">&#9660;</button>
+  </div>
+  <div class="padLift" data-reason="[USER] The lift pair, standing beside the diamond: up and down on the camera's lift axis — the height the floor feeder composes under the camera, 0 to 360.">
+    <button class="padBtn" id="padUp" type="button" aria-label="Move up" data-reason="[USER] Up: raise the camera on its lift axis — a tap nudges 6 units, a hold rises at 60 units a second.">&#11014;</button>
+    <button class="padBtn" id="padDown" type="button" aria-label="Move down" data-reason="[USER] Down: lower the camera on its lift axis — a tap nudges 6 units, a hold sinks at 60 units a second, never below the floor (lift 0).">&#11015;</button>
+  </div>
+</div>
 <script src="assets/three-vendor.js" data-reason="[BEST-PRACTICE] The vendored three.js engine (r186): one classic script, bundled from the pinned module pair, so the stage boots from a bare file:// open — no modules, no import map, no runtime fetch. Owner's platform decision, 2026-11-06 17:39 EST: adopt three.js, vendored. Its version, byte size and sha256 stand in the branch law and the migration record."></script>
 <script data-reason="[BEST-PRACTICE] The world's single script, in three layers (owner's split order, 2026-11-06): LAYER 1 ASSETS builds everything that is seen; LAYER 2 STATE holds every number; LAYER 3 MECHANICS — rigs, the frame loop, the controls — consumes state and element handles only, so the mechanics lift out as one engine block when a project forks the seed.">
 (function () {
@@ -329,9 +345,6 @@ body.camView .headChip{bottom:64px}
       gizmoLabel('E', 1.5, 0, 0); gizmoLabel('W', -1.5, 0, 0); gizmoLabel('N', 0, 0, 1.5); gizmoLabel('S', 0, 0, -1.5);
       gizmoCam = new T3.PerspectiveCamera(38, 1, 0.1, 100);
 
-      /* the room builds last, inside the same guard (the room build, 2026-11-07): its group starts hidden — the checkpoint scene is the boot state — and building it after the camera object keeps the camera group first in the group order the render-pass structure reads. */
-      buildRoom();
-
       /* @reason [BEST-PRACTICE] Context loss is an event, not a mystery: losing the context raises the named failure panel and stops the render (the loop keeps running; its render step stands down on the flag), and the browser's restore event lowers the panel and resumes — the preventDefault on the loss is what makes restoration possible at all. */
       canvas.addEventListener('webglcontextlost', function (ev) { ev.preventDefault(); glOK = false; showGlFail(true); });
       canvas.addEventListener('webglcontextrestored', function () { glOK = true; showGlFail(false); });
@@ -341,94 +354,23 @@ body.camView .headChip{bottom:64px}
   }
   try { if (!buildGL()) showGlFail(true); } catch (err) { showGlFail(true); }
 
-  /* @reason [FX] One paper tile, drawn once on a 512×512 canvas (the room build, 2026-11-07; plan §6): a neutral grey grain field — per-pixel speckle at ±6% luminance and faint horizontal fibre streaks — because the surface's DYE is its material colour and the tile only textures it (the plan's §6 arithmetic prices dye × light, so the tile must average to white and its speckle must average out of any region median). The tile is WRAP-DRAWN: every fibre streak is drawn across the border onto its −512 continuation, so the repeated tile shows no border seam at any repeat, integral or fractional. The kinds differ only in their print: 'wall' adds the foot gradient (a multiply down to 0.80 across the canvas's bottom tenth — under the engine's flipY the canvas's bottom is v 0, so with the wall textures' v spanning the full height the gradient lands at the floor line: the flat-shading era's baked contact shade); 'floor' rules plank seams down the u axis and 'deck' rules board seams across the v axis — a seam every 128 canvas px, which at the family's one tile = 368 world units is the grid's own 92 measuring scale surviving as print inside the room (plan §3); 'plain' carries grain only. */
-  function makePaperTile(kind) {
-    var S = 512, cv = document.createElement('canvas'); cv.width = S; cv.height = S;
-    var g = cv.getContext('2d'); if (!g) return cv;
-    var img = g.createImageData(S, S), d = img.data;
-    var seed = 987654321, ki;
-    for (ki = 0; ki < kind.length; ki++) seed = (seed * 31 + kind.charCodeAt(ki)) >>> 0;
-    function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
-    var i, x, y;
-    for (i = 0; i < d.length; i += 4) { var v = 246 + (rnd() - 0.5) * 30; d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = 255; }
-    for (i = 0; i < 110; i++) {
-      var fy = Math.floor(rnd() * S), fx = Math.floor(rnd() * S), len = 24 + Math.floor(rnd() * 110), lift = 1 + rnd() * 0.05, j;
-      for (j = 0; j < len; j++) {
-        var px = (fx + j) % S, idx = (fy * S + px) * 4;
-        d[idx] = Math.min(255, d[idx] * lift); d[idx + 1] = Math.min(255, d[idx + 1] * lift); d[idx + 2] = Math.min(255, d[idx + 2] * lift);
-      }
-    }
-    function darken(idx, f) { d[idx] *= f; d[idx + 1] *= f; d[idx + 2] *= f; }
-    if (kind === 'floor' || kind === 'deck') {
-      var s, p;
-      for (s = 0; s < 4; s++) for (p = 0; p < 2; p++) {
-        var at = s * 128 + p;
-        if (kind === 'floor') { for (y = 0; y < S; y++) darken((y * S + at) * 4, 0.78); }
-        else { for (x = 0; x < S; x++) darken((at * S + x) * 4, 0.78); }
-      }
-    }
-    if (kind === 'wall') {
-      for (y = S - 52; y < S; y++) { var f = 1 - 0.20 * ((y - (S - 52)) / 51); for (x = 0; x < S; x++) darken((y * S + x) * 4, f); }
-    }
-    g.putImageData(img, 0, 0);
-    return cv;
-  }
-
-  /* @reason [BEST-PRACTICE] A room texture from a drawn tile (the room build, 2026-11-07; plan §6/R5): repeat wrapping on both axes — the wrap-drawn tile is seamless at the EXACT fractional repeat (surface size ÷ 368, no rounding: grain scale is a world constant, and the seamed kinds keep their 92 spacing at every repeat because each tile carries exactly four seams) — the sRGB encoding of the file's standing colour basis (plan §6/R12), and anisotropy at the renderer's own maximum capped at 8, which the grazing floor and deck are the surfaces it exists for. Every surface calls this for its OWN texture instance: repeat is a texture property, and the ghost rule needs per-panel materials regardless (plan §6, R3) — the instances share the one drawn canvas, so the cost is the upload, never new art. */
-  function paperTexture(cv, rx, ry) {
-    var t = new T3.CanvasTexture(cv);
-    t.wrapS = T3.RepeatWrapping; t.wrapT = T3.RepeatWrapping;
-    if (T3.SRGBColorSpace) t.colorSpace = T3.SRGBColorSpace;
-    if (t.repeat && t.repeat.set) t.repeat.set(rx, ry);
-    if (renderer && renderer.capabilities && renderer.capabilities.getMaxAnisotropy) t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-    return t;
-  }
-
-  /* @reason [USER] THE ROOM (the room build, 2026-11-07; plan §§2/6): the empty paper theater, built ONCE at init under one group — seven meshes, thin boxes with real card edges under front-side materials (the file's load-bearing culling stands): the floor slab, the four walls, the ceiling slab, and the stage as one multi-material box (deck on top in the stage tone; front, sides and bottom in the riser tone). Centres are the plan's construction table, absolute; the floor slab's top lands at abs y 2 — the +2 raise that keeps the grid plane passing through the slab's SIDE, never coplanar with any face (plan §3). Every shell panel owns its material instance and its texture (plan R3) and stands in the ghost registry with its outward normal and centre; floor and stage never ghost. The dyes are the checkpoint camera object's own kraft family, re-derived for the room's faces in plan §6: walls #C8A668, floor #B78D4C, riser #77572A, ceiling #A87F45 the dark lid — and the deck one step brighter than §6's #CCA45F, at #D8B068: the §9 census on rendered frames measured the binding subject pair (deck↔back wall) at 1.48 against its 1.6 floor, and §6's own cure for a failed pair is a dye step, taken and recorded with its measurement in the build record (plan §14). The unchanged light rig separates the faces by dye step and normal; no shadow map exists anywhere in this engine, and no light fixture is depicted. The group starts HIDDEN: the checkpoint scene is the boot state, and the scene switch (Layer 3) is the only writer of its visibility. The five shell panels' materials are BORN transparent (transparent: true at construction; standing opacity 1, depthWrite on) for a measured engine reason (fix round 1, plan §16): three r186's program-change census omits the transparent flag, so a material compiled opaque keeps its OPAQUE program — which forces fragment alpha to 1.0 — however its opacity is set afterwards; toggling transparent at pass time therefore never reached the pixels (the W-R1 D3 ghost failure). With the classification fixed at birth, the pass-scoped ghost is an opacity-uniform and depthWrite change, both honoured live. */
-  function buildRoom() {
-    if (!T3 || !scene) return;
-    var wallCv = makePaperTile('wall'), floorCv = makePaperTile('floor'), deckCv = makePaperTile('deck'), plainCv = makePaperTile('plain');
-    function roomMesh(w, h, dep, x, y, z, mats) { var m = new T3.Mesh(new T3.BoxGeometry(w, h, dep), mats); m.position.set(x, y, z); roomGroup.add(m); return m; }
-    function wallMat(rx) { return new T3.MeshStandardMaterial({ color: 0xC8A668, roughness: 0.9, map: paperTexture(wallCv, rx, 1), transparent: true }); }
-    roomGroup = new T3.Group();
-    var floor = roomMesh(1128, 14, 1220, 430, -5, 513, new T3.MeshStandardMaterial({ color: 0xB78D4C, roughness: 0.9, map: paperTexture(floorCv, 1128 / 368, 1220 / 368) }));
-    var back = roomMesh(1104, 460, 12, 430, 232, -91, wallMat(1104 / 368));
-    var front = roomMesh(1104, 460, 12, 430, 232, 1117, wallMat(1104 / 368));
-    var west = roomMesh(12, 460, 1220, -128, 232, 513, wallMat(1220 / 368));
-    var east = roomMesh(12, 460, 1220, 988, 232, 513, wallMat(1220 / 368));
-    var ceil = roomMesh(1128, 12, 1220, 430, 468, 513, new T3.MeshStandardMaterial({ color: 0xA87F45, roughness: 0.9, map: paperTexture(plainCv, 1128 / 368, 1220 / 368), transparent: true }));
-    var deckMat = new T3.MeshStandardMaterial({ color: 0xD8B068, roughness: 0.9, map: paperTexture(deckCv, 644 / 368, 276 / 368) });
-    var riserMat = new T3.MeshStandardMaterial({ color: 0x77572A, roughness: 0.85, map: paperTexture(plainCv, 644 / 368, 1) });
-    var stage = roomMesh(644, 23, 276, 430, 13.5, 53, [riserMat, riserMat, deckMat, riserMat, riserMat, riserMat]);
-    floor.renderOrder = 0; stage.renderOrder = 0;
-    [back, front, west, east, ceil].forEach(function (m) { m.renderOrder = 1; });
-    roomPanels = [
-      { mesh: back, nx: 0, ny: 0, nz: -1, cx: 430, cy: 232, cz: -91 },
-      { mesh: front, nx: 0, ny: 0, nz: 1, cx: 430, cy: 232, cz: 1117 },
-      { mesh: west, nx: -1, ny: 0, nz: 0, cx: -128, cy: 232, cz: 513 },
-      { mesh: east, nx: 1, ny: 0, nz: 0, cx: 988, cy: 232, cz: 513 },
-      { mesh: ceil, nx: 0, ny: 1, nz: 0, cx: 430, cy: 468, cz: 513 }
-    ];
-    roomGroup.visible = false;
-    scene.add(roomGroup);
-  }
-
 
   /* ════════════════════════════════════════════════════════════════════════
      LAYER 2 · STATE — every number the setup runs on, and nothing else:
      the director state, the camera state, the named places (CENTRE,
-     CAM_HOME) and the SEED — and, since the room build (2026-11-07),
-     the scene selection, the room's numbers (ROOM, its two homes, its
-     aim point) and the room's own enumerated seed state. No behaviour
+     CAM_HOME) and the SEED — and, since the layers refactor
+     (2026-11-07), the scene selection and the scene registries
+     (SCENES, CAM_HOMES) a scene module extends with its own numbers.
+     No behaviour
      lives here; the mechanics read and write these objects, the assets
      never do.
      ════════════════════════════════════════════════════════════════════════ */
-  /* @reason [USER] The two states of the setup. The director: six numbers (yaw, pitch, roll, pan X/Y, dolly) with wide ranges — a full circle of orbit and a dolly whose apparent size runs more than ten times from far to near. The camera object: its ground position, its heading and tilt, its roll and its lens (focal, as the perspective its view is rendered with at world scale), plus whether it is in the space at all (present), plus its height above the world ground (camY — 0 on the checkpoint's ground plane; the room's floor function in Layer 3 is its only feeder, plan §8). Every number exists twice — current and target — and the screen chases the targets, so all motion is one smooth flight and a test can set a target and read the result. */
+  /* @reason [USER] The two states of the setup. The director: six numbers (yaw, pitch, roll, pan X/Y, dolly) with wide ranges — a full circle of orbit and a dolly whose apparent size runs more than ten times from far to near. The camera object: its ground position, its heading and tilt, its roll and its lens (focal, as the perspective its view is rendered with at world scale), plus whether it is in the space at all (present), plus its height above the world ground (camY — 0 on the checkpoint's ground plane; the room's floor function in Layer 3 is its only feeder, plan §8) and its lift above that floor (lift — cycle 2, 2026-11-07: the owner's own share of the height, written by the movement pad's up/down, by the homes and by the test door; the feeder composes floor + lift, so camY is the standing height and lift is the part the owner chose — 0 at every standing home, so every pre-cycle-2 state reads identically). Every number exists twice — current and target — and the screen chases the targets, so all motion is one smooth flight and a test can set a target and read the result. */
   var dir = { yaw: 0, pitch: -6, roll: 0, panX: 0, panY: 6, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 0, tPanY: 6, tDolly: 60 };
-  var cam = { x: 742, z: 150, heading: -107.3, tilt: 6, roll: 0, focal: 800, tX: 742, tZ: 150, tHeading: -107.3, tTilt: 6, tRoll: 0, tFocal: 800, camY: 0, tCamY: 0, present: true };
+  var cam = { x: 742, z: 150, heading: -107.3, tilt: 6, roll: 0, focal: 800, tX: 742, tZ: 150, tHeading: -107.3, tTilt: 6, tRoll: 0, tFocal: 800, camY: 0, tCamY: 0, lift: 0, tLift: 0, present: true };
   /* @reason [USER] The stage's centre point and the camera's home: the two named places of this world, defined once so every reader uses the same numbers: the AIM button reads CENTRE, RESET CAMERA and ADD CAMERA read CAM_HOME. (The double-tap visit reads neither — it solves its flight from the camera's own seat.) */
   var CENTRE = { x: 430, z: 53 };
-  var CAM_HOME = { x: 742, z: 150, heading: -107.3, tilt: 6, focal: 800 };
+  var CAM_HOME = { x: 742, z: 150, heading: -107.3, tilt: 6, focal: 800, lift: 0 };
   /* @reason [USER] THE CAMERA HOMES, one per scene (the layers refactor, 2026-11-07): the registry RESET CAMERA reads, so a scene registers its own camera home beside its other numbers and the reset never names a scene. The platform carries the void's entry alone; a scene module extends the registry from its own block (the room's entry stands with the room's numbers below). */
   var CAM_HOMES = { void: CAM_HOME };
   /* @reason [USER] The physics core's constants (the layers build, 2026-11-07; plan stage3d-layers-plan.md §2): the scale comes from the theater's deck — 23 world units stand for 1 metre — so gravity reads 9.8 × 23 = 225.4 units/s² in world units. stepMax caps one integration sub-step at 1/60 s, so a slow frame subdivides instead of tunnelling a body through its floor; settleSpeed and settleTime name when a body in contact counts as at rest (slower than 6 units/s, sustained 0.25 s). The core stands in the PLATFORM layer because every scene built on this stage falls under the same gravity. */
@@ -436,26 +378,15 @@ body.camView .headChip{bottom:64px}
   /* @reason [USER] THE SEED — the empty-stage state (owner's empty-checkpoint ruling, 2026-11-06): the void and the wireframe grid, with NO objects in the space — no camera, and no lamp anywhere in the build. It is stored state, not a rebuild: RESET STAGE applies it (and homes the director's view), ADD CAMERA leaves it, and the seed file under assets/seed/ boots into it. Boot and reset read the same object, so they can never drift. Industry seeds (Unity, Blender) keep a camera in the empty scene; this one deliberately does not — the owner's seed is the space itself, and the camera is content a project adds. */
   var SEED = { camPresent: false };
   /* @reason [USER] THE SEED STATE, enumerated whole — the single source the boot and the reset are both proven against: every director field, every camera field, the camera ABSENT, the main view the director's. The seed file boots here (its flag sets presence from SEED, with the state literals above standing at these same home values); RESET STAGE lands here (applySeed writes these same values — targets home, currents snapped, the yaw written literally to 0). The migration harness proves the identity field by field, so boot and reset can never drift apart unnoticed. */
-  var SEED_STATE = { dir: { yaw: 0, pitch: -6, roll: 0, panX: 0, panY: 6, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 0, tPanY: 6, tDolly: 60 }, cam: { x: 742, z: 150, heading: -107.3, tilt: 6, roll: 0, focal: 800, tX: 742, tZ: 150, tHeading: -107.3, tTilt: 6, tRoll: 0, tFocal: 800, camY: 0, tCamY: 0 }, camPresent: false, mainRole: 'director', scene: 'void' };
+  var SEED_STATE = { dir: { yaw: 0, pitch: -6, roll: 0, panX: 0, panY: 6, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 0, tPanY: 6, tDolly: 60 }, cam: { x: 742, z: 150, heading: -107.3, tilt: 6, roll: 0, focal: 800, tX: 742, tZ: 150, tHeading: -107.3, tTilt: 6, tRoll: 0, tFocal: 800, camY: 0, tCamY: 0, lift: 0, tLift: 0 }, camPresent: false, mainRole: 'director', scene: 'void' };
   var mainRole = 'director';
   /* @reason [USER] THE SCENE REGISTRY (the layers refactor, 2026-11-07): the doors of the space — every scene the setup can enter, by name, each naming its own enumerated seed state. The scene switch, the reset and the ?scene= test door all read this registry and nothing else, so a scene is a registration, not a branch in the engine: the platform carries the void's entry alone; a scene module extends the registry from its own block (the room's entry stands with the room's seed state below). */
   var SCENES = { void: SEED_STATE };
 
   /* @reason [USER] THE SCENE SELECTION (the room build, 2026-11-07; plan §7): the space holds one of two scenes — 'void', the checkpoint (void, grid, camera object), or 'room', the empty theater. The pair is current + target like every state in this layer, but a scene has no in-between to chase: the switch in Layer 3 writes both together and applies the entered scene's seed in the same pass. Boot is ALWAYS 'void' — the seed file is generated from this file, room code and all, so the default standing here is the seed's contract (plan §7, B14). */
   var sceneNow = 'void', sceneNext = 'void';
-  /* @reason [USER] THE ROOM, as numbers (the room build, 2026-11-07; plan §2): the dimensions every room mechanic reads — the floor heights the floor function returns (audience floor 2, deck 25), the deck's footprint (the floor function's step edge), the room centre the ghost test's far side is stated against, and the camera's admitted range inside the room: the interior (x −122..982, z −85..1111) shrunk by the camera object's 51-unit half-depth, so no position write can seat the body inside a wall (plan §8, R1). The meshes' own sizes stand in the plan's construction table and in Layer 1's builder. Since fix round 1 (plan §16) the record also carries the room's light exposure — amb and sun, the rig intensities the scene-state door applies while the room stands — re-derived from measured absolutes under the π-corrected lighting model: the room's faces are priced under a rebalanced rig (ambient ≈3.2× and sun ≈4.0× the checkpoint's values — the sun carries more of the room's light because its angle separates the west wall from the back wall, the D4 pair), and the void keeps the rig's build values (0.85 / 1.15), applied at the same door. */
-  var ROOM = { floorY: 2, deckY: 25, deckX0: 108, deckX1: 752, deckZ0: -85, deckZ1: 191, centreX: 430, centreY: 232, centreZ: 513, camMinX: -71, camMaxX: 931, camMinZ: -34, camMaxZ: 1060, amb: 2.7, sun: 4.55 };
-  /* @reason [USER] THE ROOM'S HOMES (the room build, 2026-11-07; plan §5): the camera's room home — (430, 1052) on the room's axis near the front wall, heading −180 (facing the stage; stored on the wrap180 side of the seam — +180 and −180 are the same aim, but the frame loop's normal form is [−180, 180), so storing −180 makes the state read identically on every path that reaches the home: the D-3 representation cure, fix round 1), tilt +0.6 (the drop to the deck centre over its 999-unit run), focal 360 (derived in the plan from the binding portrait aspect: the whole stage in frame at 20:9 with margin) — and the director's room home: the checkpoint posture transplanted inside (yaw 0, pitch −6, roll 0, dolly 60) with its pan SOLVED through the rig's own formulas so the deck centre (430, 25, 53) projects to the frame's centre — panX 70.39, panY −130.57 (the plan's starting estimates were 70 / −40; the solve is exact and is re-proven by projection in the room verify battery). Each scene carries its own homes; the checkpoint's CAM_HOME is untouched. */
-  var ROOM_CAM_HOME = { x: 430, z: 1052, heading: -180, tilt: 0.6, focal: 360 };
-  var ROOM_DIR_HOME = { yaw: 0, pitch: -6, roll: 0, panX: 70.39, panY: -130.57, dolly: 60 };
-  /* @reason [USER] The room's registration in the camera-home registry (the layers refactor, 2026-11-07): the theater scene's home joins the platform's registry from the theater's own block, so the platform bytes carry the void's entry alone. */
-  CAM_HOMES.room = ROOM_CAM_HOME;
-  /* @reason [USER] THE AIM POINTS, one per scene (the room build, 2026-11-07; plan §§7–8, B8): AIM AT CENTRE and the camera view's double-tap aim at the scene's subject centre — in the void, CENTRE on the ground (430, 0, 53); in the room, the deck centre IN THE AIR (430, 25, 53): aiming at the ground point there would drive the camera's aim into the riser. The y is the point's height, which the tilt's drop is measured against. */
-  var AIM_POINTS = { void: { x: 430, z: 53, y: 0 }, room: { x: 430, z: 53, y: 25 } };
-  /* @reason [USER] THE ROOM'S SEED STATE, enumerated whole like the checkpoint's (the room build, 2026-11-07; plan §7): entering the room applies exactly this — the director at ROOM_DIR_HOME, the camera PRESENT at ROOM_CAM_HOME standing on the audience floor (camY 2) — currents snapped onto targets, no glide across scenes; RESET STAGE in the room returns exactly here, field for field. Nothing persists across scenes, by decision (plan §7, R8): the two scene pills are doors between two known states, not a state keeper. The camera heading is stored as −180, the frame loop's wrap180 normal form, so the switch, the reset and the ?scene=room door all land on byte-identical state (fix round 1, D-3). */
-  var ROOM_SEED_STATE = { dir: { yaw: 0, pitch: -6, roll: 0, panX: 70.39, panY: -130.57, dolly: 60, tYaw: 0, tPitch: -6, tRoll: 0, tPanX: 70.39, tPanY: -130.57, tDolly: 60 }, cam: { x: 430, z: 1052, heading: -180, tilt: 0.6, roll: 0, focal: 360, tX: 430, tZ: 1052, tHeading: -180, tTilt: 0.6, tRoll: 0, tFocal: 360, camY: 2, tCamY: 2 }, camPresent: true, mainRole: 'director', scene: 'room' };
-  /* @reason [USER] The room's registration in the scene registry (the layers refactor, 2026-11-07): the theater scene joins the platform's registry from the theater's own block — the switch, the reset and the test door read the registry only, so the platform bytes carry the void's entry alone. */
-  SCENES.room = ROOM_SEED_STATE;
+  /* @reason [USER] THE AIM POINTS, one per scene (the room build, 2026-11-07; plan §§7–8, B8; platform form since the layers refactor, 2026-11-07): AIM AT CENTRE and the camera view's double-tap aim at the scene's subject centre — in the void, CENTRE on the ground (430, 0, 53). The y is the point's height, which the tilt's drop is measured against. A scene module adds its own entry beside its other numbers (the room's — the deck centre IN THE AIR (430, 25, 53), since aiming at the ground point there would drive the camera's aim into the riser — stands in the theater module). */
+  var AIM_POINTS = { void: { x: 430, z: 53, y: 0 } };
   /* @reason [USER] CAPTURE, as numbers (the capture build, 2026-11-07 — the owner's overnight order: we use the camera in the scene to record something as our proof of concept): the captured frame is 1280×720, fed to the recorder at 30 frames a second. The size is the capture's OWN, never the screen's — a photo or a recording must be the shot at one known size on any device, not whatever window the page happens to fill — and it is a standard HD frame the phone's encoder takes in real time. The mechanics live in Layer 3; plan §10's invariants are their contract (one scene graph, the camera's pose from state alone, the ghost pass-scoped, render-then-read in the same task). */
   var CAPTURE = { w: 1280, h: 720, fps: 30 };
 
@@ -496,6 +427,7 @@ body.camView .headChip{bottom:64px}
   numParam('tilt', function (v) { cam.tTilt = cam.tilt = clamp(v, -70, 70); });
   numParam('camroll', function (v) { cam.tRoll = cam.roll = clamp(v, -180, 180); });
   numParam('focal', function (v) { cam.tFocal = cam.focal = clamp(v, 240, 1700); });
+  numParam('lift', function (v) { cam.tLift = cam.lift = clamp(v, 0, 360); });
   if (q.get('view') === 'camera') mainRole = 'camera';
 
   var vpMain = document.getElementById('vpMain');
@@ -594,11 +526,6 @@ body.camView .headChip{bottom:64px}
     /* the two view pills are toggles, the other pills are actions: the pressed state is written alongside the lit class, so a non-visual reader can tell which eye is chosen — and can tell a toggle from a momentary action (2026-11-06 overnight round 6). */
     document.getElementById('btnDir').setAttribute('aria-pressed', mainIsDir ? 'true' : 'false');
     document.getElementById('btnCam').setAttribute('aria-pressed', mainIsDir ? 'false' : 'true');
-    /* the scene pills are toggles like the view pills (the room build, 2026-11-07): STAGE stands lit in the checkpoint scene, THEATER in the room — the pressed state is written alongside the lit class, as the role pair above. */
-    document.getElementById('btnStage').className = sceneNow === 'void' ? 'on' : '';
-    document.getElementById('btnTheater').className = sceneNow === 'room' ? 'on' : '';
-    document.getElementById('btnStage').setAttribute('aria-pressed', sceneNow === 'void' ? 'true' : 'false');
-    document.getElementById('btnTheater').setAttribute('aria-pressed', sceneNow === 'room' ? 'true' : 'false');
     document.getElementById('pip').style.display = cam.present ? '' : 'none';
     document.getElementById('btnCam').style.display = cam.present ? '' : 'none';
     document.getElementById('btnAim').style.display = cam.present ? '' : 'none';
@@ -614,9 +541,7 @@ body.camView .headChip{bottom:64px}
       ? ['Empty stage: void and grid ·', 'The empty stage: the void and the wireframe grid — nothing else stands in the space. This is the seed state projects start from. ADD CAMERA puts the camera in the space. The grid: one square is 92, the heavy line stands every 460.']
       : mainIsDir
       ? ['Director: drag to orbit · pinch to zoom ·', 'Director: drag to orbit · drag the camera to move it · pinch to zoom · two-finger drag to pan · twist two fingers to roll · double-tap the camera to visit it · double-tap space to fly home · scroll to zoom · three-finger slide zooms the lens · double-tap-hold and slide to zoom one-handed · arrow keys nudge the camera · drag or pinch the corner to aim and zoom the camera · tap the corner to swap views · grid: one square 92 · heavy line 460']
-      : ['Camera: drag to look · pinch to fly ·', 'Camera: drag to look · Shift-drag or right-drag slides and flies the camera · pinch or scroll to move forward and back · two-finger drag slides sideways and flies up/down · twist rolls · three-finger slide zooms the lens · double-tap levels and centres · double-tap-hold and slide to fly one-handed · arrow keys nudge the camera · drag or pinch the corner to orbit and zoom the director · tap the corner to swap views · grid: one square 92 · heavy line 460'];
-    /* the room's ghost rule is undiscoverable without its line (plan B15): one six-word line rides INSIDE the room director's tap-gated map. The short lines are unchanged in every scene, so the exposed-word census the checkpoint carries stands untouched; the camera maps carry no such line — the shot never ghosts, and a map must not promise a fade the shot cannot show. */
-    if (sceneNow === 'room' && cam.present && mainIsDir) hintParts = [hintParts[0], hintParts[1] + ' · walls fade when you orbit outside'];
+      : ['Camera: drag to look · pad moves ·', 'Camera: drag to look · pad moves the camera (forward, back, left, right, up, down) — tap nudges, hold moves · pinch or scroll to move forward and back · two-finger drag slides sideways and flies up/down · twist rolls · three-finger slide zooms the lens · double-tap levels and centres · arrow keys nudge the camera · drag or pinch the corner to orbit and zoom the director · tap the corner to swap views · grid: one square 92 · heavy line 460'];
     document.getElementById('hintShort').textContent = hintParts[0];
     document.getElementById('hintFull').textContent = hintParts[1];
     document.getElementById('hintFull').hidden = true;
@@ -631,16 +556,16 @@ body.camView .headChip{bottom:64px}
     fit();
   }
 
-  /* @reason [USER] The floor function (the room build, 2026-11-07; plan §8): the height of the floor under a ground point, written as a general Layer-3 function — in the void, the ground plane (0) everywhere; in the room, the deck (25) inside the stage's footprint and the audience floor (2) everywhere else. The frame loop reads it at the camera's seat every frame and feeds its target height from it, so the camera GLIDES up the riser as it crosses the deck's edge on the loop's own constant instead of stepping or sinking (plan FM-5). It is written for any caller: the first asset placed in the room inherits the same floor (plan FM-11). */
+  /* @reason [USER] The floor function (the room build, 2026-11-07; plan §8; platform form since the layers refactor, 2026-11-07): the height of the floor under a ground point, written as a general Layer-3 function — in the void, the ground plane (0) everywhere. The frame loop reads it at the camera's seat every frame and feeds its target height from it, so the camera rides its floor on the loop's own constant instead of stepping or sinking (plan FM-5). It is written for any caller: a scene module's stepped floor (the room's — the deck (25) inside the stage's footprint and the audience floor (2) everywhere else — stands in the theater module) takes this body's place when its scene registers, and the first asset placed in a scene inherits the same floor (plan FM-11). */
   function floorAt(x, z) {
-    if (sceneNow !== 'room') return 0;
-    return (x >= ROOM.deckX0 && x <= ROOM.deckX1 && z >= ROOM.deckZ0 && z <= ROOM.deckZ1) ? ROOM.deckY : ROOM.floorY;
+    return 0;
   }
-  /* @reason [BEST-PRACTICE] The camera's position clamp, one door for every position write (the room build, 2026-11-07; plan §8): drag, flights, strafe and keys all land here, so the admitted range is the scene's own — the checkpoint's ±3000 in the void; in the room, the interior shrunk by the object's half-depth (x −71..931, z −34..1060, from Layer 2's ROOM record), so no gesture or flight can seat the camera's body inside a wall. The deck is NOT an exclusion: standing on it is the floor function's business, and the clamp's z floor (−34) is exactly the deck's back reach, so the camera can back onto the deck against the back wall. */
+  /* @reason [BEST-PRACTICE] The camera's position clamp, one door for every position write (the room build, 2026-11-07; plan §8; platform form since the layers refactor, 2026-11-07): drag, flights, strafe and keys all land here, so the admitted range is the scene's own — the checkpoint's ±3000 in the void. A scene module's tighter bounds take this body's place when its scene registers (the room's — the interior shrunk by the object's half-depth, x −71..931, z −34..1060, from its ROOM record — stand in the theater module). */
   function clampCamPos() {
-    if (sceneNow === 'room') { cam.tX = clamp(cam.tX, ROOM.camMinX, ROOM.camMaxX); cam.tZ = clamp(cam.tZ, ROOM.camMinZ, ROOM.camMaxZ); }
-    else { cam.tX = clamp(cam.tX, -3000, 3000); cam.tZ = clamp(cam.tZ, -3000, 3000); }
+    cam.tX = clamp(cam.tX, -3000, 3000); cam.tZ = clamp(cam.tZ, -3000, 3000);
   }
+  /* @reason [USER] The camera's lift clamp (cycle 2, 2026-11-07; plan §2.3): one door for every lift-target write — the movement pad, the filming home, any future writer — admitting exactly the decided range, 0 (standing on the floor) to 360 (a full deck-height-and-more above it: the room's ceiling underside stands 437 above the audience floor, and the filming home's 84 sits well inside). A scene module never replaces this body: the range is the axis's own, not a scene's. */
+  function clampCamLift() { cam.tLift = clamp(cam.tLift, 0, 360); }
   /* @reason [USER] Apply a scene's seed state, whole (the room build, 2026-11-07; plan §7): every director field, every camera field, presence, role and scene — targets written, currents SNAPPED onto them (a scene switch is a door, not a flight: nothing glides across scenes), the room group shown or hidden to match, and the origin ring reseated on the scene's floor (0.5 on the checkpoint's ground; 2.5 on the room's floor — floor top plus its standing offset, plan §3). The application runs through the role boundary with force: a switch is a layout change by definition, so the live gesture is cancelled even when role and presence happen to read the same on both sides. RESET STAGE and the two scene pills are this one function's callers, so a scene's entry and its reset can never drift apart — the discipline the checkpoint's SEED_STATE identity established, extended to two scenes. The application also sets the light rig's exposure for the entered scene (fix round 1, plan §16): the room's faces are priced under ROOM.amb / ROOM.sun, the void under the rig's build values 0.85 / 1.15 — a scene's brightness is part of its seed, applied at the same door, so no path can enter a scene under the other scene's light. */
   function applySceneState(seed) {
     sceneNow = seed.scene; sceneNext = seed.scene;
@@ -648,12 +573,12 @@ body.camView .headChip{bottom:64px}
     mainRole = seed.mainRole;
     dir.tYaw = seed.dir.tYaw; dir.tPitch = seed.dir.tPitch; dir.tRoll = seed.dir.tRoll; dir.tPanX = seed.dir.tPanX; dir.tPanY = seed.dir.tPanY; dir.tDolly = seed.dir.tDolly;
     dir.yaw = dir.tYaw; dir.pitch = dir.tPitch; dir.roll = dir.tRoll; dir.panX = dir.tPanX; dir.panY = dir.tPanY; dir.dolly = dir.tDolly;
-    cam.tX = seed.cam.tX; cam.tZ = seed.cam.tZ; cam.tHeading = seed.cam.tHeading; cam.tTilt = seed.cam.tTilt; cam.tRoll = seed.cam.tRoll; cam.tFocal = seed.cam.tFocal; cam.tCamY = seed.cam.tCamY;
-    cam.x = cam.tX; cam.z = cam.tZ; cam.heading = cam.tHeading; cam.tilt = cam.tTilt; cam.roll = cam.tRoll; cam.focal = cam.tFocal; cam.camY = cam.tCamY;
+    cam.tX = seed.cam.tX; cam.tZ = seed.cam.tZ; cam.tHeading = seed.cam.tHeading; cam.tTilt = seed.cam.tTilt; cam.tRoll = seed.cam.tRoll; cam.tFocal = seed.cam.tFocal; cam.tCamY = seed.cam.tCamY; cam.tLift = seed.cam.tLift;
+    cam.x = cam.tX; cam.z = cam.tZ; cam.heading = cam.tHeading; cam.tilt = cam.tTilt; cam.roll = cam.tRoll; cam.focal = cam.tFocal; cam.camY = cam.tCamY; cam.lift = cam.tLift;
     if (roomGroup) roomGroup.visible = seed.scene === 'room';
-    if (ring0) ring0.position.y = seed.scene === 'room' ? 2.5 : 0.5;
-    if (ambLight) ambLight.intensity = seed.scene === 'room' ? ROOM.amb : 0.85;
-    if (sunLight) sunLight.intensity = seed.scene === 'room' ? ROOM.sun : 1.15;
+    if (ring0) ring0.position.y = 0.5;
+    if (ambLight) ambLight.intensity = 0.85;
+    if (sunLight) sunLight.intensity = 1.15;
     applyRoles(true);
   }
   /* @reason [USER] The scene switch (the room build, 2026-11-07; plan §7; registry form since the layers refactor, 2026-11-07): the scene pills' one act — name the scene, apply ITS seed, the seed read from the SCENES registry in Layer 2 and nothing else, so a scene is a registration, not a branch in the engine. Entering a scene always applies that scene's seed state, both ways (plan §7, R8): returning to STAGE lands on the checkpoint exactly, never on wherever the void scene was left, and re-entering THEATER lands on the room's seed — the switcher is a pair of doors between two known states, not a state keeper. An unknown name is refused whole. */
@@ -662,30 +587,6 @@ body.camView .headChip{bottom:64px}
     if (!s) return;
     sceneNext = name;
     applySceneState(s);
-  }
-  /* @reason [USER] The dollhouse ghost, evaluated for one pass (the room build, 2026-11-07; plan §4 — the wild-wall rule): on a DIRECTOR pass only, each shell panel whose plane the rendering eye stands OUTSIDE of renders as a ghost for this pass — opacity 0.07, depthWrite off, and its render order PINNED at the grid's own + 1 (0), because the engine sorts transparent objects by centroid and an unpinned ghost's order against the grid could flip with the eye (plan R4). The room centre stands inside every panel's plane, so the eye being on a panel's outward side IS the plan's test — eye outside, centre on the far side. Camera passes never call this: the shot is the true room, always. The caller restores every panel this returns, inside the same pass, whatever the render does (plan R10) — the state this writes is pass-scoped by construction, which is capture invariant 4 (plan §10). The fade writes ONLY the opacity uniform and depthWrite, never the transparent flag: the panels' materials are born transparent (Layer 1) because this engine's program-change census omits that flag — a material compiled opaque forces fragment alpha to 1.0 no matter what opacity is later set, which is the measured W-R1 D3 failure this round cures (fix round 1, plan §16); with the classification fixed at birth, the opacity change is honoured by the compiled program live. */
-  function applyRoomGhost(camObj, isDirView) {
-    if (!isDirView || !roomGroup || !roomGroup.visible || !camObj || !camObj.position) return null;
-    var eye = camObj.position, out = null, i, p, m;
-    for (i = 0; i < roomPanels.length; i++) {
-      p = roomPanels[i];
-      if ((eye.x - p.cx) * p.nx + (eye.y - p.cy) * p.ny + (eye.z - p.cz) * p.nz > 0) {
-        m = p.mesh.material;
-        m.opacity = 0.07; m.depthWrite = false;
-        p.mesh.renderOrder = 0;
-        (out = out || []).push(p);
-      }
-    }
-    return out;
-  }
-  /* @reason [BEST-PRACTICE] The ghost's restore (the room build, 2026-11-07; plan §4/R10): every panel applyRoomGhost faded returns to its standing state — opacity 1, depth-writing, its standing render order 1 (its transparent classification is its birth state and is never toggled: the classification is what the engine compiled, plan §16) — in the same pass that faded it, from the pass's finally, so a thrown render cannot strand a panel at 0.07 into a later camera pass. Restoring is by the list the apply returned, never by re-testing: what was faded is what is restored, exactly. */
-  function restoreRoomGhost(list) {
-    if (!list) return;
-    for (var i = 0; i < list.length; i++) {
-      var m = list[i].mesh.material;
-      m.opacity = 1; m.depthWrite = true;
-      list[i].mesh.renderOrder = 1;
-    }
   }
 
   /* @reason [USER] CAPTURE (the capture build, 2026-11-07; plan §10): the camera's shot, taken out of the scene — a still (PHOTO) and a recording (REC). The standing state of the feature: the lazily built kit (its render target, its own canvas, its pixel buffer, its stream and recorder — built once, on first use, so a page that never captures pays nothing) and the recording's readout (whether it stands, how many frames it has been fed, its elapsed seconds on the frame loop's own clock, the chosen mime, and the last photo and recording it produced). Every function below is guarded at its head: with no engine, or no recorder in the browser, the feature reports itself unavailable in this state and claims nothing — a refused capture, never a fabricated one. */
@@ -839,16 +740,15 @@ body.camView .headChip{bottom:64px}
   /* @reason [BEST-PRACTICE] Save the settings: persist the whole settings object — the four numbers and the aids toggle — on this device, silently tolerating a storage failure — a tool that cannot save still works. */
   function saveSettings() { try { localStorage.setItem('stage3d-settings', JSON.stringify(SET)); } catch (e) { } }
 
-  /* @reason [BEST-PRACTICE] One render pass: the scene from one eye into the current viewport rectangle. The camera object stands in a director's pass only — a camera never sees itself — its held ring with it, and its frustum helper stands only there too, and only while the aids setting is on (off by default — the owner's standing verdict on extra stuff in the scene; the panel's AIDS toggle governs it exactly as it governed the prints). The pass clears its own rectangle first, so the corner and gizmo passes never smear the main view. The room's dollhouse ghost rides this same per-pass discipline (the room build, 2026-11-07; plan §4): on a director pass, the shell panels between the eye and the room centre are faded for this pass alone and restored in the pass's finally, so no pass can inherit another pass's fade and a thrown render cannot strand one. */
+  /* @reason [BEST-PRACTICE] One render pass: the scene from one eye into the current viewport rectangle. The camera object stands in a director's pass only — a camera never sees itself — its held ring with it, and its frustum helper stands only there too, and only while the aids setting is on (off by default — the owner's standing verdict on extra stuff in the scene; the panel's AIDS toggle governs it exactly as it governed the prints). The pass clears its own rectangle first, so the corner and gizmo passes never smear the main view. */
   function renderPass(camObj, isDirView) {
     camGroup3.visible = cam.present && isDirView;
     if (ringMesh) ringMesh.visible = camGroup3.visible && ringHandle.style.display !== 'none';
     if (shadowMesh) shadowMesh.visible = !!SET.aids;
     if (camHelper) { camHelper.visible = cam.present && isDirView && !!SET.aids; if (camHelper.visible) camHelper.update(); }
-    var ghosted = applyRoomGhost(camObj, isDirView);
     renderer.setClearColor(0x070403, 1);
     renderer.clear(true, true);
-    try { renderer.render(scene, camObj); } finally { restoreRoomGhost(ghosted); }
+    renderer.render(scene, camObj);
   }
   /* @reason [BEST-PRACTICE] A camera's aspect, written only on change: the same engine camera serves the main view and the corner at different shapes, so each pass seats its own aspect first. THE PORTRAIT FRAMING LAW (fix round 8, O-3): the director camera's 33.9 degrees is a LANDSCAPE angle — on a tall phone frame it leaves a 16-degree horizontal slit, and the stage's reference points (the origin above all) fall outside it no matter where they stand. So on a narrow frame (aspect < 1.05) the director's VERTICAL angle becomes the free variable and widens to hold the horizontal field at the landscape value (52 degrees, capped at 100): the same stage coverage at any shape, the framing every 3D tool's portrait preview keeps. The scene camera is never touched by this law — its angle is the lens, and the lens is state. */
   function setAspect(c, a) { var ch = Math.abs(c.aspect - a) > 0.0001; if (ch) c.aspect = a; if (c === dirCam) { var f = a < 1.05 ? Math.min(100, 2 * Math.atan(Math.tan(26 * Math.PI / 180) / a) * 180 / Math.PI) : 33.9; if (Math.abs(c.fov - f) > 0.01) { c.fov = f; ch = true; } } if (ch) c.updateProjectionMatrix(); }
@@ -968,7 +868,7 @@ body.camView .headChip{bottom:64px}
   /* @reason [USER] Whether the hint's full gesture map stands open behind its MORE tap: while it is open the idle fade must not dim the text the owner is reading (2026-11-06, the ten-word law fix). */
   var hintOpen = false;
   /* @reason [BEST-PRACTICE] Two engine hooks into init()'s gesture scope (navfix N3/N12): the gesture state lives inside init(), but applyRoles() and fit() stand outside it — so init registers its role-boundary cancellation and its resize reseed here, and every role application and every fit runs them. Until init registers them (the boot calls), no gesture exists to cancel or reseed, and the hooks stand empty. */
-  var onRoleApply = null, onFit = null;
+  var onRoleApply = null, onFit = null, padStep = null, tickExtra = null;
   /* @reason [USER] The physics body table and the simulation clock (the layers build, 2026-11-07; plan §2): every simulated body is one record — p (centre), v, r (radius; a body's only extent in this core), rest (restitution), fric (tangential friction factor), spin (per-axis rates the presentation reads), state (falling / contact / settled), contactT (uninterrupted contact time — the settle clock), firstHit (the first contact's sim time and impact speed, MEASURED: the ball test prints them against the plan's predictions), mesh (presentation only — the step never reads it) and onHit (the body owner's first-contact call). physT is the simulation clock: it accumulates stepped time only, so a measurement reads the same at any render rate. */
   var physBodies = [], physT = 0;
   /* @reason [BEST-PRACTICE] The seeded draw (the layers build, 2026-11-07): an LCG over Math.imul — the same seed reproduces the same sequence exactly, on every engine, forever. Runtime randomness has no seat in a measured world: a scene that scatters (the ball's shards) draws its table from a seed printed in its own record. */
@@ -1022,8 +922,9 @@ body.camView .headChip{bottom:64px}
     function chase(o, curKey, tgtKey) { var d = o[tgtKey] - o[curKey]; o[curKey] = Math.abs(d) < 0.001 ? o[tgtKey] : o[curKey] + d * k; }
     chase(dir, 'yaw', 'tYaw'); chase(dir, 'pitch', 'tPitch'); chase(dir, 'panX', 'tPanX'); chase(dir, 'panY', 'tPanY'); chase(dir, 'dolly', 'tDolly');
     chase(cam, 'x', 'tX'); chase(cam, 'z', 'tZ');
-    /* @reason [BEST-PRACTICE] The camera's floor height (the room build, 2026-11-07; plan §8): the height target is re-read every frame from the floor function at the camera's CURRENT seat, and the current height chases it on the loop's own constant — crossing the deck's edge is a glide up the riser, never a step or a sink (plan FM-5); in the void the function reads 0 and the height rests on the checkpoint's ground. */
-    cam.tCamY = floorAt(cam.x, cam.z); chase(cam, 'camY', 'tCamY');
+    /* @reason [BEST-PRACTICE] The camera's standing height (the room build, 2026-11-07, plan §8; composed since cycle 2, 2026-11-07, plan §2.3): the height target is the floor function at the camera's CURRENT seat PLUS the camera's lift — the feeder composes the two instead of overwriting the height with the floor alone, which is what pinned the eye to floor + 34 and made a raised camera impossible. The floor part is re-read every frame (crossing the deck's edge is a glide up the riser, never a step or a sink, plan FM-5; in the void the function reads 0), the lift chases its own target on the loop's own constant beside it, and the current height chases the composed target — so a held pad direction rises smoothly and a ground move at height keeps its height across the riser. */
+    cam.tCamY = floorAt(cam.x, cam.z) + cam.tLift; chase(cam, 'camY', 'tCamY');
+    chase(cam, 'lift', 'tLift');
     /* @reason [BEST-PRACTICE] The heading chases the short way around the ±180 seam: the delta is wrapped into [−180, 180) first — by the file's ONE wrap, wrap180, true modulo at the function (convergence fix round 5, V2-3) — so a 2-degree aim change across the seam is a 2-degree turn, never a near-full spin. */
     var dHead = wrap180(cam.tHeading - cam.heading);
     cam.heading = Math.abs(dHead) < 0.001 ? cam.tHeading : cam.heading + dHead * k;
@@ -1053,6 +954,15 @@ body.camView .headChip{bottom:64px}
         if (tick._ct !== ct) { tick._ct = ct; document.getElementById('focalChip').textContent = ct; }
       }
     }
+    /* @reason [USER] The movement pad's face and step (cycle 2, 2026-11-07; plan §2.2): the pad stands only in the camera view, with a camera present and the settings panel closed — reconciled here, on the loop, on the readouts' own change-only cache discipline, so every way the panel opens or closes (the gear, the close button, an outside press, the corner's dismissal) and every role change is covered by this one reader instead of a call scattered across the panel's doors. The step call then spends the pad's held directions for this frame (the pad's own door, in the wiring, owns the held set), and tickExtra is the hook a scene module registers its own per-frame reconciliation on — the theater's FILM face rides it. */
+    var padEl = document.getElementById('pad');
+    if (padEl) {
+      var panelEl = document.getElementById('panel');
+      var padWant = (cam.present && mainRole === 'camera' && !(panelEl && panelEl.classList.contains('open'))) ? '' : 'none';
+      if (tick._pad !== padWant) { tick._pad = padWant; padEl.style.display = padWant; }
+    }
+    if (padStep) padStep(dt);
+    if (tickExtra) tickExtra();
   }
 
 
@@ -1110,14 +1020,38 @@ body.camView .headChip{bottom:64px}
       document.getElementById('btnDir').addEventListener('click', function () { mainRole = 'director'; applyRoles(); });
       document.getElementById('btnCam').addEventListener('click', function () { mainRole = 'camera'; applyRoles(); });
       document.getElementById('btnAddCam').addEventListener('click', addCamera);
-      document.getElementById('btnStage').addEventListener('click', function () { setScene('void'); });
-      document.getElementById('btnTheater').addEventListener('click', function () { setScene('room'); });
       document.getElementById('btnFind').addEventListener('click', function () { mainRole = 'director'; applyRoles(); focusCamera(); });
     } catch (err) { }
     /* the capture pills (capture build, 2026-11-07): PHOTO takes the still; REC starts a recording and, while one stands, stops it — the toggle reads the recording state itself, so the button, the hook and the feed can never disagree about which act a tap means. The functions carry their own reasons in Layer 3. */
     try {
       document.getElementById('btnPhoto').addEventListener('click', function () { capturePhoto(); });
       document.getElementById('btnRec').addEventListener('click', function () { if (capRec.on) captureStop(); else captureStart(); });
+    } catch (err) { }
+    /* @reason [USER] THE MOVEMENT PAD's own door (cycle 2, 2026-11-07; plan §2.2): six buttons, one private pointer map — a pad press never enters the main views' gesture maps, so it can never arm a tap chain, a channel lock or a double-tap, and a view gesture never spends as a pad move. A tap (released inside 350ms) nudges once; a hold (350ms or longer) moves continuously while held, spent by the frame loop through padStep at the decided rates — 120 units a second on the ground, 60 on the lift — with the chase smoothing the flight. Forward and back fly along the camera's own heading (flyCam, the pinch's own writer); left and right strafe along the camera's right vector in the ground plane, the two-finger pan's own formula, through the one position clamp; up and down write the lift target through its one clamp. Two held directions compose — forward with up flies diagonally up-forward at the two rates, no diagonal boost. The held set is gesture state: the role boundary's cancellation empties it (cancelGesture's enumeration). */
+    try {
+      var padDirs = { padFwd: 'fwd', padBack: 'back', padLeft: 'left', padRight: 'right', padUp: 'up', padDown: 'down' };
+      Object.keys(padDirs).forEach(function (id) {
+        var el = document.getElementById(id), dName = padDirs[id];
+        if (!el) return;
+        el.addEventListener('pointerdown', function (e) {
+          e.preventDefault();
+          try { el.setPointerCapture(e.pointerId); } catch (err) { }
+          padHeld[dName] = { t: performance.now(), id: e.pointerId };
+        });
+        function padEnd(e) {
+          var h = padHeld[dName];
+          if (!h || h.id !== e.pointerId) return;
+          delete padHeld[dName];
+          var heldMs = performance.now() - h.t;
+          if (heldMs >= 0 && heldMs < 350) padApply(dName, 6);
+        }
+        el.addEventListener('pointerup', padEnd);
+        el.addEventListener('pointercancel', padEnd);
+      });
+      padStep = function (dt) {
+        var now = performance.now();
+        for (var d in padHeld) { var heldMs2 = now - padHeld[d].t; if (heldMs2 >= 350) padApply(d, (d === 'up' || d === 'down') ? 60 * dt : 120 * dt); }
+      };
     } catch (err) { }
     /* @reason [USER] Aim at centre: heading from the eye to the scene's aim point (AIM_POINTS in Layer 2 — CENTRE on the ground in the void; the deck centre in the air in the room, plan B8) by atan2 of the offset, tilt from the eye's height above that point over the distance — the camera re-finds the subject in one tap, and the corner view proves it. One helper, used by the AIM button and by the camera view's double-tap. */
     function aimCentre() {
@@ -1128,26 +1062,37 @@ body.camView .headChip{bottom:64px}
     }
     try { document.getElementById('btnAim').addEventListener('click', aimCentre); } catch (err) { }
     /* @reason [USER] Fly the camera along its own look: the camera view's forward/back movement — the object slides on the ground along its heading, so pinching or scrolling inside the shot travels through the world instead of zooming a picture of it. (The lamp keep-out disc that once guarded this move is gone with the lamp itself — the empty-checkpoint ruling, 2026-11-06: the camera is the only object in the world, so nothing stands for it to collide with in the void; in the room, every write lands through the one position clamp, clampCamPos, whose interior bounds are the walls' guard — the room build, 2026-11-07; plan §8.) */
+    /* @reason [USER] One pad spend (cycle 2, 2026-11-07; plan §2.2): a single direction's amount — a tap's 6 units or a held frame's rate share — written through the same doors every other camera move uses, so the pad can never land the camera anywhere a gesture couldn't: forward/back through flyCam along the target heading, left/right strafed along the camera's right vector (the two-finger pan's formula) through clampCamPos, up/down through clampCamLift. An absent camera is never written (the keyboard handler's own guard). */
+    function padApply(d, amt) {
+      if (!cam.present) return;
+      var hr = cam.tHeading * Math.PI / 180, sh = Math.sin(hr), ch = Math.cos(hr);
+      if (d === 'fwd') flyCam(amt);
+      else if (d === 'back') flyCam(-amt);
+      else if (d === 'right') { cam.tX -= ch * amt; cam.tZ += sh * amt; clampCamPos(); }
+      else if (d === 'left') { cam.tX += ch * amt; cam.tZ -= sh * amt; clampCamPos(); }
+      else if (d === 'up') { cam.tLift += amt; clampCamLift(); }
+      else if (d === 'down') { cam.tLift -= amt; clampCamLift(); }
+    }
     function flyCam(step) {
       var hr = cam.tHeading * Math.PI / 180;
       cam.tX += Math.sin(hr) * step; cam.tZ += Math.cos(hr) * step; clampCamPos();
     }
-    /* @reason [USER] Reset camera: every camera target returns to the CURRENT SCENE's camera home (CAM_HOME in the void, ROOM_CAM_HOME in the room — each scene carries its own home, plan §5) — seat, heading, tilt, level roll, the home's lens. The recovery for a camera dragged or flown somewhere lost; AIM alone only ever fixed the aim. */
+    /* @reason [USER] Reset camera: every camera target returns to the CURRENT SCENE's camera home (CAM_HOME in the void, ROOM_CAM_HOME in the room — each scene carries its own home, plan §5) — seat, heading, tilt, level roll, the home's lens and its lift (the homes carry a lift since cycle 2 — 0 at the standing homes). The recovery for a camera dragged or flown somewhere lost; AIM alone only ever fixed the aim. */
     function resetCamera() {
       var H = CAM_HOMES[sceneNow] || CAM_HOME;
-      cam.tX = H.x; cam.tZ = H.z; cam.tHeading = H.heading; cam.tTilt = H.tilt; cam.tRoll = 0; cam.tFocal = H.focal;
+      cam.tX = H.x; cam.tZ = H.z; cam.tHeading = H.heading; cam.tTilt = H.tilt; cam.tRoll = 0; cam.tFocal = H.focal; cam.tLift = H.lift;
     }
     /* @reason [USER] Apply the seed — RESET STAGE (owner's empty-checkpoint ruling, 2026-11-06; scene-aware since the room build, 2026-11-07; plan §7): the reset returns the CURRENT SCENE to its own seed, field for field — in the void, the checkpoint exactly as it has always read (the camera leaves the space AND the director's view returns to the checkpoint's opening view, targets home and currents snapped onto them, the yaw written literally to 0 by the seed state itself rather than left at a home flight's nearest equivalent, and the absent camera's numbers normalised to the boot values, so boot and reset reproduce the checkpoint identically whichever path reaches it — convergence fixes C9 and round 3 L-1, carried by the enumerated SEED_STATE both paths read); in the room, ROOM_SEED_STATE exactly (director and camera at the room's homes, the camera standing on the audience floor). RESET never changes scene: returning to the checkpoint from the room is the STAGE pill's act, so each scene's reset contract stays pure. The write itself is applySceneState's — the one door scene entries and resets share. Reversible by design: ADD CAMERA (in the void) and the THEATER pill are the ways back, so the reset is a tool, not a trap. */
     function applySeed() { applySceneState(SCENES[sceneNow] || SEED_STATE); }
     /* @reason [USER] Add the camera back: it enters AT its home seat with its home aim — the same home RESET CAMERA restores — so an added camera and a reset camera are the same camera. Entering is not a flight: resetCamera writes only the targets, and a camera that was dragged far away before RESET STAGE would otherwise materialise at that stale seat and glide home across the stage. addCamera therefore also snaps every current to its target, so the camera's first visible frame is already home (2026-11-06 overnight round 3). */
-    function addCamera() { cam.present = true; resetCamera(); cam.x = cam.tX; cam.z = cam.tZ; cam.heading = cam.tHeading; cam.tilt = cam.tTilt; cam.roll = cam.tRoll; cam.focal = cam.tFocal; applyRoles(); }
+    function addCamera() { cam.present = true; resetCamera(); cam.x = cam.tX; cam.z = cam.tZ; cam.heading = cam.tHeading; cam.tilt = cam.tTilt; cam.roll = cam.tRoll; cam.focal = cam.tFocal; cam.lift = cam.tLift; applyRoles(); }
     /* @reason [USER] The held ring, written to both worlds at once: it lives inside the camera's group, so a director's world shows it around the held object and an eye's world hides it with the group — one write, both views correct. */
     function setRing(on) {
       var d = on ? '' : 'none';
       if (worldMain.ring) worldMain.ring.style.display = d;
       if (worldPip.ring) worldPip.ring.style.display = d;
     }
-    /* @reason [BEST-PRACTICE] The role boundary cancels the gesture (navfix N3/N4, 2026-11-06): a role application rewrites which eye each view shows, so every scrap of gesture bookkeeping earned under the old role — the pointer maps, the live mode, the channel lock, the tap chain — is void in the new one. Both maps are emptied, capture is released per recorded id (best effort: an engine may already have dropped it), the counters are recomputed from the emptied maps, the held ring goes off, and both double-tap chains (the general chain and the camera chain) are wiped. applyRoles() is the one door every role change passes through — pills, corner swap, FIND, RESET STAGE, ADD CAMERA, the test hook — so the cancellation is registered into it (onRoleApply) and no entry point can forget it. The reset set is COMPLETE BY ENUMERATION over every gesture variable (convergence fix round 3, A-1): the corner's dismissal spend (pipSpent) stands in it — it was the one variable the set missed, and because a corner press reads it before any reseed, a spend earned before a role boundary survived into the next layout and swallowed that layout's first legitimate corner swap. */
+    /* @reason [BEST-PRACTICE] The role boundary cancels the gesture (navfix N3/N4, 2026-11-06): a role application rewrites which eye each view shows, so every scrap of gesture bookkeeping earned under the old role — the pointer maps, the live mode, the channel lock, the tap chain — is void in the new one. Both maps are emptied, capture is released per recorded id (best effort: an engine may already have dropped it), the counters are recomputed from the emptied maps, the held ring goes off, and both double-tap chains (the general chain and the camera chain) are wiped. applyRoles() is the one door every role change passes through — pills, corner swap, FIND, RESET STAGE, ADD CAMERA, the test hook — so the cancellation is registered into it (onRoleApply) and no entry point can forget it. The reset set is COMPLETE BY ENUMERATION over every gesture variable (convergence fix round 3, A-1): the corner's dismissal spend (pipSpent) stands in it — it was the one variable the set missed, and because a corner press reads it before any reseed, a spend earned before a role boundary survived into the next layout and swallowed that layout's first legitimate corner swap. The movement pad's held set (padHeld) stands in the enumeration since cycle 2: a direction held across a role boundary must not keep spending in the new layout. */
     function cancelGesture() {
       pointers.forEach(function (p, id) { try { vpMain.releasePointerCapture(id); } catch (err) { } });
       pipPointers.forEach(function (p, id) { try { pip.releasePointerCapture(id); } catch (err) { } });
@@ -1156,6 +1101,7 @@ body.camView .headChip{bottom:64px}
       mode = null; chanLock = null; dtPending = false; dtDrag = false;
       lastTap = -Infinity; lastCamTap = -Infinity; tapOk = false; downHit = false; downMod = false;
       pipMaxPtr = 0; pipTravel = 0; pipSpent = false;
+      padHeld = {};
       setRing(false);
     }
     /* @reason [BEST-PRACTICE] A resize reseeds the live gesture (navfix N12): fit() changes the view's scale and wrap shift, so every baseline a live gesture measures from — the last position, the pinch seeds and lock reference, the lens midpoint, the corner's pinch baseline — is re-derived from the fingers' CURRENT stored positions the moment a fit lands; the gesture then continues from where the fingers are instead of jumping across the discontinuity. The stored positions are client coordinates, which a resize does not move; what must not survive the change is a delta or a classification measured across it, so the channel lock is cleared to re-classify from the reseeded landing. Registered into fit() as onFit — which fit() now invokes only when its measured inputs actually changed (convergence fix round 2, R2A-2), so this function's contract is unchanged and its trigger is honest. */
@@ -1194,6 +1140,7 @@ body.camView .headChip{bottom:64px}
 
     /* ---- main view gestures ---- */
     var pointers = new Map();
+    var padHeld = {};
     var lastDist = 0, lastMidX = 0, lastMidY = 0, lastAng = 0, lastTap = -Infinity, lastTapX = 0, lastTapY = 0, mode = null, lastX = 0, lastY = 0;
     /* @reason [BEST-PRACTICE] The camera tap chain (convergence fix C1, 2026-11-06): taps ON the camera object keep their own last-tap stamp, separate from the general chain's — a second on-camera tap completes the focus visit, and the two chains can never seed or complete each other. BOTH chain stamps are BORN DISARMED and cleared to the same value everywhere (convergence fix round 4, V-2): they initialise to −Infinity, and every write that clears a chain — cancelGesture, a completed double-tap, the non-tap resolution — writes −Infinity, never 0. A stamp of 0 was a lie the boot window believed: the arming test (now − stamp < TAP_WINDOW) is true for any press landing in the first 300 ms after the time origin, so the page's first drag near the origin armed the one-hand zoom on a tap that never happened. −Infinity sits inside no live window at any clock, so a chain can only ever be armed by a real tap seeding it. The stamps' coordinates (lastTapX/Y, lastCamTapX/Y) need no such guard: they are read only behind the time test, which a disarmed stamp always fails first. The press-epoch stamps are a different kind — downT, dtArmT and the corner's pipDownT are seeded by the very press that owns them, before any read, so their 0 initial values can never be believed either; they stand as they are, by that reseeding argument. */
     var lastCamTap = -Infinity, lastCamTapX = 0, lastCamTapY = 0;
@@ -1219,7 +1166,7 @@ body.camView .headChip{bottom:64px}
         /* a press that dismisses the open settings panel is a dismissal, not a tap: the document closer spends this same press on closing the panel, so it must neither join nor seed the double-tap test — otherwise closing the panel and tapping the scene once more inside the window flies the view home or visits the camera, a flight the user never asked for (2026-11-06 overnight round 6). */
         var panelOpen = panel.classList.contains('open');
         if (panelOpen) tapOk = false;
-        /* a modified press (Shift held, or the right button) is a pan, not a tap: it never records a camera hit for the tap chain (navfix N19) — a pan that happens to land on the camera must not be able to complete a double-tap focus on release — and it never seeds the chain either (downMod, read where taps are recorded). No non-primary press may choose what a drag means: the right button and Shift choose only the pan, the documented modification — in the director view the pan itself; in the camera view that view's pan-equivalent, the camera's own strafe and fly (convergence fix round 6, V3-2: the modification means pan in BOTH views, and the camera-view branch that once ignored downMod and silently looked is converted to the door's record like every other consumer) — and every REFUSED button (the middle, the side buttons, any other value) chooses nothing at all — its press never reaches this test, having been refused at the handler's door (the admitted-set class test, convergence fix round 5, V2-1; round 4's door guard enumerated the middle button alone, and round 3's A-3 exclusion stood in both formulas before that — it closed the grab and the chains but left the mode decision resolving a middle press to 'look', so a middle drag still orbited), so refused buttons appear in neither this test nor the mode test below: the formulas name only the presses that can actually arrive. */
+        /* a modified press (Shift held, or the right button) is a pan, not a tap: it never records a camera hit for the tap chain (navfix N19) — a pan that happens to land on the camera must not be able to complete a double-tap focus on release — and it never seeds the chain either (downMod, read where taps are recorded). No non-primary press may choose what a drag means: the right button and Shift choose only the pan, the documented modification — in the director view the pan itself; in the camera view NOTHING since cycle 2 (2026-11-07): the modified drag's strafe-and-fly spend (convergence fix round 6, V3-2) is retired there — the record still arms at this door, because the door's bookkeeping is view-agnostic, and the camera view's look simply no longer reads it; location in that view belongs to the movement pad — and every REFUSED button (the middle, the side buttons, any other value) chooses nothing at all — its press never reaches this test, having been refused at the handler's door (the admitted-set class test, convergence fix round 5, V2-1; round 4's door guard enumerated the middle button alone, and round 3's A-3 exclusion stood in both formulas before that — it closed the grab and the chains but left the mode decision resolving a middle press to 'look', so a middle drag still orbited), so refused buttons appear in neither this test nor the mode test below: the formulas name only the presses that can actually arrive. */
         downMod = !!(e.shiftKey || e.button === 2);
         downHit = !downMod && !!(e.target.closest && e.target.closest('.camHit'));
         mode = (mainRole === 'director' && !(e.shiftKey || e.button === 2) && e.target.closest && e.target.closest('.camHit')) ? 'moveCam' : 'look';
@@ -1247,7 +1194,7 @@ body.camView .headChip{bottom:64px}
       /* the dim respects the OPEN MAP (convergence fix round 3, G-1): while the full gesture map stands open behind MORE, a press must not dim the text being read — the idle fade already guards hintOpen; the press-dim now does too. */
       if (!hintOpen) document.getElementById('hint').style.opacity = 0.35;
     });
-    /* @reason [USER] The main view's drag, routed by the kind the pointer-down decided and by the view's role — the complete navigation set. The routing honours the door's decision for the drag's whole life (convergence fix round 5, V2-2): the one sub-decision inside a look — pan versus orbit — is read from the door's own record (downMod) plus the Shift key, never from the live button mask, whose equality test once let a chorded second button convert a pan into an orbit mid-flight. Director: a camera move un-projects the finger onto the ground; a look orbits freely (yaw continuous through the full circle, pitch −89 to +89, so the director can stand anywhere, look back, look from above or below) or pans with a modified drag. Camera view: the drag looks in place (heading the full circle, tilt −70 to +70), or — under the modification, read from the same door record — pans the camera itself: the strafe sideways and the fly forward/back that this view's two-finger pan performs (round 6, V3-2). Two fingers work in both views: pinch dollies the director or flies the camera along its look, the midpoint drag pans the director or strafes the camera sideways and forward/back, and the twist between the fingers rolls the view. Travel beyond 12px from the landing point also cancels the tap test, so no drag can later masquerade as a tap. */
+    /* @reason [USER] The main view's drag, routed by the kind the pointer-down decided and by the view's role — the complete navigation set. The routing honours the door's decision for the drag's whole life (convergence fix round 5, V2-2): the one sub-decision inside a look — pan versus orbit — is read from the door's own record (downMod) plus the Shift key, never from the live button mask, whose equality test once let a chorded second button convert a pan into an orbit mid-flight. Director: a camera move un-projects the finger onto the ground; a look orbits freely (yaw continuous through the full circle, pitch −89 to +89, so the director can stand anywhere, look back, look from above or below) or pans with a modified drag. Camera view: the drag looks in place and does nothing else (heading the full circle, tilt −70 to +70) — since cycle 2 (2026-11-07) the modification spends nothing there and the double-tap-hold slide flies nothing there; the camera's location in that view is the movement pad's and the two-finger channels'. Two fingers work in both views: pinch dollies the director or flies the camera along its look, the midpoint drag pans the director or strafes the camera sideways and forward/back, and the twist between the fingers rolls the view. Travel beyond 12px from the landing point also cancels the tap test, so no drag can later masquerade as a tap. */
     vpMain.addEventListener('pointermove', function (e) {
       if (!pointers.has(e.pointerId)) return;
       /* the stored entry is updated in place: it also carries the grab flag the pointer-down set (navfix N8), which a fresh object would drop. */
@@ -1285,21 +1232,9 @@ body.camView .headChip{bottom:64px}
             dir.tPitch = clamp(dir.tPitch - dy * 0.06 * SET.look, -89, 89);
           }
         } else if (mode === 'look' && mainRole === 'camera') {
-          if (dtDrag) {
-            /* double-tap-hold drag in the camera view: the same one-hand zoom, flown — slide down travels forward, up travels back. Its speed divides by the same focal-aware apparent scale (sEye) every other camera flight uses (navfix N15), so the camera flies at one speed whichever gesture flies it. */
-            var sEye1 = scaleMain * Math.max(0.3, cam.focal / 800);
-            flyCam(dy * 1.6 * SET.zoom / sEye1);
-          } else if (downMod || e.shiftKey) {
-            /* THE MODIFICATION MEANS PAN IN BOTH VIEWS (convergence fix round 6, V3-2 — designer decision, Archer, recorded): a modified drag in the camera view is spent on this view's pan-equivalent — the strafe and fly the two-finger pan below already performs, at the same SET.pan gain and the same focal-aware scale (sEye): the horizontal drag strafes the camera along its own right vector in the ground plane, the vertical drag flies it along its look. The rig exposes no height field — the camera's position is tX/tZ and its eye height is the constant EYE — so the view plane's vertical channel IS the fly, exactly as the two-finger pan spends it; the aim (heading, tilt) never changes under a modified drag. The writes take the no-snap clampFlex discipline of every pan/dolly write; a camera target can never sit outside its ±3000 range (every flight lands clamped), so the flex lands exactly where its sibling camera writes' plain clamp lands. This branch is the decide-once discipline's last converted consumer: the look below used to run for modified drags too, because this branch never read downMod at all — a right-button or Shift drag silently LOOKED at full primary gain, V-1's camera-view cell with the two admitted presses; now the branch reads the door's record (downMod) plus Shift, exactly as the director routing does. Its position writes land through the one scene clamp, clampCamPos (the room build, 2026-11-07; plan §8): in the void that clamp is exactly the ±3000 plain clamp this paragraph prices (the flex it replaces landed identically, as the argument above proves), and in the room it is the interior clamp. */
-            var sEye2 = scaleMain * Math.max(0.3, cam.focal / 800);
-            var hrM = cam.tHeading * Math.PI / 180, shM = Math.sin(hrM), chM = Math.cos(hrM);
-            var strafeM = dx * 0.9 * SET.pan / sEye2;
-            cam.tX -= chM * strafeM; cam.tZ += shM * strafeM; clampCamPos();
-            flyCam(-dy * 0.9 * SET.pan / sEye2);
-          } else {
-            cam.tHeading = wrap180(cam.tHeading + dx * 0.30 * SET.look);
-            cam.tTilt = clamp(cam.tTilt + dy * 0.18 * SET.look, -70, 70);
-          }
+          /* THE CAMERA VIEW'S ONE DRAG (cycle 2, 2026-11-07 — the owner's phone-pass model, superseding two standing decisions, recorded here where they stood): a one-finger drag in the camera view TURNS the camera and nothing else — a drag to the LEFT turns the view to the RIGHT, the heading written with the drag's sign flipped against every earlier build (the owner's catch: the view followed the finger like a dragged photograph; a camera turns against the drag — the corner's aim drag in the pip flips with this same write, one law for both paths). Two channels are retired HERE and only here — the director branch above keeps both: the modified drag's strafe-and-fly (convergence fix round 6, V3-2), so a Shift or right-button drag now falls through to this same look, its position writes gone; and the double-tap-hold slide's one-hand flight (this view's spend of dtDrag). Location in this view belongs to the movement pad and the two-finger channels now — which is also why the pad exists. The door's records still arm and prove exactly as before (downMod, the dtPending proof): they are view-agnostic bookkeeping, and in this view they spend nothing. Tilt is byte-untouched by the flip: up and down were already right. */
+          cam.tHeading = wrap180(cam.tHeading - dx * 0.30 * SET.look);
+          cam.tTilt = clamp(cam.tTilt + dy * 0.18 * SET.look, -70, 70);
         }
       } else if (pointers.size === 2) {
         var ps = Array.from(pointers.values());
@@ -1464,7 +1399,7 @@ body.camView .headChip{bottom:64px}
       if (!cam.present) return;
       if (pipPointers.size === 1) {
         if (mainRole === 'director') {
-          cam.tHeading = wrap180(cam.tHeading + dx * 0.30 * SET.look);
+          cam.tHeading = wrap180(cam.tHeading - dx * 0.30 * SET.look);
           cam.tTilt = clamp(cam.tTilt + dy * 0.18 * SET.look, -70, 70);
         } else {
           dir.tYaw += dx * 0.075 * SET.look;
@@ -1548,8 +1483,8 @@ body.camView .headChip{bottom:64px}
     requestAnimationFrame(tick);
   })();
 
-  /* @reason [BEST-PRACTICE] Test hooks: the verification suite drives the real page through these — set state exactly, switch roles, read the role back — so a screenshot or a driving test can reproduce an exact view. The room build (2026-11-07) adds the scene pair (scene / setScene), the room's seed state and engine handles (roomSeedState; room — the group and the ghost registry the verify battery inspects), and the two engine cameras (cams), so the framing battery projects the stage's corners through the scene camera itself rather than through a replica. The capture build (2026-11-07) adds the capture door (capture: photo / start / stop / state), so the battery drives the real capture path headlessly and reads its readout — the same functions the PHOTO and REC pills call. The layers build (2026-11-07) adds the physics door (physics: spawn / step / rand / clear / remove / time / bodies / PHYS), so the physics battery drives the core's real step on synthetic time and reads its measured first hits. */
-  window.__stage = { dir: dir, cam: cam, setRole: function (r) { mainRole = r; applyRoles(); }, role: function () { return mainRole; }, samplePixels: samplePixels, seedState: function () { return SEED_STATE; }, gl: function () { return { ok: glOK, vendor: T3 ? 'three-r' + T3.REVISION : null }; }, scene: function () { return sceneNow; }, setScene: setScene, roomSeedState: function () { return ROOM_SEED_STATE; }, room: function () { return { group: roomGroup, panels: roomPanels }; }, cams: function () { return { dir: dirCam, scene: sceneCam }; }, capture: { photo: capturePhoto, start: captureStart, stop: captureStop, state: captureState }, physics: { spawn: physSpawn, step: physStep, rand: physRand, clear: physClear, remove: physRemove, time: function () { return physT; }, bodies: function () { return physBodies; }, PHYS: PHYS } };
+  /* @reason [BEST-PRACTICE] Test hooks: the verification suite drives the real page through these — set state exactly, switch roles, read the role back — so a screenshot or a driving test can reproduce an exact view. The scene registration (the room build, 2026-11-07; registry form since the layers refactor, 2026-11-07) adds the scene pair (scene / setScene) and the two engine cameras (cams), so the framing battery projects the stage's corners through the scene camera itself rather than through a replica — a scene module extends the hook with its own handles from its own block (the room's: roomSeedState; room — the group and the ghost registry the verify battery inspects — stand in the theater module). The capture build (2026-11-07) adds the capture door (capture: photo / start / stop / state), so the battery drives the real capture path headlessly and reads its readout — the same functions the PHOTO and REC pills call. The layers build (2026-11-07) adds the physics door (physics: spawn / step / rand / clear / remove / time / bodies / PHYS), so the physics battery drives the core's real step on synthetic time and reads its measured first hits. */
+  window.__stage = { dir: dir, cam: cam, setRole: function (r) { mainRole = r; applyRoles(); }, role: function () { return mainRole; }, samplePixels: samplePixels, seedState: function () { return SEED_STATE; }, gl: function () { return { ok: glOK, vendor: T3 ? 'three-r' + T3.REVISION : null }; }, scene: function () { return sceneNow; }, setScene: setScene, cams: function () { return { dir: dirCam, scene: sceneCam }; }, capture: { photo: capturePhoto, start: captureStart, stop: captureStop, state: captureState }, physics: { spawn: physSpawn, step: physStep, rand: physRand, clear: physClear, remove: physRemove, time: function () { return physT; }, bodies: function () { return physBodies; }, PHYS: PHYS } };
 })();
 </script>
 </body>
