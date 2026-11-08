@@ -1,14 +1,14 @@
-/* Experiment Batch 02 — cell registry (batch06). Supersedes the Batch 01 cells
-   in this same dashboard app (2026-11-08 dashboard wiring).
+/* Experiment Batch 02 — cell registry (batch06), data v16 (dashboard refresh 2026-11-08).
    READINESS SEMANTICS — copied verbatim from batch06/panels/*.panel.json, never upgraded:
-   - The big number is PANEL READINESS: counted passes (code passes + armed guard passes)
-     over all 20 panel entries. Shadow guard verdicts are DISPLAYED (amber, in Details)
-     but NEVER counted as passes.
+   - The big number is PANEL READINESS: counted passes (code passes + armed guard passes).
+     Shadow guard verdicts are DISPLAYED (amber, in Details) but NEVER counted as passes.
    - code_ready = the code leg alone is clean. ready (guard-passed) requires code_ready
-     AND at least one armed decisive guard pass. No guard is armed tonight, so
-     ready=false for EVERY cell — the honest headline per cell is "code-clean"
-     (cells 04 and 19 only) or its located fails / not-runs.
-   - A cell whose print exists but whose panel shows code fails displays its fails.
+     AND at least one armed decisive guard pass. The translation guard is now ARMED
+     (ES scope): cells 01 and 04 each count 1 armed pass. ONLY cell 04 is panel-ready
+     (ready=true) — and its playable print is the stale pre-fix print, so it is NOT a
+     finished video (its gate text states both facts separately, never merged).
+   - Cell 01's panel is flagged INVALID-until-dispositioned (checker #14, print identity).
+   - Posters are FRAME GRABS, not designed thumbnails (labelled per cell in Details).
    HOW TO PUBLISH A FINISHED VIDEO HERE: drop the mp4 into videos/, set video + poster
    on the cell. NEVER wire a print no panel has judged. */
 
@@ -92,12 +92,36 @@ window.BATCH_REVIEWS = [
   {
     "key": "guard_cold",
     "label": "Guard (shadow) · cold"
+  },
+  {
+    "key": "code_respelling",
+    "label": "Code · respelling"
+  },
+  {
+    "key": "code_dupchunk",
+    "label": "Code · dupchunk"
+  },
+  {
+    "key": "code_print_conformance",
+    "label": "Code · print conformance"
+  },
+  {
+    "key": "code_print_identity",
+    "label": "Code · print identity"
+  },
+  {
+    "key": "code_realized_transition",
+    "label": "Code · realized transition"
+  },
+  {
+    "key": "code_surface_fidelity",
+    "label": "Code · surface fidelity"
   }
 ];
 
 window.BATCH_META = {
   "batch": "Experiment Batch 02",
-  "channel": "Earth One \u00b7 The Daily Language Challenge",
+  "channel": "Earth One · The Daily Language Challenge",
   "repo": "hadi-nayebi/hadosh-production-contexts"
 };
 
@@ -123,6 +147,58 @@ window.BATCH_CELLS = [
       "code_composition": "pass",
       "code_variant": "pass",
       "code_timing": "fail",
+      "code_parity": "fail",
+      "code_voice": "pass",
+      "code_consistency": "pass",
+      "code_stratification": "pass",
+      "code_contradiction": "pass",
+      "code_respelling": "pass",
+      "code_dupchunk": "pass",
+      "code_print_conformance": "fail",
+      "code_print_identity": "pending",
+      "code_realized_transition": "pending",
+      "code_surface_fidelity": "pass",
+      "guard_translation": "pass",
+      "guard_linguist_claims": "running",
+      "guard_reasoning": "running",
+      "guard_segment_function": "running",
+      "guard_educator": "running",
+      "guard_seams": "running",
+      "guard_depiction": "running",
+      "guard_closure": "running",
+      "guard_animation": "running",
+      "guard_cold": "running"
+    },
+    "gate": "Panel 2026-11-08T17:28Z (batch06/panels/cell01-dlc001-eat-bread-en.panel.json): PANEL FLAG — INVALID-until-dispositioned (checker #14, GUARD-MAP-v15): “print_identity divergence: the cell01 print was rendered from the 80.233 s manifest state; the root manifest was overwritten at 14:02 UTC by the cell21/22 Mina build (79.18 s state, HI sentence changed) and later restored — print identity disposition pending (checker #14, GUARD-MAP-v15)”. The print on this dashboard is the restored-construct print. Panel readiness: counted 11 — code passes 10 · armed passes 1 · code_ready=false · ready=false. Ready basis (panel, verbatim): “not ready: code leg not clean — code FAIL / NOT RUN legs stand (shadow/advisory verdicts never count)”. Quarantine: 1 entry excluded (a guard_animation verdict that originated in cell16 — never counted). Code FAILs: preflight · timing · parity · print_conformance. Code NOT RUN: print_identity · realized_transition. Located failing subscores: 59 (carried in the panel record). Shadow INDICTS faces (advisory — displayed, NEVER counted): closure (promise_answered 0.43 · floor 0.485) · depiction (prompt_depicts_line 0.32 · floor 0.455) · educator (learnable_one_hearing 0.37 · floor 0.44) · reasoning · seams · segment_function. Armed translation scope: equivalence / gloss / diagram over the interlinear — sentence surface NOT certified by this guard. Poster: frame grab — designed thumbnail pending.",
+    "file": "dlc001-eat-bread__print__en__cell01.mp4",
+    "video": "videos/dlc001-eat-bread__print__en__cell01.mp4",
+    "poster": "poster-cell-01.png",
+    "status": "recut-owed",
+    "statusLabel": "Playable print · panel INVALID-until-dispositioned (#14) — NOT ready",
+    "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The batch-02 baseline: batch 01's built cell folded in and rebuilt under the batch06 construct. Control pair with cell 02 (only the opening language moves). Its panel is flagged INVALID-until-dispositioned (checker #14 print identity) — see Gate status.",
+    "title": "I Eat Bread in 4 Languages — Learn It From English"
+  },
+  {
+    "id": "cell-02",
+    "n": 2,
+    "sentence": "I eat bread.",
+    "opening": "ES",
+    "taught": [
+      "EN",
+      "HI",
+      "TR"
+    ],
+    "arch": "A",
+    "archName": "Classic",
+    "length": "M",
+    "lengthLabel": "~90 s measured",
+    "hook": "Image hook (O1) — the question first, in Spanish.",
+    "reviews": {
+      "code_preflight": "fail",
+      "code_matrix": "pass",
+      "code_composition": "pass",
+      "code_variant": "pass",
+      "code_timing": "fail",
       "code_parity": "pending",
       "code_voice": "pass",
       "code_consistency": "pending",
@@ -139,36 +215,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 5/20 counted passes — code passes 5/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — root files whose names match neither the v6 grammar nor the data shorthand (DEPICTION.md, sibling manifest-cellNN.json files, census outputs); timing FAIL — timing check FAIL on the panel run. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
-    "file": "dlc001-eat-bread__print__en__cell01.mp4",
-    "video": "videos/dlc001-eat-bread__print__en__cell01.mp4",
-    "poster": "poster-cell-01.png",
+    "gate": "Panel 2026-11-08T14:01Z (batch06/panels/cell02-dlc001-eat-bread-es.panel.json): panel readiness 5 counted passes — code passes 5 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — root files whose names match neither the v6 grammar nor the data shorthand (DEPICTION.md, sibling manifest-cellNN.json files, census outputs); timing FAIL — 90.13 s vs the M target 60 s ±15% (+50.2%, the G2 content-floor class). Code checks not run: parity · consistency · stratification. Print: dlc001-eat-bread__print__es__cell02.mp4 · sha256 484c67dd… · 90.133 s · LUFS −14.81 · census UNTAGGED 0 · sealed tail probe PASS · cold view PASS. The print predates the ES transcript fix for the intro-list duplication (fixed in data; a post-fix re-render runs only if HQ queues one — B50 assembler route). Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 in shadow mode. Poster: frame grab — designed thumbnail pending.",
+    "file": "dlc001-eat-bread__print__es__cell02.mp4",
+    "video": "videos/dlc001-eat-bread__print__es__cell02.mp4",
     "status": "recut-owed",
     "statusLabel": "Playable print · panel shows code FAILS — fix queue",
-    "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The batch-02 baseline: batch 01's built cell folded in and rebuilt under the batch06 construct. Control pair with cell 02 (only the opening language moves)."
-  },
-  {
-    "id": "cell-02",
-    "n": 2,
-    "sentence": "I eat bread.",
-    "opening": "ES",
-    "taught": [
-      "EN",
-      "HI",
-      "TR"
-    ],
-    "arch": "A",
-    "archName": "Classic",
-    "length": "M",
-    "lengthLabel": "~60 s (plan M)",
-    "hook": "Image hook (O1) — the question first, in Spanish.",
-    "reviews": {},
-    "gate": "No panel has run for this cell yet. Exists: manifest-cell02.json · the shared bread takes and image set in assets/dlc001-eat-bread · a first ES print file sits in media/ (dlc001-eat-bread__print__es__1.mp4) that no panel has judged — it is NOT wired playable until its panel runs. Missing: panel. Panel readiness 0/20 counted passes — nothing has been counted for this cell, and nothing is claimed.",
-    "file": null,
-    "video": null,
-    "status": "inbuild",
-    "statusLabel": "In production — see gate note for what exists / is missing",
-    "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class L. Control pair with cell 01 — only the opening language moves."
+    "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class L. Control pair with cell 01 — only the opening language moves.",
+    "title": "I Eat Bread in 4 Languages — Learn It From Spanish",
+    "poster": "poster-cell-02.png"
   },
   {
     "id": "cell-03",
@@ -193,9 +247,12 @@ window.BATCH_CELLS = [
       "code_timing": "pass",
       "code_parity": "pending",
       "code_voice": "fail",
-      "code_consistency": "pending",
+      "code_consistency": "pass",
       "code_stratification": "pass",
       "code_contradiction": "pass",
+      "code_respelling": "pass",
+      "code_dupchunk": "pass",
+      "code_print_conformance": "pass",
       "guard_translation": "running",
       "guard_linguist_claims": "running",
       "guard_reasoning": "running",
@@ -207,13 +264,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 6/20 counted passes — code passes 6/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — harness/record artifacts in the root (sibling manifest-cell17.json, census__en/es.json, voice masters, render logs) — not cell data; voice FAIL — G1 GAP LOCATED — introduce segments s03/s07/s11 carry voice_state=bed; flagged for the fix queue. Code checks not run: parity, consistency. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08T16:53Z (batch06/panels/cell03-dlc003-open-door-en.panel.json): panel readiness 10 counted passes — code passes 10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — harness/record artifacts in the root (sibling manifest-cell17.json, census__en/es.json, voice masters, render logs) — not cell data; voice FAIL — G1 GAP LOCATED — introduce segments s03/s07/s11 carry voice_state=bed; flagged for the fix queue. Code checks not run: parity. Also PASS in this panel: respelling · dupchunk · print_conformance. Quarantine: 1 entry excluded (a guard_animation verdict that originated in cell17 — never counted). Located failing subscores: 6. Shadow INDICTS faces (advisory — displayed, NEVER counted): translation · linguist_claims · reasoning · depiction. Poster: frame grab — designed thumbnail pending.",
     "file": "dlc003-open-door__print__en__1.mp4",
     "video": "videos/dlc003-open-door__print__en__1.mp4",
     "poster": "poster-cell-03.png",
     "status": "recut-owed",
     "statusLabel": "Playable print · panel shows code FAILS — fix queue",
-    "about": "Strata: A · L (drifted from M; reclassed) · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. Verify-only in F2: the Phase 1B print of record, re-proved (census UNTAGGED 0, sealed tail probe PASS) — plus a take-2 render under the HARNESS-2 capture patch with identical duration/LUFS/census."
+    "about": "Strata: A · L (drifted from M; reclassed) · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. Verify-only in F2: the Phase 1B print of record, re-proved (census UNTAGGED 0, sealed tail probe PASS) — plus a take-2 render under the HARNESS-2 capture patch with identical duration/LUFS/census.",
+    "title": "I Open the Door in 4 Languages — Learn It From English"
   },
   {
     "id": "cell-04",
@@ -241,7 +299,7 @@ window.BATCH_CELLS = [
       "code_consistency": "pass",
       "code_stratification": "pass",
       "code_contradiction": "pass",
-      "guard_translation": "running",
+      "guard_translation": "pass",
       "guard_linguist_claims": "running",
       "guard_reasoning": "running",
       "guard_segment_function": "running",
@@ -252,13 +310,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 10/20 counted passes — code passes 10/10 · code_ready=true · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. No code checks outstanding. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "PANEL (batch06/panels/cell04-dlc002-need-water-en.panel.json, 2026-11-08T16:50Z): panel readiness 11 counted passes — code passes 10 · code_ready=true · armed passes 1 · ready=true. Ready basis (panel, verbatim): “guard-passed: code leg clean and armed decisive guard passes counted · armed translation scope: equivalence / gloss / diagram over the interlinear — sentence surface NOT certified by this guard.” Located failing subscores: 6 (advisory shadow faces — depiction · educator · linguist_claims · reasoning INDICT in shadow; displayed, never counted). Quarantine: 2 entries excluded (verdicts that originated in other cells — never counted). PRINT STATE — a separate fact, not merged with the panel: the playable print on this page is the PRE-FIX print (sha256 12f1418f…) — it cold-failed with the fleet and does not carry the cures the panel judged. The B50 re-render is queued and environment-blocked (Chrome capture window + exec write fault; resume recorded in BUILD-RECORD). Panel-passed + print-stale: this cell is NOT a finished video. Poster: frame grab — designed thumbnail pending.",
     "file": "dlc002-need-water__print__en__cell04.mp4",
     "video": "videos/dlc002-need-water__print__en__cell04.mp4",
     "poster": "poster-cell-04.png",
     "status": "inbuild",
-    "statusLabel": "Playable print · panel CODE-CLEAN — not ready (no armed guards)",
-    "about": "Strata: A · M · O1 · E1 · V2 photo-real · M2 card flips · demographic class XL. Re-cut of DLC-002 with the B33+B35+B36+B37 cures riding; introduce segments carry the G1 voice fix. One of only two code-clean cells tonight — and still NOT ready: zero armed guard passes."
+    "statusLabel": "Panel guard-passed · print STALE (pre-fix) — re-render queued · NOT finished",
+    "about": "Strata: A · M · O1 · E1 · V2 photo-real · M2 card flips · demographic class XL. Re-cut of DLC-002 with the B33+B35+B36+B37 cures riding; introduce segments carry the G1 voice fix. The PANEL guard-passed this cell (see Gate status) — but the print playable here is the stale pre-fix print, so this cell does not read as a finished video anywhere on this page.",
+    "title": "I Need Water in 4 Languages — Learn It From English"
   },
   {
     "id": "cell-05",
@@ -276,12 +335,13 @@ window.BATCH_CELLS = [
     "lengthLabel": "~90 s (plan L)",
     "hook": "Diagram hook (O2) — opens on the diagram itself, narration in the opening language.",
     "reviews": {},
-    "gate": "No panel has run for this cell yet. Exists: manifest-cell05.json in assets/dlc002-need-water · takes · images. Missing: render (no print in media/) · panel. Panel readiness 0/20 counted passes — nothing has been counted for this cell, and nothing is claimed.",
+    "gate": "No print and no panel yet — render BLOCKED (environment), everything upstream complete: manifest-cell05.json (23 segments · 89.52 s) · checkers all PASS (incl. parity · consistency · stratification) · audio master verified (LUFS −14.61). Capture is preserved mid-run: frames through 2,193 of 2,685 (73.1 s of 89.52 s) in the staging root, with the exact resume command recorded in BUILD-RECORD (cell 05 block). The block is the Chrome capture window (launches trap) — nothing in this cell's own files is implicated. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — see gate note for what exists / is missing",
-    "about": "Strata: B · L · O2 · E1 · V3 flat illustration · M3 slide stack · demographic class L. Diagram-first with a Hindi opening door."
+    "statusLabel": "Render blocked (environment) — capture preserved 2193/2685 · resume queued",
+    "about": "Strata: B · L · O2 · E1 · V3 flat illustration · M3 slide stack · demographic class L. Diagram-first with a Hindi opening door.",
+    "title": "I Need Water in 4 Languages — Learn It From Hindi, Diagram First"
   },
   {
     "id": "cell-06",
@@ -320,12 +380,13 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Refresh 2026-11-08: RENDER-READY — package complete, queued for the B50 mechanical render path; the queue is environment-blocked (Chrome capture window). No print yet.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — render missing · panel partial",
-    "about": "Strata: B · L · O2 · E2 quiz finish · V4 watercolor · M1 floating chips · demographic class XL. Brand-new sentence launched straight into the diagram-first form."
+    "statusLabel": "Render-ready — queued for mechanical render (environment)",
+    "about": "Strata: B · L · O2 · E2 quiz finish · V4 watercolor · M1 floating chips · demographic class XL. Brand-new sentence launched straight into the diagram-first form.",
+    "title": "I Am Hungry in 4 Languages — Diagram First, From English"
   },
   {
     "id": "cell-07",
@@ -364,13 +425,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Poster: frame grab — designed thumbnail pending.",
     "file": "dlc004-am-hungry__print__en__cell07.mp4",
     "video": "videos/dlc004-am-hungry__print__en__cell07.mp4",
     "poster": "poster-cell-07.png",
     "status": "inbuild",
     "statusLabel": "Playable print · panel incomplete — not ready",
-    "about": "Strata: A · M · O3 · E1 · V2 photo-real · M2 card flips · demographic class M. The new-languages test: German and French enter the taught pool beside Spanish."
+    "about": "Strata: A · M · O3 · E1 · V2 photo-real · M2 card flips · demographic class M. The new-languages test: German and French enter the taught pool beside Spanish.",
+    "title": "I Am Hungry in 4 Languages — German & French Join In"
   },
   {
     "id": "cell-08",
@@ -409,13 +471,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Poster: frame grab — designed thumbnail pending.",
     "file": "dlc005-sun-warm__print__en__cell08.mp4",
     "video": "videos/dlc005-sun-warm__print__en__cell08.mp4",
     "poster": "poster-cell-08.png",
     "status": "inbuild",
     "statusLabel": "Playable print · panel incomplete — not ready",
-    "about": "Strata: C · M (plan) · O3 · E4 story-button finish · V3 flat illustration · M3 slide stack · demographic class XL. Adjective-order pattern. Duration drift located: plan class M, the print measures ~105 s."
+    "about": "Strata: C · M (plan) · O3 · E4 story-button finish · V3 flat illustration · M3 slide stack · demographic class XL. Adjective-order pattern. Duration drift located: plan class M, the print measures ~105 s.",
+    "title": "The Sun Is Warm Today in 4 Languages — Watch the Word Order Move"
   },
   {
     "id": "cell-09",
@@ -454,13 +517,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 6/20 counted passes — code passes 6/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — data/census__en.json only (harness census output name — same located class as F2 cell 17). Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 6 counted passes — code passes 6/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — data/census__en.json only (harness census output name — same located class as F2 cell 17). Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Poster: frame grab — designed thumbnail pending.",
     "file": "dlc006-thank-you__print__en__cell09.mp4",
     "video": "videos/dlc006-thank-you__print__en__cell09.mp4",
     "poster": "poster-cell-09.png",
     "status": "recut-owed",
     "statusLabel": "Playable print · panel shows code FAILS — fix queue",
-    "about": "Strata: B · XL measured (plan S — drift located and declared) · O2 · E3 speed-recap finish · V5 whiteboard line-art · M4 word-build declared · demographic class XL. Diagram-first short test that outgrew its stratum: the authored diagram narration + E3 rapid-fire recap set the length. Located in the panel: closing/recap lines render white over the light hero at low contrast — construct ending typography, fix queue."
+    "about": "Strata: B · XL measured (plan S — drift located and declared) · O2 · E3 speed-recap finish · V5 whiteboard line-art · M4 word-build declared · demographic class XL. Diagram-first short test that outgrew its stratum: the authored diagram narration + E3 rapid-fire recap set the length. Located in the panel: closing/recap lines render white over the light hero at low contrast — construct ending typography, fix queue.",
+    "title": "Thank You Very Much in 4 Languages — Diagram First"
   },
   {
     "id": "cell-10",
@@ -499,13 +563,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Poster: frame grab — designed thumbnail pending.",
     "file": "dlc007-drink-water__print__en__cell10.mp4",
     "video": "videos/dlc007-drink-water__print__en__cell10.mp4",
     "poster": "poster-cell-10.png",
     "status": "inbuild",
     "statusLabel": "Playable print · panel incomplete — not ready",
-    "about": "Strata: A · M · O1 · E2 quiz finish · V2 photo-real · M1 floating chips · demographic class XL. Rebuild of the failed v3 lineage under the full current standard."
+    "about": "Strata: A · M · O1 · E2 quiz finish · V2 photo-real · M1 floating chips · demographic class XL. Rebuild of the failed v3 lineage under the full current standard.",
+    "title": "I Drink Water in 4 Languages — Learn It From English"
   },
   {
     "id": "cell-11",
@@ -544,12 +609,13 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Refresh 2026-11-08: package complete — queued for mechanical render (environment-blocked queue). No print yet.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — render missing · panel partial",
-    "about": "Strata: A · S · O4 · E1 · V3 flat illustration · M2 card flips · demographic class XL. Question-form pattern."
+    "statusLabel": "Package complete — queued for mechanical render",
+    "about": "Strata: A · S · O4 · E1 · V3 flat illustration · M2 card flips · demographic class XL. Question-form pattern.",
+    "title": "Where Is the Station? in 4 Languages — Ask It Anywhere"
   },
   {
     "id": "cell-12",
@@ -588,12 +654,13 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Refresh 2026-11-08: package complete — queued for mechanical render (environment-blocked queue). No print yet.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — render missing · panel partial",
-    "about": "Strata: C · M · O3 · E4 story-button finish · V4 watercolor · M3 slide stack · demographic class M. Market scenario with a Turkish opening door."
+    "statusLabel": "Package complete — queued for mechanical render",
+    "about": "Strata: C · M · O3 · E4 story-button finish · V4 watercolor · M3 slide stack · demographic class M. Market scenario with a Turkish opening door.",
+    "title": "How Much Does It Cost? in 4 Languages — From Turkish, at the Market"
   },
   {
     "id": "cell-13",
@@ -632,12 +699,13 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 6/20 counted passes — code passes 6/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — media/voice__es.wav and work/frames__1/frame_*.png filenames match neither grammar. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 6 counted passes — code passes 6/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — media/voice__es.wav and work/frames__1/frame_*.png filenames match neither grammar. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Refresh 2026-11-08: package complete — queued for mechanical render (environment-blocked queue). No print yet.",
     "file": null,
     "video": null,
     "status": "recut-owed",
-    "statusLabel": "In production — render missing · panel shows code FAILS (fix queue)",
-    "about": "Strata: B · S · O2 · E3 speed-recap finish · V1 paper cutout · M4 word-build · demographic class L. Greeting set with a Spanish opening door."
+    "statusLabel": "Package complete — queued for mechanical render · panel shows code FAILS (fix queue)",
+    "about": "Strata: B · S · O2 · E3 speed-recap finish · V1 paper cutout · M4 word-build · demographic class L. Greeting set with a Spanish opening door.",
+    "title": "Good Morning in 4 Languages — Learn It From Spanish"
   },
   {
     "id": "cell-14",
@@ -676,12 +744,13 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Refresh 2026-11-08: package complete — queued for mechanical render (environment-blocked queue). No print yet.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — render missing · panel partial",
-    "about": "Strata: C · L · O3 · E4 story-button finish · V2 photo-real · M1 floating chips · demographic class XL. Sentiment sentence in the half/half form."
+    "statusLabel": "Package complete — queued for mechanical render",
+    "about": "Strata: C · L · O3 · E4 story-button finish · V2 photo-real · M1 floating chips · demographic class XL. Sentiment sentence in the half/half form.",
+    "title": "I Love This City in 4 Languages — Learn It From English"
   },
   {
     "id": "cell-15",
@@ -699,12 +768,13 @@ window.BATCH_CELLS = [
     "lengthLabel": "~60 s (plan M)",
     "hook": "Image hook (O1) — the question first, the hero image revealed on the spoken cue.",
     "reviews": {},
-    "gate": "No panel has run for this cell yet. Exists: takes (21 audio files) + images (15) in assets/dlc012-am-learning. Missing: manifest (none in the root) · render · panel — the earliest cell in the queue. Panel readiness 0/20 counted passes — nothing has been counted for this cell, and nothing is claimed.",
+    "gate": "Blocked on the FA TTS outage (located): this cell teaches FA (Persian), and the harness TTS backend returned empty audio for Persian-script text on repeated attempts (2026-11-08) — the FA takes cannot be synthesized until a working FA TTS route lands. Exists: takes (21 audio files) + images (15) in assets/dlc012-am-learning. Missing: FA takes · manifest · render · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — see gate note for what exists / is missing",
-    "about": "Strata: A · M · O1 · E1 · V3 flat illustration · M2 card flips · demographic class S. FA taught probe — Mina's comfort language; niche by design."
+    "statusLabel": "Blocked — FA TTS outage (located)",
+    "about": "Strata: A · M · O1 · E1 · V3 flat illustration · M2 card flips · demographic class S. FA taught probe — Mina's comfort language; niche by design.",
+    "title": "I Am Learning in 4 Languages — Persian Joins In"
   },
   {
     "id": "cell-16",
@@ -743,13 +813,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 5/20 counted passes — code passes 5/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — same dlc001 root class as cell 01 (DEPICTION.md, sibling manifests, census outputs); timing FAIL — timing check FAIL on the panel run. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 5 counted passes — code passes 5/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — same dlc001 root class as cell 01 (DEPICTION.md, sibling manifests, census outputs); timing FAIL — timing check FAIL on the panel run. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Refresh 2026-11-08: the print on this page is the PRE-FIX print (sha256 56ef7c74… · 41.09 s) — the TR transcript data fixes and the construct respelling fix landed after it; cell 16 sits in the re-render queue with cell 01. Poster: frame grab — designed thumbnail pending.",
     "file": "dlc001-eat-bread__print__tr__cell16.mp4",
     "video": "videos/dlc001-eat-bread__print__tr__cell16.mp4",
     "poster": "poster-cell-16.png",
     "status": "recut-owed",
     "statusLabel": "Playable print · panel shows code FAILS — fix queue",
-    "about": "Strata: C · S · O4 · E2 quiz finish · V5 whiteboard line-art · M3 slide stack · demographic class M. Mina-spec skin cell: the bread sentence compressed, Turkish opening door."
+    "about": "Strata: C · S · O4 · E2 quiz finish · V5 whiteboard line-art · M3 slide stack · demographic class M. Mina-spec skin cell: the bread sentence compressed, Turkish opening door.",
+    "title": "I Eat Bread in 4 Languages — Learn It From Turkish"
   },
   {
     "id": "cell-17",
@@ -788,13 +859,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — data/census__en.json + data/census__es.json only (harness census outputs, located). Code checks not run: parity, consistency. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — data/census__en.json + data/census__es.json only (harness census outputs, located). Code checks not run: parity, consistency. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Poster: frame grab — designed thumbnail pending.",
     "file": "dlc003-open-door__print__es__cell17.mp4",
     "video": "videos/dlc003-open-door__print__es__cell17.mp4",
     "poster": "poster-cell-17.png",
     "status": "recut-owed",
     "statusLabel": "Playable print · panel shows code FAILS — fix queue",
-    "about": "Strata: C · S · O4 · E3 speed-recap finish · V4 watercolor · M2 card flips · demographic class L. Half/half at 30 seconds with a Spanish door. Minor located item: the ES diagram row label touches the left frame edge."
+    "about": "Strata: C · S · O4 · E3 speed-recap finish · V4 watercolor · M2 card flips · demographic class L. Half/half at 30 seconds with a Spanish door. Minor located item: the ES diagram row label touches the left frame edge.",
+    "title": "I Open the Door in 4 Languages — Learn It From Spanish"
   },
   {
     "id": "cell-18",
@@ -833,12 +905,13 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7/20 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Refresh 2026-11-08: RENDER-READY — package complete, queued for the B50 mechanical render path; the queue is environment-blocked (Chrome capture window). No print yet.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — render missing · panel partial",
-    "about": "Strata: D · XL · O2 · E1 · V5 whiteboard line-art · M4 word-build · demographic class XL. Explainer: the adjective-order analysis at length."
+    "statusLabel": "Render-ready — queued for mechanical render (environment)",
+    "about": "Strata: D · XL · O2 · E1 · V5 whiteboard line-art · M4 word-build · demographic class XL. Explainer: the adjective-order analysis at length.",
+    "title": "The Sun Is Warm Today in 4 Languages — The Full Word-Order Explainer"
   },
   {
     "id": "cell-19",
@@ -877,13 +950,14 @@ window.BATCH_CELLS = [
       "guard_animation": "running",
       "guard_cold": "running"
     },
-    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 10/20 counted passes — code passes 10/10 · code_ready=true · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. No code checks outstanding. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class).",
+    "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 10 counted passes — code passes 10/10 · code_ready=true · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. No code checks outstanding. Shadow guards — verdicts displayed, NEVER counted as passes (amber ⟳ in Details): all 10 PASS in shadow mode — translation (decisive class), linguist_claims · reasoning · segment_function · seams · depiction · closure · animation · cold (advisory), educator (known-non-discriminating class). Poster: frame grab — designed thumbnail pending.",
     "file": "dlc002-need-water__print__en__cell19.mp4",
     "video": "videos/dlc002-need-water__print__en__cell19.mp4",
     "poster": "poster-cell-19.png",
     "status": "inbuild",
     "statusLabel": "Playable print · panel CODE-CLEAN — not ready (no armed guards)",
-    "about": "Strata: B · M · O2 · E2 quiz finish · V3 flat illustration · M1 floating chips · demographic class S. ZH taught probe (Mina's requested set) — pinyin + tone coaching inline on the ZH beat card. One of only two code-clean cells tonight — and still NOT ready: zero armed guard passes."
+    "about": "Strata: B · M · O2 · E2 quiz finish · V3 flat illustration · M1 floating chips · demographic class S. ZH taught probe (Mina's requested set) — pinyin + tone coaching inline on the ZH beat card. One of only two code-clean cells tonight — and still NOT ready: zero armed guard passes.",
+    "title": "I Need Water in 4 Languages — Chinese Joins In"
   },
   {
     "id": "cell-20",
@@ -899,12 +973,13 @@ window.BATCH_CELLS = [
     "lengthLabel": "~120 s (plan XL)",
     "hook": "Diagram hook (O2) — the diagram at the 8-language scale.",
     "reviews": {},
-    "gate": "No panel has run for this cell yet. Exists: manifest-cell20.json in assets/dlc001-eat-bread · the shared bread takes and image set. Missing: render · panel. Panel readiness 0/20 counted passes — nothing has been counted for this cell, and nothing is claimed.",
+    "gate": "Blocked on the FA TTS outage (located): manifest-cell20.json is complete (32 segments · 133.13 s, inside the XL band) in assets/dlc001-eat-bread, but the two FA model takes (__narr__fa__t1.wav + __narr__fa__slow.wav) do not exist — the TTS backend returned empty audio for Persian-script text on 5+ attempts (2026-11-08). Fail-closed: no render attempted with missing assets. Missing: FA takes → re-tile the FA spans → render · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — see gate note for what exists / is missing",
-    "about": "Strata: D · XL · O2 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The comparison special: the diagram at the 8-language scale."
+    "statusLabel": "Blocked — FA TTS outage (located) · package otherwise complete",
+    "about": "Strata: D · XL · O2 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The comparison special: the diagram at the 8-language scale.",
+    "title": "One Sentence in 8 Languages — Every Word Order, One Diagram"
   },
   {
     "id": "cell-21",
@@ -922,12 +997,13 @@ window.BATCH_CELLS = [
     "lengthLabel": "~79 s (manifest total)",
     "hook": "Image hook (O1) — the question first, the hero image revealed on the spoken cue.",
     "reviews": {},
-    "gate": "No panel has run for this cell yet. Exists: manifest-cell21.json · Mina takes in the bread root's audio (HI mina/minaslow, verbmina, takeawaymina). Missing: render · panel. Panel readiness 0/20 counted passes — nothing has been counted for this cell, and nothing is claimed.",
+    "gate": "Package complete; capture COMPLETE (2,375 frames preserved in the bread root's work frames). The print now routes via the B50 assembler — queued (environment-blocked queue). Exists: manifest-cell21.json (79.18 s) · Mina takes · audio master media/voice__en.wav (LUFS −15.29). Missing: assembler print · census · tail probe · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — see gate note for what exists / is missing",
-    "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell21) · demographic class —. Mina variant of cell 01 — the bread sentence in Mina's voice/take set (HI mina takes, verbmina diagram take)."
+    "statusLabel": "Capture complete — print via assembler queued",
+    "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell21) · demographic class —. Mina variant of cell 01 — the bread sentence in Mina's voice/take set (HI mina takes, verbmina diagram take).",
+    "title": "I Eat Bread in 4 Languages — Mina's Voice Edition"
   },
   {
     "id": "cell-22",
@@ -945,11 +1021,12 @@ window.BATCH_CELLS = [
     "lengthLabel": "~90 s (manifest total)",
     "hook": "Image hook (O1) — the question first, in Turkish.",
     "reviews": {},
-    "gate": "No panel has run for this cell yet. Exists: manifest-cell22.json · Mina's TR narration set in the bread root. Missing: render · panel. Panel readiness 0/20 counted passes — nothing has been counted for this cell, and nothing is claimed.",
+    "gate": "Package complete: manifest-cell22.json (89.65 s) · all takes exist (TR narration set incl. Mina variants). The print routes via the B50 assembler from this cell's own staging root — queued (environment-blocked queue). Missing: assembler print · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.",
     "file": null,
     "video": null,
     "status": "inbuild",
-    "statusLabel": "In production — see gate note for what exists / is missing",
-    "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell22) · demographic class —. Mina variant with a Turkish primary — Mina's TR take set (narration__tr__mina)."
+    "statusLabel": "Package complete — print via assembler queued",
+    "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell22) · demographic class —. Mina variant with a Turkish primary — Mina's TR take set (narration__tr__mina).",
+    "title": "I Eat Bread in 4 Languages — Mina's Turkish Edition"
   }
 ];
