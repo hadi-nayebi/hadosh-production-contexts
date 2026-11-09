@@ -49,13 +49,39 @@
     background:var(--glass-hi);white-space:nowrap;
   }
   /* ---------- index rail ---------- */
-  .rail{
+  .railwrap{
     position:fixed;left:0;right:0;z-index:39;
     top:calc(57px + env(safe-area-inset-top));
-    display:flex;gap:8px;overflow-x:auto;padding:8px 12px;
-    scrollbar-width:none;
   }
-  .rail::-webkit-scrollbar{display:none}
+  .rail{
+    display:flex;gap:8px;overflow-x:auto;padding:8px 12px;
+    /* pill-row reachability, phone leg (2026-11-08 pill-fix, on the v20
+       base): at <=759px the rail stays a single scrollable row (PASS 46
+       wrapped it only at >=760px), and a scroll no one can discover is a
+       row that ends at chip ~3 — the pre-fix rules hid the scrollbar
+       (scrollbar-width:none + ::-webkit-scrollbar{display:none}) and
+       offered no other cue (PASS 39 flag a, phone leg). Now: a thin
+       visible scrollbar + the edge controls below. At >=760px the rail
+       wraps (PASS 46) and the controls are display:none there. */
+    scrollbar-width:thin;scrollbar-color:var(--amber) transparent;
+    overscroll-behavior-x:contain;
+  }
+  .rail::-webkit-scrollbar{display:block;height:4px}
+  .rail::-webkit-scrollbar-thumb{background:var(--amber);border-radius:99px}
+  .rail::-webkit-scrollbar-track{background:transparent}
+  /* edge controls for the rail: 44px-wide tap targets pinned to the rail's
+     edges; each removes itself ([hidden]) when its direction is exhausted,
+     so at the scroll end the last chips sit fully visible, never occluded */
+  .railnav{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+    min-width:44px;height:40px;padding:0 10px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--amber);background:rgba(29,19,11,.94);color:var(--amber);
+    font-size:13px;font-weight:800;font-family:inherit;
+    box-shadow:0 4px 18px rgba(0,0,0,.5);
+  }
+  .railnav.prev{left:6px}
+  .railnav.next{right:6px}
+  .railnav[hidden]{display:none}
   .chip{
     flex:0 0 auto;display:flex;align-items:center;gap:7px;
     padding:8px 12px;border-radius:999px;cursor:pointer;
@@ -110,8 +136,13 @@
   .panel{
     position:relative;z-index:2;border-radius:22px;padding:14px 14px 12px;flex:0 0 auto;
     /* scrollIntoView on Details-open lands the panel head under the fixed
-       header + rail, never beneath them */
-    scroll-margin-top:calc(116px + env(safe-area-inset-top));
+       header + rail, never beneath them. The margin must clear the header
+       as it actually stands at this width, so it takes the same values
+       PASS 46 gave .screen's top padding for the same breakpoints
+       (116px dated from the one-row rail: measured 2026-11-08 pill-fix —
+       panel top landed at 116 while the rail's bottom edge sat at 158
+       desktop / 268 phone, occluding the panel head) */
+    scroll-margin-top:calc(284px + env(safe-area-inset-top));
     background:var(--glass);border:1px solid var(--glass-brd);
     -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
     box-shadow:0 18px 50px rgba(0,0,0,.45);
@@ -201,13 +232,16 @@
        (PASS 39 flag a). The rail chips carry number + opening only;
        architecture lives in the poster + Details. Screen top padding
        clears the taller wrapped rail + coverage header. */
-    .rail{top:calc(70px + env(safe-area-inset-top));flex-wrap:wrap;overflow-x:visible;row-gap:8px}
+    .railwrap{top:calc(70px + env(safe-area-inset-top))}
+    .rail{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
+    .railnav{display:none}
     .screen{padding-left:24px;padding-right:24px;padding-top:calc(196px + env(safe-area-inset-top))}
-    .panel{max-width:640px;margin:0 auto;width:100%}
+    .panel{max-width:640px;margin:0 auto;width:100%;scroll-margin-top:calc(196px + env(safe-area-inset-top))}
     .poster .sentence{font-size:56px}
   }
   @media (min-width:760px) and (max-width:1099px){
     .screen{padding-top:calc(238px + env(safe-area-inset-top))}
+    .panel{scroll-margin-top:calc(238px + env(safe-area-inset-top))}
   }
   @media (max-width:759px){
     /* phone header: the v20 coverage line is long — it takes its own
@@ -217,7 +251,7 @@
     .topbar .batch{margin-left:0;white-space:normal;flex:1 1 150px}
     #batchstate{order:4;flex:1 1 100%;max-width:none;text-align:left;font-size:11.5px}
     .counter{margin-left:auto}
-    .rail{top:calc(220px + env(safe-area-inset-top))}
+    .railwrap{top:calc(220px + env(safe-area-inset-top))}
     .screen{padding-top:calc(284px + env(safe-area-inset-top))}
   }
 </style>
@@ -231,7 +265,11 @@
   <div class="counter" id="counter">– / –</div>
 </header>
 
+<div class="railwrap">
 <nav class="rail" id="rail" aria-label="Batch index"></nav>
+<button class="railnav prev" id="railPrev" type="button" aria-label="Scroll the cell index back" hidden>&#8249; Back</button>
+<button class="railnav next" id="railNext" type="button" aria-label="Scroll the cell index for more cells">More &#8250;</button>
+</div>
 
 <main class="feed" id="feed"></main>
 
@@ -495,6 +533,28 @@
 
   CELLS.forEach(function(cell){ feed.appendChild(buildScreen(cell)); });
   buildRail();
+
+  /* pill-row reachability, phone leg (2026-11-08 pill-fix): the rail's edge
+     controls. Each control removes itself when its scroll direction is
+     exhausted, so the end chips are never occluded by the control that
+     revealed them. At >=760px the rail wraps (PASS 46), nothing scrolls,
+     and CSS keeps the controls display:none. */
+  var railPrev = document.getElementById("railPrev");
+  var railNext = document.getElementById("railNext");
+  function updateRailNav(){
+    var max = rail.scrollWidth - rail.clientWidth;
+    if (railPrev) railPrev.hidden = rail.scrollLeft <= 4;
+    if (railNext) railNext.hidden = max <= 4 || rail.scrollLeft >= max - 4;
+  }
+  /* instant jumps, one full rail width per tap: a paged index the owner
+     pages deliberately — no animated drift, and the landing position is
+     deterministic (the control's effect is exactly one page, every tap) */
+  if (railPrev) railPrev.addEventListener("click", function(){ rail.scrollBy({ left: -rail.clientWidth }); updateRailNav(); });
+  if (railNext) railNext.addEventListener("click", function(){ rail.scrollBy({ left: rail.clientWidth }); updateRailNav(); });
+  rail.addEventListener("scroll", updateRailNav, { passive: true });
+  window.addEventListener("resize", updateRailNav);
+  updateRailNav();
+
   counter.textContent = CELLS.length ? ("1 / " + CELLS.length) : "0 / 0";
 
   /* current-cell detection uses a middle band, not a visibility fraction:
