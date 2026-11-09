@@ -43,6 +43,14 @@
   /* the coverage line is a state claim, not a label: it wraps in full —
      truncating or clipping it would silently change the claim */
   #batchstate{flex:1 1 720px;max-width:880px;white-space:normal;line-height:1.35}
+  /* PASS 123 (P56-2): the coverage line's TEXT stays verbatim behind a tap
+     (single-source gate) — its container form changes: a short face
+     (<=10 words exposed) + this expand button */
+  .covbtn{
+    margin-left:8px;padding:2px 10px;border-radius:999px;cursor:pointer;vertical-align:baseline;
+    border:1px solid var(--amber);background:rgba(29,19,11,.85);color:var(--amber);
+    font-size:11.5px;font-weight:800;font-family:inherit;white-space:nowrap;
+  }
   .counter{
     font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;
     padding:6px 10px;border-radius:999px;border:1px solid var(--glass-brd);
@@ -52,9 +60,22 @@
   .railwrap{
     position:fixed;left:0;right:0;z-index:39;
     top:calc(57px + env(safe-area-inset-top));
+    /* PASS 123 RETURN ROUND (P56-4, visual cure): the edge controls no
+       longer share the chip row's band — they sit in their own strip
+       ABOVE the chips, right-aligned at the viewport's width, so no
+       scroll position of the rail can bring a chip's glyphs under a
+       control and the two bands never overlap. The prep's in-row form
+       still overprinted chip glyphs mid-scroll (frame p390-02-railend:
+       "‹ Back" over chip 19, "More ›" over the clipped chip at the
+       right edge); the frames for this form are p390-/p360-02v2-*. */
+    display:flex;flex-direction:column;align-items:stretch;
+  }
+  .railnavrow{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:2px 12px 0;min-height:26px;
   }
   .rail{
-    display:flex;gap:8px;overflow-x:auto;padding:8px 12px;
+    display:flex;gap:8px;overflow-x:auto;padding:8px 12px;width:100%;box-sizing:border-box;
     /* pill-row reachability, phone leg (2026-11-08 pill-fix, on the v20
        base): at <=759px the rail stays a single scrollable row (PASS 46
        wrapped it only at >=760px), and a scroll no one can discover is a
@@ -69,18 +90,20 @@
   .rail::-webkit-scrollbar{display:block;height:4px}
   .rail::-webkit-scrollbar-thumb{background:var(--amber);border-radius:99px}
   .rail::-webkit-scrollbar-track{background:transparent}
-  /* edge controls for the rail: 44px-wide tap targets pinned to the rail's
-     edges; each removes itself ([hidden]) when its direction is exhausted,
-     so at the scroll end the last chips sit fully visible, never occluded */
+  /* edge controls for the rail: 44px-wide tap targets seated in their
+     own strip above the chips (PASS 123 return round, P56-4 visual cure
+     — the absolute seats over the chips hid labels, and the in-row form
+     still overprinted chip glyphs MID-SCROLL: its ∩=∅ measurement
+     covered rest/end only). Each removes itself ([hidden]) when its
+     direction is exhausted; seated in a separate band, a control can
+     never cover a chip label at any scroll state */
   .railnav{
-    position:absolute;top:50%;transform:translateY(-50%);z-index:2;
-    min-width:44px;height:40px;padding:0 10px;border-radius:999px;cursor:pointer;
+    position:static;flex:0 0 auto;margin:0;
+    min-width:44px;height:24px;padding:0 10px;border-radius:999px;cursor:pointer;
     border:1px solid var(--amber);background:rgba(29,19,11,.94);color:var(--amber);
-    font-size:13px;font-weight:800;font-family:inherit;
+    font-size:12px;font-weight:800;font-family:inherit;line-height:1;
     box-shadow:0 4px 18px rgba(0,0,0,.5);
   }
-  .railnav.prev{left:6px}
-  .railnav.next{right:6px}
   .railnav[hidden]{display:none}
   .chip{
     flex:0 0 auto;display:flex;align-items:center;gap:7px;
@@ -99,6 +122,48 @@
     scrollbar-width:none;
   }
   .feed::-webkit-scrollbar{display:none}
+  /* PASS 123 (P56-1) + RETURN ROUND (P56-1 visual cure): at the feed's
+     end state NOTHING of the last screen's stage may sit in the fixed
+     chrome's zone (the glass is translucent; content behind it reads as
+     bleed-through — frames p390-/p360-05-feedbottom). The feed therefore
+     ends with a quiescent closing screen (see .feedend below): at max
+     scroll the closing screen fills the chrome zone while the last
+     screen rests fully below it — stage scrolled past, panel below,
+     one layer, nothing behind the glass. (The prep's first form — a
+     chrome-height spacer — shifted a taller-than-viewport last screen
+     UP into the chrome and was removed; this form is measured on the
+     v2 frames at both sizes.) RETURN ROUND 2 (the settled/end-state
+     cure): the mechanism the v2 frames exposed is that a screen's
+     stage is the flex-expanding region at the TOP of its screen, so a
+     short cell's stage content rides at its screen's top edge, and the
+     120px closing screen dragged the last screen's stage into the
+     chrome zone at max scroll (stage top −29 at 390, −281 at 360 —
+     its poster tags over the chips, its status pill and readiness
+     lines over the coverage row). The cure takes the SAME measured
+     number everywhere (--chrome-h, the full chrome height: 189px at
+     phone widths, more while the coverage expansion is open): every
+     screen's top padding clears it (+16px) so at a screen's settled
+     rest (top edge at the viewport top — the scrollIntoView position
+     a chip tap lands on) the stage begins BELOW the chrome; at phone
+     widths each screen's min-height grows by the same number so the
+     flex stage expands and a short cell's content sits lower in its
+     screen; and the closing screen is a full viewport tall (above),
+     so at max scroll the viewport contains only the closing screen.
+     Judged from the v3 frames at both sizes. */
+  /* feed-end closing screen: an empty, stage-less terminus a full
+     viewport tall (PASS 123 RETURN ROUND 2 — it was 120px by a stray
+     override, which dragged the last screen's stage into the chrome
+     zone at max scroll), so at max scroll the chrome zone shows
+     only this blank screen — the last screen's stage has scrolled
+     entirely past it and its panel was read on the way */
+  .feedend{
+    height:100vh;height:100dvh;flex:0 0 auto;
+    display:flex;align-items:flex-end;justify-content:center;padding-bottom:18px;
+  }
+  .feedend .femark{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:rgba(247,236,215,.38);font-weight:700;text-align:center;padding:0 24px;
+  }
   /* a screen is a section in one continuous scroll flow, never a fixed-height
      snap page: min-height (not height) lets an expanded panel grow the screen
      instead of overflowing it onto its neighbours */
@@ -109,7 +174,18 @@
   }
   /* the stage is an in-flow flex child: its box ends where the panel begins,
      so panel overlap of video/poster content is impossible by construction */
-  .stage{position:relative;flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  /* the stage's content is anchored to the stage's BOTTOM edge (the
+     panel edge), never centred: PASS 123 RETURN ROUND 2 measured the
+     centred form leaking — with the min-height growth the stage is
+     taller than the poster, and a centred poster's bottom lines float
+     up into the chrome zone at the panel's scroll-margin rest (poster
+     bottom 168 < chrome 189 at the Details rest). Bottom-anchored, the
+     poster's lowest line sits at the stage's bottom = the panel's top,
+     which the panel's scroll-margin keeps at chrome + 16 in every
+     resting state; at a screen's settled rest the same anchor moves
+     the poster DOWN (top 280 vs centred 242 at 390×844), further from
+     the chrome. Video fills the stage box either way (height:100%). */
+  .stage{position:relative;flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
   .stage video{width:100%;height:100%;object-fit:contain;background:#000}
   /* poster / status card */
   .poster{max-width:520px;width:100%;padding:24px 10px;text-align:center}
@@ -239,6 +315,11 @@
     .panel{max-width:640px;margin:0 auto;width:100%;scroll-margin-top:calc(196px + env(safe-area-inset-top))}
     .poster .sentence{font-size:56px}
   }
+  /* PASS 123 RETURN ROUND 2: the closing screen is a full viewport at
+     every width (see .feedend above) — the former height:auto /
+     min-height:120px override here is REMOVED: it was the defect's
+     mechanism (a 120px terminus drags the last screen's stage into
+     the chrome zone at max scroll) */
   @media (min-width:760px) and (max-width:1099px){
     .screen{padding-top:calc(238px + env(safe-area-inset-top))}
     .panel{scroll-margin-top:calc(238px + env(safe-area-inset-top))}
@@ -251,8 +332,19 @@
     .topbar .batch{margin-left:0;white-space:normal;flex:1 1 150px}
     #batchstate{order:4;flex:1 1 100%;max-width:none;text-align:left;font-size:11.5px}
     .counter{margin-left:auto}
-    .railwrap{top:calc(220px + env(safe-area-inset-top))}
-    .screen{padding-top:calc(284px + env(safe-area-inset-top))}
+    .railwrap{top:var(--rail-top, calc(220px + env(safe-area-inset-top)))}
+    /* PASS 123 RETURN ROUND 2 (settled-state cure): the screen's top
+       padding clears the FULL measured chrome height (--chrome-h,
+       189px at phone widths, more while the coverage expansion is
+       open — fitChrome re-measures on the toggle) + 16px, so the stage
+       begins below the chrome at the screen's settled rest; the
+       screen's min-height grows by the same measured number, so the
+       flex stage expands and a short cell's content sits lower in its
+       screen instead of riding its top edge. The panel's scroll-margin
+       takes the SAME number (+16px), audited this round: a Details tap
+       lands the panel head at chrome bottom + 16, never under it. */
+    .screen{padding-top:calc(var(--chrome-h, 268px) + 16px + env(safe-area-inset-top));min-height:calc(100dvh + var(--chrome-h, 268px))}
+    .panel{scroll-margin-top:calc(var(--chrome-h, 268px) + 16px + env(safe-area-inset-top))}
   }
 </style>
 </head>
@@ -266,16 +358,18 @@
 </header>
 
 <div class="railwrap">
-<nav class="rail" id="rail" aria-label="Batch index"></nav>
+<div class="railnavrow">
 <button class="railnav prev" id="railPrev" type="button" aria-label="Scroll the cell index back" hidden>&#8249; Back</button>
 <button class="railnav next" id="railNext" type="button" aria-label="Scroll the cell index for more cells">More &#8250;</button>
+</div>
+<nav class="rail" id="rail" aria-label="Batch index"></nav>
 </div>
 
 <main class="feed" id="feed"></main>
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=22"></script>
+<script src="data.js?v=23"></script>
 <script>
 (function(){
   "use strict";
@@ -295,6 +389,22 @@
   var toast = document.getElementById("toast");
   var current = 0;
   var verdicts = {}; /* cellId -> "like" | "dislike" */
+  var topbarEl = document.querySelector(".topbar");
+  var railwrapEl = document.querySelector(".railwrap");
+  var screenEls = [];
+  /* PASS 123 (P56-3): the fixed chrome is MEASURED, not guessed — the rail
+     sits directly under the topbar (the ~61px empty band is gone) and the
+     feed's top padding + the panels' scroll-margin take the measured
+     chrome height. Phone widths only; the desktop layout keeps its
+     static clearances. */
+  function fitChrome(){
+    if (window.innerWidth > 759 || !topbarEl || !railwrapEl) return;
+    var tb = topbarEl.getBoundingClientRect();
+    document.documentElement.style.setProperty("--rail-top", Math.round(tb.bottom) + "px");
+    var rw = railwrapEl.getBoundingClientRect();
+    var chromeH = Math.round(rw.bottom);
+    document.documentElement.style.setProperty("--chrome-h", chromeH + "px");
+  }
 
   function esc(s){
     return String(s == null ? "" : s)
@@ -305,7 +415,35 @@
 
   var ROSTER = window.BATCH_REVIEWS || [];
   var bs = document.getElementById("batchstate");
-  if (bs && window.BATCH_META && window.BATCH_META.coverage) bs.textContent = window.BATCH_META.coverage;
+  if (bs && window.BATCH_META && window.BATCH_META.coverage) {
+    /* PASS 123 (P56-2, ten-word law): the coverage line's TEXT stays
+       verbatim — it renders in full behind the tap; the resting face is a
+       short summary (<=10 words exposed in the container) + a More button */
+    var covText = window.BATCH_META.coverage;
+    var covM = /exactly one: (G\d+)/.exec(covText);
+    var covShort = document.createElement("span");
+    covShort.textContent = "Coverage — one open item" + (covM ? " (" + covM[1] + ")" : "");
+    var covFull = document.createElement("span");
+    covFull.textContent = covText;
+    covFull.hidden = true;
+    var covBtn = document.createElement("button");
+    covBtn.type = "button";
+    covBtn.className = "covbtn";
+    covBtn.textContent = "More ›";
+    covBtn.setAttribute("aria-expanded", "false");
+    covBtn.setAttribute("aria-label", "Show the full coverage line");
+    covBtn.addEventListener("click", function(){
+      var open = covFull.hidden;
+      covFull.hidden = !open;
+      covShort.hidden = open;
+      covBtn.textContent = open ? "‹ Less" : "More ›";
+      covBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      fitChrome();
+    });
+    bs.appendChild(covShort);
+    bs.appendChild(covBtn);
+    bs.appendChild(covFull);
+  }
   function reviewState(cell, key){
     var r = cell.reviews || {};
     return r[key] || "pending";
@@ -511,8 +649,7 @@
 
   function goTo(i){
     i = Math.max(0, Math.min(CELLS.length - 1, i));
-    var screens = feed.children;
-    if (screens[i]) screens[i].scrollIntoView({ behavior: "smooth", block: "start" });
+    if (screenEls[i]) screenEls[i].scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function setCurrent(i){
@@ -524,7 +661,7 @@
       chip.classList.toggle("active", j === i);
       if (j === i) chip.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     });
-    Array.prototype.forEach.call(feed.children, function(screen, j){
+    Array.prototype.forEach.call(screenEls, function(screen, j){
       var v = screen.querySelector("video");
       if (!v) return;
       if (j !== i && !v.paused) v.pause();
@@ -532,6 +669,19 @@
   }
 
   CELLS.forEach(function(cell){ feed.appendChild(buildScreen(cell)); });
+  /* PASS 123 RETURN ROUND (P56-1 visual cure) + RETURN ROUND 2: the
+     feed ends with a quiescent closing screen — no stage, no panel — a
+     FULL VIEWPORT tall, so at max scroll the viewport (and therefore
+     the chrome zone) contains only this blank screen and the last
+     screen's stage sits entirely above the viewport, instead of the
+     120px terminus dragging it into the chrome zone. It is NOT a
+     .screen (the count/current-cell machinery ignores it). */
+  var feedend = document.createElement("div");
+  feedend.className = "feedend";
+  feedend.setAttribute("aria-hidden", "true");
+  feedend.innerHTML = '<div class="femark">End of batch — 22 cells</div>';
+  feed.appendChild(feedend);
+  screenEls = Array.prototype.filter.call(feed.children, function(el){ return el.classList.contains("screen"); });
   buildRail();
 
   /* pill-row reachability, phone leg (2026-11-08 pill-fix): the rail's edge
@@ -553,7 +703,17 @@
   if (railNext) railNext.addEventListener("click", function(){ rail.scrollBy({ left: rail.clientWidth }); updateRailNav(); });
   rail.addEventListener("scroll", updateRailNav, { passive: true });
   window.addEventListener("resize", updateRailNav);
+  window.addEventListener("resize", fitChrome);
   updateRailNav();
+  fitChrome();
+  setTimeout(fitChrome, 400);
+  /* PASS 123 RETURN ROUND 2: the measured chrome number drives the
+     screens' padding, min-height and the panels' scroll-margin — it
+     must never be a stale first-paint measurement, so it is re-measured
+     once everything (fonts, posters) has loaded, and again shortly
+     after */
+  window.addEventListener("load", fitChrome);
+  setTimeout(fitChrome, 1200);
 
   counter.textContent = CELLS.length ? ("1 / " + CELLS.length) : "0 / 0";
 
@@ -563,12 +723,12 @@
   var observer = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       if (e.isIntersecting){
-        var idx = Array.prototype.indexOf.call(feed.children, e.target);
+        var idx = Array.prototype.indexOf.call(screenEls, e.target);
         if (idx >= 0) setCurrent(idx);
       }
     });
   }, { root: feed, rootMargin: "-38% 0px -55% 0px", threshold: 0 });
-  Array.prototype.forEach.call(feed.children, function(s){ observer.observe(s); });
+  Array.prototype.forEach.call(screenEls, function(s){ observer.observe(s); });
 
   document.addEventListener("keydown", function(e){
     if (e.key === "ArrowDown" || e.key === "PageDown") goTo(current + 1);
