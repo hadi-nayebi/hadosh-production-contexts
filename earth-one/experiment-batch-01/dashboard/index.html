@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Earth One — Experiment Batch 02 · Review Dashboard</title>
-<meta name="description" content="Swipe-review dashboard for Earth One's Daily Language Challenge, Experiment Batch 02. Like, dislike and comment — feedback lands as GitHub issues.">
+<title>Earth One — Experiment Batch 02 · Review Dashboard (Batch 01 dashboard path)</title>
+<meta name="description" content="Swipe-review dashboard for Earth One's Daily Language Challenge, Experiment Batch 02, served from the legacy Experiment Batch 01 dashboard path. Like, dislike and comment — feedback lands as GitHub issues.">
 <style>
   :root{
     --ground:#17100a;
@@ -40,6 +40,9 @@
   .brand span{display:block;letter-spacing:.02em;font-weight:600;font-size:11px;color:var(--cream-dim)}
   .topbar .batch{margin-left:auto;text-align:right;font-size:12px;color:var(--cream-dim);white-space:nowrap}
   .topbar .batch b{display:block;color:var(--cream);font-size:13px}
+  /* the coverage line is a state claim, not a label: it wraps in full —
+     truncating or clipping it would silently change the claim */
+  #batchstate{flex:1 1 720px;max-width:880px;white-space:normal;line-height:1.35}
   .counter{
     font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;
     padding:6px 10px;border-radius:999px;border:1px solid var(--glass-brd);
@@ -142,6 +145,7 @@
     border:1px solid var(--glass-brd);background:rgba(0,0,0,.22);color:var(--cream-dim);white-space:nowrap;
   }
   .rchip.pass{border-color:rgba(134,214,106,.65);color:#b9e39d}
+  .rchip.accepted{border-color:rgba(242,176,74,.75);color:var(--amber)}
   .rchip.running{border-color:var(--amber);color:var(--amber)}
   .rchip.fail{border-color:var(--terra);color:#f0a58e}
   .poster .revcount{margin-top:12px;font-size:12.5px;font-weight:800;color:var(--cream-dim)}
@@ -192,9 +196,29 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   @media (min-width:760px){
-    .screen{padding-left:24px;padding-right:24px}
+    /* desktop index rail: the batch index WRAPS — every one of the 22
+       chips is on the page, none parked off-screen behind a scroll
+       (PASS 39 flag a). The rail chips carry number + opening only;
+       architecture lives in the poster + Details. Screen top padding
+       clears the taller wrapped rail + coverage header. */
+    .rail{top:calc(70px + env(safe-area-inset-top));flex-wrap:wrap;overflow-x:visible;row-gap:8px}
+    .screen{padding-left:24px;padding-right:24px;padding-top:calc(196px + env(safe-area-inset-top))}
     .panel{max-width:640px;margin:0 auto;width:100%}
     .poster .sentence{font-size:56px}
+  }
+  @media (min-width:760px) and (max-width:1099px){
+    .screen{padding-top:calc(238px + env(safe-area-inset-top))}
+  }
+  @media (max-width:759px){
+    /* phone header: the v20 coverage line is long — it takes its own
+       full-width row under the brand row instead of pushing the counter
+       and itself off-screen (PASS 46 phone-width check, staged bytes) */
+    .topbar{flex-wrap:wrap;row-gap:4px}
+    .topbar .batch{margin-left:0;white-space:normal;flex:1 1 150px}
+    #batchstate{order:4;flex:1 1 100%;max-width:none;text-align:left;font-size:11.5px}
+    .counter{margin-left:auto}
+    .rail{top:calc(220px + env(safe-area-inset-top))}
+    .screen{padding-top:calc(284px + env(safe-area-inset-top))}
   }
 </style>
 </head>
@@ -202,7 +226,7 @@
 
 <header class="topbar">
   <div class="brand">EARTH ONE<span>The Daily Language Challenge</span></div>
-  <div class="batch"><b>Experiment Batch 02</b>review dashboard</div>
+  <div class="batch"><b>Experiment Batch 02</b>review dashboard · Batch 01 path (legacy)</div>
   <div class="batch" id="batchstate" style="text-align:right"></div>
   <div class="counter" id="counter">– / –</div>
 </header>
@@ -213,7 +237,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=19"></script>
+<script src="data.js?v=20"></script>
 <script>
 (function(){
   "use strict";
@@ -278,7 +302,7 @@
     if (!ROSTER.length) return "";
     return '<div class="reviews">' + ROSTER.map(function(seat){
       var st = reviewState(cell, seat.key);
-      var mark = st === "pass" ? "✓ " : st === "running" ? "⟳ " : st === "fail" ? "✗ " : "· ";
+      var mark = st === "pass" ? "✓ " : st === "accepted" ? "◐ " : st === "running" ? "⟳ " : st === "fail" ? "✗ " : "· ";
       return '<span class="rchip ' + st + '">' + mark + esc(seat.label) + '</span>';
     }).join("") + '</div>';
   }
@@ -441,7 +465,7 @@
       chip.type = "button";
       chip.className = "chip";
       chip.innerHTML = '<span class="dot" style="background:' + (STATUS_COLORS[cell.status] || "#a2937d") + '"></span>' +
-        esc(String(cell.n).padStart(2,"0")) + ' · ' + esc(cell.opening) + ' · ' + esc(cell.archName);
+        esc(String(cell.n).padStart(2,"0")) + ' · ' + esc(cell.opening);
       chip.addEventListener("click", function(){ goTo(i); });
       rail.appendChild(chip);
     });
