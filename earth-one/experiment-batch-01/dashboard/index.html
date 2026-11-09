@@ -203,6 +203,7 @@
 <header class="topbar">
   <div class="brand">EARTH ONE<span>The Daily Language Challenge</span></div>
   <div class="batch"><b>Experiment Batch 02</b>review dashboard</div>
+  <div class="batch" id="batchstate" style="text-align:right"></div>
   <div class="counter" id="counter">– / –</div>
 </header>
 
@@ -212,7 +213,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=18"></script>
+<script src="data.js?v=19"></script>
 <script>
 (function(){
   "use strict";
@@ -241,13 +242,18 @@
   function taughtLine(cell){ return cell.taught.join(" · "); }
 
   var ROSTER = window.BATCH_REVIEWS || [];
+  var bs = document.getElementById("batchstate");
+  if (bs && window.BATCH_META && window.BATCH_META.coverage) bs.textContent = window.BATCH_META.coverage;
   function reviewState(cell, key){
     var r = cell.reviews || {};
     return r[key] || "pending";
   }
+  function countingSeats(){
+    return ROSTER.filter(function(seat){ return seat.counts !== false; }).length;
+  }
   function reviewCount(cell){
     var n = 0;
-    ROSTER.forEach(function(seat){ if (reviewState(cell, seat.key) === "pass") n++; });
+    ROSTER.forEach(function(seat){ if (seat.counts !== false && reviewState(cell, seat.key) === "pass") n++; });
     return n;
   }
   function reviewsHTML(cell){
@@ -258,14 +264,14 @@
       if (st === "fail") fails.push(seat);
       if (st === "running") running++;
     });
-    var h = '<div class="readiness"><span class="rbig">' + reviewCount(cell) + '/' + ROSTER.length + '</span>' +
-      '<span class="rlab">panel readiness — counted passes only (shadow guards never count)</span></div>';
+    var h = '<div class="readiness"><span class="rbig">' + reviewCount(cell) + '/' + countingSeats() + '</span>' +
+      '<span class="rlab">readiness — decisive passes only (code + confirmed/armed guards; provisional + advisory never count)</span></div>';
     if (fails.length) {
       h += '<div class="flags">' + fails.map(function(seat){
         return '<span class="rchip fail">✗ ' + esc(seat.label) + '</span>';
       }).join("") + '</div>';
     }
-    h += '<div class="rnote">' + (running ? running + ' running · shadow verdicts in Details' : 'Shadow verdicts in Details — never counted') + '</div>';
+    h += '<div class="rnote">' + (running ? running + ' running · provisional + advisory verdicts in Details — never counted' : 'Provisional + advisory verdicts in Details — never counted') + '</div>';
     return h;
   }
   function rosterHTML(cell){
@@ -337,7 +343,7 @@
             '<span class="tag">' + esc(cell.lengthLabel) + '</span>' +
           '</div>' +
           '<div class="statuspill"><span class="dot' + (busy ? " pulse" : "") + '" style="background:' + color + '"></span>' + esc(cell.statusLabel) + '</div>' +
-          '<div class="revcount">Panel readiness <b>' + reviewCount(cell) + '/' + ROSTER.length + '</b> checks passing</div>' +
+          '<div class="revcount">Readiness <b>' + reviewCount(cell) + '/' + countingSeats() + '</b> decisive checks passing</div>' +
           '<div class="lands">In production — full state in Details.</div>' +
         '</div>';
     }
