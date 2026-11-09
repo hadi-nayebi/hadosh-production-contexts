@@ -21,7 +21,8 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#070403;-web
 .grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:.16;mix-blend-mode:overlay;z-index:5}
 #gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
 .camProxy{position:absolute;background:transparent;display:none}
-.gizmoFrame{position:fixed;right:14px;top:64px;width:92px;height:92px;border-radius:14px;border:1px solid rgba(244,233,204,.25);background:rgba(20,14,8,.32);pointer-events:none;z-index:4}
+.gizmoFrame{position:fixed;right:14px;top:64px;width:92px;height:92px;border-radius:14px;border:1px solid rgba(244,233,204,.25);background:rgba(20,14,8,.14);pointer-events:none;z-index:4}
+.gizmoCap{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:8.5px;letter-spacing:.18em;color:rgba(244,233,204,.88);pointer-events:none}
 .headChip{position:fixed;right:14px;bottom:16px;font-family:Georgia,serif;font-size:13px;letter-spacing:.6px;color:rgba(244,233,204,.92);background:rgba(20,14,8,.32);border:1px solid rgba(244,233,204,.25);padding:6px 12px;border-radius:999px;pointer-events:none;z-index:5;display:none}
 .originMark{position:fixed;width:18px;height:18px;margin:-9px 0 0 -9px;border:2px solid rgba(244,233,204,.85);border-radius:50%;pointer-events:none;z-index:5;display:none}
 .originMark::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:rgba(244,233,204,.9)}
@@ -170,7 +171,7 @@ body.camView .headChip{bottom:64px}
 <body data-reason="[USER] The page body: one world rendered twice (the main view and the corner picture-in-picture), the glass control layer above them, and nothing else.">
 <canvas id="gl" data-reason="[BEST-PRACTICE] The WebGL surface: the one canvas the vendored three.js renders onto — the world scene full-screen for the main view, the world scene again into the corner's rectangle, and the orientation gizmo's own mini-scene into its frame. One canvas, one world scene (the gizmo's mini-scene is the named second scene), every view a render pass."></canvas>
 <div class="glFail" id="glFail" role="alert" data-reason="[USER] The named failure: when WebGL cannot start or its context is lost, this panel says so in plain words while the chrome stays alive — the stage never silently substitutes a lesser picture for the real render.">3D is not available on this device.</div>
-<div class="gizmoFrame" id="gizmoFrame" data-reason="[USER] The orientation gizmo's frame: a small glass square at the top right into which the render loop draws the world axes and the compass letters from the active eye's own direction, so which way is up and which way the eye faces are readable at a glance, at rest, without touching anything."></div>
+<div class="gizmoFrame" id="gizmoFrame" data-reason="[USER] The orientation gizmo's frame: a small glass square at the top right into which the render loop draws the world axes and the compass letters from the active eye's own direction, so which way is up and which way the eye faces are readable at a glance, at rest, without touching anything. FOLLOW-ON (2026-11-08, naive flag N1): the frame is captioned COMPASS and its glass veil lightened (0.32 to 0.14) — cold, the box read as an unexplained dark square duplicating the heading chip, its letters dimmed by the frame's own tint standing over the canvas; named and unveiled, the picture (axes + letters) and the chip (the number) read as the standard compass pair. Retiring the box was weighed and refused in this job: the gizmo is the render loop's third pass, a structural leg of the migration proof, and the instrument the owner's fix round 8 built."><div class="gizmoCap" data-reason="[USER] The gizmo's name, standing on its frame (naive flag N1, 2026-11-08): one word, so a first-time eye knows what the box is before it reads the letters inside it.">COMPASS</div></div>
 <div class="viewport" id="vpMain" data-reason="[USER] The main view: whichever eye is chosen large — the director's free view, or the camera's shot. It receives the main gestures. The picture itself is the WebGL canvas beneath; this surface is the touch layer over it.">
   <div class="camProxy camHit" id="camProxy" data-reason="[USER] The camera's grab proxy: a transparent layer the render loop seats over the camera object's projected silhouette every frame, so a press landing on the object is a press on an element carrying the hit class the gesture door reads — the fat invisible proxy every 3D tool picks against, seated by true projection now instead of by a drawn copy of the object. It carries no look at all — its whole job is to be landed on."></div>
 </div>
@@ -208,6 +209,11 @@ body.camView .headChip{bottom:64px}
     <h3 data-reason="[BEST-PRACTICE] The panel's title: one word, so the panel's job is known at a glance.">SETTINGS</h3>
     <button class="xBtn" id="btnClosePanel" aria-label="Close settings" data-reason="[USER] The panel's own close button: a panel that only its opener can dismiss traps the user; this closes it from inside, and pressing anywhere outside the panel closes it too — a press on the corner view closes it as well, through the corner's own handler, and that press is spent on the dismissal, so it cannot also swap the views.">&#10005;</button>
   </div>
+  <div class="btns" data-reason="[USER] The pose doors (owner steers, 2026-11-07): PIN freezes the camera's current pose as this device's home — one tap, saved on the device; SAVE exports the current pose durably as a prefilled GitHub issue. FILM below recalls the home: the pinned pose where one stands, the shipped filming home where none does. FOLLOW-ON (2026-11-08, the PIN-below-fold cure): the block stands at the panel's head, directly under its title — it sat twelve rows down, below the panel's fold until scrolled, and the control gate's most consequential door must be reachable without the fold hiding it.">
+    <button id="btnPin" aria-pressed="false" data-reason="[USER] Pin: save the camera's current pose — seat, lift, heading, tilt and lens — on this device as its home. From then on the scene seats it at entry, RESET CAMERA returns to it, and FILM recalls it; the button stands lit while a pin stands, and the readout below names the home and prints its numbers.">&#128204; PIN</button>
+    <button id="btnSave" data-reason="[USER] Save: open the prefilled GitHub issue carrying the camera's current pose — the durable export of a framing, into the repository the agent reads.">SAVE</button>
+  </div>
+  <div class="poseRead" id="poseRead" data-reason="[USER] The home readout (owner steer, 2026-11-07): the home's name and its six numbers as readable text — the metadata the owner asked to see, copy and hand over. A pinned pose reads HADI'S HOME; until one is pinned, the room reads the shipped filming home the FILM preset seats.">FILMING HOME</div>
   <div class="row" data-reason="[USER] Look speed: how far a drag turns the view — and how fast the camera aims when you drag the corner view.">
     <label for="sLook">Look speed <output id="oLook">1.00&times;</output></label>
     <input type="range" id="sLook" min="0.4" max="2" step="0.05" value="1" data-reason="[USER] Look speed slider: 0.4 to 2 times.">
@@ -253,11 +259,6 @@ body.camView .headChip{bottom:64px}
       <input type="range" id="sLift" min="0" max="360" step="1" value="0" data-reason="[USER] Lift slider: 0 to 360, the lift axis's own range.">
     </div>
   </div>
-  <div class="btns" data-reason="[USER] The pose doors (owner steers, 2026-11-07): PIN freezes the camera's current pose as this device's home — one tap, saved on the device; SAVE exports the current pose durably as a prefilled GitHub issue. FILM below recalls the home: the pinned pose where one stands, the shipped filming home where none does.">
-    <button id="btnPin" aria-pressed="false" data-reason="[USER] Pin: save the camera's current pose — seat, lift, heading, tilt and lens — on this device as its home. From then on the scene seats it at entry, RESET CAMERA returns to it, and FILM recalls it; the button stands lit while a pin stands, and the readout below names the home and prints its numbers.">&#128204; PIN</button>
-    <button id="btnSave" data-reason="[USER] Save: open the prefilled GitHub issue carrying the camera's current pose — the durable export of a framing, into the repository the agent reads.">SAVE</button>
-  </div>
-  <div class="poseRead" id="poseRead" data-reason="[USER] The home readout (owner steer, 2026-11-07): the home's name and its six numbers as readable text — the metadata the owner asked to see, copy and hand over. A pinned pose reads HADI'S HOME; until one is pinned, the room reads the shipped filming home the FILM preset seats.">FILMING HOME</div>
   <div class="btns" id="btnFilmRow" style="display:none" data-reason="[USER] The filming home's row in the panel (cycle 2, 2026-11-07; plan §6): one preset, one word — FILM seats the camera at the filming home, the derived pose whose frame holds exactly the stage, the curtains standing at its left and right edges and a little of the step below the deck. The row stands only in the theater (the filming home is a room pose); its button's face carries the state — lit while the camera stands at the pose, the ruling's state-on-its-face rule.">
     <button id="btnFilm" aria-pressed="false" data-reason="[USER] Film: seat the camera at the filming home (the FILM_HOME record — 430 out at 830, heading -180, tilt -4.8, lens 1080, lift 84, the eye at 120). One tap flies the camera to the pose; the button stands lit while the camera's targets stand at the pose and unlights the moment any number moves off it.">FILM</button>
   </div>
@@ -333,7 +334,7 @@ body.camView .headChip{bottom:64px}
 <script src="assets/three-vendor.js" data-reason="[BEST-PRACTICE] The vendored three.js engine (r186): one classic script, bundled from the pinned module pair, so the stage boots from a bare file:// open — no modules, no import map, no runtime fetch. Owner's platform decision, 2026-11-06 17:39 EST: adopt three.js, vendored. Its version, byte size and sha256 stand in the branch law and the migration record."></script>
 <script src="assets/locations/theater/location.js" data-reason="[ASSEMBLY] The theater's data object (the assembly build, 2026-11-08): the location's books, engine numbers and assembly table as a classic script, registered on window.STAGE_LOCATIONS before the world script runs — file:// blocks fetch and modules, so a location's data travels as a script, the file's proven pattern. Dropping a location's folder in and naming its script here is the whole act of adding a place."></script>
 <script src="assets/locations/gym/location.js" data-reason="[ASSEMBLY] The gym's data object (the assembly build, 2026-11-08): the workshop-tier proof location — added as data alone, no construction code in the HTML; the dropdown offers it and the assembler builds it from this file."></script>
-<!-- STAGE SEED - generated from stage.html (sha256 44730dad53b2d1f7) by assets/plan/make-seed.py.
+<!-- STAGE SEED - generated from stage.html (sha256 2614ee2abb4f566b) by assets/plan/make-seed.py.
      Boots into the empty state: the void and the wireframe grid, no objects.
      Do not edit by hand; regenerate after any stage.html change. -->
 <script>window.__STAGE_SEED__ = true;</script>
@@ -860,19 +861,23 @@ body.camView .headChip{bottom:64px}
   /* @reason [BEST-PRACTICE] Test views: the URL may set any state number, so a screenshot or a driving test can reproduce an exact view — the same mechanism the verification suite uses. The door admits only FINITE numbers (convergence fix round 2, R2A-3): parseFloat('1e999') is Infinity, not NaN, so the old isNaN test alone let it through — and the two params that bypass clamp() were poisoned by it (yaw set exactly to Infinity, later NaN through the home wrap; heading NaN through the modulo, then slammed to the clamp corner by the first arrow key). A non-finite value is rejected here, at the one door, for every param alike — an infinite view does not exist, and the param's shipped default stands instead. Finiteness alone was not enough for yaw (convergence fix round 3, E-1): a finite 1e308 passed this door, and flyHome's wrap step — adding at most 180 to the target — is absorbed by a float that large, so the home flight could never bring it back; yaw therefore wraps by true modulo at this door, like heading, and no admitted value of any param can strand or poison state. */
   function numParam(name, apply) { if (q.has(name)) { var v = parseFloat(q.get(name)); if (isFinite(v)) apply(v); } }
   /* @reason [BEST-PRACTICE] Every test value is clamped to the same law range its gesture path enforces before it can touch state (navfix N13): an extreme link (?dolly=1050) once zeroed the camera-drag un-projection's divisor and poisoned the camera targets with NaN until reload; now an out-of-range value lands on the nearest legal value, and a non-finite value never reaches state at all — the numParam door admits only finite numbers, for the two params that bypass clamp() as strictly as for the ten that pass through it. Those two — yaw and heading — wrap by TRUE MODULO into (−180, 180] at the door (convergence fix C6 for heading; round 3, E-1, for yaw): the old ((v + 540) % 360) − 180 formula broke below −540, where the JS % keeps the dividend's sign and the "wrapped" value landed outside the range. The director's yaw stays continuous IN USE — gestures accumulate it past a full circle freely and its home flight wraps to the nearest equivalent; only this test-view door wraps its input, so a shared link can name any view a gesture can reach, and no admitted magnitude can freeze the home flight. */
-  numParam('yaw', function (v) { var w = ((v % 360) + 360) % 360; dir.tYaw = dir.yaw = w > 180 ? w - 360 : w; });
-  numParam('roll', function (v) { dir.tRoll = dir.roll = clamp(v, -180, 180); });
-  numParam('pitch', function (v) { dir.tPitch = dir.pitch = clamp(v, -89, 89); });
-  numParam('dolly', function (v) { dir.tDolly = dir.dolly = clamp(v, -6000, 1000); });
-  numParam('panx', function (v) { dir.tPanX = dir.panX = clamp(v, -1600, 1600); });
-  numParam('pany', function (v) { dir.tPanY = dir.panY = clamp(v, -1000, 1000); });
-  numParam('camx', function (v) { cam.tX = cam.x = clamp(v, -3000, 3000); });
-  numParam('camz', function (v) { cam.tZ = cam.z = clamp(v, -3000, 3000); });
-  numParam('heading', function (v) { var w = ((v % 360) + 360) % 360; cam.tHeading = cam.heading = w > 180 ? w - 360 : w; });
-  numParam('tilt', function (v) { cam.tTilt = cam.tilt = clamp(v, -70, 70); });
-  numParam('camroll', function (v) { cam.tRoll = cam.roll = clamp(v, -180, 180); });
-  numParam('focal', function (v) { cam.tFocal = cam.focal = clamp(v, 240, 1700); });
-  numParam('lift', function (v) { cam.tLift = cam.lift = clamp(v, 0, 360); });
+  /* @reason [BEST-PRACTICE] The test-view doors, applied as one function (follow-on verification, 2026-11-08): at construction they set the boot state exactly (branch law 5 — current = target), and init calls this once more after the boot seating, because a location's seat (the pin, else its default pose) is a DEFAULT for plain boots and must not stomp an explicit test view — the assembly build's first-open seating wrote the room default over every one of these doors on location boots (?lift=120 read back 136.92, ?heading=-90 read back -180), while seed boots, which seat nothing, kept them. With no params in the URL the second application writes nothing, so plain boots and pinned boots are untouched. */
+  function applyTestView() {
+    numParam('yaw', function (v) { var w = ((v % 360) + 360) % 360; dir.tYaw = dir.yaw = w > 180 ? w - 360 : w; });
+    numParam('roll', function (v) { dir.tRoll = dir.roll = clamp(v, -180, 180); });
+    numParam('pitch', function (v) { dir.tPitch = dir.pitch = clamp(v, -89, 89); });
+    numParam('dolly', function (v) { dir.tDolly = dir.dolly = clamp(v, -6000, 1000); });
+    numParam('panx', function (v) { dir.tPanX = dir.panX = clamp(v, -1600, 1600); });
+    numParam('pany', function (v) { dir.tPanY = dir.panY = clamp(v, -1000, 1000); });
+    numParam('camx', function (v) { cam.tX = cam.x = clamp(v, -3000, 3000); });
+    numParam('camz', function (v) { cam.tZ = cam.z = clamp(v, -3000, 3000); });
+    numParam('heading', function (v) { var w = ((v % 360) + 360) % 360; cam.tHeading = cam.heading = w > 180 ? w - 360 : w; });
+    numParam('tilt', function (v) { cam.tTilt = cam.tilt = clamp(v, -70, 70); });
+    numParam('camroll', function (v) { cam.tRoll = cam.roll = clamp(v, -180, 180); });
+    numParam('focal', function (v) { cam.tFocal = cam.focal = clamp(v, 240, 1700); });
+    numParam('lift', function (v) { cam.tLift = cam.lift = clamp(v, 0, 360); });
+  }
+  applyTestView();
   if (q.get('view') === 'camera') mainRole = 'camera';
 
   var vpMain = document.getElementById('vpMain');
@@ -1699,6 +1704,8 @@ body.camView .headChip{bottom:64px}
       if (doorScene && SCENES[doorScene]) setScene(doorScene);
       /* @reason [ASSEMBLY] The first open (the assembly build, 2026-11-08; the owner's first-open ruling, 2026-11-08 12:32 EST — 'as soon as I open the app I see exactly what I want'): a plain boot — no seed flag, no scene door — opens on the FIRST registered location, assembled and seated at its default: the paper theater at the owner's room-default pose, never the void. The seed boot and the ?scene= door keep their contracts untouched. */
       if (!doorScene && q.get('seed') !== '1' && !window.__STAGE_SEED__ && LOC_LIST.length) setScene(LOC_LIST[0].scene);
+      /* the test-view doors re-apply over the boot seating (applyTestView's own reason, Layer 2): an explicit ?camx / ?lift / ?heading outranks the seat's defaults, exactly as it outranked the void's defaults before locations seated at boot; in-session scene entries are untouched — the pin and the defaults govern those, as the GATE legs prove. */
+      applyTestView();
     } catch (err) { }
     var panel = document.getElementById('panel');
     try {
