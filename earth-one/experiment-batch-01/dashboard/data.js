@@ -1,4 +1,4 @@
-/* Experiment Batch 02 — cell registry (batch06), data v23 (dashboard review-set round, PASS 123, 2026-11-09).
+/* Experiment Batch 02 — cell registry (batch06), data v24 (dashboard review-set round, PASS 143, 2026-11-10).
    READINESS SEMANTICS (v20 — the v21 counting rule, implemented in index.html):
    - The big number counts DECISIVE passes only: code checkers + CONFIRMED guards + the CONFIRMED
      closure composite, over the seats flagged counts=true in BATCH_REVIEWS.
@@ -41,6 +41,19 @@
      B4 NOT VERIFIED stands. Approvals 0/22 — named is not approved.
    - Descriptions and designed thumbnails are 0/22 batch-wide (packaging step) — shown absent.
    - Posters are FRAME GRABS, not designed thumbnails (labelled per cell in Details).
+   - PRINT STATE v24 (PASS 143, 2026-11-10 — SUPERSEDES the v23 bullet above): the FULL final set is
+     seated — 20 current masters (cell04 17a443b1… · cell05 9c1dfc1d… · cell07 3b4d1092… · cell10
+     a18321f5… · cell14 cdb362c8… · cell19 a9b74167… NAMED by the lane lead at Passes 120–124;
+     cell01 1bf6afe4… · cell02 d8bd4db7… · cell06 7eb7e884… · cell08 4a317821… · cell09 5417f7fd… ·
+     cell11 ca3b18ba… · cell12 9c7a8333… · cell13 a66a1443… · cell15 33123cec… · cell16 4c01afe2… ·
+     cell17 c92e2220… · cell18 3846c14f… · cell21 693d315e… · cell22 d03a880a… awaiting the lead's
+     naming at the Wave 5 gate, frame pack at batch06/pass143/frames/). Cells 03 + 20 seat NO video:
+     both are BLOCKED on HQ escalations (cell03: its intro span cannot hold its chunks, § PASS 134
+     Leg 0; cell20: segment-id collision, § PASS 133 §3). READINESS (GUARD-MAP v100 §2, § PASS 134):
+     0/22 — the owner-standard layer (guard_category) indicts 20/21 built cells, cell16 is
+     NO-CONTENT there, cell04 stands FAIL at animation + closure, cell05 carries the PRIMARY-HELPER
+     note (HQ ruling), cells 03 + 20 are unrendered. This page is a REVIEW surface, NOT the finish —
+     the quality wave follows it. Approvals 0/22 — seated is not approved.
    - PRESENTATION STATE (TLDR #73 HOLD, repetition 3): this refresh is PREPARED + STAGED
      only — fired ≠ presented-as-verified. No dashboard version is presented as current or
      verified until the B53 phone-width pass lands on the served page. SUPERSEDED 2026-11-09: the B53 pass landed (§ PASS 56) and the TLDR #73 HOLD was LIFTED ~00:20 EST that day; v23's index cures answer its flags P56-1…P56-4, verified on the staged bytes in § PASS 123. */
@@ -204,7 +217,7 @@ window.BATCH_META = {
   "repo": "hadi-nayebi/hadosh-production-contexts",
   "coverage": "Coverage 26/27 (old basis) · 26/28 (new basis) · open items exactly one: G11 (sound-design fit; owner = guard_seams' next B60 amendment + print legs) — row 28's FA residue CLOSED BY SUBSTITUTION (owner order + full-content clarification; § PASS 48 execution + checker #23 verification) (HQ GUARD-MAP v56)",
   "shelf": "Guard shelf: 7 CONFIRMED (translation — CONFIRMED (v27) + output-space ADDENDUM (HQ v57: taxonomy + quality profiles live; population re-run 22/22 PASS, flips 0, § PASS 51) · linguist_claims at expanded mask v3 (HQ v48; G9 closed) · segment_function · depiction at mask v4 (HQ v43; permutation class closed) · seams — certificate (v34) + completion addendum (HQ v56), all 22 judged (cell20 PASS 0.70/0.68) · animation FINAL at mask v3 + per-motion accounting (HQ v46; fleet PASS 22/22 · 763 decided entries · 3,815 slots · 0 undecided) · closure CONFIRMED as a composite (HQ v54): PASS 22/22 on the cured population — B44 tails re-measured 0.68–0.70 s · B60 rider: 11 improvement candidates) · reasoning armed-provisional at its narrowed label · educator advisory (Educator seat fired 22/22: PASS 20 · FAIL-open 1 · ACCEPTED-with-reason 1; checker #22 measured 22/22) · take identity: G10 ratified closed (HQ v50), checker population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0",
-  "dashboard": "v23 (2026-11-09, PASS 123 — review-set round: six named prints seated (Passes 120–122) + the four PASS 56 phone cures in index; data.js?v=23)",
+  "dashboard": "v24 (2026-11-10, PASS 143 — Wave 5 review-set round: the FULL final set seated — 20 current masters (Passes 120–133 prints) + cells 03/20 honest blocked statuses (HQ escalations); readiness 0/22 under GUARD-MAP v100 §2 (Pass 134 fleet table) — a REVIEW surface, not the finish; approvals 0/22; data.js?v=24)",
   "pathNote": "Served from the legacy experiment-batch-01 dashboard path; the content reviewed here is Experiment Batch 02."
 };
 
@@ -260,8 +273,8 @@ window.BATCH_CELLS = [
     "file": "dlc001-eat-bread__print__en__cell01.mp4",
     "video": "videos/dlc001-eat-bread__print__en__cell01.mp4",
     "poster": "poster-cell-01.png",
-    "status": "recut-owed",
-    "statusLabel": "Playable print · panel INVALID-until-dispositioned (#14) — NOT ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "status": "inbuild",
+    "statusLabel": "Current print seated for review (§ PASS 133 print 1bf6afe4… · 80.67 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard layer indicts: click_promise — no designed thumbnail) · not approved (0/22)",
     "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The batch-02 baseline: batch 01's built cell folded in and rebuilt under the batch06 construct. Control pair with cell 02 (only the opening language moves). Its panel is flagged INVALID-until-dispositioned (checker #14 print identity) — see Gate status.",
     "title": "I Eat Bread in 4 Languages — Learn It From English"
   },
@@ -309,8 +322,8 @@ window.BATCH_CELLS = [
     "gate": "Panel 2026-11-08T14:01Z (batch06/panels/cell02-dlc001-eat-bread-es.panel.json): panel readiness 5 counted passes — code passes 5 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — root files whose names match neither the v6 grammar nor the data shorthand (DEPICTION.md, sibling manifest-cellNN.json files, census outputs); timing FAIL — 90.13 s vs the M target 60 s ±15% (+50.2%, the G2 content-floor class). Code checks not run: parity · consistency · stratification. Print: dlc001-eat-bread__print__es__cell02.mp4 · sha256 484c67dd… · 90.133 s · LUFS −14.81 · census UNTAGGED 0 · sealed tail probe PASS · cold view PASS. The print predates the ES transcript fix for the intro-list duplication (fixed in data; a post-fix re-render runs only if HQ queues one — B50 assembler route). Shadow guards (panel era, superseded at v19): at panel time all 10 guards stood in shadow mode and none counted. That state is retired — the guards have since fired across the population and stand confirmed/armed/provisional/advisory per the roster labels; this cell's current verdicts are the chips in Details and the BATTERY STATE note below. Poster: frame grab — designed thumbnail pending.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): PASS on this cell's record — no non-PASS entry stands in its record · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes. · TIMING NOTE (v20): this cell's panel-era timing FAIL stated its basis as the retired M-class target (90.13 s vs 60 s ±15%) — under owner ruling R1/B57 duration is a declared axis, never a forced class, so the class verdict is RETIRED and this cell's duration stands declared at 90.13 s, exactly as cells 04/19 were re-faced in v18; the retirement covers the class verdict only.",
     "file": "dlc001-eat-bread__print__es__cell02.mp4",
     "video": "videos/dlc001-eat-bread__print__es__cell02.mp4",
-    "status": "recut-owed",
-    "statusLabel": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "status": "inbuild",
+    "statusLabel": "Current print seated for review (§ PASS 133 print d8bd4db7… · 88.93 s — the file the v23 entry named but did not hold) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise · its closing carries the stock CTA formula — E1 redesign queue, quality wave) · not approved (0/22)",
     "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class L. Control pair with cell 01 — only the opening language moves.",
     "title": "I Eat Bread in 4 Languages — Learn It From Spanish",
     "poster": "poster-cell-02.png"
@@ -360,11 +373,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Panel 2026-11-08T16:53Z (batch06/panels/cell03-dlc003-open-door-en.panel.json): panel readiness 10 counted passes — code passes 10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — harness/record artifacts in the root (sibling manifest-cell17.json, census__en/es.json, voice masters, render logs) — not cell data; voice FAIL — G1 GAP LOCATED — introduce segments s03/s07/s11 carry voice_state=bed; flagged for the fix queue. Code checks not run: parity. Also PASS in this panel: respelling · dupchunk · print_conformance. Quarantine: 1 entry excluded (a guard_animation verdict that originated in cell17 — never counted). Located failing subscores: 6. Shadow INDICTS faces (advisory — displayed, NEVER counted): translation · linguist_claims · reasoning · depiction. Poster: frame grab — designed thumbnail pending.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · its ending is a B60 improvement candidate (payoff/promise < 0.55 — a floor-level ending is a candidate, not a finished ending; rider re-derived in § PASS 50, ranked under HQ v54 — 11 candidates batch-wide) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): FAIL on this cell's record — LINE-UNRECORDED 3 entries (dlc003 diagramnarr EN subject/verb/object; language verified in every case; production owns authoring the records) · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": "dlc003-open-door__print__en__1.mp4",
-    "video": "videos/dlc003-open-door__print__en__1.mp4",
-    "poster": "poster-cell-03.png",
+    "file": "",
+    "video": "",
+    "poster": "",
     "status": "recut-owed",
-    "statusLabel": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗",
+    "statusLabel": "BLOCKED — no current print: the record cannot render this cell (its intro span, 2.4 s, cannot hold its three intro chunks totalling 3.29 s — § PASS 134 Leg 0, measured; re-deriving the span is an HQ / production-record decision, escalated) · NOT READY (Pass 134: seams NO-CONTENT · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)",
     "about": "Strata: A · L (drifted from M; reclassed) · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. Verify-only in F2: the Phase 1B print of record, re-proved (census UNTAGGED 0, sealed tail probe PASS) — plus a take-2 render under the HARNESS-2 capture patch with identical duration/LUFS/census.",
     "title": "I Open the Door in 4 Languages — Learn It From English"
   },
@@ -414,7 +427,7 @@ window.BATCH_CELLS = [
     "video": "videos/dlc002-need-water__print__en__cell04.mp4",
     "poster": "poster-cell-04.png",
     "status": "inbuild",
-    "statusLabel": "Named print seated (§ PASS 120, 17a443b1… · 85.63 s) — cured hero in film, three states frame-verified · closing tail 15.25 s stands untrimmed (HQ's tagging-vs-trimming call) · B4 NOT VERIFIED · not approved (0/22)",
+    "statusLabel": "Named print seated (§ PASS 120, 17a443b1… · 85.63 s) — cured hero in film, three states frame-verified · NOT READY (Pass 134: FAILs at animation (motion) + closure (B44 closing tail 15.53 s — HQ's tagging-vs-trimming call) · the owner's diagram-pacing defect stands (2.845 vs 2.093 words/s, § PASS 135) · the one cell the owner-standard layer clears) · B4 NOT VERIFIED · not approved (0/22)",
     "about": "Strata: A · L · O1 · E1 · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M2 card flips · demographic class XL. Re-cut of DLC-002 with the B33+B35+B36+B37 cures riding; introduce segments carry the G1 voice fix. The PANEL guard-passed this cell (see Gate status), and the print playable here is now the NAMED print of § PASS 120 — the cured set in film (see the print state at the head of Gate status). It is named, not approved: approvals stand 0/22.",
     "title": "I Need Water in 4 Languages — Learn It From English"
   },
@@ -454,7 +467,7 @@ window.BATCH_CELLS = [
     "video": "videos/dlc002-need-water__print__hi__cell05.mp4",
     "poster": "poster-cell-05.png",
     "status": "inbuild",
-    "statusLabel": "Named print seated (§ PASS 121, 9c1dfc1d… · 92.93 s) — its own flat-vector set, frame-verified · not approved (0/22)",
+    "statusLabel": "Named print seated (§ PASS 121, 9c1dfc1d… · 92.93 s) — its own flat-vector set, frame-verified · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise · PRIMARY-HELPER: its 3 primary Hindi chips carry no Latin helper on the realized render — HQ ruling owed (lane recommends the construct amendment), § PASS 134) · not approved (0/22)",
     "about": "Strata: B · L · O2 · E1 · V3 flat illustration · M3 slide stack · demographic class L. Diagram-first with a Hindi opening door.",
     "title": "I Need Water in 4 Languages — Learn It From Hindi, Diagram First"
   },
@@ -471,7 +484,7 @@ window.BATCH_CELLS = [
     "arch": "B",
     "archName": "Diagram-first",
     "length": "L",
-    "lengthLabel": "~90 s (plan L)",
+    "lengthLabel": "101.83 s measured (Pass 131 print)",
     "hook": "Diagram hook (O2) — opens on the diagram itself.",
     "reviews": {
       "code_preflight": "pass",
@@ -500,10 +513,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards (panel era, superseded at v19): at panel time all 10 guards stood in shadow mode and none counted. That state is retired — the guards have since fired across the population and stand confirmed/armed/provisional/advisory per the roster labels; this cell's current verdicts are the chips in Details and the BATTERY STATE note below. Refresh 2026-11-08: RENDER-READY — package complete, queued for the B50 mechanical render path; the queue is environment-blocked (Chrome capture window). No print yet.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — its B44 final-hold tail was cured on the render timeline and RE-MEASURED by the confirming pass at 0.68 s (before 1.088 s; the 1.0 s limit was never tuned) — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): PASS on this cell's record — no non-PASS entry stands in its record · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
+    "file": "dlc004-am-hungry__print__en__cell06.mp4",
+    "video": "videos/dlc004-am-hungry__print__en__cell06.mp4",
+    "poster": "poster-cell-06.png",
     "status": "inbuild",
-    "statusLabel": "Render-ready — queued for mechanical render (environment) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 131 print 7eb7e884… · 101.83 s) — naming pending at the Wave 5 gate · this seating closes the owner's 'I don't see the video here' (issue #18 / FB-4) · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
     "about": "Strata: B · L · O2 · E2 quiz finish · V4 watercolor · M1 floating chips · demographic class XL. Brand-new sentence launched straight into the diagram-first form.",
     "title": "I Am Hungry in 4 Languages — Diagram First, From English"
   },
@@ -553,7 +567,7 @@ window.BATCH_CELLS = [
     "video": "videos/dlc004-am-hungry__print__en__cell07.mp4",
     "poster": "poster-cell-07.png",
     "status": "inbuild",
-    "statusLabel": "Named print seated (§ PASS 121, 3b4d1092… · 85.90 s) — cured set in film · located: the German turn's figure is a third figure (kinship, not identity) · not approved (0/22)",
+    "statusLabel": "Named print seated (§ PASS 121, 3b4d1092… · 85.90 s) — cured set in film · located: the German turn's figure is a third figure (kinship, not identity) · NOT READY (Pass 134: FAIL at animation (intro motion) · owner-standard indicts: click_promise + follow_earned · the owner's ending verdict (issue #10) stands — its stock-CTA closing is the E1 redesign queue's first cell) · not approved (0/22)",
     "about": "Strata: A · M · O3 · E1 · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M2 card flips · demographic class M. The new-languages test: German and French enter the taught pool beside Spanish.",
     "title": "I Am Hungry in 4 Languages — German & French Join In"
   },
@@ -603,7 +617,7 @@ window.BATCH_CELLS = [
     "video": "videos/dlc005-sun-warm__print__en__cell08.mp4",
     "poster": "poster-cell-08.png",
     "status": "inbuild",
-    "statusLabel": "Playable print · panel incomplete — not ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 133 print 4a317821… · 104.10 s) — naming pending at the Wave 5 gate · completeness proven at the declared layer (28/28 takes, § PASS 136) — residuals stand: focus-stage frame-exit + caption-over-diagram (C7/C8, quality wave) · NOT READY (Pass 134: FAIL at animation (intro motion) · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
     "about": "Strata: C · M (plan) · O3 · E4 story-button finish · V3 flat illustration · M3 slide stack · demographic class XL. Adjective-order pattern. Duration drift located: plan class M, the print measures ~105 s.",
     "title": "The Sun Is Warm Today in 4 Languages — Watch the Word Order Move"
   },
@@ -652,8 +666,8 @@ window.BATCH_CELLS = [
     "file": "dlc006-thank-you__print__en__cell09.mp4",
     "video": "videos/dlc006-thank-you__print__en__cell09.mp4",
     "poster": "poster-cell-09.png",
-    "status": "recut-owed",
-    "statusLabel": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗",
+    "status": "inbuild",
+    "statusLabel": "Current print seated for review (§ PASS 133 print 5417f7fd… · 104.03 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: B · XL measured (plan S — drift located and declared) · O2 · E3 speed-recap finish · V5 whiteboard line-art · M4 word-build declared · demographic class XL. Diagram-first short test that outgrew its stratum: the authored diagram narration + E3 rapid-fire recap set the length. Located in the panel: closing/recap lines render white over the light hero at low contrast — construct ending typography, fix queue.",
     "title": "Thank You Very Much in 4 Languages — Diagram First"
   },
@@ -703,7 +717,7 @@ window.BATCH_CELLS = [
     "video": "videos/dlc007-drink-water__print__en__cell10.mp4",
     "poster": "poster-cell-10.png",
     "status": "inbuild",
-    "statusLabel": "Named print seated (§ PASS 121, a18321f5… · 88.03 s) — cured set in film, named clean · not approved (0/22)",
+    "statusLabel": "Named print seated (§ PASS 121, a18321f5… · 88.03 s) — cured set in film, named clean · NOT READY (Pass 134: confirmed guards pass · transcript verdict recovered in § PASS 134's leg (ERROR in the fleet table's raw rows — runner extraction defect) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
     "about": "Strata: A · M · O1 · E2 quiz finish · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M1 floating chips · demographic class XL. Rebuild of the failed v3 lineage under the full current standard.",
     "title": "I Drink Water in 4 Languages — Learn It From English"
   },
@@ -720,7 +734,7 @@ window.BATCH_CELLS = [
     "arch": "A",
     "archName": "Classic",
     "length": "S",
-    "lengthLabel": "~30 s (plan S)",
+    "lengthLabel": "105.13 s measured (Pass 131 print)",
     "hook": "Challenge hook (O4) — “Say it before the timer ends.”",
     "reviews": {
       "code_preflight": "pass",
@@ -749,10 +763,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards (panel era, superseded at v19): at panel time all 10 guards stood in shadow mode and none counted. That state is retired — the guards have since fired across the population and stand confirmed/armed/provisional/advisory per the roster labels; this cell's current verdicts are the chips in Details and the BATTERY STATE note below. Refresh 2026-11-08: package complete — queued for mechanical render (environment-blocked queue). No print yet.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): FAIL on this cell's record — LINE-UNRECORDED 1 entry (dlc008 chunk-intro__es, heard 'en español.') · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
+    "file": "dlc008-where-station__print__en__cell11.mp4",
+    "video": "videos/dlc008-where-station__print__en__cell11.mp4",
+    "poster": "poster-cell-11.png",
     "status": "inbuild",
-    "statusLabel": "Package complete — queued for mechanical render · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 131 print ca3b18ba… · 105.13 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: A · S · O4 · E1 · V3 flat illustration · M2 card flips · demographic class XL. Question-form pattern.",
     "title": "Where Is the Station? in 4 Languages — Ask It Anywhere"
   },
@@ -769,7 +784,7 @@ window.BATCH_CELLS = [
     "arch": "C",
     "archName": "Half/half",
     "length": "M",
-    "lengthLabel": "~60 s (plan M)",
+    "lengthLabel": "119.47 s measured (Pass 131 print)",
     "hook": "Scenario hook (O3) — a market scene opens the piece.",
     "reviews": {
       "code_preflight": "pass",
@@ -798,10 +813,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards (panel era, superseded at v19): at panel time all 10 guards stood in shadow mode and none counted. That state is retired — the guards have since fired across the population and stand confirmed/armed/provisional/advisory per the roster labels; this cell's current verdicts are the chips in Details and the BATTERY STATE note below. Refresh 2026-11-08: package complete — queued for mechanical render (environment-blocked queue). No print yet.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): FAIL on this cell's record — LINE-UNRECORDED 1 entry (dlc009 chunk-intro__en, heard 'English jet.') · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
+    "file": "dlc009-how-much-cost__print__tr__cell12.mp4",
+    "video": "videos/dlc009-how-much-cost__print__tr__cell12.mp4",
+    "poster": "poster-cell-12.png",
     "status": "inbuild",
-    "statusLabel": "Package complete — queued for mechanical render · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 131 print 9c7a8333… · 119.47 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: C · M · O3 · E4 story-button finish · V4 watercolor · M3 slide stack · demographic class M. Market scenario with a Turkish opening door.",
     "title": "How Much Does It Cost? in 4 Languages — From Turkish, at the Market"
   },
@@ -818,7 +834,7 @@ window.BATCH_CELLS = [
     "arch": "B",
     "archName": "Diagram-first",
     "length": "S",
-    "lengthLabel": "~30 s (plan S)",
+    "lengthLabel": "112.50 s measured (Pass 131 print)",
     "hook": "Diagram hook (O2) — opens on the diagram itself.",
     "reviews": {
       "code_preflight": "fail",
@@ -847,10 +863,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 6 counted passes — code passes 6/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Failing checks (located): preflight FAIL — media/voice__es.wav and work/frames__1/frame_*.png filenames match neither grammar. Code checks not run: parity, consistency, stratification. Shadow guards (panel era, superseded at v19): at panel time all 10 guards stood in shadow mode and none counted. That state is retired — the guards have since fired across the population and stand confirmed/armed/provisional/advisory per the roster labels; this cell's current verdicts are the chips in Details and the BATTERY STATE note below. Refresh 2026-11-08: package complete — queued for mechanical render (environment-blocked queue). No print yet.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): FAIL on this cell's record — ASR-LIMIT 1 entry (dlc010 diagramnarr__es__verb; embedded Hindi/Turkish words garbled) + LINE-UNRECORDED 1 entry (dlc010 chunk-intro__en, heard 'in English.') · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
-    "status": "recut-owed",
-    "statusLabel": "Package complete — queued for mechanical render · panel shows code FAILS (fix queue) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗",
+    "file": "dlc010-good-morning__print__es__cell13.mp4",
+    "video": "videos/dlc010-good-morning__print__es__cell13.mp4",
+    "poster": "poster-cell-13.png",
+    "status": "inbuild",
+    "statusLabel": "Current print seated for review (§ PASS 131 print a66a1443… · 112.50 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at closure (B44 tail 1.064 s — HQ's tagging-vs-trimming call) · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)",
     "about": "Strata: B · S · O2 · E3 speed-recap finish · V1 paper cutout · M4 word-build · demographic class L. Greeting set with a Spanish opening door.",
     "title": "Good Morning in 4 Languages — Learn It From Spanish"
   },
@@ -900,7 +917,7 @@ window.BATCH_CELLS = [
     "video": "videos/dlc011-love-city__print__en__cell14.mp4",
     "poster": "poster-cell-14.png",
     "status": "inbuild",
-    "statusLabel": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · not approved (0/22)",
+    "statusLabel": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: C · L · O3 · E4 story-button finish · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M1 floating chips · demographic class XL. Sentiment sentence in the half/half form.",
     "title": "I Love This City in 4 Languages — Learn It From English"
   },
@@ -917,7 +934,7 @@ window.BATCH_CELLS = [
     "arch": "A",
     "archName": "Classic",
     "length": "M",
-    "lengthLabel": "~97 s measured (plan M — duration-class mismatch stands, § PASS 48)",
+    "lengthLabel": "97.00 s measured (Pass 133 print)",
     "hook": "Image hook (O1) — the question first, the hero image revealed on the spoken cue.",
     "reviews": {
       "code_dupchunk": "pass",
@@ -937,10 +954,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Persian audio replaced with Turkish by owner order (2026-11-08; substitution COMPLETE — § PASS 48, full-content per the owner's clarification; the FA TTS outage item is retired): this cell teaches FA (Persian), and the harness TTS backend returned empty audio for Persian-script text on repeated attempts (2026-11-08) — the FA takes cannot be synthesized until a working FA TTS route lands. Exists: takes (21 audio files) + images (15) in assets/dlc012-am-learning. Missing: FA takes · manifest · render · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.\n\nPOST-SUBSTITUTION STATE (dashboard truthfulness note, 2026-11-08, § PASS 48): the substitution is COMPLETE — all 6 FA-declared audio slots across cells 15 + 20 were replaced with Turkish at their declaration sources, full-content (sentence · words · script · glosses · diagram rows · cards · narration text + voice together). This cell's sentence is now “Öğreniyorum.” (TR); its taught set reads [TR · TR · ES]; its FA transcript/gloss files are removed (backups kept); its beat serves the Bosphorus image in place of the retired Azadi Tower beat; its English diagram narration was rewritten to the Turkish content and regenerated (cell total 105.49 → 97.15 s; blocked_missing_assets empty). Script census: zero Persian-script strings in any live content field. The state text above predates the substitution and stands as history; this note re-scores nothing. Citation discipline (HQ v56): this cell's standing guard verdicts describe PRE-SUBSTITUTION packages — take_identity excepted (verified in § PASS 48) — until the loop's next sweeps re-judge them. The substitution's one declared consequence — dupchunk, the “In Turkish” cue rendering once per Turkish beat (twice) — was first cured with a return-form cue (§ PASS 54, a lane-lead decision under B37 + the HQ v56 advisory) and that cure was then REVERSED on the owner's explicit decision (2026-11-09: “Keep the repetition — Turkish announced twice, as emphasis”): § PASS 62 restored the original cue at both Turkish beats as OWNER-DECLARED EMPHASIS — the repeat segment carries the emphasis declaration in the data, the checker's census still counts both cue runs, and dupchunk reads PASS as DECLARED-EMPHASIS ×2 on this cell (the untagged FAIL stands proven in § PASS 62's both-directions check — the classification is a declared device, not a weakened checker). The § PASS 54 re-time was reversed with the cure: this cell's total stands at 97.15 s.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · this cell's closure verdict covers its ending only (HQ v54 scope line; § PASS 48 owns its substitution-era lines), and the cell EXITS the B60 improvement-candidate band in the confirmation re-run · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): PASS on this cell's record — § PASS 48 regenerated this cell's diagram narration on Turkish content and every substituted take was ASR-verified in its declared language with its declared line; the standing ASR-LIMIT fail (on the old Persian-embedding narration line) is cured and no non-PASS entry stands in its record in the final firing · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
+    "file": "dlc012-am-learning__print__en__cell15.mp4",
+    "video": "videos/dlc012-am-learning__print__en__cell15.mp4",
+    "poster": "poster-cell-15.png",
     "status": "inbuild",
-    "statusLabel": "Persian → Turkish substitution COMPLETE (§ PASS 48) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 133 print 33123cec… · 97.00 s — the cell's FIRST print, after the 2 ms total cure) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: A · M · O1 · E1 · V3 flat illustration · M2 card flips · demographic class S. FA taught probe — Mina's comfort language; niche by design.",
     "title": "I Am Learning in 4 Languages — Persian Joins In"
   },
@@ -957,7 +975,7 @@ window.BATCH_CELLS = [
     "arch": "C",
     "archName": "Half/half",
     "length": "S",
-    "lengthLabel": "~41 s measured",
+    "lengthLabel": "94.50 s measured (Pass 133 print)",
     "hook": "Challenge hook (O4) — “Say it before the timer ends.”",
     "reviews": {
       "code_preflight": "fail",
@@ -989,8 +1007,8 @@ window.BATCH_CELLS = [
     "file": "dlc001-eat-bread__print__tr__cell16.mp4",
     "video": "videos/dlc001-eat-bread__print__tr__cell16.mp4",
     "poster": "poster-cell-16.png",
-    "status": "recut-owed",
-    "statusLabel": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "status": "inbuild",
+    "statusLabel": "Current print seated for review (§ PASS 133 print 4c01afe2… · 94.50 s — replaces the superseded print the v23 surface held) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at seams (bed fit 0.12 vs 0.23 — the G11 line; B4 NOT VERIFIED) · owner-standard layer: no category package on the staged record (NO-CONTENT) · its closing carries the Turkish stock-CTA formula — E1 queue) · not approved (0/22)",
     "about": "Strata: C · S · O4 · E2 quiz finish · V5 whiteboard line-art · M3 slide stack · demographic class M. Mina-spec skin cell: the bread sentence compressed, Turkish opening door.",
     "title": "I Eat Bread in 4 Languages — Learn It From Turkish"
   },
@@ -1039,8 +1057,8 @@ window.BATCH_CELLS = [
     "file": "dlc003-open-door__print__es__cell17.mp4",
     "video": "videos/dlc003-open-door__print__es__cell17.mp4",
     "poster": "poster-cell-17.png",
-    "status": "recut-owed",
-    "statusLabel": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · educator seat ✗ (advisory)",
+    "status": "inbuild",
+    "statusLabel": "Current print seated for review (§ PASS 131 print c92e2220… · 38.93 s — replaces the superseded print the v23 surface held) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)",
     "about": "Strata: C · S · O4 · E3 speed-recap finish · V4 watercolor · M2 card flips · demographic class L. Half/half at 30 seconds with a Spanish door. Minor located item: the ES diagram row label touches the left frame edge.",
     "title": "I Open the Door in 4 Languages — Learn It From Spanish"
   },
@@ -1057,7 +1075,7 @@ window.BATCH_CELLS = [
     "arch": "D",
     "archName": "Explainer",
     "length": "XL",
-    "lengthLabel": "~120 s (plan XL)",
+    "lengthLabel": "135.57 s measured (Pass 131 print)",
     "hook": "Diagram hook (O2) — opens on the diagram itself.",
     "reviews": {
       "code_preflight": "pass",
@@ -1086,10 +1104,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Panel 2026-11-08 (batch06/panels): panel readiness 7 counted passes — code passes 7/10 · code_ready=false · armed passes 0 · ready=false. Ready basis (panel, verbatim): “code-clean only — no armed decisive guard passes counted (shadow/advisory verdicts never count)”. Code checks not run: parity, consistency, stratification. Shadow guards (panel era, superseded at v19): at panel time all 10 guards stood in shadow mode and none counted. That state is retired — the guards have since fired across the population and stand confirmed/armed/provisional/advisory per the roster labels; this cell's current verdicts are the chips in Details and the BATTERY STATE note below. Refresh 2026-11-08: RENDER-READY — package complete, queued for the B50 mechanical render path; the queue is environment-blocked (Chrome capture window). No print yet.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — its B44 final-hold tail was cured on the render timeline and RE-MEASURED by the confirming pass at 0.70 s (before 1.080 s; the 1.0 s limit was never tuned) — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · also a B60 improvement candidate on its payoff line — deepened in the re-run: payoff 0.54 → 0.41 on a fresh draw with its facts unchanged (§ PASS 50; ranked first under HQ v54) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): PASS on this cell's record — no non-PASS entry stands in its record · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
+    "file": "dlc005-sun-warm__print__en__cell18.mp4",
+    "video": "videos/dlc005-sun-warm__print__en__cell18.mp4",
+    "poster": "poster-cell-18.png",
     "status": "inbuild",
-    "statusLabel": "Render-ready — queued for mechanical render (environment) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 131 print 3846c14f… · 135.57 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
     "about": "Strata: D · XL · O2 · E1 · V5 whiteboard line-art · M4 word-build · demographic class XL. Explainer: the adjective-order analysis at length.",
     "title": "The Sun Is Warm Today in 4 Languages — The Full Word-Order Explainer"
   },
@@ -1139,7 +1158,7 @@ window.BATCH_CELLS = [
     "video": "videos/dlc002-need-water__print__en__cell19.mp4",
     "poster": "poster-cell-19.png",
     "status": "inbuild",
-    "statusLabel": "Named print seated (§ PASS 122, 290eea26… · 70.47 s) — WITH DEFECT: the Chinese turn card's gloss line overflows the frame, unreadable · not approved (0/22)",
+    "statusLabel": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: B · L · O2 · E2 quiz finish · V3 flat illustration · M1 floating chips · demographic class S. ZH taught probe (Mina's requested set) — pinyin + tone coaching inline on the ZH beat card. One of only two code-clean cells at panel time; its armed-guard state stands in the battery note below — approvals remain 0/22. Its ZH beat card is the one whose gloss line overflows in the named print (see Gate status).",
     "title": "I Need Water in 4 Languages — Chinese Joins In"
   },
@@ -1176,8 +1195,8 @@ window.BATCH_CELLS = [
     "gate": "Persian audio replaced with Turkish by owner order (2026-11-08; substitution COMPLETE — § PASS 48, full-content per the owner's clarification; the FA TTS outage item is retired): manifest-cell20.json is complete (32 segments · 133.13 s, inside the XL band) in assets/dlc001-eat-bread, but the two FA model takes (__narr__fa__t1.wav + __narr__fa__slow.wav) do not exist — the TTS backend returned empty audio for Persian-script text on 5+ attempts (2026-11-08). Fail-closed: no render attempted with missing assets. Missing: FA takes → re-tile the FA spans → render · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.\n\nPOST-SUBSTITUTION STATE (dashboard truthfulness note, 2026-11-08, § PASS 48): the substitution is COMPLETE — this cell's sentence is now “Ekmek yerim.” (TR); its taught sequence reads [ES · HI · TR · DE · FR · ZH · TR]; its three FA-declared slots rest on the cell's existing grammar-legal Turkish takes through a filename cure at the pointer's source, and the two declared take pointers were repaired (§ PASS 48); blocked_missing_assets is empty; script census zero Persian-script strings in any live content field. The state text above predates the substitution and stands as history; this note re-scores nothing. Citation discipline (HQ v56): this cell's standing guard verdicts describe PRE-SUBSTITUTION packages for every guard except seams (completion addendum below) and take_identity (verified in § PASS 48). The substitution's one declared consequence — dupchunk, the “In Turkish” cue rendering once per Turkish beat (twice) — was first cured with a return-form cue (§ PASS 54, a lane-lead decision under B37 + the HQ v56 advisory) and that cure was then REVERSED on the owner's explicit decision (2026-11-09: “Keep the repetition — Turkish announced twice, as emphasis”): § PASS 62 restored the original cue at both Turkish beats as OWNER-DECLARED EMPHASIS — the repeat segment carries the emphasis declaration in the data, the checker's census still counts both cue runs, and dupchunk reads PASS as DECLARED-EMPHASIS ×2 on this cell (the untagged FAIL stands proven in § PASS 62's both-directions check — the classification is a declared device, not a weakened checker).\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 6/7 pass on this cell · linguist_claims FAIL-open at the expanded mask-v3 shape (its intro states 3 while the cell teaches 7 — a PRE-SUBSTITUTION verdict, cited as such under HQ v56) · seams FULLY JUDGED — certificate (v34) + completion addendum (HQ v56): this cell's formerly excluded seam re-ran on the substituted takes and PASSES (transition_motivated 0.70 · viewer_follows 0.68); seams stands 22/22 judged with no exclusion outstanding · the other five confirmed guards pass, each cited as a PRE-SUBSTITUTION verdict for this cell (HQ v56), seams and take_identity excepted · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): FAIL on this cell's record — LINE-UNRECORDED 3 entries (dlc013 diagramnarr EN subject/verb/object; production owns authoring the records) · its former NOT VERIFIED entries are RESOLVED — the FA slots were substituted with Turkish takes and ASR-verified (§ PASS 48; the final firing stands NOT VERIFIED 0 batch-wide) · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): ACCEPTED-with-reason on this cell — one 3-word sentence through 7 doors at an unhurried pace; the new-word rate prices breadth, not depth · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
     "file": null,
     "video": null,
-    "status": "inbuild",
-    "statusLabel": "Persian → Turkish substitution COMPLETE (§ PASS 48) · package otherwise complete · Battery v22: confirmed guards 6/7 (linguist FAIL-open) · closure CONFIRMED · fails: linguist ✗ · take identity ✗ · cadence ✗ · educator seat: accepted-with-reason (advisory)",
+    "status": "recut-owed",
+    "statusLabel": "BLOCKED — no print: the record cannot render this cell (its manifest reuses segment ids s17–s22 across two blocks, evicting the zh + tr span boundaries two designed pauses need — § PASS 133 §3; the cure is an HQ / production-record decision, escalated) · NOT READY (Pass 134: seams NO-CONTENT · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: D · XL · O2 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The comparison special: the diagram at the 8-language scale.",
     "title": "One Sentence in 8 Languages — Every Word Order, One Diagram"
   },
@@ -1194,7 +1213,7 @@ window.BATCH_CELLS = [
     "arch": "A",
     "archName": "Classic",
     "length": "M",
-    "lengthLabel": "~79 s (manifest total)",
+    "lengthLabel": "79.60 s measured (Pass 131 print)",
     "hook": "Image hook (O1) — the question first, the hero image revealed on the spoken cue.",
     "reviews": {
       "guard_translation": "pass",
@@ -1213,10 +1232,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Package complete; capture COMPLETE (2,375 frames preserved in the bread root's work frames). The print now routes via the B50 assembler — queued (environment-blocked queue). Exists: manifest-cell21.json (79.18 s) · Mina takes · audio master media/voice__en.wav (LUFS −15.29). Missing: assembler print · census · tail probe · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): PASS on this cell's record — no non-PASS entry stands in its record · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
+    "file": "dlc001-eat-bread__print__en__cell21.mp4",
+    "video": "videos/dlc001-eat-bread__print__en__cell21.mp4",
+    "poster": "poster-cell-21.png",
     "status": "inbuild",
-    "statusLabel": "Capture complete — print via assembler queued · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 131 print 693d315e… · 79.60 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell21) · demographic class —. Mina variant of cell 01 — the bread sentence in Mina's voice/take set (HI mina takes, verbmina diagram take).",
     "title": "I Eat Bread in 4 Languages — Mina's Voice Edition"
   },
@@ -1233,7 +1253,7 @@ window.BATCH_CELLS = [
     "arch": "A",
     "archName": "Classic",
     "length": "M",
-    "lengthLabel": "~90 s (manifest total)",
+    "lengthLabel": "87.93 s measured (Pass 131 print)",
     "hook": "Image hook (O1) — the question first, in Turkish.",
     "reviews": {
       "guard_translation": "pass",
@@ -1252,10 +1272,11 @@ window.BATCH_CELLS = [
       "code_thumbnail": "absent"
     },
     "gate": "Package complete: manifest-cell22.json (89.65 s) · all takes exist (TR narration set incl. Mina variants). The print routes via the B50 assembler from this cell's own staging root — queued (environment-blocked queue). Missing: assembler print · panel. Panel readiness 0 counted passes — nothing has been counted for this cell, and nothing is claimed.\n\nBATTERY STATE — dashboard v22 (2026-11-08, PASS 55; traced to BUILD-RECORD §§ PASS 47 · PASS 48 · PASS 50 · PASS 51 · PASS 52 + HQ GUARD-MAP v54 · v56 · v57, on the PASS 46 base): confirmed guards 7/7 pass on this cell · depiction CONFIRMED at mask v4 (HQ v43): PASS 22/22 batch-wide · permutation class CLOSED · animation FINAL certificate at mask v3 + per-motion accounting (HQ v46): PASS 22/22 · fleet numbers — 763 decided entries · 3,815 slots · 0 undecided · closure CONFIRMED as a composite (HQ v54; confirmation re-run § PASS 50): pass — PASS 22/22 batch-wide, cited only as the composite (Jev + B45 sequence + B44 final-hold legs) · its ending is a B60 improvement candidate (payoff/promise < 0.55 — a floor-level ending is a candidate, not a finished ending; rider re-derived in § PASS 50, ranked under HQ v54 — 11 candidates batch-wide) · visual cadence (checker #24): FAIL — an untagged static-image span over the 7.0 s ceiling stands in this cell's record (batch 20/22 FAIL after § PASS 49 brought cell04 within bands; cures ride the re-render line) · take identity (checker #23, ASR): PASS on this cell's record — no non-PASS entry stands in its record · batch population PASS 555 · FAIL 4 · LINE-UNRECORDED 10 · NOT VERIFIED 0 · confirmed real defects 0 · G10 ratified CLOSED (HQ v50) · row 28's FA residue CLOSED BY SUBSTITUTION in the register (HQ v56; § PASS 48 executed full-content + checker #23 verified) · coverage open items now exactly one: G11 (sound-design fit) · reasoning passes at its NARROWED label (armed-provisional — displayed, never counted) · Educator seat (FIRED 22/22): PASS on this cell · checker #22 load_measures measured 22/22 cells (batch seat outcome PASS 20 · FAIL-open 1 (cell17) · ACCEPTED-with-reason 1 (cell20)); guard_educator's Jev form remains advisory colour only · cold advisory not fired on a new print — the human cold seat owns the prints · descriptions 0/22 and designed thumbnails 0/22 batch-wide — packaging-step work, shown as absent, not as passes.",
-    "file": null,
-    "video": null,
+    "file": "dlc001-eat-bread__print__tr__cell22.mp4",
+    "video": "videos/dlc001-eat-bread__print__tr__cell22.mp4",
+    "poster": "poster-cell-22.png",
     "status": "inbuild",
-    "statusLabel": "Package complete — print via assembler queued · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗",
+    "statusLabel": "Current print seated for review (§ PASS 131 print d03a880a… · 87.93 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise) · not approved (0/22)",
     "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell22) · demographic class —. Mina variant with a Turkish primary — Mina's TR take set (narration__tr__mina).",
     "title": "I Eat Bread in 4 Languages — Mina's Turkish Edition"
   }
