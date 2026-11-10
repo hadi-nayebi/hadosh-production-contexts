@@ -16,6 +16,7 @@
     --glass:rgba(38,26,16,.55);
     --glass-brd:rgba(255,214,150,.20);
     --glass-hi:rgba(255,240,214,.10);
+    --chrome-h:120px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -39,7 +40,6 @@
   .brand{font-weight:800;letter-spacing:.14em;font-size:13px;color:var(--amber);white-space:nowrap}
   .brand span{display:block;letter-spacing:.02em;font-weight:600;font-size:11px;color:var(--cream-dim)}
   .topbar .batch{margin-left:auto;text-align:right;font-size:12px;color:var(--cream-dim);white-space:nowrap}
-  .topbar .batch b{display:block;color:var(--cream);font-size:13px}
   /* the coverage line is a state claim, not a label: it wraps in full —
      truncating or clipping it would silently change the claim */
   #batchstate{flex:1 1 720px;max-width:880px;white-space:normal;line-height:1.35}
@@ -47,7 +47,10 @@
      (single-source gate) — its container form changes: a short face
      (<=10 words exposed) + this expand button */
   .covbtn{
-    margin-left:8px;padding:2px 10px;border-radius:999px;cursor:pointer;vertical-align:baseline;
+    /* PASS 166 (B5, generalized): the page's 48px tap floor applies to
+       EVERY tappable control, the More buttons included */
+    margin-left:8px;padding:2px 10px;border-radius:999px;cursor:pointer;vertical-align:middle;
+    min-height:48px;display:inline-flex;align-items:center;
     border:1px solid var(--amber);background:rgba(29,19,11,.85);color:var(--amber);
     font-size:11.5px;font-weight:800;font-family:inherit;white-space:nowrap;
   }
@@ -56,18 +59,22 @@
     padding:6px 10px;border-radius:999px;border:1px solid var(--glass-brd);
     background:var(--glass-hi);white-space:nowrap;
   }
+  .legendbtn{
+    min-height:48px;padding:0 14px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--glass-brd);background:var(--glass-hi);color:var(--cream);
+    font-size:13px;font-weight:800;font-family:inherit;white-space:nowrap;
+  }
+  /* ---------- stale bar (PASS 166, spec §5.3: the sha leg) ---------- */
+  .stalebar{
+    position:fixed;left:0;right:0;z-index:41;text-align:center;
+    padding:8px 12px;font-size:14px;font-weight:900;letter-spacing:.04em;
+    background:#5f2417;color:#ffd9c9;border-bottom:1px solid var(--terra);
+  }
+  .stalebar[hidden]{display:none}
   /* ---------- index rail ---------- */
   .railwrap{
     position:fixed;left:0;right:0;z-index:39;
     top:calc(57px + env(safe-area-inset-top));
-    /* PASS 123 RETURN ROUND (P56-4, visual cure): the edge controls no
-       longer share the chip row's band — they sit in their own strip
-       ABOVE the chips, right-aligned at the viewport's width, so no
-       scroll position of the rail can bring a chip's glyphs under a
-       control and the two bands never overlap. The prep's in-row form
-       still overprinted chip glyphs mid-scroll (frame p390-02-railend:
-       "‹ Back" over chip 19, "More ›" over the clipped chip at the
-       right edge); the frames for this form are p390-/p360-02v2-*. */
     display:flex;flex-direction:column;align-items:stretch;
   }
   .railnavrow{
@@ -76,30 +83,18 @@
   }
   .rail{
     display:flex;gap:8px;overflow-x:auto;padding:8px 12px;width:100%;box-sizing:border-box;
-    /* pill-row reachability, phone leg (2026-11-08 pill-fix, on the v20
-       base): at <=759px the rail stays a single scrollable row (PASS 46
-       wrapped it only at >=760px), and a scroll no one can discover is a
-       row that ends at chip ~3 — the pre-fix rules hid the scrollbar
-       (scrollbar-width:none + ::-webkit-scrollbar{display:none}) and
-       offered no other cue (PASS 39 flag a, phone leg). Now: a thin
-       visible scrollbar + the edge controls below. At >=760px the rail
-       wraps (PASS 46) and the controls are display:none there. */
     scrollbar-width:thin;scrollbar-color:var(--amber) transparent;
     overscroll-behavior-x:contain;
   }
   .rail::-webkit-scrollbar{display:block;height:4px}
   .rail::-webkit-scrollbar-thumb{background:var(--amber);border-radius:99px}
   .rail::-webkit-scrollbar-track{background:transparent}
-  /* edge controls for the rail: 44px-wide tap targets seated in their
-     own strip above the chips (PASS 123 return round, P56-4 visual cure
-     — the absolute seats over the chips hid labels, and the in-row form
-     still overprinted chip glyphs MID-SCROLL: its ∩=∅ measurement
-     covered rest/end only). Each removes itself ([hidden]) when its
-     direction is exhausted; seated in a separate band, a control can
-     never cover a chip label at any scroll state */
+  /* edge controls for the rail: PASS 166 (HQ census B5) — every tappable
+     control is >=48px in BOTH dimensions; the v25 railnav was 24px tall
+     against the page's own 48px mandate */
   .railnav{
     position:static;flex:0 0 auto;margin:0;
-    min-width:44px;height:24px;padding:0 10px;border-radius:999px;cursor:pointer;
+    min-width:48px;min-height:48px;padding:0 12px;border-radius:999px;cursor:pointer;
     border:1px solid var(--amber);background:rgba(29,19,11,.94);color:var(--amber);
     font-size:12px;font-weight:800;font-family:inherit;line-height:1;
     box-shadow:0 4px 18px rgba(0,0,0,.5);
@@ -107,7 +102,7 @@
   .railnav[hidden]{display:none}
   .chip{
     flex:0 0 auto;display:flex;align-items:center;gap:7px;
-    padding:8px 12px;border-radius:999px;cursor:pointer;
+    padding:8px 12px;border-radius:999px;cursor:pointer;min-height:48px;
     border:1px solid var(--glass-brd);color:var(--cream-dim);
     background:var(--glass);font-size:12.5px;font-weight:600;
     -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
@@ -115,90 +110,67 @@
   .chip .dot{width:8px;height:8px;border-radius:50%;background:#a2937d;flex:0 0 auto}
   .chip.active{color:#1d130b;background:var(--amber);border-color:var(--amber)}
   .chip.active .dot{background:#1d130b}
-  /* ---------- feed ---------- */
+  /* ---------- feed — PASS 166 R1: the snap scroller, by construction.
+     scroll-snap-type: y mandatory on the feed + snap-align/start +
+     snap-stop/always on every screen + screens exactly 100dvh: the
+     browser's own snap owns every resting position, so no gesture path
+     (and no JS path) can leave the feed resting between videos.
+     (Spec: pass162/dashboard-redesign-spec.md §2.3.) ---------- */
   .feed{
     height:100vh;height:100dvh;overflow-y:auto;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
+    scroll-snap-type:y mandatory;
+    overscroll-behavior-y:contain;
   }
   .feed::-webkit-scrollbar{display:none}
-  /* PASS 123 (P56-1) + RETURN ROUND (P56-1 visual cure): at the feed's
-     end state NOTHING of the last screen's stage may sit in the fixed
-     chrome's zone (the glass is translucent; content behind it reads as
-     bleed-through — frames p390-/p360-05-feedbottom). The feed therefore
-     ends with a quiescent closing screen (see .feedend below): at max
-     scroll the closing screen fills the chrome zone while the last
-     screen rests fully below it — stage scrolled past, panel below,
-     one layer, nothing behind the glass. (The prep's first form — a
-     chrome-height spacer — shifted a taller-than-viewport last screen
-     UP into the chrome and was removed; this form is measured on the
-     v2 frames at both sizes.) RETURN ROUND 2 (the settled/end-state
-     cure): the mechanism the v2 frames exposed is that a screen's
-     stage is the flex-expanding region at the TOP of its screen, so a
-     short cell's stage content rides at its screen's top edge, and the
-     120px closing screen dragged the last screen's stage into the
-     chrome zone at max scroll (stage top −29 at 390, −281 at 360 —
-     its poster tags over the chips, its status pill and readiness
-     lines over the coverage row). The cure takes the SAME measured
-     number everywhere (--chrome-h, the full chrome height: 189px at
-     phone widths, more while the coverage expansion is open): every
-     screen's top padding clears it (+16px) so at a screen's settled
-     rest (top edge at the viewport top — the scrollIntoView position
-     a chip tap lands on) the stage begins BELOW the chrome; at phone
-     widths each screen's min-height grows by the same number so the
-     flex stage expands and a short cell's content sits lower in its
-     screen; and the closing screen is a full viewport tall (above),
-     so at max scroll the viewport contains only the closing screen.
-     Judged from the v3 frames at both sizes. */
-  /* feed-end closing screen: an empty, stage-less terminus a full
-     viewport tall (PASS 123 RETURN ROUND 2 — it was 120px by a stray
-     override, which dragged the last screen's stage into the chrome
-     zone at max scroll), so at max scroll the chrome zone shows
-     only this blank screen — the last screen's stage has scrolled
-     entirely past it and its panel was read on the way */
   .feedend{
     height:100vh;height:100dvh;flex:0 0 auto;
+    scroll-snap-align:start;scroll-snap-stop:always;
     display:flex;align-items:flex-end;justify-content:center;padding-bottom:18px;
   }
   .feedend .femark{
     font-size:11px;letter-spacing:.22em;text-transform:uppercase;
     color:rgba(247,236,215,.38);font-weight:700;text-align:center;padding:0 24px;
   }
-  /* a screen is a section in one continuous scroll flow, never a fixed-height
-     snap page: min-height (not height) lets an expanded panel grow the screen
-     instead of overflowing it onto its neighbours */
+  /* a screen is exactly one viewport tall (100dvh — the dynamic unit, so
+     phone browser chrome cannot shrink the snap unit). The details live
+     in an overlay sheet INSIDE the screen (.sheet, internal scroll) —
+     never as content that stretches the screen past one viewport. */
   .screen{
-    min-height:100vh;min-height:100dvh;
-    position:relative;display:flex;flex-direction:column;
-    padding:calc(118px + env(safe-area-inset-top)) 12px calc(30px + env(safe-area-inset-bottom));
+    height:100vh;height:100dvh;
+    scroll-snap-align:start;scroll-snap-stop:always;
+    position:relative;display:flex;flex-direction:column;overflow:hidden;
+    padding:calc(var(--chrome-h) + 16px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));
   }
-  /* the stage is an in-flow flex child: its box ends where the panel begins,
-     so panel overlap of video/poster content is impossible by construction */
-  /* the stage's content is anchored to the stage's BOTTOM edge (the
-     panel edge), never centred: PASS 123 RETURN ROUND 2 measured the
-     centred form leaking — with the min-height growth the stage is
-     taller than the poster, and a centred poster's bottom lines float
-     up into the chrome zone at the panel's scroll-margin rest (poster
-     bottom 168 < chrome 189 at the Details rest). Bottom-anchored, the
-     poster's lowest line sits at the stage's bottom = the panel's top,
-     which the panel's scroll-margin keeps at chrome + 16 in every
-     resting state; at a screen's settled rest the same anchor moves
-     the poster DOWN (top 280 vs centred 242 at 390×844), further from
-     the chrome. Video fills the stage box either way (height:100%). */
+  /* the stage is an in-flow flex child: its box ends where the panel
+     begins, so panel overlap of video/poster content is impossible */
   .stage{position:relative;flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
   .stage video{width:100%;height:100%;object-fit:contain;background:#000}
-  /* poster / status card */
-  .poster{max-width:520px;width:100%;padding:24px 10px;text-align:center}
+  /* B7: a video that fails to load names its failure + offers a retry */
+  .viderr{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
+    display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;
+    background:rgba(24,15,8,.94);border:1px solid var(--terra);color:#f0a58e;
+    font-size:14px;font-weight:700;white-space:nowrap;
+  }
+  .viderr[hidden]{display:none}
+  .viderr .retry{
+    min-height:48px;padding:0 14px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--amber);background:transparent;color:var(--amber);
+    font-size:14px;font-weight:800;font-family:inherit;
+  }
+  /* poster / status card (blocked cells) — PASS 166: the poster carries
+     the sentence + the short status ONLY; the standard progress face in
+     the panel below is the cell's one status (D1 + D7 cures: no prose
+     pill, no contradicting second status line) */
+  .poster{max-width:520px;width:100%;padding:24px 10px;text-align:center;margin:0 auto}
   .poster .eyebrow{font-size:12px;letter-spacing:.22em;color:var(--amber);font-weight:700;text-transform:uppercase}
   .poster .sentence{
     font-family:Georgia,"Times New Roman",serif;font-weight:700;
     font-size:clamp(34px,9.5vw,54px);line-height:1.12;margin:16px 0 14px;color:var(--cream);
     text-shadow:0 4px 30px rgba(0,0,0,.45);
   }
-  .poster .flow{font-size:16px;color:var(--cream-dim);margin-bottom:18px}
-  .poster .flow b{color:var(--cream)}
-  .poster .tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
-  .tag{font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:999px;border:1px solid var(--glass-brd);background:var(--glass-hi);white-space:nowrap}
   .statuspill{
     display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;
     padding:9px 15px;border-radius:999px;border:1px solid var(--glass-brd);
@@ -207,26 +179,16 @@
   .statuspill .dot{width:9px;height:9px;border-radius:50%}
   .pulse{animation:pulse 1.6s ease-in-out infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-  .poster .lands{margin-top:14px;font-size:13px;color:var(--cream-dim)}
   /* ---------- glass panel ---------- */
   .panel{
     position:relative;z-index:2;border-radius:22px;padding:14px 14px 12px;flex:0 0 auto;
-    /* scrollIntoView on Details-open lands the panel head under the fixed
-       header + rail, never beneath them. The margin must clear the header
-       as it actually stands at this width, so it takes the same values
-       PASS 46 gave .screen's top padding for the same breakpoints
-       (116px dated from the one-row rail: measured 2026-11-08 pill-fix —
-       panel top landed at 116 while the rail's bottom edge sat at 158
-       desktop / 268 phone, occluding the panel head) */
-    scroll-margin-top:calc(284px + env(safe-area-inset-top));
     background:var(--glass);border:1px solid var(--glass-brd);
     -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
     box-shadow:0 18px 50px rgba(0,0,0,.45);
   }
-  /* collapse handle: the panel can always be folded to a slim bar */
   .handle{
     display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
-    min-height:36px;margin:-6px 0 8px;padding:6px 10px;border-radius:12px;
+    min-height:48px;margin:-6px 0 8px;padding:6px 10px;border-radius:12px;
     border:1px solid transparent;background:transparent;color:var(--cream-dim);
     font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
   }
@@ -236,37 +198,53 @@
   .panel.collapsed .pbody{display:none}
   .panel.collapsed .handle{margin:0}
   .titleline{font-size:16.5px;font-weight:700;line-height:1.3}
-  .titleline .meta{color:var(--amber);font-weight:700}
-  .subline{font-size:12.5px;color:var(--cream-dim);margin-top:3px}
-  /* reviewer seats — readiness summary up front (one big number + failing
-     seats only); the full roster lives in the Details drawer */
-  .readiness{display:flex;align-items:baseline;gap:9px;margin-top:11px}
-  .readiness .rbig{font-size:27px;font-weight:900;color:var(--cream);line-height:1}
-  .readiness .rlab{font-size:12.5px;color:var(--cream-dim)}
-  .flags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .rnote{font-size:11.5px;color:var(--cream-dim);margin-top:7px}
-  .reviews{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center}
-  .reviews .rcount{font-size:12.5px;font-weight:800;color:var(--cream);margin-right:2px}
+  /* language chips: symbols/codes carry what the 11-word subline
+     sentence carried (spec §6) — one code per chip, own text 1 token */
+  .langrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .langchip{
+    font-size:12px;font-weight:800;padding:5px 10px;border-radius:999px;
+    border:1px solid var(--glass-brd);background:rgba(0,0,0,.22);color:var(--cream-dim);
+  }
+  .langchip.open{border-color:var(--amber);color:var(--amber)}
+  /* PASS 166 R4 — the per-video progress face: the owner's four
+     questions as HOME data (passing · failing · progress · work left) */
+  .pface{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:11px}
+  .pf{font-size:15px;font-weight:800;white-space:nowrap}
+  .pf.pass{color:#b9e39d}
+  .pf.fail{color:#f0a58e}
+  .pf.other{color:var(--cream-dim)}
+  .pfbar{flex:1 1 90px;height:10px;border-radius:99px;background:rgba(0,0,0,.35);overflow:hidden;min-width:70px}
+  .pfbar i{display:block;height:100%;background:var(--olive);border-radius:99px}
+  .pfnum{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+  .workleft-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    min-height:48px;margin-top:10px;border-radius:14px;cursor:pointer;
+    border:1px solid var(--amber);background:rgba(242,176,74,.12);color:var(--amber);
+    font-size:15px;font-weight:800;font-family:inherit;
+  }
+  .workleft-btn:active{transform:scale(.98)}
+  .reviews{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
   .rchip{
     font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:999px;
     border:1px solid var(--glass-brd);background:rgba(0,0,0,.22);color:var(--cream-dim);white-space:nowrap;
   }
   .rchip.pass{border-color:rgba(134,214,106,.65);color:#b9e39d}
-  .rchip.accepted{border-color:rgba(242,176,74,.75);color:var(--amber)}
-  .rchip.running{border-color:var(--amber);color:var(--amber)}
   .rchip.fail{border-color:var(--terra);color:#f0a58e}
-  .poster .revcount{margin-top:12px;font-size:12.5px;font-weight:800;color:var(--cream-dim)}
-  .poster .revcount b{color:var(--cream)}
+  .rchip.other{border-color:var(--glass-brd);color:var(--cream-dim)}
+  .rchip.notchecked{border-color:rgba(242,176,74,.75);color:var(--amber)}
   .actions{display:flex;gap:9px;margin-top:12px}
   .fb{
     flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
     min-height:50px;border-radius:14px;border:1px solid var(--glass-brd);
     background:var(--glass-hi);color:var(--cream);
-    font-size:16px;font-weight:700;cursor:pointer;
+    font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
   }
   .fb:active{transform:scale(.97)}
-  .fb.like.sel{background:#3d5a1e;border-color:#86d66a}
-  .fb.dislike.sel{background:#5f2417;border-color:var(--terra)}
+  /* PASS 166 B3+B4: marking is LOCAL (amber fill = marked, saved on this
+     device) and SENDING is the separate Send act (green + check = the
+     issue was opened). A painted mark never claims a sent verdict. */
+  .fb.sel{background:rgba(242,176,74,.28);border-color:var(--amber);color:var(--amber)}
+  .fb.sent{background:#3d5a1e;border-color:#86d66a;color:#d9f2c3}
   .fb.details{flex:0 0 104px;font-size:14.5px}
   .commentrow{display:flex;gap:9px;margin-top:9px}
   .commentrow textarea{
@@ -277,74 +255,100 @@
   }
   .commentrow textarea::placeholder{color:rgba(247,236,215,.45)}
   .send{
-    flex:0 0 92px;border-radius:14px;border:1px solid var(--amber);
-    background:var(--amber);color:#1d130b;font-size:15px;font-weight:800;cursor:pointer;
+    flex:0 0 92px;min-height:50px;border-radius:14px;border:1px solid var(--amber);
+    background:var(--amber);color:#1d130b;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
   }
   .send:active{transform:scale(.97)}
-  .hint{font-size:11.5px;color:var(--cream-dim);margin-top:8px}
-  /* details drawer: grid-rows sizing animates to the content's natural
-     height — no fixed max-height cap, so drawer content is never clipped */
-  .drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
-  .drawer.open{grid-template-rows:1fr}
-  .drawer .inner{overflow:hidden;min-height:0;padding-top:12px}
-  .drow{display:flex;gap:10px;padding:7px 0;border-top:1px solid rgba(255,214,150,.12);font-size:13.5px;line-height:1.45}
-  .drow .k{flex:0 0 108px;color:var(--amber);font-weight:700}
-  .drow .v{color:var(--cream)}
-  /* ---------- toast ---------- */
-  /* no floating prev/next arrows: a fixed control floating over the panel
-     occludes the text it sits on (owner screenshots 2026-11-08). Navigation
-     is the rail chips + the scroll itself. */
+  /* PASS 161 — comment extras: image slot + timestamp chip, composer only.
+     Symbols carry the meaning (📷 · 🕐); words stay few (ten-word law).
+     Buttons keep a ≥48px tap target, panel flow keeps them clear of the
+     phone's own bottom navigation. Carried intact by PASS 166. */
+  .extrasrow{display:flex;gap:9px;margin-top:9px;align-items:center}
+  .extrasrow.dragover{outline:2px dashed var(--amber);outline-offset:3px;border-radius:14px}
+  .imgbtn,.tschip{
+    display:flex;align-items:center;gap:6px;min-height:48px;
+    border-radius:14px;border:1px solid var(--glass-brd);
+    background:var(--glass-hi);color:var(--cream);
+    font-size:15px;font-weight:700;cursor:pointer;padding:0 14px;font-family:inherit;
+  }
+  .imgbtn:active,.tschip:active{transform:scale(.97)}
+  .imgbtn img{display:none;width:34px;height:34px;object-fit:cover;border-radius:8px}
+  .imgbtn.hasimg img{display:block}
+  .tschip[hidden]{display:none}
+  .tschip .x{color:var(--terra);font-weight:800;padding:2px 4px}
+  .imgbtn input[type=file]{display:none}
+  /* ---------- details sheet — PASS 166: an OVERLAY inside the screen
+     with its own internal scroll (R1's geometry: the screen itself
+     never grows past 100dvh). One sheet, two entries: WORK LEFT and
+     Details open it; Work left is its first row. ---------- */
+  .sheet{
+    position:absolute;left:8px;right:8px;bottom:8px;z-index:6;
+    top:calc(var(--chrome-h) + 22px + env(safe-area-inset-top));
+    overflow-y:auto;display:none;border-radius:18px;padding:14px;
+    background:rgba(24,15,8,.97);border:1px solid var(--glass-brd);
+    box-shadow:0 18px 50px rgba(0,0,0,.55);
+  }
+  .sheet.open{display:block}
+  .sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .sheettitle{font-size:15px;font-weight:800;color:var(--amber)}
+  .sheetclose{
+    min-width:48px;min-height:48px;border-radius:12px;cursor:pointer;
+    border:1px solid var(--glass-brd);background:var(--glass-hi);color:var(--cream);
+    font-size:16px;font-weight:800;font-family:inherit;
+  }
+  .drow{display:flex;gap:10px;padding:8px 0;border-top:1px solid rgba(255,214,150,.12);font-size:13.5px;line-height:1.45}
+  .drow .k{flex:0 0 92px;color:var(--amber);font-weight:700}
+  .drow .v{color:var(--cream);flex:1}
+  .wl-item{display:block;padding:2px 0}
+  .gatefull{display:block;margin-top:6px}
+  /* ---------- legend overlay (D6 cure: every symbol + colour, one tap) ---------- */
+  .legendovl{
+    position:fixed;inset:0;z-index:60;display:none;
+    background:rgba(10,6,3,.88);padding:calc(20px + env(safe-area-inset-top)) 18px 18px;
+    overflow-y:auto;
+  }
+  .legendovl.open{display:block}
+  .legendcard{
+    max-width:520px;margin:0 auto;border-radius:18px;padding:16px;
+    background:rgba(24,15,8,.97);border:1px solid var(--glass-brd);
+  }
+  .legendcard h2{font-size:16px;color:var(--amber);margin-bottom:10px}
+  .legendcard .lrow{display:flex;gap:10px;padding:6px 0;font-size:14px;line-height:1.4;border-top:1px solid rgba(255,214,150,.10)}
+  .legendcard .lsym{flex:0 0 64px;font-weight:900}
+  .legendclose{
+    width:100%;min-height:48px;margin-top:12px;border-radius:12px;cursor:pointer;
+    border:1px solid var(--amber);background:transparent;color:var(--amber);
+    font-size:15px;font-weight:800;font-family:inherit;
+  }
+  /* ---------- toast — PASS 166 B1: wraps at phone width (the v25
+     nowrap pill clipped its own 57/60-char instructions at both edges) ---------- */
   .toast{
     position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
-    z-index:50;padding:11px 18px;border-radius:999px;font-size:13.5px;font-weight:700;
+    z-index:50;padding:11px 18px;border-radius:18px;font-size:13.5px;font-weight:700;
     background:var(--glass);border:1px solid var(--glass-brd);color:var(--cream);
     -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-    opacity:0;pointer-events:none;transition:all .3s ease;white-space:nowrap;
+    opacity:0;pointer-events:none;transition:all .3s ease;
+    white-space:normal;max-width:calc(100vw - 32px);text-align:center;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   @media (min-width:760px){
-    /* desktop index rail: the batch index WRAPS — every one of the 22
-       chips is on the page, none parked off-screen behind a scroll
-       (PASS 39 flag a). The rail chips carry number + opening only;
-       architecture lives in the poster + Details. Screen top padding
-       clears the taller wrapped rail + coverage header. */
     .railwrap{top:calc(70px + env(safe-area-inset-top))}
     .rail{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
     .railnav{display:none}
-    .screen{padding-left:24px;padding-right:24px;padding-top:calc(196px + env(safe-area-inset-top))}
-    .panel{max-width:640px;margin:0 auto;width:100%;scroll-margin-top:calc(196px + env(safe-area-inset-top))}
+    .screen{padding-left:24px;padding-right:24px}
+    .panel{max-width:640px;margin:0 auto;width:100%}
     .poster .sentence{font-size:56px}
+    :root{--chrome-h:196px}
   }
-  /* PASS 123 RETURN ROUND 2: the closing screen is a full viewport at
-     every width (see .feedend above) — the former height:auto /
-     min-height:120px override here is REMOVED: it was the defect's
-     mechanism (a 120px terminus drags the last screen's stage into
-     the chrome zone at max scroll) */
   @media (min-width:760px) and (max-width:1099px){
-    .screen{padding-top:calc(238px + env(safe-area-inset-top))}
-    .panel{scroll-margin-top:calc(238px + env(safe-area-inset-top))}
+    :root{--chrome-h:238px}
   }
   @media (max-width:759px){
-    /* phone header: the v20 coverage line is long — it takes its own
-       full-width row under the brand row instead of pushing the counter
-       and itself off-screen (PASS 46 phone-width check, staged bytes) */
     .topbar{flex-wrap:wrap;row-gap:4px}
     .topbar .batch{margin-left:0;white-space:normal;flex:1 1 150px}
     #batchstate{order:4;flex:1 1 100%;max-width:none;text-align:left;font-size:11.5px}
     .counter{margin-left:auto}
     .railwrap{top:var(--rail-top, calc(220px + env(safe-area-inset-top)))}
-    /* PASS 123 RETURN ROUND 2 (settled-state cure): the screen's top
-       padding clears the FULL measured chrome height (--chrome-h,
-       189px at phone widths, more while the coverage expansion is
-       open — fitChrome re-measures on the toggle) + 16px, so the stage
-       begins below the chrome at the screen's settled rest; the
-       screen's min-height grows by the same measured number, so the
-       flex stage expands and a short cell's content sits lower in its
-       screen instead of riding its top edge. The panel's scroll-margin
-       takes the SAME number (+16px), audited this round: a Details tap
-       lands the panel head at chrome bottom + 16, never under it. */
-    .screen{padding-top:calc(var(--chrome-h, 268px) + 16px + env(safe-area-inset-top));min-height:calc(100dvh + var(--chrome-h, 268px))}
-    .panel{scroll-margin-top:calc(var(--chrome-h, 268px) + 16px + env(safe-area-inset-top))}
   }
 </style>
 </head>
@@ -352,11 +356,13 @@
 
 <header class="topbar">
   <div class="brand">EARTH ONE<span>The Daily Language Challenge</span></div>
-  <div class="batch"><b>Experiment Batch 02</b>review dashboard · Batch 01 path (legacy)</div>
   <div class="batch" id="dashver" style="text-align:right"></div>
   <div class="batch" id="batchstate" style="text-align:right"></div>
+  <button class="legendbtn" id="legendBtn" type="button" aria-label="Show the legend — what every symbol and colour means">❓ Legend</button>
   <div class="counter" id="counter">– / –</div>
 </header>
+
+<div class="stalebar" id="stalebar" hidden>⚠ STALE — data ≠ build</div>
 
 <div class="railwrap">
 <div class="railnavrow">
@@ -368,9 +374,26 @@
 
 <main class="feed" id="feed"></main>
 
+<div class="legendovl" id="legendovl" role="dialog" aria-label="Legend">
+  <div class="legendcard">
+    <h2>Legend — every mark</h2>
+    <div class="lrow"><span class="lsym">✓ n</span><span>Guards passing this video</span></div>
+    <div class="lrow"><span class="lsym">✗ n</span><span>Guards failing this video</span></div>
+    <div class="lrow"><span class="lsym">○ n</span><span>Not counted — advisory or not run</span></div>
+    <div class="lrow"><span class="lsym">n / 11</span><span>Passing of 11 decisive seats</span></div>
+    <div class="lrow"><span class="lsym">⛔</span><span>Blocked — no print yet</span></div>
+    <div class="lrow"><span class="lsym">● dot</span><span>Green ready · amber fixing · pale building · grey planned</span></div>
+    <div class="lrow"><span class="lsym">👍 Marked</span><span>Saved on this device only</span></div>
+    <div class="lrow"><span class="lsym">👍 Sent ✓</span><span>Sent — the GitHub issue opened</span></div>
+    <div class="lrow"><span class="lsym">⚠ STALE</span><span>Data does not match this build</span></div>
+    <div class="lrow"><span class="lsym">🕐 0:37</span><span>Comment carries this video moment</span></div>
+    <button class="legendclose" id="legendClose" type="button">Close ✕</button>
+  </div>
+</div>
+
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=25"></script>
+<script src="data.js?v=27"></script>
 <script>
 (function(){
   "use strict";
@@ -389,15 +412,49 @@
   var counter = document.getElementById("counter");
   var toast = document.getElementById("toast");
   var current = 0;
-  var verdicts = {}; /* cellId -> "like" | "dislike" */
   var topbarEl = document.querySelector(".topbar");
   var railwrapEl = document.querySelector(".railwrap");
   var screenEls = [];
+
+  /* PASS 166 — the sha leg (spec §5.3): data.js carries BATCH_META.lineage
+     (the source-table shas it was generated from); this page embeds the
+     same object. Any mismatch prints the STALE state and no "current"
+     claim renders. The embedded copy is injected by the build
+     (pass166/work/gen_data.py's lineage) — never hand-typed. */
+  var EXPECTED_LINEAGE = {"build": "pass166-v27", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed"}, "printsFileSha": "4549d51aed98", "seated": "v25 prints (pass143 masters) — the Pass 149 lineage enters at v26 seating", "cells": 22, "countingSeats": 11};
+  function canon(o){
+    if (o === null || typeof o !== "object") return JSON.stringify(o);
+    if (Array.isArray(o)) return "[" + o.map(canon).join(",") + "]";
+    return "{" + Object.keys(o).sort().map(function(k){
+      return JSON.stringify(k) + ":" + canon(o[k]);
+    }).join(",") + "}";
+  }
+  var lineageOK = false;
+  try {
+    lineageOK = !!EXPECTED_LINEAGE && !!window.BATCH_META && !!window.BATCH_META.lineage &&
+      canon(EXPECTED_LINEAGE) === canon(window.BATCH_META.lineage);
+  } catch (e) { lineageOK = false; }
+  if (!lineageOK) {
+    var sb = document.getElementById("stalebar");
+    if (sb) { sb.hidden = false; sb.style.top = "0px"; }
+  }
+
+  /* PASS 166 B4 — verdict marks PERSIST on this device (localStorage);
+     memory is only the fallback when storage is unavailable. Shape:
+     { cellId: { v: "like"|"dislike", sent: true|false } } */
+  var LS_KEY = "dlc-v27-verdicts";
+  var verdicts = {};
+  try {
+    var raw = window.localStorage.getItem(LS_KEY);
+    if (raw) verdicts = JSON.parse(raw) || {};
+  } catch (e) { verdicts = {}; }
+  function saveVerdicts(){
+    try { window.localStorage.setItem(LS_KEY, JSON.stringify(verdicts)); } catch (e) {}
+  }
+
   /* PASS 123 (P56-3): the fixed chrome is MEASURED, not guessed — the rail
-     sits directly under the topbar (the ~61px empty band is gone) and the
-     feed's top padding + the panels' scroll-margin take the measured
-     chrome height. Phone widths only; the desktop layout keeps its
-     static clearances. */
+     sits directly under the topbar and the screens' top padding takes the
+     measured chrome height via --chrome-h. Phone widths only. */
   function fitChrome(){
     if (window.innerWidth > 759 || !topbarEl || !railwrapEl) return;
     var tb = topbarEl.getBoundingClientRect();
@@ -448,17 +505,15 @@
   var dv = document.getElementById("dashver");
   if (dv && window.BATCH_META && window.BATCH_META.dashboard) {
     /* PASS 144 (F-V24-1a): the dashboard version renders FROM THE DATA —
-       BATCH_META.dashboard is the only source; no version literal lives in
-       this file, so the next round's data changes the visible line with no
-       edit here. Same ten-word shape as the coverage line above: the
-       resting face is "Dashboard vNN" (the string's leading version
-       token); the full string stays verbatim behind the tap. */
+       BATCH_META.dashboard is the only source. PASS 166: when the sha
+       leg fails, the version face prints STALE instead of a version —
+       no "current" claim renders on a mismatched build (spec §5.3). */
     var dvText = window.BATCH_META.dashboard;
     var dvM = /^v\d+/.exec(dvText);
     var dvShort = document.createElement("span");
-    dvShort.textContent = "Dashboard " + (dvM ? dvM[0] : dvText.split(" ")[0]);
+    dvShort.textContent = lineageOK ? ("Dashboard " + (dvM ? dvM[0] : dvText.split(" ")[0])) : "⚠ STALE";
     var dvFull = document.createElement("span");
-    dvFull.textContent = dvText;
+    dvFull.textContent = lineageOK ? dvText : "⚠ STALE — data does not match this build; no version is claimed.";
     dvFull.hidden = true;
     var dvBtn = document.createElement("button");
     dvBtn.type = "button";
@@ -478,62 +533,99 @@
     dv.appendChild(dvBtn);
     dv.appendChild(dvFull);
   }
+  /* legend overlay: one tap from every screen (the topbar is fixed) */
+  var legendovl = document.getElementById("legendovl");
+  document.getElementById("legendBtn").addEventListener("click", function(){
+    legendovl.classList.add("open");
+  });
+  document.getElementById("legendClose").addEventListener("click", function(){
+    legendovl.classList.remove("open");
+  });
+  legendovl.addEventListener("click", function(ev){
+    if (ev.target === legendovl) legendovl.classList.remove("open");
+  });
+
   function reviewState(cell, key){
     var r = cell.reviews || {};
-    return r[key] || "pending";
+    return r[key] || "other";
   }
-  function countingSeats(){
-    return ROSTER.filter(function(seat){ return seat.counts !== false; }).length;
-  }
-  function reviewCount(cell){
-    var n = 0;
-    ROSTER.forEach(function(seat){ if (seat.counts !== false && reviewState(cell, seat.key) === "pass") n++; });
-    return n;
-  }
-  function reviewsHTML(cell){
-    if (!ROSTER.length) return "";
-    var fails = [], running = 0;
+  /* R4 (spec §5.4): the decisive counting set = the roster seats flagged
+     counts=true (pass134's 10 guard rows + pass153's transcript verdict
+     = 11). Geometry + unarmed seats never enter these counts; unarmed
+     coverage prints NOT CHECKED in the roster, never smoothed. */
+  function progressOf(cell){
+    if (cell.progress) return cell.progress;
+    var p = 0, f = 0, o = 0;
     ROSTER.forEach(function(seat){
+      if (!seat.counts) return;
       var st = reviewState(cell, seat.key);
-      if (st === "fail") fails.push(seat);
-      if (st === "running") running++;
+      if (st === "pass") p++; else if (st === "fail") f++; else o++;
     });
-    var h = '<div class="readiness"><span class="rbig">' + reviewCount(cell) + '/' + countingSeats() + '</span>' +
-      '<span class="rlab">readiness — decisive passes only (code + confirmed/armed guards; provisional + advisory never count)</span></div>';
-    if (fails.length) {
-      h += '<div class="flags">' + fails.map(function(seat){
-        return '<span class="rchip fail">✗ ' + esc(seat.label) + '</span>';
-      }).join("") + '</div>';
-    }
-    h += '<div class="rnote">' + (running ? running + ' running · provisional + advisory verdicts in Details — never counted' : 'Provisional + advisory verdicts in Details — never counted') + '</div>';
+    return { pass: p, fail: f, other: o, total: p + f + o };
+  }
+  function progressHTML(cell){
+    var pr = progressOf(cell);
+    var pct = pr.total ? Math.round(100 * pr.pass / pr.total) : 0;
+    var h = '<div class="pface">' +
+      '<span class="pf pass">✓ Passing ' + pr.pass + '</span>' +
+      '<span class="pf fail">✗ Failing ' + pr.fail + '</span>' +
+      (pr.other ? '<span class="pf other">○ ' + pr.other + ' other</span>' : '') +
+      '<span class="pfbar"><i style="width:' + pct + '%"></i></span>' +
+      '<span class="pfnum">' + pr.pass + '/' + pr.total + ' passing</span>' +
+      '</div>';
     return h;
   }
   function rosterHTML(cell){
     if (!ROSTER.length) return "";
     return '<div class="reviews">' + ROSTER.map(function(seat){
       var st = reviewState(cell, seat.key);
-      var mark = st === "pass" ? "✓ " : st === "accepted" ? "◐ " : st === "running" ? "⟳ " : st === "fail" ? "✗ " : "· ";
+      var mark = st === "pass" ? "✓ " : st === "fail" ? "✗ " : st === "notchecked" ? "○ " : "· ";
+      return '<span class="rchip ' + st + '">' + mark + esc(seat.short || seat.label) + '</span>';
+    }).join("") + '</div>';
+  }
+  function rosterFullHTML(cell){
+    if (!ROSTER.length) return "";
+    return '<div class="reviews">' + ROSTER.map(function(seat){
+      var st = reviewState(cell, seat.key);
+      var mark = st === "pass" ? "✓ " : st === "fail" ? "✗ " : st === "notchecked" ? "○ " : "· ";
       return '<span class="rchip ' + st + '">' + mark + esc(seat.label) + '</span>';
     }).join("") + '</div>';
   }
 
-  function issueURL(cell, verdict, comment){
+  /* PASS 161 — opts: { ts: seconds|null, img: bool }. The two new lines are
+     inserted only when present, so the no-image/no-timestamp body is
+     byte-identical to the pre-PASS 161 formation (verified in-pass).
+     PASS 166 keeps this formation byte-identical (regression gate:
+     verify161 T2 / verify164 N5 re-run on the built bytes). */
+  function fmtTS(sec){
+    sec = Math.max(0, Math.floor(sec || 0));
+    return Math.floor(sec / 60) + ":" + ("0" + (sec % 60)).slice(-2);
+  }
+  function issueURL(cell, verdict, comment, opts){
+    opts = opts || {};
     var title = "[Batch02][" + cell.id + "] " + verdict + ": " + cell.sentence + " (" + cell.opening + ")";
-    var body = [
+    var lines = [
       "Cell: " + cell.id,
       "Video file: " + (cell.file || "not built yet"),
       "Status: " + cell.statusLabel,
-      "Verdict: " + verdict,
+      "Verdict: " + verdict
+    ];
+    if (typeof opts.ts === "number") lines.push("Timestamp: " + fmtTS(opts.ts));
+    lines.push(
       "",
       "Comment:",
-      (comment && comment.trim()) ? comment.trim() : "(no comment written)",
+      (comment && comment.trim()) ? comment.trim() : "(no comment written)"
+    );
+    if (opts.img) lines.push("", "📷 Screenshot attached — pasted below (rides with this issue).");
+    lines.push(
       "",
       "---",
       "From the Experiment Batch 02 review dashboard.",
       "Sentence: \"" + cell.sentence + "\" · Opening: " + cell.opening +
         " → " + taughtLine(cell) + " · Architecture: " + cell.arch + " " + cell.archName +
         " · Length: " + cell.length + " (" + cell.lengthLabel + ")"
-    ].join("\n");
+    );
+    var body = lines.join("\n");
     var labels = ["batch-02", "feedback", verdict].join(",");
     return "https://github.com/" + REPO + "/issues/new" +
       "?title=" + encodeURIComponent(title) +
@@ -548,10 +640,57 @@
     showToast._t = setTimeout(function(){ toast.classList.remove("show"); }, 2600);
   }
 
-  function openIssue(cell, verdict, comment){
-    verdicts[cell.id] = (verdict === "comment") ? (verdicts[cell.id] || "comment") : verdict;
-    window.open(issueURL(cell, verdict, comment), "_blank", "noopener");
-    showToast("Opening your GitHub issue — one tap there sends it.");
+  /* PASS 161 — an image can only reach a GitHub issue through GitHub's own
+     composer (verified in-pass: issues/new accepts title/body/labels only;
+     attachments upload only inside the loaded issue editor, which inserts a
+     user-attachments URL into the markdown). So submit puts the image on the
+     clipboard as a PNG and opens the prefilled issue — one paste there
+     attaches it, GitHub hosts it. Returns a promise: true if the image
+     reached the clipboard. */
+  function copyImageToClipboard(blob){
+    if (!blob) return Promise.resolve(false);
+    if (!(navigator.clipboard && window.ClipboardItem)) return Promise.resolve(false);
+    function asPNG(b){
+      if (b.type === "image/png") return Promise.resolve(b);
+      return new Promise(function(res){
+        var img = new Image();
+        img.onload = function(){
+          var c = document.createElement("canvas");
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          c.getContext("2d").drawImage(img, 0, 0);
+          URL.revokeObjectURL(img.src);
+          c.toBlob(res, "image/png");
+        };
+        img.onerror = function(){ res(null); };
+        img.src = URL.createObjectURL(b);
+      });
+    }
+    return asPNG(blob).then(function(png){
+      if (!png) return false;
+      var item = {};
+      item["image/png"] = png;
+      return navigator.clipboard.write([new ClipboardItem(item)]).then(
+        function(){ return true; },
+        function(){ return false; });
+    }).catch(function(){ return false; });
+  }
+
+  function openIssue(cell, verdict, comment, opts){
+    opts = opts || {};
+    var url = issueURL(cell, verdict, comment, opts);
+    function go(copied){
+      window.open(url, "_blank", "noopener");
+      showToast(opts.img
+        ? (copied
+            ? "📷 On your clipboard — tap Paste in GitHub's comment box."
+            : "📷 GitHub opens — attach your screenshot there (paste / 📎).")
+        : "Opening your GitHub issue — one tap there sends it.");
+    }
+    if (opts.imgBlob) {
+      copyImageToClipboard(opts.imgBlob).then(go);
+    } else {
+      go(false);
+    }
   }
 
   function buildScreen(cell){
@@ -560,40 +699,61 @@
     screen.dataset.id = cell.id;
     var color = STATUS_COLORS[cell.status] || "#a2937d";
     var busy = (cell.status === "recut" || cell.status === "inbuild");
+    var isPoster = !cell.video;
 
     var stage;
     if (cell.video){
       stage = '<video src="' + esc(cell.video) + '"' +
         (cell.poster ? ' poster="' + esc(cell.poster) + '"' : '') +
-        ' playsinline controls preload="metadata"></video>';
+        ' playsinline controls preload="metadata"></video>' +
+        '<div class="viderr" hidden><span>⚠ Video didn\'t load</span>' +
+        '<button class="retry" type="button">Retry ›</button></div>';
     } else {
+      /* D1 + D7: the blocked poster carries the sentence + a <=10-word
+         status ONLY — the panel's progress face below is the cell's one
+         status claim; no second, contradicting status line exists. */
       stage =
         '<div class="poster">' +
-          '<div class="eyebrow">Cell ' + String(cell.n).padStart(2,"0") + ' · ' + esc(cell.archName) + '</div>' +
+          '<div class="eyebrow">' + String(cell.n).padStart(2,"0") + '</div>' +
           '<div class="sentence">&ldquo;' + esc(cell.sentence) + '&rdquo;</div>' +
-          '<div class="flow"><b>' + esc(cell.opening) + ' opening</b> &nbsp;→&nbsp; teaches ' + esc(taughtLine(cell)) + '</div>' +
-          '<div class="tags">' +
-            '<span class="tag" style="border-color:' + (ARCH_COLORS[cell.arch] || "#ccc") + '">Architecture ' + esc(cell.arch) + ' · ' + esc(cell.archName) + '</span>' +
-            '<span class="tag">' + esc(cell.lengthLabel) + '</span>' +
-          '</div>' +
           '<div class="statuspill"><span class="dot' + (busy ? " pulse" : "") + '" style="background:' + color + '"></span>' + esc(cell.statusLabel) + '</div>' +
-          '<div class="revcount">Readiness <b>' + reviewCount(cell) + '/' + countingSeats() + '</b> decisive checks passing</div>' +
-          '<div class="lands">In production — full state in Details.</div>' +
         '</div>';
     }
 
-    var drawerRows = [
+    /* the details sheet's rows — re-issued at build time from the seated
+       lineage (R3): work left first, then the full roster (full labels
+       live here, behind the tap; the face carries short names), the
+       seated print, the gate (short face + full text behind a SECOND
+       tap, D4's fix form), the full status, and About. */
+    var wlItems = (cell.workleft && cell.workleft.length)
+      ? cell.workleft.map(function(w){ return '<span class="wl-item">' + esc(w) + '</span>'; }).join("")
+      : '<span class="wl-item">Nothing left — ready for approval</span>';
+    var printRow = cell.printSha
+      ? esc(cell.printTake || "") + ' · sha ' + esc(cell.printSha) + '… · ' + esc(cell.printDur) + ' s'
+      : 'No print seated — BLOCKED';
+    var rows = [
+      ["Work left", wlItems],
+      ["Guards", rosterFullHTML(cell)],
+      ["Print", printRow],
+      ["Gate status", '<span class="gateshort">' + esc(cell.gateShort || "") + '</span>' +
+        ' <button class="covbtn gatemore" type="button" aria-expanded="false">More ›</button>' +
+        '<span class="gatefull" hidden>' + esc(cell.gate) + '</span>'],
       ["Sentence", "&ldquo;" + esc(cell.sentence) + "&rdquo;"],
       ["Opening → taught", esc(cell.opening) + " → " + esc(taughtLine(cell))],
       ["Architecture", esc(cell.arch) + " · " + esc(cell.archName)],
       ["Length", esc(cell.length) + " · " + esc(cell.lengthLabel)],
-      ["Hook", esc(cell.hook)],
-      ["Reviewers", rosterHTML(cell)],
-      ["Gate status", esc(cell.gate)],
-      ["About this cell", esc(cell.about)]
-    ].map(function(r){
+      ["Hook", esc(cell.hook)]
+    ];
+    if (cell.statusFull && cell.statusFull !== cell.statusLabel)
+      rows.push(["Full status", esc(cell.statusFull)]);
+    rows.push(["About this cell", esc(cell.about)]);
+    var sheetRows = rows.map(function(r){
       return '<div class="drow"><div class="k">' + r[0] + '</div><div class="v">' + r[1] + '</div></div>';
     }).join("");
+
+    var langChips = '<span class="langchip open">' + esc(cell.opening) + '</span>' +
+      cell.taught.slice(0, 3).map(function(t){ return '<span class="langchip">' + esc(t) + '</span>'; }).join("") +
+      (cell.taught.length > 3 ? '<span class="langchip">+' + (cell.taught.length - 3) + '</span>' : '');
 
     screen.innerHTML =
       '<div class="stage">' + stage + '</div>' +
@@ -602,23 +762,33 @@
           '<span class="hlabel">Hide panel</span><span class="hchev">▾</span>' +
         '</button>' +
         '<div class="pbody">' +
-        '<div class="titleline">&ldquo;' + esc(cell.sentence) + '&rdquo; <span class="meta">— ' +
-          esc(cell.opening) + ' opening</span></div>' +
-        '<div class="subline">Cell ' + String(cell.n).padStart(2,"0") + ' of ' + CELLS.length +
-          ' · teaches ' + esc(taughtLine(cell)) + '</div>' +
-        reviewsHTML(cell) +
+        (isPoster ? '' :
+          '<div class="titleline">&ldquo;' + esc(cell.sentence) + '&rdquo;</div>' +
+          '<div class="langrow">' + langChips + '</div>') +
+        progressHTML(cell) +
+        '<button class="workleft-btn" type="button">Work left ›</button>' +
         '<div class="actions">' +
           '<button class="fb like" type="button">👍 Like</button>' +
           '<button class="fb dislike" type="button">👎 Dislike</button>' +
           '<button class="fb details" type="button">Details ▾</button>' +
         '</div>' +
         '<div class="commentrow">' +
-          '<textarea rows="2" placeholder="Comment on this video… (rides into the issue)"></textarea>' +
+          '<textarea rows="2" placeholder="Comment…"></textarea>' +
           '<button class="send" type="button">Send ➤</button>' +
         '</div>' +
-        '<div class="hint">Each tap opens a prefilled GitHub issue.</div>' +
-        '<div class="drawer"><div class="inner">' + drawerRows + '</div></div>' +
+        '<div class="extrasrow">' +
+          '<label class="imgbtn" aria-label="Add a screenshot to this comment">' +
+            '<input type="file" accept="image/*">' +
+            '<span class="cam">📷</span><img alt=""><span class="x" hidden>✕</span>' +
+          '</label>' +
+          '<button class="tschip" type="button" hidden></button>' +
         '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sheet" role="dialog" aria-label="Details">' +
+        '<div class="sheethead"><span class="sheettitle">Details — ' + esc(cell.id.replace("cell-", "Cell ")) + '</span>' +
+        '<button class="sheetclose" type="button" aria-label="Close details">✕</button></div>' +
+        sheetRows +
       '</div>';
 
     var panel = screen.querySelector(".panel");
@@ -631,41 +801,172 @@
       hchev.textContent = collapsed ? "▴" : "▾";
     });
 
+    var sheet = screen.querySelector(".sheet");
+    var detailsBtn = screen.querySelector(".fb.details");
+    var workleftBtn = screen.querySelector(".workleft-btn");
+    function openSheet(){
+      sheet.classList.add("open");
+      detailsBtn.textContent = "Details ▴";
+      sheet.scrollTop = 0;
+    }
+    function closeSheet(){
+      sheet.classList.remove("open");
+      detailsBtn.textContent = "Details ▾";
+    }
+    detailsBtn.addEventListener("click", function(){
+      if (sheet.classList.contains("open")) closeSheet(); else openSheet();
+    });
+    workleftBtn.addEventListener("click", openSheet);
+    screen.querySelector(".sheetclose").addEventListener("click", closeSheet);
+    var gateMore = screen.querySelector(".gatemore");
+    if (gateMore) gateMore.addEventListener("click", function(){
+      var full = screen.querySelector(".gatefull");
+      var open = full.hidden;
+      full.hidden = !open;
+      gateMore.textContent = open ? "‹ Less" : "More ›";
+      gateMore.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    /* B7: the video error surface — a failed load names itself in
+       <=10 words and offers a retry that re-loads the same src. */
+    var video = screen.querySelector("video");
+    var viderr = screen.querySelector(".viderr");
+    if (video && viderr) {
+      var showErr = function(){ viderr.hidden = false; };
+      video.addEventListener("error", showErr, true);
+      setTimeout(function(){
+        if (video.networkState === 3) showErr();
+      }, 4000);
+      viderr.querySelector(".retry").addEventListener("click", function(){
+        viderr.hidden = true;
+        var src = video.getAttribute("src");
+        video.removeAttribute("src"); video.load();
+        video.setAttribute("src", src); video.load();
+      });
+    }
+
     var likeBtn = screen.querySelector(".fb.like");
     var dislikeBtn = screen.querySelector(".fb.dislike");
-    var detailsBtn = screen.querySelector(".fb.details");
     var sendBtn = screen.querySelector(".send");
     var ta = screen.querySelector("textarea");
-    var drawer = screen.querySelector(".drawer");
 
-    function paintVerdict(){
-      likeBtn.classList.toggle("sel", verdicts[cell.id] === "like");
-      dislikeBtn.classList.toggle("sel", verdicts[cell.id] === "dislike");
+    /* PASS 161 — composer extras state: the chosen image (blob + preview)
+       and the captured playback timestamp (seconds, null = chip off).
+       Carried intact by PASS 166 (Pass 164 semantics byte-preserved). */
+    var extrasRow = screen.querySelector(".extrasrow");
+    var imgBtn = screen.querySelector(".imgbtn");
+    var imgInput = screen.querySelector(".imgbtn input[type=file]");
+    var imgPrev = screen.querySelector(".imgbtn img");
+    var imgX = screen.querySelector(".imgbtn .x");
+    var tsChip = screen.querySelector(".tschip");
+    var pickedImg = null, pickedURL = null, pickedTS = null;
+    /* PASS 164 — tsRemoved: the chip's removal is sticky within a draft.
+       Set by the chip's own click; while set, captureTS will not resurrect
+       the chip on a later focus. Cleared only when the draft is submitted
+       or the textarea is emptied (the draft-clear leg). */
+    var tsRemoved = false;
+
+    function setImage(blob){
+      if (pickedURL) URL.revokeObjectURL(pickedURL);
+      pickedImg = blob || null;
+      pickedURL = blob ? URL.createObjectURL(blob) : null;
+      imgPrev.src = pickedURL || "";
+      imgBtn.classList.toggle("hasimg", !!blob);
+      imgX.hidden = !blob;
     }
-    likeBtn.addEventListener("click", function(){
-      verdicts[cell.id] = "like"; paintVerdict();
-      openIssue(cell, "like", ta.value);
+    function captureTS(){
+      /* PASS 164 — capture on first focus only: a live timestamp is never
+         re-stamped by a later focus, and a removed chip stays removed
+         until the draft is submitted or cleared. */
+      if (tsRemoved || pickedTS !== null) return;
+      if (!video) { pickedTS = null; tsChip.hidden = true; return; }
+      pickedTS = video.currentTime || 0;
+      tsChip.innerHTML = "🕐 " + fmtTS(pickedTS) + ' <span class="x">✕</span>';
+      tsChip.hidden = false;
+    }
+    imgInput.addEventListener("change", function(){
+      if (imgInput.files && imgInput.files[0]) setImage(imgInput.files[0]);
+      imgInput.value = "";
     });
-    dislikeBtn.addEventListener("click", function(){
-      verdicts[cell.id] = "dislike"; paintVerdict();
-      openIssue(cell, "dislike", ta.value);
+    imgX.addEventListener("click", function(ev){
+      ev.preventDefault(); ev.stopPropagation(); setImage(null);
     });
-    sendBtn.addEventListener("click", function(){
-      var v = (verdicts[cell.id] === "like" || verdicts[cell.id] === "dislike") ? verdicts[cell.id] : "comment";
-      openIssue(cell, v, ta.value);
-    });
-    detailsBtn.addEventListener("click", function(){
-      var open = drawer.classList.toggle("open");
-      detailsBtn.textContent = open ? "Details ▴" : "Details ▾";
-      if (open) {
-        /* bring the panel head to the top of the reading area (under the
-           fixed header + rail, via the panel's scroll-margin) so the reader
-           starts the drawer from its top and scrolls down through it */
-        setTimeout(function(){
-          panel.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 60);
+    screen.addEventListener("paste", function(ev){
+      var items = (ev.clipboardData && ev.clipboardData.items) || [];
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].type && items[i].type.indexOf("image/") === 0) {
+          var f = items[i].getAsFile();
+          if (f) { setImage(f); showToast("📷 Screenshot added."); }
+          ev.preventDefault();
+          return;
+        }
       }
     });
+    ["dragover", "dragenter"].forEach(function(n){
+      extrasRow.addEventListener(n, function(ev){ ev.preventDefault(); extrasRow.classList.add("dragover"); });
+    });
+    ["dragleave", "drop"].forEach(function(n){
+      extrasRow.addEventListener(n, function(ev){ ev.preventDefault(); extrasRow.classList.remove("dragover"); });
+    });
+    extrasRow.addEventListener("drop", function(ev){
+      var files = (ev.dataTransfer && ev.dataTransfer.files) || [];
+      for (var i = 0; i < files.length; i++) {
+        if (files[i].type && files[i].type.indexOf("image/") === 0) { setImage(files[i]); showToast("📷 Screenshot added."); return; }
+      }
+    });
+    ta.addEventListener("focus", captureTS);
+    tsChip.addEventListener("click", function(){
+      pickedTS = null; tsChip.hidden = true; tsRemoved = true;
+    });
+    /* PASS 164 — draft-clear reset: emptying the textarea ends the draft,
+       so both timestamp states reset and a fresh focus captures anew. */
+    ta.addEventListener("input", function(){
+      if (!ta.value) { pickedTS = null; tsChip.hidden = true; tsRemoved = false; }
+    });
+    function commentOpts(){
+      var o = { img: !!pickedImg, imgBlob: pickedImg };
+      if (pickedTS !== null && pickedTS !== undefined) o.ts = pickedTS;
+      return o;
+    }
+    /* PASS 164 — submit reset: the draft is consumed by a submit, so both
+       timestamp states reset and the chip hides; a fresh focus on a new
+       draft captures again. Called by every submit handler AFTER the
+       issue URL has been formed from commentOpts(). */
+    function resetDraftTS(){
+      pickedTS = null; tsChip.hidden = true; tsRemoved = false;
+    }
+
+    /* PASS 166 B3+B4 — marking is local, silent and persisted; sending
+       is ONLY the Send act. Marked paints amber ("Marked"); once Send
+       has opened the issue with that verdict, it paints green ("Sent ✓").
+       Tapping the marked button again un-marks. */
+    function paintVerdict(){
+      var st = verdicts[cell.id];
+      var like = st && st.v === "like", dislike = st && st.v === "dislike";
+      likeBtn.classList.toggle("sel", !!like && !st.sent);
+      likeBtn.classList.toggle("sent", !!like && !!st.sent);
+      dislikeBtn.classList.toggle("sel", !!dislike && !st.sent);
+      dislikeBtn.classList.toggle("sent", !!dislike && !!st.sent);
+      likeBtn.textContent = like ? (st.sent ? "👍 Sent ✓" : "👍 Marked") : "👍 Like";
+      dislikeBtn.textContent = dislike ? (st.sent ? "👎 Sent ✓" : "👎 Marked") : "👎 Dislike";
+    }
+    function mark(v){
+      var st = verdicts[cell.id];
+      if (st && st.v === v && !st.sent) { delete verdicts[cell.id]; showToast("Mark removed."); }
+      else { verdicts[cell.id] = { v: v, sent: false }; showToast("Marked — tap Send to send it."); }
+      saveVerdicts();
+      paintVerdict();
+    }
+    likeBtn.addEventListener("click", function(){ mark("like"); });
+    dislikeBtn.addEventListener("click", function(){ mark("dislike"); });
+    sendBtn.addEventListener("click", function(){
+      var st = verdicts[cell.id];
+      var v = (st && (st.v === "like" || st.v === "dislike")) ? st.v : "comment";
+      openIssue(cell, v, ta.value, commentOpts());
+      if (v !== "comment" && st) { st.sent = true; saveVerdicts(); paintVerdict(); }
+      resetDraftTS();
+    });
+    paintVerdict();
     return screen;
   }
 
@@ -687,7 +988,6 @@
   }
 
   function setCurrent(i){
-    if (i === current && counter.dataset.set) { /* still refresh videos */ }
     current = i;
     counter.textContent = (i + 1) + " / " + CELLS.length;
     counter.dataset.set = "1";
@@ -703,13 +1003,10 @@
   }
 
   CELLS.forEach(function(cell){ feed.appendChild(buildScreen(cell)); });
-  /* PASS 123 RETURN ROUND (P56-1 visual cure) + RETURN ROUND 2: the
-     feed ends with a quiescent closing screen — no stage, no panel — a
-     FULL VIEWPORT tall, so at max scroll the viewport (and therefore
-     the chrome zone) contains only this blank screen and the last
-     screen's stage sits entirely above the viewport, instead of the
-     120px terminus dragging it into the chrome zone. It is NOT a
-     .screen (the count/current-cell machinery ignores it). */
+  /* the feed ends with a quiescent closing screen — no stage, no panel —
+     a FULL VIEWPORT tall and itself a snap point, so at max scroll the
+     viewport contains only this blank screen. It is NOT a .screen (the
+     count/current-cell machinery ignores it). */
   var feedend = document.createElement("div");
   feedend.className = "feedend";
   feedend.setAttribute("aria-hidden", "true");
@@ -741,30 +1038,34 @@
   updateRailNav();
   fitChrome();
   setTimeout(fitChrome, 400);
-  /* PASS 123 RETURN ROUND 2: the measured chrome number drives the
-     screens' padding, min-height and the panels' scroll-margin — it
-     must never be a stale first-paint measurement, so it is re-measured
-     once everything (fonts, posters) has loaded, and again shortly
-     after */
   window.addEventListener("load", fitChrome);
   setTimeout(fitChrome, 1200);
 
   counter.textContent = CELLS.length ? ("1 / " + CELLS.length) : "0 / 0";
 
-  /* current-cell detection uses a middle band, not a visibility fraction:
-     an expanded screen is taller than the viewport and can never reach a
-     0.6 intersection ratio, which would freeze the counter and the rail */
-  var observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if (e.isIntersecting){
-        var idx = Array.prototype.indexOf.call(screenEls, e.target);
-        if (idx >= 0) setCurrent(idx);
-      }
-    });
-  }, { root: feed, rootMargin: "-38% 0px -55% 0px", threshold: 0 });
-  Array.prototype.forEach.call(screenEls, function(s){ observer.observe(s); });
+  /* PASS 166 R1 — the counter derives from the RESTING SNAP POSITION
+     (spec §2.3.3): when scrolling settles, the current cell is the snap
+     point the feed rests on — scrollTop / viewport height, exactly.
+     (The v25 IntersectionObserver band lagged the rest position in
+     11/11 measured gestures; it is removed, not tuned.) */
+  var settleTimer = null;
+  function settleCurrent(){
+    var h = feed.clientHeight || 1;
+    var idx = Math.round(feed.scrollTop / h);
+    idx = Math.max(0, Math.min(CELLS.length - 1, idx));
+    if (idx !== current) setCurrent(idx);
+  }
+  feed.addEventListener("scroll", function(){
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(settleCurrent, 140);
+  }, { passive: true });
 
+  /* PASS 166 B2 — keyboard navigation skips any event whose target is a
+     text field: arrows typed inside a comment move the caret, never
+     the cell (HQ census B2). */
   document.addEventListener("keydown", function(e){
+    var t = e.target;
+    if (t && (t.tagName === "TEXTAREA" || t.tagName === "INPUT" || t.isContentEditable)) return;
     if (e.key === "ArrowDown" || e.key === "PageDown") goTo(current + 1);
     else if (e.key === "ArrowUp" || e.key === "PageUp") goTo(current - 1);
   });
