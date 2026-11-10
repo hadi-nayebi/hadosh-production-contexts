@@ -373,6 +373,8 @@ body.camView .headChip{bottom:64px}
   var roomGroup = null, roomPanels = [], roomSpotLights = {};
   /* @reason [USER] The ball scene's visual handles (the ball scene, 2026-11-07): declared HERE, with the room's handles, above the buildGL call — a handle declared below that call is re-initialised to null by its own declaration after the builder has already assigned it, orphaning the built group in the scene (measured in the ball battery's first probe round: the state machine ran perfectly and nothing rendered). */
   var ballGroup = null, ballMesh = null, ballShadowMesh = null, ballShadowMat = null, ballGlassMat = null;
+  /* @reason [OPENING-PROSE] The prose rig's handles (the opening-prose build, 2026-11-10): the group asmProseRig builds from a location's prose props (hidden until a prose play stands), its parts table keyed by prop id, and the standings proseFrame actuates into — bookState's readback for the verifier, the same contract the ball's state keeps. Declared with the ball's handles, above the build call, for the reason that block names. */
+  var proseGroup = null, proseParts = {}, proseSt = {};
   var pipRect = null, gizmoRect = null;
 
   /* @reason [USER] The held ring's handle: there is ONE world scene now, rendered once per eye, so there is one ring — the wiring's ring writer (setRing, in the control layer) writes this handle's style exactly as it wrote the two DOM rings before, both world handles it knows are this one handle, and the render loop reads the handle each frame and lights the one ring mesh in the director's pass. One write, both views correct, because the views are one world. */
@@ -549,10 +551,11 @@ body.camView .headChip{bottom:64px}
     function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
     var i, x, y;
     for (i = 0; i < d.length; i += 4) { var v = 246 + (rnd() - 0.5) * 30; d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = 255; }
-    /* the meso octave (texture v2): soft radial blobs, cosine falloff, wrap-drawn across the borders */
+    /* the meso octave (texture v2): soft radial blobs, cosine falloff, wrap-drawn across the borders. The wall kind runs at 0.55 strength (the cardboard pass, 2026-11-10): at full strength the blobs read as stains on the big backdrop; paper pulp mottling is quieter. The rnd call count is unchanged, so every other kind's tile is byte-identical. */
+    var mesoF = kind === 'wall' ? 0.55 : 1;
     var bi, bx, by, br, bs, dx, dy, tx, ty, dd, ff, f2, idx;
     for (bi = 0; bi < 260; bi++) {
-      bx = rnd() * S; by = rnd() * S; br = 18 + rnd() * 52; bs = rnd() < 0.5 ? -0.07 : 0.07;
+      bx = rnd() * S; by = rnd() * S; br = 18 + rnd() * 52; bs = (rnd() < 0.5 ? -0.07 : 0.07) * mesoF;
       var r0 = Math.ceil(br);
       for (dy = -r0; dy <= r0; dy++) for (dx = -r0; dx <= r0; dx++) {
         dd = Math.sqrt(dx * dx + dy * dy) / br; if (dd > 1) continue;
@@ -563,16 +566,16 @@ body.camView .headChip{bottom:64px}
       }
     }
     for (i = 0; i < 110; i++) {
-      var fy = Math.floor(rnd() * S), fx = Math.floor(rnd() * S), len = 24 + Math.floor(rnd() * 110), lift = 1 + rnd() * 0.05, j;
+      var fy = Math.floor(rnd() * S), fx = Math.floor(rnd() * S), len = 24 + Math.floor(rnd() * 110), lift = 1 + rnd() * 0.05, j, sa = rnd() * 6.2832;
       for (j = 0; j < len; j++) {
-        var px = (fx + j) % S, idx = (fy * S + px) * 4;
+        var px = (((Math.floor(fx + Math.cos(sa) * j)) % S) + S) % S, py = (((Math.floor(fy + Math.sin(sa) * j)) % S) + S) % S, idx = (py * S + px) * 4;
         d[idx] = Math.min(255, d[idx] * lift); d[idx + 1] = Math.min(255, d[idx + 1] * lift); d[idx + 2] = Math.min(255, d[idx + 2] * lift);
       }
     }
-    /* the fibre-fleck octave (texture v2): short strokes near horizontal, wrap-drawn */
+    /* the fibre-fleck octave (texture v2; the cardboard pass, 2026-11-10): short strokes at FULL random angles, wrap-drawn — paper fibre has no grain direction; the old near-horizontal lie was one of the wood tells (texture audit, cause 3) */
     var fi, fa, fl, fs, fx, fy, fj, px, py;
     for (fi = 0; fi < 900; fi++) {
-      fx = rnd() * S; fy = rnd() * S; fl = 2 + rnd() * 5; fa = (rnd() - 0.5) * 0.698; fs = rnd() < 0.5 ? 0.84 : 1.16;
+      fx = rnd() * S; fy = rnd() * S; fl = 2 + rnd() * 5; fa = rnd() * 6.2832; fs = rnd() < 0.5 ? 0.84 : 1.16;
       for (fj = 0; fj < fl; fj++) {
         px = (((Math.floor(fx + Math.cos(fa) * fj)) % S) + S) % S; py = (((Math.floor(fy + Math.sin(fa) * fj)) % S) + S) % S;
         idx = (py * S + px) * 4;
@@ -580,13 +583,13 @@ body.camView .headChip{bottom:64px}
       }
     }
     function darken(idx, f) { d[idx] *= f; d[idx + 1] *= f; d[idx + 2] *= f; }
-    if (kind === 'floor' || kind === 'deck') {
-      var s, p;
-      for (s = 0; s < 4; s++) for (p = 0; p < 2; p++) {
-        var at = s * 128 + p;
-        if (kind === 'floor') { for (y = 0; y < S; y++) darken((y * S + at) * 4, 0.78); }
-        else { for (x = 0; x < S; x++) darken((at * S + x) * 4, 0.78); }
-      }
+    if (kind === 'floor') {
+      /* the cardboard pass (2026-11-10): ONE faint sheet joint at the tile's own edge, where the wrap makes it continuous — paper comes in sheets; the retired print ruled 8 dark seams per tile at a 92-unit pitch, the plank signature the texture audit names as the room's first wood tell */
+      for (y = 0; y < S; y++) darken((y * S) * 4, 0.94);
+    }
+    if (kind === 'deck') {
+      /* the cardboard pass (2026-11-10): ONE faint sheet joint at the tile's own edge, the floor's own treatment — paper comes in sheets. A fluting rhythm at print pitch stood here in the build's first pass and the paperworld guard indicted it by name (PLANK-PALETTE at the deck): ruled lines at a regular pitch across a flat surface ARE the plank signature, whatever their intent. The corrugation lives where construction puts it — the deck edge's real geometry (asmFluteEdge) — never as print spread over the top. */
+      for (y = 0; y < S; y++) darken((y * S) * 4, 0.94);
     }
     if (kind === 'wall') {
       for (y = S - 52; y < S; y++) { var f = 1 - 0.20 * ((y - (S - 52)) / 51); for (x = 0; x < S; x++) darken((y * S + x) * 4, f); }
@@ -595,7 +598,7 @@ body.camView .headChip{bottom:64px}
     return cv;
   }
 
-  /* @reason [BEST-PRACTICE] A room texture from a drawn tile (the room build, 2026-11-07; plan §6/R5): repeat wrapping on both axes — the wrap-drawn tile is seamless at the EXACT fractional repeat (surface size ÷ 368, no rounding: grain scale is a world constant, and the seamed kinds keep their 92 spacing at every repeat because each tile carries exactly four seams) — the sRGB encoding of the file's standing colour basis (plan §6/R12), and anisotropy at the renderer's own maximum capped at 8, which the grazing floor and deck are the surfaces it exists for. Every surface calls this for its OWN texture instance: repeat is a texture property, and the ghost rule needs per-panel materials regardless (plan §6, R3) — the instances share the one drawn canvas, so the cost is the upload, never new art. */
+  /* @reason [BEST-PRACTICE] A room texture from a drawn tile (the room build, 2026-11-07; plan §6/R5): repeat wrapping on both axes — the wrap-drawn tile is seamless at the EXACT fractional repeat (surface size ÷ 368, no rounding: grain scale is a world constant, and each print keeps its own rhythm at every repeat — the floor's and the deck's sheet joints ride their tiles' edges) — the sRGB encoding of the file's standing colour basis (plan §6/R12), and anisotropy at the renderer's own maximum capped at 8, which the grazing floor and deck are the surfaces it exists for. Every surface calls this for its OWN texture instance: repeat is a texture property, and the ghost rule needs per-panel materials regardless (plan §6, R3) — the instances share the one drawn canvas, so the cost is the upload, never new art. */
   function paperTexture(cv, rx, ry) {
     var t = new T3.CanvasTexture(cv);
     t.wrapS = T3.RepeatWrapping; t.wrapT = T3.RepeatWrapping;
@@ -628,17 +631,48 @@ body.camView .headChip{bottom:64px}
     if (prop.capabilities && prop.capabilities.special && prop.capabilities.special.indexOf('ghostable') >= 0) opts.transparent = true;
     return new T3.MeshStandardMaterial(opts);
   }
-  /* @reason [ASSEMBLY] The box recipe: a placed box at its placement seat — one paper material, or the two-tone form where the prop's data carries a riser colour (its top in its own dye and print; the riser in the data colour on plain paper, the builders' form). */
+  /* @reason [CARDBOARD] The fluted edge (the cardboard pass, 2026-11-10): where a box prop's data carries edgeFlute, its front and side faces gain the corrugated sandwich made visible — vertical half-round ribs at the data's pitch standing half out of the face, closed by liner rails along the top and bottom of the band. Geometry, not print: the owner ordered the cardboard SHOWN, and a flute that catches light at the deck's edge is what a phone frame can read. The back face is skipped — it stands against the wall everywhere this recipe is used. */
+  function asmFluteEdge(group, prop, seat, riserMat, asm, tiles) {
+    var s = prop.geometry.size, f = prop.data.edgeFlute;
+    var mat = riserMat || asmPaperMat(prop, asm, tiles);
+    var front = seat[2] + s[2] / 2, back = seat[2] - s[2] / 2, left = seat[0] - s[0] / 2, right = seat[0] + s[0] / 2;
+    var ribGeo = new T3.CylinderGeometry(f.r, f.r, s[1], 8), i, n;
+    function rib(x, z) { var m = new T3.Mesh(ribGeo, mat); m.position.set(x, seat[1], z); group.add(m); }
+    n = Math.floor(s[0] / f.pitch);
+    for (i = 0; i <= n; i++) rib(left + i * f.pitch, front);
+    n = Math.floor(s[2] / f.pitch);
+    for (i = 1; i < n; i++) { rib(left, back + i * f.pitch); rib(right, back + i * f.pitch); }
+    var railF = new T3.BoxGeometry(s[0] + 3, 2.6, 3), railS = new T3.BoxGeometry(3, 2.6, s[2] + 3), rail;
+    function addRail(geo, x, y, z) { rail = new T3.Mesh(geo, mat); rail.position.set(x, y, z); group.add(rail); }
+    addRail(railF, seat[0], seat[1] + s[1] / 2 - 1.3, front); addRail(railF, seat[0], seat[1] - s[1] / 2 + 1.3, front);
+    addRail(railS, left, seat[1] + s[1] / 2 - 1.3, seat[2]); addRail(railS, left, seat[1] - s[1] / 2 + 1.3, seat[2]);
+    addRail(railS, right, seat[1] + s[1] / 2 - 1.3, seat[2]); addRail(railS, right, seat[1] - s[1] / 2 + 1.3, seat[2]);
+  }
+  /* @reason [CARDBOARD] The sheet-layer edge (the cardboard pass, 2026-11-10): where a box prop's data carries edgeLayers, its front face gains that many stacked sheet strips in alternating shades of its own dye, each a hair proud of the face and a hair short of the band, so the slab's edge reads as laminated paper sheets — the floor slab's construction tell, at the edge the audience actually sees. */
+  function asmSheetEdge(group, prop, seat, asm, tiles) {
+    var s = prop.geometry.size, L = prop.data.edgeLayers, base = parseInt(prop.material.colour.slice(1), 16);
+    var front = seat[2] + s[2] / 2, shades = [0.9, 1.0, 1.09], i;
+    for (i = 0; i < L; i++) {
+      var hh = s[1] / L;
+      var mat = new T3.MeshStandardMaterial({ color: jitHex(base, shades[i % shades.length]), roughness: 1, map: paperTexture(tiles.plain, s[0] / 368, 1), bumpMap: paperBump(tiles.plain, s[0] / 368, 1), bumpScale: 0.5 });
+      var m = new T3.Mesh(new T3.BoxGeometry(s[0], hh - 0.8, 1.6), mat);
+      m.position.set(seat[0], seat[1] - s[1] / 2 + hh * (i + 0.5), front + 0.5);
+      group.add(m);
+    }
+  }
+  /* @reason [ASSEMBLY] The box recipe: a placed box at its placement seat — one paper material, or the two-tone form where the prop's data carries a riser colour (its top in its own dye and print; the riser in the data colour on plain paper, the builders' form). Where the data carries the cardboard pass's edge records (edgeFlute / edgeLayers), the edge builders above dress the box's faces after it stands. */
   function asmBox(group, prop, seat, asm, tiles) {
     var s = prop.geometry.size, mats;
     if (prop.data && prop.data.riserColour) {
       var top = asmPaperMat(prop, asm, tiles);
-      var riser = new T3.MeshStandardMaterial({ color: parseInt(prop.data.riserColour.slice(1), 16), roughness: 0.85, map: paperTexture(tiles.plain, Math.max(s[0], s[2]) / 368, 1), bumpMap: paperBump(tiles.plain, Math.max(s[0], s[2]) / 368, 1), bumpScale: 0.5 });
+      var riser = new T3.MeshStandardMaterial({ color: parseInt(prop.data.riserColour.slice(1), 16), roughness: 1, map: paperTexture(tiles.plain, Math.max(s[0], s[2]) / 368, 1), bumpMap: paperBump(tiles.plain, Math.max(s[0], s[2]) / 368, 1), bumpScale: 0.5 });
       mats = [riser, riser, top, riser, riser, riser];
     } else mats = asmPaperMat(prop, asm, tiles);
     var m = new T3.Mesh(new T3.BoxGeometry(s[0], s[1], s[2]), mats);
     m.position.set(seat[0], seat[1], seat[2]);
     group.add(m);
+    if (prop.data && prop.data.edgeFlute) asmFluteEdge(group, prop, seat, typeof riser !== 'undefined' ? riser : null, asm, tiles);
+    if (prop.data && prop.data.edgeLayers) asmSheetEdge(group, prop, seat, asm, tiles);
     return m;
   }
   /* @reason [ASSEMBLY] The turned-post recipe: post, base disc and finial ball from the prop's own radius and height — the base a disc of twice the radius, 6 high, seated under the post's foot; the finial a ball of radius + 3 at the post's top (the builders' proportions, plan §5). */
@@ -648,17 +682,59 @@ body.camView .headChip{bottom:64px}
     var base = new T3.Mesh(new T3.CylinderGeometry(r * 2, r * 2, 6, 16), mat); base.position.set(seat[0], seat[1] - h / 2 + 3, seat[2]); group.add(base);
     var fin = new T3.Mesh(new T3.SphereGeometry(r + 3, 12, 8), mat); fin.position.set(seat[0], seat[1] + h / 2, seat[2]); group.add(fin);
   }
-  /* @reason [ASSEMBLY] The pleated-plane recipe (the curtain): a 56-segment plane whose z folds ±8 on a 26-unit wavelength across its width — pleated GEOMETRY, not a normal trick — mirrored for a definition's second listed placement, so the pair gathers toward the stage's centre; the drape print at the plane's own repeats; the world's one DoubleSide material (a curtain's back is seen from the stage side). */
+  /* @reason [ASSEMBLY] The pleated-plane recipe (the curtain): a 56-segment plane whose z folds ±8 on a 26-unit wavelength across its width — pleated GEOMETRY, not a normal trick — mirrored for a definition's second listed placement, so the pair gathers toward the stage's centre; the drape print at the plane's own repeats; the world's one DoubleSide material (a curtain's back is seen from the stage side). SKINS (the opening-prose build, 2026-11-10, PR-12): the prop's data carries its skins — each skin a written form definition (its prompt) plus its shaping numbers — and data.skin names the standing one. The CLASSIC skin is this recipe exactly as it stood before skins existed (the alternate, kept intact). The BOW-TIEBACK skin shapes the same pleats: every vertex pulled toward its outer pole by the skin's gather, the pull peaking at the tie height (tieV of the height) and weighted by the vertex's innerness, so the panel bunches at the tie, hangs near-straight above it, and flares gently below; a layered raw-edge backing sheet (the same shaped geometry, a breath larger, a step behind) and the bow + valance builders below complete the form. */
   function asmCurtain(group, prop, seat, mirror, asm, tiles) {
     var w = prop.geometry.size.w, h = prop.geometry.size.h;
-    var geo = new T3.PlaneGeometry(w, h, 56, 1);
+    var skins = (prop.data && prop.data.skins) || null, skin = null, si;
+    if (skins) for (si = 0; si < skins.length; si++) if (skins[si].id === (prop.data && prop.data.skin)) skin = skins[si];
+    var bow = !!(skin && typeof skin.gather === 'number');
+    var geo = new T3.PlaneGeometry(w, h, 56, bow ? 24 : 1);
     if (geo.attributes && geo.attributes.position) {
       var pos = geo.attributes.position, vi;
-      for (vi = 0; vi < pos.count; vi++) { var wx = seat[0] + pos.getX(vi); pos.setZ(vi, 8 * Math.sin((mirror ? -1 : 1) * (2 * Math.PI * (wx - (seat[0] - w / 2)) / 26))); }
+      for (vi = 0; vi < pos.count; vi++) {
+        var lx = pos.getX(vi), ly = pos.getY(vi), wx = seat[0] + lx;
+        pos.setZ(vi, 8 * Math.sin((mirror ? -1 : 1) * (2 * Math.PI * (wx - (seat[0] - w / 2)) / 26)));
+        if (bow) {
+          var v = (ly + h / 2) / h, inner = mirror ? (0.5 - lx / w) : (0.5 + lx / w);
+          var dv = v - skin.tieV, g;
+          if (dv >= 0) g = Math.exp(-(dv / 0.22) * (dv / 0.22));
+          else g = 1 - 0.75 * (-dv) / skin.tieV;
+          var pull = skin.gather * g * Math.pow(Math.max(0, inner), 1.3);
+          pos.setX(vi, lx + (mirror ? 1 : -1) * pull);
+          pos.setZ(vi, pos.getZ(vi) + 6 * Math.exp(-(dv / 0.15) * (dv / 0.15)) * Math.max(0, inner));
+        }
+      }
       if (geo.computeVertexNormals) geo.computeVertexNormals();
     }
     var mat = new T3.MeshStandardMaterial({ color: parseInt(prop.material.colour.slice(1), 16), roughness: prop.material.roughness, map: paperTexture(tiles.drape, w / 368, h / 368), bumpMap: paperBump(tiles.drape, w / 368, h / 368), bumpScale: typeof prop.texture.bump === 'number' ? prop.texture.bump : 0.5, side: T3.DoubleSide });
     var m = new T3.Mesh(geo, mat); m.position.set(seat[0], seat[1], seat[2]); group.add(m);
+    if (bow) {
+      var edgeMat = new T3.MeshStandardMaterial({ color: parseInt((skin.edgeColour || '#E8DCC0').slice(1), 16), roughness: 1, side: T3.DoubleSide });
+      var backGeo = geo.clone(); backGeo.scale(1.05, 1.03, 1);
+      var back = new T3.Mesh(backGeo, edgeMat); back.position.set(seat[0], seat[1], seat[2] - 2.5); group.add(back);
+      asmCurtainBow(group, prop, seat, mirror, skin, edgeMat);
+      if (!mirror) asmValance(group, prop, skin, tiles, edgeMat);
+    }
+  }
+  /* @reason [SKINS] The bow itself (the opening-prose build, PR-12): at the tie point on the panel's outer side — a dye band wrapping the gathered bunch, and in raw-edge paper a knot, two loops angled up-out, and two tails hanging below the knot. Flat paper shapes, deliberately: the bow is a cut-paper bow pinned to a paper curtain, not a sculpted ribbon. */
+  function asmCurtainBow(group, prop, seat, mirror, skin, edgeMat) {
+    var h = prop.geometry.size.h, w = prop.geometry.size.w;
+    var bx = seat[0] + (mirror ? 1 : -1) * (w / 2 - 16), by = seat[1] - h / 2 + skin.tieV * h, bz = seat[2] + 7, sgn = mirror ? 1 : -1;
+    var dyeMat = new T3.MeshStandardMaterial({ color: parseInt(prop.material.colour.slice(1), 16), roughness: 1 });
+    function bowPart(geo, mat, x, y, z, rz) { var m = new T3.Mesh(geo, mat); m.position.set(x, y, z); if (rz) m.rotation.z = rz; group.add(m); }
+    bowPart(new T3.BoxGeometry(15, 19, 10), dyeMat, bx, by, bz - 2, 0);
+    bowPart(new T3.BoxGeometry(18, 12, 6), edgeMat, bx, by, bz + 2, 0);
+    bowPart(new T3.BoxGeometry(34, 13, 3.5), edgeMat, bx - sgn * 16, by + 8, bz + 1, sgn * 0.55);
+    bowPart(new T3.BoxGeometry(34, 13, 3.5), edgeMat, bx + sgn * 16, by + 8, bz + 1, -sgn * 0.55);
+    bowPart(new T3.BoxGeometry(9, 28, 3), edgeMat, bx - sgn * 6, by - 20, bz + 1, sgn * 0.16);
+    bowPart(new T3.BoxGeometry(9, 28, 3), edgeMat, bx + sgn * 6, by - 20, bz + 1, -sgn * 0.16);
+  }
+  /* @reason [SKINS] The valance (the opening-prose build, PR-12): one header band across the whole stage at the skin's written seat — the curtain's own dye and drape print — with a raw-edge paper strip along its bottom edge: the cut-paper layer line the cardboard pass asks the header to show. Built once, on the definition's first listed placement. */
+  function asmValance(group, prop, skin, tiles, edgeMat) {
+    var v = skin.valance; if (!v) return;
+    var mat = new T3.MeshStandardMaterial({ color: parseInt(prop.material.colour.slice(1), 16), roughness: prop.material.roughness, map: paperTexture(tiles.drape, v.w / 368, v.h / 368), bumpMap: paperBump(tiles.drape, v.w / 368, v.h / 368), bumpScale: 0.8, side: T3.DoubleSide });
+    var band = new T3.Mesh(new T3.BoxGeometry(v.w, v.h, 5), mat); band.position.set(v.x, v.y, v.z); group.add(band);
+    var strip = new T3.Mesh(new T3.BoxGeometry(v.w, v.edgeH, 5.6), edgeMat); strip.position.set(v.x, v.y - v.h / 2 - v.edgeH / 2 + 1, v.z); group.add(strip);
   }
   /* @reason [ASSEMBLY] The can recipe: a paper cylinder tilted onto the target of the light whose seat its placement shares, with an emissive lens disc at its mouth in that light's colour — the pairing is the book's own geometry (a can stands where its light stands), so no second table names it; the lens inset is half the can's height, its radius the builders' 7. */
   function asmCan(group, prop, seat, data, asm, tiles) {
@@ -703,6 +779,123 @@ body.camView .headChip{bottom:64px}
     ballGroup.add(ballShadowMesh);
     ballGroup.visible = false;
     scene.add(ballGroup);
+  }
+  /* @reason [OPENING-PROSE] A seeded draw for the prose rig: the same LCG the paper tiles run, seeded from the prop's own data, so the shower's layout is a property of the book — the same words in the same places on every boot and every machine. */
+  function proseRnd(seed) { var s = seed >>> 0; return function () { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
+  /* @reason [OPENING-PROSE] A drawn canvas texture for a prose face: in this world text is drawn onto paper, never typed into the DOM — the canvas is the face's print at the caller's resolution, sRGB like every paper texture in the file. */
+  function proseCanvas(w, h, draw) {
+    var cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    var g = cv.getContext('2d'); if (g) draw(g, w, h);
+    var t = new T3.CanvasTexture(cv); if (T3.SRGBColorSpace) t.colorSpace = T3.SRGBColorSpace;
+    return t;
+  }
+  /* @reason [OPENING-PROSE] One shower plate's face: a cloudy glass tile — a pale translucent wash, brighter at its heart — with its word in deep blue-grey ink. Drawn once per word at build; the sprite material's opacity does the weather. */
+  function prosePlateTexture(word) {
+    return proseCanvas(256, 104, function (g, w, h) {
+      var grad = g.createRadialGradient(w / 2, h / 2, 8, w / 2, h / 2, w / 2);
+      grad.addColorStop(0, 'rgba(240,247,252,0.95)'); grad.addColorStop(0.7, 'rgba(226,238,247,0.75)'); grad.addColorStop(1, 'rgba(214,231,243,0.55)');
+      g.fillStyle = grad; g.fillRect(0, 0, w, h);
+      g.strokeStyle = 'rgba(96,128,158,0.55)'; g.lineWidth = 5; g.strokeRect(3, 3, w - 6, h - 6);
+      g.fillStyle = 'rgba(30,46,70,0.97)'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      var px = 46;
+      do { g.font = '700 ' + px + 'px Georgia, serif'; px -= 3; } while (g.measureText(word).width > w - 28 && px > 12);
+      g.fillText(word, w / 2, h / 2 + 2);
+    });
+  }
+  /* @reason [OPENING-PROSE] A word-card's face: the prop's own dye as the card, a faint ink border inset, and its written text in ink, sized down until it fits the card — the claim reads as a printed paper headline because it is one. */
+  function proseCardTexture(prop) {
+    var w = prop.geometry.size.w * 2, h = prop.geometry.size.h * 2, ink = prop.data.ink || '#2E2118';
+    return proseCanvas(w, h, function (g) {
+      g.fillStyle = prop.material.colour; g.fillRect(0, 0, w, h);
+      g.strokeStyle = ink; g.globalAlpha = 0.3; g.lineWidth = 3; g.strokeRect(9, 9, w - 18, h - 18); g.globalAlpha = 1;
+      g.fillStyle = ink; g.textAlign = 'center'; g.textBaseline = 'middle';
+      var px = Math.floor(h * 0.52);
+      do { g.font = '700 ' + px + 'px Georgia, serif'; px -= 4; } while (g.measureText(prop.data.text).width > w - 56 && px > 10);
+      g.fillText(prop.data.text, w / 2, h / 2 + 2);
+    });
+  }
+  /* @reason [OPENING-PROSE] The calendar's face at 4 px per unit (the grid needs the resolution): the band in the prop's band colour with its words in white, two binding rings on the band, a 7-by-5 grid of days in faint ink, and one day circled in the mark colour. */
+  function proseCalendarTexture(prop) {
+    var d = prop.data;
+    return proseCanvas(336, 440, function (g, w, h) {
+      g.fillStyle = prop.material.colour; g.fillRect(0, 0, w, h);
+      g.fillStyle = d.bandColour; g.fillRect(0, 0, w, 64);
+      g.fillStyle = '#FFFFFF'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '700 32px Georgia, serif';
+      g.fillText(d.band, w / 2, 36);
+      g.fillStyle = d.ink;
+      [76, 260].forEach(function (x) { g.beginPath(); g.arc(x, 10, 10, 0, 6.2832); g.fill(); });
+      g.strokeStyle = d.ink; g.globalAlpha = 0.45; g.lineWidth = 2;
+      var cw = 42, ch = 58, gx = (w - 7 * cw) / 2, gy = 92, r, c;
+      for (r = 0; r < 5; r++) for (c = 0; c < 7; c++) g.strokeRect(gx + c * cw, gy + r * ch, cw - 3, ch - 3);
+      g.globalAlpha = 1; g.strokeStyle = d.markColour; g.lineWidth = 6;
+      g.beginPath(); g.ellipse(gx + 4 * cw + (cw - 3) / 2, gy + 2 * ch + (ch - 3) / 2, cw / 2 + 3, ch / 2 + 3, 0, 0, 6.2832); g.stroke();
+    });
+  }
+  /* @reason [OPENING-PROSE] The stamp's face: ink only on a transparent ground — a double-ruled border and its words, nothing else, so the wall shows through everywhere the stamp did not land. */
+  function proseStampTexture(prop) {
+    var ink = prop.data.ink || '#7E3327';
+    return proseCanvas(600, 208, function (g, w, h) {
+      g.clearRect(0, 0, w, h);
+      g.strokeStyle = ink; g.lineWidth = 12; g.strokeRect(16, 16, w - 32, h - 32);
+      g.lineWidth = 4; g.strokeRect(38, 38, w - 76, h - 76);
+      g.fillStyle = ink; g.textAlign = 'center'; g.textBaseline = 'middle';
+      var px = 92;
+      do { g.font = '700 ' + px + 'px Georgia, serif'; px -= 4; } while (g.measureText(prop.data.text).width > w - 120 && px > 12);
+      g.fillText(prop.data.text, w / 2, h / 2 + 4);
+    });
+  }
+  /* @reason [OPENING-PROSE] The prose rig (the opening-prose build, 2026-11-10, PR-12): built from the location's prose props the way the ball rig is built from its ball props — the word-set's glassy word sprites in their band, the word-cards as layered paper (a darker back sheet offset behind the printed face), the calendar as a thin card body with its drawn face, the stamp as a single ink print. One group, starting hidden: the word-driver's frame (proseFrame, wired with the player) owns its standing, and a location with no prose forms builds nothing. Every seat, word, size and colour is the props' own data. */
+  function asmProseRig(data) {
+    proseParts = {}; proseSt = {};
+    var found = [], i, p;
+    for (i = 0; i < data.location.props.length; i++) { p = data.location.props[i]; if (p.geometry.form === 'word-set' || p.geometry.form === 'word-card' || p.geometry.form === 'paper-card' || p.geometry.form === 'wall-stamp') found.push(p); }
+    if (!found.length) return;
+    proseGroup = new T3.Group();
+    for (i = 0; i < found.length; i++) {
+      p = found[i];
+      var seat = Array.isArray(p.geometry.seat) ? p.geometry.seat : [0, 0, 0];
+      if (p.geometry.form === 'word-set') {
+        var sub = new T3.Group(), sprites = [], d = p.data, rnd = proseRnd(d.seed || 1), k, word, sm, sp, sx;
+        for (k = 0; k < d.count; k++) {
+          word = d.words[k % d.words.length];
+          sm = new T3.SpriteMaterial({ map: prosePlateTexture(word), transparent: true, opacity: p.material.opacity, depthWrite: true }); /* depthWrite true is LOAD-BEARING here, measured at the film pass (diag_shower7): with depthWrite false the plates, though in-scene and visible in the graph, composite to ~300 changed pixels against a no-play frame — the ghost-wall depth interaction swallows them; with depth written they stand (8,471 changed pixels at the same instant). The glass look is untouched: transparency and the opacity envelope still do that work. */
+          sp = new T3.Sprite(sm);
+          sx = d.bandX[0] + rnd() * (d.bandX[1] - d.bandX[0]);
+          sp.position.set(sx, d.topY - rnd() * (d.topY - d.floorY), d.bandZ);
+          sp.scale.set(d.plate.w, d.plate.h, 1);
+          sub.add(sp);
+          sprites.push({ sp: sp, off: rnd() * (d.topY - d.floorY), speed: d.fallSpeed[0] + rnd() * (d.fallSpeed[1] - d.fallSpeed[0]), baseOp: p.material.opacity * (0.75 + rnd() * 0.45) });
+        }
+        proseGroup.add(sub);
+        proseParts[p.id] = { kind: 'shower', node: sub, sprites: sprites, data: d };
+      } else if (p.geometry.form === 'word-card') {
+        var grp = new T3.Group(), w = p.geometry.size.w, hh = p.geometry.size.h;
+        var backM = new T3.Mesh(new T3.PlaneGeometry(w, hh), new T3.MeshStandardMaterial({ color: parseInt((p.data.backColour || '#C9AE7E').slice(1), 16), roughness: 1 }));
+        backM.position.set(-5, -5, -3); grp.add(backM);
+        grp.add(new T3.Mesh(new T3.PlaneGeometry(w, hh), new T3.MeshStandardMaterial({ map: proseCardTexture(p), roughness: p.material.roughness })));
+        grp.position.set(seat[0], seat[1], seat[2]);
+        proseGroup.add(grp);
+        proseParts[p.id] = { kind: 'card', node: grp, data: p.data };
+      } else if (p.geometry.form === 'paper-card') {
+        var grp2 = new T3.Group(), w2 = p.geometry.size.w, h2 = p.geometry.size.h;
+        grp2.add(new T3.Mesh(new T3.BoxGeometry(w2, h2, 3), new T3.MeshStandardMaterial({ color: parseInt(p.material.colour.slice(1), 16), roughness: p.material.roughness })));
+        var face = new T3.Mesh(new T3.PlaneGeometry(w2, h2), new T3.MeshStandardMaterial({ map: proseCalendarTexture(p), roughness: p.material.roughness }));
+        face.position.z = 1.6; grp2.add(face);
+        grp2.position.set(seat[0], seat[1], seat[2]);
+        grp2.rotation.x = p.data.lean || 0;
+        proseGroup.add(grp2);
+        proseParts[p.id] = { kind: 'calendar', node: grp2, data: p.data, seatY: seat[1] };
+      } else if (p.geometry.form === 'wall-stamp') {
+        var sm2 = new T3.Mesh(new T3.PlaneGeometry(p.geometry.size.w, p.geometry.size.h), new T3.MeshStandardMaterial({ map: proseStampTexture(p), transparent: true, opacity: 0, roughness: p.material.roughness }));
+        sm2.position.set(seat[0], seat[1], seat[2]);
+        sm2.rotation.z = p.data.tilt || 0;
+        proseGroup.add(sm2);
+        proseParts[p.id] = { kind: 'stamp', node: sm2, data: p.data, mat: sm2.material, fullOp: p.material.opacity };
+      }
+      proseSt[p.id] = { shown: false, phase: null };
+    }
+    proseGroup.visible = false;
+    scene.add(proseGroup);
   }
   /* @reason [ASSEMBLY] Assemble a location from its data: its spot rig first (built from its light props into the spot registry under BOTH the prop id and the assembly table's legacy keys — one object under both names, so the player writes by id and the rig table reads by key), then its group from its assembly placements — the theater's read from its named stretch, the book's own standing arrangement — each placement's prop built by its form's recipe at the placement's seat; the ghost panels registered with their outward normals solved from the room's centre; and its ball rig where its data carries one. The group starts hidden: applySceneState, the caller, owns its standing. Distance 0 and decay 0 on every spot — no falloff, the standing decision. */
   function assembleLocation(data) {
@@ -751,13 +944,16 @@ body.camView .headChip{bottom:64px}
     roomGroup.visible = false;
     scene.add(roomGroup);
     if (data.ball) asmBallRig(data);
+    asmProseRig(data);
   }
   /* @reason [ASSEMBLY] Dispose the standing location whole: its group and its ball rig leave the scene graph, and every location-scoped handle is nulled — the next location assembles onto a clean stage, and no reader can meet a disposed object. */
   function disposeLocation() {
     if (roomGroup && scene) scene.remove(roomGroup);
     if (ballGroup && scene) scene.remove(ballGroup);
+    if (proseGroup && scene) scene.remove(proseGroup);
     roomGroup = null; roomPanels = []; roomSpotLights = {};
     ballGroup = null; ballMesh = null; ballGlassMat = null; ballShadowMesh = null; ballShadowMat = null;
+    proseGroup = null; proseParts = {}; proseSt = {};
   }
 
   /* @reason [USER] One shard mesh (the ball scene, 2026-11-07): a tetrahedron of the tabled size in the ball's own glass, read at opacity 0.55 — flatter and more present than the ball itself, so a settled field of them reads as broken glass, not as beads. Born transparent like every material in this world. */
@@ -825,7 +1021,7 @@ body.camView .headChip{bottom:64px}
   /* @reason [USER] CAPTURE, as numbers (the capture build, 2026-11-07 — the owner's overnight order: we use the camera in the scene to record something as our proof of concept): the captured frame is 1280×720, fed to the recorder at 30 frames a second. The size is the capture's OWN, never the screen's — a photo or a recording must be the shot at one known size on any device, not whatever window the page happens to fill — and it is a standard HD frame the phone's encoder takes in real time. The mechanics live in Layer 3; plan §10's invariants are their contract (one scene graph, the camera's pose from state alone, the ghost pass-scoped, render-then-read in the same task). */
   var CAPTURE = { w: 1280, h: 720, fps: 30 };
   /* @reason [USER] THE BOOKS' PLATFORM VOCABULARY (the books build, 2026-11-08; plan §§2–4): the closed words the checker and every location's books share — the driver registry with its action lists, the calculated-end rules, the easings, the audio kinds, and the one visibility rule every prop's record carries. The books THEMSELVES stand in the locations' data files (the assembly build, 2026-11-08); a word outside these sets is a word the system does not know (INVALID), wherever it is written. A new word joins only by plan amendment, because a rule or a curve is a mechanism, and mechanisms are decided, not improvised. */
-  var BOOK_DRIVERS = { 'ball-driver': ['held', 'free-fall', 'shatter', 'rest', 'fade-out'], 'shard-driver': ['spawn', 'settle', 'rest', 'fade-out'], 'camera-driver': ['hold', 'move'], 'light-driver': ['hold', 'move'], 'audio-driver': ['play', 'stop'] };
+  var BOOK_DRIVERS = { 'ball-driver': ['held', 'free-fall', 'shatter', 'rest', 'fade-out'], 'shard-driver': ['spawn', 'settle', 'rest', 'fade-out'], 'camera-driver': ['hold', 'move'], 'light-driver': ['hold', 'move'], 'audio-driver': ['play', 'stop'], 'word-driver': ['rain', 'grow', 'land'] };
   var BOOK_END_RULES = ['free-fall', 'settle-all', 'chain', 'clip-length'];
   var BOOK_EASINGS = ['linear', 'ease-in', 'ease-out', 'ease-in-out'];
   var BOOK_AUDIO_KINDS = ['voice', 'music', 'spot', 'ambience'];
@@ -3718,7 +3914,59 @@ body.camView .headChip{bottom:64px}
       else if (act === 'cam') playCamReturn();
     });
     var prevTick = tickExtra;
-    tickExtra = function () { if (prevTick) prevTick(); playFrame(); };
+    tickExtra = function () { if (prevTick) prevTick(); playFrame(); proseFrame(); };
+  }
+  /* @reason [OPENING-PROSE] The word-driver's frame (the opening-prose build, 2026-11-10): a pure function of the standing play, chained after playFrame in the player's own tick so a filmed play and a measured play are the same play. It reads the same derivation the verifier reads and actuates the prose rig to match: the shower's sprites cycle from the ceiling to the deck top inside their band — seeded offsets and speeds from the prop's data, fading in under the ceiling and out at the floor, dropping and disappearing into the stage — the word-cards grow on their events' written easing from their written start scale (growing, never popping), the calendar settles the last of its drop and lean, and the stamp slams from large and faint to full ink over the first part of its event. Each prop's actuated standing lands in proseSt, which bookState reads back: the verifier measures this rig as it measures the ball. No book in the play store — the whole rig hides; a stopped take leaves no residue (STOP nulls the store's book). A finished play's end state STANDS, by the player's own law (SS6.1): the store keeps its book after the finish, so this frame keeps deriving the book's last instant and the rig holds it until STOP or the next play. */
+  function proseFrame() {
+    if (!proseGroup) return;
+    var st = playStore(), id;
+    if (!st.B) {
+      if (proseGroup.visible) proseGroup.visible = false;
+      for (id in proseSt) { proseSt[id].shown = false; proseSt[id].phase = null; }
+      return;
+    }
+    var B = st.B, t = Math.min(st.t, st.duration), d = playDerived(t), any = false;
+    if (!d) return;
+    for (id in proseParts) {
+      var part = proseParts[id], dp = d.props[id];
+      if (!dp || !dp.shown) { part.node.visible = false; proseSt[id] = { shown: false, phase: null }; continue; }
+      part.node.visible = true; any = true;
+      var standing = dp.actor ? dp.actor.standing : null, span = dp.actor ? B.check.spans[dp.actor.event] : null;
+      var pr = span && span.end > span.start ? Math.max(0, Math.min(1, (t - span.start) / (span.end - span.start))) : 1;
+      var phase = null, i;
+      if (part.kind === 'shower') {
+        phase = 'raining';
+        var range = part.data.topY - part.data.floorY;
+        for (i = 0; i < part.sprites.length; i++) {
+          var s = part.sprites[i];
+          var y = part.data.topY - ((s.off + t * s.speed) % range);
+          s.sp.position.y = y;
+          var fi = Math.min(1, (part.data.topY - y) / 26), fo = Math.min(1, (y - part.data.floorY) / 20);
+          s.sp.material.opacity = s.baseOp * Math.max(0, Math.min(fi, fo));
+        }
+      } else if (part.kind === 'card') {
+        var act = null;
+        if (dp.actor) { var evs = B.scr.events; for (i = 0; i < evs.length; i++) if (evs[i].id === dp.actor.event) { var as = evs[i].actors; for (var j = 0; j < as.length; j++) if (as[j].prop === id) act = as[j]; } }
+        var from = act && act.params && typeof act.params.from === 'number' ? act.params.from : 0.12;
+        var ez = act && act.params && act.params.easing === 'ease-out' ? 1 - Math.pow(1 - pr, 3) : pr;
+        var sc = standing === 'grow' ? from + (1 - from) * ez : 1;
+        part.node.scale.set(sc, sc, 1);
+        phase = standing === 'grow' ? (pr >= 1 ? 'rested' : 'growing') : 'rested';
+      } else if (part.kind === 'calendar') {
+        var q = standing === 'land' ? Math.min(1, pr / 0.45) : 1, e2 = 1 - Math.pow(1 - q, 3);
+        part.node.position.y = part.seatY + (1 - e2) * 30;
+        part.node.rotation.x = -0.38 + ((part.data.lean || 0) + 0.38) * e2;
+        phase = q >= 1 ? 'landed' : 'landing';
+      } else if (part.kind === 'stamp') {
+        var q2 = standing === 'land' ? Math.min(1, pr / 0.4) : 1, e3 = 1 - Math.pow(1 - q2, 3);
+        var sc2 = 1 + 0.6 * (1 - e3);
+        part.node.scale.set(sc2, sc2, 1);
+        part.mat.opacity = part.fullOp * Math.min(1, q2 * 1.7);
+        phase = q2 >= 1 ? 'landed' : 'landing';
+      }
+      proseSt[id] = { shown: true, phase: phase };
+    }
+    proseGroup.visible = any;
   }
 
   /* ===== THE VERIFIER (books-step5) =====
@@ -3777,12 +4025,13 @@ body.camView .headChip{bottom:64px}
     out.sort(function (a, b) { return a - b; });
     return out;
   }
-  /* @reason [USER] SS6.2's readout door (book.state): the stage's ACTUAL standing at the instant of the read, in the derivation's own vocabulary — the playhead and the play's state, the camera's current pose and the targets it chases, every light's live intensity and colour off the real rig, and each prop the standing book places or casts: the ball read off its mesh where a mesh stands, and off its driver's phase where none does (the mesh stands visible exactly while the driver holds or drops it), its shard set off the driver's bodies, both with their driver's phase and the fall's own measured numbers — and every other prop named derivation-only, because v1 builds no driver for it and an actual the page cannot read must say so rather than pretend. */
+  /* @reason [USER] SS6.2's readout door (book.state): the stage's ACTUAL standing at the instant of the read, in the derivation's own vocabulary — the playhead and the play's state, the camera's current pose and the targets it chases, every light's live intensity and colour off the real rig, and each prop the standing book places or casts: the ball read off its mesh where a mesh stands, and off its driver's phase where none does (the mesh stands visible exactly while the driver holds or drops it), its shard set off the driver's bodies, both with their driver's phase and the fall's own measured numbers — the prose props off the word-driver's actuated standings (the opening-prose build) — and every other prop named derivation-only, because v1 builds no driver for it and an actual the page cannot read must say so rather than pretend. */
   function bookState() {
     var ps = playState(), B = playStore().B || scoreBook(), d = B ? playDerived(ps.t) : null, props = {}, id;
     if (d) for (id in d.props) {
       if (id === 'ball') props[id] = { shown: typeof ps.ballMeshShown === 'boolean' ? ps.ballMeshShown : (ps.ball.phase === 'ready' || ps.ball.phase === 'falling'), phase: ps.ball.phase, fallTime: ps.ball.fallTime, impactSpeed: ps.ball.impactSpeed };
       else if (id === 'shard-set') props[id] = { shown: ps.shardCount > 0, count: ps.shardCount, settled: ps.ball.settled, phase: ps.ball.phase };
+      else if (proseParts[id]) props[id] = { shown: proseSt[id] ? !!proseSt[id].shown : false, phase: proseSt[id] ? proseSt[id].phase : null };
       else props[id] = { shown: null, note: 'no driver in v1 — derivation only' };
     }
     return { t: ps.t, play: { on: ps.on, paused: ps.paused, label: ps.label, ended: ps.ended }, camera: { pose: ps.pose, targets: ps.targets }, lights: ps.lights, props: props };
@@ -3797,7 +4046,7 @@ body.camView .headChip{bottom:64px}
     return out;
   }
   /* @reason [USER] The driver-phase vocabulary (SS6.2's phase-exact leg, at the grain the drivers speak): a derived actor standing names the book's expectation in the book's words, and this table names which of the ball-driver's phases honour it. A standing the table does not know is not judged — the verifier abstains rather than invent a claim, and the shown standing still guards the prop. */
-  var VERIFY_PHASES = { 'held': ['ready'], 'free-fall': ['falling'], 'spawn': ['shards'], 'airborne, physics live': ['shards', 'hold'], 'settle': ['shards', 'hold'], 'rest': ['hold'], 'fade-out': ['fading', 'hold'], 'removed': ['done', 'fading', 'hold'], 'held at start pose': ['ready'], 'removed — spent as shards': ['shards', 'hold', 'fading', 'done'], 'first contact — fallTime + impactSpeed read from the body': ['shards', 'hold', 'fading', 'done'] };
+  var VERIFY_PHASES = { 'held': ['ready'], 'free-fall': ['falling'], 'spawn': ['shards'], 'airborne, physics live': ['shards', 'hold'], 'settle': ['shards', 'hold'], 'rest': ['hold'], 'fade-out': ['fading', 'hold'], 'removed': ['done', 'fading', 'hold'], 'held at start pose': ['ready'], 'removed — spent as shards': ['shards', 'hold', 'fading', 'done'], 'first contact — fallTime + impactSpeed read from the body': ['shards', 'hold', 'fading', 'done'], 'rain': ['raining'], 'grow': ['growing', 'rested'], 'rested': ['rested'], 'land': ['landing', 'landed'], 'landed': ['landed'] };
   /* @reason [USER] The comparison (SS6.2's V2), pure: the derived standing against the actual readout at one instant, returning deviation rows in the plan's only output form — instant, subject, expected, measured. Tolerances are the plan's: camera fields within half a unit or half a degree (the heading compared the short way around the circle); a light's intensity within two percent of its value with a hundredth's floor; colour exact after case. The camera's TARGETS are compared at every probe; its CURRENT pose only where the book says it stands settled (a hold, a persisted end-value, the base) — mid-move the chase lag is lawful and the targets carry the claim. A prop's shown standing is not judged within one step of its flip instants (the measured bracket judges the flip), and its driver's phase is not judged within one step of its event's edges. */
   function verifyCompare(B, t, d, a) {
     var rows = [], FIELDS = ['x', 'z', 'heading', 'tilt', 'focal', 'lift'], f, i;
