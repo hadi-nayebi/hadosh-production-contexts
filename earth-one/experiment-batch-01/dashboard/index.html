@@ -353,6 +353,7 @@
 <header class="topbar">
   <div class="brand">EARTH ONE<span>The Daily Language Challenge</span></div>
   <div class="batch"><b>Experiment Batch 02</b>review dashboard · Batch 01 path (legacy)</div>
+  <div class="batch" id="dashver" style="text-align:right"></div>
   <div class="batch" id="batchstate" style="text-align:right"></div>
   <div class="counter" id="counter">– / –</div>
 </header>
@@ -369,7 +370,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=24"></script>
+<script src="data.js?v=25"></script>
 <script>
 (function(){
   "use strict";
@@ -443,6 +444,39 @@
     bs.appendChild(covShort);
     bs.appendChild(covBtn);
     bs.appendChild(covFull);
+  }
+  var dv = document.getElementById("dashver");
+  if (dv && window.BATCH_META && window.BATCH_META.dashboard) {
+    /* PASS 144 (F-V24-1a): the dashboard version renders FROM THE DATA —
+       BATCH_META.dashboard is the only source; no version literal lives in
+       this file, so the next round's data changes the visible line with no
+       edit here. Same ten-word shape as the coverage line above: the
+       resting face is "Dashboard vNN" (the string's leading version
+       token); the full string stays verbatim behind the tap. */
+    var dvText = window.BATCH_META.dashboard;
+    var dvM = /^v\d+/.exec(dvText);
+    var dvShort = document.createElement("span");
+    dvShort.textContent = "Dashboard " + (dvM ? dvM[0] : dvText.split(" ")[0]);
+    var dvFull = document.createElement("span");
+    dvFull.textContent = dvText;
+    dvFull.hidden = true;
+    var dvBtn = document.createElement("button");
+    dvBtn.type = "button";
+    dvBtn.className = "covbtn";
+    dvBtn.textContent = "More ›";
+    dvBtn.setAttribute("aria-expanded", "false");
+    dvBtn.setAttribute("aria-label", "Show the full dashboard version line");
+    dvBtn.addEventListener("click", function(){
+      var open = dvFull.hidden;
+      dvFull.hidden = !open;
+      dvShort.hidden = open;
+      dvBtn.textContent = open ? "‹ Less" : "More ›";
+      dvBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      fitChrome();
+    });
+    dv.appendChild(dvShort);
+    dv.appendChild(dvBtn);
+    dv.appendChild(dvFull);
   }
   function reviewState(cell, key){
     var r = cell.reviews || {};
