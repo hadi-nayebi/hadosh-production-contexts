@@ -146,7 +146,14 @@
   /* the stage is an in-flow flex child: its box ends where the panel
      begins, so panel overlap of video/poster content is impossible */
   .stage{position:relative;flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
-  .stage video{width:100%;height:100%;object-fit:contain;background:#000}
+  /* PASS 168 (B53 F1): the film is a 9:16 Short — the video ELEMENT is
+     a 9:16 box fitted to the stage's height, so the picture fills its
+     element exactly. The v27 form (element = the stage's full width,
+     object-fit:contain) letterboxed the portrait film into a ~54px
+     stamp inside a black strip: the strip was the element, not the
+     film. object-fit:contain inside the true-ratio box still guards
+     any deviant print without cropping it. */
+  .stage video{height:100%;width:auto;max-width:100%;aspect-ratio:9/16;object-fit:contain;background:transparent}
   /* B7: a video that fails to load names its failure + offers a retry */
   .viderr{
     position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
@@ -185,7 +192,13 @@
     background:var(--glass);border:1px solid var(--glass-brd);
     -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
     box-shadow:0 18px 50px rgba(0,0,0,.45);
+    /* PASS 168: the panel is a flex column so that, in panel-open mode,
+       its face (handle · progress · actions) stays pinned while .pbody
+       scrolls internally under the 55dvh cap below. */
+    display:flex;flex-direction:column;
   }
+  .panel>*{flex:0 0 auto}
+  .panel .pbody{flex:0 1 auto;min-height:0;overflow-y:auto}
   .handle{
     display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
     min-height:48px;margin:-6px 0 8px;padding:6px 10px;border-radius:12px;
@@ -197,15 +210,62 @@
   .panel.collapsed{padding:8px 14px}
   .panel.collapsed .pbody{display:none}
   .panel.collapsed .handle{margin:0}
+  /* ---------- PASS 168 — panel-chrome fix (owner screenshot defect,
+     HQ 2026-11-10 ~18:50 EST) + HQ ADDITION #2 (owner's ruling ~18:49
+     EST: DETAILS CLOSED BY DEFAULT).
+     ADDITION #2: .collapsed is the panel's INITIAL DOM state (the
+     markup is built with it — closed is not a state reached after
+     load). The resting face is the compact header · the video · the
+     one-line progress face · Like/Dislike: the progress face and the
+     actions live OUTSIDE .pbody, so they stand on the resting face
+     while the title, languages, Work-left entry and the composer wait
+     behind the reviewer's tap (checker #34 leg (v) DEFAULT_CLOSED
+     prices this DOM fact).
+     PANEL-OPEN MODE (body.panel-open, set when the panel body or the
+     details sheet opens): the five-row fixed chrome compresses to ONE
+     row — the .compactbar (counter · current chip · Back) — and the
+     panel becomes a bottom sheet capped at 55dvh with .pbody as its
+     internal scroll, so the video stays visible above it. ---------- */
+  body.panel-open .topbar,body.panel-open .railwrap{display:none}
+  body.panel-open .screen{padding-top:calc(64px + env(safe-area-inset-top))}
+  body.panel-open .panel{max-height:55dvh}
+  .compactbar{
+    position:fixed;top:0;left:0;right:0;z-index:45;display:none;
+    align-items:center;gap:10px;
+    padding:calc(4px + env(safe-area-inset-top)) 12px 4px;min-height:56px;
+    background:var(--glass);border-bottom:1px solid var(--glass-brd);
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  }
+  body.panel-open .compactbar{display:flex}
+  /* the compact bar is ONE row by construction: all three items carry
+     the same 48px height and centre on the same line */
+  .compactbar .counter{display:inline-flex;align-items:center;min-height:48px}
+  .compactbar .cbchip{
+    display:flex;align-items:center;gap:7px;
+    padding:8px 12px;border-radius:999px;min-height:48px;
+    border:1px solid var(--amber);color:#1d130b;background:var(--amber);
+    font-size:12.5px;font-weight:700;white-space:nowrap;
+  }
+  .compactbar .cbback{
+    margin-left:auto;min-width:48px;min-height:48px;padding:0 14px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--amber);background:rgba(29,19,11,.94);color:var(--amber);
+    font-size:13px;font-weight:800;font-family:inherit;white-space:nowrap;
+  }
   .titleline{font-size:16.5px;font-weight:700;line-height:1.3}
   /* language chips: symbols/codes carry what the 11-word subline
      sentence carried (spec §6) — one code per chip, own text 1 token */
-  .langrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  /* PASS 168 (B53 F9) — CHOICE RECORDED: the language codes are
+     LABELS, not a selector. They never did anything on tap; the v27
+     pill dressing (border + fill + one lit amber) invited exactly the
+     tap they refuse. The honest form is plain text: no pill, no
+     border, no fill, no pointer — the opening language in amber text,
+     the taught codes in dim text, read as a line, not a control row. */
+  .langrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
   .langchip{
-    font-size:12px;font-weight:800;padding:5px 10px;border-radius:999px;
-    border:1px solid var(--glass-brd);background:rgba(0,0,0,.22);color:var(--cream-dim);
+    font-size:12.5px;font-weight:800;padding:5px 2px;
+    border:none;background:transparent;color:var(--cream-dim);cursor:default;
   }
-  .langchip.open{border-color:var(--amber);color:var(--amber)}
+  .langchip.open{color:var(--amber)}
   /* PASS 166 R4 — the per-video progress face: the owner's four
      questions as HOME data (passing · failing · progress · work left) */
   .pface{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:11px}
@@ -282,8 +342,14 @@
      never grows past 100dvh). One sheet, two entries: WORK LEFT and
      Details open it; Work left is its first row. ---------- */
   .sheet{
+    /* PASS 168: the details sheet is a BOTTOM sheet — capped at 55dvh,
+       its own internal scroll, anchored above the panel face (openSheet
+       sets style.bottom from the panel's measured height). It no
+       longer runs from under the chrome to the screen's foot, which
+       was the geometry that buried the video in the owner's
+       screenshot. */
     position:absolute;left:8px;right:8px;bottom:8px;z-index:6;
-    top:calc(var(--chrome-h) + 22px + env(safe-area-inset-top));
+    max-height:55dvh;
     overflow-y:auto;display:none;border-radius:18px;padding:14px;
     background:rgba(24,15,8,.97);border:1px solid var(--glass-brd);
     box-shadow:0 18px 50px rgba(0,0,0,.55);
@@ -298,7 +364,12 @@
   }
   .drow{display:flex;gap:10px;padding:8px 0;border-top:1px solid rgba(255,214,150,.12);font-size:13.5px;line-height:1.45}
   .drow .k{flex:0 0 92px;color:var(--amber);font-weight:700}
-  .drow .v{color:var(--cream);flex:1}
+  .drow .v{color:var(--cream);flex:1;min-width:0}
+  /* PASS 168 (B53 F5): inside the sheet the roster chips WRAP — the
+     v27 nowrap carried full-length seat labels past the sheet's right
+     edge, clipped mid-word with no sideways scroll to reach them. */
+  .sheet .rchip{white-space:normal;overflow-wrap:break-word}
+  .sheet .reviews{max-width:100%}
   .wl-item{display:block;padding:2px 0}
   .gatefull{display:block;margin-top:6px}
   /* ---------- legend overlay (D6 cure: every symbol + colour, one tap) ---------- */
@@ -331,6 +402,11 @@
     white-space:normal;max-width:calc(100vw - 32px);text-align:center;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* PASS 168 (B53 F11): while a panel is open, the toast moves to the
+     TOP (under the compact bar) — at the bottom it rendered over the
+     panel's own 📷 slot and comment box, covering the very slot its
+     clipboard instruction is about. */
+  body.panel-open .toast{bottom:auto;top:calc(64px + env(safe-area-inset-top))}
   @media (min-width:760px){
     .railwrap{top:calc(70px + env(safe-area-inset-top))}
     .rail{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
@@ -367,9 +443,18 @@
 <div class="railwrap">
 <div class="railnavrow">
 <button class="railnav prev" id="railPrev" type="button" aria-label="Scroll the cell index back" hidden>&#8249; Back</button>
-<button class="railnav next" id="railNext" type="button" aria-label="Scroll the cell index for more cells">More &#8250;</button>
+<button class="railnav next" id="railNext" type="button" aria-label="Scroll the cell index for more cells">Index &#8250;</button>
 </div>
 <nav class="rail" id="rail" aria-label="Batch index"></nav>
+</div>
+
+<!-- PASS 168: the ONE chrome row while a panel is open — counter ·
+     current chip · Back. Hidden at rest (display:none); body.panel-open
+     shows it and hides the five-row chrome it replaces. -->
+<div class="compactbar" id="compactbar">
+  <span class="counter" id="cbCounter">– / –</span>
+  <span class="cbchip" id="cbChip"></span>
+  <button class="cbback" id="cbBack" type="button" aria-label="Back to the video — close the panel">‹ Back</button>
 </div>
 
 <main class="feed" id="feed"></main>
@@ -393,7 +478,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=27"></script>
+<script src="data.js?v=28"></script>
 <script>
 (function(){
   "use strict";
@@ -421,7 +506,11 @@
      same object. Any mismatch prints the STALE state and no "current"
      claim renders. The embedded copy is injected by the build
      (pass166/work/gen_data.py's lineage) — never hand-typed. */
-  var EXPECTED_LINEAGE = {"build": "pass166-v27", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed"}, "printsFileSha": "4549d51aed98", "seated": "v25 prints (pass143 masters) — the Pass 149 lineage enters at v26 seating", "cells": 22, "countingSeats": 11};
+  /* PASS 168: the fingerprint re-issues with the v28 staged set —
+     build pass168-v28, countingSeats 10 (B53 F6: the superseded
+     Pass 134 transcript row is removed; transcript is governed by
+     Pass 153 alone). Sources + printsFileSha are unchanged facts. */
+  var EXPECTED_LINEAGE = {"build": "pass168-v28", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed"}, "printsFileSha": "4549d51aed98", "seated": "v25 prints (pass143 masters) — the Pass 149 lineage enters at v26 seating", "cells": 22, "countingSeats": 10};
   function canon(o){
     if (o === null || typeof o !== "object") return JSON.stringify(o);
     if (Array.isArray(o)) return "[" + o.map(canon).join(",") + "]";
@@ -456,6 +545,11 @@
      sits directly under the topbar and the screens' top padding takes the
      measured chrome height via --chrome-h. Phone widths only. */
   function fitChrome(){
+    /* PASS 168: while a panel is open the five-row chrome is display:none
+       (its measured height is 0) — never let a resize/load re-measure
+       write that 0 into --chrome-h; the resting chrome keeps its v27
+       measurement for when the panel closes. */
+    if (document.body.classList.contains("panel-open")) return;
     if (window.innerWidth > 759 || !topbarEl || !railwrapEl) return;
     var tb = topbarEl.getBoundingClientRect();
     document.documentElement.style.setProperty("--rail-top", Math.round(tb.bottom) + "px");
@@ -463,6 +557,48 @@
     var chromeH = Math.round(rw.bottom);
     document.documentElement.style.setProperty("--chrome-h", chromeH + "px");
   }
+
+  /* PASS 168 — panel-open mode: ONE state on <body> drives the whole
+     fix (chrome compresses to the compact bar · screens re-pad · the
+     panel caps at 55dvh). The compact bar mirrors the resting chrome's
+     own state: the counter's text and the current cell's rail chip —
+     synced here and again from setCurrent, never a second source. */
+  var cbCounter = document.getElementById("cbCounter");
+  var cbChip = document.getElementById("cbChip");
+  function syncCompactBar(){
+    if (cbCounter) cbCounter.textContent = counter.textContent;
+    if (cbChip) {
+      var active = rail.querySelector(".chip.active");
+      cbChip.textContent = active ? active.textContent.replace(/\s+/g, " ").trim() : "";
+    }
+  }
+  function setPanelOpen(open){
+    document.body.classList.toggle("panel-open", !!open);
+    if (open) syncCompactBar();
+  }
+  function anyPanelOpen(){
+    return !!document.querySelector(".sheet.open, .panel:not(.collapsed)");
+  }
+  document.getElementById("cbBack").addEventListener("click", function(){
+    /* Back = return to the resting face: close every sheet + panel. */
+    Array.prototype.forEach.call(document.querySelectorAll(".screen"), function(s){
+      var p = s.querySelector(".panel");
+      if (p && !p.classList.contains("collapsed")) {
+        p.classList.add("collapsed");
+        var hl = s.querySelector(".hlabel"), hc = s.querySelector(".hchev");
+        if (hl) hl.textContent = "Show panel";
+        if (hc) hc.textContent = "▴";
+        s.querySelector(".handle").setAttribute("aria-expanded", "false");
+      }
+      var sh = s.querySelector(".sheet");
+      if (sh && sh.classList.contains("open")) {
+        sh.classList.remove("open");
+        var db = s.querySelector(".fb.details");
+        if (db) db.textContent = "Details ▾";
+      }
+    });
+    setPanelOpen(false);
+  });
 
   function esc(s){
     return String(s == null ? "" : s)
@@ -487,14 +623,18 @@
     var covBtn = document.createElement("button");
     covBtn.type = "button";
     covBtn.className = "covbtn";
-    covBtn.textContent = "More ›";
+    /* PASS 168 (B53 F3): every expander/pager carries its OWN job in
+       its label — Coverage › here, Version › on the version line,
+       Index › on the rail pager, Full gate › in the sheet. Three
+       identical "More ›" controls with three jobs do not ship. */
+    covBtn.textContent = "Coverage ›";
     covBtn.setAttribute("aria-expanded", "false");
     covBtn.setAttribute("aria-label", "Show the full coverage line");
     covBtn.addEventListener("click", function(){
       var open = covFull.hidden;
       covFull.hidden = !open;
       covShort.hidden = open;
-      covBtn.textContent = open ? "‹ Less" : "More ›";
+      covBtn.textContent = open ? "‹ Less" : "Coverage ›";
       covBtn.setAttribute("aria-expanded", open ? "true" : "false");
       fitChrome();
     });
@@ -518,14 +658,14 @@
     var dvBtn = document.createElement("button");
     dvBtn.type = "button";
     dvBtn.className = "covbtn";
-    dvBtn.textContent = "More ›";
+    dvBtn.textContent = "Version ›";
     dvBtn.setAttribute("aria-expanded", "false");
     dvBtn.setAttribute("aria-label", "Show the full dashboard version line");
     dvBtn.addEventListener("click", function(){
       var open = dvFull.hidden;
       dvFull.hidden = !open;
       dvShort.hidden = open;
-      dvBtn.textContent = open ? "‹ Less" : "More ›";
+      dvBtn.textContent = open ? "‹ Less" : "Version ›";
       dvBtn.setAttribute("aria-expanded", open ? "true" : "false");
       fitChrome();
     });
@@ -564,6 +704,11 @@
     return { pass: p, fail: f, other: o, total: p + f + o };
   }
   function progressHTML(cell){
+    /* PASS 168 (B53 F7 — HQ's FIRST acceptance item for this round):
+       a cell with NO print wears NO counts and NO score — its face
+       prints the blocked state only. The package-level verdicts stay
+       in its roster, behind the Details tap, where they belong. */
+    if (!cell.video) return '<div class="pface"><span class="pf fail">⛔ No print</span></div>';
     var pr = progressOf(cell);
     var pct = pr.total ? Math.round(100 * pr.pass / pr.total) : 0;
     var h = '<div class="pface">' +
@@ -616,7 +761,12 @@
       "Comment:",
       (comment && comment.trim()) ? comment.trim() : "(no comment written)"
     );
-    if (opts.img) lines.push("", "📷 Screenshot attached — pasted below (rides with this issue).");
+    /* PASS 168 (B53 F11): the body states the clipboard route
+       TRUTHFULLY — the screenshot is NOT in the issue; it rides the
+       clipboard and the reviewer pastes it on GitHub. The v27 line
+       claimed "attached" in the permanent record for a paste that
+       might never happen. */
+    if (opts.img) lines.push("", "📷 Screenshot: on your clipboard — paste it in the box above.");
     lines.push(
       "",
       "---",
@@ -736,7 +886,7 @@
       ["Guards", rosterFullHTML(cell)],
       ["Print", printRow],
       ["Gate status", '<span class="gateshort">' + esc(cell.gateShort || "") + '</span>' +
-        ' <button class="covbtn gatemore" type="button" aria-expanded="false">More ›</button>' +
+        ' <button class="covbtn gatemore" type="button" aria-expanded="false">Full gate ›</button>' +
         '<span class="gatefull" hidden>' + esc(cell.gate) + '</span>'],
       ["Sentence", "&ldquo;" + esc(cell.sentence) + "&rdquo;"],
       ["Opening → taught", esc(cell.opening) + " → " + esc(taughtLine(cell))],
@@ -757,21 +907,31 @@
 
     screen.innerHTML =
       '<div class="stage">' + stage + '</div>' +
-      '<div class="panel">' +
-        '<button class="handle" type="button" aria-label="Hide or show the review panel">' +
-          '<span class="hlabel">Hide panel</span><span class="hchev">▾</span>' +
+      /* PASS 168 (HQ ADDITION #2): the panel is built COLLAPSED — the
+         closed state is the initial DOM state, not a state reached
+         after load. The progress face + actions stand OUTSIDE .pbody
+         (the resting face); the title, languages, Work-left entry and
+         the composer live inside .pbody, behind the handle's tap. */
+      '<div class="panel collapsed">' +
+        '<button class="handle" type="button" aria-label="Hide or show the review panel" aria-expanded="false">' +
+          '<span class="hlabel">Show panel</span><span class="hchev">▴</span>' +
         '</button>' +
+        progressHTML(cell) +
+        '<div class="actions">' +
+          /* PASS 168 (B53 F7): a blocked cell carries NO verdict
+             controls — there is no film to like or dislike. Details
+             stays: the roster + work-left behind it are the cell's
+             record, not a verdict on a print. */
+          (isPoster ? '' :
+          '<button class="fb like" type="button">👍 Like</button>' +
+          '<button class="fb dislike" type="button">👎 Dislike</button>') +
+          '<button class="fb details" type="button">Details ▾</button>' +
+        '</div>' +
         '<div class="pbody">' +
         (isPoster ? '' :
           '<div class="titleline">&ldquo;' + esc(cell.sentence) + '&rdquo;</div>' +
           '<div class="langrow">' + langChips + '</div>') +
-        progressHTML(cell) +
         '<button class="workleft-btn" type="button">Work left ›</button>' +
-        '<div class="actions">' +
-          '<button class="fb like" type="button">👍 Like</button>' +
-          '<button class="fb dislike" type="button">👎 Dislike</button>' +
-          '<button class="fb details" type="button">Details ▾</button>' +
-        '</div>' +
         '<div class="commentrow">' +
           '<textarea rows="2" placeholder="Comment…"></textarea>' +
           '<button class="send" type="button">Send ➤</button>' +
@@ -796,22 +956,45 @@
     var hlabel = screen.querySelector(".hlabel");
     var hchev = screen.querySelector(".hchev");
     handleBtn.addEventListener("click", function(){
+      /* PASS 168: the panel starts collapsed (Addition #2); the tap
+         opens it INTO panel-open mode (chrome compresses, panel caps
+         at 55dvh as a bottom sheet) and closing it leaves panel-open
+         mode only when no other panel/sheet stands open. */
       var collapsed = panel.classList.toggle("collapsed");
       hlabel.textContent = collapsed ? "Show panel" : "Hide panel";
       hchev.textContent = collapsed ? "▴" : "▾";
+      handleBtn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      setPanelOpen(!collapsed || anyPanelOpen());
     });
 
     var sheet = screen.querySelector(".sheet");
     var detailsBtn = screen.querySelector(".fb.details");
     var workleftBtn = screen.querySelector(".workleft-btn");
     function openSheet(){
+      /* PASS 168: the sheet REPLACES the panel body as the open
+         surface — an expanded body + the sheet together would stack
+         past the screen (measured in-pass: sheet top at −77px), so
+         opening the sheet first collapses the body back to the
+         panel's face. The bottom sheet then anchors ABOVE that face:
+         its foot is the panel's measured height + the screen's own
+         bottom padding, so the progress face + Like/Dislike below it
+         are never covered. */
+      if (!panel.classList.contains("collapsed")) {
+        panel.classList.add("collapsed");
+        hlabel.textContent = "Show panel";
+        hchev.textContent = "▴";
+        handleBtn.setAttribute("aria-expanded", "false");
+      }
+      sheet.style.bottom = (panel.offsetHeight + 20) + "px";
       sheet.classList.add("open");
       detailsBtn.textContent = "Details ▴";
       sheet.scrollTop = 0;
+      setPanelOpen(true);
     }
     function closeSheet(){
       sheet.classList.remove("open");
       detailsBtn.textContent = "Details ▾";
+      setPanelOpen(anyPanelOpen());
     }
     detailsBtn.addEventListener("click", function(){
       if (sheet.classList.contains("open")) closeSheet(); else openSheet();
@@ -823,7 +1006,7 @@
       var full = screen.querySelector(".gatefull");
       var open = full.hidden;
       full.hidden = !open;
-      gateMore.textContent = open ? "‹ Less" : "More ›";
+      gateMore.textContent = open ? "‹ Less" : "Full gate ›";
       gateMore.setAttribute("aria-expanded", open ? "true" : "false");
     });
 
@@ -831,6 +1014,35 @@
        <=10 words and offers a retry that re-loads the same src. */
     var video = screen.querySelector("video");
     var viderr = screen.querySelector(".viderr");
+    /* PASS 168 (B53 F4): tapping the picture plays/pauses it — the
+       first-time user's expectation on every video surface. Measured
+       in-pass (probe_f4.js), the machinery is two-layered: (1) the
+       toggle rides pointerdown — a plain 'click' toggle is eaten by
+       the native controls' own surface handling; (2) the native
+       surface click ALSO toggles, one phase later, and would flip
+       the state back — so a surface tap records its intent and the
+       click-phase handler re-asserts it once, 60 ms on. The bottom
+       48 px of the element are the native control bar's zone: taps
+       there belong to the controls alone and neither layer touches
+       them. */
+    if (video) {
+      var tapWant = null, tapWhen = 0;
+      video.addEventListener("pointerdown", function(e){
+        if (typeof e.offsetY === "number" && e.offsetY > video.clientHeight - 48) return;
+        tapWant = video.paused; /* paused at tap -> the tap wants it playing */
+        tapWhen = Date.now();
+        if (video.paused) { var p = video.play(); if (p && p.catch) p.catch(function(){}); }
+        else video.pause();
+      });
+      video.addEventListener("click", function(){
+        if (tapWant === null || Date.now() - tapWhen > 500) return;
+        var want = tapWant; tapWant = null;
+        setTimeout(function(){
+          if (want && video.paused) { var p = video.play(); if (p && p.catch) p.catch(function(){}); }
+          else if (!want && !video.paused) video.pause();
+        }, 60);
+      });
+    }
     if (video && viderr) {
       var showErr = function(){ viderr.hidden = false; };
       video.addEventListener("error", showErr, true);
@@ -941,6 +1153,7 @@
        has opened the issue with that verdict, it paints green ("Sent ✓").
        Tapping the marked button again un-marks. */
     function paintVerdict(){
+      if (!likeBtn || !dislikeBtn) return; /* PASS 168 F7: blocked cells build no verdict buttons */
       var st = verdicts[cell.id];
       var like = st && st.v === "like", dislike = st && st.v === "dislike";
       likeBtn.classList.toggle("sel", !!like && !st.sent);
@@ -957,8 +1170,10 @@
       saveVerdicts();
       paintVerdict();
     }
-    likeBtn.addEventListener("click", function(){ mark("like"); });
-    dislikeBtn.addEventListener("click", function(){ mark("dislike"); });
+    if (likeBtn && dislikeBtn) {
+      likeBtn.addEventListener("click", function(){ mark("like"); });
+      dislikeBtn.addEventListener("click", function(){ mark("dislike"); });
+    }
     sendBtn.addEventListener("click", function(){
       var st = verdicts[cell.id];
       var v = (st && (st.v === "like" || st.v === "dislike")) ? st.v : "comment";
@@ -991,6 +1206,7 @@
     current = i;
     counter.textContent = (i + 1) + " / " + CELLS.length;
     counter.dataset.set = "1";
+    syncCompactBar(); /* PASS 168: the compact bar mirrors this state */
     Array.prototype.forEach.call(rail.children, function(chip, j){
       chip.classList.toggle("active", j === i);
       if (j === i) chip.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });

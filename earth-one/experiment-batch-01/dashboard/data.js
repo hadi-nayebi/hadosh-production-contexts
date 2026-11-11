@@ -69,12 +69,6 @@ window.BATCH_REVIEWS = [
   "counts": true
  },
  {
-  "key": "guard_transcript_first",
-  "label": "Guard · transcript — Pass 134 firing (ERROR; superseded by Pass 153)",
-  "short": "Transcript · first",
-  "counts": true
- },
- {
   "key": "guard_transcript",
   "label": "Guard · transcript — CONFIRMED (Pass 153 re-fire, mask v2)",
   "short": "Story told",
@@ -142,10 +136,10 @@ window.BATCH_META = {
  "repo": "hadi-nayebi/hadosh-production-contexts",
  "coverage": "Coverage 26/27 (old basis) · 26/28 (new basis) · open items exactly one: G11 (sound-design fit; owner = guard_seams' next B60 amendment + print legs) — row 28's FA residue CLOSED BY SUBSTITUTION (owner order + full-content clarification; § PASS 48 execution + checker #23 verification) (HQ GUARD-MAP v56)",
  "shelf": "Guard shelf — 8 CONFIRMED · reasoning ARMED-PROVISIONAL · guard_transcript CONFIRMED (Pass 153) · guard_category BUILT-NOT-FIRED (gate firing lands on v26) · guard_thumbnail BUILT-NOT-FIRED · checkers #30/#31/#32 ARMED · #33 fired over seated prints · #34 dyslexia legs armed on this surface.",
- "dashboard": "v27 (2026-11-10, PASS 166 — Wave D build: snap feed · per-video progress face · details re-issued against the seated v25 lineage · dyslexia form (checker #34 legs) · comment images + timestamp carried from Pass 161/164)",
+ "dashboard": "v28 (2026-11-10, PASS 168 — panel-chrome fix + details closed by default (checker #34 leg (v)) · B53 flags F1–F12 cured: 9:16 video fit · blocked face honest (no counts, no verdict controls) · superseded Pass 134 transcript row removed (decisive set 10) · distinct expander labels · tap-to-play · roster wraps · truthful screenshot line)",
  "pathNote": "Served from the legacy experiment-batch-01 dashboard path; the content reviewed here is Experiment Batch 02.",
  "lineage": {
-  "build": "pass166-v27",
+  "build": "pass168-v28",
   "sources": {
    "pass134": "5852b7a5034e",
    "pass153": "33eaeea3c14c",
@@ -155,7 +149,7 @@ window.BATCH_META = {
   "printsFileSha": "4549d51aed98",
   "seated": "v25 prints (pass143 masters) — the Pass 149 lineage enters at v26 seating",
   "cells": 22,
-  "countingSeats": 11
+  "countingSeats": 10
  }
 };
 
@@ -185,7 +179,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -197,7 +190,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell01-pass133 · sha256 1bf6afe4… · 80.7 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell01-pass133 · sha256 1bf6afe4… · 80.7 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc001-eat-bread__print__en__cell01.mp4",
   "video": "videos/dlc001-eat-bread__print__en__cell01.mp4",
@@ -210,8 +203,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
@@ -249,7 +242,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -261,7 +253,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell02-pass133 · sha256 d8bd4db7… · 88.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell02-pass133 · sha256 d8bd4db7… · 88.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc001-eat-bread__print__es__cell02.mp4",
   "video": "videos/dlc001-eat-bread__print__es__cell02.mp4",
@@ -274,8 +266,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
@@ -313,7 +305,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "other",
    "code_collision": "other",
    "code_containment": "other",
@@ -325,7 +316,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: NONE — this cell is BLOCKED (no named print in pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 0 FAIL · 4 other of 11. Geometry over the seated print (Pass 148 censuses): #30 collision NOT RUN · #31 containment NOT RUN · #32 backing NOT RUN · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: NONE — this cell is BLOCKED (no named print in pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 0 FAIL · 3 other of 10. Geometry over the seated print (Pass 148 censuses): #30 collision NOT RUN · #31 containment NOT RUN · #32 backing NOT RUN · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "No print · blocked",
   "file": "",
   "video": "",
@@ -338,8 +329,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 7,
    "fail": 0,
-   "other": 4,
-   "total": 11
+   "other": 3,
+   "total": 10
   },
   "workleft": [
    "⛔ No print — first render queued",
@@ -374,7 +365,6 @@ window.BATCH_CELLS = [
    "guard_animation": "fail",
    "guard_closure": "fail",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "pass",
    "code_collision": "pass",
    "code_containment": "pass",
@@ -386,7 +376,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell04-pass120 · sha256 17a443b1… · 85.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 6 PASS · 3 FAIL · 2 other of 11. Failing: Reasoning · Motion fits · Ending. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell04-pass120 · sha256 17a443b1… · 85.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 6 PASS · 3 FAIL · 1 other of 10. Failing: Reasoning · Motion fits · Ending. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 6/11 passing",
   "file": "dlc002-need-water__print__en__cell04.mp4",
   "video": "videos/dlc002-need-water__print__en__cell04.mp4",
@@ -399,8 +389,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 6,
    "fail": 3,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Reasoning — doesn't drive choices",
@@ -437,7 +427,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "pass",
    "code_collision": "pass",
    "code_containment": "pass",
@@ -449,7 +438,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell05-pass121 · sha256 9c1dfc1d… · 92.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 9 PASS · 0 FAIL · 2 other of 11. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell05-pass121 · sha256 9c1dfc1d… · 92.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 9 PASS · 0 FAIL · 1 other of 10. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 9/11 passing",
   "file": "dlc002-need-water__print__hi__cell05.mp4",
   "video": "videos/dlc002-need-water__print__hi__cell05.mp4",
@@ -462,8 +451,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 9,
    "fail": 0,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Text backing — 26 stages undeclared",
@@ -498,7 +487,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -510,7 +498,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell06-pass131 · sha256 7eb7e884… · 101.8 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell06-pass131 · sha256 7eb7e884… · 101.8 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc004-am-hungry__print__en__cell06.mp4",
   "video": "videos/dlc004-am-hungry__print__en__cell06.mp4",
@@ -523,8 +511,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — promise made",
@@ -563,7 +551,6 @@ window.BATCH_CELLS = [
    "guard_animation": "fail",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -575,7 +562,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell07-pass121 · sha256 3b4d1092… · 85.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 2 other of 11. Failing: Motion fits · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell07-pass121 · sha256 3b4d1092… · 85.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 1 other of 10. Failing: Motion fits · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 7/11 passing",
   "file": "dlc004-am-hungry__print__en__cell07.mp4",
   "video": "videos/dlc004-am-hungry__print__en__cell07.mp4",
@@ -588,8 +575,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 7,
    "fail": 2,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Motion fits — motion serves segment",
@@ -629,7 +616,6 @@ window.BATCH_CELLS = [
    "guard_animation": "fail",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -641,7 +627,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell08-pass133 · sha256 4a317821… · 104.1 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 2 other of 11. Failing: Motion fits · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell08-pass133 · sha256 4a317821… · 104.1 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 1 other of 10. Failing: Motion fits · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 7/11 passing",
   "file": "dlc005-sun-warm__print__en__cell08.mp4",
   "video": "videos/dlc005-sun-warm__print__en__cell08.mp4",
@@ -654,8 +640,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 7,
    "fail": 2,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Motion fits — motion serves segment",
@@ -695,7 +681,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -707,7 +692,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell09-pass133 · sha256 5417f7fd… · 104.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell09-pass133 · sha256 5417f7fd… · 104.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc006-thank-you__print__en__cell09.mp4",
   "video": "videos/dlc006-thank-you__print__en__cell09.mp4",
@@ -720,8 +705,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
@@ -760,7 +745,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -772,7 +756,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell10-pass121 · sha256 a18321f5… · 88.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell10-pass121 · sha256 a18321f5… · 88.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc007-drink-water__print__en__cell10.mp4",
   "video": "videos/dlc007-drink-water__print__en__cell10.mp4",
@@ -785,8 +769,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — promise made",
@@ -824,7 +808,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -836,7 +819,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell11-pass131 · sha256 ca3b18ba… · 105.1 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell11-pass131 · sha256 ca3b18ba… · 105.1 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc008-where-station__print__en__cell11.mp4",
   "video": "videos/dlc008-where-station__print__en__cell11.mp4",
@@ -849,8 +832,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
@@ -889,7 +872,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -901,7 +883,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell12-pass131 · sha256 9c7a8333… · 119.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell12-pass131 · sha256 9c7a8333… · 119.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc009-how-much-cost__print__tr__cell12.mp4",
   "video": "videos/dlc009-how-much-cost__print__tr__cell12.mp4",
@@ -914,8 +896,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
@@ -954,7 +936,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "fail",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -966,7 +947,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell13-pass131 · sha256 a66a1443… · 112.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 2 other of 11. Failing: Ending · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell13-pass131 · sha256 a66a1443… · 112.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 1 other of 10. Failing: Ending · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 7/11 passing",
   "file": "dlc010-good-morning__print__es__cell13.mp4",
   "video": "videos/dlc010-good-morning__print__es__cell13.mp4",
@@ -979,8 +960,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 7,
    "fail": 2,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Ending — fails",
@@ -1019,7 +1000,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -1031,7 +1011,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell14-pass121 · sha256 cdb362c8… · 133.3 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell14-pass121 · sha256 cdb362c8… · 133.3 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc011-love-city__print__en__cell14.mp4",
   "video": "videos/dlc011-love-city__print__en__cell14.mp4",
@@ -1044,8 +1024,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — completion stated",
@@ -1084,7 +1064,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -1096,7 +1075,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell15-pass133 · sha256 33123cec… · 97.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell15-pass133 · sha256 33123cec… · 97.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc012-am-learning__print__en__cell15.mp4",
   "video": "videos/dlc012-am-learning__print__en__cell15.mp4",
@@ -1109,8 +1088,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — completion stated",
@@ -1147,7 +1126,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "other",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -1159,7 +1137,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell16-pass133 · sha256 4c01afe2… · 94.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 1 FAIL · 3 other of 11. Failing: Seams. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell16-pass133 · sha256 4c01afe2… · 94.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 1 FAIL · 2 other of 10. Failing: Seams. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 7/11 passing",
   "file": "dlc001-eat-bread__print__tr__cell16.mp4",
   "video": "videos/dlc001-eat-bread__print__tr__cell16.mp4",
@@ -1172,8 +1150,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 7,
    "fail": 1,
-   "other": 3,
-   "total": 11
+   "other": 2,
+   "total": 10
   },
   "workleft": [
    "✗ Seams — bed serves speech",
@@ -1212,7 +1190,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "pass",
    "code_containment": "fail",
@@ -1224,7 +1201,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell17-pass131 · sha256 c92e2220… · 38.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment FAIL · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell17-pass131 · sha256 c92e2220… · 38.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment FAIL · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc003-open-door__print__es__cell17.mp4",
   "video": "videos/dlc003-open-door__print__es__cell17.mp4",
@@ -1237,8 +1214,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — completion stated",
@@ -1275,7 +1252,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "fail",
@@ -1287,7 +1263,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell18-pass131 · sha256 3846c14f… · 135.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell18-pass131 · sha256 3846c14f… · 135.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc005-sun-warm__print__en__cell18.mp4",
   "video": "videos/dlc005-sun-warm__print__en__cell18.mp4",
@@ -1300,8 +1276,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — promise made",
@@ -1339,7 +1315,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "pass",
    "code_containment": "fail",
@@ -1351,7 +1326,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell19-pass124 · sha256 a9b74167… · 70.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell19-pass124 · sha256 a9b74167… · 70.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc002-need-water__print__en__cell19.mp4",
   "video": "videos/dlc002-need-water__print__en__cell19.mp4",
@@ -1364,8 +1339,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
@@ -1401,7 +1376,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "other",
    "code_collision": "other",
    "code_containment": "other",
@@ -1413,7 +1387,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: NONE — this cell is BLOCKED (no named print in pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 0 FAIL · 4 other of 11. Geometry over the seated print (Pass 148 censuses): #30 collision NOT RUN · #31 containment NOT RUN · #32 backing NOT RUN · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: NONE — this cell is BLOCKED (no named print in pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 0 FAIL · 3 other of 10. Geometry over the seated print (Pass 148 censuses): #30 collision NOT RUN · #31 containment NOT RUN · #32 backing NOT RUN · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "No print · blocked",
   "file": null,
   "video": null,
@@ -1426,8 +1400,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 7,
    "fail": 0,
-   "other": 4,
-   "total": 11
+   "other": 3,
+   "total": 10
   },
   "workleft": [
    "⛔ No print — first render queued",
@@ -1462,7 +1436,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -1474,7 +1447,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell21-pass131 · sha256 693d315e… · 79.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell21-pass131 · sha256 693d315e… · 79.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc001-eat-bread__print__en__cell21.mp4",
   "video": "videos/dlc001-eat-bread__print__en__cell21.mp4",
@@ -1487,8 +1460,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
@@ -1526,7 +1499,6 @@ window.BATCH_CELLS = [
    "guard_animation": "pass",
    "guard_closure": "pass",
    "guard_educator": "other",
-   "guard_transcript_first": "other",
    "guard_transcript": "fail",
    "code_collision": "fail",
    "code_containment": "pass",
@@ -1538,7 +1510,7 @@ window.BATCH_CELLS = [
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell22-pass131 · sha256 d03a880a… · 87.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 2 other of 11. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell22-pass131 · sha256 d03a880a… · 87.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "Print seated · 8/11 passing",
   "file": "dlc001-eat-bread__print__tr__cell22.mp4",
   "video": "videos/dlc001-eat-bread__print__tr__cell22.mp4",
@@ -1551,8 +1523,8 @@ window.BATCH_CELLS = [
   "progress": {
    "pass": 8,
    "fail": 1,
-   "other": 2,
-   "total": 11
+   "other": 1,
+   "total": 10
   },
   "workleft": [
    "✗ Story told — payload not spoken",
