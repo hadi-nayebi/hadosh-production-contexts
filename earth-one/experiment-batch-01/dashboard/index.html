@@ -16,7 +16,7 @@
     --glass:rgba(38,26,16,.55);
     --glass-brd:rgba(255,214,150,.20);
     --glass-hi:rgba(255,240,214,.10);
-    --chrome-h:120px;
+    --chrome-h:104px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -29,23 +29,37 @@
       linear-gradient(180deg,#1d130b 0%, #17100a 45%, #120c07 100%);
     overflow:hidden;
   }
-  /* ---------- top bar ---------- */
+  /* ---------- top bar — PASS 206 (v31 header compaction, Codex design
+     2026-11-11): the header is TWO rows, 104px total at normal text —
+     row 1 = 56px (identity · position · Menu), row 2 = the 48px chip
+     rail (.railwrap). Version · Legend · Coverage · Index live behind
+     the Menu tap; every element they carried is accounted for in the
+     design's §2 table. The space came from duplication and gaps —
+     label text, touch targets and player controls never shrank (§4). */
   .topbar{
     position:fixed;top:0;left:0;right:0;z-index:40;
-    display:flex;align-items:center;gap:10px;
-    padding:calc(8px + env(safe-area-inset-top)) 14px 8px;
+    display:flex;align-items:center;gap:12px;flex-wrap:nowrap;
+    height:calc(56px + env(safe-area-inset-top));
+    padding:calc(4px + env(safe-area-inset-top)) 12px 4px;
     background:var(--glass);border-bottom:1px solid var(--glass-brd);
     -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
   }
-  .brand{font-weight:800;letter-spacing:.14em;font-size:13px;color:var(--amber);white-space:nowrap}
-  .brand span{display:block;letter-spacing:.02em;font-weight:600;font-size:11px;color:var(--cream-dim)}
-  .topbar .batch{margin-left:auto;text-align:right;font-size:12px;color:var(--cream-dim);white-space:nowrap}
-  /* the coverage line is a state claim, not a label: it wraps in full —
-     truncating or clipping it would silently change the claim */
-  #batchstate{flex:1 1 720px;max-width:880px;white-space:normal;line-height:1.35}
-  /* PASS 123 (P56-2): the coverage line's TEXT stays verbatim behind a tap
-     (single-source gate) — its container form changes: a short face
-     (<=10 words exposed) + this expand button */
+  .identity{font-weight:800;font-size:17px;color:var(--cream);white-space:nowrap;letter-spacing:.01em}
+  .identity .iver{color:var(--amber)}
+  /* the position is a plain state pair, not a capsule (design §2) */
+  .counter{
+    font-variant-numeric:tabular-nums;font-weight:700;font-size:16px;
+    color:var(--cream);white-space:nowrap;
+  }
+  .topbar .counter{margin-left:auto}
+  .menubtn{
+    min-width:48px;min-height:48px;padding:0 16px;border-radius:12px;cursor:pointer;
+    border:1px solid var(--amber);background:rgba(29,19,11,.85);color:var(--amber);
+    font-size:16px;font-weight:800;font-family:inherit;white-space:nowrap;
+  }
+  /* the coverage line's TEXT stays verbatim behind the Menu tap
+     (single-source gate) — its container form is the menu section;
+     .covbtn below still serves the sheet's "Full gate" expander */
   .covbtn{
     /* PASS 166 (B5, generalized): the page's 48px tap floor applies to
        EVERY tappable control, the More buttons included */
@@ -54,16 +68,8 @@
     border:1px solid var(--amber);background:rgba(29,19,11,.85);color:var(--amber);
     font-size:11.5px;font-weight:800;font-family:inherit;white-space:nowrap;
   }
-  .counter{
-    font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;
-    padding:6px 10px;border-radius:999px;border:1px solid var(--glass-brd);
-    background:var(--glass-hi);white-space:nowrap;
-  }
-  .legendbtn{
-    min-height:48px;padding:0 14px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--glass-brd);background:var(--glass-hi);color:var(--cream);
-    font-size:13px;font-weight:800;font-family:inherit;white-space:nowrap;
-  }
+  /* (the capsule .counter and the standing .legendbtn retired by
+     PASS 206 — position is plain text now; Legend lives in the Menu) */
   /* ---------- stale bar (PASS 166, spec §5.3: the sha leg) ---------- */
   .stalebar{
     position:fixed;left:0;right:0;z-index:41;text-align:center;
@@ -72,37 +78,30 @@
   }
   .stalebar[hidden]{display:none}
   /* ---------- index rail ---------- */
+  /* PASS 206: header row 2 — the chip rail alone, exactly 48px; the
+     pager row is removed (the rail scrolls directly; the full index
+     lives at Menu > Index, design §2) */
   .railwrap{
     position:fixed;left:0;right:0;z-index:39;
-    top:calc(57px + env(safe-area-inset-top));
-    display:flex;flex-direction:column;align-items:stretch;
-  }
-  .railnavrow{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:2px 12px 0;min-height:26px;
+    top:calc(56px + env(safe-area-inset-top));
+    height:48px;
+    background:var(--glass);border-bottom:1px solid var(--glass-brd);
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
   }
   .rail{
-    display:flex;gap:8px;overflow-x:auto;padding:8px 12px;width:100%;box-sizing:border-box;
+    display:flex;gap:8px;overflow-x:auto;align-items:center;height:48px;
+    padding:0 12px;width:100%;box-sizing:border-box;
     scrollbar-width:thin;scrollbar-color:var(--amber) transparent;
     overscroll-behavior-x:contain;
   }
   .rail::-webkit-scrollbar{display:block;height:4px}
   .rail::-webkit-scrollbar-thumb{background:var(--amber);border-radius:99px}
   .rail::-webkit-scrollbar-track{background:transparent}
-  /* edge controls for the rail: PASS 166 (HQ census B5) — every tappable
-     control is >=48px in BOTH dimensions; the v25 railnav was 24px tall
-     against the page's own 48px mandate */
-  .railnav{
-    position:static;flex:0 0 auto;margin:0;
-    min-width:48px;min-height:48px;padding:0 12px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--amber);background:rgba(29,19,11,.94);color:var(--amber);
-    font-size:12px;font-weight:800;font-family:inherit;line-height:1;
-    box-shadow:0 4px 18px rgba(0,0,0,.5);
-  }
-  .railnav[hidden]{display:none}
+  /* (the rail's edge controls retired by PASS 206 — the rail scrolls
+     directly and the full index lives at Menu > Index) */
   .chip{
     flex:0 0 auto;display:flex;align-items:center;gap:7px;
-    padding:8px 12px;border-radius:999px;cursor:pointer;min-height:48px;
+    padding:8px 12px;border-radius:999px;cursor:pointer;min-height:44px;
     border:1px solid var(--glass-brd);color:var(--cream-dim);
     background:var(--glass);font-size:12.5px;font-weight:600;
     -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
@@ -110,6 +109,9 @@
   .chip .dot{width:8px;height:8px;border-radius:50%;background:#a2937d;flex:0 0 auto}
   .chip.active{color:#1d130b;background:var(--amber);border-color:var(--amber)}
   .chip.active .dot{background:#1d130b}
+  /* the selected chip carries a marker as well as its fill (design §2:
+     selection must not read by colour alone) */
+  .chip.active::after{content:"✓";font-weight:900}
   /* ---------- feed — PASS 166 R1: the snap scroller, by construction.
      scroll-snap-type: y mandatory on the feed + snap-align/start +
      snap-stop/always on every screen + screens exactly 100dvh: the
@@ -193,23 +195,20 @@
     -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
     box-shadow:0 18px 50px rgba(0,0,0,.45);
     /* PASS 168: the panel is a flex column so that, in panel-open mode,
-       its face (handle · progress · actions) stays pinned while .pbody
+       its face (progress · actions) stays pinned while .pbody
        scrolls internally under the 55dvh cap below. */
     display:flex;flex-direction:column;
   }
   .panel>*{flex:0 0 auto}
   .panel .pbody{flex:0 1 auto;min-height:0;overflow-y:auto}
-  .handle{
-    display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
-    min-height:48px;margin:-6px 0 8px;padding:6px 10px;border-radius:12px;
-    border:1px solid transparent;background:transparent;color:var(--cream-dim);
-    font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
-  }
-  .handle:active{background:var(--glass-hi)}
-  .handle .hchev{font-size:12px;color:var(--amber)}
-  .panel.collapsed{padding:8px 14px}
+  /* PASS 206: the handle ("Show panel", a second ambiguous disclosure
+     control) is REMOVED — the Details action is the panel body's one
+     disclosure control (design §3) */
+  /* 7px vertical padding: with the panel's 2x1px borders the collapsed
+     strip's OUTER height is exactly the design's 104px (7+40+48+7+2) —
+     the B53 leg measures the outer box */
+  .panel.collapsed{padding:7px 14px}
   .panel.collapsed .pbody{display:none}
-  .panel.collapsed .handle{margin:0}
   /* ---------- PASS 168 — panel-chrome fix (owner screenshot defect,
      HQ 2026-11-10 ~18:50 EST) + HQ ADDITION #2 (owner's ruling ~18:49
      EST: DETAILS CLOSED BY DEFAULT).
@@ -219,7 +218,9 @@
      one-line progress face · Like/Dislike: the progress face and the
      actions live OUTSIDE .pbody, so they stand on the resting face
      while the title, languages, Work-left entry and the composer wait
-     behind the reviewer's tap (checker #34 leg (v) DEFAULT_CLOSED
+     behind the Details tap (PASS 206: Details is the body's one
+     disclosure control — the second control, the handle / "Show
+     panel", is removed; checker #34 leg (v) DEFAULT_CLOSED
      prices this DOM fact).
      PANEL-OPEN MODE (body.panel-open, set when the panel body or the
      details sheet opens): the five-row fixed chrome compresses to ONE
@@ -267,15 +268,17 @@
   }
   .langchip.open{color:var(--amber)}
   /* PASS 166 R4 — the per-video progress face: the owner's four
-     questions as HOME data (passing · failing · progress · work left) */
-  .pface{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:11px}
+     questions as HOME data (passing · failing · progress · work left)
+     PASS 206 (design §3): the face is ONE merged status line in a
+     40px row — the fraction carries the progress, so the bar is
+     removed; the strip's total height is then 7 + 40 + 48 + 7
+     padding plus 2px of panel border = 104px by construction */
+  .pface{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;height:40px;margin:0;overflow:hidden}
   .pf{font-size:15px;font-weight:800;white-space:nowrap}
   .pf.pass{color:#b9e39d}
   .pf.fail{color:#f0a58e}
   .pf.other{color:var(--cream-dim)}
-  .pfbar{flex:1 1 90px;height:10px;border-radius:99px;background:rgba(0,0,0,.35);overflow:hidden;min-width:70px}
-  .pfbar i{display:block;height:100%;background:var(--olive);border-radius:99px}
-  .pfnum{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+  .pfsep{color:var(--cream-dim);font-weight:700}
   .workleft-btn{
     display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
     min-height:48px;margin-top:10px;border-radius:14px;cursor:pointer;
@@ -292,10 +295,14 @@
   .rchip.fail{border-color:var(--terra);color:#f0a58e}
   .rchip.other{border-color:var(--glass-brd);color:var(--cream-dim)}
   .rchip.notchecked{border-color:rgba(242,176,74,.75);color:var(--amber)}
-  .actions{display:flex;gap:9px;margin-top:12px}
+  /* PASS 206 (design §3): the action row is a fixed 48px row — Like ·
+     Dislike · Details as three equal actions, no top margin: the
+     collapsed strip's 104px is 7 pad + 40 status + 48 actions + 7 pad
+     + 2 border */
+  .actions{display:flex;gap:9px;height:48px;margin:0}
   .fb{
     flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
-    min-height:50px;border-radius:14px;border:1px solid var(--glass-brd);
+    min-height:48px;border-radius:14px;border:1px solid var(--glass-brd);
     background:var(--glass-hi);color:var(--cream);
     font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
   }
@@ -305,7 +312,7 @@
      issue was opened). A painted mark never claims a sent verdict. */
   .fb.sel{background:rgba(242,176,74,.28);border-color:var(--amber);color:var(--amber)}
   .fb.sent{background:#3d5a1e;border-color:#86d66a;color:#d9f2c3}
-  .fb.details{flex:0 0 104px;font-size:14.5px}
+  .fb.details{font-size:16px}
   .commentrow{display:flex;gap:9px;margin-top:9px}
   .commentrow textarea{
     flex:1;min-height:50px;max-height:96px;resize:vertical;
@@ -391,6 +398,49 @@
     border:1px solid var(--amber);background:transparent;color:var(--amber);
     font-size:15px;font-weight:800;font-family:inherit;
   }
+  /* ---------- menu + index overlays — PASS 206: the four
+     destinations the old utility rows carried, behind the one Menu
+     tap: Version · Legend · Coverage · Index, each in its own plain
+     word. Sections expand inside the card; Legend and Index open
+     their own overlays. ---------- */
+  .menuovl,.indexovl{
+    position:fixed;inset:0;z-index:60;display:none;
+    background:rgba(10,6,3,.88);padding:calc(20px + env(safe-area-inset-top)) 18px 18px;
+    overflow-y:auto;
+  }
+  .menuovl.open,.indexovl.open{display:block}
+  .menucard,.indexcard{
+    max-width:520px;margin:0 auto;border-radius:18px;padding:16px;
+    background:rgba(24,15,8,.97);border:1px solid var(--glass-brd);
+  }
+  .menuhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .menuhead .mtitle{font-size:16px;font-weight:800;color:var(--amber)}
+  .menuclose{
+    min-width:48px;min-height:48px;padding:0 14px;border-radius:12px;cursor:pointer;
+    border:1px solid var(--glass-brd);background:var(--glass-hi);color:var(--cream);
+    font-size:15px;font-weight:800;font-family:inherit;
+  }
+  .menurow{
+    display:flex;align-items:center;width:100%;min-height:48px;margin-top:8px;
+    padding:10px 14px;border-radius:12px;cursor:pointer;text-align:left;
+    border:1px solid var(--glass-brd);background:var(--glass-hi);color:var(--cream);
+    font-size:16px;font-weight:700;font-family:inherit;
+  }
+  .menurow .mchev{margin-left:auto;color:var(--amber);font-weight:900}
+  .menusec{
+    padding:10px 14px;font-size:14.5px;line-height:1.5;color:var(--cream);
+    border:1px solid rgba(255,214,150,.12);border-radius:12px;margin-top:6px;
+  }
+  .menusec[hidden]{display:none}
+  .indexlist{display:flex;flex-direction:column}
+  .indexrow{
+    display:flex;align-items:center;gap:10px;width:100%;min-height:48px;
+    padding:8px 10px;border:none;border-top:1px solid rgba(255,214,150,.12);
+    background:transparent;color:var(--cream);cursor:pointer;text-align:left;
+    font-size:15px;font-weight:600;font-family:inherit;
+  }
+  .indexrow .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+  .indexrow .istatus{margin-left:auto;color:var(--cream-dim);font-size:13.5px;font-weight:700;text-align:right}
   /* ---------- toast — PASS 166 B1: wraps at phone width (the v25
      nowrap pill clipped its own 57/60-char instructions at both edges) ---------- */
   .toast{
@@ -408,9 +458,8 @@
      clipboard instruction is about. */
   body.panel-open .toast{bottom:auto;top:calc(64px + env(safe-area-inset-top))}
   @media (min-width:760px){
-    .railwrap{top:calc(70px + env(safe-area-inset-top))}
-    .rail{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
-    .railnav{display:none}
+    .railwrap{top:calc(56px + env(safe-area-inset-top));height:auto}
+    .rail{flex-wrap:wrap;overflow-x:visible;row-gap:8px;height:auto;min-height:48px}
     .screen{padding-left:24px;padding-right:24px}
     .panel{max-width:640px;margin:0 auto;width:100%}
     .poster .sentence{font-size:56px}
@@ -420,37 +469,32 @@
     :root{--chrome-h:238px}
   }
   @media (max-width:759px){
-    .topbar{flex-wrap:wrap;row-gap:4px}
-    .topbar .batch{margin-left:0;white-space:normal;flex:1 1 150px}
-    #batchstate{order:4;flex:1 1 100%;max-width:none;text-align:left;font-size:11.5px}
-    .counter{margin-left:auto}
-    .railwrap{top:var(--rail-top, calc(220px + env(safe-area-inset-top)))}
+    /* PASS 206: one nowrap row; fitChrome still measures (--rail-top /
+       --chrome-h) — the fallback is the design's own 56px row 1 */
+    .railwrap{top:var(--rail-top, calc(56px + env(safe-area-inset-top)))}
   }
 </style>
 </head>
 <body>
 
+<!-- PASS 206 (v31 header compaction): row 1 = identity · position ·
+     Menu (56px); row 2 = the chip rail (48px). Version · Legend ·
+     Coverage · Index live behind the Menu tap (design §2). -->
 <header class="topbar">
-  <div class="brand">EARTH ONE<span>The Daily Language Challenge</span></div>
-  <div class="batch" id="dashver" style="text-align:right"></div>
-  <div class="batch" id="batchstate" style="text-align:right"></div>
-  <button class="legendbtn" id="legendBtn" type="button" aria-label="Show the legend — what every symbol and colour means">❓ Legend</button>
+  <div class="identity">Earth One<span class="iver" id="brandver"></span></div>
   <div class="counter" id="counter">– / –</div>
+  <button class="menubtn" id="menuBtn" type="button" aria-label="Open the menu — version, legend, coverage and index">Menu</button>
 </header>
 
 <div class="stalebar" id="stalebar" hidden>⚠ STALE — data ≠ build</div>
 
 <div class="railwrap">
-<div class="railnavrow">
-<button class="railnav prev" id="railPrev" type="button" aria-label="Scroll the cell index back" hidden>&#8249; Back</button>
-<button class="railnav next" id="railNext" type="button" aria-label="Scroll the cell index for more cells">Index &#8250;</button>
-</div>
 <nav class="rail" id="rail" aria-label="Batch index"></nav>
 </div>
 
 <!-- PASS 168: the ONE chrome row while a panel is open — counter ·
      current chip · Back. Hidden at rest (display:none); body.panel-open
-     shows it and hides the five-row chrome it replaces. -->
+     shows it and hides the header rows it replaces. -->
 <div class="compactbar" id="compactbar">
   <span class="counter" id="cbCounter">– / –</span>
   <span class="cbchip" id="cbChip"></span>
@@ -476,9 +520,33 @@
   </div>
 </div>
 
+<!-- PASS 206: the Menu — Version · Legend · Coverage · Index behind
+     the one Menu tap (design §2 accounting). Version and Coverage
+     expand inside this card; Legend and Index open their overlays. -->
+<div class="menuovl" id="menuovl" role="dialog" aria-label="Menu">
+  <div class="menucard">
+    <div class="menuhead"><span class="mtitle">Menu</span><button class="menuclose" id="menuClose" type="button">Close ✕</button></div>
+    <button class="menurow" id="menuVersion" type="button" aria-expanded="false">Version<span class="mchev">›</span></button>
+    <div class="menusec" id="versionSec" hidden></div>
+    <button class="menurow" id="menuLegend" type="button">Legend<span class="mchev">›</span></button>
+    <button class="menurow" id="menuCoverage" type="button" aria-expanded="false">Coverage<span id="covOpen"></span><span class="mchev">›</span></button>
+    <div class="menusec" id="coverageSec" hidden></div>
+    <button class="menurow" id="menuIndex" type="button">Index<span class="mchev">›</span></button>
+  </div>
+</div>
+
+<!-- PASS 206: the Index — the full list, tap a row to go to that
+     video (the job the old rail pagers served, design §2) -->
+<div class="indexovl" id="indexovl" role="dialog" aria-label="Index">
+  <div class="indexcard">
+    <div class="menuhead"><span class="mtitle">Index</span><button class="menuclose" id="indexClose" type="button">Close ✕</button></div>
+    <div class="indexlist" id="indexList"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=29"></script>
+<script src="data.js?v=31"></script>
 <script>
 (function(){
   "use strict";
@@ -506,12 +574,17 @@
      same object. Any mismatch prints the STALE state and no "current"
      claim renders. The embedded copy is injected by the build
      (pass166/work/gen_data.py's lineage) — never hand-typed. */
-  /* PASS 173: the fingerprint re-issues with the v29 staged set —
-     build pass173-v29, countingSeats 10; the Pass 149 lineage is
-     SEATED (printsFileSha = pass149/work/masters149.json; sources
-     extended with masters149 + the Pass 149 post-census bundle +
-     the Pass 171 transient and Pass 172 intro-language firings). */
-  var EXPECTED_LINEAGE = {"build": "pass173-v29", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798"}, "printsFileSha": "b6a5fbd5b427", "seated": "v29 prints (pass149/work/masters149.json) — the 20 Pass 149 geometry-cure prints seated; cells 03/20 blocked", "cells": 22, "countingSeats": 10, "seatedPrints": 20};
+  /* PASS 193: the fingerprint re-issues with the v30 staged set —
+     build pass193-v30, countingSeats 10; the Pass 149 lineage stands
+     and Wave C seats the 3 designed thumbnail pairs (cells 01/04/21)
+     under certificate hq-2026-11-11-025; sources extended with the
+     pass193 thumbs census (inputs193.py). */
+  /* PASS 206: the fingerprint re-issues with the v31 staged set —
+     build pass206-v31. PRESENTATION-ONLY round (header compaction):
+     sources · printsFileSha · cells · countingSeats · seatedPrints
+     stand exactly as v30 issued them; the data's meta (dashboard
+     line + this lineage's build/seated) re-issues to name v31. */
+  var EXPECTED_LINEAGE = {"build": "pass206-v31", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718"}, "printsFileSha": "b6a5fbd5b427", "seated": "v31 (PASS 206) — the v30 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; presentation-only round (header compaction)", "cells": 22, "countingSeats": 10, "seatedPrints": 20};
   function canon(o){
     if (o === null || typeof o !== "object") return JSON.stringify(o);
     if (Array.isArray(o)) return "[" + o.map(canon).join(",") + "]";
@@ -586,16 +659,12 @@
       var p = s.querySelector(".panel");
       if (p && !p.classList.contains("collapsed")) {
         p.classList.add("collapsed");
-        var hl = s.querySelector(".hlabel"), hc = s.querySelector(".hchev");
-        if (hl) hl.textContent = "Show panel";
-        if (hc) hc.textContent = "▴";
-        s.querySelector(".handle").setAttribute("aria-expanded", "false");
+        var db0 = s.querySelector(".fb.details");
+        if (db0) { db0.textContent = "Details ▾"; db0.setAttribute("aria-expanded", "false"); }
       }
       var sh = s.querySelector(".sheet");
       if (sh && sh.classList.contains("open")) {
         sh.classList.remove("open");
-        var db = s.querySelector(".fb.details");
-        if (db) db.textContent = "Details ▾";
       }
     });
     setPanelOpen(false);
@@ -609,74 +678,59 @@
   function taughtLine(cell){ return cell.taught.join(" · "); }
 
   var ROSTER = window.BATCH_REVIEWS || [];
-  var bs = document.getElementById("batchstate");
-  if (bs && window.BATCH_META && window.BATCH_META.coverage) {
-    /* PASS 123 (P56-2, ten-word law): the coverage line's TEXT stays
-       verbatim — it renders in full behind the tap; the resting face is a
-       short summary (<=10 words exposed in the container) + a More button */
-    var covText = window.BATCH_META.coverage;
-    var covM = /exactly one: (G\d+)/.exec(covText);
-    var covShort = document.createElement("span");
-    covShort.textContent = "Coverage — one open item" + (covM ? " (" + covM[1] + ")" : "");
-    var covFull = document.createElement("span");
-    covFull.textContent = covText;
-    covFull.hidden = true;
-    var covBtn = document.createElement("button");
-    covBtn.type = "button";
-    covBtn.className = "covbtn";
-    /* PASS 168 (B53 F3): every expander/pager carries its OWN job in
-       its label — Coverage › here, Version › on the version line,
-       Index › on the rail pager, Full gate › in the sheet. Three
-       identical "More ›" controls with three jobs do not ship. */
-    covBtn.textContent = "Coverage ›";
-    covBtn.setAttribute("aria-expanded", "false");
-    covBtn.setAttribute("aria-label", "Show the full coverage line");
-    covBtn.addEventListener("click", function(){
-      var open = covFull.hidden;
-      covFull.hidden = !open;
-      covShort.hidden = open;
-      covBtn.textContent = open ? "‹ Less" : "Coverage ›";
-      covBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      fitChrome();
-    });
-    bs.appendChild(covShort);
-    bs.appendChild(covBtn);
-    bs.appendChild(covFull);
+  /* PASS 206 (v31 header compaction, design §2): Version and Coverage
+     live behind the Menu tap. Their TEXTS stay verbatim — single
+     source BATCH_META — only the container form changes: the full
+     version line sits in the menu's Version section, the full
+     coverage line in its Coverage section, and the Coverage ROW
+     carries the open count in its label ("Coverage · 1 open"; the
+     item itself, G11, is inside the section). The header row itself
+     keeps only the release token, parsed from the same data. */
+  var dvText = (window.BATCH_META && window.BATCH_META.dashboard) || "";
+  var dvM = /^v\d+/.exec(dvText);
+  var brandver = document.getElementById("brandver");
+  if (brandver) {
+    /* PASS 144/166 carried forward: the version renders FROM THE
+       DATA; when the sha leg fails the header prints STALE instead —
+       no "current" claim renders on a mismatched build. */
+    brandver.textContent = lineageOK ? (" · " + (dvM ? dvM[0] : "")) : " · ⚠ STALE";
   }
-  var dv = document.getElementById("dashver");
-  if (dv && window.BATCH_META && window.BATCH_META.dashboard) {
-    /* PASS 144 (F-V24-1a): the dashboard version renders FROM THE DATA —
-       BATCH_META.dashboard is the only source. PASS 166: when the sha
-       leg fails, the version face prints STALE instead of a version —
-       no "current" claim renders on a mismatched build (spec §5.3). */
-    var dvText = window.BATCH_META.dashboard;
-    var dvM = /^v\d+/.exec(dvText);
-    var dvShort = document.createElement("span");
-    dvShort.textContent = lineageOK ? ("Dashboard " + (dvM ? dvM[0] : dvText.split(" ")[0])) : "⚠ STALE";
-    var dvFull = document.createElement("span");
-    dvFull.textContent = lineageOK ? dvText : "⚠ STALE — data does not match this build; no version is claimed.";
-    dvFull.hidden = true;
-    var dvBtn = document.createElement("button");
-    dvBtn.type = "button";
-    dvBtn.className = "covbtn";
-    dvBtn.textContent = "Version ›";
-    dvBtn.setAttribute("aria-expanded", "false");
-    dvBtn.setAttribute("aria-label", "Show the full dashboard version line");
-    dvBtn.addEventListener("click", function(){
-      var open = dvFull.hidden;
-      dvFull.hidden = !open;
-      dvShort.hidden = open;
-      dvBtn.textContent = open ? "‹ Less" : "Version ›";
-      dvBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      fitChrome();
-    });
-    dv.appendChild(dvShort);
-    dv.appendChild(dvBtn);
-    dv.appendChild(dvFull);
+  var versionSec = document.getElementById("versionSec");
+  if (versionSec) {
+    versionSec.textContent = lineageOK ? dvText
+      : "⚠ STALE — data does not match this build; no version is claimed.";
   }
-  /* legend overlay: one tap from every screen (the topbar is fixed) */
+  var covText = (window.BATCH_META && window.BATCH_META.coverage) || "";
+  var coverageSec = document.getElementById("coverageSec");
+  if (coverageSec) coverageSec.textContent = covText;
+  var covOpen = document.getElementById("covOpen");
+  if (covOpen && /exactly one: G\d+/.test(covText)) covOpen.textContent = " · 1 open";
+  /* PASS 206: the Menu overlay — every row carries its own job in
+     its label (the B53 F3 rule). Version + Coverage expand inside
+     the card; Legend + Index open their own overlays. */
+  var menuovl = document.getElementById("menuovl");
+  function closeMenu(){ menuovl.classList.remove("open"); }
+  document.getElementById("menuBtn").addEventListener("click", function(){
+    menuovl.classList.add("open");
+  });
+  document.getElementById("menuClose").addEventListener("click", closeMenu);
+  menuovl.addEventListener("click", function(ev){
+    if (ev.target === menuovl) closeMenu();
+  });
+  function menuToggle(btnId, secId){
+    var btn = document.getElementById(btnId), sec = document.getElementById(secId);
+    btn.addEventListener("click", function(){
+      var open = sec.hidden;
+      sec.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+  menuToggle("menuVersion", "versionSec");
+  menuToggle("menuCoverage", "coverageSec");
+  /* legend overlay: reached from the Menu (design §2 accounting) */
   var legendovl = document.getElementById("legendovl");
-  document.getElementById("legendBtn").addEventListener("click", function(){
+  document.getElementById("menuLegend").addEventListener("click", function(){
+    closeMenu();
     legendovl.classList.add("open");
   });
   document.getElementById("legendClose").addEventListener("click", function(){
@@ -685,6 +739,35 @@
   legendovl.addEventListener("click", function(ev){
     if (ev.target === legendovl) legendovl.classList.remove("open");
   });
+  /* index overlay: the full list with direct selection (design §2) */
+  var indexovl = document.getElementById("indexovl");
+  document.getElementById("menuIndex").addEventListener("click", function(){
+    closeMenu();
+    indexovl.classList.add("open");
+  });
+  document.getElementById("indexClose").addEventListener("click", function(){
+    indexovl.classList.remove("open");
+  });
+  indexovl.addEventListener("click", function(ev){
+    if (ev.target === indexovl) indexovl.classList.remove("open");
+  });
+  function buildIndex(){
+    var list = document.getElementById("indexList");
+    if (!list) return;
+    CELLS.forEach(function(cell, i){
+      var row = document.createElement("button");
+      row.type = "button";
+      row.className = "indexrow";
+      row.innerHTML = '<span class="dot" style="background:' + (STATUS_COLORS[cell.status] || "#a2937d") + '"></span>' +
+        '<span>' + esc(String(cell.n).padStart(2, "0")) + ' · ' + esc(cell.opening) + '</span>' +
+        '<span class="istatus">' + esc(cell.statusLabel) + '</span>';
+      row.addEventListener("click", function(){
+        indexovl.classList.remove("open");
+        goTo(i);
+      });
+      list.appendChild(row);
+    });
+  }
 
   function reviewState(cell, key){
     var r = cell.reviews || {};
@@ -711,13 +794,14 @@
        in its roster, behind the Details tap, where they belong. */
     if (!cell.video) return '<div class="pface"><span class="pf fail">⛔ No print</span></div>';
     var pr = progressOf(cell);
-    var pct = pr.total ? Math.round(100 * pr.pass / pr.total) : 0;
+    /* PASS 206 (design §3): ONE merged status line — "✓ 8/10 passing ·
+       ✗ 1 failing · ○ 1 other"; the progress bar is removed (the
+       fraction already says it) and the strip's status row is 40px. */
     var h = '<div class="pface">' +
-      '<span class="pf pass">✓ Passing ' + pr.pass + '</span>' +
-      '<span class="pf fail">✗ Failing ' + pr.fail + '</span>' +
-      (pr.other ? '<span class="pf other">○ ' + pr.other + ' other</span>' : '') +
-      '<span class="pfbar"><i style="width:' + pct + '%"></i></span>' +
-      '<span class="pfnum">' + pr.pass + '/' + pr.total + ' passing</span>' +
+      '<span class="pf pass">✓ ' + pr.pass + '/' + pr.total + ' passing</span>' +
+      '<span class="pfsep">·</span>' +
+      '<span class="pf fail">✗ ' + pr.fail + ' failing</span>' +
+      (pr.other ? '<span class="pfsep">·</span><span class="pf other">○ ' + pr.other + ' other</span>' : '') +
       '</div>';
     return h;
   }
@@ -854,8 +938,12 @@
 
     var stage;
     if (cell.video){
+      /* PASS 193 (Wave C): a designed cell's card face is its designed
+         thumbnail (cell.thumb.a) — the video poster convention seats it;
+         the other cells keep their print poster. */
+      var facePoster = (cell.thumb && cell.thumb.a) ? cell.thumb.a : cell.poster;
       stage = '<video src="' + esc(cell.video) + '"' +
-        (cell.poster ? ' poster="' + esc(cell.poster) + '"' : '') +
+        (facePoster ? ' poster="' + esc(facePoster) + '"' : '') +
         ' playsinline controls preload="metadata"></video>' +
         '<div class="viderr" hidden><span>⚠ Video didn\'t load</span>' +
         '<button class="retry" type="button">Retry ›</button></div>';
@@ -886,6 +974,18 @@
       ["Work left", wlItems],
       ["Guards", rosterFullHTML(cell)],
       ["Print", printRow],
+      /* PASS 193: the designed pair seats in the details — A is the card
+         face; B is reachable here, per the dashboard's details convention.
+         The T3 gap line prints BESIDE the guard verdicts (certificate
+         condition 3), never merged into the counts. */
+      ["Thumbnail pair", cell.thumb
+        ? '<img src="' + esc(cell.thumb.a) + '" alt="Designed thumbnail A" style="max-width:100%;height:auto;display:block;margin-bottom:6px">' +
+          'A · designed face · sha ' + esc(cell.thumb.aSha) + '…<br>' +
+          '<img src="' + esc(cell.thumb.b) + '" alt="Designed thumbnail B" style="max-width:100%;height:auto;display:block;margin:6px 0">' +
+          esc(cell.thumb.bLabel) + ' · sha ' + esc(cell.thumb.bSha) + '…<br>' +
+          esc(cell.thumb.gap) +
+          (cell.thumb.breach ? '<br>' + esc(cell.thumb.breach) : '')
+        : 'NOT DESIGNED — build tiers pending (designed set 3/22, Pass 193)'],
       ["Gate status", '<span class="gateshort">' + esc(cell.gateShort || "") + '</span>' +
         ' <button class="covbtn gatemore" type="button" aria-expanded="false">Full gate ›</button>' +
         '<span class="gatefull" hidden>' + esc(cell.gate) + '</span>'],
@@ -912,11 +1012,11 @@
          closed state is the initial DOM state, not a state reached
          after load. The progress face + actions stand OUTSIDE .pbody
          (the resting face); the title, languages, Work-left entry and
-         the composer live inside .pbody, behind the handle's tap. */
+         the composer live inside .pbody, behind the Details tap
+         (PASS 206: the handle — "Show panel", a second disclosure
+         control for the same content — is removed; Details is the
+         body's ONE control, design §3). */
       '<div class="panel collapsed">' +
-        '<button class="handle" type="button" aria-label="Hide or show the review panel" aria-expanded="false">' +
-          '<span class="hlabel">Show panel</span><span class="hchev">▴</span>' +
-        '</button>' +
         progressHTML(cell) +
         '<div class="actions">' +
           /* PASS 168 (B53 F7): a blocked cell carries NO verdict
@@ -926,7 +1026,7 @@
           (isPoster ? '' :
           '<button class="fb like" type="button">👍 Like</button>' +
           '<button class="fb dislike" type="button">👎 Dislike</button>') +
-          '<button class="fb details" type="button">Details ▾</button>' +
+          '<button class="fb details" type="button" aria-expanded="false">Details ▾</button>' +
         '</div>' +
         '<div class="pbody">' +
         (isPoster ? '' :
@@ -953,24 +1053,23 @@
       '</div>';
 
     var panel = screen.querySelector(".panel");
-    var handleBtn = screen.querySelector(".handle");
-    var hlabel = screen.querySelector(".hlabel");
-    var hchev = screen.querySelector(".hchev");
-    handleBtn.addEventListener("click", function(){
-      /* PASS 168: the panel starts collapsed (Addition #2); the tap
-         opens it INTO panel-open mode (chrome compresses, panel caps
-         at 55dvh as a bottom sheet) and closing it leaves panel-open
-         mode only when no other panel/sheet stands open. */
-      var collapsed = panel.classList.toggle("collapsed");
-      hlabel.textContent = collapsed ? "Show panel" : "Hide panel";
-      hchev.textContent = collapsed ? "▴" : "▾";
-      handleBtn.setAttribute("aria-expanded", collapsed ? "false" : "true");
-      setPanelOpen(!collapsed || anyPanelOpen());
-    });
-
     var sheet = screen.querySelector(".sheet");
     var detailsBtn = screen.querySelector(".fb.details");
     var workleftBtn = screen.querySelector(".workleft-btn");
+    /* PASS 206 (design §3): Details is the panel's ONE disclosure
+       control. Its tap opens the body (title · languages · Work-left
+       entry · composer) INTO panel-open mode — chrome compresses,
+       the panel caps at 55dvh as a bottom sheet with internal
+       scroll — and tapping again closes it. The work-left SHEET
+       (the full gate record) still opens from the Work-left entry
+       inside the body; while the sheet stands open, Details closes
+       the sheet. */
+    function setBodyOpen(open){
+      panel.classList.toggle("collapsed", !open);
+      detailsBtn.textContent = open ? "Details ▴" : "Details ▾";
+      detailsBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      setPanelOpen(open || anyPanelOpen());
+    }
     function openSheet(){
       /* PASS 168: the sheet REPLACES the panel body as the open
          surface — an expanded body + the sheet together would stack
@@ -980,25 +1079,23 @@
          its foot is the panel's measured height + the screen's own
          bottom padding, so the progress face + Like/Dislike below it
          are never covered. */
-      if (!panel.classList.contains("collapsed")) {
-        panel.classList.add("collapsed");
-        hlabel.textContent = "Show panel";
-        hchev.textContent = "▴";
-        handleBtn.setAttribute("aria-expanded", "false");
-      }
+      if (!panel.classList.contains("collapsed")) setBodyOpen(false);
       sheet.style.bottom = (panel.offsetHeight + 20) + "px";
       sheet.classList.add("open");
       detailsBtn.textContent = "Details ▴";
+      detailsBtn.setAttribute("aria-expanded", "true");
       sheet.scrollTop = 0;
       setPanelOpen(true);
     }
     function closeSheet(){
       sheet.classList.remove("open");
       detailsBtn.textContent = "Details ▾";
+      detailsBtn.setAttribute("aria-expanded", "false");
       setPanelOpen(anyPanelOpen());
     }
     detailsBtn.addEventListener("click", function(){
-      if (sheet.classList.contains("open")) closeSheet(); else openSheet();
+      if (sheet.classList.contains("open")) { closeSheet(); return; }
+      setBodyOpen(panel.classList.contains("collapsed"));
     });
     workleftBtn.addEventListener("click", openSheet);
     screen.querySelector(".sheetclose").addEventListener("click", closeSheet);
@@ -1231,28 +1328,21 @@
   feed.appendChild(feedend);
   screenEls = Array.prototype.filter.call(feed.children, function(el){ return el.classList.contains("screen"); });
   buildRail();
+  buildIndex();
+  /* PASS 206 (design §4: the selected video reads on the resting face
+     with nothing opened): mark the first chip active at build — the
+     counter already claims 1 / 22 from load; before this line no chip
+     wore the selection until the first scroll settled (a v30-standing
+     gap the cold pass caught on the v31 resting face). */
+  if (CELLS.length) setCurrent(0);
 
-  /* pill-row reachability, phone leg (2026-11-08 pill-fix): the rail's edge
-     controls. Each control removes itself when its scroll direction is
-     exhausted, so the end chips are never occluded by the control that
-     revealed them. At >=760px the rail wraps (PASS 46), nothing scrolls,
-     and CSS keeps the controls display:none. */
-  var railPrev = document.getElementById("railPrev");
-  var railNext = document.getElementById("railNext");
-  function updateRailNav(){
-    var max = rail.scrollWidth - rail.clientWidth;
-    if (railPrev) railPrev.hidden = rail.scrollLeft <= 4;
-    if (railNext) railNext.hidden = max <= 4 || rail.scrollLeft >= max - 4;
-  }
-  /* instant jumps, one full rail width per tap: a paged index the owner
-     pages deliberately — no animated drift, and the landing position is
-     deterministic (the control's effect is exactly one page, every tap) */
-  if (railPrev) railPrev.addEventListener("click", function(){ rail.scrollBy({ left: -rail.clientWidth }); updateRailNav(); });
-  if (railNext) railNext.addEventListener("click", function(){ rail.scrollBy({ left: rail.clientWidth }); updateRailNav(); });
-  rail.addEventListener("scroll", updateRailNav, { passive: true });
-  window.addEventListener("resize", updateRailNav);
+  /* (the pill-row reachability note retired by PASS 206 with the
+     pagers it described — the rail scrolls directly; Menu > Index
+     carries the full list) */
+  /* PASS 206: the rail's edge pagers are removed — the chip strip is
+     directly scrollable and the full index lives at Menu > Index
+     (design §2 accounting). No scroll listener is needed on the rail. */
   window.addEventListener("resize", fitChrome);
-  updateRailNav();
   fitChrome();
   setTimeout(fitChrome, 400);
   window.addEventListener("load", fitChrome);
