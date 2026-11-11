@@ -1,17 +1,20 @@
-/* Experiment Batch 02 — cell registry (batch06), data v27 (PASS 166 Wave D build, 2026-11-10).
-   RE-ISSUED against the SEATED lineage (v25 prints, pass143/masters.json) per
-   pass162/dashboard-redesign-spec.md: seat verdicts derive from the named source
-   tables ONLY — pass134/fleet-table.json (10 guard rows) + pass153/fleet-table.json
-   (transcript re-fire) form the 11-seat decisive counting set of spec §5.4
-   (educator advisory + the superseded Pass 134 transcript row land in Other);
-   geometry seats #30/#31/#32 from pass148 censuses and #33 from the Pass 149
-   seated-print absence census ride in the roster + work-left, never in the
-   11-seat counts. Unarmed coverage prints NOT CHECKED by name (guard_category
-   gate · guard_thumbnail · C10 · C11 · C12 arrangement). BATCH_META.lineage
-   carries the source-table shas — the page compares them against its embedded
-   copy and prints STALE on any mismatch (spec §5.3, the sha leg).
-   Readiness: decisive seats only on the face; approvals 0/22 — seated is
-   NOT approved. This page is a REVIEW surface. */
+/* Experiment Batch 02 — cell registry (batch06), data v29 (PASS 173 seating round, 2026-11-10).
+   RE-ISSUED over the PASS 149 LINEAGE (pass149/work/masters149.json — the 20
+   geometry-cure prints; cells 03/20 blocked, no print seats): the decisive
+   counting set of spec §5.4 as corrected by PASS 168 stays TEN seats
+   (pass134's nine non-transcript guard rows + guard_transcript governed
+   SOLELY by pass153's confirmed re-fire); checker seats over the new prints
+   derive from the Pass 149 post-censuses (#30/#31 PASS 20/20 · #32 FAIL by
+   the ruled decomposition · #33 19 PASS + cell16 FAIL-UNVERIFIABLE) and
+   Pass 172's #35 fleet firing (22 PASS); #31's transient combined headline
+   prints beside the settled claim in every gate text (HQ's bound). The
+   gate text is in §149.10's RULED FORM: claims scoped to ARMED coverage,
+   #32's three components named, NOT CHECKED printed by name, no print
+   described as backing-passed. BATCH_META.lineage carries the source-table
+   shas — the page compares them against its embedded copy and prints
+   STALE on any mismatch (spec §5.3, the sha leg). Readiness: decisive
+   seats only on the face; approvals 0/22 — seated is NOT approved.
+   This page is a REVIEW surface. */
 
 window.BATCH_REVIEWS = [
  {
@@ -76,31 +79,37 @@ window.BATCH_REVIEWS = [
  },
  {
   "key": "code_collision",
-  "label": "Checker #30 · text collision — ARMED (Pass 148, seated lineage)",
+  "label": "Checker #30 · text collision — ARMED (Pass 149 post-census over the v29 prints: 20/20 PASS)",
   "short": "Words collide",
   "counts": false
  },
  {
   "key": "code_containment",
-  "label": "Checker #31 · diagram containment — ARMED (Pass 148, seated lineage)",
+  "label": "Checker #31 · diagram containment — ARMED (Pass 149 post-census: settled 20/20 PASS; the Pass 171 transient leg is printed beside it in the gate text)",
   "short": "Diagram fits",
   "counts": false
  },
  {
   "key": "code_backing",
-  "label": "Checker #32 · text backing — ARMED (Pass 148, seated lineage)",
+  "label": "Checker #32 · text backing — ARMED · FAIL fleet-wide by the ruled decomposition (Comp 1 shadow 184 · Comp 2 CURED · Comp 3 pattern 12; cure = Wave E re-grounding)",
   "short": "Text backing",
   "counts": false
  },
  {
   "key": "code_caption_absence",
-  "label": "Checker #33 · caption absence (Pass 149 seated-print census)",
+  "label": "Checker #33 · caption absence — ARMED (Pass 149 post-census: 19 PASS · cell16 FAIL-UNVERIFIABLE, leg A zero)",
   "short": "No captions",
   "counts": false
  },
  {
+  "key": "code_intro_language",
+  "label": "Checker #35 · intro language — ARMED (built Pass 171 · fleet firing Pass 172: 22 PASS)",
+  "short": "Intro language",
+  "counts": false
+ },
+ {
   "key": "guard_category",
-  "label": "Guard · category — GATE NOT CHECKED (gate firing lands on v26, HQ ruling 10)",
+  "label": "Guard · category — ARMED (Pass 165) · GATE NOT CHECKED on this lineage (gate firing follows this seating, HQ ruling 10)",
   "short": "Category gate",
   "counts": false
  },
@@ -124,7 +133,7 @@ window.BATCH_REVIEWS = [
  },
  {
   "key": "guard_story_order_c12",
-  "label": "C12 · story arrangement leg — NOT CHECKED (waits on guard_category)",
+  "label": "C12 · story arrangement leg — NOT CHECKED (no guard armed)",
   "short": "Story order",
   "counts": false
  }
@@ -135,21 +144,26 @@ window.BATCH_META = {
  "channel": "Earth One · The Daily Language Challenge",
  "repo": "hadi-nayebi/hadosh-production-contexts",
  "coverage": "Coverage 26/27 (old basis) · 26/28 (new basis) · open items exactly one: G11 (sound-design fit; owner = guard_seams' next B60 amendment + print legs) — row 28's FA residue CLOSED BY SUBSTITUTION (owner order + full-content clarification; § PASS 48 execution + checker #23 verification) (HQ GUARD-MAP v56)",
- "shelf": "Guard shelf — 8 CONFIRMED · reasoning ARMED-PROVISIONAL · guard_transcript CONFIRMED (Pass 153) · guard_category BUILT-NOT-FIRED (gate firing lands on v26) · guard_thumbnail BUILT-NOT-FIRED · checkers #30/#31/#32 ARMED · #33 fired over seated prints · #34 dyslexia legs armed on this surface.",
- "dashboard": "v28 (2026-11-10, PASS 168 — panel-chrome fix + details closed by default (checker #34 leg (v)) · B53 flags F1–F12 cured: 9:16 video fit · blocked face honest (no counts, no verdict controls) · superseded Pass 134 transcript row removed (decisive set 10) · distinct expander labels · tap-to-play · roster wraps · truthful screenshot line)",
+ "shelf": "Guard shelf — 8 CONFIRMED · reasoning ARMED-PROVISIONAL · guard_transcript CONFIRMED (Pass 153) · guard_category ARMED (Pass 165; GATE firing over this lineage follows this seating, HQ ruling 10) · guard_thumbnail BUILT-NOT-FIRED · checkers #30/#31/#32/#33/#35 ARMED · #34 dyslexia legs armed on this surface.",
+ "dashboard": "v29 (2026-11-10, PASS 173 — the Pass 149 lineage SEATED: 20 geometry-cure prints · caption plate removed by construction · #30/#31 settled PASS · #33 armed (19 PASS, cell16 UNVERIFIABLE) · gate in the ruled form: #32 FAIL with its three components named · roster gains checker #35 intro language, 22 PASS · supersedes the v25-print lineage carried by v27/v28)",
  "pathNote": "Served from the legacy experiment-batch-01 dashboard path; the content reviewed here is Experiment Batch 02.",
  "lineage": {
-  "build": "pass168-v28",
+  "build": "pass173-v29",
   "sources": {
    "pass134": "5852b7a5034e",
    "pass153": "33eaeea3c14c",
    "pass148": "ee2944228cdd",
-   "pass149absence": "32abbcb922ed"
+   "pass149absence": "32abbcb922ed",
+   "masters149": "b6a5fbd5b427",
+   "pass149post": "d30bf6be6b36",
+   "pass171transient": "a6fac6c4f66e",
+   "pass172intro": "363c1ab2b798"
   },
-  "printsFileSha": "4549d51aed98",
-  "seated": "v25 prints (pass143 masters) — the Pass 149 lineage enters at v26 seating",
+  "printsFileSha": "b6a5fbd5b427",
+  "seated": "v29 prints (pass149/work/masters149.json) — the 20 Pass 149 geometry-cure prints seated; cells 03/20 blocked",
   "cells": 22,
-  "countingSeats": 10
+  "countingSeats": 10,
+  "seatedPrints": 20
  }
 };
 
@@ -180,24 +194,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell01-pass133 · sha256 1bf6afe4… · 80.7 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell01-pass149 · sha256 d97c600a… · 80.7 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (9 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 8 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc001-eat-bread__print__en__cell01.mp4",
   "video": "videos/dlc001-eat-bread__print__en__cell01.mp4",
   "poster": "poster-cell-01.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 133 print 1bf6afe4… · 80.67 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard layer indicts: click_promise — no designed thumbnail) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print d97c600a · 80.7 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The batch-02 baseline: batch 01's built cell folded in and rebuilt under the batch06 construct. Control pair with cell 02 (only the opening language moves). Its panel is flagged INVALID-until-dispositioned (checker #14 print identity) — see Gate status.",
   "title": "I Eat Bread in 4 Languages — Learn It From English",
   "progress": {
@@ -208,13 +223,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Words collide — 62 hits on print",
-   "✗ Text backing — 19 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 8 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "1bf6afe4",
-  "printTake": "cell01-pass133",
+  "printSha": "d97c600a",
+  "printTake": "cell01-pass149",
   "printDur": 80.7
  },
  {
@@ -243,24 +256,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell02-pass133 · sha256 d8bd4db7… · 88.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell02-pass149 · sha256 1e47099e… · 88.9 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (9 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 8 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc001-eat-bread__print__es__cell02.mp4",
   "video": "videos/dlc001-eat-bread__print__es__cell02.mp4",
   "poster": "poster-cell-02.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 133 print d8bd4db7… · 88.93 s — the file the v23 entry named but did not hold) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise · its closing carries the stock CTA formula — E1 redesign queue, quality wave) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 1e47099e · 88.9 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · M · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class L. Control pair with cell 01 — only the opening language moves.",
   "title": "I Eat Bread in 4 Languages — Learn It From Spanish",
   "progress": {
@@ -271,13 +285,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Words collide — 79 hits on print",
-   "✗ Text backing — 19 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 8 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "d8bd4db7",
-  "printTake": "cell02-pass133",
+  "printSha": "1e47099e",
+  "printTake": "cell02-pass149",
   "printDur": 88.9
  },
  {
@@ -310,20 +322,21 @@ window.BATCH_CELLS = [
    "code_containment": "other",
    "code_backing": "other",
    "code_caption_absence": "other",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: NONE — this cell is BLOCKED (no named print in pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 0 FAIL · 3 other of 10. Geometry over the seated print (Pass 148 censuses): #30 collision NOT RUN · #31 containment NOT RUN · #32 backing NOT RUN · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173): NONE — this cell is BLOCKED (no print seats; the F7 form carries: no counts on the face, no verdict controls). First render queued — the Pass 158 data cure landed (s02 span re-derived); the render is queued from dlc003. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 7 PASS · 0 FAIL · 3 other of 10. Checker seats: geometry NOT RUN (no print) · #35 intro language PASS (record-level, Pass 172 fleet firing). NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Issues #44/#45 (missing thumbnails) are NOT claimed closed by this round — they route to the thumbnail job’s Plan. Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "No print · blocked",
   "file": "",
   "video": "",
   "poster": "",
   "status": "recut-owed",
   "statusLabel": "⛔ No print",
-  "statusFull": "BLOCKED — no current print: the record cannot render this cell (its intro span, 2.4 s, cannot hold its three intro chunks totalling 3.29 s — § PASS 134 Leg 0, measured; re-deriving the span is an HQ / production-record decision, escalated) · NOT READY (Pass 134: seams NO-CONTENT · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)",
+  "statusFull": "BLOCKED — no print yet: the record’s data cure landed (Pass 158); the first render is queued behind this seating · NOT READY (Pass 134: seams NO-CONTENT · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)",
   "about": "Strata: A · L (drifted from M; reclassed) · O1 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. Verify-only in F2: the Phase 1B print of record, re-proved (census UNTAGGED 0, sealed tail probe PASS) — plus a take-2 render under the HARNESS-2 capture patch with identical duration/LUFS/census.",
   "title": "I Open the Door in 4 Languages — Learn It From English",
   "progress": {
@@ -369,21 +382,22 @@ window.BATCH_CELLS = [
    "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "other",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell04-pass120 · sha256 17a443b1… · 85.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 6 PASS · 3 FAIL · 1 other of 10. Failing: Reasoning · Motion fits · Ending. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 6/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell04-pass149 · sha256 dc83a386… · 85.6 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 6 PASS · 3 FAIL · 1 other of 10. Failing: Reasoning · Motion fits · Ending. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg PASSes this cell (the fleet’s only transient PASS; 19 cells FAIL it). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 15 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 6/10 passing",
   "file": "dlc002-need-water__print__en__cell04.mp4",
   "video": "videos/dlc002-need-water__print__en__cell04.mp4",
   "poster": "poster-cell-04.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Named print seated (§ PASS 120, 17a443b1… · 85.63 s) — cured hero in film, three states frame-verified · NOT READY (Pass 134: FAILs at animation (motion) + closure (B44 closing tail 15.53 s — HQ's tagging-vs-trimming call) · the owner's diagram-pacing defect stands (2.845 vs 2.093 words/s, § PASS 135) · the one cell the owner-standard layer clears) · B4 NOT VERIFIED · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print dc83a386 · 85.6 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · L · O1 · E1 · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M2 card flips · demographic class XL. Re-cut of DLC-002 with the B33+B35+B36+B37 cures riding; introduce segments carry the G1 voice fix. The PANEL guard-passed this cell (see Gate status), and the print playable here is now the NAMED print of § PASS 120 — the cured set in film (see the print state at the head of Gate status). It is named, not approved: approvals stand 0/22.",
   "title": "I Need Water in 4 Languages — Learn It From English",
   "progress": {
@@ -396,10 +410,10 @@ window.BATCH_CELLS = [
    "✗ Reasoning — doesn't drive choices",
    "✗ Motion fits — motion serves segment",
    "✗ Ending — fails",
-   "✗ Text backing — 26 stages undeclared"
+   "✗ Text backing — 15 stages declared shadow, not solid"
   ],
-  "printSha": "17a443b1",
-  "printTake": "cell04-pass120",
+  "printSha": "dc83a386",
+  "printTake": "cell04-pass149",
   "printDur": 85.6
  },
  {
@@ -431,21 +445,22 @@ window.BATCH_CELLS = [
    "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "other",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell05-pass121 · sha256 9c1dfc1d… · 92.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 9 PASS · 0 FAIL · 1 other of 10. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 9/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell05-pass149 · sha256 e9bfbabb… · 92.9 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 9 PASS · 0 FAIL · 1 other of 10. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (8 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 11 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 9/10 passing",
   "file": "dlc002-need-water__print__hi__cell05.mp4",
   "video": "videos/dlc002-need-water__print__hi__cell05.mp4",
   "poster": "poster-cell-05.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Named print seated (§ PASS 121, 9c1dfc1d… · 92.93 s) — its own flat-vector set, frame-verified · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise · PRIMARY-HELPER: its 3 primary Hindi chips carry no Latin helper on the realized render — HQ ruling owed (lane recommends the construct amendment), § PASS 134) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print e9bfbabb · 92.9 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: B · L · O2 · E1 · V3 flat illustration · M3 slide stack · demographic class L. Diagram-first with a Hindi opening door.",
   "title": "I Need Water in 4 Languages — Learn It From Hindi, Diagram First",
   "progress": {
@@ -455,11 +470,11 @@ window.BATCH_CELLS = [
    "total": 10
   },
   "workleft": [
-   "✗ Text backing — 26 stages undeclared",
+   "✗ Text backing — 11 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "9c1dfc1d",
-  "printTake": "cell05-pass121",
+  "printSha": "e9bfbabb",
+  "printTake": "cell05-pass149",
   "printDur": 92.9
  },
  {
@@ -488,24 +503,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell06-pass131 · sha256 7eb7e884… · 101.8 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell06-pass149 · sha256 61253988… · 101.8 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (7 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 11 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc004-am-hungry__print__en__cell06.mp4",
   "video": "videos/dlc004-am-hungry__print__en__cell06.mp4",
   "poster": "poster-cell-06.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print 7eb7e884… · 101.83 s) — naming pending at the Wave 5 gate · this seating closes the owner's 'I don't see the video here' (issue #18 / FB-4) · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 61253988 · 101.8 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: B · L · O2 · E2 quiz finish · V4 watercolor · M1 floating chips · demographic class XL. Brand-new sentence launched straight into the diagram-first form.",
   "title": "I Am Hungry in 4 Languages — Diagram First, From English",
   "progress": {
@@ -516,14 +532,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — promise made",
-   "✗ Words collide — 52 hits on print",
-   "✗ Diagram fits — part +15 px out",
-   "✗ Text backing — 26 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 11 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "7eb7e884",
-  "printTake": "cell06-pass131",
+  "printSha": "61253988",
+  "printTake": "cell06-pass149",
   "printDur": 101.8
  },
  {
@@ -552,24 +565,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell07-pass121 · sha256 3b4d1092… · 85.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 1 other of 10. Failing: Motion fits · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 7/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell07-pass149 · sha256 718a1014… · 85.9 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 7 PASS · 2 FAIL · 1 other of 10. Failing: Motion fits · Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (8 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 10 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 7/10 passing",
   "file": "dlc004-am-hungry__print__en__cell07.mp4",
   "video": "videos/dlc004-am-hungry__print__en__cell07.mp4",
   "poster": "poster-cell-07.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Named print seated (§ PASS 121, 3b4d1092… · 85.90 s) — cured set in film · located: the German turn's figure is a third figure (kinship, not identity) · NOT READY (Pass 134: FAIL at animation (intro motion) · owner-standard indicts: click_promise + follow_earned · the owner's ending verdict (issue #10) stands — its stock-CTA closing is the E1 redesign queue's first cell) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 718a1014 · 85.9 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · M · O3 · E1 · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M2 card flips · demographic class M. The new-languages test: German and French enter the taught pool beside Spanish.",
   "title": "I Am Hungry in 4 Languages — German & French Join In",
   "progress": {
@@ -581,14 +595,11 @@ window.BATCH_CELLS = [
   "workleft": [
    "✗ Motion fits — motion serves segment",
    "✗ Story told — promise made",
-   "✗ Words collide — 70 hits on print",
-   "✗ Diagram fits — part +100 px out",
-   "✗ Text backing — 24 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 10 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "3b4d1092",
-  "printTake": "cell07-pass121",
+  "printSha": "718a1014",
+  "printTake": "cell07-pass149",
   "printDur": 85.9
  },
  {
@@ -617,24 +628,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell08-pass133 · sha256 4a317821… · 104.1 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 1 other of 10. Failing: Motion fits · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 7/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell08-pass149 · sha256 02bbc367… · 104.1 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 7 PASS · 2 FAIL · 1 other of 10. Failing: Motion fits · Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (5 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 9 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: 1 element(s) in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved) — joins the re-grounding cure. Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 7/10 passing",
   "file": "dlc005-sun-warm__print__en__cell08.mp4",
   "video": "videos/dlc005-sun-warm__print__en__cell08.mp4",
   "poster": "poster-cell-08.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 133 print 4a317821… · 104.10 s) — naming pending at the Wave 5 gate · completeness proven at the declared layer (28/28 takes, § PASS 136) — residuals stand: focus-stage frame-exit + caption-over-diagram (C7/C8, quality wave) · NOT READY (Pass 134: FAIL at animation (intro motion) · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 02bbc367 · 104.1 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: C · M (plan) · O3 · E4 story-button finish · V3 flat illustration · M3 slide stack · demographic class XL. Adjective-order pattern. Duration drift located: plan class M, the print measures ~105 s.",
   "title": "The Sun Is Warm Today in 4 Languages — Watch the Word Order Move",
   "progress": {
@@ -646,14 +658,11 @@ window.BATCH_CELLS = [
   "workleft": [
    "✗ Motion fits — motion serves segment",
    "✗ Story told — promise made",
-   "✗ Words collide — 67 hits on print",
-   "✗ Diagram fits — part +536 px out",
-   "✗ Text backing — 23 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 9 stages declared shadow, not solid · 1 pattern rows",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "4a317821",
-  "printTake": "cell08-pass133",
+  "printSha": "02bbc367",
+  "printTake": "cell08-pass149",
   "printDur": 104.1
  },
  {
@@ -682,24 +691,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell09-pass133 · sha256 5417f7fd… · 104.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell09-pass149 · sha256 808b87fb… · 104.0 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (8 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 8 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc006-thank-you__print__en__cell09.mp4",
   "video": "videos/dlc006-thank-you__print__en__cell09.mp4",
   "poster": "poster-cell-09.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 133 print 5417f7fd… · 104.03 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 808b87fb · 104.0 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: B · XL measured (plan S — drift located and declared) · O2 · E3 speed-recap finish · V5 whiteboard line-art · M4 word-build declared · demographic class XL. Diagram-first short test that outgrew its stratum: the authored diagram narration + E3 rapid-fire recap set the length. Located in the panel: closing/recap lines render white over the light hero at low contrast — construct ending typography, fix queue.",
   "title": "Thank You Very Much in 4 Languages — Diagram First",
   "progress": {
@@ -710,14 +720,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Words collide — 136 hits on print",
-   "✗ Diagram fits — part +428 px out",
-   "✗ Text backing — 22 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 8 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "5417f7fd",
-  "printTake": "cell09-pass133",
+  "printSha": "808b87fb",
+  "printTake": "cell09-pass149",
   "printDur": 104.0
  },
  {
@@ -746,24 +753,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell10-pass121 · sha256 a18321f5… · 88.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell10-pass149 · sha256 e9623535… · 88.0 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (9 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 10 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc007-drink-water__print__en__cell10.mp4",
   "video": "videos/dlc007-drink-water__print__en__cell10.mp4",
   "poster": "poster-cell-10.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Named print seated (§ PASS 121, a18321f5… · 88.03 s) — cured set in film, named clean · NOT READY (Pass 134: confirmed guards pass · transcript verdict recovered in § PASS 134's leg (ERROR in the fleet table's raw rows — runner extraction defect) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print e9623535 · 88.0 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · M · O1 · E2 quiz finish · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M1 floating chips · demographic class XL. Rebuild of the failed v3 lineage under the full current standard.",
   "title": "I Drink Water in 4 Languages — Learn It From English",
   "progress": {
@@ -774,13 +782,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — promise made",
-   "✗ Words collide — 67 hits on print",
-   "✗ Text backing — 25 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 10 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "a18321f5",
-  "printTake": "cell10-pass121",
+  "printSha": "e9623535",
+  "printTake": "cell10-pass149",
   "printDur": 88.0
  },
  {
@@ -809,24 +815,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell11-pass131 · sha256 ca3b18ba… · 105.1 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell11-pass149 · sha256 18069c85… · 105.1 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (7 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 8 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc008-where-station__print__en__cell11.mp4",
   "video": "videos/dlc008-where-station__print__en__cell11.mp4",
   "poster": "poster-cell-11.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print ca3b18ba… · 105.13 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 18069c85 · 105.1 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · S · O4 · E1 · V3 flat illustration · M2 card flips · demographic class XL. Question-form pattern.",
   "title": "Where Is the Station? in 4 Languages — Ask It Anywhere",
   "progress": {
@@ -837,14 +844,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Words collide — 81 hits on print",
-   "✗ Diagram fits — part +141 px out",
-   "✗ Text backing — 22 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 8 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "ca3b18ba",
-  "printTake": "cell11-pass131",
+  "printSha": "18069c85",
+  "printTake": "cell11-pass149",
   "printDur": 105.1
  },
  {
@@ -873,24 +877,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell12-pass131 · sha256 9c7a8333… · 119.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell12-pass149 · sha256 c135bb88… · 119.5 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (9 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 9 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc009-how-much-cost__print__tr__cell12.mp4",
   "video": "videos/dlc009-how-much-cost__print__tr__cell12.mp4",
   "poster": "poster-cell-12.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print 9c7a8333… · 119.47 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print c135bb88 · 119.5 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: C · M · O3 · E4 story-button finish · V4 watercolor · M3 slide stack · demographic class M. Market scenario with a Turkish opening door.",
   "title": "How Much Does It Cost? in 4 Languages — From Turkish, at the Market",
   "progress": {
@@ -901,14 +906,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Words collide — 111 hits on print",
-   "✗ Diagram fits — part +52 px out",
-   "✗ Text backing — 23 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 9 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "9c7a8333",
-  "printTake": "cell12-pass131",
+  "printSha": "c135bb88",
+  "printTake": "cell12-pass149",
   "printDur": 119.5
  },
  {
@@ -937,24 +939,25 @@ window.BATCH_CELLS = [
    "guard_closure": "fail",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell13-pass131 · sha256 a66a1443… · 112.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 2 FAIL · 1 other of 10. Failing: Ending · Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 7/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell13-pass149 · sha256 68f6849a… · 112.5 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 7 PASS · 2 FAIL · 1 other of 10. Failing: Ending · Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (2 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 9 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 7/10 passing",
   "file": "dlc010-good-morning__print__es__cell13.mp4",
   "video": "videos/dlc010-good-morning__print__es__cell13.mp4",
   "poster": "poster-cell-13.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print a66a1443… · 112.50 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at closure (B44 tail 1.064 s — HQ's tagging-vs-trimming call) · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 68f6849a · 112.5 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: B · S · O2 · E3 speed-recap finish · V1 paper cutout · M4 word-build · demographic class L. Greeting set with a Spanish opening door.",
   "title": "Good Morning in 4 Languages — Learn It From Spanish",
   "progress": {
@@ -966,13 +969,11 @@ window.BATCH_CELLS = [
   "workleft": [
    "✗ Ending — fails",
    "✗ Story told — story coherence",
-   "✗ Words collide — 37 hits on print",
-   "✗ Text backing — 22 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 9 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "a66a1443",
-  "printTake": "cell13-pass131",
+  "printSha": "68f6849a",
+  "printTake": "cell13-pass149",
   "printDur": 112.5
  },
  {
@@ -1001,24 +1002,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell14-pass121 · sha256 cdb362c8… · 133.3 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell14-pass149 · sha256 7dfb35c4… · 133.3 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (6 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 8 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc011-love-city__print__en__cell14.mp4",
   "video": "videos/dlc011-love-city__print__en__cell14.mp4",
   "poster": "poster-cell-14.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 7dfb35c4 · 133.3 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: C · L · O3 · E4 story-button finish · V2 retired → textured cartoon illustration (cured set, Passes 114–119) · M1 floating chips · demographic class XL. Sentiment sentence in the half/half form.",
   "title": "I Love This City in 4 Languages — Learn It From English",
   "progress": {
@@ -1029,14 +1031,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — completion stated",
-   "✗ Words collide — 145 hits on print",
-   "✗ Diagram fits — part +232 px out",
-   "✗ Text backing — 22 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 8 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "cdb362c8",
-  "printTake": "cell14-pass121",
+  "printSha": "7dfb35c4",
+  "printTake": "cell14-pass149",
   "printDur": 133.3
  },
  {
@@ -1065,24 +1064,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "other",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell15-pass133 · sha256 33123cec… · 97.0 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell15-pass149 · sha256 e992bd28… · 97.0 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (4 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 9 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc012-am-learning__print__en__cell15.mp4",
   "video": "videos/dlc012-am-learning__print__en__cell15.mp4",
   "poster": "poster-cell-15.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 133 print 33123cec… · 97.00 s — the cell's FIRST print, after the 2 ms total cure) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print e992bd28 · 97.0 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · M · O1 · E1 · V3 flat illustration · M2 card flips · demographic class S. FA taught probe — Mina's comfort language; niche by design.",
   "title": "I Am Learning in 4 Languages — Persian Joins In",
   "progress": {
@@ -1093,12 +1093,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — completion stated",
-   "✗ Words collide — 105 hits on print",
-   "✗ Text backing — 23 stages undeclared",
+   "✗ Text backing — 9 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "33123cec",
-  "printTake": "cell15-pass133",
+  "printSha": "e992bd28",
+  "printTake": "cell15-pass149",
   "printDur": 97.0
  },
  {
@@ -1127,24 +1126,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "other",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
    "code_caption_absence": "fail",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell16-pass133 · sha256 4c01afe2… · 94.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 1 FAIL · 2 other of 10. Failing: Seams. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 7/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell16-pass149 · sha256 6138e0c7… · 94.5 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 7 PASS · 1 FAIL · 2 other of 10. Failing: Seams. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence FAIL — UNVERIFIABLE: leg A reads ZERO caption elements and the frame’s own evidence prices the band as the designed focus card; leg B cannot separate card from plate (no discriminator exists, measured) — NOT a caption conviction. · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (9 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 8 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: 10 element(s) in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved) — joins the re-grounding cure. Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 7/10 passing",
   "file": "dlc001-eat-bread__print__tr__cell16.mp4",
   "video": "videos/dlc001-eat-bread__print__tr__cell16.mp4",
   "poster": "poster-cell-16.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 133 print 4c01afe2… · 94.50 s — replaces the superseded print the v23 surface held) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at seams (bed fit 0.12 vs 0.23 — the G11 line; B4 NOT VERIFIED) · owner-standard layer: no category package on the staged record (NO-CONTENT) · its closing carries the Turkish stock-CTA formula — E1 queue) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 6138e0c7 · 94.5 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 FAIL-UNVERIFIABLE · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: C · S · O4 · E2 quiz finish · V5 whiteboard line-art · M3 slide stack · demographic class M. Mina-spec skin cell: the bread sentence compressed, Turkish opening door.",
   "title": "I Eat Bread in 4 Languages — Learn It From Turkish",
   "progress": {
@@ -1156,13 +1156,12 @@ window.BATCH_CELLS = [
   "workleft": [
    "✗ Seams — bed serves speech",
    "Story told — no text on record",
-   "✗ Words collide — 141 hits on print",
-   "✗ Text backing — 18 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 8 stages declared shadow, not solid · 10 pattern rows",
+   "◐ No captions — UNVERIFIABLE (leg A zero; card fills the zone)",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "4c01afe2",
-  "printTake": "cell16-pass133",
+  "printSha": "6138e0c7",
+  "printTake": "cell16-pass149",
   "printDur": 94.5
  },
  {
@@ -1192,23 +1191,24 @@ window.BATCH_CELLS = [
    "guard_educator": "other",
    "guard_transcript": "fail",
    "code_collision": "pass",
-   "code_containment": "fail",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "other",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell17-pass131 · sha256 c92e2220… · 38.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment FAIL · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell17-pass149 · sha256 1891f1bd… · 38.9 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (4 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 4 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc003-open-door__print__es__cell17.mp4",
   "video": "videos/dlc003-open-door__print__es__cell17.mp4",
   "poster": "poster-cell-17.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print c92e2220… · 38.93 s — replaces the superseded print the v23 surface held) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 1891f1bd · 38.9 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: C · S · O4 · E3 speed-recap finish · V4 watercolor · M2 card flips · demographic class L. Half/half at 30 seconds with a Spanish door. Minor located item: the ES diagram row label touches the left frame edge.",
   "title": "I Open the Door in 4 Languages — Learn It From Spanish",
   "progress": {
@@ -1219,12 +1219,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — completion stated",
-   "✗ Diagram fits — part +200 px out",
-   "✗ Text backing — 15 stages undeclared",
+   "✗ Text backing — 4 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "c92e2220",
-  "printTake": "cell17-pass131",
+  "printSha": "1891f1bd",
+  "printTake": "cell17-pass149",
   "printDur": 38.9
  },
  {
@@ -1253,24 +1252,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
-   "code_containment": "fail",
+   "code_collision": "pass",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "other",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell18-pass131 · sha256 3846c14f… · 135.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment FAIL · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell18-pass149 · sha256 4fbc767e… · 135.6 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (5 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 11 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: 1 element(s) in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved) — joins the re-grounding cure. Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc005-sun-warm__print__en__cell18.mp4",
   "video": "videos/dlc005-sun-warm__print__en__cell18.mp4",
   "poster": "poster-cell-18.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print 3846c14f… · 135.57 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 4fbc767e · 135.6 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: D · XL · O2 · E1 · V5 whiteboard line-art · M4 word-build · demographic class XL. Explainer: the adjective-order analysis at length.",
   "title": "The Sun Is Warm Today in 4 Languages — The Full Word-Order Explainer",
   "progress": {
@@ -1281,13 +1281,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — promise made",
-   "✗ Words collide — 67 hits on print",
-   "✗ Diagram fits — part +536 px out",
-   "✗ Text backing — 25 stages undeclared",
+   "✗ Text backing — 11 stages declared shadow, not solid · 1 pattern rows",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "3846c14f",
-  "printTake": "cell18-pass131",
+  "printSha": "4fbc767e",
+  "printTake": "cell18-pass149",
   "printDur": 135.6
  },
  {
@@ -1317,23 +1315,24 @@ window.BATCH_CELLS = [
    "guard_educator": "other",
    "guard_transcript": "fail",
    "code_collision": "pass",
-   "code_containment": "fail",
+   "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell19-pass124 · sha256 a9b74167… · 70.5 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision PASS · #31 containment FAIL · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell19-pass149 · sha256 eadeedfc… · 70.5 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (6 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). Issue #47 retires here: the seated print’s zh chip exit (+1,387.2 px at s17:diagram, pass148 census) is cured on this print — post-census containment PASS, rows [] (§149.7 stands as the answer of record). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 10 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc002-need-water__print__en__cell19.mp4",
   "video": "videos/dlc002-need-water__print__en__cell19.mp4",
   "poster": "poster-cell-19.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print eadeedfc · 70.5 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: B · L · O2 · E2 quiz finish · V3 flat illustration · M1 floating chips · demographic class S. ZH taught probe (Mina's requested set) — pinyin + tone coaching inline on the ZH beat card. One of only two code-clean cells at panel time; its armed-guard state stands in the battery note below — approvals remain 0/22. Its ZH beat card is the one whose phonetic lines overflowed the frame in the superseded print — cured at the renderer at § PASS 124; the current named print's card fits (see Gate status).",
   "title": "I Need Water in 4 Languages — Chinese Joins In",
   "progress": {
@@ -1344,13 +1343,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Diagram fits — part +1,387 px out",
-   "✗ Text backing — 25 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 10 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "a9b74167",
-  "printTake": "cell19-pass124",
+  "printSha": "eadeedfc",
+  "printTake": "cell19-pass149",
   "printDur": 70.5
  },
  {
@@ -1381,20 +1378,21 @@ window.BATCH_CELLS = [
    "code_containment": "other",
    "code_backing": "other",
    "code_caption_absence": "other",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: NONE — this cell is BLOCKED (no named print in pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 7 PASS · 0 FAIL · 3 other of 10. Geometry over the seated print (Pass 148 censuses): #30 collision NOT RUN · #31 containment NOT RUN · #32 backing NOT RUN · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173): NONE — this cell is BLOCKED (no print seats; the F7 form carries: no counts on the face, no verdict controls). First render queued — the Pass 158 data cure landed (Block-2 segment ids renamed); the render is queued from dlc013. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 7 PASS · 0 FAIL · 3 other of 10. Checker seats: geometry NOT RUN (no print) · #35 intro language PASS (record-level, Pass 172 fleet firing). NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Issues #44/#45 (missing thumbnails) are NOT claimed closed by this round — they route to the thumbnail job’s Plan. Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
   "gateShort": "No print · blocked",
   "file": null,
   "video": null,
   "poster": null,
   "status": "recut-owed",
   "statusLabel": "⛔ No print",
-  "statusFull": "BLOCKED — no print: the record cannot render this cell (its manifest reuses segment ids s17–s22 across two blocks, evicting the zh + tr span boundaries two designed pauses need — § PASS 133 §3; the cure is an HQ / production-record decision, escalated) · NOT READY (Pass 134: seams NO-CONTENT · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "BLOCKED — no print yet: the record’s data cure landed (Pass 158); the first render is queued behind this seating · NOT READY (Pass 134: seams NO-CONTENT · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise) · not approved (0/22)",
   "about": "Strata: D · XL · O2 · E1 · V1 paper cutout · M1 floating chips · demographic class XL. The comparison special: the diagram at the 8-language scale.",
   "title": "One Sentence in 8 Languages — Every Word Order, One Diagram",
   "progress": {
@@ -1437,24 +1435,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "fail",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell21-pass131 · sha256 693d315e… · 79.6 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence FAIL (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell21-pass149 · sha256 f44e8a5d… · 79.6 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (9 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 9 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc001-eat-bread__print__en__cell21.mp4",
   "video": "videos/dlc001-eat-bread__print__en__cell21.mp4",
   "poster": "poster-cell-21.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print 693d315e… · 79.60 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print f44e8a5d · 79.6 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell21) · demographic class —. Mina variant of cell 01 — the bread sentence in Mina's voice/take set (HI mina takes, verbmina diagram take).",
   "title": "I Eat Bread in 4 Languages — Mina's Voice Edition",
   "progress": {
@@ -1465,13 +1464,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Words collide — 62 hits on print",
-   "✗ Text backing — 20 stages undeclared",
-   "✗ No captions — caption plate on print",
+   "✗ Text backing — 9 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "693d315e",
-  "printTake": "cell21-pass131",
+  "printSha": "f44e8a5d",
+  "printTake": "cell21-pass149",
   "printDur": 79.6
  },
  {
@@ -1500,24 +1497,25 @@ window.BATCH_CELLS = [
    "guard_closure": "pass",
    "guard_educator": "other",
    "guard_transcript": "fail",
-   "code_collision": "fail",
+   "code_collision": "pass",
    "code_containment": "pass",
    "code_backing": "fail",
-   "code_caption_absence": "other",
+   "code_caption_absence": "pass",
+   "code_intro_language": "pass",
    "guard_category": "notchecked",
    "guard_thumbnail": "notchecked",
    "code_hook_c10": "notchecked",
    "code_badge_c11": "notchecked",
    "guard_story_order_c12": "notchecked"
   },
-  "gate": "PRINT STATE — dashboard v27 (2026-11-10, PASS 166: details re-issued against the seated lineage; supersedes the v22-era panel text). Seated print: cell22-pass131 · sha256 d03a880a… · 87.9 s (pass143/masters.json). Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; spec §5.4 counting): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Geometry over the seated print (Pass 148 censuses): #30 collision FAIL · #31 containment PASS · #32 backing FAIL · #33 caption absence NOT RUN (Pass 149 seated-print census). NOT CHECKED by name: guard_category gate (its gate firing lands on v26, HQ ruling 10) · guard_thumbnail (BUILT-NOT-FIRED; designed set 1/22) · C10 hook checker (UNBUILT) · C11 badge floor (UNBUILT) · C12 story arrangement leg (waits on guard_category). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
-  "gateShort": "Print seated · 8/11 passing",
+  "gate": "PRINT STATE v29 (2026-11-10, PASS 173 — the Pass 149 lineage seated; supersedes the v25-print state carried by v27/v28). Seated print: cell22-pass149 · sha256 81d368ce… · 87.9 s (pass149/work/masters149.json). The caption plate is removed by construction (owner’s no-captions law) — no code path produces it. Decisive seats (Pass 134 fleet firing + Pass 153 transcript re-fire; counting set of 10): 8 PASS · 1 FAIL · 1 other of 10. Failing: Story told. Checker seats over this print (Pass 149 post-censuses): #30 collision PASS · #31 containment PASS (settled) · #32 backing FAIL (components below) · #33 caption absence PASS · #35 intro language PASS (Pass 172 fleet firing, 22/22). #31 combined headline (HQ bound — the claim stands on the settled leg): the transient peak-growth leg FAILs this cell (9 priced rows; 19 cells fleet-wide — the class joins the cure queue as one construct-road cure). #32 backing — FAIL with its three components named: Component 1 — declared image-text-shadow: 9 stage-instance(s) in this cell (fleet 184; TRUE declarations, but shadow is not a lawful backing) — cure = RE-GROUNDING, Wave E’s FIRST act + fleet #32 re-census. Component 2 — CURED (ending stages declared; NOT DECLARED = 0 fleet-wide). Component 3 — measured PATTERN: none in this cell (fleet 12: cell16 ×10 · cell08 ×1 · cell18 ×1; cell09 dissolved). Prints are named on #30 · #31 · #33 only — NEVER backing-passed. NOT CHECKED by name: guard_thumbnail (not designed; designed set 1/22) · guard_category GATE over this lineage (the guard is ARMED, Pass 165; its gate firing follows this seating, HQ ruling 10) · #32 re-grounding (Wave E) · C10 hook facts (checker UNBUILT) · C12 story arrangement (no guard armed). Readiness: NOT READY — approvals 0/22 (Hadi + Mina); seated is not approved.",
+  "gateShort": "Print seated · 8/10 passing",
   "file": "dlc001-eat-bread__print__tr__cell22.mp4",
   "video": "videos/dlc001-eat-bread__print__tr__cell22.mp4",
   "poster": "poster-cell-22.png",
   "status": "inbuild",
   "statusLabel": "Seated for review · not approved",
-  "statusFull": "Current print seated for review (§ PASS 131 print d03a880a… · 87.93 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise) · not approved (0/22)",
+  "statusFull": "Current print seated for review (PASS 149 geometry-cure print 81d368ce · 87.9 s — caption plate removed by construction · #30 PASS · #31 PASS (settled) · #33 PASS · #32 backing FAIL, components in the gate text) · NOT READY · not approved (0/22)",
   "about": "Strata: A · M · O1 · E1 · V1 paper cutout (per manifest-cell22) · demographic class —. Mina variant with a Turkish primary — Mina's TR take set (narration__tr__mina).",
   "title": "I Eat Bread in 4 Languages — Mina's Turkish Edition",
   "progress": {
@@ -1528,12 +1526,11 @@ window.BATCH_CELLS = [
   },
   "workleft": [
    "✗ Story told — payload not spoken",
-   "✗ Words collide — 140 hits on print",
-   "✗ Text backing — 20 stages undeclared",
+   "✗ Text backing — 9 stages declared shadow, not solid",
    "Thumbnail — none designed yet"
   ],
-  "printSha": "d03a880a",
-  "printTake": "cell22-pass131",
+  "printSha": "81d368ce",
+  "printTake": "cell22-pass149",
   "printDur": 87.9
  }
 ];
