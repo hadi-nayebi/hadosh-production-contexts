@@ -473,6 +473,20 @@
        --chrome-h) — the fallback is the design's own 56px row 1 */
     .railwrap{top:var(--rail-top, calc(56px + env(safe-area-inset-top)))}
   }
+
+  /* PASS 244 — comment history (Details sheet) */
+  .histbtn { background: rgba(255,255,255,.08); color: inherit; border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 8px 12px; font: inherit; cursor: pointer; }
+  .fresh { opacity: .65; font-size: 12px; margin: 6px 0; }
+  .threadbox { margin-top: 6px; }
+  .tentry { border-top: 1px solid rgba(255,255,255,.12); padding: 7px 0; }
+  .tentry summary { cursor: pointer; }
+  .tbody { padding: 6px 0 2px; }
+  .tmeta { opacity: .65; font-size: 12px; margin-bottom: 4px; }
+  .ttext { white-space: normal; }
+  .tnote, .tdisp { margin-top: 6px; padding: 6px 8px; background: rgba(255,255,255,.06); border-radius: 8px; }
+  .tprov { opacity: .65; font-size: 12px; }
+  .tcanon { margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -584,7 +598,7 @@
      sources · printsFileSha · cells · countingSeats · seatedPrints
      stand exactly as v30 issued them; the data's meta (dashboard
      line + this lineage's build/seated) re-issues to name v31. */
-  var EXPECTED_LINEAGE = {"build": "pass206-v31", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718"}, "printsFileSha": "b6a5fbd5b427", "seated": "v31 (PASS 206) — the v30 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; presentation-only round (header compaction)", "cells": 22, "countingSeats": 10, "seatedPrints": 20};
+  var EXPECTED_LINEAGE = {"build": "pass244-v32", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718"}, "printsFileSha": "b6a5fbd5b427", "seated": "v32 (PASS 244) — the v31 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round: per-video comment history baked from the GitHub threads (19 threads · 72 entries · snapshot 2026-11-11T22:41:38Z) with live refresh on open · one canonical thread per video", "cells": 22, "countingSeats": 10, "seatedPrints": 20};
   function canon(o){
     if (o === null || typeof o !== "object") return JSON.stringify(o);
     if (Array.isArray(o)) return "[" + o.map(canon).join(",") + "]";
@@ -836,6 +850,7 @@
     var title = "[Batch02][" + cell.id + "] " + verdict + ": " + cell.sentence + " (" + cell.opening + ")";
     var lines = [
       "Cell: " + cell.id,
+      "Video-ID: batch02/" + cell.id,
       "Video file: " + (cell.file || "not built yet"),
       "Status: " + cell.statusLabel,
       "Verdict: " + verdict
@@ -910,22 +925,203 @@
     }).catch(function(){ return false; });
   }
 
+  /* PASS 244 — ONE canonical thread per video: when the cell already has
+     a thread, the composer routes INTO it (the composed text rides the
+     clipboard, the thread opens on GitHub — paste sends it into the same
+     thread). Only a threadless cell opens a new issue, and its body
+     carries the Video-ID marker so the mapping never depends on titles. */
   function openIssue(cell, verdict, comment, opts){
     opts = opts || {};
-    var url = issueURL(cell, verdict, comment, opts);
+    var canon = (window.BATCH_META && window.BATCH_META.threads || {})[cell.id];
+    var url = canon
+      ? "https://github.com/" + REPO + "/issues/" + canon
+      : issueURL(cell, verdict, comment, opts);
     function go(copied){
       window.open(url, "_blank", "noopener");
-      showToast(opts.img
-        ? (copied
-            ? "📷 On your clipboard — tap Paste in GitHub's comment box."
-            : "📷 GitHub opens — attach your screenshot there (paste / 📎).")
-        : "Opening your GitHub issue — one tap there sends it.");
+      if (canon) {
+        showToast(opts.img
+          ? (copied
+              ? "📷 On your clipboard — tap Paste in the thread on GitHub."
+              : "The video's thread opens on GitHub — comment there.")
+          : (copied
+              ? "✎ Copied — paste it in the video's thread on GitHub."
+              : "The video's thread opens on GitHub — comment there."));
+      } else {
+        showToast(opts.img
+          ? (copied
+              ? "📷 On your clipboard — tap Paste in GitHub's comment box."
+              : "📷 GitHub opens — attach your screenshot there (paste / 📎).")
+          : "Opening a new thread for this video on GitHub.");
+      }
     }
     if (opts.imgBlob) {
       copyImageToClipboard(opts.imgBlob).then(go);
+    } else if (canon && navigator.clipboard && navigator.clipboard.writeText) {
+      var bodyText = issueURL(cell, verdict, comment, opts);
+      var text = "";
+      try {
+        var q = bodyText.split("&body=")[1] || "";
+        text = decodeURIComponent(q.split("&")[0]);
+      } catch (e) { text = ""; }
+      if (text) {
+        navigator.clipboard.writeText(text).then(
+          function(){ go(true); }, function(){ go(false); });
+      } else { go(false); }
     } else {
       go(false);
     }
+  }
+
+  /* PASS 244 — COMMENT HISTORY (the read-back leg of the comment loop).
+     Baked snapshot (window.THREADS, harvested at build time) renders
+     instantly, labeled as a snapshot; opening a history refreshes that
+     video's threads live from the public GitHub API (no token in the
+     page), deduped by ID, and relabels. A failed refresh keeps the
+     snapshot and says so — it never renders as "no comments".
+     Entries are collapsed disclosures; the whole visible summary
+     (author + date + plain outcome + preview) stays within ten words.
+     The phone surface speaks ONE plain outcome per request; the four
+     internal state dimensions never reach it. */
+  function threadFor(cell){
+    return (window.THREADS || {})["batch02/" + cell.id] || null;
+  }
+  function historyHTML(cell){
+    var t = threadFor(cell);
+    if (!t) return 'No thread yet — your first comment opens it.';
+    return '<button class="histbtn" type="button" aria-expanded="false">History · ' +
+      t.entries.length + ' entries ›</button>' +
+      '<div class="fresh">Snapshot from ' + esc(window.BATCH_META.historySnapshot || "") + '</div>' +
+      '<div class="threadbox" hidden></div>';
+  }
+  var MONTHS_S = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function entrySummaryJS(stamp, iso, outcome, text){
+    var d = new Date(iso);
+    var words = stamp.split(" ").concat([String(d.getUTCDate()), MONTHS_S[d.getUTCMonth()]]);
+    if (outcome) words = words.concat(outcome.split(" "));
+    var prev = [];
+    String(text || "").replace(/\s+/g, " ").trim().split(" ").forEach(function(w){
+      if (w && words.length + prev.length < 10) prev.push(w);
+    });
+    return stamp + " · " + d.getUTCDate() + " " + MONTHS_S[d.getUTCMonth()] +
+      (outcome ? " · " + outcome : "") + (prev.length ? " · " + prev.join(" ") : "");
+  }
+  function outcomeJS(e){
+    if (e.kind !== "request") return null;
+    var d = e.disposition, acc = d && d.acceptance;
+    if (acc === "accepted") return "You accepted this change";
+    if (acc === "disputed" || (d && d.word === "REJECTED")) return "We disagree";
+    if (d && d.word === "NO-LONGER-APPLIES") return "This comment may no longer apply";
+    if (d && (d.word === "IMPLEMENTED" || d.word === "ACCEPTED")) return "Ready for you to check";
+    return "Being worked on";
+  }
+  function entryHTML(e, canon){
+    var h = '<details class="tentry"><summary>' + esc(e.summary || "") + '</summary><div class="tbody">' +
+      '<div class="tmeta">' + esc(e.stamp) + ' (@' + esc(e.author) + ') · ' + esc(e.created_at) +
+      ' · issue #' + e.issue + (e.issue === canon ? ' · the thread' : ' · earlier thread, closed') + '</div>' +
+      '<div class="ttext">' + esc(e.text).replace(/\n/g, "<br>") + '</div>';
+    if (e.note) h += '<div class="tnote">' + esc(e.note) + '</div>';
+    if (e.kind === "request") {
+      var d = e.disposition;
+      if (d) {
+        h += '<div class="tdisp"><b>' + esc(d.word) + '</b> — ' + esc(d.note) +
+          '<br><span class="tprov">Assigned by ' + esc(d.assigned_by || "") + ' · ' +
+          esc(d.assigned_at || "") + ' · answers ' + esc(d.answers || e.id) + '</span>';
+        if (d.word === "IMPLEMENTED" && d.acceptance !== "accepted")
+          h += '<br>Awaiting reviewer acceptance.';
+        if (d.acceptance === "accepted" && d.acceptance_evidence)
+          h += '<br>Reviewer acceptance: ' + esc(d.acceptance_evidence);
+        if (d.word === "NO-LONGER-APPLIES")
+          h += '<br><a href="https://github.com/' + REPO + '/issues/' + e.issue +
+            '" target="_blank" rel="noopener">Challenge this ›</a>';
+        h += '</div>';
+      } else {
+        h += '<div class="tdisp">Not yet dispositioned — it stands in the lane\'s queue with its age.</div>';
+      }
+    }
+    h += '<a href="https://github.com/' + REPO + '/issues/' + e.issue +
+      '" target="_blank" rel="noopener">Open on GitHub ›</a></div></details>';
+    return h;
+  }
+  function renderThread(box, cell, entries, label){
+    var t = threadFor(cell);
+    var canon = t ? t.canonical : null;
+    box.innerHTML = entries.map(function(e){ return entryHTML(e, canon); }).join("") +
+      (canon ? '<div class="tcanon"><a href="https://github.com/' + REPO + '/issues/' + canon +
+        '" target="_blank" rel="noopener">The thread for this video: #' + canon + ' ›</a></div>' : "");
+    var fresh = box.parentElement.querySelector(".fresh");
+    if (fresh) fresh.textContent = label;
+    var btn = box.parentElement.querySelector(".histbtn");
+    if (btn) btn.textContent = "History · " + entries.length + " entries ›";
+  }
+  function parseSubBody(body){
+    var m = /\nComment:\n([\s\S]*?)\n\n---/.exec(body || "");
+    return m ? m[1].trim() : String(body || "").trim();
+  }
+  function stampJS(login, body){
+    if (String(body || "").trim().indexOf("🏹 Archer") === 0) return "Archer · HQ";
+    if (login === "minanayebi") return "Mina N.";
+    if (login === "hadi-nayebi") return "Hadi N.";
+    return login;
+  }
+  var threadLiveCache = {};
+  function refreshThread(cell, box){
+    var t = threadFor(cell);
+    if (!t) return;
+    if (threadLiveCache[cell.id]) { renderThread(box, cell, threadLiveCache[cell.id], threadLiveCache[cell.id]._label); return; }
+    var api = "https://api.github.com/repos/" + REPO;
+    Promise.all([
+      fetch(api + "/issues?state=all&per_page=100").then(function(r){ if (!r.ok) throw 0; return r.json(); }),
+      fetch(api + "/issues/comments?per_page=100").then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    ]).then(function(res){
+      var issues = res[0], comments = res[1];
+      var mine = {};
+      t.issues.forEach(function(n){ mine[n] = true; });
+      issues.forEach(function(i){
+        if (i.pull_request) return;
+        var cm = /Cell: (cell-\d+)/.exec(i.body || "") || /Video-ID: batch02\/(cell-\d+)/.exec(i.body || "");
+        if (cm && cm[1] === cell.id) mine[i.number] = true;
+      });
+      var byId = {};
+      t.entries.forEach(function(e){ byId[e.id] = e; });
+      var out = [];
+      Object.keys(mine).map(Number).sort(function(a, b){ return a - b; }).forEach(function(n){
+        var iss = null;
+        issues.forEach(function(i){ if (i.number === n) iss = i; });
+        if (!iss) return;
+        var be = byId["issue:" + n];
+        out.push(be || (function(){
+          var e = { id: "issue:" + n, issue: n, kind: "request", author: iss.user.login,
+            stamp: stampJS(iss.user.login, iss.body), created_at: iss.created_at,
+            text: parseSubBody(iss.body) };
+          e.outcome = outcomeJS(e);
+          e.summary = entrySummaryJS(e.stamp, e.created_at, e.outcome, e.text);
+          return e;
+        })());
+        comments.filter(function(c){
+          return c.issue_url.split("/").pop() === String(n);
+        }).sort(function(a, b){ return a.created_at < b.created_at ? -1 : 1; }).forEach(function(c){
+          var ce = byId[String(c.id)];
+          if (!ce) {
+            ce = { id: String(c.id), issue: n,
+              kind: c.user.login === "hadi-nayebi" ? "response" : "comment",
+              author: c.user.login, stamp: stampJS(c.user.login, c.body),
+              created_at: c.created_at, text: String(c.body || "").trim() };
+            ce.outcome = outcomeJS(ce);
+            ce.summary = entrySummaryJS(ce.stamp, ce.created_at, ce.outcome, ce.text);
+          }
+          out.push(ce);
+        });
+      });
+      out.sort(function(a, b){ return a.created_at < b.created_at ? -1 : 1; });
+      var label = "Updated " + new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
+      out._label = label;
+      threadLiveCache[cell.id] = out;
+      if (!box.hidden) renderThread(box, cell, out, label);
+    }).catch(function(){
+      var fresh = box.parentElement.querySelector(".fresh");
+      if (fresh) fresh.textContent = "Refresh unavailable — showing the snapshot from " +
+        (window.BATCH_META.historySnapshot || "");
+    });
   }
 
   function buildScreen(cell){
@@ -972,6 +1168,7 @@
       : 'No print seated — BLOCKED';
     var rows = [
       ["Work left", wlItems],
+      ["History", historyHTML(cell)],
       ["Guards", rosterFullHTML(cell)],
       ["Print", printRow],
       /* PASS 193: the designed pair seats in the details — A is the card
@@ -1056,6 +1253,21 @@
     var sheet = screen.querySelector(".sheet");
     var detailsBtn = screen.querySelector(".fb.details");
     var workleftBtn = screen.querySelector(".workleft-btn");
+    var histBtn = screen.querySelector(".histbtn");
+    var threadBox = screen.querySelector(".threadbox");
+    if (histBtn && threadBox) {
+      histBtn.addEventListener("click", function(){
+        var open = threadBox.hidden;
+        threadBox.hidden = !open;
+        histBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        if (open) {
+          var t0 = threadFor(cell);
+          renderThread(threadBox, cell, t0.entries, "Snapshot from " +
+            (window.BATCH_META.historySnapshot || ""));
+          refreshThread(cell, threadBox);
+        }
+      });
+    }
     /* PASS 206 (design §3): Details is the panel's ONE disclosure
        control. Its tap opens the body (title · languages · Work-left
        entry · composer) INTO panel-open mode — chrome compresses,
