@@ -340,7 +340,8 @@ body.camView .headChip{bottom:64px}
 <script src="assets/three-vendor.js" data-reason="[BEST-PRACTICE] The vendored three.js engine (r186): one classic script, bundled from the pinned module pair, so the stage boots from a bare file:// open — no modules, no import map, no runtime fetch. Owner's platform decision, 2026-11-06 17:39 EST: adopt three.js, vendored. Its version, byte size and sha256 stand in the branch law and the migration record."></script>
 <script src="assets/locations/theater/location.js" data-reason="[ASSEMBLY] The theater's data object (the assembly build, 2026-11-08): the location's books, engine numbers and assembly table as a classic script, registered on window.STAGE_LOCATIONS before the world script runs — file:// blocks fetch and modules, so a location's data travels as a script, the file's proven pattern. Dropping a location's folder in and naming its script here is the whole act of adding a place."></script>
 <script src="assets/locations/gym/location.js" data-reason="[ASSEMBLY] The gym's data object (the assembly build, 2026-11-08): the workshop-tier proof location — added as data alone, no construction code in the HTML; the dropdown offers it and the assembler builds it from this file."></script>
-<!-- STAGE SEED - generated from stage.html (sha256 be30b5451c0065d0) by assets/plan/make-seed.py.
+<script src="assets/locations/deep/location.js" data-reason="[DEEP — the counting deep, 2026-11-11] The deep's data object: the scale-traversal cosmos the owner's redemption-test order builds — a new location added as data alone, its books, poses and assembly table in its own file, registered on window.STAGE_LOCATIONS before the world script runs, the file's proven pattern. It loads after the first location's file, whose font data its own books also carry — one typeface for the studio's word objects."></script>
+<!-- STAGE SEED - generated from stage.html (sha256 dbeca75dbd51075a) by assets/plan/make-seed.py.
      Boots into the empty state: the void and the wireframe grid, no objects.
      Do not edit by hand; regenerate after any stage.html change. -->
 <script>window.__STAGE_SEED__ = true;</script>
@@ -385,6 +386,8 @@ body.camView .headChip{bottom:64px}
   var ballGroup = null, ballMesh = null, ballShadowMesh = null, ballShadowMat = null, ballGlassMat = null;
   /* @reason [OPENING-PROSE] The prose rig's handles (the opening-prose build, 2026-11-10): the group asmProseRig builds from a location's prose props (hidden until a prose play stands), its parts table keyed by prop id, and the standings proseFrame actuates into — bookState's readback for the verifier, the same contract the ball's state keeps. Declared with the ball's handles, above the build call, for the reason that block names. */
   var proseGroup = null, proseParts = {}, proseSt = {};
+  /* @reason [DEEP — the counting deep, 2026-11-11] The deep rig's handles, declared with the prose rig's for the reason that block names: the group asmDeepRig builds from a location's deep props (hidden until a deep play stands), its parts table keyed by prop id, and the standings deepFrame actuates into — bookState's readback for the verifier, the prose contract's twin. */
+  var deepGroup = null, deepParts = {}, deepSt = {};
   var pipRect = null, gizmoRect = null;
 
   /* @reason [USER] The held ring's handle: there is ONE world scene now, rendered once per eye, so there is one ring — the wiring's ring writer (setRing, in the control layer) writes this handle's style exactly as it wrote the two DOM rings before, both world handles it knows are this one handle, and the render loop reads the handle each frame and lights the one ring mesh in the director's pass. One write, both views correct, because the views are one world. */
@@ -994,6 +997,124 @@ body.camView .headChip{bottom:64px}
     proseGroup.visible = false;
     scene.add(proseGroup);
   }
+  /* @reason [DEEP — the counting deep, 2026-11-11] The glow texture, built once: a procedural radial gradient (white core falling to nothing) on a canvas — the branch's no-external-images law holds for light too. Every halo sprite and the field's points cloud sample this one texture; tint lives on the materials, never in the pixels. */
+  function deepGlowTexture() {
+    if (deepGlowTexture.cache) return deepGlowTexture.cache;
+    var cv = document.createElement('canvas'); cv.width = 128; cv.height = 128;
+    var g = cv.getContext('2d'), gr = g.createRadialGradient(64, 64, 2, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,255,255,0.85)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.28)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+    deepGlowTexture.cache = new T3.CanvasTexture(cv);
+    return deepGlowTexture.cache;
+  }
+  /* @reason [DEEP] One halo: a soft additive sprite from the shared radial texture, tinted and sized by the caller — light, worn by heroes only. The glow discipline from the category study: emissive cores plus rationed halos on the few, points of light for the multitude, nothing washed. */
+  function deepHalo(colour, size, opacity) {
+    var sp = new T3.Sprite(new T3.SpriteMaterial({ map: deepGlowTexture(), color: parseInt(colour.slice(1), 16), transparent: true, opacity: opacity, blending: T3.AdditiveBlending, depthWrite: false }));
+    sp.scale.set(size, size, 1);
+    return sp;
+  }
+  /* @reason [DEEP — the counting deep, 2026-11-11] The deep rig: the scale-traversal machinery the owner's redemption-test order builds under its plan amendment (record: stage3d-deep-record.md §8) — a location's cosmos parts built from its props by form, the way the prose rig builds its words: the indigo sky shell, the one hero token, the staged-count field, the flowing rivers, the processing lattice and the turning orb. The claim and its subline stay prose-rig word objects on the word-driver; this rig only LIGHTS them (emissive core + additive halo) from their data.glow, because glow is this world's material, not the paper room's. deepFrame actuates the parts from playDerived — the same pure derivation the prose frame obeys — and deepSt is bookState's readback, the verifier's contract. A location with no deep forms builds nothing. Every seat, count, colour and lane is the props' own data; the halos are light (additive sprites from a procedural radial texture), never plates — nothing stands behind any letter. */
+  function asmDeepRig(data) {
+    deepParts = {}; deepSt = {};
+    var found = [], i, p;
+    for (i = 0; i < data.location.props.length; i++) { p = data.location.props[i]; if (p.geometry.form === 'deep-sky' || p.geometry.form === 'deep-seed' || p.geometry.form === 'deep-field' || p.geometry.form === 'deep-stream' || p.geometry.form === 'deep-lattice' || p.geometry.form === 'deep-orb') found.push(p); }
+    for (i = 0; i < data.location.props.length; i++) {
+      p = data.location.props[i];
+      if (p.geometry.form === 'word-object' && p.data && p.data.glow && proseParts[p.id]) {
+        (function (prop, part) {
+          var g = prop.data.glow;
+          part.node.traverse(function (m) { if (m.isMesh) m.material = new T3.MeshStandardMaterial({ color: parseInt(prop.material.colour.slice(1), 16), emissive: parseInt(g.emissive.slice(1), 16), emissiveIntensity: g.intensity, roughness: prop.material.roughness }); });
+          if (g.halo) part.node.add(deepHalo(g.emissive, g.halo, g.haloOpacity != null ? g.haloOpacity : 0.5));
+        })(p, proseParts[p.id]);
+      }
+    }
+    if (!found.length) return;
+    deepGroup = new T3.Group();
+    var font = data.fonts && data.fonts.wordSerif;
+    for (i = 0; i < found.length; i++) {
+      p = found[i];
+      var seat = Array.isArray(p.geometry.seat) ? p.geometry.seat : [0, 0, 0], d = p.data;
+      if (p.geometry.form === 'deep-sky') {
+        var skyMat = new T3.ShaderMaterial({
+          vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+          fragmentShader: 'varying vec3 vP; void main(){ float h = normalize(vP).y; vec3 top = vec3(0.020, 0.035, 0.078); vec3 mid = vec3(0.043, 0.070, 0.188); vec3 bot = vec3(0.012, 0.016, 0.039); vec3 c = h > 0.0 ? mix(mid, top, pow(h, 0.6)) : mix(mid, bot, pow(-h, 0.5)); gl_FragColor = vec4(c, 1.0); }',
+          side: T3.BackSide
+        });
+        var sky = new T3.Mesh(new T3.SphereGeometry(d.radius || 6000, 32, 16), skyMat);
+        sky.position.set(seat[0], seat[1], seat[2]);
+        deepGroup.add(sky);
+        deepParts[p.id] = { kind: 'sky', node: sky, data: d };
+      } else if (p.geometry.form === 'deep-seed') {
+        var sm = new T3.MeshStandardMaterial({ color: parseInt(p.material.colour.slice(1), 16), emissive: parseInt(d.emissive.slice(1), 16), emissiveIntensity: d.emissiveIntensity || 0.9, roughness: p.material.roughness });
+        var seedGrp = proseWord(font, d.glyph, d.em || 30, d.depth || 8, sm, true);
+        seedGrp.position.set(seat[0], seat[1], seat[2]);
+        var seedHalo = deepHalo(d.emissive, d.halo || 120, 0.6); seedGrp.add(seedHalo);
+        deepGroup.add(seedGrp);
+        deepParts[p.id] = { kind: 'seed', node: seedGrp, halo: seedHalo, data: d };
+      } else if (p.geometry.form === 'deep-field' || p.geometry.form === 'deep-orb') {
+        var isOrb = p.geometry.form === 'deep-orb';
+        var geo = new T3.TorusGeometry(d.ringR || 3.4, d.ringTube || 1.35, 6, 12);
+        var im = new T3.MeshStandardMaterial({ color: parseInt(p.material.colour.slice(1), 16), emissive: parseInt(d.emissive.slice(1), 16), emissiveIntensity: d.emissiveIntensity || 0.7, roughness: p.material.roughness, transparent: isOrb, opacity: 1 });
+        var inst = new T3.InstancedMesh(geo, im, d.max);
+        var dummy = new T3.Object3D(), rnd = proseRnd(d.seed || 7), pos = [], q;
+        if (isOrb) {
+          var golden = Math.PI * (3 - Math.sqrt(5));
+          for (q = 0; q < d.max; q++) { var yy = 1 - (q / Math.max(1, d.max - 1)) * 2, rr = Math.sqrt(Math.max(0, 1 - yy * yy)), th = golden * q; pos.push([Math.cos(th) * rr * d.radius, yy * d.radius, Math.sin(th) * rr * d.radius]); }
+        } else {
+          var raw = [];
+          for (q = 0; q < d.max; q++) { var u = rnd() * 2 - 1, ph = rnd() * Math.PI * 2, sq = Math.sqrt(1 - u * u), rad = d.rIn + (d.rOut - d.rIn) * Math.pow(rnd(), 0.7); raw.push([rad, Math.cos(ph) * sq * rad, u * rad, Math.sin(ph) * sq * rad]); }
+          raw.sort(function (a, b) { return a[0] - b[0]; });
+          for (q = 0; q < d.max; q++) pos.push([raw[q][1], raw[q][2], raw[q][3]]);
+        }
+        var parr = new Float32Array(d.max * 3);
+        for (q = 0; q < d.max; q++) {
+          parr[q * 3] = pos[q][0]; parr[q * 3 + 1] = pos[q][1]; parr[q * 3 + 2] = pos[q][2];
+          dummy.position.set(pos[q][0], pos[q][1], pos[q][2]);
+          dummy.rotation.set(rnd() * 3.14, rnd() * 3.14, rnd() * 3.14);
+          var sc = isOrb ? 1 : 0.7 + rnd() * 0.7; dummy.scale.set(sc, sc, sc);
+          dummy.updateMatrix(); inst.setMatrixAt(q, dummy.matrix);
+        }
+        inst.count = 0; inst.instanceMatrix.needsUpdate = true;
+        var grp3 = new T3.Group(); grp3.position.set(seat[0], seat[1], seat[2]); grp3.add(inst);
+        var pts3 = null, halo3 = null;
+        if (!isOrb) {
+          var pg = new T3.BufferGeometry(); pg.setAttribute('position', new T3.BufferAttribute(parr, 3)); pg.setDrawRange(0, 0);
+          pts3 = new T3.Points(pg, new T3.PointsMaterial({ size: 20, map: deepGlowTexture(), color: parseInt(d.emissive.slice(1), 16), transparent: true, opacity: 0.5, blending: T3.AdditiveBlending, depthWrite: false, sizeAttenuation: true }));
+          grp3.add(pts3);
+        } else {
+          halo3 = deepHalo(d.emissive, (d.radius || 140) * 3.4, 0.35);
+          grp3.add(halo3);
+        }
+        deepGroup.add(grp3);
+        deepParts[p.id] = { kind: isOrb ? 'orb' : 'field', node: grp3, mesh: inst, points: pts3, halo: halo3, data: d };
+      } else if (p.geometry.form === 'deep-stream') {
+        var sgeo = new T3.TorusGeometry(d.ringR || 3.4, d.ringTube || 1.35, 6, 12);
+        var smat = new T3.MeshStandardMaterial({ color: parseInt(p.material.colour.slice(1), 16), emissive: parseInt(d.emissive.slice(1), 16), emissiveIntensity: d.emissiveIntensity || 0.8, roughness: p.material.roughness });
+        var sinst = new T3.InstancedMesh(sgeo, smat, d.count);
+        var units = [], srnd = proseRnd(d.seed || 11), li;
+        for (li = 0; li < d.count; li++) { var lane = d.lanes[li % d.lanes.length]; units.push({ x: lane[0], y: lane[1], off: srnd() }); }
+        var sgrp = new T3.Group(); sgrp.add(sinst);
+        deepGroup.add(sgrp);
+        deepParts[p.id] = { kind: 'stream', node: sgrp, mesh: sinst, units: units, dummy: new T3.Object3D(), data: d };
+      } else if (p.geometry.form === 'deep-lattice') {
+        var lgrp = new T3.Group(), mats = [];
+        (d.frames || []).forEach(function (fr) {
+          var fm = new T3.MeshBasicMaterial({ color: parseInt(d.colour.slice(1), 16), transparent: true, opacity: 0 });
+          mats.push(fm);
+          var w = fr[0], h = fr[1], t = d.bar || 3, zz = fr[2] || 0;
+          var mk = function (bw, bh, x, y) { var b = new T3.Mesh(new T3.BoxGeometry(bw, bh, t), fm); b.position.set(x, y, zz); lgrp.add(b); };
+          mk(w, t, 0, h / 2); mk(w, t, 0, -h / 2); mk(t, h, -w / 2, 0); mk(t, h, w / 2, 0);
+        });
+        (d.nodes || []).forEach(function (nd) { var nm = new T3.MeshBasicMaterial({ color: parseInt(d.nodeColour.slice(1), 16), transparent: true, opacity: 0 }); mats.push(nm); var s2 = new T3.Mesh(new T3.SphereGeometry(6, 10, 8), nm); s2.position.set(nd[0], nd[1], nd[2] || 0); lgrp.add(s2); });
+        lgrp.position.set(seat[0], seat[1], seat[2]);
+        deepGroup.add(lgrp);
+        deepParts[p.id] = { kind: 'lattice', node: lgrp, mats: mats, data: d };
+      }
+      deepSt[p.id] = { shown: false, phase: null };
+    }
+    deepGroup.visible = false;
+    scene.add(deepGroup);
+  }
   /* @reason [ASSEMBLY] Assemble a location from its data: its spot rig first (built from its light props into the spot registry under BOTH the prop id and the assembly table's legacy keys — one object under both names, so the player writes by id and the rig table reads by key), then its group from its assembly placements — the theater's read from its named stretch, the book's own standing arrangement — each placement's prop built by its form's recipe at the placement's seat; the ghost panels registered with their outward normals solved from the room's centre; and its ball rig where its data carries one. The group starts hidden: applySceneState, the caller, owns its standing. Distance 0 and decay 0 on every spot — no falloff, the standing decision. */
   function assembleLocation(data) {
     if (!T3 || !scene || !data) return;
@@ -1042,15 +1163,18 @@ body.camView .headChip{bottom:64px}
     scene.add(roomGroup);
     if (data.ball) asmBallRig(data);
     asmProseRig(data);
+    asmDeepRig(data);
   }
   /* @reason [ASSEMBLY] Dispose the standing location whole: its group and its ball rig leave the scene graph, and every location-scoped handle is nulled — the next location assembles onto a clean stage, and no reader can meet a disposed object. */
   function disposeLocation() {
     if (roomGroup && scene) scene.remove(roomGroup);
     if (ballGroup && scene) scene.remove(ballGroup);
     if (proseGroup && scene) scene.remove(proseGroup);
+    if (deepGroup && scene) scene.remove(deepGroup);
     roomGroup = null; roomPanels = []; roomSpotLights = {};
     ballGroup = null; ballMesh = null; ballGlassMat = null; ballShadowMesh = null; ballShadowMat = null;
     proseGroup = null; proseParts = {}; proseSt = {};
+    deepGroup = null; deepParts = {}; deepSt = {};
   }
 
   /* @reason [USER] One shard mesh (the ball scene, 2026-11-07): a tetrahedron of the tabled size in the ball's own glass, read at opacity 0.55 — flatter and more present than the ball itself, so a settled field of them reads as broken glass, not as beads. Born transparent like every material in this world. */
@@ -1118,7 +1242,7 @@ body.camView .headChip{bottom:64px}
   /* @reason [USER] CAPTURE, as numbers (the capture build, 2026-11-07 — the owner's overnight order: we use the camera in the scene to record something as our proof of concept): the captured frame is 1280×720, fed to the recorder at 30 frames a second. The size is the capture's OWN, never the screen's — a photo or a recording must be the shot at one known size on any device, not whatever window the page happens to fill — and it is a standard HD frame the phone's encoder takes in real time. The mechanics live in Layer 3; plan §10's invariants are their contract (one scene graph, the camera's pose from state alone, the ghost pass-scoped, render-then-read in the same task). */
   var CAPTURE = { w: 1280, h: 720, fps: 30 };
   /* @reason [USER] THE BOOKS' PLATFORM VOCABULARY (the books build, 2026-11-08; plan §§2–4): the closed words the checker and every location's books share — the driver registry with its action lists, the calculated-end rules, the easings, the audio kinds, and the one visibility rule every prop's record carries. The books THEMSELVES stand in the locations' data files (the assembly build, 2026-11-08); a word outside these sets is a word the system does not know (INVALID), wherever it is written. A new word joins only by plan amendment, because a rule or a curve is a mechanism, and mechanisms are decided, not improvised. */
-  var BOOK_DRIVERS = { 'ball-driver': ['held', 'free-fall', 'shatter', 'rest', 'fade-out'], 'shard-driver': ['spawn', 'settle', 'rest', 'fade-out'], 'camera-driver': ['hold', 'move'], 'light-driver': ['hold', 'move'], 'audio-driver': ['play', 'stop'], 'word-driver': ['rain', 'grow', 'land'] };
+  var BOOK_DRIVERS = { 'ball-driver': ['held', 'free-fall', 'shatter', 'rest', 'fade-out'], 'shard-driver': ['spawn', 'settle', 'rest', 'fade-out'], 'camera-driver': ['hold', 'move'], 'light-driver': ['hold', 'move'], 'audio-driver': ['play', 'stop'], 'word-driver': ['rain', 'grow', 'land'], 'deep-driver': ['glow', 'ignite', 'stream', 'reveal'] };
   var BOOK_END_RULES = ['free-fall', 'settle-all', 'chain', 'clip-length'];
   var BOOK_EASINGS = ['linear', 'ease-in', 'ease-out', 'ease-in-out'];
   var BOOK_AUDIO_KINDS = ['voice', 'music', 'spot', 'ambience'];
@@ -4025,7 +4149,7 @@ body.camView .headChip{bottom:64px}
       else if (act === 'cam') playCamReturn();
     });
     var prevTick = tickExtra;
-    tickExtra = function () { if (prevTick) prevTick(); playFrame(); proseFrame(); };
+    tickExtra = function () { if (prevTick) prevTick(); playFrame(); proseFrame(); deepFrame(); };
   }
   /* @reason [OPENING-PROSE] The word-driver's frame (the opening-prose build, 2026-11-10): a pure function of the standing play, chained after playFrame in the player's own tick so a filmed play and a measured play are the same play. It reads the same derivation the verifier reads and actuates the prose rig to match: the shower's letterform word objects cycle from the ceiling to the deck top inside their band — seeded offsets and speeds from the prop's data, fading in under the ceiling and out at the floor, dropping and disappearing into the stage — the word objects grow on their events' written easing from their written start scale, in depth as in height (growing, never popping), the calendar settles the last of its drop and lean, and the stamp slams from large and faint to full ink over the first part of its event. Each prop's actuated standing lands in proseSt, which bookState reads back: the verifier measures this rig as it measures the ball. No book in the play store — the whole rig hides; a stopped take leaves no residue (STOP nulls the store's book). A finished play's end state STANDS, by the player's own law (SS6.1): the store keeps its book after the finish, so this frame keeps deriving the book's last instant and the rig holds it until STOP or the next play. PERFECTION ROUND 1 (2026-11-10): a shower word inside the reading zone the rig computed (the claim + subline seats with margin) is dimmed to 0.3 of its envelope — depth lanes and lane spacing thin the crossings; the zone dim keeps the headline's face clear while the rain continues behind it (record R1-D4). */
   function proseFrame() {
@@ -4080,6 +4204,68 @@ body.camView .headChip{bottom:64px}
       proseSt[id] = { shown: true, phase: phase };
     }
     proseGroup.visible = any;
+  }
+
+  /* @reason [DEEP — the counting deep, 2026-11-11] The deep frame: proseFrame's twin for the cosmos parts, obeying the same pure derivation at the same play instant — the sky stands; the seed token turns and breathes (its halo on an attack-decay-rest pulse); the field ignites in its data's staged counts (the scala rungs: real instanced counts at written span fractions, radius-sorted so each rung expands the cloud) and then burns, turning very slowly; the rivers flow their lanes at the data's speed, comet-stretched by their phase along the flow; the lattice reveals on the prose rig's own ease-out cubic and stands; the orb reveals the same way, then turns at the month's pace forever while it stands. Standings land in deepSt for bookState, word for word the prose contract. */
+  function deepFrame() {
+    if (!deepGroup) return;
+    var st = playStore(), id;
+    if (!st.B) {
+      if (deepGroup.visible) deepGroup.visible = false;
+      for (id in deepSt) { deepSt[id].shown = false; deepSt[id].phase = null; }
+      return;
+    }
+    var B = st.B, t = Math.min(st.t, st.duration), d = playDerived(t), any = false;
+    if (!d) return;
+    for (id in deepParts) {
+      var part = deepParts[id], dp = d.props[id];
+      if (!dp || !dp.shown) { part.node.visible = false; deepSt[id] = { shown: false, phase: null }; continue; }
+      part.node.visible = true; any = true;
+      var standing = dp.actor ? dp.actor.standing : null, span = dp.actor ? B.check.spans[dp.actor.event] : null;
+      var pr = span && span.end > span.start ? Math.max(0, Math.min(1, (t - span.start) / (span.end - span.start))) : 1;
+      var phase = null, i;
+      if (part.kind === 'sky') {
+        phase = null;
+      } else if (part.kind === 'seed') {
+        part.node.rotation.y = t * 0.5;
+        part.halo.material.opacity = 0.6 + 0.14 * Math.sin(t * 2.2);
+        phase = 'glowing';
+      } else if (part.kind === 'field') {
+        var count = part.data.max;
+        if (standing === 'ignite') { count = 0; for (i = 0; i < part.data.stages.length; i++) if (pr >= part.data.stages[i][0]) count = part.data.stages[i][1]; phase = count >= part.data.max ? 'burning' : 'igniting'; }
+        else phase = 'burning';
+        part.mesh.count = count;
+        if (part.points) part.points.geometry.setDrawRange(0, count);
+        part.node.rotation.y = t * 0.005;
+      } else if (part.kind === 'stream') {
+        var spanZ = part.data.z1 - part.data.z0;
+        for (i = 0; i < part.units.length; i++) {
+          var u = part.units[i], ph = (u.off + t * part.data.speed / spanZ) % 1;
+          part.dummy.position.set(u.x, u.y, part.data.z0 + ph * spanZ);
+          part.dummy.scale.set(1, 1, 1 + 1.8 * Math.sin(ph * Math.PI));
+          part.dummy.rotation.set(0, 0, 0);
+          part.dummy.updateMatrix();
+          part.mesh.setMatrixAt(i, part.dummy.matrix);
+        }
+        part.mesh.instanceMatrix.needsUpdate = true;
+        phase = 'streaming';
+      } else if (part.kind === 'lattice') {
+        var lf = standing === 'reveal' ? 1 - Math.pow(1 - pr, 3) : 1;
+        for (i = 0; i < part.mats.length; i++) part.mats[i].opacity = lf * 0.9;
+        var ls = 0.96 + 0.04 * lf; part.node.scale.set(ls, ls, ls);
+        phase = lf >= 1 ? 'standing' : 'revealing';
+      } else if (part.kind === 'orb') {
+        var of = standing === 'reveal' ? 1 - Math.pow(1 - pr, 3) : 1;
+        part.mesh.count = part.data.max;
+        part.mesh.material.opacity = of;
+        if (part.halo) part.halo.material.opacity = 0.35 * of;
+        var os = 0.7 + 0.3 * of; part.node.scale.set(os, os, os);
+        part.node.rotation.y = t * 0.02;
+        phase = of >= 1 ? 'turning' : 'revealing';
+      }
+      deepSt[id] = { shown: true, phase: phase };
+    }
+    deepGroup.visible = any;
   }
 
   /* ===== THE VERIFIER (books-step5) =====
@@ -4145,6 +4331,7 @@ body.camView .headChip{bottom:64px}
       if (id === 'ball') props[id] = { shown: typeof ps.ballMeshShown === 'boolean' ? ps.ballMeshShown : (ps.ball.phase === 'ready' || ps.ball.phase === 'falling'), phase: ps.ball.phase, fallTime: ps.ball.fallTime, impactSpeed: ps.ball.impactSpeed };
       else if (id === 'shard-set') props[id] = { shown: ps.shardCount > 0, count: ps.shardCount, settled: ps.ball.settled, phase: ps.ball.phase };
       else if (proseParts[id]) props[id] = { shown: proseSt[id] ? !!proseSt[id].shown : false, phase: proseSt[id] ? proseSt[id].phase : null };
+      else if (deepParts[id]) props[id] = { shown: deepSt[id] ? !!deepSt[id].shown : false, phase: deepSt[id] ? deepSt[id].phase : null };
       else props[id] = { shown: null, note: 'no driver in v1 — derivation only' };
     }
     return { t: ps.t, play: { on: ps.on, paused: ps.paused, label: ps.label, ended: ps.ended }, camera: { pose: ps.pose, targets: ps.targets }, lights: ps.lights, props: props };
@@ -4159,7 +4346,7 @@ body.camView .headChip{bottom:64px}
     return out;
   }
   /* @reason [USER] The driver-phase vocabulary (SS6.2's phase-exact leg, at the grain the drivers speak): a derived actor standing names the book's expectation in the book's words, and this table names which of the ball-driver's phases honour it. A standing the table does not know is not judged — the verifier abstains rather than invent a claim, and the shown standing still guards the prop. */
-  var VERIFY_PHASES = { 'held': ['ready'], 'free-fall': ['falling'], 'spawn': ['shards'], 'airborne, physics live': ['shards', 'hold'], 'settle': ['shards', 'hold'], 'rest': ['hold'], 'fade-out': ['fading', 'hold'], 'removed': ['done', 'fading', 'hold'], 'held at start pose': ['ready'], 'removed — spent as shards': ['shards', 'hold', 'fading', 'done'], 'first contact — fallTime + impactSpeed read from the body': ['shards', 'hold', 'fading', 'done'], 'rain': ['raining'], 'grow': ['growing', 'rested'], 'rested': ['rested'], 'land': ['landing', 'landed'], 'landed': ['landed'] };
+  var VERIFY_PHASES = { 'held': ['ready'], 'free-fall': ['falling'], 'spawn': ['shards'], 'airborne, physics live': ['shards', 'hold'], 'settle': ['shards', 'hold'], 'rest': ['hold'], 'fade-out': ['fading', 'hold'], 'removed': ['done', 'fading', 'hold'], 'held at start pose': ['ready'], 'removed — spent as shards': ['shards', 'hold', 'fading', 'done'], 'first contact — fallTime + impactSpeed read from the body': ['shards', 'hold', 'fading', 'done'], 'rain': ['raining'], 'grow': ['growing', 'rested'], 'rested': ['rested'], 'land': ['landing', 'landed'], 'landed': ['landed'], 'glow': ['glowing'], 'glowing': ['glowing'], 'ignite': ['igniting', 'burning'], 'burning': ['burning'], 'stream': ['streaming'], 'streaming': ['streaming'], 'reveal': ['revealing', 'standing', 'turning'], 'standing': ['standing'], 'turning': ['turning'] };
   /* @reason [USER] The comparison (SS6.2's V2), pure: the derived standing against the actual readout at one instant, returning deviation rows in the plan's only output form — instant, subject, expected, measured. Tolerances are the plan's: camera fields within half a unit or half a degree (the heading compared the short way around the circle); a light's intensity within two percent of its value with a hundredth's floor; colour exact after case. The camera's TARGETS are compared at every probe; its CURRENT pose only where the book says it stands settled (a hold, a persisted end-value, the base) — mid-move the chase lag is lawful and the targets carry the claim. A prop's shown standing is not judged within one step of its flip instants (the measured bracket judges the flip), and its driver's phase is not judged within one step of its event's edges. */
   function verifyCompare(B, t, d, a) {
     var rows = [], FIELDS = ['x', 'z', 'heading', 'tilt', 'focal', 'lift'], f, i;
