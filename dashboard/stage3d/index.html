@@ -557,11 +557,11 @@ body.camView .headChip{bottom:64px}
     function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
     var i, x, y;
     for (i = 0; i < d.length; i += 4) { var v = 246 + (rnd() - 0.5) * 30; d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = 255; }
-    /* the meso octave (texture v2): soft radial blobs, cosine falloff, wrap-drawn across the borders. The wall kind runs at 0.55 strength (the cardboard pass, 2026-11-10): at full strength the blobs read as stains on the big backdrop; paper pulp mottling is quieter. The rnd call count is unchanged, so every other kind's tile is byte-identical. */
+    /* the meso octave (texture v2): soft radial blobs, cosine falloff, wrap-drawn across the borders. The wall kind runs at 0.55 strength (the cardboard pass, 2026-11-10): at full strength the blobs read as stains on the big backdrop; paper pulp mottling is quieter. The rnd call count is unchanged, so every other kind's tile is byte-identical. PERFECTION ROUND 1 (2026-11-10): the octave quieted again and shrunk — ±4.8% and radius 13–49 px — because at ±7% / 18–70 px it still read as damp stains on the wall (record R1-D3); pulp mottling is finer and weaker than stain. */
     var mesoF = kind === 'wall' ? 0.55 : 1;
     var bi, bx, by, br, bs, dx, dy, tx, ty, dd, ff, f2, idx;
     for (bi = 0; bi < 260; bi++) {
-      bx = rnd() * S; by = rnd() * S; br = 18 + rnd() * 52; bs = (rnd() < 0.5 ? -0.07 : 0.07) * mesoF;
+      bx = rnd() * S; by = rnd() * S; br = 13 + rnd() * 36; bs = (rnd() < 0.5 ? -0.048 : 0.048) * mesoF;
       var r0 = Math.ceil(br);
       for (dy = -r0; dy <= r0; dy++) for (dx = -r0; dx <= r0; dx++) {
         dd = Math.sqrt(dx * dx + dy * dy) / br; if (dd > 1) continue;
@@ -578,10 +578,10 @@ body.camView .headChip{bottom:64px}
         d[idx] = Math.min(255, d[idx] * lift); d[idx + 1] = Math.min(255, d[idx + 1] * lift); d[idx + 2] = Math.min(255, d[idx + 2] * lift);
       }
     }
-    /* the fibre-fleck octave (texture v2; the cardboard pass, 2026-11-10): short strokes at FULL random angles, wrap-drawn — paper fibre has no grain direction; the old near-horizontal lie was one of the wood tells (texture audit, cause 3) */
+    /* the fibre-fleck octave (texture v2; the cardboard pass, 2026-11-10): short strokes at FULL random angles, wrap-drawn — paper fibre has no grain direction; the old near-horizontal lie was one of the wood tells (texture audit, cause 3). PERFECTION ROUND 1 (2026-11-10): 1150 flecks at 3–10 px — at 900 × 2–7 px the fibre was sub-visible at camera distance and the surfaces read as flat stain (record R1-D3); the flecks are the seeded stream's last consumers, so the count change reaches no other octave. */
     var fi, fa, fl, fs, fx, fy, fj, px, py;
-    for (fi = 0; fi < 900; fi++) {
-      fx = rnd() * S; fy = rnd() * S; fl = 2 + rnd() * 5; fa = rnd() * 6.2832; fs = rnd() < 0.5 ? 0.84 : 1.16;
+    for (fi = 0; fi < 1150; fi++) {
+      fx = rnd() * S; fy = rnd() * S; fl = 3 + rnd() * 7; fa = rnd() * 6.2832; fs = rnd() < 0.5 ? 0.84 : 1.16;
       for (fj = 0; fj < fl; fj++) {
         px = (((Math.floor(fx + Math.cos(fa) * fj)) % S) + S) % S; py = (((Math.floor(fy + Math.sin(fa) * fj)) % S) + S) % S;
         idx = (py * S + px) * 4;
@@ -590,12 +590,12 @@ body.camView .headChip{bottom:64px}
     }
     function darken(idx, f) { d[idx] *= f; d[idx + 1] *= f; d[idx + 2] *= f; }
     if (kind === 'floor') {
-      /* the cardboard pass (2026-11-10): ONE faint sheet joint at the tile's own edge, where the wrap makes it continuous — paper comes in sheets; the retired print ruled 8 dark seams per tile at a 92-unit pitch, the plank signature the texture audit names as the room's first wood tell */
-      for (y = 0; y < S; y++) darken((y * S) * 4, 0.94);
+      /* the cardboard pass (2026-11-10): ONE faint sheet joint at the tile's own edge, where the wrap makes it continuous — paper comes in sheets; the retired print ruled 8 dark seams per tile at a 92-unit pitch, the plank signature the texture audit names as the room's first wood tell. PERFECTION ROUND 1 (2026-11-10): the joint is now a TAPED seam — a lightened band 10 px wide centred on the tile edge with the hairline at its centre — because a lone dark hairline reads as a crack across the open floor (record R1-D6); taped seams are how paper construction actually shows. */
+      for (y = 0; y < S; y++) { for (x = 0; x < 10; x++) darken((y * S + ((S - 5 + x) % S)) * 4, 1.045); darken((y * S + S - 1) * 4, 0.88); darken((y * S) * 4, 0.88); }
     }
     if (kind === 'deck') {
-      /* the cardboard pass (2026-11-10): ONE faint sheet joint at the tile's own edge, the floor's own treatment — paper comes in sheets. A fluting rhythm at print pitch stood here in the build's first pass and the paperworld guard indicted it by name (PLANK-PALETTE at the deck): ruled lines at a regular pitch across a flat surface ARE the plank signature, whatever their intent. The corrugation lives where construction puts it — the deck edge's real geometry (asmFluteEdge) — never as print spread over the top. */
-      for (y = 0; y < S; y++) darken((y * S) * 4, 0.94);
+      /* the cardboard pass (2026-11-10): ONE faint sheet joint at the tile's own edge, the floor's own treatment — paper comes in sheets. A fluting rhythm at print pitch stood here in the build's first pass and the paperworld guard indicted it by name (PLANK-PALETTE at the deck): ruled lines at a regular pitch across a flat surface ARE the plank signature, whatever their intent. The corrugation lives where construction puts it — the deck edge's real geometry (asmFluteEdge) — never as print spread over the top. PERFECTION ROUND 1 (2026-11-10): the same taped-seam print as the floor (record R1-D6). */
+      for (y = 0; y < S; y++) { for (x = 0; x < 10; x++) darken((y * S + ((S - 5 + x) % S)) * 4, 1.045); darken((y * S + S - 1) * 4, 0.88); darken((y * S) * 4, 0.88); }
     }
     if (kind === 'wall') {
       for (y = S - 52; y < S; y++) { var f = 1 - 0.20 * ((y - (S - 52)) / 51); for (x = 0; x < S; x++) darken((y * S + x) * 4, f); }
@@ -681,12 +681,15 @@ body.camView .headChip{bottom:64px}
     if (prop.data && prop.data.edgeLayers) asmSheetEdge(group, prop, seat, asm, tiles);
     return m;
   }
-  /* @reason [ASSEMBLY] The turned-post recipe: post, base disc and finial ball from the prop's own radius and height — the base a disc of twice the radius, 6 high, seated under the post's foot; the finial a ball of radius + 3 at the post's top (the builders' proportions, plan §5). */
+  /* @reason [ASSEMBLY] The turned-post recipe: post, base disc and finial ball from the prop's own radius and height — the base a disc of twice the radius, 6 high, seated under the post's foot; the finial a ball of radius + 3 at the post's top (the builders' proportions, plan §5). PERFECTION ROUND 1 (2026-11-10): a prop whose data carries cap 'layered' builds as a PAPER TUBE instead — three stacked sheet discs for a cap and data.wrap taped bands around the tube — because the smooth turned silhouette in a dark dye read as a wooden column (record R1-D2); the ball finial remains the recipe for any prop that does not carry the flag. */
   function asmPost(group, prop, seat, asm, tiles) {
     var r = prop.geometry.size.r, h = prop.geometry.size.h, mat = asmPaperMat(prop, asm, tiles);
     var post = new T3.Mesh(new T3.CylinderGeometry(r, r, h, 12), mat); post.position.set(seat[0], seat[1], seat[2]); group.add(post);
     var base = new T3.Mesh(new T3.CylinderGeometry(r * 2, r * 2, 6, 16), mat); base.position.set(seat[0], seat[1] - h / 2 + 3, seat[2]); group.add(base);
-    var fin = new T3.Mesh(new T3.SphereGeometry(r + 3, 12, 8), mat); fin.position.set(seat[0], seat[1] + h / 2, seat[2]); group.add(fin);
+    if (prop.data && prop.data.cap === 'layered') {
+      var ci, cdisc; for (ci = 0; ci < 3; ci++) { cdisc = new T3.Mesh(new T3.CylinderGeometry(r + 3 - ci * 1.5, r + 3 - ci * 1.5, 2.2, 16), mat); cdisc.position.set(seat[0], seat[1] + h / 2 + 1.1 + ci * 2.2, seat[2]); group.add(cdisc); }
+      var wi, band, wraps = prop.data.wrap || 0; for (wi = 1; wi <= wraps; wi++) { band = new T3.Mesh(new T3.TorusGeometry(r + 0.4, 1.2, 8, 24), mat); band.rotation.x = Math.PI / 2; band.position.set(seat[0], seat[1] - h / 2 + (h * wi) / (wraps + 1), seat[2]); group.add(band); }
+    } else { var fin = new T3.Mesh(new T3.SphereGeometry(r + 3, 12, 8), mat); fin.position.set(seat[0], seat[1] + h / 2, seat[2]); group.add(fin); }
   }
   /* @reason [ASSEMBLY] The pleated-plane recipe (the curtain): a 56-segment plane whose z folds ±8 on a 26-unit wavelength across its width — pleated GEOMETRY, not a normal trick — mirrored for a definition's second listed placement, so the pair gathers toward the stage's centre; the drape print at the plane's own repeats; the world's one DoubleSide material (a curtain's back is seen from the stage side). SKINS (the opening-prose build, 2026-11-10, PR-12): the prop's data carries its skins — each skin a written form definition (its prompt) plus its shaping numbers — and data.skin names the standing one. The CLASSIC skin is this recipe exactly as it stood before skins existed (the alternate, kept intact). The BOW-TIEBACK skin shapes the same pleats: every vertex pulled toward its outer pole by the skin's gather, the pull peaking at the tie height (tieV of the height) and weighted by the vertex's innerness, so the panel bunches at the tie, hangs near-straight above it, and flares gently below; a layered raw-edge backing sheet (the same shaped geometry, a breath larger, a step behind) and the bow + valance builders below complete the form. */
   function asmCurtain(group, prop, seat, mirror, asm, tiles) {
@@ -930,7 +933,7 @@ body.camView .headChip{bottom:64px}
       g.fillText(prop.data.text, w / 2, h / 2 + 4);
     });
   }
-  /* @reason [OPENING-PROSE · CURE 2026-11-10] The prose rig (the opening-prose build, 2026-11-10, PR-12; word forms cured the same day under the owner's 11:07 verdict): built from the location's prose props the way the ball rig is built from its ball props — the word-set's words as extruded letterform objects in glass, in their band; the word-objects (the claim and its subline) as extruded letters in dyed paper; the calendar as a thin card body with its drawn face (a physical card object — an object, kept); the stamp as a single ink print on the wall (a stamp's nature is an impression, kept). One group, starting hidden: the word-driver's frame (proseFrame, wired with the player) owns its standing, and a location with no prose forms builds nothing. Every seat, word, size and colour is the props' own data; the letters' shapes are the location's font data. */
+  /* @reason [OPENING-PROSE · CURE 2026-11-10] The prose rig (the opening-prose build, 2026-11-10, PR-12; word forms cured the same day under the owner's 11:07 verdict): built from the location's prose props the way the ball rig is built from its ball props — the word-set's words as extruded letterform objects in glass, in their band; the word-objects (the claim and its subline) as extruded letters in dyed paper; the calendar as a thin card body with its drawn face (a physical card object — an object, kept); the stamp as a single ink print on the wall (a stamp's nature is an impression, kept). One group, starting hidden: the word-driver's frame (proseFrame, wired with the player) owns its standing, and a location with no prose forms builds nothing. Every seat, word, size and colour is the props' own data; the letters' shapes are the location's font data. PERFECTION ROUND 1 (2026-11-10): the shower's words are placed one per lane across the band with seeded jitter (uniform-random placement clustered by chance into unreadable piles, record R1-D5), fall in the data's depth lanes (bandZs) when the data carries them, and the rig computes the claim + subline READING ZONE from the word-object props' own seats and sizes and hands it to the frame, which dims any shower word crossing it — the shower's presence text promises "never competing", and at the shipped spacing it competed (record R1-D4). */
   function asmProseRig(data) {
     proseParts = {}; proseSt = {};
     var found = [], i, p;
@@ -948,8 +951,9 @@ body.camView .headChip{bottom:64px}
           wm = new T3.MeshStandardMaterial({ color: parseInt(p.material.colour.slice(1), 16), transparent: true, opacity: p.material.opacity, roughness: p.material.roughness, metalness: 0.05, depthWrite: true }); /* depthWrite true stays LOAD-BEARING from the plates era, measured at the film pass (diag_shower7): with depth unwritten the shower, though in-scene, composites to ~300 changed pixels against a no-play frame — the ghost-wall depth interaction swallows it; with depth written it stands. The glass look is untouched: transparency and the opacity envelope do that work. */
           wg = proseWord(font, word, lem.em, lem.depth, wm, false);
           hw = Math.min((wg.userData.w || 0) / 2, (d.bandX[1] - d.bandX[0]) / 2 - 4);
-          wx = d.bandX[0] + hw + rnd() * Math.max(1, (d.bandX[1] - d.bandX[0]) - 2 * hw);
-          wg.position.set(wx, d.topY - rnd() * (d.topY - d.floorY), d.bandZ);
+          var laneW = (d.bandX[1] - d.bandX[0]) / d.count, lx = d.bandX[0] + (k + 0.5) * laneW + (rnd() - 0.5) * laneW * 0.55;
+          wx = Math.max(d.bandX[0] + hw, Math.min(d.bandX[1] - hw, lx));
+          wg.position.set(wx, d.topY - rnd() * (d.topY - d.floorY), d.bandZs && d.bandZs.length ? d.bandZs[k % d.bandZs.length] : d.bandZ);
           sub.add(wg);
           words.push({ node: wg, mat: wm, off: rnd() * (d.topY - d.floorY), speed: d.fallSpeed[0] + rnd() * (d.fallSpeed[1] - d.fallSpeed[0]), baseOp: p.material.opacity * (0.75 + rnd() * 0.45) });
         }
@@ -972,7 +976,7 @@ body.camView .headChip{bottom:64px}
         proseGroup.add(grp2);
         proseParts[p.id] = { kind: 'calendar', node: grp2, data: p.data, seatY: seat[1] };
       } else if (p.geometry.form === 'wall-stamp') {
-        var sm2 = new T3.Mesh(new T3.PlaneGeometry(p.geometry.size.w, p.geometry.size.h), new T3.MeshStandardMaterial({ map: proseStampTexture(p), transparent: true, opacity: 0, roughness: p.material.roughness }));
+        var sm2 = new T3.Mesh(new T3.PlaneGeometry(p.geometry.size.w, p.geometry.size.h), new T3.MeshStandardMaterial({ map: proseStampTexture(p), transparent: true, opacity: 0, roughness: p.material.roughness, alphaTest: 0.04 }));
         sm2.position.set(seat[0], seat[1], seat[2]);
         sm2.rotation.z = p.data.tilt || 0;
         proseGroup.add(sm2);
@@ -980,6 +984,9 @@ body.camView .headChip{bottom:64px}
       }
       proseSt[p.id] = { shown: false, phase: null };
     }
+    var shi, shp = null, zo = null, fp, fs2, fw2, fh2, zx0, zx1, zy0, zy1;
+    for (shi = 0; shi < found.length; shi++) { fp = found[shi]; if (fp.geometry.form === 'word-set') shp = fp.id; if (fp.geometry.form === 'word-object') { fs2 = Array.isArray(fp.geometry.seat) ? fp.geometry.seat : [0, 0, 0]; fw2 = fp.geometry.size.w || 0; fh2 = fp.geometry.size.h || 0; zx0 = fs2[0] - fw2 / 2 - 20; zx1 = fs2[0] + fw2 / 2 + 20; zy0 = fs2[1] - fh2 / 2 - 14; zy1 = fs2[1] + fh2 / 2 + 14; zo = zo ? [Math.min(zo[0], zx0), Math.min(zo[1], zy0), Math.max(zo[2], zx1), Math.max(zo[3], zy1)] : [zx0, zy0, zx1, zy1]; } }
+    if (shp && zo && proseParts[shp]) proseParts[shp].zone = zo;
     proseGroup.visible = false;
     scene.add(proseGroup);
   }
@@ -4016,7 +4023,7 @@ body.camView .headChip{bottom:64px}
     var prevTick = tickExtra;
     tickExtra = function () { if (prevTick) prevTick(); playFrame(); proseFrame(); };
   }
-  /* @reason [OPENING-PROSE] The word-driver's frame (the opening-prose build, 2026-11-10): a pure function of the standing play, chained after playFrame in the player's own tick so a filmed play and a measured play are the same play. It reads the same derivation the verifier reads and actuates the prose rig to match: the shower's letterform word objects cycle from the ceiling to the deck top inside their band — seeded offsets and speeds from the prop's data, fading in under the ceiling and out at the floor, dropping and disappearing into the stage — the word objects grow on their events' written easing from their written start scale, in depth as in height (growing, never popping), the calendar settles the last of its drop and lean, and the stamp slams from large and faint to full ink over the first part of its event. Each prop's actuated standing lands in proseSt, which bookState reads back: the verifier measures this rig as it measures the ball. No book in the play store — the whole rig hides; a stopped take leaves no residue (STOP nulls the store's book). A finished play's end state STANDS, by the player's own law (SS6.1): the store keeps its book after the finish, so this frame keeps deriving the book's last instant and the rig holds it until STOP or the next play. */
+  /* @reason [OPENING-PROSE] The word-driver's frame (the opening-prose build, 2026-11-10): a pure function of the standing play, chained after playFrame in the player's own tick so a filmed play and a measured play are the same play. It reads the same derivation the verifier reads and actuates the prose rig to match: the shower's letterform word objects cycle from the ceiling to the deck top inside their band — seeded offsets and speeds from the prop's data, fading in under the ceiling and out at the floor, dropping and disappearing into the stage — the word objects grow on their events' written easing from their written start scale, in depth as in height (growing, never popping), the calendar settles the last of its drop and lean, and the stamp slams from large and faint to full ink over the first part of its event. Each prop's actuated standing lands in proseSt, which bookState reads back: the verifier measures this rig as it measures the ball. No book in the play store — the whole rig hides; a stopped take leaves no residue (STOP nulls the store's book). A finished play's end state STANDS, by the player's own law (SS6.1): the store keeps its book after the finish, so this frame keeps deriving the book's last instant and the rig holds it until STOP or the next play. PERFECTION ROUND 1 (2026-11-10): a shower word inside the reading zone the rig computed (the claim + subline seats with margin) is dimmed to 0.3 of its envelope — depth lanes and lane spacing thin the crossings; the zone dim keeps the headline's face clear while the rain continues behind it (record R1-D4). */
   function proseFrame() {
     if (!proseGroup) return;
     var st = playStore(), id;
@@ -4042,7 +4049,9 @@ body.camView .headChip{bottom:64px}
           var y = part.data.topY - ((s.off + t * s.speed) % range);
           s.node.position.y = y;
           var fi = Math.min(1, (part.data.topY - y) / 26), fo = Math.min(1, (y - part.data.floorY) / 20);
-          s.mat.opacity = s.baseOp * Math.max(0, Math.min(fi, fo));
+          var sop = s.baseOp * Math.max(0, Math.min(fi, fo));
+          if (part.zone && s.node.position.x > part.zone[0] && s.node.position.x < part.zone[2] && y > part.zone[1] && y < part.zone[3]) sop *= 0.3;
+          s.mat.opacity = sop;
         }
       } else if (part.kind === 'word') {
         var act = null;
