@@ -1,3 +1,4 @@
+/* PASS 321 — data v36: THE DISPOSITION CAMPAIGN baked — the triage queue's disposition records (Passes 312-315 D cycles · 316-320 C cycles + C3 · issue:44's standing HQ convergence event) applied to ENTRY_FACTS as classified lifecycle events with structured provenance, and THREAD disposition objects seated on the 38 exported concerns in Pass 244's form; 73 entries · 131 events · assigned dispositions 6 to 43 · classifications 1 to 2 · acceptance events in the bake: zero; the derivation core carried byte-identical; BATCH_META.dashboard + lineage re-issued for v36. */
 /* PASS 309 — data v35: ENTRY_FACTS extended with Pass 301's three disposition records (issue:58's record created — IMPLEMENTED, verification established · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · the NONE-REQUIRED classification on Mina's acknowledgment 6808791607), applied as classified lifecycle events with structured provenance in the strengthened invariant's form; assigned dispositions 4 to 6 + 1 classification; acceptance events in the bake: zero; the derivation core carried byte-identical; BATCH_META.dashboard + lineage re-issued for v35. */
 /* PASS 261 — data v34: ENTRY_FACTS rebuilt under the STRENGTHENED OUTCOME INVARIANT (classified lifecycle events with structured provenance · the reviewer of record · outcome_provenance per derived outcome); BATCH_META.dashboard + lineage re-issued for v34. */
 /* Experiment Batch 02 — cell registry (batch06), data v33 (PASS 247 re-issue, 2026-11-11: PRINT AGE — BATCH_CELLS gains printCreatedAt on every print cell (the seated rendering's creation timestamp; source hierarchy in jobs/review-dashboard/instructions/print-age.md — the standing Pass 149 set carries source (c): repository commit 7340854ce8, 2026-11-11T01:31:15Z, the commit that introduced the prints' bytes); BATCH_META.dashboard + lineage.build/seated re-issued for v33; ONE further change vs v32, under HQ's addendum of 2026-11-11 18:05 EST: issue:55's disposition is corrected (word ACCEPTED to IMPLEMENTED, acceptance accepted to pending — the false-acceptance cure; the whole-bake census found #55 alone); ADDENDUM 2 (same day, HQ — the outcome-mapping invariant, comment-loop.md §4): window.ENTRY_FACTS appended (the five record fields for all 72 entries) and every baked outcome + summary re-derived under the replacement mapping (test/meta reads 'No change requested' · the duplicate-linked read 'Tracked in another thread' · version-unavailable reads 'Original version unavailable' · DEBATED reads 'Under discussion' · undispositioned reads 'Received for review'). Every other byte stands exactly as v32 (PASS 244) issued it. */
@@ -175,10 +176,10 @@ window.BATCH_META = {
  "historySnapshot": "2026-11-11T22:41:38Z",
  "coverage": "Coverage 26/27 (old basis) · 26/28 (new basis) · open items exactly one: G11 (sound-design fit; owner = guard_seams' next B60 amendment + print legs) — row 28's FA residue CLOSED BY SUBSTITUTION (owner order + full-content clarification; § PASS 48 execution + checker #23 verification) (HQ GUARD-MAP v56)",
  "shelf": "Guard shelf — 8 CONFIRMED · reasoning ARMED-PROVISIONAL · guard_transcript CONFIRMED (Pass 153) · guard_category ARMED (Pass 165; GATE firing over this lineage follows this seating, HQ ruling 10) · guard_thumbnail ARMED (certificate hq-2026-11-11-025, Pass 193; class-gate on blur_misplaced live; T3 mechanical-spec legibility = its named gap, covered by the deterministic hygiene leg) · checkers #30/#31/#32/#33/#35 ARMED · #34 dyslexia legs armed on this surface.",
- "dashboard": "v35 (2026-11-12, PASS 309 — PASS 301'S THREE DISPOSITION RECORDS BAKED into ENTRY_FACTS as classified lifecycle events with structured provenance: issue:58's record created (IMPLEMENTED · verification established — the print-age badge it asked for stands live) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 4 to 6 + 1 classification · acceptance events in the bake: zero · the derivation core carried byte-identical) over v34 (2026-11-12, PASS 261 — THE STRENGTHENED OUTCOME INVARIANT (comment-loop.md §4): a phone outcome derives only from an authenticated, classified event whose immutable target matches entry kind · concern · attempt · version and whose actor was authorized at event time; provenance is a structured object; an acceptance outcome names the reviewer unless the viewer is the accepting reviewer herself; a withdrawn acceptance never remains the current outcome) over v33 (2026-11-11, PASS 247 — PRINT AGE BADGE (every video face shows its rendering's age, computed in-page from printCreatedAt; the exact timestamp + its source stand in Details) over the v32 set: COMMENT LOOP (per-video comment history: baked snapshot + live refresh on open · one canonical thread per video) over the v31 set: HEADER COMPACTION (Codex design 2026-11-11, the owner's header-bloat screenshot item): the header is TWO rows, 104px in total (row 1: Earth One · v31 identity · plain position · a labelled Menu; row 2: the chip rail) and the collapsed review strip is 104px (ONE merged status line — the progress bar is removed, the fraction says it — over Like · Dislike · Details; 'Show panel' is removed, Details is the panel's one disclosure control, closed by default) · Version · Legend · Coverage · Index live behind the Menu tap; the B53 viewport-budget leg measures the three shares on the served page · the v30 set stands unchanged beneath: the Pass 149 lineage (20 prints) · the 3 DESIGNED thumbnail pairs seated for cells 01 · 04 · 21 under certificate hq-2026-11-11-025 (guard_thumbnail ARMED — creates 0.505 · promise 0.70 · class-gate on blur_misplaced live; cell04's pair carries its two priced craft defects · the guard's T3 gap prints beside the verdicts on the seated cells) · the other 19 cells print NOT DESIGNED · supersedes v32)",
+ "dashboard": "v36 (2026-11-12, PASS 321 — THE DISPOSITION CAMPAIGN BAKED into the served facts: the triage queue's 39 in-thread dispositions carried into ENTRY_FACTS as classified events with structured provenance (D cycles §312-315: 17 · C cycles §316-320 + C3: 21 · issue:44's §244 HQ convergence event) with THREAD disposition objects seated in Pass 244's form · assigned dispositions 6 to 43 + 2 classifications · acceptance events: zero — ACCEPTED in a disposition string is the lane's disposition word, never a reviewer acceptance · the derivation core carried byte-identical) over v35 (2026-11-12, PASS 309 — PASS 301'S THREE DISPOSITION RECORDS BAKED into ENTRY_FACTS as classified lifecycle events with structured provenance: issue:58's record created (IMPLEMENTED · verification established — the print-age badge it asked for stands live) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 4 to 6 + 1 classification · acceptance events in the bake: zero · the derivation core carried byte-identical) over v34 (2026-11-12, PASS 261 — THE STRENGTHENED OUTCOME INVARIANT (comment-loop.md §4): a phone outcome derives only from an authenticated, classified event whose immutable target matches entry kind · concern · attempt · version and whose actor was authorized at event time; provenance is a structured object; an acceptance outcome names the reviewer unless the viewer is the accepting reviewer herself; a withdrawn acceptance never remains the current outcome) over v33 (2026-11-11, PASS 247 — PRINT AGE BADGE (every video face shows its rendering's age, computed in-page from printCreatedAt; the exact timestamp + its source stand in Details) over the v32 set: COMMENT LOOP (per-video comment history: baked snapshot + live refresh on open · one canonical thread per video) over the v31 set: HEADER COMPACTION (Codex design 2026-11-11, the owner's header-bloat screenshot item): the header is TWO rows, 104px in total (row 1: Earth One · v31 identity · plain position · a labelled Menu; row 2: the chip rail) and the collapsed review strip is 104px (ONE merged status line — the progress bar is removed, the fraction says it — over Like · Dislike · Details; 'Show panel' is removed, Details is the panel's one disclosure control, closed by default) · Version · Legend · Coverage · Index live behind the Menu tap; the B53 viewport-budget leg measures the three shares on the served page · the v30 set stands unchanged beneath: the Pass 149 lineage (20 prints) · the 3 DESIGNED thumbnail pairs seated for cells 01 · 04 · 21 under certificate hq-2026-11-11-025 (guard_thumbnail ARMED — creates 0.505 · promise 0.70 · class-gate on blur_misplaced live; cell04's pair carries its two priced craft defects · the guard's T3 gap prints beside the verdicts on the seated cells) · the other 19 cells print NOT DESIGNED · supersedes v32)",
  "pathNote": "Served from the legacy experiment-batch-01 dashboard path; the content reviewed here is Experiment Batch 02.",
  "lineage": {
- "build": "pass309-v35",
+ "build": "pass321-v36",
   "sources": {
    "pass134": "5852b7a5034e",
    "pass153": "33eaeea3c14c",
@@ -190,10 +191,19 @@ window.BATCH_META = {
    "pass172intro": "363c1ab2b798",
    "pass193thumbs": "6a51778c8718",
    "pass301": "fdd234c3c0f0",
-   "pass309": "3be4cf11b136"
+   "pass309": "3be4cf11b136",
+   "pass312": "08a34dccc01f",
+   "pass313": "aabbf55a7100",
+   "pass314": "944b42eda191",
+   "pass315": "3cc09b41c13c",
+   "pass316": "8720a697fcce",
+   "pass317": "aaa070b45f80",
+   "pass319": "6550c05a16d8",
+   "pass320": "529731adc939",
+   "pass321": "13507d022828"
   },
   "printsFileSha": "b6a5fbd5b427",
-  "seated": "v35 (PASS 309) — the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992",
+  "seated": "v36 (PASS 321) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1",
   "cells": 22,
   "countingSeats": 11,
   "seatedPrints": 20
@@ -1633,10 +1643,10 @@ window.BATCH_CELLS = [
 ];
 
 /* PASS 244 — baked comment history (snapshot 2026-11-11T22:41:38Z). Per video: the canonical issue + every mapped issue (duplicates included — their comments live there) + all entries (issue bodies + comments, deduped by GitHub ID). Dispositions ride only where the standing record grounds them; the rest render undispositioned. */
-window.THREADS = {"batch02/cell-01": {"canonical": 55, "issues": [14, 44, 48, 54, 55, 56], "entries": [{"id": "issue:14", "issue": 14, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:06:03Z", "text": "Diagram with hindi must include english alphabet version for reading help? How come the jeb guards don't flag these? What jev guard must cover this so every language with different alphabet are all accompanied by a helper with english alphabets", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Diagram with hindi", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Playable print · panel INVALID-until-dispositioned (#14) — NOT ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "issue:44", "issue": 44, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T21:55:47Z", "text": "Missing thumbnails,  all video", "outcome": "Under discussion", "summary": "Hadi N. · 10 Nov · Under discussion · Missing thumbnails, all", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Current print seated for review (§ PASS 133 print 1bf6afe4… · 80.67 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard layer indicts: click_promise — no designed thumbnail) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "DEBATED", "note": "Thumbnails are being rebuilt as designed sets: the per-primary census and the set design landed in Pass 241; the thumbnail assembler build is in flight (Pass 242). Open until the sets ship.", "acceptance": "pending", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:44"}}, {"id": "issue:48", "issue": 48, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:29:00Z", "text": "The sentence never mentioned in the opening language before it is said in other languages,  do you get it? Which jev or guard does this pass", "outcome": "Ready for you to check", "summary": "Hadi N. · 10 Nov · Ready for you to check · The", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Current print seated for review (§ PASS 133 print 1bf6afe4… · 80.67 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard layer indicts: click_promise — no designed thumbnail) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "IMPLEMENTED", "note": "The gate you asked for exists and is armed: checker #35 (intro_language) requires the sentence to be stated in the opening language first, and checker #36's C13 leg checks first mention across languages. Both ARMED.", "acceptance": "pending", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:48"}}, {"id": "issue:54", "issue": 54, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-11T17:31:51Z", "text": "The diagram highlights and transcript dont match, when it is talking about word I i side verb in turkish, it does not highlightbit, what judge must filter and flag these issues", "outcome": "Ready for you to check", "summary": "Hadi N. · 11 Nov · Ready for you to check · The", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Seated for review · not approved", "verdict": "comment"}, "disposition": {"word": "IMPLEMENTED", "note": "This comment founded checker #39 (sync_coherence) - diagram highlight vs transcript: built in PASS 231, ARMED in PASS 234. This issue stands cited as that checker's founding evidence in the battery record.", "acceptance": "pending", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:54"}}, {"id": "issue:55", "issue": 55, "kind": "request", "author": "minanayebi", "stamp": "Mina N.", "created_at": "2026-11-11T22:18:09Z", "text": "Salam test kardam bebinam comment miyad?", "outcome": "No change requested", "summary": "Mina N. · 11 Nov · No change requested · Salam test", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Seated for review · not approved", "verdict": "comment", "timestamp": "0:05"}, "disposition": {"word": "IMPLEMENTED", "note": "Channel test — the loop test proved: the comment was received, registered under Mina's name, and answered in this thread by HQ (English reply, then the Finglish reply that stands as the language-rule correction). No change was proposed by this comment and none was accepted; acceptance stands PENDING. Corrected by Pass 247 under HQ's addendum of 2026-11-11 18:05 EST: Pass 244's ACCEPTED read her thank-you for the registration confirmation as an acceptance; under the closing rule it is not one.", "acceptance": "pending", "acceptance_evidence": "none held — comment 6808791607 by minanayebi in this thread ('Halle mersi babate tayide comment.') thanks HQ for confirming her test comment registered; under the closing rule (comment-loop.md section 3) a thank-you is not a reviewer acceptance act, so acceptance stands PENDING (HQ addendum to Pass 247, 2026-11-11 18:05 EST, superseding Pass 244's reading)", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:55"}}, {"id": "6808573795", "issue": 55, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:27:16Z", "text": "🏹 Archer — reply\n\nSalam Mina! Received ✓ — your comment came through the dashboard and landed here at 23:18 your time.\n\nThis reply is the loop working: your comment is registered under your name, I read it, and I answer in this same thread so you can see it here and on the dashboard.\n\nStatus: RESOLVED ✓ — channel test confirmed. Nothing to fix in the video from this one; it was a test, and the test passed.\n\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Salam"}, {"id": "6808631619", "issue": 55, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:30:22Z", "text": "🏹 Archer — Mina jan, resid ✓\n\nSalam Mina jan! Commentet resid va khoondamesh.\n\nAz in be bad, javabhaye man be to hamishe be Farsi (Finglish) khahad bud — Hadi emrooz in ro be man goft va dige in eshtebah تکرار nemishe.\n\nIn comment faghat yek test bud va chizi baraye dorost kardan nadasht, vali loop kamel shod: comment resid, khoonde shod, javab gereft.\n\nStatus: RESOLVED ✓ — channel test movafagh bud.\n\n— Archer", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — Mina jan,"}, {"id": "6808689356", "issue": 14, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:32Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe comment posted here — “Diagram with hindi must include english alphabet version for reading help? How come the jeb guards don't flag these? What jev guard must …” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:14 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808707575", "issue": 44, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:31Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe point raised here — missing thumbnails — is the thumbnail line's standing subject: designed thumbnails are seated for 3 of 22 cells under guard_thumbnail (ARMED, certificate hq-2026-11-11-025); the remaining designed pairs are the thumbnail job's open build tiers. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:44 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808712734", "issue": 48, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:49Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe point raised here — the sentence is never stated in the opening language before it is said in the other languages — is already a standing gate, not an open question: checker #35 (intro_language, ARMED) and checker #36's C13 first-mention leg (ARMED, § PASS 233) carry exactly that expectation. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:48 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808719406", "issue": 54, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:35:11Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe point raised here — the diagram highlights and the transcript do not match on the Turkish verb row — founded checker #39 (sync_coherence: built § PASS 231, ARMED § PASS 234); this issue stands cited as that checker's founding evidence in the battery record. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:54 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "issue:56", "issue": 56, "kind": "request", "author": "minanayebi", "stamp": "Mina N.", "created_at": "2026-11-11T22:36:39Z", "text": "Archer chera comment man sabt nemishe inja ? Lotfan ye tayid bede ke commentam ro didi?", "outcome": "No change requested", "summary": "Mina N. · 11 Nov · No change requested · Archer chera comment", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Seated for review · not approved", "verdict": "comment", "timestamp": "0:00"}}, {"id": "6808773233", "issue": 56, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:38:10Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner's design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01, created by the standing dashboard build while the convergence was running. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe comment posted here — “Archer chera comment man sabt nemishe inja ? Lotfan ye tayid bede ke commentam ro didi?” — stays readable in this closed issue; nothing is deleted or rewritten. It is registered in the comment loop's reconciliation census as received, and its acknowledgment is routed to HQ as responder of record in the canonical thread. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:56 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808791607", "issue": 55, "kind": "comment", "author": "minanayebi", "stamp": "Mina N.", "created_at": "2026-11-11T22:39:13Z", "text": "Halle mersi babate tayide comment.", "outcome": null, "summary": "Mina N. · 11 Nov · Halle mersi babate tayide comment."}]}, "batch02/cell-02": {"canonical": 15, "issues": [15, 45, 49], "entries": [{"id": "issue:15", "issue": 15, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:07:18Z", "text": "Same hindi ones needs in diagram to come with english alphabet", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Same hindi ones", "meta": {"cell": "cell-02", "video_file": "dlc001-eat-bread__print__es__cell02.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "issue:45", "issue": 45, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T21:57:44Z", "text": "Is this the thumbnail?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Is this the", "meta": {"cell": "cell-02", "video_file": "dlc001-eat-bread__print__es__cell02.mp4", "status": "Current print seated for review (§ PASS 133 print d8bd4db7… · 88.93 s — the file the v23 entry named but did not hold) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise · its closing carries the stock CTA formula — E1 redesign queue, quality wave) · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:49", "issue": 49, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:30:22Z", "text": "The opening caption like text is in english but the openning is in spanish. Do you get it? Which guard needs adjustment?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · The opening caption", "meta": {"cell": "cell-02", "video_file": "dlc001-eat-bread__print__es__cell02.mp4", "status": "Current print seated for review (§ PASS 133 print d8bd4db7… · 88.93 s — the file the v23 entry named but did not hold) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise · its closing carries the stock CTA formula — E1 redesign queue, quality wave) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808708916", "issue": 45, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:36Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-02. The canonical thread for this video is #15: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/15\n\nThe comment posted here — “Is this the thumbnail?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:45 · video batch02/cell-02 · version dlc001-eat-bread__print__es__cell02.mp4 · implementation = superseded — canonical thread #15\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #15."}, {"id": "6808714238", "issue": 49, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:53Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-02. The canonical thread for this video is #15: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/15\n\nThe comment posted here — “The opening caption like text is in english but the openning is in spanish. Do you get it? Which guard needs adjustment?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:49 · video batch02/cell-02 · version dlc001-eat-bread__print__es__cell02.mp4 · implementation = superseded — canonical thread #15\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #15."}]}, "batch02/cell-03": {"canonical": 16, "issues": [16, 46], "entries": [{"id": "issue:16", "issue": 16, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:09:47Z", "text": "Hindi needs english alpahbet helper on the diagram", "outcome": "Original version unavailable", "summary": "Hadi N. · 10 Nov · Original version unavailable · Hindi needs english", "meta": {"cell": "cell-03", "video_file": "dlc003-open-door__print__en__1.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}}, {"id": "issue:46", "issue": 46, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T21:59:43Z", "text": "Missing video.", "outcome": "Original version unavailable", "summary": "Hadi N. · 10 Nov · Original version unavailable · Missing video.", "meta": {"cell": "cell-03", "video_file": "not built yet", "status": "BLOCKED — no current print: the record cannot render this cell (its intro span, 2.4 s, cannot hold its three intro chunks totalling 3.29 s — § PASS 134 Leg 0, measured; re-deriving the span is an HQ / production-record decision, escalated) · NOT READY (Pass 134: seams NO-CONTENT · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808710079", "issue": 46, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:40Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-03. The canonical thread for this video is #16: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/16\n\nThe comment posted here — “Missing video.” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:46 · video batch02/cell-03 · version not built yet · implementation = superseded — canonical thread #16\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #16."}]}, "batch02/cell-04": {"canonical": 17, "issues": [17], "entries": [{"id": "issue:17", "issue": 17, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:11:18Z", "text": "The diagram voice over is rushed", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · The diagram voice", "meta": {"cell": "cell-04", "video_file": "dlc002-need-water__print__en__cell04.mp4", "status": "Named print seated (§ PASS 120, 17a443b1… · 85.63 s) — cured hero in film, three states frame-verified · closing tail 15.25 s stands untrimmed (HQ's tagging-vs-trimming call) · B4 NOT VERIFIED · not approved (0/22)", "verdict": "comment"}}]}, "batch02/cell-05": {"canonical": 50, "issues": [50], "entries": [{"id": "issue:50", "issue": 50, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:31:32Z", "text": "Image is outside the frame", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Image is outside", "meta": {"cell": "cell-05", "video_file": "dlc002-need-water__print__hi__cell05.mp4", "status": "Named print seated (§ PASS 121, 9c1dfc1d… · 92.93 s) — its own flat-vector set, frame-verified · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise · PRIMARY-HELPER: its 3 primary Hindi chips carry no Latin helper on the realized render — HQ ruling owed (lane recommends the construct amendment), § PASS 134) · not approved (0/22)", "verdict": "comment"}}]}, "batch02/cell-06": {"canonical": 18, "issues": [18, 51], "entries": [{"id": "issue:18", "issue": 18, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:13:19Z", "text": "I don't see the video  here", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · I don't see", "meta": {"cell": "cell-06", "video_file": "not built yet", "status": "Render-ready — queued for mechanical render (environment) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "issue:51", "issue": 51, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:33:00Z", "text": "Diagram and caption overlap.", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Diagram and caption", "meta": {"cell": "cell-06", "video_file": "dlc004-am-hungry__print__en__cell06.mp4", "status": "Current print seated for review (§ PASS 131 print 7eb7e884… · 101.83 s) — naming pending at the Wave 5 gate · this seating closes the owner's 'I don't see the video here' (issue #18 / FB-4) · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808715448", "issue": 51, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:58Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-06. The canonical thread for this video is #18: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/18\n\nThe comment posted here — “Diagram and caption overlap.” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:51 · video batch02/cell-06 · version dlc004-am-hungry__print__en__cell06.mp4 · implementation = superseded — canonical thread #18\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #18."}]}, "batch02/cell-08": {"canonical": 12, "issues": [12, 19, 20], "entries": [{"id": "issue:12", "issue": 12, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-08T17:59:25Z", "text": "There are missing parts in this one, are you sure about this?", "outcome": "Received for review", "summary": "Hadi N. · 8 Nov · Received for review · There are missing", "meta": {"cell": "cell-08", "video_file": "dlc005-sun-warm__print__en__cell08.mp4", "status": "Playable print · panel incomplete — not ready", "verdict": "comment"}}, {"id": "issue:19", "issue": 19, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:16:09Z", "text": "Hindi needs english alphabet helpers", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Hindi needs english", "meta": {"cell": "cell-08", "video_file": "dlc005-sun-warm__print__en__cell08.mp4", "status": "Playable print · panel incomplete — not ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "issue:20", "issue": 20, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:17:46Z", "text": "Hindi needs english alphabet helpers, still showing sun behind the diagram visually distracting. Why jevs don't catch these. Is this the best jev layer you have for this job?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Hindi needs english", "meta": {"cell": "cell-08", "video_file": "dlc005-sun-warm__print__en__cell08.mp4", "status": "Playable print · panel incomplete — not ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "6808690459", "issue": 19, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:35Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-08. The canonical thread for this video is #12: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/12\n\nThe comment posted here — “Hindi needs english alphabet helpers” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:19 · video batch02/cell-08 · version dlc005-sun-warm__print__en__cell08.mp4 · implementation = superseded — canonical thread #12\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #12."}, {"id": "6808691577", "issue": 20, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:39Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-08. The canonical thread for this video is #12: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/12\n\nThe comment posted here — “Hindi needs english alphabet helpers, still showing sun behind the diagram visually distracting. Why jevs don't catch these. Is this the …” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:20 · video batch02/cell-08 · version dlc005-sun-warm__print__en__cell08.mp4 · implementation = superseded — canonical thread #12\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #12."}]}, "batch02/cell-09": {"canonical": 21, "issues": [21, 52], "entries": [{"id": "issue:21", "issue": 21, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:20:26Z", "text": "Hindi needs english helper on diagram as well.", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Hindi needs english", "meta": {"cell": "cell-09", "video_file": "dlc006-thank-you__print__en__cell09.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}}, {"id": "issue:52", "issue": 52, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:34:05Z", "text": "Caption still overlap the diagram. No caption", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Caption still overlap", "meta": {"cell": "cell-09", "video_file": "dlc006-thank-you__print__en__cell09.mp4", "status": "Current print seated for review (§ PASS 133 print 5417f7fd… · 104.03 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808716629", "issue": 52, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:35:02Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-09. The canonical thread for this video is #21: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/21\n\nThe comment posted here — “Caption still overlap the diagram. No caption” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:52 · video batch02/cell-09 · version dlc006-thank-you__print__en__cell09.mp4 · implementation = superseded — canonical thread #21\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #21."}]}, "batch02/cell-11": {"canonical": 22, "issues": [22], "entries": [{"id": "issue:22", "issue": 22, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:22:12Z", "text": "No video???", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · No video???", "meta": {"cell": "cell-11", "video_file": "not built yet", "status": "Package complete — queued for mechanical render · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}}]}, "batch02/cell-12": {"canonical": 23, "issues": [23, 53], "entries": [{"id": "issue:23", "issue": 23, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:22:52Z", "text": "No video?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · No video?", "meta": {"cell": "cell-12", "video_file": "not built yet", "status": "Package complete — queued for mechanical render · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "dislike"}}, {"id": "issue:53", "issue": 53, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:35:39Z", "text": "Caption overlap diagram again", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Caption overlap diagram", "meta": {"cell": "cell-12", "video_file": "dlc009-how-much-cost__print__tr__cell12.mp4", "status": "Current print seated for review (§ PASS 131 print 9c7a8333… · 119.47 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808718093", "issue": 53, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:35:06Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-12. The canonical thread for this video is #23: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/23\n\nThe comment posted here — “Caption overlap diagram again” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:53 · video batch02/cell-12 · version dlc009-how-much-cost__print__tr__cell12.mp4 · implementation = superseded — canonical thread #23\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #23."}]}, "batch02/cell-13": {"canonical": 24, "issues": [24, 36], "entries": [{"id": "issue:24", "issue": 24, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:23:24Z", "text": "No video?????", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · No video?????", "meta": {"cell": "cell-13", "video_file": "not built yet", "status": "Package complete — queued for mechanical render · panel shows code FAILS (fix queue) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}}, {"id": "issue:36", "issue": 36, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:53:11Z", "text": "Caption and diagram overlap, how this is being passed by the jev calls or other deterministic guards?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Caption and diagram", "meta": {"cell": "cell-13", "video_file": "dlc010-good-morning__print__es__cell13.mp4", "status": "Current print seated for review (§ PASS 131 print a66a1443… · 112.50 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at closure (B44 tail 1.064 s — HQ's tagging-vs-trimming call) · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808698603", "issue": 36, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:02Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-13. The canonical thread for this video is #24: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/24\n\nThe comment posted here — “Caption and diagram overlap, how this is being passed by the jev calls or other deterministic guards?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:36 · video batch02/cell-13 · version dlc010-good-morning__print__es__cell13.mp4 · implementation = superseded — canonical thread #24\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #24."}]}, "batch02/cell-14": {"canonical": 25, "issues": [25, 26, 27], "entries": [{"id": "issue:25", "issue": 25, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:24:53Z", "text": "The turkish standalone secrion is missing", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · The turkish standalone", "meta": {"cell": "cell-14", "video_file": "dlc011-love-city__print__en__cell14.mp4", "status": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:26", "issue": 26, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:25:51Z", "text": "Caption over diagram visually mixed on several video, what jev is missing this", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Caption over diagram", "meta": {"cell": "cell-14", "video_file": "dlc011-love-city__print__en__cell14.mp4", "status": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:27", "issue": 27, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:27:13Z", "text": "The diagram outside the frame. How did jev miss this?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · The diagram outside", "meta": {"cell": "cell-14", "video_file": "dlc011-love-city__print__en__cell14.mp4", "status": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · not approved (0/22)", "verdict": "comment"}}, {"id": "6808692907", "issue": 26, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:43Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-14. The canonical thread for this video is #25: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/25\n\nThe comment posted here — “Caption over diagram visually mixed on several video, what jev is missing this” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:26 · video batch02/cell-14 · version dlc011-love-city__print__en__cell14.mp4 · implementation = superseded — canonical thread #25\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #25."}, {"id": "6808694090", "issue": 27, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:47Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-14. The canonical thread for this video is #25: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/25\n\nThe comment posted here — “The diagram outside the frame. How did jev miss this?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:27 · video batch02/cell-14 · version dlc011-love-city__print__en__cell14.mp4 · implementation = superseded — canonical thread #25\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #25."}]}, "batch02/cell-15": {"canonical": 28, "issues": [28, 37], "entries": [{"id": "issue:28", "issue": 28, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:27:40Z", "text": "No video", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · No video", "meta": {"cell": "cell-15", "video_file": "not built yet", "status": "Persian → Turkish substitution COMPLETE (§ PASS 48) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "issue:37", "issue": 37, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:55:21Z", "text": "The story is garbage, mixed, how did jevs did not flag, the parts are missing, audio is slowed down, diagram and caption overlap. Do you think the arrangement of the beats is meaningful or random like this one.", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · The story is", "meta": {"cell": "cell-15", "video_file": "dlc012-am-learning__print__en__cell15.mp4", "status": "Current print seated for review (§ PASS 133 print 33123cec… · 97.00 s — the cell's FIRST print, after the 2 ms total cure) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808699952", "issue": 37, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:07Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-15. The canonical thread for this video is #28: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/28\n\nThe comment posted here — “The story is garbage, mixed, how did jevs did not flag, the parts are missing, audio is slowed down, diagram and caption overlap. Do you …” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:37 · video batch02/cell-15 · version dlc012-am-learning__print__en__cell15.mp4 · implementation = superseded — canonical thread #28\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #28."}]}, "batch02/cell-16": {"canonical": 38, "issues": [38], "entries": [{"id": "issue:38", "issue": 38, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:55:50Z", "text": "Caption overlap with diagram", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Caption overlap with", "meta": {"cell": "cell-16", "video_file": "dlc001-eat-bread__print__tr__cell16.mp4", "status": "Current print seated for review (§ PASS 133 print 4c01afe2… · 94.50 s — replaces the superseded print the v23 surface held) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at seams (bed fit 0.12 vs 0.23 — the G11 line; B4 NOT VERIFIED) · owner-standard layer: no category package on the staged record (NO-CONTENT) · its closing carries the Turkish stock-CTA formula — E1 queue) · not approved (0/22)", "verdict": "comment"}}]}, "batch02/cell-17": {"canonical": 29, "issues": [29], "entries": [{"id": "issue:29", "issue": 29, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:29:06Z", "text": "Hindi in diagrams need english helper alphabets", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Hindi in diagrams", "meta": {"cell": "cell-17", "video_file": "dlc003-open-door__print__es__cell17.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · educator seat ✗ (advisory)", "verdict": "comment"}}]}, "batch02/cell-18": {"canonical": 30, "issues": [30, 39], "entries": [{"id": "issue:30", "issue": 30, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:29:15Z", "text": "No video", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · No video", "meta": {"cell": "cell-18", "video_file": "not built yet", "status": "Render-ready — queued for mechanical render (environment) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "issue:39", "issue": 39, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:56:59Z", "text": "Opening is stretched out and hook is double questions,  is this good thinking?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Opening is stretched", "meta": {"cell": "cell-18", "video_file": "dlc005-sun-warm__print__en__cell18.mp4", "status": "Current print seated for review (§ PASS 131 print 3846c14f… · 135.57 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808701226", "issue": 39, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:11Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-18. The canonical thread for this video is #30: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/30\n\nThe comment posted here — “Opening is stretched out and hook is double questions, is this good thinking?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:39 · video batch02/cell-18 · version dlc005-sun-warm__print__en__cell18.mp4 · implementation = superseded — canonical thread #30\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #30."}]}, "batch02/cell-19": {"canonical": 31, "issues": [31, 32, 40, 41, 47], "entries": [{"id": "issue:31", "issue": 31, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:29:50Z", "text": "Diagram outside the frame", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Diagram outside the", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 122, 290eea26… · 70.47 s) — WITH DEFECT: the Chinese turn card's gloss line overflows the frame, unreadable · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:32", "issue": 32, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:30:37Z", "text": "Diagram outside the frame, this diagram desig is very ugly", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Diagram outside the", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 122, 290eea26… · 70.47 s) — WITH DEFECT: the Chinese turn card's gloss line overflows the frame, unreadable · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:40", "issue": 40, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:57:37Z", "text": "The opening and hook is three or four pros itself. Why?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · The opening and", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:41", "issue": 41, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:58:38Z", "text": "The opening and hook is three or four pros itself. Why? Why flags in most videos are too small, double the flag size so they are visible", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · The opening and", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:47", "issue": 47, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T22:02:55Z", "text": "Chinese in the diagram is outside the frame. Which jev guard or non-jev guard did let this pass?", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · Chinese in the", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808696131", "issue": 32, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:54Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “Diagram outside the frame, this diagram desig is very ugly” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:32 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}, {"id": "6808702397", "issue": 40, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:15Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “The opening and hook is three or four pros itself. Why?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:40 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}, {"id": "6808703700", "issue": 41, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:19Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “The opening and hook is three or four pros itself. Why? Why flags in most videos are too small, double the flag size so they are visible” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:41 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}, {"id": "6808711335", "issue": 47, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:44Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “Chinese in the diagram is outside the frame. Which jev guard or non-jev guard did let this pass?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:47 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}]}, "batch02/cell-20": {"canonical": 33, "issues": [33, 34], "entries": [{"id": "issue:33", "issue": 33, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:31:15Z", "text": "No videos", "outcome": "Original version unavailable", "summary": "Hadi N. · 10 Nov · Original version unavailable · No videos", "meta": {"cell": "cell-20", "video_file": "not built yet", "status": "Persian → Turkish substitution COMPLETE (§ PASS 48) · package otherwise complete · Battery v22: confirmed guards 6/7 (linguist FAIL-open) · closure CONFIRMED · fails: linguist ✗ · take identity ✗ · cadence ✗ · educator seat: accepted-with-reason (advisory)", "verdict": "dislike"}}, {"id": "issue:34", "issue": 34, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:31:20Z", "text": "No videos", "outcome": "Tracked in another thread", "summary": "Hadi N. · 10 Nov · Tracked in another thread · No videos", "meta": {"cell": "cell-20", "video_file": "not built yet", "status": "Persian → Turkish substitution COMPLETE (§ PASS 48) · package otherwise complete · Battery v22: confirmed guards 6/7 (linguist FAIL-open) · closure CONFIRMED · fails: linguist ✗ · take identity ✗ · cadence ✗ · educator seat: accepted-with-reason (advisory)", "verdict": "dislike"}}, {"id": "6808697459", "issue": 34, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:59Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-20. The canonical thread for this video is #33: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/33\n\nThe comment posted here — “No videos” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:34 · video batch02/cell-20 · version not built yet · implementation = superseded — canonical thread #33\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #33."}]}, "batch02/cell-21": {"canonical": 35, "issues": [35, 42, 43], "entries": [{"id": "issue:35", "issue": 35, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:31:31Z", "text": "No video", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · No video", "meta": {"cell": "cell-21", "video_file": "not built yet", "status": "Capture complete — print via assembler queued · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}}, {"id": "issue:42", "issue": 42, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:59:20Z", "text": "These visual styles are my favorite", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · These visual styles", "meta": {"cell": "cell-21", "video_file": "dlc001-eat-bread__print__en__cell21.mp4", "status": "Current print seated for review (§ PASS 131 print 693d315e… · 79.60 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "issue:43", "issue": 43, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:59:47Z", "text": "These visual styles are my favorite. The caption overlap diagrams", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · These visual styles", "meta": {"cell": "cell-21", "video_file": "dlc001-eat-bread__print__en__cell21.mp4", "status": "Current print seated for review (§ PASS 131 print 693d315e… · 79.60 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}}, {"id": "6808704946", "issue": 42, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:23Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-21. The canonical thread for this video is #35: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/35\n\nThe comment posted here — “These visual styles are my favorite” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:42 · video batch02/cell-21 · version dlc001-eat-bread__print__en__cell21.mp4 · implementation = superseded — canonical thread #35\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #35."}, {"id": "6808706308", "issue": 43, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:27Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-21. The canonical thread for this video is #35: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/35\n\nThe comment posted here — “These visual styles are my favorite. The caption overlap diagrams” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:43 · video batch02/cell-21 · version dlc001-eat-bread__print__en__cell21.mp4 · implementation = superseded — canonical thread #35\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #35."}]}};
+window.THREADS = {"batch02/cell-01": {"canonical": 55, "issues": [14, 44, 48, 54, 55, 56], "entries": [{"id": "issue:14", "issue": 14, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:06:03Z", "text": "Diagram with hindi must include english alphabet version for reading help? How come the jeb guards don't flag these? What jev guard must cover this so every language with different alphabet are all accompanied by a helper with english alphabets", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Diagram with hindi", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Playable print · panel INVALID-until-dispositioned (#14) — NOT ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the script-helper direction is taken: every language written in a non-English alphabet is accompanied by an English-alphabet helper in the diagram, so a learner can read the word before they can read its script. The cure rides the production wave's diagram composition, fleet-wide. Your second question — which guard covers this class so the miss is flagged mechanically — is a coverage question for HQ and the guard battery; it is routed with this disposition and is not answered by assertion here.", "acceptance": "pending", "assigned_by": "Pass 316 (lane), from the standing record", "assigned_at": "2026-11-12T07:14:46Z", "answers": "issue:14#c1"}}, {"id": "issue:44", "issue": 44, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T21:55:47Z", "text": "Missing thumbnails,  all video", "outcome": "Under discussion", "summary": "Hadi N. · 10 Nov · Under discussion · Missing thumbnails, all", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Current print seated for review (§ PASS 133 print 1bf6afe4… · 80.67 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard layer indicts: click_promise — no designed thumbnail) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "DEBATED", "note": "Thumbnails are being rebuilt as designed sets: the per-primary census and the set design landed in Pass 241; the thumbnail assembler build is in flight (Pass 242). Open until the sets ship.", "acceptance": "pending", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:44"}}, {"id": "issue:48", "issue": 48, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:29:00Z", "text": "The sentence never mentioned in the opening language before it is said in other languages,  do you get it? Which jev or guard does this pass", "outcome": "Ready for you to check", "summary": "Hadi N. · 10 Nov · Ready for you to check · The", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Current print seated for review (§ PASS 133 print 1bf6afe4… · 80.67 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard layer indicts: click_promise — no designed thumbnail) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "IMPLEMENTED", "note": "The gate you asked for exists and is armed: checker #35 (intro_language) requires the sentence to be stated in the opening language first, and checker #36's C13 leg checks first mention across languages. Both ARMED.", "acceptance": "pending", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:48"}}, {"id": "issue:54", "issue": 54, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-11T17:31:51Z", "text": "The diagram highlights and transcript dont match, when it is talking about word I i side verb in turkish, it does not highlightbit, what judge must filter and flag these issues", "outcome": "Ready for you to check", "summary": "Hadi N. · 11 Nov · Ready for you to check · The", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Seated for review · not approved", "verdict": "comment"}, "disposition": {"word": "IMPLEMENTED", "note": "This comment founded checker #39 (sync_coherence) - diagram highlight vs transcript: built in PASS 231, ARMED in PASS 234. This issue stands cited as that checker's founding evidence in the battery record.", "acceptance": "pending", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:54"}}, {"id": "issue:55", "issue": 55, "kind": "request", "author": "minanayebi", "stamp": "Mina N.", "created_at": "2026-11-11T22:18:09Z", "text": "Salam test kardam bebinam comment miyad?", "outcome": "No change requested", "summary": "Mina N. · 11 Nov · No change requested · Salam test", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Seated for review · not approved", "verdict": "comment", "timestamp": "0:05"}, "disposition": {"word": "IMPLEMENTED", "note": "Channel test — the loop test proved: the comment was received, registered under Mina's name, and answered in this thread by HQ (English reply, then the Finglish reply that stands as the language-rule correction). No change was proposed by this comment and none was accepted; acceptance stands PENDING. Corrected by Pass 247 under HQ's addendum of 2026-11-11 18:05 EST: Pass 244's ACCEPTED read her thank-you for the registration confirmation as an acceptance; under the closing rule it is not one.", "acceptance": "pending", "acceptance_evidence": "none held — comment 6808791607 by minanayebi in this thread ('Halle mersi babate tayide comment.') thanks HQ for confirming her test comment registered; under the closing rule (comment-loop.md section 3) a thank-you is not a reviewer acceptance act, so acceptance stands PENDING (HQ addendum to Pass 247, 2026-11-11 18:05 EST, superseding Pass 244's reading)", "assigned_by": "Pass 244 (lane), from the standing record", "assigned_at": "2026-11-11T22:41:38Z", "answers": "issue:55"}}, {"id": "6808573795", "issue": 55, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:27:16Z", "text": "🏹 Archer — reply\n\nSalam Mina! Received ✓ — your comment came through the dashboard and landed here at 23:18 your time.\n\nThis reply is the loop working: your comment is registered under your name, I read it, and I answer in this same thread so you can see it here and on the dashboard.\n\nStatus: RESOLVED ✓ — channel test confirmed. Nothing to fix in the video from this one; it was a test, and the test passed.\n\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Salam"}, {"id": "6808631619", "issue": 55, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:30:22Z", "text": "🏹 Archer — Mina jan, resid ✓\n\nSalam Mina jan! Commentet resid va khoondamesh.\n\nAz in be bad, javabhaye man be to hamishe be Farsi (Finglish) khahad bud — Hadi emrooz in ro be man goft va dige in eshtebah تکرار nemishe.\n\nIn comment faghat yek test bud va chizi baraye dorost kardan nadasht, vali loop kamel shod: comment resid, khoonde shod, javab gereft.\n\nStatus: RESOLVED ✓ — channel test movafagh bud.\n\n— Archer", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — Mina jan,"}, {"id": "6808689356", "issue": 14, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:32Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe comment posted here — “Diagram with hindi must include english alphabet version for reading help? How come the jeb guards don't flag these? What jev guard must …” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:14 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808707575", "issue": 44, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:31Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe point raised here — missing thumbnails — is the thumbnail line's standing subject: designed thumbnails are seated for 3 of 22 cells under guard_thumbnail (ARMED, certificate hq-2026-11-11-025); the remaining designed pairs are the thumbnail job's open build tiers. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:44 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808712734", "issue": 48, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:49Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe point raised here — the sentence is never stated in the opening language before it is said in the other languages — is already a standing gate, not an open question: checker #35 (intro_language, ARMED) and checker #36's C13 first-mention leg (ARMED, § PASS 233) carry exactly that expectation. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:48 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808719406", "issue": 54, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:35:11Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe point raised here — the diagram highlights and the transcript do not match on the Turkish verb row — founded checker #39 (sync_coherence: built § PASS 231, ARMED § PASS 234); this issue stands cited as that checker's founding evidence in the battery record. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:54 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "issue:56", "issue": 56, "kind": "request", "author": "minanayebi", "stamp": "Mina N.", "created_at": "2026-11-11T22:36:39Z", "text": "Archer chera comment man sabt nemishe inja ? Lotfan ye tayid bede ke commentam ro didi?", "outcome": "No change requested", "summary": "Mina N. · 11 Nov · No change requested · Archer chera comment", "meta": {"cell": "cell-01", "video_file": "dlc001-eat-bread__print__en__cell01.mp4", "status": "Seated for review · not approved", "verdict": "comment", "timestamp": "0:00"}}, {"id": "6808773233", "issue": 56, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:38:10Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner's design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-01, created by the standing dashboard build while the convergence was running. The canonical thread for this video is #55: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/55\n\nThe comment posted here — “Archer chera comment man sabt nemishe inja ? Lotfan ye tayid bede ke commentam ro didi?” — stays readable in this closed issue; nothing is deleted or rewritten. It is registered in the comment loop's reconciliation census as received, and its acknowledgment is routed to HQ as responder of record in the canonical thread. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:56 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #55."}, {"id": "6808791607", "issue": 55, "kind": "comment", "author": "minanayebi", "stamp": "Mina N.", "created_at": "2026-11-11T22:39:13Z", "text": "Halle mersi babate tayide comment.", "outcome": null, "summary": "Mina N. · 11 Nov · Halle mersi babate tayide comment."}]}, "batch02/cell-02": {"canonical": 15, "issues": [15, 45, 49], "entries": [{"id": "issue:15", "issue": 15, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:07:18Z", "text": "Same hindi ones needs in diagram to come with english alphabet", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Same hindi ones", "meta": {"cell": "cell-02", "video_file": "dlc001-eat-bread__print__es__cell02.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the direction is applied. The cure rides the production wave's diagram composition; the transcript-side helper text already stands (Pass 139), and the render-level helper wiring is named openly as waiting on HQ's primary-helper ruling — the acceptance of your direction does not wait on it.", "acceptance": "pending", "assigned_by": "Pass 312 (lane), from the standing record", "assigned_at": "2026-11-12T06:49:55Z", "answers": "issue:15#c1"}}, {"id": "issue:45", "issue": 45, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T21:57:44Z", "text": "Is this the thumbnail?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Is this the", "meta": {"cell": "cell-02", "video_file": "dlc001-eat-bread__print__es__cell02.mp4", "status": "Current print seated for review (§ PASS 133 print d8bd4db7… · 88.93 s — the file the v23 entry named but did not hold) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise · its closing carries the stock CTA formula — E1 redesign queue, quality wave) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the defect is taken: the panel face was not the designed thumbnail. Since your comment, the thumbnail line was rebuilt on your own ruling (sets per primary language, not per video): the thumbnail assembler (Pass 242) produced this cell's designed thumbnail in the Spanish set (cell02-thumb.png, in the thumbnail job's Pass 242 run outputs), and the whole assembled set passed guard_thumbnail, 22 of 22. Seating the assembled set on this review surface rides the next dashboard bake; full designed-thumbnail coverage is priced at the compiled batch's presentation gate — the same remainder as issue #44's.", "acceptance": "pending", "assigned_by": "Pass 319 (lane), from the standing record", "assigned_at": "2026-11-12T07:27:31Z", "answers": "issue:45#c1"}}, {"id": "issue:49", "issue": 49, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:30:22Z", "text": "The opening caption like text is in english but the openning is in spanish. Do you get it? Which guard needs adjustment?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · The opening caption", "meta": {"cell": "cell-02", "video_file": "dlc001-eat-bread__print__es__cell02.mp4", "status": "Current print seated for review (§ PASS 133 print d8bd4db7… · 88.93 s — the file the v23 entry named but did not hold) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise · its closing carries the stock CTA formula — E1 redesign queue, quality wave) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — an opening language-consistency defect is taken: on this Spanish print, the opening's caption-like text is in English while the opening itself is in Spanish — the opening's written text and its spoken language do not match. The cure family is the production wave's opening composition: the battery's intro-language leg (checker #35) prices the opening's language per configuration, and the opening class carries the composition rule. Your question — which guard needs adjustment — is not answered here by assertion: it stands routed to HQ and the guard battery with this event, and their answer lands on the record.", "acceptance": "pending", "assigned_by": "Pass 320 (lane), from the standing record", "assigned_at": "2026-11-12T07:38:31Z", "answers": "issue:49#c1"}}, {"id": "6808708916", "issue": 45, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:36Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-02. The canonical thread for this video is #15: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/15\n\nThe comment posted here — “Is this the thumbnail?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:45 · video batch02/cell-02 · version dlc001-eat-bread__print__es__cell02.mp4 · implementation = superseded — canonical thread #15\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #15."}, {"id": "6808714238", "issue": 49, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:53Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-02. The canonical thread for this video is #15: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/15\n\nThe comment posted here — “The opening caption like text is in english but the openning is in spanish. Do you get it? Which guard needs adjustment?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:49 · video batch02/cell-02 · version dlc001-eat-bread__print__es__cell02.mp4 · implementation = superseded — canonical thread #15\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #15."}]}, "batch02/cell-03": {"canonical": 16, "issues": [16, 46], "entries": [{"id": "issue:16", "issue": 16, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:09:47Z", "text": "Hindi needs english alpahbet helper on the diagram", "outcome": "Original version unavailable", "summary": "Hadi N. · 10 Nov · Original version unavailable · Hindi needs english", "meta": {"cell": "cell-03", "video_file": "dlc003-open-door__print__en__1.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the direction is applied. One state named plainly: cell-03 carries no print on the served dashboard yet (its panel reads \"No print yet\"), so there is no diagram on the surface to cure today; the rule is registered against this cell now and binds the diagram the moment cell-03's print is built. The class cure rides the production wave's diagram composition.", "acceptance": "pending", "assigned_by": "Pass 312 (lane), from the standing record", "assigned_at": "2026-11-12T06:50:02Z", "answers": "issue:16#c1"}}, {"id": "issue:46", "issue": 46, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T21:59:43Z", "text": "Missing video.", "outcome": "Original version unavailable", "summary": "Hadi N. · 10 Nov · Original version unavailable · Missing video.", "meta": {"cell": "cell-03", "video_file": "not built yet", "status": "BLOCKED — no current print: the record cannot render this cell (its intro span, 2.4 s, cannot hold its three intro chunks totalling 3.29 s — § PASS 134 Leg 0, measured; re-deriving the span is an HQ / production-record decision, escalated) · NOT READY (Pass 134: seams NO-CONTENT · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the report stands true today, exactly as written: cell-03 carries no print on the served surface (§247's census reads cell-03 \"No print yet\"), so this thread's panel still has no video to watch. The cure is the cell's own print: cell-03 renders alone through the runner gate at the wave review under the standing plan, and the compiled line carries it into the batch. Nothing is claimed seated until that print stands and is verified.", "acceptance": "pending", "assigned_by": "Pass 319 (lane), from the standing record", "assigned_at": "2026-11-12T07:27:36Z", "answers": "issue:46#c1"}}, {"id": "6808710079", "issue": 46, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:40Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-03. The canonical thread for this video is #16: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/16\n\nThe comment posted here — “Missing video.” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:46 · video batch02/cell-03 · version not built yet · implementation = superseded — canonical thread #16\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #16."}]}, "batch02/cell-04": {"canonical": 17, "issues": [17], "entries": [{"id": "issue:17", "issue": 17, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:11:18Z", "text": "The diagram voice over is rushed", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · The diagram voice", "meta": {"cell": "cell-04", "video_file": "dlc002-need-water__print__en__cell04.mp4", "status": "Named print seated (§ PASS 120, 17a443b1… · 85.63 s) — cured hero in film, three states frame-verified · closing tail 15.25 s stands untrimmed (HQ's tagging-vs-trimming call) · B4 NOT VERIFIED · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the cure is this video's re-render in the production wave, fired against the armed battery (the ear-machine's pause and rate legs included). Nothing is claimed fixed today: the standing print still carries the rushed narration until that re-render lands.", "acceptance": "pending", "assigned_by": "Pass 312 (lane), from the standing record", "assigned_at": "2026-11-12T06:50:07Z", "answers": "issue:17#c1"}}]}, "batch02/cell-05": {"canonical": 50, "issues": [50], "entries": [{"id": "issue:50", "issue": 50, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:31:32Z", "text": "Image is outside the frame", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Image is outside", "meta": {"cell": "cell-05", "video_file": "dlc002-need-water__print__hi__cell05.mp4", "status": "Named print seated (§ PASS 121, 9c1dfc1d… · 92.93 s) — its own flat-vector set, frame-verified · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise · PRIMARY-HELPER: its 3 primary Hindi chips carry no Latin helper on the realized render — HQ ruling owed (lane recommends the construct amendment), § PASS 134) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the containment defect is taken. The cure rides the production wave's re-render under the armed battery, whose containment censuses check every element in-frame and unobstructed, per cell, at the element's own moment, before any print stands as the fix. Nothing is claimed fixed on the print that stands today.", "acceptance": "pending", "assigned_by": "Pass 315 (lane), from the standing record", "assigned_at": "2026-11-12T07:09:31Z", "answers": "issue:50#c1"}}]}, "batch02/cell-06": {"canonical": 18, "issues": [18, 51], "entries": [{"id": "issue:18", "issue": 18, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:13:19Z", "text": "I don't see the video  here", "outcome": "This comment may no longer apply", "summary": "Hadi N. · 10 Nov · This comment may no longer apply", "meta": {"cell": "cell-06", "video_file": "not built yet", "status": "Render-ready — queued for mechanical render (environment) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "NO-LONGER-APPLIES", "note": "NO-LONGER-APPLIES — stated as an assessment, not a closure: it stands until reviewer acceptance, and it can be challenged on this thread if the video is not in front of you.", "acceptance": "pending", "assigned_by": "Pass 312 (lane), from the standing record", "assigned_at": "2026-11-12T06:50:12Z", "answers": "issue:18#c1"}}, {"id": "issue:51", "issue": 51, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:33:00Z", "text": "Diagram and caption overlap.", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Diagram and caption", "meta": {"cell": "cell-06", "video_file": "dlc004-am-hungry__print__en__cell06.mp4", "status": "Current print seated for review (§ PASS 131 print 7eb7e884… · 101.83 s) — naming pending at the Wave 5 gate · this seating closes the owner's 'I don't see the video here' (issue #18 / FB-4) · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the overlap class is taken, the same family as issue:26#c1: the diagram and the text over it occupy the same space on this cell, and neither can be read as it stands. The cure is the production wave's re-render under the armed battery: text-collision and label checks price the overlap class per cell, and checker #38's labelchip legs price the chip-overlap part. Nothing is claimed fixed on the print that stands today.", "acceptance": "pending", "assigned_by": "Pass 320 (lane), from the standing record", "assigned_at": "2026-11-12T07:38:36Z", "answers": "issue:51#c1"}}, {"id": "6808715448", "issue": 51, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:58Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-06. The canonical thread for this video is #18: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/18\n\nThe comment posted here — “Diagram and caption overlap.” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:51 · video batch02/cell-06 · version dlc004-am-hungry__print__en__cell06.mp4 · implementation = superseded — canonical thread #18\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #18."}]}, "batch02/cell-08": {"canonical": 12, "issues": [12, 19, 20], "entries": [{"id": "issue:12", "issue": 12, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-08T17:59:25Z", "text": "There are missing parts in this one, are you sure about this?", "outcome": "Needs your clarification", "summary": "Hadi N. · 8 Nov · Needs your clarification · There are missing", "meta": {"cell": "cell-08", "video_file": "dlc005-sun-warm__print__en__cell08.mp4", "status": "Playable print · panel incomplete — not ready", "verdict": "comment"}, "disposition": {"word": "DEBATED", "note": "DEBATED — this question is the act; the concern stays open on your answer, and the cure is priced the moment the parts are named.", "acceptance": "pending", "assigned_by": "Pass 312 (lane), from the standing record", "assigned_at": "2026-11-12T06:49:50Z", "answers": "issue:12#c1"}}, {"id": "issue:19", "issue": 19, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:16:09Z", "text": "Hindi needs english alphabet helpers", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Hindi needs english", "meta": {"cell": "cell-08", "video_file": "dlc005-sun-warm__print__en__cell08.mp4", "status": "Playable print · panel incomplete — not ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the script-helper direction is taken, the same family as your cell-02 comment (issue #15, dispositioned ACCEPTED on its own thread): Hindi in the diagram comes with English-alphabet helpers. The cure rides the production wave's diagram composition (helper class, fleet-wide); the transcript helper stands (Pass 139), and the render wiring is named openly as awaiting HQ's primary-helper ruling.", "acceptance": "pending", "assigned_by": "Pass 316 (lane), from the standing record", "assigned_at": "2026-11-12T07:14:51Z", "answers": "issue:19#c1"}}, {"id": "issue:20", "issue": 20, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:17:46Z", "text": "Hindi needs english alphabet helpers, still showing sun behind the diagram visually distracting. Why jevs don't catch these. Is this the best jev layer you have for this job?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Hindi needs english", "meta": {"cell": "cell-08", "video_file": "dlc005-sun-warm__print__en__cell08.mp4", "status": "Playable print · panel incomplete — not ready · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — both parts are taken. (1) The script-helper direction: Hindi in the diagram comes with English-alphabet helpers; the cure rides the production wave's diagram composition (helper class, fleet-wide), the transcript helper stands (Pass 139), and the render wiring is named openly as awaiting HQ's primary-helper ruling. (2) The sun standing behind the diagram, visually distracting: taken as a diagram-composition defect of the same cure family — the production wave's diagram composition owns what stands behind the diagram. Your challenge — why the Jev layer doesn't catch these — routes to HQ and the guard battery with this disposition; it is not answered by assertion here.", "acceptance": "pending", "assigned_by": "Pass 316 (lane), from the standing record", "assigned_at": "2026-11-12T07:14:55Z", "answers": "issue:20#c1"}}, {"id": "6808690459", "issue": 19, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:35Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-08. The canonical thread for this video is #12: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/12\n\nThe comment posted here — “Hindi needs english alphabet helpers” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:19 · video batch02/cell-08 · version dlc005-sun-warm__print__en__cell08.mp4 · implementation = superseded — canonical thread #12\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #12."}, {"id": "6808691577", "issue": 20, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:39Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-08. The canonical thread for this video is #12: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/12\n\nThe comment posted here — “Hindi needs english alphabet helpers, still showing sun behind the diagram visually distracting. Why jevs don't catch these. Is this the …” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:20 · video batch02/cell-08 · version dlc005-sun-warm__print__en__cell08.mp4 · implementation = superseded — canonical thread #12\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #12."}]}, "batch02/cell-09": {"canonical": 21, "issues": [21, 52], "entries": [{"id": "issue:21", "issue": 21, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:20:26Z", "text": "Hindi needs english helper on diagram as well.", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Hindi needs english", "meta": {"cell": "cell-09", "video_file": "dlc006-thank-you__print__en__cell09.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the direction is applied. The cure rides the production wave's diagram composition; the transcript-side helper text already stands (Pass 139), and the render-level helper wiring is named openly as waiting on HQ's primary-helper ruling — the acceptance of your direction does not wait on it.", "acceptance": "pending", "assigned_by": "Pass 313 (lane), from the standing record", "assigned_at": "2026-11-12T06:55:57Z", "answers": "issue:21#c1"}}, {"id": "issue:52", "issue": 52, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:34:05Z", "text": "Caption still overlap the diagram. No caption", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Caption still overlap", "meta": {"cell": "cell-09", "video_file": "dlc006-thank-you__print__en__cell09.mp4", "status": "Current print seated for review (§ PASS 133 print 5417f7fd… · 104.03 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — both parts are taken. (1) The overlap class, on this cell again: your \"still\" is priced as written — the defect persisted across the waves on this cell, and a catch that repeats is a system failure, not a new defect. The cure is the class cure (the family of issue:26#c1): the production wave's re-render under the armed battery, whose text-collision and label checks price the overlap class per cell, with checker #38's labelchip legs pricing the chip-overlap part. (2) Your tail — \"No caption\" — restates the standing law of this channel: no captions, ever. It is applied as law, not debated. Nothing is claimed fixed on the print that stands today.", "acceptance": "pending", "assigned_by": "Pass 320 (lane), from the standing record", "assigned_at": "2026-11-12T07:38:40Z", "answers": "issue:52#c1"}}, {"id": "6808716629", "issue": 52, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:35:02Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-09. The canonical thread for this video is #21: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/21\n\nThe comment posted here — “Caption still overlap the diagram. No caption” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:52 · video batch02/cell-09 · version dlc006-thank-you__print__en__cell09.mp4 · implementation = superseded — canonical thread #21\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #21."}]}, "batch02/cell-11": {"canonical": 22, "issues": [22], "entries": [{"id": "issue:22", "issue": 22, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:22:12Z", "text": "No video???", "outcome": "This comment may no longer apply", "summary": "Hadi N. · 10 Nov · This comment may no longer apply", "meta": {"cell": "cell-11", "video_file": "not built yet", "status": "Package complete — queued for mechanical render · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}, "disposition": {"word": "NO-LONGER-APPLIES", "note": "NO-LONGER-APPLIES — stated as an assessment, not a closure: it stands until reviewer acceptance, and it can be challenged on this thread if the video is not in front of you.", "acceptance": "pending", "assigned_by": "Pass 313 (lane), from the standing record", "assigned_at": "2026-11-12T06:56:03Z", "answers": "issue:22#c1"}}]}, "batch02/cell-12": {"canonical": 23, "issues": [23, 53], "entries": [{"id": "issue:23", "issue": 23, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:22:52Z", "text": "No video?", "outcome": "This comment may no longer apply", "summary": "Hadi N. · 10 Nov · This comment may no longer apply", "meta": {"cell": "cell-12", "video_file": "not built yet", "status": "Package complete — queued for mechanical render · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "dislike"}, "disposition": {"word": "NO-LONGER-APPLIES", "note": "NO-LONGER-APPLIES — stated as an assessment, not a closure: it stands until reviewer acceptance, and it can be challenged on this thread if the video is not in front of you.", "acceptance": "pending", "assigned_by": "Pass 313 (lane), from the standing record", "assigned_at": "2026-11-12T06:56:10Z", "answers": "issue:23#c1"}}, {"id": "issue:53", "issue": 53, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T23:35:39Z", "text": "Caption overlap diagram again", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Caption overlap diagram", "meta": {"cell": "cell-12", "video_file": "dlc009-how-much-cost__print__tr__cell12.mp4", "status": "Current print seated for review (§ PASS 131 print 9c7a8333… · 119.47 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the overlap class is taken, the same family as issue:26#c1. Your \"again\" is priced as you price it: this catch repeats catches already taken on other cells, and a repeated catch is a system failure, not a new defect — so the cure is the fleet-wide class cure, not a per-cell patch: the production wave's re-render under the armed battery, whose text-collision and label checks price the overlap class per cell, with checker #38's labelchip legs pricing the chip-overlap part. Nothing is claimed fixed on the print that stands today.", "acceptance": "pending", "assigned_by": "Pass 320 (lane), from the standing record", "assigned_at": "2026-11-12T07:38:44Z", "answers": "issue:53#c1"}}, {"id": "6808718093", "issue": 53, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:35:06Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-12. The canonical thread for this video is #23: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/23\n\nThe comment posted here — “Caption overlap diagram again” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:53 · video batch02/cell-12 · version dlc009-how-much-cost__print__tr__cell12.mp4 · implementation = superseded — canonical thread #23\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #23."}]}, "batch02/cell-13": {"canonical": 24, "issues": [24, 36], "entries": [{"id": "issue:24", "issue": 24, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:23:24Z", "text": "No video?????", "outcome": "This comment may no longer apply", "summary": "Hadi N. · 10 Nov · This comment may no longer apply", "meta": {"cell": "cell-13", "video_file": "not built yet", "status": "Package complete — queued for mechanical render · panel shows code FAILS (fix queue) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · cadence ✗", "verdict": "comment"}, "disposition": {"word": "NO-LONGER-APPLIES", "note": "NO-LONGER-APPLIES — stated as an assessment, not a closure: it stands until reviewer acceptance, and it can be challenged on this thread if the video is not in front of you.", "acceptance": "pending", "assigned_by": "Pass 313 (lane), from the standing record", "assigned_at": "2026-11-12T06:56:15Z", "answers": "issue:24#c1"}}, {"id": "issue:36", "issue": 36, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:53:11Z", "text": "Caption and diagram overlap, how this is being passed by the jev calls or other deterministic guards?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Caption and diagram", "meta": {"cell": "cell-13", "video_file": "dlc010-good-morning__print__es__cell13.mp4", "status": "Current print seated for review (§ PASS 131 print a66a1443… · 112.50 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at closure (B44 tail 1.064 s — HQ's tagging-vs-trimming call) · transcript verdict recovered in § PASS 134's leg (ERROR in the raw rows) · owner-standard indicts: click_promise + follow_earned) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the caption-and-diagram overlap class is taken, the same family as the overlap concern converged from cell-14 (issue:26). The cure rides the production wave's re-render under the armed battery: text-collision and label checks price the overlap class per cell, and checker #38's labelchip legs price the chip-overlap part. Your question — how this is being passed by the jev calls or other deterministic guards — is a coverage question for HQ and the guard battery; it is routed with this disposition and is not answered by assertion here.", "acceptance": "pending", "assigned_by": "Pass 317 (lane), from the standing record", "assigned_at": "2026-11-12T07:21:02Z", "answers": "issue:36#c1"}}, {"id": "6808698603", "issue": 36, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:02Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-13. The canonical thread for this video is #24: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/24\n\nThe comment posted here — “Caption and diagram overlap, how this is being passed by the jev calls or other deterministic guards?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:36 · video batch02/cell-13 · version dlc010-good-morning__print__es__cell13.mp4 · implementation = superseded — canonical thread #24\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #24."}]}, "batch02/cell-14": {"canonical": 25, "issues": [25, 26, 27], "entries": [{"id": "issue:25", "issue": 25, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:24:53Z", "text": "The turkish standalone secrion is missing", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · The turkish standalone", "meta": {"cell": "cell-14", "video_file": "dlc011-love-city__print__en__cell14.mp4", "status": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the cure rides the production wave: this cell's Turkish standalone section is restored, and the compiled print is verified against the manifest's section list before it stands as the fix. The standing print (seated, § PASS 121) carries the gap until then — nothing is claimed fixed on it today.", "acceptance": "pending", "assigned_by": "Pass 313 (lane), from the standing record", "assigned_at": "2026-11-12T06:56:21Z", "answers": "issue:25#c1"}}, {"id": "issue:26", "issue": 26, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:25:51Z", "text": "Caption over diagram visually mixed on several video, what jev is missing this", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Caption over diagram", "meta": {"cell": "cell-14", "video_file": "dlc011-love-city__print__en__cell14.mp4", "status": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the caption-over-diagram overlap class is taken, on this cell and across the several videos you named: caption text and the diagram are both things a learner has to read, and where they mix, neither is readable. The cure rides the production wave's re-render under the armed battery, whose text-collision and label checks price caption/diagram overlap per cell before any print stands as the fix; checker #38's labelchip legs price the chip-overlap part of the class. Your question — what Jev is missing this — routes to HQ and the guard battery with this disposition; it is not answered by assertion here. The concern's family stands elsewhere with its own rows (issue #38 on cell-16 · issue #43 on cell-21) — named here, not bundled into this disposition.", "acceptance": "pending", "assigned_by": "Pass 316 (lane), from the standing record", "assigned_at": "2026-11-12T07:14:59Z", "answers": "issue:26#c1"}}, {"id": "issue:27", "issue": 27, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:27:13Z", "text": "The diagram outside the frame. How did jev miss this?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · The diagram outside", "meta": {"cell": "cell-14", "video_file": "dlc011-love-city__print__en__cell14.mp4", "status": "FIRST print seated + named (§ PASS 121, cdb362c8… · 133.33 s) — findings on its face: floating-terrace exception · skA hero unseated by the manifest · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — a containment defect is taken: an element outside the frame is not in the video, so a diagram crossing the frame edge teaches nothing where it stands. Same family as your cell-19 comment (issue #31, dispositioned ACCEPTED on its own thread). The cure rides the production wave's re-render under the armed battery, whose containment censuses check every element fully in-frame and unobstructed, per cell, at the element's own moment, before any print stands as the fix; nothing is claimed fixed on the standing print. Your question — how the Jev layer missed this — routes to HQ and the guard battery with this disposition; it is not answered by assertion here.", "acceptance": "pending", "assigned_by": "Pass 316 (lane), from the standing record", "assigned_at": "2026-11-12T07:15:03Z", "answers": "issue:27#c1"}}, {"id": "6808692907", "issue": 26, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:43Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-14. The canonical thread for this video is #25: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/25\n\nThe comment posted here — “Caption over diagram visually mixed on several video, what jev is missing this” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:26 · video batch02/cell-14 · version dlc011-love-city__print__en__cell14.mp4 · implementation = superseded — canonical thread #25\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #25."}, {"id": "6808694090", "issue": 27, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:47Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-14. The canonical thread for this video is #25: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/25\n\nThe comment posted here — “The diagram outside the frame. How did jev miss this?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:27 · video batch02/cell-14 · version dlc011-love-city__print__en__cell14.mp4 · implementation = superseded — canonical thread #25\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #25."}]}, "batch02/cell-15": {"canonical": 28, "issues": [28, 37], "entries": [{"id": "issue:28", "issue": 28, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:27:40Z", "text": "No video", "outcome": "This comment may no longer apply", "summary": "Hadi N. · 10 Nov · This comment may no longer apply", "meta": {"cell": "cell-15", "video_file": "not built yet", "status": "Persian → Turkish substitution COMPLETE (§ PASS 48) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "NO-LONGER-APPLIES", "note": "NO-LONGER-APPLIES — stated as an assessment, not a closure: it stands until reviewer acceptance, and it can be challenged on this thread if the video is not in front of you.", "acceptance": "pending", "assigned_by": "Pass 314 (lane), from the standing record", "assigned_at": "2026-11-12T07:02:28Z", "answers": "issue:28#c1"}}, {"id": "issue:37", "issue": 37, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:55:21Z", "text": "The story is garbage, mixed, how did jevs did not flag, the parts are missing, audio is slowed down, diagram and caption overlap. Do you think the arrangement of the beats is meaningful or random like this one.", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · The story is", "meta": {"cell": "cell-15", "video_file": "dlc012-am-learning__print__en__cell15.mp4", "status": "Current print seated for review (§ PASS 133 print 33123cec… · 97.00 s — the cell's FIRST print, after the 2 ms total cure) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the concern is compound, and every part is taken, each routed to the line that owns it: (i) the story reads mixed and the beat arrangement reads random — your verdict on the arrangement is recorded as a direction, not debated; the story and arrangement are rebuilt in the production wave's story/transcript layer; (ii) parts are missing — content completeness is checked against the manifest in the same wave; (iii) the audio is slowed down — the ear-machine's speech-rate legs (§302) price rate on the re-render; (iv) diagram and caption overlap — the overlap class, same family as issue:26, cured by the production wave's re-render under the armed battery (text-collision + label checks per cell). Your challenge — how did the jevs not flag this — is a coverage question for HQ and the guard battery; it is routed with this disposition and is not answered by assertion here.", "acceptance": "pending", "assigned_by": "Pass 317 (lane), from the standing record", "assigned_at": "2026-11-12T07:21:07Z", "answers": "issue:37#c1"}}, {"id": "6808699952", "issue": 37, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:07Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-15. The canonical thread for this video is #28: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/28\n\nThe comment posted here — “The story is garbage, mixed, how did jevs did not flag, the parts are missing, audio is slowed down, diagram and caption overlap. Do you …” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:37 · video batch02/cell-15 · version dlc012-am-learning__print__en__cell15.mp4 · implementation = superseded — canonical thread #28\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #28."}]}, "batch02/cell-16": {"canonical": 38, "issues": [38], "entries": [{"id": "issue:38", "issue": 38, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:55:50Z", "text": "Caption overlap with diagram", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Caption overlap with", "meta": {"cell": "cell-16", "video_file": "dlc001-eat-bread__print__tr__cell16.mp4", "status": "Current print seated for review (§ PASS 133 print 4c01afe2… · 94.50 s — replaces the superseded print the v23 surface held) — naming pending at the Wave 5 gate · NOT READY (Pass 134: FAIL at seams (bed fit 0.12 vs 0.23 — the G11 line; B4 NOT VERIFIED) · owner-standard layer: no category package on the staged record (NO-CONTENT) · its closing carries the Turkish stock-CTA formula — E1 queue) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the caption-overlap defect is taken. The cure rides the production wave's re-render under the armed battery, whose text-collision and label checks price caption/diagram overlap per cell before any print stands as the fix. Verification on this cell rides its regeneration — re-render from the reconciled root (staging-roots/dlc001-cell16/manifest.json) through the runner gate, § PASS 299's named path — and the compiled wave behind it. This concern's family stands elsewhere with its own rows (issue #43 on cell-21 · issue #26 on cell-14) — named here, not bundled into this disposition.", "acceptance": "pending", "assigned_by": "Pass 315 (lane), from the standing record", "assigned_at": "2026-11-12T07:09:24Z", "answers": "issue:38#c1"}}]}, "batch02/cell-17": {"canonical": 29, "issues": [29], "entries": [{"id": "issue:29", "issue": 29, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:29:06Z", "text": "Hindi in diagrams need english helper alphabets", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Hindi in diagrams", "meta": {"cell": "cell-17", "video_file": "dlc003-open-door__print__es__cell17.mp4", "status": "Playable print · panel shows code FAILS — fix queue · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: take identity ✗ · educator seat ✗ (advisory)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the direction is applied. The cure rides the production wave's diagram composition; the transcript-side helper text already stands (Pass 139), and the render-level helper wiring is named openly as waiting on HQ's primary-helper ruling — the acceptance of your direction does not wait on it.", "acceptance": "pending", "assigned_by": "Pass 314 (lane), from the standing record", "assigned_at": "2026-11-12T07:02:37Z", "answers": "issue:29#c1"}}]}, "batch02/cell-18": {"canonical": 30, "issues": [30, 39], "entries": [{"id": "issue:30", "issue": 30, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:29:15Z", "text": "No video", "outcome": "This comment may no longer apply", "summary": "Hadi N. · 10 Nov · This comment may no longer apply", "meta": {"cell": "cell-18", "video_file": "not built yet", "status": "Render-ready — queued for mechanical render (environment) · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "NO-LONGER-APPLIES", "note": "NO-LONGER-APPLIES — stated as an assessment, not a closure: it stands until reviewer acceptance, and it can be challenged on this thread if the video is not in front of you.", "acceptance": "pending", "assigned_by": "Pass 314 (lane), from the standing record", "assigned_at": "2026-11-12T07:02:47Z", "answers": "issue:30#c1"}}, {"id": "issue:39", "issue": 39, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:56:59Z", "text": "Opening is stretched out and hook is double questions,  is this good thinking?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Opening is stretched", "meta": {"cell": "cell-18", "video_file": "dlc005-sun-warm__print__en__cell18.mp4", "status": "Current print seated for review (§ PASS 131 print 3846c14f… · 135.57 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise + follow_earned · stock-CTA closing — E1 queue) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the opening-structure defect is taken: the opening is stretched out and the hook is a double question, and that is not the standing opening form. The cure family is the opening class: checker #36's C13 leg is armed (§297) and prices opening structure per configuration, and the decision on the new opening class stands with HQ; the compiled wave's openings are priced against both.", "acceptance": "pending", "assigned_by": "Pass 317 (lane), from the standing record", "assigned_at": "2026-11-12T07:21:11Z", "answers": "issue:39#c1"}}, {"id": "6808701226", "issue": 39, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:11Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-18. The canonical thread for this video is #30: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/30\n\nThe comment posted here — “Opening is stretched out and hook is double questions, is this good thinking?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:39 · video batch02/cell-18 · version dlc005-sun-warm__print__en__cell18.mp4 · implementation = superseded — canonical thread #30\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #30."}]}, "batch02/cell-19": {"canonical": 31, "issues": [31, 32, 40, 41, 47], "entries": [{"id": "issue:31", "issue": 31, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:29:50Z", "text": "Diagram outside the frame", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Diagram outside the", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 122, 290eea26… · 70.47 s) — WITH DEFECT: the Chinese turn card's gloss line overflows the frame, unreadable · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the containment defect is taken. The cure rides the production wave's re-render under the armed battery, whose containment censuses check every element in-frame and unobstructed, per cell, at the element's own moment, before any print stands as the fix. Nothing is claimed fixed on the print that stands today.", "acceptance": "pending", "assigned_by": "Pass 314 (lane), from the standing record", "assigned_at": "2026-11-12T07:02:58Z", "answers": "issue:31#c1"}}, {"id": "issue:32", "issue": 32, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:30:37Z", "text": "Diagram outside the frame, this diagram desig is very ugly", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Diagram outside the", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 122, 290eea26… · 70.47 s) — WITH DEFECT: the Chinese turn card's gloss line overflows the frame, unreadable · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — both parts are taken. First, the containment defect: a diagram outside the frame is not in the video (the ★★★ containment law's own class); the same defect stands taken on this cell's canonical thread for its own comment (issue:31). Second, your design verdict — the diagram design is very ugly — is recorded as a direction to the production wave's diagram design, applied, never debated back: the diagram is redesigned, not defended. The cure rides the production wave's re-render under the armed battery, whose containment censuses price the class per cell at the element's own moment; nothing is claimed fixed on the standing print.", "acceptance": "pending", "assigned_by": "Pass 317 (lane), from the standing record", "assigned_at": "2026-11-12T07:20:58Z", "answers": "issue:32#c1"}}, {"id": "issue:40", "issue": 40, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:57:37Z", "text": "The opening and hook is three or four pros itself. Why?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · The opening and", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the opening-structure defect is taken, the same family as issue:39: the opening and hook run to three or four prose beats of their own before the teaching starts. The cure family is the opening class: checker #36's C13 leg is armed (§297) and prices opening structure per configuration, and the decision on the new opening class stands with HQ; the compiled wave's openings are priced against both.", "acceptance": "pending", "assigned_by": "Pass 317 (lane), from the standing record", "assigned_at": "2026-11-12T07:21:15Z", "answers": "issue:40#c1"}}, {"id": "issue:41", "issue": 41, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:58:38Z", "text": "The opening and hook is three or four pros itself. Why? Why flags in most videos are too small, double the flag size so they are visible", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · The opening and", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — both parts are taken. (1) The opening-structure defect, the same family as issues #39 and #40: the opening and hook run to three or four prose beats of their own before the teaching starts. The cure family is the opening class: checker #36's C13 leg is armed (§297) and prices opening structure per configuration, and the decision on the new opening class stands with HQ; the compiled wave's openings are priced against both. (2) Your direction on the flags — double the flag size so they are visible — is applied as stated, not negotiated: the cure family is the production wave's flag rendering, built to the doubled size; checker #37's badge floor prices flag legibility at 104 px today.", "acceptance": "pending", "assigned_by": "Pass 319 (lane), from the standing record", "assigned_at": "2026-11-12T07:27:19Z", "answers": "issue:41#c1"}}, {"id": "issue:47", "issue": 47, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T22:02:55Z", "text": "Chinese in the diagram is outside the frame. Which jev guard or non-jev guard did let this pass?", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · Chinese in the", "meta": {"cell": "cell-19", "video_file": "dlc002-need-water__print__en__cell19.mp4", "status": "Named print seated (§ PASS 124, a9b74167… · 70.47 s — the zh-phonetic-fit cure; supersedes the 290eea26… bytes the v23 surface held) — twin frames viewed at naming · NOT READY (Pass 134: confirmed guards pass, transcript PASS · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — a containment defect is taken: the diagram's Chinese text stands outside the frame, and under the standing containment law an element outside the frame is not in the video at all. It is the same family as issue:31#c1, taken on the canonical thread itself. The cure is the production wave's re-render under the armed battery, whose containment censuses check every element in-frame and unobstructed, per cell, at the element's own moment. (Its script-helper adjacency is noted — the family of issue:14#c1.) Your question — which jev guard or non-jev guard let this pass — is not answered here by assertion: it stands routed to HQ and the guard battery with this event, and their answer lands on the record. Nothing is claimed fixed on the print that stands today.", "acceptance": "pending", "assigned_by": "Pass 320 (lane), from the standing record", "assigned_at": "2026-11-12T07:38:27Z", "answers": "issue:47#c1"}}, {"id": "6808696131", "issue": 32, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:54Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “Diagram outside the frame, this diagram desig is very ugly” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:32 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}, {"id": "6808702397", "issue": 40, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:15Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “The opening and hook is three or four pros itself. Why?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:40 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}, {"id": "6808703700", "issue": 41, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:19Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “The opening and hook is three or four pros itself. Why? Why flags in most videos are too small, double the flag size so they are visible” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:41 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}, {"id": "6808711335", "issue": 47, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:44Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-19. The canonical thread for this video is #31: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31\n\nThe comment posted here — “Chinese in the diagram is outside the frame. Which jev guard or non-jev guard did let this pass?” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:47 · video batch02/cell-19 · version dlc002-need-water__print__en__cell19.mp4 · implementation = superseded — canonical thread #31\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #31."}]}, "batch02/cell-20": {"canonical": 33, "issues": [33, 34], "entries": [{"id": "issue:33", "issue": 33, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:31:15Z", "text": "No videos", "outcome": "Original version unavailable", "summary": "Hadi N. · 10 Nov · Original version unavailable · No videos", "meta": {"cell": "cell-20", "video_file": "not built yet", "status": "Persian → Turkish substitution COMPLETE (§ PASS 48) · package otherwise complete · Battery v22: confirmed guards 6/7 (linguist FAIL-open) · closure CONFIRMED · fails: linguist ✗ · take identity ✗ · cadence ✗ · educator seat: accepted-with-reason (advisory)", "verdict": "dislike"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the missing-video report is taken exactly as it stands. The cure is cell-20's print through the production/compiled line; cell-20 stands held in the standing wave plan until that line runs, and this acceptance does not wait on the cure — acceptance may land while the cure pends. Nothing is claimed seated until the print stands and is verified.", "acceptance": "pending", "assigned_by": "Pass 320 (lane), from the standing record", "assigned_at": "2026-11-12T07:38:54Z", "answers": "issue:33#c1"}}, {"id": "issue:34", "issue": 34, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:31:20Z", "text": "No videos", "outcome": "Tracked in another thread", "summary": "Hadi N. · 10 Nov · Tracked in another thread · No videos", "meta": {"cell": "cell-20", "video_file": "not built yet", "status": "Persian → Turkish substitution COMPLETE (§ PASS 48) · package otherwise complete · Battery v22: confirmed guards 6/7 (linguist FAIL-open) · closure CONFIRMED · fails: linguist ✗ · take identity ✗ · cadence ✗ · educator seat: accepted-with-reason (advisory)", "verdict": "dislike"}}, {"id": "6808697459", "issue": 34, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:33:59Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-20. The canonical thread for this video is #33: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/33\n\nThe comment posted here — “No videos” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:34 · video batch02/cell-20 · version not built yet · implementation = superseded — canonical thread #33\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #33."}]}, "batch02/cell-21": {"canonical": 35, "issues": [35, 42, 43], "entries": [{"id": "issue:35", "issue": 35, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T03:31:31Z", "text": "No video", "outcome": "This comment may no longer apply", "summary": "Hadi N. · 10 Nov · This comment may no longer apply", "meta": {"cell": "cell-21", "video_file": "not built yet", "status": "Capture complete — print via assembler queued · Battery v22: confirmed guards 7/7 · closure CONFIRMED · fails: cadence ✗", "verdict": "comment"}, "disposition": {"word": "NO-LONGER-APPLIES", "note": "NO-LONGER-APPLIES — stated as an assessment, not a closure: it stands until reviewer acceptance, and it can be challenged on this thread if the video is not in front of you.", "acceptance": "pending", "assigned_by": "Pass 314 (lane), from the standing record", "assigned_at": "2026-11-12T07:03:08Z", "answers": "issue:35#c1"}}, {"id": "issue:42", "issue": 42, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:59:20Z", "text": "These visual styles are my favorite", "outcome": "Received for review", "summary": "Hadi N. · 10 Nov · Received for review · These visual styles", "meta": {"cell": "cell-21", "video_file": "dlc001-eat-bread__print__en__cell21.mp4", "status": "Current print seated for review (§ PASS 131 print 693d315e… · 79.60 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "NONE-REQUIRED", "note": "NONE-REQUIRED by classification — this comment is a positive verdict and requests no change, so there is nothing to implement; it is classified in the form Pass 301 set for the same class (no change requested). It stands recorded as owner-standard evidence: cell-21's visual styles carry your explicit approval, an input to the owner-standard layer (§300). The praise half of issue #43 stands recorded with this comment.", "acceptance": "pending", "assigned_by": "Pass 319 (lane), from the standing record", "assigned_at": "2026-11-12T07:27:23Z", "answers": "issue:42#c1"}}, {"id": "issue:43", "issue": 43, "kind": "request", "author": "hadi-nayebi", "stamp": "Hadi N.", "created_at": "2026-11-10T15:59:47Z", "text": "These visual styles are my favorite. The caption overlap diagrams", "outcome": "Being worked on", "summary": "Hadi N. · 10 Nov · Being worked on · These visual styles", "meta": {"cell": "cell-21", "video_file": "dlc001-eat-bread__print__en__cell21.mp4", "status": "Current print seated for review (§ PASS 131 print 693d315e… · 79.60 s) — naming pending at the Wave 5 gate · NOT READY (Pass 134: confirmed guards pass · transcript FAIL (advisory) · owner-standard indicts: click_promise) · not approved (0/22)", "verdict": "comment"}, "disposition": {"word": "ACCEPTED", "note": "ACCEPTED — the complaint half governs: the caption overlaps the diagrams. That overlap class is taken, the same family as issue #26: the cure is the production wave's re-render under the armed battery — text-collision and label checks price the overlap class per cell, and checker #38's labelchip legs price the chip-overlap part. The praise half of this comment (\"These visual styles are my favorite\") stands recorded with issue #42 as owner-standard evidence; nothing in this disposition argues with it.", "acceptance": "pending", "assigned_by": "Pass 319 (lane), from the standing record", "assigned_at": "2026-11-12T07:27:28Z", "answers": "issue:43#c1"}}, {"id": "6808704946", "issue": 42, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:23Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-21. The canonical thread for this video is #35: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/35\n\nThe comment posted here — “These visual styles are my favorite” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:42 · video batch02/cell-21 · version dlc001-eat-bread__print__en__cell21.mp4 · implementation = superseded — canonical thread #35\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #35."}, {"id": "6808706308", "issue": 43, "kind": "response", "author": "hadi-nayebi", "stamp": "Archer · HQ", "created_at": "2026-11-11T22:34:27Z", "text": "🏹 Archer — reply\n\nThread convergence — one thread per video (the dashboard comment loop, owner’s design 2026-11-11). This issue is a duplicate submission thread for batch02/cell-21. The canonical thread for this video is #35: https://github.com/hadi-nayebi/hadosh-production-contexts/issues/35\n\nThe comment posted here — “These visual styles are my favorite. The caption overlap diagrams” — stays readable in this closed issue; nothing is deleted or rewritten. Please continue the conversation in the canonical thread.\n\nSTATE-EVENT · request issue:43 · video batch02/cell-21 · version dlc001-eat-bread__print__en__cell21.mp4 · implementation = superseded — canonical thread #35\n— Archer, HQ", "outcome": null, "summary": "Archer · HQ · 11 Nov · 🏹 Archer — reply Thread", "note": "Convergence pointer (Pass 244): this duplicate thread was closed; the canonical thread for this video is #35."}]}};
 window.THREADS_EMPTY = ["cell-07", "cell-10", "cell-22"];
 
-/* PASS 309 — window.ENTRY_FACTS: 73 records in the strengthened invariant's structured form (classified lifecycle events · structured provenance · the reviewer of record · outcome_provenance), extended by Pass 301's disposition records (issue:58 created · issue:56's implementation event · the classification on 6808791607). The derivation core is outcome_core.js (Pass 261), carried byte-identical — the same text gen_facts35.js ran to compute outcome_provenance. */
+/* PASS 321 — window.ENTRY_FACTS: 73 records in the strengthened invariant's structured form (classified lifecycle events · structured provenance · the reviewer of record · outcome_provenance), extended by the disposition campaign's 39 records (38 exported by Passes 312-320 + issue:44's standing HQ convergence event). The derivation core is outcome_core.js (Pass 261), carried byte-identical — the same text gen_facts36.js ran to compute outcome_provenance. */
 window.ENTRY_FACTS = {
  "issue:14": {
   "entry_kind": "change-request",
@@ -1645,7 +1655,7 @@ window.ENTRY_FACTS = {
    "issue:14#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -1677,15 +1687,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:14:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:14:46Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:14#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:46Z · answers issue:14#c1 · converged duplicate of canonical thread #55 (Pass 244) · state event comment 6817300653 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/14#issuecomment-6817300653) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #14 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:46Z · answers issue:14#c1 · converged duplicate of canonical thread #55 (Pass 244) · state event comment 6817300653 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/14#issuecomment-6817300653) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:44": {
@@ -1744,6 +1774,26 @@ window.ENTRY_FACTS = {
       "display": "HQ"
      },
      "source_event": "disposition DEBATED · assigned by Pass 244 (lane), from the standing record · answers issue:44",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:44:3",
+    "type": "implementation",
+    "at": "2026-11-11T22:34:31Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:44#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "HQ convergence state event · Pass 244 · 2026-11-11T22:34:31Z · STATE-EVENT · request issue:44 · video batch02/cell-01 · version dlc001-eat-bread__print__en__cell01.mp4 · implementation = superseded — canonical thread #55 · answers issue:44#c1 · the concern stands dispositioned in-thread by HQ's convergence (disposition ledger stratum C1; §320 closing census: converged-superseded) · reviewer acceptance pending",
      "authority": "supervisor"
     },
     "authenticated": true
@@ -2490,7 +2540,7 @@ window.ENTRY_FACTS = {
    "issue:15#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -2522,15 +2572,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:15:2",
+    "type": "implementation",
+    "at": "2026-11-12T06:49:55Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:15#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 312 (lane), from the standing record · 2026-11-12T06:49:55Z · answers issue:15#c1 · state event comment 6816878530 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/15#issuecomment-6816878530) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #15 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 312 (lane), from the standing record · 2026-11-12T06:49:55Z · answers issue:15#c1 · state event comment 6816878530 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/15#issuecomment-6816878530) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:45": {
@@ -2540,7 +2610,7 @@ window.ENTRY_FACTS = {
    "issue:45#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -2572,15 +2642,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:45:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:27:31Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:45#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 319 (lane), from the standing record · 2026-11-12T07:27:31Z · answers issue:45#c1 · converged duplicate of canonical thread #15 (Pass 244) · state event comment 6817516601 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/45#issuecomment-6817516601) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #45 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 319 (lane), from the standing record · 2026-11-12T07:27:31Z · answers issue:45#c1 · converged duplicate of canonical thread #15 (Pass 244) · state event comment 6817516601 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/45#issuecomment-6817516601) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:49": {
@@ -2590,7 +2680,7 @@ window.ENTRY_FACTS = {
    "issue:49#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -2622,15 +2712,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:49:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:38:31Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:49#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:31Z · answers issue:49#c1 · converged duplicate of canonical thread #15 (Pass 244) · state event comment 6817707277 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/49#issuecomment-6817707277) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #49 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:31Z · answers issue:49#c1 · converged duplicate of canonical thread #15 (Pass 244) · state event comment 6817707277 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/49#issuecomment-6817707277) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808708916": {
@@ -2726,7 +2836,7 @@ window.ENTRY_FACTS = {
    "issue:16#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "unavailable",
   "owner_handled": false,
@@ -2758,6 +2868,26 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:16:2",
+    "type": "implementation",
+    "at": "2026-11-12T06:50:02Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:16#c1",
+     "attempt": "a1",
+     "version": "unavailable"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 312 (lane), from the standing record · 2026-11-12T06:50:02Z · answers issue:16#c1 · state event comment 6816880355 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/16#issuecomment-6816880355) · version state at disposition: unavailable (no print seated on the served surface, §247) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -2776,7 +2906,7 @@ window.ENTRY_FACTS = {
    "issue:46#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "unavailable",
   "owner_handled": false,
@@ -2806,6 +2936,26 @@ window.ENTRY_FACTS = {
      },
      "source_event": "issue #46 body on GitHub",
      "authority": "author"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:46:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:27:36Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:46#c1",
+     "attempt": "a1",
+     "version": "unavailable"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 319 (lane), from the standing record · 2026-11-12T07:27:36Z · answers issue:46#c1 · converged duplicate of canonical thread #16 (Pass 244) · state event comment 6817517838 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/46#issuecomment-6817517838) · reviewer acceptance pending",
+     "authority": "supervisor"
     },
     "authenticated": true
    }
@@ -2869,7 +3019,7 @@ window.ENTRY_FACTS = {
    "issue:17#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -2901,15 +3051,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:17:2",
+    "type": "implementation",
+    "at": "2026-11-12T06:50:07Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:17#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 312 (lane), from the standing record · 2026-11-12T06:50:07Z · answers issue:17#c1 · state event comment 6816881811 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/17#issuecomment-6816881811) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #17 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 312 (lane), from the standing record · 2026-11-12T06:50:07Z · answers issue:17#c1 · state event comment 6816881811 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/17#issuecomment-6816881811) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:50": {
@@ -2919,7 +3089,7 @@ window.ENTRY_FACTS = {
    "issue:50#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -2951,15 +3121,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:50:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:09:31Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:50#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 315 (lane), from the standing record · 2026-11-12T07:09:31Z · answers issue:50#c1 · state event comment 6817213439 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/50#issuecomment-6817213439) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #50 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 315 (lane), from the standing record · 2026-11-12T07:09:31Z · answers issue:50#c1 · state event comment 6817213439 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/50#issuecomment-6817213439) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:18": {
@@ -2969,8 +3159,8 @@ window.ENTRY_FACTS = {
    "issue:18#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
-  "verification": "not-established",
+  "implementation": "implemented",
+  "verification": "established",
   "version": "current",
   "owner_handled": false,
   "links": {
@@ -3001,6 +3191,46 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:18:2",
+    "type": "retirement",
+    "at": "2026-11-12T06:50:12Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:18#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NO-LONGER-APPLIES · assigned by Pass 312 (lane), from the standing record · 2026-11-12T06:50:12Z · answers issue:18#c1 · state event comment 6816883424 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/18#issuecomment-6816883424) · the §4 evidence pack stands in the state event · reviewer acceptance pending (the retirement is an assessment, not a closure)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:18:3",
+    "type": "verification",
+    "at": "2026-11-12T06:50:12Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:18#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "evidenced — § PASS 247 print census (20 prints seated incl. cell-06; cells 03/20 only 'No print yet') + the fired v35 cell record + the age badge field (printCreatedAt 2026-11-11T01:31:15Z, seating commit 7340854ce8)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -3010,7 +3240,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #18 body on GitHub",
    "authority": "author"
-  }
+  },
+  "evidence_pack_complete": true
  },
  "issue:51": {
   "entry_kind": "change-request",
@@ -3019,7 +3250,7 @@ window.ENTRY_FACTS = {
    "issue:51#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3051,15 +3282,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:51:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:38:36Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:51#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:36Z · answers issue:51#c1 · converged duplicate of canonical thread #18 (Pass 244) · state event comment 6817708496 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/51#issuecomment-6817708496) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #51 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:36Z · answers issue:51#c1 · converged duplicate of canonical thread #18 (Pass 244) · state event comment 6817708496 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/51#issuecomment-6817708496) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808715448": {
@@ -3144,6 +3395,26 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:12:2",
+    "type": "debate",
+    "at": "2026-11-12T06:49:50Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:12#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition DEBATED · assigned by Pass 312 (lane), from the standing record · 2026-11-12T06:49:50Z · answers issue:12#c1 · state event comment 6816876712 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/12#issuecomment-6816876712) · the cycle opened with the §6 CLARIFY question (which parts are missing — a language section, the diagram, or the ending) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -3153,7 +3424,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #12 body on GitHub",
    "authority": "author"
-  }
+  },
+  "blocked": "clarification"
  },
  "issue:19": {
   "entry_kind": "change-request",
@@ -3162,7 +3434,7 @@ window.ENTRY_FACTS = {
    "issue:19#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3194,15 +3466,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:19:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:14:51Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:19#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:51Z · answers issue:19#c1 · converged duplicate of canonical thread #12 (Pass 244) · state event comment 6817302023 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/19#issuecomment-6817302023) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #19 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:51Z · answers issue:19#c1 · converged duplicate of canonical thread #12 (Pass 244) · state event comment 6817302023 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/19#issuecomment-6817302023) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:20": {
@@ -3212,7 +3504,7 @@ window.ENTRY_FACTS = {
    "issue:20#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3244,15 +3536,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:20:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:14:55Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:20#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:55Z · answers issue:20#c1 · converged duplicate of canonical thread #12 (Pass 244) · state event comment 6817303232 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/20#issuecomment-6817303232) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #20 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:55Z · answers issue:20#c1 · converged duplicate of canonical thread #12 (Pass 244) · state event comment 6817303232 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/20#issuecomment-6817303232) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808690459": {
@@ -3348,7 +3660,7 @@ window.ENTRY_FACTS = {
    "issue:21#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3380,15 +3692,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:21:2",
+    "type": "implementation",
+    "at": "2026-11-12T06:55:57Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:21#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 313 (lane), from the standing record · 2026-11-12T06:55:57Z · answers issue:21#c1 · state event comment 6816988422 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/21#issuecomment-6816988422) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #21 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 313 (lane), from the standing record · 2026-11-12T06:55:57Z · answers issue:21#c1 · state event comment 6816988422 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/21#issuecomment-6816988422) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:52": {
@@ -3398,7 +3730,7 @@ window.ENTRY_FACTS = {
    "issue:52#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3430,15 +3762,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:52:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:38:40Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:52#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:40Z · answers issue:52#c1 · converged duplicate of canonical thread #21 (Pass 244) · state event comment 6817709855 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/52#issuecomment-6817709855) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #52 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:40Z · answers issue:52#c1 · converged duplicate of canonical thread #21 (Pass 244) · state event comment 6817709855 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/52#issuecomment-6817709855) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808716629": {
@@ -3491,8 +3843,8 @@ window.ENTRY_FACTS = {
    "issue:22#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
-  "verification": "not-established",
+  "implementation": "implemented",
+  "verification": "established",
   "version": "current",
   "owner_handled": false,
   "links": {
@@ -3523,6 +3875,46 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:22:2",
+    "type": "retirement",
+    "at": "2026-11-12T06:56:03Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:22#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NO-LONGER-APPLIES · assigned by Pass 313 (lane), from the standing record · 2026-11-12T06:56:03Z · answers issue:22#c1 · state event comment 6816990170 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/22#issuecomment-6816990170) · the §4 evidence pack stands in the state event · reviewer acceptance pending (the retirement is an assessment, not a closure)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:22:3",
+    "type": "verification",
+    "at": "2026-11-12T06:56:03Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:22#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "evidenced — § PASS 247 print census (20 prints seated incl. cell-11; cells 03/20 only 'No print yet') + the fired v35 cell record + the age badge field (printCreatedAt 2026-11-11T01:31:15Z, seating commit 7340854ce8)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -3532,7 +3924,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #22 body on GitHub",
    "authority": "author"
-  }
+  },
+  "evidence_pack_complete": true
  },
  "issue:23": {
   "entry_kind": "change-request",
@@ -3541,8 +3934,8 @@ window.ENTRY_FACTS = {
    "issue:23#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
-  "verification": "not-established",
+  "implementation": "implemented",
+  "verification": "established",
   "version": "current",
   "owner_handled": false,
   "links": {
@@ -3573,6 +3966,46 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:23:2",
+    "type": "retirement",
+    "at": "2026-11-12T06:56:10Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:23#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NO-LONGER-APPLIES · assigned by Pass 313 (lane), from the standing record · 2026-11-12T06:56:10Z · answers issue:23#c1 · state event comment 6816992210 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/23#issuecomment-6816992210) · the §4 evidence pack stands in the state event · the event answers the dislike's stated ground (the missing video), not the verdict itself · reviewer acceptance pending (the retirement is an assessment, not a closure)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:23:3",
+    "type": "verification",
+    "at": "2026-11-12T06:56:10Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:23#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "evidenced — § PASS 247 print census (20 prints seated incl. cell-12; cells 03/20 only 'No print yet') + the fired v35 cell record + the age badge field (printCreatedAt 2026-11-11T01:31:15Z, seating commit 7340854ce8)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -3582,7 +4015,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #23 body on GitHub",
    "authority": "author"
-  }
+  },
+  "evidence_pack_complete": true
  },
  "issue:53": {
   "entry_kind": "change-request",
@@ -3591,7 +4025,7 @@ window.ENTRY_FACTS = {
    "issue:53#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3623,15 +4057,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:53:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:38:44Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:53#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:44Z · answers issue:53#c1 · converged duplicate of canonical thread #23 (Pass 244) · state event comment 6817711010 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/53#issuecomment-6817711010) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #53 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:44Z · answers issue:53#c1 · converged duplicate of canonical thread #23 (Pass 244) · state event comment 6817711010 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/53#issuecomment-6817711010) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808718093": {
@@ -3684,8 +4138,8 @@ window.ENTRY_FACTS = {
    "issue:24#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
-  "verification": "not-established",
+  "implementation": "implemented",
+  "verification": "established",
   "version": "current",
   "owner_handled": false,
   "links": {
@@ -3716,6 +4170,46 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:24:2",
+    "type": "retirement",
+    "at": "2026-11-12T06:56:15Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:24#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NO-LONGER-APPLIES · assigned by Pass 313 (lane), from the standing record · 2026-11-12T06:56:15Z · answers issue:24#c1 · state event comment 6816993832 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/24#issuecomment-6816993832) · the §4 evidence pack stands in the state event · reviewer acceptance pending (the retirement is an assessment, not a closure)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:24:3",
+    "type": "verification",
+    "at": "2026-11-12T06:56:15Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:24#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "evidenced — § PASS 247 print census (20 prints seated incl. cell-13; cells 03/20 only 'No print yet') + the fired v35 cell record + the age badge field (printCreatedAt 2026-11-11T01:31:15Z, seating commit 7340854ce8)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -3725,7 +4219,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #24 body on GitHub",
    "authority": "author"
-  }
+  },
+  "evidence_pack_complete": true
  },
  "issue:36": {
   "entry_kind": "change-request",
@@ -3734,7 +4229,7 @@ window.ENTRY_FACTS = {
    "issue:36#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3766,15 +4261,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:36:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:21:02Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:36#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:02Z · answers issue:36#c1 · converged duplicate of canonical thread #24 (Pass 244) · state event comment 6817407009 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/36#issuecomment-6817407009) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #36 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:02Z · answers issue:36#c1 · converged duplicate of canonical thread #24 (Pass 244) · state event comment 6817407009 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/36#issuecomment-6817407009) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808698603": {
@@ -3827,7 +4342,7 @@ window.ENTRY_FACTS = {
    "issue:25#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3859,15 +4374,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:25:2",
+    "type": "implementation",
+    "at": "2026-11-12T06:56:21Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:25#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 313 (lane), from the standing record · 2026-11-12T06:56:21Z · answers issue:25#c1 · state event comment 6816995288 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/25#issuecomment-6816995288) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #25 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 313 (lane), from the standing record · 2026-11-12T06:56:21Z · answers issue:25#c1 · state event comment 6816995288 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/25#issuecomment-6816995288) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:26": {
@@ -3877,7 +4412,7 @@ window.ENTRY_FACTS = {
    "issue:26#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3909,15 +4444,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:26:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:14:59Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:26#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:59Z · answers issue:26#c1 · converged duplicate of canonical thread #25 (Pass 244) · state event comment 6817304298 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/26#issuecomment-6817304298) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #26 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:14:59Z · answers issue:26#c1 · converged duplicate of canonical thread #25 (Pass 244) · state event comment 6817304298 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/26#issuecomment-6817304298) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:27": {
@@ -3927,7 +4482,7 @@ window.ENTRY_FACTS = {
    "issue:27#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -3959,15 +4514,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:27:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:15:03Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:27#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:15:03Z · answers issue:27#c1 · converged duplicate of canonical thread #25 (Pass 244) · state event comment 6817305486 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/27#issuecomment-6817305486) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #27 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 316 (lane), from the standing record · 2026-11-12T07:15:03Z · answers issue:27#c1 · converged duplicate of canonical thread #25 (Pass 244) · state event comment 6817305486 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/27#issuecomment-6817305486) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808692907": {
@@ -4063,8 +4638,8 @@ window.ENTRY_FACTS = {
    "issue:28#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
-  "verification": "not-established",
+  "implementation": "implemented",
+  "verification": "established",
   "version": "current",
   "owner_handled": false,
   "links": {
@@ -4095,6 +4670,46 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:28:2",
+    "type": "retirement",
+    "at": "2026-11-12T07:02:28Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:28#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NO-LONGER-APPLIES · assigned by Pass 314 (lane), from the standing record · 2026-11-12T07:02:28Z · answers issue:28#c1 · state event comment 6817094816 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/28#issuecomment-6817094816) · the §4 evidence pack stands in the state event · reviewer acceptance pending (the retirement is an assessment, not a closure)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:28:3",
+    "type": "verification",
+    "at": "2026-11-12T07:02:28Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:28#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "evidenced — § PASS 247 print census (20 prints seated incl. cell-15; cells 03/20 only 'No print yet') + the fired v35 cell record + the age badge field (printCreatedAt 2026-11-11T01:31:15Z, seating commit 7340854ce8)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -4104,7 +4719,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #28 body on GitHub",
    "authority": "author"
-  }
+  },
+  "evidence_pack_complete": true
  },
  "issue:37": {
   "entry_kind": "change-request",
@@ -4113,7 +4729,7 @@ window.ENTRY_FACTS = {
    "issue:37#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4145,15 +4761,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:37:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:21:07Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:37#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:07Z · answers issue:37#c1 · converged duplicate of canonical thread #28 (Pass 244) · state event comment 6817408241 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/37#issuecomment-6817408241) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #37 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:07Z · answers issue:37#c1 · converged duplicate of canonical thread #28 (Pass 244) · state event comment 6817408241 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/37#issuecomment-6817408241) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808699952": {
@@ -4206,7 +4842,7 @@ window.ENTRY_FACTS = {
    "issue:38#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4238,15 +4874,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:38:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:09:24Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:38#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 315 (lane), from the standing record · 2026-11-12T07:09:24Z · answers issue:38#c1 · state event comment 6817211391 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/38#issuecomment-6817211391) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #38 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 315 (lane), from the standing record · 2026-11-12T07:09:24Z · answers issue:38#c1 · state event comment 6817211391 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/38#issuecomment-6817211391) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:29": {
@@ -4256,7 +4912,7 @@ window.ENTRY_FACTS = {
    "issue:29#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4288,15 +4944,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:29:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:02:37Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:29#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 314 (lane), from the standing record · 2026-11-12T07:02:37Z · answers issue:29#c1 · state event comment 6817097389 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/29#issuecomment-6817097389) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #29 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 314 (lane), from the standing record · 2026-11-12T07:02:37Z · answers issue:29#c1 · state event comment 6817097389 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/29#issuecomment-6817097389) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:30": {
@@ -4306,8 +4982,8 @@ window.ENTRY_FACTS = {
    "issue:30#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
-  "verification": "not-established",
+  "implementation": "implemented",
+  "verification": "established",
   "version": "current",
   "owner_handled": false,
   "links": {
@@ -4338,6 +5014,46 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:30:2",
+    "type": "retirement",
+    "at": "2026-11-12T07:02:47Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:30#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NO-LONGER-APPLIES · assigned by Pass 314 (lane), from the standing record · 2026-11-12T07:02:47Z · answers issue:30#c1 · state event comment 6817100035 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/30#issuecomment-6817100035) · the §4 evidence pack stands in the state event · reviewer acceptance pending (the retirement is an assessment, not a closure)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:30:3",
+    "type": "verification",
+    "at": "2026-11-12T07:02:47Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:30#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "evidenced — § PASS 247 print census (20 prints seated incl. cell-18; cells 03/20 only 'No print yet') + the fired v35 cell record + the age badge field (printCreatedAt 2026-11-11T01:31:15Z, seating commit 7340854ce8)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -4347,7 +5063,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #30 body on GitHub",
    "authority": "author"
-  }
+  },
+  "evidence_pack_complete": true
  },
  "issue:39": {
   "entry_kind": "change-request",
@@ -4356,7 +5073,7 @@ window.ENTRY_FACTS = {
    "issue:39#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4388,15 +5105,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:39:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:21:11Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:39#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:11Z · answers issue:39#c1 · converged duplicate of canonical thread #30 (Pass 244) · state event comment 6817409396 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/39#issuecomment-6817409396) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #39 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:11Z · answers issue:39#c1 · converged duplicate of canonical thread #30 (Pass 244) · state event comment 6817409396 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/39#issuecomment-6817409396) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808701226": {
@@ -4449,7 +5186,7 @@ window.ENTRY_FACTS = {
    "issue:31#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4481,15 +5218,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:31:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:02:58Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:31#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 314 (lane), from the standing record · 2026-11-12T07:02:58Z · answers issue:31#c1 · state event comment 6817103265 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31#issuecomment-6817103265) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #31 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 314 (lane), from the standing record · 2026-11-12T07:02:58Z · answers issue:31#c1 · state event comment 6817103265 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/31#issuecomment-6817103265) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:32": {
@@ -4499,7 +5256,7 @@ window.ENTRY_FACTS = {
    "issue:32#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4531,15 +5288,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:32:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:20:58Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:32#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:20:58Z · answers issue:32#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817405897 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/32#issuecomment-6817405897) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #32 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:20:58Z · answers issue:32#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817405897 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/32#issuecomment-6817405897) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:40": {
@@ -4549,7 +5326,7 @@ window.ENTRY_FACTS = {
    "issue:40#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4581,15 +5358,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:40:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:21:15Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:40#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:15Z · answers issue:40#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817410620 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/40#issuecomment-6817410620) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #40 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 317 (lane), from the standing record · 2026-11-12T07:21:15Z · answers issue:40#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817410620 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/40#issuecomment-6817410620) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:41": {
@@ -4599,7 +5396,7 @@ window.ENTRY_FACTS = {
    "issue:41#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4631,15 +5428,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:41:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:27:19Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:41#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 319 (lane), from the standing record · 2026-11-12T07:27:19Z · answers issue:41#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817513219 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/41#issuecomment-6817513219) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #41 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 319 (lane), from the standing record · 2026-11-12T07:27:19Z · answers issue:41#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817513219 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/41#issuecomment-6817513219) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "issue:47": {
@@ -4649,7 +5466,7 @@ window.ENTRY_FACTS = {
    "issue:47#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -4681,15 +5498,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:47:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:38:27Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:47#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:27Z · answers issue:47#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817706021 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/47#issuecomment-6817706021) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #47 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:27Z · answers issue:47#c1 · converged duplicate of canonical thread #31 (Pass 244) · state event comment 6817706021 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/47#issuecomment-6817706021) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808696131": {
@@ -4871,7 +5708,7 @@ window.ENTRY_FACTS = {
    "issue:33#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "unavailable",
   "owner_handled": false,
@@ -4901,6 +5738,26 @@ window.ENTRY_FACTS = {
      },
      "source_event": "issue #33 body on GitHub",
      "authority": "author"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:33:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:38:54Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:33#c1",
+     "attempt": "a1",
+     "version": "unavailable"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 320 (lane), from the standing record · 2026-11-12T07:38:54Z · answers issue:33#c1 · state event comment 6817713755 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/33#issuecomment-6817713755) · reviewer acceptance pending",
+     "authority": "supervisor"
     },
     "authenticated": true
    }
@@ -5014,8 +5871,8 @@ window.ENTRY_FACTS = {
    "issue:35#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
-  "verification": "not-established",
+  "implementation": "implemented",
+  "verification": "established",
   "version": "current",
   "owner_handled": false,
   "links": {
@@ -5046,6 +5903,46 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:35:2",
+    "type": "retirement",
+    "at": "2026-11-12T07:03:08Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:35#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NO-LONGER-APPLIES · assigned by Pass 314 (lane), from the standing record · 2026-11-12T07:03:08Z · answers issue:35#c1 · state event comment 6817106021 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/35#issuecomment-6817106021) · the §4 evidence pack stands in the state event · reviewer acceptance pending (the retirement is an assessment, not a closure)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
+   },
+   {
+    "id": "ev:issue:35:3",
+    "type": "verification",
+    "at": "2026-11-12T07:03:08Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:35#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "evidenced — § PASS 247 print census (20 prints seated incl. cell-21; cells 03/20 only 'No print yet') + the fired v35 cell record + the age badge field (printCreatedAt 2026-11-11T01:31:15Z, seating commit 7340854ce8) + the owner's own same-day comments on this cell (issues #42/#43)",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -5055,7 +5952,8 @@ window.ENTRY_FACTS = {
    },
    "source_event": "issue #35 body on GitHub",
    "authority": "author"
-  }
+  },
+  "evidence_pack_complete": true
  },
  "issue:42": {
   "entry_kind": "change-request",
@@ -5096,6 +5994,26 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:42:2",
+    "type": "classification",
+    "at": "2026-11-12T07:27:23Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:42#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition NONE-REQUIRED · classified by Pass 319 (lane), from the standing record · 2026-11-12T07:27:23Z · answers issue:42#c1 · converged duplicate of canonical thread #35 (Pass 244) · state event comment 6817514400 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/42#issuecomment-6817514400) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
@@ -5114,7 +6032,7 @@ window.ENTRY_FACTS = {
    "issue:43#c1"
   ],
   "attempt": "a1",
-  "implementation": "received",
+  "implementation": "in-progress",
   "verification": "not-established",
   "version": "current",
   "owner_handled": false,
@@ -5146,15 +6064,35 @@ window.ENTRY_FACTS = {
      "authority": "author"
     },
     "authenticated": true
+   },
+   {
+    "id": "ev:issue:43:2",
+    "type": "implementation",
+    "at": "2026-11-12T07:27:28Z",
+    "target": {
+     "kind": "change-request",
+     "concern": "issue:43#c1",
+     "attempt": "a1",
+     "version": "current"
+    },
+    "provenance": {
+     "actor": {
+      "account": "hq-reply",
+      "display": "HQ"
+     },
+     "source_event": "disposition ACCEPTED · assigned by Pass 319 (lane), from the standing record · 2026-11-12T07:27:28Z · answers issue:43#c1 · converged duplicate of canonical thread #35 (Pass 244) · state event comment 6817515532 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/43#issuecomment-6817515532) · reviewer acceptance pending",
+     "authority": "supervisor"
+    },
+    "authenticated": true
    }
   ],
   "outcome_provenance": {
    "actor": {
-    "account": "hadi-nayebi",
-    "display": "Hadi N."
+    "account": "hq-reply",
+    "display": "HQ"
    },
-   "source_event": "issue #43 body on GitHub",
-   "authority": "author"
+   "source_event": "disposition ACCEPTED · assigned by Pass 319 (lane), from the standing record · 2026-11-12T07:27:28Z · answers issue:43#c1 · converged duplicate of canonical thread #35 (Pass 244) · state event comment 6817515532 (https://github.com/hadi-nayebi/hadosh-production-contexts/issues/43#issuecomment-6817515532) · reviewer acceptance pending",
+   "authority": "supervisor"
   }
  },
  "6808704946": {
