@@ -156,6 +156,18 @@
      film. object-fit:contain inside the true-ratio box still guards
      any deviant print without cropping it. */
   .stage video{height:100%;width:auto;max-width:100%;aspect-ratio:9/16;object-fit:contain;background:transparent}
+  /* PASS 247 — the print-age badge: the seated rendering's age, computed
+     in-page from the cell's printCreatedAt (jobs/review-dashboard/
+     instructions/print-age.md). Seated at the video frame's top-center,
+     inside .stage; solid backing so it reads over any frame; it is a
+     label, not a control (pointer-events none). */
+  .agebadge{
+    position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:4;
+    padding:5px 11px;border-radius:999px;background:#14100c;
+    border:1px solid rgba(255,255,255,.28);color:#fff;
+    font-size:13px;font-weight:700;letter-spacing:.02em;white-space:nowrap;
+    pointer-events:none;
+  }
   /* B7: a video that fails to load names its failure + offers a retry */
   .viderr{
     position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
@@ -560,7 +572,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=31"></script>
+<script src="data.js?v=33"></script>
 <script>
 (function(){
   "use strict";
@@ -598,7 +610,7 @@
      sources · printsFileSha · cells · countingSeats · seatedPrints
      stand exactly as v30 issued them; the data's meta (dashboard
      line + this lineage's build/seated) re-issues to name v31. */
-  var EXPECTED_LINEAGE = {"build": "pass244-v32", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718"}, "printsFileSha": "b6a5fbd5b427", "seated": "v32 (PASS 244) — the v31 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round: per-video comment history baked from the GitHub threads (19 threads · 72 entries · snapshot 2026-11-11T22:41:38Z) with live refresh on open · one canonical thread per video", "cells": 22, "countingSeats": 10, "seatedPrints": 20};
+  var EXPECTED_LINEAGE = {"build": "pass247-v33", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718"}, "printsFileSha": "b6a5fbd5b427", "seated": "v33 (PASS 247) — the v32 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round: every video face carries an age badge computed in-page from the cell's printCreatedAt (the standing set is source (c) of the print-age contract — repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · OUTCOME-MAPPING round (PASS 247 ADDENDUM 2): phone outcomes derive from ENTRY_FACTS under the invariant (comment-loop.md §4) — no outcome asserts a request, progress, readiness, acceptance, or closure its record does not establish; missing evidence renders an explicit incomplete state", "cells": 22, "countingSeats": 10, "seatedPrints": 20};
   function canon(o){
     if (o === null || typeof o !== "object") return JSON.stringify(o);
     if (Array.isArray(o)) return "[" + o.map(canon).join(",") + "]";
@@ -1005,14 +1017,61 @@
     return stamp + " · " + d.getUTCDate() + " " + MONTHS_S[d.getUTCMonth()] +
       (outcome ? " · " + outcome : "") + (prev.length ? " · " + prev.join(" ") : "");
   }
+  /* PASS 247 ADDENDUM 2 — the outcome derivation implements THE INVARIANT
+     (comment-loop.md §4, adopted from the Codex outcome-mapping attack):
+     a phone outcome is DERIVED from applicable evidence for the exact
+     entry kind, concern, change attempt, and video version it describes;
+     it never asserts a request, progress, readiness, acceptance, or
+     closure the records do not establish; missing or conflicting evidence
+     renders an explicit incomplete state — success is never a default.
+     Rows fire IN ORDER (the attack's replacement mapping); the record a
+     row may read is the entry's disposition + its ENTRY_FACTS (data.js).
+     A disposition is a recorded judgment; it cannot supply evidence. */
+  function outcomeForConcern(e, f){
+    var d = e.disposition || null, acc = d ? d.acceptance : null;
+    if (f.entry_kind === "test/meta") return "No change requested";
+    if (f.entry_kind === "undetermined") return "Needs clarification";
+    if (f.conflict) return "Status needs checking";
+    if (f.links && f.links.duplicate_of) return "Tracked in another thread";
+    if (f.version === "unavailable") return "Original version unavailable";
+    if (f.retirement_challenged) return "You challenged this assessment";
+    if (acc === "disputed" && !f.remedy_attempt) return "You disputed this change";
+    if (d && d.word === "NO-LONGER-APPLIES" && !f.evidence_pack_complete) return "Applicability needs checking";
+    if (d && d.word === "NO-LONGER-APPLIES" && acc !== "accepted") return "This comment may no longer apply";
+    if (d && d.word === "NO-LONGER-APPLIES") return "You accepted this assessment";
+    if (d && d.word === "REJECTED") return "We declined this request";
+    if (f.owner_handled) return "You handled this request";
+    if (acc === "accepted"){
+      if (f.acceptance_target === "change" && f.implementation === "implemented" && f.verification === "established" && f.version === "current") return "You accepted this change";
+      return "Status needs checking";
+    }
+    if (d && (d.word === "IMPLEMENTED" || d.word === "ACCEPTED") && f.implementation === "implemented" && f.verification === "established" && f.version === "current") return "Ready for you to check";
+    if (f.remedy_attempt && f.implementation === "implemented" && f.verification === "established") return "Revised change needs your check";
+    if (f.implementation === "implemented") return "Change awaiting verification";
+    if (f.blocked === "clarification") return "Needs your clarification";
+    if (f.blocked) return "Work is blocked";
+    if (f.deferred) return "Deferred";
+    if (d && d.word === "DEBATED") return "Under discussion";
+    if (f.implementation === "in-progress") return "Being worked on";
+    if (f.implementation === "received") return "Received for review";
+    return "Status needs checking";
+  }
   function outcomeJS(e){
     if (e.kind !== "request") return null;
-    var d = e.disposition, acc = d && d.acceptance;
-    if (acc === "accepted") return "You accepted this change";
-    if (acc === "disputed" || (d && d.word === "REJECTED")) return "We disagree";
-    if (d && d.word === "NO-LONGER-APPLIES") return "This comment may no longer apply";
-    if (d && (d.word === "IMPLEMENTED" || d.word === "ACCEPTED")) return "Ready for you to check";
-    return "Being worked on";
+    var f = (window.ENTRY_FACTS || {})[e.id];
+    if (!f) return "Status needs checking";
+    if (f.concerns && f.concerns.length > 1){
+      if (!f.per_concern) return "Status needs checking";
+      var outs = f.concerns.map(function(c){
+        var cf = Object.assign({}, f, f.per_concern[c] || {});
+        return outcomeForConcern(e, cf);
+      });
+      var uniq = outs.filter(function(o, i){ return outs.indexOf(o) === i; });
+      if (uniq.length === 1) return uniq[0];
+      var done = outs.filter(function(o){ return o === "You accepted this change"; }).length;
+      return "Partly addressed · " + done + "/" + outs.length + " concerns";
+    }
+    return outcomeForConcern(e, f);
   }
   function entryHTML(e, canon){
     var h = '<details class="tentry"><summary>' + esc(e.summary || "") + '</summary><div class="tbody">' +
@@ -1124,6 +1183,35 @@
     });
   }
 
+  /* PASS 247 — print age: a pure function of the cell's recorded
+     printCreatedAt and the viewer's clock at load. Nothing is stored;
+     every load recomputes. Forms per the print-age contract. */
+  function printAgeLabel(iso){
+    if (!iso) return null;
+    var t = Date.parse(iso);
+    if (isNaN(t)) return null;
+    var sec = Math.max(0, (Date.now() - t) / 1000);
+    if (sec < 60) return "just now";
+    var min = Math.floor(sec / 60);
+    if (min < 60) return min + " min ago";
+    var hr = Math.floor(min / 60);
+    if (hr < 24) return hr + " h ago";
+    return Math.floor(hr / 24) + " d ago";
+  }
+  /* the badge's three states, each truthful: the sourced age · No print
+     yet (the cell seats no print) · Age unverified (a print seats but no
+     source in the hierarchy carries its creation time). */
+  function ageBadge(cell){
+    if (!cell.video) return '<div class="agebadge">No print yet</div>';
+    var a = printAgeLabel(cell.printCreatedAt);
+    return '<div class="agebadge">' + (a ? a : "Age unverified") + '</div>';
+  }
+  /* provenance of the standing set's timestamps: source (c) of the
+     print-age contract — the repository commit that introduced the
+     prints' bytes. A future build whose prints carry render-stamped
+     timestamps (source (a)) re-issues this note with its data. */
+  var PRINT_AGE_PROVENANCE = 'entered the dashboard record at this time (repository commit 7340854ce8, Dashboard v29) \u00b7 the rendering was produced in Pass 149 (2026-11-10) \u2014 its production record carries no exact per-print creation time';
+
   function buildScreen(cell){
     var screen = document.createElement("section");
     screen.className = "screen";
@@ -1171,6 +1259,11 @@
       ["History", historyHTML(cell)],
       ["Guards", rosterFullHTML(cell)],
       ["Print", printRow],
+      ["Print created", !cell.video
+        ? 'No print seated'
+        : (cell.printCreatedAt
+          ? esc(cell.printCreatedAt.replace('T', ' ').replace('Z', '')) + ' UTC \u00b7 ' + PRINT_AGE_PROVENANCE
+          : 'Age unverified \u2014 no record in the print-age source hierarchy carries this print\'s creation time')],
       /* PASS 193: the designed pair seats in the details — A is the card
          face; B is reachable here, per the dashboard's details convention.
          The T3 gap line prints BESIDE the guard verdicts (certificate
@@ -1204,7 +1297,7 @@
       (cell.taught.length > 3 ? '<span class="langchip">+' + (cell.taught.length - 3) + '</span>' : '');
 
     screen.innerHTML =
-      '<div class="stage">' + stage + '</div>' +
+      '<div class="stage">' + stage + ageBadge(cell) + '</div>' +
       /* PASS 168 (HQ ADDITION #2): the panel is built COLLAPSED — the
          closed state is the initial DOM state, not a state reached
          after load. The progress face + actions stand OUTSIDE .pbody
