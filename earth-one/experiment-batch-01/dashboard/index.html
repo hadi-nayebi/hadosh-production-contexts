@@ -572,7 +572,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=33"></script>
+<script src="data.js?v=34"></script>
 <script>
 (function(){
   "use strict";
@@ -610,7 +610,7 @@
      sources · printsFileSha · cells · countingSeats · seatedPrints
      stand exactly as v30 issued them; the data's meta (dashboard
      line + this lineage's build/seated) re-issues to name v31. */
-  var EXPECTED_LINEAGE = {"build": "pass247-v33", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718"}, "printsFileSha": "b6a5fbd5b427", "seated": "v33 (PASS 247) — the v32 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round: every video face carries an age badge computed in-page from the cell's printCreatedAt (the standing set is source (c) of the print-age contract — repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · OUTCOME-MAPPING round (PASS 247 ADDENDUM 2): phone outcomes derive from ENTRY_FACTS under the invariant (comment-loop.md §4) — no outcome asserts a request, progress, readiness, acceptance, or closure its record does not establish; missing evidence renders an explicit incomplete state", "cells": 22, "countingSeats": 10, "seatedPrints": 20};
+  var EXPECTED_LINEAGE = {"build": "pass261-v34", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718"}, "printsFileSha": "b6a5fbd5b427", "seated": "v34 (PASS 261) — the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome", "cells": 22, "countingSeats": 11, "seatedPrints": 20};
   function canon(o){
     if (o === null || typeof o !== "object") return JSON.stringify(o);
     if (Array.isArray(o)) return "[" + o.map(canon).join(",") + "]";
@@ -1017,62 +1017,242 @@
     return stamp + " · " + d.getUTCDate() + " " + MONTHS_S[d.getUTCMonth()] +
       (outcome ? " · " + outcome : "") + (prev.length ? " · " + prev.join(" ") : "");
   }
-  /* PASS 247 ADDENDUM 2 — the outcome derivation implements THE INVARIANT
-     (comment-loop.md §4, adopted from the Codex outcome-mapping attack):
-     a phone outcome is DERIVED from applicable evidence for the exact
-     entry kind, concern, change attempt, and video version it describes;
-     it never asserts a request, progress, readiness, acceptance, or
-     closure the records do not establish; missing or conflicting evidence
-     renders an explicit incomplete state — success is never a default.
-     Rows fire IN ORDER (the attack's replacement mapping); the record a
-     row may read is the entry's disposition + its ENTRY_FACTS (data.js).
-     A disposition is a recorded judgment; it cannot supply evidence. */
-  function outcomeForConcern(e, f){
-    var d = e.disposition || null, acc = d ? d.acceptance : null;
-    if (f.entry_kind === "test/meta") return "No change requested";
-    if (f.entry_kind === "undetermined") return "Needs clarification";
-    if (f.conflict) return "Status needs checking";
-    if (f.links && f.links.duplicate_of) return "Tracked in another thread";
-    if (f.version === "unavailable") return "Original version unavailable";
-    if (f.retirement_challenged) return "You challenged this assessment";
-    if (acc === "disputed" && !f.remedy_attempt) return "You disputed this change";
-    if (d && d.word === "NO-LONGER-APPLIES" && !f.evidence_pack_complete) return "Applicability needs checking";
-    if (d && d.word === "NO-LONGER-APPLIES" && acc !== "accepted") return "This comment may no longer apply";
-    if (d && d.word === "NO-LONGER-APPLIES") return "You accepted this assessment";
-    if (d && d.word === "REJECTED") return "We declined this request";
-    if (f.owner_handled) return "You handled this request";
-    if (acc === "accepted"){
-      if (f.acceptance_target === "change" && f.implementation === "implemented" && f.verification === "established" && f.version === "current") return "You accepted this change";
-      return "Status needs checking";
+/* PASS 261 — OUTCOME DERIVATION CORE (the strengthened invariant).
+   This file is the SINGLE source of the derivation: build_v34.py splices it
+   verbatim into index.html (replacing the PASS 247 derivation), gen_facts34.js
+   loads it to compute the baked outcome_provenance, and gate_outcome34.js
+   extracts it FROM THE BUILT index.html and exercises it — the page, the bake
+   and the gate can never diverge, because they are the same text.
+
+   THE OPERATIVE TEXT (comment-loop.md §4, adopted verbatim from the Codex
+   outcome-invariant-fields attack, consumed by HQ):
+   "a state transition derives only from an authenticated, unambiguously
+   classified event whose immutable target matches the displayed entry kind,
+   concern scope, attempt, and version, and whose actor was authorized for
+   that transition at event time; a supervisor may establish IMPLEMENTED,
+   only the designated reviewer establishes ACCEPTED; implemented,
+   acknowledgment, silence, and duplicate/successor links never imply
+   accepted; missing or conflicting evidence yields an unresolved state,
+   never a success."
+   Plus: (a) provenance is a structured object {actor · source event ·
+   authority at the time} on every event and on every derived outcome;
+   (b) "You accepted …" renders only when the viewer IS the accepting
+   reviewer — otherwise the outcome names her; (c) correction, withdrawal
+   and supersession are first-class events that fold in order — a withdrawn
+   acceptance never remains the current outcome. */
+function provOf(ev){ return ev && ev.provenance ? ev.provenance : null; }
+function evActor(ev){ var p = provOf(ev); return p && p.actor ? p.actor : null; }
+function evMatchesUnit(ev, f, unit){
+  var t = ev && ev.target;
+  return !!t && t.kind === f.entry_kind && t.concern === unit.concern &&
+    t.attempt === unit.attempt && t.version === f.version;
+}
+/* Fold the classified lifecycle events of one concern-unit, in record order.
+   Only authenticated, classified events with a structured provenance can
+   move state at all; only the designated reviewer's acceptance event can
+   establish ACCEPTED. Everything the fold cannot use is still reported
+   (voidClaims · foreignAcceptances · ambiguous) so the details render can
+   say precisely what is established and what is not. */
+function foldConcern(f, unit){
+  var R = { accepted: null, acceptedScope: null, withdrawn: [], correctedOut: [],
+    supersededOut: [], dispute: null,
+    challenged: null, handled: null, rejectionLive: false, conflict: false,
+    voidClaims: [], foreignAcceptances: [], ambiguous: [] };
+  var evs = (f && f.events) || [];
+  for (var i = 0; i < evs.length; i++){
+    var ev = evs[i];
+    if (!ev || !ev.type) continue;
+    if (ev.authenticated !== true){
+      if (ev.type === "acceptance") R.voidClaims.push({ ev: ev, why: "unauthenticated" });
+      continue;
     }
-    if (d && (d.word === "IMPLEMENTED" || d.word === "ACCEPTED") && f.implementation === "implemented" && f.verification === "established" && f.version === "current") return "Ready for you to check";
-    if (f.remedy_attempt && f.implementation === "implemented" && f.verification === "established") return "Revised change needs your check";
-    if (f.implementation === "implemented") return "Change awaiting verification";
-    if (f.blocked === "clarification") return "Needs your clarification";
-    if (f.blocked) return "Work is blocked";
-    if (f.deferred) return "Deferred";
-    if (d && d.word === "DEBATED") return "Under discussion";
-    if (f.implementation === "in-progress") return "Being worked on";
-    if (f.implementation === "received") return "Received for review";
-    return "Status needs checking";
-  }
-  function outcomeJS(e){
-    if (e.kind !== "request") return null;
-    var f = (window.ENTRY_FACTS || {})[e.id];
-    if (!f) return "Status needs checking";
-    if (f.concerns && f.concerns.length > 1){
-      if (!f.per_concern) return "Status needs checking";
-      var outs = f.concerns.map(function(c){
-        var cf = Object.assign({}, f, f.per_concern[c] || {});
-        return outcomeForConcern(e, cf);
-      });
-      var uniq = outs.filter(function(o, i){ return outs.indexOf(o) === i; });
-      if (uniq.length === 1) return uniq[0];
-      var done = outs.filter(function(o){ return o === "You accepted this change"; }).length;
-      return "Partly addressed · " + done + "/" + outs.length + " concerns";
+    var p = provOf(ev), a = evActor(ev);
+    if (!p || !a || !a.account || !p.authority || ev.type === "ambiguous"){
+      R.ambiguous.push(ev); continue;
     }
-    return outcomeForConcern(e, f);
+    if (ev.type === "acceptance"){
+      if (!evMatchesUnit(ev, f, unit)){ R.foreignAcceptances.push(ev); continue; }
+      if (!f.reviewer || a.account !== f.reviewer.account || p.authority !== "reviewer"){
+        R.voidClaims.push({ ev: ev, why: "actor is not the designated reviewer" }); continue;
+      }
+      if (R.accepted) R.conflict = true;
+      R.accepted = ev; R.acceptedScope = ev.scope || "change";
+    }
+    else if (ev.type === "withdrawal"){
+      if (R.accepted && evMatchesUnit(ev, f, unit) && f.reviewer && a.account === f.reviewer.account){
+        R.withdrawn.push(R.accepted); R.accepted = null; R.acceptedScope = null;
+      }
+    }
+    else if (ev.type === "correction"){
+      if (R.accepted && ev.corrects === R.accepted.id){
+        R.correctedOut.push(R.accepted); R.accepted = null; R.acceptedScope = null;
+      }
+    }
+    else if (ev.type === "supersession"){
+      if (R.accepted && ev.supersedes === R.accepted.id){
+        R.supersededOut.push(R.accepted); R.accepted = null; R.acceptedScope = null;
+      }
+    }
+    else if (ev.type === "dispute"){ if (evMatchesUnit(ev, f, unit)) R.dispute = ev; }
+    else if (ev.type === "retirement-challenge"){ if (evMatchesUnit(ev, f, unit)) R.challenged = ev; }
+    else if (ev.type === "owner-handled"){ if (evMatchesUnit(ev, f, unit)) R.handled = ev; }
+    else if (ev.type === "rejection"){ if (evMatchesUnit(ev, f, unit)) R.rejectionLive = true; }
+    /* receipt · implementation · verification · acknowledgment · debate ·
+       retirement events: recorded, provenance-bearing — and by construction
+       they never touch acceptance. */
   }
+  if (R.accepted && R.rejectionLive) R.conflict = true;
+  return R;
+}
+function viewerIs(f, account){
+  try { return !!(window.localStorage && account &&
+    window.localStorage.getItem("dlcViewer") === account); }
+  catch (e) { return false; }
+}
+function firstNameOf(ev){
+  var a = evActor(ev);
+  var d = a ? (a.display || a.account || "") : "";
+  return String(d).split(" ")[0] || "The reviewer";
+}
+/* The viewer-conditional labels: the second-person form renders ONLY when
+   this device's viewer signal names the actor of the event; every other
+   viewer reads the naming form. */
+function acceptedLabel(f, ev, scope){
+  var base = scope === "assessment" ? "accepted this assessment" : "accepted this change";
+  return viewerIs(f, evActor(ev).account) ? "You " + base : firstNameOf(ev) + " " + base;
+}
+function challengedLabel(f, ev){
+  return viewerIs(f, evActor(ev).account) ? "You challenged this assessment" : firstNameOf(ev) + " challenged this assessment";
+}
+function disputedLabel(f, ev){
+  return viewerIs(f, evActor(ev).account) ? "You disputed this change" : firstNameOf(ev) + " disputed this change";
+}
+function handledLabel(f, ev){
+  return viewerIs(f, evActor(ev).account) ? "You handled this request" : firstNameOf(ev) + " handled this request";
+}
+function receiptEvent(f){
+  var evs = (f && f.events) || [];
+  for (var i = 0; i < evs.length; i++) if (evs[i] && evs[i].type === "receipt") return evs[i];
+  return null;
+}
+function lastEventOfType(f, type){
+  var evs = (f && f.events) || [], hit = null;
+  for (var i = 0; i < evs.length; i++) if (evs[i] && evs[i].type === type) hit = evs[i];
+  return hit;
+}
+function provOut(ev){
+  if (!ev) return null;
+  var p = provOf(ev), a = evActor(ev);
+  if (!p || !a) return null;
+  return { actor: { account: a.account, display: a.display || a.account },
+    source_event: p.source_event || "", authority: p.authority || "" };
+}
+/* The derivation proper: the 23-row replacement mapping of comment-loop.md
+   §4, in order — but acceptance, dispute, challenge and owner-handled now
+   read ONLY from the event fold, never from a disposition label. Returns
+   { label, provenance, notes } — the provenance of the decisive event as a
+   structured object, and claim-specific notes separating what is
+   established from what is not. */
+function outcomeDetailForConcern(e, f){
+  var d = (e && e.disposition) || null;
+  var unit = { concern: f.concern_id, attempt: f.attempt };
+  var fold = foldConcern(f, unit);
+  var notes = [];
+  fold.foreignAcceptances.forEach(function(ev){
+    var t = ev.target || {};
+    var diffs = [];
+    if (t.kind !== f.entry_kind) diffs.push("entry kind " + t.kind);
+    if (t.concern !== unit.concern) diffs.push("another concern");
+    if (t.attempt !== unit.attempt) diffs.push("attempt " + t.attempt);
+    if (t.version !== f.version) diffs.push("version " + t.version);
+    if (diffs.length === 1 && t.version !== f.version && t.kind === f.entry_kind &&
+        t.concern === unit.concern && t.attempt === unit.attempt)
+      notes.push("Acceptance recorded for version " + t.version +
+        ". Acceptance of version " + f.version + " is not established.");
+    else
+      notes.push("Acceptance recorded for " + (diffs.join(" · ") || "a different target") +
+        ". Acceptance here is not established.");
+  });
+  fold.withdrawn.forEach(function(){
+    notes.push("An acceptance on this concern was withdrawn; it is not the current outcome.");
+  });
+  fold.correctedOut.forEach(function(){
+    notes.push("An acceptance on this concern was corrected out of the record; it is not the current outcome.");
+  });
+  fold.supersededOut.forEach(function(){
+    notes.push("An acceptance on this concern was superseded; it is not the current outcome.");
+  });
+  fold.voidClaims.forEach(function(v){
+    var a = evActor(v.ev);
+    notes.push("An acceptance was claimed by " + (a ? (a.display || a.account) : "an unverified actor") +
+      " (" + v.why + "); only the designated reviewer can accept — acceptance is not established.");
+  });
+  function done(label, ev){ return { label: label, provenance: provOut(ev || receiptEvent(f)), notes: notes }; }
+  if (f.entry_kind === "test/meta") return done("No change requested");
+  if (f.entry_kind === "undetermined") return done("Needs clarification");
+  if (f.conflict || fold.conflict) return done("Status needs checking", fold.accepted);
+  if (f.links && f.links.duplicate_of) return done("Tracked in another thread");
+  if (f.version === "unavailable") return done("Original version unavailable");
+  if (fold.challenged) return done(challengedLabel(f, fold.challenged), fold.challenged);
+  if (fold.dispute && !f.remedy_attempt) return done(disputedLabel(f, fold.dispute), fold.dispute);
+  if (d && d.word === "NO-LONGER-APPLIES" && !f.evidence_pack_complete) return done("Applicability needs checking");
+  if (d && d.word === "NO-LONGER-APPLIES" && !(fold.accepted && fold.acceptedScope === "assessment")) return done("This comment may no longer apply");
+  if (d && d.word === "NO-LONGER-APPLIES") return done(acceptedLabel(f, fold.accepted, "assessment"), fold.accepted);
+  if (d && d.word === "REJECTED") return done("We declined this request", lastEventOfType(f, "rejection"));
+  if (fold.handled) return done(handledLabel(f, fold.handled), fold.handled);
+  if (fold.accepted && fold.acceptedScope === "change"){
+    if (f.implementation === "implemented" && f.verification === "established" && f.version !== "unavailable")
+      return done(acceptedLabel(f, fold.accepted, "change"), fold.accepted);
+    return done("Status needs checking", fold.accepted);
+  }
+  if (fold.accepted) return done("Status needs checking", fold.accepted);
+  if (d && (d.word === "IMPLEMENTED" || d.word === "ACCEPTED") && f.implementation === "implemented" && f.verification === "established" && f.version !== "unavailable")
+    return done("Ready for you to check", lastEventOfType(f, "implementation"));
+  if (f.remedy_attempt && f.implementation === "implemented" && f.verification === "established")
+    return done("Revised change needs your check", lastEventOfType(f, "implementation"));
+  if (f.implementation === "implemented") return done("Change awaiting verification", lastEventOfType(f, "implementation"));
+  if (f.blocked === "clarification") return done("Needs your clarification");
+  if (f.blocked) return done("Work is blocked");
+  if (f.deferred) return done("Deferred");
+  if (d && d.word === "DEBATED") return done("Under discussion", lastEventOfType(f, "debate"));
+  if (f.implementation === "in-progress") return done("Being worked on", lastEventOfType(f, "implementation"));
+  if (f.implementation === "received") return done("Received for review");
+  return done("Status needs checking");
+}
+function outcomeForConcern(e, f){ return outcomeDetailForConcern(e, f).label; }
+function outcomeDetail(e){
+  if (!e || e.kind !== "request") return null;
+  var f = (window.ENTRY_FACTS || {})[e.id];
+  if (!f) return { label: "Status needs checking", provenance: null,
+    notes: ["Acceptance status cannot yet be determined because this entry's evidence is unavailable."] };
+  if (f.concerns && f.concerns.length > 1){
+    if (!f.per_concern) return { label: "Status needs checking", provenance: null, notes: [] };
+    var details = f.concerns.map(function(c){
+      var cf = Object.assign({}, f, f.per_concern[c] || {});
+      cf.concern_id = c;
+      return outcomeDetailForConcern(e, cf);
+    });
+    var labels = details.map(function(x){ return x.label; });
+    var uniq = labels.filter(function(o, i){ return labels.indexOf(o) === i; });
+    if (uniq.length === 1) return details[0];
+    var accEv = null, doneN = 0;
+    f.concerns.forEach(function(c){
+      var cf = Object.assign({}, f, f.per_concern[c] || {});
+      cf.concern_id = c;
+      var fo = foldConcern(cf, { concern: c, attempt: cf.attempt });
+      if (fo.accepted){ doneN++; accEv = accEv || fo.accepted; }
+    });
+    var notes = [];
+    details.forEach(function(x){ notes = notes.concat(x.notes); });
+    return { label: "Partly addressed · " + doneN + "/" + f.concerns.length + " concerns",
+      provenance: provOut(accEv), notes: notes };
+  }
+  return outcomeDetailForConcern(e, f);
+}
+function outcomeJS(e){
+  var od = outcomeDetail(e);
+  return od ? od.label : null;
+}
   function entryHTML(e, canon){
     var h = '<details class="tentry"><summary>' + esc(e.summary || "") + '</summary><div class="tbody">' +
       '<div class="tmeta">' + esc(e.stamp) + ' (@' + esc(e.author) + ') · ' + esc(e.created_at) +
@@ -1096,6 +1276,16 @@
       } else {
         h += '<div class="tdisp">Not yet dispositioned — it stands in the lane\'s queue with its age.</div>';
       }
+    }
+    if (e.kind === "request") {
+      var od34 = outcomeDetail(e);
+      var f34 = (window.ENTRY_FACTS || {})[e.id];
+      if (od34 && od34.provenance) h += '<div class="tnote">Outcome derived from: ' + esc(od34.provenance.source_event) + ' · ' + esc(od34.provenance.actor.display) + ' · authority: ' + esc(od34.provenance.authority) + '</div>';
+      if (od34 && od34.notes) od34.notes.forEach(function(n34){ h += '<div class="tnote">' + esc(n34) + '</div>'; });
+      if (f34 && f34.events && f34.events.length) h += '<div class="tnote">Record events:<br>' + f34.events.map(function(ev34){
+        var pa34 = ev34.provenance && ev34.provenance.actor ? (ev34.provenance.actor.display || ev34.provenance.actor.account) : '?';
+        return esc(ev34.type) + ' · ' + esc(pa34) + ' · ' + esc((ev34.provenance && ev34.provenance.source_event) || '');
+      }).join('<br>') + '</div>';
     }
     h += '<a href="https://github.com/' + REPO + '/issues/' + e.issue +
       '" target="_blank" rel="noopener">Open on GitHub ›</a></div></details>';
