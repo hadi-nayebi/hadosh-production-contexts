@@ -259,6 +259,17 @@
     border:1px solid var(--amber);color:#1d130b;background:var(--amber);
     font-size:12.5px;font-weight:700;white-space:nowrap;
   }
+  /* FIRING TURN (HQ disposition 2026-11-15, panel-open ruling (b)): the
+     blocked-or-broken signal is never lost while a panel is open — this
+     badge rides the compact bar (the panel-open chrome row) whenever the
+     count is non-zero. */
+  .compactbar .cbbadge{
+    display:inline-flex;align-items:center;min-height:48px;
+    padding:8px 12px;border-radius:999px;white-space:nowrap;
+    border:1px solid #e07856;color:#e07856;
+    font-size:12.5px;font-weight:700;
+  }
+  .compactbar .cbbadge[hidden]{display:none}
   .compactbar .cbback{
     margin-left:auto;min-width:48px;min-height:48px;padding:0 14px;border-radius:999px;cursor:pointer;
     border:1px solid var(--amber);background:rgba(29,19,11,.94);color:var(--amber);
@@ -486,6 +497,25 @@
     .railwrap{top:var(--rail-top, calc(56px + env(safe-area-inset-top)))}
   }
 
+  /* PASS 446 — the glance-answer strip: a third fixed chrome row under
+     the rail, measured into --chrome-h by fitChrome like the rows above
+     it. Its three lines answer, inside the first viewport: what needs
+     the owner · what is blocked or broken · what changed. */
+  .overviewbar{position:fixed;left:0;right:0;z-index:38;
+    top:var(--ov-top, calc(104px + env(safe-area-inset-top)));
+    height:62px;padding:5px 12px;box-sizing:border-box;
+    background:var(--glass);border-bottom:1px solid var(--glass-brd);
+    backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);
+    display:flex;flex-direction:column;justify-content:center;gap:1px}
+  .ovline{font-size:13.5px;line-height:1.3;font-weight:700;color:var(--cream);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ovline b{color:var(--amber)}
+  body.panel-open .overviewbar{display:none}
+  @media (min-width:760px){
+    .overviewbar{top:calc(var(--chrome-h) + env(safe-area-inset-top))}
+    .screen{padding-top:calc(var(--chrome-h) + 62px + 16px + env(safe-area-inset-top))}
+  }
+
   /* PASS 244 — comment history (Details sheet) */
   .histbtn { background: rgba(255,255,255,.08); color: inherit; border: 1px solid rgba(255,255,255,.18);
     border-radius: 10px; padding: 8px 12px; font: inherit; cursor: pointer; }
@@ -521,9 +551,15 @@
 <!-- PASS 168: the ONE chrome row while a panel is open — counter ·
      current chip · Back. Hidden at rest (display:none); body.panel-open
      shows it and hides the header rows it replaces. -->
+<div class="overviewbar" id="overviewbar">
+    <div class="ovline" id="ovNeeds"></div>
+    <div class="ovline" id="ovBlocked"></div>
+    <div class="ovline" id="ovChanged"></div>
+  </div>
 <div class="compactbar" id="compactbar">
   <span class="counter" id="cbCounter">– / –</span>
   <span class="cbchip" id="cbChip"></span>
+  <span class="cbbadge" id="cbBlocked" hidden></span>
   <button class="cbback" id="cbBack" type="button" aria-label="Back to the video — close the panel">‹ Back</button>
 </div>
 
@@ -572,7 +608,97 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=38"></script>
+<script src="data.js?v=39"></script>
+<script>
+/* PASS 446 — the glance-answer strip's three lines, computed from this
+   version's own data.js at render time. NEEDS YOU: a seated video no
+   guard review has run on and no reviewer thread has opened (the
+   longest-waiting one is named). BLOCKED OR BROKEN: a cell with no
+   video, or a status label that says no print. CHANGED: the cells
+   seated by this version's intake (the deck's newest printCreatedAt
+   cluster). If the page's own lineage check declares this data stale,
+   the strip prints no counts — one unverified line instead. */
+(function () {
+  var cells = window.BATCH_CELLS || [], meta = window.BATCH_META || {};
+  var threads = meta.threads || {};
+  function needsStr() {
+    var q = cells.filter(function (c) {
+      if (!c.video) return false;
+      var rv = c.reviews || {}, ks = Object.keys(rv);
+      if (!ks.length) return false;
+      for (var i = 0; i < ks.length; i++) if (rv[ks[i]] !== "notchecked") return false;
+      return !threads[c.id];
+    });
+    q.sort(function (a, b) {
+      var d = String(a.printCreatedAt || "").localeCompare(String(b.printCreatedAt || ""));
+      return d || (a.n - b.n);
+    });
+    if (!q.length) return "Needs you: none — nothing seated awaits review";
+    return "Needs you: " + q.length + (q.length === 1 ? " video" : " videos") +
+      " — longest waiting, entry " + q[0].n;
+  }
+  function blockedCells() {
+    return cells.filter(function (c) {
+      return !c.video || (c.statusLabel || "").indexOf("No print") >= 0;
+    });
+  }
+  function blockedStr() {
+    var b = blockedCells();
+    if (!b.length) return "Blocked or broken: none";
+    var named = "Blocked or broken: " + b.length + " — entries " +
+      b.map(function (c) { return c.n; }).join(", ") + " (no video)";
+    if (named.split(/\s+/).filter(Boolean).length <= 10) return named;
+    return "Blocked or broken: " + b.length + " — no video";
+  }
+  function changedStr() {
+    var mx = "";
+    cells.forEach(function (c) { if ((c.printCreatedAt || "") > mx) mx = c.printCreatedAt || ""; });
+    var ch = cells.filter(function (c) { return c.printCreatedAt === mx; });
+    ch.sort(function (a, b) { return a.n - b.n; });
+    if (!ch.length) return "Changed: none";
+    if (ch.length === 1) return "Changed: 1 new video — entry " + ch[0].n;
+    var contig = ch[ch.length - 1].n - ch[0].n === ch.length - 1;
+    if (contig) return "Changed: " + ch.length + " new videos — entries " + ch[0].n + " to " + ch[ch.length - 1].n;
+    var list = "Changed: " + ch.length + " new videos — entries " +
+      ch.map(function (c) { return c.n; }).join(", ");
+    if (list.split(/\s+/).filter(Boolean).length <= 10) return list;
+    return "Changed: " + ch.length + " new videos";
+  }
+  function setLine(el, s) {
+    var i = s.indexOf(":");
+    el.innerHTML = "";
+    var b = document.createElement("b");
+    b.textContent = s.slice(0, i);
+    el.appendChild(b);
+    el.appendChild(document.createTextNode(s.slice(i)));
+  }
+  function render() {
+    var lN = document.getElementById("ovNeeds"),
+        lB = document.getElementById("ovBlocked"),
+        lC = document.getElementById("ovChanged");
+    if (!lN || !lB || !lC) return;
+    var stale = document.getElementById("stalebar");
+    if (stale && !stale.hidden) {
+      setLine(lN, "Overview: unverified — data does not match this build");
+      lB.textContent = ""; lC.textContent = "";
+      var bdS = document.getElementById("cbBlocked");
+      if (bdS) { bdS.hidden = true; bdS.textContent = ""; }
+      return;
+    }
+    setLine(lN, needsStr());
+    setLine(lB, blockedStr());
+    setLine(lC, changedStr());
+    var bd = document.getElementById("cbBlocked");
+    if (bd) {
+      var nb = blockedCells().length;
+      bd.textContent = nb ? ("\u26a0 " + nb + " blocked") : "";
+      bd.hidden = !nb;
+    }
+  }
+  render();
+  window.addEventListener("load", render);
+})();
+</script>
 <script>
 (function(){
   "use strict";
@@ -610,7 +736,7 @@
      sources · printsFileSha · cells · countingSeats · seatedPrints
      stand exactly as v30 issued them; the data's meta (dashboard
      line + this lineage's build/seated) re-issues to name v31. */
-  var EXPECTED_LINEAGE = {"build": "pass432-v38", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718", "pass301": "fdd234c3c0f0", "pass309": "3be4cf11b136", "pass312": "08a34dccc01f", "pass313": "aabbf55a7100", "pass314": "944b42eda191", "pass315": "3cc09b41c13c", "pass316": "8720a697fcce", "pass317": "aaa070b45f80", "pass319": "6550c05a16d8", "pass320": "529731adc939", "pass321": "13507d022828", "pass427": "792c68f57903", "pass432": "5d7888cbd7d5"}, "printsFileSha": "b6a5fbd5b427", "seated": "v38 (PASS 432) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1 · OPENING PLACEMENT round (PASS 427): the two §425 opening-exercise prints seated as review entries 23 · 24 (ids opening-425-a · opening-425-b — the declared OPENING container over the dlc001 root, EN hook-question + ES visual, configuration-only delta) in the standing review form · their MP4s are §427 FASTSTART re-exports through the cured export path (export_mux.py: -movflags +faststart + the measured moov gate; §425's prints carried moov at file end — 319,038 / 166,835 — the seated files carry moov at byte 32; decoded content framemd5-identical to §425's prints) · ENTRY_FACTS carried byte-identical (facts36 — the openings carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 22 → 24 · countingSeats 11 + seatedPrints 20 unchanged (the openings are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 792c68f5790315d09c7415d27dd646ddf0d40d14bc6f1e8aa5f30abb1cc8fe10 · TRANSITION PLACEMENT round (PASS 432): the three §426 transition sequences seated as review entries 25 · 26 · 27 (ids sequence-426-scene · sequence-426-bridge · sequence-426-mark — the declared TRANSITION container over the dlc001 root: SCENE (a sounded scene joint) · BRIDGE (a silent bridge) · MARK (a sounded mark), configuration-only delta) in the standing review form · their MP4s are §426's composed prints seated BYTE-IDENTICAL (digests verified against §426's change record at build; moov measured at byte 32 in all three by PASS 432 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the sequences carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 24 → 27 · countingSeats 11 + seatedPrints 20 unchanged (the sequences are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 5d7888cbd7d57ee52acff510a3292f5d4eb28d3e90e69e14022ad0a2413c66e4", "cells": 27, "countingSeats": 11, "seatedPrints": 20};
+  var EXPECTED_LINEAGE = {"build": "pass443-v39", "sources": {"pass134": "5852b7a5034e", "pass153": "33eaeea3c14c", "pass148": "ee2944228cdd", "pass149absence": "32abbcb922ed", "masters149": "b6a5fbd5b427", "pass149post": "d30bf6be6b36", "pass171transient": "a6fac6c4f66e", "pass172intro": "363c1ab2b798", "pass193thumbs": "6a51778c8718", "pass301": "fdd234c3c0f0", "pass309": "3be4cf11b136", "pass312": "08a34dccc01f", "pass313": "aabbf55a7100", "pass314": "944b42eda191", "pass315": "3cc09b41c13c", "pass316": "8720a697fcce", "pass317": "aaa070b45f80", "pass319": "6550c05a16d8", "pass320": "529731adc939", "pass321": "13507d022828", "pass427": "792c68f57903", "pass432": "5d7888cbd7d5", "pass443v39": "9fd8dc6c2106"}, "printsFileSha": "b6a5fbd5b427", "seated": "v39 (PASS 443) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1 · OPENING PLACEMENT round (PASS 427): the two §425 opening-exercise prints seated as review entries 23 · 24 (ids opening-425-a · opening-425-b — the declared OPENING container over the dlc001 root, EN hook-question + ES visual, configuration-only delta) in the standing review form · their MP4s are §427 FASTSTART re-exports through the cured export path (export_mux.py: -movflags +faststart + the measured moov gate; §425's prints carried moov at file end — 319,038 / 166,835 — the seated files carry moov at byte 32; decoded content framemd5-identical to §425's prints) · ENTRY_FACTS carried byte-identical (facts36 — the openings carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 22 → 24 · countingSeats 11 + seatedPrints 20 unchanged (the openings are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 792c68f5790315d09c7415d27dd646ddf0d40d14bc6f1e8aa5f30abb1cc8fe10 · TRANSITION PLACEMENT round (PASS 432): the three §426 transition sequences seated as review entries 25 · 26 · 27 (ids sequence-426-scene · sequence-426-bridge · sequence-426-mark — the declared TRANSITION container over the dlc001 root: SCENE (a sounded scene joint) · BRIDGE (a silent bridge) · MARK (a sounded mark), configuration-only delta) in the standing review form · their MP4s are §426's composed prints seated BYTE-IDENTICAL (digests verified against §426's change record at build; moov measured at byte 32 in all three by PASS 432 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the sequences carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 24 → 27 · countingSeats 11 + seatedPrints 20 unchanged (the sequences are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 5d7888cbd7d57ee52acff510a3292f5d4eb28d3e90e69e14022ad0a2413c66e4 · CHAIN PLACEMENT round 1 of 6 (PASS 443): the three §428 repeat-exercise sequences (the declared REPEAT container over the dlc001 root, composed by §428's sequence engine) seated as review entries 28 · 29 · 30 (ids sequence-428-repeat-full · sequence-428-chain · sequence-428-listen-say) in the standing review form · their MP4s are §428's composed prints seated BYTE-IDENTICAL (digests verified against §428's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 27 → 30 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 9fd8dc6c2106f528c28a4c2a1c43bca0b4b7aab8d32d8ac8811fd144fc3a3c9b", "cells": 30, "countingSeats": 11, "seatedPrints": 20};
   function canon(o){
     if (o === null || typeof o !== "object") return JSON.stringify(o);
     if (Array.isArray(o)) return "[" + o.map(canon).join(",") + "]";
@@ -655,6 +781,13 @@
     document.documentElement.style.setProperty("--rail-top", Math.round(tb.bottom) + "px");
     var rw = railwrapEl.getBoundingClientRect();
     var chromeH = Math.round(rw.bottom);
+    /* PASS 446: the overview strip is the chrome's third row — the
+       screens reserve it through the same measured value. */
+    var ov = document.getElementById("overviewbar");
+    if (ov) {
+      document.documentElement.style.setProperty("--ov-top", Math.round(rw.bottom) + "px");
+      chromeH = Math.round(ov.getBoundingClientRect().bottom);
+    }
     document.documentElement.style.setProperty("--chrome-h", chromeH + "px");
   }
 
