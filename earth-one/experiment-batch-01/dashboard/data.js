@@ -1,3 +1,4 @@
+/* PASS 427 — data v37: THE §425 OPENINGS SEATED as review entries 23 · 24 (opening-425-a · opening-425-b) in the standing review form + THE FASTSTART CURE (the seated MP4s are re-exports through the export path cured at the source — moov measured at byte 32; §425's prints carried moov at file end) · ENTRY_FACTS carried byte-identical (facts36: 73 records · 131 events) · BATCH_META.dashboard + lineage re-issued for v37 · cells 22 → 24. */
 /* PASS 321 — data v36: THE DISPOSITION CAMPAIGN baked — the triage queue's disposition records (Passes 312-315 D cycles · 316-320 C cycles + C3 · issue:44's standing HQ convergence event) applied to ENTRY_FACTS as classified lifecycle events with structured provenance, and THREAD disposition objects seated on the 38 exported concerns in Pass 244's form; 73 entries · 131 events · assigned dispositions 6 to 43 · classifications 1 to 2 · acceptance events in the bake: zero; the derivation core carried byte-identical; BATCH_META.dashboard + lineage re-issued for v36. */
 /* PASS 309 — data v35: ENTRY_FACTS extended with Pass 301's three disposition records (issue:58's record created — IMPLEMENTED, verification established · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · the NONE-REQUIRED classification on Mina's acknowledgment 6808791607), applied as classified lifecycle events with structured provenance in the strengthened invariant's form; assigned dispositions 4 to 6 + 1 classification; acceptance events in the bake: zero; the derivation core carried byte-identical; BATCH_META.dashboard + lineage re-issued for v35. */
 /* PASS 261 — data v34: ENTRY_FACTS rebuilt under the STRENGTHENED OUTCOME INVARIANT (classified lifecycle events with structured provenance · the reviewer of record · outcome_provenance per derived outcome); BATCH_META.dashboard + lineage re-issued for v34. */
@@ -176,10 +177,10 @@ window.BATCH_META = {
  "historySnapshot": "2026-11-11T22:41:38Z",
  "coverage": "Coverage 26/27 (old basis) · 26/28 (new basis) · open items exactly one: G11 (sound-design fit; owner = guard_seams' next B60 amendment + print legs) — row 28's FA residue CLOSED BY SUBSTITUTION (owner order + full-content clarification; § PASS 48 execution + checker #23 verification) (HQ GUARD-MAP v56)",
  "shelf": "Guard shelf — 8 CONFIRMED · reasoning ARMED-PROVISIONAL · guard_transcript CONFIRMED (Pass 153) · guard_category ARMED (Pass 165; GATE firing over this lineage follows this seating, HQ ruling 10) · guard_thumbnail ARMED (certificate hq-2026-11-11-025, Pass 193; class-gate on blur_misplaced live; T3 mechanical-spec legibility = its named gap, covered by the deterministic hygiene leg) · checkers #30/#31/#32/#33/#35 ARMED · #34 dyslexia legs armed on this surface.",
- "dashboard": "v36 (2026-11-12, PASS 321 — THE DISPOSITION CAMPAIGN BAKED into the served facts: the triage queue's 39 in-thread dispositions carried into ENTRY_FACTS as classified events with structured provenance (D cycles §312-315: 17 · C cycles §316-320 + C3: 21 · issue:44's §244 HQ convergence event) with THREAD disposition objects seated in Pass 244's form · assigned dispositions 6 to 43 + 2 classifications · acceptance events: zero — ACCEPTED in a disposition string is the lane's disposition word, never a reviewer acceptance · the derivation core carried byte-identical) over v35 (2026-11-12, PASS 309 — PASS 301'S THREE DISPOSITION RECORDS BAKED into ENTRY_FACTS as classified lifecycle events with structured provenance: issue:58's record created (IMPLEMENTED · verification established — the print-age badge it asked for stands live) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 4 to 6 + 1 classification · acceptance events in the bake: zero · the derivation core carried byte-identical) over v34 (2026-11-12, PASS 261 — THE STRENGTHENED OUTCOME INVARIANT (comment-loop.md §4): a phone outcome derives only from an authenticated, classified event whose immutable target matches entry kind · concern · attempt · version and whose actor was authorized at event time; provenance is a structured object; an acceptance outcome names the reviewer unless the viewer is the accepting reviewer herself; a withdrawn acceptance never remains the current outcome) over v33 (2026-11-11, PASS 247 — PRINT AGE BADGE (every video face shows its rendering's age, computed in-page from printCreatedAt; the exact timestamp + its source stand in Details) over the v32 set: COMMENT LOOP (per-video comment history: baked snapshot + live refresh on open · one canonical thread per video) over the v31 set: HEADER COMPACTION (Codex design 2026-11-11, the owner's header-bloat screenshot item): the header is TWO rows, 104px in total (row 1: Earth One · v31 identity · plain position · a labelled Menu; row 2: the chip rail) and the collapsed review strip is 104px (ONE merged status line — the progress bar is removed, the fraction says it — over Like · Dislike · Details; 'Show panel' is removed, Details is the panel's one disclosure control, closed by default) · Version · Legend · Coverage · Index live behind the Menu tap; the B53 viewport-budget leg measures the three shares on the served page · the v30 set stands unchanged beneath: the Pass 149 lineage (20 prints) · the 3 DESIGNED thumbnail pairs seated for cells 01 · 04 · 21 under certificate hq-2026-11-11-025 (guard_thumbnail ARMED — creates 0.505 · promise 0.70 · class-gate on blur_misplaced live; cell04's pair carries its two priced craft defects · the guard's T3 gap prints beside the verdicts on the seated cells) · the other 19 cells print NOT DESIGNED · supersedes v32)",
+ "dashboard": "v37 (2026-11-15, PASS 427 — THE §425 OPENINGS SEATED + THE FASTSTART CURE: the two opening-exercise prints of the declared OPENING container (dlc001 · EN hook-question · ES visual) placed as review entries 23 · 24 in the standing form, their MP4s re-exported faststart through the export path cured at the source (moov measured at byte 32; §425's exports carried moov at file end — 319,038 / 166,835) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v36 (2026-11-12, PASS 321 — THE DISPOSITION CAMPAIGN BAKED into the served facts: the triage queue's 39 in-thread dispositions carried into ENTRY_FACTS as classified events with structured provenance (D cycles §312-315: 17 · C cycles §316-320 + C3: 21 · issue:44's §244 HQ convergence event) with THREAD disposition objects seated in Pass 244's form · assigned dispositions 6 to 43 + 2 classifications · acceptance events: zero — ACCEPTED in a disposition string is the lane's disposition word, never a reviewer acceptance · the derivation core carried byte-identical) over v35 (2026-11-12, PASS 309 — PASS 301'S THREE DISPOSITION RECORDS BAKED into ENTRY_FACTS as classified lifecycle events with structured provenance: issue:58's record created (IMPLEMENTED · verification established — the print-age badge it asked for stands live) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 4 to 6 + 1 classification · acceptance events in the bake: zero · the derivation core carried byte-identical) over v34 (2026-11-12, PASS 261 — THE STRENGTHENED OUTCOME INVARIANT (comment-loop.md §4): a phone outcome derives only from an authenticated, classified event whose immutable target matches entry kind · concern · attempt · version and whose actor was authorized at event time; provenance is a structured object; an acceptance outcome names the reviewer unless the viewer is the accepting reviewer herself; a withdrawn acceptance never remains the current outcome) over v33 (2026-11-11, PASS 247 — PRINT AGE BADGE (every video face shows its rendering's age, computed in-page from printCreatedAt; the exact timestamp + its source stand in Details) over the v32 set: COMMENT LOOP (per-video comment history: baked snapshot + live refresh on open · one canonical thread per video) over the v31 set: HEADER COMPACTION (Codex design 2026-11-11, the owner's header-bloat screenshot item): the header is TWO rows, 104px in total (row 1: Earth One · v31 identity · plain position · a labelled Menu; row 2: the chip rail) and the collapsed review strip is 104px (ONE merged status line — the progress bar is removed, the fraction says it — over Like · Dislike · Details; 'Show panel' is removed, Details is the panel's one disclosure control, closed by default) · Version · Legend · Coverage · Index live behind the Menu tap; the B53 viewport-budget leg measures the three shares on the served page · the v30 set stands unchanged beneath: the Pass 149 lineage (20 prints) · the 3 DESIGNED thumbnail pairs seated for cells 01 · 04 · 21 under certificate hq-2026-11-11-025 (guard_thumbnail ARMED — creates 0.505 · promise 0.70 · class-gate on blur_misplaced live; cell04's pair carries its two priced craft defects · the guard's T3 gap prints beside the verdicts on the seated cells) · the other 19 cells print NOT DESIGNED · supersedes v32)",
  "pathNote": "Served from the legacy experiment-batch-01 dashboard path; the content reviewed here is Experiment Batch 02.",
  "lineage": {
- "build": "pass321-v36",
+ "build": "pass427-v37",
   "sources": {
    "pass134": "5852b7a5034e",
    "pass153": "33eaeea3c14c",
@@ -200,11 +201,12 @@ window.BATCH_META = {
    "pass317": "aaa070b45f80",
    "pass319": "6550c05a16d8",
    "pass320": "529731adc939",
-   "pass321": "13507d022828"
+   "pass321": "13507d022828",
+   "pass427": "792c68f57903"
   },
   "printsFileSha": "b6a5fbd5b427",
-  "seated": "v36 (PASS 321) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1",
-  "cells": 22,
+  "seated": "v37 (PASS 427) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1 · OPENING PLACEMENT round (PASS 427): the two §425 opening-exercise prints seated as review entries 23 · 24 (ids opening-425-a · opening-425-b — the declared OPENING container over the dlc001 root, EN hook-question + ES visual, configuration-only delta) in the standing review form · their MP4s are §427 FASTSTART re-exports through the cured export path (export_mux.py: -movflags +faststart + the measured moov gate; §425's prints carried moov at file end — 319,038 / 166,835 — the seated files carry moov at byte 32; decoded content framemd5-identical to §425's prints) · ENTRY_FACTS carried byte-identical (facts36 — the openings carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 22 → 24 · countingSeats 11 + seatedPrints 20 unchanged (the openings are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 792c68f5790315d09c7415d27dd646ddf0d40d14bc6f1e8aa5f30abb1cc8fe10",
+  "cells": 24,
   "countingSeats": 11,
   "seatedPrints": 20
  }
@@ -1639,6 +1641,114 @@ window.BATCH_CELLS = [
   "printTake": "cell22-pass149",
   "printDur": 87.9,
   "printCreatedAt": "2026-11-11T01:31:15Z"
+ },
+ {
+  "id": "opening-425-a",
+  "n": 23,
+  "sentence": "I eat bread.",
+  "opening": "EN",
+  "taught": [],
+  "arch": "hook-question",
+  "archName": "Opening · hook question",
+  "length": "S",
+  "lengthLabel": "~6 s measured",
+  "hook": "Image hook (O1) — the question first, the hero image revealed on the spoken cue.",
+  "reviews": {
+   "guard_translation": "notchecked",
+   "guard_linguist_claims": "notchecked",
+   "guard_reasoning": "notchecked",
+   "guard_segment_function": "notchecked",
+   "guard_depiction": "notchecked",
+   "guard_seams": "notchecked",
+   "guard_animation": "notchecked",
+   "guard_closure": "notchecked",
+   "guard_educator": "notchecked",
+   "guard_transcript": "notchecked",
+   "code_collision": "notchecked",
+   "code_containment": "notchecked",
+   "code_backing": "notchecked",
+   "code_caption_absence": "notchecked",
+   "code_intro_language": "notchecked",
+   "guard_category": "notchecked",
+   "guard_thumbnail": "notchecked",
+   "code_hook_c10": "notchecked",
+   "code_badge_c11": "notchecked",
+   "guard_story_order_c12": "notchecked"
+  },
+  "gate": "OPENING EXERCISE PRINT — produced by § PASS 425 (2026-11-15) under the OPENING DECLARATION (fired 2026-11-15T00:48:33Z: the OPENING container declared for the Timing-Accepted population on §§411/415/416's three consecutive FAILED-0 firings + this pass's exercise). This print: instance 693a66169f1db1f2… · §425 MP4 bd31e2bded35b0f0… (327,426 B · 6.444 s · 390×844 + audio · full decode error-free) · census PRODUCT (PASS 103 · FAIL 0 · NA 22) · playback PASS · containment PASS at phone size · owner-standard 95.25 (lane instrument, §395 form; basis in §425's entry). FASTSTART CURE (§ PASS 427): §425's export carried the moov atom at byte 319,038 — the file's end; phones could not start playback. The export path is cured at the source (export_mux.py: -movflags +faststart + a measured moov gate that refuses a non-faststart export) and this print was re-exported through the cured path: seated file 4f12dcf8e7cc… · moov at byte 32, ending before mdat · decoded content identical to §425's print (framemd5-verified, 496 frame/audio lines). LIMITATIONS (from the declaration's face): spoken onsets DERIVED by proportional split (measured drift medians 42–108 ms · max 281 ms) — spoken-onset compliance (G25 · blocker 3) NOT declared · the fleet guard battery has NOT run on this print (the roster seats print NOT CHECKED; the instruments above are the opening's own) · the full video's taught set stands on cell-01's entry — the opening container itself teaches nothing yet · this is the OPENING container only (transitions · repeat · diagram · ending are the successor containers) · NOT APPROVED (approvals 0/22).",
+  "gateShort": "Opening print seated · §425 census clean",
+  "file": "dlc001-eat-bread__opening__en__hook-question.mp4",
+  "video": "videos/dlc001-eat-bread__opening__en__hook-question.mp4",
+  "poster": "poster-opening-425-a.png",
+  "thumb": null,
+  "status": "inbuild",
+  "statusLabel": "Seated for review · not approved",
+  "statusFull": "Opening print seated for review (§425 opening exercise — the OPENING container declared 2026-11-15 · census FAIL 0 · playback + containment PASS · owner-standard 95.25, lane instrument · faststart re-export §427, moov at byte 32) · NOT a full video · not approved (0/22)",
+  "about": "Opening exercise entry (PASS 425): the declared OPENING container over the dlc001 root (“I eat bread.”) — English hook-question variant, warm presentation. One of the two differently-configured openings of §425's declaration exercise; the other is opening-425-b (Spanish visual). Same machinery + register as the fleet's openings, configuration-only delta. The full video for this root stands at cell-01; this entry seats the opening alone, at final quality, for review of the declared container.",
+  "title": "Opening · I Eat Bread — English Hook Question",
+  "workleft": [
+   "○ Fleet guard battery — not run on this print",
+   "✗ Spoken onsets derived — blocker 3 cure stands open",
+   "○ Opening container only — the full video is not built"
+  ],
+  "printSha": "4f12dcf8",
+  "printTake": "pass425-opening · faststart re-export pass427",
+  "printDur": 6.444,
+  "printCreatedAt": "2026-11-15T00:55:02Z"
+ },
+ {
+  "id": "opening-425-b",
+  "n": 24,
+  "sentence": "I eat bread.",
+  "opening": "ES",
+  "taught": [],
+  "arch": "visual",
+  "archName": "Opening · visual",
+  "length": "S",
+  "lengthLabel": "~4 s measured",
+  "hook": "Visual hook — the hero image carries the spoken question over the paper-cutout scene: “¿En cuántos idiomas puedes describir esta imagen?” (media set skA · dark presentation).",
+  "reviews": {
+   "guard_translation": "notchecked",
+   "guard_linguist_claims": "notchecked",
+   "guard_reasoning": "notchecked",
+   "guard_segment_function": "notchecked",
+   "guard_depiction": "notchecked",
+   "guard_seams": "notchecked",
+   "guard_animation": "notchecked",
+   "guard_closure": "notchecked",
+   "guard_educator": "notchecked",
+   "guard_transcript": "notchecked",
+   "code_collision": "notchecked",
+   "code_containment": "notchecked",
+   "code_backing": "notchecked",
+   "code_caption_absence": "notchecked",
+   "code_intro_language": "notchecked",
+   "guard_category": "notchecked",
+   "guard_thumbnail": "notchecked",
+   "code_hook_c10": "notchecked",
+   "code_badge_c11": "notchecked",
+   "guard_story_order_c12": "notchecked"
+  },
+  "gate": "OPENING EXERCISE PRINT — produced by § PASS 425 (2026-11-15) under the OPENING DECLARATION (fired 2026-11-15T00:48:33Z: the OPENING container declared for the Timing-Accepted population on §§411/415/416's three consecutive FAILED-0 firings + this pass's exercise). This print: instance 6e32d2d565eab8ab… · §425 MP4 31d2bf294ea74db5… (172,191 B · 3.633 s · 390×844 + audio · full decode error-free) · census PRODUCT (PASS 93 · FAIL 0 · NA 32) · playback PASS · containment PASS at phone size · owner-standard 97.5 (lane instrument, §395 form; basis in §425's entry). FASTSTART CURE (§ PASS 427): §425's export carried the moov atom at byte 166,835 — the file's end; phones could not start playback. The export path is cured at the source (export_mux.py: -movflags +faststart + a measured moov gate that refuses a non-faststart export) and this print was re-exported through the cured path: seated file 9b6e5266426b… · moov at byte 32, ending before mdat · decoded content identical to §425's print (framemd5-verified, 279 frame/audio lines). LIMITATIONS (from the declaration's face): spoken onsets DERIVED by proportional split (measured drift medians 42–108 ms · max 281 ms) — spoken-onset compliance (G25 · blocker 3) NOT declared · the fleet guard battery has NOT run on this print (the roster seats print NOT CHECKED; the instruments above are the opening's own) · the full video's taught set stands on cell-01's entry — the opening container itself teaches nothing yet · this is the OPENING container only (transitions · repeat · diagram · ending are the successor containers) · NOT APPROVED (approvals 0/22).",
+  "gateShort": "Opening print seated · §425 census clean",
+  "file": "dlc001-eat-bread__opening__es__visual.mp4",
+  "video": "videos/dlc001-eat-bread__opening__es__visual.mp4",
+  "poster": "poster-opening-425-b.png",
+  "thumb": null,
+  "status": "inbuild",
+  "statusLabel": "Seated for review · not approved",
+  "statusFull": "Opening print seated for review (§425 opening exercise — the OPENING container declared 2026-11-15 · census FAIL 0 · playback + containment PASS · owner-standard 97.5, lane instrument · faststart re-export §427, moov at byte 32) · NOT a full video · not approved (0/22)",
+  "about": "Opening exercise entry (PASS 425): the declared OPENING container over the dlc001 root (“I eat bread.”) — Spanish visual variant, media set skA, dark presentation. One of the two differently-configured openings of §425's declaration exercise; the other is opening-425-a (English hook-question). Same machinery + register as the fleet's openings, configuration-only delta (language · variant · presentation). The full video for this root stands at cell-01; this entry seats the opening alone, at final quality, for review of the declared container.",
+  "title": "Opening · I Eat Bread — Spanish Visual",
+  "workleft": [
+   "○ Fleet guard battery — not run on this print",
+   "✗ Spoken onsets derived — blocker 3 cure stands open",
+   "○ Opening container only — the full video is not built"
+  ],
+  "printSha": "9b6e5266",
+  "printTake": "pass425-opening · faststart re-export pass427",
+  "printDur": 3.633,
+  "printCreatedAt": "2026-11-15T00:55:02Z"
  }
 ];
 
