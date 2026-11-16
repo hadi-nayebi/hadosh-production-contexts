@@ -1,3 +1,4 @@
+/* PASS 448 — data v46: THE CLASS-(1)+(3) RENDERER CURE — the per-entry provenance field (printProv) stamped on all 43 cells from the producing records (the derivation table in change-record-v46.md) · BATCH_META.dashboard + lineage re-issued for v46. */
 /* PASS 447 — data v45: THE CLASS-(2) CURE — the unestablished quality claim (census-class2) deleted from the about fields of entries 23 · 24 · 25 · 27 · 28 · 29 · 31 · 32 · 33 · 34 · 37 · 40 · 41 (13 occurrences — census-class2: the claim was intake-authoring text, §§426–438 + §427, contradicted by the entries' own state: exercise prints · inbuild · not approved, approvals 0/22) and restored to the surface's proven sibling closing · the sources cured at every governing input, the about-wording rule + about_claim_gate added so the claim cannot re-emit through the lane's builds · no cells added or removed (cells 43) · ENTRY_FACTS carried byte-identical · BATCH_META.dashboard + lineage re-issued for v45. */
 /* PASS 443 — data v44: THE §440 DLC014 OPENING SPECIMEN SEATED as review entry 43 (sequence-440-part-o) in the standing review form, consumed from §440's placement intake (its cell completed at seating from §440's own placement record — the completion map stands in change-record-443-v44.json) · the print faststart as composed (moov measured at byte 32 by PASS 443 from the intake bytes) · ENTRY_FACTS carried byte-identical (facts36: 73 records · 131 events) · BATCH_META.dashboard + lineage re-issued for v44 · cells 42 → 43. */
 /* PASS 443 — data v43: THE §438 TR-CLOSING CHAINS SEQUENCES SEATED as review entries 40 · 41 · 42 (sequence-438-chain-closing-tr-final · sequence-438-e15-chain-closing-tr · sequence-438-ending-closing-tr-only) in the standing review form, consumed verbatim from §438's placement intake · the prints faststart as composed (moov measured at byte 32 in all 3 by PASS 443 from the intake bytes) · ENTRY_FACTS carried byte-identical (facts36: 73 records · 131 events) · BATCH_META.dashboard + lineage re-issued for v43 · cells 39 → 42. */
@@ -185,10 +186,10 @@ window.BATCH_META = {
  "historySnapshot": "2026-11-11T22:41:38Z",
  "coverage": "Coverage 26/27 (old basis) · 26/28 (new basis) · open items exactly one: G11 (sound-design fit; owner = guard_seams' next B60 amendment + print legs) — row 28's FA residue CLOSED BY SUBSTITUTION (owner order + full-content clarification; § PASS 48 execution + checker #23 verification) (HQ GUARD-MAP v56)",
  "shelf": "Guard shelf — 8 CONFIRMED · reasoning ARMED-PROVISIONAL · guard_transcript CONFIRMED (Pass 153) · guard_category ARMED (Pass 165; GATE firing over this lineage follows this seating, HQ ruling 10) · guard_thumbnail ARMED (certificate hq-2026-11-11-025, Pass 193; class-gate on blur_misplaced live; T3 mechanical-spec legibility = its named gap, covered by the deterministic hygiene leg) · checkers #30/#31/#32/#33/#35 ARMED · #34 dyslexia legs armed on this surface.",
- "dashboard": "v45 (2026-11-15, PASS 447 — THE CLASS-(2) CURE: the unestablished quality claim (census-class2) deleted from the about fields of entries 23 · 24 · 25 · 27 · 28 · 29 · 31 · 32 · 33 · 34 · 37 · 40 · 41 (13 occurrences) — the words were intake-authoring text contradicted by the entries' own state (exercise prints · inbuild · not approved; approvals 0/22); the deletion restores the proven sibling closing · the governing inputs cured in place, the writer programs stratified, the about-wording rule + about_claim_gate added to the jobs' instruction layer · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v44 (2026-11-15, PASS 443 — THE §440 DLC014 OPENING SPECIMEN SEATED (chain step 6 of 6): the one composed opening print of §440's asset-completion act (dlc014 · 'I read a book.' · hook-question — the acceptance's CANNOT FILL case, narrowed) placed as review entry 43 in the standing form, its print faststart as composed (moov measured at byte 32, re-measured by PASS 443 from the intake bytes) · the intake cell completed at seating from §440's own placement record (15 card fields + one roster-key normalization, each traced in change-record-443-v44.json) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v43 (2026-11-15, PASS 443 — THE §438 TR-CLOSING CHAINS SEQUENCES SEATED (chain step 5 of 6): the three §438 chains whose Turkish closing was cured by the timings-map re-point (over the dlc001 root, composed by §438's sequence engine) placed as review entries 40 · 41 · 42 in the standing form, their prints faststart as composed by §438's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v42 (2026-11-15, PASS 443 — THE §436 FINAL SEQUENCES SEATED (chain step 4 of 6): the three §436 final sequences (the declared FINAL container over the dlc001 root, composed by §436's sequence engine) placed as review entries 37 · 38 · 39 in the standing form, their prints faststart as composed by §436's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v41 (2026-11-15, PASS 443 — THE §434 ENDING SEQUENCES SEATED (chain step 3 of 6): the three §434 ending sequences (the declared ENDING container over the dlc001 root, composed by §434's sequence engine) placed as review entries 34 · 35 · 36 in the standing form, their prints faststart as composed by §434's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v40 (2026-11-15, PASS 443 — THE §431 DIAGRAM SEQUENCES SEATED (chain step 2 of 6): the three §431 diagram sequences (the declared DIAGRAM container over the dlc001 root, composed by §431's sequence engine) placed as review entries 31 · 32 · 33 in the standing form, their prints faststart as composed by §431's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v39 (2026-11-15, PASS 443 — THE §428 REPEAT SEQUENCES SEATED (chain step 1 of 6): the three §428 repeat-exercise sequences (the declared REPEAT container over the dlc001 root, composed by §428's sequence engine) placed as review entries 28 · 29 · 30 in the standing form, their prints faststart as composed by §428's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v38 (2026-11-15, PASS 432 — THE §426 TRANSITION SEQUENCES SEATED: the three composed sequences of the declared TRANSITION container (dlc001 · A-scene-B · A-bridge-B · A-mark-B) placed as review entries 25 · 26 · 27 in the standing form, their prints faststart as composed by §426's sequence engine (moov measured at byte 32 in all three, re-measured by PASS 432 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v37 (2026-11-15, PASS 427 — THE §425 OPENINGS SEATED + THE FASTSTART CURE: the two opening-exercise prints of the declared OPENING container (dlc001 · EN hook-question · ES visual) placed as review entries 23 · 24 in the standing form, their MP4s re-exported faststart through the export path cured at the source (moov measured at byte 32; §425's exports carried moov at file end — 319,038 / 166,835) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v36 (2026-11-12, PASS 321 — THE DISPOSITION CAMPAIGN BAKED into the served facts: the triage queue's 39 in-thread dispositions carried into ENTRY_FACTS as classified events with structured provenance (D cycles §312-315: 17 · C cycles §316-320 + C3: 21 · issue:44's §244 HQ convergence event) with THREAD disposition objects seated in Pass 244's form · assigned dispositions 6 to 43 + 2 classifications · acceptance events: zero — ACCEPTED in a disposition string is the lane's disposition word, never a reviewer acceptance · the derivation core carried byte-identical) over v35 (2026-11-12, PASS 309 — PASS 301'S THREE DISPOSITION RECORDS BAKED into ENTRY_FACTS as classified lifecycle events with structured provenance: issue:58's record created (IMPLEMENTED · verification established — the print-age badge it asked for stands live) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 4 to 6 + 1 classification · acceptance events in the bake: zero · the derivation core carried byte-identical) over v34 (2026-11-12, PASS 261 — THE STRENGTHENED OUTCOME INVARIANT (comment-loop.md §4): a phone outcome derives only from an authenticated, classified event whose immutable target matches entry kind · concern · attempt · version and whose actor was authorized at event time; provenance is a structured object; an acceptance outcome names the reviewer unless the viewer is the accepting reviewer herself; a withdrawn acceptance never remains the current outcome) over v33 (2026-11-11, PASS 247 — PRINT AGE BADGE (every video face shows its rendering's age, computed in-page from printCreatedAt; the exact timestamp + its source stand in Details) over the v32 set: COMMENT LOOP (per-video comment history: baked snapshot + live refresh on open · one canonical thread per video) over the v31 set: HEADER COMPACTION (Codex design 2026-11-11, the owner's header-bloat screenshot item): the header is TWO rows, 104px in total (row 1: Earth One · v31 identity · plain position · a labelled Menu; row 2: the chip rail) and the collapsed review strip is 104px (ONE merged status line — the progress bar is removed, the fraction says it — over Like · Dislike · Details; 'Show panel' is removed, Details is the panel's one disclosure control, closed by default) · Version · Legend · Coverage · Index live behind the Menu tap; the B53 viewport-budget leg measures the three shares on the served page · the v30 set stands unchanged beneath: the Pass 149 lineage (20 prints) · the 3 DESIGNED thumbnail pairs seated for cells 01 · 04 · 21 under certificate hq-2026-11-11-025 (guard_thumbnail ARMED — creates 0.505 · promise 0.70 · class-gate on blur_misplaced live; cell04's pair carries its two priced craft defects · the guard's T3 gap prints beside the verdicts on the seated cells) · the other 19 cells print NOT DESIGNED · supersedes v32)",
+ "dashboard": "v46 (2026-11-15, PASS 448 — THE CLASS-(1)+(3) RENDERER CURE: the dangling taught row cured at the renderer (both consumers — the details row and the comment composer's body; an empty taught set renders 'No taught set declared') · the print-created provenance clause made per-source (a per-entry provenance field stamped from the producing records; the standing set keeps the Pass 149 source-(c) clause verbatim, entries 23–43 carry their composition clause naming the producing pass) · measured wide chrome (the ≥760px reservation gap cured — fitChrome measures at every width) · the renderer census gate added to the job's guards · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v45 (2026-11-15, PASS 447 — THE CLASS-(2) CURE: the unestablished quality claim (census-class2) deleted from the about fields of entries 23 · 24 · 25 · 27 · 28 · 29 · 31 · 32 · 33 · 34 · 37 · 40 · 41 (13 occurrences) — the words were intake-authoring text contradicted by the entries' own state (exercise prints · inbuild · not approved; approvals 0/22); the deletion restores the proven sibling closing · the governing inputs cured in place, the writer programs stratified, the about-wording rule + about_claim_gate added to the jobs' instruction layer · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v44 (2026-11-15, PASS 443 — THE §440 DLC014 OPENING SPECIMEN SEATED (chain step 6 of 6): the one composed opening print of §440's asset-completion act (dlc014 · 'I read a book.' · hook-question — the acceptance's CANNOT FILL case, narrowed) placed as review entry 43 in the standing form, its print faststart as composed (moov measured at byte 32, re-measured by PASS 443 from the intake bytes) · the intake cell completed at seating from §440's own placement record (15 card fields + one roster-key normalization, each traced in change-record-443-v44.json) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v43 (2026-11-15, PASS 443 — THE §438 TR-CLOSING CHAINS SEQUENCES SEATED (chain step 5 of 6): the three §438 chains whose Turkish closing was cured by the timings-map re-point (over the dlc001 root, composed by §438's sequence engine) placed as review entries 40 · 41 · 42 in the standing form, their prints faststart as composed by §438's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v42 (2026-11-15, PASS 443 — THE §436 FINAL SEQUENCES SEATED (chain step 4 of 6): the three §436 final sequences (the declared FINAL container over the dlc001 root, composed by §436's sequence engine) placed as review entries 37 · 38 · 39 in the standing form, their prints faststart as composed by §436's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v41 (2026-11-15, PASS 443 — THE §434 ENDING SEQUENCES SEATED (chain step 3 of 6): the three §434 ending sequences (the declared ENDING container over the dlc001 root, composed by §434's sequence engine) placed as review entries 34 · 35 · 36 in the standing form, their prints faststart as composed by §434's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v40 (2026-11-15, PASS 443 — THE §431 DIAGRAM SEQUENCES SEATED (chain step 2 of 6): the three §431 diagram sequences (the declared DIAGRAM container over the dlc001 root, composed by §431's sequence engine) placed as review entries 31 · 32 · 33 in the standing form, their prints faststart as composed by §431's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v39 (2026-11-15, PASS 443 — THE §428 REPEAT SEQUENCES SEATED (chain step 1 of 6): the three §428 repeat-exercise sequences (the declared REPEAT container over the dlc001 root, composed by §428's sequence engine) placed as review entries 28 · 29 · 30 in the standing form, their prints faststart as composed by §428's sequence engine (moov measured at byte 32 in all 3, re-measured by PASS 443 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v38 (2026-11-15, PASS 432 — THE §426 TRANSITION SEQUENCES SEATED: the three composed sequences of the declared TRANSITION container (dlc001 · A-scene-B · A-bridge-B · A-mark-B) placed as review entries 25 · 26 · 27 in the standing form, their prints faststart as composed by §426's sequence engine (moov measured at byte 32 in all three, re-measured by PASS 432 from the intake bytes) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v37 (2026-11-15, PASS 427 — THE §425 OPENINGS SEATED + THE FASTSTART CURE: the two opening-exercise prints of the declared OPENING container (dlc001 · EN hook-question · ES visual) placed as review entries 23 · 24 in the standing form, their MP4s re-exported faststart through the export path cured at the source (moov measured at byte 32; §425's exports carried moov at file end — 319,038 / 166,835) · ENTRY_FACTS unchanged (facts36 carried byte-identical) · the derivation core carried byte-identical) over v36 (2026-11-12, PASS 321 — THE DISPOSITION CAMPAIGN BAKED into the served facts: the triage queue's 39 in-thread dispositions carried into ENTRY_FACTS as classified events with structured provenance (D cycles §312-315: 17 · C cycles §316-320 + C3: 21 · issue:44's §244 HQ convergence event) with THREAD disposition objects seated in Pass 244's form · assigned dispositions 6 to 43 + 2 classifications · acceptance events: zero — ACCEPTED in a disposition string is the lane's disposition word, never a reviewer acceptance · the derivation core carried byte-identical) over v35 (2026-11-12, PASS 309 — PASS 301'S THREE DISPOSITION RECORDS BAKED into ENTRY_FACTS as classified lifecycle events with structured provenance: issue:58's record created (IMPLEMENTED · verification established — the print-age badge it asked for stands live) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 4 to 6 + 1 classification · acceptance events in the bake: zero · the derivation core carried byte-identical) over v34 (2026-11-12, PASS 261 — THE STRENGTHENED OUTCOME INVARIANT (comment-loop.md §4): a phone outcome derives only from an authenticated, classified event whose immutable target matches entry kind · concern · attempt · version and whose actor was authorized at event time; provenance is a structured object; an acceptance outcome names the reviewer unless the viewer is the accepting reviewer herself; a withdrawn acceptance never remains the current outcome) over v33 (2026-11-11, PASS 247 — PRINT AGE BADGE (every video face shows its rendering's age, computed in-page from printCreatedAt; the exact timestamp + its source stand in Details) over the v32 set: COMMENT LOOP (per-video comment history: baked snapshot + live refresh on open · one canonical thread per video) over the v31 set: HEADER COMPACTION (Codex design 2026-11-11, the owner's header-bloat screenshot item): the header is TWO rows, 104px in total (row 1: Earth One · v31 identity · plain position · a labelled Menu; row 2: the chip rail) and the collapsed review strip is 104px (ONE merged status line — the progress bar is removed, the fraction says it — over Like · Dislike · Details; 'Show panel' is removed, Details is the panel's one disclosure control, closed by default) · Version · Legend · Coverage · Index live behind the Menu tap; the B53 viewport-budget leg measures the three shares on the served page · the v30 set stands unchanged beneath: the Pass 149 lineage (20 prints) · the 3 DESIGNED thumbnail pairs seated for cells 01 · 04 · 21 under certificate hq-2026-11-11-025 (guard_thumbnail ARMED — creates 0.505 · promise 0.70 · class-gate on blur_misplaced live; cell04's pair carries its two priced craft defects · the guard's T3 gap prints beside the verdicts on the seated cells) · the other 19 cells print NOT DESIGNED · supersedes v32)",
  "pathNote": "Served from the legacy experiment-batch-01 dashboard path; the content reviewed here is Experiment Batch 02.",
  "lineage": {
- "build": "pass447-v45",
+ "build": "pass448v46",
   "sources": {
    "pass134": "5852b7a5034e",
    "pass153": "33eaeea3c14c",
@@ -218,13 +219,18 @@ window.BATCH_META = {
    "pass443v42": "2583fe59b881",
    "pass443v43": "87037c92cb15",
    "pass443v44": "11af1c514b31",
-   "pass447v45": "ca85a9a3042e"
+   "pass447v45": "ca85a9a3042e",
+   "pass448v46": "5519b6459832"
   },
   "printsFileSha": "b6a5fbd5b427",
   "seated": "v44 (PASS 443) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1 · OPENING PLACEMENT round (PASS 427): the two §425 opening-exercise prints seated as review entries 23 · 24 (ids opening-425-a · opening-425-b — the declared OPENING container over the dlc001 root, EN hook-question + ES visual, configuration-only delta) in the standing review form · their MP4s are §427 FASTSTART re-exports through the cured export path (export_mux.py: -movflags +faststart + the measured moov gate; §425's prints carried moov at file end — 319,038 / 166,835 — the seated files carry moov at byte 32; decoded content framemd5-identical to §425's prints) · ENTRY_FACTS carried byte-identical (facts36 — the openings carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 22 → 24 · countingSeats 11 + seatedPrints 20 unchanged (the openings are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 792c68f5790315d09c7415d27dd646ddf0d40d14bc6f1e8aa5f30abb1cc8fe10 · TRANSITION PLACEMENT round (PASS 432): the three §426 transition sequences seated as review entries 25 · 26 · 27 (ids sequence-426-scene · sequence-426-bridge · sequence-426-mark — the declared TRANSITION container over the dlc001 root: SCENE (a sounded scene joint) · BRIDGE (a silent bridge) · MARK (a sounded mark), configuration-only delta) in the standing review form · their MP4s are §426's composed prints seated BYTE-IDENTICAL (digests verified against §426's change record at build; moov measured at byte 32 in all three by PASS 432 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the sequences carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 24 → 27 · countingSeats 11 + seatedPrints 20 unchanged (the sequences are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 5d7888cbd7d57ee52acff510a3292f5d4eb28d3e90e69e14022ad0a2413c66e4 · CHAIN PLACEMENT round 1 of 6 (PASS 443): the three §428 repeat-exercise sequences (the declared REPEAT container over the dlc001 root, composed by §428's sequence engine) seated as review entries 28 · 29 · 30 (ids sequence-428-repeat-full · sequence-428-chain · sequence-428-listen-say) in the standing review form · their MP4s are §428's composed prints seated BYTE-IDENTICAL (digests verified against §428's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 27 → 30 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 9fd8dc6c2106f528c28a4c2a1c43bca0b4b7aab8d32d8ac8811fd144fc3a3c9b · CHAIN PLACEMENT round 2 of 6 (PASS 443): the three §431 diagram sequences (the declared DIAGRAM container over the dlc001 root, composed by §431's sequence engine) seated as review entries 31 · 32 · 33 (ids sequence-431-chain-build-step · sequence-431-listen-say-talk-over · sequence-431-full-focus) in the standing review form · their MP4s are §431's composed prints seated BYTE-IDENTICAL (digests verified against §431's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 30 → 33 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 05a00042e9fd7bd5e8370064545e566bc464d80929b87cf1d3aefec80b854967 · CHAIN PLACEMENT round 3 of 6 (PASS 443): the three §434 ending sequences (the declared ENDING container over the dlc001 root, composed by §434's sequence engine) seated as review entries 34 · 35 · 36 (ids sequence-434-chain-recap-closing · sequence-434-chain-closing · sequence-434-ending-recap-closing-only) in the standing review form · their MP4s are §434's composed prints seated BYTE-IDENTICAL (digests verified against §434's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 33 → 36 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 c3dcfbdcb3f23521e479dcd6f6dac6e39cd0c5878f8a8e0417433db15e5c3e29 · CHAIN PLACEMENT round 4 of 6 (PASS 443): the three §436 final sequences (the declared FINAL container over the dlc001 root, composed by §436's sequence engine) seated as review entries 37 · 38 · 39 (ids sequence-436-chain-final · sequence-436-chain-closing-final · sequence-436-final-part) in the standing review form · their MP4s are §436's composed prints seated BYTE-IDENTICAL (digests verified against §436's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 36 → 39 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 2583fe59b8813064ea6f56820e773738be2a9af7c8ad31fa5f476035cfd9f484 · CHAIN PLACEMENT round 5 of 6 (PASS 443): the three §438 chains whose Turkish closing was cured by the timings-map re-point (over the dlc001 root, composed by §438's sequence engine) seated as review entries 40 · 41 · 42 (ids sequence-438-chain-closing-tr-final · sequence-438-e15-chain-closing-tr · sequence-438-ending-closing-tr-only) in the standing review form · their MP4s are §438's composed prints seated BYTE-IDENTICAL (digests verified against §438's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 39 → 42 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 87037c92cb1528f1b2077616f6480056d412c942bee3dec52c120ff05f8bd1b2 · CHAIN PLACEMENT round 6 of 6 (PASS 443): §440's dlc014 opening specimen (the OPENING of dlc014 'I read a book.', hook-question, composed by §440's asset-completion act on the sequence machine; the chain beyond the opening stands REFUSED-NAMED in §440's record) seated as review entry 43 (ids sequence-440-part-o) in the standing review form · their MP4s are §440's composed prints seated BYTE-IDENTICAL (digests verified against §440's change record at build; moov measured at byte 32 in the print by PASS 443 — faststart as composed, no re-export needed or made) · the intake cell completed at seating from §440's own placement record (15 card fields + one roster-key normalization, traced in the change record) · ENTRY_FACTS carried byte-identical (facts36 — the new entry carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 42 → 43 · countingSeats 11 + seatedPrints 20 unchanged (the new entry are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 11af1c514b31b67c593d1f12daef3603c796b6c0f11bb462d0f81527e5ba09e7 · CLASS-(2) CURE round (PASS 447): the unestablished quality claim (census-class2) deleted from the about fields of the 13 entries named in census-class2 (23 · 24 · 25 · 27 · 28 · 29 · 31 · 32 · 33 · 34 · 37 · 40 · 41) — intake-authoring words (§§426–438 placement programs + §427's hand-authored intake) contradicted by the entries' own state (exercise prints · inbuild · not approved; approvals 0/22); each about restored to the surface's proven sibling closing · the cure landed at the sources (staging + the seven intake inputs cured in place under preservation copies · the writer programs stratified · the about-wording rule + the about_claim_gate acceptance check added to the jobs' instruction layer) · no cells added or removed (cells 43) · ENTRY_FACTS carried byte-identical · change record sha256 ca85a9a3042ec40f2250bd764b07a3042c0efa426e2e70a537cd04eeb137a33e",
   "cells": 43,
   "countingSeats": 11,
   "seatedPrints": 20
+ }
+,
+ "sources": {
+  "pass448v46": "jobs/review-dashboard/runs/2026-11-15-pass448-class13-cure/evidence/change-record-v46.md"
  }
 };
 
@@ -298,7 +304,10 @@ window.BATCH_CELLS = [
   "printSha": "d97c600a",
   "printTake": "cell01-pass149",
   "printDur": 80.7,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-02",
@@ -362,7 +371,10 @@ window.BATCH_CELLS = [
   "printSha": "1e47099e",
   "printTake": "cell02-pass149",
   "printDur": 88.9,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-03",
@@ -424,7 +436,10 @@ window.BATCH_CELLS = [
   ],
   "printSha": null,
   "printTake": null,
-  "printDur": null
+  "printDur": null,
+  "printProv": {
+   "class": "none"
+  }
  },
  {
   "id": "cell-04",
@@ -497,7 +512,10 @@ window.BATCH_CELLS = [
   "printSha": "dc83a386",
   "printTake": "cell04-pass149",
   "printDur": 85.6,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-05",
@@ -560,7 +578,10 @@ window.BATCH_CELLS = [
   "printSha": "e9bfbabb",
   "printTake": "cell05-pass149",
   "printDur": 92.9,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-06",
@@ -624,7 +645,10 @@ window.BATCH_CELLS = [
   "printSha": "61253988",
   "printTake": "cell06-pass149",
   "printDur": 101.8,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-07",
@@ -689,7 +713,10 @@ window.BATCH_CELLS = [
   "printSha": "718a1014",
   "printTake": "cell07-pass149",
   "printDur": 85.9,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-08",
@@ -754,7 +781,10 @@ window.BATCH_CELLS = [
   "printSha": "02bbc367",
   "printTake": "cell08-pass149",
   "printDur": 104.1,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-09",
@@ -818,7 +848,10 @@ window.BATCH_CELLS = [
   "printSha": "808b87fb",
   "printTake": "cell09-pass149",
   "printDur": 104.0,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-10",
@@ -882,7 +915,10 @@ window.BATCH_CELLS = [
   "printSha": "e9623535",
   "printTake": "cell10-pass149",
   "printDur": 88.0,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-11",
@@ -946,7 +982,10 @@ window.BATCH_CELLS = [
   "printSha": "18069c85",
   "printTake": "cell11-pass149",
   "printDur": 105.1,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-12",
@@ -1010,7 +1049,10 @@ window.BATCH_CELLS = [
   "printSha": "c135bb88",
   "printTake": "cell12-pass149",
   "printDur": 119.5,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-13",
@@ -1075,7 +1117,10 @@ window.BATCH_CELLS = [
   "printSha": "68f6849a",
   "printTake": "cell13-pass149",
   "printDur": 112.5,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-14",
@@ -1139,7 +1184,10 @@ window.BATCH_CELLS = [
   "printSha": "7dfb35c4",
   "printTake": "cell14-pass149",
   "printDur": 133.3,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-15",
@@ -1203,7 +1251,10 @@ window.BATCH_CELLS = [
   "printSha": "e992bd28",
   "printTake": "cell15-pass149",
   "printDur": 97.0,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-16",
@@ -1269,7 +1320,10 @@ window.BATCH_CELLS = [
   "printSha": "6138e0c7",
   "printTake": "cell16-pass149",
   "printDur": 94.5,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-17",
@@ -1333,7 +1387,10 @@ window.BATCH_CELLS = [
   "printSha": "1891f1bd",
   "printTake": "cell17-pass149",
   "printDur": 38.9,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-18",
@@ -1397,7 +1454,10 @@ window.BATCH_CELLS = [
   "printSha": "4fbc767e",
   "printTake": "cell18-pass149",
   "printDur": 135.6,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-19",
@@ -1461,7 +1521,10 @@ window.BATCH_CELLS = [
   "printSha": "eadeedfc",
   "printTake": "cell19-pass149",
   "printDur": 70.5,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-20",
@@ -1521,7 +1584,10 @@ window.BATCH_CELLS = [
   ],
   "printSha": null,
   "printTake": null,
-  "printDur": null
+  "printDur": null,
+  "printProv": {
+   "class": "none"
+  }
  },
  {
   "id": "cell-21",
@@ -1592,7 +1658,10 @@ window.BATCH_CELLS = [
   "printSha": "f44e8a5d",
   "printTake": "cell21-pass149",
   "printDur": 79.6,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "cell-22",
@@ -1656,7 +1725,10 @@ window.BATCH_CELLS = [
   "printSha": "81d368ce",
   "printTake": "cell22-pass149",
   "printDur": 87.9,
-  "printCreatedAt": "2026-11-11T01:31:15Z"
+  "printCreatedAt": "2026-11-11T01:31:15Z",
+  "printProv": {
+   "class": "c"
+  }
  },
  {
   "id": "opening-425-a",
@@ -1710,7 +1782,11 @@ window.BATCH_CELLS = [
   "printSha": "4f12dcf8",
   "printTake": "pass425-opening · faststart re-export pass427",
   "printDur": 6.444,
-  "printCreatedAt": "2026-11-15T00:55:02Z"
+  "printCreatedAt": "2026-11-15T00:55:02Z",
+  "printProv": {
+   "class": "a",
+   "pass": 425
+  }
  },
  {
   "id": "opening-425-b",
@@ -1764,7 +1840,11 @@ window.BATCH_CELLS = [
   "printSha": "9b6e5266",
   "printTake": "pass425-opening · faststart re-export pass427",
   "printDur": 3.633,
-  "printCreatedAt": "2026-11-15T00:55:02Z"
+  "printCreatedAt": "2026-11-15T00:55:02Z",
+  "printProv": {
+   "class": "a",
+   "pass": 425
+  }
  },
  {
   "id": "sequence-426-scene",
@@ -1818,7 +1898,11 @@ window.BATCH_CELLS = [
   "printSha": "ab8faaa2",
   "printTake": "pass426-sequence",
   "printDur": 12.6,
-  "printCreatedAt": "2026-11-15T01:31:44Z"
+  "printCreatedAt": "2026-11-15T01:31:44Z",
+  "printProv": {
+   "class": "a",
+   "pass": 426
+  }
  },
  {
   "id": "sequence-426-bridge",
@@ -1872,7 +1956,11 @@ window.BATCH_CELLS = [
   "printSha": "54474153",
   "printTake": "pass426-sequence",
   "printDur": 14.18,
-  "printCreatedAt": "2026-11-15T01:31:44Z"
+  "printCreatedAt": "2026-11-15T01:31:44Z",
+  "printProv": {
+   "class": "a",
+   "pass": 426
+  }
  },
  {
   "id": "sequence-426-mark",
@@ -1926,7 +2014,11 @@ window.BATCH_CELLS = [
   "printSha": "d96012a7",
   "printTake": "pass426-sequence",
   "printDur": 12.033,
-  "printCreatedAt": "2026-11-15T01:31:44Z"
+  "printCreatedAt": "2026-11-15T01:31:44Z",
+  "printProv": {
+   "class": "a",
+   "pass": 426
+  }
  },
  {
   "id": "sequence-428-repeat-full",
@@ -1980,7 +2072,11 @@ window.BATCH_CELLS = [
   "printSha": "5d2bbeb8",
   "printTake": "pass428-sequence",
   "printDur": 24.067,
-  "printCreatedAt": "2026-11-15T02:11:55Z"
+  "printCreatedAt": "2026-11-15T02:11:55Z",
+  "printProv": {
+   "class": "a",
+   "pass": 428
+  }
  },
  {
   "id": "sequence-428-chain",
@@ -2034,7 +2130,11 @@ window.BATCH_CELLS = [
   "printSha": "cca0adac",
   "printTake": "pass428-sequence",
   "printDur": 29.64,
-  "printCreatedAt": "2026-11-15T02:11:55Z"
+  "printCreatedAt": "2026-11-15T02:11:55Z",
+  "printProv": {
+   "class": "a",
+   "pass": 428
+  }
  },
  {
   "id": "sequence-428-listen-say",
@@ -2088,7 +2188,11 @@ window.BATCH_CELLS = [
   "printSha": "c2ffb77e",
   "printTake": "pass428-sequence",
   "printDur": 19.267,
-  "printCreatedAt": "2026-11-15T02:11:55Z"
+  "printCreatedAt": "2026-11-15T02:11:55Z",
+  "printProv": {
+   "class": "a",
+   "pass": 428
+  }
  },
  {
   "id": "sequence-431-chain-build-step",
@@ -2143,7 +2247,11 @@ window.BATCH_CELLS = [
   "printSha": "f1b187c7",
   "printTake": "pass431-sequence",
   "printDur": 54.233,
-  "printCreatedAt": "2026-11-15T03:18:29Z"
+  "printCreatedAt": "2026-11-15T03:18:29Z",
+  "printProv": {
+   "class": "a",
+   "pass": 431
+  }
  },
  {
   "id": "sequence-431-listen-say-talk-over",
@@ -2198,7 +2306,11 @@ window.BATCH_CELLS = [
   "printSha": "729c2855",
   "printTake": "pass431-sequence",
   "printDur": 22.612,
-  "printCreatedAt": "2026-11-15T03:18:29Z"
+  "printCreatedAt": "2026-11-15T03:18:29Z",
+  "printProv": {
+   "class": "a",
+   "pass": 431
+  }
  },
  {
   "id": "sequence-431-full-focus",
@@ -2253,7 +2365,11 @@ window.BATCH_CELLS = [
   "printSha": "c185bc21",
   "printTake": "pass431-sequence",
   "printDur": 30.667,
-  "printCreatedAt": "2026-11-15T03:18:29Z"
+  "printCreatedAt": "2026-11-15T03:18:29Z",
+  "printProv": {
+   "class": "a",
+   "pass": 431
+  }
  },
  {
   "id": "sequence-434-chain-recap-closing",
@@ -2309,7 +2425,11 @@ window.BATCH_CELLS = [
   "printSha": "e63f82f0",
   "printTake": "pass434-sequence",
   "printDur": 76.533,
-  "printCreatedAt": "2026-11-15T05:05:03Z"
+  "printCreatedAt": "2026-11-15T05:05:03Z",
+  "printProv": {
+   "class": "a",
+   "pass": 434
+  }
  },
  {
   "id": "sequence-434-chain-closing",
@@ -2365,7 +2485,11 @@ window.BATCH_CELLS = [
   "printSha": "0e8771cd",
   "printTake": "pass434-sequence",
   "printDur": 29.236,
-  "printCreatedAt": "2026-11-15T05:05:03Z"
+  "printCreatedAt": "2026-11-15T05:05:03Z",
+  "printProv": {
+   "class": "a",
+   "pass": 434
+  }
  },
  {
   "id": "sequence-434-ending-recap-closing-only",
@@ -2421,7 +2545,11 @@ window.BATCH_CELLS = [
   "printSha": "223f2009",
   "printTake": "pass434-sequence",
   "printDur": 20.333,
-  "printCreatedAt": "2026-11-15T05:05:03Z"
+  "printCreatedAt": "2026-11-15T05:05:03Z",
+  "printProv": {
+   "class": "a",
+   "pass": 434
+  }
  },
  {
   "id": "sequence-436-chain-final",
@@ -2479,7 +2607,11 @@ window.BATCH_CELLS = [
   "printSha": "47889dc2",
   "printTake": "pass436-sequence",
   "printDur": 79.033,
-  "printCreatedAt": "2026-11-15T06:22:21Z"
+  "printCreatedAt": "2026-11-15T06:22:21Z",
+  "printProv": {
+   "class": "a",
+   "pass": 436
+  }
  },
  {
   "id": "sequence-436-chain-closing-final",
@@ -2537,7 +2669,11 @@ window.BATCH_CELLS = [
   "printSha": "63f1084b",
   "printTake": "pass436-sequence",
   "printDur": 31.736,
-  "printCreatedAt": "2026-11-15T06:22:21Z"
+  "printCreatedAt": "2026-11-15T06:22:21Z",
+  "printProv": {
+   "class": "a",
+   "pass": 436
+  }
  },
  {
   "id": "sequence-436-final-part",
@@ -2595,7 +2731,11 @@ window.BATCH_CELLS = [
   "printSha": "2fd34c50",
   "printTake": "pass436-sequence",
   "printDur": 2.0,
-  "printCreatedAt": "2026-11-15T06:22:21Z"
+  "printCreatedAt": "2026-11-15T06:22:21Z",
+  "printProv": {
+   "class": "a",
+   "pass": 436
+  }
  },
  {
   "id": "sequence-438-chain-closing-tr-final",
@@ -2651,7 +2791,11 @@ window.BATCH_CELLS = [
   "printSha": "09bea0ad",
   "printTake": "pass438-sequence",
   "printDur": 71.9,
-  "printCreatedAt": "2026-11-15T09:02:54Z"
+  "printCreatedAt": "2026-11-15T09:02:54Z",
+  "printProv": {
+   "class": "a",
+   "pass": 438
+  }
  },
  {
   "id": "sequence-438-e15-chain-closing-tr",
@@ -2707,7 +2851,11 @@ window.BATCH_CELLS = [
   "printSha": "e9213cda",
   "printTake": "pass438-sequence",
   "printDur": 37.767,
-  "printCreatedAt": "2026-11-15T09:02:54Z"
+  "printCreatedAt": "2026-11-15T09:02:54Z",
+  "printProv": {
+   "class": "a",
+   "pass": 438
+  }
  },
  {
   "id": "sequence-438-ending-closing-tr-only",
@@ -2763,7 +2911,11 @@ window.BATCH_CELLS = [
   "printSha": "2e68aee6",
   "printTake": "pass438-sequence",
   "printDur": 13.2,
-  "printCreatedAt": "2026-11-15T09:02:54Z"
+  "printCreatedAt": "2026-11-15T09:02:54Z",
+  "printProv": {
+   "class": "a",
+   "pass": 438
+  }
  },
  {
   "id": "sequence-440-part-o",
@@ -2817,7 +2969,11 @@ window.BATCH_CELLS = [
   "printSha": "f0d02832",
   "printTake": "pass440-sequence",
   "printDur": 6.516,
-  "printCreatedAt": "2026-11-15T10:06:15Z"
+  "printCreatedAt": "2026-11-15T10:06:15Z",
+  "printProv": {
+   "class": "a",
+   "pass": 440
+  }
  }
 ];
 
