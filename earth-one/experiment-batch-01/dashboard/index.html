@@ -530,6 +530,24 @@
   .tnote, .tdisp { margin-top: 6px; padding: 6px 8px; background: rgba(255,255,255,.06); border-radius: 8px; }
   .tprov { opacity: .65; font-size: 12px; }
   .tcanon { margin-top: 8px; }
+  /* PASS 472 — THE ROSTER SEPARATION: hidden screens/chips leave the
+     layout entirely (the [hidden] standing leg's form); the batch
+     header bar + the specimens gate are in-feed snap rests; specimen
+     chips read dashed; each specimen screen carries its kind line. */
+  .screen[hidden]{display:none}
+  .rail .chip[hidden]{display:none}
+  .batchhead{scroll-snap-align:start;padding:calc(var(--chrome-h) + 16px + env(safe-area-inset-top)) 12px 12px}
+  .batchhead .bh1{font-size:20px;font-weight:700;letter-spacing:.03em}
+  .batchhead .bh2{margin-top:5px;font-size:15px;color:#f2b04a}
+  .specbtn{margin-top:10px;background:rgba(255,255,255,.08);color:inherit;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:9px 14px;font-size:15px;min-height:44px;cursor:pointer}
+  .specgate{scroll-snap-align:start;padding:calc(var(--chrome-h) + 16px + env(safe-area-inset-top)) 12px 20px;border-top:2px dashed rgba(255,255,255,.28)}
+  .specgate .sg1{font-size:18px;font-weight:700;letter-spacing:.03em}
+  .specgate .sg2{margin-top:5px;font-size:15px}
+  .specgate .sg3{margin-top:3px;font-size:14px;color:#a2937d}
+  .kindline{padding:7px 2px 1px;font-size:13px;letter-spacing:.05em;color:#a2937d}
+  .rail .chip.spec{border-style:dashed}
+  .indexhead{padding:12px 12px 4px;font-weight:700;letter-spacing:.03em}
+  .indexrow.spec{opacity:.75}
 </style>
 </head>
 <body>
@@ -574,6 +592,7 @@
     <div class="lrow"><span class="lsym">○ n</span><span>Not counted — advisory or not run</span></div>
     <div class="lrow"><span class="lsym">n / 11</span><span>Passing of 11 decisive seats</span></div>
     <div class="lrow"><span class="lsym">⛔</span><span>Blocked — no print yet</span></div>
+    <div class="lrow"><span class="lsym">- -</span><span>Building-block test piece (dashed chip)</span></div>
     <div class="lrow"><span class="lsym">● dot</span><span>Green ready · amber fixing · pale building · grey planned</span></div>
     <div class="lrow"><span class="lsym">👍 Marked</span><span>Saved on this device only</span></div>
     <div class="lrow"><span class="lsym">👍 Sent ✓</span><span>Sent — the GitHub issue opened</span></div>
@@ -609,7 +628,7 @@
 
 <div class="toast" id="toast">Opening your GitHub issue…</div>
 
-<script src="data.js?v=54"></script>
+<script src="data.js?v=55"></script>
 <script>
 /* PASS 446 — the glance-answer strip's three lines, computed from this
    version's own data.js at render time. NEEDS YOU: a seated video no
@@ -620,7 +639,16 @@
    cluster). If the page's own lineage check declares this data stale,
    the strip prints no counts — one unverified line instead. */
 (function () {
+  /* PASS 472 — the strip answers for THE BATCH only: cells is
+     filtered to the batch cells below, so NEEDS YOU / BLOCKED OR
+     BROKEN / CHANGED and the #cbBlocked badge all count the batch
+     list; the 21 building-block specimens stand outside the strip's
+     counts by design (they are proofs, not review items). CHANGED
+     names PRINT RECENCY — the batch entry with the newest print —
+     not comment intake; PASS 472's rewrite makes the code compute
+     exactly that (entries with no dated print never win the max). */
   var cells = window.BATCH_CELLS || [], meta = window.BATCH_META || {};
+  cells = cells.filter(function (c) { return /^cell-\d+$/.test(c.id); });
   var threads = meta.threads || {};
   function needsStr() {
     var q = cells.filter(function (c) {
@@ -634,8 +662,8 @@
       var d = String(a.printCreatedAt || "").localeCompare(String(b.printCreatedAt || ""));
       return d || (a.n - b.n);
     });
-    if (!q.length) return "Needs you: none — nothing seated awaits review";
-    return "Needs you: " + q.length + (q.length === 1 ? " video" : " videos") +
+    if (!q.length) return "Needs you, batch: none — nothing seated awaits review";
+    return "Needs you, batch: " + q.length + (q.length === 1 ? " video" : " videos") +
       " — longest waiting, entry " + q[0].n;
   }
   function blockedCells() {
@@ -645,25 +673,27 @@
   }
   function blockedStr() {
     var b = blockedCells();
-    if (!b.length) return "Blocked or broken: none";
-    var named = "Blocked or broken: " + b.length + " — entries " +
+    if (!b.length) return "Blocked or broken, batch: none";
+    var named = "Blocked or broken, batch: " + b.length + " — entries " +
       b.map(function (c) { return c.n; }).join(", ") + " (no video)";
     if (named.split(/\s+/).filter(Boolean).length <= 10) return named;
-    return "Blocked or broken: " + b.length + " — no video";
+    return "Blocked or broken, batch: " + b.length + " — no video";
   }
   function changedStr() {
+    /* PASS 472: the line names PRINT RECENCY — the batch entry whose
+       print is newest (max printCreatedAt); entries with no dated
+       print never win the max, and no dated prints reads as its own
+       line. */
     var mx = "";
     cells.forEach(function (c) { if ((c.printCreatedAt || "") > mx) mx = c.printCreatedAt || ""; });
+    if (!mx) return "Changed, batch: no dated prints";
     var ch = cells.filter(function (c) { return c.printCreatedAt === mx; });
     ch.sort(function (a, b) { return a.n - b.n; });
-    if (!ch.length) return "Changed: none";
-    if (ch.length === 1) return "Changed: 1 new video — entry " + ch[0].n;
-    var contig = ch[ch.length - 1].n - ch[0].n === ch.length - 1;
-    if (contig) return "Changed: " + ch.length + " new videos — entries " + ch[0].n + " to " + ch[ch.length - 1].n;
-    var list = "Changed: " + ch.length + " new videos — entries " +
-      ch.map(function (c) { return c.n; }).join(", ");
+    var day = mx.slice(0, 10);
+    if (ch.length === 1) return "Changed, batch: #" + ch[0].n + " · newest print " + day;
+    var list = "Changed, batch: entries " + ch.map(function (c) { return c.n; }).join(", ") + " · newest print " + day;
     if (list.split(/\s+/).filter(Boolean).length <= 10) return list;
-    return "Changed: " + ch.length + " new videos";
+    return "Changed, batch: " + ch.length + " entries · newest print " + day;
   }
   function setLine(el, s) {
     var i = s.indexOf(":");
@@ -692,7 +722,7 @@
     var bd = document.getElementById("cbBlocked");
     if (bd) {
       var nb = blockedCells().length;
-      bd.textContent = nb ? ("\u26a0 " + nb + " blocked") : "";
+      bd.textContent = nb ? ("\u26a0 " + nb + " blocked \u00b7 batch") : "";
       bd.hidden = !nb;
     }
   }
@@ -738,7 +768,7 @@
      stand exactly as v30 issued them; the data's meta (dashboard
      line + this lineage's build/seated) re-issues to name v31. */
   var EXPECTED_LINEAGE = {
- "build": "pass467v54",
+ "build": "pass472v55",
  "sources": {
   "pass134": "5852b7a5034e",
   "pass153": "33eaeea3c14c",
@@ -778,10 +808,11 @@
   "pass460v52": "c17a01c2178e",
   "pass461v52": "79aaa2535e99",
   "pass464v53": "5e8cfa99a05e",
-  "pass467v54": "0f65e7c40cd0"
+  "pass467v54": "0f65e7c40cd0",
+  "pass472v55": "ad6229824977"
  },
  "printsFileSha": "b6a5fbd5b427",
- "seated": "v44 (PASS 443) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1 · OPENING PLACEMENT round (PASS 427): the two §425 opening-exercise prints seated as review entries 23 · 24 (ids opening-425-a · opening-425-b — the declared OPENING container over the dlc001 root, EN hook-question + ES visual, configuration-only delta) in the standing review form · their MP4s are §427 FASTSTART re-exports through the cured export path (export_mux.py: -movflags +faststart + the measured moov gate; §425's prints carried moov at file end — 319,038 / 166,835 — the seated files carry moov at byte 32; decoded content framemd5-identical to §425's prints) · ENTRY_FACTS carried byte-identical (facts36 — the openings carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 22 → 24 · countingSeats 11 + seatedPrints 20 unchanged (the openings are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 792c68f5790315d09c7415d27dd646ddf0d40d14bc6f1e8aa5f30abb1cc8fe10 · TRANSITION PLACEMENT round (PASS 432): the three §426 transition sequences seated as review entries 25 · 26 · 27 (ids sequence-426-scene · sequence-426-bridge · sequence-426-mark — the declared TRANSITION container over the dlc001 root: SCENE (a sounded scene joint) · BRIDGE (a silent bridge) · MARK (a sounded mark), configuration-only delta) in the standing review form · their MP4s are §426's composed prints seated BYTE-IDENTICAL (digests verified against §426's change record at build; moov measured at byte 32 in all three by PASS 432 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the sequences carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 24 → 27 · countingSeats 11 + seatedPrints 20 unchanged (the sequences are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 5d7888cbd7d57ee52acff510a3292f5d4eb28d3e90e69e14022ad0a2413c66e4 · CHAIN PLACEMENT round 1 of 6 (PASS 443): the three §428 repeat-exercise sequences (the declared REPEAT container over the dlc001 root, composed by §428's sequence engine) seated as review entries 28 · 29 · 30 (ids sequence-428-repeat-full · sequence-428-chain · sequence-428-listen-say) in the standing review form · their MP4s are §428's composed prints seated BYTE-IDENTICAL (digests verified against §428's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 27 → 30 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 9fd8dc6c2106f528c28a4c2a1c43bca0b4b7aab8d32d8ac8811fd144fc3a3c9b · CHAIN PLACEMENT round 2 of 6 (PASS 443): the three §431 diagram sequences (the declared DIAGRAM container over the dlc001 root, composed by §431's sequence engine) seated as review entries 31 · 32 · 33 (ids sequence-431-chain-build-step · sequence-431-listen-say-talk-over · sequence-431-full-focus) in the standing review form · their MP4s are §431's composed prints seated BYTE-IDENTICAL (digests verified against §431's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 30 → 33 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 05a00042e9fd7bd5e8370064545e566bc464d80929b87cf1d3aefec80b854967 · CHAIN PLACEMENT round 3 of 6 (PASS 443): the three §434 ending sequences (the declared ENDING container over the dlc001 root, composed by §434's sequence engine) seated as review entries 34 · 35 · 36 (ids sequence-434-chain-recap-closing · sequence-434-chain-closing · sequence-434-ending-recap-closing-only) in the standing review form · their MP4s are §434's composed prints seated BYTE-IDENTICAL (digests verified against §434's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 33 → 36 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 c3dcfbdcb3f23521e479dcd6f6dac6e39cd0c5878f8a8e0417433db15e5c3e29 · CHAIN PLACEMENT round 4 of 6 (PASS 443): the three §436 final sequences (the declared FINAL container over the dlc001 root, composed by §436's sequence engine) seated as review entries 37 · 38 · 39 (ids sequence-436-chain-final · sequence-436-chain-closing-final · sequence-436-final-part) in the standing review form · their MP4s are §436's composed prints seated BYTE-IDENTICAL (digests verified against §436's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 36 → 39 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 2583fe59b8813064ea6f56820e773738be2a9af7c8ad31fa5f476035cfd9f484 · CHAIN PLACEMENT round 5 of 6 (PASS 443): the three §438 chains whose Turkish closing was cured by the timings-map re-point (over the dlc001 root, composed by §438's sequence engine) seated as review entries 40 · 41 · 42 (ids sequence-438-chain-closing-tr-final · sequence-438-e15-chain-closing-tr · sequence-438-ending-closing-tr-only) in the standing review form · their MP4s are §438's composed prints seated BYTE-IDENTICAL (digests verified against §438's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 39 → 42 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 87037c92cb1528f1b2077616f6480056d412c942bee3dec52c120ff05f8bd1b2 · CHAIN PLACEMENT round 6 of 6 (PASS 443): §440's dlc014 opening specimen (the OPENING of dlc014 'I read a book.', hook-question, composed by §440's asset-completion act on the sequence machine; the chain beyond the opening stands REFUSED-NAMED in §440's record) seated as review entry 43 (ids sequence-440-part-o) in the standing review form · their MP4s are §440's composed prints seated BYTE-IDENTICAL (digests verified against §440's change record at build; moov measured at byte 32 in the print by PASS 443 — faststart as composed, no re-export needed or made) · the intake cell completed at seating from §440's own placement record (15 card fields + one roster-key normalization, traced in the change record) · ENTRY_FACTS carried byte-identical (facts36 — the new entry carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 42 → 43 · countingSeats 11 + seatedPrints 20 unchanged (the new entry are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 11af1c514b31b67c593d1f12daef3603c796b6c0f11bb462d0f81527e5ba09e7 · CLASS-(2) CURE round (PASS 447): the unestablished quality claim (census-class2) deleted from the about fields of the 13 entries named in census-class2 (23 · 24 · 25 · 27 · 28 · 29 · 31 · 32 · 33 · 34 · 37 · 40 · 41) — intake-authoring words (§§426–438 placement programs + §427's hand-authored intake) contradicted by the entries' own state (exercise prints · inbuild · not approved; approvals 0/22); each about restored to the surface's proven sibling closing · the cure landed at the sources (staging + the seven intake inputs cured in place under preservation copies · the writer programs stratified · the about-wording rule + the about_claim_gate acceptance check added to the jobs' instruction layer) · no cells added or removed (cells 43) · ENTRY_FACTS carried byte-identical · change record sha256 ca85a9a3042ec40f2250bd764b07a3042c0efa426e2e70a537cd04eeb137a33e · PASS 459: the F3 wording cure seated over the v50 set entire (the shell's progress face reworded; the data carried byte-identical outside the header comment, the dashboard string, and this lineage block) — change-record-459.json sha256 ee94fec0343d061d5a966cd08df6aea3dc75b57b58cc596bea6a0afba5270fd9 · PASS 460: entry 8 restored to architecture C with the original master print (49d28d58…) under HQ's disposition; the §454 candidate superseded; entry 8's measurement state reset (battery not run on this print); the future-sentences register established with Mina's row 1 · PASS 461: the authorized ledger amendment executed (the gate's cell-08 ledger row returned to its class-c form under HQ's authorization; the cumulative amendment evidence + the frozen baseline stand in the gate) + entry 8's age-row clause re-frozen from the master print's own record (Factory F3, 2026-11-08); change-record-461.json sha256 79aaa2535e99f8ca452ee81ffb48b65402323b7b591d22849674a72575a25df2 · PASS 464: the battery re-run on entry 8's restored print (the §460 remainder discharged — panel 7 pass · 2 fail · 1 not run of 10; wider checks 4 pass · 5 fail · 1 not run of 10; the fields carry the measured states with scopes printed) + the moov verification (five copies, all faststart-clean at byte 32; no cure; the §431 attribution returned to HQ as a record discrepancy); change-record-464.json sha256 5e8cfa99a05e7846f175fe6a16cf5390e65e2b65aeb08264d53e31aef04cae6d · CELL-03 SEATING (PASS 467, 2026-11-17): the PASS 325 print (registry index 86 · sha256 7696d47b… · 91.033 s · faststart, moov at byte 32) seated at the stable media path under the class-\"b\" ledger amendment (HQ DISPOSITION, board lane-2026-11-15-068; the amendment stands in renderer_census_gate.py with its cumulative evidence record + frozen baseline); printCreatedAt 2026-11-12T10:52Z carried in the print's production record (the registry, print-age source (b)); the §460 measurement reset applied and the fleet battery re-run on the seated print (panel 9 pass · 1 fail · 0 not run · wider 3 pass · 5 fail · 2 not run) · change record: jobs/review-dashboard/runs/2026-11-17-pass467-cell03-seating-v54/work/change-record-467.json (sha256 0f65e7c40cd0ad4842c9b7069cf1c3deaf9b7fc14fb472ba28953d673bcdb5b8) · NOT SERVED until the lead fires under the release predicate.",
+ "seated": "v44 (PASS 443) — the v35 set stands entire: the v34 set stands entire: the v33 set stands: the 20 Pass 149 geometry-cure prints; the 3 designed thumbnail pairs seated for cells 01 · 04 · 21 (guard_thumbnail ARMED per certificate hq-2026-11-11-025); cells 03/20 blocked; COMMENT LOOP round stands (per-video comment history, baked snapshot 2026-11-11T22:41:38Z + live refresh on open · one canonical thread per video); PRINT AGE round stands (every video face carries an age badge computed in-page from the cell's printCreatedAt — source (c), repository commit 7340854ce8, 2026-11-11T01:31:15Z; jobs/review-dashboard/instructions/print-age.md) · STRENGTHENED OUTCOME INVARIANT round (PASS 261): phone outcomes derive from ENTRY_FACTS under the strengthened invariant (comment-loop.md §4) — a transition derives only from an authenticated, classified event whose target matches entry kind, concern, attempt and version and whose actor was authorized at event time; acceptance derives only from the designated reviewer's acceptance events, never from a disposition label, an acknowledgment, or a duplicate/successor link; provenance is a structured object {actor · source event · authority}; the second-person acceptance form renders only for the accepting reviewer herself — every other viewer reads the naming form; correction, withdrawal and supersession events fold into the derivation, and a withdrawn acceptance never remains the current outcome · PASS 301 DISPOSITIONS round (PASS 309): ENTRY_FACTS extended with Pass 301's three disposition records as classified events with structured provenance — issue:58's record created (IMPLEMENTED, verification established) · issue:56 IMPLEMENTED via its concern link to canonical issue:55 · Mina's acknowledgment 6808791607 classified NONE-REQUIRED · assigned dispositions 6 + 1 classification · acceptance events zero (reviewer acceptance pending throughout) · facts35 sha256 3be4cf11b1369c22b62311388c3c63e02d7849cccae446d882e7e1cc31fbc5ea · pass301 records sha256 fdd234c3c0f0b992 · DISPOSITION CAMPAIGN round (PASS 321): the triage queue's 39 dispositions baked — Passes 312-315 (D cycles: 17 concerns on their canonical threads) · Passes 316-320 (C cycles: 20 converged duplicates + C3's issue:33 on its canonical thread) · issue:44's standing HQ convergence event (§244: implementation = superseded — canonical thread #55) recorded · THREAD disposition objects seated on the 38 exported concerns in Pass 244's form · facts36: 73 entries · 131 events · assigned dispositions 43 + 2 classifications (issue:42 + Mina's acknowledgment 6808791607, both NONE-REQUIRED) · acceptance events zero (reviewer acceptance pending throughout) · derived distribution over the 44 requests: Being worked on 26 · This comment may no longer apply 7 · Needs your clarification 1 · Received for review 1 · Under discussion 1 · Ready for you to check 2 · No change requested 2 · Original version unavailable 3 · Tracked in another thread 1 · facts36 sha256 13507d0228286f08d7cb0d5e3ba705ed72313d0ad23da23fdcd2b133db7df5e1 · OPENING PLACEMENT round (PASS 427): the two §425 opening-exercise prints seated as review entries 23 · 24 (ids opening-425-a · opening-425-b — the declared OPENING container over the dlc001 root, EN hook-question + ES visual, configuration-only delta) in the standing review form · their MP4s are §427 FASTSTART re-exports through the cured export path (export_mux.py: -movflags +faststart + the measured moov gate; §425's prints carried moov at file end — 319,038 / 166,835 — the seated files carry moov at byte 32; decoded content framemd5-identical to §425's prints) · ENTRY_FACTS carried byte-identical (facts36 — the openings carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 22 → 24 · countingSeats 11 + seatedPrints 20 unchanged (the openings are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 792c68f5790315d09c7415d27dd646ddf0d40d14bc6f1e8aa5f30abb1cc8fe10 · TRANSITION PLACEMENT round (PASS 432): the three §426 transition sequences seated as review entries 25 · 26 · 27 (ids sequence-426-scene · sequence-426-bridge · sequence-426-mark — the declared TRANSITION container over the dlc001 root: SCENE (a sounded scene joint) · BRIDGE (a silent bridge) · MARK (a sounded mark), configuration-only delta) in the standing review form · their MP4s are §426's composed prints seated BYTE-IDENTICAL (digests verified against §426's change record at build; moov measured at byte 32 in all three by PASS 432 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the sequences carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 24 → 27 · countingSeats 11 + seatedPrints 20 unchanged (the sequences are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 5d7888cbd7d57ee52acff510a3292f5d4eb28d3e90e69e14022ad0a2413c66e4 · CHAIN PLACEMENT round 1 of 6 (PASS 443): the three §428 repeat-exercise sequences (the declared REPEAT container over the dlc001 root, composed by §428's sequence engine) seated as review entries 28 · 29 · 30 (ids sequence-428-repeat-full · sequence-428-chain · sequence-428-listen-say) in the standing review form · their MP4s are §428's composed prints seated BYTE-IDENTICAL (digests verified against §428's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 27 → 30 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 9fd8dc6c2106f528c28a4c2a1c43bca0b4b7aab8d32d8ac8811fd144fc3a3c9b · CHAIN PLACEMENT round 2 of 6 (PASS 443): the three §431 diagram sequences (the declared DIAGRAM container over the dlc001 root, composed by §431's sequence engine) seated as review entries 31 · 32 · 33 (ids sequence-431-chain-build-step · sequence-431-listen-say-talk-over · sequence-431-full-focus) in the standing review form · their MP4s are §431's composed prints seated BYTE-IDENTICAL (digests verified against §431's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 30 → 33 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 05a00042e9fd7bd5e8370064545e566bc464d80929b87cf1d3aefec80b854967 · CHAIN PLACEMENT round 3 of 6 (PASS 443): the three §434 ending sequences (the declared ENDING container over the dlc001 root, composed by §434's sequence engine) seated as review entries 34 · 35 · 36 (ids sequence-434-chain-recap-closing · sequence-434-chain-closing · sequence-434-ending-recap-closing-only) in the standing review form · their MP4s are §434's composed prints seated BYTE-IDENTICAL (digests verified against §434's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 33 → 36 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 c3dcfbdcb3f23521e479dcd6f6dac6e39cd0c5878f8a8e0417433db15e5c3e29 · CHAIN PLACEMENT round 4 of 6 (PASS 443): the three §436 final sequences (the declared FINAL container over the dlc001 root, composed by §436's sequence engine) seated as review entries 37 · 38 · 39 (ids sequence-436-chain-final · sequence-436-chain-closing-final · sequence-436-final-part) in the standing review form · their MP4s are §436's composed prints seated BYTE-IDENTICAL (digests verified against §436's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 36 → 39 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 2583fe59b8813064ea6f56820e773738be2a9af7c8ad31fa5f476035cfd9f484 · CHAIN PLACEMENT round 5 of 6 (PASS 443): the three §438 chains whose Turkish closing was cured by the timings-map re-point (over the dlc001 root, composed by §438's sequence engine) seated as review entries 40 · 41 · 42 (ids sequence-438-chain-closing-tr-final · sequence-438-e15-chain-closing-tr · sequence-438-ending-closing-tr-only) in the standing review form · their MP4s are §438's composed prints seated BYTE-IDENTICAL (digests verified against §438's change record at build; moov measured at byte 32 in all 3 by PASS 443 — faststart as composed, no re-export needed or made) · ENTRY_FACTS carried byte-identical (facts36 — the new entries carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 39 → 42 · countingSeats 11 + seatedPrints 20 unchanged (the new entries are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 87037c92cb1528f1b2077616f6480056d412c942bee3dec52c120ff05f8bd1b2 · CHAIN PLACEMENT round 6 of 6 (PASS 443): §440's dlc014 opening specimen (the OPENING of dlc014 'I read a book.', hook-question, composed by §440's asset-completion act on the sequence machine; the chain beyond the opening stands REFUSED-NAMED in §440's record) seated as review entry 43 (ids sequence-440-part-o) in the standing review form · their MP4s are §440's composed prints seated BYTE-IDENTICAL (digests verified against §440's change record at build; moov measured at byte 32 in the print by PASS 443 — faststart as composed, no re-export needed or made) · the intake cell completed at seating from §440's own placement record (15 card fields + one roster-key normalization, traced in the change record) · ENTRY_FACTS carried byte-identical (facts36 — the new entry carry no comment-loop facts; no GitHub issue exists for them; their history state is the page's native 'No thread yet' form) · cells 42 → 43 · countingSeats 11 + seatedPrints 20 unchanged (the new entry are review entries, not counting seats and not prints of the Pass-149 lineage) · change record sha256 11af1c514b31b67c593d1f12daef3603c796b6c0f11bb462d0f81527e5ba09e7 · CLASS-(2) CURE round (PASS 447): the unestablished quality claim (census-class2) deleted from the about fields of the 13 entries named in census-class2 (23 · 24 · 25 · 27 · 28 · 29 · 31 · 32 · 33 · 34 · 37 · 40 · 41) — intake-authoring words (§§426–438 placement programs + §427's hand-authored intake) contradicted by the entries' own state (exercise prints · inbuild · not approved; approvals 0/22); each about restored to the surface's proven sibling closing · the cure landed at the sources (staging + the seven intake inputs cured in place under preservation copies · the writer programs stratified · the about-wording rule + the about_claim_gate acceptance check added to the jobs' instruction layer) · no cells added or removed (cells 43) · ENTRY_FACTS carried byte-identical · change record sha256 ca85a9a3042ec40f2250bd764b07a3042c0efa426e2e70a537cd04eeb137a33e · PASS 459: the F3 wording cure seated over the v50 set entire (the shell's progress face reworded; the data carried byte-identical outside the header comment, the dashboard string, and this lineage block) — change-record-459.json sha256 ee94fec0343d061d5a966cd08df6aea3dc75b57b58cc596bea6a0afba5270fd9 · PASS 460: entry 8 restored to architecture C with the original master print (49d28d58…) under HQ's disposition; the §454 candidate superseded; entry 8's measurement state reset (battery not run on this print); the future-sentences register established with Mina's row 1 · PASS 461: the authorized ledger amendment executed (the gate's cell-08 ledger row returned to its class-c form under HQ's authorization; the cumulative amendment evidence + the frozen baseline stand in the gate) + entry 8's age-row clause re-frozen from the master print's own record (Factory F3, 2026-11-08); change-record-461.json sha256 79aaa2535e99f8ca452ee81ffb48b65402323b7b591d22849674a72575a25df2 · PASS 464: the battery re-run on entry 8's restored print (the §460 remainder discharged — panel 7 pass · 2 fail · 1 not run of 10; wider checks 4 pass · 5 fail · 1 not run of 10; the fields carry the measured states with scopes printed) + the moov verification (five copies, all faststart-clean at byte 32; no cure; the §431 attribution returned to HQ as a record discrepancy); change-record-464.json sha256 5e8cfa99a05e7846f175fe6a16cf5390e65e2b65aeb08264d53e31aef04cae6d · CELL-03 SEATING (PASS 467, 2026-11-17): the PASS 325 print (registry index 86 · sha256 7696d47b… · 91.033 s · faststart, moov at byte 32) seated at the stable media path under the class-\"b\" ledger amendment (HQ DISPOSITION, board lane-2026-11-15-068; the amendment stands in renderer_census_gate.py with its cumulative evidence record + frozen baseline); printCreatedAt 2026-11-12T10:52Z carried in the print's production record (the registry, print-age source (b)); the §460 measurement reset applied and the fleet battery re-run on the seated print (panel 9 pass · 1 fail · 0 not run · wider 3 pass · 5 fail · 2 not run) · change record: jobs/review-dashboard/runs/2026-11-17-pass467-cell03-seating-v54/work/change-record-467.json (sha256 0f65e7c40cd0ad4842c9b7069cf1c3deaf9b7fc14fb472ba28953d673bcdb5b8) · NOT SERVED until the lead fires under the release predicate. · ROSTER SEPARATION (PASS 472, 2026-11-17): the 43 entries organized into two labeled lists — THE BATCH (22 video entries; the batch header carries the owner's NOT REVIEW-READY standing line) + BUILDING-BLOCK SPECIMENS (21 proofs, collapsed behind the specimens gate, each card carrying a kind line naming what it proves) · no entry deleted · no entry field changed (the parsed entry delta is EMPTY; the whole-file delta confined to the header comment + this BATCH_META block) · the glance strip scoped to the batch · change record: jobs/review-dashboard/runs/2026-11-17-pass472-roster-separation/work/change-record-472.json (sha256 ad62298249777c0424eb53299ecdb68bb241ee5846f8df18ae317b5626d8155e) · NOT SERVED until the lead fires under the release predicate.",
  "cells": 43,
  "countingSeats": 11,
  "seatedPrints": 20
@@ -974,9 +1005,15 @@
     var list = document.getElementById("indexList");
     if (!list) return;
     CELLS.forEach(function(cell, i){
+      if (i === 0 || (isSpecimen(cell) && !isSpecimen(CELLS[i - 1]))) {
+        var hd = document.createElement("div");
+        hd.className = "indexhead";
+        hd.textContent = isSpecimen(cell) ? "BUILDING-BLOCK SPECIMENS — 21 proofs" : "THE BATCH — 22 video entries";
+        list.appendChild(hd);
+      }
       var row = document.createElement("button");
       row.type = "button";
-      row.className = "indexrow";
+      row.className = "indexrow" + (isSpecimen(cell) ? " spec" : "");
       row.innerHTML = '<span class="dot" style="background:' + (STATUS_COLORS[cell.status] || "#a2937d") + '"></span>' +
         '<span>' + esc(String(cell.n).padStart(2, "0")) + ' · ' + esc(cell.opening) + '</span>' +
         '<span class="istatus">' + esc(cell.statusLabel) + '</span>';
@@ -1610,6 +1647,43 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
     return null;
   }
 
+  /* PASS 472 — THE ROSTER SEPARATION: the 43 entries stand in two
+     labeled lists. isBatch is the one partition predicate (the batch =
+     the 22 batch06 cells); the feed build, the rail, the Index, the
+     counter and the settle leg all read it. SPEC_LABELS names what
+     each specimen proves — generated by PASS 472's build from its
+     change record; the table is data, not a derivation. */
+  function isBatch(cell){ return /^cell-\d+$/.test(cell.id); }
+  function isSpecimen(cell){ return !isBatch(cell); }
+  var SPEC_LABELS = {
+    "opening-425-a": "TEST PIECE — Opening · hook question",
+    "opening-425-b": "TEST PIECE — Opening · visual",
+    "sequence-426-scene": "TEST PIECE — Transition · scene",
+    "sequence-426-bridge": "TEST PIECE — Transition · bridge",
+    "sequence-426-mark": "TEST PIECE — Transition · mark",
+    "sequence-428-repeat-full": "TEST PIECE — Repeat · full",
+    "sequence-428-chain": "TEST PIECE — Sequence · five-block chain",
+    "sequence-428-listen-say": "TEST PIECE — Repeat · listen & say",
+    "sequence-431-chain-build-step": "TEST PIECE — Diagram · build-step",
+    "sequence-431-listen-say-talk-over": "TEST PIECE — Diagram · talk-over",
+    "sequence-431-full-focus": "TEST PIECE — Diagram · focus",
+    "sequence-434-chain-recap-closing": "TEST PIECE — Ending · recap-closing · the grown chain",
+    "sequence-434-chain-closing": "TEST PIECE — Ending · closing",
+    "sequence-434-ending-recap-closing-only": "TEST PIECE — Ending · recap-closing · isolated",
+    "sequence-436-chain-final": "TEST PIECE — Final · hold · full chain",
+    "sequence-436-chain-closing-final": "TEST PIECE — Final · hold · closing chain",
+    "sequence-436-final-part": "TEST PIECE — Final · hold · isolated",
+    "sequence-438-chain-closing-tr-final": "TEST PIECE — Ending · closing [EN·ES·TR] → Final",
+    "sequence-438-e15-chain-closing-tr": "TEST PIECE — Ending · closing [EN·ES·TR]",
+    "sequence-438-ending-closing-tr-only": "TEST PIECE — Ending · closing [EN·ES·TR] isolated",
+    "sequence-440-part-o": "TEST PIECE — Opening · hook-question · dlc014"
+  };
+  function kindLabel(cell){ return SPEC_LABELS[cell.id] || "TEST PIECE"; }
+  var BATCH_N = CELLS.filter(isBatch).length;
+  var SPEC_N = CELLS.length - BATCH_N;
+  var KIND_RANK = CELLS.map(function(cell, i){
+    return CELLS.slice(0, i + 1).filter(function(c){ return isBatch(c) === isBatch(cell); }).length;
+  });
   function buildScreen(cell){
     var screen = document.createElement("section");
     screen.className = "screen";
@@ -1696,6 +1770,7 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
 
     screen.innerHTML =
       '<div class="stage">' + stage + ageBadge(cell) + '</div>' +
+      (isSpecimen(cell) ? '<div class="kindline">' + esc(kindLabel(cell)) + '</div>' : '') +
       /* PASS 168 (HQ ADDITION #2): the panel is built COLLAPSED — the
          closed state is the initial DOM state, not a state reached
          after load. The progress face + actions stand OUTSIDE .pbody
@@ -1990,7 +2065,8 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
     CELLS.forEach(function(cell, i){
       var chip = document.createElement("button");
       chip.type = "button";
-      chip.className = "chip";
+      chip.className = "chip" + (isSpecimen(cell) ? " spec" : "");
+      if (isSpecimen(cell)) chip.hidden = true; /* PASS 472: specimen chips stand hidden until the gate opens */
       chip.innerHTML = '<span class="dot" style="background:' + (STATUS_COLORS[cell.status] || "#a2937d") + '"></span>' +
         esc(String(cell.n).padStart(2,"0")) + ' · ' + esc(cell.opening);
       chip.addEventListener("click", function(){ goTo(i); });
@@ -2000,12 +2076,25 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
 
   function goTo(i){
     i = Math.max(0, Math.min(CELLS.length - 1, i));
-    if (screenEls[i]) screenEls[i].scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!screenEls[i]) return;
+    if (screenEls[i].hidden) {
+      /* PASS 472: a jump to a hidden specimen opens the gate first */
+      openSpecimens();
+      requestAnimationFrame(function(){ screenEls[i].scrollIntoView({ behavior: "smooth", block: "start" }); });
+    } else {
+      screenEls[i].scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+  function goVisible(dir){
+    var j = current + dir;
+    while (j >= 0 && j < CELLS.length && screenEls[j] && screenEls[j].hidden) j += dir;
+    if (j >= 0 && j < CELLS.length) goTo(j);
   }
 
   function setCurrent(i){
+    if (screenEls[i] && screenEls[i].hidden) return; /* PASS 472: a hidden specimen is never the current screen */
     current = i;
-    counter.textContent = (i + 1) + " / " + CELLS.length;
+    counter.textContent = isBatch(CELLS[i]) ? ("Batch " + KIND_RANK[i] + " / " + BATCH_N) : ("Test piece " + KIND_RANK[i] + " / " + SPEC_N);
     counter.dataset.set = "1";
     syncCompactBar(); /* PASS 168: the compact bar mirrors this state */
     Array.prototype.forEach.call(rail.children, function(chip, j){
@@ -2019,7 +2108,73 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
     });
   }
 
-  CELLS.forEach(function(cell){ feed.appendChild(buildScreen(cell)); });
+  /* PASS 472 — the feed opens on THE BATCH: the batch header bar
+     stands first (not a .screen), then the 22 batch screens, then the
+     specimens gate, then the 21 specimen screens HIDDEN until the gate
+     opens. The surface's face is the batch list. */
+  var batchhead = document.createElement("div");
+  batchhead.className = "batchhead";
+  batchhead.innerHTML = '<div class="bh1">THE BATCH — 22 video entries</div>' +
+    '<div class="bh2">Not review-ready — fixes pending across the batch</div>' +
+    '<button type="button" class="specbtn" id="specJump">21 test pieces below ›</button>';
+  feed.appendChild(batchhead);
+  var gateEl = document.createElement("div");
+  gateEl.className = "specgate";
+  gateEl.innerHTML = '<div class="sg1">Building-block test pieces — 21</div>' +
+    '<div class="sg2">Proofs of the video building blocks — not batch videos</div>' +
+    '<div class="sg3">Runs 2 to 79 seconds each</div>' +
+    '<button type="button" class="specbtn" id="specToggle" aria-expanded="false">Show the test pieces</button>';
+  var specOpen = false;
+  var disclosureGen = 0;
+  CELLS.forEach(function(cell){
+    if (isSpecimen(cell) && !gateEl.parentNode) feed.appendChild(gateEl);
+    var scr = buildScreen(cell);
+    if (isSpecimen(cell)) scr.hidden = true;
+    feed.appendChild(scr);
+  });
+  if (!gateEl.parentNode) feed.appendChild(gateEl);
+  function openSpecimens(){
+    if (specOpen) return;
+    disclosureGen++;
+    specOpen = true;
+    screenEls.forEach(function(s, j){ if (isSpecimen(CELLS[j])) s.hidden = false; });
+    Array.prototype.forEach.call(rail.children, function(chip, j){ if (isSpecimen(CELLS[j])) chip.hidden = false; });
+    var b = document.getElementById("specToggle");
+    if (b) { b.textContent = "Hide the test pieces"; b.setAttribute("aria-expanded", "true"); }
+  }
+  /* THE COLLAPSE PROTOCOL (PASS 472 — one guarded transition, in
+     order): bump the generation + clear the settle timer · jump
+     without animation to batch 22 · close specimen sheets, pause
+     specimen media, drop the panel mode if it was a specimen's ·
+     hide the specimen screens + chips · commit current = batch 22
+     · focus the gate button. */
+  function closeSpecimens(){
+    if (!specOpen) return;
+    disclosureGen++;
+    clearTimeout(settleTimer);
+    clearTimeout(confirmTimer);
+    specOpen = false;
+    var b22 = screenEls[BATCH_N - 1];
+    if (b22) b22.scrollIntoView({ behavior: "auto", block: "start" });
+    screenEls.forEach(function(s, j){
+      if (!isSpecimen(CELLS[j])) return;
+      var sh = s.querySelector(".sheet"); if (sh) sh.classList.remove("open");
+      var v = s.querySelector("video"); if (v && !v.paused) v.pause();
+    });
+    if (isSpecimen(CELLS[current])) document.body.classList.remove("panel-open");
+    screenEls.forEach(function(s, j){ if (isSpecimen(CELLS[j])) s.hidden = true; });
+    Array.prototype.forEach.call(rail.children, function(chip, j){ if (isSpecimen(CELLS[j])) chip.hidden = true; });
+    var b = document.getElementById("specToggle");
+    if (b) { b.textContent = "Show the test pieces"; b.setAttribute("aria-expanded", "false"); }
+    setCurrent(BATCH_N - 1);
+    if (b) b.focus({ preventScroll: true });
+  }
+  document.getElementById("specJump").addEventListener("click", function(){
+    gateEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  document.getElementById("specToggle").addEventListener("click", function(){
+    if (specOpen) closeSpecimens(); else openSpecimens();
+  });
   /* the feed ends with a quiescent closing screen — no stage, no panel —
      a FULL VIEWPORT tall and itself a snap point, so at max scroll the
      viewport contains only this blank screen. It is NOT a .screen (the
@@ -2027,7 +2182,7 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
   var feedend = document.createElement("div");
   feedend.className = "feedend";
   feedend.setAttribute("aria-hidden", "true");
-  feedend.innerHTML = '<div class="femark">End of batch — 22 cells</div>';
+  feedend.innerHTML = '<div class="femark">End — 22 batch entries · 21 test pieces</div>';
   feed.appendChild(feedend);
   screenEls = Array.prototype.filter.call(feed.children, function(el){ return el.classList.contains("screen"); });
   buildRail();
@@ -2051,23 +2206,54 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
   window.addEventListener("load", fitChrome);
   setTimeout(fitChrome, 1200);
 
-  counter.textContent = CELLS.length ? ("1 / " + CELLS.length) : "0 / 0";
+  counter.textContent = CELLS.length ? ("Batch 1 / " + BATCH_N) : "0 / 0";
 
-  /* PASS 166 R1 — the counter derives from the RESTING SNAP POSITION
-     (spec §2.3.3): when scrolling settles, the current cell is the snap
-     point the feed rests on — scrollTop / viewport height, exactly.
-     (The v25 IntersectionObserver band lagged the rest position in
-     11/11 measured gestures; it is removed, not tuned.) */
+  /* PASS 472 — the settle leg re-based on MEASURED POSITIONS (the
+     PASS 166 R1 scrollTop/height form cannot price a feed that now
+     carries non-screen rests): the current screen is the VISIBLE
+     screen nearest the resting scroll position, with explicit
+     mappings for the non-screen rests — resting on the batch header
+     reads Batch 1 · resting on the specimens gate reads Batch 22 in
+     both disclosure states · resting on the feed-end reads the last
+     visible screen. A settle queued before a disclosure change is
+     invalid (the generation guard). A CONFIRMATION settle fires
+     650ms after the last scroll event on the same guard: a smooth
+     traverse can dwell at an intermediate snap point (the gate)
+     long enough for the 140ms settle to fire there, and the
+     confirmation re-prices the state from the final resting
+     position (§472 Verify V1's Index-click leg measured the
+     stale-counter case it cures). */
   var settleTimer = null;
+  var settleGen = 0;
+  var confirmTimer = null;
+  function feedPos(el){ return el.getBoundingClientRect().top - feed.getBoundingClientRect().top + feed.scrollTop; }
   function settleCurrent(){
-    var h = feed.clientHeight || 1;
-    var idx = Math.round(feed.scrollTop / h);
-    idx = Math.max(0, Math.min(CELLS.length - 1, idx));
-    if (idx !== current) setCurrent(idx);
+    if (settleGen !== disclosureGen) return;
+    var st = feed.scrollTop;
+    if (screenEls[0] && st < feedPos(screenEls[0]) - 1) { if (current !== 0) setCurrent(0); return; }
+    if (gateEl) {
+      var gt = feedPos(gateEl);
+      if (st >= gt - 1 && st < gt + gateEl.offsetHeight) { if (current !== BATCH_N - 1) setCurrent(BATCH_N - 1); return; }
+    }
+    if (feedend && st >= feedPos(feedend) - 1) {
+      var lv = specOpen ? CELLS.length - 1 : BATCH_N - 1;
+      if (current !== lv) setCurrent(lv);
+      return;
+    }
+    var best = -1, bd = Infinity;
+    screenEls.forEach(function(s, j){
+      if (s.hidden) return;
+      var d = Math.abs(feedPos(s) - st);
+      if (d < bd) { bd = d; best = j; }
+    });
+    if (best >= 0 && best !== current) setCurrent(best);
   }
   feed.addEventListener("scroll", function(){
     clearTimeout(settleTimer);
+    settleGen = disclosureGen;
     settleTimer = setTimeout(settleCurrent, 140);
+    clearTimeout(confirmTimer);
+    confirmTimer = setTimeout(settleCurrent, 650);
   }, { passive: true });
 
   /* PASS 166 B2 — keyboard navigation skips any event whose target is a
@@ -2076,8 +2262,8 @@ var PRINT_AGE_CLAUSE_B = 'the timestamp is carried in the print\'s production re
   document.addEventListener("keydown", function(e){
     var t = e.target;
     if (t && (t.tagName === "TEXTAREA" || t.tagName === "INPUT" || t.isContentEditable)) return;
-    if (e.key === "ArrowDown" || e.key === "PageDown") goTo(current + 1);
-    else if (e.key === "ArrowUp" || e.key === "PageUp") goTo(current - 1);
+    if (e.key === "ArrowDown" || e.key === "PageDown") goVisible(1);
+    else if (e.key === "ArrowUp" || e.key === "PageUp") goVisible(-1);
   });
 })();
 </script>
