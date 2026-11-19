@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T205 — Comparison: vote-to-grid conversion diagram</title>
+<style>
+  html,body{margin:0;padding:0;font-family:Georgia,'Times New Roman',serif;background:#e9e6df;}
+  h1{font-size:18px;text-align:center;margin:12px 8px 4px;}
+  #controls{display:flex;gap:8px;justify-content:center;padding:10px;flex-wrap:wrap;}
+  #controls button{font-size:16px;padding:10px 18px;min-height:44px;cursor:pointer;}
+  #clock{font-family:monospace;font-size:14px;align-self:center;}
+  #pair{display:flex;gap:12px;justify-content:center;align-items:flex-start;padding:0 12px 16px;}
+  .side{flex:1 1 0;max-width:640px;}
+  .side h2{font-size:15px;text-align:center;margin:6px 0;}
+  .side video,.side iframe{width:100%;aspect-ratio:16/9;border:1px solid #888;background:#f4f1ea;display:block;}
+  @media (max-width:700px){ #pair{flex-direction:column;align-items:stretch;} .side{max-width:none;} }
+</style>
+</head>
+<body>
+<h1>T205 — Vote-to-grid conversion diagram</h1>
+<div id="controls">
+  <button id="btnPlay" type="button">Play both</button>
+  <button id="btnRestart" type="button">Restart both</button>
+  <span id="clock">0 ms</span>
+</div>
+<div id="pair">
+  <div class="side">
+    <h2>ORIGINAL — Vox, “The Electoral College, explained” @ source 37.0–46.0 s (evidence frames: census 40 / 43 / 44 s)</h2>
+    <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+  </div>
+  <div class="side">
+    <h2>RECREATION — T205 vote-to-grid conversion diagram, parameterized (CONFIG-driven)</h2>
+    <iframe id="rec" src="recreation.html" title="T205 recreation"></iframe>
+  </div>
+</div>
+<script>
+(function(){
+  var video = document.getElementById("orig");
+  var frame = document.getElementById("rec");
+  var clockEl = document.getElementById("clock");
+  var btn = document.getElementById("btnPlay");
+  function recApi(){ try { return frame.contentWindow && frame.contentWindow.__T205; } catch(e){ return null; } }
+  function sync(){
+    var api = recApi();
+    if (api) api.setElapsed(video.currentTime * 1000);
+    clockEl.textContent = Math.round(video.currentTime * 1000) + " ms";
+  }
+  video.addEventListener("timeupdate", sync);
+  video.addEventListener("seeked", sync);
+  frame.addEventListener("load", sync);
+  btn.addEventListener("click", function(){
+    if (video.paused){ video.play(); btn.textContent = "Pause both"; }
+    else { video.pause(); btn.textContent = "Play both"; }
+  });
+  document.getElementById("btnRestart").addEventListener("click", function(){
+    video.currentTime = 0; sync(); video.play(); btn.textContent = "Pause both";
+  });
+})();
+</script>
+</body>
+</html>

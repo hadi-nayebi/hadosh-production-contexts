@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T204 comparison — original vs recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#1c1c1c;color:#eee;font-family:Georgia,'Times New Roman',serif;}
+  #wrap{max-width:1200px;margin:0 auto;padding:10px;}
+  #cols{display:flex;gap:12px;align-items:flex-start;}
+  .side{flex:1 1 0;min-width:0;}
+  .side h2{font-size:15px;margin:4px 0 8px;}
+  video{width:100%;display:block;background:#000;}
+  iframe{width:100%;aspect-ratio:16/10;border:0;display:block;background:#222;}
+  #controls{display:flex;gap:8px;align-items:center;padding:12px 0;flex-wrap:wrap;}
+  #controls button{font-size:16px;padding:10px 16px;cursor:pointer;}
+  #tlabel{font-size:14px;}
+  @media (max-width:640px){
+    #cols{flex-direction:column;}
+    .side{width:100%;}
+    #controls button{padding:12px 18px;}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="controls">
+    <button id="btnPlay" type="button">Play / Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+    <span id="tlabel">0 ms</span>
+  </div>
+  <div id="cols">
+    <div class="side">
+      <h2>ORIGINAL — specimen @ 30.8–37.0 s</h2>
+      <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+    </div>
+    <div class="side">
+      <h2>RECREATION — T204, parameterized</h2>
+      <iframe id="rec" src="recreation.html" title="T204 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+const vid = document.getElementById("orig");
+const frame = document.getElementById("rec");
+const tlabel = document.getElementById("tlabel");
+let playing = false;
+function recWin() { return frame.contentWindow; }
+function sync() {
+  const w = recWin();
+  if (w && w.__T204) {
+    const t = vid.currentTime * 1000;
+    w.__T204.setTime(Math.min(t, w.__T204.CONFIG.buildMs));
+    tlabel.textContent = Math.round(t) + " ms";
+  }
+  if (playing) requestAnimationFrame(sync);
+}
+document.getElementById("btnPlay").addEventListener("click", () => {
+  if (vid.paused) { vid.play(); playing = true; requestAnimationFrame(sync); }
+  else { vid.pause(); playing = false; }
+});
+document.getElementById("btnRestart").addEventListener("click", () => {
+  vid.currentTime = 0; vid.play(); playing = true; requestAnimationFrame(sync);
+});
+vid.addEventListener("seeked", sync);
+vid.addEventListener("timeupdate", () => { if (!playing) sync(); });
+frame.addEventListener("load", sync);
+</script>
+</body>
+</html>

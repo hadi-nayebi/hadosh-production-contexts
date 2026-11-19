@@ -1,0 +1,413 @@
+CONSUMER + DECISION PRICED: the practice job (Video Study lane), re-scoring wave - your score is one of five independent lens scores for the recreation build in front of you, filed into the artifact's permanent scores record.
+WORKING RECORD: you build from the technique facts + recreation source + build record below; your return is filed verbatim under the artifact's codex/attempt-2/ directory.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body - one line beginning "BODY-WRITE:" stating the finding that should change the job's instruction or this build. End your return with exactly one line: SCORE: <integer 0-100>. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: CONSTRUCTION PURITY only. Score 0-100 whether the recreation is a parameterized construction rather than a tracing/embedding of the specimen — a refusal-class judgment. Other lenses own motion, timing, reuse breadth, readability.
+Judge: is every visual (robot torso, LED plaque, printer slot, paper receipt, post/system cards, phone, chat bubbles) built from DOM/CSS code in this file? Is there ANY reference to specimen media (segment/source filenames, video/img tags, external URLs, image files, frame sequences, traced redraws)? Do all texts, timings and colors flow from the CONFIG object (the build's own grep found 0 hits for specimen-media patterns and 0 hex colors outside CONFIG — verify from the source, do not take it on trust)? Does the file load anything external at all?
+
+TECHNIQUE FACTS (packet P1, frame-evidenced): T21 Printed receipt gag + app switch @ 2:50-3:02. A paper USAGE RECEIPT prints out of the robot: a dot-matrix LED readout types the limit line (evidence t175: pale robot belly, gold trim, horizontal printer slot, black LED plaque reading "YOU'VE REACHED / YOUR USAGE LI..." mid-line) while the paper emerges from the belly slot, its printed rows appearing as it comes out. The held receipt is then shown beside a post card "I have an AI slop empire to build." and a system card "You're out of usage credits — Resets Saturday at 3:00 AM". The character then picks up a phone and types "Hey ChatGPT?" into the rival app's chat UI (evidence t178: tall black phone UI, Chat/Work tabs, green-outlined callout bubble "› Hey ChatGPT?"), and the rival app answers in its own voice: "Heyyy! What are we getting into today?" Why it works: the abstract limit becomes a physical artifact; the brand switch is told entirely through UI chrome, no narration; the switch restarts the story's engine (the loop mechanism).
+
+OWN-CHECK PACKET (neutral; check names + results only): node logic suite 50/50 PASS asserting effect mappings - default state mappings (typing starts after phone entry, completes at typedAt; reply completes before bridgeAt; bridge completes before loop end); feed-geometry row exposure from the slot-crossing condition on the shared geometry model; adversarial swaps (durationMs=1000 valid with typing/reply/bridge completing in order; phoneAt=11000 rejected and recorded with timeline unchanged; phoneAt=6000 accepted; 10 receipt lines tier-applied and within grown cap; 20 lines overflow-flagged; unbroken 40-char row wrapped in the geometry model; 180-char reply tier-applied; 300-char reply overflow-flagged; content swap lands per element); purity census over hex + rgba + hsl + named colors outside the CONFIG block = 0; specimen-media/external-load grep = 0; displayed-state geometry model at 360px and 390px (nested receipt text width from the percentage chain; complete receipt height within its window cap; type floors read from source clamps). PIXEL-UNVERIFIED: no rendered check stands behind the geometry; it rests on the deterministic source-bound suite.
+
+===== BUILD RECORD (score-blind excerpt) =====
+## Construction (what the source does)
+
+- Checkpoint table gains a bridge boundary: `{printStart:0, receiptFull:3200, cardsAt:4200, phoneAt:7000, typedAt:9500, replyAt:10300, bridgeAt:11200}` + `bridgeMs`. During the bridge the phone eases down, dims slightly, and a bridge badge (text from CONFIG) fades in — a visible reply-to-restart handoff before the loop restarts.
+- Timeline validation runs in a fixed order: (1) a duration override scales checkpoints AND subordinate durations by one ratio; (2) individual checkpoint overrides are collected; (3) subordinate durations are derived from neighbouring checkpoint spans (`cardsFade ≤ 0.8×(phoneAt−cardsAt)`, `phoneRise ≤ 0.8×(typedAt−phoneAt)`, `typeDelay ≤ 0.25×(typedAt−phoneAt)`, `replyPop ≤ 0.8×(bridgeAt−replyAt)`), exposed as `CONFIG.effective`; (4) ordering, minimum spans (`max(minSpanMs, durationMs × minSpanFraction)`), typing-window space (≥ half the phoneAt→typedAt span), reply completion before `bridgeAt`, and rise completion before `typedAt` are validated; (5) a failing override is rejected atomically and recorded in `CONFIG.rejectedOverrides` with its reason. The typing state reads the validated window directly — no collapsed denominator.
+- Paper feed: the receipt wrap is anchored under the slot and its height IS the fed length in pixels; the sheet translates down so its bottom edge sits exactly at the fed length, so window, translation and exposure all read the same `fedPx`. Row exposure comes from one shared geometry calculation (`paperModel`): padding (applied to the element from the same CONFIG keys the model reads), header height, per-row wrapped line counts (from `modelCharsPerLine`), and the overflow size tier all set each row's bottom offset; a row is exposed once its bottom edge has crossed the slot aperture (`fedPx > totalPx − row.bottom`).
+- Every color lives in CONFIG, in every syntax: the three shadow values are CONFIG keys (`shadowReceipt`, `shadowCard`, `shadowPhone`) applied from JS, and CSS carries no color syntax at all. The prompt prefix is `CONFIG.promptPrefix`, consumed by render. The accent colors the prompt outline and the active tab.
+- Shaping endpoints are CONFIG keys: `cardTravelPx`, `phoneTravelPct`, `replyScaleFrom`, `bridgeDipPct`.
+- Capacity policies are explicit CONFIG limits with state flags, never silent clipping: `receiptMaxLines` (past it, rows render at the `receiptOverflowScale` tier — modelled effective size stays ≥12px — and the window may grow to `receiptGrowCapHPct`; paper taller than the grown cap sets `receiptOverflow` in state), `replySoftChars`/`replyLongScale` (long-reply size tier), `replyMaxChars` (past it, `replyOverflow` is set in state). Receipt rows wrap on all widths with `overflow-wrap:anywhere`.
+- Typography: substantive copy resolves at 14–16px floors (LED 14, receipt header 15, receipt rows 14, post 16, system title 15, system reset 14, prompt 15, reply 14, input 14). At ≤520px the print column takes 94% width, the cards take a full-width row beneath it, and the phone takes `min(94%, 320px)`.
+
+## Own checks (node, source-bound; suite asserts effect mappings, not counts alone)
+
+50/50 PASS. Coverage: default state mappings (typing starts after phone entry, completes at `typedAt`; reply completes before `bridgeAt`; bridge completes before loop end; no reply before the question completes); feed geometry (row exposure priced from the slot-crossing condition on the shared model — the last row crosses first, the header last, every exposed row's displayed bottom sits below the slot; half-print fed length = half the paper); adversarial swaps — `durationMs=1000` (valid; typing starts after phone entry and finishes at the scaled `typedAt`; reply completes before the scaled bridge; bridge completes before the loop), `phoneAt=11000` (rejected explicitly and recorded; timeline unchanged; typing still completes before the reply), `phoneAt=6000` (accepted; typing inside its window), 10 receipt lines (overflow tier applied, fits the grown cap, modelled row floor ≥12px), 20 receipt lines (overflow flagged in state), one unbroken 40-char row (wrapped line count ≥2 in the geometry model, bottom priced from wrapped height), 180-char reply (long tier, no overflow flag), 300-char reply (overflow flagged), content swap (new lines/prompt/accent land per element); purity census covering hex + rgba + hsl + named colors outside the CONFIG block = 0, plus the specimen-media/external-load grep = 0; displayed-state geometry at 360px and 390px (nested receipt text width modelled from the actual percentage chain: stage padding → 94% column → 96% wrap → padding; complete default receipt height fits its window cap; `modelCharsPerLine` is conservative against the 14px fit at both widths); per-element type floors ≥14px for substantive copy read from the source clamps.
+
+PIXEL-UNVERIFIED: the agent-session Chrome render route is blocked fleet-wide, so no rendered hold check stands behind the geometry above; all of it rests on the deterministic source-bound suite. Printed as a limitation, not as modelled compliance.
+
+===== RECREATION SOURCE =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T21 — Printed receipt gag + app switch · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif}
+  #stage{position:relative;width:100%;height:100%;min-height:300px;overflow:hidden;padding:3%}
+  #leftCol{position:absolute;left:3%;top:4%;width:52%;height:92%;display:flex;flex-direction:column;align-items:center}
+  #torso{position:relative;width:88%;border-radius:46% 46% 42% 42%/22% 22% 14% 14%;padding:7% 6% 5%;flex:0 0 auto}
+  #led{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:clamp(14px,2.6vw,17px);
+       letter-spacing:.06em;border-radius:4px;padding:5px 7px;min-height:2.2em;line-height:1.25;word-break:break-word}
+  #trim{height:4px;border-radius:2px;margin:7% 0 5%}
+  #slot{height:16px;border-radius:8px;border:3px solid;margin:0 auto;width:52%}
+  #receiptWrap{width:96%;overflow:hidden;flex:0 0 auto}
+  #receipt{font-family:ui-monospace,Menlo,Consolas,monospace;padding:8px 9px 12px;text-align:center}
+  #receiptHead{font-weight:700;font-size:clamp(15px,2.8vw,17px);letter-spacing:.08em;border-bottom:1px dashed;padding-bottom:5px;margin-bottom:5px}
+  .rline{font-size:clamp(14px,2.4vw,15px);line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+  #cardsCol{position:absolute;right:3%;top:9%;width:40%;display:flex;flex-direction:column;gap:12px}
+  .card{border-radius:10px;padding:12px 13px;line-height:1.4}
+  #postCard{font-size:clamp(16px,3vw,19px);font-weight:700}
+  #sysTitle{font-size:clamp(15px,2.8vw,17px);font-weight:700}
+  #sysReset{font-size:clamp(14px,2.4vw,15px);margin-top:4px;opacity:.85}
+  #phone{position:absolute;left:50%;top:5%;width:min(62%,290px);height:90%;border-radius:26px;
+         border:3px solid;display:flex;flex-direction:column;overflow:hidden}
+  #phoneHead{display:flex;justify-content:center;gap:8px;padding:9px 0 7px;font-size:clamp(13px,2.2vw,14px)}
+  .tab{border-radius:10px;padding:2px 12px}
+  #chatArea{flex:1;display:flex;flex-direction:column;gap:10px;padding:12px 10px;overflow:hidden}
+  #promptBubble{align-self:flex-start;max-width:88%;border:2px solid;border-radius:12px;padding:7px 10px;
+                font-size:clamp(15px,2.8vw,16px);font-weight:700}
+  #replyBubble{align-self:flex-start;max-width:92%;border-radius:12px;padding:8px 11px;
+               font-size:clamp(14px,2.6vw,15px);line-height:1.4}
+  #bridgeBadge{align-self:center;border-radius:12px;padding:6px 12px;font-size:clamp(13px,2.4vw,14px);font-weight:700}
+  #inputBar{margin:0 10px 12px;border-radius:16px;padding:8px 12px;font-size:clamp(14px,2.5vw,15px);min-height:1.4em}
+  @media (max-width:520px){
+    #leftCol{width:94%;height:56%}
+    #cardsCol{width:94%;left:3%;right:auto;top:63%}
+    #phone{width:min(94%,320px)}
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="leftCol">
+    <div id="torso">
+      <div id="led"></div>
+      <div id="trim"></div>
+      <div id="slot"></div>
+    </div>
+    <div id="receiptWrap"><div id="receipt"><div id="receiptHead"></div><div id="receiptLines"></div></div></div>
+  </div>
+  <div id="cardsCol">
+    <div class="card" id="postCard"></div>
+    <div class="card" id="sysCard"><div id="sysTitle"></div><div id="sysReset"></div></div>
+  </div>
+  <div id="phone">
+    <div id="phoneHead"><span class="tab" id="tabA"></span><span class="tab" id="tabB"></span></div>
+    <div id="chatArea"><div id="promptBubble"></div><div id="replyBubble"></div><div id="bridgeBadge"></div></div>
+    <div id="inputBar"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; the logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: phase boundaries come from the checkpoints table
+   (printStart / receiptFull / cardsAt / phoneAt / typedAt / replyAt / bridgeAt);
+   subordinate durations are SCALED with duration overrides and DERIVED from
+   neighbouring checkpoint spans at validation time (see validateTimeline). */
+const CONFIG = {
+  durationMs: 12000,
+  checkpoints: { printStart: 0, receiptFull: 3200, cardsAt: 4200, phoneAt: 7000, typedAt: 9500, replyAt: 10300, bridgeAt: 11200 },
+  ledFraction: 0.65,
+  cardsFadeMs: 600,
+  phoneRiseMs: 700,
+  typeDelayMs: 400,
+  replyPopMs: 350,
+  bridgeMs: 400,
+  /* validation: minimum span between consecutive checkpoints, as a fraction of durationMs, and in ms */
+  minSpanFraction: 0.003,
+  minSpanMs: 30,
+  /* shaping endpoints (render reads these, never literals) */
+  cardTravelPx: 18,
+  phoneTravelPct: 60,
+  replyScaleFrom: 0.7,
+  bridgeDipPct: 6,
+  /* receipt feed geometry (px, at the modelled reference size) */
+  receiptPadTopPx: 8,
+  receiptPadBottomPx: 12,
+  receiptHeaderHPx: 31,
+  receiptLineHPx: 22.5,
+  modelCharsPerLine: 24,
+  modelColumnHPx: 430,
+  receiptMaxHPct: 46,
+  receiptGrowCapHPct: 64,
+  /* capacity policies (explicit limits; overflow is flagged in state, never silent) */
+  receiptMaxLines: 8,
+  receiptOverflowScale: 0.86,       /* row-size tier past receiptMaxLines; effective floor stays >= 12px at 14px base */
+  replySoftChars: 60,
+  replyLongScale: 0.9,
+  replyMaxChars: 220,
+  promptPrefix: "\u203A ",
+  bridgeText: "\u21BB new thread \u2014 same engine",
+  ledText: "YOU'VE REACHED YOUR USAGE LIMIT",
+  receiptHeader: "USAGE RECEIPT",
+  receiptLines: ["Plan: MAX", "Credits used: 100%", "Status: LIMIT HIT", "Thank you for building"],
+  postText: "I have an AI slop empire to build.",
+  systemTitle: "You're out of usage credits",
+  systemReset: "Resets Saturday at 3:00 AM",
+  tabA: "Chat",
+  tabB: "Work",
+  phonePrompt: "Hey ChatGPT?",
+  phoneReply: "Heyyy! What are we getting into today?",
+  bg: "#17130f",
+  torsoColor: "#b9bcc4",
+  trimColor: "#d99a2b",
+  ledBg: "#0a0a0a",
+  ledColor: "#ffb62e",
+  paperColor: "#f7f2e4",
+  paperInk: "#23201a",
+  cardBg: "#fdfcf8",
+  cardInk: "#191919",
+  sysBg: "#2b2f36",
+  sysInk: "#f2f4f8",
+  accent: "#37c84f",
+  phoneBg: "#000000",
+  phoneInk: "#f4f4f4",
+  phoneFrame: "#3a3f46",
+  replyBg: "#1d1f24",
+  inputBg: "#17181c",
+  shadowReceipt: "rgba(0,0,0,.35)",
+  shadowCard: "rgba(0,0,0,.3)",
+  shadowPhone: "rgba(0,0,0,.45)",
+  effective: null,
+  rejectedOverrides: [],
+  validationErrors: []
+};
+
+/* ===== Timeline validation (execution order is part of the construction) =====
+   1. duration override scales checkpoints AND subordinate durations by one ratio.
+   2. individual checkpoint overrides are collected.
+   3. subordinate durations are derived from neighbouring checkpoint spans.
+   4. ordering + minimum spans + completion/hold space are validated.
+   5. an override that fails validation is rejected ATOMICALLY (never applied)
+      and recorded in CONFIG.rejectedOverrides with its reason. */
+function validateTimeline(cfg){
+  const cp = cfg.checkpoints, errs = [];
+  const order = ["printStart","receiptFull","cardsAt","phoneAt","typedAt","replyAt","bridgeAt"];
+  const minSpan = Math.max(cfg.minSpanMs, cfg.durationMs * cfg.minSpanFraction);
+  for (let i = 1; i < order.length; i++)
+    if (!(cp[order[i]] - cp[order[i-1]] >= minSpan)) errs.push(order[i] + " too close after " + order[i-1]);
+  if (!(cfg.durationMs - cp.bridgeAt >= minSpan)) errs.push("bridgeAt leaves no hold before loop end");
+  const eff = {};
+  eff.cardsFadeMs = Math.min(cfg.cardsFadeMs, 0.8 * (cp.phoneAt - cp.cardsAt));
+  eff.phoneRiseMs = Math.min(cfg.phoneRiseMs, 0.8 * (cp.typedAt - cp.phoneAt));
+  eff.typeDelayMs = Math.min(cfg.typeDelayMs, 0.25 * (cp.typedAt - cp.phoneAt));
+  eff.replyPopMs = Math.min(cfg.replyPopMs, 0.8 * (cp.bridgeAt - cp.replyAt));
+  eff.bridgeMs = Math.min(cfg.bridgeMs, cfg.durationMs - cp.bridgeAt);
+  const typeStart = cp.phoneAt + eff.typeDelayMs, typeWindow = cp.typedAt - typeStart;
+  if (!(typeWindow >= 0.5 * (cp.typedAt - cp.phoneAt))) errs.push("typing window under half the phone-to-typed span");
+  if (!(cp.replyAt + eff.replyPopMs <= cp.bridgeAt)) errs.push("reply does not complete before the bridge");
+  if (!(cp.phoneAt + eff.phoneRiseMs <= cp.typedAt)) errs.push("phone rise does not complete before typing completes");
+  eff.typeStart = typeStart; eff.typeWindow = typeWindow;
+  cfg.effective = eff;
+  return errs;
+}
+
+/* URL overrides (swap test / reuse):
+   ?prompt=...&reply=...&post=...&reset=...&led=...  ·  ?accent=<hex>&paper=<hex>
+   ?phoneAt=6000 (one checkpoint)  ·  ?durationMs=10000 (checkpoints + subordinate durations scale)
+   ?lines=Alpha;Beta;Gamma (receipt lines) */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  const baseDuration = CONFIG.durationMs;
+  const dReq = num("durationMs");
+  if (dReq !== null){
+    if (dReq >= 1000){
+      CONFIG.durationMs = dReq;
+      const r = dReq / baseDuration;
+      for (const k in CONFIG.checkpoints) CONFIG.checkpoints[k] = Math.round(CONFIG.checkpoints[k] * r);
+      CONFIG.cardsFadeMs = Math.round(CONFIG.cardsFadeMs * r);
+      CONFIG.phoneRiseMs = Math.round(CONFIG.phoneRiseMs * r);
+      CONFIG.typeDelayMs = Math.round(CONFIG.typeDelayMs * r);
+      CONFIG.replyPopMs = Math.round(CONFIG.replyPopMs * r);
+      CONFIG.bridgeMs = Math.round(CONFIG.bridgeMs * r);
+    } else CONFIG.rejectedOverrides.push({ key: "durationMs", value: dReq, reason: "below the 1000ms minimum" });
+  }
+  const cpKeys = ["printStart","receiptFull","cardsAt","phoneAt","typedAt","replyAt","bridgeAt"];
+  for (const k of cpKeys){
+    const v = num(k);
+    if (v === null) continue;
+    const saved = CONFIG.checkpoints[k];
+    CONFIG.checkpoints[k] = v;
+    const errs = validateTimeline(CONFIG);
+    if (errs.length){ CONFIG.checkpoints[k] = saved; CONFIG.rejectedOverrides.push({ key: k, value: v, reason: errs.join("; ") }); }
+  }
+  CONFIG.validationErrors = validateTimeline(CONFIG);
+  if (q.get("led")) CONFIG.ledText = q.get("led");
+  if (q.get("post")) CONFIG.postText = q.get("post");
+  if (q.get("prompt")) CONFIG.phonePrompt = q.get("prompt");
+  if (q.get("reply")) CONFIG.phoneReply = q.get("reply");
+  if (q.get("reset")) CONFIG.systemReset = q.get("reset");
+  if (q.get("header")) CONFIG.receiptHeader = q.get("header");
+  if (q.get("lines")) CONFIG.receiptLines = q.get("lines").split(";");
+  if (q.get("accent")) CONFIG.accent = q.get("accent");
+  if (q.get("paper")) CONFIG.paperColor = q.get("paper");
+  if (q.get("ledColor")) CONFIG.ledColor = q.get("ledColor");
+})();
+
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+/* Receipt paper geometry: wrapped line counts, overflow tier and padding all enter
+   the SAME calculation that prices row exposure — a row is exposed when the fed
+   length reaches its bottom offset on the moving paper. */
+function paperModel(cfg){
+  const scale = cfg.receiptLines.length > cfg.receiptMaxLines ? cfg.receiptOverflowScale : 1;
+  const lineH = cfg.receiptLineHPx * scale;
+  const rows = [{ top: cfg.receiptPadTopPx, bottom: cfg.receiptPadTopPx + cfg.receiptHeaderHPx }];
+  let y = cfg.receiptPadTopPx + cfg.receiptHeaderHPx;
+  for (const line of cfg.receiptLines){
+    const wrapped = Math.max(1, Math.ceil(line.length / cfg.modelCharsPerLine));
+    rows.push({ top: y, bottom: y + wrapped * lineH, wrapped: wrapped });
+    y += wrapped * lineH;
+  }
+  const totalPx = y + cfg.receiptPadBottomPx;
+  const windowCapPx = cfg.modelColumnHPx * (cfg.receiptLines.length > cfg.receiptMaxLines ? cfg.receiptGrowCapHPct : cfg.receiptMaxHPct) / 100;
+  return { rows: rows, totalPx: totalPx, scale: scale, windowCapPx: windowCapPx, overflow: totalPx > windowCapPx };
+}
+
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  if (!cfg.effective) validateTimeline(cfg);
+  const eff = cfg.effective;
+  const printSpan = cp.receiptFull - cp.printStart;
+  const printProgress = clamp01((t - cp.printStart) / printSpan);
+  const ledChars = Math.floor(clamp01((t - cp.printStart) / (printSpan * cfg.ledFraction)) * cfg.ledText.length);
+  const pm = paperModel(cfg);
+  const fedPx = printProgress * pm.totalPx;
+  /* the sheet translates down through the slot: its bottom edge sits at fedPx and
+     a row is exposed once its own bottom edge has crossed the slot aperture
+     (fedPx past totalPx - row.bottom on the shared geometry model) */
+  const exposedRows = pm.rows.map(r => fedPx > pm.totalPx - r.bottom);
+  let visibleRows = 0;
+  for (const e of exposedRows) if (e) visibleRows++;
+  const cardsProgress = clamp01((t - cp.cardsAt) / eff.cardsFadeMs);
+  const phoneProgress = clamp01((t - cp.phoneAt) / eff.phoneRiseMs);
+  const typedChars = eff.typeWindow > 0 ? Math.floor(clamp01((t - eff.typeStart) / eff.typeWindow) * cfg.phonePrompt.length) : 0;
+  const replyProgress = clamp01((t - cp.replyAt) / eff.replyPopMs);
+  const bridgeProgress = clamp01((t - cp.bridgeAt) / eff.bridgeMs);
+  const phase = t < cp.cardsAt ? 1 : (t < cp.phoneAt ? 2 : 3);
+  return { t: t, phase: phase, printProgress: printProgress, ledChars: ledChars,
+           visibleRows: visibleRows, exposedRows: exposedRows, fedPx: fedPx, paperTotalPx: pm.totalPx, receiptOverflow: pm.overflow,
+           cardsProgress: cardsProgress, phoneProgress: phoneProgress, typedChars: typedChars,
+           replyProgress: replyProgress, bridgeProgress: bridgeProgress,
+           replyOverflow: cfg.phoneReply.length > cfg.replyMaxChars,
+           replyTier: cfg.phoneReply.length > cfg.replySoftChars ? cfg.replyLongScale : 1,
+           valid: cfg.validationErrors.length === 0 };
+}
+
+const stage = document.getElementById("stage");
+const led = document.getElementById("led");
+const torso = document.getElementById("torso");
+const trim = document.getElementById("trim");
+const slot = document.getElementById("slot");
+const receiptWrap = document.getElementById("receiptWrap");
+const receipt = document.getElementById("receipt");
+const receiptHead = document.getElementById("receiptHead");
+const receiptLines = document.getElementById("receiptLines");
+const cardsCol = document.getElementById("cardsCol");
+const postCard = document.getElementById("postCard");
+const sysCard = document.getElementById("sysCard");
+const sysTitle = document.getElementById("sysTitle");
+const sysReset = document.getElementById("sysReset");
+const phone = document.getElementById("phone");
+const tabA = document.getElementById("tabA");
+const tabB = document.getElementById("tabB");
+const promptBubble = document.getElementById("promptBubble");
+const replyBubble = document.getElementById("replyBubble");
+const bridgeBadge = document.getElementById("bridgeBadge");
+const inputBar = document.getElementById("inputBar");
+
+document.body.style.background = CONFIG.bg;
+stage.style.background = CONFIG.bg;
+torso.style.background = CONFIG.torsoColor;
+trim.style.background = CONFIG.trimColor;
+slot.style.borderColor = CONFIG.trimColor;
+slot.style.background = CONFIG.ledBg;
+led.style.background = CONFIG.ledBg;
+led.style.color = CONFIG.ledColor;
+receipt.style.background = CONFIG.paperColor;
+receipt.style.color = CONFIG.paperInk;
+receipt.style.boxShadow = "0 3px 8px " + CONFIG.shadowReceipt;
+receipt.style.padding = CONFIG.receiptPadTopPx + "px 9px " + CONFIG.receiptPadBottomPx + "px";
+receiptHead.textContent = CONFIG.receiptHeader;
+postCard.style.background = CONFIG.cardBg;
+postCard.style.color = CONFIG.cardInk;
+postCard.style.boxShadow = "0 3px 10px " + CONFIG.shadowCard;
+postCard.textContent = CONFIG.postText;
+sysCard.style.background = CONFIG.sysBg;
+sysCard.style.color = CONFIG.sysInk;
+sysCard.style.boxShadow = "0 3px 10px " + CONFIG.shadowCard;
+sysTitle.textContent = CONFIG.systemTitle;
+sysReset.textContent = CONFIG.systemReset;
+phone.style.background = CONFIG.phoneBg;
+phone.style.color = CONFIG.phoneInk;
+phone.style.borderColor = CONFIG.phoneFrame;
+phone.style.boxShadow = "0 8px 24px " + CONFIG.shadowPhone;
+tabA.textContent = CONFIG.tabA;
+tabB.textContent = CONFIG.tabB;
+tabA.style.background = CONFIG.accent;
+tabB.style.background = CONFIG.replyBg;
+promptBubble.style.borderColor = CONFIG.accent;
+promptBubble.style.color = CONFIG.phoneInk;
+promptBubble.style.background = CONFIG.phoneBg;
+replyBubble.style.background = CONFIG.replyBg;
+replyBubble.style.color = CONFIG.phoneInk;
+replyBubble.textContent = CONFIG.phoneReply;
+bridgeBadge.textContent = CONFIG.bridgeText;
+bridgeBadge.style.background = CONFIG.replyBg;
+bridgeBadge.style.color = CONFIG.phoneInk;
+bridgeBadge.style.border = "2px solid " + CONFIG.accent;
+inputBar.style.background = CONFIG.inputBg;
+
+const lineEls = [];
+for (let i = 0; i < CONFIG.receiptLines.length; i++){
+  const d = document.createElement("div");
+  d.className = "rline";
+  d.textContent = CONFIG.receiptLines[i];
+  if (CONFIG.receiptLines.length > CONFIG.receiptMaxLines) d.style.fontSize = "calc(clamp(14px,2.4vw,15px) * " + CONFIG.receiptOverflowScale + ")";
+  receiptLines.appendChild(d); lineEls.push(d);
+}
+if (CONFIG.phoneReply.length > CONFIG.replySoftChars)
+  replyBubble.style.fontSize = "calc(clamp(14px,2.6vw,15px) * " + CONFIG.replyLongScale + ")";
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  led.textContent = CONFIG.ledText.slice(0, s.ledChars);
+  /* the paper itself translates through the slot aperture: the wrap is anchored
+     under the slot, its height IS the fed length in pixels, and the sheet slides
+     down so its bottom edge sits exactly at the fed length — window, translation
+     and row exposure all read the same fedPx on the same geometry model */
+  receiptWrap.style.height = s.fedPx + "px";
+  receipt.style.transform = "translateY(" + (s.fedPx - s.paperTotalPx) + "px)";
+  receiptHead.style.visibility = s.exposedRows[0] ? "visible" : "hidden";
+  for (let i = 0; i < lineEls.length; i++)
+    lineEls[i].style.visibility = s.exposedRows[i + 1] ? "visible" : "hidden";
+  cardsCol.style.opacity = String(s.cardsProgress);
+  cardsCol.style.transform = "translateY(" + ((1 - s.cardsProgress) * CONFIG.cardTravelPx) + "px)";
+  const dip = s.bridgeProgress * CONFIG.bridgeDipPct;
+  phone.style.opacity = String(s.phoneProgress);
+  phone.style.transform = "translate(-50%, " + ((1 - s.phoneProgress) * CONFIG.phoneTravelPct + dip) + "%)";
+  const typed = CONFIG.phonePrompt.slice(0, s.typedChars);
+  promptBubble.textContent = s.typedChars > 0 ? CONFIG.promptPrefix + typed : "";
+  promptBubble.style.visibility = s.typedChars > 0 ? "visible" : "hidden";
+  inputBar.textContent = typed;
+  replyBubble.style.opacity = String(s.replyProgress);
+  replyBubble.style.transform = "scale(" + (CONFIG.replyScaleFrom + (1 - CONFIG.replyScaleFrom) * s.replyProgress) + ")";
+  replyBubble.style.visibility = s.replyProgress > 0 ? "visible" : "hidden";
+  bridgeBadge.style.opacity = String(s.bridgeProgress);
+  bridgeBadge.style.visibility = s.bridgeProgress > 0 ? "visible" : "hidden";
+  return s;
+}
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T21 — Printed receipt gag + app switch · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif}
+  #stage{position:relative;width:100%;height:100%;min-height:300px;overflow:hidden;padding:3%}
+  #leftCol{position:absolute;left:3%;top:4%;width:52%;height:92%;display:flex;flex-direction:column;align-items:center}
+  #torso{position:relative;width:88%;border-radius:46% 46% 42% 42%/22% 22% 14% 14%;padding:7% 6% 5%;flex:0 0 auto}
+  #led{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:clamp(14px,2.6vw,17px);
+       letter-spacing:.06em;border-radius:4px;padding:5px 7px;min-height:2.2em;line-height:1.25;word-break:break-word}
+  #trim{height:4px;border-radius:2px;margin:7% 0 5%}
+  #slot{height:16px;border-radius:8px;border:3px solid;margin:0 auto;width:52%}
+  #receiptWrap{width:96%;overflow:hidden;flex:0 0 auto}
+  #receipt{font-family:ui-monospace,Menlo,Consolas,monospace;padding:8px 9px 12px;text-align:center}
+  #receiptHead{font-weight:700;font-size:clamp(15px,2.8vw,17px);letter-spacing:.08em;border-bottom:1px dashed;padding-bottom:5px;margin-bottom:5px}
+  .rline{font-size:clamp(14px,2.4vw,15px);line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+  #cardsCol{position:absolute;right:3%;top:9%;width:40%;display:flex;flex-direction:column;gap:12px}
+  .card{border-radius:10px;padding:12px 13px;line-height:1.4}
+  #postCard{font-size:clamp(16px,3vw,19px);font-weight:700}
+  #sysTitle{font-size:clamp(15px,2.8vw,17px);font-weight:700}
+  #sysReset{font-size:clamp(14px,2.4vw,15px);margin-top:4px;opacity:.85}
+  #phone{position:absolute;left:50%;top:5%;width:min(62%,290px);height:90%;border-radius:26px;
+         border:3px solid;display:flex;flex-direction:column;overflow:hidden}
+  #phoneHead{display:flex;justify-content:center;gap:8px;padding:9px 0 7px;font-size:clamp(13px,2.2vw,14px)}
+  .tab{border-radius:10px;padding:2px 12px}
+  #chatArea{flex:1;display:flex;flex-direction:column;gap:10px;padding:12px 10px;overflow:hidden}
+  #promptBubble{align-self:flex-start;max-width:88%;border:2px solid;border-radius:12px;padding:7px 10px;
+                font-size:clamp(15px,2.8vw,16px);font-weight:700}
+  #replyBubble{align-self:flex-start;max-width:92%;border-radius:12px;padding:8px 11px;
+               font-size:clamp(14px,2.6vw,15px);line-height:1.4}
+  #bridgeBadge{align-self:center;border-radius:12px;padding:6px 12px;font-size:clamp(13px,2.4vw,14px);font-weight:700}
+  #inputBar{margin:0 10px 12px;border-radius:16px;padding:8px 12px;font-size:clamp(14px,2.5vw,15px);min-height:1.4em}
+  @media (max-width:520px){
+    #leftCol{width:94%;height:56%}
+    #cardsCol{width:94%;left:3%;right:auto;top:63%}
+    #phone{width:min(94%,320px)}
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="leftCol">
+    <div id="torso">
+      <div id="led"></div>
+      <div id="trim"></div>
+      <div id="slot"></div>
+    </div>
+    <div id="receiptWrap"><div id="receipt"><div id="receiptHead"></div><div id="receiptLines"></div></div></div>
+  </div>
+  <div id="cardsCol">
+    <div class="card" id="postCard"></div>
+    <div class="card" id="sysCard"><div id="sysTitle"></div><div id="sysReset"></div></div>
+  </div>
+  <div id="phone">
+    <div id="phoneHead"><span class="tab" id="tabA"></span><span class="tab" id="tabB"></span></div>
+    <div id="chatArea"><div id="promptBubble"></div><div id="replyBubble"></div><div id="bridgeBadge"></div></div>
+    <div id="inputBar"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; the logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: phase boundaries come from the checkpoints table
+   (printStart / receiptFull / cardsAt / phoneAt / typedAt / replyAt / bridgeAt);
+   subordinate durations are SCALED with duration overrides and DERIVED from
+   neighbouring checkpoint spans at validation time (see validateTimeline). */
+const CONFIG = {
+  durationMs: 12000,
+  checkpoints: { printStart: 0, receiptFull: 3200, cardsAt: 4200, phoneAt: 7000, typedAt: 9500, replyAt: 10300, bridgeAt: 11200 },
+  ledFraction: 0.65,
+  cardsFadeMs: 600,
+  phoneRiseMs: 700,
+  typeDelayMs: 400,
+  replyPopMs: 350,
+  bridgeMs: 400,
+  /* validation: minimum span between consecutive checkpoints, as a fraction of durationMs, and in ms */
+  minSpanFraction: 0.003,
+  minSpanMs: 30,
+  /* shaping endpoints (render reads these, never literals) */
+  cardTravelPx: 18,
+  phoneTravelPct: 60,
+  replyScaleFrom: 0.7,
+  bridgeDipPct: 6,
+  /* receipt feed geometry (px, at the modelled reference size) */
+  receiptPadTopPx: 8,
+  receiptPadBottomPx: 12,
+  receiptHeaderHPx: 31,
+  receiptLineHPx: 22.5,
+  modelCharsPerLine: 24,
+  modelColumnHPx: 430,
+  receiptMaxHPct: 46,
+  receiptGrowCapHPct: 64,
+  /* capacity policies (explicit limits; overflow is flagged in state, never silent) */
+  receiptMaxLines: 8,
+  receiptOverflowScale: 0.86,       /* row-size tier past receiptMaxLines; effective floor stays >= 12px at 14px base */
+  replySoftChars: 60,
+  replyLongScale: 0.9,
+  replyMaxChars: 220,
+  promptPrefix: "\u203A ",
+  bridgeText: "\u21BB new thread \u2014 same engine",
+  ledText: "YOU'VE REACHED YOUR USAGE LIMIT",
+  receiptHeader: "USAGE RECEIPT",
+  receiptLines: ["Plan: MAX", "Credits used: 100%", "Status: LIMIT HIT", "Thank you for building"],
+  postText: "I have an AI slop empire to build.",
+  systemTitle: "You're out of usage credits",
+  systemReset: "Resets Saturday at 3:00 AM",
+  tabA: "Chat",
+  tabB: "Work",
+  phonePrompt: "Hey ChatGPT?",
+  phoneReply: "Heyyy! What are we getting into today?",
+  bg: "#17130f",
+  torsoColor: "#b9bcc4",
+  trimColor: "#d99a2b",
+  ledBg: "#0a0a0a",
+  ledColor: "#ffb62e",
+  paperColor: "#f7f2e4",
+  paperInk: "#23201a",
+  cardBg: "#fdfcf8",
+  cardInk: "#191919",
+  sysBg: "#2b2f36",
+  sysInk: "#f2f4f8",
+  accent: "#37c84f",
+  phoneBg: "#000000",
+  phoneInk: "#f4f4f4",
+  phoneFrame: "#3a3f46",
+  replyBg: "#1d1f24",
+  inputBg: "#17181c",
+  shadowReceipt: "rgba(0,0,0,.35)",
+  shadowCard: "rgba(0,0,0,.3)",
+  shadowPhone: "rgba(0,0,0,.45)",
+  effective: null,
+  rejectedOverrides: [],
+  validationErrors: []
+};
+
+/* ===== Timeline validation (execution order is part of the construction) =====
+   1. duration override scales checkpoints AND subordinate durations by one ratio.
+   2. individual checkpoint overrides are collected.
+   3. subordinate durations are derived from neighbouring checkpoint spans.
+   4. ordering + minimum spans + completion/hold space are validated.
+   5. an override that fails validation is rejected ATOMICALLY (never applied)
+      and recorded in CONFIG.rejectedOverrides with its reason. */
+function validateTimeline(cfg){
+  const cp = cfg.checkpoints, errs = [];
+  const order = ["printStart","receiptFull","cardsAt","phoneAt","typedAt","replyAt","bridgeAt"];
+  const minSpan = Math.max(cfg.minSpanMs, cfg.durationMs * cfg.minSpanFraction);
+  for (let i = 1; i < order.length; i++)
+    if (!(cp[order[i]] - cp[order[i-1]] >= minSpan)) errs.push(order[i] + " too close after " + order[i-1]);
+  if (!(cfg.durationMs - cp.bridgeAt >= minSpan)) errs.push("bridgeAt leaves no hold before loop end");
+  const eff = {};
+  eff.cardsFadeMs = Math.min(cfg.cardsFadeMs, 0.8 * (cp.phoneAt - cp.cardsAt));
+  eff.phoneRiseMs = Math.min(cfg.phoneRiseMs, 0.8 * (cp.typedAt - cp.phoneAt));
+  eff.typeDelayMs = Math.min(cfg.typeDelayMs, 0.25 * (cp.typedAt - cp.phoneAt));
+  eff.replyPopMs = Math.min(cfg.replyPopMs, 0.8 * (cp.bridgeAt - cp.replyAt));
+  eff.bridgeMs = Math.min(cfg.bridgeMs, cfg.durationMs - cp.bridgeAt);
+  const typeStart = cp.phoneAt + eff.typeDelayMs, typeWindow = cp.typedAt - typeStart;
+  if (!(typeWindow >= 0.5 * (cp.typedAt - cp.phoneAt))) errs.push("typing window under half the phone-to-typed span");
+  if (!(cp.replyAt + eff.replyPopMs <= cp.bridgeAt)) errs.push("reply does not complete before the bridge");
+  if (!(cp.phoneAt + eff.phoneRiseMs <= cp.typedAt)) errs.push("phone rise does not complete before typing completes");
+  eff.typeStart = typeStart; eff.typeWindow = typeWindow;
+  cfg.effective = eff;
+  return errs;
+}
+
+/* URL overrides (swap test / reuse):
+   ?prompt=...&reply=...&post=...&reset=...&led=...  ·  ?accent=<hex>&paper=<hex>
+   ?phoneAt=6000 (one checkpoint)  ·  ?durationMs=10000 (checkpoints + subordinate durations scale)
+   ?lines=Alpha;Beta;Gamma (receipt lines) */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  const baseDuration = CONFIG.durationMs;
+  const dReq = num("durationMs");
+  if (dReq !== null){
+    if (dReq >= 1000){
+      CONFIG.durationMs = dReq;
+      const r = dReq / baseDuration;
+      for (const k in CONFIG.checkpoints) CONFIG.checkpoints[k] = Math.round(CONFIG.checkpoints[k] * r);
+      CONFIG.cardsFadeMs = Math.round(CONFIG.cardsFadeMs * r);
+      CONFIG.phoneRiseMs = Math.round(CONFIG.phoneRiseMs * r);
+      CONFIG.typeDelayMs = Math.round(CONFIG.typeDelayMs * r);
+      CONFIG.replyPopMs = Math.round(CONFIG.replyPopMs * r);
+      CONFIG.bridgeMs = Math.round(CONFIG.bridgeMs * r);
+    } else CONFIG.rejectedOverrides.push({ key: "durationMs", value: dReq, reason: "below the 1000ms minimum" });
+  }
+  const cpKeys = ["printStart","receiptFull","cardsAt","phoneAt","typedAt","replyAt","bridgeAt"];
+  for (const k of cpKeys){
+    const v = num(k);
+    if (v === null) continue;
+    const saved = CONFIG.checkpoints[k];
+    CONFIG.checkpoints[k] = v;
+    const errs = validateTimeline(CONFIG);
+    if (errs.length){ CONFIG.checkpoints[k] = saved; CONFIG.rejectedOverrides.push({ key: k, value: v, reason: errs.join("; ") }); }
+  }
+  CONFIG.validationErrors = validateTimeline(CONFIG);
+  if (q.get("led")) CONFIG.ledText = q.get("led");
+  if (q.get("post")) CONFIG.postText = q.get("post");
+  if (q.get("prompt")) CONFIG.phonePrompt = q.get("prompt");
+  if (q.get("reply")) CONFIG.phoneReply = q.get("reply");
+  if (q.get("reset")) CONFIG.systemReset = q.get("reset");
+  if (q.get("header")) CONFIG.receiptHeader = q.get("header");
+  if (q.get("lines")) CONFIG.receiptLines = q.get("lines").split(";");
+  if (q.get("accent")) CONFIG.accent = q.get("accent");
+  if (q.get("paper")) CONFIG.paperColor = q.get("paper");
+  if (q.get("ledColor")) CONFIG.ledColor = q.get("ledColor");
+})();
+
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+/* Receipt paper geometry: wrapped line counts, overflow tier and padding all enter
+   the SAME calculation that prices row exposure — a row is exposed when the fed
+   length reaches its bottom offset on the moving paper. */
+function paperModel(cfg){
+  const scale = cfg.receiptLines.length > cfg.receiptMaxLines ? cfg.receiptOverflowScale : 1;
+  const lineH = cfg.receiptLineHPx * scale;
+  const rows = [{ top: cfg.receiptPadTopPx, bottom: cfg.receiptPadTopPx + cfg.receiptHeaderHPx }];
+  let y = cfg.receiptPadTopPx + cfg.receiptHeaderHPx;
+  for (const line of cfg.receiptLines){
+    const wrapped = Math.max(1, Math.ceil(line.length / cfg.modelCharsPerLine));
+    rows.push({ top: y, bottom: y + wrapped * lineH, wrapped: wrapped });
+    y += wrapped * lineH;
+  }
+  const totalPx = y + cfg.receiptPadBottomPx;
+  const windowCapPx = cfg.modelColumnHPx * (cfg.receiptLines.length > cfg.receiptMaxLines ? cfg.receiptGrowCapHPct : cfg.receiptMaxHPct) / 100;
+  return { rows: rows, totalPx: totalPx, scale: scale, windowCapPx: windowCapPx, overflow: totalPx > windowCapPx };
+}
+
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  if (!cfg.effective) validateTimeline(cfg);
+  const eff = cfg.effective;
+  const printSpan = cp.receiptFull - cp.printStart;
+  const printProgress = clamp01((t - cp.printStart) / printSpan);
+  const ledChars = Math.floor(clamp01((t - cp.printStart) / (printSpan * cfg.ledFraction)) * cfg.ledText.length);
+  const pm = paperModel(cfg);
+  const fedPx = printProgress * pm.totalPx;
+  /* the sheet translates down through the slot: its bottom edge sits at fedPx and
+     a row is exposed once its own bottom edge has crossed the slot aperture
+     (fedPx past totalPx - row.bottom on the shared geometry model) */
+  const exposedRows = pm.rows.map(r => fedPx > pm.totalPx - r.bottom);
+  let visibleRows = 0;
+  for (const e of exposedRows) if (e) visibleRows++;
+  const cardsProgress = clamp01((t - cp.cardsAt) / eff.cardsFadeMs);
+  const phoneProgress = clamp01((t - cp.phoneAt) / eff.phoneRiseMs);
+  const typedChars = eff.typeWindow > 0 ? Math.floor(clamp01((t - eff.typeStart) / eff.typeWindow) * cfg.phonePrompt.length) : 0;
+  const replyProgress = clamp01((t - cp.replyAt) / eff.replyPopMs);
+  const bridgeProgress = clamp01((t - cp.bridgeAt) / eff.bridgeMs);
+  const phase = t < cp.cardsAt ? 1 : (t < cp.phoneAt ? 2 : 3);
+  return { t: t, phase: phase, printProgress: printProgress, ledChars: ledChars,
+           visibleRows: visibleRows, exposedRows: exposedRows, fedPx: fedPx, paperTotalPx: pm.totalPx, receiptOverflow: pm.overflow,
+           cardsProgress: cardsProgress, phoneProgress: phoneProgress, typedChars: typedChars,
+           replyProgress: replyProgress, bridgeProgress: bridgeProgress,
+           replyOverflow: cfg.phoneReply.length > cfg.replyMaxChars,
+           replyTier: cfg.phoneReply.length > cfg.replySoftChars ? cfg.replyLongScale : 1,
+           valid: cfg.validationErrors.length === 0 };
+}
+
+const stage = document.getElementById("stage");
+const led = document.getElementById("led");
+const torso = document.getElementById("torso");
+const trim = document.getElementById("trim");
+const slot = document.getElementById("slot");
+const receiptWrap = document.getElementById("receiptWrap");
+const receipt = document.getElementById("receipt");
+const receiptHead = document.getElementById("receiptHead");
+const receiptLines = document.getElementById("receiptLines");
+const cardsCol = document.getElementById("cardsCol");
+const postCard = document.getElementById("postCard");
+const sysCard = document.getElementById("sysCard");
+const sysTitle = document.getElementById("sysTitle");
+const sysReset = document.getElementById("sysReset");
+const phone = document.getElementById("phone");
+const tabA = document.getElementById("tabA");
+const tabB = document.getElementById("tabB");
+const promptBubble = document.getElementById("promptBubble");
+const replyBubble = document.getElementById("replyBubble");
+const bridgeBadge = document.getElementById("bridgeBadge");
+const inputBar = document.getElementById("inputBar");
+
+document.body.style.background = CONFIG.bg;
+stage.style.background = CONFIG.bg;
+torso.style.background = CONFIG.torsoColor;
+trim.style.background = CONFIG.trimColor;
+slot.style.borderColor = CONFIG.trimColor;
+slot.style.background = CONFIG.ledBg;
+led.style.background = CONFIG.ledBg;
+led.style.color = CONFIG.ledColor;
+receipt.style.background = CONFIG.paperColor;
+receipt.style.color = CONFIG.paperInk;
+receipt.style.boxShadow = "0 3px 8px " + CONFIG.shadowReceipt;
+receipt.style.padding = CONFIG.receiptPadTopPx + "px 9px " + CONFIG.receiptPadBottomPx + "px";
+receiptHead.textContent = CONFIG.receiptHeader;
+postCard.style.background = CONFIG.cardBg;
+postCard.style.color = CONFIG.cardInk;
+postCard.style.boxShadow = "0 3px 10px " + CONFIG.shadowCard;
+postCard.textContent = CONFIG.postText;
+sysCard.style.background = CONFIG.sysBg;
+sysCard.style.color = CONFIG.sysInk;
+sysCard.style.boxShadow = "0 3px 10px " + CONFIG.shadowCard;
+sysTitle.textContent = CONFIG.systemTitle;
+sysReset.textContent = CONFIG.systemReset;
+phone.style.background = CONFIG.phoneBg;
+phone.style.color = CONFIG.phoneInk;
+phone.style.borderColor = CONFIG.phoneFrame;
+phone.style.boxShadow = "0 8px 24px " + CONFIG.shadowPhone;
+tabA.textContent = CONFIG.tabA;
+tabB.textContent = CONFIG.tabB;
+tabA.style.background = CONFIG.accent;
+tabB.style.background = CONFIG.replyBg;
+promptBubble.style.borderColor = CONFIG.accent;
+promptBubble.style.color = CONFIG.phoneInk;
+promptBubble.style.background = CONFIG.phoneBg;
+replyBubble.style.background = CONFIG.replyBg;
+replyBubble.style.color = CONFIG.phoneInk;
+replyBubble.textContent = CONFIG.phoneReply;
+bridgeBadge.textContent = CONFIG.bridgeText;
+bridgeBadge.style.background = CONFIG.replyBg;
+bridgeBadge.style.color = CONFIG.phoneInk;
+bridgeBadge.style.border = "2px solid " + CONFIG.accent;
+inputBar.style.background = CONFIG.inputBg;
+
+const lineEls = [];
+for (let i = 0; i < CONFIG.receiptLines.length; i++){
+  const d = document.createElement("div");
+  d.className = "rline";
+  d.textContent = CONFIG.receiptLines[i];
+  if (CONFIG.receiptLines.length > CONFIG.receiptMaxLines) d.style.fontSize = "calc(clamp(14px,2.4vw,15px) * " + CONFIG.receiptOverflowScale + ")";
+  receiptLines.appendChild(d); lineEls.push(d);
+}
+if (CONFIG.phoneReply.length > CONFIG.replySoftChars)
+  replyBubble.style.fontSize = "calc(clamp(14px,2.6vw,15px) * " + CONFIG.replyLongScale + ")";
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  led.textContent = CONFIG.ledText.slice(0, s.ledChars);
+  /* the paper itself translates through the slot aperture: the wrap is anchored
+     under the slot, its height IS the fed length in pixels, and the sheet slides
+     down so its bottom edge sits exactly at the fed length — window, translation
+     and row exposure all read the same fedPx on the same geometry model */
+  receiptWrap.style.height = s.fedPx + "px";
+  receipt.style.transform = "translateY(" + (s.fedPx - s.paperTotalPx) + "px)";
+  receiptHead.style.visibility = s.exposedRows[0] ? "visible" : "hidden";
+  for (let i = 0; i < lineEls.length; i++)
+    lineEls[i].style.visibility = s.exposedRows[i + 1] ? "visible" : "hidden";
+  cardsCol.style.opacity = String(s.cardsProgress);
+  cardsCol.style.transform = "translateY(" + ((1 - s.cardsProgress) * CONFIG.cardTravelPx) + "px)";
+  const dip = s.bridgeProgress * CONFIG.bridgeDipPct;
+  phone.style.opacity = String(s.phoneProgress);
+  phone.style.transform = "translate(-50%, " + ((1 - s.phoneProgress) * CONFIG.phoneTravelPct + dip) + "%)";
+  const typed = CONFIG.phonePrompt.slice(0, s.typedChars);
+  promptBubble.textContent = s.typedChars > 0 ? CONFIG.promptPrefix + typed : "";
+  promptBubble.style.visibility = s.typedChars > 0 ? "visible" : "hidden";
+  inputBar.textContent = typed;
+  replyBubble.style.opacity = String(s.replyProgress);
+  replyBubble.style.transform = "scale(" + (CONFIG.replyScaleFrom + (1 - CONFIG.replyScaleFrom) * s.replyProgress) + ")";
+  replyBubble.style.visibility = s.replyProgress > 0 ? "visible" : "hidden";
+  bridgeBadge.style.opacity = String(s.bridgeProgress);
+  bridgeBadge.style.visibility = s.bridgeProgress > 0 ? "visible" : "hidden";
+  return s;
+}
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

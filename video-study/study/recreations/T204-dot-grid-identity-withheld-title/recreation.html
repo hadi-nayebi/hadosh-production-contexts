@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T204 — Dot-grid identity system + withheld title (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#222;font-family:Georgia,'Times New Roman',serif;}
+  #wrap{max-width:960px;margin:0 auto;padding:8px;}
+  #stage{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;}
+  #ground{position:absolute;inset:0;}
+  #speckles{position:absolute;inset:0;overflow:hidden;}
+  .speck{position:absolute;width:3px;height:3px;border-radius:50%;background:#9a9a9a;}
+  .cell{position:absolute;}
+  #band{position:absolute;overflow:hidden;}
+  #bandInner{position:absolute;left:0;top:0;}
+  .bandBlock{position:absolute;}
+  #titleClip{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;}
+  #titleText{position:absolute;white-space:nowrap;}
+  #controls{display:flex;gap:8px;align-items:center;padding:8px 0;}
+  #controls button{font-size:15px;padding:8px 14px;cursor:pointer;}
+  #tlabel{color:#eee;font-size:14px;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <div id="ground"></div>
+    <div id="speckles"></div>
+    <div id="field"></div>
+    <div id="band"><div id="bandInner"></div></div>
+  </div>
+  <div id="controls">
+    <button id="btnPlay" type="button">Play / Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+    <span id="tlabel">0 ms</span>
+  </div>
+</div>
+<script id="build-script">
+"use strict";
+const CONFIG = {
+  titleText: "Electoral College",
+  cols: 32,
+  rows: 16,
+  lastRowCells: 26,
+  lastRowOffsetCols: 3,
+  stageW: 960,
+  stageH: 540,
+  fieldLeftFrac: 0.090,
+  fieldTopFrac: 0.114,
+  fieldWidthFrac: 0.821,
+  fieldHeightFrac: 0.719,
+  cellFillFrac: 0.56,
+  cellColor: "#111111",
+  groundColor: "#ececec",
+  groundTextureOpacity: 0.05,
+  groundTextureScale: 1.0,
+  groundTextureContrast: 1.0,
+  groundSpeckleCount: 240,
+  groundSpeckleSizeMin: 0.6,
+  groundSpeckleSizeVar: 0.8,
+  groundSpeckleAlphaMin: 0.5,
+  groundSpeckleGain: 8,
+  assembleStartMs: 500,
+  assembleMs: 2700,
+  growthKeyframes: [
+    {f: 0.000, colFrac: 0.0625, rowFrac: 0.1250, lastRowFrac: 0},
+    {f: 0.074, colFrac: 0.15625, rowFrac: 0.1875, lastRowFrac: 0},
+    {f: 0.259, colFrac: 0.53125, rowFrac: 0.5000, lastRowFrac: 0},
+    {f: 0.444, colFrac: 0.78125, rowFrac: 0.7500, lastRowFrac: 0},
+    {f: 0.630, colFrac: 0.96875, rowFrac: 0.9375, lastRowFrac: 0},
+    {f: 0.700, colFrac: 0.96875, rowFrac: 1.0000, lastRowFrac: 0},
+    {f: 0.815, colFrac: 1.0000, rowFrac: 1.0000, lastRowFrac: 0},
+    {f: 1.000, colFrac: 1.0000, rowFrac: 1.0000, lastRowFrac: 1}
+  ],
+  cellFadeMs: 60,
+  cellFadeFloor: 0.30,
+  fadeSettleMs: 350,
+  bandBlocks: [
+    {c: "#157180", x: 0.000, y: 0.00, w: 0.118, h: 1.00},
+    {c: "#ba3844", x: 0.118, y: 0.00, w: 0.882, h: 1.00},
+    {c: "#396b84", x: 0.000, y: 0.78, w: 0.470, h: 0.22},
+    {c: "#b1cdce", x: 0.745, y: 0.78, w: 0.105, h: 0.22},
+    {c: "#43031b", x: 0.155, y: 0.00, w: 0.475, h: 0.07}
+  ],
+  bandLeftFrac: 0.220,
+  bandTopFrac: 0.426,
+  bandWidthFrac: 0.565,
+  bandHeightFrac: 0.130,
+  bandInMs: 200,
+  bandInStartMs: 3450,
+  titleColor: "#ffffff",
+  titleFontFamily: "Georgia, 'Times New Roman', serif",
+  titleSizeFrac: 0.107,
+  titleFitInnerFrac: 0.94,
+  titleLeftFrac: 0.045,
+  titleTopFrac: 0.10,
+  revealStartMs: 3500,
+  revealMs: 500,
+  revealKeyframes: [
+    {f: 0.00, chars: 0},
+    {f: 0.40, chars: 9},
+    {f: 0.60, chars: 13},
+    {f: 0.80, chars: 16},
+    {f: 1.00, chars: 17}
+  ],
+  glyphWidthEm: {default: 0.52, " ": 0.28, i: 0.26, l: 0.26, t: 0.34, f: 0.30, r: 0.38, E: 0.66, C: 0.72, H: 0.74, A: 0.70, D: 0.72, O: 0.76, S: 0.60, M: 0.88, Y: 0.68},
+  holdEndMs: 5400,
+  buildMs: 6200,
+  seed: 204,
+  originCorner: "top-left",
+  growthAxes: "right-down",
+  revealDirection: "left-to-right"
+};
+
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function textureSpeckles(cfg) {
+  const rng = mulberry32(cfg.seed);
+  const out = [];
+  const n = cfg.groundSpeckleCount;
+  for (let i = 0; i < n; i++) {
+    out.push({x: rng(), y: rng(), s: (cfg.groundSpeckleSizeMin + rng() * cfg.groundSpeckleSizeVar) * cfg.groundTextureScale, o: cfg.groundTextureOpacity * cfg.groundTextureContrast * (cfg.groundSpeckleAlphaMin + rng())});
+  }
+  return out;
+}
+function totalCells(cfg) { return cfg.cols * cfg.rows + cfg.lastRowCells; }
+function offsetUsed(cfg) { return Math.min(cfg.lastRowOffsetCols, Math.max(0, cfg.cols - cfg.lastRowCells)); }
+function geometry(cfg) {
+  const fieldW = cfg.fieldWidthFrac * cfg.stageW;
+  const fieldH = cfg.fieldHeightFrac * cfg.stageH;
+  const pitchX = fieldW / cfg.cols;
+  const pitchY = fieldH / cfg.rows;
+  const side = Math.min(pitchX, pitchY) * cfg.cellFillFrac;
+  const fromRight = cfg.originCorner.indexOf("right") >= 0;
+  const fromBottom = cfg.originCorner.indexOf("bottom") >= 0;
+  const fieldX = fromRight ? cfg.stageW - (cfg.fieldLeftFrac + cfg.fieldWidthFrac) * cfg.stageW : cfg.fieldLeftFrac * cfg.stageW;
+  const fieldY = fromBottom ? cfg.stageH - (cfg.fieldTopFrac + cfg.fieldHeightFrac) * cfg.stageH : cfg.fieldTopFrac * cfg.stageH;
+  return {fieldX, fieldY, fieldW, fieldH, pitchX, pitchY, side};
+}
+function frontsAt(cfg, t) {
+  if (t < cfg.assembleStartMs) return {colFront: 0, rowFront: 0, lastRowFront: 0};
+  let f = (t - cfg.assembleStartMs) / cfg.assembleMs;
+  if (f > 1) f = 1;
+  const kf = cfg.growthKeyframes;
+  let i = 0;
+  while (i < kf.length - 2 && f > kf[i + 1].f) i++;
+  const a = kf[i], b = kf[i + 1];
+  const span = (b.f - a.f) || 1;
+  const u = Math.min(1, Math.max(0, (f - a.f) / span));
+  const q = (x) => Math.round(x * 1000) / 1000;
+  const swapAxes = cfg.growthAxes === "down-right";
+  const colF = a.colFrac + (b.colFrac - a.colFrac) * u;
+  const rowF = a.rowFrac + (b.rowFrac - a.rowFrac) * u;
+  return {
+    colFront: q((swapAxes ? rowF : colF) * cfg.cols),
+    rowFront: q((swapAxes ? colF : rowF) * cfg.rows),
+    lastRowFront: q((a.lastRowFrac + (b.lastRowFrac - a.lastRowFrac) * u) * cfg.lastRowCells)
+  };
+}
+function axisFullTime(cfg, axis, v) {
+  // time at which the axis front (in cell units) reaches v (v >= 1), inverse of frontsAt
+  const kf = cfg.growthKeyframes;
+  const key = axis === "col" ? "colFrac" : axis === "row" ? "rowFrac" : "lastRowFrac";
+  const mult = axis === "col" ? cfg.cols : axis === "row" ? cfg.rows : cfg.lastRowCells;
+  const times = kf.map(k => cfg.assembleStartMs + k.f * cfg.assembleMs);
+  const vals = kf.map(k => k[key] * mult);
+  if (v <= vals[0]) {
+    const slope = (vals[1] - vals[0]) / (times[1] - times[0]);
+    return times[0] - (vals[0] - v) / slope;
+  }
+  for (let i = 0; i < vals.length - 1; i++) {
+    if (v >= vals[i] && v <= vals[i + 1] && vals[i + 1] > vals[i]) {
+      return times[i] + (v - vals[i]) / (vals[i + 1] - vals[i]) * (times[i + 1] - times[i]);
+    }
+    if (v === vals[i + 1] && vals[i + 1] === vals[i]) { /* plateau: fall through to next rising segment */ }
+  }
+  // v reached only at a plateau end or the final value: scan for first time vals >= v
+  for (let i = 0; i < vals.length; i++) { if (vals[i] >= v) return times[i]; }
+  return times[times.length - 1];
+}
+function glyphWidth(cfg, ch) {
+  const g = cfg.glyphWidthEm;
+  return Object.prototype.hasOwnProperty.call(g, ch) ? g[ch] : g.default;
+}
+function textWidthEm(cfg, s) {
+  let w = 0;
+  for (const ch of s) w += glyphWidth(cfg, ch);
+  return w;
+}
+function revealState(cfg, t) {
+  let f = (t - cfg.revealStartMs) / cfg.revealMs;
+  f = Math.min(1, Math.max(0, f));
+  const kf = cfg.revealKeyframes;
+  let i = 0;
+  while (i < kf.length - 2 && f > kf[i + 1].f) i++;
+  const a = kf[i], b = kf[i + 1];
+  const span = (b.f - a.f) || 1;
+  const u = Math.min(1, Math.max(0, (f - a.f) / span));
+  const charsFloat = a.chars + (b.chars - a.chars) * u;
+  const defaultLen = kf[kf.length - 1].chars;
+  const n = Math.floor(charsFloat * (cfg.titleText.length / defaultLen) + 1e-9);
+  const count = Math.max(0, Math.min(cfg.titleText.length, n));
+  const prefix = cfg.revealDirection === "right-to-left" ? cfg.titleText.slice(cfg.titleText.length - count) : cfg.titleText.slice(0, count);
+  const totalW = textWidthEm(cfg, cfg.titleText);
+  const clipFrac = totalW > 0 ? textWidthEm(cfg, prefix) / totalW : 0;
+  return {prefix, clipFrac, chars: prefix.length};
+}
+function stateAt(cfg, t) {
+  const geo = geometry(cfg);
+  const fr = frontsAt(cfg, t);
+  const total = totalCells(cfg);
+  const off = offsetUsed(cfg);
+  const cells = [];
+  let visibleCount = 0, fullCount = 0, blackCount = 0;
+  const bandX = cfg.bandLeftFrac * cfg.stageW, bandY = cfg.bandTopFrac * cfg.stageH;
+  const bandWFull = cfg.bandWidthFrac * cfg.stageW, bandH = cfg.bandHeightFrac * cfg.stageH;
+  const assemblyDone = cfg.assembleStartMs + cfg.assembleMs;
+  const bandStartEff = Math.max(cfg.bandInStartMs, assemblyDone);
+  const bandFrac = t <= bandStartEff ? 0 : Math.min(1, (t - bandStartEff) / cfg.bandInMs);
+  const bandCurW = bandWFull * bandFrac;
+  function cellState(c, r, k) {
+    let visible, full, fullTime, pen;
+    if (k === null) {
+      visible = fr.colFront > c && fr.rowFront > r;
+      full = fr.colFront >= c + 1 && fr.rowFront >= r + 1;
+      pen = Math.min(fr.colFront - c, fr.rowFront - r);
+      fullTime = Math.max(axisFullTime(cfg, "col", c + 1), axisFullTime(cfg, "row", r + 1));
+    } else {
+      visible = fr.lastRowFront > k;
+      full = fr.lastRowFront >= k + 1;
+      pen = fr.lastRowFront - k;
+      fullTime = axisFullTime(cfg, "last", k + 1);
+    }
+    let opacity = 0;
+    if (visible) {
+      if (full) {
+        const age = t - fullTime;
+        opacity = cfg.cellFadeFloor + (1 - cfg.cellFadeFloor) * Math.min(1, Math.max(0, age / cfg.cellFadeMs));
+      } else {
+        opacity = cfg.cellFadeFloor * Math.min(1, Math.max(0, pen));
+      }
+    }
+    const cx = k === null ? geo.fieldX + c * geo.pitchX + geo.pitchX / 2 : geo.fieldX + (off + k) * geo.pitchX + geo.pitchX / 2;
+    const cy = k === null ? geo.fieldY + r * geo.pitchY + geo.pitchY / 2 : geo.fieldY + cfg.rows * geo.pitchY + geo.pitchY / 2;
+    const occluded = bandFrac > 0 && cx >= bandX && cx <= bandX + bandCurW && cy >= bandY && cy <= bandY + bandH;
+    if (visible) visibleCount++;
+    if (full) fullCount++;
+    const black = opacity >= 0.98;
+    if (black) blackCount++;
+    return {c: k === null ? c : off + k, r: k === null ? r : cfg.rows, opacity, visible, full, black, occluded};
+  }
+  for (let r = 0; r < cfg.rows; r++) for (let c = 0; c < cfg.cols; c++) cells.push(cellState(c, r, null));
+  for (let k = 0; k < cfg.lastRowCells; k++) cells.push(cellState(0, cfg.rows, k));
+  const rev = revealState(cfg, t);
+  const clipApplied = bandFrac <= 0 ? 0 : Math.min(rev.clipFrac, bandFrac >= 1 ? 1 : bandFrac);
+  const innerEm = (cfg.bandWidthFrac * cfg.stageW * cfg.titleFitInnerFrac) / (cfg.titleSizeFrac * cfg.stageH);
+  const titleFitScale = Math.min(1, innerEm / Math.max(1e-9, textWidthEm(cfg, cfg.titleText)));
+  const settled = t >= assemblyDone + cfg.fadeSettleMs;
+  const phase = t < cfg.assembleStartMs ? "preroll" : t < assemblyDone ? "assembly" : t < cfg.revealStartMs + cfg.revealMs ? "reveal" : t <= cfg.holdEndMs ? "hold" : "tail";
+  let hash = 0;
+  const hstr = visibleCount + "|" + fullCount + "|" + blackCount + "|" + bandFrac.toFixed(3) + "|" + rev.prefix + "|" + cells.reduce((s, x) => s + Math.round(x.opacity * 100), 0);
+  for (let i = 0; i < hstr.length; i++) hash = ((hash * 31) + hstr.charCodeAt(i)) | 0;
+  return {
+    t, colFront: fr.colFront, rowFront: fr.rowFront, lastRowFront: fr.lastRowFront,
+    visibleCount, fullCount, blackCount, grayCount: visibleCount - blackCount,
+    totalCells: total, offsetUsed: off, cellSide: geo.side, pitchX: geo.pitchX, pitchY: geo.pitchY,
+    bandStartEff, bandWidthFrac: bandFrac, bandVisible: bandFrac > 0,
+    titlePrefix: rev.prefix, revealChars: rev.chars, clipFrac: rev.clipFrac, clipApplied,
+    titleFitScale, settled, phase,
+    cells, hash
+  };
+}
+
+if (typeof document !== "undefined") {
+  const cfg = CONFIG;
+  const stage = document.getElementById("stage");
+  const ground = document.getElementById("ground");
+  const speckBox = document.getElementById("speckles");
+  const field = document.getElementById("field");
+  const band = document.getElementById("band");
+  const bandInner = document.getElementById("bandInner");
+  const tlabel = document.getElementById("tlabel");
+  ground.style.background = cfg.groundColor;
+  for (const s of textureSpeckles(cfg)) {
+    const d = document.createElement("div");
+    d.className = "speck";
+    d.style.left = (s.x * 100) + "%";
+    d.style.top = (s.y * 100) + "%";
+    d.style.transform = "scale(" + s.s + ")";
+    d.style.opacity = String(Math.min(1, s.o * cfg.groundSpeckleGain));
+    speckBox.appendChild(d);
+  }
+  const geo = geometry(cfg);
+  const cellEls = [];
+  function addCell(x, y) {
+    const d = document.createElement("div");
+    d.className = "cell";
+    d.style.background = cfg.cellColor;
+    d.style.width = geo.side + "px";
+    d.style.height = geo.side + "px";
+    d.style.left = x + "px";
+    d.style.top = y + "px";
+    field.appendChild(d);
+    cellEls.push(d);
+  }
+  const off = offsetUsed(cfg);
+  for (let r = 0; r < cfg.rows; r++) for (let c = 0; c < cfg.cols; c++) {
+    addCell(geo.fieldX + c * geo.pitchX + (geo.pitchX - geo.side) / 2, geo.fieldY + r * geo.pitchY + (geo.pitchY - geo.side) / 2);
+  }
+  for (let k = 0; k < cfg.lastRowCells; k++) {
+    addCell(geo.fieldX + (off + k) * geo.pitchX + (geo.pitchX - geo.side) / 2, geo.fieldY + cfg.rows * geo.pitchY + (geo.pitchY - geo.side) / 2);
+  }
+  const bandW = cfg.bandWidthFrac * cfg.stageW, bandH = cfg.bandHeightFrac * cfg.stageH;
+  band.style.left = (cfg.bandLeftFrac * cfg.stageW) + "px";
+  band.style.top = (cfg.bandTopFrac * cfg.stageH) + "px";
+  band.style.height = bandH + "px";
+  bandInner.style.width = bandW + "px";
+  bandInner.style.height = bandH + "px";
+  for (const b of cfg.bandBlocks) {
+    const d = document.createElement("div");
+    d.className = "bandBlock";
+    d.style.background = b.c;
+    d.style.left = (b.x * bandW) + "px";
+    d.style.top = (b.y * bandH) + "px";
+    d.style.width = (b.w * bandW) + "px";
+    d.style.height = (b.h * bandH) + "px";
+    bandInner.appendChild(d);
+  }
+  const clip = document.createElement("div");
+  clip.id = "titleClip";
+  const span = document.createElement("span");
+  span.id = "titleText";
+  span.textContent = cfg.titleText;
+  span.style.color = cfg.titleColor;
+  span.style.fontFamily = cfg.titleFontFamily;
+  const baseFontPx = cfg.titleSizeFrac * cfg.stageH;
+  const meas = document.createElement("canvas").getContext("2d");
+  meas.font = baseFontPx + "px " + cfg.titleFontFamily;
+  const measuredW = meas.measureText(cfg.titleText).width;
+  const fitScale = Math.min(1, (bandW * cfg.titleFitInnerFrac) / Math.max(1, measuredW));
+  span.style.fontSize = (baseFontPx * fitScale) + "px";
+  span.style.left = (bandW * cfg.titleLeftFrac) + "px";
+  span.style.top = (bandH * cfg.titleTopFrac) + "px";
+  clip.appendChild(span);
+  bandInner.appendChild(clip);
+  function render(t) {
+    const st = stateAt(cfg, t);
+    const scale = stage.clientWidth / cfg.stageW;
+    field.style.transform = "";
+    for (let i = 0; i < cellEls.length; i++) {
+      const cs = st.cells[i];
+      cellEls[i].style.opacity = String(cs.opacity);
+      cellEls[i].style.display = cs.visible && !cs.occluded ? "block" : "none";
+    }
+    band.style.width = (bandW * st.bandWidthFrac) + "px";
+    band.style.display = st.bandVisible ? "block" : "none";
+    clip.style.clipPath = "inset(0 " + ((1 - st.clipApplied) * 100) + "% 0 0)";
+    stage.style.transform = "";
+    tlabel.textContent = Math.round(t) + " ms / " + cfg.buildMs + " ms";
+    return st;
+  }
+  let playing = false, startStamp = 0, cur = 0;
+  function loop(ts) {
+    if (!playing) return;
+    cur = Math.min(cfg.buildMs, (ts - startStamp));
+    render(cur * (cfg.buildMs / cfg.buildMs));
+    if (cur < cfg.buildMs) requestAnimationFrame(loop); else playing = false;
+  }
+  document.getElementById("btnPlay").addEventListener("click", () => {
+    if (playing) { playing = false; return; }
+    playing = true; startStamp = performance.now() - cur;
+    requestAnimationFrame(loop);
+  });
+  document.getElementById("btnRestart").addEventListener("click", () => {
+    cur = 0; playing = true; startStamp = performance.now();
+    requestAnimationFrame(loop);
+  });
+  window.__T204 = {CONFIG: cfg, stateAt, render, setTime: (t) => { cur = t; render(t); }};
+  render(0);
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {CONFIG, stateAt, frontsAt, axisFullTime, geometry, totalCells, offsetUsed, textureSpeckles, revealState};
+}
+</script>
+</body>
+</html>

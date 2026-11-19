@@ -1,0 +1,595 @@
+STANDING HEADER
+Consumer: the practice job's Verify step (five-lens re-score wave) and the artifact's scores file.
+Decision priced: your score for the READABILITY lens of the recreation build in this payload — whether the formed words are legible at phone size against their own field.
+Working record: this payload is the record you judge from (neutral technique facts + the recreation source + a neutral own-check packet). Your return is filed verbatim in the artifact's codex directory.
+Scores are integers from 0 to 100. End your return with a BODY-WRITE line naming what your return records, then a final line: SCORE: <integer>
+
+LENS — READABILITY: formed words legible against their own particle field — intensity separation between the facade words and competing elements (neighbor lit windows, the hero edge glow, the marquee), phone-size legibility of the glyph cells during partial lighting and hold, glyph recognizability (stems, counters) under the sampling construction, and marquee containment within its strip. The harness raster is a synthetic stub (a bitmap glyph model), not a browser raster — price what that does and does not prove; this is a source-only assessment and should not claim observed pixel defects.
+
+NEUTRAL TECHNIQUE FACTS
+Technique: a neon night-city finale. The facade of a central tower lights letter by letter until its window grid reads "LOOK WHAT I CAN DO!"; the camera orbits the tower while it completes; a marquee at the tower's base carries the same line and is already complete while the facade is partial. Segment window: 14 seconds, looping. One timed evidence anchor exists: at 6.5 s into the segment, lines 1-2 are complete and the first glyph of line 3 is lit (9 of 15 letters). Intermediate letter times are an ALLOCATION MODEL (even allocation across the span), labelled as such. The surrounding towers carry scattered lit windows under a night sky; the hero tower has a glowing edge outline.
+PIXEL-UNVERIFIED: no browser rendering is available in this environment; assess the source and the harness evidence.
+
+=== recreation.html (the build under judgment) ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T20 — Building-as-display typography · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="cv"></canvas></div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; the logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: letters light from the checkpoint table (lightStart ->
+   lightComplete); the per-letter interval is DERIVED from the span and the live letter
+   count, so a cardinality-changed text re-derives its cadence instead of breaking.
+   Letterforms are decided by RUNTIME SAMPLING: the CONFIG facade text is drawn to an
+   offscreen canvas and its alpha mask is mapped onto the facade window grid — no
+   letter cell is hand-placed. */
+const CONFIG = {
+  durationMs: 14000,                 /* segment window 2:36.5-2:50.5 = 14 s, loops */
+  facadeLines: ["LOOK", "WHAT", "I CAN DO!"],
+  marqueeText: "LOOK WHAT I CAN DO!",
+  marqueeCharMs: 40,                 /* marquee types fast; frame-evidenced complete while the facade is partial */
+  checkpoints: { lightStart: 500, lightComplete: 11000 },
+  /* ALLOCATION MODEL (one timed anchor): the evidence frame at 6.5 s into the segment
+     shows lines 1-2 complete + first glyph of line 3 = 9 of 15 letters lit. Letter
+     onsets use first/last-onset semantics: the first glyph lights AT lightStart and
+     the last AT lightComplete, so the spacing is span/(n-1) = 750 ms and the 9th
+     onset falls exactly on the 6500 ms anchor. Intermediate letter times are
+     allocated evenly across the span; uncertainty is the full span — no other
+     timed anchor exists in the packet. */
+  gridCols: 40,
+  gridRows: 48,
+  sampleW: 400,
+  sampleH: 480,
+  sampleFontPx: 92,
+  sampleMask: "#ffffff",
+  sampleFitRatio: 0.92,
+  sampleAlphaMin: 128,
+  sampleCoverageMin: 0.25,           /* cell ownership: mask coverage inside the cell rect at/above this fraction */
+  sampleMinFontPx: 8,                /* auto-fit floor; below it the capacity diagnostic fires instead of overflowing */
+  sampleFitStepPx: 2,                /* auto-fit decrement per iteration (facade + marquee) */
+  checkpointMinSpanMs: 250,          /* checkpoint normalization enforces at least this span inside the duration */
+  geom: { cellInset: 0.18, cellSize: 0.64, litInset: 0.12, litSize: 0.76, glowPad: 0.10, glowSize: 1.20,
+          neighborInset: 0.22, neighborSize: 0.56, edgeWidthFactor: 0.0022, edgeMinStrokePx: 1.5, groundPct: 94 },
+  fontFamily: "bold {px}px 'Arial Black', Arial, sans-serif",
+  hero: { xPct: 31, yPct: 6, wPct: 38, hPct: 82 },
+  marquee: { hPct: 7.5, fontMinPx: 11, fontMaxPx: 24, fontFactor: 0.034, fontFamily: "bold {px}px Arial, sans-serif" },
+  orbit: { farPx: 20, midPx: 44, heroPx: 12, referenceWidthPx: 960, facePx: 14 },
+  overrideMinDurationMs: 1000,       /* duration override floor */
+  stageCssMinHeightPx: 200,          /* stage element minimum height, applied at startup */
+  stageMin: { wPx: 300, hPx: 170 },  /* canvas minimum dimensions on resize */
+  intensity: { neighborLitScale: 0.45, edgeAlpha: 0.55, edgeBlurPx: 6, marqueeScale: 0.62 },
+  neighborDensity: 0.30,
+  neighborSeed: 20261114,
+  neighborTowers: [
+    { xPct: 0,  yPct: 14, wPct: 13, hPct: 86, layer: "mid" },
+    { xPct: 11, yPct: 34, wPct: 9,  hPct: 66, layer: "far" },
+    { xPct: 19, yPct: 46, wPct: 10, hPct: 54, layer: "far" },
+    { xPct: 22, yPct: 58, wPct: 8,  hPct: 42, layer: "mid" },
+    { xPct: 70, yPct: 22, wPct: 11, hPct: 78, layer: "mid" },
+    { xPct: 80, yPct: 40, wPct: 9,  hPct: 60, layer: "far" },
+    { xPct: 87, yPct: 30, wPct: 13, hPct: 70, layer: "mid" },
+    { xPct: 93, yPct: 52, wPct: 7,  hPct: 48, layer: "far" }
+  ],
+  neighborCols: 7,
+  neighborRows: 16,
+  skyTop: "#2a1052",
+  skyBottom: "#6d2a7a",
+  neighborTower: "#17122b",
+  neighborSide: "#0d0a1c",
+  neighborLit: "#ffd9a0",
+  neighborUnlit: "#241b40",
+  heroFacade: "#0d1420",
+  heroEdge: "#37f4e4",
+  refusalEdge: "#ff5a3c",
+  cellLit: "#ffe9f6",
+  cellLitGlow: "rgba(255,120,220,0.55)",
+  cellUnlit: "#1b2a3d",
+  marqueeBg: "#062a30",
+  marqueeTextColor: "#5ff7ec",
+  ground: "#07050f"
+};
+
+/* URL overrides (swap test / reuse):
+   ?lines=HI|THERE+FRIEND  facade lines ('|' separates lines)  ·  ?marquee=...  marquee text
+   ?lightStart=...&lightComplete=...  checkpoints  ·  ?lit=%23ffffff&sky=%23331155  palette
+   ?durationMs=...  ·  ?density=0.5&seed=42 */
+(function applyOverrides(){
+  if (typeof window === "undefined" || !window.location) return;
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (num("durationMs") !== null) CONFIG.durationMs = Math.max(CONFIG.overrideMinDurationMs, num("durationMs"));
+  if (q.get("lines")) CONFIG.facadeLines = q.get("lines").split("|");
+  if (q.get("marquee")) CONFIG.marqueeText = q.get("marquee");
+  if (num("lightStart") !== null) CONFIG.checkpoints.lightStart = num("lightStart");
+  if (num("lightComplete") !== null) CONFIG.checkpoints.lightComplete = num("lightComplete");
+  if (num("density") !== null) CONFIG.neighborDensity = num("density");
+  if (num("seed") !== null) CONFIG.neighborSeed = Math.floor(num("seed"));
+  if (q.get("lit")) CONFIG.cellLit = q.get("lit");
+  if (q.get("sky")) CONFIG.skyTop = q.get("sky");
+})();
+
+/* Deterministic seeded RNG (mulberry32). */
+function makeRng(seed){
+  let a = seed >>> 0;
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* Letters in reading order: every non-space char of every line, in order. */
+function letterList(cfg){
+  const out = [];
+  cfg.facadeLines.forEach(function(line, li){
+    for (let i = 0; i < line.length; i++){
+      if (line[i] !== " ") out.push({ ch: line[i], line: li, indexInLine: i });
+    }
+  });
+  return out;
+}
+
+/* Checkpoint normalization with stated domains and postconditions.
+   Domain: durationMs must be a finite number > 0 — anything else is a
+   "duration-invalid" diagnostic and no checkpoint state is derived from it.
+   For a valid duration, EVERY input is normalized so the result satisfies
+   0 <= start < complete <= durationMs: non-finite endpoints are replaced
+   (start -> 0, complete -> duration), both endpoints are clamped into
+   [0, durationMs] FIRST, then ordered, then a positive span of at least
+   min(CONFIG.checkpointMinSpanMs, durationMs) is enforced — complete extends
+   toward the duration first, and only when pinned there does start pull back.
+   Every correction is reported in the returned errors list; nothing is
+   normalized silently. */
+const CHECKPOINT_MIN_SPAN_DEFAULT_MS = 250;
+const MARQUEE_CHAR_DEFAULT_MS = 40;
+function validateCheckpoints(cfg){
+  const dur = cfg.durationMs;
+  if (!(typeof dur === "number" && isFinite(dur) && dur > 0)) {
+    return { ok: false, errors: ["duration-invalid"], start: 0, complete: 0, durationValid: false, marqueeCharMsValid: false, marqueeCharMs: 0 };
+  }
+  const errors = [];
+  let minSpanRaw = cfg.checkpointMinSpanMs;
+  if (!(typeof minSpanRaw === "number" && isFinite(minSpanRaw))) { errors.push("checkpointMinSpanMs-nonfinite->default"); minSpanRaw = CHECKPOINT_MIN_SPAN_DEFAULT_MS; }
+  else if (minSpanRaw <= 0) { errors.push("checkpointMinSpanMs-clamped"); minSpanRaw = 1; }
+  else if (minSpanRaw > dur) { errors.push("checkpointMinSpanMs-clamped"); minSpanRaw = dur; }
+  const minSpanEff = Math.min(minSpanRaw, dur);
+  let marqueeMs = cfg.marqueeCharMs;
+  const marqueeValid = (typeof marqueeMs === "number" && isFinite(marqueeMs) && marqueeMs > 0);
+  if (!marqueeValid) { errors.push("marqueeCharMs-invalid"); marqueeMs = 0; }
+  let start = cfg.checkpoints.lightStart, complete = cfg.checkpoints.lightComplete;
+  if (!(typeof start === "number" && isFinite(start))) { errors.push("lightStart-nonfinite->0"); start = 0; }
+  if (!(typeof complete === "number" && isFinite(complete))) { errors.push("lightComplete-nonfinite->duration"); complete = dur; }
+  if (start < 0) { errors.push("lightStart-clamped"); start = 0; }
+  if (start > dur) { errors.push("lightStart-clamped"); start = dur; }
+  if (complete < 0) { errors.push("lightComplete-clamped"); complete = 0; }
+  if (complete > dur) { errors.push("lightComplete-clamped"); complete = dur; }
+  if (complete < start) { errors.push("checkpoints reordered"); const tmp = start; start = complete; complete = tmp; }
+  const minSpan = minSpanEff;
+  if (complete - start < minSpan) {
+    errors.push("span-extended");
+    complete = Math.min(dur, start + minSpan);
+    if (complete - start < minSpan) { start = complete - minSpan; errors.push("span-start-pulled-back"); }
+  }
+  return { ok: errors.length === 0, errors: errors, start: start, complete: complete, durationValid: true, marqueeCharMsValid: marqueeValid, marqueeCharMs: marqueeMs, checkpointMinSpanMs: minSpanRaw };
+}
+
+/* Per-letter spacing derived from the checkpoint span under first/last-onset
+   semantics: glyph 1 lights AT start, glyph n AT complete, so the spacing is
+   span/(n-1). n = 1 has no spacing (its one glyph lights at start); n = 0 none. */
+function perLetterMs(cfg){
+  const v = validateCheckpoints(cfg);
+  const n = letterList(cfg).length;
+  if (!v.durationValid || n < 2) return 0;
+  return (v.complete - v.start) / (n - 1);
+}
+
+/* Runtime sampling: draw the CONFIG facade text to an offscreen canvas, read its
+   alpha mask, and map mask coverage onto the facade grid. A cell is owned by the
+   letter whose band covers the largest share of the cell's sample rect, when that
+   share reaches CONFIG.sampleCoverageMin — coverage ownership, not a single
+   centre-pixel probe, so thin stems and enclosed counters survive sampling.
+   The fit is TWO-AXIS: the sample font steps down until the widest line's measured
+   width fits the sample width AND every line's measured ink height fits its line
+   band; at the font floor an unfittable text returns a capacity diagnostic
+   (fitStatus "over-capacity" + the binding axis) instead of silently overflowing.
+   Per-letter bounds are MEASURED from the fitted mask and the owned cells (ink
+   rows/cols, cell rows/cols) and returned with the sample.
+   rasterDoc is injectable so the logic is node-testable with a stub canvas. */
+function sampleFacade(cfg, rasterDoc){
+  const doc = rasterDoc || (typeof document !== "undefined" ? document : null);
+  const letters0 = letterList(cfg);
+  if (!doc || cfg.facadeLines.length === 0) return { cells: [], letterCount: letters0.length, cols: cfg.gridCols, rows: cfg.gridRows, fittedFontPx: cfg.sampleFontPx, fitStatus: "empty", bindingAxis: null, lineInk: [], letters: [] };
+  const cv = doc.createElement("canvas");
+  cv.width = cfg.sampleW; cv.height = cfg.sampleH;
+  const ctx = cv.getContext("2d");
+  const lineH = cfg.sampleH / cfg.facadeLines.length;
+  function drawAndMeasure(fontPx){
+    ctx.clearRect(0, 0, cfg.sampleW, cfg.sampleH);
+    ctx.fillStyle = cfg.sampleMask;
+    ctx.font = cfg.fontFamily.replace("{px}", String(fontPx));
+    ctx.textBaseline = "middle";
+    const bands = [];
+    let globalLetter = 0;
+    const lineInfo = [];
+    cfg.facadeLines.forEach(function(line, li){
+      const w = ctx.measureText(line).width;
+      const x0 = (cfg.sampleW - w) / 2;
+      ctx.fillText(line, x0, lineH * (li + 0.5));
+      let acc = x0;
+      for (let i = 0; i < line.length; i++){
+        const cw = ctx.measureText(line[i]).width;
+        const owner = line[i] === " " ? -1 : globalLetter++;
+        bands.push({ ch: line[i], line: li, x0: acc, x1: acc + cw, y0: lineH * li, y1: lineH * (li + 1), owner: owner });
+        acc += cw;
+      }
+      lineInfo.push({ widthPx: w, bandHeightPx: lineH, inkHeightPx: 0, inkTopPx: 0, inkBottomPx: -1, inkExtentPx: 0 });
+    });
+    const img = ctx.getImageData(0, 0, cfg.sampleW, cfg.sampleH).data;
+    /* In-band ink height (reported row; the band-capped basis). */
+    cfg.facadeLines.forEach(function(line, li){
+      let minR = -1, maxR = -1;
+      const y0 = Math.max(0, Math.floor(lineH * li)), y1 = Math.min(cfg.sampleH, Math.ceil(lineH * (li + 1)));
+      for (let y = y0; y < y1; y++){
+        let any = false;
+        for (let x = 0; x < cfg.sampleW; x++){ if (img[(y * cfg.sampleW + x) * 4 + 3] >= cfg.sampleAlphaMin) { any = true; break; } }
+        if (any) { if (minR < 0) minR = y; maxR = y; }
+      }
+      lineInfo[li].inkHeightPx = maxR < 0 ? 0 : (maxR - minR + 1);
+    });
+    /* Full-region ink extent: each line is drawn ALONE on an isolated,
+       vertically padded surface and its ink bounds are mapped back to its
+       intended band, so ink crossing a band edge or the canvas edge is
+       measured, not clipped away. Placement rule: a line passes the height
+       axis only when its full extent fits inside its own band. */
+    const padPx = Math.ceil(lineH);
+    const iso = doc.createElement("canvas");
+    iso.width = cfg.sampleW; iso.height = cfg.sampleH + padPx * 2;
+    const ictx = iso.getContext("2d");
+    cfg.facadeLines.forEach(function(line, li){
+      ictx.clearRect(0, 0, iso.width, iso.height);
+      ictx.fillStyle = cfg.sampleMask;
+      ictx.font = cfg.fontFamily.replace("{px}", String(fontPx));
+      ictx.textBaseline = "middle";
+      const w = ictx.measureText(line).width;
+      const x0 = (cfg.sampleW - w) / 2;
+      ictx.fillText(line, x0, padPx + lineH * (li + 0.5));
+      const idata = ictx.getImageData(0, 0, iso.width, iso.height).data;
+      let minR = -1, maxR = -1;
+      for (let y = 0; y < iso.height; y++){
+        let any = false;
+        for (let x = 0; x < iso.width; x++){ if (idata[(y * iso.width + x) * 4 + 3] >= cfg.sampleAlphaMin) { any = true; break; } }
+        if (any) { if (minR < 0) minR = y; maxR = y; }
+      }
+      const bandTop = lineH * li;
+      if (maxR < 0) { lineInfo[li].inkTopPx = bandTop; lineInfo[li].inkBottomPx = bandTop - 1; lineInfo[li].inkExtentPx = 0; }
+      else { lineInfo[li].inkTopPx = minR - padPx; lineInfo[li].inkBottomPx = maxR - padPx; lineInfo[li].inkExtentPx = maxR - minR + 1; }
+    });
+    return { bands: bands, img: img, lineInfo: lineInfo };
+  }
+  let fontPx = cfg.sampleFontPx, drawn = drawAndMeasure(fontPx);
+  let fitStatus = "ok", bindingAxis = null;
+  while (true) {
+    const maxW = drawn.lineInfo.reduce(function(a, l){ return Math.max(a, l.widthPx); }, 0);
+    const widthOk = maxW <= cfg.sampleW * cfg.sampleFitRatio;
+    const heightOk = drawn.lineInfo.every(function(l, li){
+      const bandTop = (cfg.sampleH / cfg.facadeLines.length) * li;
+      return l.inkExtentPx <= l.bandHeightPx && l.inkTopPx >= bandTop && l.inkBottomPx < bandTop + l.bandHeightPx;
+    });
+    if (widthOk && heightOk) break;
+    bindingAxis = !widthOk ? "width" : "height";
+    if (fontPx <= cfg.sampleMinFontPx) { fitStatus = "over-capacity"; break; }
+    /* step down; a step that would pass the floor lands ON the floor and the
+       loop re-measures there — the status comes from the floor draw itself */
+    fontPx = Math.max(cfg.sampleMinFontPx, fontPx - cfg.sampleFitStepPx);
+    drawn = drawAndMeasure(fontPx);
+  }
+  /* coverage ownership: accumulate ink pixels per (cell, band), assign each cell
+     to its best-covered letter band at/above the coverage floor. */
+  const cwPx = cfg.sampleW / cfg.gridCols, chPx = cfg.sampleH / cfg.gridRows;
+  const cellBandCounts = new Map();
+  const maskRows = new Map(), maskCols = new Map();
+  for (let y = 0; y < cfg.sampleH; y++){
+    for (let x = 0; x < cfg.sampleW; x++){
+      if (drawn.img[(y * cfg.sampleW + x) * 4 + 3] < cfg.sampleAlphaMin) continue;
+      let band = null;
+      for (let b = 0; b < drawn.bands.length; b++){
+        const bd = drawn.bands[b];
+        if (bd.owner >= 0 && x >= bd.x0 && x < bd.x1 && y >= bd.y0 && y < bd.y1) { band = bd; break; }
+      }
+      if (!band) continue;
+      if (!maskRows.has(band.owner)) { maskRows.set(band.owner, new Set()); maskCols.set(band.owner, new Set()); }
+      maskRows.get(band.owner).add(y); maskCols.get(band.owner).add(x);
+      const cellKey = Math.floor(y / chPx) * cfg.gridCols + Math.floor(x / cwPx);
+      const k = cellKey + ":" + band.owner;
+      cellBandCounts.set(k, (cellBandCounts.get(k) || 0) + 1);
+    }
+  }
+  const cellBest = new Map();
+  cellBandCounts.forEach(function(count, k){
+    const parts = k.split(":");
+    const cellKey = Number(parts[0]), owner = Number(parts[1]);
+    const coverage = count / (cwPx * chPx);
+    if (coverage < cfg.sampleCoverageMin) return;
+    if (!cellBest.has(cellKey) || cellBest.get(cellKey).coverage < coverage) cellBest.set(cellKey, { owner: owner, coverage: coverage });
+  });
+  const cells = [];
+  const cellRows = new Map(), cellCols = new Map();
+  cellBest.forEach(function(v, cellKey){
+    const col = cellKey % cfg.gridCols, row = Math.floor(cellKey / cfg.gridCols);
+    cells.push({ col: col, row: row, letter: v.owner });
+    if (!cellRows.has(v.owner)) { cellRows.set(v.owner, new Set()); cellCols.set(v.owner, new Set()); }
+    cellRows.get(v.owner).add(row); cellCols.get(v.owner).add(col);
+  });
+  cells.sort(function(a, b){ return (a.row - b.row) || (a.col - b.col); });
+  const letters = letters0.map(function(l, i){
+    return { ch: l.ch, line: l.line,
+             maskInkRows: maskRows.has(i) ? maskRows.get(i).size : 0,
+             maskInkCols: maskCols.has(i) ? maskCols.get(i).size : 0,
+             inkRows: cellRows.has(i) ? cellRows.get(i).size : 0,
+             inkCols: cellCols.has(i) ? cellCols.get(i).size : 0,
+             cellCount: cells.reduce(function(a, c){ return a + (c.letter === i ? 1 : 0); }, 0) };
+  });
+  return { cells: cells, letterCount: letters0.length, cols: cfg.gridCols, rows: cfg.gridRows,
+           fittedFontPx: fontPx, fitStatus: fitStatus, bindingAxis: fitStatus === "ok" ? null : bindingAxis,
+           lineInk: drawn.lineInfo, letters: letters };
+}
+
+/* Facade glyph cell size at a given stage width — the legibility price. */
+function cellPxAt(stageW, cfg){
+  return (stageW * cfg.hero.wPct / 100) / cfg.gridCols;
+}
+
+/* Intensity hierarchy helpers: colors are scaled toward black by a CONFIG factor
+   so the facade letters are the brightest group BY CONSTRUCTION (a scale, not a
+   hue difference). effectiveLuminance prices a color at a scale with the BT.709
+   luma coefficients — the ordering the own-check suite asserts. */
+function scaleHexColor(hex, scale){
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.round(((n >> 16) & 255) * scale), g = Math.round(((n >> 8) & 255) * scale), b = Math.round((n & 255) * scale);
+  return "rgb(" + r + "," + g + "," + b + ")";
+}
+function effectiveLuminance(hex, scale){
+  const n = parseInt(hex.slice(1), 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 * scale;
+}
+function marqueeFontPx(stageW, cfg){
+  return Math.max(cfg.marquee.fontMinPx, Math.min(cfg.marquee.fontMaxPx, stageW * cfg.marquee.fontFactor));
+}
+
+/* Marquee measured fit: the full marquee string is MEASURED at the candidate font
+   and the font steps down until the measured width fits the hero strip (the hero
+   width at this stage width); at the font floor an unfittable string returns the
+   capacity diagnostic instead of overflowing. measure(text, fontPx) is injected
+   so the fit is testable outside a browser. */
+function marqueeFit(stageW, cfg, measure){
+  const stripPx = stageW * cfg.hero.wPct / 100;
+  let fontPx = marqueeFontPx(stageW, cfg);
+  while (true) {
+    const w = measure(cfg.marqueeText, fontPx);
+    if (w <= stripPx) return { fontPx: fontPx, widthPx: w, stripPx: stripPx, fitStatus: "ok" };
+    if (fontPx - cfg.sampleFitStepPx < cfg.marquee.fontMinPx) {
+      const fw = measure(cfg.marqueeText, cfg.marquee.fontMinPx);
+      return { fontPx: cfg.marquee.fontMinPx, widthPx: fw, stripPx: stripPx, fitStatus: fw <= stripPx ? "ok" : "over-capacity" };
+    }
+    fontPx -= cfg.sampleFitStepPx;
+  }
+}
+
+/* Pure state from time — the checkpoint table decides the lighting.
+   First/last-onset semantics: glyph k lights at start + (k-1) x spacing with
+   inclusive-at-onset boundaries, so the facade is incomplete immediately before
+   lightComplete and complete exactly at it; the hold is duration - complete.
+   n = 1: the single glyph lights at start and is complete from that onset.
+   n = 0: no letters, the phase never reads "hold" on letters. */
+function computeState(tMs, cfg){
+  const v = validateCheckpoints(cfg);
+  const n = letterList(cfg).length;
+  if (!v.durationValid) {
+    return { t: 0, lettersLit: 0, letterCount: n, perLetterMs: 0, marqueeChars: 0,
+             phase: "idle", checkpointOk: false, checkpointErrors: v.errors };
+  }
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  let spacing = 0, lettersLit = 0;
+  if (n === 1) {
+    lettersLit = t >= v.start ? 1 : 0;
+  } else if (n >= 2) {
+    spacing = (v.complete - v.start) / (n - 1);
+    if (t >= v.start) lettersLit = Math.min(n, Math.floor((t - v.start) / spacing) + 1);
+  }
+  const marqueeChars = v.marqueeCharMsValid ? Math.min(cfg.marqueeText.length, Math.floor(t / v.marqueeCharMs) + (t > 0 ? 1 : 0)) : 0;
+  const phase = n > 0 && lettersLit >= n ? "hold" : (lettersLit > 0 ? "lighting" : "idle");
+  return { t: t, lettersLit: lettersLit, letterCount: n, perLetterMs: spacing,
+           marqueeChars: t === 0 ? 0 : marqueeChars, phase: phase,
+           checkpointOk: v.ok, checkpointErrors: v.errors };
+}
+
+/* Orbit passage: a directionally consistent parallax drift. The passage value is
+   the elapsed fraction of the loop, so every layer's offset moves in ONE
+   direction at a constant velocity sign for the whole loop — through the reveal
+   and the hold — and resets at the loop wrap together with the lighting reset
+   (the selected wrap behaviour: one discontinuity, shared with the reveal).
+   The facade grid itself is never transformed; layers translate rigidly. */
+function orbitPassage(tMs, cfg){
+  const v = validateCheckpoints(cfg);
+  if (!v.durationValid) return 0;
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  return t / cfg.durationMs;
+}
+function orbitOffsetPx(tMs, cfg, layerPx, stageW){
+  return -orbitPassage(tMs, cfg) * layerPx * (stageW / cfg.orbit.referenceWidthPx);
+}
+/* Side-face strip width for a neighbor tower at time t: the strip is carved
+   from the tower's own rect (its right portion), grows with the passage, and
+   is zero at t = 0. The hero facade carries no strip. */
+function faceStripWidthPx(tMs, cfg, stageW){
+  return orbitPassage(tMs, cfg) * cfg.orbit.facePx * (stageW / cfg.orbit.referenceWidthPx);
+}
+
+/* Render decision: a pure mapping from the two fit results to what the
+   renderer may present. The marquee is clipped to its strip at every fit
+   status. A facade reported over-capacity is refused: its lit-cell passes
+   are withheld (an unreadable facade is never presented as a successful
+   one) while the unlit grid, towers and marquee still render, and the hero
+   edge switches to the refusal color. A marquee reported over-capacity is
+   drawn clipped and the refusal is recorded on the decision. */
+function renderDecision(sampled, marqueeFitResult){
+  const facadeOver = !!sampled && sampled.fitStatus === "over-capacity";
+  const marqueeOver = !!marqueeFitResult && marqueeFitResult.fitStatus === "over-capacity";
+  const parts = [];
+  if (facadeOver) parts.push("facade-over-capacity");
+  if (marqueeOver) parts.push("marquee-over-capacity");
+  return { drawFacadeLetters: !facadeOver, marqueeClip: true,
+           facadeRefusal: facadeOver, marqueeRefusal: marqueeOver,
+           refusal: parts.length ? parts.join("+") : null };
+}
+
+/* ===== Rendering (browser only; all values read from CONFIG) ===== */
+function litColor(cfg){ return cfg.cellLit; }
+if (typeof document !== "undefined" && document.getElementById) {
+  const stage = document.getElementById("stage");
+  const cv = document.getElementById("cv");
+  const ctx = cv.getContext("2d");
+  document.body.style.background = CONFIG.ground;
+  stage.style.minHeight = CONFIG.stageCssMinHeightPx + "px";
+  const sampled = sampleFacade(CONFIG);
+  const neighborLitRendered = scaleHexColor(CONFIG.neighborLit, CONFIG.intensity.neighborLitScale);
+  const marqueeTextRendered = scaleHexColor(CONFIG.marqueeTextColor, CONFIG.intensity.marqueeScale);
+  const rng = makeRng(CONFIG.neighborSeed);
+  const neighborLitMap = CONFIG.neighborTowers.map(function(){
+    const cells = [];
+    for (let i = 0; i < CONFIG.neighborCols * CONFIG.neighborRows; i++) cells.push(rng() < CONFIG.neighborDensity);
+    return cells;
+  });
+  function resize(){
+    const r = stage.getBoundingClientRect();
+    cv.width = Math.max(CONFIG.stageMin.wPx, Math.floor(r.width));
+    cv.height = Math.max(CONFIG.stageMin.hPx, Math.floor(r.height));
+  }
+  resize();
+  if (typeof window !== "undefined") window.addEventListener("resize", resize);
+  function render(tMs){
+    const s = computeState(tMs, CONFIG);
+    const W = cv.width, H = cv.height;
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, CONFIG.skyTop); sky.addColorStop(1, CONFIG.skyBottom);
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    /* neighbor towers with parallax drift */
+    CONFIG.neighborTowers.forEach(function(tw, ti){
+      const drift = orbitOffsetPx(s.t, CONFIG, tw.layer === "far" ? CONFIG.orbit.farPx : CONFIG.orbit.midPx, W);
+      const x = W * tw.xPct / 100 + drift, y = H * tw.yPct / 100;
+      const w = W * tw.wPct / 100, h = H * tw.hPct / 100;
+      ctx.fillStyle = CONFIG.neighborTower; ctx.fillRect(x, y, w, h);
+      const cw = w / CONFIG.neighborCols, ch = h / CONFIG.neighborRows;
+      for (let r = 0; r < CONFIG.neighborRows; r++){
+        for (let c = 0; c < CONFIG.neighborCols; c++){
+          ctx.fillStyle = neighborLitMap[ti][r * CONFIG.neighborCols + c] ? neighborLitRendered : CONFIG.neighborUnlit;
+          ctx.fillRect(x + c * cw + cw * CONFIG.geom.neighborInset, y + r * ch + ch * CONFIG.geom.neighborInset, cw * CONFIG.geom.neighborSize, ch * CONFIG.geom.neighborSize);
+        }
+      }
+      /* side-face strip: drawn after the windows, on the tower's right
+         portion, inside the tower rect; width grows with the passage */
+      const stripW = faceStripWidthPx(s.t, CONFIG, W);
+      if (stripW > 0) { ctx.fillStyle = CONFIG.neighborSide; ctx.fillRect(x + w - stripW, y, stripW, h); }
+    });
+    /* ground */
+    ctx.fillStyle = CONFIG.ground; ctx.fillRect(0, H * CONFIG.geom.groundPct / 100, W, H * (1 - CONFIG.geom.groundPct / 100));
+    /* hero tower */
+    const hx = W * CONFIG.hero.xPct / 100 + orbitOffsetPx(s.t, CONFIG, CONFIG.orbit.heroPx, W);
+    const hy = H * CONFIG.hero.yPct / 100, hw = W * CONFIG.hero.wPct / 100, hh = H * CONFIG.hero.hPct / 100;
+    ctx.fillStyle = CONFIG.heroFacade; ctx.fillRect(hx, hy, hw, hh);
+    const cellW = hw / CONFIG.gridCols, cellH = hh / CONFIG.gridRows;
+    /* unlit grid */
+    ctx.fillStyle = CONFIG.cellUnlit;
+    for (let r = 0; r < CONFIG.gridRows; r++)
+      for (let c = 0; c < CONFIG.gridCols; c++)
+        ctx.fillRect(hx + c * cellW + cellW * CONFIG.geom.cellInset, hy + r * cellH + cellH * CONFIG.geom.cellInset, cellW * CONFIG.geom.cellSize, cellH * CONFIG.geom.cellSize);
+    /* marquee fit is measured before the decision so both fit results feed it */
+    const mf = marqueeFit(W, CONFIG, function(text, px){
+      ctx.font = CONFIG.marquee.fontFamily.replace("{px}", String(px));
+      return ctx.measureText(text).width;
+    });
+    const decision = renderDecision(sampled, mf);
+    /* lit cells from the runtime sample, gated by letters lit and by the
+       render decision (withheld entirely on a facade refusal) */
+    if (decision.drawFacadeLetters) {
+      ctx.fillStyle = CONFIG.cellLitGlow;
+      sampled.cells.forEach(function(cell){
+        if (cell.letter < s.lettersLit)
+          ctx.fillRect(hx + cell.col * cellW - cellW * CONFIG.geom.glowPad, hy + cell.row * cellH - cellH * CONFIG.geom.glowPad, cellW * CONFIG.geom.glowSize, cellH * CONFIG.geom.glowSize);
+      });
+      ctx.fillStyle = litColor(CONFIG);
+      sampled.cells.forEach(function(cell){
+        if (cell.letter < s.lettersLit)
+          ctx.fillRect(hx + cell.col * cellW + cellW * CONFIG.geom.litInset, hy + cell.row * cellH + cellH * CONFIG.geom.litInset, cellW * CONFIG.geom.litSize, cellH * CONFIG.geom.litSize);
+      });
+    }
+    /* neon edge — priced below the facade by alpha and blur; on a facade
+       refusal the edge switches to the refusal color */
+    const edgeColor = decision.facadeRefusal ? CONFIG.refusalEdge : CONFIG.heroEdge;
+    ctx.strokeStyle = edgeColor; ctx.lineWidth = Math.max(CONFIG.geom.edgeMinStrokePx, W * CONFIG.geom.edgeWidthFactor);
+    ctx.shadowColor = edgeColor; ctx.shadowBlur = CONFIG.intensity.edgeBlurPx;
+    ctx.globalAlpha = CONFIG.intensity.edgeAlpha;
+    ctx.strokeRect(hx, hy, hw, hh);
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+    /* marquee at the tower base — font fitted from the measured full string;
+       the draw is clipped to the strip rect at every fit status */
+    const mh = H * CONFIG.marquee.hPct / 100, my = hy + hh - mh;
+    ctx.fillStyle = CONFIG.marqueeBg; ctx.fillRect(hx, my, hw, mh);
+    ctx.fillStyle = marqueeTextRendered;
+    ctx.font = CONFIG.marquee.fontFamily.replace("{px}", String(mf.fontPx));
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.save();
+    ctx.beginPath(); ctx.rect(hx, my, hw, mh); ctx.clip();
+    ctx.fillText(CONFIG.marqueeText.slice(0, s.marqueeChars), hx + hw / 2, my + mh / 2);
+    ctx.restore();
+    ctx.textAlign = "left";
+    return s;
+  }
+  let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+  function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+  function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+  function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+  function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+  function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+  if (typeof window !== "undefined") window.addEventListener("message", function(e){
+    if (!e.data || typeof e.data !== "object") return;
+    if (e.data.cmd === "play") play();
+    if (e.data.cmd === "pause") pause();
+    if (e.data.cmd === "restart") restart();
+  });
+  render(0);
+  play();
+}
+</script>
+</body>
+</html>
+
+
+=== NEUTRAL OWN-CHECK PACKET ===
+NEUTRAL OWN-CHECK PACKET (logic harness, node; check names + results only — 167 checks, 167 PASS, 0 FAIL)
+Timing/state: spacing derived 750 | 0 lit at 0ms | 0 lit at 499 | 1 lit at 500 | 8 lit at 6499 | 9 lit at 6500 | 14 lit at 10999 | 15 lit at 11000 | hold state 11000..13999 all lit | presented state at 13999: all 15 lit, passage and face strip at their sampled maximum before the wrap | marquee complete at 6500 (19/19 chars) | marquee empty at 0 | single-letter text lights its glyph at start, spacing 0 | empty text: no letters, never hold phase, no NaN | text swap 15->8 letters re-derives (all 8 at new completion 8000) | 23-letter text re-derives and completes at checkpoint | facade cardinalities 0, 1, 15, 23 and a 5-line swap all enumerated
+Checkpoint tables: {20000,11000} -> {11000,14000} corrections reported | {500,-100} -> {0,500} no negative endpoint | {14000,14000} -> {13750,14000} positive span | {NaN,Infinity} -> {0,14000} corrections reported | duration 0 -> invalid-duration diagnostic, state finite | duration negative -> diagnostic, no NaN
+Scalar validation: the span scalar 0, -250 and NaN each normalize a zero-span checkpoint pair to a positive span with corrections reported | the marquee interval scalar 0 yields 0 characters at t = 0, 1, 720, 6500 with a named error on the state, never NaN | an equal checkpoint pair normalizes to strictly ordered checkpoints with positive spacing, probed one ms before, at, and after each normalized endpoint | a 0.5 ms duration keeps ordered checkpoints and a positive finite per-letter interval | generative sweep over five numeric fields x eleven value classes (valid, 0, -1, -250, NaN, +infinity, -infinity, string, null, absent, very large magnitude) x eight time points = 440 state evaluations, 0 invariant failures: every state field finite, letter and marquee counts integers in range, per-letter interval finite and >= 0, phase in the named set | with the shipped configuration the validation reports zero corrections and the state outputs on the time grid are unchanged from the previous build of this file
+Sampling/fit (synthetic stub raster — a bitmap glyph model, NOT a browser raster; browser rasterization unavailable in this environment): 374 cells sampled for the specimen text | all 15 letters own cells | per-letter ink rows: L8 O8 O8 K8 W8 H8 A8 T8 I8 C8 A8 N8 D8 O8 !7 | per-letter ink cols: letters 5-7, I 2, ! 1 | stems present for L,H,T,I,K | enclosed counters present for O,A,D | fitted sample font 74 | line ink widths 201.3 / 221.3 / 362.6 against a 368 limit | 26-char single line fits at fitted font 20 | five lines: ink height 92 within band 96
+Vertical fit (each line measured alone on a vertically padded surface, ink bounds mapped back to its band; both measures printed): specimen lines — full-region ink extent 74 against a 160 band, ink rows 43-116 / 203-276 / 363-436 inside bands 0-160 / 160-320 / 320-480; band-capped heights also 74 | a six-line fixture at a pinned font measures band-capped height 80 (equal to its band) but full-region extent 92 crossing into the neighbouring band, and is reported over-capacity on the height axis | a first line at a pinned large font records ink extending 20 above the canvas top and a last line 19 past the canvas bottom, and is reported over-capacity on the height axis | a line that fits only at the fit floor font is re-measured at the floor and reported as fitting at that font
+Capacity behaviour: the marquee draw is clipped to its strip rectangle at every fit status (recording canvas stub: the marquee text draw runs under an active clip whose rectangle is the strip) | a 63-character marquee measures 412.2 against the 136.8 strip, is reported over-capacity, and its displayed width under the clip is the strip width | the render decision maps fit results to presentation: facade fitting + marquee fitting -> letters drawn, no refusal | facade fitting + marquee over-capacity -> letters drawn, marquee refusal recorded | facade over-capacity -> lit-cell and glow draws withheld (recording stub: zero such draws), unlit grid, towers and clipped marquee still drawn, tower edge drawn in the refusal color, facade refusal recorded | both over-capacity -> both refusals recorded | empty facade -> letters drawn (none exist), no refusal
+Intensity (computed from the configuration values as rendered): facade 0.936 | marquee 0.520 | neighbor lit window 0.390 | hero edge 0.437 | facade brightest | marquee above neighbor | facade:marquee ratio 1.80 | edge alpha 0.55, edge blur 6
+Configuration consumption (mutating a key changes the asserted effect): coverage threshold | fit font floor | fit ratio | grid columns | checkpoint minimum span | span scalar validation default | marquee interval validation | orbit reference width | orbit amplitudes | side-face width | side-face color | refusal edge color | stage minimum height (applied style 200 -> 333 on mutation) | marquee font family | stage minimum width | neighbor intensity scale | marquee intensity scale | edge alpha — all consumed | stylesheet contains no minimum-height declaration and no 200 literal; the stage minimum height is a configuration value applied at startup | canvas minimum dimensions (300 x 170) are a separate configuration mechanism from the stage minimum height
+Motion construction: no shared sinusoid in source | layer offsets at 360px across the loop: 0.00, -1.18, -3.54, -5.89, -7.66, -10.61, -12.96, -15.32, -16.50 (strictly monotonic) | offset at loop end equals offset at loop start (reset) | layer ordering at the anchor instant: hero < far < mid | loop-total passage at 360px: hero 4.50, far 7.50, mid 16.50 (mid-minus-hero differential 12.00) | at 390px: hero 4.88, far 8.12, mid 17.88 (differential 13.00) | width accounting: the renderer takes its width from the mounted canvas, whose backing width has a 300px floor — mount 240 -> backing 300 -> displayed passage hero 3.75, far 6.25, mid 13.75; mount 360 -> backing 360; mount 390 -> backing 390 (a direct model call at width 240 gives mid 11.00 and does not describe the displayed travel at a 240 mount) | the left-edge mid-layer tower retains 64.7% of its width on stage at maximum offset at 360 and at the 240 mount's backing width | the hero facade and its marquee stay fully in frame at maximum offset at all three mounts | side-face strip on the surrounding towers (a darker shade drawn on each tower's right portion, inside its own rectangle, after its windows; the hero facade carries none): width 0 at t=0, growing monotonically with the passage — 4.13 at the reveal end and 5.25 at the loop end at 360px; 4.47 / 5.69 at 390px; at the 240 mount's backing width 3.44 / 4.37 | the strip at maximum covers 79% of the rightmost window column's width of a mid-layer tower | hero cell geometry is identical with the strip width set to 0 or to its shipped value (the strip touches no hero cell)
+Startup: the file renders a frame at load with no external caller (5656 draw calls in the harness) | stylesheet parses (5 rule blocks) | purity scan of the source: 0 matches for external/media references | script parses clean

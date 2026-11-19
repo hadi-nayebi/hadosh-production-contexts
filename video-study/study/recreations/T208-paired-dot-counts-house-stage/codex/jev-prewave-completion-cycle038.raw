@@ -1,0 +1,550 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1efbb-7595-7bd2-9e37-2e36ed804636
+--------
+user
+TASK: You are the jev-prewave judge for the recreation job, Cycle 038 Wave 35, item T208 — A12.3 COMPLETION re-fire after two HOLDs in Wave 34 (firing 1 HOLD ASSERTED-CHECKS, cure round 1, firing 2 HOLD ASSERTED-CHECKS). The build is UNCHANGED (recreation.html sha256 42d33e6be5327b6e059db39a3aa8fc99b5f6d7857889387e5488bc7e4fb9eaca, 15,115 B); the Cycle 038 completion cures are in the build record's "Cycle 038 completion cures" section: (1) A11 timing-swap movement receipts for the remaining seven checkpoints, each swapping the timing input its own expression reads (CP1 countUpStartMs 2000->2500, CP2 revealAnchorMs 6000->6570, VT40/VT45 placeholderMorphMs 10500->10650 / 11000->11300, CP5 holdAfterCountMs 11500->12100, CP6 arrowDrawMs 14500->15250, CP7 annotationAnchorMs 17000->18000), each with CONFIG expression, default instant, swapped instant, and raw full-predicate result at the swapped instant; (2) a Guard #2 logic-level geometry receipt (recomputed dot positions/bounding boxes under a content swap vs default). Fresh own-checks (harness 31 PASS + extension 18 PASS + cure harness 8 PASS, purity NO HITS, node --check OK, A9.3 columns 2 dots 37), fresh A6 legs (fit-table HITs 0; config-census HITs 3 carried with dispositions re-priced), and the A13 receipt index re-reconciled (8 guard commands + 12 A11 assertions inherited whole) are all in the record. Judge ONLY the record below per the call definition. Return FIRE-WAVE or HOLD with the four dimension scores (0-1), the primary classification if HOLD, and named defects. End with a BODY-WRITE: line.
+
+
+===== JEV-PREWAVE CALL DEFINITION =====
+# Jev call — jev-prewave (recreation)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14. The judgment: a scoring wave is the lane's expensive instrument — this call prices whether a build has EARNED its wave before the wave spends._
+
+## 1. What it judges
+- Deliverable: an attempt's build record (parameter table · construction route · own-checks results) BEFORE the Codex wave fires.
+- Call point: recreation INSTRUCTION §4, between the builder's own checks (§5.2) and the wave (§5.3). The verdict is advisory: applied, a HOLD returns the build to the builder with named defects and the wave does not fire on that item; set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this build record shows a recreation ready to be scored, or one whose defects are already visible in its own paperwork. Price: (1) PARAMETERIZATION — is the piece genuinely CONFIG-driven (fields named, ranges sane), or hard-coded with a config costume? (2) PURITY PRE-CHECK — does the construction route describe generation from parameters, with no tracing/embedding step hiding in the prose? (3) OWN-CHECKS COMPLETENESS — are the mechanical guards' results recorded (purity grep, swap test, syntax), or asserted? **Census-checkpoint mapping (Amendment A11, landed 2026-11-17, Cycle 028 Condense): every Observe census checkpoint for the item must map to an executable own-check assertion whose evaluation instant is CONFIG-derived; the build-record identifies checkpoint · assertion · CONFIG expression · evaluated result. ASSERTED-CHECKS is returned if any checkpoint lacks this mapping, any evaluation instant uses hardcoded defaults, or execution evidence is absent; a CONFIG timing swap must be shown to move the corresponding assertion's evaluation instant. Receipt form (Amendment A12, landed 2026-11-18, Cycle 035 Condense): the execution evidence for each assertion is its EXECUTABLE RECEIPT — harness command or run · CONFIG expression evaluated · raw result from the build under review (for a timing swap, the receipt shows the changed evaluation instant); a claim without its receipt is execution evidence absent. **Receipt-index ground (Amendment A13, landed 2026-11-18, Cycle 036 Condense): a build-record whose RECEIPT INDEX (INSTRUCTION A13.1) is missing an expected entry (an applicable guards.md command, a planned A11 assertion, an assertion inherited whole from a prior attempt's filed harness, or a census row for an expected CONFIG key), carries an exclusion whose disposition cites no governing plan or guard, or carries a populated receipt lacking the evidence its assertion requires (CONFIG expression + evaluated value for CONFIG-derived inputs; raw observed result for checks) is an ASSERTED-CHECKS ground by name.** The same leg prices the A6 fit evidence: a fit-table row lacking measurement provenance, or carrying model-derived bounds, per guard-measured-fit.md checks 1–2 is an ASSERTED-CHECKS ground.** (4) TECHNIQUE FIDELITY PLAN — does the record state which packet mechanics the build implements and which it deliberately defers (a deferral named is lawful; a mechanic silently absent is not)? Score 0–1 per dimension, classify defects. You judge paperwork only: a build can pass you and still fail its wave — your job is that no wave is spent on a build its own record already condemns.
+
+## 3. Context contract (masked view)
+- FED: build-record.md · the CONFIG block of recreation.html · the technique's packet section · guards.md command list (what own-checks should exist) · **the item's A6 leg outputs (fit-table.md + config-census.md) — added 2026-11-16, recreation Cycle 024 Condense, on the Wave-21 pattern: prewave firings for T151, T153 and T154 all HOLDed or re-fired on feed completeness (the A6 files and packet section existed complete in the artifact directory but were not in the payload), the lane's recurring ASSERTED-CHECKS false-positive class. A payload lacking any FED element is a feeder defect, printed as such in the build record; a HOLD whose only named cure is feeding an already-filed FED element is disposed as a feed-completeness miss, with the miss recorded.**
+- FED (added 2026-11-17, Cycle 026 Condense — the T167 miss): **the wave record's binding census-anchor mapping for the item + any Observe dispositions pricing source ambiguities** (the §1d-form: where a packet caption or digest line admits two readings, the wave record's priced reading governs). A HOLD founded on a source ambiguity the wave record has already priced is a feeder defect, disposed as such in the build record — the judge prices the build against the binding mapping, not against raw source prose. (Founding miss: Cycle 026 T167 — HOLD priced a packet caption's ambiguous reading against a build that followed the gate-approved mapping; the seat upheld the set-aside at §5.)
+- NEVER FED: the builder's confidence prose · prior attempts' scores (each build is priced on its own record).
+- Ceiling: ≤32k tokens; the HTML enters as its CONFIG + construction sections, not media.
+
+## 4. Output space
+- Verdict classes: **FIRE-WAVE · HOLD**.
+- Dimensions (0–1): parameterization · purity pre-check · own-checks completeness · fidelity-plan honesty.
+- Rejection taxonomy (one primary): HARDCODED-CONFIG · TRACING-STEP · ASSERTED-CHECKS (results claimed, not recorded) · SILENT-DEFERRAL.
+- Accepted profile travels: cited in scores.md's pre-wave line; a wave fired over a HOLD is a deviation (WAVE-OVER-HOLD).
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → HOLD · ASSERTED-CHECKS at any score on other dimensions → HOLD (unrecorded checks are the lane's named failure class).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + classification + disposition land in the build record either way; an applied HOLD leaves the item IN PROGRESS and the wave moves to its next item (a held item never holds the wave hostage).
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: T15 attempt 1's build record (must FIRE-WAVE: checks recorded, deferral of the interlude named in its Plan) · a constructed record claiming a swap test with no harness output (must HOLD as ASSERTED-CHECKS) · a constructed record whose CONFIG is decorative over hard-coded phrases (must HOLD as HARDCODED-CONFIG).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all three must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.
+
+===== BUILD RECORD (verbatim, incl. Cycle 038 completion cures) =====
+# Build record — T208 paired dot counts, House stage · Wave 34 · Cycle 037
+
+- Plan authority: `item-T208-observe-plan.md` (run dir) AS AMENDED by `plan-amendment-cycle037.md` in this directory (8 gate charges cured; filed before any build script).
+- Schedule basis: **segment-anchored**. Segment = source 83.5–102.5 s; buildMs = (sourceT − 83.5) × 1000.
+- Build: recreation.html sha256 `42d33e6be5327b6e059db39a3aa8fc99b5f6d7857889387e5488bc7e4fb9eaca` · 15,115 B. comparison.html sha256 `9d407cd8616a5b7d238b01f43e2fc99b38ed54c9f1d4a6f65e23ecfa9b70d253` · 2,418 B (both hashes sha256sum-verified at filing).
+- Segment: segment.mp4 · ffprobe: duration **19.016 s** (prescribed 19.0) · video h264 1920×1080 · audio aac · size 1,056,861 B · sha256 `c9ec90d194c178311a0353d5570f25819a25ed3131f49538a5423c802c48cefc`. Cut command: `ffmpeg -ss 83.5 -i <digest>/source.webm -t 19.0 -c:v libx264 -pix_fmt yuv420p -c:a aac -b:a 96k`.
+- Construction: DOM + inline SVG; one compiled schedule (compileSchedule) drives rendering, seek, and checkpoint evaluation; dots and tiles on separate layers; Vermont has exactly one reveal (the square→dot morph); ratios derived (`ratioMode:'derived'`, `ratioRounding:1000`), never literal.
+- Loaded-asset inventory: recreation.html loads only its inline CSS/JS (no external scripts, styles, fonts, images, or media; texture = CSS gradient; silhouettes = inline SVG paths from CONFIG tokens). comparison.html loads segment.mp4 (labeled ORIGINAL side only) + recreation.html (iframe).
+- Fidelity plan: implements tiles→count-ups→cascade→morph→paired hold→annotation per the census; defers nothing silently — reductions named: entrance transition renders only its incoming half (amendment C4); silhouettes are simplified code-drawn paths by design (G4); prior/next scenes not recreated (R5 handles).
+- PIXEL-UNVERIFIED: no browser binary in this seat; fit evidence is PIL rendered measurement with a named stand-in font (fit-table.md); lens verdicts are source-based; comparison.html is the render surface.
+
+## Own checks — RAW output (A9.4, from the final build; harness re-run after both pre-wave cures)
+
+Harness: `node /tmp/t208-harness.js recreation.html` (extracts the `core` script block, evaluates CONFIG/compileSchedule/stateAt, asserts). Exit 0. Full raw output:
+
+```
+== CONFIG census ==
+columns=2 dots=37 ratios=702,000,630,000
+PASS | A9.3 columns | expr: CONFIG.columns.length | raw: 2 | expect: 2
+PASS | A9.3 dots total | expr: sum(columns[].count) | raw: 37 | expect: 37
+PASS | A9.3 TX ratio | expr: derivedRatio(tx)=round(25268000/36/1000)*1000 | raw: 702000 | expect: 702000
+PASS | A9.3 VT ratio | expr: derivedRatio(vt) | raw: 630000 | expect: 630000
+== compiled schedule (default) ==
+{"cols":[{"idx":0,"entranceStart":500,"entranceEnd":1500,"countUpStart":1500,"countUpEnd":3300,"revealStart":6430,"revealSettle":7780,"stagger":32.285714285714285},{"idx":1,"entranceStart":3630,"entranceEnd":4630,"countUpStart":4130,"countUpEnd":5630,"revealStart":10210,"revealSettle":10810,"stagger":0}],"annotationStart":13000,"arrowEnd":16000,"maxRevealSettle":10810}
+== A11 census assertions (default CONFIG, fixed census instants) ==
+PASS | CP1@2000 | expr: cols[0].visible && 0<popDisplay<population && !cols[1].visible | raw: true
+   CP1 popDisplay raw=7018889
+PASS | CP2@6000 | expr: cols.every(popDisplay===population) && totalStarted===0 | raw: true
+PASS | CP3@7000 | expr: tx.settled in [8,16] && tx.inFlight>=1 && tx.tileOpacity<0.5 && vt.roundDots===0 | raw: true
+   CP3 raw settled=11 inFlight=7 started=18 tileOpacity=0.120
+PASS | CP4@8000 zero-state | expr: tx.settled===36 && tx.tileOpacity===0 && vt.roundDots===0 | raw: true
+PASS | VT94.0@10500 | expr: vt.morphProgress in (0,1) | raw: true
+   morphProgress raw=0.483
+PASS | VT94.5@11000 | expr: vt.morphProgress===1 | raw: 1 | expect: 1
+PASS | CP5@11500 | expr: vt.roundDots===1 && tx.settled===36 && ratioVisible===0 | raw: true
+PASS | CP6@14500 | expr: ratioVisible===2 && ratios=[702,000,630,000] && 0<arrowProgress<1 | raw: true
+   CP6 arrowProgress raw=0.5
+PASS | CP7@17000 | expr: arrowProgress===1 && tx.settled===36 && vt.roundDots===1 | raw: true
+== A11 CONFIG-expression evaluation instants ==
+CP3-eval expr revealAnchorMs+round(0.42*cascadeMs) = 6997
+CP4-eval expr revealAnchorMs+cascadeMs+dotSettleMs = 8000
+PASS | CP3-eval@6997 | expr: tx.inFlight>=1 && tx.settled>=1 | raw: true
+PASS | CP4-eval@8000 | expr: tx.settled===36 | raw: 36 | expect: 36
+== contrast gate: earliest landing ==
+firstDotStart=6430 tileOpacity=0.413 gate=0.55
+PASS | EARLIEST contrast | expr: tileOpacityAt(firstDotStart) <= tileContrastGate | raw: true
+== annotation gate ==
+PASS | ANNOT-GATE@12999 | expr: ratioVisible===0 | raw: 0 | expect: 0
+annotationStart compiled=13000
+== SWAP: timing cascadeMs x1.5 ==
+swapped cascadeMs=2025 CP3-eval 6997 -> 7281 CP4-eval 8000 -> 8675
+PASS | TIMING swap moves CP3-eval | expr: cp3eval2>cp3eval | raw: true
+PASS | TIMING swap moves CP4-eval | expr: cp4eval2>cp4eval | raw: true
+PASS | TIMING CP4-eval swapped | expr: tx.settled===36 under swapped CONFIG | raw: 36 | expect: 36
+PASS | TIMING CP3-eval swapped | expr: tx.inFlight>=1 under swapped CONFIG | raw: true
+== SWAP: palette arrow ==
+PASS | PALETTE swap | expr: CONFIG.palette.arrow | raw: "#c2543a" | expect: "#c2543a"
+== SWAP fixtures: content 2-col / 1-col / 3-col ==
+fixture content2 ratios=[100000,100000] totals@18999=[12,3] revealStarts=[6430,7780]
+PASS | FIXTURE content2 ratios | expr: derivedRatio per column | raw: true
+PASS | FIXTURE content2 dot totals | expr: settled@18999 per column | raw: true
+PASS | FIXTURE content2 event order | expr: compiled reveals clamped/ordered | raw: true
+fixture one ratios=[100000] totals@18999=[12] revealStarts=[6430]
+PASS | FIXTURE one ratios | expr: derivedRatio per column | raw: true
+PASS | FIXTURE one dot totals | expr: settled@18999 per column | raw: true
+PASS | FIXTURE one event order | expr: compiled reveals clamped/ordered | raw: true
+fixture three ratios=[100000,100000,50000] totals@18999=[12,3,5] revealStarts=[6430,7780,9130]
+PASS | FIXTURE three ratios | expr: derivedRatio per column | raw: true
+PASS | FIXTURE three dot totals | expr: settled@18999 per column | raw: true
+PASS | FIXTURE three event order | expr: compiled reveals clamped/ordered | raw: true
+== SUMMARY pass=31 fail=0 ==
+```
+
+Purity grep (guards.md #1), raw: pattern `segment\.mp4|source\.mp4|source\.webm|<video|<img|ajavsMbCapY|ajavsmbcapy|t95-dot|t100-tx|url\(` over recreation.html → **NO HITS** (zero `url(#id)` fragments exist, so there is nothing to classify). comparison.html contains exactly one segment reference — the labeled ORIGINAL `<video>` side, as designed.
+Syntax (guards.md #3): both inline scripts extracted → `node --check` → core OK, render OK. RNG census: no `Math.random` anywhere; `seed` key present but unapplied (config-census HIT 1).
+Caption census: grep `caption|subtitle|<track` over both files → NO HITS.
+Comparison check (§5 leg 3): comparison.html carries both labels verbatim ("ORIGINAL — Vox Electoral College, paired dot counts @ 83.5–102.5s" · "RECREATION — T208 paired dot counts, House stage, parameterized"), ONE shared control set (Play both / Restart both drives the video; the recreation is slaved via `__T208Render(orig.currentTime*1000)` on a rAF sync + seeked events), durations matched (segment 19.016 s vs recreation durationMs 19000), phone stacking via `@media (max-width:640px)` column layout with the control bar above both sides. Render behavior is source-verified only (PIXEL-UNVERIFIED).
+
+## A6 legs (on the final build)
+- fit-table.md — final HIT list EMPTY (0). Two pre-cure floor HITs (population ink 9.4 px @360 at typeScale 30) cured by `typeScale.population` 30→36 and re-measured (11.6 px).
+- config-census.md — HIT count carried: **3** after cure round 1 (seed unapplied; arrow-start baseline offset literal 14; countUpEasing unapplied — the third added by the cure, see below) + 1 printed classification note (bounds keys). Census cure before filing: tile-dissolve `80` and the render-layer shaping coefficients (opacity ramps, placeholder/annotation geometry, dash length, stroke width, tint, font stack) were moved into CONFIG; the harness was re-run after the cure (31/31 above, bound to the final hash).
+
+## A13 RECEIPT INDEX (reconciled BEFORE the prewave payload)
+
+Guards.md commands:
+- #1 purity grep — RECEIPT: grep command + pattern above → raw result NO HITS (final build).
+- #2 swap test — RECEIPT: harness run above → content 2-col + 1-col + 3-col fixtures, timing ×1.5, palette arrow — 14 swap-section PASS lines, raw values printed (ratios, totals, moved instants 6997→7281 / 8000→8675).
+- #3 syntax + seeded-RNG census — RECEIPT: `node --check` core OK / render OK; RNG census raw: no `Math.random` hits; seed unapplied (config-census HIT 1).
+- #4 scores arithmetic — NOT-DEMANDED at this step: no lens scores exist yet; the seat recomputes at scores.md filing (governing: guards.md #4 + INSTRUCTION §5.5).
+- #5 segment binding — RECEIPT: ffprobe facts above (19.016 s, h264 1920×1080, sha256 c9ec90d1…) against the prescribed 83.5–102.5 s / 19.0 s window.
+- #6 fit leg — RECEIPT: fit-table.md filed; final HIT list EMPTY (0); pre-cure HITs + cure printed in that file.
+- #7 census leg — RECEIPT: config-census.md filed; HIT count **3** carried after cure round 1 (seed · arrow-offset literal · countUpEasing) + 1 classification note; key→site resolution includes nested `columns[]` keys and `columns[].events.*` / `columns[].tile.*`.
+- #8 census-anchor probes — RECEIPT: CP4 is a zero-state anchor (VT round dots = 0 at 8000) → harness line `PASS | CP4@8000 zero-state` above; EARLIEST contrast probe and ANNOT-GATE probe also receipted above.
+
+A11 assertions (every checkpoint in the amended Plan):
+- CP1 — RECEIPT: harness `CP1@2000` PASS, popDisplay raw 7018889 (CONFIG expression: stateAt(CONFIG,2000).cols[0].popDisplay, population CONFIG 25268000).
+- CP2 — RECEIPT: `CP2@6000` PASS.
+- CP3 (fixed census instant) — RECEIPT: `CP3@7000` PASS, raw settled=11 inFlight=7 started=18 tileOpacity=0.120.
+- CP3-eval (CONFIG-expression instant) — RECEIPT: expression `revealAnchorMs+round(0.42*cascadeMs)` = 6997, PASS; under timing swap the same expression = 7281 with PASS (moved instant shown).
+- CP4 (fixed + CONFIG-eval; the two coincide at 8000 by construction) — RECEIPT: `CP4@8000` PASS and `CP4-eval@8000` PASS raw 36; under timing swap CP4-eval = 8675, PASS raw 36.
+- VT94.0 — RECEIPT: `VT94.0@10500` PASS, morphProgress raw 0.483 (expression: (10500 − revealAnchorMs 10210)/placeholderMorphMs 600).
+- VT94.5 — RECEIPT: `VT94.5@11000` PASS raw 1.
+- CP5 — RECEIPT: `CP5@11500` PASS.
+- CP6 — RECEIPT: `CP6@14500` PASS, arrowProgress raw 0.5; ratio values are CONFIG-derived (derivedRatio receipts in the census section: 702000 / 630000).
+- CP7 — RECEIPT: `CP7@17000` PASS.
+- EARLIEST (contrast gate at first landing) — RECEIPT: firstDotStart=6430 (CONFIG revealStart), tileOpacity raw 0.413 ≤ gate 0.55 (CONFIG tileContrastGate), PASS.
+- ANNOT-GATE — RECEIPT: `ANNOT-GATE@12999` PASS raw 0 (compiled annotationStart 13000 from CONFIG annotationAnchorMs/holdAfterCountMs).
+
+Reconciliation result: index lines = 8 guard commands + 12 A11 assertions = 20 lines; every line carries its receipt or a NOT-DEMANDED line with a governing citation (#4 only). Expected CONFIG keys (nested/array included) reconcile against config-census.md §2 — every key resolves to a site or a printed HIT/note (seed; bounds keys). No expected line is missing; no exclusion lacks a citation. **RECONCILED — ready for the prewave payload.**
+
+## Binding census-anchor mapping (for the prewave + timing payloads)
+Window-start offset: build 0 = source 83.5 s. Census states (segment-relative ms → prescribed state): 2000 TX alone counting · 6000 both pops complete, 0 dots · 7000 cascade mid-flight (≈11 settled) · 8000 TX 36 complete, VT 0 (zero-state anchor) · 10500 VT morph mid-flight (94.0 s sample) · 11000 VT morph complete (94.5 s sample) · 11500 paired state, no annotation · 14500 ratio labels visible, arrows mid-draw · 17000 final state. Departures from the catalogue window are printed in the item record §P3 (segment ends 102.5 s, not 111 s — T209 territory excluded).
+
+## Cure round 1 (on jev-prewave HOLD #1 — ASSERTED-CHECKS; return filed verbatim at codex/jev-prewave.md: parameterization 0.82 · purity 0.98 · own-checks 0.40 · fidelity 0.96)
+
+Cures applied (build UNCHANGED — hash 42d33e6b… stands; all three defects were record/harness defects):
+1. **Defect 1 (CONFIG-derived instants for every checkpoint):** extension harness `node /tmp/t208-harness2.js recreation.html` evaluates EVERY checkpoint at a CONFIG-expression instant — CP1 = `columns[tx].events.countUpStartMs+500` · CP2 = `columns[tx].events.revealAnchorMs−430` · CP3 = `revealAnchorMs+round(0.42*cascadeMs)` · CP4 = `revealAnchorMs+cascadeMs+dotSettleMs` · VT40 = `columns[vt].events.revealAnchorMs+290` · VT45 = `revealAnchorMs+placeholderMorphMs+190` · CP5 = `compiledAnnotationStart−holdAfterCountMs−300` · CP6 = `annotationStart+round(arrowDrawMs/2)` · CP7 = `annotationStart+arrowDrawMs+1000` — under BOTH the default CONFIG and the timing-swapped CONFIG (cascadeMs ×1.5). Raw output below: default instants {2000,6000,6997,8000,10500,11000,11500,14500,17000}; swapped instants identical except CP3 6997→7281 and CP4 8000→8675 (the cascade-dependent instants move; the others' expressions do not contain cascadeMs, and their swapped receipts show the same evaluated instant with the full predicate re-evaluated there).
+2. **Defect 2 (full predicates at the moved instants):** the extension harness evaluates the COMPLETE checkpoint predicates at the CONFIG-expression instants (CP3: settled range + in-flight ≥1 + tileOpacity <0.5 + VT round dots = 0 · CP4: settled = count + tileOpacity = 0 + VT round dots = 0), default and swapped — raw state values printed (swapped CP3: settled 13, inFlight 4, tileOpacity 0.12; swapped CP4: settled 36, tileOpacity 0).
+3. **Defect 3 (census site overstatements):** config-census.md §2 corrected — `countUpEasing` now records NO application site and is added as HIT 4 (carried HIT count 2→3); `tileContrastGate` now records its actual role (harness threshold only; stateAt reads tileFadeLeadMs).
+
+Extension harness RAW output (`node /tmp/t208-harness2.js recreation.html`, exit 0):
+```
+== CONFIG-expression instants (default, cascadeMs=1350) ==
+{"CP1":2000,"CP2":6000,"CP3":6997,"CP4":8000,"VT40":10500,"VT45":11000,"CP5":11500,"CP6":14500,"CP7":17000}
+PASS | CP1-eval@2000 (default) | expr: full CP1 predicate at CONFIG-expression instant | raw: true
+PASS | CP2-eval@6000 (default) | expr: full CP2 predicate at CONFIG-expression instant | raw: true
+PASS | CP3-eval@6997 (default) | expr: full CP3 predicate at CONFIG-expression instant | raw: true
+   raw {"settled":11,"inFlight":7,"tileOpacity":0.12,"morph":0,"arrow":0}
+PASS | CP4-eval@8000 (default) | expr: full CP4 predicate at CONFIG-expression instant | raw: true
+   raw {"settled":36,"inFlight":0,"tileOpacity":0,"morph":0,"arrow":0}
+PASS | VT40-eval@10500 (default) | expr: full VT40 predicate at CONFIG-expression instant | raw: true
+PASS | VT45-eval@11000 (default) | expr: full VT45 predicate at CONFIG-expression instant | raw: true
+PASS | CP5-eval@11500 (default) | expr: full CP5 predicate at CONFIG-expression instant | raw: true
+PASS | CP6-eval@14500 (default) | expr: full CP6 predicate at CONFIG-expression instant | raw: true
+PASS | CP7-eval@17000 (default) | expr: full CP7 predicate at CONFIG-expression instant | raw: true
+== CONFIG-expression instants (timing-swap, cascadeMs=2025) ==
+{"CP1":2000,"CP2":6000,"CP3":7281,"CP4":8675,"VT40":10500,"VT45":11000,"CP5":11500,"CP6":14500,"CP7":17000}
+PASS | CP1-eval@2000 (timing-swap) | expr: full CP1 predicate at CONFIG-expression instant | raw: true
+PASS | CP2-eval@6000 (timing-swap) | expr: full CP2 predicate at CONFIG-expression instant | raw: true
+PASS | CP3-eval@7281 (timing-swap) | expr: full CP3 predicate at CONFIG-expression instant | raw: true
+   raw {"settled":13,"inFlight":4,"tileOpacity":0.12,"morph":0,"arrow":0}
+PASS | CP4-eval@8675 (timing-swap) | expr: full CP4 predicate at CONFIG-expression instant | raw: true
+   raw {"settled":36,"inFlight":0,"tileOpacity":0,"morph":0,"arrow":0}
+PASS | VT40-eval@10500 (timing-swap) | expr: full VT40 predicate at CONFIG-expression instant | raw: true
+PASS | VT45-eval@11000 (timing-swap) | expr: full VT45 predicate at CONFIG-expression instant | raw: true
+PASS | CP5-eval@11500 (timing-swap) | expr: full CP5 predicate at CONFIG-expression instant | raw: true
+PASS | CP6-eval@14500 (timing-swap) | expr: full CP6 predicate at CONFIG-expression instant | raw: true
+PASS | CP7-eval@17000 (timing-swap) | expr: full CP7 predicate at CONFIG-expression instant | raw: true
+== SUMMARY pass=18 fail=0 ==
+```
+Receipt-index update: the A11 lines for CP1/CP2/VT94.0/VT94.5/CP5/CP6/CP7 now ALSO carry the cure-round receipts above (CONFIG-expression instant + full predicate + raw result, default and timing-swapped); CP3/CP4 lines now carry the full-predicate receipts at their moved instants in both configurations. The fixed-census-instant receipts in the first harness remain as the fidelity alignment record. Reconciliation stands: 20 index lines, all receipted or NOT-DEMANDED with citation.
+
+## Cycle 038 completion cures (Wave 35 · A12.3 completion — on jev-prewave firing-2 HOLD; return filed verbatim at codex/jev-prewave-refire.md: parameterization 0.82 · purity 0.98 · own-checks 0.48 · fidelity 0.96)
+
+Build UNCHANGED — recreation.html sha256 `42d33e6be5327b6e059db39a3aa8fc99b5f6d7857889387e5488bc7e4fb9eaca` · 15,115 B (sha256sum-verified at Cycle 038 filing). Both cures are record/harness-only; no build change was required by either cure, so no A6 leg changed its result (fresh legs below).
+
+### Cure 1 — A11 timing-swap movement evidence for the remaining seven checkpoints
+Harness: `node /tmp/t208-harness3.js recreation.html` (extracts the `core` script block, evaluates CONFIG/compileSchedule/stateAt/dotOrderIndex from the build under review; each swap is a deep-cloned CONFIG with ONLY the named timing input changed; the full checkpoint predicate from plan-amendment C3 is evaluated at the swapped instant). Exit 0. Each receipt: CONFIG expression · default instant · swapped instant · raw full-predicate result at the swapped instant (+ raw state dump in the harness output).
+
+- CP1 — expression `columns[tx].events.countUpStartMs+500` · default 2000 · swapped 2500 (swap: `countUpStartMs` 1500→2000) · raw predicate result at 2500: **true** (popDisplay 7018889, VT not visible).
+- CP2 — expression `columns[tx].events.revealAnchorMs-430` · default 6000 · swapped 6570 (swap: TX `revealAnchorMs` 6430→7000) · raw predicate result at 6570: **true** (both popDisplay at full population, totalStarted 0).
+- VT40 — expression `columns[vt].events.revealAnchorMs+round(placeholderMorphMs/2)-10` (= 10210+300−10 = 10500 at default, the morph-fraction form of the cure-round-1 +290 offset) · default 10500 · swapped 10650 (swap: `placeholderMorphMs` 600→900) · raw predicate result at 10650: **true** (morphProgress 0.4889, strictly in (0,1)).
+- VT45 — expression `columns[vt].events.revealAnchorMs+placeholderMorphMs+190` · default 11000 · swapped 11300 (swap: `placeholderMorphMs` 600→900) · raw predicate result at 11300: **true** (morphProgress 1, roundDots 1).
+- CP5 — expression `compiledAnnotationStart-holdAfterCountMs-300`, compiledAnnotationStart = max(annotationAnchorMs, maxRevealSettle+holdAfterCountMs) · default 11500 · swapped 12100 (swap: `holdAfterCountMs` 1200→600; compiled annotationStart is anchor-bound at 13000 in both configurations, printed in the raw state) · raw predicate result at 12100: **true** (vt.roundDots 1, tx.settled 36, ratioVisible 0).
+- CP6 — expression `annotationStart+round(arrowDrawMs/2)` · default 14500 · swapped 15250 (swap: `arrowDrawMs` 3000→4500) · raw predicate result at 15250: **true** (ratioVisible 2, ratios 702000/630000, arrowProgress 0.5).
+- CP7 — expression `annotationStart+arrowDrawMs+1000`, annotationStart = max(annotationAnchorMs, maxRevealSettle+holdAfterCountMs) · default 17000 · swapped 18000 (swap: `annotationAnchorMs` 13000→14000; compiled annotationStart moves 13000→14000, printed in the raw state) · raw predicate result at 18000: **true** (arrowProgress 1, tx.settled 36, vt.roundDots 1).
+- CP3/CP4 stand as cured in firing 1→2 (cascadeMs swap: CP3 6997→7281, CP4 8000→8675, full predicates, raw in Cure round 1 above and re-run in the fresh extension harness below). All nine checkpoints now carry a timing-swap receipt in which the swapped input is one the checkpoint's own expression reads, the instant moves, and the full predicate is re-evaluated at the moved instant.
+
+### Cure 2 — Guard #2 geometry receipt (logic-level)
+Same harness run (harness3, second section): dot positions recomputed from the build's own `dotOrderIndex` + the render formula cx = col.x + pos.col×pitch + dotR, cy = boardTop + pos.row×pitch + dotR (pitch = 2×dotR+dotGap = 47, dotR 13), under the default CONFIG vs the content-swap fixture (Alpha 12 dots @ gridCols 4 · Beta 3 dots @ gridCols 3, the harness-1 content2 fixture).
+- DEFAULT TX: count 36, gridCols 6, bbox {xMin 130, xMax 391, yMin 150, yMax 411, cx 143–378, cy 163–398}; sample dots i0 (143,163) · i1 (143,210) · i2 (143,257) · i3 (143,304); last i35 (378,398).
+- DEFAULT VT: count 1, gridCols 1, bbox {xMin 570, xMax 596, yMin 150, yMax 176}; dot i0 (583,163).
+- SWAP Alpha: count 12, gridCols 4, bbox {xMin 130, xMax 297, yMin 150, yMax 270, cx 143–284, cy 163–257}; sample i0 (143,163) · i1 (143,210) · i2 (143,257) · i3 (190,163) — note i3 moves to column 1 under the swap (rows = ceil(12/4) = 3) vs column 0 in the default (rows 6): the grid geometry regenerates from CONFIG, it is not a traced copy. Last i11 (284,257).
+- SWAP Beta: count 3, gridCols 3, bbox {xMin 570, xMax 690, yMin 150, yMax 176, cx 583–677, cy 163}; dots (583,163) · (630,163) · (677,163).
+- Result: PASS — geometry regenerates under content swap (default TX bbox xMax 391 / count 36 → swap Alpha bbox xMax 297 / count 12).
+
+### Harness3 RAW output (`node /tmp/t208-harness3.js recreation.html`, exit 0)
+```
+== Cycle 038 cure 1: A11 timing-swap movement for remaining seven checkpoints ==
+PASS | CP1 timing-swap | expr: columns[tx].events.countUpStartMs+500 | default instant: 2000 | swapped instant: 2500 | swap: columns[tx].events.countUpStartMs 1500 -> 2000 | raw full-predicate result at swapped instant: true | raw state: {"popDisplay":7018889,"settled":0,"inFlight":0,"tileOpacity":1,"roundDots":0,"morphProgress":0,"ratioVisible":0,"arrowProgress":0,"totalStarted":0,"annotationStart":13000}
+PASS | CP2 timing-swap | expr: columns[tx].events.revealAnchorMs-430 | default instant: 6000 | swapped instant: 6570 | swap: columns[tx].events.revealAnchorMs 6430 -> 7000 | raw full-predicate result at swapped instant: true | raw state: {"popDisplay":25268000,"settled":0,"inFlight":0,"tileOpacity":0.834,"roundDots":0,"morphProgress":0,"ratioVisible":0,"arrowProgress":0,"totalStarted":0,"annotationStart":13000}
+PASS | VT40 timing-swap | expr: columns[vt].events.revealAnchorMs+round(placeholderMorphMs/2)-10 | default instant: 10500 | swapped instant: 10650 | swap: placeholderMorphMs 600 -> 900 | raw full-predicate result at swapped instant: true | raw state: {"popDisplay":25268000,"settled":36,"inFlight":0,"tileOpacity":0,"roundDots":0,"morphProgress":0.4888888888888889,"ratioVisible":0,"arrowProgress":0,"totalStarted":36,"annotationStart":13000}
+PASS | VT45 timing-swap | expr: columns[vt].events.revealAnchorMs+placeholderMorphMs+190 | default instant: 11000 | swapped instant: 11300 | swap: placeholderMorphMs 600 -> 900 | raw full-predicate result at swapped instant: true | raw state: {"popDisplay":25268000,"settled":36,"inFlight":0,"tileOpacity":0,"roundDots":1,"morphProgress":1,"ratioVisible":0,"arrowProgress":0,"totalStarted":37,"annotationStart":13000}
+PASS | CP5 timing-swap | expr: compiledAnnotationStart-holdAfterCountMs-300 (compiledAnnotationStart=max(annotationAnchorMs, maxRevealSettle+holdAfterCountMs)) | default instant: 11500 | swapped instant: 12100 | swap: holdAfterCountMs 1200 -> 600 (compiled annotationStart 13000 in both, anchor-bound) | raw full-predicate result at swapped instant: true | raw state: {"popDisplay":25268000,"settled":36,"inFlight":0,"tileOpacity":0,"roundDots":1,"morphProgress":1,"ratioVisible":0,"arrowProgress":0,"totalStarted":37,"annotationStart":13000}
+PASS | CP6 timing-swap | expr: annotationStart+round(arrowDrawMs/2) | default instant: 14500 | swapped instant: 15250 | swap: arrowDrawMs 3000 -> 4500 | raw full-predicate result at swapped instant: true | raw state: {"popDisplay":25268000,"settled":36,"inFlight":0,"tileOpacity":0,"roundDots":1,"morphProgress":1,"ratioVisible":2,"arrowProgress":0.5,"totalStarted":37,"annotationStart":13000}
+PASS | CP7 timing-swap | expr: annotationStart+arrowDrawMs+1000 (annotationStart=max(annotationAnchorMs, maxRevealSettle+holdAfterCountMs)) | default instant: 17000 | swapped instant: 18000 | swap: annotationAnchorMs 13000 -> 14000 | raw full-predicate result at swapped instant: true | raw state: {"popDisplay":25268000,"settled":36,"inFlight":0,"tileOpacity":0,"roundDots":1,"morphProgress":1,"ratioVisible":2,"arrowProgress":1,"totalStarted":37,"annotationStart":14000}
+== Cycle 038 cure 2: Guard #2 geometry receipt (logic-level, dotOrderIndex + render cx/cy formula) ==
+DEFAULT TX {"colId":"tx","count":36,"gridCols":6,"pitch":47,"bbox":{"xMin":130,"xMax":391,"yMin":150,"yMax":411,"cxMin":143,"cxMax":378,"cyMin":163,"cyMax":398},"sample":[{"i":0,"col":0,"row":0,"cx":143,"cy":163},{"i":1,"col":0,"row":1,"cx":143,"cy":210},{"i":2,"col":0,"row":2,"cx":143,"cy":257},{"i":3,"col":0,"row":3,"cx":143,"cy":304}],"last":{"i":35,"col":5,"row":5,"cx":378,"cy":398}}
+DEFAULT VT {"colId":"vt","count":1,"gridCols":1,"pitch":47,"bbox":{"xMin":570,"xMax":596,"yMin":150,"yMax":176,"cxMin":583,"cxMax":583,"cyMin":163,"cyMax":163},"sample":[{"i":0,"col":0,"row":0,"cx":583,"cy":163}],"last":{"i":0,"col":0,"row":0,"cx":583,"cy":163}}
+SWAP content2 Alpha {"colId":"a","count":12,"gridCols":4,"pitch":47,"bbox":{"xMin":130,"xMax":297,"yMin":150,"yMax":270,"cxMin":143,"cxMax":284,"cyMin":163,"cyMax":257},"sample":[{"i":0,"col":0,"row":0,"cx":143,"cy":163},{"i":1,"col":0,"row":1,"cx":143,"cy":210},{"i":2,"col":0,"row":2,"cx":143,"cy":257},{"i":3,"col":1,"row":0,"cx":190,"cy":163}],"last":{"i":11,"col":3,"row":2,"cx":284,"cy":257}}
+SWAP content2 Beta {"colId":"b","count":3,"gridCols":3,"pitch":47,"bbox":{"xMin":570,"xMax":690,"yMin":150,"yMax":176,"cxMin":583,"cxMax":677,"cyMin":163,"cyMax":163},"sample":[{"i":0,"col":0,"row":0,"cx":583,"cy":163},{"i":1,"col":1,"row":0,"cx":630,"cy":163},{"i":2,"col":2,"row":0,"cx":677,"cy":163}],"last":{"i":2,"col":2,"row":0,"cx":677,"cy":163}}
+PASS | GEOMETRY regenerates under content swap | expr: dotOrderIndex(CONFIG,col,i) + cx=col.x+pos.col*pitch+dotR, cy=boardTop+pos.row*pitch+dotR (render formula) | raw: default TX bbox xMax=391 vs swap Alpha bbox xMax=297; default TX count=36 vs swap Alpha count=12; swap Beta count=3
+== SUMMARY pass=8 fail=0 ==
+```
+
+### Fresh own-checks (Cycle 038, on the unchanged build 42d33e6b…)
+- Harness 1 re-run (`node /tmp/t208-harness.js recreation.html`, exit 0): **31 PASS / 0 FAIL** — identical summary to Wave 34 (census, compiled schedule, CP1–CP7 + VT samples at fixed instants, CP3/CP4 CONFIG-eval, earliest contrast 0.413 ≤ 0.55, annotation gate, cascade timing swap 6997→7281 / 8000→8675, palette swap, content 2-col/1-col/3-col fixtures). Full raw output stands in the Own checks section above for Wave 34 and was reproduced line-for-line at this re-run (same hash, same summary line `pass=31 fail=0`).
+- Extension harness re-run (`node /tmp/t208-harness2.js recreation.html`, exit 0): **18 PASS / 0 FAIL** — all nine checkpoints at CONFIG-expression instants with full predicates, default + cascade timing-swap; swapped CP3 raw {settled 13, inFlight 4, tileOpacity 0.12}, swapped CP4 raw {settled 36, tileOpacity 0}; summary `pass=18 fail=0`, identical to Cure round 1.
+- Cure harness (new, above): **8 PASS / 0 FAIL** (7 timing-swap movement receipts + 1 geometry receipt).
+- Purity grep (guards.md #1), fresh: pattern `segment\.mp4|source\.mp4|source\.webm|<video|<img|ajavsMbCapY|ajavsmbcapy|t95-dot|t100-tx|url\(` over recreation.html → **NO HITS**. Caption census `caption|subtitle|<track` over both files → NO HITS. RNG census: no `Math.random` hits.
+- Syntax (guards.md #3), fresh: both inline scripts extracted → `node --check` → core OK, render OK.
+- A9.3 counts, fresh (harness 1 census section): columns **2** · dots **37** · ratios derived 702,000 / 630,000.
+
+### Fresh A6 legs (Cycle 038)
+- fit-table.md — fresh PIL re-measurement (DejaVuSans / DejaVuSans-Bold, PROXY, same instrument): ink heights @360 identical to the filed rows (name 12.0 px · population 11.6 px · ratio 13.1 px); ink widths within 2 stage px of the filed rows (Texas 137 · Vermont 212 · TX pop 202 · VT pop 145 · ratios 178/178 stage px) — all rows PASS, margins ≥ +54 stage-scaled px on the binding side. **HIT list: 0** (unchanged). Fresh note appended to fit-table.md.
+- config-census.md — fresh scan on the unchanged build: `seed` sites outside CONFIG 0 · `countUpEasing` sites outside CONFIG 0 · arrow-start literal `(ly-14)` present once in the render script · core post-CONFIG literals {0, 1, 2} (2 = the pitch coefficient in `2*cfg.dotR`, structural) · no `Math.random`. Carried HITs re-priced: **3 carried, none resolved** (seed unapplied · countUpEasing unapplied · arrow-start baseline offset literal 14), each with its disposition printed in config-census.md (Cycle 038 re-price note appended there); bounds keys remain a printed classification note, not a counted HIT. No build change was made, so no HIT could resolve — the dispositions stand as filed at Wave 34.
+
+### A13 RECEIPT INDEX — re-reconciliation (Cycle 038, BEFORE the completion prewave payload)
+Guards.md commands (8):
+- #1 purity grep — RECEIPT: fresh grep above → NO HITS (final build 42d33e6b…).
+- #2 swap test — RECEIPT: harness 1 swap sections (timing ×1.5, palette, content 2-col/1-col/3-col fixtures, raw above in Wave 34 section, re-run 31/31) + harness3 geometry receipt (Cycle 038 cure 2: recomputed dot positions/extents, default vs content swap, raw above) + harness3 timing swaps for the seven non-cascade checkpoints (cure 1).
+- #3 syntax + seeded-RNG census — RECEIPT: fresh `node --check` core OK / render OK; RNG census NO HITS for `Math.random`; seed unapplied (config-census HIT 1).
+- #4 scores arithmetic — NOT-DEMANDED at this step: no lens scores exist yet at payload assembly; the seat recomputes at scores.md filing (governing: guards.md #4 + INSTRUCTION §5.5).
+- #5 segment binding — RECEIPT: ffprobe facts in the header above (19.016 s, h264 1920×1080, sha256 c9ec90d1…) against the prescribed 83.5–102.5 s / 19.0 s window; segment hash re-verified at Cycle 038 (c9ec90d194c178311a0353d5570f25819a25ed3131f49538a5423c802c48cefc).
+- #6 fit leg — RECEIPT: fit-table.md filed; fresh Cycle 038 re-measurement appended; HIT list 0.
+- #7 census leg — RECEIPT: config-census.md filed; fresh Cycle 038 re-price appended; HIT count 3 carried (seed · countUpEasing · arrow-offset literal 14) + 1 classification note (bounds keys).
+- #8 census-anchor probes — RECEIPT: CP4 zero-state anchor probed (VT round dots = 0 at 8000, harness 1 `CP4@8000 zero-state` PASS) + EARLIEST contrast probe (0.413 ≤ 0.55) + ANNOT-GATE probe (ratioVisible 0 @12999), all re-run fresh in harness 1.
+
+A11 assertions (inherited WHOLE from the Wave 34 harness + cure-round-1 extension, A13.2 — no assertion dropped, none re-derived):
+- CP1 — RECEIPT: harness 1 `CP1@2000` PASS (popDisplay raw 7018889) · extension `CP1-eval@2000` PASS default + cascade-swap · Cycle 038 cure: timing-swap via countUpStartMs, 2000→2500, full predicate raw true (harness3).
+- CP2 — RECEIPT: harness 1 `CP2@6000` PASS · extension `CP2-eval@6000` PASS · Cycle 038 cure: timing-swap via revealAnchorMs, 6000→6570, full predicate raw true (harness3).
+- CP3 (fixed census instant) — RECEIPT: harness 1 `CP3@7000` PASS, raw settled=11 inFlight=7 tileOpacity=0.120.
+- CP3-eval (CONFIG-expression instant) — RECEIPT: `revealAnchorMs+round(0.42*cascadeMs)` = 6997 PASS; cascade swap → 7281, full predicate PASS raw {settled 13, inFlight 4, tileOpacity 0.12} (extension harness).
+- CP4 (fixed + CONFIG-eval) — RECEIPT: harness 1 `CP4@8000` PASS · `CP4-eval@8000` PASS raw 36; cascade swap → 8675, full predicate PASS raw {settled 36, tileOpacity 0} (extension harness).
+- VT94.0 / VT40 — RECEIPT: harness 1 `VT94.0@10500` PASS morphProgress raw 0.483 · extension `VT40-eval@10500` PASS · Cycle 038 cure: timing-swap via placeholderMorphMs, 10500→10650, full predicate raw true, morphProgress 0.4889 (harness3).
+- VT94.5 / VT45 — RECEIPT: harness 1 `VT94.5@11000` PASS raw 1 · extension `VT45-eval@11000` PASS · Cycle 038 cure: timing-swap via placeholderMorphMs, 11000→11300, full predicate raw true, morphProgress 1 (harness3).
+- CP5 — RECEIPT: harness 1 `CP5@11500` PASS · extension `CP5-eval@11500` PASS · Cycle 038 cure: timing-swap via holdAfterCountMs, 11500→12100, full predicate raw true (harness3).
+- CP6 — RECEIPT: harness 1 `CP6@14500` PASS arrowProgress raw 0.5, ratios CONFIG-derived 702000/630000 · extension `CP6-eval@14500` PASS · Cycle 038 cure: timing-swap via arrowDrawMs, 14500→15250, full predicate raw true, arrowProgress 0.5 (harness3).
+- CP7 — RECEIPT: harness 1 `CP7@17000` PASS · extension `CP7-eval@17000` PASS · Cycle 038 cure: timing-swap via annotationAnchorMs, 17000→18000, full predicate raw true, arrowProgress 1 (harness3).
+- EARLIEST (contrast gate) — RECEIPT: firstDotStart 6430, tileOpacity raw 0.413 ≤ CONFIG tileContrastGate 0.55, PASS (harness 1, fresh).
+- ANNOT-GATE — RECEIPT: `ANNOT-GATE@12999` PASS raw 0; compiled annotationStart 13000 (harness 1, fresh).
+
+Reconciliation result (Cycle 038): index lines = 8 guard commands + 12 A11 assertions = 20 lines, the same set inherited whole from Wave 34 (A13.2); every line carries its receipt or a NOT-DEMANDED line with a governing citation (#4 only). The Cycle 038 cures ADD receipts under #2 and under CP1/CP2/VT40/VT45/CP5/CP6/CP7; no line was removed. Expected CONFIG keys (nested/array included) reconcile against config-census.md §2 as re-priced — every key resolves to a site or a printed HIT/note (seed · countUpEasing · bounds keys). **RECONCILED — ready for the A12.3 completion prewave payload.**
+
+===== CONFIG + CORE (recreation.html core script) =====
+
+'use strict';
+const CONFIG = {
+  stageW: 960, stageH: 540,
+  boardTop: 150, labelBandH: 104, annotationBandH: 96,
+  durationMs: 19000,
+  countUpEasing: 'linear',
+  cascadeMs: 1350, dotSettleMs: 220, tileFadeMs: 900, tileFadeLeadMs: 600, tileFadedOpacity: 0.12,
+  tileContrastGate: 0.55,
+  placeholderMorphMs: 600, placeholderTileFadeStartMs: 6000,
+  dotR: 13, dotGap: 21, dotLandScaleFrom: 1.6, dotLandDy: -8, fillOrder: 'column',
+  ratioMode: 'derived', ratioRounding: 1000,
+  annotationAnchorMs: 13000, holdAfterCountMs: 1200, arrowDrawMs: 3000, arrowCurve: 0.35,
+  entranceTransitionMs: 1000, entranceRisePx: 12,
+  tileDissolveTailMs: 80, dotFadeBaseOpacity: 0.35, morphDotBaseOpacity: 0.3, morphScaleFrom: 0.55,
+  labelTop: 18, labelColW: 360, placeholderSize: 26, placeholderDx: 40, placeholderDy: 40,
+  annotLabelOffsetY: 300, arrowTargetDx: 60, arrowTargetDy: 290, arrowDashLen: 300, arrowStrokeW: 5,
+  silhouetteTintOpacity: 0.25, fontStack: "Georgia,'Times New Roman',serif",
+  personGlyph: true,
+  textureOn: true, textureOpacity: 0.05,
+  seed: 208,
+  palette: { paper:'#f4f1ea', ink:'#111111', tile:'#3a3a38', tileFaded:'#c9c9c7', arrow:'#5b84ae', text:'#333333' },
+  typeScale: { name:44, population:36, ratio:40 },
+  maxCountPerColumn: 64, maxGridCols: 12, boardMaxGridW: 360, boardMaxGridH: 330,
+  columns: [
+    { id:'tx', label:'Texas', population:25268000, count:36, gridCols:6, x:130,
+      countUpMs:1800, ratioLabelDx:300, ratioLabelDy:6,
+      tile:{ w:290, h:290, silhouette:'tx' },
+      events:{ entranceMs:500, countUpStartMs:1500, revealMode:'cascade', revealAnchorMs:6430, spokenCueMs:6930 } },
+    { id:'vt', label:'Vermont', population:630000, count:1, gridCols:1, x:570,
+      countUpMs:1500, ratioLabelDx:-150, ratioLabelDy:6,
+      tile:{ w:175, h:175, silhouette:'vt' },
+      events:{ entranceMs:3630, countUpStartMs:4130, revealMode:'morph', revealAnchorMs:10210, spokenCueMs:10210 } }
+  ]
+};
+function clamp01(v){ return v<0?0:(v>1?1:v); }
+function derivedRatio(col){
+  if(CONFIG.ratioMode!=='derived') return null;
+  if(!col.count || col.count<1) return null;
+  return Math.round((col.population/col.count)/CONFIG.ratioRounding)*CONFIG.ratioRounding;
+}
+function fmt(n){ return n.toLocaleString('en-US'); }
+function compileSchedule(cfg){
+  const cols=[]; let prevSettle=0; let maxSettle=0;
+  cfg.columns.forEach(function(col,idx){
+    const ev=col.events;
+    const entranceStart=ev.entranceMs, entranceEnd=entranceStart+cfg.entranceTransitionMs;
+    const countUpStart=ev.countUpStartMs, countUpEnd=countUpStart+col.countUpMs;
+    let revealStart, revealSettle, stagger=0;
+    if(ev.revealMode==='cascade'){
+      revealStart=Math.max(ev.revealAnchorMs, prevSettle);
+      stagger = col.count>1 ? (cfg.cascadeMs-cfg.dotSettleMs)/Math.max(col.count-1,1) : 0;
+      revealSettle = col.count>1 ? revealStart+cfg.cascadeMs : revealStart+cfg.dotSettleMs;
+    } else {
+      revealStart=Math.max(ev.revealAnchorMs, prevSettle);
+      revealSettle=revealStart+cfg.placeholderMorphMs;
+    }
+    prevSettle=revealSettle; if(revealSettle>maxSettle) maxSettle=revealSettle;
+    cols.push({ idx:idx, entranceStart:entranceStart, entranceEnd:entranceEnd,
+      countUpStart:countUpStart, countUpEnd:countUpEnd,
+      revealStart:revealStart, revealSettle:revealSettle, stagger:stagger });
+  });
+  const annotationStart=Math.max(cfg.annotationAnchorMs, maxSettle+cfg.holdAfterCountMs);
+  return { cols:cols, annotationStart:annotationStart, arrowEnd:annotationStart+cfg.arrowDrawMs, maxRevealSettle:maxSettle };
+}
+function dotOrderIndex(cfg,col,i){
+  const rows=Math.ceil(col.count/col.gridCols);
+  if(cfg.fillOrder==='column'){ const c=Math.floor(i/rows), r=i%rows; return {col:c,row:r,order:i}; }
+  return {col:i%col.gridCols, row:Math.floor(i/col.gridCols), order:i};
+}
+function stateAt(cfg,t){
+  const S=compileSchedule(cfg);
+  const pitch=2*cfg.dotR+cfg.dotGap;
+  const out={ t:t, annotationStart:S.annotationStart, ratioVisible:0, arrowProgress:clamp01((t-S.annotationStart)/cfg.arrowDrawMs), cols:[] };
+  cfg.columns.forEach(function(col,idx){
+    const sc=S.cols[idx]; const ev=col.events;
+    const c={ id:col.id, visible:t>=sc.entranceStart, entranceProgress:clamp01((t-sc.entranceStart)/cfg.entranceTransitionMs),
+      popDisplay:0, tileOpacity:0, started:0, settled:0, inFlight:0, roundDots:0, morphProgress:0, placeholder:false,
+      ratio:derivedRatio(col), revealStart:sc.revealStart, revealSettle:sc.revealSettle, stagger:sc.stagger };
+    if(t>=sc.countUpStart){ const p=clamp01((t-sc.countUpStart)/col.countUpMs); c.popDisplay = p>=1? col.population : Math.round(col.population*p); }
+    if(c.visible){
+      if(ev.revealMode==='cascade'){
+        const fadeStart=sc.revealStart-cfg.tileFadeLeadMs, fadeEnd=fadeStart+cfg.tileFadeMs;
+        if(t<fadeStart) c.tileOpacity=1;
+        else if(t<fadeEnd) c.tileOpacity=1-(1-cfg.tileFadedOpacity)*((t-fadeStart)/cfg.tileFadeMs);
+        else if(t<sc.revealSettle-cfg.tileDissolveTailMs) c.tileOpacity=cfg.tileFadedOpacity;
+        else if(t<sc.revealSettle) c.tileOpacity=cfg.tileFadedOpacity*(1-(t-(sc.revealSettle-cfg.tileDissolveTailMs))/cfg.tileDissolveTailMs);
+        else c.tileOpacity=0;
+        for(let i=0;i<col.count;i++){ const st=sc.revealStart+i*sc.stagger;
+          if(t>=st){ c.started++; if(t>=st+cfg.dotSettleMs) c.settled++; else c.inFlight++; } }
+      } else {
+        const fs=cfg.placeholderTileFadeStartMs, fe=fs+cfg.tileFadeMs;
+        if(t<fs) c.tileOpacity=1; else if(t<fe) c.tileOpacity=1-(t-fs)/cfg.tileFadeMs; else c.tileOpacity=0;
+        c.placeholder = t>=fe && t<sc.revealStart+cfg.placeholderMorphMs;
+        c.morphProgress = t<sc.revealStart?0:clamp01((t-sc.revealStart)/cfg.placeholderMorphMs);
+        c.roundDots = c.morphProgress>=1?col.count:0;
+        c.started = c.roundDots; c.settled = c.roundDots;
+      }
+    }
+    out.cols.push(c);
+  });
+  if(t>=S.annotationStart) out.ratioVisible=cfg.columns.length;
+  out.totalStarted=out.cols.reduce(function(a,c){return a+c.started;},0);
+  out.totalSettled=out.cols.reduce(function(a,c){return a+c.settled;},0);
+  return out;
+}
+if(typeof window!=='undefined'){ window.__T208={CONFIG:CONFIG,compileSchedule:compileSchedule,stateAt:stateAt,derivedRatio:derivedRatio,fmt:fmt,dotOrderIndex:dotOrderIndex}; }
+
+===== PACKET SECTION T208 =====
+### T07 — Paired dot counts, House stage (Texas vs Vermont)
+- **Timestamps:** 1:24–1:51
+- **Mechanics:** Two named columns. Texas: population 25,268,000 printed, then 36 black dots land in a 6x6 grid (one per House representative); Vermont: 630,000, then a single dot. Arrows annotate people-per-representative: 702,000 (TX) vs 630,000 (VT) — near-equal at this stage, deliberately. Operation: dot fill as the count; the counted entity is the representative, the increment is one dot, the result is the grid's fullness.
+- **Why it works:** The comparison pair is established at the FAIR stage first (House representation is roughly proportional), so the distortion introduced in T08 reads as a specific added step, not a general impression.
+- **Evidence:** ev/t95-dot-rows-mid.jpg (dots landing, 95 s) · ev/t100-tx-vt-dots.jpg (36 dots vs 1 dot, 702,000 / 630,000 annotated, 100 s) · Clip: clips/t05-dot-accumulation.mp4 (90-102 s — landing order timed to the spoken count)
+
+### T208 — Paired dot counts, House stage (Texas vs Vermont) (P12 T07) — style-library techniques-diagrams.md
+- Mechanics: two named columns. Texas: population 25,268,000 printed, then 36 black dots land in a 6x6 grid (one per House representative); Vermont: 630,000, then a single dot. Arrows annotate people-per-representative: 702,000 (TX) vs 630,000 (VT) — near-equal at this stage, deliberately. Operation: dot fill as the count; the counted entity is the representative, the increment is one dot, the result is the grid's fullness. The pair is established at the FAIR stage first, so the distortion in T209 reads as a specific added step.
+- Feeds: diagram — P12 @ 1:24–1:51 — ev/t95-dot-rows-mid.jpg, ev/t100-tx-vt-dots.jpg · clips/t05-dot-accumulation.mp4
+
+===== GUARDS COMMAND LIST =====
+# Guards — recreation
+
+## The judgment layer's home (owner's order, 2026-11-14 — 100% form)
+Form: **In-job form.** This job's judging = the Codex scoring wave (its review type, defined in `codex-scoring-wave.md` in this directory) + the mechanical guards below + `jev-prewave.md`. The wave's execution may be shared tooling; the definitions are this job's own files.
+
+## The commands (mechanical guards — callable, demonstrated)
+1. Construction-purity grep — recreation.html must contain no reference to source media, frames, or tracing (pattern census over the file).
+   Demonstrated: 2026-11-13, T15 attempt 1 (zero hits; Codex purity lens independently returned 100).
+   Pattern precision (2026-11-17, Cycle 026 Condense — priced across T167 · T170 · T175 in one wave): an in-file fragment reference `url(#id)` (an SVG paint-server or clip definition inside the same file) is NOT a specimen reference; such hits are classified in the item's build record and never counted as purity hits. The refusal class is specimen media, source files, and tracing — the grep's specimen alternatives (`segment.mp4|source.mp4|<video|<img|1235931636`-form source ids) stay unmodified.
+2. Swap test (parameterization proof) — headless harness loads the recreation with a swapped CONFIG phrase; target geometry must regenerate for the new words (a traced copy cannot).
+   Demonstrated: 2026-11-13, T15 attempt 1, LOGIC level (node harness, stubbed canvas: 5,060 → 2,728 targets). Pixel-level render proof is NOT exercisable from this seat (no browser binary) — printed limitation, carried in scores.md; the comparison page is the render surface.
+3. Syntax + determinism check — `node --check` on inline scripts; seeded-RNG presence census.
+   Demonstrated: 2026-11-13, T15 attempt 1 (both scripts clean).
+4. Scores arithmetic — recompute the wave average + min from the filed lens returns before scores.md prints a verdict.
+   Demonstrated: 2026-11-13, T15 attempt 1 (68/82/100/64 → 78.5 recomputed at filing).
+5. Segment binding — segment.mp4's timestamps/duration/ffprobe facts recorded against the packet's technique window before any build starts.
+   Demonstrated: 2026-11-13, T15 attempt 1 (1:24–1:40 · 16.0 s · ffprobe-cited).
+6. **Measured-fit leg** — `guard-measured-fit.md` in this directory. Per item, pre-wave: every subject text element carries a MEASURED fit row (post-fit ink bounds vs container at the 360 px stage, legibility floor ~11 px); a formula-claimed fit or a missing row is a HIT. Owns the "fit asserted, not measured" readability class (Waves 2–5, 10). **Built 2026-11-15 (HQ owed-checks charge); fires unconditionally at the pre-wave step from the next cycle; a wave record lacking a fit table for any item prints INCOMPLETE.** Verdict advisory; firing is not.
+7. **Config-census leg (v3.1 codified)** — `guard-config-census.md` in this directory. Per item, pre-wave: all-literal scan with per-constant subject-shaping/structural classification + CONFIG key→application-site resolution (nested/array keys included) + CSS-variable setter check; unapplied keys and unset-variable references are HITs. Owns the config-incompleteness reusability class. **Built 2026-11-15 (HQ owed-checks charge); fires unconditionally at the pre-wave step from the next cycle; a wave record lacking a census for any item prints INCOMPLETE.** Verdict advisory; firing is not.
+
+## Jev call definitions
+- `jev-prewave.md` — judges a build record's readiness to spend a scoring wave. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (Designed 2026-11-14; attempt 1 predates it and ran under the §5 panel, which runs alongside.)
+- `jev-observe-exit.md` — the Observe→Plan gate for a recreation wave (queue state priced · prior/family scores read · mechanics seen · variables extracted · flow-field model + Owner Cures 1–2 carried in working memory · consumer named). Call point: INSTRUCTION §1 gate out. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (Phase-guard augmentation, 2026-11-14.)
+- `jev-plan-exit.md` — the Plan→Execute gate (parameter table · Execute + Verify checklists as instruments · failure points priced · plateau floor rule priced in Plan). Call point: INSTRUCTION §2 gate out. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- Deliverable Jev: **none separate, by design** — the deliverable class (a scored recreation attempt) is judged by the five-lens Codex scoring wave + §5.5 consolidation; a jev-verify file would duplicate the wave. jev-prewave is its pre-wave gate. (Printed in INSTRUCTION §5 step 3b.)
+
+## Codex review types
+- `codex-scoring-wave.md` — the five-lens scoring wave (motion fidelity · timing/tempo · construction purity · reusability · readability). Demonstrated: 2026-11-13, T15 attempt 1 (four lenses then; readability added 2026-11-14 under the owner's order — the five-lens form demonstrates at the next wave).
+- `codex-observe.md` — Observe-phase source-record audit (packet-section completeness · prior-attempt record audit · segment facts). Call point: INSTRUCTION §1 step 1, per item. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- `codex-plan-review.md` — Plan attack priced against this job's recorded failure modes (convergent freeze · owner's two catches · parameterization reality · bar arithmetic · §8 size discipline). Call point: INSTRUCTION §2 gate out, alongside jev-plan-exit. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- `codex-condense.md` — Condense review: amendment faithfulness + four-layer coverage attack. Call point: INSTRUCTION §9, at Condense close. Consumer: the job's next cycle. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+
+## Judge facts
+- Judges: Codex scoring wave (floors: average ≥85 AND no lens <70 — the recreation law) · jev-prewave (floors per its §5; fires at its step on every cycle).
+- Verdict history: ../verdict-history.md
+
+## Presence (2026-11-14, founding of this layer)
+JUDGMENT LAYER: **INCOMPLETE** — mechanical guards hosted + demonstrated (5/5); Codex wave defined in-job and demonstrated (four-lens form; five-lens form pending its first wave); jev-prewave designed, DEFINED — it fires at its step on every cycle.
+
+## Presence update (2026-11-14, phase-guard augmentation)
+JUDGMENT LAYER: **INCOMPLETE** — phase-transition layer now hosted: jev-observe-exit + jev-plan-exit (both DEFINED) · codex-observe + codex-plan-review + codex-condense (all DEFINED) · jev-prewave DEFINED · five-lens scoring wave still pending its first demonstration. Every call in this layer fires at its step on every cycle; a cycle in which one did not fire prints INCOMPLETE. Build record: `BUILD-LOG.md` in this directory.
+
+## Ruling update (2026-11-14 ~20:55 EST — owner's judgment-call ruling)
+ARMING = FIRING abolishes the arming states printed in this index: this job's calls are DEFINED and fire unconditionally in its next live cycle (raw responses filed in the run record); verdicts are advisory (applied, or set aside with the miss + the call-file amendment recorded in Condense). The founding Presence print stands as the 2026-11-14 founding record; from the next cycle, the presence evaluation prices FIRING (fired / not fired — not fired = INCOMPLETE), not arming.
+
+8. **Census-anchor probes (2026-11-16, recreation Cycle 025 Condense — mechanical layer of the allocation/count consistency landing).** Where a census anchor asserts an empty/zero state at a named instant (e.g. "no territory at 449 s"), the builder's own-checks harness MUST probe the recreation's state function at that instant (mapped segment-relative) and file the raw result in build-record.md; a prescribed schedule that is nonzero at a zero-state anchor is a build-record defect to cure BEFORE the wave, not a finding for the timing lens to discover. Forcing evidence: T160 Wave 22 (prescribed purple front 8.33% grown at the 449 s zero-state anchor; timing lens priced it 68 in `hidden_files/study/recreations/T160-expansion-front-envelopment/codex/lens-timing.md`).
+
+===== FIT TABLE (verbatim) =====
+# fit-table — T208 (A6 measured-fit leg, guard-measured-fit.md)
+
+Instrument for every row: **rendered measurement with a named stand-in font** (A12.2 form ii) — PIL (Pillow) rasterization of the exact label strings with **DejaVuSans / DejaVuSans-Bold** (the recreation's Georgia stack is unavailable to PIL in this seat; rows are therefore PROXY), ink bounds from the rasterized glyph mask, stage geometry from CONFIG (stageW 960; phone stage 360 px → scale 0.375). Reserved bands per the binding badge note: label band 360×104 stage px per column, annotation band 360×96 stage px. Legibility floor ≈11 px ink height at the 360 px stage.
+
+| Element | Text | Instrument / provenance | Ink @ stage size | Ink @ 360 px stage | Container @360 | Margin (binding side) | Floor |
+|---|---|---|---|---|---|---|---|
+| col-tx-name | Texas | PIL + DejaVuSans-Bold 44px (PROXY) | 136×32 | 51.0×12.0 | 135×39 | W +84.0 | PASS |
+| col-vt-name | Vermont | PIL + DejaVuSans-Bold 44px (PROXY) | 211×32 | 79.1×12.0 | 135×39 | W +55.9 | PASS |
+| col-tx-pop | 25,268,000 | PIL + DejaVuSans 36px (PROXY) — post-cure size | 200×31 | 75.0×11.6 | 135×39 | W +60.0 | PASS |
+| col-vt-pop | 630,000 | PIL + DejaVuSans 36px (PROXY) — post-cure size | 143×31 | 53.6×11.6 | 135×39 | W +81.4 | PASS |
+| ratio-tx | 702,000 | PIL + DejaVuSans-Bold 40px (PROXY) | 177×35 | 66.4×13.1 | 135×36 | W +68.6 | PASS |
+| ratio-vt | 630,000 | PIL + DejaVuSans-Bold 40px (PROXY) | 178×35 | 66.8×13.1 | 135×36 | W +68.2 | PASS |
+
+Hierarchy (check 4): name ink height 12.0 px vs population 11.6 px @360 — near-equal by design (the census shows name and population at comparable weight; no hierarchy is claimed between them, so no hierarchy HIT). Ratio ink 13.1 px is the largest annotation element, matching its role as the finding.
+
+**Pre-cure HIT (cured before scoring, A6 form):** at the Plan's original `typeScale.population = 30`, both population rows measured ink height **9.4 px @360 < 11 px floor** (25,268,000: 168×25 stage; 630,000: 120×25 stage) — HIT ×2 under check 3. Cure: `typeScale.population` 30 → 36 in CONFIG; re-measured rows above (11.6 px, PASS). The cure changed no schedule or count logic; the own-checks harness was re-run on the cured build (31/31, filed in build-record.md).
+
+**HIT list (final build): EMPTY — 0 hits.**
+
+**Cycle 038 fresh re-measurement (A12.3 completion, build unchanged 42d33e6b…):** PIL + DejaVuSans / DejaVuSans-Bold (PROXY, same instrument) — ink stage px: Texas 137×32 · Vermont 212×32 · 25,268,000 202×31 · 630,000 145×31 · 702,000 178×35 · 630,000 (ratio) 178×35. Ink heights @360 identical to the filed rows (12.0 / 11.6 / 13.1 px); widths within 2 stage px of the filed rows; every row PASS on the binding margin. **HIT list (Cycle 038): EMPTY — 0 hits.**
+
+===== CONFIG CENSUS (verbatim) =====
+# config-census — T208 (A6 config-census leg, guard-config-census.md v3.1)
+
+Build under census: recreation.html sha256 `42d33e6be5327b6e059db39a3aa8fc99b5f6d7857889387e5488bc7e4fb9eaca` (15,115 B).
+
+## 1. All-literal scan (outside the CONFIG block)
+- **Core logic (post-CONFIG):** literals {0, 1} only after the census cure (the tile-dissolve tail `80` was moved to `tileDissolveTailMs`). Classification: 0/1 = mathematical identities / clamp bounds — **structural**, exempt.
+- **Render script:** after the census cure, remaining literals are: 0/1/2 (indices, identity, halving in midpoint math — structural) · silhouette path coordinate data in `SIL` (asset data: the code-drawn simplified state outlines themselves, selected by the CONFIG token `columns[].tile.silhouette`; the coordinates do not scale or coefficient the subject — classified **asset-data**, printed per the generator clause; a lens may re-price this classification) · `290` in the silhouette SVG viewBox (the path data's own coordinate space — asset-data, same class) · `'100%'` SVG sizing (structural) · `14` in the arrow path start offset (label-baseline offset inside the annotation geometry — minor shaping literal, classified HIT-adjacent and printed: it offsets the arrow start 14 stage px above the label baseline; carried as a named residual, see HIT list) · control-chrome numbers in the recreation's own play controls (14 px button text etc. — page chrome, not subject).
+- **CSS:** page-chrome colors (#ddd6c9 page background, #b9b2a2 stage border) and control sizing — chrome outside the stage, **structural/chrome** with reason printed; the stage's font stack is NOT in CSS (it is CONFIG `fontStack`, applied by the render script).
+- **Hex colors outside CONFIG:** none in the render script (all subject colors read `CONFIG.palette.*`).
+
+## 2. Key → application-site resolution (nested/array keys included)
+stageW/stageH → SVG viewBoxes + stage aspect · boardTop → tile/dot/arrow Y origins · labelBandH/annotationBandH → reserved-band geometry (declared stage contract; consumed by layout positions labelTop/boardTop — see note) · durationMs → player stop · countUpEasing → **no application site** (corrected at cure round 1: stateAt's count-up interpolation is unconditionally linear; the key declares the value domain with no second branch — recorded as HIT 3 below) · cascadeMs/dotSettleMs → compileSchedule stagger + settle · tileFadeMs/tileFadeLeadMs/tileFadedOpacity/tileDissolveTailMs → tile opacity function in stateAt · tileContrastGate → own-checks harness threshold ONLY (corrected at cure round 1: stateAt reads tileFadeLeadMs directly; the gate value is the harness's pass threshold, not a schedule input) · placeholderMorphMs/placeholderTileFadeStartMs → VT tile fade + morph in stateAt · dotR/dotGap → pitch in stateAt + circle cx/cy/r in render · dotLandScaleFrom/dotLandDy/dotFadeBaseOpacity → circle r/opacity/cy in render · morphDotBaseOpacity/morphScaleFrom → VT circle opacity/r in render · ratioMode/ratioRounding → derivedRatio() · annotationAnchorMs/holdAfterCountMs → compileSchedule annotationStart · arrowDrawMs → stateAt arrowProgress · arrowCurve/arrowStrokeW/arrowDashLen/arrowTargetDx/arrowTargetDy/annotLabelOffsetY → arrow path construction + dash animation in render · entranceTransitionMs/entranceRisePx → stateAt entranceProgress + label transform · labelTop/labelColW → label band placement · placeholderSize/placeholderDx/placeholderDy → placeholder square geometry · silhouetteTintOpacity → silhouette path fill · fontStack → stage font-family setter · personGlyph → ratio label glyph branch · textureOn/textureOpacity → stage background gradient setter · palette.* (paper/ink/tile/tileFaded/arrow/text) → stage background, circle fill, tile background (faded branch), arrow stroke, label colors · typeScale.* (name/population/ratio) → label font sizes · maxCountPerColumn/maxGridCols/boardMaxGridW/boardMaxGridH → CONFIG validation bounds printed in plan-amendment C2 (bounds contract; enforced by the harness fixtures' geometry — no runtime consumer inside the page; classified as bounds declarations, see HIT list) · seed → **no application site** (see HIT list) · columns[].id/label/population/count/gridCols/x/countUpMs/ratioLabelDx/ratioLabelDy → column generation, count-up, grid, ratio derivation, annotation placement · columns[].tile.w/h/silhouette → tile geometry + SIL token selection · columns[].events.entranceMs/countUpStartMs/revealMode/revealAnchorMs/spokenCueMs → compileSchedule (spokenCueMs is a narration anchor carried as data; it drives no animation by design — C1's separation — and is consumed by the build-record's anchor table).
+
+## 3. CSS-variable setter check
+No CSS variables are used by the build (all CONFIG consumption is direct JS reads + inline style setters). No unset-variable references exist. **No HIT under this check.**
+
+## HIT list
+1. **seed — UNAPPLIED key** (guard §2): CONFIG carries `seed: 208` (item-record §P1) but the build contains no RNG at all (grep: no `Math.random`; determinism is total), so the key promises a control that does not exist. Disposition: carried into the wave printed — removing it would deviate from the filed Plan's parameter table; the honest price is this HIT.
+2. **Arrow-start baseline offset `14`** (render script): a 14 stage-px shaping literal standing outside CONFIG. Disposition: carried printed; it is a fixed typographic baseline offset, named here so the reusability lens can price it.
+3. **Bounds keys** (maxCountPerColumn/maxGridCols/boardMaxGridW/boardMaxGridH): declared bounds with no in-page runtime consumer; their enforcement lives in the harness fixtures. Classified as bounds declarations, printed for the lens to price — not counted as unapplied-key HITs beyond this note.
+4. **countUpEasing — UNAPPLIED key** (added at cure round 1 on jev-prewave HOLD #1 defect 3): the key exists in CONFIG with the single value 'linear' and stateAt implements only that path; no branch selects on it. Same class as HIT 1 (seed).
+
+**HIT count carried to the wave: 3** (items 1, 2, 4; item 3 is a printed classification note). All other literals classified above.
+
+## Cycle 038 re-price (A12.3 completion, build unchanged 42d33e6b…)
+Fresh scan: `seed` application sites outside CONFIG 0 · `countUpEasing` sites outside CONFIG 0 · arrow-start literal `(ly-14)` present once in the render script · core post-CONFIG literals {0, 1, 2} (2 = pitch coefficient in `2*cfg.dotR`, structural) · no `Math.random`. Re-priced dispositions: HIT 1 (seed unapplied) — CARRIED, unresolved (no build change; removing the key would deviate from the filed Plan's parameter table). HIT 2 (arrow-start baseline offset literal 14) — CARRIED, unresolved (fixed typographic baseline offset, printed for the reusability lens). HIT 4 in §2 numbering / carried item 3 (countUpEasing unapplied) — CARRIED, unresolved (single-value 'linear' key, no selecting branch). Bounds keys (item 3) remain a printed classification note, not a counted HIT. **HIT count carried to the wave: 3 (unchanged).**
+
+===== BINDING CENSUS-ANCHOR MAPPING =====
+Window-start offset: build 0 = source 83.5 s. Census states (segment-relative ms -> prescribed state): 2000 TX alone counting · 6000 both pops complete, 0 dots · 7000 cascade mid-flight (~11 settled) · 8000 TX 36 complete, VT 0 (zero-state anchor) · 10500 VT morph mid-flight (94.0 s sample) · 11000 VT morph complete (94.5 s sample) · 11500 paired state, no annotation · 14500 ratio labels visible, arrows mid-draw · 17000 final state.
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 99110 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**HOLD — ASSERTED-CHECKS.** The A13 reconciliation claims every CONFIG key is accounted for, but `fillOrder` has no application-site entry in `config-census.md` §2.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.86 |
+| Purity pre-check | 0.98 |
+| Own-checks completeness | 0.94 |
+| Fidelity-plan honesty | 0.97 |
+
+**Blocking defect.** CONFIG declares `fillOrder: 'column'`, and `dotOrderIndex(cfg,col,i)` reads `cfg.fillOrder` to select column-major or row-major placement. The position samples in the Cycle 038 Guard #2 receipt show the configured column-major order. Add that key and its application site to `config-census.md` §2, then re-reconcile the A13 index. A13 makes a missing expected CONFIG entry a HOLD ground regardless of the scores.
+
+**Cures supported by the record.** The seven new timing receipts and the two inherited CP3/CP4 receipts account for all nine binding checkpoints. Each shows a moved CONFIG-derived instant and a passing full predicate. The Guard #2 content swap moves dot `i3` from `(143,304)` to `(190,163)` and changes the first grid’s right edge from 391 to 297 stage px. The fit table supplies six measured rows with named PIL proxy fonts. The construction record describes inline generation, and the fidelity plan names its entrance, silhouette, and scene-boundary reductions.
+
+**Limits.** Judgment is based on the supplied record. Browser-rendered geometry, final-font fit, and the filed hashes were outside this review.
+
+**Body-write: none (read-only run)**
+tokens used
+32,229
+**HOLD — ASSERTED-CHECKS.** The A13 reconciliation claims every CONFIG key is accounted for, but `fillOrder` has no application-site entry in `config-census.md` §2.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.86 |
+| Purity pre-check | 0.98 |
+| Own-checks completeness | 0.94 |
+| Fidelity-plan honesty | 0.97 |
+
+**Blocking defect.** CONFIG declares `fillOrder: 'column'`, and `dotOrderIndex(cfg,col,i)` reads `cfg.fillOrder` to select column-major or row-major placement. The position samples in the Cycle 038 Guard #2 receipt show the configured column-major order. Add that key and its application site to `config-census.md` §2, then re-reconcile the A13 index. A13 makes a missing expected CONFIG entry a HOLD ground regardless of the scores.
+
+**Cures supported by the record.** The seven new timing receipts and the two inherited CP3/CP4 receipts account for all nine binding checkpoints. Each shows a moved CONFIG-derived instant and a passing full predicate. The Guard #2 content swap moves dot `i3` from `(143,304)` to `(190,163)` and changes the first grid’s right edge from 391 to 297 stage px. The fit table supplies six measured rows with named PIL proxy fonts. The construction record describes inline generation, and the fidelity plan names its entrance, silhouette, and scene-boundary reductions.
+
+**Limits.** Judgment is based on the supplied record. Browser-rendered geometry, final-font fit, and the filed hashes were outside this review.
+
+**Body-write: none (read-only run)**

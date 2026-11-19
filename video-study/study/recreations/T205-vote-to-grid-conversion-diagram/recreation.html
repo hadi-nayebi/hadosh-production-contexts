@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T205 — Vote-to-grid conversion diagram (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#e9e6df;font-family:Georgia,'Times New Roman',serif;}
+  #stage{position:relative;width:960px;max-width:100vw;aspect-ratio:16/9;margin:0 auto;overflow:hidden;}
+  #stage svg{position:absolute;inset:0;width:100%;height:100%;}
+  #controls{display:flex;gap:8px;justify-content:center;padding:10px;}
+  #controls button{font-size:16px;padding:10px 18px;min-height:44px;cursor:pointer;}
+  #clock{font-family:monospace;font-size:14px;align-self:center;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="controls">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnRestart" type="button">Restart</button>
+  <span id="clock">0 ms</span>
+</div>
+<script>
+/*PURE-START*/
+const CONFIG = {
+  content: {
+    ballotLabel: "VOTE",
+    blockLabel: null,
+    checkPath: "M22 54 L42 74 L80 30"
+  },
+  grid: { cols: 34, rows: 18, cellPx: 14, gapPx: 10 },
+  blocks: [
+    { id: "west", colRange: [0, 4], rowRange: [3, 13], fillOrder: 1 }
+  ],
+  blocksToFill: 1,
+  outlines: [
+    { colRange: [0, 9], rowRange: [0, 6] },
+    { colRange: [10, 20], rowRange: [0, 8] },
+    { colRange: [21, 33], rowRange: [0, 5] },
+    { colRange: [0, 12], rowRange: [7, 17] },
+    { colRange: [13, 24], rowRange: [9, 17] },
+    { colRange: [25, 33], rowRange: [6, 17] }
+  ],
+  palette: {
+    ground: "#f4f1ea",
+    cell: "#111111",
+    outline: "#4a4a4a",
+    disc: "#111111",
+    box: "#e8e6e1",
+    paper: "#ffffff",
+    connector: "#d94f5c",
+    fill: "#d94f5c",
+    fillAlpha: 0.82,
+    checkIdle: "#5b7a99",
+    checkActive: "#d94f5c",
+    texture: "#e3ded2",
+    paperStroke: "#999999",
+    boxStroke: "#555555",
+    slot: "#333333",
+    labelInkOnBox: "#222222"
+  },
+  ground: { textureOn: true },
+  geom: {
+    discDiameterPx: 340,
+    boxScale: 1.0,
+    connectorThicknessPx: 26,
+    paperLiftPx: 46,
+    paperStubFraction: 0.15,
+    checkStubTick: 0.08,
+    labelFontPx: 40,
+    discCenterXPx: 190,
+    paperWPx: 120,
+    paperHPx: 170,
+    boxWPx: 170,
+    boxHPx: 74,
+    ballotStackOffsetPx: 30,
+    connectorGapPx: 160,
+    outlinePadPx: 5,
+    outlineStrokePx: 2.5,
+    washPadPx: 4,
+    paperStrokePx: 1.5,
+    checkStrokePx: 11,
+    checkOffsetXPx: 18,
+    checkOffsetYPx: 34,
+    checkScale: 0.84,
+    checkPathLength: 120,
+    boxStrokePx: 2,
+    boxRadiusPx: 8,
+    slotInsetPx: 14,
+    slotHeightPx: 7,
+    labelBaselineOffsetPx: 22,
+    textureStepPx: 21,
+    textureOffsetPx: 12,
+    textureStrokePx: 1
+  },
+  layout: { side: "disc-left" },
+  fade: { residualOpacity: 0.25 },
+  stage: { widthPx: 960, heightPx: 540, durationMs: 9000 },
+  phases: [
+    { id: "outlineDraw",    startMs: 0,    endMs: 1900 },
+    { id: "substrateHold",  startMs: 1900, endMs: 2500 },
+    { id: "layoutShift",    startMs: 2500, endMs: 3000 },
+    { id: "paperGrow",      startMs: 3000, endMs: 4500 },
+    { id: "checkDraw",      startMs: 4000, endMs: 5000 },
+    { id: "connectorExtend",startMs: 5000, endMs: 6200 },
+    { id: "paperRetract",   startMs: 5900, endMs: 6200 },
+    { id: "paperReappear",  startMs: 6200, endMs: 6400 },
+    { id: "blockWash",      startMs: 6400, endMs: 7000 },
+    { id: "convertedHold",  startMs: 7000, endMs: 8200 },
+    { id: "fadeOut",        startMs: 8200, endMs: 9000 }
+  ]
+};
+function phaseOf(cfg, id){ for (const p of cfg.phases) if (p.id === id) return p; throw new Error("unknown phase " + id); }
+function phaseDuration(cfg, id){ const p = phaseOf(cfg, id); return p.endMs - p.startMs; }
+function prog(cfg, id, ms){ const p = phaseOf(cfg, id); if (ms <= p.startMs) return 0; if (ms >= p.endMs) return 1; return (ms - p.startMs) / (p.endMs - p.startMs); }
+function validateConfig(cfg){
+  const ids = new Set();
+  for (const b of cfg.blocks){
+    if (ids.has(b.id)) throw new Error("duplicate block id " + b.id);
+    ids.add(b.id);
+    if (b.colRange[0] < 0 || b.colRange[1] >= cfg.grid.cols || b.rowRange[0] < 0 || b.rowRange[1] >= cfg.grid.rows)
+      throw new Error("block " + b.id + " range outside grid");
+  }
+  if (cfg.blocksToFill > cfg.blocks.length) throw new Error("blocksToFill exceeds blocks");
+  for (const p of cfg.phases){
+    if (!(p.endMs > p.startMs)) throw new Error("phase " + p.id + " endMs<=startMs");
+    if (p.startMs < 0 || p.endMs > cfg.stage.durationMs) throw new Error("phase " + p.id + " outside duration");
+  }
+  return true;
+}
+function pitch(cfg){ return cfg.grid.cellPx + cfg.grid.gapPx; }
+function latticeSize(cfg){ return { w: cfg.grid.cols * cfg.grid.cellPx + (cfg.grid.cols - 1) * cfg.grid.gapPx, h: cfg.grid.rows * cfg.grid.cellPx + (cfg.grid.rows - 1) * cfg.grid.gapPx }; }
+function fullGridX(cfg){ return (cfg.stage.widthPx - latticeSize(cfg).w) / 2; }
+function fullGridY(cfg){ return (cfg.stage.heightPx - latticeSize(cfg).h) / 2; }
+function splitGridX(cfg){ return cfg.geom.discCenterXPx + cfg.geom.discDiameterPx / 2 + cfg.geom.connectorGapPx; }
+function splitGridXMirror(cfg){ return cfg.stage.widthPx - splitGridX(cfg) - latticeSize(cfg).w; }
+function gridXAt(cfg, mirror, layoutProgress){ const fx = fullGridX(cfg); const sx = mirror ? splitGridXMirror(cfg) : splitGridX(cfg); return fx + (sx - fx) * layoutProgress; }
+function visibleCellStats(cfg, mirror, split){
+  const gx = split ? gridXAt(cfg, mirror, 1) : fullGridX(cfg), gy = fullGridY(cfg), pt = pitch(cfg);
+  let intersecting = 0, fullyWithin = 0; const cols = new Set(), fullyCols = new Set();
+  for (let r = 0; r < cfg.grid.rows; r++) for (let c = 0; c < cfg.grid.cols; c++){
+    const x = gx + c * pt, y = gy + r * pt;
+    const inter = x < cfg.stage.widthPx && x + cfg.grid.cellPx > 0 && y < cfg.stage.heightPx && y + cfg.grid.cellPx > 0;
+    const full = x >= 0 && x + cfg.grid.cellPx <= cfg.stage.widthPx && y >= 0 && y + cfg.grid.cellPx <= cfg.stage.heightPx;
+    if (inter){ intersecting++; cols.add(c); }
+    if (full){ fullyWithin++; fullyCols.add(c); }
+  }
+  const sorted = a => Array.from(a).sort((p, q) => p - q);
+  return { gridX: gx, gridY: gy, intersecting, fullyWithin, visibleCols: sorted(cols), fullyWithinCols: sorted(fullyCols) };
+}
+function washVisibility(cfg, b, mirror){
+  const gx = gridXAt(cfg, mirror, 1), gy = fullGridY(cfg), br = blockRect(cfg, b);
+  const x = gx + br.x - cfg.geom.washPadPx, y = gy + br.y - cfg.geom.washPadPx, w = br.w + 2 * cfg.geom.washPadPx, h = br.h + 2 * cfg.geom.washPadPx;
+  const ix = Math.max(0, Math.min(x + w, cfg.stage.widthPx) - Math.max(x, 0)), iy = Math.max(0, Math.min(y + h, cfg.stage.heightPx) - Math.max(y, 0));
+  return { x, y, w, h, visibleFraction: (ix * iy) / (w * h) };
+}
+function connectorGeometry(cfg, mirror){
+  const discCx = mirror ? cfg.stage.widthPx - cfg.geom.discCenterXPx : cfg.geom.discCenterXPx;
+  const from = mirror ? discCx - cfg.geom.discDiameterPx / 2 : discCx + cfg.geom.discDiameterPx / 2;
+  const gx = gridXAt(cfg, mirror, 1);
+  const target = mirror ? gx + latticeSize(cfg).w : gx;
+  return { from, target, lengthAtFull: Math.abs(target - from) };
+}
+function blockLabelText(cfg){ return cfg.content.blockLabel; }
+function totalCells(cfg){ return cfg.grid.cols * cfg.grid.rows; }
+function blockCellCount(cfg, b){ return (b.colRange[1] - b.colRange[0] + 1) * (b.rowRange[1] - b.rowRange[0] + 1); }
+function blockRect(cfg, b){
+  const pt = pitch(cfg);
+  return { x: b.colRange[0] * pt, y: b.rowRange[0] * pt, w: (b.colRange[1] - b.colRange[0] + 1) * pt - cfg.grid.gapPx, h: (b.rowRange[1] - b.rowRange[0] + 1) * pt - cfg.grid.gapPx };
+}
+function stateAt(cfg, ms){
+  const outlineProgress = prog(cfg, "outlineDraw", ms);
+  const layoutProgress = prog(cfg, "layoutShift", ms);
+  const layout = layoutProgress >= 1 ? "split" : (layoutProgress > 0 ? "shifting" : "full");
+  const grow = prog(cfg, "paperGrow", ms);
+  let paperProgress = cfg.geom.paperStubFraction + (1 - cfg.geom.paperStubFraction) * grow;
+  if (ms < phaseOf(cfg, "paperGrow").startMs) paperProgress = 0;
+  const retract = prog(cfg, "paperRetract", ms);
+  if (retract > 0) paperProgress = paperProgress * (1 - retract);
+  const reappear = prog(cfg, "paperReappear", ms);
+  if (phaseOf(cfg, "paperReappear").startMs <= ms) paperProgress = reappear;
+  const paperLiftPx = cfg.geom.paperLiftPx * reappear;
+  let checkProgress = prog(cfg, "checkDraw", ms);
+  if (ms < phaseOf(cfg, "checkDraw").startMs && paperProgress > 0 && retract === 0) checkProgress = cfg.geom.checkStubTick;
+  if (retract > 0 && reappear === 0) checkProgress = checkProgress * (1 - retract);
+  if (phaseOf(cfg, "paperReappear").startMs <= ms) checkProgress = reappear > 0 ? 1 : checkProgress;
+  const connectorProgress = prog(cfg, "connectorExtend", ms);
+  const washStart = phaseOf(cfg, "blockWash").startMs;
+  const checkColor = ms >= washStart ? cfg.palette.checkActive : cfg.palette.checkIdle;
+  const fillByBlock = {};
+  const ordered = cfg.blocks.slice().sort((a, b) => a.fillOrder - b.fillOrder);
+  for (const b of cfg.blocks) fillByBlock[b.id] = 0;
+  for (let i = 0; i < Math.min(cfg.blocksToFill, ordered.length); i++) fillByBlock[ordered[i].id] = prog(cfg, "blockWash", ms);
+  const fadeProgress = prog(cfg, "fadeOut", ms);
+  const diagramOpacity = 1 - (1 - cfg.fade.residualOpacity) * fadeProgress;
+  return { ms, outlineProgress, layoutProgress, discOpacity: layoutProgress, layout, paperProgress, paperLiftPx, checkProgress, checkColor, connectorProgress, fillByBlock, fadeProgress, diagramOpacity };
+}
+/*PURE-END*/
+
+/* ---- DOM rendering (browser only) ---- */
+(function(){
+  if (typeof document === "undefined") return;
+  validateConfig(CONFIG);
+  const stage = document.getElementById("stage");
+  const NS = "http://www.w3.org/2000/svg";
+  function el(name, attrs){ const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  const svg = el("svg", { viewBox: "0 0 " + CONFIG.stage.widthPx + " " + CONFIG.stage.heightPx, preserveAspectRatio: "xMidYMid meet" });
+  stage.appendChild(svg);
+  const root = el("g", {}); svg.appendChild(root);
+  const bg = el("rect", { x: 0, y: 0, width: CONFIG.stage.widthPx, height: CONFIG.stage.heightPx, fill: CONFIG.palette.ground });
+  root.appendChild(bg);
+  if (CONFIG.ground.textureOn){
+    for (let y = CONFIG.geom.textureOffsetPx; y < CONFIG.stage.heightPx; y += CONFIG.geom.textureStepPx){
+      const line = el("line", { x1: 0, y1: y, x2: CONFIG.stage.widthPx, y2: y, stroke: CONFIG.palette.texture, "stroke-width": CONFIG.geom.textureStrokePx });
+      root.appendChild(line);
+    }
+  }
+  const mirror = CONFIG.layout.side === "disc-right";
+  const gridW = latticeSize(CONFIG).w, gridH = latticeSize(CONFIG).h;
+  const gridFullX = fullGridX(CONFIG), gridFullY = fullGridY(CONFIG);
+  const gridSplitX = mirror ? splitGridXMirror(CONFIG) : splitGridX(CONFIG);
+  const discCx = mirror ? CONFIG.stage.widthPx - CONFIG.geom.discCenterXPx : CONFIG.geom.discCenterXPx, discCy = CONFIG.stage.heightPx / 2;
+  const gridGroup = el("g", {}); root.appendChild(gridGroup);
+  const washGroup = el("g", {}); gridGroup.appendChild(washGroup);
+  const cellGroup = el("g", {}); gridGroup.appendChild(cellGroup);
+  const cells = [];
+  for (let r = 0; r < CONFIG.grid.rows; r++) for (let c = 0; c < CONFIG.grid.cols; c++){
+    const rect = el("rect", { x: c * pitch(CONFIG), y: r * pitch(CONFIG), width: CONFIG.grid.cellPx, height: CONFIG.grid.cellPx, fill: CONFIG.palette.cell });
+    cellGroup.appendChild(rect); cells.push(rect);
+  }
+  const outlineGroup = el("g", { fill: "none", stroke: CONFIG.palette.outline, "stroke-width": CONFIG.geom.outlineStrokePx }); gridGroup.appendChild(outlineGroup);
+  const outlinePaths = [];
+  for (const o of CONFIG.outlines){
+    const x = o.colRange[0] * pitch(CONFIG) - CONFIG.geom.outlinePadPx, y = o.rowRange[0] * pitch(CONFIG) - CONFIG.geom.outlinePadPx;
+    const w = (o.colRange[1] - o.colRange[0] + 1) * pitch(CONFIG) + 2 * CONFIG.geom.outlinePadPx - CONFIG.grid.gapPx, h = (o.rowRange[1] - o.rowRange[0] + 1) * pitch(CONFIG) + 2 * CONFIG.geom.outlinePadPx - CONFIG.grid.gapPx;
+    const p = el("path", { d: "M" + x + " " + y + " H" + (x + w) + " V" + (y + h) + " H" + x + " Z" });
+    const len = 2 * (w + h); p.setAttribute("stroke-dasharray", len); p.setAttribute("stroke-dashoffset", len);
+    outlineGroup.appendChild(p); outlinePaths.push({ p, len });
+  }
+  const washRects = {};
+  for (const b of CONFIG.blocks){
+    const br = blockRect(CONFIG, b);
+    const wr = el("rect", { x: br.x - CONFIG.geom.washPadPx, y: br.y - CONFIG.geom.washPadPx, width: br.w + 2 * CONFIG.geom.washPadPx, height: br.h + 2 * CONFIG.geom.washPadPx, fill: CONFIG.palette.fill, opacity: 0 });
+    washGroup.appendChild(wr); washRects[b.id] = wr;
+  }
+  const blockLabelEls = {};
+  if (blockLabelText(CONFIG) !== null){
+    for (const b of CONFIG.blocks){
+      const br = blockRect(CONFIG, b);
+      const t = el("text", { x: br.x + br.w / 2, y: br.y + br.h / 2, "text-anchor": "middle", "font-size": CONFIG.geom.labelFontPx, "font-weight": "bold", fill: CONFIG.palette.labelInkOnBox, "font-family": "Georgia,serif" });
+      t.textContent = blockLabelText(CONFIG);
+      gridGroup.appendChild(t); blockLabelEls[b.id] = t;
+    }
+  }
+  const discGroup = el("g", { opacity: 0 }); root.appendChild(discGroup);
+  const disc = el("circle", { cx: discCx, cy: discCy, r: CONFIG.geom.discDiameterPx / 2, fill: CONFIG.palette.disc });
+  discGroup.appendChild(disc);
+  const paperW = CONFIG.geom.paperWPx * CONFIG.geom.boxScale, paperH = CONFIG.geom.paperHPx * CONFIG.geom.boxScale;
+  const paperX = discCx - paperW / 2;
+  const stackOff = CONFIG.geom.ballotStackOffsetPx;
+  const paper = el("rect", { x: paperX, y: discCy - stackOff - paperH, width: paperW, height: paperH, fill: CONFIG.palette.paper, stroke: CONFIG.palette.paperStroke, "stroke-width": CONFIG.geom.paperStrokePx });
+  discGroup.appendChild(paper);
+  const check = el("path", { d: CONFIG.content.checkPath, transform: "translate(" + (paperX + CONFIG.geom.checkOffsetXPx) + "," + (discCy - stackOff - paperH + CONFIG.geom.checkOffsetYPx) + ") scale(" + CONFIG.geom.checkScale + ")", fill: "none", stroke: CONFIG.palette.checkIdle, "stroke-width": CONFIG.geom.checkStrokePx, "stroke-linecap": "round", "stroke-linejoin": "round" });
+  const checkLen = CONFIG.geom.checkPathLength; check.setAttribute("stroke-dasharray", checkLen); check.setAttribute("stroke-dashoffset", checkLen);
+  discGroup.appendChild(check);
+  const boxW = CONFIG.geom.boxWPx * CONFIG.geom.boxScale, boxH = CONFIG.geom.boxHPx * CONFIG.geom.boxScale;
+  const box = el("rect", { x: discCx - boxW / 2, y: discCy - stackOff, width: boxW, height: boxH, rx: CONFIG.geom.boxRadiusPx, fill: CONFIG.palette.box, stroke: CONFIG.palette.boxStroke, "stroke-width": CONFIG.geom.boxStrokePx });
+  discGroup.appendChild(box);
+  const slot = el("rect", { x: discCx - boxW / 2 + CONFIG.geom.slotInsetPx, y: discCy - stackOff, width: boxW - 2 * CONFIG.geom.slotInsetPx, height: CONFIG.geom.slotHeightPx, fill: CONFIG.palette.slot });
+  discGroup.appendChild(slot);
+  const label = el("text", { x: discCx, y: discCy + CONFIG.geom.labelBaselineOffsetPx, "text-anchor": "middle", "font-size": CONFIG.geom.labelFontPx, "font-weight": "bold", fill: CONFIG.palette.labelInkOnBox, "font-family": "Georgia,serif" });
+  label.textContent = CONFIG.content.ballotLabel;
+  discGroup.appendChild(label);
+  const connX0 = mirror ? discCx - CONFIG.geom.discDiameterPx / 2 : discCx + CONFIG.geom.discDiameterPx / 2;
+  const connector = el("rect", { y: discCy - CONFIG.geom.connectorThicknessPx / 2, height: CONFIG.geom.connectorThicknessPx, fill: CONFIG.palette.connector, width: 0 });
+  root.appendChild(connector);
+  let startStamp = null, playing = false, elapsed = 0;
+  const clockEl = document.getElementById("clock");
+  function render(ms){
+    const s = stateAt(CONFIG, ms);
+    root.setAttribute("opacity", s.diagramOpacity);
+    const gridX = gridFullX + (gridSplitX - gridFullX) * s.layoutProgress;
+    gridGroup.setAttribute("transform", "translate(" + gridX + "," + gridFullY + ")");
+    for (const o of outlinePaths) o.p.setAttribute("stroke-dashoffset", o.len * (1 - s.outlineProgress));
+    discGroup.setAttribute("opacity", s.discOpacity);
+    const ph = paperH * s.paperProgress;
+    paper.setAttribute("height", ph);
+    paper.setAttribute("y", discCy - stackOff - ph - s.paperLiftPx);
+    check.setAttribute("transform", "translate(" + (paperX + CONFIG.geom.checkOffsetXPx) + "," + (discCy - stackOff - ph - s.paperLiftPx + CONFIG.geom.checkOffsetYPx) + ") scale(" + CONFIG.geom.checkScale + ")");
+    check.setAttribute("stroke-dashoffset", checkLen * (1 - s.checkProgress));
+    check.setAttribute("stroke", s.checkColor);
+    check.setAttribute("opacity", s.paperProgress > 0 ? 1 : 0);
+    paper.setAttribute("opacity", s.paperProgress > 0 ? 1 : 0);
+    for (const b of CONFIG.blocks) washRects[b.id].setAttribute("opacity", (s.fillByBlock[b.id] * CONFIG.palette.fillAlpha).toFixed(3));
+    const gridLeftEdge = gridX;
+    const target = mirror ? gridLeftEdge + gridW : gridLeftEdge;
+    const from = mirror ? target : connX0;
+    const w = Math.abs(target - connX0) * s.connectorProgress;
+    connector.setAttribute("x", mirror ? connX0 - w : connX0);
+    connector.setAttribute("width", s.layoutProgress >= 1 ? w : 0);
+    connector.setAttribute("opacity", s.layoutProgress);
+    clockEl.textContent = Math.round(ms) + " ms";
+  }
+  function frame(ts){
+    if (!playing) return;
+    if (startStamp === null) startStamp = ts - elapsed;
+    elapsed = ts - startStamp;
+    if (elapsed >= CONFIG.stage.durationMs){ elapsed = CONFIG.stage.durationMs; playing = false; document.getElementById("btnPlay").textContent = "Play"; }
+    render(elapsed);
+    if (playing) requestAnimationFrame(frame);
+  }
+  document.getElementById("btnPlay").addEventListener("click", function(){
+    if (playing){ playing = false; this.textContent = "Play"; }
+    else { if (elapsed >= CONFIG.stage.durationMs) elapsed = 0; playing = true; startStamp = null; this.textContent = "Pause"; requestAnimationFrame(frame); }
+  });
+  document.getElementById("btnRestart").addEventListener("click", function(){ elapsed = 0; startStamp = null; render(0); if (!playing){ playing = true; document.getElementById("btnPlay").textContent = "Pause"; requestAnimationFrame(frame); } });
+  window.__T205 = { CONFIG, stateAt, render, setElapsed: function(ms){ elapsed = ms; render(ms); }, getElapsed: function(){ return elapsed; } };
+  render(0);
+})();
+</script>
+</body>
+</html>

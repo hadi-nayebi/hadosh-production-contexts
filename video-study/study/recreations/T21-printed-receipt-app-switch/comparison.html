@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T21 — Printed receipt gag + app switch · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.08em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T21 — Printed receipt gag + app switch</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 2:50–3:02.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation — a paper usage receipt prints out of the robot's belly
+while its LED readout types the limit line; the held receipt sits beside a post card and a
+system card; then a phone rises and the character types a prompt into the rival app's chat UI,
+which answers in its own voice. One control set drives both.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — new receipt, prompt, reply, palette</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — Look What I Can Do (P1) @ 2:50–3:02<small>segment.mp4 · specimen window 2:49.5–3:02.5 (±0.5 handles) · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T21 Printed receipt gag + app switch, parameterized<small>recreation.html · CONFIG: receipt lines, post/system texts, phone prompt/reply, checkpoint table (incl. bridge), palette + shadows, shaping endpoints, capacity limits · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T21 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click, so both start together. The recreation runs a 12 s loop
+(<code>durationMs</code> 12000, the technique window) inside the segment's 13 s loop; its phases are
+decided by the <code>checkpoints</code> table (printStart 0 · receiptFull 3200 · cardsAt 4200 ·
+phoneAt 7000 · typedAt 9500 · replyAt 10300 · bridgeAt 11200 — the reply-to-restart bridge),
+not by hidden cadences. Overrides are validated: subordinate durations derive from the
+checkpoint spans, and a combination that breaks ordering or completion space is rejected
+and recorded in <code>CONFIG.rejectedOverrides</code>. The Swap test button reloads
+the recreation with
+<code>?lines=Plan:%20FREE;Tokens:%2042;Status:%20OK&amp;prompt=Hey%20rival%20app%3F&amp;reply=Yo!%20New%20thread%2C%20new%20rules.&amp;accent=%23ff2e88&amp;phoneAt=6000</code> —
+different receipt lines, a different prompt and reply, a pink rival accent and an earlier phone
+phase; if the receipt, the typed prompt, the reply and the accent all follow the new values,
+the build is the technique, not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+function cmd(c){ rec.contentWindow && rec.contentWindow.postMessage({cmd:c}, "*"); }
+document.getElementById("btnPlay").addEventListener("click", function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ vid.currentTime = 0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click", function(){
+  rec.src = "recreation.html?lines=Plan:%20FREE;Tokens:%2042;Status:%20OK&prompt=Hey%20rival%20app%3F&reply=Yo!%20New%20thread%2C%20new%20rules.&accent=%23ff2e88&phoneAt=6000";
+  vid.currentTime = 0; vid.play();
+});
+</script>
+</body>
+</html>

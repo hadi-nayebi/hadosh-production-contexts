@@ -1,0 +1,13 @@
+**Verdict** — The recreation matches the 14 s loop and the 6.5 s evidence anchor in source-level timing. The facade’s completion and hold are consequences of the allocation model. The marquee is complete while the facade is still revealing.
+
+**Findings**
+
+- **Loop identity.** `recreation.html` sets `CONFIG.durationMs` to 14,000 ms, matching the neutral technique facts. `computeState` wraps elapsed time modulo that duration. The facade and marquee reset at 14.000 s, and `orbitPassage` resets on the same clock. The own-check packet reports all 15 facade glyphs lit at 13,999 ms and the motion offset resetting at the loop boundary.
+- **Cadence and anchor.** `letterList` schedules 15 non-space glyphs, including the exclamation mark, across 14 intervals. `computeState` derives each interval as `(11,000 − 500) / 14 = 750 ms`. The ninth onset is `500 + 8 × 750 = 6,500 ms`, so `LOOK` and `WHAT` are complete and the `I` on line 3 has just lit. The timing harness reports eight glyphs at 6,499 ms and nine at 6,500 ms. The other onsets are evenly allocated model timings.
+- **Checkpoint semantics and hold.** In the shipped multi-glyph build, `lightStart` and `lightComplete` set the first and last glyph onsets. The 6.5 s anchor follows from those endpoints and the glyph count. It is not a separate runtime checkpoint. The harness reports 14 glyphs at 10,999 ms and all 15 at 11,000 ms, yielding a `14,000 − 11,000 = 3,000 ms` hold. The original’s completion and hold are unverified. With one glyph, completion occurs at `lightStart`. With zero glyphs, there is no hold. If a checkpoint override puts `lightComplete` exactly at the loop duration, wrapping makes that endpoint unreachable in the displayed cycle.
+- **Marquee.** The 19-character string, including spaces, reaches full length at `(19 − 1) × 40 = 720 ms` under `computeState`’s positive-time counting rule. At that instant only the first facade glyph is lit, with the second due at `500 + 750 = 1,250 ms`. The harness confirms all 19 marquee characters at 6.5 s, when nine facade glyphs are lit. The original’s exact marquee completion time is unverified.
+
+**Limits** — Pixel-unverified. The source and supplied logic-harness results establish the scheduled states. Browser frame presentation and the original’s untimed phase boundaries remain unverified.
+
+**Body-write: none (read-only run)**. This return records the timing verdict and its evidence for Verify and the artifact’s scores file.  
+SCORE: 97

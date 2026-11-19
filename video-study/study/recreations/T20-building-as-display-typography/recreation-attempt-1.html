@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T20 — Building-as-display typography · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:100%;height:100%;min-height:200px;overflow:hidden}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="cv"></canvas></div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; the logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: letters light from the checkpoint table (lightStart ->
+   lightComplete); the per-letter interval is DERIVED from the span and the live letter
+   count, so a cardinality-changed text re-derives its cadence instead of breaking.
+   Letterforms are decided by RUNTIME SAMPLING: the CONFIG facade text is drawn to an
+   offscreen canvas and its alpha mask is mapped onto the facade window grid (the T15
+   precedent, Amendment A1.2) — no letter cell is hand-placed. */
+const CONFIG = {
+  durationMs: 14000,                 /* segment window 2:36.5-2:50.5 = 14 s, loops */
+  facadeLines: ["LOOK", "WHAT", "I CAN DO!"],
+  marqueeText: "LOOK WHAT I CAN DO!",
+  marqueeCharMs: 40,                 /* marquee types fast; frame-evidenced complete while the facade is partial */
+  checkpoints: { lightStart: 500, lightComplete: 11000 },
+  /* ALLOCATION MODEL (one timed anchor): the evidence frame at 6.5 s into the segment
+     shows lines 1-2 complete + first glyph of line 3 = 9 of 15 letters lit. lightStart
+     500 + derived per-letter 700 ms reproduces exactly 9 lit at 6500 ms. Intermediate
+     letter times are allocated evenly across the span; uncertainty is the full span —
+     no other timed anchor exists in the packet. */
+  gridCols: 40,
+  gridRows: 48,
+  sampleW: 400,
+  sampleH: 480,
+  sampleFontPx: 92,
+  sampleMask: "#ffffff",
+  sampleFitRatio: 0.92,
+  sampleAlphaMin: 128,
+  geom: { cellInset: 0.18, cellSize: 0.64, litInset: 0.12, litSize: 0.76, glowPad: 0.10, glowSize: 1.20,
+          neighborInset: 0.22, neighborSize: 0.56, edgeWidthFactor: 0.0022, edgeBlur: 12, groundPct: 94 },
+  fontFamily: "bold {px}px 'Arial Black', Arial, sans-serif",
+  hero: { xPct: 31, yPct: 6, wPct: 38, hPct: 82 },
+  marquee: { hPct: 7.5, fontMinPx: 11, fontMaxPx: 24, fontFactor: 0.034 },
+  orbit: { farPx: 5, midPx: 11, heroPx: 3 },
+  neighborDensity: 0.30,
+  neighborSeed: 20261114,
+  neighborTowers: [
+    { xPct: 0,  yPct: 14, wPct: 13, hPct: 86, layer: "mid" },
+    { xPct: 11, yPct: 34, wPct: 9,  hPct: 66, layer: "far" },
+    { xPct: 19, yPct: 46, wPct: 10, hPct: 54, layer: "far" },
+    { xPct: 22, yPct: 58, wPct: 8,  hPct: 42, layer: "mid" },
+    { xPct: 70, yPct: 22, wPct: 11, hPct: 78, layer: "mid" },
+    { xPct: 80, yPct: 40, wPct: 9,  hPct: 60, layer: "far" },
+    { xPct: 87, yPct: 30, wPct: 13, hPct: 70, layer: "mid" },
+    { xPct: 93, yPct: 52, wPct: 7,  hPct: 48, layer: "far" }
+  ],
+  neighborCols: 7,
+  neighborRows: 16,
+  skyTop: "#2a1052",
+  skyBottom: "#6d2a7a",
+  neighborTower: "#17122b",
+  neighborLit: "#ffd9a0",
+  neighborUnlit: "#241b40",
+  heroFacade: "#0d1420",
+  heroEdge: "#37f4e4",
+  cellLit: "#ffe9f6",
+  cellLitGlow: "rgba(255,120,220,0.55)",
+  cellUnlit: "#1b2a3d",
+  marqueeBg: "#062a30",
+  marqueeTextColor: "#5ff7ec",
+  ground: "#07050f"
+};
+
+/* URL overrides (swap test / reuse):
+   ?lines=HI|THERE+FRIEND  facade lines ('|' separates lines)  ·  ?marquee=...  marquee text
+   ?lightStart=...&lightComplete=...  checkpoints  ·  ?lit=%23ffffff&sky=%23331155  palette
+   ?durationMs=...  ·  ?density=0.5&seed=42 */
+(function applyOverrides(){
+  if (typeof window === "undefined" || !window.location) return;
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (num("durationMs") !== null) CONFIG.durationMs = Math.max(1000, num("durationMs"));
+  if (q.get("lines")) CONFIG.facadeLines = q.get("lines").split("|");
+  if (q.get("marquee")) CONFIG.marqueeText = q.get("marquee");
+  if (num("lightStart") !== null) CONFIG.checkpoints.lightStart = num("lightStart");
+  if (num("lightComplete") !== null) CONFIG.checkpoints.lightComplete = num("lightComplete");
+  if (num("density") !== null) CONFIG.neighborDensity = num("density");
+  if (num("seed") !== null) CONFIG.neighborSeed = Math.floor(num("seed"));
+  if (q.get("lit")) CONFIG.cellLit = q.get("lit");
+  if (q.get("sky")) CONFIG.skyTop = q.get("sky");
+})();
+
+/* Deterministic seeded RNG (mulberry32). */
+function makeRng(seed){
+  let a = seed >>> 0;
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* Letters in reading order: every non-space char of every line, in order. */
+function letterList(cfg){
+  const out = [];
+  cfg.facadeLines.forEach(function(line, li){
+    for (let i = 0; i < line.length; i++){
+      if (line[i] !== " ") out.push({ ch: line[i], line: li, indexInLine: i });
+    }
+  });
+  return out;
+}
+
+/* Checkpoint coherence: checkpoints must be ordered and inside the duration.
+   Invalid tables are normalized (clamped + re-ordered) and reported — never trusted raw. */
+function validateCheckpoints(cfg){
+  const errors = [];
+  let start = cfg.checkpoints.lightStart, complete = cfg.checkpoints.lightComplete;
+  if (!(start >= 0)) { errors.push("lightStart<0"); start = 0; }
+  if (!(complete <= cfg.durationMs)) { errors.push("lightComplete>duration"); complete = cfg.durationMs; }
+  if (complete < start) { errors.push("checkpoints reordered"); const tmp = start; start = complete; complete = tmp; }
+  if (complete === start) { errors.push("zero span"); complete = Math.min(cfg.durationMs, start + 1); }
+  return { ok: errors.length === 0, errors: errors, start: start, complete: complete };
+}
+
+/* Per-letter interval derived from the checkpoint span and the LIVE letter count. */
+function perLetterMs(cfg){
+  const v = validateCheckpoints(cfg);
+  const n = Math.max(1, letterList(cfg).length);
+  return (v.complete - v.start) / n;
+}
+
+/* Runtime sampling: draw the CONFIG facade text to an offscreen canvas, read its
+   alpha mask, and map mask coverage onto the facade grid. Each cell is assigned to
+   the letter whose char-band (line band x char advance) contains the cell centre.
+   rasterDoc is injectable so the logic is node-testable with a stub canvas. */
+function sampleFacade(cfg, rasterDoc){
+  const doc = rasterDoc || (typeof document !== "undefined" ? document : null);
+  if (!doc) return { cells: [], letterCount: letterList(cfg).length, cols: cfg.gridCols, rows: cfg.gridRows };
+  const cv = doc.createElement("canvas");
+  cv.width = cfg.sampleW; cv.height = cfg.sampleH;
+  const ctx = cv.getContext("2d");
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.fillStyle = cfg.sampleMask;
+  ctx.font = cfg.fontFamily.replace("{px}", String(cfg.sampleFontPx));
+  /* auto-fit: if the widest CONFIG line overflows the sample width, scale the
+     sample font down — cardinality/length changes re-fit instead of clipping. */
+  let maxW = 0;
+  cfg.facadeLines.forEach(function(line){ maxW = Math.max(maxW, ctx.measureText(line).width); });
+  if (maxW > cfg.sampleW * cfg.sampleFitRatio) {
+    const scaled = Math.max(8, Math.floor(cfg.sampleFontPx * (cfg.sampleW * cfg.sampleFitRatio) / maxW));
+    ctx.font = cfg.fontFamily.replace("{px}", String(scaled));
+  }
+  ctx.textBaseline = "middle";
+  const lineH = cfg.sampleH / cfg.facadeLines.length;
+  const bands = [];
+  let globalLetter = 0;
+  cfg.facadeLines.forEach(function(line, li){
+    const w = ctx.measureText(line).width;
+    const x0 = (cfg.sampleW - w) / 2;
+    ctx.fillText(line, x0, lineH * (li + 0.5));
+    let acc = x0;
+    for (let i = 0; i < line.length; i++){
+      const cw = ctx.measureText(line[i]).width;
+      const owner = line[i] === " " ? -1 : globalLetter++;
+      bands.push({ ch: line[i], line: li, x0: acc, x1: acc + cw, y0: lineH * li, y1: lineH * (li + 1), owner: owner });
+      acc += cw;
+    }
+  });
+  const img = ctx.getImageData(0, 0, cfg.sampleW, cfg.sampleH).data;
+  const letters = letterList(cfg);
+  const cells = [];
+  const cwPx = cfg.sampleW / cfg.gridCols, chPx = cfg.sampleH / cfg.gridRows;
+  for (let r = 0; r < cfg.gridRows; r++){
+    for (let c = 0; c < cfg.gridCols; c++){
+      const cx = (c + 0.5) * cwPx, cy = (r + 0.5) * chPx;
+      const px = Math.min(cfg.sampleW - 1, Math.floor(cx)), py = Math.min(cfg.sampleH - 1, Math.floor(cy));
+      const alpha = img[(py * cfg.sampleW + px) * 4 + 3];
+      if (alpha < cfg.sampleAlphaMin) continue;
+      for (let b = 0; b < bands.length; b++){
+        const band = bands[b];
+        if (band.owner >= 0 && cx >= band.x0 && cx < band.x1 && cy >= band.y0 && cy < band.y1) {
+          cells.push({ col: c, row: r, letter: band.owner });
+          break;
+        }
+      }
+    }
+  }
+  return { cells: cells, letterCount: letters.length, cols: cfg.gridCols, rows: cfg.gridRows };
+}
+
+/* Facade glyph cell size at a given stage width — the legibility price. */
+function cellPxAt(stageW, cfg){
+  return (stageW * cfg.hero.wPct / 100) / cfg.gridCols;
+}
+function marqueeFontPx(stageW, cfg){
+  return Math.max(cfg.marquee.fontMinPx, Math.min(cfg.marquee.fontMaxPx, stageW * cfg.marquee.fontFactor));
+}
+
+/* Pure state from time — the checkpoint table decides the lighting. */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const v = validateCheckpoints(cfg);
+  const n = letterList(cfg).length;
+  const per = n > 0 ? (v.complete - v.start) / n : 0;
+  let lettersLit = 0;
+  if (t >= v.start && n > 0) lettersLit = Math.min(n, Math.floor((t - v.start) / per) + 1);
+  if (t >= v.complete) lettersLit = n;
+  const marqueeChars = Math.min(cfg.marqueeText.length, Math.floor(t / cfg.marqueeCharMs) + (t > 0 ? 1 : 0));
+  const phase = lettersLit >= n && n > 0 ? "hold" : (lettersLit > 0 ? "lighting" : "idle");
+  return { t: t, lettersLit: lettersLit, letterCount: n, perLetterMs: per,
+           marqueeChars: t === 0 ? 0 : marqueeChars, phase: phase,
+           checkpointOk: v.ok, checkpointErrors: v.errors };
+}
+
+/* ===== Rendering (browser only; all values read from CONFIG) ===== */
+function litColor(cfg){ return cfg.cellLit; }
+if (typeof document !== "undefined" && document.getElementById) {
+  const stage = document.getElementById("stage");
+  const cv = document.getElementById("cv");
+  const ctx = cv.getContext("2d");
+  document.body.style.background = CONFIG.ground;
+  const sampled = sampleFacade(CONFIG);
+  const rng = makeRng(CONFIG.neighborSeed);
+  const neighborLitMap = CONFIG.neighborTowers.map(function(){
+    const cells = [];
+    for (let i = 0; i < CONFIG.neighborCols * CONFIG.neighborRows; i++) cells.push(rng() < CONFIG.neighborDensity);
+    return cells;
+  });
+  function resize(){
+    const r = stage.getBoundingClientRect();
+    cv.width = Math.max(300, Math.floor(r.width));
+    cv.height = Math.max(170, Math.floor(r.height));
+  }
+  resize();
+  if (typeof window !== "undefined") window.addEventListener("resize", resize);
+  function render(tMs){
+    const s = computeState(tMs, CONFIG);
+    const W = cv.width, H = cv.height;
+    const prog = s.t / CONFIG.durationMs;
+    const sway = Math.sin(prog * Math.PI * 2);
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, CONFIG.skyTop); sky.addColorStop(1, CONFIG.skyBottom);
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    /* neighbor towers with parallax drift */
+    CONFIG.neighborTowers.forEach(function(tw, ti){
+      const drift = sway * (tw.layer === "far" ? CONFIG.orbit.farPx : CONFIG.orbit.midPx) * (W / 960);
+      const x = W * tw.xPct / 100 + drift, y = H * tw.yPct / 100;
+      const w = W * tw.wPct / 100, h = H * tw.hPct / 100;
+      ctx.fillStyle = CONFIG.neighborTower; ctx.fillRect(x, y, w, h);
+      const cw = w / CONFIG.neighborCols, ch = h / CONFIG.neighborRows;
+      for (let r = 0; r < CONFIG.neighborRows; r++){
+        for (let c = 0; c < CONFIG.neighborCols; c++){
+          ctx.fillStyle = neighborLitMap[ti][r * CONFIG.neighborCols + c] ? CONFIG.neighborLit : CONFIG.neighborUnlit;
+          ctx.fillRect(x + c * cw + cw * CONFIG.geom.neighborInset, y + r * ch + ch * CONFIG.geom.neighborInset, cw * CONFIG.geom.neighborSize, ch * CONFIG.geom.neighborSize);
+        }
+      }
+    });
+    /* ground */
+    ctx.fillStyle = CONFIG.ground; ctx.fillRect(0, H * CONFIG.geom.groundPct / 100, W, H * (1 - CONFIG.geom.groundPct / 100));
+    /* hero tower */
+    const hx = W * CONFIG.hero.xPct / 100 + sway * CONFIG.orbit.heroPx * (W / 960);
+    const hy = H * CONFIG.hero.yPct / 100, hw = W * CONFIG.hero.wPct / 100, hh = H * CONFIG.hero.hPct / 100;
+    ctx.fillStyle = CONFIG.heroFacade; ctx.fillRect(hx, hy, hw, hh);
+    const cellW = hw / CONFIG.gridCols, cellH = hh / CONFIG.gridRows;
+    /* unlit grid */
+    ctx.fillStyle = CONFIG.cellUnlit;
+    for (let r = 0; r < CONFIG.gridRows; r++)
+      for (let c = 0; c < CONFIG.gridCols; c++)
+        ctx.fillRect(hx + c * cellW + cellW * CONFIG.geom.cellInset, hy + r * cellH + cellH * CONFIG.geom.cellInset, cellW * CONFIG.geom.cellSize, cellH * CONFIG.geom.cellSize);
+    /* lit cells from the runtime sample, gated by letters lit */
+    ctx.fillStyle = CONFIG.cellLitGlow;
+    sampled.cells.forEach(function(cell){
+      if (cell.letter < s.lettersLit)
+        ctx.fillRect(hx + cell.col * cellW - cellW * CONFIG.geom.glowPad, hy + cell.row * cellH - cellH * CONFIG.geom.glowPad, cellW * CONFIG.geom.glowSize, cellH * CONFIG.geom.glowSize);
+    });
+    ctx.fillStyle = litColor(CONFIG);
+    sampled.cells.forEach(function(cell){
+      if (cell.letter < s.lettersLit)
+        ctx.fillRect(hx + cell.col * cellW + cellW * CONFIG.geom.litInset, hy + cell.row * cellH + cellH * CONFIG.geom.litInset, cellW * CONFIG.geom.litSize, cellH * CONFIG.geom.litSize);
+    });
+    /* cyan neon edge */
+    ctx.strokeStyle = CONFIG.heroEdge; ctx.lineWidth = Math.max(1.5, W * CONFIG.geom.edgeWidthFactor);
+    ctx.shadowColor = CONFIG.heroEdge; ctx.shadowBlur = CONFIG.geom.edgeBlur;
+    ctx.strokeRect(hx, hy, hw, hh);
+    ctx.shadowBlur = 0;
+    /* marquee at the tower base */
+    const mh = H * CONFIG.marquee.hPct / 100, my = hy + hh - mh;
+    ctx.fillStyle = CONFIG.marqueeBg; ctx.fillRect(hx, my, hw, mh);
+    ctx.fillStyle = CONFIG.marqueeTextColor;
+    ctx.font = "bold " + marqueeFontPx(W, CONFIG) + "px Arial, sans-serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(CONFIG.marqueeText.slice(0, s.marqueeChars), hx + hw / 2, my + mh / 2);
+    ctx.textAlign = "left";
+    return s;
+  }
+  let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+  function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+  function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+  function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+  function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+  function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+  if (typeof window !== "undefined") window.addEventListener("message", function(e){
+    if (!e.data || typeof e.data !== "object") return;
+    if (e.data.cmd === "play") play();
+    if (e.data.cmd === "pause") pause();
+    if (e.data.cmd === "restart") restart();
+  });
+  render(0);
+  play();
+}
+</script>
+</body>
+</html>

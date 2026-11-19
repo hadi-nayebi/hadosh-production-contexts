@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T21 — Printed receipt gag + app switch · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif}
+  #stage{position:relative;width:100%;height:100%;min-height:300px;overflow:hidden;padding:3%}
+  /* Phase 1+2: robot + receipt on the left, cards on the right */
+  #leftCol{position:absolute;left:3%;top:4%;width:52%;height:92%;display:flex;flex-direction:column;align-items:center}
+  #torso{position:relative;width:88%;border-radius:46% 46% 42% 42%/22% 22% 14% 14%;padding:7% 6% 5%;flex:0 0 auto}
+  #led{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:clamp(9px,2.2vw,15px);
+       letter-spacing:.06em;border-radius:4px;padding:5px 7px;min-height:2.2em;line-height:1.25;word-break:break-word}
+  #trim{height:4px;border-radius:2px;margin:7% 0 5%}
+  #slot{height:16px;border-radius:8px;border:3px solid;margin:0 auto;width:52%}
+  #receiptWrap{width:74%;overflow:hidden;flex:0 1 auto}
+  #receipt{font-family:ui-monospace,Menlo,Consolas,monospace;padding:8px 9px 12px;text-align:center;
+           box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  #receiptHead{font-weight:700;font-size:clamp(10px,2.4vw,15px);letter-spacing:.08em;border-bottom:1px dashed;padding-bottom:5px;margin-bottom:5px}
+  .rline{font-size:clamp(8px,2vw,12.5px);line-height:1.5;white-space:nowrap;overflow:hidden}
+  #cardsCol{position:absolute;right:3%;top:9%;width:40%;display:flex;flex-direction:column;gap:12px}
+  .card{border-radius:10px;padding:12px 13px;line-height:1.4;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+  #postCard{font-size:clamp(12px,2.8vw,18px);font-weight:700}
+  #sysTitle{font-size:clamp(11px,2.5vw,16px);font-weight:700}
+  #sysReset{font-size:clamp(9px,2.1vw,13px);margin-top:4px;opacity:.85}
+  /* Phase 3: phone */
+  #phone{position:absolute;left:50%;top:5%;width:min(62%,290px);height:90%;border-radius:26px;
+         border:3px solid;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+  #phoneHead{display:flex;justify-content:center;gap:8px;padding:9px 0 7px;font-size:clamp(9px,2vw,12px)}
+  .tab{border-radius:10px;padding:2px 12px}
+  #chatArea{flex:1;display:flex;flex-direction:column;gap:10px;padding:12px 10px;overflow:hidden}
+  #promptBubble{align-self:flex-start;max-width:88%;border:2px solid;border-radius:12px;padding:7px 10px;
+                font-size:clamp(11px,2.6vw,15px);font-weight:700}
+  #replyBubble{align-self:flex-start;max-width:92%;border-radius:12px;padding:8px 11px;
+               font-size:clamp(10px,2.4vw,14px);line-height:1.4}
+  #inputBar{margin:0 10px 12px;border-radius:16px;padding:8px 12px;font-size:clamp(10px,2.3vw,13px);min-height:1.4em}
+  @media (max-width:520px){
+    #leftCol{width:56%}
+    #cardsCol{width:38%;top:6%}
+    .rline{white-space:normal}
+    #phone{width:min(78%,290px)}
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="leftCol">
+    <div id="torso">
+      <div id="led"></div>
+      <div id="trim"></div>
+      <div id="slot"></div>
+    </div>
+    <div id="receiptWrap"><div id="receipt"><div id="receiptHead"></div><div id="receiptLines"></div></div></div>
+  </div>
+  <div id="cardsCol">
+    <div class="card" id="postCard"></div>
+    <div class="card" id="sysCard"><div id="sysTitle"></div><div id="sysReset"></div></div>
+  </div>
+  <div id="phone">
+    <div id="phoneHead"><span class="tab" id="tabA"></span><span class="tab" id="tabB"></span></div>
+    <div id="chatArea"><div id="promptBubble"></div><div id="replyBubble"></div></div>
+    <div id="inputBar"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; the logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: phase boundaries come from the checkpoints table
+   (printStart / receiptFull / cardsAt / phoneAt / typedAt / replyAt); every sub-timing
+   (LED typing, per-line print reveal, card fade, phone rise, typing, reply pop) is
+   DERIVED from those checkpoints + the named duration keys below — never a hidden cadence. */
+const CONFIG = {
+  durationMs: 12000,                /* technique window 2:50-3:02 = 12 s */
+  checkpoints: { printStart: 0, receiptFull: 3200, cardsAt: 4200, phoneAt: 7000, typedAt: 9500, replyAt: 10300 },
+  ledFraction: 0.65,                /* LED line completes at this fraction of the print phase */
+  cardsFadeMs: 600,                 /* post + system cards fade/slide in over this, from cardsAt */
+  phoneRiseMs: 700,                 /* phone rises into frame over this, from phoneAt */
+  typeDelayMs: 400,                 /* typing starts this long after phoneAt; completes at typedAt */
+  replyPopMs: 350,                  /* reply bubble pops in over this, from replyAt */
+  receiptMinHPct: 0,                /* receipt window height at print start, % of its column */
+  receiptMaxHPct: 46,               /* receipt window height when fully printed, % */
+  ledText: "YOU'VE REACHED YOUR USAGE LIMIT",
+  receiptHeader: "USAGE RECEIPT",
+  receiptLines: ["Plan: MAX", "Credits used: 100%", "Status: LIMIT HIT", "Thank you for building"],
+  postText: "I have an AI slop empire to build.",
+  systemTitle: "You're out of usage credits",
+  systemReset: "Resets Saturday at 3:00 AM",
+  tabA: "Chat",
+  tabB: "Work",
+  phonePrompt: "Hey ChatGPT?",
+  phoneReply: "Heyyy! What are we getting into today?",
+  bg: "#17130f",
+  torsoColor: "#b9bcc4",
+  trimColor: "#d99a2b",
+  ledBg: "#0a0a0a",
+  ledColor: "#ffb62e",
+  paperColor: "#f7f2e4",
+  paperInk: "#23201a",
+  cardBg: "#fdfcf8",
+  cardInk: "#191919",
+  sysBg: "#2b2f36",
+  sysInk: "#f2f4f8",
+  accent: "#37c84f",                /* rival-app green — prompt bubble outline + tab */
+  phoneBg: "#000000",
+  phoneInk: "#f4f4f4",
+  phoneFrame: "#3a3f46",
+  replyBg: "#1d1f24",
+  inputBg: "#17181c"
+};
+
+/* URL overrides (swap test / reuse):
+   ?prompt=...&reply=...&post=...&reset=...&led=...  ·  ?accent=%23ff2e88&paper=%23ffffff
+   ?phoneAt=6000 (one checkpoint)  ·  ?durationMs=10000 (checkpoints scale proportionally)
+   ?lines=Alpha;Beta;Gamma (receipt lines) */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  const baseDuration = CONFIG.durationMs;
+  if (num("durationMs") !== null && num("durationMs") >= 1000) CONFIG.durationMs = num("durationMs");
+  if (CONFIG.durationMs !== baseDuration){
+    const r = CONFIG.durationMs / baseDuration;   /* duration-only change: checkpoints scale, never strand */
+    for (const k in CONFIG.checkpoints) CONFIG.checkpoints[k] = Math.round(CONFIG.checkpoints[k] * r);
+  }
+  if (num("phoneAt") !== null && num("phoneAt") > 0 && num("phoneAt") < CONFIG.durationMs) CONFIG.checkpoints.phoneAt = num("phoneAt");
+  if (q.get("led")) CONFIG.ledText = q.get("led");
+  if (q.get("post")) CONFIG.postText = q.get("post");
+  if (q.get("prompt")) CONFIG.phonePrompt = q.get("prompt");
+  if (q.get("reply")) CONFIG.phoneReply = q.get("reply");
+  if (q.get("reset")) CONFIG.systemReset = q.get("reset");
+  if (q.get("header")) CONFIG.receiptHeader = q.get("header");
+  if (q.get("lines")) CONFIG.receiptLines = q.get("lines").split(";");
+  if (q.get("accent")) CONFIG.accent = q.get("accent");
+  if (q.get("paper")) CONFIG.paperColor = q.get("paper");
+  if (q.get("ledColor")) CONFIG.ledColor = q.get("ledColor");
+})();
+
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+/* Pure state from time — every phase value derives from CONFIG.checkpoints + CONFIG durations. */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  const printSpan = Math.max(1, cp.receiptFull - cp.printStart);
+  const printProgress = clamp01((t - cp.printStart) / printSpan);
+  const ledChars = Math.floor(clamp01((t - cp.printStart) / (printSpan * cfg.ledFraction)) * cfg.ledText.length);
+  const totalRows = 1 + cfg.receiptLines.length;   /* header + lines */
+  const visibleRows = Math.min(totalRows, Math.floor(printProgress * totalRows));
+  const cardsProgress = clamp01((t - cp.cardsAt) / cfg.cardsFadeMs);
+  const phoneProgress = clamp01((t - cp.phoneAt) / cfg.phoneRiseMs);
+  const typeStart = cp.phoneAt + cfg.typeDelayMs;
+  const typedChars = Math.floor(clamp01((t - typeStart) / Math.max(1, cp.typedAt - typeStart)) * cfg.phonePrompt.length);
+  const replyProgress = clamp01((t - cp.replyAt) / cfg.replyPopMs);
+  const phase = t < cp.cardsAt ? 1 : (t < cp.phoneAt ? 2 : 3);
+  return { t: t, phase: phase, printProgress: printProgress, ledChars: ledChars,
+           visibleRows: visibleRows, cardsProgress: cardsProgress,
+           phoneProgress: phoneProgress, typedChars: typedChars, replyProgress: replyProgress };
+}
+
+const stage = document.getElementById("stage");
+const led = document.getElementById("led");
+const torso = document.getElementById("torso");
+const trim = document.getElementById("trim");
+const slot = document.getElementById("slot");
+const receiptWrap = document.getElementById("receiptWrap");
+const receipt = document.getElementById("receipt");
+const receiptHead = document.getElementById("receiptHead");
+const receiptLines = document.getElementById("receiptLines");
+const cardsCol = document.getElementById("cardsCol");
+const postCard = document.getElementById("postCard");
+const sysCard = document.getElementById("sysCard");
+const sysTitle = document.getElementById("sysTitle");
+const sysReset = document.getElementById("sysReset");
+const phone = document.getElementById("phone");
+const tabA = document.getElementById("tabA");
+const tabB = document.getElementById("tabB");
+const promptBubble = document.getElementById("promptBubble");
+const replyBubble = document.getElementById("replyBubble");
+const inputBar = document.getElementById("inputBar");
+
+document.body.style.background = CONFIG.bg;
+stage.style.background = CONFIG.bg;
+torso.style.background = CONFIG.torsoColor;
+trim.style.background = CONFIG.trimColor;
+slot.style.borderColor = CONFIG.trimColor;
+slot.style.background = CONFIG.ledBg;
+led.style.background = CONFIG.ledBg;
+led.style.color = CONFIG.ledColor;
+receipt.style.background = CONFIG.paperColor;
+receipt.style.color = CONFIG.paperInk;
+receiptHead.textContent = CONFIG.receiptHeader;
+postCard.style.background = CONFIG.cardBg;
+postCard.style.color = CONFIG.cardInk;
+postCard.textContent = CONFIG.postText;
+sysCard.style.background = CONFIG.sysBg;
+sysCard.style.color = CONFIG.sysInk;
+sysTitle.textContent = CONFIG.systemTitle;
+sysReset.textContent = CONFIG.systemReset;
+phone.style.background = CONFIG.phoneBg;
+phone.style.color = CONFIG.phoneInk;
+phone.style.borderColor = CONFIG.phoneFrame;
+tabA.textContent = CONFIG.tabA;
+tabB.textContent = CONFIG.tabB;
+tabA.style.background = CONFIG.replyBg;
+tabB.style.background = CONFIG.replyBg;
+promptBubble.style.borderColor = CONFIG.accent;
+promptBubble.style.color = CONFIG.phoneInk;
+promptBubble.style.background = CONFIG.phoneBg;
+replyBubble.style.background = CONFIG.replyBg;
+replyBubble.style.color = CONFIG.phoneInk;
+replyBubble.textContent = CONFIG.phoneReply;
+inputBar.style.background = CONFIG.inputBg;
+
+const lineEls = [];
+for (let i = 0; i < CONFIG.receiptLines.length; i++){
+  const d = document.createElement("div");
+  d.className = "rline";
+  d.textContent = CONFIG.receiptLines[i];
+  receiptLines.appendChild(d); lineEls.push(d);
+}
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  led.textContent = CONFIG.ledText.slice(0, s.ledChars);
+  receiptWrap.style.height = (CONFIG.receiptMinHPct + s.printProgress * (CONFIG.receiptMaxHPct - CONFIG.receiptMinHPct)) + "%";
+  receiptHead.style.visibility = s.visibleRows >= 1 ? "visible" : "hidden";
+  for (let i = 0; i < lineEls.length; i++)
+    lineEls[i].style.visibility = s.visibleRows >= i + 2 ? "visible" : "hidden";
+  cardsCol.style.opacity = String(s.cardsProgress);
+  cardsCol.style.transform = "translateY(" + ((1 - s.cardsProgress) * 18) + "px)";
+  phone.style.opacity = String(s.phoneProgress);
+  phone.style.transform = "translate(-50%, " + ((1 - s.phoneProgress) * 60) + "%)";
+  const typed = CONFIG.phonePrompt.slice(0, s.typedChars);
+  promptBubble.textContent = s.typedChars > 0 ? "\u203A " + typed : "";
+  promptBubble.style.visibility = s.typedChars > 0 ? "visible" : "hidden";
+  inputBar.textContent = typed;
+  replyBubble.style.opacity = String(s.replyProgress);
+  replyBubble.style.transform = "scale(" + (0.7 + 0.3 * s.replyProgress) + ")";
+  replyBubble.style.visibility = s.replyProgress > 0 ? "visible" : "hidden";
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

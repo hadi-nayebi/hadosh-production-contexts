@@ -1,0 +1,13 @@
+**Verdict.** The recreation matches the discrete facade reveal, the 6.5 s anchor, the completed marquee at that anchor, and the final title hold. The camera motion is a partial match because the hero tower slides without changing perspective.
+
+**Findings**
+
+- **Facade reveal.** `letterList()` assigns non-space glyphs in reading order. `sampleFacade()` maps glyphs to window cells, and the two lit-cell passes in `render()` switch on all cells owned by each glyph at once. The configured span is 11,000 − 500 = 10,500 ms across 14 intervals for 15 glyphs including the exclamation point. At 750 ms per interval, glyph 9 (`I`) lights at 500 + 8 × 750 = 6,500 ms, after `LOOK` and `WHAT`. The own-check packet’s Timing/state probes report eight glyphs at 6,499 ms and nine at 6,500 ms. Intermediate onsets follow the stated allocation model.
+- **Camera and skyline.** `orbitPassage()` and `orbitOffsetPx()` produce continuous leftward drift with distinct layer speeds. At a 360 px canvas width, the configured travel approaches 4.5 px for the hero, 7.5 px for the far layer, and 16.5 px for the mid layer before reset. `render()` keeps the hero facade and window grid front-facing at fixed dimensions. The growing side strips cover portions of neighboring tower fronts. The resulting parallax cues lateral camera movement, with no changing view of the tower the camera is described as orbiting.
+- **Marquee.** `computeState()` completes the 19-character line at 18 × 40 = 720 ms. The facade starts at 500 ms, so both reveals overlap for 220 ms. The marquee then stays complete through the 6.5 s anchor and the rest of the loop. `render()` centers the growing prefix, adding a brief typing motion whose timing is unverified by the technique facts.
+- **Completed-title hold.** `computeState()` keeps all 15 glyphs lit from 11,000 ms until the 14,000 ms wrap, yielding a 3 s hold while the skyline continues drifting. The wrap resets the facade, marquee, and layer offsets together. The technique facts establish a loop, with no evidence for the exact hold length or reset style.
+
+**Limits.** Source-only assessment. The own-check packet uses a synthetic raster for glyph sampling. Browser cell coverage, legibility, and the perceived strength of the camera motion remain pixel-unverified.
+
+**Body-write: none (read-only run)** — this return records the motion-fidelity findings and score for the artifact’s Verify record.  
+SCORE: 84

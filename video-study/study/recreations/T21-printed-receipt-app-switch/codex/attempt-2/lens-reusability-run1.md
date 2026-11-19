@@ -1,0 +1,10 @@
+Production can swap ordinary content, colors, and timing through CONFIG, but layout and capacity behavior still require source edits. Score reflects source inspection; rendered behavior remains unverified.
+
+- **No dead declared keys found.** Every palette entry, both tab labels, receipt limits, overflow tiers, and shaping endpoints has a consumer. URL overrides cover text, receipt lines, timing, and palette values. Duration scaling includes subordinate durations, and accepted `phoneAt` changes move the typing window.
+- **Receipt geometry is only partly parameterized.** `receiptPadTopPx` and `receiptPadBottomPx` affect the model, while CSS independently fixes padding at `8px` and `12px`. Header height, row height, and wrapping similarly depend on separate CSS values. Changing CONFIG can therefore change exposure timing without changing the corresponding rendered dimensions.
+- **Shaping literals remain outside CONFIG.** Bridge dimming uses a fixed `0.15`; typography, component widths/heights, breakpoint, bubble capacities, and shadow geometry remain embedded in CSS or render code. These constrain reuse for a substantially different app or receipt.
+- **Extreme swaps are partially priced.** Excess receipt height and reply length produce state flags, but render neither surfaces those flags nor provides an overflow treatment. Character count cannot reliably predict reply fit across viewport sizes, explicit newlines, or long prompts. Receipt wrapping uses a fixed character estimate rather than rendered width.
+- **Timing protection is useful but incomplete.** The 1000ms override scales coherently and shorter URL durations are explicitly rejected. Direct CONFIG edits lack equivalent rejection enforcement: invalid state still renders. Also, `cfg.effective || validateTimeline(cfg)` receives an errors array when `effective` is null, making standalone `computeState` use unsafe.
+
+BODY-WRITE: Require one shared source for receipt model and CSS geometry, configurable typography/layout/bridge dimming, explicit rendered overflow handling, and validated CONFIG initialization before claiming production reuse from CONFIG alone.
+SCORE: 79

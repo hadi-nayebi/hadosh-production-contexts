@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T20 — Building-as-display typography · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.08em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T20 — Building-as-display typography</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 2:37–2:50.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation — a neon night skyline whose hero tower's window
+grid spells the title in lit cells, letter by letter, while the camera slowly orbits
+and the base marquee already reads the full line. One control set drives both.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — new texts, timing, palette</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — Look What I Can Do (P1) @ 2:37–2:50<small>segment.mp4 · specimen window 2:36.5–2:50.5 (±0.5 handles) · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T20 building-as-display typography, parameterized<small>recreation.html · CONFIG: facade lines, marquee text, checkpoints, grid, palette, orbit, neighbor seed/density, sampling coverage + two-axis fit, intensity hierarchy · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T20 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click, so both start together. The recreation runs a 14 s loop
+(<code>durationMs</code> 14000, the segment length); its letter lighting is decided by the CONFIG checkpoint
+table (<code>lightStart</code> 500 · <code>lightComplete</code> 11000) with first/last-onset semantics — the first
+glyph lights at <code>lightStart</code>, the last exactly at <code>lightComplete</code>, the interval derived
+from the span and the live letter count — at 6.5 s it reproduces the evidence-frame state
+(the 2:43 frame: LOOK + WHAT complete, first glyph of line 3 lit = 9 of 15 letters). Letterforms come from
+runtime sampling of the CONFIG text, never from traced cells. The Swap test button reloads the recreation with
+<code>?lines=WE|ARE+ONE&amp;marquee=WE ARE ONE!&amp;lightComplete=8000&amp;lit=%23aef7ff</code> —
+new facade lines (cardinality 15 → 8 letters, re-derived cadence), a new marquee, a faster
+completion checkpoint, and an ice-blue lit-cell palette; if the tower spells the new words on the
+new schedule in the new color, the build is the technique, not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+function cmd(c){ rec.contentWindow && rec.contentWindow.postMessage({cmd:c}, "*"); }
+document.getElementById("btnPlay").addEventListener("click", function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ vid.currentTime = 0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click", function(){
+  rec.src = "recreation.html?lines=WE|ARE+ONE&marquee=WE ARE ONE!&lightComplete=8000&lit=%23aef7ff";
+  vid.currentTime = 0; vid.play();
+});
+</script>
+</body>
+</html>

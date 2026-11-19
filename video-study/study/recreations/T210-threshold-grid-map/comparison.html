@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T210 — Threshold grid-map — comparison</title>
+<style>
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:#e9e6de; color:#1a1a1a; }
+  main { max-width:1100px; margin:0 auto; padding:12px; }
+  .sides { display:flex; gap:16px; align-items:flex-start; }
+  figure { flex:1 1 0; margin:0; }
+  figcaption { font-weight:bold; padding:6px 0; }
+  video, iframe { width:100%; aspect-ratio:16/9; display:block; border:1px solid #1a1a1a; background:#f4f1ea; }
+  iframe { border:1px solid #1a1a1a; }
+  .controls { display:flex; gap:8px; align-items:center; padding:12px 0; flex-wrap:wrap; }
+  button { font-size:16px; padding:10px 18px; min-height:44px; cursor:pointer; }
+  input[type="range"] { flex:1 1 200px; min-height:44px; }
+  @media (max-width: 560px) {
+    .sides { flex-direction: column; }
+    figure { width:100%; }
+    .controls { position:sticky; bottom:0; background:#e9e6de; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <button id="restart" type="button">Restart</button>
+    <input id="seek" type="range" min="0" max="8000" step="50" value="0" aria-label="Seek">
+    <span id="clock">0.0s</span>
+  </div>
+  <div class="sides">
+    <figure>
+      <figcaption>ORIGINAL — Vox, The Electoral College, explained @ 2:19–2:27 (segment includes ±0.5 s handles)</figcaption>
+      <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+    </figure>
+    <figure>
+      <figcaption>RECREATION — T210 threshold grid-map, parameterized</figcaption>
+      <iframe id="rec" src="recreation.html" title="T210 recreation"></iframe>
+    </figure>
+  </div>
+</main>
+<script>
+"use strict";
+/* Clock binding (plan-amendment C14): segment.mp4 time 0.5 s = source 139.0 s = buildMs 0.
+   buildMs = (video.currentTime - HANDLE_OFFSET_S) * 1000, clamped to [0, 8000]. */
+const HANDLE_OFFSET_S = 0.5;
+const DURATION_MS = 8000;
+const video = document.getElementById("orig");
+const rec = document.getElementById("rec");
+const seek = document.getElementById("seek");
+const clock = document.getElementById("clock");
+function recSeek(buildMs){
+  const w = rec.contentWindow;
+  if (w && w.__T210 && w.__T210.seek) w.__T210.seek(buildMs);
+}
+function applyBuildMs(buildMs){
+  buildMs = Math.max(0, Math.min(buildMs, DURATION_MS));
+  video.currentTime = buildMs / 1000 + HANDLE_OFFSET_S;
+  recSeek(buildMs);
+  seek.value = buildMs;
+  clock.textContent = (buildMs / 1000).toFixed(1) + "s / 8.0s";
+}
+video.addEventListener("timeupdate", () => {
+  const buildMs = Math.max(0, Math.min((video.currentTime - HANDLE_OFFSET_S) * 1000, DURATION_MS));
+  recSeek(buildMs);
+  seek.value = buildMs;
+  clock.textContent = (buildMs / 1000).toFixed(1) + "s / 8.0s";
+});
+document.getElementById("play").addEventListener("click", () => { video.play(); const w = rec.contentWindow; if (w) { const b = w.document.getElementById("play"); if (b) b.click(); } });
+document.getElementById("pause").addEventListener("click", () => { video.pause(); const w = rec.contentWindow; if (w) { const b = w.document.getElementById("pause"); if (b) b.click(); } });
+document.getElementById("restart").addEventListener("click", () => applyBuildMs(0));
+seek.addEventListener("input", () => applyBuildMs(Number(seek.value)));
+</script>
+</body>
+</html>
