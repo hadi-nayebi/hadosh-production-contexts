@@ -1,0 +1,8 @@
+# build-record (score-blind) — T132 Serial presentation (RSVP replacement) · attempt 1
+Technique: Packet #7 P7 T01 — Serial presentation (RSVP replacement). Window: 3.00–17.00 s (segment 14.000 s). Schedule basis: segment-anchored (onsets/dwells measured from onset-table rows 8–57, onset − 3.00 s).
+Mechanics implemented: One word at a time replaces the last by hard cut at a fixed centre position over a continuous moving landscape plate; nothing accumulates; dwell is the only variable. 56 words in segment; first word 'Limits.' holds 1160 ms; last word onset 13920 ms, its 120 ms dwell ends 40 ms past the 14000 ms cycle (the specimen's own overflow of the window, filed not trimmed).
+Construction: one self-contained HTML file; CONFIG at top; one JS clock; single-slot phase machine; plate drawn from CONFIG geometry and panned. No external assets; no specimen media.
+Deferred/named: Plate is a code-drawn layered silhouette (sky/far ridge/near ground), not the specimen's photographic salt-flat plate — the technique's claim is the word schedule over a moving plate; photographic texture is T141's (not owed) territory, named here as a deferral.
+Swap test (logic level): words→[Alpha. 360 · Bravo 360 · Charlie. 1080] (dwell table x1.5 with cumulative onsets in the harness copy) — timeline regenerated with the new texts/dwells: PASS · palette leg: plate.sky→#a8c9d9 in CONFIG (render-only key, timeline unaffected by construction)
+Purity grep over recreation.html: 0 hits. Syntax check: PASS. Determinism: no Math.random / Date.now.
+recreation.html SHA-256: c8423a660141fd240dfbdabee84c345c2bd5200a54d957f8d0c4a81c5293ae04

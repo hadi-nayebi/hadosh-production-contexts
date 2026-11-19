@@ -1,0 +1,500 @@
+Consumer: practice job §5 Verify for T132 attempt 2 + decision priced: whether this attempt passes the bar, and what remains to cure if it does not.
+Working record: the artifact's scores.md filing (seat-side; not part of this packet).
+BODY-WRITE: return must end with SCORE: <integer> and a BODY-WRITE: line naming what it filed.
+Scores are integers from 0 to 100. Bar: average >= 85 AND no lens < 70 (this lens is one of five).
+recreation.html SHA-256: f2c89c1b8fbd7dc7e1ee65e346dd587216dc21a2d6e138f7ba213988c13b685e (identical across all five lens payloads)
+
+LENS INSTRUCTION: Judge ONLY this lens: reusability — can a new schedule, palette, plate geometry, or canvas be driven from configuration alone, with defined swap semantics, validation, fit behaviour, and mode contracts?. Score 0-100 against the bar. Do not judge other lenses.
+
+Neutral technique facts (digest + seat census): Honda 'Keep Up' (2015), words flashing one at a time over driving footage. The packet technique: the RSVP convention pushed past reading speed — one word replaces the last at a fixed screen position, nothing accumulates, the picture moves continuously behind the words. The measured segment (3.00 s into the film) carries 56 words with dwells from 120 ms to 1160 ms; the first word 'Limits.' holds 1160 ms; one measured 160 ms beat carries no legible word; the last word's dwell ends 14040 ms into the segment. All specimen text is RED (seat census of 9 frames, viewed firsthand). The plate is a pale blue sky over a white salt flat with grey-blue ridges. Schedule basis: segment-anchored (onsets/dwells measured from the onset table).
+
+SCORE-BLIND BUILD RECORD:
+# build-record (score-blind) — T132 Serial presentation (RSVP replacement) · attempt 2
+Technique: Packet #7 P7 T01 — Serial presentation (RSVP replacement). Window: segment 3.00–17.04 s. Schedule basis: segment-anchored (measured onset table rows 8–64, onset − 3.00 s).
+Mechanics implemented: One word at a time replaces the last by hard cut at a fixed centre position over a continuously panning landscape plate; nothing accumulates. The schedule is 56 words plus one typed transition phase (160 ms, plate visible, word slot empty by type); word time 13880 ms + transition 160 ms = cycle 14040 ms, and the final word's full dwell plays inside the cycle. Configuration carries words + dwells only; onsets and the cycle length are derived in the engine, and a global dwell scale multiplies every dwell including the transition. An explicit cycle length unequal to the derived total is rejected atomically, as are invalid values and impossible fits (a word wider than the stage at the minimum size), each rejection recorded in an observable record.
+Construction: one self-contained HTML file; CONFIG at top carries content, schedule, palette, typography, canvas dimensions, fit policy and model, and plate geometry. The plate is generated as a repeating tile (closing height generated from opening height) drawn across the canvas; the pan offset derives from total elapsed time and never resets at the cycle boundary; the sun is a static element outside the panning group. Canvas dimensions in CONFIG drive the viewBox, plate widths, and stage aspect. A shrink fit policy fits over-wide words toward a minimum size, recomputed from the live stage width each frame. Each display mode declares its required keys, validated for the active mode. No external assets; no specimen media.
+Deferred/named: Plate is a code-drawn layered silhouette, not the specimen's photographic salt-flat plate — the technique's claim is the word schedule over a moving plate; photographic texture is another technique's territory. The countdown segment before the word window and the words after the window are outside this recreation's evidenced window. Length-weighted dwell is not implemented: the measured record shows the same median dwell in every length band.
+Swap test (logic level): 3-word table with words + dwells only regenerates its timeline from configuration alone; palette-only changes leave the timeline identical; tile-geometry changes change the plate path: PASS.
+Own checks: fit-table HITs 0 · config-census HITs 0 · schedule reconciliation 56/56 rows · purity grep 0 hits · syntax PASS · determinism: no random/wall-clock in the schedule path.
+PIXEL-UNVERIFIED: no browser binary in this seat; verification is logic-level, comparison.html is the render surface.
+recreation.html SHA-256: f2c89c1b8fbd7dc7e1ee65e346dd587216dc21a2d6e138f7ba213988c13b685e
+
+
+OWN-CHECK PACKET:
+# own-check packet — T132 serial presentation · attempt 2 (neutral)
+
+Source SHA-256: f2c89c1b8fbd7dc7e1ee65e346dd587216dc21a2d6e138f7ba213988c13b685e
+Verification basis: source/logic level (node harness over the file's own inline script). PIXEL-UNVERIFIED: no browser binary in this seat; the comparison page is the render surface.
+
+## Schedule reconciliation (against the measured onset table, segment rows 8–64, onset − 3.00 s)
+- 56/56 word rows equal (text, derived onset, dwell) — machine diff, 0 mismatches.
+- One measured non-word beat of 160 ms is accounted as a typed transition phase at 13120–13280 ms; during it the plate displays and the word slot is empty by type.
+- Measured minimum word dwell in the segment: 120 ms. No 80 ms dwell exists in the segment rows.
+- Word time 13880 ms + transition 160 ms = cycle 14040 ms; every millisecond is owned by a named phase; the final word's full 120 ms dwell plays inside the cycle.
+
+## Checks (all passing)
+- Timeline contiguity: derived onsets are cumulative; no gaps, no overlaps.
+- Index mapping: entry 0 = 'Limits.' (1160 ms), entry 50 = 'You', entry 51 = transition, entry 52 = 'can'.
+- Scale mapping: a global dwell scale of 1.5 scales every dwell including the transition (cycle 14040 -> 21060); at 2.0 the cycle is 28080.
+- Plate continuity: the landscape is generated as a repeating tile whose closing height is generated from its opening height; pan offset is computed from total elapsed time (never reduced by the cycle), is continuous across the 14040 ms cycle boundary (-12.70 -> -12.74 across the boundary sample), and wraps at the tile period with identical plate state. The sun element is outside the panning group and invariant.
+- Contrast: word colour #b91f16 against sky #a9c6d4 computes to 3.58:1 from the two configuration values; the numeral colour carries the same value.
+- Fit: every word's modelled ink fits the 360 px stage at its fitted size (fit-table, HITs 0); the longest word 'yourself.' is 190.4 px at full size. Fit is recomputed from the live stage width on every frame, so container resizes re-fit.
+- Impossible fit: a word whose ink at the minimum size exceeds the stage width is rejected atomically (timeline unchanged, rejection recorded in an observable record) — asserted for a 72-character word and for a narrowed 80 px canvas; also asserted under a changed canvas aspect (400x400 accepted, words fit; 80 px width rejected).
+- Validation: zero/negative/NaN/Infinity/oversized (1e999) and wrong-type values in dwell, scale, pan rate, tile period, font sizes, anchor fraction, and tile points are each rejected atomically with the rejection recorded; an explicit cycle length unequal to the derived total is rejected whether shorter or longer; an empty word list is rejected.
+- Mode contracts: each mode declares its required keys; activating a mode with a required key absent is rejected atomically with the missing keys recorded.
+- Swap test: a 3-word table carrying words + dwells only (no onsets supplied) regenerates its timeline from configuration alone (onsets 0/360/720 at scale 1.5, cycle 1800); palette-only changes leave the timeline identical; a tile-geometry change changes the generated plate path.
+- Configuration consumption: every configuration key has a mutation-based effect mapping (config-census, HITs 0); the former separate wrap key is absent from the source.
+- Purity: no external assets, no specimen media, no embedded frames; determinism (no random or wall-clock calls in the schedule path); syntax check passes.
+- Self-start: the piece registers its own animation loop at load and reaches its scheduled ending (14040 ms) and loops under its own startup path; the seek hook parses and re-bases both the word phase and the pan offset from the same elapsed basis.
+
+
+RECREATION.HTML FULL SOURCE:
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T132 recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;max-height:100vh;overflow:hidden}
+#plate{position:absolute;inset:0}
+#word{position:absolute;left:0;right:0;text-align:center;transform-origin:center center;font-weight:700;white-space:nowrap}
+</style></head><body>
+<div id="stage"><svg id="plate" preserveAspectRatio="none" width="100%" height="100%">
+<rect id="sky" x="0" y="0"/>
+<g id="pan">
+<path id="far" d=""/>
+<path id="near" d=""/>
+</g><circle id="sun"/><rect id="ground" x="0"/>
+</svg><div id="word"></div></div>
+<script>
+var CONFIG = {
+ "mode": "table",
+ "dwellScale": 1,
+ "canvasW": 720,
+ "canvasH": 405,
+ "fitPolicy": "shrink",
+ "minFontPx": 18,
+ "fitModel": {"upper": 0.72, "lower": 0.56, "digit": 0.62, "punct": 0.28, "space": 0.3, "capHeight": 0.72},
+ "scaleFrom": 1,
+ "scaleTo": 1,
+ "words": [
+  {
+   "t": "Limits.",
+   "dwellMs": 1160
+  },
+  {
+   "t": "We",
+   "dwellMs": 240
+  },
+  {
+   "t": "have",
+   "dwellMs": 240
+  },
+  {
+   "t": "all",
+   "dwellMs": 240
+  },
+  {
+   "t": "got",
+   "dwellMs": 240
+  },
+  {
+   "t": "them.",
+   "dwellMs": 760
+  },
+  {
+   "t": "That",
+   "dwellMs": 160
+  },
+  {
+   "t": "voice",
+   "dwellMs": 200
+  },
+  {
+   "t": "that",
+   "dwellMs": 160
+  },
+  {
+   "t": "tells",
+   "dwellMs": 200
+  },
+  {
+   "t": "you",
+   "dwellMs": 200
+  },
+  {
+   "t": "that",
+   "dwellMs": 160
+  },
+  {
+   "t": "you've",
+   "dwellMs": 200
+  },
+  {
+   "t": "done",
+   "dwellMs": 160
+  },
+  {
+   "t": "all",
+   "dwellMs": 200
+  },
+  {
+   "t": "you",
+   "dwellMs": 160
+  },
+  {
+   "t": "could",
+   "dwellMs": 160
+  },
+  {
+   "t": "do.",
+   "dwellMs": 720
+  },
+  {
+   "t": "This",
+   "dwellMs": 160
+  },
+  {
+   "t": "is",
+   "dwellMs": 160
+  },
+  {
+   "t": "the",
+   "dwellMs": 160
+  },
+  {
+   "t": "furthest",
+   "dwellMs": 160
+  },
+  {
+   "t": "I",
+   "dwellMs": 160
+  },
+  {
+   "t": "can",
+   "dwellMs": 160
+  },
+  {
+   "t": "go.",
+   "dwellMs": 560
+  },
+  {
+   "t": "I",
+   "dwellMs": 120
+  },
+  {
+   "t": "will",
+   "dwellMs": 160
+  },
+  {
+   "t": "not",
+   "dwellMs": 120
+  },
+  {
+   "t": "be",
+   "dwellMs": 120
+  },
+  {
+   "t": "able",
+   "dwellMs": 160
+  },
+  {
+   "t": "to",
+   "dwellMs": 160
+  },
+  {
+   "t": "top",
+   "dwellMs": 120
+  },
+  {
+   "t": "that.",
+   "dwellMs": 320
+  },
+  {
+   "t": "I",
+   "dwellMs": 160
+  },
+  {
+   "t": "have",
+   "dwellMs": 160
+  },
+  {
+   "t": "given",
+   "dwellMs": 160
+  },
+  {
+   "t": "my",
+   "dwellMs": 160
+  },
+  {
+   "t": "best.",
+   "dwellMs": 480
+  },
+  {
+   "t": "But",
+   "dwellMs": 160
+  },
+  {
+   "t": "when",
+   "dwellMs": 160
+  },
+  {
+   "t": "you",
+   "dwellMs": 160
+  },
+  {
+   "t": "force",
+   "dwellMs": 160
+  },
+  {
+   "t": "yourself",
+   "dwellMs": 160
+  },
+  {
+   "t": "to",
+   "dwellMs": 160
+  },
+  {
+   "t": "push.",
+   "dwellMs": 480
+  },
+  {
+   "t": "I",
+   "dwellMs": 240
+  },
+  {
+   "t": "mean",
+   "dwellMs": 240
+  },
+  {
+   "t": "really",
+   "dwellMs": 200
+  },
+  {
+   "t": "REALLY",
+   "dwellMs": 320
+  },
+  {
+   "t": "push.",
+   "dwellMs": 440
+  },
+  {
+   "t": "You",
+   "dwellMs": 760
+  },
+  {
+   "kind": "transition",
+   "dwellMs": 160
+  },
+  {
+   "t": "can",
+   "dwellMs": 160
+  },
+  {
+   "t": "surprise",
+   "dwellMs": 160
+  },
+  {
+   "t": "yourself.",
+   "dwellMs": 200
+  },
+  {
+   "t": "Suddenly",
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "dwellMs": 120
+  }
+ ],
+ "fontPx": 40,
+ "fontWeight": 700,
+ "numeralFontPx": 110,
+ "numeralColor": "#b91f16",
+ "wordColor": "#b91f16",
+ "anchorYFrac": 0.44,
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "plate": {
+  "sky": "#a9c6d4",
+  "far": "#a7b8ba",
+  "near": "#efe9dc",
+  "panPxPerSec": 18,
+  "tilePx": 240,
+  "farTile": [[0, 250], [60, 210], [120, 238], [180, 200]],
+  "nearTile": [[0, 300], [80, 272], [160, 296], [200, 268]],
+  "sun": {
+   "cx": 590,
+   "cy": 86,
+   "r": 30
+  },
+  "groundY": 330,
+  "groundH": 75
+ },
+};
+
+var REJECTED=[];
+function isPosFinite(v){ return typeof v==="number" && isFinite(v) && v>0; }
+function validateSchedule(cfg){
+  var errs=[];
+  if(!cfg || typeof cfg!=="object") errs.push("config-not-object");
+  if(errs.length) return {ok:false, errors:errs, derivedCycleMs:0};
+  if(cfg.mode!=="table" && cfg.mode!=="derived" && cfg.mode!=="bands" && cfg.mode!=="countdown") errs.push("mode-unknown");
+  if(cfg.dwellScale!==undefined && !isPosFinite(cfg.dwellScale)) errs.push("dwellScale-invalid");
+  if(cfg.mode==="table" || !cfg.mode){
+    if(!Array.isArray(cfg.words) || cfg.words.length===0) errs.push("words-empty");
+    else for(var i=0;i<cfg.words.length;i++){ var w=cfg.words[i];
+      if(!w || typeof w!=="object") { errs.push("word-entry-invalid"); continue; }
+      if(w.kind==="transition"){ if(!isPosFinite(w.dwellMs)) errs.push("transition-dwell-invalid"); }
+      else { if(typeof w.t!=="string" || !w.t) errs.push("word-text-invalid"); if(!isPosFinite(w.dwellMs)) errs.push("word-dwell-invalid"); }
+    }
+  }
+  var derived=0;
+  if(cfg.mode==="table" || !cfg.mode){
+    var sc=cfg.dwellScale||1;
+    if(Array.isArray(cfg.words)) for(var j=0;j<cfg.words.length;j++){ if(cfg.words[j] && isPosFinite(cfg.words[j].dwellMs)) derived+=Math.round(cfg.words[j].dwellMs*sc); }
+  }
+  if(cfg.cycleMs!==undefined && cfg.mode==="table"){
+    if(!isPosFinite(cfg.cycleMs)) errs.push("cycleMs-invalid");
+    else if(cfg.cycleMs!==derived) errs.push("cycleMs-unequal-override");
+  }
+  return {ok:errs.length===0, errors:errs, derivedCycleMs:derived};
+}
+
+var MODE_CONTRACTS={table:['words'],derived:['words','baseDwellMs','finalMultiplier','finalMarks'],bands:['sentences','finalMultiplier'],countdown:['numerals','numeralOnsetsMs','numeralDwellsMs','firstWord','thenWords','scaleFrom','scaleTo']};
+function inkWidth(text, px, model){
+  var w=0; for(var i=0;i<text.length;i++){ var c=text[i];
+    if(c>='A'&&c<='Z') w+=model.upper; else if(c>='a'&&c<='z') w+=model.lower; else if(c>='0'&&c<='9') w+=model.digit; else if(c===' ') w+=model.space; else w+=model.punct; }
+  return w*px;
+}
+function fitFontPx(text, basePx, stageW, cfg){
+  if(cfg.fitPolicy!=='shrink') return basePx;
+  var s=basePx; while(s>cfg.minFontPx && inkWidth(text,s,cfg.fitModel)>stageW) s--;
+  return inkWidth(text,s,cfg.fitModel)>stageW? -1 : s;
+}
+function validateConfig(cfg){
+  var base=validateSchedule(cfg); var errs=base.errors.slice();
+  if(!cfg || typeof cfg!=="object") return {ok:false, errors:errs, derivedCycleMs:0};
+  var contract=MODE_CONTRACTS[cfg.mode];
+  if(contract) for(var ci=0;ci<contract.length;ci++){ if(cfg[contract[ci]]===undefined||cfg[contract[ci]]===null) errs.push('contract-missing:'+cfg.mode+':'+contract[ci]); }
+  var nums=[['canvasW',cfg.canvasW],['canvasH',cfg.canvasH],['fontPx',cfg.fontPx],['minFontPx',cfg.minFontPx],['numeralFontPx',cfg.numeralFontPx],['anchorYFrac',cfg.anchorYFrac]];
+  for(var ni=0;ni<nums.length;ni++){ if(!isPosFinite(nums[ni][1])) errs.push('numeric-invalid:'+nums[ni][0]); }
+  if(typeof cfg.anchorYFrac==="number" && (cfg.anchorYFrac<0||cfg.anchorYFrac>1)) errs.push('numeric-invalid:anchorYFrac-range');
+  if(cfg.minFontPx!==undefined && cfg.fontPx!==undefined && isPosFinite(cfg.minFontPx) && isPosFinite(cfg.fontPx) && cfg.minFontPx>cfg.fontPx) errs.push('numeric-invalid:minFontPx-exceeds-fontPx');
+  if(cfg.fitPolicy!==undefined && cfg.fitPolicy!=='shrink' && cfg.fitPolicy!=='none') errs.push('fitPolicy-invalid');
+  if(cfg.plate){
+    var p=cfg.plate;
+    if(!isPosFinite(p.panPxPerSec)) errs.push('numeric-invalid:plate.panPxPerSec');
+    if(!isPosFinite(p.tilePx)) errs.push('numeric-invalid:plate.tilePx');
+    if(!isPosFinite(p.groundY)) errs.push('numeric-invalid:plate.groundY');
+    if(!isPosFinite(p.groundH)) errs.push('numeric-invalid:plate.groundH');
+    if(!p.sun || !isPosFinite(p.sun.cx) || !isPosFinite(p.sun.cy) || !isPosFinite(p.sun.r)) errs.push('numeric-invalid:plate.sun');
+    var tiles=[p.farTile,p.nearTile];
+    for(var ti=0;ti<tiles.length;ti++){ if(!Array.isArray(tiles[ti])||!tiles[ti].length) errs.push('tile-invalid'); else for(var pi=0;pi<tiles[ti].length;pi++){ var pt=tiles[ti][pi]; if(!Array.isArray(pt)||typeof pt[0]!=="number"||typeof pt[1]!=="number"||!isFinite(pt[0])||!isFinite(pt[1])) errs.push('tile-point-invalid'); } }
+  } else errs.push('plate-missing');
+  if(cfg.mode==='table' && Array.isArray(cfg.words) && isPosFinite(cfg.canvasW) && isPosFinite(cfg.minFontPx) && cfg.fitModel){
+    for(var wi=0;wi<cfg.words.length;wi++){ var w=cfg.words[wi]; if(w && typeof w.t==="string" && inkWidth(w.t, cfg.minFontPx, cfg.fitModel)>cfg.canvasW) errs.push('fit-impossible:'+w.t); }
+  }
+  if(cfg.mode==='derived'){ if(!isPosFinite(cfg.baseDwellMs)) errs.push('numeric-invalid:baseDwellMs'); if(!isPosFinite(cfg.finalMultiplier)) errs.push('numeric-invalid:finalMultiplier'); }
+  return {ok:errs.length===0, errors:errs, derivedCycleMs:base.derivedCycleMs};
+}
+function buildTimeline(cfg){
+  var v=validateConfig(cfg);
+  if(!v.ok){ REJECTED.push({errors:v.errors.slice()}); return null; }
+  var tl=[];
+  if(cfg.mode==='countdown'){
+    for(var i=0;i<cfg.numerals.length;i++){
+      var tap=(cfg.numeralScaleTaper? cfg.numeralScaleTaper[i] : 1); tl.push({kind:'numeral', text:cfg.numerals[i], onsetMs:cfg.numeralOnsetsMs[i], dwellMs:cfg.numeralDwellsMs[i], scaleFrom:cfg.scaleFrom*tap, scaleTo:cfg.scaleTo*tap});
+    }
+    var t=cfg.firstWord.atMs;
+    tl.push({kind:'word', text:cfg.firstWord.t, onsetMs:t, dwellMs:cfg.firstWord.dwellMs, scaleFrom:1, scaleTo:1}); t+=cfg.firstWord.dwellMs;
+    for(var j=0;j<cfg.thenWords.length;j++){ tl.push({kind:'word', text:cfg.thenWords[j].t, onsetMs:t, dwellMs:cfg.thenWords[j].dwellMs, scaleFrom:1, scaleTo:1}); t+=cfg.thenWords[j].dwellMs; }
+  } else if(cfg.mode==='bands'){
+    var tt=0;
+    for(var s=0;s<cfg.sentences.length;s++){
+      var span=cfg.sentences[s].words.length*60000/cfg.sentences[s].wpm;
+      var dwell=span/(cfg.sentences[s].words.length-1+cfg.finalMultiplier);
+      var ws=cfg.sentences[s].words;
+      for(var k=0;k<ws.length;k++){
+        var d=(k===ws.length-1)? dwell*cfg.finalMultiplier : dwell;
+        tl.push({kind:'word', text:ws[k], onsetMs:Math.round(tt), dwellMs:Math.round(d), scaleFrom:1, scaleTo:1}); tt+=d;
+      }
+    }
+  } else if(cfg.mode==='derived'){
+    var t2=0, sc2=cfg.dwellScale||1;
+    for(var m=0;m<cfg.words.length;m++){
+      var tok=cfg.words[m], fin=false;
+      for(var f=0;f<cfg.finalMarks.length;f++){ if(tok.endsWith(cfg.finalMarks[f])) fin=true; }
+      var dd=Math.round((fin? cfg.baseDwellMs*cfg.finalMultiplier : cfg.baseDwellMs)*sc2);
+      tl.push({kind:'word', text:tok, onsetMs:t2, dwellMs:dd, scaleFrom:1, scaleTo:1}); t2+=dd;
+    }
+  } else {
+    var t3=0, sc3=cfg.dwellScale||1;
+    for(var n=0;n<cfg.words.length;n++){
+      var e=cfg.words[n];
+      if(e.kind==='transition'){ var dt=Math.round(e.dwellMs*sc3); tl.push({kind:'transition', text:'', onsetMs:t3, dwellMs:dt, scaleFrom:1, scaleTo:1}); t3+=dt; }
+      else { var txt=e.t; if(cfg.emphasisIndices && cfg.emphasisIndices.indexOf(n)>=0) txt=txt.toUpperCase(); var dw=Math.round(e.dwellMs*sc3); tl.push({kind:'word', text:txt, onsetMs:t3, dwellMs:dw, scaleFrom:1, scaleTo:1}); t3+=dw; }
+    }
+  }
+  return tl;
+}
+function derivedCycleMs(tl){ if(!tl||!tl.length) return 0; var last=tl[tl.length-1]; return last.onsetMs+last.dwellMs; }
+
+function tilePathTop(tile, tilePx, w, h){
+    var ptsOut=[], firstY=tile[0][1];
+    for(var x0=0;x0<w+tilePx;x0+=tilePx){
+      for(var q=0;q<tile.length;q++){ ptsOut.push((x0+tile[q][0])+' '+tile[q][1]); }
+      ptsOut.push((x0+tilePx)+' '+firstY);
+    }
+    return 'M'+ptsOut.join(' L')+' L'+(w+tilePx)+' '+h+' L0 '+h+' Z';
+  }
+(function(){
+  var cfg=CONFIG, tl=buildTimeline(cfg), word=document.getElementById('word'), pan=document.getElementById('pan'), stage=document.getElementById('stage'), plateSvg=document.getElementById('plate');
+  plateSvg.setAttribute('viewBox','0 0 '+cfg.canvasW+' '+cfg.canvasH);
+  stage.style.height=(cfg.canvasH/cfg.canvasW*100)+'vw';
+  var skyEl=document.getElementById('sky'); skyEl.setAttribute('width',cfg.canvasW); skyEl.setAttribute('height',cfg.canvasH);
+  document.getElementById('ground').setAttribute('width',cfg.canvasW);
+  document.getElementById('sky').setAttribute('fill', cfg.plate.sky);
+  document.getElementById('far').setAttribute('fill', cfg.plate.far);
+  document.getElementById('near').setAttribute('fill', cfg.plate.near);
+  document.getElementById('ground').setAttribute('fill', cfg.plate.near);
+  document.getElementById('sun').setAttribute('fill', cfg.plate.sky);
+  function tilePath(tile, tilePx, w, h){
+    var ptsOut=[], firstY=tile[0][1];
+    for(var x0=0;x0<w+tilePx;x0+=tilePx){
+      for(var q=0;q<tile.length;q++){ ptsOut.push((x0+tile[q][0])+' '+tile[q][1]); }
+      ptsOut.push((x0+tilePx)+' '+firstY);
+    }
+    return 'M'+ptsOut.join(' L')+' L'+(w+tilePx)+' '+h+' L0 '+h+' Z';
+  }
+  document.getElementById('far').setAttribute('d', tilePath(cfg.plate.farTile, cfg.plate.tilePx, cfg.canvasW, cfg.canvasH));
+  document.getElementById('near').setAttribute('d', tilePath(cfg.plate.nearTile, cfg.plate.tilePx, cfg.canvasW, cfg.canvasH));
+  var sun=document.getElementById('sun'); sun.setAttribute('cx',cfg.plate.sun.cx); sun.setAttribute('cy',cfg.plate.sun.cy); sun.setAttribute('r',cfg.plate.sun.r);
+  var gr=document.getElementById('ground'); gr.setAttribute('y',cfg.plate.groundY); gr.setAttribute('height',cfg.plate.groundH);
+  word.style.top = Math.round(cfg.anchorYFrac*100)+'%';
+  word.style.fontFamily = cfg.fontFamily;
+  word.style.fontWeight = cfg.fontWeight;
+  var offset=0, start=performance.now(), lastKey='';
+  function frame(now){
+    var el=offset+(now-start), cycMs=derivedCycleMs(tl), cyc=((el%cycMs)+cycMs)%cycMs, cur=null;
+    for(var i=0;i<tl.length;i++){ if(cyc>=tl[i].onsetMs && cyc<tl[i].onsetMs+tl[i].dwellMs){cur=tl[i];break;} }
+    var panX=-(((el/1000)*cfg.plate.panPxPerSec)%cfg.plate.tilePx);
+    pan.setAttribute('transform','translate('+panX+' 0)');
+    if(cur && cur.kind==='transition'){ word.style.display='none'; word.setAttribute('data-phase','transition'); lastKey=''; } else if(cur){
+      var key=cur.kind+cur.text+cur.onsetMs;
+      if(key!==lastKey){ word.textContent=cur.text; lastKey=key; }
+      var isNum=cur.kind==='numeral';
+      var stageW=(stage.clientWidth||cfg.canvasW); var fitted=fitFontPx(cur.text,(isNum? cfg.numeralFontPx : cfg.fontPx),stageW,cfg); word.style.fontSize=(fitted<0? cfg.minFontPx : fitted)+'px';
+      word.style.color=isNum? cfg.numeralColor : cfg.wordColor;
+      var pr=(cyc-cur.onsetMs)/cur.dwellMs;
+      if(cfg.scaleEasing==='smooth') pr=pr*pr*(3-2*pr);
+      var sc=cur.scaleFrom+(cur.scaleTo-cur.scaleFrom)*pr;
+      word.style.transform='scale('+sc+')';
+      word.style.display='block'; word.setAttribute('data-phase',cur.kind);
+    } else { word.style.display='none'; word.setAttribute('data-phase','none'); lastKey=''; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__T132={seek:function(ms){offset=ms; start=performance.now();}};
+})();
+if(typeof module!=="undefined"){ module.exports={buildTimeline:buildTimeline, CONFIG:CONFIG, validateSchedule:validateSchedule, derivedCycleMs:derivedCycleMs, REJECTED:REJECTED, tilePath:tilePathTop, validateConfig:validateConfig, inkWidth:inkWidth, fitFontPx:fitFontPx, MODE_CONTRACTS:MODE_CONTRACTS}; }
+</script></body></html>
+

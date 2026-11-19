@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T14 — CCTV room + wall-projected text · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  #blinds{position:absolute;display:flex;flex-direction:column;justify-content:space-between}
+  .slat{flex:1 1 0}
+  #tvGlow{position:absolute;border-radius:50%;pointer-events:none}
+  #stand{position:absolute}
+  #tv{position:absolute;border-style:solid;overflow:hidden}
+  #tvText{position:absolute;inset:0;white-space:pre-wrap;word-break:break-word}
+  #wallText{position:absolute;text-align:left;white-space:pre-wrap;pointer-events:none}
+  .chrome{position:absolute;z-index:5}
+  #recBox{text-align:right}
+  #recDot{display:inline-block;border-radius:50%;vertical-align:baseline}
+  #scan{position:absolute;inset:0;pointer-events:none;z-index:6}
+  #vig{position:absolute;inset:0;pointer-events:none;z-index:7}
+  #rejectedBox{display:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="blinds"></div>
+  <div id="tvGlow"></div>
+  <div id="wallText"></div>
+  <div id="stand"></div>
+  <div id="tv"><div id="tvText"></div></div>
+  <div class="chrome" id="camBox"><div id="camLabel"></div><div id="ts"></div></div>
+  <div class="chrome" id="recBox"><div><span id="recDot"></span><span id="recLabel"></span></div><div id="ptzLabel"></div></div>
+  <div id="scan"></div>
+  <div id="vig"></div>
+  <div id="rejectedBox"></div>
+</div>
+<script>
+"use strict";
+/* CONFIG: every shaping variable of the technique lives here; the logic below reads only CONFIG.
+   Timing is checkpoint-priced: the phase table decides when each text event starts.
+   The camera never moves: locked-off is the technique.
+   Scheduling policy: a checkpoint set is valid only when every checkpoint lies inside the
+   loop window and each text event completes strictly before the next event starts, with the
+   follow-up completing inside the loop. An invalid override set is rejected as a whole and
+   the rejection is recorded in an observable record. Subordinate durations derive from the
+   checkpoint spans and the configured per-character speeds, never from independent literals. */
+const CONFIG = {
+  durationMs: 6000,
+  camLabel: "CAM 01  LIVING RM",
+  recLabel: "REC",
+  ptzLabel: "PTZ 2X",
+  timestampBase: "2026-11-08 03:14:09",
+  tvPrompt: "* ",
+  tvLine1: "What are your qualifications?",
+  wallText: "I HAVE A SUBSCRIPTION.",
+  tvLine2: "To what?",
+  tvCharMs: 55,
+  wallCharMs: 65,
+  checkpoints: { tvTypeStart: 400, wallWriteAt: 2567, tvFollowAt: 4400 },
+  wallLineMaxChars: 13,
+  wallCharWidthFactor: 0.60,
+  wallMaxFontPx: 64,
+  wallMinFontPx: 14,
+  wallFitMarginFraction: 0.04,
+  wallLineHeight: 1.3,
+  blindsCount: 11,
+  fontFamilyMono: "ui-monospace, Menlo, Consolas, monospace",
+  bg: "#0b0e0c",
+  wallColor: "#5f7263",
+  wallShadeColor: "#46564a",
+  blindColor: "#c9cfc4",
+  blindFrameColor: "#2c352e",
+  standColor: "#23282a",
+  tvFrameColor: "#0a0a0a",
+  tvBg: "#050505",
+  tvTextColor: "#ffb347",
+  wallTextColor: "#ffe9a8",
+  wallGlowColor: "#ffd75e",
+  tvGlowColor: "#9db8a2",
+  overlayColor: "#d8dde2",
+  recColor: "#e33b3b",
+  scanlineIntensity: 0.16,
+  vignetteIntensity: 0.55,
+  blindsLeftPct: 0, blindsTopPct: 16, blindsWidthPct: 17, blindsHeightPct: 56, blindsPaddingYPct: 1.2, blindsSlatMarginPct: 6,
+  tvGlowLeftPct: 30, tvGlowTopPct: 26, tvGlowWidthPct: 52, tvGlowHeightPct: 44, tvGlowOpacity: 0.35, tvGlowBlurPx: 18,
+  standLeftPct: 31, standTopPct: 84, standWidthPct: 46, standHeightPct: 11,
+  tvLeftPct: 34, tvTopPct: 47, tvWidthPct: 40, tvHeightPct: 36, tvBorderWidthPx: 6, tvBorderRadiusPx: 3,
+  wallBoxLeftPct: 24, wallBoxTopPct: 10, wallBoxWidthFraction: 0.58, wallBoxHeightFraction: 0.34,
+  tvTextPaddingYPct: 3, tvTextPaddingXPct: 6,
+  chromeLeftPct: 2.5, chromeTopPct: 3, chromeRightPct: 2.5,
+  tvTextShadowBlurPx: 6, wallGlowBlurPx: 10, wallGlowBlur2Px: 26,
+  chromeFontMinPx: 9, chromeFontVw: 2.2, chromeFontMaxPx: 17,
+  tvFontMinPx: 9, tvFontVw: 2.4, tvFontMaxPx: 19, tvLineHeight: 1.45,
+  chromeLetterSpacingEm: 0.04, chromeFontWeight: 700, wallFontWeight: 700,
+  recDotSizeEm: 0.62, recDotMarginEm: 0.35,
+  wallpaperShadeStopPct: 72, vignetteStopPct: 52, vignetteAlpha: 0.85,
+  scanlineAlpha: 0.55, scanlineLinePx: 1, scanlinePeriodPx: 3, scanlineColorRgb: "0,0,0"
+};
+
+/* URL overrides: texts, checkpoints, speeds, palette, chrome, duration.
+   The whole override set is validated as one unit before anything is applied. */
+const REJECTED = [];
+function cloneCfg(c){ return JSON.parse(JSON.stringify(c)); }
+function completionTimes(cfg){
+  const cp = cfg.checkpoints;
+  const done = (start, speed, len) => len <= 0 ? start : start + (len - 1) * speed;
+  return { tv1Complete: done(cp.tvTypeStart, cfg.tvCharMs, cfg.tvLine1.length),
+           wallComplete: done(cp.wallWriteAt, cfg.wallCharMs, cfg.wallText.length),
+           followComplete: done(cp.tvFollowAt, cfg.tvCharMs, cfg.tvLine2.length) };
+}
+function validateSchedule(cfg){
+  const reasons = []; const cp = cfg.checkpoints; const ct = completionTimes(cfg);
+  const cps = [["tvTypeStart", cp.tvTypeStart], ["wallWriteAt", cp.wallWriteAt], ["tvFollowAt", cp.tvFollowAt]];
+  for (let i = 0; i < cps.length; i++){ if (!(cps[i][1] >= 0 && cps[i][1] < cfg.durationMs)) reasons.push(cps[i][0] + " outside loop window"); }
+  if (!(ct.tv1Complete < cp.wallWriteAt)) reasons.push("question completes at " + ct.tv1Complete + " not before wall start " + cp.wallWriteAt);
+  if (!(ct.wallComplete < cp.tvFollowAt)) reasons.push("wall completes at " + ct.wallComplete + " not before follow-up start " + cp.tvFollowAt);
+  if (!(ct.followComplete <= cfg.durationMs)) reasons.push("follow-up completes at " + ct.followComplete + " after loop end " + cfg.durationMs);
+  return reasons;
+}
+function applyOverridesTo(search, base){
+  const cfg = cloneCfg(base); const q = new URLSearchParams(search || "");
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  let touched = false;
+  const set = (fn) => { fn(); touched = true; };
+  if (num("durationMs") !== null) set(() => { cfg.durationMs = Math.max(1000, num("durationMs")); });
+  if (q.get("q1")) set(() => { cfg.tvLine1 = q.get("q1"); });
+  if (q.get("wall")) set(() => { cfg.wallText = q.get("wall"); });
+  if (q.get("q2")) set(() => { cfg.tvLine2 = q.get("q2"); });
+  if (q.get("cam")) set(() => { cfg.camLabel = q.get("cam"); });
+  if (q.get("ts")) set(() => { cfg.timestampBase = q.get("ts"); });
+  if (num("tvCharMs") !== null) set(() => { cfg.tvCharMs = Math.max(5, num("tvCharMs")); });
+  if (num("wallCharMs") !== null) set(() => { cfg.wallCharMs = Math.max(5, num("wallCharMs")); });
+  if (num("wallAt") !== null) set(() => { cfg.checkpoints.wallWriteAt = Math.max(0, num("wallAt")); });
+  if (num("followAt") !== null) set(() => { cfg.checkpoints.tvFollowAt = Math.max(0, num("followAt")); });
+  if (num("tvStart") !== null) set(() => { cfg.checkpoints.tvTypeStart = Math.max(0, num("tvStart")); });
+  if (q.get("amber")) set(() => { cfg.tvTextColor = q.get("amber"); });
+  if (q.get("glow")) set(() => { cfg.wallTextColor = q.get("glow"); cfg.wallGlowColor = q.get("glow"); });
+  if (q.get("wallpaper")) set(() => { cfg.wallColor = q.get("wallpaper"); });
+  if (!touched) return { cfg: cfg, rejected: null };
+  const reasons = validateSchedule(cfg);
+  if (reasons.length) return { cfg: cloneCfg(base), rejected: { search: String(search), reasons: reasons } };
+  return { cfg: cfg, rejected: null };
+}
+(function applyOverrides(){
+  try {
+    const r = applyOverridesTo(window.location ? window.location.search : "", CONFIG);
+    if (r.rejected) REJECTED.push(r.rejected);
+    const keys = Object.keys(r.cfg); for (let i = 0; i < keys.length; i++) CONFIG[keys[i]] = r.cfg[keys[i]];
+  } catch (e) { /* no location in logic harness */ }
+})();
+
+function parseBaseMs(s){
+  const m = /^(\d{4})-(\d{2})-(\d{2})[ ](\d{2}):(\d{2}):(\d{2})$/.exec(s);
+  if (!m) return 0;
+  return Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
+}
+function pad2(n){ return (n < 10 ? "0" : "") + n; }
+function formatTimestamp(baseMs, elapsedMs){
+  const d = new Date(baseMs + elapsedMs);
+  return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth() + 1) + "-" + pad2(d.getUTCDate()) +
+         " " + pad2(d.getUTCHours()) + ":" + pad2(d.getUTCMinutes()) + ":" + pad2(d.getUTCSeconds());
+}
+
+/* Wall answer wraps into lines of at most maxChars; a word longer than the limit is
+   hard-split at the limit so it enters the same wrap path instead of shrinking alone. */
+function splitLines(text, maxChars){
+  const raw = text.split(" "); const words = [];
+  for (let i = 0; i < raw.length; i++){
+    let w = raw[i];
+    while (w.length > maxChars){ words.push(w.slice(0, maxChars)); w = w.slice(maxChars); }
+    if (w !== "") words.push(w);
+  }
+  const lines = []; let cur = "";
+  for (let i = 0; i < words.length; i++){
+    const w = words[i];
+    const next = cur === "" ? w : cur + " " + w;
+    if (next.length <= maxChars || cur === "") cur = next;
+    else { lines.push(cur); cur = w; }
+  }
+  if (cur !== "") lines.push(cur);
+  return lines;
+}
+/* Text measurement: canvas measurement against the configured font stack when a canvas
+   exists in this runtime; otherwise the configured monospace advance factor is the
+   documented fallback basis. The basis that ran is reported with the result. */
+let measureCtx = null, measureTried = false;
+function measureBasis(){
+  if (!measureTried){
+    measureTried = true;
+    try { const c = document.createElement("canvas"); measureCtx = c && c.getContext ? c.getContext("2d") : null; } catch (e) { measureCtx = null; }
+  }
+  return measureCtx ? "canvas" : "model";
+}
+function measureLineWidthPx(line, fontPx, cfg){
+  if (measureBasis() === "canvas"){
+    measureCtx.font = cfg.wallFontWeight + " " + fontPx + "px " + cfg.fontFamilyMono;
+    return measureCtx.measureText(line).width;
+  }
+  return line.length * fontPx * cfg.wallCharWidthFactor;
+}
+/* Two-dimensional fit: the font is the smallest of the width fit (measured line widths
+   against the box width, less the fit margin), the height fit (box height divided by the
+   line count times the line height) and the configured maximum. If that size falls below
+   the readable floor, the floor is used and an explicit diagnostic is reported. */
+function fitWallFont(stageW, stageH, cfg){
+  const lines = splitLines(cfg.wallText, cfg.wallLineMaxChars);
+  const boxW = stageW * cfg.wallBoxWidthFraction, boxH = stageH * cfg.wallBoxHeightFraction;
+  const usableW = boxW * (1 - cfg.wallFitMarginFraction);
+  let widthFit = cfg.wallMaxFontPx;
+  for (let i = 0; i < lines.length; i++){
+    const atRef = measureLineWidthPx(lines[i], 100, cfg);
+    if (atRef > 0) widthFit = Math.min(widthFit, usableW / (atRef / 100));
+  }
+  const heightFit = lines.length > 0 ? boxH / (lines.length * cfg.wallLineHeight) : cfg.wallMaxFontPx;
+  let font = Math.min(cfg.wallMaxFontPx, widthFit, heightFit);
+  let diagnostic = null;
+  if (font < cfg.wallMinFontPx){ diagnostic = "wall font floor: two-dimensional fit " + font.toFixed(1) + "px is below the readable floor " + cfg.wallMinFontPx + "px"; font = cfg.wallMinFontPx; }
+  return { fontPx: font, lines: lines, boxW: boxW, boxH: boxH, widthFit: widthFit, heightFit: heightFit, basis: measureBasis(), diagnostic: diagnostic };
+}
+
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  const typed = (start, speed, len) => t < start ? 0 : Math.min(len, Math.floor((t - start) / speed) + 1);
+  const tv1 = typed(cp.tvTypeStart, cfg.tvCharMs, cfg.tvLine1.length);
+  const wall = typed(cp.wallWriteAt, cfg.wallCharMs, cfg.wallText.length);
+  const tv2 = typed(cp.tvFollowAt, cfg.tvCharMs, cfg.tvLine2.length);
+  const phase = tv2 > 0 ? "follow" : (wall > 0 ? "wall" : (tv1 > 0 ? "question" : "idle"));
+  return { t: t, tv1Chars: tv1, wallChars: wall, tv2Chars: tv2, phase: phase,
+           timestamp: formatTimestamp(parseBaseMs(cfg.timestampBase), t) };
+}
+
+/* TV exchange model: the displayed lines of prompt + question + follow-up at a stage,
+   wrapped at the TV box width with the configured font clamp, against the inner height
+   left by the border and the configured padding. */
+function tvExchangeModel(stageW, stageH, cfg){
+  const tvW = stageW * cfg.tvWidthPct / 100, tvH = stageH * cfg.tvHeightPct / 100;
+  const fontPx = Math.max(cfg.tvFontMinPx, Math.min(cfg.tvFontMaxPx, stageW * cfg.tvFontVw / 100));
+  const lineH = fontPx * cfg.tvLineHeight;
+  const padY = tvW * cfg.tvTextPaddingYPct / 100, padX = tvW * cfg.tvTextPaddingXPct / 100;
+  const innerW = tvW - 2 * cfg.tvBorderWidthPx - 2 * padX, innerH = tvH - 2 * cfg.tvBorderWidthPx - 2 * padY;
+  const charsPerLine = Math.max(1, Math.floor(innerW / (fontPx * cfg.wallCharWidthFactor)));
+  const wrapCount = (s) => { const words = s.split(" "); let lines = 1, cur = ""; for (let i = 0; i < words.length; i++){ const nx = cur === "" ? words[i] : cur + " " + words[i]; if (nx.length <= charsPerLine || cur === "") cur = nx; else { lines++; cur = words[i]; } } return lines; };
+  const qLines = wrapCount(cfg.tvPrompt + cfg.tvLine1), fLines = wrapCount(cfg.tvLine2);
+  const totalLines = qLines + fLines;
+  return { tvW: tvW, tvH: tvH, fontPx: fontPx, lineH: lineH, innerW: innerW, innerH: innerH, charsPerLine: charsPerLine, qLines: qLines, fLines: fLines, totalLines: totalLines, neededH: totalLines * lineH, fits: totalLines * lineH <= innerH };
+}
+
+const __api = { CONFIG: CONFIG, REJECTED: REJECTED, cloneCfg: cloneCfg, completionTimes: completionTimes, validateSchedule: validateSchedule, applyOverridesTo: applyOverridesTo, parseBaseMs: parseBaseMs, formatTimestamp: formatTimestamp, splitLines: splitLines, measureBasis: measureBasis, measureLineWidthPx: measureLineWidthPx, fitWallFont: fitWallFont, tvExchangeModel: tvExchangeModel, computeState: computeState };
+if (typeof window !== "undefined") window.__T14 = __api;
+
+/* ===== DOM construction — all colors, sizes and texts applied from CONFIG ===== */
+const stage = (typeof document !== "undefined" && document.getElementById) ? document.getElementById("stage") : null;
+if (stage){
+  document.body.style.background = CONFIG.bg;
+  document.body.style.fontFamily = CONFIG.fontFamilyMono;
+  stage.style.background = "linear-gradient(90deg," + CONFIG.wallColor + " 0%," + CONFIG.wallColor + " " + CONFIG.wallpaperShadeStopPct + "%," + CONFIG.wallShadeColor + " 100%)";
+  const blinds = document.getElementById("blinds");
+  blinds.style.left = CONFIG.blindsLeftPct + "%"; blinds.style.top = CONFIG.blindsTopPct + "%";
+  blinds.style.width = CONFIG.blindsWidthPct + "%"; blinds.style.height = CONFIG.blindsHeightPct + "%";
+  blinds.style.padding = CONFIG.blindsPaddingYPct + "% 0"; blinds.style.background = CONFIG.blindFrameColor;
+  for (let i = 0; i < CONFIG.blindsCount; i++){
+    const s = document.createElement("div");
+    s.className = "slat"; s.style.background = CONFIG.blindColor; s.style.margin = "0 " + CONFIG.blindsSlatMarginPct + "%";
+    blinds.appendChild(s);
+  }
+  const tvGlow = document.getElementById("tvGlow");
+  tvGlow.style.left = CONFIG.tvGlowLeftPct + "%"; tvGlow.style.top = CONFIG.tvGlowTopPct + "%";
+  tvGlow.style.width = CONFIG.tvGlowWidthPct + "%"; tvGlow.style.height = CONFIG.tvGlowHeightPct + "%";
+  tvGlow.style.background = CONFIG.tvGlowColor; tvGlow.style.opacity = String(CONFIG.tvGlowOpacity);
+  tvGlow.style.filter = "blur(" + CONFIG.tvGlowBlurPx + "px)";
+  const stand = document.getElementById("stand");
+  stand.style.left = CONFIG.standLeftPct + "%"; stand.style.top = CONFIG.standTopPct + "%";
+  stand.style.width = CONFIG.standWidthPct + "%"; stand.style.height = CONFIG.standHeightPct + "%";
+  stand.style.background = CONFIG.standColor;
+  const tv = document.getElementById("tv");
+  tv.style.left = CONFIG.tvLeftPct + "%"; tv.style.top = CONFIG.tvTopPct + "%";
+  tv.style.width = CONFIG.tvWidthPct + "%"; tv.style.height = CONFIG.tvHeightPct + "%";
+  tv.style.background = CONFIG.tvBg; tv.style.borderColor = CONFIG.tvFrameColor;
+  tv.style.borderWidth = CONFIG.tvBorderWidthPx + "px"; tv.style.borderRadius = CONFIG.tvBorderRadiusPx + "px";
+  const tvText = document.getElementById("tvText");
+  tvText.style.color = CONFIG.tvTextColor;
+  tvText.style.textShadow = "0 0 " + CONFIG.tvTextShadowBlurPx + "px " + CONFIG.tvTextColor;
+  tvText.style.padding = CONFIG.tvTextPaddingYPct + "% " + CONFIG.tvTextPaddingXPct + "%";
+  tvText.style.fontSize = "clamp(" + CONFIG.tvFontMinPx + "px," + CONFIG.tvFontVw + "vw," + CONFIG.tvFontMaxPx + "px)";
+  tvText.style.lineHeight = String(CONFIG.tvLineHeight);
+  const wallEl = document.getElementById("wallText");
+  wallEl.style.left = CONFIG.wallBoxLeftPct + "%"; wallEl.style.top = CONFIG.wallBoxTopPct + "%";
+  wallEl.style.width = (CONFIG.wallBoxWidthFraction * 100) + "%"; wallEl.style.height = (CONFIG.wallBoxHeightFraction * 100) + "%";
+  wallEl.style.color = CONFIG.wallTextColor; wallEl.style.fontWeight = String(CONFIG.wallFontWeight);
+  wallEl.style.lineHeight = String(CONFIG.wallLineHeight);
+  wallEl.style.textShadow = "0 0 " + CONFIG.wallGlowBlurPx + "px " + CONFIG.wallGlowColor + ",0 0 " + CONFIG.wallGlowBlur2Px + "px " + CONFIG.wallGlowColor;
+  document.getElementById("camLabel").textContent = CONFIG.camLabel;
+  document.getElementById("recLabel").textContent = CONFIG.recLabel;
+  document.getElementById("ptzLabel").textContent = CONFIG.ptzLabel;
+  const recDot = document.getElementById("recDot");
+  recDot.style.background = CONFIG.recColor; recDot.style.width = CONFIG.recDotSizeEm + "em"; recDot.style.height = CONFIG.recDotSizeEm + "em"; recDot.style.marginRight = CONFIG.recDotMarginEm + "em";
+  const camBox = document.getElementById("camBox"), recBox = document.getElementById("recBox");
+  camBox.style.left = CONFIG.chromeLeftPct + "%"; camBox.style.top = CONFIG.chromeTopPct + "%";
+  recBox.style.right = CONFIG.chromeRightPct + "%"; recBox.style.top = CONFIG.chromeTopPct + "%";
+  camBox.style.color = CONFIG.overlayColor; recBox.style.color = CONFIG.overlayColor;
+  const chromeFont = "clamp(" + CONFIG.chromeFontMinPx + "px," + CONFIG.chromeFontVw + "vw," + CONFIG.chromeFontMaxPx + "px)";
+  camBox.style.fontSize = chromeFont; recBox.style.fontSize = chromeFont;
+  camBox.style.fontWeight = String(CONFIG.chromeFontWeight); recBox.style.fontWeight = String(CONFIG.chromeFontWeight);
+  camBox.style.letterSpacing = CONFIG.chromeLetterSpacingEm + "em"; recBox.style.letterSpacing = CONFIG.chromeLetterSpacingEm + "em";
+  const scan = document.getElementById("scan");
+  scan.style.background = "repeating-linear-gradient(0deg, rgba(" + CONFIG.scanlineColorRgb + "," + CONFIG.scanlineAlpha + ") 0px, rgba(" + CONFIG.scanlineColorRgb + "," + CONFIG.scanlineAlpha + ") " + CONFIG.scanlineLinePx + "px, transparent " + CONFIG.scanlineLinePx + "px, transparent " + CONFIG.scanlinePeriodPx + "px)";
+  scan.style.opacity = String(CONFIG.scanlineIntensity);
+  const vig = document.getElementById("vig");
+  vig.style.background = "radial-gradient(ellipse at center, transparent " + CONFIG.vignetteStopPct + "%, rgba(" + CONFIG.scanlineColorRgb + "," + CONFIG.vignetteAlpha + ") 100%)";
+  vig.style.opacity = String(CONFIG.vignetteIntensity);
+  const rejectedBox = document.getElementById("rejectedBox");
+  if (REJECTED.length){ rejectedBox.textContent = JSON.stringify(REJECTED); if (document.documentElement) document.documentElement.setAttribute("data-rejected-overrides", String(REJECTED.length)); }
+  if (typeof window !== "undefined") window.__rejectedOverrides = REJECTED;
+  const tsEl = document.getElementById("ts");
+  let wallLinesCache = splitLines(CONFIG.wallText, CONFIG.wallLineMaxChars);
+  function fitWall(){
+    const w = stage.clientWidth || 0, h = stage.clientHeight || 0;
+    if (w > 0 && h > 0){ const f = fitWallFont(w, h, CONFIG); wallEl.style.fontSize = f.fontPx.toFixed(1) + "px"; if (f.diagnostic) wallEl.setAttribute("data-fit-diagnostic", f.diagnostic); }
+  }
+  fitWall();
+  window.addEventListener("resize", fitWall);
+  let lastKey = "";
+  function render(tMs){
+    const s = computeState(tMs, CONFIG);
+    const key = s.tv1Chars + "|" + s.wallChars + "|" + s.tv2Chars + "|" + s.timestamp;
+    if (key === lastKey) return s;
+    lastKey = key;
+    let tvStr = CONFIG.tvPrompt + CONFIG.tvLine1.slice(0, s.tv1Chars);
+    if (s.tv2Chars > 0) tvStr += "\n" + CONFIG.tvLine2.slice(0, s.tv2Chars);
+    tvText.textContent = tvStr;
+    let remaining = s.wallChars; const out = [];
+    for (let i = 0; i < wallLinesCache.length; i++){
+      const take = Math.max(0, Math.min(wallLinesCache[i].length, remaining));
+      out.push(wallLinesCache[i].slice(0, take));
+      remaining -= wallLinesCache[i].length + 1;
+      if (remaining < 0) remaining = 0;
+    }
+    wallEl.textContent = out.join("\n");
+    tsEl.textContent = s.timestamp;
+    return s;
+  }
+  let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+  function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+  function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+  function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+  function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+  function restart(){ pausedAt = 0; lastKey = ""; if (playing){ startStamp = nowMs(); } else { render(0); } }
+  window.addEventListener("message", function(e){
+    if (!e.data || typeof e.data !== "object") return;
+    if (e.data.cmd === "play") play();
+    if (e.data.cmd === "pause") pause();
+    if (e.data.cmd === "restart") restart();
+  });
+  render(0);
+  play();
+}
+</script>
+</body>
+</html>

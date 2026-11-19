@@ -1,0 +1,10 @@
+**Verdict — Readability clears the 70-point lens floor provisionally.** The source supports a generous type size at phone width. First-pass recognition at playback speed remains unverified. The overall attempt’s pass depends on the other four scores.
+
+- **Type size:** At 360 CSS px wide, all 56 words retain 40 px bold type under the supplied fit model. The widest modeled word, “yourself.”, takes 190.4 px. “Suddenly” takes 185.6 px. [recreation.html](/home/hatch/workspace/t132-scratch/lens-readability/recreation.html:258)
+- **Contrast:** The configured red `#b91f16` computes to 3.58:1 against the sky and 3.12:1 against the far ridge. The word box starts at 44% of stage height, leaving the lower glyphs close enough to the moving ridge that the sky value alone cannot establish glyph-level contrast. A darker red such as `#89160e` gives at least 4.5:1 against all three configured plate colors by calculation. [recreation.html](/home/hatch/workspace/t132-scratch/lens-readability/recreation.html:262)
+- **Shortest dwells:** Six of 56 words are scheduled for 120 ms — “I,” “not,” “be,” “top,” “Suddenly,” and “you.” “Suddenly” is the longest of those six and the priority for a first-play check. After the contrast change, a 360 CSS px playback check at the original timing would establish whether a fresh viewer catches “Suddenly” and the final “you,” with a frame capture to check their actual exposure and clipping. [recreation.html](/home/hatch/workspace/t132-scratch/lens-readability/recreation.html:129) · [recreation.html](/home/hatch/workspace/t132-scratch/lens-readability/recreation.html:249)
+
+**Limits** — The disk SHA-256 matches the packet. Fit and contrast were checked from source. Rendered glyph bounds, displayed dwell, and first-play recognition were not assessed because no browser executable was available.
+
+SCORE: 80  
+**Body-write: none (read-only run)**

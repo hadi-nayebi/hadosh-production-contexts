@@ -1,0 +1,523 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T137-case-emphasis-stream/codex
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e585-a7e8-7582-89b7-e5fb2f318e29
+--------
+user
+You are the Jev judge for this call. Follow the guard definition below exactly; return a FIRE-WAVE or HOLD verdict with the four dimension scores, primary classification if HOLD, and end with a BODY-WRITE: line.
+
+# Jev call — jev-prewave (recreation)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14. The judgment: a scoring wave is the lane's expensive instrument — this call prices whether a build has EARNED its wave before the wave spends._
+
+## 1. What it judges
+- Deliverable: an attempt's build record (parameter table · construction route · own-checks results) BEFORE the Codex wave fires.
+- Call point: recreation INSTRUCTION §4, between the builder's own checks (§5.2) and the wave (§5.3). The verdict is advisory: applied, a HOLD returns the build to the builder with named defects and the wave does not fire on that item; set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this build record shows a recreation ready to be scored, or one whose defects are already visible in its own paperwork. Price: (1) PARAMETERIZATION — is the piece genuinely CONFIG-driven (fields named, ranges sane), or hard-coded with a config costume? (2) PURITY PRE-CHECK — does the construction route describe generation from parameters, with no tracing/embedding step hiding in the prose? (3) OWN-CHECKS COMPLETENESS — are the mechanical guards' results recorded (purity grep, swap test, syntax), or asserted? (4) TECHNIQUE FIDELITY PLAN — does the record state which packet mechanics the build implements and which it deliberately defers (a deferral named is lawful; a mechanic silently absent is not)? Score 0–1 per dimension, classify defects. You judge paperwork only: a build can pass you and still fail its wave — your job is that no wave is spent on a build its own record already condemns.
+
+## 3. Context contract (masked view)
+- FED: build-record.md · the CONFIG block of recreation.html · the technique's packet section · guards.md command list (what own-checks should exist).
+- NEVER FED: the builder's confidence prose · prior attempts' scores (each build is priced on its own record).
+- Ceiling: ≤32k tokens; the HTML enters as its CONFIG + construction sections, not media.
+
+## 4. Output space
+- Verdict classes: **FIRE-WAVE · HOLD**.
+- Dimensions (0–1): parameterization · purity pre-check · own-checks completeness · fidelity-plan honesty.
+- Rejection taxonomy (one primary): HARDCODED-CONFIG · TRACING-STEP · ASSERTED-CHECKS (results claimed, not recorded) · SILENT-DEFERRAL.
+- Accepted profile travels: cited in scores.md's pre-wave line; a wave fired over a HOLD is a deviation (WAVE-OVER-HOLD).
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → HOLD · ASSERTED-CHECKS at any score on other dimensions → HOLD (unrecorded checks are the lane's named failure class).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + classification + disposition land in the build record either way; an applied HOLD leaves the item IN PROGRESS and the wave moves to its next item (a held item never holds the wave hostage).
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: T15 attempt 1's build record (must FIRE-WAVE: checks recorded, deferral of the interlude named in its Plan) · a constructed record claiming a swap test with no harness output (must HOLD as ASSERTED-CHECKS) · a constructed record whose CONFIG is decorative over hard-coded phrases (must HOLD as HARDCODED-CONFIG).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all three must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.
+
+
+===== BUILD RECORD UNDER JUDGMENT: T137 (re-fire after ASSERTED-CHECKS cure — raw harness output now appended to the record) =====
+# build-record — T137 Case emphasis inside a level stream · Cycle 022 Wave 19 · attempt 1
+Artifact: hidden_files/study/recreations/T137-case-emphasis-stream/
+Technique: Packet #7 P7 T06 — Case emphasis inside a level stream. Window: 13.36–27.36 s (segment 14.000 s). Schedule basis: segment-anchored (62 tokens, onsets/dwells measured; emphasis token at segment-relative 1240 ms).
+Mechanics implemented: A level word stream (250–375 wpm bands) in which one repeated token returns in full capitals: CONFIG words carry the lowercase source 'really' at index 3 and index 4; emphasisIndices [4] applies a toUpperCase() transform at timeline build, so index 4 renders 'REALLY' at identical font size, weight, colour and anchor (seat census §1c confirmed the specimen's invariance firsthand). The emphasised token's dwell (320 ms) is its measured dwell, not an added emphasis beat.
+Construction: one self-contained HTML file; CONFIG object at the top carries every subject variable (content, schedule, palette, typography, plate geometry); one JS clock (requestAnimationFrame against a shared start + seek offset); single-slot phase machine — exactly one token visible at any instant (Owner Cure 2 serial form); landscape plate drawn from CONFIG plate.* geometry (far/near ridge point arrays, sun, ground band) and panned at plate.panPxPerSec. No external assets; no specimen media anywhere in the build.
+Fidelity plan — deferred/named: None named. The stream before/after the event is the shared serial engine; the item's claim is only the case transform + invariance.
+Own checks (recorded, §5 legs 1–3):
+- Swap test (logic level, node harness over buildTimeline with stubbed DOM): words→[go 240 · slow 240 · slow 200 · go 320 · now. 440] with emphasisIndices→[3]: timeline renders GO at index 3, lowercase elsewhere: PASS (the capitals move with the index set) · timing leg: dwell table x1.5 in harness copy · palette leg: wordColor→#ffd75e
+- Purity grep (segment\.mp4|source\.mp4|<video|<img|url\(|iO7BmPoL6a4|onset-[0-9]+\.jpg) over recreation.html: 0 hits. Asset inventory: code only (HTML/CSS/JS + inline SVG plate drawn from CONFIG data).
+- Comparison check: comparison.html drives segment.mp4 and recreation.html from one control set; recreation slaved via the seek hook on timeupdate; labels ORIGINAL/RECREATION as filed; 360 px stacking via the shared prior-wave stylesheet form.
+- Syntax: node --check on the extracted inline script: PASS. Determinism census: no Math.random, no Date.now in the file; schedule is a pure function of CONFIG.
+- Segment binding: segment.mp4 ffprobe 14.000 s.
+A6 legs (pre-wave, final build): fit-table.md HITs 0 · config-census.md HITs 0.
+PIXEL-UNVERIFIED: no browser binary in this seat; verification is logic-level, comparison.html is the render surface.
+recreation.html SHA-256: 709fcd59fd0bf98758dfa6b680f5f6ac89ddfd095861173c222c16f115f6d114
+
+## Prewave cure (Cycle 022, after jev-prewave HOLD ASSERTED-CHECKS — applied, not set aside)
+Raw swap-harness output (node, buildTimeline over the build's own inline script; verbatim excerpts):
+- T137_base: {"emph": {"text": "REALLY", "onsetMs": 1240, "dwellMs": 320}, "before": {"text": "really", "onsetMs": 1040, "dwellMs": 200}}
+- T137_swap: {"texts": ["go", "slow", "slow", "GO", "now."], "pass": true}
+Timing leg measured: the swap table's dwells [240,240,200,320,440] are exactly the x1.5-scaled probe values used for the timing leg (base probe dwells [160,160,133,213,293] x1.5, rounded) and the regenerated timeline carried them unchanged (onsets cumulative 0/240/480/680/1000 in the same output run).
+Palette leg observed result: cfg.wordColor consumed at the render-init site (seat grep count x1) and cfg.plate.sky/far/near at x3 sites; buildTimeline output contains no color fields, so a palette-only change leaves the timeline byte-identical while changing rendered colors by construction.
+
+--- CONFIG block of recreation.html ---
+var CONFIG = {
+ "mode": "table",
+ "words": [
+  {
+   "t": "push.",
+   "onsetMs": 80,
+   "dwellMs": 480
+  },
+  {
+   "t": "I",
+   "onsetMs": 560,
+   "dwellMs": 240
+  },
+  {
+   "t": "mean",
+   "onsetMs": 800,
+   "dwellMs": 240
+  },
+  {
+   "t": "really",
+   "onsetMs": 1040,
+   "dwellMs": 200
+  },
+  {
+   "t": "really",
+   "onsetMs": 1240,
+   "dwellMs": 320
+  },
+  {
+   "t": "push.",
+   "onsetMs": 1560,
+   "dwellMs": 440
+  },
+  {
+   "t": "You",
+   "onsetMs": 2000,
+   "dwellMs": 760
+  },
+  {
+   "t": "can",
+   "onsetMs": 2920,
+   "dwellMs": 160
+  },
+  {
+   "t": "surprise",
+   "onsetMs": 3080,
+   "dwellMs": 160
+  },
+  {
+   "t": "yourself.",
+   "onsetMs": 3240,
+   "dwellMs": 200
+  },
+  {
+   "t": "Suddenly",
+   "onsetMs": 3440,
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "onsetMs": 3560,
+   "dwellMs": 120
+  },
+  {
+   "t": "find",
+   "onsetMs": 3680,
+   "dwellMs": 160
+  },
+  {
+   "t": "you",
+   "onsetMs": 3840,
+   "dwellMs": 120
+  },
+  {
+   "t": "can",
+   "onsetMs": 3960,
+   "dwellMs": 120
+  },
+  {
+   "t": "go",
+   "onsetMs": 4080,
+   "dwellMs": 160
+  },
+  {
+   "t": "faster",
+   "onsetMs": 4240,
+   "dwellMs": 120
+  },
+  {
+   "t": "than",
+   "onsetMs": 4360,
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "onsetMs": 4480,
+   "dwellMs": 160
+  },
+  {
+   "t": "thought.",
+   "onsetMs": 4640,
+   "dwellMs": 120
+  },
+  {
+   "t": "And",
+   "onsetMs": 4760,
+   "dwellMs": 120
+  },
+  {
+   "t": "go",
+   "onsetMs": 4880,
+   "dwellMs": 160
+  },
+  {
+   "t": "past",
+   "onsetMs": 5040,
+   "dwellMs": 120
+  },
+  {
+   "t": "the",
+   "onsetMs": 5160,
+   "dwellMs": 120
+  },
+  {
+   "t": "limit",
+   "onsetMs": 5280,
+   "dwellMs": 160
+  },
+  {
+   "t": "you",
+   "onsetMs": 5440,
+   "dwellMs": 120
+  },
+  {
+   "t": "thought",
+   "onsetMs": 5560,
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "onsetMs": 5680,
+   "dwellMs": 160
+  },
+  {
+   "t": "had.",
+   "onsetMs": 5840,
+   "dwellMs": 200
+  },
+  {
+   "t": "To",
+   "onsetMs": 6040,
+   "dwellMs": 120
+  },
+  {
+   "t": "places",
+   "onsetMs": 6160,
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "onsetMs": 6280,
+   "dwellMs": 160
+  },
+  {
+   "t": "didn't",
+   "onsetMs": 6440,
+   "dwellMs": 120
+  },
+  {
+   "t": "think",
+   "onsetMs": 6560,
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "onsetMs": 6680,
+   "dwellMs": 160
+  },
+  {
+   "t": "could",
+   "onsetMs": 6840,
+   "dwellMs": 120
+  },
+  {
+   "t": "reach.",
+   "onsetMs": 6960,
+   "dwellMs": 680
+  },
+  {
+   "t": "It",
+   "onsetMs": 7640,
+   "dwellMs": 280
+  },
+  {
+   "t": "feels",
+   "onsetMs": 7920,
+   "dwellMs": 200
+  },
+  {
+   "t": "pretty",
+   "onsetMs": 8120,
+   "dwellMs": 200
+  },
+  {
+   "t": "good,",
+   "onsetMs": 8320,
+   "dwellMs": 240
+  },
+  {
+   "t": "right?",
+   "onsetMs": 8560,
+   "dwellMs": 1480
+  },
+  {
+   "t": "Because",
+   "onsetMs": 10040,
+   "dwellMs": 120
+  },
+  {
+   "t": "we",
+   "onsetMs": 10160,
+   "dwellMs": 240
+  },
+  {
+   "t": "all",
+   "onsetMs": 10400,
+   "dwellMs": 120
+  },
+  {
+   "t": "capable",
+   "onsetMs": 10520,
+   "dwellMs": 120
+  },
+  {
+   "t": "of",
+   "onsetMs": 10640,
+   "dwellMs": 120
+  },
+  {
+   "t": "doing",
+   "onsetMs": 10760,
+   "dwellMs": 120
+  },
+  {
+   "t": "the",
+   "onsetMs": 10880,
+   "dwellMs": 120
+  },
+  {
+   "t": "most",
+   "onsetMs": 11000,
+   "dwellMs": 120
+  },
+  {
+   "t": "incredible",
+   "onsetMs": 11120,
+   "dwellMs": 120
+  },
+  {
+   "t": "things",
+   "onsetMs": 11240,
+   "dwellMs": 120
+  },
+  {
+   "t": "if",
+   "onsetMs": 11360,
+   "dwellMs": 120
+  },
+  {
+   "t": "we",
+   "onsetMs": 11480,
+   "dwellMs": 120
+  },
+  {
+   "t": "just",
+   "onsetMs": 11600,
+   "dwellMs": 120
+  },
+  {
+   "t": "push",
+   "onsetMs": 11720,
+   "dwellMs": 120
+  },
+  {
+   "t": "more.",
+   "onsetMs": 11840,
+   "dwellMs": 320
+  },
+  {
+   "t": "Push",
+   "onsetMs": 12160,
+   "dwellMs": 200
+  },
+  {
+   "t": "to",
+   "onsetMs": 12360,
+   "dwellMs": 160
+  },
+  {
+   "t": "reach",
+   "onsetMs": 12520,
+   "dwellMs": 120
+  },
+  {
+   "t": "new",
+   "onsetMs": 12640,
+   "dwellMs": 160
+  },
+  {
+   "t": "places.",
+   "onsetMs": 12800,
+   "dwellMs": 200
+  }
+ ],
+ "emphasisIndices": [
+  4
+ ],
+ "fontPx": 40,
+ "fontWeight": 700,
+ "numeralFontPx": 110,
+ "numeralColor": "#e63329",
+ "wordColor": "#e63329",
+ "anchorYFrac": 0.44,
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "plate": {
+  "sky": "#a9c6d4",
+  "far": "#a7b8ba",
+  "near": "#efe9dc",
+  "panPxPerSec": 18,
+  "panWrapPx": 120,
+  "farPoints": [
+   [
+    0,
+    250
+   ],
+   [
+    120,
+    210
+   ],
+   [
+    260,
+    238
+   ],
+   [
+    400,
+    200
+   ],
+   [
+    540,
+    232
+   ],
+   [
+    720,
+    205
+   ],
+   [
+    720,
+    405
+   ],
+   [
+    0,
+    405
+   ]
+  ],
+  "nearPoints": [
+   [
+    0,
+    300
+   ],
+   [
+    160,
+    272
+   ],
+   [
+    330,
+    296
+   ],
+   [
+    500,
+    268
+   ],
+   [
+    720,
+    292
+   ],
+   [
+    720,
+    405
+   ],
+   [
+    0,
+    405
+   ]
+  ],
+  "sun": {
+   "cx": 590,
+   "cy": 86,
+   "r": 30
+  },
+  "groundY": 330,
+  "groundH": 75
+ },
+ "cycleMs": 14000
+};
+--- Packet section ---
+### T06 — Case emphasis inside a level stream
+- **Timestamps:** 14.40 "really" → 14.60 "REALLY" → 14.92 "push."
+- **Mechanics:** within one sentence ("I mean really REALLY push."), the repeated word returns in full capitals at the same size and position — emphasis carried by case alone, the stream's only typographic event besides the countdown's scale.
+- **Why it works:** at 250+ wpm there is no time for a size or colour event to register as emphasis; case is the one change readable in a single fixation.
+- **Evidence:** ev/14.6-REALLY.jpg · frames/onset-055.jpg ("really", the before state).
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+**FIRE-WAVE**
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.90 |
+| Purity pre-check | 0.95 |
+| Own-checks completeness | 0.85 |
+| Fidelity-plan honesty | 0.95 |
+
+CONFIG names content, timing, emphasis, typography, palette and geometry. Recorded harness output demonstrates that capitalization moves with the configured index; timing results and palette consumption are documented. Purity grep and syntax results are recorded, clearing ASSERTED-CHECKS.
+
+The plan explicitly implements case-only emphasis with invariant styling and position. Browser verification remains openly unperformed; visual fidelity belongs to the scoring wave.
+
+BODY-WRITE: This response supplies the advisory verdict for the runner to append to build-record.md; no filesystem write performed.
+tokens used
+14,674
+**FIRE-WAVE**
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.90 |
+| Purity pre-check | 0.95 |
+| Own-checks completeness | 0.85 |
+| Fidelity-plan honesty | 0.95 |
+
+CONFIG names content, timing, emphasis, typography, palette and geometry. Recorded harness output demonstrates that capitalization moves with the configured index; timing results and palette consumption are documented. Purity grep and syntax results are recorded, clearing ASSERTED-CHECKS.
+
+The plan explicitly implements case-only emphasis with invariant styling and position. Browser verification remains openly unperformed; visual fidelity belongs to the scoring wave.
+
+BODY-WRITE: This response supplies the advisory verdict for the runner to append to build-record.md; no filesystem write performed.

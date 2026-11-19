@@ -1,0 +1,8 @@
+# build-record (score-blind) — T133 Countdown pre-announcement with scaling numerals · attempt 1
+Technique: Packet #7 P7 T02 — Countdown pre-announcement with scaling numerals. Window: 0.00–14.00 s (segment 14.000 s). Schedule basis: segment-anchored (numerals at 400/1200/2000 ms, dwells 800/800/1000 ms; first word 'Limits.' at 3000 ms, dwell 1160 ms; stream continues to cycle end).
+Mechanics implemented: Three red numerals, each growing in scale across its dwell (scaleFrom 0.55 → scaleTo 1.30, linear), with a census-derived per-numeral taper [1.0, 0.72, 0.45] (seat census: '3' largest sampled state, '1' smallest at comparable phase — sampling uncertainty printed in RUN §1c). Hard cuts between numerals; the numeral anchor and the word anchor are the same centre point; after the countdown the word stream runs (46 further timeline entries).
+Construction: one self-contained HTML file; CONFIG at top; one JS clock; single-slot phase machine; plate drawn from CONFIG geometry and panned. No external assets; no specimen media.
+Deferred/named: Scale states in the specimen were detector-sampled at three states for '3'; the build interpolates continuously (linear, CONFIG scaleEasing with a 'smooth' alternative wired) — stepped-vs-continuous is a named uncertainty the motion lens prices.
+Swap test (logic level): numerals→[5,4,3] · onsets→[400,1400,2400] · dwells→[1000,1000,1000] · firstWord→{Ready., 3400, 1160}: PASS (timeline shows 5/4/3 then Ready. at 3400) · palette leg: numeralColor→#2a6ad4 in CONFIG
+Purity grep over recreation.html: 0 hits. Syntax check: PASS. Determinism: no Math.random / Date.now.
+recreation.html SHA-256: 0748d3babe40dc4d248af4b0d256d5eb018797850a5adadb2bc2d40e308c7962

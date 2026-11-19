@@ -1,0 +1,8 @@
+# build-record (score-blind) — T135 Sentence-final dwell weighting (punctuation as timing) · attempt 1
+Technique: Packet #7 P7 T04 — Sentence-final dwell weighting (punctuation as timing). Window: 3.00–17.00 s (segment 14.000 s). Schedule basis: t=0 allocation (dwells derived: baseDwellMs 180 x finalMultiplier 3.0 for tokens ending in a CONFIG finalMarks mark; derived total 13320 ms, tail 680 ms of plate to cycle end).
+Mechanics implemented: 56-word stream on a uniform metronome; the ONLY timing event is the sentence-final hold: 9 final tokens in the list dwell 540 ms against 180 ms internal. Detection reads the token's terminal mark against CONFIG finalMarks ['.','?'] at timeline build. Packet calibration: whole-film medians internal 0.16 s / final 0.48 s (14 finals vs 117 internal); base 180 ms is an allocation above the 160 median, priced in the Plan.
+Construction: one self-contained HTML file; CONFIG at top; one JS clock; single-slot phase machine; plate drawn from CONFIG geometry and panned. No external assets; no specimen media.
+Deferred/named: Source final holds vary (0.32–0.76 s) around the median; the build's claim is the weighting RULE at a constant multiplier, not a per-word trace — the derivation gap is the item's priced risk (Plan).
+Swap test (logic level): words→[One. 540 · Two 180 · three. 540 · Four? 540]: PASS exact · timing leg: finalMultiplier 3.0→2.0 gives finals 360 ms: PASS · palette leg: wordColor→#ffd75e in CONFIG
+Purity grep over recreation.html: 0 hits. Syntax check: PASS. Determinism: no Math.random / Date.now.
+recreation.html SHA-256: f29b8ee6016dbb7321c6938d30b12dae342cf32a0b37861b51e28045e8f75c51

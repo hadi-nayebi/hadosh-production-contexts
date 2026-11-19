@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T132 recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;height:56.25vw;max-height:100vh;overflow:hidden}
+#plate{position:absolute;inset:0}
+#word{position:absolute;left:0;right:0;text-align:center;transform-origin:center center;font-weight:700;white-space:nowrap}
+</style></head><body>
+<div id="stage"><svg id="plate" viewBox="0 0 720 405" preserveAspectRatio="none" width="100%" height="100%">
+<rect id="sky" x="0" y="0" width="720" height="405"/>
+<g id="pan">
+<path id="far" d=""/>
+<path id="near" d=""/>
+<circle id="sun"/>
+</g><rect id="ground" x="0" width="720"/>
+</svg><div id="word"></div></div>
+<script>
+var CONFIG = {
+ "mode": "table",
+ "words": [
+  {
+   "t": "Limits.",
+   "onsetMs": 0,
+   "dwellMs": 1160
+  },
+  {
+   "t": "We",
+   "onsetMs": 1160,
+   "dwellMs": 240
+  },
+  {
+   "t": "have",
+   "onsetMs": 1400,
+   "dwellMs": 240
+  },
+  {
+   "t": "all",
+   "onsetMs": 1640,
+   "dwellMs": 240
+  },
+  {
+   "t": "got",
+   "onsetMs": 1880,
+   "dwellMs": 240
+  },
+  {
+   "t": "them.",
+   "onsetMs": 2120,
+   "dwellMs": 760
+  },
+  {
+   "t": "That",
+   "onsetMs": 2880,
+   "dwellMs": 160
+  },
+  {
+   "t": "voice",
+   "onsetMs": 3040,
+   "dwellMs": 200
+  },
+  {
+   "t": "that",
+   "onsetMs": 3240,
+   "dwellMs": 160
+  },
+  {
+   "t": "tells",
+   "onsetMs": 3400,
+   "dwellMs": 200
+  },
+  {
+   "t": "you",
+   "onsetMs": 3600,
+   "dwellMs": 200
+  },
+  {
+   "t": "that",
+   "onsetMs": 3800,
+   "dwellMs": 160
+  },
+  {
+   "t": "you've",
+   "onsetMs": 3960,
+   "dwellMs": 200
+  },
+  {
+   "t": "done",
+   "onsetMs": 4160,
+   "dwellMs": 160
+  },
+  {
+   "t": "all",
+   "onsetMs": 4320,
+   "dwellMs": 200
+  },
+  {
+   "t": "you",
+   "onsetMs": 4520,
+   "dwellMs": 160
+  },
+  {
+   "t": "could",
+   "onsetMs": 4680,
+   "dwellMs": 160
+  },
+  {
+   "t": "do.",
+   "onsetMs": 4840,
+   "dwellMs": 720
+  },
+  {
+   "t": "This",
+   "onsetMs": 5560,
+   "dwellMs": 160
+  },
+  {
+   "t": "is",
+   "onsetMs": 5720,
+   "dwellMs": 160
+  },
+  {
+   "t": "the",
+   "onsetMs": 5880,
+   "dwellMs": 160
+  },
+  {
+   "t": "furthest",
+   "onsetMs": 6040,
+   "dwellMs": 160
+  },
+  {
+   "t": "I",
+   "onsetMs": 6200,
+   "dwellMs": 160
+  },
+  {
+   "t": "can",
+   "onsetMs": 6360,
+   "dwellMs": 160
+  },
+  {
+   "t": "go.",
+   "onsetMs": 6520,
+   "dwellMs": 560
+  },
+  {
+   "t": "I",
+   "onsetMs": 7080,
+   "dwellMs": 120
+  },
+  {
+   "t": "will",
+   "onsetMs": 7200,
+   "dwellMs": 160
+  },
+  {
+   "t": "not",
+   "onsetMs": 7360,
+   "dwellMs": 120
+  },
+  {
+   "t": "be",
+   "onsetMs": 7480,
+   "dwellMs": 120
+  },
+  {
+   "t": "able",
+   "onsetMs": 7600,
+   "dwellMs": 160
+  },
+  {
+   "t": "to",
+   "onsetMs": 7760,
+   "dwellMs": 160
+  },
+  {
+   "t": "top",
+   "onsetMs": 7920,
+   "dwellMs": 120
+  },
+  {
+   "t": "that.",
+   "onsetMs": 8040,
+   "dwellMs": 320
+  },
+  {
+   "t": "I",
+   "onsetMs": 8360,
+   "dwellMs": 160
+  },
+  {
+   "t": "have",
+   "onsetMs": 8520,
+   "dwellMs": 160
+  },
+  {
+   "t": "given",
+   "onsetMs": 8680,
+   "dwellMs": 160
+  },
+  {
+   "t": "my",
+   "onsetMs": 8840,
+   "dwellMs": 160
+  },
+  {
+   "t": "best.",
+   "onsetMs": 9000,
+   "dwellMs": 480
+  },
+  {
+   "t": "But",
+   "onsetMs": 9480,
+   "dwellMs": 160
+  },
+  {
+   "t": "when",
+   "onsetMs": 9640,
+   "dwellMs": 160
+  },
+  {
+   "t": "you",
+   "onsetMs": 9800,
+   "dwellMs": 160
+  },
+  {
+   "t": "force",
+   "onsetMs": 9960,
+   "dwellMs": 160
+  },
+  {
+   "t": "yourself",
+   "onsetMs": 10120,
+   "dwellMs": 160
+  },
+  {
+   "t": "to",
+   "onsetMs": 10280,
+   "dwellMs": 160
+  },
+  {
+   "t": "push.",
+   "onsetMs": 10440,
+   "dwellMs": 480
+  },
+  {
+   "t": "I",
+   "onsetMs": 10920,
+   "dwellMs": 240
+  },
+  {
+   "t": "mean",
+   "onsetMs": 11160,
+   "dwellMs": 240
+  },
+  {
+   "t": "really",
+   "onsetMs": 11400,
+   "dwellMs": 200
+  },
+  {
+   "t": "REALLY",
+   "onsetMs": 11600,
+   "dwellMs": 320
+  },
+  {
+   "t": "push.",
+   "onsetMs": 11920,
+   "dwellMs": 440
+  },
+  {
+   "t": "You",
+   "onsetMs": 12360,
+   "dwellMs": 760
+  },
+  {
+   "t": "can",
+   "onsetMs": 13280,
+   "dwellMs": 160
+  },
+  {
+   "t": "surprise",
+   "onsetMs": 13440,
+   "dwellMs": 160
+  },
+  {
+   "t": "yourself.",
+   "onsetMs": 13600,
+   "dwellMs": 200
+  },
+  {
+   "t": "Suddenly",
+   "onsetMs": 13800,
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "onsetMs": 13920,
+   "dwellMs": 120
+  }
+ ],
+ "fontPx": 40,
+ "fontWeight": 700,
+ "numeralFontPx": 110,
+ "numeralColor": "#e63329",
+ "wordColor": "#e63329",
+ "anchorYFrac": 0.44,
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "plate": {
+  "sky": "#a9c6d4",
+  "far": "#a7b8ba",
+  "near": "#efe9dc",
+  "panPxPerSec": 18,
+  "panWrapPx": 120,
+  "farPoints": [
+   [
+    0,
+    250
+   ],
+   [
+    120,
+    210
+   ],
+   [
+    260,
+    238
+   ],
+   [
+    400,
+    200
+   ],
+   [
+    540,
+    232
+   ],
+   [
+    720,
+    205
+   ],
+   [
+    720,
+    405
+   ],
+   [
+    0,
+    405
+   ]
+  ],
+  "nearPoints": [
+   [
+    0,
+    300
+   ],
+   [
+    160,
+    272
+   ],
+   [
+    330,
+    296
+   ],
+   [
+    500,
+    268
+   ],
+   [
+    720,
+    292
+   ],
+   [
+    720,
+    405
+   ],
+   [
+    0,
+    405
+   ]
+  ],
+  "sun": {
+   "cx": 590,
+   "cy": 86,
+   "r": 30
+  },
+  "groundY": 330,
+  "groundH": 75
+ },
+ "cycleMs": 14000
+};
+
+function buildTimeline(cfg){
+  var tl=[]; // {kind:'word'|'numeral', text, onsetMs, dwellMs, scaleFrom, scaleTo}
+  if(cfg.mode==='countdown'){
+    for(var i=0;i<cfg.numerals.length;i++){
+      var tap=(cfg.numeralScaleTaper? cfg.numeralScaleTaper[i] : 1); tl.push({kind:'numeral', text:cfg.numerals[i], onsetMs:cfg.numeralOnsetsMs[i], dwellMs:cfg.numeralDwellsMs[i], scaleFrom:cfg.scaleFrom*tap, scaleTo:cfg.scaleTo*tap});
+    }
+    var t=cfg.firstWord.atMs;
+    tl.push({kind:'word', text:cfg.firstWord.t, onsetMs:t, dwellMs:cfg.firstWord.dwellMs, scaleFrom:1, scaleTo:1}); t+=cfg.firstWord.dwellMs;
+    for(var j=0;j<cfg.thenWords.length;j++){ tl.push({kind:'word', text:cfg.thenWords[j].t, onsetMs:t, dwellMs:cfg.thenWords[j].dwellMs, scaleFrom:1, scaleTo:1}); t+=cfg.thenWords[j].dwellMs; }
+  } else if(cfg.mode==='bands'){
+    var tt=0;
+    for(var s=0;s<cfg.sentences.length;s++){
+      var span=cfg.sentences[s].words.length*60000/cfg.sentences[s].wpm;
+      var dwell=span/(cfg.sentences[s].words.length-1+cfg.finalMultiplier);
+      var ws=cfg.sentences[s].words;
+      for(var k=0;k<ws.length;k++){
+        var d=(k===ws.length-1)? dwell*cfg.finalMultiplier : dwell;
+        tl.push({kind:'word', text:ws[k], onsetMs:Math.round(tt), dwellMs:Math.round(d), scaleFrom:1, scaleTo:1}); tt+=d;
+      }
+    }
+  } else if(cfg.mode==='derived'){
+    var t2=0;
+    for(var m=0;m<cfg.words.length;m++){
+      var tok=cfg.words[m], fin=false;
+      for(var f=0;f<cfg.finalMarks.length;f++){ if(tok.endsWith(cfg.finalMarks[f])) fin=true; }
+      var dd=fin? cfg.baseDwellMs*cfg.finalMultiplier : cfg.baseDwellMs;
+      tl.push({kind:'word', text:tok, onsetMs:t2, dwellMs:dd, scaleFrom:1, scaleTo:1}); t2+=dd;
+    }
+  } else { // table
+    for(var n=0;n<cfg.words.length;n++){
+      var txt=cfg.words[n].t;
+      if(cfg.emphasisIndices && cfg.emphasisIndices.indexOf(n)>=0) txt=txt.toUpperCase();
+      tl.push({kind:'word', text:txt, onsetMs:cfg.words[n].onsetMs, dwellMs:cfg.words[n].dwellMs, scaleFrom:1, scaleTo:1});
+    }
+  }
+  return tl;
+}
+
+(function(){
+  var cfg=CONFIG, tl=buildTimeline(cfg), word=document.getElementById('word'), pan=document.getElementById('pan');
+  document.getElementById('sky').setAttribute('fill', cfg.plate.sky);
+  document.getElementById('far').setAttribute('fill', cfg.plate.far);
+  document.getElementById('near').setAttribute('fill', cfg.plate.near);
+  document.getElementById('ground').setAttribute('fill', cfg.plate.near);
+  document.getElementById('sun').setAttribute('fill', cfg.plate.sky);
+  function pts(a){ return 'M'+a.map(function(q){return q[0]+' '+q[1];}).join(' L')+' Z'; }
+  document.getElementById('far').setAttribute('d', pts(cfg.plate.farPoints));
+  document.getElementById('near').setAttribute('d', pts(cfg.plate.nearPoints));
+  var sun=document.getElementById('sun'); sun.setAttribute('cx',cfg.plate.sun.cx); sun.setAttribute('cy',cfg.plate.sun.cy); sun.setAttribute('r',cfg.plate.sun.r);
+  var gr=document.getElementById('ground'); gr.setAttribute('y',cfg.plate.groundY); gr.setAttribute('height',cfg.plate.groundH);
+  word.style.top = Math.round(cfg.anchorYFrac*100)+'%';
+  word.style.fontFamily = cfg.fontFamily;
+  word.style.fontWeight = cfg.fontWeight;
+  var offset=0, start=performance.now(), lastKey='';
+  function frame(now){
+    var el=offset+(now-start), cyc=((el%cfg.cycleMs)+cfg.cycleMs)%cfg.cycleMs, cur=null;
+    for(var i=0;i<tl.length;i++){ if(cyc>=tl[i].onsetMs && cyc<tl[i].onsetMs+tl[i].dwellMs){cur=tl[i];break;} }
+    var panX=-((cyc/1000)*cfg.plate.panPxPerSec)%cfg.plate.panWrapPx;
+    pan.setAttribute('transform','translate('+panX+' 0)');
+    if(cur){
+      var key=cur.kind+cur.text+cur.onsetMs;
+      if(key!==lastKey){ word.textContent=cur.text; lastKey=key; }
+      var isNum=cur.kind==='numeral';
+      word.style.fontSize=(isNum? cfg.numeralFontPx : cfg.fontPx)+'px';
+      word.style.color=isNum? cfg.numeralColor : cfg.wordColor;
+      var pr=(cyc-cur.onsetMs)/cur.dwellMs;
+      if(cfg.scaleEasing==='smooth') pr=pr*pr*(3-2*pr);
+      var sc=cur.scaleFrom+(cur.scaleTo-cur.scaleFrom)*pr;
+      word.style.transform='scale('+sc+')';
+      word.style.display='block';
+    } else { word.style.display='none'; lastKey=''; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__T132={seek:function(ms){offset=ms; start=performance.now();}};
+})();
+if(typeof module!=="undefined"){ module.exports={buildTimeline:buildTimeline, CONFIG:CONFIG}; }
+</script></body></html>

@@ -1,0 +1,28 @@
+PASS defaults: checkpoints 400/2567/4400, completions 1940/3932/4785, schedule valid :: wall hold before follow-up = 468ms
+PASS state gating at the new anchor: 0 wall chars at 2566, 1 at 2567, question full by 1940
+PASS timestamp advance / rollover / loop wrap
+PASS phase order question -> wall -> follow
+PASS swap accepted (attempt-1 swap, wallAt=2600): texts, checkpoint and palette all take effect
+PASS long-but-coherent schedule accepted and takes effect
+PASS reject reversed checkpoints wallAt=5000&followAt=2000 :: wall completes at 6365 not before follow-up start 2000
+PASS reject out-of-window wallAt=9000 :: wallWriteAt outside loop window;wall completes at 10365 not before follow-up start 4400
+PASS reject long question crossing wall start :: question completes at 4745 not before wall start 2567
+PASS reject follow-up completing after loop end :: follow-up completes at 7975 after loop end 6000
+PASS default wall wrap invariant: lines are the specimen lines, longest = limit
+PASS unbroken long word hard-splits at the limit and enters the wrap path (accepted config) :: lines=3 font=17.7 basis=model
+PASS many-line answer on an accepted coherent schedule fits the 2D budget or diagnoses :: lines=4 font=14.0 diag=wall font floor: two-dimensional fit 13.2px is below the readable floor 14px
+PASS impossible fit diagnoses explicitly instead of shrinking below the floor (separate policy test) :: wall font floor: two-dimensional fit 5.3px is below the readable floor 14px
+PASS displayed state @360x202.5 default: containment + legibility :: font=25.7 lines=2 basis=model
+PASS displayed state @360x202.5 many-line wrapped answer :: font=14.0 lines=4 basis=model
+PASS displayed state @720x405 default :: font=51.4 lines=2 basis=model
+PASS TV vertical fit: full exchange (no blank line) fits at 360x202.5; all three holds legible :: qLines=2 fLines=1 needed=39.1 inner=52.3 font=9
+PASS TV wrapped states: long question and wrapped follow-up still fit the inner height or the model says so :: qLines=4 fLines=2 fits=false needed=78.3 inner=52.3
+PASS consumption census: every CONFIG key resolves to at least one application site outside CONFIG :: 91 keys, 0 unconsumed
+PASS effect mappings (mutation): named keys change computed effects :: 6 mutations asserted
+PASS literal census: no numeric/color literal outside CONFIG beyond the structural whitelist :: distinct literals=16 all whitelisted
+PASS purity grep: 0 specimen/external hits; asset inventory empty :: 0 hits, 0 external assets
+PASS comparison check: labels verbatim, both sides present, ORIGINAL side + segment unchanged :: segment sha verified
+PASS preservation: attempt-1 copy sha intact after all writes :: f426898f9632
+---
+SHA 2c5a897e952082ab1e5b247ec627b9192916677ffce9b0dc9ebe103686540590
+RESULT pass=25 fail=0 PIXEL-UNVERIFIED

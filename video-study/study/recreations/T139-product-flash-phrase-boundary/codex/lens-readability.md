@@ -1,0 +1,258 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T139-product-flash-phrase-boundary/codex
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e61d-b195-77f0-91cc-cbecdb610dc1
+--------
+user
+Consumer: recreation job §5 Verify for T139 attempt 1. Decision priced: tier movement RECREATED vs IN PROGRESS and the cure list for attempt 2 / practice.
+Working record: artifact codex/ directory + scores.md in the artifact dir (hidden_files/study/recreations/T139-product-flash-phrase-boundary/).
+BODY-WRITE: your return is filed verbatim as codex/lens-readability.md and its SCORE line is extracted into scores.md; your return MUST end with a line 'SCORE: <integer>' and a line beginning 'BODY-WRITE:'.
+
+recreation.html SHA-256: aa3ade793b7f33ddbb87fa8a21a313bc8705c04db73739eade61e7e201652929
+
+LENS INSTRUCTION: Judge ONLY the readability lens: word legibility at phone size (360 px stage, fontPx 40, ink height 28.8 px vs the ~11 px floor; widest word forwards. ink 190.4 px, margin 84.8 px) and word-vs-background separation (red #e63329 on the pale plate; during flashes no word competes with the vehicle). Score 0-100 for this lens only. Bar context: wave PASS requires five-lens average >=85 AND minimum lens >=70. Return priced findings, then the SCORE and BODY-WRITE lines.
+
+NEUTRAL TECHNIQUE FACTS (Packet #7, Honda Keep Up, segment 26.36-36.60 s, segment-anchored): red words #e63329 in a single centre slot over a moving salt-flat plate (pale blue sky, far ridge, near salt flat, seamless tiled pan 18 px/s, tile 720). The word stream is interrupted by product flashes; a flash replaces the word slot entirely (no word on screen during a flash); the word clock pauses during flashes/gaps and resumes at the same band at measured onsets. Event table (segment-relative ms, 37 events: 28 words + 6 flashes + 3 gaps, cycle 10240): flash HR-V 0/1320 cross 1100; words to/do/new/things. 1560-2160; gap 2160/760; flash Jazz 2920/280 cross 280; words Push/to/a/new/kind/of/forwards. 3360-4360; flash Type R 4360/1160 cross 1000 (dir -1); chant words To/improve/and x10 5680-7160; gap 7160/120; flash Jet 7280/120 cross 120 (takeoff, rises); gap 7400/480; words Keep/pushing/and/get/to/better/faster. 7880-9480; flash NSX-distant 9480/400 cross 400 (scale 0.55); flash NSX 9880/360 cross 360 (centred rear view, receding). Vehicles are photographic in the specimen but code-drawn generic SVG silhouettes here per the named fidelity deferral (A-T139-DEFERRAL). Swap evidence: post-Jazz words -> Alpha/bravo/charlie., HR-V colour -> #2a6ad4, sky -> #d9a8c9 rebuild cleanly at 37 events with phases exclusive; HR-V dwellMs 1320->2000 takes effect with exclusivity preserved. Purity grep over the file: 0 hits. PIXEL-UNVERIFIED: no browser binary; judge at source/logic level.
+
+=== recreation.html FULL SOURCE ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T139 recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;height:56.25vw;max-height:100vh;overflow:hidden}
+#plate{position:absolute;inset:0}
+#word{position:absolute;left:0;right:0;text-align:center;font-weight:700;white-space:nowrap;transform:translateY(-50%)}
+</style></head><body>
+<div id="stage"><svg id="plate" viewBox="0 0 720 405" preserveAspectRatio="none" width="100%" height="100%">
+<rect id="sky" x="0" y="0" width="720" height="405"/>
+<rect id="ground" x="0" width="720"/>
+<g id="pan"><path id="far" d=""/><path id="near" d=""/></g>
+<g id="veh"><g id="vehIn"></g></g>
+</svg><div id="word"></div></div>
+<script>
+var CONFIG = {
+ "fontPx": 40,
+ "fontWeight": 700,
+ "wordColor": "#e63329",
+ "anchorYFrac": 0.44,
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "cycleMs": 10240,
+ "vehicleYFrac": 0.62,
+ "plate": {
+  "sky": "#a9c6d4",
+  "far": "#a7b8ba",
+  "near": "#efe9dc",
+  "panPxPerSec": 18,
+  "panTilePx": 720,
+  "stageW": 720,
+  "stageH": 405,
+  "groundY": 300,
+  "groundH": 105,
+  "farPoints": [[0,250],[120,210],[260,238],[400,200],[540,232],[720,205],[720,405],[0,405]],
+  "nearPoints": [[0,318],[160,290],[330,314],[500,286],[720,310],[720,405],[0,405]]
+ },
+ "vehicles": {
+  "hrv":   {"shape":"crossover","color":"#5a6068","dir":1,"bodyW":190,"bodyH":54,"cabinFrac":0.5,"wheelR":17,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.55,"lightColor":"#ffd75e","recedeTo":1},
+  "jazz":  {"shape":"hatch","color":"#c22a20","dir":1,"bodyW":150,"bodyH":48,"cabinFrac":0.56,"wheelR":15,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.55,"lightColor":"#ffd75e","recedeTo":1},
+  "typer": {"shape":"sport","color":"#b02020","dir":-1,"bodyW":180,"bodyH":44,"cabinFrac":0.48,"wheelR":16,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.55,"lightColor":"#ffd75e","recedeTo":1},
+  "jet":   {"shape":"jet","color":"#d8dde2","dir":1,"bodyW":210,"bodyH":30,"cabinFrac":0.3,"wheelR":0,"wheelColor":"#1c1e22","scale":1,"risePx":130,"dustColor":"#e8e2d4","dustOpacity":0.4,"lightColor":"#ffd75e","recedeTo":1},
+  "nsxFar":{"shape":"sport","color":"#8a1f24","dir":1,"bodyW":180,"bodyH":44,"cabinFrac":0.48,"wheelR":16,"wheelColor":"#1c1e22","scale":0.55,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.5,"lightColor":"#ffd75e","recedeTo":1},
+  "nsx":   {"shape":"sport-rear","color":"#c0202a","dir":0,"bodyW":170,"bodyH":58,"cabinFrac":0.4,"wheelR":15,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.45,"lightColor":"#ffd75e","recedeTo":0.45}
+ },
+ "events": [
+  {"kind":"flash","vehicle":"hrv","atMs":0,"dwellMs":1320,"crossMs":1100},
+  {"kind":"word","t":"to","atMs":1560,"dwellMs":120},
+  {"kind":"word","t":"do","atMs":1680,"dwellMs":120},
+  {"kind":"word","t":"new","atMs":1800,"dwellMs":120},
+  {"kind":"word","t":"things.","atMs":1920,"dwellMs":240},
+  {"kind":"gap","atMs":2160,"dwellMs":760},
+  {"kind":"flash","vehicle":"jazz","atMs":2920,"dwellMs":280,"crossMs":280},
+  {"kind":"word","t":"Push","atMs":3360,"dwellMs":160},
+  {"kind":"word","t":"to","atMs":3520,"dwellMs":120},
+  {"kind":"word","t":"a","atMs":3640,"dwellMs":120},
+  {"kind":"word","t":"new","atMs":3760,"dwellMs":120},
+  {"kind":"word","t":"kind","atMs":3880,"dwellMs":160},
+  {"kind":"word","t":"of","atMs":4040,"dwellMs":120},
+  {"kind":"word","t":"forwards.","atMs":4160,"dwellMs":200},
+  {"kind":"flash","vehicle":"typer","atMs":4360,"dwellMs":1160,"crossMs":1000},
+  {"kind":"word","t":"To","atMs":5680,"dwellMs":160},
+  {"kind":"word","t":"improve","atMs":5840,"dwellMs":160},
+  {"kind":"word","t":"and","atMs":6000,"dwellMs":120},
+  {"kind":"word","t":"improve","atMs":6120,"dwellMs":120},
+  {"kind":"word","t":"and","atMs":6240,"dwellMs":120},
+  {"kind":"word","t":"improve","atMs":6360,"dwellMs":120},
+  {"kind":"word","t":"and","atMs":6480,"dwellMs":200},
+  {"kind":"word","t":"and","atMs":6680,"dwellMs":200},
+  {"kind":"word","t":"improve","atMs":6880,"dwellMs":120},
+  {"kind":"word","t":"improve","atMs":7000,"dwellMs":160},
+  {"kind":"gap","atMs":7160,"dwellMs":120},
+  {"kind":"flash","vehicle":"jet","atMs":7280,"dwellMs":120,"crossMs":120},
+  {"kind":"gap","atMs":7400,"dwellMs":480},
+  {"kind":"word","t":"Keep","atMs":7880,"dwellMs":160},
+  {"kind":"word","t":"pushing","atMs":8040,"dwellMs":200},
+  {"kind":"word","t":"and","atMs":8240,"dwellMs":160},
+  {"kind":"word","t":"get","atMs":8400,"dwellMs":160},
+  {"kind":"word","t":"to","atMs":8560,"dwellMs":160},
+  {"kind":"word","t":"better","atMs":8720,"dwellMs":240},
+  {"kind":"word","t":"faster.","atMs":8960,"dwellMs":520},
+  {"kind":"flash","vehicle":"nsxFar","atMs":9480,"dwellMs":400,"crossMs":400},
+  {"kind":"flash","vehicle":"nsx","atMs":9880,"dwellMs":360,"crossMs":360}
+ ]
+};
+
+function buildTimeline(cfg){
+  var tl=[];
+  for(var i=0;i<cfg.events.length;i++){
+    var e=cfg.events[i];
+    tl.push({kind:e.kind, text:(e.kind==='word'? e.t : ''), vehicle:(e.vehicle||''), atMs:e.atMs, dwellMs:e.dwellMs, crossMs:(e.crossMs||e.dwellMs)});
+  }
+  tl.sort(function(a,b){return a.atMs-b.atMs;});
+  return tl;
+}
+function stateAt(tl, ms){
+  for(var i=0;i<tl.length;i++){
+    if(ms>=tl[i].atMs && ms<tl[i].atMs+tl[i].dwellMs) return tl[i];
+  }
+  return null;
+}
+function countKinds(tl){
+  var c={word:0,flash:0,gap:0,total:tl.length};
+  for(var i=0;i<tl.length;i++){ c[tl[i].kind]++; }
+  return c;
+}
+
+if(typeof document!=="undefined"){
+(function(){
+  var cfg=CONFIG, tl=buildTimeline(cfg);
+  var word=document.getElementById('word');
+  var pan=document.getElementById('pan');
+  var veh=document.getElementById('veh'), vehIn=document.getElementById('vehIn');
+  var SVGNS='http://www.w3.org/2000/svg';
+  document.getElementById('sky').setAttribute('fill', cfg.plate.sky);
+  var ground=document.getElementById('ground');
+  ground.setAttribute('fill', cfg.plate.near);
+  ground.setAttribute('y', cfg.plate.groundY);
+  ground.setAttribute('height', cfg.plate.groundH);
+  function pts(a, off){ return 'M'+a.map(function(q){return (q[0]+off)+' '+q[1];}).join(' L')+' Z'; }
+  document.getElementById('far').setAttribute('fill', cfg.plate.far);
+  document.getElementById('far').setAttribute('d', pts(cfg.plate.farPoints,0)+' '+pts(cfg.plate.farPoints,cfg.plate.panTilePx));
+  document.getElementById('near').setAttribute('fill', cfg.plate.near);
+  document.getElementById('near').setAttribute('d', pts(cfg.plate.nearPoints,0)+' '+pts(cfg.plate.nearPoints,cfg.plate.panTilePx));
+  word.style.top=(cfg.anchorYFrac*100)+'%';
+  word.style.fontFamily=cfg.fontFamily;
+  word.style.fontWeight=cfg.fontWeight;
+  word.style.fontSize=cfg.fontPx+'px';
+  word.style.color=cfg.wordColor;
+  function el(name, attrs){ var n=document.createElementNS(SVGNS,name); for(var k in attrs) n.setAttribute(k,attrs[k]); return n; }
+  var builtFor='';
+  function buildVehicle(key){
+    var v=cfg.vehicles[key];
+    while(vehIn.firstChild) vehIn.removeChild(vehIn.firstChild);
+    var bw=v.bodyW, bh=v.bodyH;
+    // dust trail (behind the body, opposite the travel direction)
+    var dustX=[-0.16,-0.38,-0.62], dustR=[0.16,0.24,0.34];
+    for(var d=0;d<3;d++){
+      vehIn.appendChild(el('ellipse',{cx:(bw*dustX[d]).toFixed(1), cy:bh, rx:(bw*dustR[d]).toFixed(1), ry:(bh*0.32).toFixed(1), fill:v.dustColor, opacity:v.dustOpacity}));
+    }
+    if(v.shape==='sport-rear'){
+      vehIn.appendChild(el('rect',{x:bw*0.18, y:0, width:bw*v.cabinFrac, height:bh*0.42, rx:6, fill:v.color}));
+      vehIn.appendChild(el('rect',{x:0, y:bh*0.36, width:bw, height:bh*0.64, rx:8, fill:v.color}));
+      vehIn.appendChild(el('rect',{x:bw*0.08, y:bh*0.52, width:bw*0.2, height:bh*0.16, rx:3, fill:v.lightColor}));
+      vehIn.appendChild(el('rect',{x:bw*0.72, y:bh*0.52, width:bw*0.2, height:bh*0.16, rx:3, fill:v.lightColor}));
+      vehIn.appendChild(el('rect',{x:bw*0.04, y:bh*0.88, width:bw*0.18, height:bh*0.12, fill:v.wheelColor}));
+      vehIn.appendChild(el('rect',{x:bw*0.78, y:bh*0.88, width:bw*0.18, height:bh*0.12, fill:v.wheelColor}));
+    } else if(v.shape==='jet'){
+      vehIn.appendChild(el('path',{d:'M0 '+(bh*0.62)+' L'+(bw*0.3)+' '+(bh*0.18)+' L'+(bw*0.86)+' '+(bh*0.18)+' L'+bw+' '+(bh*0.5)+' L'+(bw*0.86)+' '+(bh*0.8)+' L'+(bw*0.3)+' '+(bh*0.8)+' Z', fill:v.color}));
+      vehIn.appendChild(el('path',{d:'M'+(bw*0.42)+' '+(bh*0.8)+' L'+(bw*0.62)+' '+(bh*1.7)+' L'+(bw*0.74)+' '+(bh*0.8)+' Z', fill:v.color}));
+      vehIn.appendChild(el('path',{d:'M'+(bw*0.06)+' '+(bh*0.3)+' L'+(bw*0.2)+' '+(-bh*0.55)+' L'+(bw*0.3)+' '+(bh*0.3)+' Z', fill:v.color}));
+    } else {
+      var cab='M'+(bw*0.24)+' '+(bh*0.48)+' L'+(bw*0.36)+' '+(bh*0.06)+' L'+(bw*(0.32+v.cabinFrac))+' '+(bh*0.06)+' L'+(bw*(0.4+v.cabinFrac))+' '+(bh*0.48)+' Z';
+      vehIn.appendChild(el('path',{d:cab, fill:v.color}));
+      vehIn.appendChild(el('rect',{x:0, y:bh*0.42, width:bw, height:bh*0.58, rx:bh*0.18, fill:v.color}));
+      if(v.wheelR>0){
+        vehIn.appendChild(el('circle',{cx:bw*0.22, cy:bh, r:v.wheelR, fill:v.wheelColor}));
+        vehIn.appendChild(el('circle',{cx:bw*0.78, cy:bh, r:v.wheelR, fill:v.wheelColor}));
+      }
+    }
+    builtFor=key;
+  }
+  var offset=0, start=performance.now(), lastKey='';
+  function frame(now){
+    var elMs=offset+(now-start);
+    var cyc=((elMs%cfg.cycleMs)+cfg.cycleMs)%cfg.cycleMs;
+    var cur=stateAt(tl, cyc);
+    var panX=-(((elMs/1000)*cfg.plate.panPxPerSec)%cfg.plate.panTilePx);
+    pan.setAttribute('transform','translate('+panX.toFixed(2)+' 0)');
+    if(cur && cur.kind==='word'){
+      var key='w'+cur.text+cur.atMs;
+      if(key!==lastKey){ word.textContent=cur.text; lastKey=key; }
+      word.style.display='block';
+      veh.setAttribute('display','none');
+    } else if(cur && cur.kind==='flash'){
+      word.style.display='none'; lastKey='';
+      var v=cfg.vehicles[cur.vehicle];
+      if(builtFor!==cur.vehicle) buildVehicle(cur.vehicle);
+      var p=(cyc-cur.atMs)/cur.crossMs; if(p>1)p=1; if(p<0)p=0;
+      var s=v.scale, x, y=cfg.vehicleYFrac*cfg.plate.stageH - v.bodyH*s;
+      if(v.dir===0){
+        s=v.scale+(v.recedeTo-v.scale)*p;
+        x=(cfg.plate.stageW - v.bodyW*s)/2;
+        y=cfg.vehicleYFrac*cfg.plate.stageH - v.bodyH*s;
+      } else {
+        var travel=cfg.plate.stageW + v.bodyW*s;
+        var x0=(v.dir>0? -v.bodyW*s : cfg.plate.stageW);
+        x=x0 + p*travel*v.dir;
+        y=y - v.risePx*p;
+      }
+      veh.removeAttribute('display');
+      veh.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+') scale('+s.toFixed(3)+')');
+      vehIn.setAttribute('transform', (v.dir<0? 'translate('+v.bodyW+' 0) scale(-1 1)' : ''));
+    } else {
+      word.style.display='none'; lastKey='';
+      veh.setAttribute('display','none');
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__seek=function(ms){ offset=ms; start=performance.now(); };
+  window.__config=CONFIG;
+  window.__T139={seek:window.__seek};
+})();
+}
+if(typeof module!=="undefined"){ module.exports={buildTimeline:buildTimeline, stateAt:stateAt, countKinds:countKinds, CONFIG:CONFIG}; }
+</script></body></html>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+Readability is strong in size and spacing, with a contrast weakness.
+
+- At 360 px, the stated 28.8 px ink height comfortably exceeds the ~11 px floor. “forwards.” fits with 84.8 px on either side; bold, centered, unwrapped text supports recognition.
+- The word sits over the blue sky at this anchor, rather than the cream ground. Red #e63329 against sky #a9c6d4 provides approximately 2.4:1 contrast: readable at this weight and size, but weaker than desirable for brief words.
+- Source logic hides vehicles during words and hides words during flashes and gaps. Product flashes therefore introduce no simultaneous competition.
+- The 120 ms word exposures leave little recovery time if recognition fails. For attempt 2, strengthen word–sky contrast while preserving the red treatment, then verify the shortest exposures in actual phone-size playback.
+
+This lens clears the minimum of 70. It cannot establish the five-lens tier decision. Assessment is source-level; rendered glyphs and playback remain unverified.
+
+SCORE: 84
+BODY-WRITE: This return supplies codex/lens-readability.md with the readability verdict, evidence limits, and attempt-2 cures; its SCORE is ready for extraction into scores.md.
+tokens used
+15,005
+Readability is strong in size and spacing, with a contrast weakness.
+
+- At 360 px, the stated 28.8 px ink height comfortably exceeds the ~11 px floor. “forwards.” fits with 84.8 px on either side; bold, centered, unwrapped text supports recognition.
+- The word sits over the blue sky at this anchor, rather than the cream ground. Red #e63329 against sky #a9c6d4 provides approximately 2.4:1 contrast: readable at this weight and size, but weaker than desirable for brief words.
+- Source logic hides vehicles during words and hides words during flashes and gaps. Product flashes therefore introduce no simultaneous competition.
+- The 120 ms word exposures leave little recovery time if recognition fails. For attempt 2, strengthen word–sky contrast while preserving the red treatment, then verify the shortest exposures in actual phone-size playback.
+
+This lens clears the minimum of 70. It cannot establish the five-lens tier decision. Assessment is source-level; rendered glyphs and playback remain unverified.
+
+SCORE: 84
+BODY-WRITE: This return supplies codex/lens-readability.md with the readability verdict, evidence limits, and attempt-2 cures; its SCORE is ready for extraction into scores.md.

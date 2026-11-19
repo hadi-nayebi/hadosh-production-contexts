@@ -1,0 +1,227 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T139-product-flash-phrase-boundary/codex
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e61a-c17c-7ed1-bc50-ca283fa9a5b0
+--------
+user
+CONSUMER: recreation job INSTRUCTION §5 leg 3b — jev-prewave gate for T139 attempt 1. DECISION PRICED: FIRE-WAVE (spend the five-lens scoring wave) or HOLD (return build to Execute). WORKING RECORD: this artifact directory (build-record.md + recreation.html CONFIG). BODY-WRITE: your return is filed verbatim at the artifact root as jev-prewave.md and cited in scores.md; end your return with your verdict line and dimension scores.
+
+=== GUARD DEFINITION (jev-prewave) ===
+# Jev call — jev-prewave (recreation)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14. The judgment: a scoring wave is the lane's expensive instrument — this call prices whether a build has EARNED its wave before the wave spends._
+
+## 1. What it judges
+- Deliverable: an attempt's build record (parameter table · construction route · own-checks results) BEFORE the Codex wave fires.
+- Call point: recreation INSTRUCTION §4, between the builder's own checks (§5.2) and the wave (§5.3). The verdict is advisory: applied, a HOLD returns the build to the builder with named defects and the wave does not fire on that item; set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this build record shows a recreation ready to be scored, or one whose defects are already visible in its own paperwork. Price: (1) PARAMETERIZATION — is the piece genuinely CONFIG-driven (fields named, ranges sane), or hard-coded with a config costume? (2) PURITY PRE-CHECK — does the construction route describe generation from parameters, with no tracing/embedding step hiding in the prose? (3) OWN-CHECKS COMPLETENESS — are the mechanical guards' results recorded (purity grep, swap test, syntax), or asserted? (4) TECHNIQUE FIDELITY PLAN — does the record state which packet mechanics the build implements and which it deliberately defers (a deferral named is lawful; a mechanic silently absent is not)? Score 0–1 per dimension, classify defects. You judge paperwork only: a build can pass you and still fail its wave — your job is that no wave is spent on a build its own record already condemns.
+
+## 3. Context contract (masked view)
+- FED: build-record.md · the CONFIG block of recreation.html · the technique's packet section · guards.md command list (what own-checks should exist).
+- NEVER FED: the builder's confidence prose · prior attempts' scores (each build is priced on its own record).
+- Ceiling: ≤32k tokens; the HTML enters as its CONFIG + construction sections, not media.
+
+## 4. Output space
+- Verdict classes: **FIRE-WAVE · HOLD**.
+- Dimensions (0–1): parameterization · purity pre-check · own-checks completeness · fidelity-plan honesty.
+- Rejection taxonomy (one primary): HARDCODED-CONFIG · TRACING-STEP · ASSERTED-CHECKS (results claimed, not recorded) · SILENT-DEFERRAL.
+- Accepted profile travels: cited in scores.md's pre-wave line; a wave fired over a HOLD is a deviation (WAVE-OVER-HOLD).
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → HOLD · ASSERTED-CHECKS at any score on other dimensions → HOLD (unrecorded checks are the lane's named failure class).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + classification + disposition land in the build record either way; an applied HOLD leaves the item IN PROGRESS and the wave moves to its next item (a held item never holds the wave hostage).
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: T15 attempt 1's build record (must FIRE-WAVE: checks recorded, deferral of the interlude named in its Plan) · a constructed record claiming a swap test with no harness output (must HOLD as ASSERTED-CHECKS) · a constructed record whose CONFIG is decorative over hard-coded phrases (must HOLD as HARDCODED-CONFIG).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all three must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.
+
+=== BUILD RECORD (T139 attempt 1) ===
+# build-record — T139 Product flash at a phrase boundary · Cycle 023 Wave 20 · attempt 1
+Artifact: hidden_files/study/recreations/T139-product-flash-phrase-boundary/
+Technique: Packet #7 P7 T08 — Product flash at a phrase boundary. Window: 26.36–36.60 s (segment cut 25.86–37.10 with ±0.5 s handles per A-HANDLES; segment.mp4 11.240 s, h264/aac, ffprobe-verified). Schedule basis: segment-anchored (event onsets at measured segment-relative times, onset − 26.36 s).
+Mechanics implemented: the red word stream (centre anchor, moving salt-flat plate) is interrupted by product passes; the word clock PAUSES for each flash and RESUMES at the same band — implemented as a single event timeline (CONFIG events with absolute segment-relative atMs/dwellMs): during a flash or gap event no word event is active, and the next word lands at its measured onset, never re-based. Single-slot phase machine: at any instant exactly one foreground state — a word, OR a flash (code-drawn SVG vehicle crossing the stage with dust trail), OR a gap (plate only) — Owner Cure 2 serial form. Seamless tiled pan: ridge paths duplicated at panTilePx 720, pan offset derived from total elapsed time (continuous across the cycle wrap, A9.1). crossMs carried per flash independent of dwellMs (A-T139-2): HR-V 1100 · Jazz 280 · Type R 1000 · Jet 120 · NSX-distant 400 · NSX 360. Vehicle forms from CONFIG: crossover #5a6068 dir 1 · hatch #c22a20 dir 1 · sport #b02020 dir −1 · jet #d8dde2 dir 1 rising (risePx) · NSX-distant sport at scale 0.55 · NSX sport-rear #c0202a dir 0 centred, receding (scale → recedeTo 0.45). Silhouette geometry (body/cabin/wheels/dust) is computed FROM the vehicles.* geometry keys, not literals (Cycle-021 addendum).
+Construction: one self-contained HTML file; CONFIG object at the top carries every subject variable (event table, vehicles, palette, typography, plate geometry); ONE JS clock (requestAnimationFrame against elapsed time); window.__seek(ms) + window.__config exposed for the comparison page and harness. No external assets; no specimen media anywhere in the build.
+Event count assertion (A9.3): the A-T139-1 table in RUN §2b, enumerated token by token by the builder (and machine-counted from the RUN text), carries 37 events — 28 words + 6 flashes (HR-V · Jazz · Type R · Jet · NSX-distant · NSX) + 3 gaps — ending exactly at cycleMs 10240 with zero overlaps. Built CONFIG: 37 events, same split (harness counts below). ASSERTION: enumerated-source 37 vs built 37 — MATCH. Printed discrepancy: RUN §2b's summary line ("5 flashes + 2 gaps + 26 words = 33") does not match its own detailed table; the detailed table is the binding source (it alone tiles the 10240 ms cycle exactly), and the summary arithmetic is flagged here for the seat's Condense rather than silently reproduced.
+Fidelity plan — deferred/named (A-T139-DEFERRAL): the specimen's flashes are photographic product passes; the recreation's vehicles are code-drawn generic silhouettes. Reason: §6.1 purity law forbids specimen media and no generated-imagery route exists in this seat for moving photographic passes. Expected cost: the motion lens prices the gap (it is the predicted stuck lens, §2 plateau pricing; family baseline T132 a1 avg 83.2).
+Asset inventory (A-VERIFY): segment.mp4 (evidence only, appears solely as the labeled ORIGINAL side of comparison.html) · recreation.html — all assets code/build-generated: inline SVG plate drawn from CONFIG plate.* data, vehicle silhouettes generated in JS from CONFIG vehicles.* geometry, DOM word slot; NO external files, NO generated imagery files, NO specimen media · comparison.html (control page) · codex/ returns. Every asset the recreation loads: none — it is a single self-contained file.
+Own checks (recorded, §5 legs 1–3 — raw harness output from the FIRST draft, A9.4, verbatim below):
+- Swap test (logic level, node harness over buildTimeline/stateAt with the build's own inline script): Swap A — post-Jazz word slots → Alpha/bravo/charlie. · HR-V flash colour → #2a6ad4 · sky → #d9a8c9: timeline rebuilds at 37 events, 'Alpha' owns the slot at 3400 ms, phases stay exclusive: PASS. Swap B — HR-V dwellMs 1320→2000: dwell takes effect (flash owns 1700 ms), exclusivity preserved by first-match priority; observed consequence recorded honestly: the extended flash shadows the words at 1560–2160 in the absolute table — the schedule follows CONFIG, which is the swap's claim: PASS.
+- Purity grep (segment\.mp4|source\.mp4|<video|<img|url\(|iO7BmPoL6a4|onset-[0-9]+\.jpg) over recreation.html: 0 hits (grep exit 1, match count 0).
+- Syntax: node --check on the extracted inline script: PASS (SYNTAX_OK). Determinism census: no Math.random, no Date.now in the file; schedule is a pure function of CONFIG.
+- Comparison check: comparison.html drives segment.mp4 and the recreation iframe from one control set (play/pause/restart); recreation slaved via __seek with the A-HANDLES mapping recreationMs = videoMs − 500, clamped ≥0 (timeupdate + seeked + 100 ms interval while playing); labels 'ORIGINAL — Honda Keep Up @ 26.36–36.60' / 'RECREATION — T139 Product flash at a phrase boundary, parameterized' as filed; phone-width: column stack, max-width 360 px media, 44 px-min-height buttons.
+- Segment binding: segment.mp4 ffprobe duration 11.240 s (cut 25.86 + 11.24 from the archived source).
+A6 legs (pre-wave, final build): fit-table.md HITs 0 · config-census.md HITs 0.
+PIXEL-UNVERIFIED: no browser binary in this seat; verification is logic-level, comparison.html is the render surface.
+recreation.html SHA-256: aa3ade793b7f33ddbb87fa8a21a313bc8705c04db73739eade61e7e201652929
+
+## Raw harness output (first draft, verbatim)
+```
+SYNTAX_OK
+{
+ "counts": {
+  "word": 28,
+  "flash": 6,
+  "gap": 3,
+  "total": 37
+ },
+ "first": {
+  "kind": "flash",
+  "vehicle": "hrv",
+  "atMs": 0,
+  "dwellMs": 1320,
+  "crossMs": 1100
+ },
+ "lastEnd": 10240,
+ "cycleMs": 10240,
+ "tableOverlaps": 0,
+ "spots": {
+  "100": {"kind": "flash", "vehicle": "hrv"},
+  "1400": null,
+  "1600": {"kind": "word", "text": "to"},
+  "2200": {"kind": "gap"},
+  "3000": {"kind": "flash", "vehicle": "jazz"},
+  "5000": {"kind": "flash", "vehicle": "typer"},
+  "5900": {"kind": "word", "text": "improve"},
+  "7200": {"kind": "gap"},
+  "7300": {"kind": "flash", "vehicle": "jet"},
+  "7600": {"kind": "gap"},
+  "9000": {"kind": "word", "text": "faster."},
+  "9600": {"kind": "flash", "vehicle": "nsxFar"},
+  "10000": {"kind": "flash", "vehicle": "nsx"}
+ },
+ "fitMax": {"word": "forwards.", "inkW": 190.4, "inkH": 28.8, "margin": 84.8},
+ "swapA": {
+  "counts": {"word": 28, "flash": 6, "gap": 3, "total": 37},
+  "at3400": {"kind": "word", "text": "Alpha"},
+  "hrvColor": "#2a6ad4",
+  "sky": "#d9a8c9",
+  "pass": true
+ },
+ "swapB": {
+  "dwellMs": 2000,
+  "at1700": {"kind": "flash", "vehicle": "hrv"},
+  "at2200": {"kind": "gap"},
+  "note": "extended flash shadows words to/do/new/things. (1560-2160) by first-match priority; exactly one foreground state at every sampled ms",
+  "pass": true
+ }
+}
+```
+(Full per-word fit rows from the same harness run are filed in fit-table.md; the census run's per-key site counts are filed in config-census.md — unapplied keys: [].)
+
+=== CONFIG BLOCK OF recreation.html ===
+var CONFIG = {
+ "fontPx": 40,
+ "fontWeight": 700,
+ "wordColor": "#e63329",
+ "anchorYFrac": 0.44,
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "cycleMs": 10240,
+ "vehicleYFrac": 0.62,
+ "plate": {
+  "sky": "#a9c6d4",
+  "far": "#a7b8ba",
+  "near": "#efe9dc",
+  "panPxPerSec": 18,
+  "panTilePx": 720,
+  "stageW": 720,
+  "stageH": 405,
+  "groundY": 300,
+  "groundH": 105,
+  "farPoints": [[0,250],[120,210],[260,238],[400,200],[540,232],[720,205],[720,405],[0,405]],
+  "nearPoints": [[0,318],[160,290],[330,314],[500,286],[720,310],[720,405],[0,405]]
+ },
+ "vehicles": {
+  "hrv":   {"shape":"crossover","color":"#5a6068","dir":1,"bodyW":190,"bodyH":54,"cabinFrac":0.5,"wheelR":17,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.55,"lightColor":"#ffd75e","recedeTo":1},
+  "jazz":  {"shape":"hatch","color":"#c22a20","dir":1,"bodyW":150,"bodyH":48,"cabinFrac":0.56,"wheelR":15,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.55,"lightColor":"#ffd75e","recedeTo":1},
+  "typer": {"shape":"sport","color":"#b02020","dir":-1,"bodyW":180,"bodyH":44,"cabinFrac":0.48,"wheelR":16,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.55,"lightColor":"#ffd75e","recedeTo":1},
+  "jet":   {"shape":"jet","color":"#d8dde2","dir":1,"bodyW":210,"bodyH":30,"cabinFrac":0.3,"wheelR":0,"wheelColor":"#1c1e22","scale":1,"risePx":130,"dustColor":"#e8e2d4","dustOpacity":0.4,"lightColor":"#ffd75e","recedeTo":1},
+  "nsxFar":{"shape":"sport","color":"#8a1f24","dir":1,"bodyW":180,"bodyH":44,"cabinFrac":0.48,"wheelR":16,"wheelColor":"#1c1e22","scale":0.55,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.5,"lightColor":"#ffd75e","recedeTo":1},
+  "nsx":   {"shape":"sport-rear","color":"#c0202a","dir":0,"bodyW":170,"bodyH":58,"cabinFrac":0.4,"wheelR":15,"wheelColor":"#1c1e22","scale":1,"risePx":0,"dustColor":"#e8e2d4","dustOpacity":0.45,"lightColor":"#ffd75e","recedeTo":0.45}
+ },
+ "events": [
+  {"kind":"flash","vehicle":"hrv","atMs":0,"dwellMs":1320,"crossMs":1100},
+  {"kind":"word","t":"to","atMs":1560,"dwellMs":120},
+  {"kind":"word","t":"do","atMs":1680,"dwellMs":120},
+  {"kind":"word","t":"new","atMs":1800,"dwellMs":120},
+  {"kind":"word","t":"things.","atMs":1920,"dwellMs":240},
+  {"kind":"gap","atMs":2160,"dwellMs":760},
+  {"kind":"flash","vehicle":"jazz","atMs":2920,"dwellMs":280,"crossMs":280},
+  {"kind":"word","t":"Push","atMs":3360,"dwellMs":160},
+  {"kind":"word","t":"to","atMs":3520,"dwellMs":120},
+  {"kind":"word","t":"a","atMs":3640,"dwellMs":120},
+  {"kind":"word","t":"new","atMs":3760,"dwellMs":120},
+  {"kind":"word","t":"kind","atMs":3880,"dwellMs":160},
+  {"kind":"word","t":"of","atMs":4040,"dwellMs":120},
+  {"kind":"word","t":"forwards.","atMs":4160,"dwellMs":200},
+  {"kind":"flash","vehicle":"typer","atMs":4360,"dwellMs":1160,"crossMs":1000},
+  {"kind":"word","t":"To","atMs":5680,"dwellMs":160},
+  {"kind":"word","t":"improve","atMs":5840,"dwellMs":160},
+  {"kind":"word","t":"and","atMs":6000,"dwellMs":120},
+  {"kind":"word","t":"improve","atMs":6120,"dwellMs":120},
+  {"kind":"word","t":"and","atMs":6240,"dwellMs":120},
+  {"kind":"word","t":"improve","atMs":6360,"dwellMs":120},
+  {"kind":"word","t":"and","atMs":6480,"dwellMs":200},
+  {"kind":"word","t":"and","atMs":6680,"dwellMs":200},
+  {"kind":"word","t":"improve","atMs":6880,"dwellMs":120},
+  {"kind":"word","t":"improve","atMs":7000,"dwellMs":160},
+  {"kind":"gap","atMs":7160,"dwellMs":120},
+  {"kind":"flash","vehicle":"jet","atMs":7280,"dwellMs":120,"crossMs":120},
+  {"kind":"gap","atMs":7400,"dwellMs":480},
+  {"kind":"word","t":"Keep","atMs":7880,"dwellMs":160},
+  {"kind":"word","t":"pushing","atMs":8040,"dwellMs":200},
+  {"kind":"word","t":"and","atMs":8240,"dwellMs":160},
+  {"kind":"word","t":"get","atMs":8400,"dwellMs":160},
+  {"kind":"word","t":"to","atMs":8560,"dwellMs":160},
+  {"kind":"word","t":"better","atMs":8720,"dwellMs":240},
+  {"kind":"word","t":"faster.","atMs":8960,"dwellMs":520},
+  {"kind":"flash","vehicle":"nsxFar","atMs":9480,"dwellMs":400,"crossMs":400},
+  {"kind":"flash","vehicle":"nsx","atMs":9880,"dwellMs":360,"crossMs":360}
+ ]
+};
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+**FIRE-WAVE.** The supplied paperwork earns scoring; this is not a visual-quality clearance.
+
+- **Parameterization — 0.90.** CONFIG exposes timing, text, vehicle geometry, palette, typography, and plate motion. Recorded swaps demonstrate meaningful changes. Swap B’s word shadowing is disclosed; it proves configurability, not timing robustness.
+- **Purity pre-check — 0.95.** Construction describes parameter-generated SVG and DOM elements without specimen embedding or tracing. The recorded purity search reports zero matches.
+- **Own-checks completeness — 0.85.** Syntax and swap results have harness output; purity has an explicit result and exit status. Pixel verification is expressly unperformed. The packet section and guards command list were not supplied, so completeness against those documents remains unconfirmed.
+- **Fidelity-plan honesty — 0.85.** Serial foreground states, measured event timing, independent crossing durations, and continuous plate motion are named. Replacing photographic passes with generic silhouettes is explicitly deferred and its expected cost disclosed.
+
+**Paperwork correction:** “tiles the 10240 ms cycle exactly” overstates coverage. CONFIG leaves uncovered intervals at 1320–1560, 3200–3360, and 5520–5680 ms; the harness confirms a null state at 1400 ms. Describe these as implicit plate-only intervals, or explicitly represent them as gaps. Zero overlaps and the final endpoint do not prove continuous event coverage. This is a documentation inconsistency, not sufficient evidence to reject the scoring spend.
+
+**Rejection taxonomy:** none triggered. Body-write: this return supplies the pre-wave judgment for filing as `jev-prewave.md` and citation in `scores.md`; no filesystem write was performed here.
+
+**FIRE-WAVE · parameterization 0.90 · purity pre-check 0.95 · own-checks completeness 0.85 · fidelity-plan honesty 0.85**
+tokens used
+17,176
+**FIRE-WAVE.** The supplied paperwork earns scoring; this is not a visual-quality clearance.
+
+- **Parameterization — 0.90.** CONFIG exposes timing, text, vehicle geometry, palette, typography, and plate motion. Recorded swaps demonstrate meaningful changes. Swap B’s word shadowing is disclosed; it proves configurability, not timing robustness.
+- **Purity pre-check — 0.95.** Construction describes parameter-generated SVG and DOM elements without specimen embedding or tracing. The recorded purity search reports zero matches.
+- **Own-checks completeness — 0.85.** Syntax and swap results have harness output; purity has an explicit result and exit status. Pixel verification is expressly unperformed. The packet section and guards command list were not supplied, so completeness against those documents remains unconfirmed.
+- **Fidelity-plan honesty — 0.85.** Serial foreground states, measured event timing, independent crossing durations, and continuous plate motion are named. Replacing photographic passes with generic silhouettes is explicitly deferred and its expected cost disclosed.
+
+**Paperwork correction:** “tiles the 10240 ms cycle exactly” overstates coverage. CONFIG leaves uncovered intervals at 1320–1560, 3200–3360, and 5520–5680 ms; the harness confirms a null state at 1400 ms. Describe these as implicit plate-only intervals, or explicitly represent them as gaps. Zero overlaps and the final endpoint do not prove continuous event coverage. This is a documentation inconsistency, not sufficient evidence to reject the scoring spend.
+
+**Rejection taxonomy:** none triggered. Body-write: this return supplies the pre-wave judgment for filing as `jev-prewave.md` and citation in `scores.md`; no filesystem write was performed here.
+
+**FIRE-WAVE · parameterization 0.90 · purity pre-check 0.95 · own-checks completeness 0.85 · fidelity-plan honesty 0.85**

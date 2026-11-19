@@ -1,0 +1,8 @@
+# build-record (score-blind) — T137 Case emphasis inside a level stream · attempt 1
+Technique: Packet #7 P7 T06 — Case emphasis inside a level stream. Window: 13.36–27.36 s (segment 14.000 s). Schedule basis: segment-anchored (62 tokens, onsets/dwells measured; emphasis token at segment-relative 1240 ms).
+Mechanics implemented: A level word stream (250–375 wpm bands) in which one repeated token returns in full capitals: CONFIG words carry the lowercase source 'really' at index 3 and index 4; emphasisIndices [4] applies a toUpperCase() transform at timeline build, so index 4 renders 'REALLY' at identical font size, weight, colour and anchor (seat census §1c confirmed the specimen's invariance firsthand). The emphasised token's dwell (320 ms) is its measured dwell, not an added emphasis beat.
+Construction: one self-contained HTML file; CONFIG at top; one JS clock; single-slot phase machine; plate drawn from CONFIG geometry and panned. No external assets; no specimen media.
+Deferred/named: None named. The stream before/after the event is the shared serial engine; the item's claim is only the case transform + invariance.
+Swap test (logic level): words→[go 240 · slow 240 · slow 200 · go 320 · now. 440] with emphasisIndices→[3]: timeline renders GO at index 3, lowercase elsewhere: PASS (the capitals move with the index set) · timing leg: dwell table x1.5 in harness copy · palette leg: wordColor→#ffd75e
+Purity grep over recreation.html: 0 hits. Syntax check: PASS. Determinism: no Math.random / Date.now.
+recreation.html SHA-256: 709fcd59fd0bf98758dfa6b680f5f6ac89ddfd095861173c222c16f115f6d114
