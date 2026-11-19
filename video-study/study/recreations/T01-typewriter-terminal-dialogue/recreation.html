@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T01 — Typewriter Terminal Dialogue (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#000}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden;box-sizing:border-box}
+  #chrome{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;gap:8px;padding:0 12px;box-sizing:border-box;z-index:3}
+  .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto}
+  #chromeTitle{margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #status{position:absolute;top:34px;left:0;right:0;height:26px;display:flex;justify-content:space-between;align-items:center;padding:0 16px;box-sizing:border-box;z-index:3}
+  #viewport{position:absolute;left:0;right:0;top:60px;bottom:0;overflow:hidden}
+  #log{position:absolute;left:0;right:0;top:0;padding:26px 8% 0 8%;box-sizing:border-box;will-change:transform}
+  #banner{border:2px solid;border-radius:12px;padding:16px 22px;margin:0 auto 64px auto;max-width:640px;box-sizing:border-box}
+  #bannerTitle{font-weight:700;font-size:1.02em;min-height:1.25em;line-height:1.25}
+  #bannerSub{font-size:.68em;margin-top:6px;min-height:1.2em;line-height:1.2}
+  .line{display:flex;align-items:baseline;gap:14px;line-height:1.5;margin:0 0 10px 0;min-width:0}
+  .prompt{flex:0 0 auto;font-weight:700}
+  .txt{white-space:pre-wrap;overflow-wrap:break-word;min-width:0}
+  .cursor{display:inline-block;width:.62em;height:1.08em;vertical-align:-0.14em;margin-left:2px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="chrome"><span class="dot" id="dotR"></span><span class="dot" id="dotY"></span><span class="dot" id="dotG"></span><span id="chromeTitle"></span></div>
+  <div id="status"><span id="statusLeft"></span><span id="statusRight"></span></div>
+  <div id="viewport"><div id="log">
+    <div id="banner"><div id="bannerTitle"></div><div id="bannerSub"></div></div>
+    <div id="lines"></div>
+  </div></div>
+</div>
+<script>
+"use strict";
+/* ================================================================
+   T01 — TYPEWRITER TERMINAL DIALOGUE
+   Recreation of the technique catalogued in Video Study packet P1
+   ("Look What I Can Do", 0:00-0:14): dialogue types char-by-char
+   with a block cursor inside a fake terminal; lines accumulate
+   and the log scrolls (the banner scrolls away).
+   PARAMETERIZED, NOT TRACED: every content / timing / palette /
+   chrome / speaker value is read from CONFIG below.
+   SCROLL MODEL: the scroll offset is a deterministic function of
+   t. Layout bounds (banner height, per-line wrapped heights,
+   viewport height) are measured/modelled for the actual stage
+   size; scroll keyframes are precomputed from those bounds at
+   each moment the active line's bottom would leave the viewport,
+   and the displayed offset eases between keyframe targets as a
+   function of t — so seek and continuous play give the identical
+   state at the same t.
+   TEMPO MODEL: the banner types, then its subline, then dialogue
+   at CONFIG.charMs; the closing exchange (the last
+   CONFIG.finaleLines lines) types at CONFIG.finaleCharMs, with
+   CONFIG.finaleStartPauseMs before it and CONFIG.closingPauseMs
+   before the final line.
+   URL overrides: ?lines=user:Hello|ai:Hi there&charMs=30
+                  &finaleCharMs=120&linePauseMs=200&bg=%23000000
+   ================================================================ */
+const CONFIG = {
+  lines: [
+    { speaker: "user", text: "Hey Claude?" },
+    { speaker: "ai",   text: "Yes?" },
+    { speaker: "user", text: "Can you help me write a song?" },
+    { speaker: "ai",   text: "Of course." },
+    { speaker: "user", text: "Can you make it catchy?" },
+    { speaker: "ai",   text: "Absolutely." },
+    { speaker: "user", text: "Can you make it famous?" },
+    { speaker: "ai",   text: "Watch me." }
+  ],
+  speakers: {
+    user:     { glyph: "\u276D", prompt: "#4ade80", text: "#d9d9d6" },
+    ai:       { glyph: "\u25CF", prompt: "#e8930c", text: "#f0a832" },
+    narrator: { glyph: "\u25C6", prompt: "#7dd3fc", text: "#bae6fd" }
+  },
+  bannerTitle: "Welcome to the studio",
+  bannerGlyph: "\u2733 ",
+  bannerSub: "cwd: ~/look-what-i-can-do \u00B7 model: claude-opus-5.5",
+  startDelayMs: 120,
+  bannerCharMs: 20,
+  bannerGapMs: 60,
+  bannerSubCharMs: 12,
+  dialoguePauseMs: 212,
+  charMs: 35.5,
+  linePauseMs: 250,
+  finaleLines: 2,
+  bannerExitLine: 6,
+  finaleCharMs: 146,
+  finaleStartPauseMs: 500,
+  closingPauseMs: 2600,
+  endHoldMs: 200,
+  blinkPeriodMs: 1060,
+  blinkOnMs: 700,
+  scrollEaseMs: 350,
+  scrollBottomPadPx: 12,
+  palette: {
+    bg: "#070807",
+    bannerBorder: "#a86f14", bannerTitle: "#f2f2ee", bannerSub: "#c4c8cb",
+    cursor: "#57d977", statusText: "#a3a8ab", chromeBg: "#101210",
+    dotRed: "#e5534b", dotYellow: "#d9a514", dotGreen: "#57d977"
+  },
+  chrome: {
+    title: "adita@studio: ~/look-what-i-can-do",
+    statusLeft: "adita@studio  ~/look-what-i-can-do",
+    statusRight: "claude \u00B7 intro"
+  },
+  fontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+  fontSizePx: 30,
+  minDialoguePx: 19,
+  chromeFontPx: 15,
+  minChromePx: 11.5,
+  designWidthPx: 960,
+  chromeHeightPx: 34,
+  statusHeightPx: 26,
+  logPaddingTopPx: 26,
+  logSidePadFraction: 0.08,
+  lineMarginBottomPx: 10,
+  lineGapPx: 14,
+  bannerMarginBottomPx: 64,
+  bannerMaxWidthPx: 640,
+  loop: false
+};
+/* ---- CONFIG validation / clamping (runs at load, before any use) ---- */
+function validateConfig(cfg){
+  const warnings = [];
+  const num = function(key, v, lo, hi){
+    v = Number(v);
+    if (!isFinite(v)) { warnings.push(key + ": non-numeric, clamped to " + lo); return lo; }
+    if (v < lo) { warnings.push(key + ": " + v + " below " + lo + ", clamped"); return lo; }
+    if (v > hi) { warnings.push(key + ": " + v + " above " + hi + ", clamped"); return hi; }
+    return v;
+  };
+  cfg.startDelayMs = num("startDelayMs", cfg.startDelayMs, 0, 10000);
+  cfg.bannerCharMs = num("bannerCharMs", cfg.bannerCharMs, 1, 1000);
+  cfg.bannerSubCharMs = num("bannerSubCharMs", cfg.bannerSubCharMs, 1, 1000);
+  cfg.bannerGapMs = num("bannerGapMs", cfg.bannerGapMs, 0, 10000);
+  cfg.dialoguePauseMs = num("dialoguePauseMs", cfg.dialoguePauseMs, 0, 10000);
+  cfg.charMs = num("charMs", cfg.charMs, 5, 1000);
+  cfg.finaleCharMs = num("finaleCharMs", cfg.finaleCharMs, 5, 2000);
+  cfg.linePauseMs = num("linePauseMs", cfg.linePauseMs, 0, 10000);
+  cfg.finaleStartPauseMs = num("finaleStartPauseMs", cfg.finaleStartPauseMs, 0, 10000);
+  cfg.closingPauseMs = num("closingPauseMs", cfg.closingPauseMs, 0, 10000);
+  cfg.endHoldMs = num("endHoldMs", cfg.endHoldMs, 0, 300);
+  cfg.blinkPeriodMs = num("blinkPeriodMs", cfg.blinkPeriodMs, 100, 10000);
+  cfg.blinkOnMs = num("blinkOnMs", cfg.blinkOnMs, 10, cfg.blinkPeriodMs);
+  cfg.scrollEaseMs = num("scrollEaseMs", cfg.scrollEaseMs, 0, 5000);
+  cfg.scrollBottomPadPx = num("scrollBottomPadPx", cfg.scrollBottomPadPx, 0, 200);
+  cfg.fontSizePx = num("fontSizePx", cfg.fontSizePx, 10, 80);
+  cfg.minDialoguePx = num("minDialoguePx", cfg.minDialoguePx, 8, cfg.fontSizePx);
+  cfg.finaleLines = Math.max(0, Math.min(Math.floor(Number(cfg.finaleLines) || 0), 8));
+  cfg.bannerExitLine = Math.max(0, Math.min(Math.floor(Number(cfg.bannerExitLine) || 0), 64));
+  if (!cfg.speakers || typeof cfg.speakers !== "object") cfg.speakers = {};
+  if (!cfg.speakers.user) cfg.speakers.user = { glyph: "\u276D", prompt: "#4ade80", text: "#d9d9d6" };
+  if (!cfg.speakers.ai) cfg.speakers.ai = { glyph: "\u25CF", prompt: "#e8930c", text: "#f0a832" };
+  if (!Array.isArray(cfg.lines) || cfg.lines.length === 0) {
+    warnings.push("lines: empty or missing, fallback single line installed");
+    cfg.lines = [{ speaker: "user", text: "Hello." }];
+  }
+  cfg.lines = cfg.lines.map(function(L, i){
+    const text = (L && L.text != null) ? String(L.text) : "";
+    let speaker = (L && typeof L.speaker === "string" && L.speaker) ? L.speaker : "user";
+    if (!cfg.speakers[speaker]) warnings.push("lines[" + i + "]: unknown speaker '" + speaker + "', user style fallback");
+    if (text.length === 0) warnings.push("lines[" + i + "]: empty text");
+    return { speaker: speaker, text: text };
+  });
+  return warnings;
+}
+const VALIDATION_WARNINGS = validateConfig(CONFIG);
+/* URL overrides (used by the swap test) */
+(function applyUrlOverrides(){
+  if (typeof location === "undefined") return;
+  const q = new URLSearchParams(location.search);
+  if (q.has("lines")) CONFIG.lines = q.get("lines").split("|").map(function(s){
+    const i = s.indexOf(":"); return { speaker: i >= 0 ? s.slice(0, i) : "user", text: i >= 0 ? s.slice(i + 1) : s };
+  });
+  for (const k of ["charMs","finaleCharMs","linePauseMs","bannerCharMs","bannerSubCharMs","startDelayMs","endHoldMs","fontSizePx"])
+    if (q.has(k)) CONFIG[k] = parseFloat(q.get(k));
+  if (q.has("bg")) CONFIG.palette.bg = q.get("bg");
+  if (q.has("cursor")) CONFIG.palette.cursor = q.get("cursor");
+  if (q.has("aiText") && CONFIG.speakers.ai) CONFIG.speakers.ai.text = q.get("aiText");
+  if (q.has("userPrompt") && CONFIG.speakers.user) CONFIG.speakers.user.prompt = q.get("userPrompt");
+  validateConfig(CONFIG);
+})();
+
+/* ---- Pure timeline logic (node-testable; no DOM below this line) ---- */
+function lineCharMs(cfg, i){
+  return i >= cfg.lines.length - cfg.finaleLines ? cfg.finaleCharMs : cfg.charMs;
+}
+function pauseAfterMs(cfg, i){
+  if (i === cfg.lines.length - 2) return cfg.closingPauseMs;
+  if (i === cfg.lines.length - cfg.finaleLines - 1) return cfg.finaleStartPauseMs;
+  return cfg.linePauseMs;
+}
+function buildTimeline(cfg){
+  const bannerText = cfg.bannerGlyph + cfg.bannerTitle;
+  const bannerStart = cfg.startDelayMs;
+  const bannerEnd = bannerStart + bannerText.length * cfg.bannerCharMs;
+  const subStart = bannerEnd + cfg.bannerGapMs;
+  const subEnd = subStart + cfg.bannerSub.length * cfg.bannerSubCharMs;
+  let t = subEnd + cfg.dialoguePauseMs;
+  const lines = cfg.lines.map(function(L, i){
+    const cms = lineCharMs(cfg, i);
+    const start = t;
+    const end = start + L.text.length * cms;
+    t = end + pauseAfterMs(cfg, i);
+    return { speaker: L.speaker, text: L.text, start: start, end: end, charMs: cms };
+  });
+  const contentEnd = lines.length ? lines[lines.length - 1].end : subEnd;
+  return { bannerText: bannerText, bannerStart: bannerStart, bannerEnd: bannerEnd,
+           subStart: subStart, subEnd: subEnd, dialogueStart: subEnd + cfg.dialoguePauseMs,
+           lines: lines, contentEnd: contentEnd,
+           durationMs: contentEnd + cfg.endHoldMs };
+}
+/* ---- Layout model: measured bounds for a stage of w x h px ----
+   charWidthPx is an input: in the browser it is measured with a
+   canvas against the actual font; in logic tests it is the same
+   font's nominal monospace advance (0.6em). All heights derive
+   from whole-word wrapping at that measured width. */
+function effectiveSizes(cfg, stageWidthPx){
+  const scale = stageWidthPx / cfg.designWidthPx;
+  return {
+    fontPx: Math.max(cfg.minDialoguePx, Math.min(cfg.fontSizePx, cfg.fontSizePx * scale)),
+    chromePx: Math.max(cfg.minChromePx, Math.min(cfg.chromeFontPx, cfg.chromeFontPx * scale))
+  };
+}
+function wrapRows(text, charsPerRow){
+  if (!text) return 1;
+  const cpr = Math.max(1, Math.floor(charsPerRow));
+  const words = text.split(" ");
+  let rows = 1, cur = 0;
+  for (const w of words) {
+    const wl = w.length;
+    if (cur === 0) cur = wl;
+    else if (cur + 1 + wl <= cpr) cur += 1 + wl;
+    else { rows += 1; cur = wl; }
+    while (cur > cpr) { rows += 1; cur -= cpr; }
+  }
+  return rows;
+}
+function buildLayout(cfg, stageWidthPx, stageHeightPx, charWidthPx){
+  const sizes = effectiveSizes(cfg, stageWidthPx);
+  const fontPx = sizes.fontPx;
+  const cw = charWidthPx || fontPx * 0.6;
+  const contentWidth = stageWidthPx * (1 - 2 * cfg.logSidePadFraction);
+  const promptPx = fontPx * 0.7;
+  const textWidth = Math.max(40, contentWidth - promptPx - cfg.lineGapPx);
+  const charsPerRow = Math.max(4, Math.floor(textWidth / cw));
+  const lineHeightPx = fontPx * 1.5;
+  const bannerInner = Math.min(cfg.bannerMaxWidthPx, contentWidth) - 48;
+  const subFontPx = fontPx * 0.68;
+  const bannerTitleRows = wrapRows(cfg.bannerGlyph + cfg.bannerTitle, Math.max(4, Math.floor(bannerInner / (cw * 1.02))));
+  const bannerSubRows = wrapRows(cfg.bannerSub, Math.max(4, Math.floor(bannerInner / (cw * 0.68))));
+  const bannerHeightPx = 4 + 32 + bannerTitleRows * fontPx * 1.02 * 1.25 + 6 +
+    bannerSubRows * subFontPx * 1.2 + cfg.bannerMarginBottomPx;
+  const lineRows = cfg.lines.map(function(L){ return wrapRows(L.text, charsPerRow); });
+  const lineHeightsPx = lineRows.map(function(r){ return r * lineHeightPx + cfg.lineMarginBottomPx; });
+  const viewportHeightPx = Math.max(40, stageHeightPx - cfg.chromeHeightPx - cfg.statusHeightPx);
+  const totalContentPx = cfg.logPaddingTopPx + bannerHeightPx +
+    lineHeightsPx.reduce(function(a, b){ return a + b; }, 0);
+  return { fontPx: fontPx, chromePx: sizes.chromePx, charWidthPx: cw,
+           contentWidthPx: contentWidth, charsPerRow: charsPerRow,
+           lineHeightPx: lineHeightPx, bannerHeightPx: bannerHeightPx,
+           lineRows: lineRows, lineHeightsPx: lineHeightsPx,
+           viewportHeightPx: viewportHeightPx,
+           totalContentPx: totalContentPx,
+           maxScrollPx: Math.max(0, totalContentPx - viewportHeightPx) };
+}
+/* Scroll keyframes: one entry each time the scroll target changes.
+   The target at time t keeps the active line's bottom edge inside
+   the viewport, computed from the layout bounds of the content
+   typed by t. */
+function buildScrollKeyframes(cfg, tl, layout){
+  const kfs = [{ t: 0, target: 0 }];
+  let prevBottoms = cfg.logPaddingTopPx + layout.bannerHeightPx;
+  const lineTops = [];
+  for (let i = 0; i < tl.lines.length; i++) {
+    lineTops.push(prevBottoms);
+    prevBottoms += layout.lineHeightsPx[i];
+  }
+  /* Keyframes are timestamped one ease-duration BEFORE the event
+     that needs them (a line starting, a wrapped row appearing), so
+     the eased offset has fully arrived when the event lands. */
+  function push(eventT, target){
+    /* targets are monotonic: the log never scrolls back down */
+    target = Math.max(0, Math.min(target, layout.maxScrollPx), kfs[kfs.length - 1].target);
+    if (Math.abs(target - kfs[kfs.length - 1].target) <= 0.01) return;
+    let t = Math.max(0, eventT - cfg.scrollEaseMs);
+    if (t <= kfs[kfs.length - 1].t) t = kfs[kfs.length - 1].t + 1;
+    kfs.push({ t: t, target: target });
+  }
+  const bannerBoxPx = layout.bannerHeightPx - cfg.bannerMarginBottomPx;
+  for (let i = 0; i < tl.lines.length; i++) {
+    const L = tl.lines[i];
+    /* banner-exit: by the configured line's start, the banner box
+       has fully scrolled above the viewport */
+    if (i === cfg.bannerExitLine) push(L.start, cfg.logPaddingTopPx + bannerBoxPx);
+    for (let n = 1; n <= L.text.length; n++) {
+      const shown = L.text.slice(0, n);
+      const rows = wrapRows(shown, layout.charsPerRow);
+      const activeBottom = lineTops[i] + rows * layout.lineHeightPx;
+      const target = activeBottom + cfg.scrollBottomPadPx - layout.viewportHeightPx;
+      if (target > 0) push(L.start + n * L.charMs, target);
+    }
+  }
+  return { keyframes: kfs, lineTops: lineTops };
+}
+function scrollYAt(cfg, scroll, t){
+  const kfs = scroll.keyframes;
+  let prev = 0, cur = 0, curT = 0;
+  for (let i = 0; i < kfs.length; i++) {
+    if (kfs[i].t <= t) { prev = cur; cur = kfs[i].target; curT = kfs[i].t; }
+    else break;
+  }
+  const p = cfg.scrollEaseMs > 0 ? Math.min(1, Math.max(0, (t - curT) / cfg.scrollEaseMs)) : 1;
+  const e = p * p * (3 - 2 * p);
+  return prev + (cur - prev) * e;
+}
+function stateAt(cfg, tl, layout, scroll, t){
+  const clampN = function(a, b){ return Math.max(0, Math.min(a, b)); };
+  const bannerShown = t < tl.bannerStart ? "" :
+    tl.bannerText.slice(0, Math.floor((t - tl.bannerStart) / cfg.bannerCharMs));
+  const subShown = t < tl.subStart ? "" :
+    cfg.bannerSub.slice(0, Math.floor((t - tl.subStart) / cfg.bannerSubCharMs));
+  let cursorTarget = "banner";
+  if (t >= tl.subStart) cursorTarget = "sub";
+  let activeLine = -1;
+  const lines = tl.lines.map(function(L, i){
+    let shown = "";
+    if (t >= L.end) shown = L.text;
+    else if (t >= L.start) shown = L.text.slice(0, Math.floor((t - L.start) / L.charMs));
+    if (t >= L.start) { cursorTarget = i; activeLine = i; }
+    return { speaker: L.speaker, shown: shown, started: t >= L.start };
+  });
+  return { bannerShown: bannerShown, subShown: subShown, lines: lines,
+           cursorTarget: cursorTarget, activeLine: activeLine,
+           scrollYPx: scrollYAt(cfg, scroll, t),
+           done: t >= tl.contentEnd };
+}
+if (typeof window !== "undefined") window.T01 = { CONFIG: CONFIG, buildTimeline: buildTimeline,
+  stateAt: stateAt, buildLayout: buildLayout, buildScrollKeyframes: buildScrollKeyframes,
+  effectiveSizes: effectiveSizes, wrapRows: wrapRows, validateConfig: validateConfig,
+  VALIDATION_WARNINGS: VALIDATION_WARNINGS };
+
+/* ---- DOM wiring ---- */
+if (typeof document !== "undefined" && document.getElementById) (function(){
+  const cfg = CONFIG, tl = buildTimeline(cfg);
+  const $ = function(id){ return document.getElementById(id); };
+  const stage = $("stage"), log = $("log"), linesEl = $("lines"), viewport = $("viewport");
+  stage.style.background = cfg.palette.bg;
+  stage.style.fontFamily = cfg.fontFamily;
+  $("chrome").style.background = cfg.palette.chromeBg;
+  $("chrome").style.color = cfg.palette.statusText;
+  $("chromeTitle").textContent = cfg.chrome.title;
+  $("dotR").style.background = cfg.palette.dotRed;
+  $("dotY").style.background = cfg.palette.dotYellow;
+  $("dotG").style.background = cfg.palette.dotGreen;
+  $("status").style.color = cfg.palette.statusText;
+  $("statusLeft").textContent = cfg.chrome.statusLeft;
+  const banner = $("banner");
+  banner.style.borderColor = cfg.palette.bannerBorder;
+  $("bannerTitle").style.color = cfg.palette.bannerTitle;
+  $("bannerSub").style.color = cfg.palette.bannerSub;
+  function speakerStyle(key){
+    return cfg.speakers[key] || cfg.speakers.user;
+  }
+  const lineEls = cfg.lines.map(function(L){
+    const row = document.createElement("div"); row.className = "line";
+    const p = document.createElement("span"); p.className = "prompt";
+    const tx = document.createElement("span"); tx.className = "txt";
+    const st = speakerStyle(L.speaker);
+    p.textContent = st.glyph; p.style.color = st.prompt; tx.style.color = st.text;
+    row.appendChild(p); row.appendChild(tx); linesEl.appendChild(row);
+    return { row: row, tx: tx };
+  });
+  const cursor = document.createElement("span");
+  cursor.className = "cursor"; cursor.style.background = cfg.palette.cursor;
+  let layout = null, scroll = null;
+  function measureCharWidth(fontPx){
+    try {
+      const c = document.createElement("canvas").getContext("2d");
+      c.font = fontPx + "px " + cfg.fontFamily;
+      return c.measureText("MMMMMMMMMM").width / 10;
+    } catch (e) { return fontPx * 0.6; }
+  }
+  function rebuildLayout(){
+    const w = stage.clientWidth || cfg.designWidthPx;
+    const h = stage.clientHeight || Math.round(w * 9 / 16);
+    const sizes = effectiveSizes(cfg, w);
+    layout = buildLayout(cfg, w, h, measureCharWidth(sizes.fontPx));
+    scroll = buildScrollKeyframes(cfg, tl, layout);
+    stage.style.fontSize = layout.fontPx + "px";
+    $("chrome").style.fontSize = layout.chromePx + "px";
+    $("status").style.fontSize = layout.chromePx + "px";
+  }
+  rebuildLayout();
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(rebuildLayout).observe(stage);
+  function render(t){
+    const st = stateAt(cfg, tl, layout, scroll, t);
+    $("bannerTitle").textContent = st.bannerShown;
+    $("bannerSub").textContent = st.subShown;
+    $("statusRight").textContent = cfg.chrome.statusRight + " \u00B7 " + (t / 1000).toFixed(1) + "s";
+    st.lines.forEach(function(L, i){
+      lineEls[i].row.style.display = L.started ? "flex" : "none";
+      lineEls[i].tx.textContent = L.shown;
+    });
+    if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+    const blink = (t % cfg.blinkPeriodMs) < cfg.blinkOnMs || !st.done;
+    cursor.style.visibility = blink ? "visible" : "hidden";
+    if (st.cursorTarget === "banner") $("bannerTitle").appendChild(cursor);
+    else if (st.cursorTarget === "sub") $("bannerSub").appendChild(cursor);
+    else lineEls[st.cursorTarget].tx.appendChild(cursor);
+    log.style.transform = "translateY(" + (-st.scrollYPx) + "px)";
+  }
+  let playing = false, elapsed = 0, lastTs = null, raf = null;
+  function frame(ts){
+    if (!playing) return;
+    if (lastTs === null) lastTs = ts;
+    elapsed += ts - lastTs; lastTs = ts;
+    if (elapsed >= tl.durationMs) {
+      if (cfg.loop) elapsed = 0; else { elapsed = tl.durationMs; playing = false; }
+    }
+    render(elapsed);
+    if (playing) raf = requestAnimationFrame(frame);
+  }
+  window.REC_API = {
+    play: function(){ if (!playing) { playing = true; lastTs = null; raf = requestAnimationFrame(frame); } },
+    pause: function(){ playing = false; if (raf) cancelAnimationFrame(raf); },
+    restart: function(){ elapsed = 0; lastTs = null; render(0); },
+    seekTo: function(ms){ elapsed = Math.max(0, Math.min(ms, tl.durationMs)); lastTs = null; render(elapsed); },
+    getElapsed: function(){ return elapsed; },
+    durationMs: tl.durationMs
+  };
+  render(0);
+  window.REC_API.play();
+})();
+</script>
+</body>
+</html>

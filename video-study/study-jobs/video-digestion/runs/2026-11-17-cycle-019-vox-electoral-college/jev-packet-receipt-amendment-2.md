@@ -1,0 +1,6 @@
+# jev-packet receipt amendment 2 — Cycle-019 (A7 clause 3 form)
+
+- **Re-firing receipt (jev-packet-return-2.md):** ADOPT-WITH-GAPS on md 2954bb20… / pdf befcd9d7… — gaps G1 (§1 stated 31 ev frames vs 32 cited) · G2 (T08's Wyoming/California extension bound to transcript only) · G3 (clip filenames offset from technique numbers — consequence: consumers follow explicit cited paths, never filename inference; stands) · G4 (minor VAGUE-MECHANIC thinness on T05/T06/T02/T10 — stands as priced).
+- **Delta cured on the packet face after the re-firing:** G1 — §1 count corrected to the disk truth, now 33 (one frame added by the G2 cure); G2 — ev/t135-wyoming-california.jpg extracted, viewed firsthand (Wyoming/California squares, 189,000 vs 679,000 per electoral vote), and cited in T08.
+- **Adopted (final) version:** digest.md sha256 3f551eec5e66d74ff6eec0b7531971e3d045fcbd2759bc58c6d04356f6010f28 · digest.pdf sha256 2bb08cc4931fc080a6827ebe83a5b3b33db4063b5ec2e004f8776f2350d503c4 (10 pp; parity 22=22; ev cited 33/33, 0 missing, 0 uncited — census re-run on the final version).
+- **Adoption form:** ADOPTED WITH GAPS — the standing gaps are G3 + G4 (nonblocking citation-form/mechanics-thinness, consequences recorded here and carried to style-library in the hand-off); G1 + G2 are CLOSED by the cures above.

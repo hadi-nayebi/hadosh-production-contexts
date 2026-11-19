@@ -1,0 +1,29 @@
+## PRIOR-ART GAPS
+
+**Verdict: Observe supports the A2 comparison with Packet #3. Plan needs stronger evidence rules before treating block flips, discarded margins, count acceleration, or the proposed section order as features of the specimen.**
+
+- **The catalogue search establishes a naming gap.** The reported search for `electoral|Vox|ajavs` checks for direct creator and specimen matches. It does not establish that the library lacks reusable mechanics under other names. Plan would benefit from comparing the cited T53/T54/T68 entries by operation: what enters the count, how it is grouped, what changes the total, and what crossing the threshold reveals. **Source:** RUN.md §1, “Prior art (lane record),” Packet #3 and Style Library INDEX bullets.
+- **Outside-lane Vox prior art is NOT ASSESSED.** No external Vox specimen, production account, or style analysis is supplied. The house-style attribution of flat vectors plus paper/map texture and the era-specific runtime estimate are **UNVERIFIED**. Whether outside-lane work contradicts either claim is unresolved. Plan can establish this specimen’s texture and runtime from the frames and probe. **Source:** RUN.md §1, “Lesson classes priced at Observe,” texture bullet, and §2, “Split decision.”
+
+## TAXONOMY / CONFUSABLES
+
+- **Enumeration vs. weighted accumulation.** Packet #3 supplies the baseline of one counting event per senator. For Vox, Plan should distinguish the state as the counted entity, the electoral-vote weight as the increment, and the running total as the result. Map highlighting, a tile moving, and a counter updating are distinct operations. An evidence sequence can show which operations the specimen synchronizes. **Source:** RUN.md §1, queue row #7 and Packet #3, family T53/T54/T68.
+- **Block size vs. whole-block transfer vs. discarded margin.** A block can encode weight without showing allocation. A whole-block transfer can show the winner receiving the allocation without showing what happened to the losing votes or how narrow the margin was. A flip requires evidence of an assignment changing across scenarios. Plan should capture the input margin, the allocation change, and the resulting tally separately wherever they appear. The queue’s 1% example is a lead to check against the specimen. **Source:** RUN.md §1, queue row #7, trick bullet, and Observe product, and §2, temporal clip plan.
+- **Allocation rule vs. threshold vs. representation weight.** Which side receives a state’s votes, when the running total reaches 270, and how much weight a state carries are different explanations. A threshold reveal also differs from faster counting. Plan should record the intervals between updates before assigning acceleration and check whether the effect comes from count timing, edits, narration, or sound. **Source:** RUN.md §1, Packet #3 threshold-interpretation ladder and pacing bullet, and §2, S2–S4.
+
+## SEGMENTATION PRECEDENT
+
+- **The cited precedents establish a form class, with their boundary method still unverified.** Observe names Packet #8 and Packet #2 as big-question essay precedents. It gives no section markers or examples of how either packet resolved boundaries. The five proposed sections are reasonable hypotheses. In particular, winner-take-all could be taught during the worked count, and the proposed faithless-elector example and reform coda still need confirmation. **Source:** RUN.md §1, Packet #8 and Packet #2 bullet, and §2, “Segmentation model.”
+- **Observe records a hook cue but no timestamped transition cues.** For each candidate boundary, useful signals would be the timestamped narration pivot and the accompanying change, if present, in visual system, tally state, music, or sound. Within the worked example, the first block assignment, any reassignment, and the first threshold crossing are candidate beat markers. Recording cue timestamps separately would let Plan see where narration and visuals lead or lag each other. The word-timed VTT is reported as retrieved, and the opening polls framing is the only caption evidence described in the feed. **Source:** RUN.md §1, “Media properties,” and §2, “Segmentation model” and Execute steps 1–3.
+
+## LESSON-CLASS PREDICTIONS
+
+- **Technique — continuity across map and tally.** Check whether a state keeps a recognizable label, color, or shape as it moves from geographic view to tally. If present, that continuity is a transferable lesson alongside weighted counting. **Source:** RUN.md §1, “Consumer” and technique bullet. Prediction from the named map/block builds.
+- **Storytelling pattern — reuse of a worked example under changed conditions.** If the same states and tally board are reused with a changed margin, the sequence may teach how to make a counterfactual readable by holding the rest of the example steady. **Source:** RUN.md §1, queue row #7, and §2, S3–S4. Prediction contingent on a visible comparison.
+- **Transcript device — a spoken cue timed to a diagram event.** Beyond rhetorical questions and direct address, check whether a state name, a number, or a contrast phrase cues a transfer or threshold reveal. The word-event note is cited as general prior art, and the VTT can support a timing comparison with frames. **Source:** RUN.md §1, study-notes bullet, media properties, and transcript-device bullet. Prediction, pending timing evidence.
+
+## SOURCES
+
+The review uses the fed excerpt of `runs/2026-11-17-cycle-019-vox-electoral-college/RUN.md`, §§1–2, including the embedded queue row #7. Packet #3, Packet #8, Packet #2, T53/T54/T68, the library search, and the 2026-11-14 word-event note are cited through that excerpt. Their underlying records, the full VTT, frames, audio, probe, and outside-lane sources were unavailable in the feed. Specimen behavior and exact section boundaries remain unverified.
+
+**Body-write: none (read-only run)**

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T02 — Counting list + giant numeral (parameterized recreation)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #000; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #stage { position: relative; width: min(100vw, 177.78vh); aspect-ratio: 16/9; overflow: hidden; flex: none; }
+  #prompt { position: absolute; left: 0; font-weight: 700; white-space: nowrap; }
+  #listWrap { position: absolute; overflow: hidden; }
+  #list { display: flex; flex-direction: column; justify-content: flex-start; }
+  .line { display: flex; align-items: baseline; white-space: nowrap; }
+  .line .check { font-weight: 700; }
+  #numeralCol { position: absolute; top: 0; right: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #numeral { font-weight: 900; line-height: .95; letter-spacing: -0.02em; will-change: transform; }
+  #caption { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; opacity: 0; }
+  #controlBar { display: flex; flex: none; }
+  #controlBar button { cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="prompt"><span id="promptChevron"></span><span id="promptText"></span></div>
+  <div id="listWrap"><div id="list"></div></div>
+  <div id="numeralCol"><div id="numeral">0</div><div id="numeralLabel"></div></div>
+  <div id="caption"></div>
+</div>
+<div id="controlBar">
+  <button id="btnPlay" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+const CONFIG = {
+  directoryCommand: "ls ~/Original\\ Music",
+  lines: [
+    "A/B Testimonial/","Almost Famous Build/","Blame the Intern/","Cache Money/",
+    "Cherry Pick Serenade/","Commit Early Commit Often/","Dark Mode Lullaby/",
+    "Deployed on a Friday (Fable)/","Eleven Kept Going/","Fangs for Asking/",
+    "Get Off War Thunder/","Git Blame/","Git Blame (Country)/","Graceful Shutdown/",
+    "Great Idea, Ted/","Hard Launch/","I have a blocker. (Take It Offline)/","LGTM/",
+    "Merge Conflict/","Mirror, Mirror, Look at Us/","Null Pointer Lullaby/",
+    "One More Hotfix/","Pipeline Dreams/","Quick Sync Serenade/",
+    "Ragnarök or Reach for Mars/","Rate Limited/","Snowflake Undrop/","Spinning Cursor/",
+    "TED Talk/","TED Talk (Charts)/","TED Talk (Screenlife)/","TED Talk (Shadow Play)/",
+    "TED Talk (Stepping Back)/","Take It Offline/","Tech Debt/","The Promptress/",
+    "Thirsty (The Data Center Next Door)/","Undo Everything/","Works on My Machine/"
+  ],
+  finalCount: 39,
+  checkpoints: [ {timeMs: 0, count: 0}, {timeMs: 3000, count: 20}, {timeMs: 6000, count: 37}, {timeMs: 7000, count: 39} ],
+  captionAtMs: 7000,
+  captionText: "39 projects - 0 video editors",
+  captionAccentChar: "0",
+  totalDurationMs: 8000,
+  visibleLines: 13,
+  numeralColor: "#f59e2c",
+  numeralLabel: "projects",
+  numeralSizeRatio: 0.3333,
+  pulseScale: 1.0,
+  pulseMs: 130,
+  speed: 1,
+  palette: { bg: "#050505", text: "#d9d9d9", check: "#43b581", prompt: "#e8e8e8", caption: "#ffffff", zero: "#f59e2c" },
+  fonts: {
+    mono: 'ui-monospace, "SF Mono", Menlo, Consolas, monospace',
+    numeral: '"Arial Black", Arial, Helvetica, sans-serif',
+    ui: 'system-ui, sans-serif'
+  },
+  layout: { listLeftPct: 3.5, listWidthPct: 62.5, numeralWidthPct: 31, promptTopPct: 3, promptLeftPct: 3.5, listTopPct: 14, listBottomPct: 84, captionBottomPct: 3 },
+  type: { listFontRatio: 0.0543, promptFontRatio: 0.072, captionFontRatio: 0.078, labelFontRatio: 0.052, lineHeightRatio: 1.3, minFontPx: 11, captionAccentScale: 1.25, rowGapEm: 0.45, checkGlyph: "✓", chevron: ">", chevronGapEm: 0.35 },
+  controls: { barGapPx: 8, barMarginTopPx: 10, buttonFontSizePx: 13, buttonPadding: "9px 13px", buttonRadiusPx: 6, buttonBorder: "1px solid #555", buttonBg: "#1c1c1c", buttonColor: "#eeeeee", buttonMinHeightPx: 40, playLabel: "Play", pauseLabel: "Pause", restartLabel: "Restart" }
+};
+/* ================= PURE (schedule, validation, geometry — delimited for logic-level tests) ================= */
+// PURE-BEGIN
+
+function isValidColor(v) {
+  return typeof v === "string" && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v);
+}
+function shapeValidCheckpoints(cps) {
+  if (!Array.isArray(cps) || cps.length === 0) return false;
+  for (const c of cps) {
+    if (c === null || typeof c !== "object") return false;
+    if (!("timeMs" in c) || !("count" in c)) return false;
+  }
+  return true;
+}
+function validateCandidateCheckpoints(cps, totalLines) {
+  if (!shapeValidCheckpoints(cps) || cps.length < 2) return false;
+  if (cps[0].timeMs !== 0 || cps[0].count !== 0) return false;
+  for (let i = 0; i < cps.length; i++) {
+    const c = cps[i];
+    if (!Number.isFinite(c.timeMs) || !Number.isFinite(c.count)) return false;
+    if (c.timeMs < 0 || c.count < 0 || c.count > totalLines) return false;
+    if (!Number.isInteger(c.count)) return false;
+    if (i > 0 && (c.timeMs <= cps[i - 1].timeMs || c.count <= cps[i - 1].count)) return false;
+  }
+  return cps[cps.length - 1].count === totalLines;
+}
+function validateDerivedCheckpoints(cps, totalLines) {
+  if (!shapeValidCheckpoints(cps) || cps.length < 2) return false;
+  if (cps[0].timeMs !== 0 || cps[0].count !== 0) return false;
+  for (let i = 0; i < cps.length; i++) {
+    const c = cps[i];
+    if (!Number.isFinite(c.timeMs) || !Number.isFinite(c.count)) return false;
+    if (c.timeMs < 0 || c.count < 0 || c.count > totalLines) return false;
+    if (!Number.isInteger(c.count)) return false;
+    if (i > 0 && c.timeMs <= cps[i - 1].timeMs) return false;
+    if (i > 0 && c.count < cps[i - 1].count) return false;
+    if (i < cps.length - 1 && totalLines > 0 && c.count >= totalLines) return false;
+  }
+  return cps[cps.length - 1].count === totalLines;
+}
+function validateCheckpoints(cps, totalLines) {
+  return validateCandidateCheckpoints(cps, totalLines);
+}
+function isCoherentBasis(cps) {
+  if (!shapeValidCheckpoints(cps) || cps.length < 2) return false;
+  if (cps[0].timeMs !== 0 || cps[0].count !== 0) return false;
+  for (let i = 0; i < cps.length; i++) {
+    const c = cps[i];
+    if (!Number.isFinite(c.timeMs) || !Number.isFinite(c.count)) return false;
+    if (c.timeMs < 0 || c.count < 0 || !Number.isInteger(c.count)) return false;
+    if (i > 0 && (c.timeMs <= cps[i - 1].timeMs || c.count < cps[i - 1].count)) return false;
+  }
+  return cps[cps.length - 1].count > 0;
+}
+
+function deriveFromBasis(basis, totalLines) {
+  const specTotal = basis[basis.length - 1].count;
+  return basis.map((c, i) => {
+    let count;
+    if (i === 0) count = 0;
+    else if (i === basis.length - 1) count = totalLines;
+    else count = Math.min(totalLines - 1, Math.round((c.count / specTotal) * totalLines));
+    return { timeMs: c.timeMs, count };
+  });
+}
+function normalizeCheckpoints(basis, totalLines) {
+  return deriveFromBasis(basis, totalLines);
+}
+
+function resolveSchedule(candidate, totalLines, trustedBasis, durationMs, captionAtMs, defaultDurationMs, defaultCaptionAtMs) {
+  const warnings = [];
+  let table = null, kind = "";
+  const finalTime = trustedBasis[trustedBasis.length - 1].timeMs;
+  if (!Number.isInteger(totalLines) || totalLines < 0) totalLines = 0;
+  if (totalLines === 0) {
+    table = [{ timeMs: 0, count: 0 }, { timeMs: finalTime, count: 0 }]; kind = "empty";
+    warnings.push("line list is empty; the effective schedule carries no lines");
+  } else if (validateCandidateCheckpoints(candidate, totalLines)) {
+    table = candidate.map(c => ({ timeMs: c.timeMs, count: c.count })); kind = "candidate";
+  } else {
+    const basis = isCoherentBasis(candidate) ? candidate : trustedBasis;
+    const derived = deriveFromBasis(basis, totalLines);
+    if (validateDerivedCheckpoints(derived, totalLines)) {
+      table = derived; kind = basis === candidate ? "derived-candidate" : "derived-trusted";
+      warnings.push("checkpoints failed validation; a count-derived schedule was produced and re-validated");
+    } else if (validateCandidateCheckpoints(trustedBasis, totalLines)) {
+      table = trustedBasis.map(c => ({ timeMs: c.timeMs, count: c.count })); kind = "trusted";
+      warnings.push("checkpoints rejected; the validated default schedule was restored");
+    } else {
+      table = [{ timeMs: 0, count: 0 }, { timeMs: finalTime, count: totalLines }];
+      kind = "fallback";
+      warnings.push("checkpoints rejected; a two-anchor fallback schedule was produced");
+    }
+  }
+  let dur = durationMs, cap = captionAtMs;
+  if (!Number.isFinite(dur) || dur <= 0) { dur = defaultDurationMs; warnings.push("duration rejected: not a positive finite value; the default duration was restored"); }
+  if (!Number.isFinite(cap)) { cap = defaultCaptionAtMs; warnings.push("caption point rejected: not a finite value; the default caption point was restored"); }
+  if (table[table.length - 1].timeMs > dur) {
+    table = validateCandidateCheckpoints(trustedBasis, totalLines)
+      ? trustedBasis.map(c => ({ timeMs: c.timeMs, count: c.count }))
+      : deriveFromBasis(trustedBasis, totalLines);
+    kind = "default-restored";
+    warnings.push("schedule rejected: its final anchor exceeds the total duration; the default schedule was restored");
+    if (table[table.length - 1].timeMs > dur) {
+      dur = defaultDurationMs;
+      warnings.push("duration rejected: shorter than the default schedule; the default duration was restored");
+    }
+  }
+  if (cap < 0 || cap > dur) { cap = Math.min(Math.max(0, cap), dur); warnings.push("caption point aligned inside the total duration"); }
+  return { table, durationMs: dur, captionAtMs: cap, warnings, kind };
+}
+
+function lineTimeMs(index, checkpoints) {
+  for (let s = 0; s < checkpoints.length - 1; s++) {
+    const a = checkpoints[s], b = checkpoints[s + 1];
+    if (index < b.count) {
+      const span = b.count - a.count, dt = b.timeMs - a.timeMs;
+      if (span <= 0) continue;
+      return a.timeMs + (index - a.count + 1) * (dt / span);
+    }
+  }
+  return Infinity;
+}
+function countAtMs(t, checkpoints) {
+  const total = checkpoints[checkpoints.length - 1].count;
+  let c = 0;
+  for (let i = 0; i < total; i++) { if (lineTimeMs(i, checkpoints) <= t) c = i + 1; else break; }
+  return c;
+}
+function pulseScaleAt(t, checkpoints, pulseScale, pulseMs) {
+  if (pulseScale === 1) return 1;
+  const shown = countAtMs(t, checkpoints);
+  if (shown === 0) return 1;
+  const lastReveal = lineTimeMs(shown - 1, checkpoints);
+  const age = t - lastReveal;
+  if (age < 0 || age >= pulseMs) return 1;
+  return 1 + (pulseScale - 1) * (1 - age / pulseMs);
+}
+function deriveLayout(stageW, stageH, cfg) {
+  const listFont = Math.max(cfg.type.minFontPx, cfg.type.listFontRatio * stageH);
+  const promptFont = Math.max(cfg.type.minFontPx, cfg.type.promptFontRatio * stageH);
+  const captionFont = Math.max(cfg.type.minFontPx, cfg.type.captionFontRatio * stageH);
+  const labelFont = Math.max(cfg.type.minFontPx, cfg.type.labelFontRatio * stageH);
+  const numeralFont = cfg.numeralSizeRatio * stageH;
+  const rowH = listFont * cfg.type.lineHeightRatio;
+  const windowH = stageH * (cfg.layout.listBottomPct - cfg.layout.listTopPct) / 100;
+  const windowW = stageW * cfg.layout.listWidthPct / 100;
+  const numeralColW = stageW * cfg.layout.numeralWidthPct / 100;
+  const effectiveVisible = Math.max(1, Math.min(cfg.visibleLines, Math.floor(windowH / rowH)));
+  return { listFont, promptFont, captionFont, labelFont, numeralFont, rowH, windowH, windowW, numeralColW, effectiveVisible };
+}
+function lineNeedPx(text, fontPx) {
+  return (text.length + 1) * 0.6 * fontPx + 0.45 * fontPx;
+}
+// PURE-END
+
+/* ================= WARNINGS + OVERRIDES ================= */
+const TRUSTED_BASIS = CONFIG.checkpoints.map(c => ({ timeMs: c.timeMs, count: c.count }));
+const DEFAULT_DURATION_MS = CONFIG.totalDurationMs;
+const DEFAULT_CAPTION_MS = CONFIG.captionAtMs;
+const WARNINGS = [];
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("color")) { const v = q.get("color"); if (isValidColor(v)) CONFIG.numeralColor = v; else WARNINGS.push("color override rejected: not a hex color"); }
+  if (q.has("caption")) CONFIG.captionText = q.get("caption");
+  if (q.has("lines")) { const parts = q.get("lines").split("|").filter(s => s.length > 0); if (parts.length > 0) CONFIG.lines = parts; else WARNINGS.push("lines override rejected: no entries"); }
+  if (q.has("speed")) { const v = parseFloat(q.get("speed")); if (Number.isFinite(v) && v > 0 && v <= 10) CONFIG.speed = v; else WARNINGS.push("speed override rejected: outside (0, 10]"); }
+  if (q.has("checkpoint2")) { const v = parseInt(q.get("checkpoint2"), 10); if (Number.isInteger(v) && v > CONFIG.checkpoints[0].timeMs && v < CONFIG.checkpoints[2].timeMs) CONFIG.checkpoints[1].timeMs = v; else WARNINGS.push("checkpoint2 override rejected: outside the neighbouring checkpoint times"); }
+})();
+if (CONFIG.finalCount !== CONFIG.lines.length) { WARNINGS.push("finalCount aligned to lines.length"); CONFIG.finalCount = CONFIG.lines.length; }
+const resolved = resolveSchedule(CONFIG.checkpoints, CONFIG.lines.length, TRUSTED_BASIS, CONFIG.totalDurationMs, CONFIG.captionAtMs, DEFAULT_DURATION_MS, DEFAULT_CAPTION_MS);
+WARNINGS.push(...resolved.warnings);
+CONFIG.totalDurationMs = resolved.durationMs;
+CONFIG.captionAtMs = resolved.captionAtMs;
+let effCheckpoints = resolved.table;
+
+/* ================= BUILD ================= */
+const stage = document.getElementById("stage");
+stage.style.background = CONFIG.palette.bg;
+stage.style.fontFamily = CONFIG.fonts.mono;
+const promptEl = document.getElementById("prompt");
+promptEl.style.color = CONFIG.palette.prompt;
+promptEl.style.top = CONFIG.layout.promptTopPct + "%";
+promptEl.style.left = CONFIG.layout.promptLeftPct + "%";
+const chevronEl = document.getElementById("promptChevron");
+chevronEl.textContent = CONFIG.type.chevron;
+chevronEl.style.marginRight = CONFIG.type.chevronGapEm + "em";
+chevronEl.style.opacity = ".85";
+document.getElementById("promptText").textContent = CONFIG.directoryCommand;
+const listWrap = document.getElementById("listWrap");
+listWrap.style.top = CONFIG.layout.listTopPct + "%";
+listWrap.style.left = CONFIG.layout.listLeftPct + "%";
+listWrap.style.width = CONFIG.layout.listWidthPct + "%";
+listWrap.style.bottom = (100 - CONFIG.layout.listBottomPct) + "%";
+const listEl = document.getElementById("list");
+const numeralCol = document.getElementById("numeralCol");
+numeralCol.style.width = CONFIG.layout.numeralWidthPct + "%";
+const numeralEl = document.getElementById("numeral");
+numeralEl.style.color = CONFIG.numeralColor;
+numeralEl.style.fontFamily = CONFIG.fonts.numeral;
+const labelEl = document.getElementById("numeralLabel");
+labelEl.textContent = CONFIG.numeralLabel;
+labelEl.style.color = CONFIG.palette.text;
+const captionEl = document.getElementById("caption");
+captionEl.style.color = CONFIG.palette.caption;
+captionEl.style.bottom = CONFIG.layout.captionBottomPct + "%";
+(function buildCaption(){
+  const text = CONFIG.captionText, accent = CONFIG.captionAccentChar;
+  const idx = accent ? text.indexOf(accent) : -1;
+  if (idx < 0) { captionEl.appendChild(document.createTextNode(text)); return; }
+  if (idx > 0) captionEl.appendChild(document.createTextNode(text.slice(0, idx)));
+  const span = document.createElement("span");
+  span.style.color = CONFIG.palette.zero;
+  span.style.fontSize = CONFIG.type.captionAccentScale + "em";
+  span.appendChild(document.createTextNode(text.slice(idx, idx + accent.length)));
+  captionEl.appendChild(span);
+  if (idx + accent.length < text.length) captionEl.appendChild(document.createTextNode(text.slice(idx + accent.length)));
+})();
+const bar = document.getElementById("controlBar");
+bar.style.gap = CONFIG.controls.barGapPx + "px";
+bar.style.marginTop = CONFIG.controls.barMarginTopPx + "px";
+bar.style.fontFamily = CONFIG.fonts.ui;
+[document.getElementById("btnPlay"), document.getElementById("btnRestart")].forEach(b => {
+  b.style.font = "600 " + CONFIG.controls.buttonFontSizePx + "px/1 " + CONFIG.fonts.ui;
+  b.style.padding = CONFIG.controls.buttonPadding;
+  b.style.borderRadius = CONFIG.controls.buttonRadiusPx + "px";
+  b.style.border = CONFIG.controls.buttonBorder;
+  b.style.background = CONFIG.controls.buttonBg;
+  b.style.color = CONFIG.controls.buttonColor;
+  b.style.minHeight = CONFIG.controls.buttonMinHeightPx + "px";
+});
+document.getElementById("btnRestart").textContent = CONFIG.controls.restartLabel;
+const lineEls = CONFIG.lines.map(txt => {
+  const d = document.createElement("div");
+  d.className = "line"; d.style.color = CONFIG.palette.text; d.style.visibility = "hidden";
+  d.style.gap = CONFIG.type.rowGapEm + "em";
+  const c = document.createElement("span"); c.className = "check"; c.textContent = CONFIG.type.checkGlyph; c.style.color = CONFIG.palette.check;
+  const s = document.createElement("span"); s.textContent = txt;
+  d.appendChild(c); d.appendChild(s); listEl.appendChild(d); return d;
+});
+
+/* ================= LAYOUT ================= */
+let LAY = null;
+function applyLayout() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  LAY = deriveLayout(w, h, CONFIG);
+  promptEl.style.fontSize = LAY.promptFont + "px";
+  captionEl.style.fontSize = LAY.captionFont + "px";
+  numeralEl.style.fontSize = LAY.numeralFont + "px";
+  labelEl.style.fontSize = LAY.labelFont + "px";
+  labelEl.style.marginTop = (0.11 * LAY.numeralFont) + "px";
+  lineEls.forEach(el => { el.style.fontSize = LAY.listFont + "px"; el.style.height = LAY.rowH + "px"; el.style.lineHeight = LAY.rowH + "px"; });
+}
+applyLayout();
+window.addEventListener("resize", applyLayout);
+
+/* ================= CLOCK ================= */
+let playing = true, baseElapsed = 0, startStamp = performance.now(), rafId = null, loopStarts = 0;
+function elapsedMs() { return playing ? baseElapsed + (performance.now() - startStamp) * CONFIG.speed : baseElapsed; }
+function renderAt(t) {
+  const tt = Math.min(Math.max(t, 0), CONFIG.totalDurationMs);
+  const shown = countAtMs(tt, effCheckpoints);
+  const vis = LAY ? LAY.effectiveVisible : CONFIG.visibleLines;
+  const firstVisible = Math.max(0, shown - vis);
+  lineEls.forEach((el, i) => {
+    const on = i < shown;
+    el.style.display = i < firstVisible ? "none" : "flex";
+    el.style.visibility = on ? "visible" : "hidden";
+  });
+  numeralEl.textContent = shown;
+  numeralEl.style.transform = "scale(" + pulseScaleAt(tt, effCheckpoints, CONFIG.pulseScale, CONFIG.pulseMs).toFixed(4) + ")";
+  captionEl.style.opacity = tt >= CONFIG.captionAtMs ? "1" : "0";
+}
+function tick() {
+  renderAt(elapsedMs());
+  if (playing) { rafId = requestAnimationFrame(tick); } else { rafId = null; }
+}
+function ensureLoop() { if (rafId === null && playing) { loopStarts++; rafId = requestAnimationFrame(tick); } }
+function play() { if (!playing) { playing = true; startStamp = performance.now(); ensureLoop(); } document.getElementById("btnPlay").textContent = CONFIG.controls.pauseLabel; }
+function pause() { if (playing) { baseElapsed = elapsedMs(); playing = false; } document.getElementById("btnPlay").textContent = CONFIG.controls.playLabel; }
+function restart() { baseElapsed = 0; playing = true; startStamp = performance.now(); ensureLoop(); renderAt(0); document.getElementById("btnPlay").textContent = CONFIG.controls.pauseLabel; }
+function seek(ms) { const v = Number.isFinite(ms) ? Math.min(Math.max(ms, 0), CONFIG.totalDurationMs) : 0; baseElapsed = v; if (playing) startStamp = performance.now(); renderAt(v); ensureLoop(); }
+document.getElementById("btnPlay").textContent = CONFIG.controls.pauseLabel;
+document.getElementById("btnPlay").addEventListener("click", () => playing ? pause() : play());
+document.getElementById("btnRestart").addEventListener("click", restart);
+ensureLoop();
+window.T02 = { play, pause, restart, seek, elapsedMs, warnings: WARNINGS, checkpoints: effCheckpoints, debug: { loopStarts: () => loopStarts, activeLoop: () => rafId !== null, layout: () => LAY } };
+window.addEventListener("message", e => {
+  const m = e.data || {};
+  if (m.cmd === "play") play(); else if (m.cmd === "pause") pause();
+  else if (m.cmd === "restart") restart(); else if (m.cmd === "seek") seek(m.ms || 0);
+});
+</script>
+</body>
+</html>

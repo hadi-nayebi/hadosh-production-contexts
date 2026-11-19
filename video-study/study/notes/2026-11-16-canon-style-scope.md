@@ -1,0 +1,36 @@
+# Study note — 2026-11-16 — Topic 4: CANON-STYLE CRAFT (second rotation, the scope audit)
+
+Rotation: second rotation, in order — Topic 1 (2026-11-13), Topic 2 (2026-11-14), Topic 3 (2026-11-15), Topic 4 today; named by the 2026-11-15 Condense. No pull-forward. STEERING checked — the standing ACTIVE delivery-gate restoration freeze governs stamp-gated deliveries only; this session delivers, stamps, pushes and renders nothing.
+
+## Replan
+Last cycle taught: a scope cure's own rows can overreach the form they cure (priced again today by this session's Codex-plan-review). This cycle does differently: it audits the 2026-11-01 conversion (canon §7 + decision-model §10D) against everything that postdates it — the two lane sections (§10E 2026-11-11, §10F 2026-11-12), the Assembler Product Spec (2026-11-12) and the three sibling scope cures (§10C, §9B, §5A) — under the Second-rotation leg: no re-study, no re-derivation.
+
+## Sources (trust order, all read on final bytes this session unless named)
+1. Own records first: `files/decision-model.md` §10D in full (preserved pre-edit at the run's `pre-edit-10D-passage.txt`, 4,758 chars; file 103,942 chars at open) · §10E.7/§10E.8, §10F.6/§10F.7 rows · §10C.9, §9B.11, §5A.10 precedent rows · `files/canon.md` §7 in full (preserved pre-edit at `pre-edit-canon7-passage.txt`, 7,421 chars) · the Assembler Product Spec (`hidden_files/language-challenge/ASSEMBLER-PRODUCT-SPEC.md`, 3,135 chars, read in full in the Observe cure after the observe-exit gate's STALE-CARRY return) · CURRICULUM Topic 4 + the 2026-11-01 LEDGER entry + the 2026-11-01 session note.
+2. Point-of-work joins, counted this session: scenes+words visual-craft skill cites §10D ×2 and canon ×9 and loads §10D as a whole section · visual-review skill angle 5 cites canon §7 ×4, §10D ×0 · QC "10D" ×0 (canon ×9) · custom-skills listing inspected in full — no journey/diorama planning skill exists; the only lane hit across SKILL.md files is dashboard-ux (reviewer/UX slot).
+3. Seat library, consumed not re-digested: `hidden_files/study/style-library/TECHNIQUES.md` packet key + register head (89,549 chars; "10D" ×0, "canon" ×0) — no style-derivation technique identified from the catalogue; packet-level absence unconfirmed, nothing rests on it.
+4. Independent reviews fired in-session: Codex-observe (OBSERVE-GAPPED, 6 findings, all disposed in the Observe cure) · jev-observe-exit (RETURN-TO-OBSERVE/STALE-CARRY → cured → ADVANCE) · Codex-plan-review (PLAN-DEFECTIVE, 8 findings, all disposed in the Plan revision) · jev-plan-exit (EXECUTE). Receipts in `runs/2026-11-16-0821-session/`.
+
+## Findings
+- §10D carried its scope only in its header line ("scenes+words layer") — no scope paragraph, no row-level boundary, and it never named §10E, §10F, containers or the assembler (counts on final bytes). Codex-observe F1 bounded the claim: the header does limit the section; the defect is the missing row-level boundary, not a universal grant.
+- Two postdating lane sections claim §10D's palette slots with their own declarations (§10E.8 journey palette, §10F.6 diorama palette, each naming style-mixing a defect) — unacknowledged inside §10D.
+- One §10D row already travels cross-lane by citation: §10D.6 (deterministic text) is cited by both §10E.7 and §10F.7 — while §10D stated neither the travel nor its limit (the travel carries the text rule only; it authorizes no caption layer — §10E.7/§10F.7's own reconciliation with the 2026-11-10 no-captions law).
+- In an assembler piece, §10D's units (piece, scene/plate) left a transition or diagram container's imagery with no named style unit — the §10C/§9B/§5A scope defect in its style form. Nothing in the assembler record contradicts §10D inside a single scene.
+- Canon §7 already scoped the lanes from their side (the two lane references); its four "container" hits are all the branded wrapper (Container Spec), never an assembler container; "assembler" ×0.
+
+## Conversion
+See LEDGER 2026-11-16: `files/decision-model.md` §10D gained a **scope paragraph** (row-by-row unit map: 10D.1/10D.2/10D.5 scenes+words only · 10D.6 travels cross-lane, text rule only, no captions · 10D.3 scenes+words derivation · 10D.4 scenes+words, no cross-lane claim · 10D.7/10D.8 appearance-scoped · 10D.9 as written, extended per container by 10D.10 in scenes+words assembler pieces; lane pieces audited under §10E.10/§10F.10; prescriptive-addition label) + **row 10D.10** (inter-container style for scenes+words assembler pieces; pointer for lane forms) + **row 10D.11** (lane derivation record — the applicability map); §10E and §10F headers each gained a one-line cross-reference to §10D.11; `files/canon.md` §7 gained a **scope cross-reference** paragraph. The plan's own first draft of these rows was attacked by Codex-plan-review and cured before landing (10D.10's cross-form overreach split · 10D.9's text left exactly as written · 10D.11's citation exclusivity replaced by the applicability map). Final sizes (measured at Verify): decision-model 103,942 → 107,640 chars; canon → 24,044 chars, with the §7 diff against the preserved pre-edit passage additions-only (0 removed lines), as is the §10D diff.
+
+## R8 exercise (synthetic planning exercise — rule usability, not production performance)
+Fixtures from Plan revision 2, run against the landed rows:
+- (a) Scenes+words assembler piece — opening container (one plate, cortex figure) → transition container (two plates) → diagram container (three plates) → ending container (no imagery). Under 10D.10: one verbatim style block for the piece; colour roles per plate in all three imagery containers (plates are the 10D.2 unit wherever they sit); the drift report names the three imagery-bearing containers with per-scene comparisons preserved inside them, names the ending container as carrying no imagery, and the piece passes 10D.9 only if all three pass. Every expected output is produced by a named row. PASS.
+- (b) Journey piece planned from §10E — applicability record under 10D.11: APPLIED 10D.6 (labels composited deterministically); NOT APPLIED with lane reason 10D.1/10D.2/10D.5; governing section §10E + canon §7 second-lane reference named; the planner meets the §10D.11 cross-reference in §10E's own header. PASS.
+- (c) Diorama piece proposing a generated in-image label + a caption pill — the label fails 10D.6 as applied via §10F.7/10D.11 (text composited instead); the pill fails the scope paragraph's no-captions line. PASS.
+
+## R9 counterexamples (each fails a named row or is scoped by one)
+1. Chalk style block copied into a journey piece's plan — fails 10D.11 (applied where recorded NOT APPLIED).
+2. A diorama plan denying 10D.6 because "§10D is scenes+words" — fails the scope paragraph's travel line and §10F.7's citation.
+3. A transition container's plates exempted from the drift audit as "not scenes" — fails 10D.10 (a plate is the unit wherever it sits).
+4. A container rewording the style block for its own plates — fails 10D.10 with 10D.1.
+5. A caption layer in a lane piece justified by 10D.6's travel — fails the scope paragraph (the travel carries the text rule only).
+6. A faced cortex figure inside a diagram container, claimed outside 10D.7 because the section is piece-scoped — fails 10D.7's appearance scope in the unit map.

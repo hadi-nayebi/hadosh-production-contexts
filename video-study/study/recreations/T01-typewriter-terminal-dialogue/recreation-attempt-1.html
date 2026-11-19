@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T01 — Typewriter Terminal Dialogue (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#000}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden;box-sizing:border-box}
+  #chrome{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;gap:8px;padding:0 12px;box-sizing:border-box;z-index:3}
+  .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto}
+  #chromeTitle{margin-left:8px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #status{position:absolute;top:34px;left:0;right:0;height:26px;display:flex;justify-content:space-between;align-items:center;padding:0 16px;box-sizing:border-box;font-size:13px;z-index:3}
+  #viewport{position:absolute;left:0;right:0;top:60px;bottom:0;overflow:hidden}
+  #log{position:absolute;left:0;right:0;top:0;padding:26px 8% 0 8%;box-sizing:border-box;will-change:transform}
+  #banner{border:2px solid;border-radius:12px;padding:16px 22px;margin:0 auto 64px auto;max-width:640px;box-sizing:border-box}
+  #bannerTitle{font-weight:700;font-size:1.02em;min-height:1.25em}
+  #bannerSub{font-size:.62em;margin-top:6px;min-height:1.2em}
+  .line{display:flex;align-items:baseline;gap:14px;line-height:1.5;margin:0 0 10px 0;overflow-wrap:anywhere}
+  .prompt{flex:0 0 auto;font-weight:700}
+  .txt{white-space:pre-wrap}
+  .cursor{display:inline-block;width:.62em;height:1.08em;vertical-align:-0.14em;margin-left:2px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="chrome"><span class="dot" id="dotR"></span><span class="dot" id="dotY"></span><span class="dot" id="dotG"></span><span id="chromeTitle"></span></div>
+  <div id="status"><span id="statusLeft"></span><span id="statusRight"></span></div>
+  <div id="viewport"><div id="log">
+    <div id="banner"><div id="bannerTitle"></div><div id="bannerSub"></div></div>
+    <div id="lines"></div>
+  </div></div>
+</div>
+<script>
+"use strict";
+/* ================================================================
+   T01 — TYPEWRITER TERMINAL DIALOGUE
+   Recreation of the technique catalogued in Video Study packet P1
+   ("Look What I Can Do", 0:00-0:14): dialogue types char-by-char
+   with a block cursor inside a fake terminal; lines accumulate
+   and the log scrolls (the banner scrolls away).
+   PARAMETERIZED, NOT TRACED: every content / timing / palette /
+   chrome value is read from CONFIG below. Swap the dialogue and
+   the technique still works — that is the swap test.
+   URL overrides: ?lines=user:Hello|ai:Hi there&charMs=30
+                  &linePauseMs=200&bg=%23000000&cursor=%23ff0000
+   ================================================================ */
+const CONFIG = {
+  lines: [
+    { speaker: "user", text: "Hey Claude?" },
+    { speaker: "ai",   text: "Yes?" },
+    { speaker: "user", text: "Can you help me write a song?" },
+    { speaker: "ai",   text: "Of course." },
+    { speaker: "user", text: "Can you make it catchy?" },
+    { speaker: "ai",   text: "Absolutely." },
+    { speaker: "user", text: "Can you make it famous?" },
+    { speaker: "ai",   text: "Watch me." }
+  ],
+  bannerTitle: "Welcome to the studio",
+  bannerGlyph: "\u2733 ",
+  bannerSub: "cwd: ~/look-what-i-can-do \u00B7 model: claude-opus-5.5",
+  bannerCharMs: 28,
+  charMs: 55,
+  linePauseMs: 380,
+  startDelayMs: 250,
+  endHoldMs: 1800,
+  palette: {
+    bg: "#070807", userPrompt: "#4ade80", userText: "#d9d9d6",
+    aiPrompt: "#e8930c", aiText: "#f0a832",
+    bannerBorder: "#a86f14", bannerTitle: "#f2f2ee", bannerSub: "#8f9296",
+    cursor: "#57d977", statusText: "#6d7276", chromeBg: "#101210",
+    dotRed: "#e5534b", dotYellow: "#d9a514", dotGreen: "#57d977"
+  },
+  chrome: {
+    title: "adita@studio: ~/look-what-i-can-do",
+    statusLeft: "adita@studio  ~/look-what-i-can-do",
+    statusRight: "claude \u00B7 intro"
+  },
+  fontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+  fontSizePx: 30,
+  visibleLines: 7,
+  loop: false
+};
+/* URL overrides (used by the swap test) */
+(function applyUrlOverrides(){
+  if (typeof location === "undefined") return;
+  const q = new URLSearchParams(location.search);
+  if (q.has("lines")) CONFIG.lines = q.get("lines").split("|").map(function(s){
+    const i = s.indexOf(":"); return { speaker: s.slice(0, i) || "user", text: s.slice(i + 1) };
+  });
+  for (const k of ["charMs","linePauseMs","bannerCharMs","startDelayMs","endHoldMs","fontSizePx","visibleLines"])
+    if (q.has(k)) CONFIG[k] = parseFloat(q.get(k));
+  if (q.has("bg")) CONFIG.palette.bg = q.get("bg");
+  if (q.has("cursor")) CONFIG.palette.cursor = q.get("cursor");
+  if (q.has("aiText")) CONFIG.palette.aiText = q.get("aiText");
+  if (q.has("userPrompt")) CONFIG.palette.userPrompt = q.get("userPrompt");
+})();
+
+/* ---- Pure timeline logic (node-testable; no DOM below this line) ---- */
+function buildTimeline(cfg){
+  const bannerText = cfg.bannerGlyph + cfg.bannerTitle;
+  const bannerStart = cfg.startDelayMs;
+  const bannerEnd = bannerStart + bannerText.length * cfg.bannerCharMs;
+  const subStart = bannerEnd + 120;
+  const subEnd = subStart + cfg.bannerSub.length * cfg.bannerCharMs;
+  let t = subEnd + cfg.linePauseMs;
+  const lines = cfg.lines.map(function(L){
+    const start = t;
+    const end = start + L.text.length * cfg.charMs;
+    t = end + cfg.linePauseMs;
+    return { speaker: L.speaker, text: L.text, start: start, end: end };
+  });
+  const contentEnd = lines.length ? lines[lines.length - 1].end : subEnd;
+  return { bannerText: bannerText, bannerStart: bannerStart, bannerEnd: bannerEnd,
+           subStart: subStart, subEnd: subEnd, lines: lines,
+           durationMs: contentEnd + cfg.endHoldMs };
+}
+function stateAt(cfg, tl, t){
+  const n = function(a, b){ return Math.max(0, Math.min(a, b)); };
+  const bannerShown = t < tl.bannerStart ? "" :
+    tl.bannerText.slice(0, Math.floor((t - tl.bannerStart) / cfg.bannerCharMs));
+  const subShown = t < tl.subStart ? "" :
+    cfg.bannerSub.slice(0, Math.floor((t - tl.subStart) / cfg.bannerCharMs));
+  let cursorTarget = "banner";
+  if (t >= tl.subStart) cursorTarget = "sub";
+  const lines = tl.lines.map(function(L, i){
+    let shown = "";
+    if (t >= L.end) shown = L.text;
+    else if (t >= L.start) shown = L.text.slice(0, Math.floor((t - L.start) / cfg.charMs));
+    if (t >= L.start && t < L.end + cfg.linePauseMs) cursorTarget = i;
+    return { speaker: L.speaker, shown: shown, started: t >= L.start };
+  });
+  /* scroll: one unit per accumulated line beyond capacity; banner counts as 3 units */
+  let units = 3;
+  lines.forEach(function(L){ if (L.started) units += 1; });
+  const shiftUnits = Math.max(0, units - cfg.visibleLines);
+  return { bannerShown: bannerShown, subShown: subShown, lines: lines,
+           cursorTarget: cursorTarget, shiftUnits: shiftUnits,
+           done: t >= tl.durationMs - cfg.endHoldMs };
+}
+if (typeof window !== "undefined") window.T01 = { CONFIG: CONFIG, buildTimeline: buildTimeline, stateAt: stateAt };
+
+/* ---- DOM wiring ---- */
+if (typeof document !== "undefined" && document.getElementById) (function(){
+  const cfg = CONFIG, tl = buildTimeline(cfg);
+  const $ = function(id){ return document.getElementById(id); };
+  const stage = $("stage"), log = $("log"), linesEl = $("lines");
+  stage.style.background = cfg.palette.bg;
+  stage.style.fontFamily = cfg.fontFamily;
+  stage.style.fontSize = cfg.fontSizePx + "px";
+  $("chrome").style.background = cfg.palette.chromeBg;
+  $("chrome").style.color = cfg.palette.statusText;
+  $("chromeTitle").textContent = cfg.chrome.title;
+  $("dotR").style.background = cfg.palette.dotRed;
+  $("dotY").style.background = cfg.palette.dotYellow;
+  $("dotG").style.background = cfg.palette.dotGreen;
+  $("status").style.color = cfg.palette.statusText;
+  $("statusLeft").textContent = cfg.chrome.statusLeft;
+  const banner = $("banner");
+  banner.style.borderColor = cfg.palette.bannerBorder;
+  $("bannerTitle").style.color = cfg.palette.bannerTitle;
+  $("bannerSub").style.color = cfg.palette.bannerSub;
+  const lineEls = cfg.lines.map(function(L){
+    const row = document.createElement("div"); row.className = "line";
+    const p = document.createElement("span"); p.className = "prompt";
+    const tx = document.createElement("span"); tx.className = "txt";
+    if (L.speaker === "ai") { p.textContent = "\u25CF"; p.style.color = cfg.palette.aiPrompt; tx.style.color = cfg.palette.aiText; }
+    else { p.textContent = "\u276D"; p.style.color = cfg.palette.userPrompt; tx.style.color = cfg.palette.userText; }
+    row.appendChild(p); row.appendChild(tx); linesEl.appendChild(row);
+    return { row: row, tx: tx };
+  });
+  const cursor = document.createElement("span");
+  cursor.className = "cursor"; cursor.style.background = cfg.palette.cursor;
+  function render(t){
+    const st = stateAt(cfg, tl, t);
+    $("bannerTitle").textContent = st.bannerShown;
+    $("bannerSub").textContent = st.subShown;
+    $("statusRight").textContent = cfg.chrome.statusRight + " \u00B7 " + (t / 1000).toFixed(1) + "s";
+    st.lines.forEach(function(L, i){
+      lineEls[i].row.style.display = L.started ? "flex" : "none";
+      lineEls[i].tx.textContent = L.shown;
+    });
+    if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+    const blink = (t % 1060) < 700 || !st.done;
+    cursor.style.visibility = blink ? "visible" : "hidden";
+    if (st.cursorTarget === "banner") $("bannerTitle").appendChild(cursor);
+    else if (st.cursorTarget === "sub") $("bannerSub").appendChild(cursor);
+    else lineEls[st.cursorTarget].tx.appendChild(cursor);
+    const lineUnitPx = cfg.fontSizePx * 1.5 + 10;
+    log.style.transform = "translateY(" + (-st.shiftUnits * lineUnitPx) + "px)";
+  }
+  let playing = false, elapsed = 0, lastTs = null, raf = null;
+  function frame(ts){
+    if (!playing) return;
+    if (lastTs === null) lastTs = ts;
+    elapsed += ts - lastTs; lastTs = ts;
+    if (elapsed >= tl.durationMs) {
+      if (cfg.loop) elapsed = 0; else { elapsed = tl.durationMs; playing = false; }
+    }
+    render(elapsed);
+    if (playing) raf = requestAnimationFrame(frame);
+  }
+  window.REC_API = {
+    play: function(){ if (!playing) { playing = true; lastTs = null; raf = requestAnimationFrame(frame); } },
+    pause: function(){ playing = false; if (raf) cancelAnimationFrame(raf); },
+    restart: function(){ elapsed = 0; render(0); },
+    seekTo: function(ms){ elapsed = Math.max(0, Math.min(ms, tl.durationMs)); render(elapsed); },
+    getElapsed: function(){ return elapsed; },
+    durationMs: tl.durationMs
+  };
+  render(0);
+  window.REC_API.play();
+})();
+</script>
+</body>
+</html>
