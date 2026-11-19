@@ -1,0 +1,17 @@
+# T124 — config-census leg (guard-config-census.md v3.1) · attempt 1 · final build
+
+## All-literal scan (outside the CONFIG block)
+- Hex colors outside CONFIG: `#070a1a` (page chrome behind the stage), `#fff` / `#a00` (error banner chrome) — **structural/chrome**: none is inside the stage; the stage field is CONFIG `palette.field`.
+- Font stack in CSS: none (font applied from CONFIG `type.font` at build). The `#err` rule's `12px monospace` is error-banner chrome — structural.
+- Grid hairline `"1px"` in the backgroundImage gradient strings — the minimum renderable hairline unit for the CONFIG-driven grid (cell size and color are CONFIG `grid.cellPx` / `palette.grid`) — structural.
+- Numeric constants in logic: CHAR_W advance fractions (upper 0.68 · lower 0.52 · space 0.278 · digit 0.556 · punct 0.30) and ink ratios 0.716 / 0.75 — the fit harness's measurement model, structural (they measure the subject; they do not shape it). Clamp bounds 0/1, array indices, modulo arithmetic — mathematical identities, structural. Weight factor 1.06 in the measurement model — structural (measurement only).
+- Durations outside CONFIG: none — the schedule reads `headlineAtMs` / `atMs[]` / `strikeDelayMs` / `strikeMs` / `flipAtMs` / `enterMs` / `flipFadeMs` / `cycleMs` only; no 14000 literal in logic (cycleMs is a CONFIG key).
+- Geometry outside CONFIG: none — every position/size in build() derives from `card` / `strike` / `layout` / `type` values via layoutModel.
+
+## Key → application-site resolution (all resolved)
+headline → renderSpans (initial headline) · flipHeadline → renderSpans (at flip, in applyFrame) · tasks → build() card construction + layoutModel ink measurement + stateAt card states · atMs[] → stateAt per-card schedule (array-member keys resolved individually) · headlineAtMs → stateAt headline window · strikeDelayMs → stateAt strikeStart (= atMs + strikeDelayMs) · strikeMs → stateAt strike progress · flipAtMs → stateAt flipped flag + listFade start · cycleMs → stateAt modulo · enterMs → stateAt entering windows (headline + cards) · flipFadeMs → stateAt listFade · card.w/h → layoutModel + build() card box · card.padX → layoutModel textX/strikeX + wrap offset · card.gap → layoutModel card y positions · card.radius → card borderRadius · strike.thicknessPx → layoutModel strikeH + strike div height/borderRadius · strike.overshootPx → layoutModel strikeX/strikeFullW + strike div left · strike.yFracOfLine → layoutModel strikeY + strike div top · strikeColor → strike div background (own key per §2b, separately swappable from palette.blue) · stage.w/h → layoutModel + stage size · grid.cellPx → stage backgroundSize · layout.headlineTopPx → headline top · layout.listTopPx → layoutModel card y origin · layout.enterRisePx → stateAt rise values · type.font → stage fontFamily · type.headlinePx/headlineWeight → headline styles + spansWidthPx · type.cardPx/cardWeight → card text styles + textWidthPx · type.lineHFrac → headline/card lineHeight + line-box geometry · type.chipPadX/chipRadius → chip span styles + spansWidthPx · palette.field → stage backgroundColor · palette.grid → stage backgroundImage · palette.ink → plain spans + card text color · palette.blue → blue spans (headline operative word) · palette.chipBg/chipInk → chip span colors · palette.card → card background · palette.cardEdge → card border.
+
+## CSS-variable setter check
+No CSS variables are used anywhere in the build — check vacuous, no unset-variable references.
+
+**HIT list: EMPTY.**

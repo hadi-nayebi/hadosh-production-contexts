@@ -1,0 +1,18 @@
+Verdict: **76/100** — CONFIG supports substantial card swaps, but an unused onset key and accepted overrides that break the timeline prevent reliable reuse.
+
+1. **`exhibit.atMs` promises onset control without exerting it.** In the supplied `recreation.html`, `validateOverride()` checks this key, but `stateAt()` never uses it to control visibility or phase selection. For example, `{exhibit:{atMs:1000}}` passes validation while the exhibit remains visible at t=0. **Next attempt:** implement the configured onset, or remove the key and explicitly define the exhibit as starting at zero.
+
+2. **Accepted overrides can produce invalid rendering state.** The validator accepts `map.fadeTo:1`, but `stateAt()` computes `darken = (1-mapO)/(1-cfg.map.fadeTo)`. After the exhibit exit, this becomes `0/0`, producing `NaN` and an invalid background colour in `render()`. It also accepts unequal `map.contours` and `map.contourO` lengths; DOM construction then emits undefined opacity values. **Next attempt:** handle the full-opacity endpoint safely and validate the arrays’ matching lengths.
+
+3. **Schedule validation does not preserve the advertised sequence.** `validateOverride()` orders eyebrow onset, strike onset and main onset, but omits eyebrow completion and strike completion. With defaults otherwise unchanged, `{eyebrowCharMs:200}` passes: eyebrow completion becomes **8850 ms**, calculated as `5450 + 17×200`, after the strike starts at 7600 ms. `{strikeMs:2000}` also passes, placing strike completion at **9600 ms**, after main typing starts at 9250 ms. **Next attempt:** validate completion boundaries against subsequent onsets. Also allow single-glyph main lines: currently `{mainText:"A"}` fails because main onset equals completion, despite `charsAt()` supporting that reveal.
+
+4. **The accent flag has a narrower effect than its name promises.** In main-span construction, `mainFinalCharAccent` only accents a final `"."`. Changing the card to end with `"!"` silently removes the accent despite the flag remaining true. **Next attempt:** accent the final glyph whenever enabled, or expose an explicit configurable punctuation rule.
+
+5. **Some shaping remains outside CONFIG, and fit validation is incomplete.** The stylesheet fixes centring, alignment and nowrap behaviour; SVG paths inherit an unconfigured stroke width. These are reasonable template constraints, but contradict the build record’s “every shaping value” claim. Additionally, `fitRows().mapLabel` omits configured letter spacing, and override validation checks only main/eyebrow model widths—not exhibit fit, vertical bounds or rendered font metrics. **Next attempt:** expose the intended variable controls, document fixed template rules, and validate relevant dimensions using measurements that include tracking.
+
+Atomic rejection is correctly structured for detected errors: validation modifies a clone and returns the original base on failure; `applyOverride()` records rejection. The recorded wider swap covers text, palette, width and typing speed, providing useful evidence of reuse. However, the reported “none unconsumed” census conflicts with `exhibit.atMs`, and the adversarial cases do not cover the accepted failures above.
+
+Limits: Assessment uses the complete source supplied in the payload. The local directory contained only `stderr.log`; no local recreation or harness was available to verify the binding hash, reproduce the reported checks, or inspect rendered output. Reported test totals and wider-swap results remain UNVERIFIED.
+
+SCORE: 76
+Body-write: none (read-only run)

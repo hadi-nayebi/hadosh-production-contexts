@@ -1,0 +1,16 @@
+Verdict: **82/100** — the principal title is readable at the configured 360 × 203 phone size, but the map label becomes difficult to read, and the claimed ink measurements and strike alignment remain unverified font models.
+
+1. **The title has a clear hierarchy and strong contrast.** In supplied `recreation.html`, `CONFIG.type` and `fitRows()` model the eyebrow at 270 × 11.30 px and the main line at 189.20 × 31.68 px: a 2.80:1 height hierarchy. Recalculation using `lum()` confirms white ink against the final field at **15.47:1**. The red final period reaches **4.77:1**; the strike starts against a field yielding approximately **4.62:1**. These support readability, although the eyebrow’s modeled cap height is small.
+
+2. **Every default typed state fits horizontally under the model.** `render()` hides unrevealed spans using `visibility`, preserving the full line’s layout. All modeled glyph advances are positive, so every partial state fits within the full line’s bounds: eyebrow 270/360 px; main 189.20/360 px. However, `measureText()` estimates advances rather than measuring rendered ink, and `fitRows()` does not test vertical containment. **Next attempt:** measure the actual font bounds and containers in a browser, including partial reveals, at phone size.
+
+3. **The map label becomes hard to read during the title beats.** `stateAt()` reduces the entire map layer to opacity **0.22** by 9250 ms; `render()` applies that opacity to its label too. Compositing the configured ink over the final field produces approximately **1.85:1** contrast. Its modeled cap height is only **11.52 px**. It is readable during the initial map beat, but faint during the completed card. Also, `fitRows().mapLabel` omits the configured 2 px tracking: the corrected modeled width is **263.60 px**, calculated as 217.60 + 23 × 2, still within 360 px. **Next attempt:** measure tracking correctly and give the label independent opacity sufficient for its intended reading window; keep contours faint separately.
+
+4. **Strike placement is plausible, not established.** `strikeTopPx()` puts the 2 px bar at y=89–91, centered at y=90—the midpoint of the eyebrow’s 24 px line box. It does not calculate the actual glyph ink midpoint, despite the build record’s claim. The modeled 270 px strike width likewise uses advance estimates. **Next attempt:** align the strike to measured glyph bounds and verify that the struck letters remain recognizable.
+
+5. **The exhibit text has good modeled readability.** `CONFIG.exhibit` gives a 16 px label and 15.5 px date, with modeled cap heights of **11.52** and **11.16 px**. Recomputed exhibit contrast is **11.97:1**. The label’s modeled width, **227.84 px**, fits the actual 270 px content width after padding and borders. Both small lines warrant rendered inspection because their size leaves little margin.
+
+Limits: Assessment uses the complete supplied source and independent arithmetic, not rendered pixels. Font substitution, antialiasing, actual ink bounds, and narrower-phone clipping remain unverified. No local `recreation.html` was present to verify the supplied SHA-256; the reported harness results were not rerun.
+
+SCORE: 82
+Body-write: none (read-only run)

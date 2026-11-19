@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T128 — Title-card chaptering, parameterized recreation</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .exhibit{position:absolute;left:50%;top:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-sizing:border-box;}
+  .mapground{position:absolute;left:0;top:0;width:100%;height:100%;text-align:center;}
+  .maplabel{position:absolute;left:0;width:100%;text-align:center;}
+  .eyebrow{position:absolute;left:0;width:100%;text-align:center;white-space:nowrap;}
+  .strike{position:absolute;}
+  .mainline{position:absolute;left:0;width:100%;text-align:center;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+/* T128 — title-card chaptering. Construction: DOM, CONFIG-driven, JS-clock phase machine.
+   One pure stateAt() function of cycle-relative time; the cycle is derived, never a literal.
+   Reveal convention: a typed string of N glyphs with onset O and per-glyph interval C shows
+   glyph k at O + (k-1)*C, so it completes at O + (N-1)*C. The full-opacity hold is measured
+   from the main line's completion. The exhibit is present from cycle t=0 by definition. No external assets; no specimen imagery. */
+const CONFIG = {
+  exhibit: { label: "ARCHDUKE FRANZ FERDINAND", sub: "28 JUNE 1914",
+             exitAtMs: 4600, exitMs: 200, exitDxPx: -150, exitDyPx: -70, exitScale: 0.5,
+             wPx: 300, hPx: 128, padPx: 12, tiltDeg: -2, mono: "FF", monoPx: 26,
+             labelPx: 16, subPx: 15.5, borderPx: 3 },
+  map: { label: "AUSTRO-HUNGARIAN EMPIRE", labelPx: 16, labelTopPx: 30, labelTrackingPx: 2, fadeTo: 0.22, contourO: [0.16, 0.11, 0.09, 0.09],
+         contours: ["M-10,150 C60,120 90,170 160,140 C230,110 260,160 370,120", "M-10,90 C70,70 120,110 200,80 C270,55 310,95 370,60", "M40,-10 C60,60 30,120 70,213", "M300,-10 C280,70 320,130 290,213"] },
+  eyebrow: "NOT JUST A MURDER.",
+  mainText: "A SPARK.",
+  mainFinalCharAccent: true,
+  eyebrowAtMs: 5450, eyebrowCharMs: 60,
+  strikeAtMs: 7600, strikeMs: 400,
+  mainAtMs: 9250, mainCharMs: 70,
+  holdMs: 3400, exitMs: 400, exitStrikeLead: 2,
+  serif: "Georgia, 'Times New Roman', serif",
+  type: { eyebrowPx: 20, eyebrowTrackingPx: 3, mainPx: 44,
+          eyebrowStack: "\"Courier New\", Courier, monospace",
+          eyebrowWeight: 700, mainWeight: 700, exhibitWeight: 700, /*DONLY*/
+          lineHeightEyebrow: 1.2, lineHeightMain: 1.15, lineHeightExhibit: 1.3, /*DONLY*/
+          strikePx: 2 },
+  geom: { eyebrowTopPx: 78, mainTopPx: 100 },
+  palette: { field: "#10201e", fieldDark: "#0a1514", ink: "#e9ebe6", strike: "#cd6053",
+             exhibitBg: "#e8e0cc", exhibitInk: "#20241f", exhibitEdge: "#f5f0e6" },
+  stage: { w: 360, h: 203 }
+};
+/* Measurement instrument coefficients (fit model only; they shape the model, not the subject):
+   serif advance classes — caps 0.62, other letters 0.52, space 0.30, punctuation 0.28;
+   monospace advance 0.60 for every glyph; cap-height ratios — serif 0.72, monospace 0.565. */
+function glyphCount(s){ return [...String(s)].length; }
+function eyebrowCompleteMs(cfg){ return cfg.eyebrowAtMs + (glyphCount(cfg.eyebrow)-1)*cfg.eyebrowCharMs; }
+function mainCompleteMs(cfg){ return cfg.mainAtMs + (glyphCount(cfg.mainText)-1)*cfg.mainCharMs; }
+function cycleMs(cfg){ return mainCompleteMs(cfg) + cfg.holdMs + cfg.exitMs; }
+function clamp01(x){ return x<0?0:(x>1?1:x); }
+function charsAt(onset, charMs, n, t){ return t<onset ? 0 : Math.min(n, Math.floor((t-onset)/charMs)+1); }
+function isMono(cfg){ return cfg.type.eyebrowStack.indexOf("monospace")>=0; }
+function measureText(text, px, trackingPx, mono){
+  let adv = 0;
+  for(const ch of String(text)){
+    if(mono) adv += 0.60;
+    else if(ch===" ") adv += 0.30;
+    else if(ch==="."||ch===","||ch==="-"||ch==="…") adv += 0.28;
+    else if(ch===ch.toUpperCase() && ch!==ch.toLowerCase()) adv += 0.62;
+    else adv += 0.52;
+  }
+  return adv*px + trackingPx*([...String(text)].length);
+}
+function inkHeightPx(px, mono){ return px*(mono?0.565:0.72); }
+function strikeWidthPx(cfg){ return measureText(cfg.eyebrow, cfg.type.eyebrowPx, cfg.type.eyebrowTrackingPx, isMono(cfg)); }
+function strikeTopPx(cfg){ const lh = (cfg.type.lineHeightEyebrow||1.2); return cfg.geom.eyebrowTopPx + (cfg.type.eyebrowPx*lh - cfg.type.strikePx)/2; }
+function fitRows(cfg){
+  const mono = isMono(cfg);
+  const eb = (s)=>measureText(s, cfg.type.eyebrowPx, cfg.type.eyebrowTrackingPx, mono);
+  const mn = (s)=>measureText(s, cfg.type.mainPx, 0, false);
+  return {
+    eyebrow: { text: cfg.eyebrow, inkW: eb(cfg.eyebrow), inkH: inkHeightPx(cfg.type.eyebrowPx, mono), boxW: cfg.stage.w },
+    eyebrow6: { text: cfg.eyebrow.slice(0,6), inkW: eb(cfg.eyebrow.slice(0,6)), inkH: inkHeightPx(cfg.type.eyebrowPx, mono), boxW: cfg.stage.w },
+    eyebrow12: { text: cfg.eyebrow.slice(0,12), inkW: eb(cfg.eyebrow.slice(0,12)), inkH: inkHeightPx(cfg.type.eyebrowPx, mono), boxW: cfg.stage.w },
+    main: { text: cfg.mainText, inkW: mn(cfg.mainText), inkH: inkHeightPx(cfg.type.mainPx, false), boxW: cfg.stage.w },
+    main1: { text: cfg.mainText.slice(0,1), inkW: mn(cfg.mainText.slice(0,1)), inkH: inkHeightPx(cfg.type.mainPx, false), boxW: cfg.stage.w },
+    main4: { text: cfg.mainText.slice(0,4), inkW: mn(cfg.mainText.slice(0,4)), inkH: inkHeightPx(cfg.type.mainPx, false), boxW: cfg.stage.w },
+    exhibitLabel: { text: cfg.exhibit.label, inkW: measureText(cfg.exhibit.label, cfg.exhibit.labelPx, 0, false), inkH: inkHeightPx(cfg.exhibit.labelPx, false), boxW: cfg.exhibit.wPx - 2*cfg.exhibit.padPx },
+    exhibitSub: { text: cfg.exhibit.sub, inkW: measureText(cfg.exhibit.sub, cfg.exhibit.subPx, 0, false), inkH: inkHeightPx(cfg.exhibit.subPx, false), boxW: cfg.exhibit.wPx - 2*cfg.exhibit.padPx },
+    mapLabel: { text: cfg.map.label, inkW: measureText(cfg.map.label, cfg.map.labelPx, 0, false), inkH: inkHeightPx(cfg.map.labelPx, false), boxW: cfg.stage.w }
+  };
+}
+function lum(hex){
+  const c = [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=> v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+  return 0.2126*c[0] + 0.7152*c[1] + 0.0722*c[2];
+}
+function contrastRatio(a, b){ const x = lum(a), y = lum(b); return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05); }
+/* Phase machine — exactly one phase per t, pure function of cycle-relative t. */
+function stateAt(cfg, t){
+  const cyc = cycleMs(cfg); const tt = ((t % cyc) + cyc) % cyc;
+  const ex = cfg.exhibit;
+  const exitEnd = ex.exitAtMs + ex.exitMs;
+  const ebC = eyebrowCompleteMs(cfg), mC = mainCompleteMs(cfg);
+  const holdEnd = mC + cfg.holdMs;
+  const exhibitP = clamp01((tt - ex.exitAtMs)/ex.exitMs);
+  const exhibitO = tt < exitEnd ? 1 - exhibitP : 0;
+  let mapO = 0;
+  if (tt >= ex.exitAtMs && tt < exitEnd) mapO = exhibitP;
+  else if (tt >= exitEnd) mapO = 1 - (1 - cfg.map.fadeTo)*clamp01((tt - exitEnd)/(cfg.mainAtMs - exitEnd));
+  const eyebrowChars = charsAt(cfg.eyebrowAtMs, cfg.eyebrowCharMs, glyphCount(cfg.eyebrow), tt);
+  const strikeP = clamp01((tt - cfg.strikeAtMs)/cfg.strikeMs);
+  const mainChars = charsAt(cfg.mainAtMs, cfg.mainCharMs, glyphCount(cfg.mainText), tt);
+  const exitP = tt < holdEnd ? 0 : clamp01((tt - holdEnd)/cfg.exitMs);
+  const darken = tt < exitEnd ? 0 : (1 - mapO)/(1 - cfg.map.fadeTo);
+  const phase = tt < ex.exitAtMs ? "EXHIBIT" : (tt < exitEnd ? "EXIT" : (tt < cfg.eyebrowAtMs ? "MAP" :
+    (tt < ebC ? "EYEBROW-TYPE" : (tt < cfg.strikeAtMs ? "EYEBROW-DWELL" : (tt < cfg.strikeAtMs + cfg.strikeMs ? "STRIKE" :
+    (tt < cfg.mainAtMs ? "STRUCK-HOLD" : (tt < mC ? "MAIN-TYPE" : (tt < holdEnd ? "HOLD" : "EXIT-OUT"))))))));
+  return { t: tt, phase, exhibitO, exhibitP, mapO, darken, eyebrowChars, strikeP, mainChars, exitP,
+           cardO: 1 - exitP, strikeO: (1 - Math.min(1, exitP*cfg.exitStrikeLead)) * (strikeP>0?1:0) };
+}
+/*VALIDATOR-BEGIN*/
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+const SCHEMA = {
+  groups: {
+    exhibit: { label:"str", sub:"str", exitAtMs:"ms", exitMs:"pos", exitDxPx:"num", exitDyPx:"num", exitScale:"unit", wPx:"pos", hPx:"pos", padPx:"num", tiltDeg:"num", mono:"str", monoPx:"pos", labelPx:"pos", subPx:"pos", borderPx:"num" },
+    map: { label:"str", labelPx:"pos", labelTopPx:"num", labelTrackingPx:"num", fadeTo:"unit", contourO:"arrUnit", contours:"arrStr" },
+    type: { eyebrowPx:"pos", eyebrowTrackingPx:"num", mainPx:"pos", eyebrowStack:"str", eyebrowWeight:"pos", mainWeight:"pos", exhibitWeight:"pos", lineHeightEyebrow:"pos", lineHeightMain:"pos", lineHeightExhibit:"pos", strikePx:"pos" },
+    geom: { eyebrowTopPx:"num", mainTopPx:"num" },
+    palette: { field:"hex", fieldDark:"hex", ink:"hex", strike:"hex", exhibitBg:"hex", exhibitInk:"hex", exhibitEdge:"hex" },
+    stage: { w:"pos", h:"pos" }
+  },
+  top: { eyebrow:"text", mainText:"text", mainFinalCharAccent:"bool", eyebrowAtMs:"ms", eyebrowCharMs:"pos", strikeAtMs:"ms", strikeMs:"pos", mainAtMs:"ms", mainCharMs:"pos", holdMs:"ms", exitMs:"pos", exitStrikeLead:"pos", serif:"str" }
+};
+function kindErrors(kind, v, path, errors){
+  const num = (x)=> typeof x === "number" && Number.isFinite(x);
+  const hex = (x)=> typeof x === "string" && /^#[0-9a-fA-F]{6}$/.test(x);
+  if (kind==="num" && !num(v)) errors.push(path+": not a finite number");
+  if (kind==="pos" && !(num(v) && v>0)) errors.push(path+": not a positive finite number");
+  if (kind==="ms" && !(num(v) && v>=0)) errors.push(path+": not a non-negative finite number");
+  if (kind==="unit" && !(num(v) && v>=0 && v<=1)) errors.push(path+": not within 0..1");
+  if (kind==="pct" && !(num(v) && v>=0 && v<=100)) errors.push(path+": not within 0..100");
+  if (kind==="str" && !(typeof v==="string" && v.length>0)) errors.push(path+": not a non-empty string");
+  if (kind==="text" && !(typeof v==="string" && v.trim().length>0)) errors.push(path+": empty text");
+  if (kind==="hex" && !hex(v)) errors.push(path+": not a #rrggbb colour");
+  if (kind==="bool" && typeof v!=="boolean") errors.push(path+": not a boolean");
+  if (kind==="arrUnit" && !(Array.isArray(v) && v.length>0 && v.every(x=>num(x) && x>=0 && x<=1))) errors.push(path+": not an array of numbers within 0..1");
+  if (kind==="arrStr" && !(Array.isArray(v) && v.length>0 && v.every(x=>typeof x==="string" && x.length>0))) errors.push(path+": not an array of non-empty strings");
+}
+function postChecks(cfg, errors){
+  if (!(typeof cfg.map.fadeTo === "number" && cfg.map.fadeTo >= 0 && cfg.map.fadeTo < 1)) errors.push("map.fadeTo: must satisfy 0 <= fadeTo < 1 (the darkening denominator 1-fadeTo must be positive)");
+  if (!Array.isArray(cfg.map.contours) || !Array.isArray(cfg.map.contourO) || cfg.map.contours.length !== cfg.map.contourO.length) errors.push("map: contours and contourO must have equal lengths");
+  if (!(eyebrowCompleteMs(cfg) < cfg.strikeAtMs)) errors.push("ordering: eyebrow completion must precede strike onset");
+  if (!(cfg.strikeAtMs + cfg.strikeMs < cfg.mainAtMs)) errors.push("ordering: strike completion must precede main onset");
+  if (!(cfg.eyebrowAtMs < cfg.strikeAtMs)) errors.push("ordering: eyebrow onset must precede strike onset");
+  if (!(cfg.strikeAtMs < cfg.mainAtMs)) errors.push("ordering: strike onset must precede main onset");
+  if (!(mainCompleteMs(cfg) >= cfg.mainAtMs)) errors.push("ordering: main completion precedes its onset");
+  if (!(cycleMs(cfg) > mainCompleteMs(cfg))) errors.push("ordering: cycle must extend past main completion");
+  if (cfg.exhibit.exitAtMs + cfg.exhibit.exitMs > cfg.eyebrowAtMs) errors.push("ordering: exhibit exit ends after eyebrow onset");
+  if ("vignetteInnerPct" in cfg.map && "vignetteOuterPct" in cfg.map && !(cfg.map.vignetteInnerPct < cfg.map.vignetteOuterPct)) errors.push("map: vignette inner stop must precede outer stop");
+  if (measureText(cfg.mainText, cfg.type.mainPx, 0, false) > cfg.stage.w) errors.push("fit: main text ink exceeds stage width");
+  if (measureText(cfg.eyebrow, cfg.type.eyebrowPx, cfg.type.eyebrowTrackingPx, cfg.type.eyebrowStack.indexOf("monospace")>=0) > cfg.stage.w) errors.push("fit: eyebrow ink exceeds stage width");
+}
+function validateOverride(base, o){
+  const errors = [];
+  if (o === null || typeof o !== "object" || Array.isArray(o)) return { ok: false, errors: ["override is not an object"], cfg: base };
+  const cfg = deepClone(base);
+  for (const k of Object.keys(o)){
+    if (Object.prototype.hasOwnProperty.call(SCHEMA.groups, k)){
+      if (o[k]===null || typeof o[k]!=="object" || Array.isArray(o[k])){ errors.push(k+": group is not an object"); continue; }
+      for (const sub of Object.keys(o[k])){
+        if (!Object.prototype.hasOwnProperty.call(SCHEMA.groups[k], sub)){ errors.push(k+"."+sub+": unknown key"); continue; }
+        kindErrors(SCHEMA.groups[k][sub], o[k][sub], k+"."+sub, errors); cfg[k][sub] = o[k][sub];
+      }
+    } else if (Object.prototype.hasOwnProperty.call(SCHEMA.top, k)){ kindErrors(SCHEMA.top[k], o[k], k, errors); cfg[k] = o[k]; }
+    else errors.push(k+": unknown key");
+  }
+  if (!errors.length) postChecks(cfg, errors);
+  return errors.length ? { ok: false, errors, cfg: base } : { ok: true, errors: [], cfg };
+}
+function validateConfig(cfg){
+  const errors = [];
+  if (cfg === null || typeof cfg !== "object" || Array.isArray(cfg)) return { ok: false, errors: ["config is not an object"] };
+  for (const k of Object.keys(cfg)){
+    if (Object.prototype.hasOwnProperty.call(SCHEMA.groups, k)){
+      if (cfg[k]===null || typeof cfg[k]!=="object" || Array.isArray(cfg[k])){ errors.push(k+": group is not an object"); continue; }
+      for (const sub of Object.keys(cfg[k])){
+        if (!Object.prototype.hasOwnProperty.call(SCHEMA.groups[k], sub)){ errors.push(k+"."+sub+": unknown key"); continue; }
+        kindErrors(SCHEMA.groups[k][sub], cfg[k][sub], k+"."+sub, errors);
+      }
+    } else if (Object.prototype.hasOwnProperty.call(SCHEMA.top, k)){ kindErrors(SCHEMA.top[k], cfg[k], k, errors); }
+    else errors.push(k+": unknown key");
+  }
+  if (!errors.length) postChecks(cfg, errors);
+  return { ok: errors.length === 0, errors };
+}
+function resolveBoot(candidate, fallback){
+  const v = validateConfig(candidate);
+  if (v.ok) return { cfg: candidate, rejected: false, errors: [] };
+  return { cfg: fallback, rejected: true, errors: v.errors };
+}
+function recordRejection(entry){
+  if (typeof window !== "undefined"){ window.__t128RejectedOverrides = window.__t128RejectedOverrides || []; window.__t128RejectedOverrides.push(entry); }
+  if (typeof document !== "undefined" && document.documentElement) document.documentElement.setAttribute("data-rejected", JSON.stringify(entry));
+}
+function applyOverride(cfg){
+  let q = null;
+  try{ q = new URLSearchParams(location.search).get("cfg"); }catch(e){ return cfg; }
+  if (!q) return cfg;
+  let o; try{ o = JSON.parse(q); }catch(e){ recordRejection({ reason: "unparseable override" }); return cfg; }
+  const r = validateOverride(cfg, o);
+  if (!r.ok){ recordRejection({ reason: "invalid override", errors: r.errors }); return cfg; }
+  return r.cfg;
+}
+/*VALIDATOR-END*/
+const BUILTIN_DEFAULT = deepClone(CONFIG);
+let ACTIVE = CONFIG;
+{ const boot = resolveBoot(CONFIG, BUILTIN_DEFAULT); if (boot.rejected) recordRejection({ reason: "invalid direct config", errors: boot.errors }); ACTIVE = boot.cfg; }
+if (typeof location !== "undefined") ACTIVE = applyOverride(ACTIVE);
+
+if (typeof document !== "undefined"){
+  const cfg = ACTIVE, P = cfg.palette;
+  document.body.style.background = P.fieldDark;
+  const stage = document.getElementById("stage");
+  stage.style.width = cfg.stage.w+"px"; stage.style.height = cfg.stage.h+"px";
+  stage.style.background = P.field; stage.style.fontFamily = cfg.serif;
+  const mapEl = document.createElement("div"); mapEl.className = "mapground";
+  mapEl.innerHTML = "<svg width=\"100%\" height=\"100%\" viewBox=\"0 0 "+cfg.stage.w+" "+cfg.stage.h+"\" preserveAspectRatio=\"none\" aria-hidden=\"true\">"
+    + cfg.map.contours.map((d,i)=>"<path d=\""+d+"\" fill=\"none\" stroke=\""+P.ink+"\" stroke-opacity=\""+cfg.map.contourO[i]+"\"/>").join("")
+    + "</svg>";
+  const mapLab = document.createElement("div"); mapLab.className = "maplabel"; mapLab.textContent = cfg.map.label;
+  mapLab.style.top = cfg.map.labelTopPx+"px"; mapLab.style.fontSize = cfg.map.labelPx+"px"; mapLab.style.color = P.ink;
+  mapLab.style.letterSpacing = cfg.map.labelTrackingPx+"px";
+  mapEl.appendChild(mapLab); stage.appendChild(mapEl);
+  const exEl = document.createElement("div"); exEl.className = "exhibit";
+  exEl.style.width = cfg.exhibit.wPx+"px"; exEl.style.height = cfg.exhibit.hPx+"px";
+  exEl.style.padding = cfg.exhibit.padPx+"px"; exEl.style.background = P.exhibitBg;
+  exEl.style.border = cfg.exhibit.borderPx+"px solid "+P.exhibitEdge; exEl.style.color = P.exhibitInk;
+  exEl.style.lineHeight = String(cfg.type.lineHeightExhibit||1.3); /*LHSET*/
+  const mono = document.createElement("div"); mono.textContent = cfg.exhibit.mono;
+  mono.style.fontSize = cfg.exhibit.monoPx+"px"; mono.style.fontWeight = String(cfg.type.exhibitWeight||700); /*WSET*/
+  const lab = document.createElement("div"); lab.textContent = cfg.exhibit.label; lab.style.fontSize = cfg.exhibit.labelPx+"px";
+  lab.style.fontWeight = String(cfg.type.exhibitWeight||700); /*WSET*/
+  const sub = document.createElement("div"); sub.textContent = cfg.exhibit.sub; sub.style.fontSize = cfg.exhibit.subPx+"px";
+  exEl.appendChild(mono); exEl.appendChild(lab); exEl.appendChild(sub); stage.appendChild(exEl);
+  const ebEl = document.createElement("div"); ebEl.className = "eyebrow";
+  ebEl.style.top = cfg.geom.eyebrowTopPx+"px"; ebEl.style.fontSize = cfg.type.eyebrowPx+"px";
+  ebEl.style.fontFamily = cfg.type.eyebrowStack; ebEl.style.letterSpacing = cfg.type.eyebrowTrackingPx+"px";
+  ebEl.style.color = P.ink; ebEl.style.fontWeight = String(cfg.type.eyebrowWeight||700); /*WSET*/
+  ebEl.style.lineHeight = String(cfg.type.lineHeightEyebrow||1.2); /*LHSET*/
+  const ebSpans = [...cfg.eyebrow].map((ch)=>{ const s = document.createElement("span"); s.textContent = ch; ebEl.appendChild(s); return s; });
+  stage.appendChild(ebEl);
+  const stEl = document.createElement("div"); stEl.className = "strike";
+  stEl.style.top = strikeTopPx(cfg)+"px"; stEl.style.height = cfg.type.strikePx+"px"; stEl.style.background = P.strike;
+  stEl.style.left = ((cfg.stage.w - strikeWidthPx(cfg))/2)+"px"; stEl.style.width = "0px";
+  stage.appendChild(stEl);
+  const mainEl = document.createElement("div"); mainEl.className = "mainline";
+  mainEl.style.top = cfg.geom.mainTopPx+"px"; mainEl.style.fontSize = cfg.type.mainPx+"px"; mainEl.style.color = P.ink;
+  mainEl.style.fontWeight = String(cfg.type.mainWeight||700); /*WSET*/
+  mainEl.style.lineHeight = String(cfg.type.lineHeightMain||1.15); /*LHSET*/
+  const mainSpans = [...cfg.mainText].map((ch, i, arr)=>{
+    const s = document.createElement("span"); s.textContent = ch;
+    if (cfg.mainFinalCharAccent && i === arr.length-1 && ch === ".") s.style.color = P.strike;
+    mainEl.appendChild(s); return s;
+  });
+  stage.appendChild(mainEl);
+  function hexRgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+  function mix(a,b,f){ const A=hexRgb(a),B=hexRgb(b); return "rgb("+A.map((v,i)=>Math.round(v+(B[i]-v)*f)).join(",")+")"; }
+  let start = performance.now(), paused = false, pauseT = 0;
+  function render(now){
+    const t = paused ? pauseT : now - start;
+    const s = stateAt(cfg, t);
+    exEl.style.opacity = s.exhibitO; exEl.style.display = s.exhibitO<=0 ? "none":"flex";
+    exEl.style.transform = "translate(-50%,-50%) translate("+(cfg.exhibit.exitDxPx*s.exhibitP)+"px,"+(cfg.exhibit.exitDyPx*s.exhibitP)+"px) scale("+(1-(1-cfg.exhibit.exitScale)*s.exhibitP)+") rotate("+cfg.exhibit.tiltDeg+"deg)";
+    mapEl.style.opacity = s.mapO;
+    stage.style.background = mix(P.field, P.fieldDark, s.darken);
+    ebSpans.forEach((el,i)=>{ el.style.visibility = i < s.eyebrowChars ? "visible":"hidden"; });
+    ebEl.style.opacity = s.cardO;
+    stEl.style.width = (strikeWidthPx(cfg)*s.strikeP)+"px"; stEl.style.opacity = s.strikeO;
+    mainSpans.forEach((el,i)=>{ el.style.visibility = i < s.mainChars ? "visible":"hidden"; });
+    mainEl.style.opacity = s.cardO;
+    if(!paused) requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+  window.addEventListener("message", (ev)=>{
+    const d = ev.data||{};
+    if(d.cmd==="pause"){ paused = true; pauseT = performance.now()-start; }
+    if(d.cmd==="play"){ if(paused){ start = performance.now()-pauseT; paused=false; requestAnimationFrame(render);} }
+    if(d.cmd==="restart"){ start = performance.now(); paused=false; requestAnimationFrame(render); }
+  });
+}
+if (typeof module !== "undefined"){
+  const API = { CONFIG, SCHEMA, BUILTIN_DEFAULT, stateAt, cycleMs, eyebrowCompleteMs, mainCompleteMs, charsAt, measureText, inkHeightPx, strikeWidthPx, strikeTopPx, fitRows, contrastRatio, applyOverride, validateConfig, resolveBoot };
+  if (typeof validateOverride === "function") API.validateOverride = validateOverride;
+  module.exports = API;
+}
+</script>
+</body>
+</html>

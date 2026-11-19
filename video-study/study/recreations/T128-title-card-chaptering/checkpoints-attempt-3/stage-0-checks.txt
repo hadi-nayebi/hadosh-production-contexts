@@ -1,0 +1,32 @@
+CHECK [BASE] cycle-derived-13540 :: PASS :: 13540
+CHECK [BASE] main-complete-9740 :: PASS :: 9740
+CHECK [BASE] hold-window-9740-13140-3400 :: PASS :: 3400
+CHECK [BASE] partial-main-A-SP-at-9500 :: PASS :: 4
+CHECK [BASE] eyebrow-complete-6470 :: PASS :: 6470
+CHECK [BASE] all-sample-states-finite :: PASS
+CHECK [A] atMs-absent-from-CONFIG :: FAIL
+CHECK [A] atMs-absent-from-source-text :: FAIL
+CHECK [A] atMs-override-rejected-unknown-key-atomically :: FAIL :: []
+CHECK [A] exhibit-present-from-t0 :: PASS
+CHECK [B1] fadeTo-1-rejected :: FAIL
+CHECK [B1] fadeTo-0.999-accepted :: PASS
+CHECK [B1] fadeTo-0-accepted :: PASS
+CHECK [B1] fadeTo-negative-rejected :: PASS
+/home/hatch/workspace/.scratch/cycle-030/suite.cjs:49
+check("B1", "fadeTo-1-state-would-be-guarded", (() => { const c = clone(CFG); c.map.fadeTo = 1; const b = A.resolveBoot(c, CFG); return b.rejected === true && b.cfg === CFG; })());
+                                                                                                            ^
+
+TypeError: A.resolveBoot is not a function
+    at /home/hatch/workspace/.scratch/cycle-030/suite.cjs:49:109
+    at Object.<anonymous> (/home/hatch/workspace/.scratch/cycle-030/suite.cjs:49:177)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v24.22.1
+
+STAGE-0 NOTE: the attempt-3 suite halts on the unmodified attempt-2 source where it first calls an attempt-3-only export (labelContrastAt/resolveBoot/SCHEMA absent in a2) — expected: the a2 source predates those exports. BASE-section checks that ran before the halt are recorded above. Stage 0 checkpoint = preserved a2 source copy, filed create-once before Stage A opened.

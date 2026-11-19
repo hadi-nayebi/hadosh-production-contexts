@@ -1,0 +1,355 @@
+Consumer: recreation job §5 Verify for T124 attempt 1 + decision priced: tier movement (RECREATED vs IN PROGRESS) and cure list.
+Working record: artifact codex/ directory + scores.md in hidden_files/study/recreations/T124-strikethrough-negation-list/
+BODY-WRITE: return must end with SCORE: <integer> and a BODY-WRITE: line naming what it filed.
+recreation.html SHA-256: 546f1104611932252a7e363b3622d7ef73a308cbbd80b810facde4882510a276 (identical across all five lens payloads)
+
+LENS INSTRUCTION: Judge ONLY this lens: reusability — could production drive it from CONFIG alone for a different piece? (swap test evidence in blind record). Score 0-100 against bar (lens is one of five; PASS needs avg>=85 and min>=70). Do not judge other lenses.
+
+Neutral technique facts (Packet #6 T124): strikethrough negation list under the T122 headline-card grammar, dark-navy grid ground. Headline 'You don'\''t need to manually…' (blue on 'don'\''t') lands at headlineAtMs 4000. Three task cards land one by one and accumulate vertically: 'Arrange the images' atMs 5000, 'Create animations' atMs 7000, 'Add anything on a timeline' atMs 10000. Each card is struck through in blue after landing: strike starts atMs + 800 ms (strikeDelayMs), draws left to right across the card text over strikeMs 700. After the last strike the headline flips at flipAtMs 11500 to 'Claude handles all of that' (operative span in white chip) and the list flips/clears (fades out over flipFadeMs 400). Segment-anchored: segment 308-322s of source, cycleMs 14000 looping. The post-flip Claude/plugin tile scene is out of scope by design.
+
+SCORE-BLIND BUILD RECORD:
+# T124 — Strikethrough negation list · build record (attempt 1, Cycle 020 Wave 17, queue #61)
+
+## Observe gate-out
+- **Consumer: WORD ANIMATION · DIAGRAM** — strikethrough negation list; DLC assembler / Academy tutorial surfaces (per wave RUN.md §1).
+- **Mechanics:** under the T122 headline grammar, the value claim is drawn as a list of manual tasks being cancelled one by one: headline "You don't need to manually…" (blue on "don't") lands; task cards accumulate vertically; a BLUE strike rule draws left→right across each card's text; after the last strike the headline flips to "Claude handles all of that" (operative span in a white chip) and the list clears. The automation is sold by deleting the viewer's to-do list item by item.
+- **Schedule basis: `segment-anchored`** (Amendment A7) — segment 308–322 s of the Packet #6 source; anchors are the §2b named keys (headlineAtMs 4000 · atMs [5000, 7000, 10000] · strike starts atMs + strikeDelayMs 800 · strikeMs 700 · flipAtMs 11500 · cycleMs 14000, looping).
+- **Guard firings at Observe/Plan:** codex-observe → **CONFIRMED-WITH-GAPS** (`codex/codex-observe.md`); codex-plan-review → **REVISE**, all points disposed below before building.
+
+## codex-observe gaps — dispositions
+1. *Wording gap (digest narration "edit anything on a timeline" vs card 3 "Add anything on a timeline")* — CLOSED firsthand: the builder's segment frames show card 3's on-screen text verbatim as "Add anything on a timeline" (frames seg-033 / seg-037, viewed firsthand). The digest's wording is the narration line; the card text is the visual line. They are different channels, recorded separately here; the recreation carries the CARD text (the technique is the visual list).
+2. *Window gap (packet ≈05:08–05:19 vs segment 308–322 s)* — CLOSED: segment cut 308–322 s (14.000 s, ffprobe-verified below); the packet window is approximate and the flip beat lands inside the segment's handles, per the seat census.
+3. *Evidence coverage gap (only ev/t314.jpg cited)* — CLOSED firsthand: builder's 0.25 s census (56 frames) covers every beat — headline, all three cards, all three strikes, the flip, and the list clearance (measured table below).
+4. *Prior-attempt absence unverified by the auditor* — CLOSED firsthand: the wave RUN's binding artifact census found no T124 directory before this wave; this directory was created by this attempt. Family arithmetic recomputed by the auditor and confirmed: T03 79.2 (five lenses, FAIL) · T22 88.2 (five lenses, PASS) — family references only; no sibling score enters this attempt's average.
+5. *Segment facts / source duration unverified by the auditor* — CLOSED: source ffprobe 638.494 s (RUN census, re-verified by the parent task); segment ffprobe 14.000 s (below).
+6. *Numbering crosswalk (digest "T10" vs TECHNIQUES "T122" for the headline grammar)* — packet-local vs library numbering for the same grammar; the library entry T122 is the governing reference. Named, no action owed.
+
+## codex-plan-review — dispositions (REVISE; every point cured or carried named)
+1. *Measurement construction for the strike* — **CURED BY CONSTRUCTION:** each card's text sits in a text-only inline wrapper; the strike is a child rule of that wrapper whose endpoints derive from the text's measured ink width in layoutModel (strikeFullW = inkW + 2 × overshootPx; strikeX = textX − overshootPx) and whose vertical placement is tied to the text line metrics (strike centre at lineH × yFracOfLine 0.54). Cards are all mounted from build; visibility/opacity derive from the single schedule state, so later cards cannot replace earlier ones. Measured in `fit-table.md`.
+2. *Intensity separation unproven* — **CURED BY SPECIFICATION + MEASUREMENT:** the hierarchy is headline (20 px / 800 / white, operative span blue or chip) > card text (15 px / 700 / white on the dark card) > strike (the only saturated rule, 3 px, drawn over the ink it cancels). Measured ink ratio headline:card = 1.27:1 (fit-table). Under the palette swap, palette.blue → #ffd23c recolours the headline operative span; cardEdge is its own palette key and strikeColor its own CONFIG key (§2b) — neither follows the blue swap, which is the §2b design (strikeColor separately swappable), recorded in the swap result below.
+3. *Phase exclusivity unproven* — **CURED BY CONSTRUCTION:** ONE elapsed-time function `stateAt(t, cfg)` derives every element's state; no independent timers exist. Per-card state machine: waiting → entering (enterMs 350) → landed → striking → struck, with strike onset = atMs + strikeDelayMs (800) and enterMs < strikeDelayMs by construction (harness-asserted), so a strike can never start before its card's landing completes. "Lands" is defined: a card lands at its atMs (appearance + enter settle over enterMs).
+4. *Parameterization incomplete; cardMs ambiguous* — **CURED:** strikeDelayMs 800, enterMs 350, strike.thicknessPx / overshootPx / yFracOfLine, stage.w/h, grid.cellPx, flipFadeMs 400 are all named CONFIG keys; `config-census.md` resolves every key to an application site, HIT list EMPTY. cardMs:2600 from the §2 table is **superseded by the §2b per-card atMs anchors** (the same replacement the gate applied to T122's beatMs and T123's stepMs) and is therefore not carried as a CONFIG key — named here, not silently dropped.
+5. *Timing anchors vs the refined census* — **CARRIED WITH RECORDED RECONCILIATION:** the §2b anchors are the Plan gate's own cure (jev-plan-exit REVISE, consumed in RUN §2b) and stand as the Plan of record for attempt 1. The builder's finer 0.25 s census (below) measures card 3 and the flip up to ~1.5 s earlier than the anchors; that refinement is filed here as evidence for the timing lens to price and for Condense/practice to consume — it is not silently substituted for the gate's anchors mid-Execute. Arithmetic noted: PASS needs sum ≥ 425 with every lens ≥ 70.
+6. *Exit decision missing* — **CURED:** the list CLEARS at the flip, as measured (cards fade out over flipFadeMs 400 from flipAtMs while the headline flips); accumulation holds from each card's landing until the flip, then the stage carries only the flipped headline to cycle end. The following Claude/plugin tile scene is out of scope (§8 size discipline).
+
+## Segment + measured frames
+- Segment: cut from `hidden_files/study/video-digests/2026-11-15-yt-l2pkb1ebmq/source.mp4` at 308–322 s, re-encoded (libx264/yuv420p/aac, faststart). ffprobe: **14.000 s**, 1920×1012, h264 + aac, 1317878 bytes.
+- Frames extracted at 0.25 s steps (56 frames, `frames/seg-001.jpg` … `seg-056.jpg`; frame n at segment t = (n−1) × 0.25 s). Measured table (segment time → source time → state), viewed firsthand by the builder:
+  - 4.00 s (src 312.00): headline "You don't need to manually…" present alone, blue on "don't" (seg-017).
+  - 5.00 s (src 313.00): headline only — card 1 not yet landed (seg-021).
+  - 6.00 s (src 314.00): card 1 "Arrange the images" landed, its blue strike FULLY drawn across the text at the x-height midline, overshooting the ink slightly on both sides (seg-025).
+  - 7.00 s (src 315.00): card 2 "Create animations" landed; its strike just starting (short dash at the "C") (seg-029).
+  - 8.00 s (src 316.00): card 3 "Add anything on a timeline" landed unstruck; strikes 1–2 full (seg-033).
+  - 9.00 s (src 317.00): all three cards struck (seg-037).
+  - 10.00 s (src 318.00): headline flipped to "Claude handles all of that" (chip on "all of that"); the list is GONE (seg-041).
+  - 10.50–12.00 s: the next scene (Claude tile, then plugin tile) builds — NOT this technique; out of scope (seg-043/045/049).
+- Refinement vs the seat's 1 fps census (RUN §1b): the builder's 0.25 s census places the beats up to ~1.5 s earlier than the §1b approximations on card 3 / flip; the §2b anchors stand per disposition 5 above.
+- Measured specimen geometry (1920×1012 frames): cards are wide rounded rectangles, dark fill, blue edge glow, text left-aligned inside; the strike is a blue rule at the text's x-height midline extending slightly past the ink on both sides. The §2b card geometry (w 250 · h 34 · padX 14 · gap 10 at the 360×203 stage) is the Plan-bound form and stands.
+
+## Build
+- `recreation.html` — ONE self-contained file; CONFIG at top with every literal (headline spans, flipHeadline spans, tasks array, atMs, headlineAtMs, strikeDelayMs, strikeMs, flipAtMs, card geometry, strike geometry, strikeColor, palette, type, grid, layout); DOM construction; stage 360×203; dark-navy grid ground (CSS gradients from CONFIG); headline lands at headlineAtMs; task cards accumulate vertically and stay; each strike is a drawn rule (div) whose width animates 0→100% of the measured text ink (+ overshoot) across strikeMs; headline flips to flipHeadline at flipAtMs and the list fades out over flipFadeMs; no captions/subtitles (headline/card texts are the technique's subject text); no external assets; logic reads only CONFIG; `?cfg=` override supported.
+- `comparison.html` — ORIGINAL segment + live recreation side by side, labels "ORIGINAL — Grow With Kaz @ 5:08–5:22" / "RECREATION — T124 strikethrough negation list, parameterized"; ONE synchronized control set (Play/Pause drive the video and postMessage the recreation's clock; Restart zeroes both); phone stacking at ≤560 px with 48 px-minimum controls.
+
+## Own checks (§5 legs 1–3, recorded — not asserted)
+1. **Swap test (exact §2 values), via `?cfg=`-equivalent resolveConfig on the shipped script:** words — task 1 "Arrange the images" → "Sync the audio clips" (re-measured ink 156.4 px, fits the 222 px inner width, strike full width re-derives to 162.4 px) · timing — strikeMs 700 → 300 (stateAt: card 1 strikeP = 0.50 at strike start + 150 ms, mode struck at +300 ms) · palette — blue "#3b82f6" → "#ffd23c" (palette.blue applied: headline operative span recolours; strikeColor stays "#3b82f6" and cardEdge stays "#3b82f6" — both are separate CONFIG keys by §2b design, named here). Result: **PASS** — the piece re-derives from CONFIG alone for all three legs.
+2. **Purity:** grep over recreation.html for `segment\.mp4|source\.mp4|<video|<img|url\(|l2_pKB1EbMQ|t[0-9]+\.jpg` (the G1-A pattern set) = **0 hits**. Asset inventory: recreation.html loads NO external assets (no src/href loads; grid, cards and strikes are generated in-code from CONFIG). comparison.html legitimately references segment.mp4 + recreation.html and is not purity-grepped.
+3. **Comparison check (LOGIC level):** both sides present with the exact labels; video duration 14.000 s vs recreation cycle 14000 ms (CONFIG cycleMs, harness-verified: stateAt(14000).u = 0); shared controls wired to both sides; phone stacking CSS present. PIXEL-UNVERIFIED — no browser binary in this seat.
+4. **Syntax:** `node --check` on both inline scripts — clean. Schedule harness assertions: enterMs < strikeDelayMs ✓ · strike 3 completes exactly at flipAtMs (10000 + 800 + 700 = 11500) ✓ · all cards struck and visible at t=11499 (card 3 strikeP = 0.999 at 11499, completing at 11500) ✓ · list opacity 0 by t=11900 ✓ · headline flips at exactly 11500 ✓.
+
+## A6 legs (pre-wave, on the final build)
+- guard-measured-fit → `fit-table.md`: rows for headline, flip headline, all three card texts + swap row, plus the strike-alignment rows; **HIT list EMPTY** (card ink 11.25 px vs the ~11 px floor — margin 0.25 px, printed as a watch).
+- guard-config-census → `config-census.md`: literal scan classified, every CONFIG key resolved to an application site (incl. atMs[] array members), no CSS variables; **HIT list EMPTY**.
+
+## Pre-wave Jev gate
+jev-prewave: **FIRE-WAVE** (parameterization 0.95 · purity pre-check 0.95 · own-checks completeness 0.90 · fidelity-plan honesty 0.90; return at `jev-prewave.md`). Disposition: APPLIED — the wave fired; its two watches (the ~1.5 s §2b-anchor vs 0.25 s-census timing delta on card 3 / flip · the 0.25 px card-ink margin) are carried into scores.md for the lenses to price.
+
+## Faithfulness trace
+- Trace: §1 Observe (RUN §1/§1b + this record's gate-out) · §2 Plan (RUN §2 + §2b amendments, binding) · §3 Execute (segment, frames, builds above) · §5 Verify (own checks above, A6 legs, jev-prewave, five-lens wave in `codex/`) · §9 Condense is the seat's act.
+- Choice log: (1) DOM over canvas (RUN §2; A1 disposition in §2b — DOM card/headline text is the lawful construction for this technique) · (2) strike as a div rule inside the text wrapper, endpoints from the measured ink model (plan-review cure 1) · (3) §2b anchors stand over the builder's finer census (plan-review disposition 5 — gate authority, discrepancy filed as evidence) · (4) list clears at the flip over flipFadeMs (measured; plan-review point 6).
+- Deviation register: §2 cardMs:2600 superseded by §2b atMs anchors — named in disposition 4 · builder census refines §1b beat times — filed as evidence, anchors unchanged · the post-flip Claude/plugin tile scene is excluded (§8) — the segment's last ~3.5 s has no recreation counterpart by design. No other deviations.
+- Evidence binding: segment.mp4 ffprobe 14.000 s · frames/ 56 files · recreation.html sha256 in scores.md · codex returns verbatim in `codex/`.
+- Git corroboration: UNCORROBORATED-BY-LOCAL-GIT at build time (lane sync is JOB-14's act).
+
+
+RECREATION.HTML FULL SOURCE:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T124 — Strikethrough negation list (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#070a1a;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #headline{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;}
+  #headline .chip{display:inline-block;}
+  #list{position:absolute;left:0;right:0;}
+  .card{position:absolute;box-sizing:border-box;}
+  .cardText{position:relative;display:inline-block;white-space:nowrap;}
+  .strike{position:absolute;}
+  #err{position:absolute;left:0;top:0;right:0;display:none;color:#fff;background:#a00;font:12px monospace;padding:4px;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="headline"></div>
+  <div id="list"></div>
+  <div id="err"></div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / font / geometry value lives here ============ */
+const CONFIG = {
+  headline: [{t: "You "}, {t: "don't", style: "blue"}, {t: " need to manually…"}],
+  flipHeadline: [{t: "Claude handles "}, {t: "all of that", style: "chip"}],
+  tasks: ["Arrange the images", "Create animations", "Add anything on a timeline"],
+  atMs: [5000, 7000, 10000],
+  headlineAtMs: 4000,
+  strikeDelayMs: 800,
+  strikeMs: 700,
+  flipAtMs: 11500,
+  cycleMs: 14000,
+  enterMs: 350,
+  flipFadeMs: 400,
+  card: {w: 250, h: 34, padX: 14, gap: 10, radius: 8},
+  strike: {thicknessPx: 3, overshootPx: 3, yFracOfLine: 0.54},
+  strikeColor: "#3b82f6",
+  stage: {w: 360, h: 203},
+  grid: {cellPx: 24},
+  layout: {headlineTopPx: 14, listTopPx: 64, enterRisePx: 6},
+  type: {font: "Arial, Helvetica, sans-serif", headlinePx: 20, headlineWeight: 800, cardPx: 15, cardWeight: 700, lineHFrac: 1.3, chipPadX: 8, chipRadius: 5},
+  palette: {field: "#0b1026", grid: "rgba(120,140,255,0.07)", ink: "#ffffff", blue: "#3b82f6", chipBg: "#ffffff", chipInk: "#10131f", card: "#131a33", cardEdge: "#3b82f6"}
+};
+const TOP_KEYS = ["headline","flipHeadline","tasks","atMs","headlineAtMs","strikeDelayMs","strikeMs","flipAtMs","cycleMs","enterMs","flipFadeMs","card","strike","strikeColor","stage","grid","layout","type","palette"];
+
+/* ============ override (?cfg= JSON) ============ */
+function deepMerge(base, over){
+  if (Array.isArray(over)){
+    if (!Array.isArray(base)) return over.slice();
+    const merged = base.map(function(b, i){ return i < over.length ? deepMerge(b, over[i]) : b; });
+    for (let i = base.length; i < over.length; i++) merged.push(over[i]);
+    return merged;
+  }
+  if (over && typeof over === "object"){
+    const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
+    for (const k of Object.keys(over)) out[k] = deepMerge(base ? base[k] : undefined, over[k]);
+    return out;
+  }
+  return over;
+}
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function resolveConfig(raw){
+  if (raw === null || raw === undefined || raw === "") return {cfg: clone(CONFIG), errors: []};
+  let over;
+  try { over = JSON.parse(raw); } catch(e){ return {cfg: null, errors: ["cfg: malformed JSON"]}; }
+  if (!over || typeof over !== "object" || Array.isArray(over)) return {cfg: null, errors: ["cfg: expected object"]};
+  return {cfg: deepMerge(clone(CONFIG), over), errors: []};
+}
+
+/* ============ pure logic (node-testable) ============ */
+function easeOutCubic(p){ return 1 - Math.pow(1 - p, 3); }
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+/* Character width model (Arial advance widths, em fractions) — the fit
+   harness's measurement model; the strike endpoints derive from it. */
+const CHAR_W = {upper: 0.68, lower: 0.52, space: 0.278, digit: 0.556, punct: 0.30};
+function textWidthPx(text, fontPx, weight){
+  let em = 0;
+  for (const ch of text){
+    if (ch === " ") em += CHAR_W.space;
+    else if (ch >= "A" && ch <= "Z") em += CHAR_W.upper;
+    else if (ch >= "0" && ch <= "9") em += CHAR_W.digit;
+    else if (".,;:!?'’-—…".indexOf(ch) >= 0) em += CHAR_W.punct;
+    else em += CHAR_W.lower;
+  }
+  if (weight >= 700) em *= 1.06;
+  return em * fontPx;
+}
+function spansWidthPx(spans, fontPx, weight, cfg){
+  let w = 0;
+  for (const s of spans){
+    w += textWidthPx(s.t, fontPx, weight);
+    if (s.style === "chip") w += 2 * cfg.type.chipPadX;
+  }
+  return w;
+}
+function layoutModel(cfg){
+  const cardX = Math.round((cfg.stage.w - cfg.card.w) / 2);
+  const cards = cfg.tasks.map(function(task, i){
+    const inkW = textWidthPx(task, cfg.type.cardPx, cfg.type.cardWeight);
+    const lineH = cfg.type.cardPx * cfg.type.lineHFrac;
+    return {
+      task: task,
+      x: cardX,
+      y: cfg.layout.listTopPx + i * (cfg.card.h + cfg.card.gap),
+      w: cfg.card.w, h: cfg.card.h,
+      textX: cardX + cfg.card.padX,
+      inkW: inkW,
+      inkH: cfg.type.cardPx * 0.75,
+      innerW: cfg.card.w - 2 * cfg.card.padX,
+      strikeX: cardX + cfg.card.padX - cfg.strike.overshootPx,
+      strikeFullW: inkW + 2 * cfg.strike.overshootPx,
+      strikeY: cfg.layout.listTopPx + i * (cfg.card.h + cfg.card.gap) + (cfg.card.h - lineH) / 2 + lineH * cfg.strike.yFracOfLine - cfg.strike.thicknessPx / 2,
+      strikeH: cfg.strike.thicknessPx
+    };
+  });
+  return {
+    stageW: cfg.stage.w, stageH: cfg.stage.h,
+    headlineW: spansWidthPx(cfg.headline, cfg.type.headlinePx, cfg.type.headlineWeight, cfg),
+    flipHeadlineW: spansWidthPx(cfg.flipHeadline, cfg.type.headlinePx, cfg.type.headlineWeight, cfg),
+    headlineInkH: cfg.type.headlinePx * 0.716,
+    cards: cards,
+    listBottom: cfg.layout.listTopPx + cfg.tasks.length * cfg.card.h + (cfg.tasks.length - 1) * cfg.card.gap
+  };
+}
+/* ONE elapsed-time schedule derives every state (phase exclusivity):
+   headline: hidden → entering → shown → flipped at flipAtMs.
+   per card: waiting → entering (enterMs) → landed → striking
+   (strike starts strikeDelayMs after the card's atMs; enterMs <
+   strikeDelayMs by construction, so the strike never starts before
+   the landing completes) → struck; at flipAtMs the list fades out
+   over flipFadeMs (the measured flip clears the list). */
+function stateAt(t, cfg){
+  const u = ((t % cfg.cycleMs) + cfg.cycleMs) % cfg.cycleMs;
+  const flipped = u >= cfg.flipAtMs;
+  let headline;
+  if (u < cfg.headlineAtMs) headline = {mode: "hidden", opacity: 0, risePx: cfg.layout.enterRisePx, flipped: false};
+  else if (u < cfg.headlineAtMs + cfg.enterMs){
+    const p = easeOutCubic((u - cfg.headlineAtMs) / cfg.enterMs);
+    headline = {mode: "entering", opacity: p, risePx: cfg.layout.enterRisePx * (1 - p), flipped: false};
+  } else headline = {mode: flipped ? "flipped" : "shown", opacity: 1, risePx: 0, flipped: flipped};
+  const listFade = flipped ? 1 - clamp01((u - cfg.flipAtMs) / cfg.flipFadeMs) : 1;
+  const cards = cfg.tasks.map(function(task, i){
+    const at = cfg.atMs[i];
+    const strikeStart = at + cfg.strikeDelayMs;
+    let mode, opacity, risePx;
+    if (u < at){ mode = "waiting"; opacity = 0; risePx = cfg.layout.enterRisePx; }
+    else if (u < at + cfg.enterMs){
+      const p = easeOutCubic((u - at) / cfg.enterMs);
+      mode = "entering"; opacity = p; risePx = cfg.layout.enterRisePx * (1 - p);
+    } else if (u < strikeStart){ mode = "landed"; opacity = 1; risePx = 0; }
+    else if (u < strikeStart + cfg.strikeMs){ mode = "striking"; opacity = 1; risePx = 0; }
+    else { mode = "struck"; opacity = 1; risePx = 0; }
+    const strikeP = clamp01((u - strikeStart) / cfg.strikeMs);
+    return {mode: mode, opacity: opacity * listFade, risePx: risePx, strikeP: strikeP};
+  });
+  return {u: u, headline: headline, cards: cards, listFade: listFade};
+}
+
+/* ============ DOM construction ============ */
+function renderSpans(el, spans, cfg){
+  el.textContent = "";
+  for (const s of spans){
+    const sp = document.createElement("span");
+    sp.textContent = s.t;
+    if (s.style === "blue") sp.style.color = cfg.palette.blue;
+    else if (s.style === "chip"){
+      sp.className = "chip";
+      sp.style.background = cfg.palette.chipBg;
+      sp.style.color = cfg.palette.chipInk;
+      sp.style.paddingLeft = cfg.type.chipPadX + "px";
+      sp.style.paddingRight = cfg.type.chipPadX + "px";
+      sp.style.borderRadius = cfg.type.chipRadius + "px";
+    } else sp.style.color = cfg.palette.ink;
+    el.appendChild(sp);
+  }
+}
+function build(cfg){
+  const L = layoutModel(cfg);
+  const stage = document.getElementById("stage");
+  stage.style.width = L.stageW + "px";
+  stage.style.height = L.stageH + "px";
+  stage.style.backgroundColor = cfg.palette.field;
+  stage.style.backgroundImage =
+    "linear-gradient(to right, " + cfg.palette.grid + " 1px, transparent 1px)," +
+    "linear-gradient(to bottom, " + cfg.palette.grid + " 1px, transparent 1px)";
+  stage.style.backgroundSize = cfg.grid.cellPx + "px " + cfg.grid.cellPx + "px";
+  stage.style.fontFamily = cfg.type.font;
+  const headline = document.getElementById("headline");
+  headline.style.top = cfg.layout.headlineTopPx + "px";
+  headline.style.fontSize = cfg.type.headlinePx + "px";
+  headline.style.fontWeight = String(cfg.type.headlineWeight);
+  headline.style.lineHeight = String(cfg.type.lineHFrac);
+  renderSpans(headline, cfg.headline, cfg);
+  const list = document.getElementById("list");
+  list.textContent = "";
+  const cardEls = [];
+  cfg.tasks.forEach(function(task, i){
+    const lay = L.cards[i];
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.left = lay.x + "px";
+    card.style.top = lay.y + "px";
+    card.style.width = lay.w + "px";
+    card.style.height = lay.h + "px";
+    card.style.background = cfg.palette.card;
+    card.style.border = "1px solid " + cfg.palette.cardEdge;
+    card.style.borderRadius = cfg.card.radius + "px";
+    const wrap = document.createElement("span");
+    wrap.className = "cardText";
+    wrap.textContent = task;
+    wrap.style.left = cfg.card.padX + "px";
+    wrap.style.top = ((cfg.card.h - cfg.type.cardPx * cfg.type.lineHFrac) / 2) + "px";
+    wrap.style.color = cfg.palette.ink;
+    wrap.style.fontSize = cfg.type.cardPx + "px";
+    wrap.style.fontWeight = String(cfg.type.cardWeight);
+    wrap.style.lineHeight = String(cfg.type.lineHFrac);
+    const strike = document.createElement("div");
+    strike.className = "strike";
+    strike.style.left = (-cfg.strike.overshootPx) + "px";
+    strike.style.top = (cfg.type.cardPx * cfg.type.lineHFrac * cfg.strike.yFracOfLine - cfg.strike.thicknessPx / 2) + "px";
+    strike.style.height = cfg.strike.thicknessPx + "px";
+    strike.style.width = "0px";
+    strike.style.background = cfg.strikeColor;
+    strike.style.borderRadius = (cfg.strike.thicknessPx / 2) + "px";
+    wrap.appendChild(strike);
+    card.appendChild(wrap);
+    list.appendChild(card);
+    cardEls.push({card: card, strike: strike, fullW: lay.strikeFullW});
+  });
+  return {layout: L, cardEls: cardEls, headlineFlipped: null};
+}
+function applyFrame(cfg, view, t){
+  const st = stateAt(t, cfg);
+  const headline = document.getElementById("headline");
+  if (view.headlineFlipped !== st.headline.flipped){
+    renderSpans(headline, st.headline.flipped ? cfg.flipHeadline : cfg.headline, cfg);
+    view.headlineFlipped = st.headline.flipped;
+  }
+  headline.style.opacity = String(st.headline.opacity);
+  headline.style.transform = "translateY(" + st.headline.risePx + "px)";
+  view.cardEls.forEach(function(ce, i){
+    const cs = st.cards[i];
+    ce.card.style.opacity = String(cs.opacity);
+    ce.card.style.transform = "translateY(" + cs.risePx + "px)";
+    ce.card.style.visibility = cs.mode === "waiting" ? "hidden" : "visible";
+    ce.strike.style.width = (cs.strikeP * ce.fullW) + "px";
+  });
+  return st;
+}
+if (typeof document !== "undefined"){
+  const params = new URLSearchParams(location.search);
+  const res = resolveConfig(params.get("cfg"));
+  if (!res.cfg){
+    const e = document.getElementById("err");
+    e.style.display = "block"; e.textContent = res.errors.join("; ");
+  } else {
+    const cfg = res.cfg;
+    const view = build(cfg);
+    let start = performance.now();
+    let frozen = null;
+    window.addEventListener("message", function(ev){
+      if (ev.data === "pause" && frozen === null) frozen = performance.now() - start;
+      if (ev.data === "play" && frozen !== null){ start = performance.now() - frozen; frozen = null; }
+    });
+    function tick(now){ applyFrame(cfg, view, frozen !== null ? frozen : now - start); requestAnimationFrame(tick); }
+    requestAnimationFrame(tick);
+    window.__t124 = {cfg: cfg, stateAt: stateAt, layout: layoutModel(cfg)};
+  }
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = {CONFIG: CONFIG, resolveConfig: resolveConfig, stateAt: stateAt, layoutModel: layoutModel, textWidthPx: textWidthPx, spansWidthPx: spansWidthPx};
+}
+</script>
+</body>
+</html>
+
