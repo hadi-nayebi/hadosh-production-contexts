@@ -18,7 +18,7 @@ Keep the embedded plan in `index.html` byte-equivalent in parsed data to the JSO
 ## Craft and evidence
 Evaluate storytelling, pacing, visual coherence, composition, typography, motion quality, explanatory clarity, narration and sound, technical playback, and balanced completeness. Record findings for every part. Keep planned, implemented, observed and accepted distinct.
 
-Inspect actual moving playback and representative full-size frames, including portrait layouts, critical boundaries, opening formation and the ending. Test play/pause, seek, restart, keyboard controls and resize. Preserve one animation scheduler; visible opening glyphs and particle masks use the same geometry.
+Inspect actual moving playback and representative full-size frames, including portrait layouts, critical boundaries, opening formation and the ending. Test play/pause, seek, restart, keyboard controls and resize. Preserve one animation scheduler, including asynchronous audio start/pause races; reject an audio asset whose measured duration does not match the performance timeline. Visible opening glyphs and particle masks use the same geometry. Reserve the final-word layout through all prediction states, clip partial comparison units, and keep equal quantitative units the same size.
 
 Verify the transcript exactly. Google is the reported scope, not the whole industry. Processing includes repeated passes, not solely unique new text. The public-text number is an estimate of usable stock. Use sourced endpoints and an honest common measure for comparisons. Attention links are illustrative, not measured weights. Tools execute outside the model.
 
