@@ -1,11 +1,28 @@
-# AGENTS.md — goals/diy-building-and-real-learning/hidden_files/tab2-work/push-v71/dashboard — dashboard
+# Quadrillion — clean motion-film branch
 
-Local working memory for `goals/diy-building-and-real-learning/hidden_files/tab2-work/push-v71/dashboard` (dashboard). It currently holds 0 file(s) and 1 subdirectory. Subdirectories: `quadrillion/`.
+## Scope
+This branch owns the new four-part “3.2 Quadrillion Tokens” HTML motion film. Its runtime is one `index.html`; supporting plans, rights notices and any future approved audio live in `assets/`. Opening the entry must present the film at the full available viewport. Controls appear while paused.
 
-Read the AGENTS.md chain root→local before working here (tool: ~/workspace/tools/agents-chain.sh <dir>). Work here runs under named skills/standards — never improvised. Lessons learned here are written HERE, in this file. Information that proves true for sibling directories moves UP to the parent directory's AGENTS.md.
+The source lineage is preserved in Git. The existing `dashboard` branch and its published film are comparison evidence, not implementation dependencies. Do not copy its renderer, media, fonts or narration into this rebuild. The final 25-line transcript is the retained editorial source.
 
-Governing skills/standards for work here:
-- Dashboard UX skill: /home/hatch/workspace/custom-skills/dashboard-ux/SKILL.md (dashboard-ux — review surfaces for Hadi)
-- Global method: /home/hatch/AGENTS.md
-- Nearest ancestor AGENTS.md in this tree (the chain above this directory)
-- Immediate parent memory in force: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/tab2-work/push-v71/AGENTS.md
+## Controlling creative direction
+Begin in a true void. Reveal “The river overflowed its banks.” as a sentence being extended. Pull back while language appears faster, reduce words into marks, and choreograph one coherent murmuration. A foreground group forms the complete “3.2 quadrillion tokens” claim around two seconds, then settles for reading. The same sentence returns in the attention explanation.
+
+The film contains Scale; Work → Era; Origin; Invitation. Develop all four parts to comparable craft. A highly polished opening does not compensate for a weaker later part. Competition-level work and a major improvement over the baseline are the acceptance objective; an agent’s self-rating is not acceptance.
+
+## Recorded production contract
+`assets/production-plan.json` is the structured specification. Its readable counterpart is `assets/production-plan.md`. The plan covers every passage and every interval no longer than two seconds, with finer opening intervals. Preserve intent, before/action/after, continuity, camera and observable pass/fail criteria.
+
+Keep the embedded plan in `index.html` byte-equivalent in parsed data to the JSON. The performance timeline maps each passage to immutable animation-time anchors. Narration becomes the master clock when a fresh asset and verified alignment exist. Do not silently reuse old audio, system speech or a placeholder voice. Pending narration means the full film is not finished.
+
+## Craft and evidence
+Evaluate storytelling, pacing, visual coherence, composition, typography, motion quality, explanatory clarity, narration and sound, technical playback, and balanced completeness. Record findings for every part. Keep planned, implemented, observed and accepted distinct.
+
+Inspect actual moving playback and representative full-size frames, including portrait layouts, critical boundaries, opening formation and the ending. Test play/pause, seek, restart, keyboard controls and resize. Preserve one animation scheduler; visible opening glyphs and particle masks use the same geometry.
+
+Verify the transcript exactly. Google is the reported scope, not the whole industry. Processing includes repeated passes, not solely unique new text. The public-text number is an estimate of usable stock. Use sourced endpoints and an honest common measure for comparisons. Attention links are illustrative, not measured weights. Tools execute outside the model.
+
+## Change boundaries
+Use focused commits and a review PR against the clean baseline branch. Do not merge this branch into the shared dashboard: that would replace unrelated project files. Merge, publication and changes to other project lineages require their own authorization. Do not edit `CLAUDE.md` or `.claude/`.
+
+The current build is a production review, not a finished or award-qualified film. Fresh narration, final timing and perceptual acceptance must be evidenced before changing that status.
