@@ -1,0 +1,34 @@
+# Codex review — codex-plan-review (video-digestion)
+
+_One file per repeated Codex review type, hosted in this job's own guards/ (owner's 100% judgment-layer order, 2026-11-14). Phase-guard augmentation 2026-11-14._
+
+## Standing header
+- **Consumer:** this cycle's Execute (§3) — the builder who will work the Plan's checklists.
+- **Decision priced:** whether the Plan survives attack on this job's recurring plan risks before Execute spends against it — a plan that fails here is revised in Plan; a plan that fails in Verify has already spent the extraction.
+- **Working record:** the cycle's `runs/<date>-cycle-<NNN>-<slug>/RUN.md` (Plan section + jev-plan-exit receipt).
+- **Body-write:** the return must name what it wrote into the body (Plan amendments in RUN.md, INSTRUCTION or guard amendments proposed, or explicitly "Body-write: none (read-only run)" with the consumer persisting the return verbatim).
+
+## Call point
+INSTRUCTION §2 Plan, after the jev-plan-exit verdict and before Execute — standing for long-form specimens and for any specimen whose segmentation or split decision is contested; for a routine short-form plan with an EXECUTE verdict and no contested decision, Plan may print "codex-plan-review: not fired — routine form, jev-plan-exit EXECUTE, receipt cited" instead.
+
+## Instruction (the Codex charge)
+Attack this digestion Plan on the risks this job has actually recorded. (1) Segmentation: does the model fit the specimen's form — for long form, are sections derived from musical/visual signals in the record or imposed by clock? Where would section-first vs beat-first produce a materially different catalogue here? (2) Sampling: does the frame rule (every motion beat + every section boundary + before/during/after per technique) actually capture the planned techniques, and does the clip rule fire only where stills cannot carry a technique — named per entry, not by habit? (3) Tempo: is the tempo-map method able to support its claims (counts at stated thresholds, per-section for long form), or does it plan impressions? Packet #1's tempo discovery — energy as intra-shot animation density, 25 hard cuts at 0.35 vs 48 at 0.22 in 198 s — is the standard: a plan that counts only cuts would have missed it. (4) The G1/G2/G3 recurrence: are goods/bads (timestamp-bound, producer-written), the consumer section (packet §3.3(2), not an adoption act), and the reception slot (charged print, not silence) planned as production steps with evidence routes — or merely listed as sections? (5) Failure points and split: are the priced failure points specimen-specific or boilerplate, and if the specimen splits, is the split by section with the continuation queued by name? Return each finding as EXECUTE-DEFECT or REVISE-IN-PLAN with the exact Plan line it condemns (finding classes are advisory severity labels — the runner disposes each finding on the record: applied, or set aside with the miss recorded in Condense); findings without a condemned line are commentary and are labeled as such.
+
+## Feeding contract
+- Files embedded, ONE stream only: this file's charge · RUN.md (Observe product + Plan section, incl. both checklists and the failure-point evaluation) · INSTRUCTION §2–§3 · the jev-plan-exit receipt.
+- **Feed-snapshot rule (added 2026-11-18, Cycle-023 Condense — codex-condense Layer-4 cure, on the A8 cl.4 serialisation precedent):** the feed assembles AFTER the jev-plan-exit disposition has been applied to the Plan's operative lines (cures edited in, or each finding explicitly set aside on the record) — never from a Plan whose Jev cure is still pending. The assembled feed carries a snapshot identifier (the RUN.md byte count + sha prefix at assembly) and an assembly timestamp, printed in the feed manifest; a review that prices a superseded snapshot is consumed as pricing that snapshot, and any finding already cured in the operative Plan is dispositioned ALREADY-CURED with the grep evidence named. (Founding instance: Cycle-023 — the feed carried the still-empty P-B block; Finding 6 priced the feed's state, and the runner's consumption had to narrow the disposition after the fact.)
+- Text only; no media, no frames. Overflow: RUN.md is fed whole where it fits; excerpts are cut at section boundaries and the cut is named.
+- FED-FORM (added 2026-11-16, Cycle-016 Condense — deviation D-CO1's cure): this call is a fed review — the stream opens with the standing instruction that the reviewer judges the fed text only and does not attempt tool use. The image Codex's tool host is absent; a firing that attempts tools returns NOT ASSESSED and is re-fired in fed form, with the attempt recorded as a deviation.
+- Effort: high. Read-only.
+
+## Output required
+Sections: FINDINGS (each: condemned Plan line · class EXECUTE-DEFECT / REVISE-IN-PLAN · the cure) · PLAN STRENGTHS THAT SURVIVED · BODY-WRITE line.
+
+## Firing
+**Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** Firing receipts (return path + consumption line in RUN.md) are recorded in ../verdict-history.md when they exist.
+
+## Firing-record rule (2026-11-15, Cycle-012 Condense — judgment-transport cure)
+A firing IS the return FILE on disk in the run directory. The runner verifies the file's presence before recording any receipt; a chat summary is not a return, is never quoted as a verdict, and where a summary diverges from the filed return, the divergence is recorded in RUN.md WITH the summary's divergent claim quoted verbatim. A claimed firing with no file is UNFILED and the cycle prints INCOMPLETE for this call (guards.md command 8 censuses this mechanically from Cycle-013).
+
+## Amendment (2026-11-18, Cycle-024 Condense, on that cycle's codex-condense Layer-4 verdict)
+**Pre-firing manifest check (A10 clause 2).** Before firing, record these required items as PRESENT or ABSENT in the RUN's feed manifest and carry their values in the assembled feed: (1) the filed `jev-plan-exit` return path and verdict, (2) the RUN location of the recorded disposition, with pointers to any operative cures or explicit set-asides, or an explicit acceptance when no cure is required before review, (3) the assembled RUN snapshot identifier, comprising byte count and SHA-256 prefix, and (4) the assembly timestamp in UTC. Assemble the feed after the disposition is recorded. Any missing field, pending required cure, or mismatch between the identified snapshot and the version supplied to review blocks firing until the record is complete and the feed is reassembled. For a direct disk-read review, check the read against the manifest identifier. **Prevention CANDIDATE.** Test at the next required Plan review, even if Jev returns EXECUTE. Its manifest and filed return must identify the same snapshot and show the recorded disposition in the reviewed version. At the next Jev REVISE, also check that the reviewed version contains the operative cures or explicit set-asides.

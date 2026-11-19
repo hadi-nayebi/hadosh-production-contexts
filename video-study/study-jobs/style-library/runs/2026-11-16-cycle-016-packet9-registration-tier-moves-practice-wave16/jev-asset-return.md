@@ -1,0 +1,14 @@
+# jev-asset — RAW RETURN — style-library Cycle-016
+Call: jev-asset (guards/jev-asset.md §2 executed against its §3 context contract, by a fresh decision-model judge). Candidates: packet #9's lessons L1–L9, judged one at a time against ASSETS.md (66 assets). Floors per §5 applied.
+
+L1 — REGISTER · Reusability 0.90 · Evidence Binding 0.95 · Consumer Namedness 0.90 · Non-Duplication 0.90 · Basis: Parameterized draw-on link-then-node device; no existing asset covers hub-and-spoke link disclosure (nearest AS-05 is a document pattern, not link disclosure).
+L2 — REGISTER · Reusability 0.92 · Evidence Binding 0.90 · Consumer Namedness 0.90 · Non-Duplication 0.92 · Basis: Single-clock label/diagram-event synchrony rule; burst–name synchrony is uncovered by any existing asset.
+L3 — REGISTER · Reusability 0.85 · Evidence Binding 0.90 · Consumer Namedness 0.85 · Non-Duplication 0.95 · Basis: One-line vertical name-roll ticker for labelling a changing diagram; no existing asset covers a name-roll device.
+L4 — REGISTER · Reusability 0.88 · Evidence Binding 0.70 · Consumer Namedness 0.80 · Non-Duplication 0.90 · Basis: Minimal seed-state opening measured against remembered emptiness; seed-state opening is uncovered (distinct from AS-22's count-as-argument structure).
+L5 — REGISTER · Reusability 0.80 · Evidence Binding 0.65 · Consumer Namedness 0.75 · Non-Duplication 0.80 · Basis: Name-exit ending with ≥1 s bare-result hold; distinct from AS-08/AS-40 end cards and AS-47 — the held item is the result itself, not a static card, and name-exit is uncovered.
+L6 — REGISTER-AS-VARIANT (parent AS-09) · Reusability 0.80 · Evidence Binding 0.65 · Consumer Namedness 0.85 · Non-Duplication 0.35 · Basis: Monochrome work / colour-only frame is AS-09's two-register colour separation applied to frame vs. working diagram, not a new colour principle.
+L7 — REGISTER-AS-VARIANT (parent AS-22) · Reusability 0.85 · Evidence Binding 0.60 · Consumer Namedness 0.90 · Non-Duplication 0.20 · Basis: Accumulate-one-countable-unit-until-the-count-persuades restates AS-22 Build the argument as a count, instantiated here in a diagram build.
+L8 — REGISTER-AS-VARIANT (parent AS-52) · Reusability 0.85 · Evidence Binding 0.85 · Consumer Namedness 0.85 · Non-Duplication 0.35 · Basis: Burst period tightening ≈3:1 is AS-52's compression-contrast pacing applied to burst-plus-hold builds, with the tempo table as its parameter evidence.
+L9 — REGISTER-AS-VARIANT (parent AS-19) · Reusability 0.82 · Evidence Binding 0.70 · Consumer Namedness 0.85 · Non-Duplication 0.40 · Basis: A ≈40–45% stillness budget after each addition is AS-19's structural pacing — rhythm carried by build structure — with a quantified hold parameter.
+
+Disposition (runner): applied in full — L1–L5 → AS-70…AS-74; L6 → variant under AS-09; L7 → variant under AS-22; L8 → variant under AS-52; L9 → variant under AS-19; 0 REJECT.
