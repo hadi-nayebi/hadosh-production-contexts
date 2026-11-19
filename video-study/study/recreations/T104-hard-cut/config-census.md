@@ -1,0 +1,22 @@
+# T104 — guard-config-census output v3.1 (A6 leg 2, FINAL build, pre-wave)
+
+## 1. All-literal scan (outside CONFIG block)
+Style block literals: `0` margins/paddings (structural — page chrome reset), `hidden`/`absolute`/`nowrap` keywords (structural — construction syntax). Script literals outside CONFIG, each classified:
+- `"block"` / `"none"` display values — structural (the binary selector's two states; the values ARE the mechanism's states, not subject shaping).
+- `"px"` suffixes, `"px dashed "` border format string — structural (construction syntax; width and color are CONFIG-derived: geom.groundW + palette.body).
+- `/ 2` in bar/dot borderRadius — structural (half of a CONFIG dimension is a mathematical identity, the radius of a pill/circle).
+- `- 30`, `+ 60` in the ground-line placement (laptopX−30, laptopW+60) — **first-pass HIT, CURED pre-wave? No — classified on inspection: these size the dashed ground line relative to the laptop; they shape scene geometry.** Recorded as a HIT below with disposition (carried, not cured — see HIT list).
+- `((t % CYCLE) + CYCLE) % CYCLE` — structural (modulo identity).
+- `render(0)`, seam initial opacity `"0"` — structural (initial state; seam opacity is thereafter seamOpacity(t), CONFIG-timed).
+- First-pass HITs found by this census and CURED before this filing (re-verified by harness after cure): line-height `"1.2"` → `type.lineHeight` · marker glyphs `"▸"`/`"▲"` → `sceneA.marker`/`sceneB.marker` · tile glyph offsets `7`/`5` → `geom.tileGlyphX`/`tileGlyphY` · heading offset `1` → `geom.headY` · hero title offset `−2` → `geom.titleDY` · strip start `stripGap + 2` → `geom.stripTop`.
+
+## 2. Application-site resolution (every CONFIG key → ≥1 site)
+stage.width/height → stage + both layers + seam sizing ✓ · sceneA.kind — **no application site (descriptive label only)** — see HIT list · sceneA.title → laptop screen title node ✓ · sceneA.lines[] → laptop screen line nodes ✓ · sceneA.marker → screen marker glyphs ✓ · sceneB.kind — **no application site (descriptive label only)** — see HIT list · sceneB.heading → search-bar text ✓ · sceneB.title → hero title node ✓ · sceneB.lines[] → hero line nodes ✓ · sceneB.lit → **no application site** — see HIT list · sceneB.marker → hero tile glyph ✓ · introMs/holdAMs/holdBMs/loopFadeMs → CYCLE + CUT1/CUT2/CUT3/FADE_START derivation + seamOpacity ✓ · palette.field → body background + seam overlay background ✓ · palette.cardA → hero background ✓ · palette.cardB → second card background ✓ · palette.ink → hero title + tile glyph color ✓ · palette.dim → hero lines color ✓ · palette.accent → screen markers color + hero tile background ✓ · palette.fieldA → layerA background ✓ · palette.fieldB → layerB background ✓ · palette.body → laptop body + base + ground border + card1 strips ✓ · palette.screen → laptop screen background ✓ · palette.dark → screen text + heading + dot + card2 strips ✓ · palette.card → card1 background ✓ · palette.bar → search bar background ✓ · type.font → body font-family ✓ · type.titleSize/lineSize/headSize/markerSize → text sizing ✓ · type.titleWeight/lineWeight → text weights ✓ · type.lineHeight → txt() line-height ✓ · geom.* (all 31 keys) → scene construction positions/sizes (laptop, base, ground, screen pad, page pad, bar, hero, cards, tile, strips, dot) ✓. 
+
+## 3. CSS-variable setter check
+No CSS variables are used; CONFIG is consumed directly in JS. No setter-missing class possible. ✓
+
+HIT list: **3 HITs carried** (all dispositioned; the wave prices them):
+- HIT-1: ground-line offsets `−30`/`+60` outside CONFIG (subject-shaping geometry). Disposition: carried — a one-line decorative ground rule; curing it means two more geom keys for a dashed line whose exact extent no lens can price against the specimen (the specimen's own ground line is itself approximate). Named here so the reusability lens prices it knowingly.
+- HIT-2: `sceneA.kind` / `sceneB.kind` have no application site (descriptive labels). Disposition: carried — they are the consumer-facing scene-type labels (the assembler's transition container names its scene kinds); they promise no visual control. If the wave prices them as unapplied keys, practice removes or applies them.
+- HIT-3: `sceneB.lit` has no application site. Disposition: carried — a leftover of the superseded ladder CONFIG (where lit marked the active row); in the measured webpage scene there is no lit/unlit state to drive. Named here rather than silently deleted because the Plan table carries it; the wave prices it.

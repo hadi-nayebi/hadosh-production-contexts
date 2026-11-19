@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T103 — Complexity ladder (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#10131f;font-family:Arial,Helvetica,sans-serif;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #card{position:absolute;inset:0;}
+  .row{position:absolute;left:0;right:0;}
+  .rname{font-weight:700;white-space:nowrap;}
+  .items{margin:0;padding:0;list-style:none;}
+  .items li{white-space:nowrap;font-style:italic;}
+  .items li::before{content:"• ";color:var(--acc);}
+  #marker{position:absolute;}
+  .tri{width:0;height:0;border-top-style:solid;border-bottom-style:solid;border-left-style:solid;border-top-color:transparent;border-bottom-color:transparent;}
+  .sq{border-radius:2px;}
+  .ci{border-radius:50%;}
+</style>
+</head>
+<body>
+<div id="stage"><div id="card"></div><div id="marker"></div></div>
+<script>
+"use strict";
+/* CONFIG — every content, timing, palette and geometry value lives here.
+   Logic below reads ONLY this object (plus a ?cfg= JSON deep-merge override). */
+const CONFIG = {
+  rows: [
+    { name: "Easy",         items: ["Hard cut", "Dissolve"] },
+    { name: "Intermediate", items: ["Cut on action", "Match cut"] },
+    { name: "Difficult",    items: ["Dynamic zoom", "Element morph"] }
+  ],
+  marker: { color: "#f28c28", shape: "triangle", startRow: 0 },
+  palette: { card: "#1e2a78", ink: "#ffffff", inkDim: "#b9c2e8", accent: "#f28c28" },
+  stepMs: 3600,
+  holdMs: 3200,
+  stage: { width: 360 },
+  type: { font: "Arial, Helvetica, sans-serif", namePx: 30, itemPx: 16 },
+  geom: { padX: 84, rowTop: 44, rowH: 118, markerX: 48, markerSize: 22, itemGap: 4, nameItemGap: 6 }
+};
+/* Phase machine (explicit, per codex-plan-review disposition):
+   totalMs  = rows.length * stepMs + holdMs            (= 14000 at defaults)
+   step     = min(floor(t / stepMs), rows.length - 1)
+   rowIndex = (marker.startRow + step) % rows.length   (DERIVED runtime state)
+   The final row therefore stays selected for stepMs + holdMs (= 6800 ms). */
+function totalMs(c){ return c.rows.length * c.stepMs + c.holdMs; }
+function stateAt(c, t){
+  const total = totalMs(c);
+  const tt = ((t % total) + total) % total;
+  const step = Math.min(Math.floor(tt / c.stepMs), c.rows.length - 1);
+  const rowIndex = (c.marker.startRow + step) % c.rows.length;
+  return { t: tt, totalMs: total, step: step, rowIndex: rowIndex };
+}
+function merge(base, over){
+  if (Array.isArray(over)) return over.slice();
+  if (over && typeof over === "object"){
+    const out = {};
+    for (const k in base) out[k] = merge(base[k], over[k]);
+    for (const k in over) if (!(k in base)) out[k] = over[k];
+    return out;
+  }
+  return over === undefined ? base : over;
+}
+let CFG = CONFIG;
+try {
+  const q = new URLSearchParams(location.search).get("cfg");
+  if (q) CFG = merge(CONFIG, JSON.parse(q));
+} catch (e) { CFG = CONFIG; }
+
+const stage = document.getElementById("stage");
+const card = document.getElementById("card");
+const markerEl = document.getElementById("marker");
+let rowEls = [];
+function build(c){
+  const W = c.stage.width, H = c.geom.rowTop * 2 + c.geom.rowH * c.rows.length;
+  stage.style.width = W + "px"; stage.style.height = H + "px";
+  stage.style.fontFamily = c.type.font;
+  card.style.background = c.palette.card;
+  card.style.setProperty("--acc", c.palette.accent);
+  card.innerHTML = ""; rowEls = [];
+  c.rows.forEach(function(r, i){
+    const row = document.createElement("div"); row.className = "row";
+    row.style.top = (c.geom.rowTop + i * c.geom.rowH) + "px";
+    row.style.paddingLeft = c.geom.padX + "px";
+    const nm = document.createElement("div"); nm.className = "rname";
+    nm.textContent = r.name; nm.style.fontSize = c.type.namePx + "px";
+    const ul = document.createElement("ul"); ul.className = "items";
+    ul.style.marginTop = c.geom.nameItemGap + "px";
+    r.items.forEach(function(it){
+      const li = document.createElement("li"); li.textContent = it;
+      li.style.fontSize = c.type.itemPx + "px"; li.style.marginTop = c.geom.itemGap + "px";
+      li.style.color = c.palette.ink;
+      ul.appendChild(li);
+    });
+    row.appendChild(nm); row.appendChild(ul); card.appendChild(row);
+    rowEls.push({ row: row, name: nm, items: ul });
+  });
+  const s = c.geom.markerSize;
+  markerEl.className = c.marker.shape === "triangle" ? "tri" : (c.marker.shape === "circle" ? "ci" : "sq");
+  markerEl.style.left = c.geom.markerX + "px";
+  markerEl.style.width = c.marker.shape === "triangle" ? "0px" : s + "px";
+  markerEl.style.height = c.marker.shape === "triangle" ? "0px" : s + "px";
+  if (c.marker.shape === "triangle"){
+    markerEl.style.borderTopWidth = (s/2) + "px"; markerEl.style.borderBottomWidth = (s/2) + "px";
+    markerEl.style.borderLeftWidth = s + "px"; markerEl.style.borderLeftColor = c.marker.color;
+    markerEl.style.background = "transparent";
+  } else {
+    markerEl.style.borderWidth = "0px"; markerEl.style.background = c.marker.color;
+  }
+}
+function render(t){
+  const c = CFG, st = stateAt(c, t);
+  rowEls.forEach(function(r, i){
+    const active = i === st.rowIndex;
+    r.name.style.color = active ? c.palette.ink : c.palette.inkDim;
+    r.items.style.display = active ? "block" : "none";
+  });
+  const top = c.geom.rowTop + st.rowIndex * c.geom.rowH + (c.type.namePx - c.geom.markerSize) / 2;
+  markerEl.style.top = top + "px";
+  return st;
+}
+build(CFG);
+window.__render = render;
+window.__stateAt = function(t){ return stateAt(CFG, t); };
+window.__totalMs = function(){ return totalMs(CFG); };
+window.__config = CFG;
+let start = null;
+function loop(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

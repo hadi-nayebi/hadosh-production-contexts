@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T103 — Complexity ladder · comparison</title>
+<style>
+  body{margin:0;background:#10131f;color:#fff;font-family:Arial,Helvetica,sans-serif;}
+  .bar{padding:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  button{font-size:16px;padding:10px 18px;min-height:44px;}
+  .wrap{display:flex;flex-wrap:wrap;gap:16px;padding:0 10px 16px;}
+  figure{margin:0;width:360px;max-width:100%;}
+  figcaption{font-size:13px;padding:6px 0;line-height:1.4;}
+  video,iframe{width:360px;max-width:100%;border:0;background:#000;display:block;}
+  video{height:203px;} iframe{height:442px;}
+</style>
+</head>
+<body>
+<div class="bar">
+  <button id="playBtn" type="button">Play / Pause</button>
+  <button id="restartBtn" type="button">Restart</button>
+  <span id="clock">0.0 s / 14.0 s</span>
+</div>
+<div class="wrap">
+  <figure>
+    <figcaption>ORIGINAL — School of Motion 'Six Essential Motion Design Transitions' @ 10–24 s</figcaption>
+    <video id="orig" src="segment.mp4" playsinline preload="auto"></video>
+  </figure>
+  <figure>
+    <figcaption>RECREATION — T103 complexity ladder, parameterized</figcaption>
+    <iframe id="rec" src="recreation.html" title="T103 recreation"></iframe>
+  </figure>
+</div>
+<script>
+"use strict";
+var v = document.getElementById("orig");
+var f = document.getElementById("rec");
+var clock = document.getElementById("clock");
+function drive(){
+  var t = v.currentTime * 1000;
+  clock.textContent = (v.currentTime).toFixed(1) + " s / 14.0 s";
+  try { if (f.contentWindow && f.contentWindow.__render) f.contentWindow.__render(t); } catch (e) {}
+}
+v.addEventListener("timeupdate", drive);
+setInterval(drive, 50);
+document.getElementById("playBtn").addEventListener("click", function(){
+  if (v.paused) { v.play(); } else { v.pause(); }
+  drive();
+});
+document.getElementById("restartBtn").addEventListener("click", function(){
+  v.currentTime = 0; v.play(); drive();
+});
+</script>
+</body>
+</html>

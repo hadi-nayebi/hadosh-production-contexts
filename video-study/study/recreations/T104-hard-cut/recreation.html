@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T104 — Hard cut · recreation</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .layer{position:absolute;left:0;top:0;}
+  .box{position:absolute;box-sizing:border-box;}
+  .txt{position:absolute;box-sizing:border-box;white-space:nowrap;overflow:hidden;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  stage: {width:360, height:203},
+  sceneA: {kind:"laptop", title:"Easy", lines:["Hard cut","Dissolve"], marker:"▸"},
+  sceneB: {kind:"webpage", heading:"Motion Design Training", title:"Easy", lines:["Hard cut","Dissolve"], lit:true, marker:"▲"},
+  introMs: 1400,
+  holdAMs: 2600,
+  holdBMs: 3400,
+  loopFadeMs: 600,
+  palette: {field:"#2b3a8f", cardA:"#3f7fbf", cardB:"#57b7a8", ink:"#ffffff", dim:"rgba(255,255,255,0.45)", accent:"#ff8a3c", fieldA:"#e75480", fieldB:"#57c8b4", body:"#3b4a6b", screen:"#7fe7d2", dark:"#22304a", card:"#f4f4f4", bar:"#ffd23c"},
+  type: {font:"Arial, sans-serif", titleSize:18, lineSize:16, headSize:16, markerSize:16, titleWeight:700, lineWeight:400, lineHeight:1.2},
+  geom: {laptopX:105, laptopY:46, laptopW:150, laptopH:96, baseX:95, baseW:170, baseH:10, screenPad:8, lineGap:5,
+         pagePad:14, barY:12, barH:22, heroY:42, heroH:72, cardY:120, cardH:36, card2Y:162, radius:4, markerW:16,
+         tileW:34, tileX:10, tileY:12, textX:54, stripH:8, stripGap:5, groundW:2, dotD:10, headY:1, titleDY:-2,
+         tileGlyphX:7, tileGlyphY:5, stripTop:7,
+         barFrac:[0.92,0.78,0.6], barFrac2:[0.85,0.66]}
+};
+const CYCLE = CONFIG.introMs + CONFIG.holdAMs + CONFIG.holdBMs + CONFIG.holdAMs + CONFIG.holdBMs + CONFIG.loopFadeMs;
+const CUT1 = CONFIG.introMs + CONFIG.holdAMs;
+const CUT2 = CUT1 + CONFIG.holdBMs;
+const CUT3 = CUT2 + CONFIG.holdAMs;
+const FADE_START = CUT3 + CONFIG.holdBMs;
+function stateAt(t){
+  t = ((t % CYCLE) + CYCLE) % CYCLE;
+  if (t < CUT1) return "A";
+  if (t < CUT2) return "B";
+  if (t < CUT3) return "A";
+  return "B";
+}
+function seamOpacity(t){
+  t = ((t % CYCLE) + CYCLE) % CYCLE;
+  if (t < FADE_START) return 0;
+  return (t - FADE_START) / CONFIG.loopFadeMs;
+}
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+document.body.style.background = CONFIG.palette.field;
+document.body.style.fontFamily = CONFIG.type.font;
+function el(parent, x, y, w, h, bg){
+  const d = document.createElement("div");
+  d.className = "box";
+  d.style.left = x + "px"; d.style.top = y + "px";
+  d.style.width = w + "px"; d.style.height = h + "px";
+  if (bg) d.style.background = bg;
+  parent.appendChild(d);
+  return d;
+}
+function txt(parent, x, y, size, weight, color, text){
+  const d = document.createElement("div");
+  d.className = "txt";
+  d.style.left = x + "px"; d.style.top = y + "px";
+  d.style.fontSize = size + "px"; d.style.fontWeight = weight;
+  d.style.color = color; d.style.lineHeight = String(CONFIG.type.lineHeight);
+  d.textContent = text;
+  parent.appendChild(d);
+  return d;
+}
+function buildSceneA(){
+  const g = CONFIG.geom, p = CONFIG.palette, ty = CONFIG.type, s = CONFIG.sceneA;
+  const layer = document.createElement("div");
+  layer.className = "layer"; layer.id = "layerA";
+  layer.style.width = CONFIG.stage.width + "px"; layer.style.height = CONFIG.stage.height + "px";
+  layer.style.background = p.fieldA;
+  const ground = el(layer, g.laptopX - 30, g.laptopY + g.laptopH + g.baseH, g.laptopW + 60, 0, null);
+  ground.style.borderTop = g.groundW + "px dashed " + p.body;
+  el(layer, g.baseX, g.laptopY + g.laptopH, g.baseW, g.baseH, p.body);
+  const lap = el(layer, g.laptopX, g.laptopY, g.laptopW, g.laptopH, p.body);
+  lap.style.borderRadius = g.radius + "px";
+  const scr = el(lap, g.screenPad, g.screenPad, g.laptopW - 2 * g.screenPad, g.laptopH - 2 * g.screenPad, p.screen);
+  txt(scr, g.screenPad, g.screenPad, ty.titleSize, ty.titleWeight, p.dark, s.title);
+  let y = g.screenPad + ty.titleSize + g.lineGap * 2;
+  s.lines.forEach(function(line, i){
+    const m = txt(scr, g.screenPad, y, ty.markerSize, ty.titleWeight, p.accent, s.marker);
+    m.style.width = g.markerW + "px";
+    txt(scr, g.screenPad + g.markerW, y, ty.lineSize, ty.lineWeight, p.dark, line);
+    y += ty.lineSize + g.lineGap;
+  });
+  stage.appendChild(layer);
+  return layer;
+}
+function buildSceneB(){
+  const g = CONFIG.geom, p = CONFIG.palette, ty = CONFIG.type, s = CONFIG.sceneB;
+  const layer = document.createElement("div");
+  layer.className = "layer"; layer.id = "layerB";
+  layer.style.width = CONFIG.stage.width + "px"; layer.style.height = CONFIG.stage.height + "px";
+  layer.style.background = p.fieldB;
+  const W = CONFIG.stage.width - 2 * g.pagePad;
+  const bar = el(layer, g.pagePad, g.barY, W, g.barH, p.bar);
+  bar.style.borderRadius = (g.barH / 2) + "px";
+  txt(bar, g.screenPad * 2, g.headY, ty.headSize, ty.lineWeight, p.dark, s.heading);
+  const dot = el(bar, W - g.dotD - g.screenPad, (g.barH - g.dotD) / 2, g.dotD, g.dotD, p.dark);
+  dot.style.borderRadius = (g.dotD / 2) + "px";
+  const hero = el(layer, g.pagePad, g.heroY, W, g.heroH, p.cardA);
+  hero.style.borderRadius = g.radius + "px";
+  const tile = el(hero, g.tileX, g.tileY, g.tileW, g.tileW, p.accent);
+  tile.style.borderRadius = g.radius + "px";
+  txt(tile, g.tileGlyphX, g.tileGlyphY, ty.markerSize, ty.titleWeight, p.ink, s.marker);
+  txt(hero, g.textX, g.tileY + g.titleDY, ty.titleSize, ty.titleWeight, p.ink, s.title);
+  let y = g.tileY + ty.titleSize + g.lineGap;
+  s.lines.forEach(function(line){
+    txt(hero, g.textX, y, ty.lineSize, ty.lineWeight, p.dim, line);
+    y += ty.lineSize + g.lineGap;
+  });
+  const card1 = el(layer, g.pagePad, g.cardY, W, g.cardH, p.card);
+  card1.style.borderRadius = g.radius + "px";
+  let sy = g.stripTop;
+  g.barFrac.forEach(function(f){
+    el(card1, g.textX, sy, (W - g.textX - g.screenPad) * f, g.stripH, p.body);
+    sy += g.stripH + g.stripGap;
+  });
+  const card2 = el(layer, g.pagePad, g.card2Y, W, g.cardH, p.cardB);
+  card2.style.borderRadius = g.radius + "px";
+  sy = g.stripTop;
+  g.barFrac2.forEach(function(f){
+    el(card2, g.textX, sy, (W - g.textX - g.screenPad) * f, g.stripH, p.dark);
+    sy += g.stripH + g.stripGap;
+  });
+  stage.appendChild(layer);
+  return layer;
+}
+const layerA = buildSceneA();
+const layerB = buildSceneB();
+const seam = document.createElement("div");
+seam.className = "layer"; seam.id = "seam";
+seam.style.width = CONFIG.stage.width + "px"; seam.style.height = CONFIG.stage.height + "px";
+seam.style.background = CONFIG.palette.field;
+seam.style.opacity = "0";
+stage.appendChild(seam);
+function render(t){
+  const s = stateAt(t);
+  layerA.style.display = (s === "A") ? "block" : "none";
+  layerB.style.display = (s === "B") ? "block" : "none";
+  seam.style.opacity = String(seamOpacity(t));
+}
+window.__render = render;
+window.__stateAt = stateAt;
+window.__seamOpacity = seamOpacity;
+window.__CONFIG = CONFIG;
+window.__CYCLE = CYCLE;
+render(0);
+const t0 = performance.now();
+function frame(now){ render(now - t0); requestAnimationFrame(frame); }
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

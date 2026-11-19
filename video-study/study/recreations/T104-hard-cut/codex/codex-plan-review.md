@@ -1,0 +1,19 @@
+**Verdict: REVISE before Execute.** The binary scene selector is sound, but the Plan does not yet prove that its charged parameter swaps affect the visible laptop/webpage recreation.
+
+1. **Convergent defect class — partly closed.** A pure `state(t)` returning one scene ID, with visibility assigned directly, can prevent simultaneous A/B display. That guarantee needs both layers’ visibility derived from the same result on every update. A zero-hit search for transition/animation on the swap layers is insufficient: ancestor opacity, descendant animation, pseudo-elements, or another stylesheet could still alter the cut. Specify static scene trees, fully opaque stage ancestry during every cut, and no temporal styling within either scene.
+
+2. **Owner catches — exclusivity passes conceptually; intensity needs a stronger invariant.** The intended hard cut has zero overlap duration: immediately before the boundary, A is fully present; at the boundary, B is fully present. Write that as an explicit invariant covering **all three cuts**, with stage opacity exactly 1 throughout each. Put the seam fade in a separate named phase with defined opacity and reset behavior. An exclusive scene ID alone does not exclude a seam fade leaking into a demonstration.
+
+3. **Parameterization — current gate blocker.** Retaining `title`, `lines`, `rows`, and `activeRow` from the superseded ladder does not establish useful parameterization of a laptop and webpage. The Plan never identifies where `sceneA.title="Basics"` or `sceneB.lines=["Jump cut","Fade out"]` becomes visible. Dormant keys would let the exact swap test pass structurally while changing no pixels.
+
+   Before Execute, provide a key-to-visible-element map. Either give those charged values a justified visible role in the measured scenes or revise the charged swap test through the consuming Plan. Do not add ladder text merely to satisfy the test. Also enumerate geometry and typography keys with actual values; “from CONFIG geometry” currently leaves screen dimensions, lid shape, card layout, spacing, border widths, and font sizes available as hardcoded accidents. Map `palette.accent` to a visible element too.
+
+4. **Five-lens arithmetic — reusability remains the credible minimum.** T101’s 76 is evidence of limited headroom, not evidence that config composition will clear this item. The other four T101 scores total 350; holding those constant, a reusability score of 70 yields an average of 84 and fails. Reusability must reach **75** under that comparison. Any loss elsewhere raises the requirement. Simplicity itself should not depress reusability; unused configuration and absent evidence of transition-container integration should. No defensible numerical prediction follows from the present Plan.
+
+5. **Size discipline — keep the core, remove legacy baggage.** Static laptop and webpage scenes plus an instantaneous selector are appropriately scoped. Remove unused ladder controls and palette entries. Treat the seam fade as playback handling, separately parameterized and verified. Demonstrate that the consumer can supply scene content and timing without editing the selector.
+
+**Required verification revision:** sample every boundary at −1 ms, exactly at the boundary, and +1 ms; verify exclusive visibility and full opacity; test seam start, midpoint, end, and wrap; verify that each charged content/color swap visibly changes its mapped element. The proposed −16/0 ms state samples establish selector behavior at one boundary, not the rendered construction across the loop.
+
+The local execution tool failed before reading or writing files, so this review uses the supplied record only. The consumer must persist this return verbatim.
+
+BODY-WRITE: none (read-only run); consumer to file this return at `codex/codex-plan-review.md`.
