@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T57 — Quote cards with named attribution</title>
+<style>
+  html,body{margin:0;padding:0;background:var(--page-bg);}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  #stage{position:relative;width:100%;max-width:var(--stage-max);aspect-ratio:16/9;overflow:hidden;
+    background:var(--field);font-family:var(--font-family);box-sizing:border-box;}
+  #card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:var(--card-w);box-sizing:border-box;background:var(--card);
+    border-left:var(--rule-w) solid var(--chip);border-radius:var(--card-radius);
+    padding:var(--card-pad-y) var(--card-pad-x);box-shadow:0 6px 24px rgba(0,0,0,0.35);}
+  #glyph{color:var(--chip);font-size:var(--glyph-size);line-height:0.6;font-weight:var(--quote-weight);}
+  #quote{margin-top:var(--quote-gap);}
+  .qline{color:var(--ink);font-size:var(--quote-size);font-weight:var(--quote-weight);
+    line-height:var(--line-height);white-space:nowrap;opacity:0;}
+  #chip{margin-top:var(--chip-gap);opacity:0;}
+  #speaker{color:var(--chip-ink);font-size:var(--chip-size);font-weight:var(--chip-weight);}
+  #occasion{color:var(--chip);font-size:var(--chip-size);font-style:italic;font-weight:400;margin-left:0.45em;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="card">
+    <div id="glyph">&ldquo;</div>
+    <div id="quote"></div>
+    <div id="chip"><span id="speaker"></span><span id="occasion"></span></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / geometry value lives here ============ */
+const CONFIG = {
+  durationMs: 14000,
+  pageBg: "#000000",
+  quotes: [
+    { text: "Made a career of doing favors for his colleagues.",
+      speaker: "Associated Press", occasion: "on Byrd" }
+  ],
+  palette: { card: "#232a31", ink: "#f5f2ea", chip: "#b8860b", chipInk: "#ffffff", field: "#2e6b7a" },
+  fontFamily: "Georgia, 'Times New Roman', serif",
+  lineMs: 620,
+  holdMs: 3000,
+  cardEnterMs: 500,
+  chipFadeMs: 400,
+  lineFadeMs: 260,
+  layout: { stageMaxPx: 960, cardWidthFrac: 0.62, cardPadXFrac: 0.045, cardPadYFrac: 0.035,
+            cardRadiusFrac: 0.012, rulePx: 4 },
+  type: { quoteFrac: 0.040, glyphFrac: 0.075, chipFrac: 0.030,
+          quoteWeight: 600, chipWeight: 700, lineHeight: 1.3,
+          quoteGapFrac: 0.018, chipGapFrac: 0.022, fitGuard: 0.97, minQuotePx: 11 }
+};
+/* URL override: ?config=<url-encoded JSON> deep-merges into CONFIG (swap-test route). */
+(function applyOverride(){
+  try {
+    const q = new URLSearchParams(location.search).get("config");
+    if (!q) return;
+    const o = JSON.parse(q);
+    (function merge(dst, src){
+      for (const k in src) {
+        if (src[k] && typeof src[k] === "object" && !Array.isArray(src[k]) &&
+            dst[k] && typeof dst[k] === "object" && !Array.isArray(dst[k])) merge(dst[k], src[k]);
+        else dst[k] = src[k];
+      }
+    })(CONFIG, o);
+  } catch (e) { /* malformed override ignored; specimen defaults stand */ }
+})();
+
+const stage = document.getElementById("stage");
+const cardEl = document.getElementById("card");
+const quoteEl = document.getElementById("quote");
+const chipEl = document.getElementById("chip");
+const speakerEl = document.getElementById("speaker");
+const occasionEl = document.getElementById("occasion");
+const glyphEl = document.getElementById("glyph");
+
+function applyVars() {
+  const r = stage.style;
+  r.setProperty("--page-bg", CONFIG.pageBg);
+  r.setProperty("--field", CONFIG.palette.field);
+  r.setProperty("--card", CONFIG.palette.card);
+  r.setProperty("--ink", CONFIG.palette.ink);
+  r.setProperty("--chip", CONFIG.palette.chip);
+  r.setProperty("--chip-ink", CONFIG.palette.chipInk);
+  r.setProperty("--font-family", CONFIG.fontFamily);
+  r.setProperty("--stage-max", CONFIG.layout.stageMaxPx + "px");
+  const W = stage.clientWidth || CONFIG.layout.stageMaxPx;
+  r.setProperty("--card-w", Math.round(W * CONFIG.layout.cardWidthFrac) + "px");
+  r.setProperty("--card-pad-x", Math.round(W * CONFIG.layout.cardPadXFrac) + "px");
+  r.setProperty("--card-pad-y", Math.round(W * CONFIG.layout.cardPadYFrac) + "px");
+  r.setProperty("--card-radius", Math.round(W * CONFIG.layout.cardRadiusFrac) + "px");
+  r.setProperty("--rule-w", CONFIG.layout.rulePx + "px");
+  r.setProperty("--quote-size", Math.max(CONFIG.type.minQuotePx, W * CONFIG.type.quoteFrac) + "px");
+  r.setProperty("--glyph-size", (W * CONFIG.type.glyphFrac) + "px");
+  r.setProperty("--chip-size", (W * CONFIG.type.chipFrac) + "px");
+  r.setProperty("--quote-weight", CONFIG.type.quoteWeight);
+  r.setProperty("--chip-weight", CONFIG.type.chipWeight);
+  r.setProperty("--line-height", CONFIG.type.lineHeight);
+  r.setProperty("--quote-gap", Math.round(W * CONFIG.type.quoteGapFrac) + "px");
+  r.setProperty("--chip-gap", Math.round(W * CONFIG.type.chipGapFrac) + "px");
+}
+
+/* Measured line formation: greedy word wrap against canvas-measured text at the
+   CONFIG font; available width = card width minus actual padding minus rule.
+   No specimen line breaks, no character-count splitting. Long unbroken tokens
+   are hard-split only when a single token exceeds the available width. */
+const measCtx = document.createElement("canvas").getContext("2d");
+function measure(text, px, weight) {
+  measCtx.font = weight + " " + px + "px " + CONFIG.fontFamily;
+  return measCtx.measureText(text).width;
+}
+function wrapLines(text, availPx, fontPx) {
+  let size = fontPx;
+  const guard = availPx * CONFIG.type.fitGuard;
+  const words = text.split(/\s+/).filter(Boolean);
+  function build(px) {
+    const lines = []; let cur = "";
+    for (const w of words) {
+      if (measure(w, px, CONFIG.type.quoteWeight) > guard) {
+        if (cur) { lines.push(cur); cur = ""; }
+        let rest = w;
+        while (measure(rest, px, CONFIG.type.quoteWeight) > guard && rest.length > 1) {
+          let n = rest.length;
+          while (n > 1 && measure(rest.slice(0, n), px, CONFIG.type.quoteWeight) > guard) n--;
+          lines.push(rest.slice(0, n)); rest = rest.slice(n);
+        }
+        cur = rest; continue;
+      }
+      const trial = cur ? cur + " " + w : w;
+      if (measure(trial, px, CONFIG.type.quoteWeight) <= guard) cur = trial;
+      else { lines.push(cur); cur = w; }
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  let lines = build(size);
+  /* Vertical policy: if the wrapped block would exceed the stage height budget,
+     shrink the quote font (never below the legibility floor) and re-wrap. */
+  const stageH = (stage.clientWidth || CONFIG.layout.stageMaxPx) * 9 / 16;
+  while (size > CONFIG.type.minQuotePx &&
+         lines.length * size * CONFIG.type.lineHeight > stageH * 0.52) {
+    size -= 1; lines = build(size);
+  }
+  return { lines, fontPx: size };
+}
+
+/* Contrast guard (plan-review cure): ink vs card and chipInk vs card and chip
+   vs card must clear 3:1 or the palette is deterministically corrected to the
+   specimen ink/chip so a swapped palette can never silently kill legibility. */
+function lum(hex) {
+  const c = hex.replace("#", "");
+  const v = [0, 2, 4].map(i => parseInt(c.substr(i, 2), 16) / 255)
+    .map(s => s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4));
+  return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+}
+function contrast(a, b) {
+  const la = lum(a), lb = lum(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function guardPalette() {
+  const p = CONFIG.palette;
+  if (contrast(p.ink, p.card) < 3) p.ink = "#f5f2ea";
+  if (contrast(p.chipInk, p.card) < 3) p.chipInk = "#ffffff";
+  if (contrast(p.chip, p.card) < 2) p.chip = "#b8860b";
+}
+
+/* Timeline (time-derived, seekable): quote i starts after the previous quote's
+   lines + chip + hold complete; inside a quote: card enters, lines reveal one
+   per lineMs, chip lands after the last line, holdMs runs from chip landing.
+   Terminal state: last quote fully revealed and held to durationMs. */
+let lineDivs = [];
+function quoteStart(i) {
+  let t = 0;
+  for (let k = 0; k < i; k++) t += quoteSpan(k);
+  return t;
+}
+let wrappedCache = [];
+function quoteSpan(i) {
+  const n = wrappedCache[i] ? wrappedCache[i].lines.length : 3;
+  return CONFIG.cardEnterMs + n * CONFIG.lineMs + CONFIG.chipFadeMs + CONFIG.holdMs;
+}
+function buildQuote(i) {
+  const q = CONFIG.quotes[i];
+  const W = stage.clientWidth || CONFIG.layout.stageMaxPx;
+  const cardW = W * CONFIG.layout.cardWidthFrac;
+  const avail = cardW - 2 * (W * CONFIG.layout.cardPadXFrac) - CONFIG.layout.rulePx;
+  const fontPx = Math.max(CONFIG.type.minQuotePx, W * CONFIG.type.quoteFrac);
+  const w = wrapLines(q.text, avail, fontPx);
+  wrappedCache[i] = w;
+  quoteEl.innerHTML = "";
+  quoteEl.style.fontSize = w.fontPx + "px";
+  lineDivs = w.lines.map(txt => {
+    const d = document.createElement("div");
+    d.className = "qline"; d.textContent = txt; d.style.fontSize = w.fontPx + "px";
+    quoteEl.appendChild(d); return d;
+  });
+  speakerEl.textContent = "\u2014 " + q.speaker;
+  occasionEl.textContent = q.occasion;
+}
+let curQuote = -1;
+function renderAt(tMs) {
+  let i = 0;
+  while (i < CONFIG.quotes.length - 1 && tMs >= quoteStart(i) + quoteSpan(i)) i++;
+  if (i !== curQuote) { curQuote = i; buildQuote(i); }
+  const local = tMs - quoteStart(i);
+  const enter = Math.min(1, Math.max(0, local / CONFIG.cardEnterMs));
+  cardEl.style.opacity = enter;
+  cardEl.style.transform = "translate(-50%,-50%) translateY(" + ((1 - enter) * 14) + "px)";
+  lineDivs.forEach((d, li) => {
+    const start = CONFIG.cardEnterMs + li * CONFIG.lineMs;
+    const p = Math.min(1, Math.max(0, (local - start) / CONFIG.lineFadeMs));
+    d.style.opacity = p;
+  });
+  const chipStart = CONFIG.cardEnterMs + lineDivs.length * CONFIG.lineMs;
+  const cp = Math.min(1, Math.max(0, (local - chipStart) / CONFIG.chipFadeMs));
+  chipEl.style.opacity = cp;
+  glyphEl.style.opacity = enter;
+}
+let startStamp = null, pausedAt = 0, playing = false;
+function frame(now) {
+  if (!playing) return;
+  if (startStamp === null) startStamp = now - pausedAt;
+  const t = now - startStamp;
+  if (t >= CONFIG.durationMs) { renderAt(CONFIG.durationMs); playing = false; return; }
+  renderAt(t);
+  requestAnimationFrame(frame);
+}
+function play() { if (!playing) { playing = true; startStamp = null; requestAnimationFrame(frame); } }
+function pause() { playing = false; }
+function seek(ms) { pausedAt = Math.max(0, Math.min(CONFIG.durationMs, ms)); renderAt(pausedAt); if (playing) startStamp = null; }
+guardPalette();
+applyVars();
+buildQuote(0); curQuote = 0; renderAt(0);
+window.__T57 = { seek, play, pause, renderAt, CONFIG,
+  wrap: (text) => { const W = stage.clientWidth || CONFIG.layout.stageMaxPx;
+    const avail = W * CONFIG.layout.cardWidthFrac - 2 * (W * CONFIG.layout.cardPadXFrac) - CONFIG.layout.rulePx;
+    return wrapLines(text, avail, Math.max(CONFIG.type.minQuotePx, W * CONFIG.type.quoteFrac)); },
+  contrast };
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { wrappedCache = []; curQuote = -1; renderAt(pausedAt); });
+play();
+</script>
+</body>
+</html>

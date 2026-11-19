@@ -1,0 +1,13 @@
+Reusability is solid for short quotes in the default dark palette and unit entrance mode, but several configuration paths lack reliable bounds.
+
+- **Multi-quote handling and seeking:** Precomputed wrapping and timing make card selection independent of playback history. Scheduled gaps and sequence starts work for the supplied, chronologically ordered quotes. Unsorted scheduled entries are neither sorted nor rejected; selection follows array order rather than the latest chronological start.
+- **Duration adequacy:** Sequence duration uses only `cardEnterMs + holdMs`. In staggered mode, it ignores line reveals and attribution completion, so longer quotes can be replaced before their attribution appears. Scheduled overlaps and exits before entrance completion also lack validation.
+- **Content fitting:** Quote wrapping and complete-card height estimation are useful, but reaching the minimum font size does not guarantee fit or produce an overflow diagnostic. Attribution height is estimated as at most two lines, although long speakers or occasions can occupy more. Attribution uses browser wrapping while the estimate uses combined canvas widths, leaving the fit guarantee incomplete.
+- **Palette swaps:** The fallback supports dark panels, but lightening cannot repair insufficient contrast against light panels. It stops after twenty iterations without reporting failure. Color parsing assumes six-digit hex, which further restricts configuration inputs without validation.
+- **Configuration coverage:** Content, timing, typography, and much geometry are exposed. Card placement, stage aspect ratio, glyph, glyph line height, and shadow color remain fixed outside configuration. Consuming every CONFIG key does not establish coverage of every shaping decision.
+- **Edge-case evidence:** The reported checks cover useful ordinary cases, empty content, direct seeking, and one dark-panel palette repair. They do not establish behavior for oversized attribution, minimum-size overflow, unsorted schedules, light panels, or staggered sequences with many lines. Browser fitting remains unverified.
+
+Production can reuse the default path, but configuration alone cannot yet guarantee a complete, fitting, readable card across the advertised variants.
+
+SCORE: 72
+BODY-WRITE: Require staggered timing to include attribution completion, validate chronological schedules and configuration bounds, and report unresolved text overflow or contrast failure before accepting a configuration for production.

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T64 — Calendar-prop stakes · comparison</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #10151c; color: #eef2f5; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 12px; }
+  .cols { display: flex; gap: 16px; align-items: flex-start; }
+  .col { flex: 1 1 0; min-width: 0; }
+  .label { font-weight: 800; font-size: 14px; margin: 0 0 8px 0; }
+  video, iframe { width: 100%; border: 0; border-radius: 8px; background: #000; display: block; }
+  .controls { display: flex; gap: 10px; margin: 14px 0; }
+  button { min-height: 48px; min-width: 88px; font-size: 16px; font-weight: 700; border-radius: 8px; border: 0; background: #256a7d; color: #fff; cursor: pointer; }
+  @media (max-width: 640px) { .cols { flex-direction: column; } .col { width: 100%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <p class="label">ORIGINAL — Epochs in Ink @ 528–542 s</p>
+      <video id="orig" src="segment.mp4" playsinline preload="metadata"></video>
+    </div>
+    <div class="col">
+      <p class="label">RECREATION — T64 calendar-prop stakes, parameterized</p>
+      <iframe id="rec" src="recreation.html" title="T64 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+const vid = document.getElementById("orig");
+const rec = document.getElementById("rec");
+rec.style.height = "300px";
+let rafId = null;
+function recSeek(ms) {
+  try { const w = rec.contentWindow; if (w && w.__T64) w.__T64.seek(ms / 1000); } catch (e) {}
+}
+function syncLoop() {
+  recSeek(vid.currentTime * 1000);
+  if (!vid.paused && !vid.ended) rafId = requestAnimationFrame(syncLoop);
+}
+document.getElementById("btnPlay").addEventListener("click", () => { vid.play(); syncLoop(); });
+document.getElementById("btnPause").addEventListener("click", () => { vid.pause(); if (rafId) cancelAnimationFrame(rafId); recSeek(vid.currentTime * 1000); });
+document.getElementById("btnRestart").addEventListener("click", () => { vid.currentTime = 0; vid.play(); syncLoop(); });
+vid.addEventListener("seeked", () => recSeek(vid.currentTime * 1000));
+</script>
+</body>
+</html>

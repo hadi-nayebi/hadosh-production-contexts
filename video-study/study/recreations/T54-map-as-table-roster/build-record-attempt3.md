@@ -1,0 +1,79 @@
+# T54 — Map-as-table roster · build record (attempt 3) — INTERNAL CURE LEDGER
+Artifact dir: `hidden_files/study/recreations/T54-map-as-table-roster/` · Run: practice Cycle 010 Wave 9.
+Prior attempt 2 average 76.0 (motion 80 · timing 66 · purity 100 · reuse 70 · readability 64). This ledger is INTERNAL: it is never fed to a lens. Lens payloads carry only the separately generated neutral facts packet (`codex/attempt-3/neutral-packet.md`).
+
+## §0 STEP 0 — Resolved frame timeline (filed BEFORE any recreation.html write) + A-C008-1 MID-CYCLE PREMISE AMENDMENT
+Segment evidence (firsthand this cycle): frames extracted from the artifact's own `segment.mp4` (14.000 s) at 2 fps and at 5 fps and viewed directly.
+- 5 fps frame at 1.0 s: camera still zoomed on the Midwest region (regional framing, featured plate + tags large).
+- 5 fps frame at 1.2 s: zoom-out underway (regional framing widening, featured objects shrinking).
+- 5 fps frame at 1.6 s: near-full framing; 5 fps frame at 2.0 s: full map settled, complete roster visible.
+- 5 fps frames at 6.0 s and 6.2 s: full map still framed. 5 fps frame at 6.4 s: pan-away underway (map shifted, the next device entering at frame right); 2 fps frame at 6.5 s: pan-away clearly in progress.
+RESOLVED TIMELINE (geometric): regional-hold end / transition start = **1100 ms** · transition duration = **900 ms** (the plan's move value, consistent with the observed ~0.9 s widening) · full-arrival = **2000 ms** · full dwell = **2000–6000 ms** · pan-away = **6000–7000 ms** nominal (observed: not yet underway at 6200 ms, underway by 6400 ms — the nominal window stands within frame granularity).
+**A-C008-1 MID-CYCLE PREMISE AMENDMENT.** Premise contradicted: the plan (plan-T54 §0/C-T2, Verify V10) binds full arrival at 3000 ms with the Midwest dwell budgeted to ~3000 ms (hold 2100 + move 900). Contradicting evidence: the full map is already settled at the 2.0 s frame and the widening is underway at 1.2 s — a hold ending at 2100 ms cannot produce a settled full map at 2000 ms. Revised construction: hold ends 1100 ms, move 1100–2000 ms, full arrival **2000 ms**. Dependent assertions amended together: (a) C-X2's completion bound becomes placement end + pop settle ≤ **2000 ms** (not 3000); (b) C-T2 is satisfied by the evidence split (1100 + 900), not by holding the region to 3000; (c) Verify V10 absolute anchors become 2000 / 6000 / 7000; (d) the full dwell lengthens to 4000 ms (2000–6000); (e) C-M3's count-plate settle bound is re-based to the 2000 ms arrival. The pan-away anchors (6000–7000) are NOT contradicted and stand as planned.
+
+## §1 W2 — Complete prior evidence inventory + hashes (before any mutation)
+sha256 (captured this cycle, before mutation):
+- recreation.html (attempt-2 source) `02f31dd34dd13fccd3041233578adfb55dddb95fc674a7cfa7644a9f51a36ed4` = recreation-attempt-2.html (preservation copy, Plan-verified, distinct inode) — NEVER touched this attempt.
+- recreation-attempt-1.html `00679517e35c410aab6230d7691860110b33477f69c65ce62410882f9c57e704`
+- build-record.md `fbb6652e2860ed944e76a5a757c67378a0ed13ccdf8a6ea17251e49d541023dc`
+- build-record-attempt2.md `75055c61d339ceffb5debd6d2f393890381cc80f7016ad0c6a23dae05f0ffa06`
+- fit-table.md `a066670dfcfdb7e8faff4555a830fc0b3cdefac9e828eff08346d2c939b66f7f` — attempt-3 leg output takes the NEW path `fit-table-attempt3.md`; this file is not overwritten.
+- config-census.md `9d7c3d18f34f6a5ffc9cda1b9b3e46e61814c0454af0dbb21ff92fea8d884e69` — attempt-3 leg output takes `config-census-attempt3.md`; not overwritten.
+- comparison.html `9be41d4c39ea23cf53242d69f46c995d68939458f1bf601a0d99055f2bc6c47c` (its recreation side loads recreation.html; ORIGINAL side is the attempt-1 source embedded — verified at close).
+- scores.md `f55c641a9e4516e7acfe0a710dbb8fdc684dfde07bf32290a8b94020b8c7f709` (append-only this attempt).
+- codex/attempt-2/ returns: motion `1512f076…9889` · timing `590dcf6e…e042` · purity `c0e99dff…bd9` · readability `393eafc2…84d` · reusability `47587da7…6d33`; instr files likewise hashed in the run capture. All attempt-2 paths are create-once history; attempt-3 outputs take `codex/attempt-3/` paths.
+Create-once rule in force for every output of this attempt: an existing path stops filing; a fresh run-tagged path is taken and the supersession noted.
+
+## §2 W1 — Falsifiable success conditions, stated BEFORE implementation (per cure)
+- C-X2 (placement ≤ arrival): FAILS unless placementEnd + effectivePop ≤ 2000 ms on the default roster AND on both swap rosters (asserted numerically).
+- C-T2 (Midwest budget): FAILS unless camera keys are exactly hold-end 1100 / arrival 2000 and the camera is at regional scale at 1000 ms and at scale 1 at 2000 ms.
+- C-T1 (pan-away): FAILS unless camera keys include a full key at 6000, an exit key at 7000 with centre shifted by the configured pan shift, continuity sampling across 5900–7100 ms shows no snap, and the first pass-region key starts at ≥7000.
+- C-X1 (derived step/dwell): FAILS unless, for every region, step = cameraMoveMs + Σ per-wave dwells, each dwell = max(dwellFloorMs, dwellBaseMs + dwellPerNameMs·nameCount + dwellPerLongestCharMs·longestLabelChars) computed from that wave's actual members, and stationary-elapsed (see §3) drives wave membership.
+- C-T3/C-Ru2 (validation): FAILS unless each named invalid fixture (move ≥ step, empty opening region, empty pass region, zero tagGridStep, non-finite value, invalid viewBox, nonpositive placement end) is rejected with a field-specific error before layout.
+- C-R1 (foreground + full identity bounds): FAILS unless at every named stationary checkpoint, every displayed plate/tag is pairwise disjoint from every other plate/tag AND from every visible chip's full identity bounds (disc circle + initials box + tag rect), and every displayed plate/tag lies inside the camera window; tag extents are included in regional camera fitting.
+- C-X3 (measured text): FAILS unless plate/tag/initials widths all derive from the single glyph-metrics table whose profile is bound to the configured font family, and a font-family change without a matching profile is rejected.
+- C-R2 (derived reserve): FAILS unless the full-plate reserve is computed in code from the plate tokens (size × line-height factor + 2·padY + bottom) and equals ≥34 units at default tokens, with no stored reserve literal.
+- C-R3 (overview access): FAILS unless during the final full hold the foreground index cycles groups covering all 55 identities (union of final-hold visible sets = all 55) and the final hold is ≥1100 ms.
+- C-Ru1 (generalized waves): FAILS unless a 3-wave fixture exposes every region member (union over the region's step = all members) with continuous settled exposure per member ≥ the dwell floor, as for the default fixture.
+- C-Ru3 (feasibility gate): FAILS unless a named feasibility result (ok/failures) is produced for the final layout and an artificially infeasible fixture (min centre gap impossible) is rejected explicitly.
+- C-Ru4 (grapheme initials): dependency named in §4. FAILS unless decomposed-accent and supplementary-plane fixtures yield whole-grapheme initials AND all 55 default initials match attempt 2 exactly.
+- C-Ru5 (policy/localization literals): dependency named in §4. FAILS unless the layout inset, initials count, full-view scale threshold, error prefix and accessibility label are all CONFIG keys consumed by code, and the literal census whitelist (§6) names every remaining literal.
+- C-M1 (plate stability): named policy = **hide-relocate-reveal** — plates/tags are hidden whenever the camera is moving, are computed once per stationary beat for that beat's visible set, and reveal only when the camera is stationary; FAILS unless, for a fixed visible set at a stationary checkpoint, repeated plate computation is identical (displacement 0) and no plate is displayed at any sampled moving instant.
+- C-M2 (connectors): dependency named in §4. FAILS unless connector endpoints are a pure function of anchor/laid position (constant across pop progress) and the render path draws connectors outside the pop-scaled group.
+- C-M3 (count plate at settle): FAILS unless the count plate's first up instant ≥ placement end + effective pop.
+- Purity (protection): FAILS unless the purity grep finds 0 specimen-media/external references (SVG namespace excepted) and the swap test passes.
+Lens movement for every cure prints **BUNDLED** unless staged checkpoint evidence isolates it (checkpoints under `codex/attempt-3/checkpoints/`, §5).
+
+## §3 Stationary-elapsed definition + dwell formula (W2 disposition 3)
+Stationary-elapsed time for a pass region = t − (region start + cameraMoveMs), accrued ONLY while the camera key segment is a hold (identical centre/scale at both ends); it is 0 during any camera move and wave switches occur only at stationary-elapsed thresholds. Dwell per wave (executable, in code as `dwellForWave`): `max(dwellFloorMs, dwellBaseMs + dwellPerNameMs × (names in wave) + dwellPerLongestCharMs × (longest label length in wave))`, with CONFIG dwellFloorMs 1200, dwellBaseMs 300, dwellPerNameMs 90, dwellPerLongestCharMs 25.
+
+## §4 Rider dispositions (W2 disposition 5 — executed only on a named concrete dependency)
+- Grapheme extraction (C-Ru4): EXECUTED — dependency: C-X3's measured-text path measures initials from the extracted graphemes; a code-unit extraction would corrupt both the initials and their measured widths for decomposed/supplementary names.
+- Localization/policy literals (C-Ru5): EXECUTED — dependency: C-Ru2's rebuilt validation/render path consumes the error prefix and accessibility label, and the plate search (C-R1) consumes the layout inset; leaving them as literals would strand the rebuilt paths on the old literal class.
+- Connector animation (C-M2): EXECUTED — dependency: C-R1/C-M1 restructure the chip group into connector / pop / foreground layers; the connector's layer assignment is decided by that same restructure.
+- Generalized wave counts (C-Ru1): EXECUTED — dependency: C-X1's step is defined as move + Σ wave dwells; the wave index must consume the same schedule object for any wave count or the step and the exposure diverge.
+No rider is deferred; no other deferral is taken beyond the plan's D2 (PIXEL-UNVERIFIED) and D3/D4, which stand as priced in plan-T54 §2.
+
+## §5 Checkpoint protocol (W1)
+After each timeline cure stage (C-X2 → C-T2 → C-T1 → C-X1), a create-once checkpoint (source copy + own-check output for that stage) is preserved under `codex/attempt-3/checkpoints/`. Later cure stages (layering/text/validation/feasibility) are verified against the final source with the cross-cure regression suite; their lens attribution prints BUNDLED.
+
+## §6 Literal whitelist (A-C008-3 / A-C009-4 — per-literal, structural only)
+To be completed from the final source scan in the config-census leg; every numeric/colour literal outside CONFIG must appear there by value with its structural justification, or the suite fails. No content literal (text, symbols, labels) may be classified structural.
+
+## §7 Construction revisions made under the feasibility gate (C-Ru3 adaptation, recorded not silent)
+The first build pass failed its own feasibility gate (381 failures: tag fallbacks + plate fallbacks at regional windows). The gate's adaptation path produced these recorded revisions; each preserves the plan cure it serves:
+- **R1 — Wave-group framing (adapts C-X1/C-Ru1).** The pass frames each WAVE GROUP (≤4 members) rather than the whole region: a wave entry's step = cameraMoveMs + that wave's dwell, and the region's total is the sum of its wave steps. The dwell formula, the stationary-elapsed definition, and the ≥1200 ms floor are unchanged; the C-X1 success condition in §2 is amended accordingly (per-wave step, not per-region step). Reason: whole-region windows (scale ≈1.1) contain ~45 discs, and no collision-free plate corridor exists for a wave's plates there — measured, not assumed.
+- **R2 — Disc scale (adapts C-R1).** chipR 13 → 9 and initialsSize 16 → 12 (initialsMaxWidth 16): the attempt-2 disc diameter was 7.2% of stage width against the specimen's ~1.6% at full view; at r=13 a 43-unit tag cannot fit between discs spaced 32 units apart in any direction (brute-force verified). minCentreGap 6 → 4 (min centre distance 22).
+- **R3 — Tag placement policy (names the W2-disposition-4 policy for tags).** Tag search reserves other chips' FULL INITIALS BOUNDS and other tags' full rects (not centres — the attempt-2 priced defect), but not other discs' full circles: brute force showed full-disc avoidance is geometrically infeasible for a 43-unit tag in this packing, and the specimen's own tags sit on their disc's edge. Tags render in the foreground layer. Elect tag tokens reduced (electSize 13, electHeight 18) so a feasible position exists for every elect chip (verified: 0 fallbacks).
+- **R4 — Hide-if-infeasible plate policy (with C-M1's hide-relocate-reveal).** Plate candidates are obstacle-scored (discs + tags) and a deterministic greedy first-free solver picks the first collision-free candidate; a plate with no collision-free position at a beat is HIDDEN at that beat (fallback rects are never displayed). The feasibility gate then verifies: no displayed plate collides with any disc/tag/plate, every displayed plate is inside the camera window, and the exposure union across opening + waves + final index covers all 55 identities. Final result: gate PASS, 0 failures, every identity displayed at ≥1 checkpoint.
+- **R5 — Final index group size 5** (finalIndexGroupSize 5, finalFullHoldMs 6600 = 11 groups × 600 ms) so the completed-overview index (C-R3) can actually display each group collision-free at full view.
+- **Deviation D-A3-1 (W1 checkpoints).** The build was executed in one continuous pass, not in staged cure stages; the checkpoints under `codex/attempt-3/checkpoints/` are therefore stage-evidence files generated against the final source (per timeline cure: its assertion output + the final source's hash), NOT staged interim sources. Lens attribution prints BUNDLED for all cures, per W1's fallback rule.
+
+## §6 (completed) Literal whitelist — final source scan
+Numeric/colour literals outside CONFIG in the final source: {0, 1, 2, −1, 100, 50, −50, 1e-6, 2000} — classifications per-literal in `config-census-attempt3.md` §1 (all structural; 2000 is the SVG namespace URI year inside a string). Colour literals outside CONFIG: 0. Content literals outside CONFIG: 0. The suite's literal census asserts this set exactly (50/50 pass).
+
+## §8 Wave outcome (filed)
+Final source sha256 `1ee27ef80cd62382bfdb561e0446034e416e2191e3dd1664fa0bdb9506e629c2` (re-verified at filing; identical for all five lens runs). Own checks 50/50. Legs: fit-table-attempt3.md 3 HITs carried with dispositions · config-census-attempt3.md 0 HITs.
+Scores: motion 80 · timing 58 · purity 100 · reusability 70 · readability 68 → sum 376, average 75.2, minimum 58. Delta vs 76.0 = **−0.8**. Verdict FAIL (average <85, minimum <70). Branch (W4): NON-BEATING → the full WHY is filed in scores.md's Attempt 3 entry (stuck lens timing; causes: playback never auto-starts −18, opening evidence-granularity dispute −12, final hold not derived −8, pop compression −4). Lens movement for every cure prints BUNDLED (D-A3-1). No PASS, so no tier hand-off is filed; the item remains IN PROGRESS in the pool.
+Comparison: comparison.html unchanged (sha `9be41d4c…c47c` = W2 inventory hash) — its recreation side loads recreation.html and encodes no duration or config key, so Execute step 9 did not fire; its ORIGINAL side (segment video) is untouched.
+Deviations filed: D-A3-1 (W1 checkpoints are stage-evidence against the final source, not staged interim sources) · the A-C008-1 premise amendment (§0) · construction revisions R1–R5 (§7, feasibility-gate adaptations). No other deviation.

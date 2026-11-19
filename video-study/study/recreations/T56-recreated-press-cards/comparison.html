@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T56 comparison — recreated press cards as evidence props</title>
+<style>
+  html,body{margin:0;padding:0;background:#173f4d;color:#fff;font-family:Arial,Helvetica,sans-serif;}
+  main{max-width:1180px;margin:0 auto;padding:14px;}
+  h1{font-size:18px;margin:0 0 10px;}
+  .row{display:flex;gap:14px;align-items:flex-start;}
+  .side{flex:1 1 0;min-width:0;}
+  .lab{font-size:13px;font-weight:700;margin:0 0 6px;letter-spacing:.04em;}
+  video,iframe{display:block;width:100%;aspect-ratio:16/9;border:1px solid #4a7a8a;background:#000;}
+  .controls{display:flex;gap:10px;margin:14px 0;}
+  button{font-size:16px;padding:12px 20px;border-radius:8px;border:1px solid #7fb2c4;
+    background:#2e6b7a;color:#fff;cursor:pointer;min-height:48px;}
+  #time{font-size:14px;align-self:center;}
+  @media (max-width:640px){ .row{flex-direction:column;} .side{width:100%;} }
+</style>
+</head>
+<body>
+<main>
+  <h1>T56 — Recreated press cards as evidence props</h1>
+  <div class="controls">
+    <button id="playBtn" type="button">Play</button>
+    <button id="pauseBtn" type="button">Pause</button>
+    <button id="restartBtn" type="button">Restart</button>
+    <span id="time">0.0s / 14.0s</span>
+  </div>
+  <div class="row">
+    <div class="side">
+      <p class="lab">ORIGINAL — Epochs in Ink @ 2:08–2:22 (Roll Call card)</p>
+      <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+    </div>
+    <div class="side">
+      <p class="lab">RECREATION — T56 recreated press cards, parameterized</p>
+      <iframe id="rec" src="recreation.html" title="T56 recreation"></iframe>
+    </div>
+  </div>
+</main>
+<script>
+"use strict";
+const vid=document.getElementById("orig"), frame=document.getElementById("rec"),
+      timeEl=document.getElementById("time");
+function recApi(){ try{ return frame.contentWindow.__T56; }catch(e){ return null; } }
+function sync(){ const api=recApi(); if(api&&!vid.paused){ api.seek(vid.currentTime*1000); }
+  timeEl.textContent=vid.currentTime.toFixed(1)+"s / "+(vid.duration||14).toFixed(1)+"s";
+  requestAnimationFrame(sync); }
+document.getElementById("playBtn").addEventListener("click",()=>{ vid.play(); const a=recApi(); if(a) a.play(); });
+document.getElementById("pauseBtn").addEventListener("click",()=>{ vid.pause(); const a=recApi(); if(a) a.pause(); });
+document.getElementById("restartBtn").addEventListener("click",()=>{ vid.currentTime=0; vid.play();
+  const a=recApi(); if(a) a.restart(); });
+vid.addEventListener("seeked",()=>{ const a=recApi(); if(a) a.seek(vid.currentTime*1000); });
+requestAnimationFrame(sync);
+</script>
+</body>
+</html>

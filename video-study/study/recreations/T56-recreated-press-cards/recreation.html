@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T56 — Recreated press cards as evidence props</title>
+<style>
+  html,body{margin:0;padding:0;background:var(--page-bg);}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  #stage{position:relative;width:100%;max-width:var(--stage-max);overflow:hidden;
+    font-family:var(--font-family);}
+  #card{position:absolute;left:50%;top:50%;width:var(--card-w);box-sizing:border-box;
+    border-radius:var(--card-radius);overflow:hidden;background:var(--liv-bg);color:var(--liv-ink);
+    will-change:transform,opacity;}
+  #band{background:var(--liv-band);color:var(--band-ink);font-weight:var(--band-weight);
+    font-size:var(--band-size);letter-spacing:var(--band-spacing);
+    padding:var(--band-pad-y) var(--card-pad-x);white-space:nowrap;overflow:hidden;}
+  #body{padding:var(--body-pad-y) var(--card-pad-x) var(--card-pad-x);}
+  #mast{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;}
+  #outlet{color:var(--outlet-ink);font-weight:var(--outlet-weight);font-size:var(--outlet-size);
+    letter-spacing:var(--outlet-spacing);white-space:normal;}
+  #date{font-size:var(--date-size);font-weight:var(--date-weight);white-space:nowrap;}
+  #rule{background:var(--liv-ink);}
+  #cols{display:flex;}
+  #media{background:var(--liv-band);
+    display:flex;align-items:center;justify-content:center;border-radius:var(--media-radius);}
+  #initials{color:var(--band-ink);font-weight:var(--outlet-weight);font-size:var(--initials-size);}
+  #textcol{min-width:0;flex:1 1 auto;}
+  #headline{font-family:var(--headline-family);font-weight:var(--headline-weight);
+    font-size:var(--headline-size);margin:0;}
+  #kind{position:absolute;font-weight:var(--byline-weight);
+    letter-spacing:var(--band-spacing);text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="card">
+    <div id="band"></div>
+    <div id="body">
+      <div id="mast"><span id="outlet"></span><span id="date"></span></div>
+      <div id="rule"></div>
+      <div id="cols">
+        <div id="media"><span id="initials"></span></div>
+        <div id="textcol">
+          <p id="headline"></p>
+          <div id="subline"></div>
+          <div id="byline"></div>
+        </div>
+      </div>
+      <div id="kind"></div>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / geometry / appearance value lives here ============
+   Livery lives ONLY inside cards[].livery (RUN.md §2b), including its foreground inks.
+   Two schedule modes: "segment" (default) replays the bound 14 s specimen window on an
+   explicit timeline (lead-in -> specimen card entry -> full-size hold -> recession ->
+   reduced hold to durationMs, terminal); "cycle" is the multi-card livery demonstration
+   (slot = enterMs + holdMs per card). Entry gestures in both modes are reconstruction
+   choices: the specimen entry is a scale-up riding the camera settle. */
+const CONFIG = {
+  durationMs: 14000,
+  mode: "segment",
+  pageBg: "#101418",
+  stage: { top: "#2e6b7a", bottom: "#173f4d", maxPx: 960, aspectW: 16, aspectH: 9, gradientDeg: 180 },
+  fontFamily: "Arial, Helvetica, sans-serif",
+  headlineFamily: "Georgia, 'Times New Roman', serif",
+  enterMotion: "rise",
+  enterMs: 550,
+  holdMs: 2400,
+  enterDistPx: 46,
+  segment: { specimenIndex: 1, introAtMs: 3500, enterMs: 1000,
+             recedeAtMs: 8500, recedeMs: 500, recedeScale: 0.30,
+             recedeDxPx: 120, recedeDyPx: 10 },
+  cards: [
+    { outlet: "MS NOW", tag: "THE BRIEFING", initials: "MS",
+      livery: { bg: "#10243e", band: "#c8102e", ink: "#ffffff", bandInk: "#ffffff", outletInk: "#f2f5f9" },
+      headline: "Schumer says he will seek another term as Democratic leader",
+      subline: "The announcement sets up the leadership fight the count now tracks",
+      byline: "", date: "Nov. 3, 2026", kind: "chyron" },
+    { outlet: "ROLL CALL", tag: "", initials: "CS",
+      livery: { bg: "#f7f3ea", band: "#7a1f1f", ink: "#1c1a17", bandInk: "#ffffff", outletInk: "#7a1f1f" },
+      headline: "\u2018I\u2019ll be reelected as majority leader,\u2019 Schumer says",
+      subline: "Some newcomers had called for fresh blood, but leader projects confidence",
+      byline: "By Savannah Behrmann", date: "Nov. 4, 2026", kind: "front-page" },
+    { outlet: "THE CHRISTIAN SCIENCE MONITOR", tag: "", initials: "RB",
+      livery: { bg: "#f4f1e8", band: "#a33327", ink: "#1c1a17", bandInk: "#ffffff", outletInk: "#a33327" },
+      headline: "Senate Democrats keep Byrd as leader, but some look to \u201986",
+      subline: "", byline: "By Julia Malone", date: "Dec. 13, 1984", kind: "front-page" }
+  ],
+  layout: { cardWFrac: 0.88, cardPadXFrac: 0.038, cardRadiusFrac: 0.012,
+            mediaWFrac: 0.20, mediaHFrac: 0.52, mediaRadiusFrac: 0.008, colGapFrac: 0.028,
+            bandPadYFrac: 0.016, bodyPadYFrac: 0.02, ruleHFrac: 0.006, ruleGapFrac: 0.014,
+            ruleMinPx: 1, subGapFrac: 0.014, kindBottomFrac: 0.02,
+            mastRowGapFrac: 0.011, mastColGapFrac: 0.028 },
+  type: { bandFrac: 0.030, bandWeight: 800, bandSpacingEm: 0.14, bandInkAutoContrast: true,
+          outletFrac: 0.040, outletWeight: 800, outletSpacingEm: 0.06,
+          dateFrac: 0.031, dateWeight: 600,
+          headlineFrac: 0.045, headlineWeight: 700, headlineLh: 1.18,
+          subFrac: 0.030, subLh: 1.3, bylineFrac: 0.029, bylineWeight: 700,
+          initialsFrac: 0.052, kindFrac: 0.022 },
+  style: { shadowXPx: 0, shadowYPx: 10, shadowBlurPx: 28, shadowColor: "rgba(0,0,0,0.35)",
+           dateOpacity: 0.85, ruleOpacity: 0.55, sublineOpacity: 0.88,
+           bylineOpacity: 0.8, kindOpacity: 0.65, entryOpacityFrom: 0.15 }
+};
+/* URL override: ?config=<json> deep-merges (array elements deep-merge by index);
+   "replaceCards": true in the override replaces the cards array wholesale. */
+function deepMerge(base, over){
+  if (Array.isArray(over)) {
+    const out = Array.isArray(base) ? base.slice() : [];
+    over.forEach((v,i)=>{ out[i] = (v && typeof v==="object" && out[i] && typeof out[i]==="object") ? deepMerge(out[i], v) : v; });
+    return out;
+  }
+  if (over && typeof over==="object") {
+    const out = Object.assign({}, base);
+    for (const k of Object.keys(over)) out[k] = deepMerge(base ? base[k] : undefined, over[k]);
+    return out;
+  }
+  return over === undefined ? base : over;
+}
+try {
+  const q = new URLSearchParams(location.search).get("config");
+  if (q) { const over = JSON.parse(q);
+    for (const k of Object.keys(over)) {
+      if (k === "replaceCards") continue;
+      CONFIG[k] = (k === "cards" && over.replaceCards) ? over.cards : deepMerge(CONFIG[k], over[k]);
+    } }
+} catch (e) { /* malformed override ignored; defaults stand */ }
+
+/* ============ Schedules — pure functions own the stage ============
+   Cycle mode: slotMs = enterMs + holdMs; exactly one active card at any t.
+   Segment mode: explicit timeline bound to durationMs; t clamps at durationMs
+   (terminal state = the reduced specimen card, held). */
+function slotMs(){ return CONFIG.enterMs + CONFIG.holdMs; }
+function cycleMs(){ return slotMs() * CONFIG.cards.length; }
+function stateAt(tMs){
+  if (CONFIG.mode === "segment") {
+    const S = CONFIG.segment, t = Math.max(0, Math.min(tMs, CONFIG.durationMs));
+    const idx = S.specimenIndex;
+    if (t < S.introAtMs) return { mode: "segment", index: -1, phase: "leadin", progress: 0, scale: 1, dx: 0, dy: 0 };
+    if (t < S.introAtMs + S.enterMs) return { mode: "segment", index: idx, phase: "enter",
+      progress: S.enterMs ? (t - S.introAtMs) / S.enterMs : 1, scale: 1, dx: 0, dy: 0 };
+    if (t < S.recedeAtMs) return { mode: "segment", index: idx, phase: "hold", progress: 1, scale: 1, dx: 0, dy: 0 };
+    if (t < S.recedeAtMs + S.recedeMs) { const p = S.recedeMs ? (t - S.recedeAtMs) / S.recedeMs : 1;
+      return { mode: "segment", index: idx, phase: "recede", progress: p,
+        scale: 1 + (S.recedeScale - 1) * p, dx: S.recedeDxPx * p, dy: S.recedeDyPx * p }; }
+    return { mode: "segment", index: idx, phase: "reduced", progress: 1,
+      scale: S.recedeScale, dx: S.recedeDxPx, dy: S.recedeDyPx };
+  }
+  const cyc = cycleMs(); if (cyc <= 0) return null;
+  const t = ((tMs % cyc) + cyc) % cyc;
+  const idx = Math.floor(t / slotMs());
+  const local = t - idx * slotMs();
+  const entering = local < CONFIG.enterMs;
+  return { mode: "cycle", index: idx, localMs: local, phase: entering ? "enter" : "hold",
+           progress: entering ? (CONFIG.enterMs ? local / CONFIG.enterMs : 1) : 1, scale: 1, dx: 0, dy: 0 };
+}
+function checkpointsOk(){
+  if (!CONFIG.cards.length) return false;
+  if (!(CONFIG.durationMs > 0)) return false;
+  for (const c of CONFIG.cards) {
+    if (!c.outlet || !c.headline || !c.date || !c.kind) return false;
+    if (!c.livery || !c.livery.bg || !c.livery.band || !c.livery.ink || !c.livery.bandInk || !c.livery.outletInk) return false;
+  }
+  if (CONFIG.enterMotion !== "rise" && CONFIG.enterMotion !== "slide") return false;
+  if (CONFIG.mode === "segment") {
+    const S = CONFIG.segment;
+    if (!(S.specimenIndex >= 0 && S.specimenIndex < CONFIG.cards.length)) return false;
+    if (!(S.introAtMs >= 0 && S.enterMs > 0)) return false;
+    if (!(S.introAtMs + S.enterMs < S.recedeAtMs)) return false; /* entry completes before recession */
+    if (!(S.recedeAtMs + S.recedeMs <= CONFIG.durationMs)) return false; /* recession inside the window */
+    if (!(S.recedeScale > 0 && S.recedeScale < 1)) return false;
+    if (stateAt(0).phase !== "leadin" || stateAt(S.introAtMs).phase !== "enter") return false;
+    if (stateAt(S.introAtMs + S.enterMs).phase !== "hold") return false;
+    if (stateAt(S.recedeAtMs).phase !== "recede" || stateAt(CONFIG.durationMs).phase !== "reduced") return false;
+    if (stateAt(CONFIG.durationMs + 99999).phase !== "reduced") return false; /* terminal clamp */
+    return true;
+  }
+  if (CONFIG.mode !== "cycle") return false;
+  if (!(CONFIG.enterMs > 0) || !(CONFIG.holdMs > 0)) return false;
+  if (CONFIG.enterMs + CONFIG.holdMs > slotMs()) return false; /* enter+hold <= cycle slot */
+  const s = slotMs();
+  for (let k = 0; k < CONFIG.cards.length; k++) {
+    if (stateAt(k * s).index !== k) return false;
+    if (k > 0 && stateAt(k * s - 1).index !== k - 1) return false;
+  }
+  if (stateAt(cycleMs()).index !== 0) return false; /* wraparound */
+  return true;
+}
+
+/* ============ Rendering — all style values derive from CONFIG ============ */
+const stage = document.getElementById("stage"), card = document.getElementById("card");
+const els = { band: document.getElementById("band"), outlet: document.getElementById("outlet"),
+  date: document.getElementById("date"), rule: document.getElementById("rule"),
+  media: document.getElementById("media"), cols: document.getElementById("cols"),
+  mast: document.getElementById("mast"), initials: document.getElementById("initials"),
+  headline: document.getElementById("headline"), subline: document.getElementById("subline"),
+  byline: document.getElementById("byline"), kind: document.getElementById("kind") };
+function lum(hex){ const c = hex.replace("#",""); if (c.length !== 6) return 0;
+  const v = [0,2,4].map(i=>parseInt(c.substr(i,2),16)/255).map(x=>x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4));
+  return 0.2126*v[0] + 0.7152*v[1] + 0.0722*v[2]; }
+function bandInkFor(c){
+  if (!CONFIG.type.bandInkAutoContrast) return c.livery.bandInk;
+  const lb = lum(c.livery.band), lw = lum("#ffffff"), lk = lum("#141414");
+  const rw = (Math.max(lb,lw)+0.05)/(Math.min(lb,lw)+0.05), rk = (Math.max(lb,lk)+0.05)/(Math.min(lb,lk)+0.05);
+  return rk > rw ? "#141414" : "#ffffff";
+}
+let renderedIndex = -2;
+function applyVars(){
+  const w = stage.clientWidth || CONFIG.stage.maxPx, r = document.documentElement.style;
+  const set = (n,v)=>r.setProperty(n,v);
+  set("--page-bg", CONFIG.pageBg); set("--stage-max", CONFIG.stage.maxPx + "px");
+  set("--font-family", CONFIG.fontFamily); set("--headline-family", CONFIG.headlineFamily);
+  stage.style.aspectRatio = CONFIG.stage.aspectW + " / " + CONFIG.stage.aspectH;
+  stage.style.background = "linear-gradient(" + CONFIG.stage.gradientDeg + "deg," +
+    CONFIG.stage.top + "," + CONFIG.stage.bottom + ")";
+  const L = CONFIG.layout, T = CONFIG.type, Y = CONFIG.style;
+  set("--card-w", (L.cardWFrac * w) + "px"); set("--card-pad-x", (L.cardPadXFrac * w) + "px");
+  set("--card-radius", (L.cardRadiusFrac * w) + "px");
+  card.style.boxShadow = Y.shadowXPx + "px " + Y.shadowYPx + "px " + Y.shadowBlurPx + "px " + Y.shadowColor;
+  els.media.style.flex = "0 0 " + (L.mediaWFrac * w) + "px";
+  els.media.style.height = (L.mediaHFrac * w * CONFIG.stage.aspectH / CONFIG.stage.aspectW) + "px";
+  set("--media-radius", (L.mediaRadiusFrac * w) + "px");
+  els.cols.style.gap = (L.colGapFrac * w) + "px";
+  els.mast.style.gap = (L.mastRowGapFrac * w) + "px " + (L.mastColGapFrac * w) + "px";
+  set("--band-pad-y", (L.bandPadYFrac * w) + "px"); set("--body-pad-y", (L.bodyPadYFrac * w) + "px");
+  els.rule.style.height = Math.max(L.ruleMinPx, L.ruleHFrac * w) + "px";
+  els.rule.style.margin = (L.ruleGapFrac * w) + "px 0";
+  els.rule.style.opacity = String(Y.ruleOpacity);
+  els.subline.style.marginTop = (L.subGapFrac * w) + "px"; els.subline.style.opacity = String(Y.sublineOpacity);
+  els.byline.style.marginTop = (L.subGapFrac * w) + "px"; els.byline.style.opacity = String(Y.bylineOpacity);
+  els.date.style.opacity = String(Y.dateOpacity);
+  els.kind.style.right = (L.cardPadXFrac * w) + "px"; els.kind.style.bottom = (L.kindBottomFrac * w) + "px";
+  els.kind.style.fontSize = (T.kindFrac * w) + "px"; els.kind.style.opacity = String(Y.kindOpacity);
+  set("--band-size", (T.bandFrac * w) + "px");
+  set("--band-weight", T.bandWeight); set("--band-spacing", T.bandSpacingEm + "em");
+  set("--outlet-size", (T.outletFrac * w) + "px"); set("--outlet-weight", T.outletWeight);
+  set("--outlet-spacing", T.outletSpacingEm + "em");
+  set("--date-size", (T.dateFrac * w) + "px"); set("--date-weight", T.dateWeight);
+  set("--headline-size", (T.headlineFrac * w) + "px"); set("--headline-weight", T.headlineWeight);
+  els.headline.style.lineHeight = String(T.headlineLh);
+  els.subline.style.fontSize = (T.subFrac * w) + "px"; els.subline.style.lineHeight = String(T.subLh);
+  els.byline.style.fontSize = (T.bylineFrac * w) + "px"; els.byline.style.fontWeight = T.bylineWeight;
+  set("--initials-size", (T.initialsFrac * w) + "px");
+}
+function renderCard(i){
+  const c = CONFIG.cards[i], r = document.documentElement.style;
+  r.setProperty("--liv-bg", c.livery.bg); r.setProperty("--liv-band", c.livery.band);
+  r.setProperty("--liv-ink", c.livery.ink); r.setProperty("--outlet-ink", c.livery.outletInk);
+  r.setProperty("--band-ink", bandInkFor(c));
+  els.band.textContent = c.tag ? (c.outlet + "  ·  " + c.tag) : c.outlet;
+  els.outlet.textContent = c.outlet; els.date.textContent = c.date;
+  els.initials.textContent = c.initials || "";
+  els.headline.textContent = c.headline;
+  els.subline.textContent = c.subline || ""; els.subline.style.display = c.subline ? "" : "none";
+  els.byline.textContent = c.byline || ""; els.byline.style.display = c.byline ? "" : "none";
+  els.kind.textContent = c.kind;
+  renderedIndex = i;
+}
+function render(tMs){
+  const st = stateAt(tMs); if (!st) { card.style.display = "none"; return; }
+  if (st.index < 0) { card.style.display = "none"; renderedIndex = -1; return; }
+  card.style.display = "";
+  if (st.index !== renderedIndex) renderCard(st.index);
+  const off = CONFIG.enterDistPx * (1 - st.progress);
+  const ex = CONFIG.enterMotion === "slide" ? off : 0;
+  const ey = CONFIG.enterMotion === "rise" ? off : 0;
+  const entering = st.phase === "enter";
+  const x = (st.dx || 0) + (entering ? ex : 0), y = (st.dy || 0) + (entering ? ey : 0);
+  card.style.transform = "translate(-50%,-50%) translate(" + x + "px," + y + "px) scale(" + (st.scale || 1) + ")";
+  card.style.opacity = entering ? String(CONFIG.style.entryOpacityFrom +
+    (1 - CONFIG.style.entryOpacityFrom) * st.progress) : "1";
+}
+/* Clock: single rAF chain; pause captures elapsed; restart cancels the pending frame;
+   playback stops at durationMs with the terminal state held (segment mode). */
+let playing = true, rafId = null, startStamp = null, baseMs = 0, ended = false;
+function tick(ts){
+  rafId = null;
+  if (startStamp === null) startStamp = ts;
+  const elapsed = baseMs + (ts - startStamp);
+  if (CONFIG.mode === "segment" && elapsed >= CONFIG.durationMs) {
+    render(CONFIG.durationMs); playing = false; ended = true; return;
+  }
+  render(elapsed);
+  if (playing) rafId = requestAnimationFrame(tick);
+}
+function startLoop(){ if (rafId === null && playing) { startStamp = null; rafId = requestAnimationFrame(tick); } }
+rafId = requestAnimationFrame(tick);
+window.__T56 = { CONFIG, stateAt, slotMs, cycleMs, checkpointsOk, bandInkFor,
+  seek(ms){ baseMs = ms; startStamp = null; ended = false; render(ms); },
+  play(){ if (!playing && !ended) { playing = true; startLoop(); } },
+  pause(){ if (playing && startStamp !== null) { baseMs += performance.now() - startStamp; }
+    else if (playing) { /* stamp not yet set; baseMs already holds elapsed */ }
+    playing = false; if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; } },
+  restart(){ if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    baseMs = 0; startStamp = null; ended = false; playing = true; render(0); startLoop(); } };
+applyVars();
+addEventListener("resize", applyVars);
+render(0);
+</script>
+</body>
+</html>

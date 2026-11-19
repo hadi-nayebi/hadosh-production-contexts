@@ -1,0 +1,17 @@
+**REVISE** — the binding amendment and swap results address real risks, but the Plan still leaves its two central construction guarantees ambiguous.
+
+1. **Convergent defect — high cost.** Persistent completed artwork is appropriate here; frozen surplus artwork is not. The Plan must specify how configuration changes and replay reconcile DOM nodes: exactly `rows(rows+1)/2` bundles per stack, exactly one tag per stack, and no counter nodes when disabled. `checkpointsOk` checking expected counts does not establish that rendered nodes match them. Require rendered-node counts after a smaller-row swap and a replay/reset. This translates T15’s defect into this mechanic without importing particle requirements.
+
+2. **Owner catches — high cost.**
+   - **Intensity separation:** the palette lists colors but establishes no foreground/background guarantee. State the bundle, band, tag, and text separation requirements and verify the rendered result at phone size. The current palette may work; the Plan does not make that property hold across supported swaps.
+   - **Strict sequencing:** the default arithmetic exposes an unresolved collision. Stack 1’s rows occupy 0–1100 ms and its tag 1100–1600 ms; a 900 ms stagger starts stack 2 while stack 1 is still building. A per-stack phase machine permits concurrent beats. Specify one global phase owner and how it resolves stagger requests—such as treating them as earliest eligible starts. Derive checkpoints from that resolved schedule. “Only the current phase animates” needs a global definition.
+
+3. **Parameterization — medium cost.** The tag-face/accent amendment is clear, and 28 passing assertions are useful evidence. They do not establish full coverage. Likely hiding places are stack cardinality, initial-configuration validation, lifecycle reset, text overflow, and geometric ratios classified as structural. T45 directly warns against fixed counter cardinality; T53 warns about override-array semantics and reset behavior. Add explicit coverage for supported stack counts, counter enabled/disabled, invalid configurations, and long sponsor/total text. Unsupported configurations may be rejected clearly rather than supported accidentally.
+
+4. **Score arithmetic — medium cost.** The forecast is correctly calculated: **86.4 average, minimum 82**. **Reusability** remains the credible predicted minimum, but **84 is insufficiently supported** while lifecycle and cardinality behavior remain unspecified. Timing’s 82 also depends on resolving the global sequencing ambiguity. T53’s minimum 74 and T45’s minimum 78 make the forecast optimistic; their supplied aggregate scores do not identify lens-specific baselines. Keep the forecast provisional until the named cures have evidence.
+
+5. **Size discipline — acceptable.** Two sourced-total pyramids and their tags form a coherent core mechanic. Plain ground and exclusion of T54’s map/portraits preserve the boundary. Keep the optional voter counter as a separately enabled extension with its own scheduling checks. Retain the visible distinction between the observed completed pyramids and the invented **allocation-model** row reveal.
+
+**Release condition:** amend the build record with global scheduling semantics, DOM reconciliation/reset behavior, and supported configuration boundaries; apply or explicitly disposition each cure, then verify those properties before scoring.
+
+BODY-WRITE: none (read-only run); consumer persists this return verbatim at `hidden_files/study/recreations/T66-money-stacks-sourced-totals/codex/codex-plan-review.md`.

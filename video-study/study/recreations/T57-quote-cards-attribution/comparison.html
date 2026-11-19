@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T57 — Comparison: quote cards with named attribution</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;color:#eee;font-family:Arial,Helvetica,sans-serif;}
+  #wrap{max-width:1200px;margin:0 auto;padding:12px;box-sizing:border-box;}
+  #cols{display:flex;gap:12px;}
+  .side{flex:1;min-width:0;}
+  .lab{font-size:14px;font-weight:700;margin:0 0 6px;}
+  video,iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;display:block;}
+  #controls{display:flex;gap:10px;margin-top:14px;}
+  button{min-height:48px;min-width:96px;font-size:16px;font-weight:700;cursor:pointer;}
+  @media (max-width:640px){ #cols{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="cols">
+    <div class="side">
+      <p class="lab">ORIGINAL — Epochs in Ink quote card (AP on Byrd) @ 498–512 s</p>
+      <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+    </div>
+    <div class="side">
+      <p class="lab">RECREATION — T57 quote cards with named attribution, parameterized (interface: per-quote entrance/exit intervals, per-quote anchors, exit scale, stage aspect — all in CONFIG)</p>
+      <iframe id="rec" src="recreation.html" title="T57 recreation"></iframe>
+    </div>
+  </div>
+  <div id="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+</div>
+<script>
+"use strict";
+const orig = document.getElementById("orig");
+const rec = document.getElementById("rec");
+function recApi() { try { return rec.contentWindow.__T57 || null; } catch (e) { return null; } }
+function syncLoop() {
+  const api = recApi();
+  if (api && !orig.paused && !orig.ended) api.seek(orig.currentTime * 1000);
+  requestAnimationFrame(syncLoop);
+}
+rec.addEventListener("load", () => { const api = recApi(); if (api) api.pause(); requestAnimationFrame(syncLoop); });
+document.getElementById("btnPlay").addEventListener("click", () => { orig.play(); const api = recApi(); if (api) api.play(); });
+document.getElementById("btnPause").addEventListener("click", () => { orig.pause(); const api = recApi(); if (api) api.pause(); });
+document.getElementById("btnRestart").addEventListener("click", () => { orig.currentTime = 0; orig.play(); const api = recApi(); if (api) { api.seek(0); api.play(); } });
+</script>
+</body>
+</html>

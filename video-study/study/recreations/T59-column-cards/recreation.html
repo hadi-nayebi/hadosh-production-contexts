@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T59 — Column cards (parameterized recreation)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; display: flex; justify-content: center; }
+  #stage { position: relative; overflow: hidden; }
+  #row { position: absolute; display: flex; align-items: stretch; }
+  #card { opacity: 0; }
+  #cardTitle { font-weight: 800; white-space: nowrap; overflow: hidden; }
+  #cardRule { }
+  .line { display: flex; align-items: baseline; opacity: 0; font-weight: 700; white-space: nowrap; overflow: hidden; }
+  .dot { flex: 0 0 auto; border-radius: 50%; }
+  #countBlock { display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; text-align: center; }
+  #countNum { font-weight: 800; line-height: 1; }
+  #countLabel { font-weight: 700; line-height: 1.25; word-break: break-word; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="row">
+    <div id="card">
+      <div id="cardTitle"></div>
+      <div id="cardRule"></div>
+      <div id="lines"></div>
+    </div>
+    <div id="countBlock">
+      <div id="countNum"></div>
+      <div id="countLabel"></div>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  card: { title: "Van Hollen's column", lines: ["His own vote", "Bernie Sanders", "Abdul El-Sayed"] },
+  opposition: { count: 18, label: "Schumer's column" },
+  layout: { cardW: 300, cardH: 168, countW: 52, countH: 168, gapPx: 8 },
+  stage: { width: 360 },
+  palette: { card: "#fff8e7", ink: "#1d2733", accent: "#0e7c74", countBg: "#1d2733", countInk: "#ffffff", stage: "#dce8e4" },
+  geom: { padX: 16, padY: 14, radius: 10, bulletPx: 7, bulletGapPx: 8, rowTopPx: 24, bottomPadPx: 24, countPadPx: 6, countPadXPx: 2, ruleTopPx: 8, ruleBottomPx: 10, ruleHPx: 2, titleReservePx: 30 },
+  type: { minTitle: 13, maxTitle: 20, minLine: 11, maxLine: 17, lineSlackPx: 7, minCount: 18, maxCount: 34, countFrac: 0.62, minCountLabel: 9, maxCountLabel: 12, fitMinPx: 9, charWidthFrac: 0.60 },
+  lineMs: 600,
+  holdMs: 5200,
+  cardAtMs: 2800,
+  firstLineDelayMs: 600,
+  lineAnimMs: 300,
+  countDelayMs: 400,
+  fadeMs: 600,
+  durationMs: 14000
+};
+// URL overrides: ?config=<url-encoded JSON>, ALLOWLISTED schema only (purity cure):
+// unknown keys and prototype keys are dropped; palette values must be #rrggbb hex
+// (a url()/expression can never reach a style); numeric keys must be finite numbers.
+const OVERRIDE_SCHEMA = {
+  card: { title: "string", lines: "stringArray" },
+  opposition: { count: "number", label: "string" },
+  layout: { cardW: "number", cardH: "number", countW: "number", countH: "number", gapPx: "number" },
+  stage: { width: "number" },
+  palette: { card: "color", ink: "color", accent: "color", countBg: "color", countInk: "color", stage: "color" },
+  geom: { padX: "number", padY: "number", radius: "number", bulletPx: "number", bulletGapPx: "number", rowTopPx: "number", bottomPadPx: "number", countPadPx: "number", countPadXPx: "number", ruleTopPx: "number", ruleBottomPx: "number", ruleHPx: "number", titleReservePx: "number" },
+  type: { minTitle: "number", maxTitle: "number", minLine: "number", maxLine: "number", lineSlackPx: "number", minCount: "number", maxCount: "number", countFrac: "number", minCountLabel: "number", maxCountLabel: "number", fitMinPx: "number", charWidthFrac: "number" },
+  lineMs: "number", holdMs: "number", cardAtMs: "number", firstLineDelayMs: "number",
+  lineAnimMs: "number", countDelayMs: "number", fadeMs: "number", durationMs: "number"
+};
+function validOverride(kind, v) {
+  if (kind === "string") return typeof v === "string";
+  if (kind === "stringArray") return Array.isArray(v) && v.every((x) => typeof x === "string");
+  if (kind === "number") return typeof v === "number" && isFinite(v);
+  if (kind === "color") return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v);
+  return false;
+}
+function applyOverrides(cfg) {
+  try {
+    const q = new URLSearchParams(location.search).get("config");
+    if (!q) return cfg;
+    const o = JSON.parse(q);
+    for (const k of Object.keys(OVERRIDE_SCHEMA)) {
+      if (!(k in o)) continue;
+      const spec = OVERRIDE_SCHEMA[k];
+      if (typeof spec === "string") { if (validOverride(spec, o[k])) cfg[k] = o[k]; }
+      else if (o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) {
+        for (const sub of Object.keys(spec)) if (sub in o[k] && validOverride(spec[sub], o[k][sub])) cfg[k][sub] = o[k][sub];
+      }
+    }
+  } catch (e) { /* malformed override ignored */ }
+  return cfg;
+}
+const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+applyOverrides(CONFIG);
+
+// Derived phase schedule — ONE clock, every phase derived from CONFIG (plan-review cure 3).
+function schedule(cfg) {
+  const n = cfg.card.lines.length;
+  const lineStarts = cfg.card.lines.map((_, i) => cfg.cardAtMs + cfg.firstLineDelayMs + i * cfg.lineMs);
+  const lastLineDone = n ? lineStarts[n - 1] + cfg.lineAnimMs : cfg.cardAtMs;
+  const countAt = lastLineDone + cfg.countDelayMs;
+  const holdEnd = countAt + cfg.holdMs;
+  const fadeEnd = holdEnd + cfg.fadeMs;
+  return { lineStarts, lastLineDone, countAt, holdEnd, fadeEnd };
+}
+function checkpointsOk(cfg) {
+  // Full validation (reusability cure): positivity/finiteness, integer count,
+  // padding capacity, derived-value sanity, phase ordering, duration bound.
+  const L = cfg.layout, G = cfg.geom;
+  const nums = [L.cardW, L.cardH, L.countW, L.countH, L.gapPx, cfg.stage.width,
+    cfg.lineMs, cfg.holdMs, cfg.cardAtMs, cfg.firstLineDelayMs, cfg.lineAnimMs,
+    cfg.countDelayMs, cfg.fadeMs, cfg.durationMs, G.padX, G.padY, G.rowTopPx, G.bottomPadPx];
+  if (!nums.every((v) => typeof v === "number" && isFinite(v))) return false;
+  if (!(L.cardW > 0 && L.cardH > 0 && L.countW > 0 && L.countH > 0 && cfg.stage.width > 0)) return false;
+  if (!(cfg.lineMs > 0 && cfg.lineAnimMs > 0 && cfg.fadeMs > 0 && cfg.durationMs > 0 && cfg.holdMs >= 0 && cfg.countDelayMs >= 0)) return false;
+  if (!Number.isInteger(cfg.opposition.count) || cfg.opposition.count < 0) return false;
+  if (!Array.isArray(cfg.card.lines) || cfg.card.lines.length < 1) return false;
+  if (L.cardW + L.gapPx + L.countW > cfg.stage.width) return false;
+  if (L.cardH !== L.countH) return false;
+  if (L.cardW <= G.padX * 2 + 20) return false; // padding capacity
+  const availH = L.cardH - G.padY * 2 - G.titleReservePx - (G.ruleTopPx + G.ruleBottomPx + G.ruleHPx);
+  if (availH < cfg.card.lines.length * 8) return false; // vertical capacity floor
+  const s = schedule(cfg);
+  if (![s.lastLineDone, s.countAt, s.holdEnd, s.fadeEnd].every(isFinite)) return false;
+  for (let i = 1; i < s.lineStarts.length; i++) if (s.lineStarts[i] <= s.lineStarts[i - 1]) return false;
+  if (!(s.countAt > s.lastLineDone)) return false;
+  if (!(s.holdEnd >= s.countAt)) return false;
+  if (s.fadeEnd > cfg.durationMs) return false;
+  return true;
+}
+if (!checkpointsOk(CONFIG)) { // enforced BEFORE build/playback: invalid override → defaults
+  const fresh = JSON.parse(JSON.stringify(DEFAULTS));
+  for (const k of Object.keys(CONFIG)) delete CONFIG[k];
+  Object.assign(CONFIG, fresh);
+}
+// Text measurement: canvas measureText where available, deterministic
+// char-width estimate (CONFIG.type.charWidthFrac) otherwise (node harness).
+let measureCtx = null;
+function textWidth(text, px, weight) {
+  try {
+    if (typeof document !== "undefined" && document.createElement) {
+      if (!measureCtx) { const c = document.createElement("canvas"); if (c && c.getContext) measureCtx = c.getContext("2d"); }
+      if (measureCtx) { measureCtx.font = weight + " " + px + "px Arial, Helvetica, sans-serif"; return measureCtx.measureText(text).width; }
+    }
+  } catch (e) { /* fall through to estimate */ }
+  return text.length * px * CONFIG.type.charWidthFrac;
+}
+function fitFont(text, startPx, weight, maxW, minPx) {
+  let px = startPx;
+  while (px > minPx && textWidth(text, px, weight) > maxW) px -= 1;
+  return px;
+}
+// Derived typography (plan-review cure 4 + reusability fit cure): fonts computed
+// from layout + line count AND fitted to measured/estimated ink width.
+function typeSizes(cfg) {
+  const T = cfg.type, G = cfg.geom, L = cfg.layout;
+  const n = Math.max(1, cfg.card.lines.length);
+  const availH = L.cardH - G.padY * 2 - G.titleReservePx - (G.ruleTopPx + G.ruleBottomPx + G.ruleHPx);
+  const lineH = Math.max(8, Math.min(26, Math.floor(availH / n)));
+  const innerW = L.cardW - G.padX * 2;
+  let title = Math.max(T.minTitle, Math.min(T.maxTitle, Math.floor(L.cardW / 15)));
+  title = fitFont(cfg.card.title, title, 800, innerW, T.fitMinPx);
+  let line = Math.max(T.minLine, Math.min(T.maxLine, lineH - T.lineSlackPx));
+  for (const txt of cfg.card.lines) line = Math.min(line, fitFont(txt, line, 700, innerW - G.bulletPx - G.bulletGapPx, T.fitMinPx));
+  let count = Math.max(T.minCount, Math.min(T.maxCount, Math.floor(L.countW * T.countFrac)));
+  count = fitFont(String(cfg.opposition.count), count, 800, L.countW - G.countPadXPx * 2, T.fitMinPx);
+  return {
+    title: title,
+    line: line,
+    lineH: lineH,
+    count: count,
+    countLabel: Math.max(T.minCountLabel, Math.min(T.maxCountLabel, Math.floor(L.countW / 5)))
+  };
+}
+function build(cfg) {
+  const L = cfg.layout, P = cfg.palette, T = typeSizes(cfg);
+  const stage = document.getElementById("stage");
+  stage.style.width = cfg.stage.width + "px";
+  stage.style.height = (cfg.geom.rowTopPx + L.cardH + cfg.geom.bottomPadPx) + "px";
+  stage.style.background = P.stage;
+  const G = cfg.geom;
+  const row = document.getElementById("row");
+  row.style.left = Math.floor((cfg.stage.width - (L.cardW + L.gapPx + L.countW)) / 2) + "px";
+  row.style.top = G.rowTopPx + "px";
+  row.style.gap = L.gapPx + "px";
+  const card = document.getElementById("card");
+  card.style.width = L.cardW + "px"; card.style.height = L.cardH + "px";
+  card.style.background = P.card; card.style.color = P.ink;
+  card.style.borderRadius = G.radius + "px"; card.style.padding = G.padY + "px " + G.padX + "px";
+  const title = document.getElementById("cardTitle");
+  title.textContent = cfg.card.title; title.style.fontSize = T.title + "px"; title.style.color = P.accent;
+  const rule = document.getElementById("cardRule");
+  rule.style.background = P.accent; rule.style.margin = G.ruleTopPx + "px 0 " + G.ruleBottomPx + "px 0"; rule.style.height = G.ruleHPx + "px";
+  const linesEl = document.getElementById("lines");
+  linesEl.textContent = "";
+  cfg.card.lines.forEach((txt) => {
+    const d = document.createElement("div"); d.className = "line";
+    d.style.fontSize = T.line + "px"; d.style.lineHeight = T.lineH + "px"; d.style.color = P.ink; d.style.gap = G.bulletGapPx + "px";
+    const dot = document.createElement("span"); dot.className = "dot";
+    dot.style.width = G.bulletPx + "px"; dot.style.height = G.bulletPx + "px"; dot.style.background = P.accent;
+    const s = document.createElement("span"); s.textContent = txt;
+    d.appendChild(dot); d.appendChild(s); linesEl.appendChild(d);
+  });
+  const cb = document.getElementById("countBlock");
+  cb.style.width = L.countW + "px"; cb.style.height = L.countH + "px";
+  cb.style.background = P.countBg; cb.style.color = P.countInk;
+  cb.style.borderRadius = G.radius + "px"; cb.style.padding = G.countPadPx + "px " + G.countPadXPx + "px";
+  const num = document.getElementById("countNum");
+  num.textContent = String(cfg.opposition.count); num.style.fontSize = T.count + "px";
+  const lab = document.getElementById("countLabel");
+  lab.textContent = cfg.opposition.label; lab.style.fontSize = T.countLabel + "px";
+  return { card, cb, row, lineEls: Array.from(linesEl.children) };
+}
+const els = build(CONFIG);
+const SCHED = schedule(CONFIG);
+let startTs = null, rafId = null;
+function render(tMs) {
+  // Entrances are opacity-only (motion cure: no unevidenced translations/scale).
+  // The exit fade applies ONCE, on the row parent (motion cure: no fade-squared lines).
+  const cardP = Math.min(1, Math.max(0, (tMs - CONFIG.cardAtMs) / CONFIG.lineAnimMs));
+  els.card.style.opacity = String(cardP);
+  els.lineEls.forEach((el, i) => {
+    const p = Math.min(1, Math.max(0, (tMs - SCHED.lineStarts[i]) / CONFIG.lineAnimMs));
+    el.style.opacity = String(p);
+  });
+  const cp = Math.min(1, Math.max(0, (tMs - SCHED.countAt) / CONFIG.lineAnimMs));
+  els.cb.style.opacity = String(cp);
+  let fade = 1;
+  if (tMs > SCHED.holdEnd) fade = Math.max(0, 1 - (tMs - SCHED.holdEnd) / CONFIG.fadeMs);
+  els.row.style.opacity = String(fade);
+}
+function loop(ts) {
+  if (startTs === null) startTs = ts;
+  const t = ts - startTs;
+  render(t);
+  if (t < CONFIG.durationMs) rafId = requestAnimationFrame(loop);
+}
+window.__T59 = { CONFIG, schedule, checkpointsOk, typeSizes, render, seek(ms) { render(ms); } };
+if (typeof requestAnimationFrame === "function") rafId = requestAnimationFrame(loop);
+</script>
+</body>
+</html>

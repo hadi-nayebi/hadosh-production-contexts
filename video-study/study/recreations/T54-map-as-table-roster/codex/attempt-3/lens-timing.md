@@ -1,0 +1,11 @@
+Timing score: 58/100. Deductions from 100:
+
+- **−18 — Playback is never started by this file.** Initialization calls `render(0)` with `playing = false`; there is no internal `play()` call or playback control. All 54,400 ms therefore depend on an external caller invoking `__T54.play()`. Cure: wire playback into the comparison surface and verify that it reaches the scheduled ending.
+- **−12 — Opening timing misses the specified state sequence.** The Midwest holds only to 1,100 ms, widening runs to 2,000 ms, and full view occupies 2,000–6,000 ms. Against the instructed Midwest 0–3 s / full map 3–6 s sequence, the regional beat ends early. The 6–7 s exit matches. Cure: reconcile the conflicting packet observations with the scoring target, then schedule the opening accordingly.
+- **−8 — Extended-roster completion holds are not derived.** The default 55 identities fit exactly into eleven 600 ms groups across 6,600 ms. With 56 identities, the twelfth group starts precisely when playback ends and receives no scheduled exposure. Feasibility checkpoints nevertheless sample beyond that endpoint. Cure: derive the final hold from group count and required exposure, and reject verification samples outside the playable duration.
+- **−4 — Placement pops are compressed into near-instant events.** The effective pop is 30.6 ms against a 34 ms placement cadence, overriding the configured 120 ms duration. This prevents overlapping pops but leaves little temporal articulation for each arrival. Cure: budget placement cadence and pop duration together, preserving a deliberate perceptible entrance while settling before full-map arrival.
+
+Credit: the default timeline allocates its duration continuously; regional dwell starts after camera movement, the roster pass derives its duration from actual groups, and the return receives a real 6,600 ms full-map hold. Placement settles at 1,900.6 ms, before the 2,000 ms arrival. These are source-level findings; playback remains pixel-unverified.
+
+SCORE: 58
+BODY-WRITE: This return files the attempt’s timing/tempo defects, cures, and score for the practice job’s Verify step and permanent score record.

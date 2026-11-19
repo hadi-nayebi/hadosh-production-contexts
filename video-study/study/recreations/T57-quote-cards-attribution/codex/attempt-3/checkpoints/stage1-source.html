@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T57 — Quote cards with named attribution</title>
+<style>
+  html,body{margin:0;padding:0;background:var(--page-bg);}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  #stage{position:relative;width:100%;max-width:var(--stage-max);aspect-ratio:var(--stage-aspect);overflow:hidden;
+    background:var(--field);font-family:var(--font-family);box-sizing:border-box;}
+  #scene{position:absolute;left:0;top:0;width:100%;height:100%;background:var(--field);transform-origin:50% 50%;}
+  #card{position:absolute;left:var(--card-left);top:var(--card-top);transform:translate(-50%,-50%);
+    width:var(--card-w);box-sizing:border-box;background:var(--card);
+    border-left:var(--rule-w) solid var(--chip);border-radius:var(--card-radius);
+    padding:var(--card-pad-y) var(--card-pad-x);box-shadow:var(--card-shadow);}
+  #glyph{color:var(--chip);font-size:var(--glyph-size);line-height:var(--glyph-line-height);font-weight:var(--quote-weight);}
+  #quote{margin-top:var(--quote-gap);}
+  .qline{color:var(--ink);font-size:var(--quote-size);font-weight:var(--quote-weight);
+    line-height:var(--line-height);white-space:nowrap;opacity:0;}
+  #chip{margin-top:var(--chip-gap);line-height:var(--chip-line-height);opacity:0;}
+  #speaker{color:var(--chip-ink);font-size:var(--chip-size);font-weight:var(--chip-weight);}
+  #occasion{color:var(--occasion);font-size:var(--chip-size);font-style:italic;font-weight:var(--occasion-weight);margin-left:var(--occasion-gap);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="scene">
+    <div id="card">
+      <div id="glyph">&ldquo;</div>
+      <div id="quote"></div>
+      <div id="chip"><span id="speaker"></span><span id="occasion"></span></div>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / geometry value lives here ============ */
+const CONFIG = {
+  durationMs: 14000,
+  pageBg: "#000000",
+  fontFamily: "Georgia, 'Times New Roman', serif",
+  quotes: [
+    { text: "Made a career of doing favors for his colleagues.",
+      speaker: "Associated Press", occasion: "on Byrd",
+      enterAtMs: 0, enterDurMs: 500, exitStartMs: 8000, exitDurMs: 500 },
+    { text: "Range far beyond his public ones.",
+      speaker: "Semafor", occasion: "on Schumer's private commitments",
+      enterAtMs: 11500, enterDurMs: 500, exitStartMs: null, exitDurMs: 500,
+      anchorXFrac: 0.5, anchorYFrac: 0.5 }
+  ],
+  palette: { card: "#232a31", ink: "#f5f2ea", chip: "#b8860b", chipInk: "#ffffff",
+             occasion: "#d9a62e", field: "#2e6b7a" },
+  entranceMode: "unit",
+  lifecycleMode: "specimen",
+  cardEnterMs: 500,
+  exitDurMs: 500,
+  exitScaleTo: 1,
+  lineMs: 620,
+  lineFadeMs: 260,
+  chipFadeMs: 400,
+  holdMs: 3000,
+  entranceScaleFrom: 0.96,
+  contrastTextMin: 4.5,
+  contrastAccentMin: 2,
+  contrastFallback: "lighten",
+  layout: { stageMaxPx: 960, stageAspectW: 16, stageAspectH: 9,
+            cardAnchorXFrac: 0.5, cardAnchorYFrac: 0.5,
+            cardWidthFrac: 0.72, cardPadXFrac: 0.045, cardPadYFrac: 0.035,
+            cardRadiusFrac: 0.012, rulePx: 4, cardMaxHeightFrac: 0.9,
+            shadowOffsetYFrac: 0.011, shadowBlurFrac: 0.044, shadowAlpha: 0.35 },
+  type: { quoteFrac: 0.040, glyphFrac: 0.075, chipFrac: 0.039,
+          quoteWeight: 600, chipWeight: 700, occasionWeight: 400, lineHeight: 1.3,
+          glyphLineHeight: 0.6, chipLineHeight: 1.3,
+          quoteGapFrac: 0.018, chipGapFrac: 0.022, fitGuard: 0.97,
+          minQuotePx: 11, chipMinPx: 11, occasionGapEm: 0.45 }
+};
+/* URL override: ?config=<url-encoded JSON> deep-merges into CONFIG (swap route). */
+(function applyOverride(){
+  try {
+    const q = new URLSearchParams(location.search).get("config");
+    if (!q) return;
+    const o = JSON.parse(q);
+    (function merge(dst, src){
+      for (const k in src) {
+        if (src[k] && typeof src[k] === "object" && !Array.isArray(src[k]) &&
+            dst[k] && typeof dst[k] === "object" && !Array.isArray(dst[k])) merge(dst[k], src[k]);
+        else dst[k] = src[k];
+      }
+    })(CONFIG, o);
+  } catch (e) { /* malformed override ignored; defaults stand */ }
+})();
+
+const stage = document.getElementById("stage");
+const sceneEl = document.getElementById("scene");
+const cardEl = document.getElementById("card");
+const quoteEl = document.getElementById("quote");
+const chipEl = document.getElementById("chip");
+const speakerEl = document.getElementById("speaker");
+const occasionEl = document.getElementById("occasion");
+const glyphEl = document.getElementById("glyph");
+
+function stageW() { return stage.clientWidth || CONFIG.layout.stageMaxPx; }
+
+function applyVars() {
+  const root = document.documentElement.style;
+  root.setProperty("--page-bg", CONFIG.pageBg);
+  const r = stage.style;
+  r.setProperty("--field", CONFIG.palette.field);
+  r.setProperty("--card", CONFIG.palette.card);
+  r.setProperty("--ink", CONFIG.palette.ink);
+  r.setProperty("--chip", CONFIG.palette.chip);
+  r.setProperty("--chip-ink", CONFIG.palette.chipInk);
+  r.setProperty("--occasion", CONFIG.palette.occasion);
+  r.setProperty("--font-family", CONFIG.fontFamily);
+  r.setProperty("--stage-max", CONFIG.layout.stageMaxPx + "px");
+  r.setProperty("--stage-aspect", CONFIG.layout.stageAspectW + " / " + CONFIG.layout.stageAspectH);
+  r.setProperty("--card-left", (CONFIG.layout.cardAnchorXFrac * 100) + "%");
+  r.setProperty("--card-top", (CONFIG.layout.cardAnchorYFrac * 100) + "%");
+  const W = stageW();
+  r.setProperty("--card-w", Math.round(W * CONFIG.layout.cardWidthFrac) + "px");
+  r.setProperty("--card-pad-x", Math.round(W * CONFIG.layout.cardPadXFrac) + "px");
+  r.setProperty("--card-pad-y", Math.round(W * CONFIG.layout.cardPadYFrac) + "px");
+  r.setProperty("--card-radius", Math.round(W * CONFIG.layout.cardRadiusFrac) + "px");
+  r.setProperty("--rule-w", CONFIG.layout.rulePx + "px");
+  r.setProperty("--card-shadow", "0 " + Math.round(W * CONFIG.layout.shadowOffsetYFrac) + "px " +
+    Math.round(W * CONFIG.layout.shadowBlurFrac) + "px rgba(0,0,0," + CONFIG.layout.shadowAlpha + ")");
+  r.setProperty("--quote-size", Math.max(CONFIG.type.minQuotePx, W * CONFIG.type.quoteFrac) + "px");
+  r.setProperty("--glyph-size", (W * CONFIG.type.glyphFrac) + "px");
+  r.setProperty("--chip-size", Math.max(CONFIG.type.chipMinPx, W * CONFIG.type.chipFrac) + "px");
+  r.setProperty("--quote-weight", CONFIG.type.quoteWeight);
+  r.setProperty("--chip-weight", CONFIG.type.chipWeight);
+  r.setProperty("--occasion-weight", CONFIG.type.occasionWeight);
+  r.setProperty("--line-height", CONFIG.type.lineHeight);
+  r.setProperty("--glyph-line-height", CONFIG.type.glyphLineHeight);
+  r.setProperty("--chip-line-height", CONFIG.type.chipLineHeight);
+  r.setProperty("--quote-gap", Math.round(W * CONFIG.type.quoteGapFrac) + "px");
+  r.setProperty("--chip-gap", Math.round(W * CONFIG.type.chipGapFrac) + "px");
+  r.setProperty("--occasion-gap", CONFIG.type.occasionGapEm + "em");
+}
+
+/* Measured line formation: greedy word wrap against canvas-measured text at the
+   configured font; available width = card width minus actual padding minus rule.
+   No preset line breaks, no character-count splitting. Long unbroken tokens are
+   hard-split only when a single token exceeds the available width. */
+const measCtx = document.createElement("canvas").getContext("2d");
+function measure(text, px, weight, italic) {
+  measCtx.font = (italic ? "italic " : "") + weight + " " + px + "px " + CONFIG.fontFamily;
+  return measCtx.measureText(text).width;
+}
+/* Attribution wrap simulation (model level). Token handling, stated explicitly:
+   the attribution string is split on whitespace runs (each run collapses to one
+   space, matching how the rendered inline spans collapse whitespace); every
+   token is measured with its own role font (speaker tokens at the speaker
+   weight, occasion tokens italic at the occasion weight); the gap between the
+   speaker and occasion parts is the configured occasion gap, counted once and
+   only when the occasion's first token lands on the same line as preceding
+   content; a token wider than the available width is hard-split at character
+   level across lines. The returned line count is unbounded. */
+function chipWrap(q, availPx, chipPx) {
+  const tokens = [];
+  ("\u2014 " + (q.speaker || "")).split(/\s+/).filter(Boolean)
+    .forEach(t => tokens.push({ text: t, weight: CONFIG.type.chipWeight, italic: false, part: "speaker" }));
+  (q.occasion || "").split(/\s+/).filter(Boolean)
+    .forEach((t, i) => tokens.push({ text: t, weight: CONFIG.type.occasionWeight, italic: true, part: "occasion", first: i === 0 }));
+  if (!tokens.length) return { lines: 0 };
+  const spaceW = measure(" ", chipPx, CONFIG.type.chipWeight, false);
+  const gapW = chipPx * CONFIG.type.occasionGapEm;
+  let lines = 1, curW = 0;
+  for (const tok of tokens) {
+    let rest = tok.text, firstChunk = true;
+    while (rest.length) {
+      const w = measure(rest, chipPx, tok.weight, tok.italic);
+      const lead = curW > 0 ? (firstChunk && tok.first ? gapW : spaceW) : 0;
+      if (curW > 0 && curW + lead + w > availPx) { lines++; curW = 0; continue; }
+      if (curW + lead + w <= availPx) { curW += lead + w; rest = ""; }
+      else {
+        const room = availPx - curW - lead;
+        let n = rest.length;
+        while (n > 1 && measure(rest.slice(0, n), chipPx, tok.weight, tok.italic) > room) n--;
+        if (n < 1) n = 1;
+        curW += lead + measure(rest.slice(0, n), chipPx, tok.weight, tok.italic);
+        rest = rest.slice(n); firstChunk = false;
+        if (rest.length) { lines++; curW = 0; }
+      }
+    }
+  }
+  return { lines };
+}
+function wrapQuote(q, availPx, fontPx, chipPx) {
+  let size = fontPx;
+  const guard = availPx * CONFIG.type.fitGuard;
+  const words = q.text.split(/\s+/).filter(Boolean);
+  function build(px) {
+    const lines = []; let cur = "";
+    for (const w of words) {
+      if (measure(w, px, CONFIG.type.quoteWeight, false) > guard) {
+        if (cur) { lines.push(cur); cur = ""; }
+        let rest = w;
+        while (measure(rest, px, CONFIG.type.quoteWeight, false) > guard && rest.length > 1) {
+          let n = rest.length;
+          while (n > 1 && measure(rest.slice(0, n), px, CONFIG.type.quoteWeight, false) > guard) n--;
+          lines.push(rest.slice(0, n)); rest = rest.slice(n);
+        }
+        cur = rest; continue;
+      }
+      const trial = cur ? cur + " " + w : w;
+      if (measure(trial, px, CONFIG.type.quoteWeight, false) <= guard) cur = trial;
+      else { lines.push(cur); cur = w; }
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  /* Complete-card vertical fit: padding, glyph, gaps, quote lines and the
+     attribution block (at its simulated wrapped line count and its own
+     configured line height) are all priced; the quote font shrinks toward
+     its floor until the whole card fits the height budget. Any remaining
+     excess at the floor is returned as a reported overflow amount. */
+  const W = stageW();
+  const stageH = W * CONFIG.layout.stageAspectH / CONFIG.layout.stageAspectW;
+  const chipLines = chipWrap(q, availPx, chipPx).lines;
+  const fixedH = 2 * (W * CONFIG.layout.cardPadYFrac)
+    + (W * CONFIG.type.glyphFrac) * CONFIG.type.glyphLineHeight
+    + W * CONFIG.type.quoteGapFrac + W * CONFIG.type.chipGapFrac;
+  function totalH(px, lines) {
+    return fixedH + lines.length * px * CONFIG.type.lineHeight
+      + chipLines * chipPx * CONFIG.type.chipLineHeight;
+  }
+  let lines = build(size);
+  while (size > CONFIG.type.minQuotePx && totalH(size, lines) > stageH * CONFIG.layout.cardMaxHeightFrac) {
+    size -= 1; lines = build(size);
+  }
+  const h = totalH(size, lines);
+  const overflowPx = Math.max(0, h - stageH * CONFIG.layout.cardMaxHeightFrac);
+  return { lines, fontPx: size, cardHeightPx: h, stageHPx: stageH,
+           chipLines, overflowPx };
+}
+
+/* Contrast handling: text colors must clear the text floor against the card;
+   the accent must clear the accent floor. When a color falls short and the
+   configured fallback policy is "lighten", the color is lightened toward
+   white in fixed steps until it clears (deterministic; the adjusted value is
+   what renders). With any other policy value the colors render as configured.
+   A color that still falls short after the step cap, and any color value that
+   is not a six-digit hex string, is recorded in the diagnostics object. */
+let diagnostics = { extendedDurationMs: 0, requiredMs: 0, quoteCount: 0,
+  scheduleValid: true, validationErrors: [], overlapWarnings: [],
+  fitOverflow: [], fitOverflowMaxPx: 0, contrastFailures: [], invalidColors: [] };
+function isHex6(s) { return typeof s === "string" && /^#[0-9a-fA-F]{6}$/.test(s); }
+function lum(hex) {
+  if (!isHex6(hex)) return 0;
+  const c = hex.replace("#", "");
+  const v = [0, 2, 4].map(i => parseInt(c.substr(i, 2), 16) / 255)
+    .map(s => s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4));
+  return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+}
+function contrast(a, b) {
+  const la = lum(a), lb = lum(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function lighten(hex, step) {
+  const c = hex.replace("#", "");
+  const ch = [0, 2, 4].map(i => parseInt(c.substr(i, 2), 16));
+  const out = ch.map(v => Math.round(v + (255 - v) * step));
+  return "#" + out.map(v => v.toString(16).padStart(2, "0")).join("");
+}
+function guardPalette() {
+  const p = CONFIG.palette;
+  for (const key of Object.keys(p)) {
+    if (!isHex6(p[key])) diagnostics.invalidColors.push({ key, value: String(p[key]) });
+  }
+  if (!isHex6(p.card)) return;
+  const fix = (key, floor) => {
+    if (!isHex6(p[key])) return;
+    let guard = 0;
+    if (CONFIG.contrastFallback === "lighten") {
+      while (contrast(p[key], p.card) < floor && guard < 20) { p[key] = lighten(p[key], 0.12); guard++; }
+    }
+    if (contrast(p[key], p.card) < floor) {
+      diagnostics.contrastFailures.push({ key, ratio: Math.round(contrast(p[key], p.card) * 100) / 100, floor });
+    }
+  };
+  fix("ink", CONFIG.contrastTextMin);
+  fix("chipInk", CONFIG.contrastTextMin);
+  fix("occasion", CONFIG.contrastTextMin);
+  fix("chip", CONFIG.contrastAccentMin);
+}
+
+/* Precomputed timeline: every quote is wrapped and every start time is fixed
+   before playback begins, so any seek lands on the same state sequential
+   playback would show. In the scheduled lifecycle each quote carries its own
+   entrance interval and exit interval; otherwise starts accumulate from
+   entrance + hold spans, where a staggered span runs to the attribution's
+   completion. The schedule is validated before it is adopted: out-of-order
+   scheduled entrances are rejected and reported (the previous timeline is
+   left unchanged); overlaps and exits that begin before an entrance completes
+   are flagged in the diagnostics. The required duration is derived from the
+   table; a shorter configured duration extends to the requirement and the
+   extension is recorded in the diagnostics. */
+let timeline = [];
+function spanFor(entry) {
+  if (CONFIG.entranceMode === "staggered") {
+    return entry.enterDurMs + entry.wrapped.lines.length * CONFIG.lineMs
+      + CONFIG.chipFadeMs + CONFIG.holdMs;
+  }
+  return entry.enterDurMs + CONFIG.holdMs;
+}
+function computeTimeline() {
+  const W = stageW();
+  const cardW = W * CONFIG.layout.cardWidthFrac;
+  const avail = cardW - 2 * (W * CONFIG.layout.cardPadXFrac) - CONFIG.layout.rulePx;
+  const fontPx = Math.max(CONFIG.type.minQuotePx, W * CONFIG.type.quoteFrac);
+  const chipPx = Math.max(CONFIG.type.chipMinPx, W * CONFIG.type.chipFrac);
+  const candidate = [];
+  let cursor = 0;
+  CONFIG.quotes.forEach((q, i) => {
+    const w = wrapQuote(q, avail, fontPx, chipPx);
+    const enterDur = typeof q.enterDurMs === "number" ? q.enterDurMs : CONFIG.cardEnterMs;
+    const exitDur = typeof q.exitDurMs === "number" ? q.exitDurMs : CONFIG.exitDurMs;
+    let start;
+    if (CONFIG.lifecycleMode === "specimen" && typeof q.enterAtMs === "number") start = q.enterAtMs;
+    else if (i === 0) start = 0;
+    else start = cursor;
+    const exitStart = (CONFIG.lifecycleMode === "specimen" && typeof q.exitStartMs === "number")
+      ? q.exitStartMs : null;
+    const probe = { quote: q, wrapped: w, startMs: start, enterDurMs: enterDur,
+                    exitStartMs: exitStart, exitDurMs: exitDur, endMs: 0 };
+    probe.endMs = exitStart !== null ? exitStart + exitDur
+      : (CONFIG.lifecycleMode === "specimen" && typeof q.enterAtMs === "number")
+        ? Math.max(start + enterDur, CONFIG.durationMs)
+        : start + spanFor(probe);
+    candidate.push(probe);
+    cursor = Math.max(cursor, probe.endMs);
+  });
+  const errors = [], warnings = [];
+  if (CONFIG.lifecycleMode === "specimen") {
+    candidate.forEach((e, i) => {
+      if (i > 0 && e.startMs < candidate[i - 1].startMs) errors.push({ type: "schedule-order", index: i });
+      if (i > 0 && e.startMs < candidate[i - 1].endMs) warnings.push({ type: "overlap", index: i });
+      if (e.exitStartMs !== null && e.exitStartMs < e.startMs + e.enterDurMs) {
+        warnings.push({ type: "exit-before-entrance-complete", index: i });
+      }
+    });
+  }
+  diagnostics.validationErrors = errors;
+  diagnostics.overlapWarnings = warnings;
+  diagnostics.scheduleValid = errors.length === 0;
+  if (errors.length) return; /* rejected: the previous timeline stands unchanged */
+  timeline = candidate;
+  diagnostics.quoteCount = timeline.length;
+  diagnostics.requiredMs = timeline.length ? Math.max.apply(null, timeline.map(e => e.endMs)) : 0;
+  diagnostics.extendedDurationMs = Math.max(0, diagnostics.requiredMs - CONFIG.durationMs);
+  diagnostics.fitOverflow = timeline.filter(e => e.wrapped.overflowPx > 0)
+    .map(e => ({ index: timeline.indexOf(e), overflowPx: Math.round(e.wrapped.overflowPx * 100) / 100 }));
+  diagnostics.fitOverflowMaxPx = diagnostics.fitOverflow.length
+    ? Math.max.apply(null, diagnostics.fitOverflow.map(f => f.overflowPx)) : 0;
+}
+function effectiveDuration() { return Math.max(CONFIG.durationMs, diagnostics.requiredMs); }
+
+let lineDivs = [];
+let curQuote = -1;
+function buildQuote(i) {
+  const entry = timeline[i];
+  const q = entry.quote;
+  cardEl.style.left = ((typeof q.anchorXFrac === "number" ? q.anchorXFrac : CONFIG.layout.cardAnchorXFrac) * 100) + "%";
+  cardEl.style.top = ((typeof q.anchorYFrac === "number" ? q.anchorYFrac : CONFIG.layout.cardAnchorYFrac) * 100) + "%";
+  quoteEl.innerHTML = "";
+  lineDivs = entry.wrapped.lines.map(txt => {
+    const d = document.createElement("div");
+    d.className = "qline"; d.textContent = txt; d.style.fontSize = entry.wrapped.fontPx + "px";
+    quoteEl.appendChild(d); return d;
+  });
+  speakerEl.textContent = "\u2014 " + q.speaker;
+  occasionEl.textContent = q.occasion;
+}
+function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+function renderAt(tMs) {
+  if (!timeline.length) { cardEl.style.opacity = 0; return; }
+  let i = 0;
+  for (let k = 0; k < timeline.length; k++) if (tMs >= timeline[k].startMs) i = k;
+  if (tMs < timeline[0].startMs) i = 0;
+  if (i !== curQuote) { curQuote = i; buildQuote(i); }
+  const entry = timeline[i];
+  const local = tMs - entry.startMs;
+  const enter = clamp01(local / entry.enterDurMs);
+  let exitP = 0;
+  if (entry.exitStartMs !== null) exitP = clamp01((tMs - entry.exitStartMs) / entry.exitDurMs);
+  const vis = enter * (1 - exitP);
+  const scale = CONFIG.entranceScaleFrom + (1 - CONFIG.entranceScaleFrom) * enter;
+  /* The scene layer and the card share one exit transform: a single exit
+     progress drives the scene layer's scale, and the card — a child of the
+     scene layer — is carried by that same transform while it fades. */
+  const sceneScale = entry.exitStartMs !== null ? 1 + (CONFIG.exitScaleTo - 1) * exitP : 1;
+  sceneEl.style.transform = "scale(" + sceneScale + ")";
+  cardEl.style.transform = "translate(-50%,-50%) scale(" + scale + ")";
+  if (CONFIG.entranceMode === "staggered") {
+    /* The parent carries the exit fade only; entrances stay with the children,
+       so no progress value is applied twice to the same content. */
+    cardEl.style.opacity = 1 - exitP;
+    lineDivs.forEach((d, li) => {
+      const start = entry.enterDurMs + li * CONFIG.lineMs;
+      d.style.opacity = clamp01((local - start) / CONFIG.lineFadeMs);
+    });
+    const chipStart = entry.enterDurMs + lineDivs.length * CONFIG.lineMs;
+    chipEl.style.opacity = clamp01((local - chipStart) / CONFIG.chipFadeMs);
+    glyphEl.style.opacity = enter;
+  } else {
+    /* Unit mode: the parent alone carries the entrance/exit opacity;
+       the children render at full opacity inside it. */
+    cardEl.style.opacity = vis;
+    lineDivs.forEach(d => { d.style.opacity = 1; });
+    chipEl.style.opacity = 1;
+    glyphEl.style.opacity = 1;
+  }
+}
+let startStamp = null, pausedAt = 0, playing = false;
+function frame(now) {
+  if (!playing) return;
+  if (startStamp === null) startStamp = now - pausedAt;
+  const t = now - startStamp;
+  if (t >= effectiveDuration()) { renderAt(effectiveDuration()); playing = false; return; }
+  renderAt(t);
+  requestAnimationFrame(frame);
+}
+function play() { if (!playing) { playing = true; startStamp = null; requestAnimationFrame(frame); } }
+function pause() { playing = false; }
+function seek(ms) { pausedAt = Math.max(0, Math.min(effectiveDuration(), ms)); renderAt(pausedAt); if (playing) startStamp = null; }
+function relayout() { applyVars(); computeTimeline(); curQuote = -1; renderAt(pausedAt); }
+guardPalette();
+applyVars();
+computeTimeline();
+if (timeline.length) { buildQuote(0); curQuote = 0; }
+renderAt(0);
+window.addEventListener("resize", relayout);
+window.__T57 = { seek, play, pause, renderAt, CONFIG, timeline: () => timeline,
+  diagnostics: () => diagnostics, effectiveDuration,
+  wrap: (text) => { const W = stageW();
+    const avail = W * CONFIG.layout.cardWidthFrac - 2 * (W * CONFIG.layout.cardPadXFrac) - CONFIG.layout.rulePx;
+    return wrapQuote({ text, speaker: "", occasion: "" }, avail,
+      Math.max(CONFIG.type.minQuotePx, W * CONFIG.type.quoteFrac),
+      Math.max(CONFIG.type.chipMinPx, W * CONFIG.type.chipFrac)); },
+  chip: (speaker, occasion) => { const W = stageW();
+    const avail = W * CONFIG.layout.cardWidthFrac - 2 * (W * CONFIG.layout.cardPadXFrac) - CONFIG.layout.rulePx;
+    return chipWrap({ speaker, occasion }, avail,
+      Math.max(CONFIG.type.chipMinPx, W * CONFIG.type.chipFrac)); },
+  contrast };
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+play();
+</script>
+</body>
+</html>

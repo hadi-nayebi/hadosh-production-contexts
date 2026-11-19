@@ -1,0 +1,16 @@
+The build offers substantial CONFIG-driven reuse: roster, geography, palette, camera, typography and cadence feed shared computations; placement and final-hold duration derive from roster size. Validation precedes generated SVG construction. Deducting from 100:
+
+- **−7 — Schema validation is incomplete and can throw instead of returning errors.** Missing `viewBox`, non-array `states`, or malformed region records can fail during unchecked dereferences. Optional state anchors, chip `elect`/`initials`, `labelRx`, required palette entries and full-plate colors lack adequate checks; several numeric checks accept strings. **Cure:** validate container shapes before traversal, strictly type every consumed leaf, and validate required colors and locale syntax before geometry.
+
+- **−5 — International initials are only partially generalized.** Glyph coverage checks names and labels but omits the actual generated or overridden initials, including locale uppercase expansions. Multiword extraction can underfill `initialsCount` when the first word is short; letter-only word matching strips joiners before grapheme segmentation. The fallback handles combining marks, not complete grapheme boundaries. **Cure:** define and enforce the count policy on final graphemes, preserve script-relevant joiners, validate final rendered initials, and provide a complete segmentation fallback or explicit supported-script boundary.
+
+- **−4 — Region-pass cardinality does not preserve the stated four-member wave behavior.** `passWaves` limits the number of groups; it does not cap their membership. A region with 17 members produces a five-member group at the default setting. Final indexing does correctly derive group coverage and duration. **Cure:** configure maximum members per wave and derive the number of waves from membership.
+
+- **−3 — Responsive reuse is validated against different geometry from rendering.** Feasibility reserves the count-plate strip using `stageReferenceWidthPx`; rendering uses actual stage width. Narrower stages can therefore hide identities despite successful reference-width validation. Count-plate horizontal fit is also unchecked. **Cure:** validate supported viewport sizes using the renderer’s conversion and check overlay width and identity coverage at each.
+
+- **−3 — Some layout policy remains embedded outside CONFIG.** Elect-tag candidate topology, plate candidate patterns, Manhattan-distance ranking and one-decimal candidate deduplication are fixed implementation choices. Production can tune their inputs but cannot fully re-drive these style/search policies through CONFIG. **Cure:** expose named candidate and ranking policies plus deduplication precision, with validation.
+
+No deduction for required initials/blob substitutions, autoplay-off behavior, or lack of pixel verification itself. This assessment concerns reuse from the supplied source; the reported suite is supporting evidence rather than independently reproduced verification.
+
+SCORE: 78
+BODY-WRITE: Files this attempt’s Reusability lens assessment, deductions and cures for the practice job’s Verify step and permanent score record.

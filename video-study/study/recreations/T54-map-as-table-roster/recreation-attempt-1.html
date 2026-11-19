@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T54 — Map-as-table roster</title>
+<style>
+  html,body{margin:0;padding:0;background:#0b2b33;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  #stage{position:relative;width:100%;max-width:720px;aspect-ratio:360/260;overflow:hidden;background:#14424e;font-family:Arial,Helvetica,sans-serif;}
+  svg{position:absolute;inset:0;width:100%;height:100%;}
+  #fullplate{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:#14232e;color:#fff;font-weight:700;font-size:13px;letter-spacing:.06em;padding:5px 12px;border-radius:6px;opacity:0;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="map" viewBox="0 0 360 260" preserveAspectRatio="xMidYMid meet" aria-label="Roster map"></svg>
+  <div id="fullplate"></div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / geometry value lives here ============ */
+const CONFIG = {
+  durationMs: 14000,
+  viewBox: { w: 360, h: 260 },
+  palette: {
+    ground: "#14424e",
+    land: "#33523f",
+    landAlt: ["#3f6b4f", "#7a9a4e", "#b39b4a", "#7d5a8a", "#4e7d5a"],
+    chip: "#e8dcc0",
+    chipRing: "#ffffff",
+    chipInk: "#22303a",
+    electBg: "#14232e",
+    elect: "#f7c948",
+    label: "#14232e",
+    labelText: "#ffffff"
+  },
+  chipR: 13,
+  chipRingW: 2,
+  initialsSize: 9,
+  labelSize: 8.5,
+  electSize: 7,
+  placeMs: 240,
+  holdAfterPlaceMs: 800,
+  popMs: 180,
+  zoomMs: 900,
+  /* Abstract generated state blobs {id,cx,cy,r} in the 360x260 viewBox — generated anchors,
+     NOT traced boundaries. Optional ax/ay = chip anchor when the landmass centre is too
+     crowded for a chip (small north-east blobs); default anchor is the blob centre. */
+  states: [
+    {id:"WA",cx:30,cy:35,r:17},{id:"OR",cx:28,cy:62,r:15},{id:"CA",cx:22,cy:105,r:20},
+    {id:"NV",cx:48,cy:95,r:14},{id:"ID",cx:52,cy:58,r:13},{id:"MT",cx:78,cy:32,r:16},
+    {id:"WY",cx:80,cy:68,r:13},{id:"UT",cx:62,cy:92,r:12},{id:"AZ",cx:62,cy:122,r:14},
+    {id:"NM",cx:95,cy:125,r:13},{id:"CO",cx:105,cy:100,r:13},{id:"ND",cx:140,cy:35,r:14},
+    {id:"SD",cx:140,cy:58,r:13},{id:"NE",cx:142,cy:82,r:13},{id:"KS",cx:145,cy:108,r:13},
+    {id:"OK",cx:148,cy:132,r:12},{id:"TX",cx:150,cy:168,r:20},{id:"MN",cx:185,cy:42,r:14},
+    {id:"IA",cx:188,cy:72,r:12},{id:"MO",cx:192,cy:102,r:13},{id:"AR",cx:196,cy:130,r:11},
+    {id:"LA",cx:198,cy:158,r:11},{id:"WI",cx:215,cy:52,r:12},{id:"IL",cx:218,cy:88,r:13},
+    {id:"MI",cx:238,cy:48,r:13},{id:"IN",cx:240,cy:84,r:11},{id:"KY",cx:246,cy:106,r:11},
+    {id:"TN",cx:248,cy:124,r:11},{id:"MS",cx:222,cy:140,r:11},{id:"AL",cx:240,cy:142,r:11},
+    {id:"GA",cx:262,cy:142,r:12},{id:"FL",cx:278,cy:185,r:13},{id:"SC",cx:278,cy:124,r:10,ax:284,ay:128},
+    {id:"NC",cx:282,cy:108,r:11,ax:276,ay:112},{id:"VA",cx:288,cy:92,r:11,ax:278,ay:86},{id:"OH",cx:262,cy:80,r:12},
+    {id:"PA",cx:288,cy:68,r:12},{id:"NY",cx:308,cy:52,r:13},
+    {id:"VT",cx:322,cy:42,r:8,ax:314,ay:34},{id:"NH",cx:334,cy:36,r:8,ax:340,ay:26},
+    {id:"ME",cx:342,cy:24,r:10,ax:344,ay:16},{id:"MA",cx:334,cy:56,r:8,ax:342,ay:58},
+    {id:"CT",cx:328,cy:66,r:7,ax:330,ay:74},{id:"NJ",cx:318,cy:76,r:8,ax:312,ay:84},
+    {id:"MD",cx:306,cy:86,r:8,ax:298,ay:98},{id:"DE",cx:318,cy:88,r:6,ax:322,ay:98},
+    {id:"AK",cx:40,cy:200,r:13},{id:"HI",cx:75,cy:232,r:7}
+  ],
+  /* Deterministic offsets for the 1st, 2nd, 3rd... chip sharing one state anchor. */
+  chipOffsets: [
+    {dx:0,dy:0},{dx:14,dy:-9},{dx:-14,dy:9},{dx:14,dy:10},{dx:-14,dy:-10}
+  ],
+  /* chips[] = {name,label,stateId,elect} — placement order IS array order, one per placeMs.
+     Chips are generated initials-discs, never portraits. */
+  chips: [
+    {name:"J. Hart",label:"Hart — WA",stateId:"WA",elect:false},
+    {name:"R. Osei",label:"Osei — WA",stateId:"WA",elect:true},
+    {name:"M. Lindqvist",label:"Lindqvist — OR",stateId:"OR",elect:false},
+    {name:"T. Begay",label:"Begay — OR",stateId:"OR",elect:false},
+    {name:"A. Rivera",label:"Rivera — CA",stateId:"CA",elect:false},
+    {name:"S. Nakamura",label:"Nakamura — CA",stateId:"CA",elect:true},
+    {name:"K. Doyle",label:"Doyle — NV",stateId:"NV",elect:false},
+    {name:"P. Anand",label:"Anand — ID",stateId:"ID",elect:false},
+    {name:"C. Whitfield",label:"Whitfield — MT",stateId:"MT",elect:false},
+    {name:"D. Kovac",label:"Kovac — WY",stateId:"WY",elect:false},
+    {name:"E. Salazar",label:"Salazar — UT",stateId:"UT",elect:false},
+    {name:"H. Brennan",label:"Brennan — AZ",stateId:"AZ",elect:true},
+    {name:"L. Tsosie",label:"Tsosie — NM",stateId:"NM",elect:false},
+    {name:"G. Moreau",label:"Moreau — CO",stateId:"CO",elect:false},
+    {name:"N. Erickson",label:"Erickson — ND",stateId:"ND",elect:false},
+    {name:"B. Redbird",label:"Redbird — SD",stateId:"SD",elect:false},
+    {name:"F. Novak",label:"Novak — NE",stateId:"NE",elect:false},
+    {name:"W. Okafor",label:"Okafor — KS",stateId:"KS",elect:false},
+    {name:"D. Mercer",label:"Mercer — OK",stateId:"OK",elect:false},
+    {name:"R. Delgado",label:"Delgado — TX",stateId:"TX",elect:true},
+    {name:"I. Petrov",label:"Petrov — TX",stateId:"TX",elect:false},
+    {name:"A. Lindgren",label:"Lindgren — MN",stateId:"MN",elect:false},
+    {name:"J. Kowalski",label:"Kowalski — MN",stateId:"MN",elect:true},
+    {name:"S. Verma",label:"Verma — IA",stateId:"IA",elect:false},
+    {name:"C. Dubois",label:"Dubois — MO",stateId:"MO",elect:false},
+    {name:"T. Harlan",label:"Harlan — AR",stateId:"AR",elect:false},
+    {name:"M. Boudreaux",label:"Boudreaux — LA",stateId:"LA",elect:false},
+    {name:"K. Nilsen",label:"Nilsen — WI",stateId:"WI",elect:false},
+    {name:"O. Farrell",label:"Farrell — IL",stateId:"IL",elect:false},
+    {name:"Y. Tanaka",label:"Tanaka — IL",stateId:"IL",elect:true},
+    {name:"E. Vance",label:"Vance — MI",stateId:"MI",elect:false},
+    {name:"R. Osei-Bonsu",label:"Osei-Bonsu — IN",stateId:"IN",elect:false},
+    {name:"H. Calloway",label:"Calloway — KY",stateId:"KY",elect:false},
+    {name:"P. Rutledge",label:"Rutledge — TN",stateId:"TN",elect:false},
+    {name:"J. Colom",label:"Colom — MS",stateId:"MS",elect:false},
+    {name:"A. Beaumont",label:"Beaumont — AL",stateId:"AL",elect:false},
+    {name:"N. Whitaker",label:"Whitaker — GA",stateId:"GA",elect:false},
+    {name:"C. Fontaine",label:"Fontaine — FL",stateId:"FL",elect:true},
+    {name:"D. Ashe",label:"Ashe — SC",stateId:"SC",elect:false},
+    {name:"L. Merritt",label:"Merritt — NC",stateId:"NC",elect:false},
+    {name:"S. Aldana",label:"Aldana — VA",stateId:"VA",elect:false},
+    {name:"B. Kessler",label:"Kessler — OH",stateId:"OH",elect:false},
+    {name:"M. Orellana",label:"Orellana — OH",stateId:"OH",elect:true},
+    {name:"T. Brennan-Hughes",label:"Brennan-Hughes — PA",stateId:"PA",elect:false},
+    {name:"R. Castellano",label:"Castellano — NY",stateId:"NY",elect:false},
+    {name:"E. Whitmore",label:"Whitmore — NY",stateId:"NY",elect:true},
+    {name:"B. Sanders-Liu",label:"Sanders-Liu — VT",stateId:"VT",elect:false},
+    {name:"P. Welch",label:"Welch — VT",stateId:"VT",elect:false},
+    {name:"C. Pappas-Reed",label:"Pappas-Reed — NH",stateId:"NH",elect:true},
+    {name:"M. Holloway",label:"Holloway — ME",stateId:"ME",elect:false},
+    {name:"A. Prescott",label:"Prescott — MA",stateId:"MA",elect:false},
+    {name:"R. Almeida",label:"Almeida — CT",stateId:"CT",elect:false},
+    {name:"J. Ferreira",label:"Ferreira — NJ",stateId:"NJ",elect:false},
+    {name:"K. Aldridge",label:"Aldridge — MD",stateId:"MD",elect:false},
+    {name:"S. Nakamura-Reed",label:"Nakamura-Reed — HI",stateId:"HI",elect:false}
+  ],
+  /* zooms = [{stateIds[], atMs, scale}] over the same viewBox. Camera ownership: exactly one
+     transform is active; a later zoom replaces the earlier; at fullAtMs the identity
+     transform owns the stage (full-roster state). Zoom atMs values are authored against
+     authoredSpanMs; the effective zoom time rescales with the derived span
+     (effectiveAt = atMs * fullAtMs / authoredSpanMs), so a compressed placement
+     (swap: placeMs 110) keeps every zoom inside the run — validation requires the
+     effective time < fullAtMs. Zoom order follows placement order (west to east),
+     so each zoom's region is already populated when the camera arrives. */
+  authoredSpanMs: 14000,
+  zooms: [
+    {stateIds:["WA","OR","CA"], atMs:3000, scale:1.9},
+    {stateIds:["IL","WI","IN"], atMs:7000, scale:2.0},
+    {stateIds:["OH","PA","NY"], atMs:11000, scale:2.2}
+  ],
+  fullLabel: "{n} ON THE MAP"
+};
+
+/* ============ Pure logic (DOM-free; exercised by the node swap harness) ============ */
+function fullAtMs(cfg){ return cfg.chips.length * cfg.placeMs + cfg.holdAfterPlaceMs; }
+function stateMap(cfg){ const m={}; cfg.states.forEach(function(s){ m[s.id]=s; }); return m; }
+function initials(name){
+  const parts = name.replace(/[^A-Za-z .'-]/g,"").split(/[\s.]+/).filter(Boolean);
+  if(parts.length===0) return "??";
+  if(parts.length===1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+}
+function resolveChips(cfg){
+  const m = stateMap(cfg), seen = {}, out = [];
+  cfg.chips.forEach(function(chip, i){
+    const st = m[chip.stateId];
+    if(!st) throw new Error("chip " + i + " references missing stateId " + chip.stateId);
+    const ord = seen[chip.stateId] || 0; seen[chip.stateId] = ord + 1;
+    const off = cfg.chipOffsets[ord % cfg.chipOffsets.length];
+    const ax = (st.ax !== undefined ? st.ax : st.cx), ay = (st.ay !== undefined ? st.ay : st.cy);
+    out.push({ i:i, name:chip.name, label:chip.label, stateId:chip.stateId, elect:!!chip.elect,
+               x: ax + off.dx, y: ay + off.dy, placeAtMs: (i + 1) * cfg.placeMs,
+               initials: initials(chip.name) });
+  });
+  return out;
+}
+function placedCount(cfg, t){
+  if(t <= 0) return 0;
+  return Math.min(cfg.chips.length, Math.floor(t / cfg.placeMs));
+}
+function zoomTarget(cfg, zoom){
+  const m = stateMap(cfg); let sx=0, sy=0, n=0;
+  zoom.stateIds.forEach(function(id){ const st=m[id]; if(st){ sx+=st.cx; sy+=st.cy; n++; } });
+  if(n===0) return null;
+  return { cx: sx/n, cy: sy/n, scale: zoom.scale };
+}
+function zoomAt(cfg, z){ return z.atMs * fullAtMs(cfg) / cfg.authoredSpanMs; }
+function cameraAt(cfg, t){
+  const full = fullAtMs(cfg);
+  const ident = { cx: cfg.viewBox.w/2, cy: cfg.viewBox.h/2, scale: 1 };
+  if(t >= full) return ident;
+  let active = null;
+  cfg.zooms.forEach(function(z){ if(zoomAt(cfg, z) <= t) active = z; });
+  if(!active) return ident;
+  const tgt = zoomTarget(cfg, active); if(!tgt) return ident;
+  const prevZooms = cfg.zooms.filter(function(z){ return z.atMs < active.atMs; });
+  let from = ident;
+  if(prevZooms.length){ const p = zoomTarget(cfg, prevZooms[prevZooms.length-1]); if(p) from = p; }
+  const k = Math.min(1, Math.max(0, (t - zoomAt(cfg, active)) / cfg.zoomMs));
+  const e = 1 - Math.pow(1 - k, 3);
+  return { cx: from.cx + (tgt.cx - from.cx) * e, cy: from.cy + (tgt.cy - from.cy) * e,
+           scale: from.scale + (tgt.scale - from.scale) * e };
+}
+function labelVisible(cfg, resolved, t){
+  /* Label policy: the name plate shows for the most recently placed chip and for every
+     placed chip whose state belongs to the currently active zoom; discs + initials
+     carry the rest of the roster. Elect tags show on every placed elect chip. */
+  const n = placedCount(cfg, t);
+  let activeIds = null;
+  if(t < fullAtMs(cfg)){
+    cfg.zooms.forEach(function(z){ if(zoomAt(cfg, z) <= t) activeIds = z.stateIds; });
+  }
+  return resolved.map(function(rc){
+    if(rc.i >= n) return false;
+    if(rc.i === n - 1) return true;
+    return !!(activeIds && activeIds.indexOf(rc.stateId) >= 0);
+  });
+}
+function checkpointsOk(cfg){
+  const full = fullAtMs(cfg);
+  if(!(full <= cfg.durationMs)) return false;
+  let prev = -1;
+  for(const z of cfg.zooms){
+    if(!(z.atMs > prev)) return false;
+    if(!(zoomAt(cfg, z) < full)) return false;
+    if(!(z.scale > 1)) return false;
+    if(!z.stateIds.length) return false;
+    prev = z.atMs;
+  }
+  try { resolveChips(cfg); } catch(e){ return false; }
+  return true;
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = { CONFIG: CONFIG, fullAtMs: fullAtMs, resolveChips: resolveChips,
+    placedCount: placedCount, cameraAt: cameraAt, labelVisible: labelVisible,
+    checkpointsOk: checkpointsOk, initials: initials, zoomAt: zoomAt };
+}
+
+/* ============ Rendering (browser only) ============ */
+if (typeof document !== "undefined"){
+  const svg = document.getElementById("map");
+  const NS = "http://www.w3.org/2000/svg";
+  const P = CONFIG.palette;
+  function el(tag, attrs){ const e = document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  const camG = el("g", {}); svg.appendChild(camG);
+  const ground = el("rect", {x:0, y:0, width:CONFIG.viewBox.w, height:CONFIG.viewBox.h, fill:P.ground});
+  camG.appendChild(ground);
+  CONFIG.states.forEach(function(st, idx){
+    const fill = idx === 0 ? P.land : P.landAlt[(idx - 1) % P.landAlt.length];
+    camG.appendChild(el("circle", {cx:st.cx, cy:st.cy, r:st.r, fill:fill}));
+  });
+  const resolved = resolveChips(CONFIG);
+  const chipEls = resolved.map(function(rc){
+    const g = el("g", {opacity:0});
+    const disc = el("circle", {cx:rc.x, cy:rc.y, r:CONFIG.chipR, fill:P.chip,
+      stroke:P.chipRing, "stroke-width":CONFIG.chipRingW});
+    const ini = el("text", {x:rc.x, y:rc.y + CONFIG.initialsSize*0.36, "text-anchor":"middle",
+      "font-size":CONFIG.initialsSize, "font-weight":700, fill:P.chipInk});
+    ini.textContent = rc.initials;
+    g.appendChild(disc); g.appendChild(ini);
+    let electG = null;
+    if(rc.elect){
+      electG = el("g", {});
+      const w = 26;
+      electG.appendChild(el("rect", {x:rc.x + 4, y:rc.y + 6, width:w, height:11, rx:2, fill:P.electBg}));
+      const et = el("text", {x:rc.x + 4 + w/2, y:rc.y + 14.5, "text-anchor":"middle",
+        "font-size":CONFIG.electSize, "font-weight":700, fill:P.elect});
+      et.textContent = "Elect"; electG.appendChild(et); g.appendChild(electG);
+    }
+    const labelG = el("g", {opacity:0});
+    const lw = Math.max(34, rc.label.length * CONFIG.labelSize * 0.62 + 10);
+    const lx = Math.min(Math.max(rc.x - lw/2, 2), CONFIG.viewBox.w - lw - 2);
+    labelG.appendChild(el("rect", {x:lx, y:rc.y + CONFIG.chipR + 3, width:lw, height:13, rx:3, fill:P.label}));
+    const lt = el("text", {x:lx + lw/2, y:rc.y + CONFIG.chipR + 12.5, "text-anchor":"middle",
+      "font-size":CONFIG.labelSize, "font-weight":700, fill:P.labelText});
+    lt.textContent = rc.label; labelG.appendChild(lt); g.appendChild(labelG);
+    camG.appendChild(g);
+    return { g:g, labelG:labelG };
+  });
+  const plate = document.getElementById("fullplate");
+  let startStamp = null, pausedAt = 0, playing = false, rafId = null;
+  function render(t){
+    const cam = cameraAt(CONFIG, t);
+    const vbw = CONFIG.viewBox.w / cam.scale, vbh = CONFIG.viewBox.h / cam.scale;
+    svg.setAttribute("viewBox", (cam.cx - vbw/2) + " " + (cam.cy - vbh/2) + " " + vbw + " " + vbh);
+    const n = placedCount(CONFIG, t);
+    const vis = labelVisible(CONFIG, resolved, t);
+    resolved.forEach(function(rc, i){
+      const ce = chipEls[i];
+      if(rc.placeAtMs > t){ ce.g.setAttribute("opacity", 0); return; }
+      const k = Math.min(1, (t - rc.placeAtMs) / CONFIG.popMs);
+      const e = 1 - Math.pow(1 - k, 3);
+      ce.g.setAttribute("opacity", e);
+      ce.g.setAttribute("transform", "translate(" + rc.x + " " + rc.y + ") scale(" +
+        (0.6 + 0.4*e) + ") translate(" + (-rc.x) + " " + (-rc.y) + ")");
+      ce.labelG.setAttribute("opacity", vis[i] ? 1 : 0);
+    });
+    const full = fullAtMs(CONFIG);
+    plate.style.opacity = t >= full ? 1 : 0;
+    plate.textContent = CONFIG.fullLabel.replace("{n}", String(CONFIG.chips.length));
+    if(t >= CONFIG.durationMs){ playing = false; }
+  }
+  function frame(now){
+    if(!playing) return;
+    if(startStamp === null) startStamp = now - pausedAt;
+    const t = now - startStamp;
+    if(t >= CONFIG.durationMs){ render(CONFIG.durationMs); playing = false; return; }
+    render(t);
+    rafId = requestAnimationFrame(frame);
+  }
+  window.__T54 = {
+    seek: function(ms){ pausedAt = Math.max(0, Math.min(CONFIG.durationMs, ms));
+      startStamp = null; render(pausedAt); },
+    play: function(){ if(!playing){ playing = true; rafId = requestAnimationFrame(frame); } },
+    pause: function(){ if(playing){ playing = false;
+      if(rafId) cancelAnimationFrame(rafId);
+      if(startStamp !== null){ pausedAt = performance.now() - startStamp; startStamp = null; } } },
+    render: render
+  };
+  render(0);
+}
+</script>
+</body>
+</html>

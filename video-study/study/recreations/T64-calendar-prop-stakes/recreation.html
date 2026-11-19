@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T64 — Calendar-prop stakes · recreation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; display: flex; justify-content: center; }
+  #stage { position: relative; overflow: hidden; }
+  .page { position: absolute; border-radius: 6px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,.35); }
+  .page .hdr { display: flex; align-items: center; justify-content: center; color: #fff; font-family: Arial, Helvetica, sans-serif; font-weight: 700; }
+  .page .body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .page .day { font-family: Arial, Helvetica, sans-serif; font-weight: 800; line-height: 1; }
+  .page .wd { font-style: italic; }
+  .plabel { position: absolute; text-align: center; font-family: Arial, Helvetica, sans-serif; }
+  .dot { position: absolute; border-radius: 50%; }
+  .prop-bill { position: absolute; box-shadow: 0 6px 14px rgba(0,0,0,.35); padding: 10px 12px; }
+  .prop-bill .bill-kicker { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter-spacing: 1px; }
+  .prop-bill .bill-title { font-weight: 700; }
+  .prop-coin { position: absolute; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,.35); }
+</style>
+</head>
+<body>
+<div id="stage" aria-label="Calendar-prop stakes recreation"></div>
+<script>
+'use strict';
+/* T64 — Calendar-prop stakes. ALL content, timing, palette and geometry come from CONFIG below.
+   The animation logic reads only CONFIG (via the validated effective config). */
+const CONFIG = {
+  pages: [
+    { month: 'Dec', day: '1',  weekday: 'Tuesday', headerColor: '#c63a2e', label: 'The vote' },
+    { month: 'Dec', day: '11', weekday: 'Friday',  headerColor: '#3a6ea8', label: 'Funding expires' }
+  ],
+  connector: { dotCount: 11, dotColor: '#f7efdc', dotDiameterPx: 7, dotStaggerMs: 140 },
+  props: { enabled: true, items: [
+    { kind: 'bill', kicker: 'A BILL', title: 'Making continuing appropriations', bodyLines: ['Be it enacted by the Senate and', 'House of Representatives of the', 'United States of America in Congress'] },
+    { kind: 'coin', face: '$' }
+  ] },
+  palette: { bg: '#256a7d', page: '#f7efdc', ink: '#1d2733', weekdayInk: '#8a3b2e', headerInk: '#ffffff', labelInk: '#f7efdc', billInk: '#1d2733', coin: '#d9a441', coinInk: '#7a5410' },
+  enterMs: 600,
+  holdMs: 5200,
+  stage: { width: 360 },
+  style: { radiusPx: 6, enterScaleFrom: 0.82, holdScaleTo: 0.9, holdRisePx: 12, billPadYPx: 10 },
+  layout: { pageW: 118, pageH: 134, headerH: 32, topPx: 34, sideMarginPx: 14, labelGapPx: 8, labelH: 18, propsTopPx: 190, billW: 300, billH: 96, coinD: 30, stageH: 300, textPadPx: 12, labelPadPx: 8, billPadPx: 24, coinGapPx: 10 },
+  schedule: { firstPageDelayMs: 400, secondPageGapMs: 1000, dotsGapMs: 600, propsGapMs: 660, bodyFillGapMs: 800, coinGapMs: 1000, fadeMs: 0, durationMs: 14000 },
+  type: { monthPx: 15, dayPx: 46, weekdayPx: 14, labelPx: 13, billKickerPx: 11, billTitlePx: 13, billBodyPx: 11, coinPx: 14, fitMinPx: 9, charWidthFrac: 0.58, boldCharWidthFrac: 0.62 }
+};
+
+/* ---------- config validation + URL override (allowlisted; invalid -> specimen defaults) ---------- */
+function isHex(v){ return typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v); }
+function isPosNum(v){ return typeof v === 'number' && isFinite(v) && v > 0; }
+function isNonNegNum(v){ return typeof v === 'number' && isFinite(v) && v >= 0; }
+function isStr(v){ return typeof v === 'string' && v.length > 0 && v.length <= 80 && !/[<>]/.test(v); }
+function validate(cfg){
+  if (!cfg || typeof cfg !== 'object') return false;
+  if (!Array.isArray(cfg.pages) || cfg.pages.length !== 2) return false;
+  for (const p of cfg.pages){
+    if (!isStr(p.month) || !isStr(p.day) || !isStr(p.weekday) || !isStr(p.label) || !isHex(p.headerColor)) return false;
+  }
+  if (!cfg.connector || !Number.isInteger(cfg.connector.dotCount) || cfg.connector.dotCount < 1 || cfg.connector.dotCount > 40) return false;
+  if (!isHex(cfg.connector.dotColor) || !isPosNum(cfg.connector.dotDiameterPx) || !isNonNegNum(cfg.connector.dotStaggerMs)) return false;
+  if (!cfg.props || typeof cfg.props.enabled !== 'boolean' || !Array.isArray(cfg.props.items)) return false;
+  for (const it of cfg.props.items){
+    if (it.kind === 'bill'){ if (!isStr(it.kicker) || !isStr(it.title) || !Array.isArray(it.bodyLines)) return false; for (const ln of it.bodyLines) if (!isStr(ln)) return false; }
+    else if (it.kind === 'coin'){ if (!isStr(it.face)) return false; }
+    else return false;
+  }
+  if (!cfg.palette) return false;
+  for (const k of ['bg','page','ink','weekdayInk','headerInk','labelInk','billInk','coin','coinInk']) if (!isHex(cfg.palette[k])) return false;
+  if (!isPosNum(cfg.enterMs) || !isNonNegNum(cfg.holdMs)) return false;
+  if (!cfg.stage || cfg.stage.width !== 360) return false;
+  if (!cfg.layout) return false;
+  for (const k of ['pageW','pageH','headerH','topPx','sideMarginPx','labelGapPx','labelH','propsTopPx','billW','billH','coinD','stageH','textPadPx','labelPadPx','billPadPx','coinGapPx']) if (!isPosNum(cfg.layout[k])) return false;
+  if (cfg.layout.pageW * 2 + cfg.layout.sideMarginPx * 2 >= cfg.stage.width) return false;
+  if (!cfg.schedule) return false;
+  for (const k of ['firstPageDelayMs','secondPageGapMs','dotsGapMs','propsGapMs','bodyFillGapMs','coinGapMs','fadeMs','durationMs']) if (!isNonNegNum(cfg.schedule[k])) return false;
+  if (!cfg.type) return false;
+  for (const k of ['monthPx','dayPx','weekdayPx','labelPx','billKickerPx','billTitlePx','billBodyPx','coinPx','fitMinPx']) if (!isPosNum(cfg.type[k])) return false;
+  if (!(cfg.type.charWidthFrac > 0 && cfg.type.charWidthFrac <= 1)) return false;
+  if (!(cfg.type.boldCharWidthFrac > 0 && cfg.type.boldCharWidthFrac <= 1)) return false;
+  if (!cfg.style || !isPosNum(cfg.style.radiusPx) || !(cfg.style.enterScaleFrom > 0 && cfg.style.enterScaleFrom <= 1) || !(cfg.style.holdScaleTo > 0 && cfg.style.holdScaleTo <= 1) || !isNonNegNum(cfg.style.holdRisePx) || !isNonNegNum(cfg.style.billPadYPx)) return false;
+  if (cfg.layout.headerH >= cfg.layout.pageH) return false;
+  if (cfg.layout.billW > cfg.stage.width) return false;
+  if (cfg.props.enabled && cfg.layout.propsTopPx + cfg.layout.billH > cfg.layout.stageH) return false;
+  if (cfg.props.enabled && (cfg.stage.width - cfg.layout.billW) / 2 + cfg.layout.billW - cfg.layout.coinD / 2 + cfg.layout.coinGapPx + cfg.layout.coinD > cfg.stage.width) return false;
+  if (cfg.type.dayPx * 1.15 + cfg.type.weekdayPx * 1.3 > cfg.layout.pageH - cfg.layout.headerH) return false;
+  return true;
+}
+function effectiveConfig(){
+  let cfg = JSON.parse(JSON.stringify(CONFIG));
+  try {
+    const raw = new URLSearchParams(location.search).get('config');
+    if (raw){
+      const over = JSON.parse(raw);
+      const merged = JSON.parse(JSON.stringify(CONFIG));
+      (function merge(dst, src){
+        for (const k of Object.keys(src)){
+          if (Array.isArray(src[k])) dst[k] = src[k];
+          else if (src[k] && typeof src[k] === 'object' && dst[k] && typeof dst[k] === 'object') merge(dst[k], src[k]);
+          else dst[k] = src[k];
+        }
+      })(merged, over);
+      if (validate(merged)) cfg = merged;
+    }
+  } catch (e) { /* fall back to specimen defaults */ }
+  return cfg;
+}
+let CFG = effectiveConfig();
+
+/* ---------- derived schedule (one phase machine; one beat owns the stage at a time) ---------- */
+function schedule(cfg){
+  const s = cfg.schedule;
+  const page1Start = s.firstPageDelayMs;                       // second-listed page (Dec 11) enters first, alone (measured)
+  const page0Start = page1Start + s.secondPageGapMs;           // first page (Dec 1) joins
+  const entersEnd = page0Start + cfg.enterMs;
+  const dotsStart = entersEnd + s.dotsGapMs;
+  const dotsEnd = dotsStart + cfg.connector.dotCount * cfg.connector.dotStaggerMs;
+  const holdEnd = dotsEnd + cfg.holdMs;
+  const propsStart = holdEnd + s.propsGapMs;
+  const propsEnd = propsStart + (cfg.props.enabled ? s.bodyFillGapMs + s.coinGapMs + cfg.enterMs : 0);
+  const fadeStart = s.durationMs - s.fadeMs;
+  return { page1Start, page0Start, entersEnd, dotsStart, dotsEnd, holdEnd, propsStart, propsEnd, fadeStart, durationMs: s.durationMs };
+}
+function checkpointsOk(cfg){
+  if (!validate(cfg)) return false;
+  const sc = schedule(cfg);
+  if (!(sc.page1Start < sc.page0Start && sc.page0Start < sc.entersEnd && sc.entersEnd <= sc.dotsStart)) return false;
+  if (!(sc.dotsStart < sc.dotsEnd && sc.dotsEnd <= sc.holdEnd)) return false;
+  if (cfg.props.enabled && !(sc.holdEnd < sc.propsStart && sc.propsStart < sc.propsEnd && sc.propsEnd <= sc.fadeStart)) return false;
+  if (!cfg.props.enabled && !(sc.holdEnd <= sc.fadeStart)) return false;
+  if (sc.fadeStart > sc.durationMs) return false;
+  const L = cfg.layout;
+  if (L.topPx + L.pageH + L.labelGapPx + L.labelH > L.stageH) return false;
+  if (cfg.props.enabled && L.propsTopPx + L.billH > L.stageH) return false;
+  return true;
+}
+
+/* ---------- initialization enforcement (codex-plan-review cure): constraints are ENFORCED, not just exposed.
+   A configuration that violates schedule ordering, text fit at the floor, or the contrast floor
+   falls back wholesale to the specimen defaults. The contrast guarantee covers configurations that
+   pass this gate: ink-on-page >= 7:1, header ink on header color >= 3:1 (large bold), label ink on bg >= 3:1. ---------- */
+function relLum(hex){
+  const n = parseInt(hex.slice(1), 16);
+  const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f((n >> 16) & 255) + 0.7152 * f((n >> 8) & 255) + 0.0722 * f(n & 255);
+}
+function contrast(a, b){
+  const la = relLum(a), lb = relLum(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function allTextFits(cfg){
+  const L = cfg.layout;
+  const checks = [];
+  cfg.pages.forEach(function(p){
+    checks.push([p.month, cfg.type.monthPx, L.pageW - L.textPadPx, true]);
+    checks.push([p.day, cfg.type.dayPx, L.pageW - L.textPadPx, true]);
+    checks.push([p.weekday, cfg.type.weekdayPx, L.pageW - L.textPadPx, false]);
+    checks.push([p.label, cfg.type.labelPx, L.pageW - L.labelPadPx, false]);
+  });
+  if (cfg.props.enabled) cfg.props.items.forEach(function(it){
+    if (it.kind === 'bill'){
+      checks.push([it.kicker, cfg.type.billKickerPx, L.billW - 2 * L.billPadPx, true]);
+      checks.push([it.title, cfg.type.billTitlePx, L.billW - 2 * L.billPadPx, true]);
+      it.bodyLines.forEach(function(ln){ checks.push([ln, cfg.type.billBodyPx, L.billW - 2 * L.billPadPx, false]); });
+    }
+    if (it.kind === 'coin') checks.push([it.face, cfg.type.coinPx, L.coinD - 4, true]);
+  });
+  return checks.every(function(c){ return inkWidth(c[0], fitPx(c[0], c[1], c[2], c[3], cfg), c[3], cfg) <= c[2]; });
+}
+function contrastOk(cfg){
+  if (contrast(cfg.palette.ink, cfg.palette.page) < 7) return false;
+  for (const p of cfg.pages) if (contrast(cfg.palette.headerInk, p.headerColor) < 3) return false;
+  if (contrast(cfg.palette.labelInk, cfg.palette.bg) < 3) return false;
+  return true;
+}
+if (!(checkpointsOk(CFG) && allTextFits(CFG) && contrastOk(CFG))) {
+  CFG = JSON.parse(JSON.stringify(CONFIG));
+}
+
+/* ---------- text fitting (ink width estimated from CONFIG fractions; shrink to fit, floor fitMinPx) ---------- */
+function inkWidth(text, px, bold, cfg){
+  const frac = bold ? cfg.type.boldCharWidthFrac : cfg.type.charWidthFrac;
+  return text.length * px * frac;
+}
+function fitPx(text, basePx, maxW, bold, cfg){
+  let px = basePx;
+  while (px > cfg.type.fitMinPx && inkWidth(text, px, bold, cfg) > maxW) px -= 1;
+  return px;
+}
+
+/* ---------- build DOM from CONFIG ---------- */
+const stage = document.getElementById('stage');
+stage.style.width = CFG.stage.width + 'px';
+stage.style.height = CFG.layout.stageH + 'px';
+stage.style.background = CFG.palette.bg;
+
+const L = CFG.layout;
+const connX0 = L.sideMarginPx + L.pageW;
+const connX1 = CFG.stage.width - L.sideMarginPx - L.pageW;
+const pageEls = [], labelEls = [], dotEls = [], propEls = [];
+
+CFG.pages.forEach(function(p, i){
+  const el = document.createElement('div');
+  el.className = 'page';
+  el.style.width = L.pageW + 'px';
+  el.style.height = L.pageH + 'px';
+  el.style.top = L.topPx + 'px';
+  el.style.left = (i === 0 ? L.sideMarginPx : CFG.stage.width - L.sideMarginPx - L.pageW) + 'px';
+  el.style.background = CFG.palette.page;
+  el.style.borderRadius = CFG.style.radiusPx + 'px';
+  el.style.opacity = '0';
+  const hdr = document.createElement('div');
+  hdr.className = 'hdr';
+  hdr.style.height = L.headerH + 'px';
+  hdr.style.background = p.headerColor;
+  hdr.style.color = CFG.palette.headerInk;
+  hdr.style.fontSize = fitPx(p.month, CFG.type.monthPx, L.pageW - L.textPadPx, true, CFG) + 'px';
+  hdr.textContent = p.month;
+  const body = document.createElement('div');
+  body.className = 'body';
+  body.style.height = (L.pageH - L.headerH) + 'px';
+  const day = document.createElement('div');
+  day.className = 'day';
+  day.style.color = CFG.palette.ink;
+  day.style.fontSize = fitPx(p.day, CFG.type.dayPx, L.pageW - L.textPadPx, true, CFG) + 'px';
+  day.textContent = p.day;
+  const wd = document.createElement('div');
+  wd.className = 'wd';
+  wd.style.color = CFG.palette.weekdayInk;
+  wd.style.fontSize = fitPx(p.weekday, CFG.type.weekdayPx, L.pageW - L.textPadPx, false, CFG) + 'px';
+  wd.textContent = p.weekday;
+  body.appendChild(day); body.appendChild(wd);
+  el.appendChild(hdr); el.appendChild(body);
+  stage.appendChild(el); pageEls.push(el);
+  const lab = document.createElement('div');
+  lab.className = 'plabel';
+  lab.style.width = L.pageW + 'px';
+  lab.style.left = el.style.left;
+  lab.style.top = (L.topPx + L.pageH + L.labelGapPx) + 'px';
+  lab.style.height = L.labelH + 'px';
+  lab.style.color = CFG.palette.labelInk;
+  lab.style.fontSize = fitPx(p.label, CFG.type.labelPx, L.pageW - L.labelPadPx, false, CFG) + 'px';
+  lab.style.opacity = '0';
+  lab.textContent = p.label;
+  stage.appendChild(lab); labelEls.push(lab);
+});
+
+for (let d = 0; d < CFG.connector.dotCount; d++){
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  const span = connX1 - connX0;
+  const x = CFG.connector.dotCount === 1 ? (connX0 + connX1) / 2 : connX0 + (span * d) / (CFG.connector.dotCount - 1);
+  dot.style.width = CFG.connector.dotDiameterPx + 'px';
+  dot.style.height = CFG.connector.dotDiameterPx + 'px';
+  dot.style.left = (x - CFG.connector.dotDiameterPx / 2) + 'px';
+  dot.style.top = (L.topPx + L.pageH / 2 - CFG.connector.dotDiameterPx / 2) + 'px';
+  dot.style.background = CFG.connector.dotColor;
+  dot.style.opacity = '0';
+  stage.appendChild(dot); dotEls.push(dot);
+}
+
+if (CFG.props.enabled){
+  CFG.props.items.forEach(function(it, idx){
+    if (it.kind === 'bill'){
+      const b = document.createElement('div');
+      b.className = 'prop-bill';
+      b.style.width = L.billW + 'px'; b.style.height = L.billH + 'px';
+      b.style.left = ((CFG.stage.width - L.billW) / 2) + 'px';
+      b.style.top = L.propsTopPx + 'px';
+      b.style.background = CFG.palette.page; b.style.color = CFG.palette.billInk;
+      b.style.borderRadius = CFG.style.radiusPx + 'px';
+      b.style.padding = CFG.style.billPadYPx + 'px ' + L.billPadPx + 'px';
+      b.style.opacity = '0';
+      const k = document.createElement('div'); k.className = 'bill-kicker';
+      k.style.fontSize = CFG.type.billKickerPx + 'px'; k.textContent = it.kicker;
+      const t = document.createElement('div'); t.className = 'bill-title';
+      t.style.fontSize = fitPx(it.title, CFG.type.billTitlePx, L.billW - 2 * L.billPadPx, true, CFG) + 'px'; t.textContent = it.title;
+      const bd = document.createElement('div'); bd.className = 'bill-body';
+      bd.style.fontSize = CFG.type.billBodyPx + 'px'; bd.style.opacity = '0';
+      it.bodyLines.forEach(function(ln){ const d = document.createElement('div'); d.textContent = ln; bd.appendChild(d); });
+      b.appendChild(k); b.appendChild(t); b.appendChild(bd);
+      b.__bodyEl = bd;
+      stage.appendChild(b); propEls.push(b);
+    } else if (it.kind === 'coin'){
+      const c = document.createElement('div');
+      c.className = 'prop-coin';
+      c.style.width = L.coinD + 'px'; c.style.height = L.coinD + 'px';
+      c.style.left = ((CFG.stage.width - L.billW) / 2 + L.billW - L.coinD / 2 + L.coinGapPx) + 'px';
+      c.style.top = (L.propsTopPx + L.billH - L.coinD) + 'px';
+      c.style.background = CFG.palette.coin; c.style.color = CFG.palette.coinInk;
+      c.style.fontSize = CFG.type.coinPx + 'px';
+      c.style.display = 'flex'; c.style.alignItems = 'center'; c.style.justifyContent = 'center';
+      c.style.opacity = '0';
+      c.textContent = it.face;
+      stage.appendChild(c); propEls.push(c);
+    }
+  });
+}
+
+/* ---------- seekable render(t): one shared clock, deterministic in t ---------- */
+const SC = schedule(CFG);
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function render(tMs){
+  const pageStart = [SC.page0Start, SC.page1Start];
+  for (let i = 0; i < 2; i++){
+    const o = clamp01((tMs - pageStart[i]) / CFG.enterMs);
+    pageEls[i].style.opacity = String(o);
+    labelEls[i].style.opacity = String(o);
+    pageEls[i].style.transform = 'scale(' + (CFG.style.enterScaleFrom + (1 - CFG.style.enterScaleFrom) * o) + ')';
+  }
+  const holdP = clamp01((tMs - SC.dotsEnd) / Math.max(1, SC.propsStart - SC.dotsEnd));
+  const hs = 1 - (1 - CFG.style.holdScaleTo) * holdP;
+  stage.style.transform = 'scale(' + hs + ') translateY(' + (-CFG.style.holdRisePx * holdP) + 'px)';
+  dotEls.forEach(function(dot, d){
+    const start = SC.dotsStart + d * CFG.connector.dotStaggerMs;
+    dot.style.opacity = String(clamp01((tMs - start) / CFG.connector.dotStaggerMs));
+  });
+  propEls.forEach(function(el, idx){
+    const start = SC.propsStart + idx * (CFG.schedule.bodyFillGapMs + CFG.schedule.coinGapMs);
+    el.style.opacity = String(clamp01((tMs - start) / CFG.enterMs));
+    if (el.__bodyEl) el.__bodyEl.style.opacity = String(clamp01((tMs - (SC.propsStart + CFG.schedule.bodyFillGapMs)) / CFG.enterMs));
+  });
+  if (CFG.schedule.fadeMs > 0){
+    const fade = clamp01((tMs - SC.fadeStart) / CFG.schedule.fadeMs);
+    stage.style.opacity = String(1 - fade);
+  } else {
+    stage.style.opacity = '1';
+  }
+}
+let startStamp = null, pausedAt = 0, playing = true;
+function tick(now){
+  if (playing){
+    if (startStamp === null) startStamp = now - pausedAt;
+    const t = (now - startStamp) % SC.durationMs;
+    render(t);
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+function seek(seconds){ pausedAt = seconds * 1000; startStamp = null; render(pausedAt); }
+window.__T64 = { CONFIG: CFG, schedule: SC, checkpointsOk: function(){ return checkpointsOk(CFG); }, render: render, seek: seek };
+</script>
+</body>
+</html>

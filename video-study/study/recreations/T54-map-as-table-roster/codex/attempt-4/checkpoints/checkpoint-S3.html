@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T54 — Map-as-table roster</title>
+<style>
+  html,body{margin:0;padding:0;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  #stage{position:relative;width:100%;overflow:hidden;}
+  svg{position:absolute;inset:0;width:100%;height:100%;}
+  #fullplate{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;opacity:0;}
+  #err{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="map" preserveAspectRatio="xMidYMid meet"></svg>
+  <div id="fullplate"></div>
+  <div id="err"></div>
+</div>
+<script>
+"use strict";
+/* CONFIG: every content, timing, palette and geometry value lives in this block. */
+const CONFIG = {
+  viewBox: { w: 360, h: 260 },
+  pageBg: "#0b2b33",
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontWeightBold: 700,
+  stageMaxWidthPx: 720,
+  palette: {
+    ground: "#14424e",
+    land: "#33523f",
+    landAlt: ["#3f6b4f", "#7a9a4e", "#b39b4a", "#7d5a8a", "#4e7d5a"],
+    chip: "#e8dcc0",
+    chipRing: "#ffffff",
+    chipInk: "#22303a",
+    electBg: "#14232e",
+    elect: "#f7c948",
+    label: "#14232e",
+    labelText: "#ffffff",
+    connector: "#ffffff",
+    errorBg: "#14232e",
+    errorText: "#ffffff"
+  },
+  chipR: 9,
+  chipRingW: 2,
+  minCentreGap: 4,
+  layoutInsetUnits: 1,
+  layoutIterations: 200,
+  connectorThreshold: 5,
+  connectorWidth: 1,
+  connectorOpacity: 0.55,
+  initialsSize: 12,
+  initialsMaxWidth: 14,
+  initialsCount: 2,
+  segmenterLocale: "en",
+  textMetrics: {
+    profileFor: "Arial, Helvetica, sans-serif",
+    unit: 1000,
+    defaultWidth: 600,
+    widths: { A: 722, B: 722, C: 722, D: 722, E: 667, F: 611, G: 778, H: 722, I: 278, J: 500, K: 667, L: 556, M: 889, N: 722, O: 778, P: 667, Q: 778, R: 722, S: 667, T: 722, U: 722, V: 722, W: 944, X: 667, Y: 667, Z: 667,
+      a: 556, b: 556, c: 500, d: 556, e: 556, f: 278, g: 556, h: 556, i: 222, j: 222, k: 500, l: 222, m: 833, n: 556, o: 556, p: 556, q: 556, r: 333, s: 500, t: 278, u: 556, v: 500, w: 722, x: 500, y: 500, z: 500,
+      " ": 278, "-": 333, "—": 1000, ".": 278, "'": 278 }
+  },
+  labelSize: 15,
+  labelPadX: 5,
+  labelPadY: 3,
+  labelGap: 3,
+  plateMargin: 2,
+  plateRowCount: 5,
+  plateXShifts: [-48, -24, 0, 24, 48],
+  platePolicy: "hide-relocate-reveal",
+  plateGridStep: 7,
+  feasibilitySampleMs: 500,
+  tagGridStep: 1,
+  tagGridRange: 56,
+  labelRx: 3,
+  electText: "Elect",
+  electSize: 13,
+  electPadX: 4,
+  electHeight: 18,
+  electRx: 2,
+  electOffsetX: 5,
+  electOffsetY: 7,
+  placeMs: 34,
+  popMs: 120,
+  autoplayOnLoad: true,
+  maxConcurrentPops: 4,
+  popFromScale: 0.6,
+  easeExponent: 3,
+  midwestHoldMs: 1100,
+  cameraMoveMs: 900,
+  fullDwellMs: 4000,
+  panAwayMs: 1000,
+  panExitShiftUnits: 200,
+  passWaves: 4,
+  dwellBaseMs: 300,
+  dwellPerNameMs: 90,
+  dwellPerLongestCharMs: 25,
+  dwellFloorMs: 1200,
+  framePadUnits: 8,
+  finalFullHoldMs: 6600,
+  finalIndexGroupSize: 5,
+  finalIndexStepMs: 600,
+  fullViewScaleMax: 1,
+  midwestStateIds: ["IL", "IN", "OH", "PA"],
+  openingLabelCap: 1,
+  midwestScale: 1.6,
+  passRegions: [
+    { id: "west", scale: 1.9, stateIds: ["WA","OR","CA","NV","ID","MT","WY","UT","AZ","NM","AK","HI"] },
+    { id: "central", scale: 1.9, stateIds: ["CO","ND","SD","NE","KS","OK","TX","MN","IA","MO","AR","LA"] },
+    { id: "midwest", scale: 2.0, stateIds: ["WI","IL","MI","IN","OH","KY","TN","MS","AL"] },
+    { id: "south", scale: 2.0, stateIds: ["GA","FL","SC","NC","VA"] },
+    { id: "northeast", scale: 1.5, stateIds: ["PA","NY","VT","NH","ME","MA","CT","NJ","MD","DE"] }
+  ],
+  textBaselineFactor: 0.36,
+  labelTextBaselineFactor: 0.82,
+  regionSwitchPoint: 0.5,
+  overlapPenalty: 10,
+  offsetBase: 15,
+  offsetStep: 4,
+  goldenAngleRad: 2.399963,
+  maxChipsPerState: 8,
+  missingInitials: "??",
+  errorPrefix: "Configuration error: ",
+  ariaLabel: "Roster map",
+  fullLabel: "{n} ON THE MAP",
+  fullPlate: { bg: "#14232e", ink: "#ffffff", sizePx: 16, padX: 12, padY: 5, radius: 6, bottomPx: 8, letterSpacingEm: 0.06, lineHeightFactor: 1.2 },
+  states: [
+    {id:"WA",cx:30,cy:35,r:17},{id:"OR",cx:28,cy:62,r:15},{id:"CA",cx:22,cy:105,r:20},
+    {id:"NV",cx:48,cy:95,r:14},{id:"ID",cx:52,cy:58,r:13},{id:"MT",cx:78,cy:32,r:16},
+    {id:"WY",cx:80,cy:68,r:13},{id:"UT",cx:62,cy:92,r:12},{id:"AZ",cx:62,cy:122,r:14},
+    {id:"NM",cx:95,cy:125,r:13},{id:"CO",cx:105,cy:100,r:13},{id:"ND",cx:140,cy:35,r:14},
+    {id:"SD",cx:140,cy:58,r:13},{id:"NE",cx:142,cy:82,r:13},{id:"KS",cx:145,cy:108,r:13},
+    {id:"OK",cx:148,cy:132,r:12},{id:"TX",cx:150,cy:168,r:20},{id:"MN",cx:185,cy:42,r:14},
+    {id:"IA",cx:188,cy:72,r:12},{id:"MO",cx:192,cy:102,r:13},{id:"AR",cx:196,cy:130,r:11},
+    {id:"LA",cx:198,cy:158,r:11},{id:"WI",cx:215,cy:52,r:12},{id:"IL",cx:218,cy:88,r:13},
+    {id:"MI",cx:238,cy:48,r:13},{id:"IN",cx:240,cy:84,r:11},{id:"KY",cx:246,cy:106,r:11},
+    {id:"TN",cx:248,cy:124,r:11},{id:"MS",cx:222,cy:140,r:11},{id:"AL",cx:240,cy:142,r:11},
+    {id:"GA",cx:262,cy:142,r:12},{id:"FL",cx:278,cy:185,r:13},{id:"SC",cx:278,cy:124,r:10,ax:284,ay:128},
+    {id:"NC",cx:282,cy:108,r:11,ax:276,ay:112},{id:"VA",cx:288,cy:92,r:11,ax:278,ay:86},{id:"OH",cx:262,cy:80,r:12},
+    {id:"PA",cx:288,cy:68,r:12},{id:"NY",cx:308,cy:52,r:13},
+    {id:"VT",cx:322,cy:42,r:8,ax:314,ay:34},{id:"NH",cx:334,cy:36,r:8,ax:340,ay:26},
+    {id:"ME",cx:342,cy:24,r:10,ax:344,ay:16},{id:"MA",cx:334,cy:56,r:8,ax:342,ay:58},
+    {id:"CT",cx:328,cy:66,r:7,ax:330,ay:74},{id:"NJ",cx:318,cy:76,r:8,ax:312,ay:84},
+    {id:"MD",cx:306,cy:86,r:8,ax:298,ay:98},{id:"DE",cx:318,cy:88,r:6,ax:322,ay:98},
+    {id:"AK",cx:40,cy:200,r:13},{id:"HI",cx:75,cy:232,r:7}
+  ],
+  chips: [
+    {name:"O. Farrell",label:"Farrell — IL",stateId:"IL",elect:false},
+    {name:"Y. Tanaka",label:"Tanaka — IL",stateId:"IL",elect:true},
+    {name:"R. Osei-Bonsu",label:"Osei-Bonsu — IN",stateId:"IN",elect:false},
+    {name:"B. Kessler",label:"Kessler — OH",stateId:"OH",elect:false},
+    {name:"M. Orellana",label:"Orellana — OH",stateId:"OH",elect:true},
+    {name:"H. Calloway",label:"Calloway — KY",stateId:"KY",elect:false},
+    {name:"K. Nilsen",label:"Nilsen — WI",stateId:"WI",elect:false},
+    {name:"E. Vance",label:"Vance — MI",stateId:"MI",elect:false},
+    {name:"S. Verma",label:"Verma — IA",stateId:"IA",elect:false},
+    {name:"C. Dubois",label:"Dubois — MO",stateId:"MO",elect:false},
+    {name:"A. Lindgren",label:"Lindgren — MN",stateId:"MN",elect:false},
+    {name:"J. Kowalski",label:"Kowalski — MN",stateId:"MN",elect:true},
+    {name:"P. Rutledge",label:"Rutledge — TN",stateId:"TN",elect:false},
+    {name:"T. Brennan-Hughes",label:"Brennan-Hughes — PA",stateId:"PA",elect:false},
+    {name:"R. Castellano",label:"Castellano — NY",stateId:"NY",elect:false},
+    {name:"E. Whitmore",label:"Whitmore — NY",stateId:"NY",elect:true},
+    {name:"S. Aldana",label:"Aldana — VA",stateId:"VA",elect:false},
+    {name:"L. Merritt",label:"Merritt — NC",stateId:"NC",elect:false},
+    {name:"D. Ashe",label:"Ashe — SC",stateId:"SC",elect:false},
+    {name:"N. Whitaker",label:"Whitaker — GA",stateId:"GA",elect:false},
+    {name:"K. Aldridge",label:"Aldridge — MD",stateId:"MD",elect:false},
+    {name:"J. Ferreira",label:"Ferreira — NJ",stateId:"NJ",elect:false},
+    {name:"R. Almeida",label:"Almeida — CT",stateId:"CT",elect:false},
+    {name:"B. Sanders-Liu",label:"Sanders-Liu — VT",stateId:"VT",elect:false},
+    {name:"P. Welch",label:"Welch — VT",stateId:"VT",elect:false},
+    {name:"C. Pappas-Reed",label:"Pappas-Reed — NH",stateId:"NH",elect:true},
+    {name:"A. Prescott",label:"Prescott — MA",stateId:"MA",elect:false},
+    {name:"J. Colom",label:"Colom — MS",stateId:"MS",elect:false},
+    {name:"A. Beaumont",label:"Beaumont — AL",stateId:"AL",elect:false},
+    {name:"C. Fontaine",label:"Fontaine — FL",stateId:"FL",elect:true},
+    {name:"R. Delgado",label:"Delgado — TX",stateId:"TX",elect:true},
+    {name:"I. Petrov",label:"Petrov — TX",stateId:"TX",elect:false},
+    {name:"T. Harlan",label:"Harlan — AR",stateId:"AR",elect:false},
+    {name:"M. Boudreaux",label:"Boudreaux — LA",stateId:"LA",elect:false},
+    {name:"N. Erickson",label:"Erickson — ND",stateId:"ND",elect:false},
+    {name:"B. Redbird",label:"Redbird — SD",stateId:"SD",elect:false},
+    {name:"F. Novak",label:"Novak — NE",stateId:"NE",elect:false},
+    {name:"M. Holloway",label:"Holloway — ME",stateId:"ME",elect:false},
+    {name:"W. Okafor",label:"Okafor — KS",stateId:"KS",elect:false},
+    {name:"D. Mercer",label:"Mercer — OK",stateId:"OK",elect:false},
+    {name:"G. Moreau",label:"Moreau — CO",stateId:"CO",elect:false},
+    {name:"L. Tsosie",label:"Tsosie — NM",stateId:"NM",elect:false},
+    {name:"H. Brennan",label:"Brennan — AZ",stateId:"AZ",elect:true},
+    {name:"E. Salazar",label:"Salazar — UT",stateId:"UT",elect:false},
+    {name:"D. Kovac",label:"Kovac — WY",stateId:"WY",elect:false},
+    {name:"C. Whitfield",label:"Whitfield — MT",stateId:"MT",elect:false},
+    {name:"P. Anand",label:"Anand — ID",stateId:"ID",elect:false},
+    {name:"K. Doyle",label:"Doyle — NV",stateId:"NV",elect:false},
+    {name:"J. Hart",label:"Hart — WA",stateId:"WA",elect:false},
+    {name:"R. Osei",label:"Osei — WA",stateId:"WA",elect:true},
+    {name:"M. Lindqvist",label:"Lindqvist — OR",stateId:"OR",elect:false},
+    {name:"T. Begay",label:"Begay — OR",stateId:"OR",elect:false},
+    {name:"A. Rivera",label:"Rivera — CA",stateId:"CA",elect:false},
+    {name:"S. Nakamura",label:"Nakamura — CA",stateId:"CA",elect:true},
+    {name:"S. Nakamura-Reed",label:"Nakamura-Reed — HI",stateId:"HI",elect:false}
+  ]
+};
+
+/* Pure logic (DOM-free; exercised by the node harness). */
+function stateMap(cfg){ const m = {}; cfg.states.forEach(function(s){ m[s.id] = s; }); return m; }
+function graphemes(str, cfg){
+  if (typeof Intl !== "undefined" && Intl.Segmenter){
+    const seg = new Intl.Segmenter(cfg.segmenterLocale, { granularity: "grapheme" });
+    return Array.from(seg.segment(str), function(s){ return s.segment; });
+  }
+  return Array.from(str);
+}
+function initials(name, cfg){
+  if(!name) return cfg.missingInitials;
+  const words = name.match(/\p{L}+/gu);
+  if(!words || words.length === 0) return cfg.missingInitials;
+  if(words.length === 1) return graphemes(words[0], cfg).slice(0, cfg.initialsCount).join("").toUpperCase();
+  const first = graphemes(words[0], cfg)[0] || "";
+  const last = graphemes(words[words.length - 1], cfg)[0] || "";
+  return (first + last).toUpperCase();
+}
+function textWidth(cfg, text, size){
+  const tm = cfg.textMetrics;
+  let sum = 0;
+  for(const ch of text) sum += (tm.widths[ch] !== undefined ? tm.widths[ch] : tm.defaultWidth);
+  return sum / tm.unit * size;
+}
+function offsetFor(cfg, ord){
+  if(ord === 0) return { dx: 0, dy: 0 };
+  const rad = cfg.offsetBase + cfg.offsetStep * Math.sqrt(ord);
+  const ang = ord * cfg.goldenAngleRad;
+  return { dx: Math.round(Math.cos(ang) * rad), dy: Math.round(Math.sin(ang) * rad) };
+}
+function resolveChips(cfg){
+  const m = stateMap(cfg), seen = {}, out = [];
+  cfg.chips.forEach(function(chip, i){
+    const st = m[chip.stateId];
+    if(!st) throw new Error("chips[" + i + "].stateId unknown state: " + chip.stateId);
+    const ord = seen[chip.stateId] || 0; seen[chip.stateId] = ord + 1;
+    const off = offsetFor(cfg, ord);
+    const ax = (st.ax !== undefined ? st.ax : st.cx), ay = (st.ay !== undefined ? st.ay : st.cy);
+    const ini = chip.initials ? chip.initials : initials(chip.name, cfg);
+    out.push({ i: i, name: chip.name, label: chip.label, stateId: chip.stateId, elect: !!chip.elect,
+      anchorX: ax + off.dx, anchorY: ay + off.dy, placeAtMs: (i + 1) * cfg.placeMs,
+      initials: ini, initialsWidth: textWidth(cfg, ini, cfg.initialsSize) });
+  });
+  return out;
+}
+function rectsOverlap(a, b){ return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h; }
+function rectCircleOverlap(rect, cx, cy, r){
+  const nx = Math.min(Math.max(cx, rect.x), rect.x + rect.w);
+  const ny = Math.min(Math.max(cy, rect.y), rect.y + rect.h);
+  const dx = cx - nx, dy = cy - ny;
+  return dx * dx + dy * dy < r * r;
+}
+let __layoutCalls = 0;
+function layoutChips(cfg){
+  __layoutCalls++;
+  const res = resolveChips(cfg);
+  const minD = 2 * cfg.chipR + cfg.minCentreGap;
+  const pos = res.map(function(r){ return { x: r.anchorX, y: r.anchorY }; });
+  function clamp(p){
+    p.x = Math.min(Math.max(p.x, cfg.chipR + cfg.layoutInsetUnits), cfg.viewBox.w - cfg.chipR - cfg.layoutInsetUnits);
+    p.y = Math.min(Math.max(p.y, cfg.chipR + cfg.layoutInsetUnits), cfg.viewBox.h - cfg.chipR - cfg.layoutInsetUnits);
+  }
+  pos.forEach(clamp);
+  for(let it = 0; it < cfg.layoutIterations; it++){
+    for(let i = 0; i < pos.length; i++){
+      for(let j = i + 1; j < pos.length; j++){
+        let dx = pos[j].x - pos[i].x, dy = pos[j].y - pos[i].y;
+        let d = Math.sqrt(dx * dx + dy * dy);
+        if(d >= minD) continue;
+        if(d === 0){ const a = i * cfg.goldenAngleRad; dx = Math.cos(a); dy = Math.sin(a); d = 1; }
+        const push = (minD - d) / 2, ux = dx / d, uy = dy / d;
+        pos[i].x -= ux * push; pos[i].y -= uy * push;
+        pos[j].x += ux * push; pos[j].y += uy * push;
+        clamp(pos[i]); clamp(pos[j]);
+      }
+    }
+  }
+  res.forEach(function(r, k){
+    r.x = pos[k].x; r.y = pos[k].y;
+    const dx = r.x - r.anchorX, dy = r.y - r.anchorY;
+    r.displaced = Math.sqrt(dx * dx + dy * dy);
+  });
+  const tagW = textWidth(cfg, cfg.electText, cfg.electSize) + 2 * cfg.electPadX;
+  const chosen = [];
+  res.forEach(function(r){
+    if(!r.elect){ r.electRect = null; return; }
+    const ox = cfg.electOffsetX, oy = cfg.electOffsetY, th = cfg.electHeight;
+    const raw = [
+      { x: r.x - tagW / 2, y: r.y + cfg.chipR - th }, { x: r.x + ox, y: r.y + cfg.chipR - th },
+      { x: r.x - tagW / 2, y: r.y - cfg.chipR }, { x: r.x - ox - tagW + cfg.chipR, y: r.y + cfg.chipR - th },
+      { x: r.x + ox, y: r.y + oy }, { x: r.x - ox - tagW, y: r.y + oy },
+      { x: r.x + ox, y: r.y - oy - th }, { x: r.x - ox - tagW, y: r.y - oy - th },
+      { x: r.x - tagW / 2, y: r.y + cfg.chipR + oy }, { x: r.x - tagW / 2, y: r.y - cfg.chipR - oy - th },
+      { x: r.x + cfg.chipR + ox, y: r.y - th / 2 }, { x: r.x - cfg.chipR - ox - tagW, y: r.y - th / 2 },
+      { x: r.x - tagW / 2, y: r.y + cfg.chipR + oy + th }, { x: r.x - tagW / 2, y: r.y - cfg.chipR - oy - 2 * th }
+    ];
+    const grid = [];
+    for(let gy = -cfg.tagGridRange; gy <= cfg.tagGridRange; gy += cfg.tagGridStep)
+      for(let gx = -cfg.tagGridRange; gx <= cfg.tagGridRange; gx += cfg.tagGridStep)
+        grid.push({ x: r.x + gx - tagW / 2, y: r.y + gy - th / 2 });
+    grid.sort(function(a, b){
+      const da = Math.abs(a.x + tagW / 2 - r.x) + Math.abs(a.y + th / 2 - r.y);
+      const db = Math.abs(b.x + tagW / 2 - r.x) + Math.abs(b.y + th / 2 - r.y);
+      return da - db;
+    });
+    let best = null, bestScore = Infinity;
+    for(const c of raw.concat(grid)){
+      const rect = { x: Math.min(Math.max(c.x, 0), cfg.viewBox.w - tagW), y: Math.min(Math.max(c.y, 0), cfg.viewBox.h - th), w: tagW, h: th };
+      let score = 0;
+      res.forEach(function(o){
+        if(o === r) return;
+        const ib = { x: o.x - o.initialsWidth / 2, y: o.y - cfg.initialsSize / 2, w: o.initialsWidth, h: cfg.initialsSize };
+        if(rectsOverlap(rect, ib)) score += cfg.overlapPenalty;
+      });
+      chosen.forEach(function(o){ if(rectsOverlap(rect, o)) score += cfg.overlapPenalty; });
+      if(score < bestScore){ bestScore = score; best = rect; }
+      if(score === 0) break;
+    }
+    r.electRect = best; r.electFallback = bestScore > 0; chosen.push(best);
+  });
+  derivePlacement(cfg, res);
+  return res;
+}
+function connectorEndpoints(rc){ return { x1: rc.anchorX, y1: rc.anchorY, x2: rc.x, y2: rc.y }; }
+function chipExtent(cfg, rc){
+  let minX = rc.x - cfg.chipR, maxX = rc.x + cfg.chipR, minY = rc.y - cfg.chipR, maxY = rc.y + cfg.chipR;
+  if(rc.electRect){
+    minX = Math.min(minX, rc.electRect.x); maxX = Math.max(maxX, rc.electRect.x + rc.electRect.w);
+    minY = Math.min(minY, rc.electRect.y); maxY = Math.max(maxY, rc.electRect.y + rc.electRect.h);
+  }
+  return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+}
+function openingWindow(cfg){
+  const m = stateMap(cfg);
+  const c = centroidOf(cfg.midwestStateIds.map(function(id){ return { x: m[id].cx, y: m[id].cy }; }));
+  return windowAt(cfg, { cx: c.cx, cy: c.cy, scale: cfg.midwestScale });
+}
+function extentInside(ext, win){
+  return ext.x >= win.x - 1e-9 && ext.y >= win.y - 1e-9 && ext.x + ext.w <= win.x + win.w + 1e-9 && ext.y + ext.h <= win.y + win.h + 1e-9;
+}
+/* Placement schedule DERIVED from the camera track and the final laid geometry:
+   a chip places at a stationary instant whose camera window contains its full
+   extent (disc + Elect tag). Opening-region chips whose extent fits the opening
+   window place inside the opening hold; every other chip places inside the full
+   dwell. placeMs survives as a minimum-spacing floor on the derived step.
+   RE-DERIVATION RULE (W-T54): this derivation consumes laid positions + tag
+   rects, so it runs at the end of layoutChips — after every geometry change —
+   and any geometry-affecting edit re-derives it before checks run. */
+function placementSchedule(cfg, laid){
+  const oWin = openingWindow(cfg);
+  const fWin = { x: 0, y: 0, w: cfg.viewBox.w, h: cfg.viewBox.h };
+  const opening = [], full = [];
+  laid.forEach(function(rc){
+    const ext = chipExtent(cfg, rc);
+    if(cfg.midwestStateIds.indexOf(rc.stateId) >= 0 && extentInside(ext, oWin)) opening.push(rc);
+    else full.push(rc);
+  });
+  const openingStep = opening.length ? Math.max((cfg.midwestHoldMs - cfg.popMs) / (opening.length + 1), cfg.placeMs) : 0;
+  const fullStep = full.length ? Math.max((cfg.fullDwellMs - cfg.popMs) / (full.length + 1), cfg.placeMs) : 0;
+  return { opening: opening, full: full, openingStep: openingStep, fullStep: fullStep,
+    openingWindow: oWin, fullWindow: fWin };
+}
+function derivePlacement(cfg, laid){
+  const s = placementSchedule(cfg, laid);
+  s.opening.forEach(function(rc, k){ rc.placeAtMs = (k + 1) * s.openingStep; });
+  s.full.forEach(function(rc, k){ rc.placeAtMs = fullArrivalMs(cfg) + (k + 1) * s.fullStep; });
+}
+function maxConcurrentPops(cfg, laid){
+  const events = [];
+  laid.forEach(function(rc){ events.push({ t: rc.placeAtMs, d: 1 }); events.push({ t: rc.placeAtMs + cfg.popMs, d: -1 }); });
+  events.sort(function(a, b){ return a.t - b.t || a.d - b.d; });
+  let cur = 0, max = 0;
+  events.forEach(function(e){ cur += e.d; if(cur > max) max = cur; });
+  return max;
+}
+function placeEndMs(cfg, laid){ if(laid && laid.length) return Math.max.apply(null, laid.map(function(r){ return r.placeAtMs; })); return cfg.chips.length * cfg.placeMs; }
+function effectivePopMs(cfg){ return cfg.popMs; }
+function fullArrivalMs(cfg){ return cfg.midwestHoldMs + cfg.cameraMoveMs; }
+function panStartMs(cfg){ return fullArrivalMs(cfg) + cfg.fullDwellMs; }
+function passStartMs(cfg){ return panStartMs(cfg) + cfg.panAwayMs; }
+function fullPlateReserveUnits(cfg){
+  return Math.ceil(cfg.fullPlate.sizePx * cfg.fullPlate.lineHeightFactor + 2 * cfg.fullPlate.padY + cfg.fullPlate.bottomPx);
+}
+function dwellForWave(cfg, labels){
+  let longest = 0;
+  labels.forEach(function(l){ longest = Math.max(longest, l.length); });
+  return Math.max(cfg.dwellFloorMs, cfg.dwellBaseMs + cfg.dwellPerNameMs * labels.length + cfg.dwellPerLongestCharMs * longest);
+}
+function passSchedule(cfg, laid){
+  let start = passStartMs(cfg);
+  const entries = [];
+  cfg.passRegions.forEach(function(reg){
+    const members = laid.filter(function(r){ return reg.stateIds.indexOf(r.stateId) >= 0; });
+    const groupCount = Math.max(1, Math.min(cfg.passWaves, members.length));
+    const per = Math.max(1, Math.ceil(members.length / groupCount));
+    for(let w = 0; w * per < members.length; w++){
+      const group = members.slice(w * per, (w + 1) * per);
+      const dwell = dwellForWave(cfg, group.map(function(r){ return r.label; }));
+      const step = cfg.cameraMoveMs + dwell;
+      entries.push({ id: reg.id + "-w" + w, regionId: reg.id, reg: reg,
+        members: group, waves: [group.map(function(r){ return r.i; })], dwells: [dwell], start: start, step: step });
+      start += step;
+    }
+  });
+  return entries;
+}
+function passEndMs(cfg, laid){ const s = passSchedule(cfg, laid); return s.length ? s[s.length - 1].start + s[s.length - 1].step : passStartMs(cfg); }
+function durationMs(cfg, laid){ return passEndMs(cfg, laid) + cfg.cameraMoveMs + cfg.finalFullHoldMs; }
+function returnArrivalMs(cfg, laid){ return passEndMs(cfg, laid) + cfg.cameraMoveMs; }
+function placedCount(cfg, t, laid){
+  if(t <= 0) return 0;
+  if(laid) return laid.filter(function(rc){ return rc.placeAtMs <= t; }).length;
+  return Math.min(cfg.chips.length, Math.floor(t / cfg.placeMs));
+}
+function centroidOf(points){ let sx = 0, sy = 0; points.forEach(function(p){ sx += p.x; sy += p.y; }); return { cx: sx / points.length, cy: sy / points.length }; }
+function regionCamera(cfg, pts, reg){
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  pts.forEach(function(p){
+    minX = Math.min(minX, p.x - cfg.chipR); maxX = Math.max(maxX, p.x + cfg.chipR);
+    minY = Math.min(minY, p.y - cfg.chipR); maxY = Math.max(maxY, p.y + cfg.chipR);
+    if(p.electRect){
+      minX = Math.min(minX, p.electRect.x); maxX = Math.max(maxX, p.electRect.x + p.electRect.w);
+      minY = Math.min(minY, p.electRect.y); maxY = Math.max(maxY, p.electRect.y + p.electRect.h);
+    }
+  });
+  const bw = (maxX - minX) + cfg.framePadUnits, bh = (maxY - minY) + cfg.framePadUnits;
+  const fit = Math.min(cfg.viewBox.w / bw, cfg.viewBox.h / bh);
+  const scale = Math.max(1, Math.min(reg.scale, fit));
+  return { cx: (minX + maxX) / 2, cy: (minY + maxY) / 2, scale: scale };
+}
+function buildTimeline(cfg, laid){
+  const m = stateMap(cfg);
+  const full = { cx: cfg.viewBox.w / 2, cy: cfg.viewBox.h / 2, scale: 1 };
+  const midC = centroidOf(cfg.midwestStateIds.map(function(id){ return { x: m[id].cx, y: m[id].cy }; }));
+  const hold = cfg.midwestHoldMs, move = cfg.cameraMoveMs;
+  const keys = [];
+  keys.push({ t: 0, cx: midC.cx, cy: midC.cy, scale: cfg.midwestScale, regionIds: cfg.midwestStateIds.slice(), regionKey: "opening" });
+  keys.push({ t: hold, cx: midC.cx, cy: midC.cy, scale: cfg.midwestScale, regionIds: cfg.midwestStateIds.slice(), regionKey: "opening" });
+  keys.push({ t: hold + move, cx: full.cx, cy: full.cy, scale: full.scale, regionIds: null, regionKey: null });
+  keys.push({ t: panStartMs(cfg), cx: full.cx, cy: full.cy, scale: full.scale, regionIds: null, regionKey: null });
+  keys.push({ t: passStartMs(cfg), cx: full.cx + cfg.panExitShiftUnits, cy: full.cy, scale: full.scale, regionIds: null, regionKey: "panexit" });
+  const sched = passSchedule(cfg, laid);
+  sched.forEach(function(entry){
+    const c = regionCamera(cfg, entry.members, entry.reg);
+    keys.push({ t: entry.start + move, cx: c.cx, cy: c.cy, scale: c.scale, regionIds: entry.reg.stateIds.slice(), regionKey: entry.id });
+    keys.push({ t: entry.start + entry.step, cx: c.cx, cy: c.cy, scale: c.scale, regionIds: entry.reg.stateIds.slice(), regionKey: entry.id });
+  });
+  const pe = passEndMs(cfg, laid);
+  keys.push({ t: pe + move, cx: full.cx, cy: full.cy, scale: full.scale, regionIds: null, regionKey: null });
+  keys.push({ t: durationMs(cfg, laid), cx: full.cx, cy: full.cy, scale: full.scale, regionIds: null, regionKey: null });
+  return keys;
+}
+function cameraAt(cfg, keys, t){
+  if(t <= keys[0].t) return keys[0];
+  for(let s = 0; s < keys.length - 1; s++){
+    const a = keys[s], b = keys[s + 1];
+    if(t >= a.t && t <= b.t){
+      if(b.t === a.t) return b;
+      const k = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t)));
+      const e = 1 - Math.pow(1 - k, cfg.easeExponent);
+      const sw = k >= cfg.regionSwitchPoint;
+      return { cx: a.cx + (b.cx - a.cx) * e, cy: a.cy + (b.cy - a.cy) * e,
+        scale: a.scale + (b.scale - a.scale) * e, regionIds: (sw ? b.regionIds : a.regionIds),
+        regionKey: (sw ? b.regionKey : a.regionKey) };
+    }
+  }
+  return keys[keys.length - 1];
+}
+function isStationary(cfg, keys, t){
+  let seen = false;
+  for(let s = 0; s < keys.length - 1; s++){
+    const a = keys[s], b = keys[s + 1];
+    if(t >= a.t && t <= b.t){
+      seen = true;
+      if(a.cx === b.cx && a.cy === b.cy && a.scale === b.scale) return true;
+    }
+  }
+  return !seen;
+}
+function windowAt(cfg, cam){
+  const w = cfg.viewBox.w / cam.scale, h = cfg.viewBox.h / cam.scale;
+  return { x: cam.cx - w / 2, y: cam.cy - h / 2, w: w, h: h };
+}
+function waveIndexAt(entry, stationaryElapsed){
+  let acc = 0;
+  for(let w = 0; w < entry.dwells.length; w++){
+    if(stationaryElapsed < acc + entry.dwells[w]) return w;
+    acc += entry.dwells[w];
+  }
+  return entry.dwells.length - 1;
+}
+function labelVisible(cfg, laid, keys, t){
+  const none = laid.map(function(){ return false; });
+  if(!isStationary(cfg, keys, t)) return none;
+  const n = placedCount(cfg, t, laid);
+  const cam = cameraAt(cfg, keys, t);
+  const ids = cam.regionIds;
+  if(cam.regionKey && cam.regionKey !== "opening" && cam.regionKey !== "panexit"){
+    const sched = passSchedule(cfg, laid);
+    const entry = sched.find(function(e){ return e.id === cam.regionKey; });
+    if(!entry) return none;
+    const stationaryElapsed = t - (entry.start + cfg.cameraMoveMs);
+    if(stationaryElapsed < 0) return none;
+    const wave = waveIndexAt(entry, stationaryElapsed);
+    const set = {};
+    entry.waves[wave].forEach(function(i){ set[i] = true; });
+    return laid.map(function(rc){ return rc.placeAtMs <= t && !!set[rc.i]; });
+  }
+  if(cam.regionKey === "panexit") return none;
+  if(cam.regionKey === "opening" && ids){
+    const placedRegion = laid.filter(function(r){ return r.placeAtMs <= t && ids.indexOf(r.stateId) >= 0; });
+    const set = {};
+    placedRegion.slice(-cfg.openingLabelCap).forEach(function(r){ set[r.i] = true; });
+    return laid.map(function(rc){ return !!set[rc.i]; });
+  }
+  const ra = returnArrivalMs(cfg, laid);
+  if(t >= ra){
+    const groupCount = Math.ceil(laid.length / cfg.finalIndexGroupSize);
+    const g = Math.min(groupCount - 1, Math.floor((t - ra) / cfg.finalIndexStepMs));
+    return laid.map(function(rc){ return Math.floor(rc.i / cfg.finalIndexGroupSize) === g; });
+  }
+  let latest = -1;
+  laid.forEach(function(rc){ if(rc.placeAtMs <= t && rc.placeAtMs > latest) latest = rc.placeAtMs; });
+  return laid.map(function(rc){ return rc.placeAtMs <= t && rc.placeAtMs === latest; });
+}
+function countPlateUp(cfg, laid, keys, t){
+  const cam = cameraAt(cfg, keys, t);
+  if(cam.scale > cfg.fullViewScaleMax) return false;
+  if(t < placeEndMs(cfg, laid) + effectivePopMs(cfg)) return false;
+  if(t >= panStartMs(cfg) && t < returnArrivalMs(cfg, laid)) return false;
+  return true;
+}
+function plateSize(cfg, label){
+  return { w: textWidth(cfg, label, cfg.labelSize) + 2 * cfg.labelPadX, h: cfg.labelSize + 2 * cfg.labelPadY };
+}
+function plateRectsFor(cfg, laid, visibleIdx, win, reserveBottom, obstacleIdx){
+  const placed = [], out = {};
+  const bx = win.x, by = win.y;
+  const bx2 = win.x + win.w, by2 = win.y + win.h;
+  const obstacleSet = obstacleIdx ? laid.filter(function(rc){ return obstacleIdx.indexOf(rc.i) >= 0; }) : laid;
+  const obstacles = obstacleSet.filter(function(rc){
+    return rc.x + cfg.chipR > bx && rc.x - cfg.chipR < bx2 && rc.y + cfg.chipR > by && rc.y - cfg.chipR < by2;
+  });
+  const hardTags = [];
+  laid.forEach(function(rc){
+    if(rc.electRect && rectsOverlap(rc.electRect, { x: bx, y: by, w: bx2 - bx, h: by2 - by })) hardTags.push(rc.electRect);
+  });
+  const ordered = visibleIdx.slice().sort(function(a, b){
+    const d = plateSize(cfg, laid[b].label).w - plateSize(cfg, laid[a].label).w;
+    return d !== 0 ? d : a - b;
+  });
+  function overlaps(a, b){ return rectsOverlap(a, b); }
+  function candList(idx){
+    const rc = laid[idx], sz = plateSize(cfg, rc.label);
+    const yLimit = by2 - reserveBottom - sz.h - cfg.plateMargin;
+    const xs = [rc.x - sz.w / 2, rc.x - cfg.chipR, rc.x + cfg.chipR - sz.w, bx + cfg.plateMargin, bx2 - sz.w - cfg.plateMargin];
+    cfg.plateXShifts.forEach(function(s){ xs.push(rc.x - sz.w / 2 + s); });
+    const raw = [];
+    for(let row = 0; row < cfg.plateRowCount; row++){
+      xs.forEach(function(x){
+        raw.push({ x: x, y: rc.y + cfg.chipR + cfg.labelGap + row * (sz.h + cfg.labelGap) });
+        raw.push({ x: x, y: rc.y - cfg.chipR - cfg.labelGap - sz.h - row * (sz.h + cfg.labelGap) });
+      });
+    }
+    for(let band = 0; band * (sz.h + cfg.labelGap) < (by2 - by); band++){
+      const gy = by + cfg.plateMargin + band * (sz.h + cfg.labelGap);
+      raw.push({ x: bx + cfg.plateMargin, y: gy });
+      raw.push({ x: bx2 - sz.w - cfg.plateMargin, y: gy });
+      raw.push({ x: rc.x - sz.w / 2, y: gy });
+    }
+    for(let gy = by + cfg.plateMargin; gy + sz.h <= by2 - reserveBottom - cfg.plateMargin; gy += cfg.plateGridStep)
+      for(let gx = bx + cfg.plateMargin; gx + sz.w <= bx2 - cfg.plateMargin; gx += cfg.plateGridStep)
+        raw.push({ x: gx, y: gy });
+    const seen = {}, list = [];
+    raw.forEach(function(c){
+      const rect = { x: Math.min(Math.max(c.x, bx + cfg.plateMargin), bx2 - sz.w - cfg.plateMargin), y: c.y, w: sz.w, h: sz.h };
+      if(rect.y < by + cfg.plateMargin || rect.y > yLimit) return;
+      const key = rect.x.toFixed(1) + "," + rect.y.toFixed(1);
+      if(seen[key]) return;
+      seen[key] = true; list.push(rect);
+    });
+    list.forEach(function(rect){
+      let s = 0;
+      obstacles.forEach(function(o){ if(rectCircleOverlap(rect, o.x, o.y, cfg.chipR)) s++; });
+      hardTags.forEach(function(o){ if(rectsOverlap(rect, o)) s++; });
+      rect.obsScore = s;
+    });
+    list.sort(function(a, b){
+      if(a.obsScore !== b.obsScore) return a.obsScore - b.obsScore;
+      const da = Math.abs(a.x + a.w / 2 - rc.x) + Math.abs(a.y + a.h / 2 - rc.y);
+      const db = Math.abs(b.x + b.w / 2 - rc.x) + Math.abs(b.y + b.h / 2 - rc.y);
+      return da - db;
+    });
+    return list;
+  }
+  const lists = {};
+  ordered.forEach(function(idx){ lists[idx] = candList(idx); });
+  function freeOf(rect){
+    let bad = false;
+    placed.forEach(function(o){ if(overlaps(rect, o)) bad = true; });
+    if(!bad) hardTags.forEach(function(o){ if(overlaps(rect, o)) bad = true; });
+    if(!bad) obstacles.forEach(function(o){ if(rectCircleOverlap(rect, o.x, o.y, cfg.chipR)) bad = true; });
+    return !bad;
+  }
+  /* Greedy first-free over obstacle-sorted candidates; a chip with no free
+     candidate is flagged fallback and hidden at this beat by the caller. */
+  ordered.forEach(function(idx){
+    const sz = plateSize(cfg, laid[idx].label);
+    let best = null, bestScore = Infinity;
+    for(const rect of lists[idx]){
+      if(freeOf(rect)){ best = rect; bestScore = 0; break; }
+      let score = 0;
+      placed.forEach(function(o){ if(overlaps(rect, o)) score += cfg.overlapPenalty; });
+      hardTags.forEach(function(o){ if(overlaps(rect, o)) score += cfg.overlapPenalty; });
+      obstacles.forEach(function(o){ if(rectCircleOverlap(rect, o.x, o.y, cfg.chipR)) score += cfg.overlapPenalty; });
+      if(score < bestScore){ bestScore = score; best = rect; }
+    }
+    if(!best){
+      best = { x: bx + cfg.plateMargin, y: by + cfg.plateMargin, w: sz.w, h: sz.h };
+      bestScore = cfg.overlapPenalty;
+    }
+    best.fallback = bestScore > 0;
+    placed.push(best); out[idx] = best;
+  });
+  return out;
+}
+function layoutFeasibility(cfg, laid, keys){
+  const failures = [];
+  let minD = Infinity;
+  for(let i = 0; i < laid.length; i++) for(let j = i + 1; j < laid.length; j++){
+    const dx = laid[j].x - laid[i].x, dy = laid[j].y - laid[i].y;
+    minD = Math.min(minD, Math.sqrt(dx * dx + dy * dy));
+  }
+  if(minD < 2 * cfg.chipR + cfg.minCentreGap - 1e-6) failures.push("layout feasibility: minimum centre distance " + minD.toFixed(2) + " below required separation");
+  laid.forEach(function(rc){ if(rc.electFallback) failures.push("layout feasibility: elect tag fallback for chips[" + rc.i + "]"); });
+  const checkpoints = [cfg.feasibilitySampleMs, fullArrivalMs(cfg) + cfg.feasibilitySampleMs];
+  const sched = passSchedule(cfg, laid);
+  sched.forEach(function(entry){
+    checkpoints.push(entry.start + cfg.cameraMoveMs + Math.floor(entry.dwells[0] / 2));
+  });
+  const ra = returnArrivalMs(cfg, laid);
+  const groupCount = Math.ceil(laid.length / cfg.finalIndexGroupSize);
+  for(let g = 0; g < groupCount; g++) checkpoints.push(ra + g * cfg.finalIndexStepMs + Math.floor(cfg.finalIndexStepMs / 2));
+  const exposure = {};
+  checkpoints.forEach(function(t){
+    const cam = cameraAt(cfg, keys, t);
+    const win = windowAt(cfg, cam);
+    const vis = labelVisible(cfg, laid, keys, t);
+    const visIdx = [];
+    vis.forEach(function(v, i){ if(v) visIdx.push(i); });
+    if(!visIdx.length) return;
+    const reserve = countPlateUp(cfg, laid, keys, t) ? fullPlateReserveUnits(cfg) : 0;
+    const placedIdx = [];
+    laid.forEach(function(rc){ if(rc.placeAtMs <= t) placedIdx.push(rc.i); });
+    const rects = plateRectsFor(cfg, laid, visIdx, win, reserve, placedIdx);
+    const displayed = visIdx.filter(function(idx){ const r = rects[idx]; return r && !r.fallback; });
+    displayed.forEach(function(idx){ exposure[idx] = (exposure[idx] || 0) + 1; });
+    const rs = displayed.map(function(idx){ return rects[idx]; });
+    for(let a = 0; a < rs.length; a++) for(let b = a + 1; b < rs.length; b++)
+      if(rectsOverlap(rs[a], rs[b])) failures.push("layout feasibility: displayed plate overlap at t=" + t);
+    rs.forEach(function(r){
+      if(r.x < win.x - 1e-6 || r.y < win.y - 1e-6 || r.x + r.w > win.x + win.w + 1e-6 || r.y + r.h > win.y + win.h + 1e-6)
+        failures.push("layout feasibility: displayed plate outside the camera window at t=" + t);
+      laid.forEach(function(rc){
+        if(rc.placeAtMs > t) return;
+        if(rectCircleOverlap(r, rc.x, rc.y, cfg.chipR)) failures.push("layout feasibility: displayed plate covers a disc at t=" + t);
+        if(rc.electRect && rectsOverlap(r, rc.electRect)) failures.push("layout feasibility: displayed plate covers a tag at t=" + t);
+      });
+    });
+  });
+  laid.forEach(function(rc){
+    if(!exposure[rc.i]) failures.push("layout feasibility: identity never displayed for chips[" + rc.i + "]");
+  });
+  return { ok: failures.length === 0, failures: failures, minCentreDistance: minD, exposure: exposure };
+}
+function validateConfig(cfg){
+  /* Phase A — pure schema: type/finite/range on every CONFIG leaf. No layout,
+     no timeline construction, no plate/tag search runs in this phase. */
+  const errsA = [];
+  const A = function(cond, msg){ if(!cond) errsA.push(msg); };
+  A(cfg && typeof cfg === "object", "CONFIG must be an object");
+  if(errsA.length) return errsA;
+  A(isFinite(cfg.viewBox.w) && cfg.viewBox.w > 0 && isFinite(cfg.viewBox.h) && cfg.viewBox.h > 0, "viewBox must be positive and finite");
+  A(Array.isArray(cfg.states) && cfg.states.length > 0, "states must be non-empty");
+  A(Array.isArray(cfg.chips) && cfg.chips.length > 0, "chips must be non-empty");
+  const stateIds = {};
+  (cfg.states || []).forEach(function(s, i){
+    A(isFinite(s.cx) && isFinite(s.cy) && isFinite(s.r), "states[" + i + "] geometry must be finite");
+    A(s.r > 0, "states[" + i + "].r must be positive");
+    A(s.cx >= 0 && s.cx <= cfg.viewBox.w && s.cy >= 0 && s.cy <= cfg.viewBox.h, "states[" + i + "] centre outside viewBox");
+    A(!stateIds[s.id], "states duplicate id: " + s.id); stateIds[s.id] = true;
+    A(typeof s.id === "string" && s.id.length > 0, "states[" + i + "].id must be a non-empty string");
+  });
+  (cfg.chips || []).forEach(function(chip, i){
+    A(typeof chip.name === "string" && chip.name.length > 0, "chips[" + i + "].name must be non-empty");
+    A(typeof chip.label === "string" && chip.label.length > 0, "chips[" + i + "].label must be non-empty");
+    A(!!stateIds[chip.stateId], "chips[" + i + "].stateId unknown state: " + chip.stateId);
+  });
+  const numPos = ["chipR","connectorWidth","initialsSize","initialsMaxWidth","labelSize","plateGridStep","feasibilitySampleMs","tagGridStep","electSize","electHeight","placeMs","popMs","easeExponent","cameraMoveMs","panAwayMs","dwellPerNameMs","dwellFloorMs","finalIndexStepMs","fullViewScaleMax","goldenAngleRad","stageMaxWidthPx","fontWeightBold","textMetrics.unit","textMetrics.defaultWidth","fullPlate.sizePx","fullPlate.lineHeightFactor"];
+  const numNonNeg = ["chipRingW","minCentreGap","layoutInsetUnits","connectorThreshold","connectorOpacity","labelPadX","labelPadY","labelGap","plateMargin","tagGridRange","electPadX","electRx","electOffsetX","electOffsetY","midwestHoldMs","fullDwellMs","finalFullHoldMs","dwellBaseMs","dwellPerLongestCharMs","framePadUnits","fullPlate.padX","fullPlate.padY","fullPlate.radius","fullPlate.bottomPx","fullPlate.letterSpacingEm","overlapPenalty","offsetBase","offsetStep"];
+  function leaf(path){
+    let o = cfg; const parts = path.split(".");
+    for(const p of parts){ if(o === null || o === undefined) return undefined; o = o[p]; }
+    return o;
+  }
+  numPos.forEach(function(k){ const v = leaf(k); A(typeof v === "number" && isFinite(v) && v > 0, k + " must be a positive finite number"); });
+  numNonNeg.forEach(function(k){ const v = leaf(k); A(typeof v === "number" && isFinite(v) && v >= 0, k + " must be a non-negative finite number"); });
+  A(cfg.connectorOpacity <= 1, "connectorOpacity must not exceed 1");
+  A(cfg.popFromScale > 0 && cfg.popFromScale <= 1, "popFromScale must lie in (0,1]");
+  A(cfg.midwestScale > 1, "midwestScale must exceed 1");
+  A(cfg.regionSwitchPoint >= 0 && cfg.regionSwitchPoint <= 1, "regionSwitchPoint must lie in [0,1]");
+  ["layoutIterations","plateRowCount","passWaves","finalIndexGroupSize","maxChipsPerState","initialsCount","maxConcurrentPops"].forEach(function(k){
+    A(Number.isInteger(cfg[k]) && cfg[k] >= 1, k + " must be a positive integer");
+  });
+  A(Array.isArray(cfg.plateXShifts) && cfg.plateXShifts.every(function(v){ return isFinite(v); }), "plateXShifts must be an array of finite numbers");
+  A(isFinite(cfg.textBaselineFactor) && isFinite(cfg.labelTextBaselineFactor), "text baseline factors must be finite");
+  A(isFinite(cfg.panExitShiftUnits), "panExitShiftUnits must be finite");
+  const tm = cfg.textMetrics || {};
+  A(typeof tm.profileFor === "string" && tm.profileFor.length > 0, "textMetrics.profileFor must be a non-empty string");
+  A(tm.widths && typeof tm.widths === "object", "textMetrics.widths must be an object");
+  if(tm.widths) Object.keys(tm.widths).forEach(function(ch){ A(isFinite(tm.widths[ch]) && tm.widths[ch] > 0, "textMetrics.widths[" + JSON.stringify(ch) + "] must be a positive finite number"); });
+  ["fontFamily","electText","errorPrefix","ariaLabel","fullLabel","missingInitials","segmenterLocale","platePolicy"].forEach(function(k){
+    A(typeof cfg[k] === "string" && cfg[k].length > 0, k + " must be a non-empty string");
+  });
+  A(cfg.platePolicy === "hide-relocate-reveal", "platePolicy must name a supported plate policy");
+  A(typeof cfg.autoplayOnLoad === "boolean", "autoplayOnLoad must be a boolean");
+  A(cfg.palette && typeof cfg.palette === "object", "palette must be an object");
+  if(cfg.palette) Object.keys(cfg.palette).forEach(function(k){
+    const v = cfg.palette[k];
+    A(typeof v === "string" || (Array.isArray(v) && v.every(function(x){ return typeof x === "string"; })), "palette." + k + " must be a colour string or list of colour strings");
+  });
+  A(Array.isArray(cfg.midwestStateIds) && cfg.midwestStateIds.length > 0, "midwestStateIds must be non-empty");
+  (cfg.midwestStateIds || []).forEach(function(id){ A(!!stateIds[id], "midwestStateIds unknown state: " + id); });
+  A(Array.isArray(cfg.passRegions) && cfg.passRegions.length > 0, "passRegions must be non-empty");
+  const regIds = {};
+  (cfg.passRegions || []).forEach(function(reg, ri){
+    A(!regIds[reg.id], "passRegions duplicate id: " + reg.id); regIds[reg.id] = true;
+    A(isFinite(reg.scale) && reg.scale > 1, "passRegions[" + ri + "].scale must exceed 1");
+    (reg.stateIds || []).forEach(function(id){ A(!!stateIds[id], "passRegions[" + ri + "].stateIds unknown state: " + id); });
+  });
+  if(errsA.length) return errsA;
+  /* Phase B — cross-field relations computable without layout or search. */
+  const errsB = [];
+  const B = function(cond, msg){ if(!cond) errsB.push(msg); };
+  B(cfg.textMetrics.profileFor === cfg.fontFamily, "textMetrics.profileFor must match fontFamily (no metrics profile for the configured font)");
+  const perState = {};
+  cfg.chips.forEach(function(chip){ perState[chip.stateId] = (perState[chip.stateId] || 0) + 1; });
+  Object.keys(perState).forEach(function(id){ B(perState[id] <= cfg.maxChipsPerState, "chips per-state capacity exceeded for state: " + id); });
+  B(cfg.chips.some(function(c){ return cfg.midwestStateIds.indexOf(c.stateId) >= 0; }), "midwestStateIds opening region has no roster members");
+  cfg.passRegions.forEach(function(reg, ri){
+    B(cfg.chips.some(function(c){ return reg.stateIds.indexOf(c.stateId) >= 0; }), "passRegions[" + ri + "] has no roster members");
+    const members = cfg.chips.filter(function(c){ return reg.stateIds.indexOf(c.stateId) >= 0; });
+    const groupCount = Math.max(1, Math.min(cfg.passWaves, members.length));
+    const per = Math.max(1, Math.ceil(members.length / groupCount));
+    for(let w = 0; w * per < members.length; w++){
+      const group = members.slice(w * per, (w + 1) * per);
+      const dwell = dwellForWave(cfg, group.map(function(r){ return r.label; }));
+      B(dwell > 0, "derived dwell must be positive for region " + reg.id + " wave " + w);
+      B(cfg.cameraMoveMs < cfg.cameraMoveMs + dwell, "cameraMoveMs must be below the derived pass step for region " + reg.id + " wave " + w);
+    }
+  });
+  cfg.chips.forEach(function(chip, i){
+    let covered = false;
+    cfg.passRegions.forEach(function(reg){ if(reg.stateIds.indexOf(chip.stateId) >= 0) covered = true; });
+    B(covered, "chips[" + i + "].stateId not covered by any passRegion: " + chip.stateId);
+  });
+  if(errsB.length) return errsB;
+  /* Phase C — geometry-dependent: layout, timeline, feasibility. Runs only on a clean A+B. */
+  const errsC = [];
+  try {
+    const laid = layoutChips(cfg);
+    const keys = buildTimeline(cfg, laid);
+    laid.forEach(function(rc){
+      if(cfg.midwestStateIds.indexOf(rc.stateId) >= 0){
+        const win = windowAt(cfg, cameraAt(cfg, keys, rc.placeAtMs));
+        if(rc.anchorX < win.x || rc.anchorX > win.x + win.w || rc.anchorY < win.y || rc.anchorY > win.y + win.h)
+          errsC.push("regional readiness: chips[" + rc.i + "] (opening region) anchor outside the opening camera window at its placement time");
+      }
+    });
+    if(placeEndMs(cfg, laid) + effectivePopMs(cfg) > panStartMs(cfg)) errsC.push("placement end + pop settle must not exceed pan start (derived schedule)");
+    if(maxConcurrentPops(cfg, laid) > cfg.maxConcurrentPops) errsC.push("concurrent pops exceed the configured cap maxConcurrentPops");
+    laid.forEach(function(rc){
+      if(!isStationary(cfg, keys, rc.placeAtMs)) errsC.push("placement outside a camera hold for chips[" + rc.i + "]");
+      const win = windowAt(cfg, cameraAt(cfg, keys, rc.placeAtMs));
+      if(!extentInside(chipExtent(cfg, rc), win)) errsC.push("placement extent outside the camera window for chips[" + rc.i + "]");
+    });
+    const feas = layoutFeasibility(cfg, laid, keys);
+    feas.failures.forEach(function(f){ errsC.push(f); });
+  } catch(e){ errsC.push("layout/timeline construction failed: " + e.message); }
+  return errsC;
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = { CONFIG: CONFIG, validateConfig: validateConfig, resolveChips: resolveChips,
+    layoutChips: layoutChips, buildTimeline: buildTimeline, cameraAt: cameraAt, windowAt: windowAt,
+    labelVisible: labelVisible, plateSize: plateSize, plateRectsFor: plateRectsFor,
+    placeEndMs: placeEndMs, passStartMs: passStartMs, durationMs: durationMs,
+    effectivePopMs: effectivePopMs, placedCount: placedCount, initials: initials, offsetFor: offsetFor,
+    graphemes: graphemes, textWidth: textWidth, dwellForWave: dwellForWave, passSchedule: passSchedule,
+    passEndMs: passEndMs, returnArrivalMs: returnArrivalMs, fullArrivalMs: fullArrivalMs, panStartMs: panStartMs,
+    fullPlateReserveUnits: fullPlateReserveUnits, isStationary: isStationary, countPlateUp: countPlateUp,
+    layoutFeasibility: layoutFeasibility, connectorEndpoints: connectorEndpoints, rectsOverlap: rectsOverlap,
+    chipExtent: chipExtent, openingWindow: openingWindow, extentInside: extentInside, placementSchedule: placementSchedule, maxConcurrentPops: maxConcurrentPops,
+    getLayoutCalls: function(){ return __layoutCalls; }, resetLayoutCalls: function(){ __layoutCalls = 0; },
+    rectCircleOverlap: rectCircleOverlap, regionCamera: regionCamera };
+}
+
+/* Rendering (browser only). Validation runs before any DOM construction. */
+if (typeof document !== "undefined"){
+  const errs = validateConfig(CONFIG);
+  const stage = document.getElementById("stage");
+  document.body.style.background = CONFIG.pageBg;
+  stage.style.background = CONFIG.palette.ground;
+  stage.style.fontFamily = CONFIG.fontFamily;
+  stage.style.maxWidth = CONFIG.stageMaxWidthPx + "px";
+  stage.style.aspectRatio = CONFIG.viewBox.w + "/" + CONFIG.viewBox.h;
+  if(errs.length){
+    const errEl = document.getElementById("err");
+    errEl.style.display = "flex";
+    errEl.style.background = CONFIG.palette.errorBg;
+    errEl.style.color = CONFIG.palette.errorText;
+    errEl.textContent = CONFIG.errorPrefix + errs.join("; ");
+    throw new Error(errs.join("; "));
+  }
+  const svg = document.getElementById("map");
+  svg.setAttribute("aria-label", CONFIG.ariaLabel);
+  const NS = "http://www.w3.org/2000/svg";
+  const P = CONFIG.palette;
+  svg.setAttribute("viewBox", "0 0 " + CONFIG.viewBox.w + " " + CONFIG.viewBox.h);
+  function el(tag, attrs){ const e = document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  const camG = el("g", {}); svg.appendChild(camG);
+  camG.appendChild(el("rect", { x: 0, y: 0, width: CONFIG.viewBox.w, height: CONFIG.viewBox.h, fill: P.ground }));
+  CONFIG.states.forEach(function(st, idx){
+    const fill = idx === 0 ? P.land : P.landAlt[(idx - 1) % P.landAlt.length];
+    camG.appendChild(el("circle", { cx: st.cx, cy: st.cy, r: st.r, fill: fill }));
+  });
+  const laid = layoutChips(CONFIG);
+  const keys = buildTimeline(CONFIG, laid);
+  const chipEls = laid.map(function(rc){
+    const g = el("g", { opacity: 0 });
+    if(rc.displaced > CONFIG.connectorThreshold){
+      const seg = connectorEndpoints(rc);
+      g.appendChild(el("line", { x1: seg.x1, y1: seg.y1, x2: seg.x2, y2: seg.y2,
+        stroke: P.connector, "stroke-width": CONFIG.connectorWidth, opacity: CONFIG.connectorOpacity }));
+    }
+    const popG = el("g", {});
+    popG.appendChild(el("circle", { cx: rc.x, cy: rc.y, r: CONFIG.chipR, fill: P.chip, stroke: P.chipRing, "stroke-width": CONFIG.chipRingW }));
+    const iniAttrs = { x: rc.x, y: rc.y + CONFIG.initialsSize * CONFIG.textBaselineFactor, "text-anchor": "middle",
+      "font-size": CONFIG.initialsSize, "font-weight": CONFIG.fontWeightBold, fill: P.chipInk };
+    if(rc.initialsWidth > CONFIG.initialsMaxWidth){ iniAttrs.textLength = CONFIG.initialsMaxWidth; iniAttrs.lengthAdjust = "spacingAndGlyphs"; }
+    const ini = el("text", iniAttrs);
+    ini.textContent = rc.initials; popG.appendChild(ini);
+    g.appendChild(popG);
+    camG.appendChild(g);
+    return { g: g, popG: popG };
+  });
+  const fgG = el("g", {}); camG.appendChild(fgG);
+  const fgEls = laid.map(function(rc){
+    let tagRect = null, tagText = null;
+    if(rc.elect && rc.electRect){
+      const er = rc.electRect;
+      tagRect = el("rect", { x: er.x, y: er.y, width: er.w, height: er.h, rx: CONFIG.electRx, fill: P.electBg, opacity: 0 });
+      tagText = el("text", { x: er.x + er.w / 2, y: er.y + er.h / 2 + CONFIG.electSize * CONFIG.textBaselineFactor, "text-anchor": "middle",
+        "font-size": CONFIG.electSize, "font-weight": CONFIG.fontWeightBold, fill: P.elect, opacity: 0 });
+      tagText.textContent = CONFIG.electText;
+      fgG.appendChild(tagRect); fgG.appendChild(tagText);
+    }
+    const plateRect = el("rect", { rx: CONFIG.labelRx, fill: P.label, opacity: 0 });
+    const plateText = el("text", { "text-anchor": "middle", "font-size": CONFIG.labelSize,
+      "font-weight": CONFIG.fontWeightBold, fill: P.labelText, opacity: 0 });
+    plateText.textContent = rc.label;
+    fgG.appendChild(plateRect); fgG.appendChild(plateText);
+    return { tagRect: tagRect, tagText: tagText, plateRect: plateRect, plateText: plateText };
+  });
+  const plate = document.getElementById("fullplate");
+  plate.style.background = CONFIG.fullPlate.bg;
+  plate.style.color = CONFIG.fullPlate.ink;
+  plate.style.fontSize = CONFIG.fullPlate.sizePx + "px";
+  plate.style.fontWeight = CONFIG.fontWeightBold;
+  plate.style.padding = CONFIG.fullPlate.padY + "px " + CONFIG.fullPlate.padX + "px";
+  plate.style.borderRadius = CONFIG.fullPlate.radius + "px";
+  plate.style.bottom = CONFIG.fullPlate.bottomPx + "px";
+  plate.style.letterSpacing = CONFIG.fullPlate.letterSpacingEm + "em";
+  plate.textContent = CONFIG.fullLabel.replace("{n}", String(CONFIG.chips.length));
+  const DUR = durationMs(CONFIG, laid);
+  let startStamp = null, pausedAt = 0, playing = false, rafId = null;
+  function render(t){
+    const cam = cameraAt(CONFIG, keys, t);
+    const win = windowAt(CONFIG, cam);
+    svg.setAttribute("viewBox", win.x + " " + win.y + " " + win.w + " " + win.h);
+    const stationary = isStationary(CONFIG, keys, t);
+    const vis = labelVisible(CONFIG, laid, keys, t);
+    const visIdx = [];
+    vis.forEach(function(v, i){ if(v) visIdx.push(i); });
+    const plateUp = countPlateUp(CONFIG, laid, keys, t);
+    const placedIdx = [];
+    laid.forEach(function(rc){ if(rc.placeAtMs <= t) placedIdx.push(rc.i); });
+    const rects = stationary ? plateRectsFor(CONFIG, laid, visIdx, win, plateUp ? fullPlateReserveUnits(CONFIG) : 0, placedIdx) : {};
+    laid.forEach(function(rc, i){
+      const ce = chipEls[i], fe = fgEls[i];
+      if(rc.placeAtMs > t){
+        ce.g.setAttribute("opacity", 0);
+        if(fe.tagRect){ fe.tagRect.setAttribute("opacity", 0); fe.tagText.setAttribute("opacity", 0); }
+        fe.plateRect.setAttribute("opacity", 0); fe.plateText.setAttribute("opacity", 0);
+        return;
+      }
+      const k = Math.min(1, (t - rc.placeAtMs) / effectivePopMs(CONFIG));
+      const e = 1 - Math.pow(1 - k, CONFIG.easeExponent);
+      ce.g.setAttribute("opacity", e);
+      ce.popG.setAttribute("transform", "translate(" + rc.x + " " + rc.y + ") scale(" +
+        (CONFIG.popFromScale + (1 - CONFIG.popFromScale) * e) + ") translate(" + (-rc.x) + " " + (-rc.y) + ")");
+      if(fe.tagRect){
+        fe.tagRect.setAttribute("opacity", e); fe.tagText.setAttribute("opacity", e);
+      }
+      const r = rects[i];
+      if(r && !r.fallback){
+        fe.plateRect.setAttribute("x", r.x); fe.plateRect.setAttribute("y", r.y);
+        fe.plateRect.setAttribute("width", r.w); fe.plateRect.setAttribute("height", r.h);
+        fe.plateRect.setAttribute("opacity", 1);
+        fe.plateText.setAttribute("x", r.x + r.w / 2);
+        fe.plateText.setAttribute("y", r.y + CONFIG.labelPadY + CONFIG.labelSize * CONFIG.labelTextBaselineFactor);
+        fe.plateText.setAttribute("opacity", 1);
+      } else {
+        fe.plateRect.setAttribute("opacity", 0); fe.plateText.setAttribute("opacity", 0);
+      }
+    });
+    plate.style.opacity = plateUp ? 1 : 0;
+    if(t >= DUR){ playing = false; }
+  }
+  function frame(now){
+    if(!playing) return;
+    if(startStamp === null) startStamp = now - pausedAt;
+    const t = now - startStamp;
+    if(t >= DUR){ render(DUR); playing = false; return; }
+    render(t);
+    rafId = requestAnimationFrame(frame);
+  }
+  window.__T54 = {
+    seek: function(ms){ pausedAt = Math.max(0, Math.min(DUR, ms)); startStamp = null; render(pausedAt); },
+    play: function(){ if(!playing){ playing = true; rafId = requestAnimationFrame(frame); } },
+    pause: function(){ if(playing){ playing = false;
+      if(rafId) cancelAnimationFrame(rafId);
+      if(startStamp !== null){ pausedAt = performance.now() - startStamp; startStamp = null; } } },
+    render: render
+  };
+  render(0);
+  if(CONFIG.autoplayOnLoad) window.__T54.play();
+}
+</script>
+</body>
+</html>
