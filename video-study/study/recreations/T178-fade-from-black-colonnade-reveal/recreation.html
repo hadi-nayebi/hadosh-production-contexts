@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T178 — fade-from-black colonnade reveal, parameterized recreation</title>
+<style>
+  html, body { margin:0; padding:0; background:#000; height:100%; }
+  #stage { position:relative; width:100%; max-width:960px; margin:0 auto; aspect-ratio:16/9; overflow:hidden; background:#000; }
+  #stage svg { display:block; width:100%; height:100%; }
+  #overlay { position:absolute; inset:0; background:#000; pointer-events:none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="sceneSvg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <g id="scene"></g>
+  </svg>
+  <div id="overlay"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every subject-shaping value lives here (A9.6) ===== */
+const CONFIG = {
+  blackHoldMs: 300,
+  fadeMs: 350,
+  durationMs: 3040,
+  settleScaleFrom: 1.045,
+  fadeEasing: "easeInOutCubic",
+  columnCount: 2,
+  textileColor: "#b3402a",
+  textileStrands: 26,
+  interiorColor: "#17130f",
+  columnColor: "#ddd3bd",
+  tableColor: "#cfc8b4",
+  accentLabel: "colonnade"
+};
+
+/* ===== Easing — resolved through CONFIG.fadeEasing (§2c.2) ===== */
+const EASINGS = {
+  easeInOutCubic: function (x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; },
+  linear: function (x) { return x; },
+  easeOutQuad: function (x) { return 1 - (1 - x) * (1 - x); }
+};
+function easingFor(cfg) { return EASINGS[cfg.fadeEasing] || EASINGS.easeInOutCubic; }
+function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+/* ===== Phase functions (§2c.2 — pure functions of CONFIG) ===== */
+function overlayOpacityAt(t, cfg) {
+  if (t < cfg.blackHoldMs) return 1;
+  if (t >= cfg.blackHoldMs + cfg.fadeMs) return 0;
+  const p = (t - cfg.blackHoldMs) / cfg.fadeMs;
+  return 1 - easingFor(cfg)(clamp01(p));
+}
+function scaleAt(t, cfg) {
+  if (t < cfg.blackHoldMs) return cfg.settleScaleFrom;
+  if (t >= cfg.blackHoldMs + cfg.fadeMs) return 1;
+  const p = (t - cfg.blackHoldMs) / cfg.fadeMs;
+  return cfg.settleScaleFrom + (1 - cfg.settleScaleFrom) * easingFor(cfg)(clamp01(p));
+}
+function phaseAt(t, cfg) {
+  if (t < cfg.blackHoldMs) return "black-hold";
+  if (t < cfg.blackHoldMs + cfg.fadeMs) return "fade";
+  return "revealed";
+}
+function stateAtWith(cfg, t) {
+  return { t: t, phase: phaseAt(t, cfg), overlayOpacity: overlayOpacityAt(t, cfg), scale: scaleAt(t, cfg), accentLabel: cfg.accentLabel, textileStrands: cfg.textileStrands, textileColor: cfg.textileColor };
+}
+function stateAt(t) { return stateAtWith(CONFIG, t); }
+
+/* ===== Scene construction (code-drawn from CONFIG; no external assets) ===== */
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(name, attrs) {
+  const n = document.createElementNS(SVGNS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+function buildScene(cfg) {
+  const g = document.getElementById("scene");
+  while (g.firstChild) g.removeChild(g.firstChild);
+  const W = 960, H = 540;
+  // dark interior
+  g.appendChild(el("rect", { x: 0, y: 0, width: W, height: H, fill: cfg.interiorColor }));
+  // back wall shading band
+  g.appendChild(el("rect", { x: 0, y: 0, width: W, height: 120, fill: "#000000", opacity: 0.35 }));
+  // white-clothed tables inside (stylized shapes)
+  const tables = [ {x:330,y:360,w:130,h:44}, {x:520,y:385,w:150,h:50}, {x:430,y:320,w:100,h:36} ];
+  for (const tb of tables) {
+    g.appendChild(el("rect", { x: tb.x, y: tb.y, width: tb.w, height: tb.h, rx: 6, fill: cfg.tableColor, opacity: 0.92 }));
+    g.appendChild(el("rect", { x: tb.x + tb.w/2 - 6, y: tb.y + tb.h, width: 12, height: 34, fill: cfg.tableColor, opacity: 0.6 }));
+  }
+  // thin tree trunk (centre-right, beside the textile)
+  g.appendChild(el("rect", { x: 646, y: 90, width: 9, height: 330, fill: "#3a2c1e" }));
+  g.appendChild(el("line", { x1: 650, y1: 120, x2: 606, y2: 66, stroke: "#3a2c1e", "stroke-width": 6 }));
+  g.appendChild(el("line", { x1: 650, y1: 110, x2: 700, y2: 60, stroke: "#3a2c1e", "stroke-width": 6 }));
+  // hanging red textile — strand lines, count from CONFIG
+  const tx = 560, tw = 120, top = 96, len = 235;
+  g.appendChild(el("rect", { x: tx - 10, y: top - 12, width: tw + 20, height: 10, fill: "#5a4632" }));
+  for (let i = 0; i < cfg.textileStrands; i++) {
+    const fx = cfg.textileStrands === 1 ? tx + tw / 2 : tx + (tw * i) / (cfg.textileStrands - 1);
+    const sway = Math.sin(i * 1.7) * 7;
+    g.appendChild(el("line", { x1: fx, y1: top, x2: fx + sway, y2: top + len + Math.cos(i * 2.3) * 9, stroke: cfg.textileColor, "stroke-width": 3.4, "stroke-linecap": "round", opacity: 0.95 }));
+  }
+  // pale columns — count from CONFIG, evenly spaced across the frame
+  for (let c = 0; c < cfg.columnCount; c++) {
+    const cx = cfg.columnCount === 1 ? 130 : 120 + c * 620;
+    g.appendChild(el("rect", { x: cx - 52, y: 26, width: 104, height: 30, fill: cfg.columnColor }));
+    g.appendChild(el("rect", { x: cx - 40, y: 56, width: 80, height: 400, fill: cfg.columnColor }));
+    g.appendChild(el("rect", { x: cx - 52, y: 456, width: 104, height: 30, fill: cfg.columnColor }));
+    g.appendChild(el("rect", { x: cx - 40, y: 56, width: 16, height: 400, fill: "#000000", opacity: 0.14 }));
+  }
+  return g;
+}
+
+/* ===== Clock (requestAnimationFrame; __rec API for comparison sync) ===== */
+let clockMs = 0, playing = false, lastTs = null, rafId = null;
+function render() {
+  const s = stateAt(clockMs);
+  document.getElementById("overlay").style.opacity = String(s.overlayOpacity);
+  const g = document.getElementById("scene");
+  g.setAttribute("transform", "translate(480 270) scale(" + s.scale.toFixed(5) + ") translate(-480 -270)");
+}
+function tick(ts) {
+  if (!playing) return;
+  if (lastTs === null) lastTs = ts;
+  clockMs += ts - lastTs;
+  lastTs = ts;
+  if (clockMs >= CONFIG.durationMs) { clockMs = CONFIG.durationMs; playing = false; render(); return; }
+  render();
+  rafId = requestAnimationFrame(tick);
+}
+window.__rec = {
+  play: function () { if (!playing) { playing = true; lastTs = null; rafId = requestAnimationFrame(tick); } },
+  pause: function () { playing = false; if (rafId) cancelAnimationFrame(rafId); },
+  seek: function (t) { clockMs = Math.max(0, Math.min(CONFIG.durationMs, t)); render(); },
+  time: function () { return clockMs; }
+};
+window.__config = CONFIG;
+window.stateAt = stateAt;
+window.stateAtWith = stateAtWith;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, stateAt: stateAt, stateAtWith: stateAtWith, overlayOpacityAt: overlayOpacityAt, scaleAt: scaleAt };
+}
+if (typeof document !== "undefined" && document.getElementById) {
+  buildScene(CONFIG);
+  render();
+}
+</script>
+</body>
+</html>

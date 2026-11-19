@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T170 — Comparison: Vertical name-roll ticker</title>
+<style>
+  body{margin:0;background:#181818;color:#eee;font-family:Arial,Helvetica,sans-serif;padding:12px;}
+  h1{font-size:18px;margin:4px 0 10px;}
+  .note{font-size:14px;color:#ccc;max-width:900px;line-height:1.45;}
+  .row{display:flex;gap:16px;flex-wrap:wrap;}
+  .side{flex:1 1 320px;min-width:280px;}
+  .side h2{font-size:15px;margin:6px 0;}
+  video,iframe{width:100%;aspect-ratio:1/1;background:#000;border:1px solid #444;display:block;}
+  iframe{border:1px solid #444;}
+  .controls{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap;}
+  button{min-height:44px;min-width:44px;padding:10px 18px;font-size:16px;cursor:pointer;}
+  #clock{font-size:14px;color:#ccc;align-self:center;}
+  @media (max-width:700px){ .row{flex-direction:column;} }
+</style>
+</head>
+<body>
+<h1>T170 — Vertical name-roll ticker</h1>
+<p class="note">NOTE: the recreation isolates the footer device; the original's network is other techniques' subject. Both sides run the full loop; the recreation clock is slaved to the video clock (recreationMs = videoMs, segment-anchored).</p>
+<div class="controls">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnPause" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+  <span id="clock">0.00 s</span>
+</div>
+<div class="row">
+  <div class="side">
+    <h2>ORIGINAL — SixMap (nez&amp;pez) @ throughout (full loop)</h2>
+    <video id="orig" src="segment.mp4" loop muted playsinline preload="auto"></video>
+  </div>
+  <div class="side">
+    <h2>RECREATION — T170 Vertical name-roll ticker, parameterized</h2>
+    <iframe id="rec" src="recreation.html" title="T170 recreation"></iframe>
+  </div>
+</div>
+<script>
+"use strict";
+var video = document.getElementById("orig");
+var rec = document.getElementById("rec");
+var clock = document.getElementById("clock");
+var raf = null;
+function sync() {
+  var ms = video.currentTime * 1000;
+  clock.textContent = video.currentTime.toFixed(2) + " s";
+  try {
+    if (rec.contentWindow && rec.contentWindow.__seek) rec.contentWindow.__seek(ms);
+  } catch (e) { /* iframe not ready yet */ }
+  raf = requestAnimationFrame(sync);
+}
+function startSync() { if (raf === null) raf = requestAnimationFrame(sync); }
+function stopSync() { if (raf !== null) cancelAnimationFrame(raf); raf = null; }
+document.getElementById("btnPlay").addEventListener("click", function () { video.play(); startSync(); });
+document.getElementById("btnPause").addEventListener("click", function () { video.pause(); stopSync(); sync(); });
+document.getElementById("btnRestart").addEventListener("click", function () { video.currentTime = 0; video.play(); startSync(); });
+rec.addEventListener("load", function () { sync(); });
+video.addEventListener("seeked", sync);
+</script>
+</body>
+</html>

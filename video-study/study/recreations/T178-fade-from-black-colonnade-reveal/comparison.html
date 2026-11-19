@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T178 comparison — fade-from-black colonnade reveal</title>
+<style>
+  body { margin:0; padding:16px; background:#111; color:#eee; font-family:system-ui, sans-serif; }
+  .row { display:flex; gap:16px; align-items:flex-start; }
+  .side { flex:1; min-width:0; }
+  .side video, .side iframe { width:100%; aspect-ratio:16/9; border:0; background:#000; display:block; }
+  .label { font-size:14px; margin:0 0 8px; }
+  .controls { margin:16px 0; display:flex; gap:10px; }
+  .controls button { min-height:44px; min-width:88px; font-size:15px; cursor:pointer; }
+  @media (max-width: 640px) {
+    .row { flex-direction:column; }
+    .side { width:100%; }
+  }
+</style>
+</head>
+<body>
+<div class="controls">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnPause" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+</div>
+<div class="row">
+  <div class="side">
+    <p class="label">ORIGINAL — Watchtower of Turkey @ 0.00–3.04</p>
+    <video id="origVideo" src="segment.mp4" preload="auto" playsinline></video>
+  </div>
+  <div class="side">
+    <p class="label">RECREATION — T178 fade-from-black colonnade reveal, parameterized</p>
+    <iframe id="recFrame" src="recreation.html" title="T178 recreation"></iframe>
+  </div>
+</div>
+<script>
+"use strict";
+var video = document.getElementById("origVideo");
+var frame = document.getElementById("recFrame");
+function rec() { return frame.contentWindow && frame.contentWindow.__rec; }
+function syncRec() { var r = rec(); if (r) r.seek(video.currentTime * 1000); }
+function syncLoop() { syncRec(); if (!video.paused && !video.ended) requestAnimationFrame(syncLoop); }
+document.getElementById("btnPlay").addEventListener("click", function () { video.play(); var r = rec(); if (r) r.play(); requestAnimationFrame(syncLoop); });
+document.getElementById("btnPause").addEventListener("click", function () { video.pause(); var r = rec(); if (r) r.pause(); syncRec(); });
+document.getElementById("btnRestart").addEventListener("click", function () { video.currentTime = 0; var r = rec(); if (r) { r.seek(0); r.play(); } video.play(); requestAnimationFrame(syncLoop); });
+video.addEventListener("timeupdate", syncRec);
+video.addEventListener("seeked", syncRec);
+video.addEventListener("ended", function () { var r = rec(); if (r) r.pause(); });
+</script>
+</body>
+</html>

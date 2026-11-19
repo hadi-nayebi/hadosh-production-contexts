@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T18 — Keynote stage + heckler chat · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:#030305}
+  body{display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+  #stage{position:relative;width:100%;height:100%;min-height:240px;overflow:hidden}
+  #screenWrap{position:absolute;left:4%;right:4%;top:5%;height:72%;transform-origin:50% 50%}
+  #screen{position:absolute;inset:0;border-radius:18px/28px;overflow:hidden;
+         box-shadow:0 0 60px rgba(80,90,160,.35) inset,0 6px 30px rgba(0,0,0,.8);
+         transform:perspective(900px) rotateX(2deg)}
+  #titleWrap{position:absolute;left:5%;top:16%;width:62%}
+  .tline{font-weight:900;line-height:1.04;letter-spacing:.01em;white-space:normal;word-break:break-word}
+  .tline .word{position:relative;display:inline-block;padding:0 .08em}
+  .tline .hlbar{position:absolute;left:0;top:8%;height:84%;z-index:-1}
+  #statWrap{position:absolute;left:5%;bottom:6%;display:flex;gap:3%}
+  .stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:4px 8px;text-align:center}
+  .stat .v{font-weight:900;font-size:clamp(13px,3.2vw,26px)}
+  .stat .l{font-size:clamp(7px,1.4vw,10px);letter-spacing:.14em;opacity:.75}
+  #counter{position:absolute;right:4%;bottom:6%;font-weight:700;font-size:clamp(10px,2vw,16px);opacity:.9}
+  #chatWrap{position:absolute;right:3%;top:10%;width:29%;display:flex;flex-direction:column;gap:6px}
+  .chat{border-radius:8px;padding:5px 7px;transform-origin:80% 50%}
+  .chat .meta{font-size:clamp(6px,1.3vw,9px);opacity:.75;margin-bottom:2px;display:flex;align-items:center;gap:4px}
+  .avatar{width:1.5em;height:1.5em;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex:0 0 auto}
+  .chat .txt{font-size:clamp(8px,1.9vw,13px);line-height:1.25}
+  #spot{position:absolute;left:50%;bottom:13%;width:16%;height:5%;transform:translateX(-50%);border-radius:50%}
+  #speaker{position:absolute;left:50%;bottom:15%;width:3.2%;min-width:14px;transform:translateX(-50%)}
+  #speaker .head{width:60%;aspect-ratio:1;border-radius:50%;margin:0 auto}
+  #speaker .body{width:100%;height:14px;border-radius:7px 7px 0 0;margin-top:2px}
+  #audience{position:absolute;left:0;right:0;bottom:1.5%;height:9%;display:flex;flex-wrap:wrap;gap:3px;justify-content:center;overflow:hidden;padding:0 2%}
+  .aud{width:9px;height:9px;border-radius:50%;opacity:.5}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="screenWrap"><div id="screen">
+    <div id="titleWrap"></div>
+    <div id="statWrap"></div>
+    <div id="counter"></div>
+    <div id="chatWrap"></div>
+  </div></div>
+  <div id="spot"></div>
+  <div id="speaker"><div class="head"></div><div class="body"></div></div>
+  <div id="audience"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable lives here; logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: title lines, chat pops and hard cuts are decided by
+   explicit checkpoint tables in CONFIG, never by hardcoded branches in the logic. */
+const CONFIG = {
+  durationMs: 15000,
+  titleLines: ["THE GREATEST TRANSFORMATION", "IN HUMAN", "HISTORY"],
+  titleTimesMs: [600, 3400, 6200],
+  highlightMs: 700,
+  highlightColor: "#f5c518",
+  highlightWordIndex: 1,
+  titleColor: "#ffffff",
+  titleSizeVw: 5.2,
+  statCards: [{label:"MINUTES", value:"18"}, {label:"SLIDES", value:"0"}],
+  slideCounter: "2 / 40",
+  chatMessages: [
+    {sender:"You", time:"9:19", text:"the file?", color:"#2f6fed", tMs:1200},
+    {sender:"Sam", time:"9:38", text:"he's buffering", color:"#3aa655", tMs:4200},
+    {sender:"Priya", time:"9:38", text:"It's a pause. for effect", color:"#7b4fd0", tMs:7400},
+    {sender:"Ted", time:"9:40", text:"Great point, will circle back on this!", color:"#e07b2a", tMs:10600}
+  ],
+  cutTimesMs: [0, 2400, 4850, 7300, 9700, 12150],
+  framings: [
+    {scale:1.00, x:0, y:0},
+    {scale:1.10, x:-2, y:1},
+    {scale:0.94, x:1, y:0},
+    {scale:1.16, x:2, y:-1},
+    {scale:1.04, x:-1, y:1},
+    {scale:1.22, x:0, y:-2}
+  ],
+  bg: "#030305",
+  screenBg: "#101426",
+  chatBg: "rgba(18,20,34,0.88)",
+  chatColor: "#eef1f8",
+  speakerColor: "#05060a",
+  spotColor: "rgba(255,230,160,0.35)",
+  audienceColor: "#2a2e44",
+  audienceCount: 90
+};
+
+/* URL overrides: ?titles=A|B|C · ?chats=x;y · ?highlight=%23ff00aa · ?durationMs=12000
+   ?titleMs=600,3000,6000 · ?chatMs=1000,4000,7000,10000 · ?cutMs=0,2000,4000,6000,8000,10000 · ?screen=%231a1030 */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (num("durationMs") !== null) CONFIG.durationMs = Math.max(1000, num("durationMs"));
+  if (q.get("titles")) CONFIG.titleLines = q.get("titles").split("|");
+  if (q.get("chats")) {
+    const parts = q.get("chats").split(";");
+    CONFIG.chatMessages = CONFIG.chatMessages.map((m,i)=> parts[i] ? Object.assign({}, m, {text:parts[i]}) : m);
+  }
+  if (q.get("highlight")) CONFIG.highlightColor = q.get("highlight");
+  if (q.get("screen")) CONFIG.screenBg = q.get("screen");
+  if (q.get("title")) CONFIG.titleColor = q.get("title");
+  const list = (k) => q.get(k) ? q.get(k).split(",").map(Number).filter(isFinite) : null;
+  const tm = list("titleMs"); if (tm && tm.length) CONFIG.titleTimesMs = tm;
+  const cm = list("cutMs"); if (cm && cm.length) CONFIG.cutTimesMs = cm;
+  const chm = list("chatMs"); if (chm && chm.length) CONFIG.chatMessages = CONFIG.chatMessages.map((m,i)=> chm[i]!==undefined ? Object.assign({}, m, {tMs:chm[i]}) : m);
+})();
+
+/* Pure state from time — checkpoint tables decide everything. */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const titleVisible = cfg.titleLines.map((_,i)=> t >= (cfg.titleTimesMs[i]||0));
+  let highlightLine = -1, highlightProgress = 0;
+  for (let i=0;i<cfg.titleLines.length;i++){
+    const start = cfg.titleTimesMs[i]||0;
+    if (t >= start && t < start + cfg.highlightMs){ highlightLine = i; highlightProgress = (t-start)/cfg.highlightMs; }
+  }
+  const chatVisible = cfg.chatMessages.map(m=> t >= m.tMs);
+  let cutIndex = -1;
+  for (let i=0;i<cfg.cutTimesMs.length;i++){ if (cfg.cutTimesMs[i] <= t) cutIndex = i; else break; }
+  const framing = cfg.framings[Math.max(0,cutIndex) % cfg.framings.length];
+  return {t:t, titleVisible:titleVisible, highlightLine:highlightLine, highlightProgress:highlightProgress,
+          chatVisible:chatVisible, cutIndex:cutIndex, cutCount:cfg.cutTimesMs.length, framing:framing};
+}
+
+const stage = document.getElementById("stage");
+const screenWrap = document.getElementById("screenWrap");
+const screenEl = document.getElementById("screen");
+const titleWrap = document.getElementById("titleWrap");
+const statWrap = document.getElementById("statWrap");
+const counterEl = document.getElementById("counter");
+const chatWrap = document.getElementById("chatWrap");
+document.body.style.background = CONFIG.bg;
+stage.style.background = CONFIG.bg;
+screenEl.style.background = CONFIG.screenBg;
+document.getElementById("spot").style.background = CONFIG.spotColor;
+
+const hlBars = [];
+const titleEls = CONFIG.titleLines.map(function(line, li){
+  const d = document.createElement("div"); d.className = "tline";
+  d.style.color = CONFIG.titleColor; d.style.fontSize = "clamp(13px," + CONFIG.titleSizeVw + "vw,44px)";
+  line.split(" ").forEach(function(w, wi){
+    const s = document.createElement("span"); s.className = "word"; s.textContent = w;
+    const isHl = (li === 0 && wi === CONFIG.highlightWordIndex) || (li === 1 && wi === 0);
+    if (isHl){
+      const h = document.createElement("span"); h.className = "hlbar"; h.style.background = CONFIG.highlightColor; h.style.width = "0%";
+      s.appendChild(h); hlBars.push({line:li, bar:h, word:s});
+    }
+    d.appendChild(s); d.appendChild(document.createTextNode(" "));
+  });
+  d.style.display = "none"; titleWrap.appendChild(d); return d;
+});
+CONFIG.statCards.forEach(function(c){
+  const d = document.createElement("div"); d.className = "stat"; d.style.color = CONFIG.titleColor;
+  const v = document.createElement("div"); v.className = "v"; v.textContent = c.value;
+  const l = document.createElement("div"); l.className = "l"; l.textContent = c.label;
+  d.appendChild(l); d.appendChild(v); statWrap.appendChild(d);
+});
+counterEl.textContent = CONFIG.slideCounter; counterEl.style.color = CONFIG.titleColor;
+
+const chatEls = CONFIG.chatMessages.map(function(m){
+  const d = document.createElement("div"); d.className = "chat";
+  d.style.background = CONFIG.chatBg; d.style.color = CONFIG.chatColor;
+  const meta = document.createElement("div"); meta.className = "meta";
+  const av = document.createElement("span"); av.className = "avatar"; av.style.background = m.color; av.textContent = m.sender.charAt(0);
+  const who = document.createElement("span"); who.textContent = m.sender + " " + m.time;
+  meta.appendChild(av); meta.appendChild(who);
+  const txt = document.createElement("div"); txt.className = "txt"; txt.textContent = m.text;
+  d.appendChild(meta); d.appendChild(txt); d.style.display = "none"; chatWrap.appendChild(d); return d;
+});
+const spk = document.getElementById("speaker");
+spk.children[0].style.background = CONFIG.speakerColor; spk.children[1].style.background = CONFIG.speakerColor;
+const aud = document.getElementById("audience");
+for (let i=0;i<CONFIG.audienceCount;i++){ const a=document.createElement("div"); a.className="aud"; a.style.background=CONFIG.audienceColor; aud.appendChild(a); }
+
+let lastKey = "";
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  s.titleVisible.forEach(function(v,i){ titleEls[i].style.display = v ? "block" : "none"; });
+  hlBars.forEach(function(h){
+    h.bar.style.width = (h.line === s.highlightLine ? Math.round(s.highlightProgress*100) : 0) + "%";
+    const swept = s.titleVisible[h.line] && s.t >= (CONFIG.titleTimesMs[h.line]||0) + CONFIG.highlightMs;
+    h.word.style.color = swept ? CONFIG.highlightColor : CONFIG.titleColor;
+  });
+  s.chatVisible.forEach(function(v,i){
+    chatEls[i].style.display = v ? "block" : "none";
+    if (v){ const age = s.t - CONFIG.chatMessages[i].tMs; const sc = age < 220 ? (0.8 + 0.2*(age/220)) : 1; chatEls[i].style.transform = "scale(" + sc.toFixed(3) + ")"; }
+  });
+  const f = s.framing;
+  screenWrap.style.transform = "scale(" + f.scale + ") translate(" + f.x + "%, " + f.y + "%)";
+  return s;
+}
+
+let playing=false, startStamp=0, pausedAt=0, rafId=null;
+function nowMs(){ return (typeof performance!=="undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if(!playing) return; render(nowMs()-startStamp); rafId=requestAnimationFrame(tick); }
+function play(){ if(playing) return; playing=true; startStamp=nowMs()-pausedAt; tick(); }
+function pause(){ if(!playing) return; pausedAt=nowMs()-startStamp; playing=false; if(rafId) cancelAnimationFrame(rafId); rafId=null; }
+function restart(){ pausedAt=0; if(playing){ startStamp=nowMs(); } else { render(0); } }
+window.addEventListener("message", function(e){
+  if(!e.data || typeof e.data!=="object") return;
+  if(e.data.cmd==="play") play();
+  if(e.data.cmd==="pause") pause();
+  if(e.data.cmd==="restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

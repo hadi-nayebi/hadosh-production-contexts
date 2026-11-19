@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T18 — Keynote stage + heckler chat · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:#030305}
+  body{display:flex;align-items:center;justify-content:center;font-family:var(--t18-font,Arial,Helvetica,sans-serif);overflow:hidden}
+  #stage{position:relative;width:100%;height:100%;min-height:240px;overflow:hidden}
+  #world{position:absolute;inset:0;transform-origin:50% 50%}
+  #screenWrap{position:absolute;transform-origin:50% 50%}
+  #screen{position:absolute;inset:0;border-radius:var(--t18-screen-radius,18px/28px);overflow:hidden;
+         box-shadow:0 0 60px rgba(80,90,160,.35) inset,0 6px 30px rgba(0,0,0,.8);
+         transform:perspective(900px) rotateX(2deg)}
+  #titleWrap{position:absolute}
+  .tline{font-weight:var(--t18-title-weight,900);line-height:var(--t18-title-lh,1.04);letter-spacing:var(--t18-title-ls,.01em);white-space:normal;word-break:break-word}
+  .tline .word{position:relative;display:inline-block;padding:0 .08em}
+  .tline .hlbar{position:absolute;left:0;top:var(--t18-hl-top,8%);height:var(--t18-hl-height,84%);z-index:-1}
+  #statWrap{position:absolute;display:flex}
+  .stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:var(--t18-stat-radius,6px);padding:var(--t18-stat-pad,4px 8px);text-align:center}
+  .stat .v{font-weight:900}
+  .stat .l{letter-spacing:.14em;opacity:.75}
+  #counter{position:absolute;font-weight:700;opacity:.9}
+  #chatWrap{position:absolute;display:flex;flex-direction:column}
+  .chat{border-radius:var(--t18-chat-radius,8px);padding:var(--t18-chat-pad,5px 7px);transform-origin:80% 50%}
+  .chat .meta{opacity:.75;margin-bottom:2px;display:flex;align-items:center;gap:4px}
+  .avatar{width:1.5em;height:1.5em;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex:0 0 auto}
+  .chat .txt{line-height:var(--t18-chat-lh,1.25)}
+  #spot{position:absolute;border-radius:50%}
+  #speaker{position:absolute}
+  #speaker .head{width:60%;aspect-ratio:1;border-radius:50%;margin:0 auto}
+  #speaker .body{width:100%;height:14px;border-radius:7px 7px 0 0;margin-top:2px}
+  #audience{position:absolute;display:flex;flex-wrap:wrap;gap:var(--t18-aud-gap,3px);justify-content:center;overflow:hidden}
+  .aud{width:var(--t18-aud-size,9px);height:var(--t18-aud-size,9px);border-radius:50%;opacity:var(--t18-aud-opacity,.5)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <div id="screenWrap"><div id="screen">
+      <div id="titleWrap"></div>
+      <div id="statWrap"></div>
+      <div id="counter"></div>
+      <div id="chatWrap"></div>
+    </div></div>
+    <div id="spot"></div>
+    <div id="speaker"><div class="head"></div><div class="body"></div></div>
+    <div id="audience"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable lives here; logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: title lines, highlight targets, chat pops and hard cuts
+   are complete records in CONFIG, validated by validateConfig() before use.
+   ADJACENCY DECISION (priced): the chat at 7400ms follows the cut at 7300ms by 100ms.
+   DECISION: RETAIN the 100ms adjacency — the cut is a whole-stage framing change and
+   the pop is screen content; state at 7350ms (new framing, chat not yet visible) and at
+   7450ms (chat visible, pop priced from CONFIG) keeps the two events distinguishable.
+   LOOP BOUNDARY: the final cut (13850ms) lands on a near-initial wide framing; the wrap
+   at durationMs is itself a designed cut back to initialFraming while content resets —
+   a cut to a fresh take of the stage, not a wipe (framing discontinuity is asserted).
+   SHORT-DURATION POLICY: REJECT — a config whose events do not fit inside durationMs
+   (with minTailMs after the last event) fails validation; an invalid URL override is
+   rejected whole and the last valid CONFIG stands (window.__overrideErrors records it). */
+const CONFIG = {
+  durationMs: 15000,
+  minTailMs: 400,
+  titleLines: [
+    {text:"THE GREATEST TRANSFORMATION", tMs:600},
+    {text:"IN HUMAN", tMs:3400},
+    {text:"HISTORY", tMs:6200}
+  ],
+  highlightTargets: [
+    {lineIndex:0, wordIndex:1},
+    {lineIndex:1, wordIndex:0},
+    {lineIndex:2, wordIndex:0}
+  ],
+  highlightMs: 700,
+  highlightColor: "#f5c518",
+  sweepTextColor: "#141414",
+  titleColor: "#ffffff",
+  titleSizeVw: 5.2, titleMinPx: 16, titleMaxPx: 44,
+  chatTextMinPx: 11, chatTextVw: 3.1, chatTextMaxPx: 14,
+  metaMinPx: 9, metaVw: 2.6, metaMaxPx: 11,
+  statValueMinPx: 14, statValueVw: 3.4, statValueMaxPx: 26,
+  statLabelMinPx: 9, statLabelVw: 2.4, statLabelMaxPx: 11,
+  counterMinPx: 11, counterVw: 2.8, counterMaxPx: 16,
+  layout: {screenLeftPct:2, screenRightPct:2, screenTopPct:4, screenHeightPct:74,
+           titleLeftPct:5, titleTopPct:14, titleWidthPct:52,
+           chatRightPct:3, chatTopPct:9, chatWidthPct:36, chatGapPx:6,
+           statLeftPct:5, statBottomPct:6, statGapPct:3,
+           counterRightPct:4, counterBottomPct:6,
+           spotLeftPct:50, spotBottomPct:13, spotWidthPct:16, spotHeightPct:5,
+           speakerLeftPct:50, speakerBottomPct:15, speakerWidthPct:3.2, speakerMinPx:14,
+           audienceBottomPct:1.5, audienceHeightPct:9, audiencePadPct:2},
+  statCards: [{label:"MINUTES", value:"18"}, {label:"SLIDES", value:"0"}],
+  slideCounter: "2 / 40",
+  chatMessages: [
+    {sender:"You", time:"9:19", text:"the file?", color:"#2f6fed", tMs:1200},
+    {sender:"Sam", time:"9:38", text:"he's buffering", color:"#3aa655", tMs:4200},
+    {sender:"Priya", time:"9:38", text:"It's a pause. for effect", color:"#7b4fd0", tMs:7400},
+    {sender:"Ted", time:"9:40", text:"Great point, will circle back on this!", color:"#e07b2a", tMs:10600}
+  ],
+  chatPopMs: 220, chatPopFrom: 0.8, chatPopTo: 1,
+  initialFraming: {scale:1.00, x:0, y:0, speakerXPct:0, spotScale:1.00, audienceShiftPct:0},
+  cuts: [
+    {tMs:2400,  scale:1.03, x:-1, y:0,  speakerXPct:-9, spotScale:1.18, audienceShiftPct:-4},
+    {tMs:4850,  scale:0.95, x:1,  y:1,  speakerXPct:8,  spotScale:0.84, audienceShiftPct:4},
+    {tMs:7300,  scale:1.04, x:-1, y:-1, speakerXPct:-11, spotScale:1.24, audienceShiftPct:-5},
+    {tMs:9700,  scale:0.98, x:2,  y:0,  speakerXPct:10, spotScale:0.92, audienceShiftPct:3},
+    {tMs:12150, scale:1.02, x:0,  y:-2, speakerXPct:-6, spotScale:1.14, audienceShiftPct:-2},
+    {tMs:13850, scale:0.99, x:0,  y:0,  speakerXPct:-2, spotScale:0.94, audienceShiftPct:0}
+  ],
+  contentBoundsPct: {left:2, right:98, top:3, bottom:99},
+  framingMinDelta: 0.04,
+  capacity: {maxTitleLines:6, maxMessages:8, maxCuts:12, maxStatCards:4},
+  detail: {fontFamily:"Arial,Helvetica,sans-serif", titleWeight:900, titleLineHeight:1.04, titleLetterSpacing:".01em",
+           hlTopPct:8, hlHeightPct:84, screenRadius:"18px/28px", chatPadding:"5px 7px", chatRadiusPx:8,
+           chatLineHeight:1.25, statPadding:"4px 8px", statRadiusPx:6, audSizePx:9, audGapPx:3, audOpacity:0.5},
+  bg: "#030305",
+  screenBg: "#101426",
+  chatBg: "rgba(18,20,34,0.88)",
+  chatColor: "#eef1f8",
+  speakerColor: "#05060a",
+  spotColor: "rgba(255,230,160,0.35)",
+  audienceColor: "#2a2e44",
+  audienceCount: 90
+};
+
+/* ===== Validation — complete records, ordered checkpoints, in-range, length-checked =====
+   Shared tokenization: validation and construction split title text identically. */
+function tokenizeWords(text){ return String(text == null ? "" : text).split(" ").filter(Boolean); }
+function isNum(v){ return typeof v === "number" && isFinite(v); }
+function validateConfig(cfg){
+  const errs = [];
+  if (!cfg || typeof cfg !== "object" || Array.isArray(cfg)) return ["config not an object"];
+  if (!isNum(cfg.durationMs) || cfg.durationMs <= 0) errs.push("durationMs must be a positive number");
+  if (!isNum(cfg.minTailMs) || cfg.minTailMs < 0) errs.push("minTailMs must be a non-negative number");
+  if (!isNum(cfg.highlightMs) || cfg.highlightMs <= 0) errs.push("highlightMs must be positive");
+  if (!isNum(cfg.chatPopMs) || cfg.chatPopMs <= 0) errs.push("chatPopMs must be positive");
+  if (!isNum(cfg.chatPopFrom) || !isNum(cfg.chatPopTo) || cfg.chatPopFrom === cfg.chatPopTo) errs.push("chatPop endpoints must be two distinct numbers");
+  if (!Number.isInteger(cfg.audienceCount) || cfg.audienceCount < 0) errs.push("audienceCount must be a non-negative integer");
+  if (!cfg.capacity || !Number.isInteger(cfg.capacity.maxTitleLines) || !Number.isInteger(cfg.capacity.maxMessages) ||
+      !Number.isInteger(cfg.capacity.maxCuts) || !Number.isInteger(cfg.capacity.maxStatCards))
+    errs.push("capacity limits must be integers");
+  if (!Array.isArray(cfg.statCards)) errs.push("statCards must be an array");
+  else {
+    if (cfg.capacity && cfg.statCards.length > cfg.capacity.maxStatCards) errs.push("statCards exceed capacity (ill-fit policy: reject)");
+    cfg.statCards.forEach(function(c, i){
+      if (!c || typeof c.label !== "string" || !c.label || typeof c.value !== "string" || !c.value) errs.push("statCards[" + i + "] needs label+value strings");
+    });
+  }
+  if (cfg.layout) Object.keys(cfg.layout).forEach(function(k){ if (!isNum(cfg.layout[k])) errs.push("layout." + k + " not a number"); });
+  if (!cfg.contentBoundsPct || !isNum(cfg.contentBoundsPct.left) || !isNum(cfg.contentBoundsPct.right) ||
+      !isNum(cfg.contentBoundsPct.top) || !isNum(cfg.contentBoundsPct.bottom) ||
+      cfg.contentBoundsPct.right <= cfg.contentBoundsPct.left || cfg.contentBoundsPct.bottom <= cfg.contentBoundsPct.top)
+    errs.push("contentBoundsPct must be a valid ordered rect");
+  if (!Array.isArray(cfg.titleLines) || cfg.titleLines.length < 1) errs.push("titleLines must be a non-empty array");
+  else {
+    if (cfg.capacity && cfg.titleLines.length > cfg.capacity.maxTitleLines) errs.push("titleLines exceed capacity (ill-fit policy: reject)");
+    let prev = -1;
+    cfg.titleLines.forEach(function(L, i){
+      if (!L || typeof L !== "object") { errs.push("titleLines[" + i + "] not a record"); return; }
+      if (typeof L.text !== "string" || !L.text.trim()) errs.push("titleLines[" + i + "].text missing");
+      if (!isNum(L.tMs)) errs.push("titleLines[" + i + "].tMs not a number");
+      else {
+        if (L.tMs < 0 || L.tMs >= cfg.durationMs) errs.push("titleLines[" + i + "].tMs out of range");
+        if (L.tMs <= prev) errs.push("titleLines tMs must be strictly increasing (index " + i + ")");
+        prev = L.tMs;
+      }
+    });
+  }
+  if (!Array.isArray(cfg.highlightTargets)) errs.push("highlightTargets must be an array");
+  else if (Array.isArray(cfg.titleLines)) {
+    const seen = {};
+    cfg.highlightTargets.forEach(function(h, i){
+      if (!h || !Number.isInteger(h.lineIndex) || !Number.isInteger(h.wordIndex)) { errs.push("highlightTargets[" + i + "] needs integer lineIndex+wordIndex"); return; }
+      if (h.lineIndex < 0 || h.lineIndex >= cfg.titleLines.length) { errs.push("highlightTargets[" + i + "].lineIndex out of range"); return; }
+      if (seen[h.lineIndex]) errs.push("duplicate highlight target for line " + h.lineIndex);
+      seen[h.lineIndex] = true;
+      const line = cfg.titleLines[h.lineIndex];
+      const words = tokenizeWords(line && typeof line === "object" ? line.text : "");
+      if (h.wordIndex < 0 || h.wordIndex >= words.length) errs.push("highlightTargets[" + i + "].wordIndex out of range for line " + h.lineIndex);
+    });
+    cfg.titleLines.forEach(function(_, i){ if (!seen[i]) errs.push("line " + i + " has no highlight target"); });
+  }
+  if (!Array.isArray(cfg.chatMessages)) errs.push("chatMessages must be an array");
+  else {
+    if (cfg.capacity && cfg.chatMessages.length > cfg.capacity.maxMessages) errs.push("chatMessages exceed capacity (ill-fit policy: reject)");
+    let prev = -1;
+    cfg.chatMessages.forEach(function(m, i){
+      if (!m || typeof m !== "object") { errs.push("chatMessages[" + i + "] not a record"); return; }
+      if (typeof m.text !== "string" || !m.text) errs.push("chatMessages[" + i + "].text missing");
+      if (typeof m.sender !== "string" || !m.sender) errs.push("chatMessages[" + i + "].sender missing");
+      if (typeof m.time !== "string" || !m.time) errs.push("chatMessages[" + i + "].time missing");
+      if (typeof m.color !== "string" || !m.color) errs.push("chatMessages[" + i + "].color missing");
+      if (!isNum(m.tMs)) errs.push("chatMessages[" + i + "].tMs not a number");
+      else {
+        if (m.tMs < 0 || m.tMs >= cfg.durationMs) errs.push("chatMessages[" + i + "].tMs out of range");
+        if (m.tMs <= prev) errs.push("chatMessages tMs must be strictly increasing (index " + i + ")");
+        prev = m.tMs;
+      }
+    });
+  }
+  const framingFields = ["scale","x","y","speakerXPct","spotScale","audienceShiftPct"];
+  function checkFraming(f, where){
+    if (!f || typeof f !== "object") { errs.push(where + " missing"); return; }
+    framingFields.forEach(function(k){ if (!isNum(f[k])) errs.push(where + "." + k + " not a number"); });
+    if (isNum(f.scale) && f.scale <= 0) errs.push(where + ".scale must be positive");
+    if (isNum(f.spotScale) && f.spotScale <= 0) errs.push(where + ".spotScale must be positive");
+  }
+  checkFraming(cfg.initialFraming, "initialFraming");
+  if (!Array.isArray(cfg.cuts) || cfg.cuts.length < 1) errs.push("cuts must be a non-empty array");
+  else {
+    if (cfg.capacity && cfg.cuts.length > cfg.capacity.maxCuts) errs.push("cuts exceed capacity (ill-fit policy: reject)");
+    let prev = 0;
+    cfg.cuts.forEach(function(c, i){
+      if (!c || typeof c !== "object") { errs.push("cuts[" + i + "] not a record"); return; }
+      if (!isNum(c.tMs)) errs.push("cuts[" + i + "].tMs not a number");
+      else {
+        if (c.tMs <= 0 || c.tMs >= cfg.durationMs) errs.push("cuts[" + i + "].tMs out of range (cuts are events after the initial framing)");
+        if (c.tMs <= prev) errs.push("cuts tMs must be strictly increasing (index " + i + ")");
+        prev = c.tMs;
+      }
+      checkFraming(c, "cuts[" + i + "]");
+    });
+  }
+  /* Framing-distinction floor is enforced, not merely declared. */
+  if (isNum(cfg.framingMinDelta) && cfg.initialFraming && Array.isArray(cfg.cuts) && cfg.cuts.length &&
+      framingFields.every(function(k){ return isNum(cfg.initialFraming[k]); })) {
+    const seqF = [cfg.initialFraming].concat(cfg.cuts);
+    for (let i = 1; i <= seqF.length; i++){
+      const a = seqF[i - 1], b = seqF[i % seqF.length];
+      if (a && b && typeof a === "object" && typeof b === "object" &&
+          framingFields.every(function(k){ return isNum(a[k]) && isNum(b[k]); }) && framingDelta(a, b) < cfg.framingMinDelta)
+        errs.push("framing distinction below framingMinDelta at transition " + (i - 1) + "->" + (i % seqF.length));
+    }
+  } else if (!isNum(cfg.framingMinDelta)) errs.push("framingMinDelta must be a number");
+  /* Short-duration policy (REJECT): every event + its tail must fit the window. */
+  if (isNum(cfg.durationMs)) {
+    let last = 0;
+    if (Array.isArray(cfg.titleLines)) cfg.titleLines.forEach(function(L){ if (L && isNum(L.tMs)) last = Math.max(last, L.tMs + (isNum(cfg.highlightMs) ? cfg.highlightMs : 0)); });
+    if (Array.isArray(cfg.chatMessages)) cfg.chatMessages.forEach(function(m){ if (m && isNum(m.tMs)) last = Math.max(last, m.tMs + (isNum(cfg.chatPopMs) ? cfg.chatPopMs : 0)); });
+    if (Array.isArray(cfg.cuts)) cfg.cuts.forEach(function(c){ if (c && isNum(c.tMs)) last = Math.max(last, c.tMs); });
+    if (last + (isNum(cfg.minTailMs) ? cfg.minTailMs : 0) > cfg.durationMs)
+      errs.push("durationMs too short for configured events (short-duration policy: reject)");
+  }
+  return errs;
+}
+
+/* ===== Framing clamp — the transformed content bounds stay inside the stage ===== */
+function clampFraming(f, cfg){
+  const b = cfg.contentBoundsPct;
+  const w = b.right - b.left, h = b.bottom - b.top;
+  let scale = Math.min(f.scale, 100 / w, 100 / h);
+  let x = f.x, y = f.y;
+  function rect(){
+    return {left: 50 + x + (b.left - 50) * scale, right: 50 + x + (b.right - 50) * scale,
+            top: 50 + y + (b.top - 50) * scale, bottom: 50 + y + (b.bottom - 50) * scale};
+  }
+  let r = rect();
+  if (r.left < 0) x += -r.left;
+  r = rect();
+  if (r.right > 100) x -= (r.right - 100);
+  r = rect();
+  if (r.top < 0) y += -r.top;
+  r = rect();
+  if (r.bottom > 100) y -= (r.bottom - 100);
+  return {scale:scale, x:x, y:y, speakerXPct:f.speakerXPct, spotScale:f.spotScale, audienceShiftPct:f.audienceShiftPct, rect:rect()};
+}
+function framingDelta(a, b){
+  return Math.abs(a.scale - b.scale) + (Math.abs(a.x - b.x) + Math.abs(a.y - b.y)) / 100 +
+         Math.abs(a.speakerXPct - b.speakerXPct) / 100 + Math.abs(a.spotScale - b.spotScale);
+}
+
+/* Per-character sweep colour: a character turns dark only once the bar has covered it,
+   so uncovered letters stay in the title colour against the dark screen throughout the sweep. */
+function charColor(progress, phase, charIndex, charCount, cfg){
+  if (phase === "swept") return cfg.highlightColor;
+  if (phase !== "sweeping") return cfg.titleColor;
+  return (progress * charCount > charIndex) ? cfg.sweepTextColor : cfg.titleColor;
+}
+
+/* Pure state from time — checkpoint tables decide everything. */
+function computeState(tMs, cfg){
+  const errs = validateConfig(cfg);
+  if (errs.length) throw new Error("invalid CONFIG: " + errs.join("; "));
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const titleVisible = cfg.titleLines.map(function(L){ return t >= L.tMs; });
+  const highlights = cfg.highlightTargets.map(function(h){
+    const start = cfg.titleLines[h.lineIndex].tMs;
+    let progress = 0, phase = "pending";
+    if (t >= start + cfg.highlightMs) { progress = 1; phase = "swept"; }
+    else if (t >= start) { progress = (t - start) / cfg.highlightMs; phase = "sweeping"; }
+    return {lineIndex:h.lineIndex, wordIndex:h.wordIndex, progress:progress, phase:phase,
+            barWidthPct: phase === "sweeping" ? progress * 100 : 0,
+            textColor: phase === "sweeping" ? cfg.sweepTextColor : (phase === "swept" ? cfg.highlightColor : cfg.titleColor)};
+  });
+  const chatVisible = cfg.chatMessages.map(function(m){ return t >= m.tMs; });
+  const chatScales = cfg.chatMessages.map(function(m){
+    if (t < m.tMs) return cfg.chatPopFrom;
+    const age = t - m.tMs;
+    return age >= cfg.chatPopMs ? cfg.chatPopTo : cfg.chatPopFrom + (cfg.chatPopTo - cfg.chatPopFrom) * (age / cfg.chatPopMs);
+  });
+  let cutIndex = -1;
+  for (let i = 0; i < cfg.cuts.length; i++){ if (cfg.cuts[i].tMs <= t) cutIndex = i; else break; }
+  const rawFraming = cutIndex < 0 ? cfg.initialFraming : cfg.cuts[cutIndex];
+  const framing = clampFraming(rawFraming, cfg);
+  return {t:t, titleVisible:titleVisible, highlights:highlights,
+          chatVisible:chatVisible, chatScales:chatScales,
+          cutIndex:cutIndex, cutCount:cfg.cuts.length, framing:framing};
+}
+
+/* URL overrides: ?lines=TEXT~tMs~wordIdx;... · ?messages=sender~time~text~color~tMs;... (empty value = zero messages)
+   ?cuts=tMs,scale,x,y,speakerXPct,spotScale,audienceShiftPct;... · ?stats=LABEL~VALUE;... · ?counter=
+   ?popMs= ?popFrom= ?popTo= · ?highlight= ?screen= ?title= ?bg= ?chatBg= · ?durationMs=
+   legacy: ?titles=A|B|C · ?chats=x;y (exact-length text replacement) · ?titleMs=...
+   ATOMICITY: any error anywhere in the override set rejects the WHOLE override; the last valid CONFIG stands. */
+window.__overrideErrors = [];
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  if (![...q.keys()].length) return;
+  const cand = JSON.parse(JSON.stringify(CONFIG));
+  const num = (k) => { const raw = q.get(k); if (raw === null || raw.trim() === "") return null; const v = Number(raw); return isFinite(v) ? v : null; };
+  if (num("durationMs") !== null) cand.durationMs = num("durationMs");
+  if (q.has("lines")) {
+    cand.titleLines = []; cand.highlightTargets = [];
+    q.get("lines").split(";").forEach(function(e, i){
+      const p = e.split("~"); cand.titleLines.push({text:p[0] || "", tMs:Number(p[1])});
+      cand.highlightTargets.push({lineIndex:i, wordIndex:Number(p[2] || 0)});
+    });
+  } else if (q.has("titles")) {
+    const parts = q.get("titles").split("|");
+    if (parts.length === cand.titleLines.length) cand.titleLines = cand.titleLines.map(function(L, i){ return {text:parts[i], tMs:L.tMs}; });
+    else window.__overrideErrors.push("titles count mismatch — override rejected");
+  }
+  const tm = q.has("titleMs") ? q.get("titleMs").split(",").map(Number) : null;
+  if (tm) {
+    if (tm.length === cand.titleLines.length) cand.titleLines = cand.titleLines.map(function(L, i){ return {text:L.text, tMs:tm[i]}; });
+    else window.__overrideErrors.push("titleMs length mismatch — override rejected");
+  }
+  if (q.has("messages")) {
+    const raw = q.get("messages");
+    cand.chatMessages = raw === "" ? [] : raw.split(";").map(function(e){
+      const p = e.split("~"); return {sender:p[0] || "", time:p[1] || "", text:p[2] || "", color:p[3] || "#888888", tMs:Number(p[4])};
+    });
+  } else if (q.has("chats")) {
+    const parts = q.get("chats").split(";");
+    if (parts.length === cand.chatMessages.length) cand.chatMessages = cand.chatMessages.map(function(m, i){ return Object.assign({}, m, {text:parts[i]}); });
+    else window.__overrideErrors.push("chats count mismatch — override rejected");
+  }
+  if (q.has("cuts")) {
+    cand.cuts = q.get("cuts").split(";").map(function(e){
+      const p = e.split(",").map(Number);
+      return {tMs:p[0], scale:p[1], x:p[2], y:p[3], speakerXPct:p[4], spotScale:p[5], audienceShiftPct:p[6]};
+    });
+  }
+  if (q.has("stats")) {
+    cand.statCards = q.get("stats").split(";").map(function(e){
+      const p = e.split("~"); return {label:p[0] || "", value:p[1] || ""};
+    });
+  }
+  if (q.has("counter")) cand.slideCounter = q.get("counter");
+  if (num("popMs") !== null) cand.chatPopMs = num("popMs");
+  if (num("popFrom") !== null) cand.chatPopFrom = num("popFrom");
+  if (num("popTo") !== null) cand.chatPopTo = num("popTo");
+  if (q.get("highlight")) cand.highlightColor = q.get("highlight");
+  if (q.get("screen")) cand.screenBg = q.get("screen");
+  if (q.get("title")) cand.titleColor = q.get("title");
+  if (q.get("bg")) cand.bg = q.get("bg");
+  if (q.get("chatBg")) cand.chatBg = q.get("chatBg");
+  const errs = validateConfig(cand);
+  if (errs.length) window.__overrideErrors.push.apply(window.__overrideErrors, errs);
+  if (window.__overrideErrors.length) return; /* atomic: nothing commits */
+  Object.keys(cand).forEach(function(k){ CONFIG[k] = cand[k]; });
+})();
+
+/* CONFIG.detail drives the CSS detail layer via custom properties. */
+(function applyDetail(){
+  const d = CONFIG.detail, r = document.documentElement.style;
+  r.setProperty("--t18-font", d.fontFamily);
+  r.setProperty("--t18-title-weight", String(d.titleWeight));
+  r.setProperty("--t18-title-lh", String(d.titleLineHeight));
+  r.setProperty("--t18-title-ls", d.titleLetterSpacing);
+  r.setProperty("--t18-hl-top", d.hlTopPct + "%");
+  r.setProperty("--t18-hl-height", d.hlHeightPct + "%");
+  r.setProperty("--t18-screen-radius", d.screenRadius);
+  r.setProperty("--t18-chat-pad", d.chatPadding);
+  r.setProperty("--t18-chat-radius", d.chatRadiusPx + "px");
+  r.setProperty("--t18-chat-lh", String(d.chatLineHeight));
+  r.setProperty("--t18-stat-pad", d.statPadding);
+  r.setProperty("--t18-stat-radius", d.statRadiusPx + "px");
+  r.setProperty("--t18-aud-size", d.audSizePx + "px");
+  r.setProperty("--t18-aud-gap", d.audGapPx + "px");
+  r.setProperty("--t18-aud-opacity", String(d.audOpacity));
+})();
+
+const stage = document.getElementById("stage");
+const world = document.getElementById("world");
+const screenWrap = document.getElementById("screenWrap");
+const screenEl = document.getElementById("screen");
+const titleWrap = document.getElementById("titleWrap");
+const statWrap = document.getElementById("statWrap");
+const counterEl = document.getElementById("counter");
+const chatWrap = document.getElementById("chatWrap");
+const spotEl = document.getElementById("spot");
+const speakerEl = document.getElementById("speaker");
+const audienceEl = document.getElementById("audience");
+const L = CONFIG.layout;
+document.body.style.background = CONFIG.bg;
+stage.style.background = CONFIG.bg;
+screenEl.style.background = CONFIG.screenBg;
+screenWrap.style.left = L.screenLeftPct + "%"; screenWrap.style.right = L.screenRightPct + "%";
+screenWrap.style.top = L.screenTopPct + "%"; screenWrap.style.height = L.screenHeightPct + "%";
+titleWrap.style.left = L.titleLeftPct + "%"; titleWrap.style.top = L.titleTopPct + "%"; titleWrap.style.width = L.titleWidthPct + "%";
+chatWrap.style.right = L.chatRightPct + "%"; chatWrap.style.top = L.chatTopPct + "%";
+chatWrap.style.width = L.chatWidthPct + "%"; chatWrap.style.gap = L.chatGapPx + "px";
+statWrap.style.left = L.statLeftPct + "%"; statWrap.style.bottom = L.statBottomPct + "%"; statWrap.style.gap = L.statGapPct + "%";
+counterEl.style.right = L.counterRightPct + "%"; counterEl.style.bottom = L.counterBottomPct + "%";
+counterEl.style.fontSize = "clamp(" + CONFIG.counterMinPx + "px," + CONFIG.counterVw + "vw," + CONFIG.counterMaxPx + "px)";
+spotEl.style.left = L.spotLeftPct + "%"; spotEl.style.bottom = L.spotBottomPct + "%";
+spotEl.style.width = L.spotWidthPct + "%"; spotEl.style.height = L.spotHeightPct + "%";
+spotEl.style.background = CONFIG.spotColor;
+speakerEl.style.left = L.speakerLeftPct + "%"; speakerEl.style.bottom = L.speakerBottomPct + "%";
+speakerEl.style.width = L.speakerWidthPct + "%"; speakerEl.style.minWidth = L.speakerMinPx + "px";
+audienceEl.style.left = "0"; audienceEl.style.right = "0"; audienceEl.style.bottom = L.audienceBottomPct + "%";
+audienceEl.style.height = L.audienceHeightPct + "%"; audienceEl.style.padding = "0 " + L.audiencePadPct + "%";
+
+const hlByLine = {};
+CONFIG.highlightTargets.forEach(function(h){ hlByLine[h.lineIndex] = h; });
+const wordEls = [];
+const titleEls = CONFIG.titleLines.map(function(line, li){
+  const d = document.createElement("div"); d.className = "tline";
+  d.style.color = CONFIG.titleColor;
+  d.style.fontSize = "clamp(" + CONFIG.titleMinPx + "px," + CONFIG.titleSizeVw + "vw," + CONFIG.titleMaxPx + "px)";
+  const target = hlByLine[li];
+  tokenizeWords(line.text).forEach(function(w, wi){
+    const s = document.createElement("span"); s.className = "word"; s.textContent = w;
+    if (target && wi === target.wordIndex){
+      const h = document.createElement("span"); h.className = "hlbar"; h.style.background = CONFIG.highlightColor; h.style.width = "0%";
+      s.textContent = "";
+      s.appendChild(h);
+      const chars = w.split("").map(function(ch){
+        const cs = document.createElement("span"); cs.className = "ch"; cs.textContent = ch; s.appendChild(cs); return cs;
+      });
+      wordEls.push({line:li, bar:h, word:s, chars:chars});
+    }
+    d.appendChild(s); d.appendChild(document.createTextNode(" "));
+  });
+  d.style.display = "none"; titleWrap.appendChild(d); return d;
+});
+CONFIG.statCards.forEach(function(c){
+  const d = document.createElement("div"); d.className = "stat"; d.style.color = CONFIG.titleColor;
+  const v = document.createElement("div"); v.className = "v"; v.textContent = c.value;
+  v.style.fontSize = "clamp(" + CONFIG.statValueMinPx + "px," + CONFIG.statValueVw + "vw," + CONFIG.statValueMaxPx + "px)";
+  const l = document.createElement("div"); l.className = "l"; l.textContent = c.label;
+  l.style.fontSize = "clamp(" + CONFIG.statLabelMinPx + "px," + CONFIG.statLabelVw + "vw," + CONFIG.statLabelMaxPx + "px)";
+  d.appendChild(l); d.appendChild(v); statWrap.appendChild(d);
+});
+counterEl.textContent = CONFIG.slideCounter; counterEl.style.color = CONFIG.titleColor;
+
+const chatEls = CONFIG.chatMessages.map(function(m){
+  const d = document.createElement("div"); d.className = "chat";
+  d.style.background = CONFIG.chatBg; d.style.color = CONFIG.chatColor;
+  const meta = document.createElement("div"); meta.className = "meta";
+  meta.style.fontSize = "clamp(" + CONFIG.metaMinPx + "px," + CONFIG.metaVw + "vw," + CONFIG.metaMaxPx + "px)";
+  const av = document.createElement("span"); av.className = "avatar"; av.style.background = m.color; av.textContent = m.sender.charAt(0);
+  const who = document.createElement("span"); who.textContent = m.sender + " " + m.time;
+  meta.appendChild(av); meta.appendChild(who);
+  const txt = document.createElement("div"); txt.className = "txt"; txt.textContent = m.text;
+  txt.style.fontSize = "clamp(" + CONFIG.chatTextMinPx + "px," + CONFIG.chatTextVw + "vw," + CONFIG.chatTextMaxPx + "px)";
+  d.appendChild(meta); d.appendChild(txt); d.style.display = "none"; chatWrap.appendChild(d); return d;
+});
+speakerEl.children[0].style.background = CONFIG.speakerColor; speakerEl.children[1].style.background = CONFIG.speakerColor;
+for (let i = 0; i < CONFIG.audienceCount; i++){ const a = document.createElement("div"); a.className = "aud"; a.style.background = CONFIG.audienceColor; audienceEl.appendChild(a); }
+
+window.__configErrors = validateConfig(CONFIG);
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  s.titleVisible.forEach(function(v, i){ titleEls[i].style.display = v ? "block" : "none"; });
+  wordEls.forEach(function(w){
+    const hl = s.highlights.filter(function(h){ return h.lineIndex === w.line; })[0];
+    w.bar.style.width = Math.round(hl.barWidthPct) + "%";
+    w.word.style.color = hl.textColor;
+    if (w.chars) w.chars.forEach(function(cs, ci){ cs.style.color = charColor(hl.progress, hl.phase, ci, w.chars.length, CONFIG); });
+  });
+  s.chatVisible.forEach(function(v, i){
+    chatEls[i].style.display = v ? "block" : "none";
+    if (v) chatEls[i].style.transform = "scale(" + s.chatScales[i].toFixed(3) + ")";
+  });
+  const f = s.framing;
+  world.style.transform = "scale(" + f.scale + ") translate(" + f.x + "%, " + f.y + "%)";
+  speakerEl.style.transform = "translateX(calc(-50% + " + f.speakerXPct + "%))";
+  spotEl.style.transform = "translateX(-50%) scale(" + f.spotScale + ")";
+  audienceEl.style.transform = "translateX(" + f.audienceShiftPct + "%)";
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T178-fade-from-black-colonnade-reveal
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e953-9b24-73e2-9fe3-4a07b5583d49
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream.
+
+CONSUMER: recreation INSTRUCTION §5 Verify for Cycle 028 Wave 25 item T178, attempt 1. DECISION PRICED: tier RECREATED vs IN PROGRESS — the bar is five-lens average ≥85 AND minimum lens ≥70. WORKING RECORD: hidden_files/study/recreations/T178-fade-from-black-colonnade-reveal/ (codex/ + scores.md). BODY-WRITE: your return is filed verbatim as codex/lens-readability.md; end with "SCORE: <int>" on its own line and a BODY-WRITE: line.
+
+LENS INSTRUCTION: READABILITY lens (fifth lens): for this text-free technique, price the revealed place's legibility — the colonnade composition readable at phone size during and after the reveal, the red textile distinguishable against the dark interior, no element competing with or obscuring the subject, and the fade never leaving the place illegible past its measured legibility instant.
+
+RECREATION.HTML SHA-256 (bound): 1549786b7b989e52096c96e287f1b996171c90f6d10af74d58f1a636db67ff21
+
+NEUTRAL TECHNIQUE FACTS (from RUN §1b/§1c/§1e/§1f for T178): The film opens on black. Measured playback (ffmpeg signalstats, 25fps): black hold ~0.3s (YAVG 16, pure black, 0.00–0.28s) · first faint image at 0.32s · fade ramp ~0.35s (0.44–0.64s) · legible place by ~0.65s (plateau from 0.64s) · specimen CUTS AWAY at ~1.28s to a different shot. Seat's visual record: at 0.50s the left column and red textile are legible while the right third is still near-black; at 0.96s the whole frame is revealed — two pale stone columns framing a dark interior, white-clothed tables inside, a hanging RED textile (strands) centre-right beside a thin tree trunk, textile swaying slightly. No title, no logo — the place is the first statement. The build's duration is 3040ms: its hold of the revealed place past 1280ms is a PRINTED ALLOCATION (for study), never presented as measured.
+CENSUS-ANCHOR MAPPING (binding): offset 0ms · black 0–280ms · ramp 440–640ms · legible from ~650ms · cut away ~1280ms · build prescribed: t<300 black · ramp 300–650 (blackHoldMs 300 + fadeMs 350) · legible from 650 · t>1280 allocation hold.
+SCHEDULE BASIS: segment-anchored fade + t=0 allocation hold (departure printed above).
+
+=== SCORING-WAVE GUARD (codex-scoring-wave.md) ===
+# Codex review — scoring wave (recreation)
+
+_Repeated Codex review type, defined in this job's own guards layer (owner's 100% order, 2026-11-14). Execution: Codex via the fleet feeding rule; the DEFINITION lives here._
+
+## The review
+Five independent lens runs score ONE recreation attempt against the BAR: **average of the five lens scores ≥ 85 AND no lens < 70** (the recreation law; a pass at this bar is the only route to RECREATED).
+Lenses: **motion fidelity** (does the recreation's movement equal the technique's described movement?) · **timing/tempo** (phase timings vs the original's measured window) · **construction purity** (parameterized construction vs tracing/embedding — a refusal-class judgment) · **reusability** (could production drive it from CONFIG alone for a different piece?) · **readability** (owner's fifth lens, 2026-11-14: formed words legible against their own particle field — intensity separation, phone-size legibility during hold, background never at word intensity).
+
+## Feeding contract
+- ONE stream per lens run: lens instruction file + the artifacts it judges, concatenated — never pipe + stdin together (fleet rule; a doubled stream voids the run).
+- **Score-blind allowed packet (ADOPTED 2026-11-14, Cycle 009 Condense — the Wave-6 adoption decision executed):** lens payloads are the ALLOWED PACKET only (lens instruction · neutral technique facts · the attempt's recreation.html · a score-blind build record). scores.md is NEVER fed to a lens; no lens sees a prior score or another lens's return.
+- **Identical-hash binding (ADOPTED 2026-11-14, Cycle 009):** all five returns of an attempt must bind to the identical final recreation.html SHA-256. When a lens catches an interim-build defect, the build is cured, self-verify re-runs, and the wave re-fires on the final build; the interim return is preserved verbatim (e.g. `codex/lens-motion-interim1.md`) and never enters the final average. Founding instance: Wave 6, T38 (interim motion 35 → cured → five lenses re-fired on the final build).
+- **Every-firing preservation duty (ADOPTED 2026-11-14, Cycle 009 — practice A-C003-1 generalized):** every firing's payload + return is filed create-once in the attempt directory BEFORE any subsequent source change, payload regeneration, or re-fire, for every attempt number; a discarded interim return files as a printed deviation with the material recorded UNAVAILABLE.
+- Every lens instruction opens with the standing header: (1) consumer = recreation job's §5 step + the decision priced (tier movement / cure list), (2) the working record it builds from and writes to (the artifact's codex/ directory + scores.md), (3) the return must end with `SCORE: <integer>` and a `BODY-WRITE:` line naming what it filed.
+- Lenses run independently; no lens sees another's return.
+- Returns file VERBATIM in the artifact's `codex/lens-<name>.md`; scores.md cites them; the seat recomputes average + min mechanically (guards.md command 4) — a wave average is never taken from a return's own arithmetic.
+
+## Consumer
+- Consumer: recreation's §5 Verify (tier recommendation) + the cycle's Condense (cure list, convergent-lens rule: a defect two lenses name becomes the next attempt's primary cure) + practice (the filed returns are its Observe input).
+- Decision priced: whether this attempt is RECREATED-tier, and exactly what the next attempt must cure.
+
+## Demonstration state
+- Four-lens form: demonstrated 2026-11-13, T15 attempt 1 (68/82/100/64 → 78.5, FAIL, returns on file).
+- Five-lens form (readability born 2026-11-14): demonstrated Waves 1–6 (2026-11-14, 25 attempts) under the score-blind + hash-binding practice adopted at Wave 6.
+
+## Adoption record (2026-11-14, Cycle 009 Condense — replaces the divergence notices printed here 2026-11-14)
+Recreation's Wave-6 Condense adopted the practice-copy rules (practice Cycle-002 A-C002-4 + payload/binding corrections, and Cycle-003 A-C003-1's every-firing preservation duty) after applying and proving them in Wave 6, and charged the text amendment to the next Condense. That amendment lands here at Cycle 009: the three rules now stand in the Feeding contract above as this job's own text. The divergence between this file and practice's `codex-rescore-wave.md` is CLOSED on these three rules; the historical notices are retired by this record, not silently deleted (Wave-6 RUN.md Condense + this adoption record carry the history).
+
+## Amendment — census-anchor mapping is a required timing-payload element (2026-11-16, recreation Cycle 025 Condense)
+From Wave 23 onward, the **timing lens payload** for every item MUST include the item's **census-anchor mapping table** (window-start offset · each census state's segment-relative ms · the build's prescribed state at that instant, per the jev-plan-exit consistency leg landed the same Condense). A timing payload without the mapping is a feeder defect, printed as such in the item's build record; the lens prices the schedule against the mapping, not against the builder's summary of it. Forcing evidence: T160 Wave 22 timing 68 + T162 Wave 22 timing 64 (filed returns: the items' `codex/lens-timing.md`) — in both, the schedule the lens was asked to judge contradicted the census anchors the Plan claimed to bind, and the mapping that would have exposed the contradiction at Plan time existed nowhere as a single table.
+
+=== BUILD RECORD (score-blind) ===
+# build-record — T178 Fade-from-black colonnade reveal · attempt 1 · Cycle 028 Wave 25 (queue #85)
+
+- **Item:** T178 — Fade-from-black colonnade reveal (Packet #10, Watchtower of Turkey, Vimeo 108018156) · P10 T01 · window 0.00–3.04 s.
+- **Schedule basis: `segment-anchored fade + t=0 allocation hold`** (RUN §2 T178 as amended by §2c.2/§2d — binding). Measured: black hold ≈300 ms · fade ramp 350 ms · legible by ≈650 ms · specimen cuts away ≈1280 ms. **Departure (allocation, printed):** the build holds the revealed place from 1280 ms to 3040 ms so the reveal can be studied — never presented as measured.
+- **Final build SHA-256:** `1549786b7b989e52096c96e287f1b996171c90f6d10af74d58f1a636db67ff21` (recreation.html; identical in all five lens payloads).
+- **PIXEL-UNVERIFIED** — no browser binary in this seat; verification is LOGIC level (node harness over the build's own phase functions) + structural comparison assertions; comparison.html is the render surface. This limitation is printed in scores.md (§2c.1d).
+
+## Segment facts
+- Source: `hidden_files/study/video-digests/2026-11-16-vimeo-watchtower/source.mp4` — ffprobe: h264 · 1920×1080 · duration 212.68 s.
+- Cut: `ffmpeg -ss 0 -t 3.04`, re-encoded libx264/yuv420p + aac → `segment.mp4`. ffprobe (raw): `codec_name=h264 · width=1920 · height=1080 · r_frame_rate=25/1 · codec_name=aac · duration=3.040000`. Evidence only: appears solely as the labeled ORIGINAL side of comparison.html.
+
+## §2 — Gate dispositions (codex-observe + codex-plan-review, fired as this builder's first acts, A9.2)
+- **codex-observe → CONFIRMED-WITH-GAPS** (filed verbatim: `codex/codex-observe.md`). Disposition: APPLIED as confirmation — every gap it names was already closed firsthand in the wave record it audited: (1) the 0.00–3.04 s span is the opening *section*, the colonnade shot itself ends ≈1.28 s (RUN §1c/§1e — the Plan's census-anchor mapping and the printed allocation departure carry exactly this distinction); (2) spatial behaviour: §1f's "centre-out in feel" is a perceptual note only — the build implements the §2c.2-prescribed *uniform* black-overlay opacity function and claims no centre-out parameter; (3) family arithmetic recomputed by the return itself and agreed (85.2 / 80.0 / 88.4 / mean 83.7); T107–T109 aggregates unbound in-stream — noted, they carry no weight in this item's Plan beyond the family mean the seat bound to filed verdict-history lines.
+- **codex-plan-review → REVISE** (filed verbatim: `codex/codex-plan-review.md`). Dispositions:
+  1. *Swap-sensitive assertions* — **APPLIED (buildable within the Plan):** the harness runs the §2 default-config checkpoints (150/500/700/960) AND CONFIG-relative assertions under the swapped config (hold point 150 · mid-ramp at blackHoldMs+fadeMs/2=370 · completion at blackHoldMs+fadeMs=440), per §2c.6 (assertions follow CONFIG). Raw output below — all pass.
+  2. *Easing binding* — **APPLIED:** the curve is resolved through `CONFIG.fadeEasing` via an easing resolver (`easingFor`); no curve is hardcoded in the phase functions.
+  3. *Settle justification* — **SET ASIDE with reason:** `settleScaleFrom` 1.045 is prescribed by the binding Plan as amended (§2c.2 names the scale function and the key); removing it would deviate from the gate-approved Plan. It stands printed as SUPPLIED (specimen settle UNMEASURED) in the Plan, this record, and scores.md.
+  4. *Timing-hold pricing / predicted lens budget* — **APPLIED as printing:** the 1760 ms allocated hold (57.9% of the build) is printed as a departure here, in §2, and in every timing-lens payload; the wave prices it with full knowledge. Predicted stuck lens (Plan §2c.8): TIMING.
+  5. *T105 purity cure* — the §2c.1(a) grep (0 hits, raw below) + the construction route (independently code-drawn SVG geometry; no specimen imagery, no tracing step anywhere in the build) are the filed evidence; the purity lens prices the source directly.
+
+## Construction
+One self-contained recreation.html. CONFIG at top with EXACTLY the §2 keys as amended by §2c.2 (blackHoldMs 300 · fadeMs 350 · durationMs 3040 · settleScaleFrom 1.045 · fadeEasing "easeInOutCubic" · columnCount 2 · textileColor #b3402a · textileStrands 26 · interiorColor #17130f · columnColor #ddd3bd · tableColor #cfc8b4 · accentLabel "colonnade").
+- Scene (SVG, code-drawn from CONFIG): dark interior rect · three white table shapes · thin trunk with branches · hanging textile = `textileStrands` strand lines in `textileColor` · `columnCount` pale columns. NO text rendered anywhere in the scene.
+- Phase functions (§2c.2): overlay opacity = 1 for t<blackHoldMs · 1 − ease((t−blackHoldMs)/fadeMs) during ramp · 0 after; scene scale = settleScaleFrom → 1.000 across the same window, same easing (resolved via CONFIG.fadeEasing).
+- Clock: requestAnimationFrame; `window.__rec` API (play/pause/seek/time) + `window.__config` / `stateAt` / `stateAtWith` harness surface. No external assets; no specimen media references.
+- comparison.html: segment video + recreation iframe side by side, ONE shared control set (Play/Pause/Restart drives both; recreation slaved to the video's currentTime), labels "ORIGINAL — Watchtower of Turkey @ 0.00–3.04" / "RECREATION — T178 fade-from-black colonnade reveal, parameterized", @media (max-width:640px) stacking.
+
+## Count assertion (A9.3)
+CONFIG.textileStrands = **26** vs RUN §2 table 26 — **MATCH** (harness raw: `count.textileStrands default: 26`) · CONFIG.columnCount = **2** vs §2 table 2 — **MATCH** (`columns: 2`).
+
+## Fidelity plan
+Implemented: black hold → eased fade-from-black → legible colonnade place (columns/interior/tables/red textile/trunk) → hold. Deliberate deferrals: the specimen's later shots (pavement/sand/bokeh from 1.60 s) are OTHER techniques, not this one — excluded by the census, printed in §2; the post-1280 ms hold is the printed allocation above. The textile's slight sway seen at 0.50→0.96 s (§1f) is not separately animated — the strands carry a static sway offset; named here as a simplification, not silently absent.
+
+## Own checks — RAW output (A9.4, from the final build)
+Harness: node, inline script extracted from recreation.html, evaluated in a vm context (window/document stubs); swap applied via `stateAtWith` on a deep copy of CONFIG.
+
+```
+CONFIG: {"blackHoldMs":300,"fadeMs":350,"durationMs":3040,"settleScaleFrom":1.045,"fadeEasing":"easeInOutCubic","columnCount":2,"textileColor":"#b3402a","textileStrands":26,"interiorColor":"#17130f","columnColor":"#ddd3bd","tableColor":"#cfc8b4","accentLabel":"colonnade"}
+checkpoint.opacity@150: 1
+checkpoint.opacity@500: 0.3148688046647231
+checkpoint.opacity@700: 0
+checkpoint.opacity@960: 0
+assert.opacity150==1: true
+assert.opacity500 strictly between 0 and 1: true
+assert.opacity700==0: true
+assert.opacity960==0: true
+scale@0: 1.045 scale@475: 1.0225 scale@650: 1
+swap.CONFIG: {"blackHoldMs":300,"fadeMs":140,"durationMs":3040,"settleScaleFrom":1.045,"fadeEasing":"easeInOutCubic","columnCount":2,"textileColor":"#2a6db3","textileStrands":10,"interiorColor":"#17130f","columnColor":"#ddd3bd","tableColor":"#cfc8b4","accentLabel":"harbour"}
+swap.state@370: {"t":370,"phase":"fade","overlayOpacity":0.5,"scale":1.0225,"accentLabel":"harbour","textileStrands":10,"textileColor":"#2a6db3"}
+swap.opacity@150: 1
+swap.opacity@mid-ramp(370): 0.5
+swap.opacity@440(blackHold+fadeMs): 0
+assert.swap opacity150==1: true
+assert.swap mid-ramp strictly between: true
+assert.swap opacity440==0: true
+assert.swap strands==10: true
+assert.swap label==harbour: true
+assert.swap color==#2a6db3: true
+count.textileStrands default: 26 columns: 2
+```
+
+1. **Swap test (EXACT §2c-amended values):** textileColor #b3402a→#2a6db3 · fadeMs 350→140 · textileStrands 26→10 · accentLabel "colonnade"→"harbour". Result: swapped fade completes at 440 ms (300+140), mid-ramp opacity exactly 0.5 at 370 ms, strand count and label follow CONFIG — the technique (black → place revealed, faster) still reads. **PASS.**
+2. **Checkpoint assertions (default CONFIG):** opacity =1 @150 · 0.3149 (strictly between) @500 · =0 @700 · =0 @960 — **PASS** (raw above).
+3. **Purity grep (§2c.1a exact patterns):** `grep -nEi 'segment\.mp4|source\.mp4|<video|<img|108018156|watchtower|vimeo' recreation.html` → **0 hits** (grep exit 1).
+4. **Asset inventory (§2c.1b):** `grep -oE '(src|href)="[^"]+"|url\(|@import|fetch\(' recreation.html` → **0 external references** (grep exit 1). Every asset is inline code in the one file.
+5. **Syntax:** `node --check` on the extracted inline script: **PASS**.
+6. **Comparison check (structural, §2c.1c):** node harness over comparison.html — has video tag: true · recreation iframe: true · control buttons: 3 (ONE shared set) · both labels verbatim: true · clock slaved (`video.currentTime * 1000`): true · @media (max-width:640px) stacking: true — **PASS**.
+
+## A6 legs (final build)
+- fit-table.md — HITs **0** (text class N/A with reason: text-free technique; geometry rows measured).
+- config-census.md — HITs **0** (every CONFIG key resolved to a value-flow site; scene-layout constants classified in the open under the §2 exact-keys constraint).
+
+## Pre-wave (jev-prewave)
+_(filled after firing)_
+
+## Wave
+_(filled after firing)_
+
+## Faithfulness trace (item level)
+- **Trace:** §1 Observe — RUN §1b/§1c/§1e/§1f + codex-observe CONFIRMED-WITH-GAPS consumed above · §2 Plan — RUN §2 + §2c.2 + §2d, codex-plan-review REVISE consumed above · §3 Execute — segment + recreation + comparison on disk, own checks raw above · §5 Verify — A6 legs + jev-prewave + five-lens wave (below at filing) · §9 Condense — the seat's act.
+- **Choice log (≥2 alternatives):** (1) DOM/SVG scene under a clock-driven black overlay — CHOSEN; canvas particle fade rejected (no particle mechanic in the specimen); CSS-only animation rejected (clock must slave to the comparison's shared control). (2) Uniform overlay opacity per §2c.2 — CHOSEN; a centre-out spatial reveal rejected (priced only as a perceptual "feel" in §1f, never measured; the uniform function is the gate-approved form).
+- **Deviations:** settleScaleFrom set-aside vs codex-plan-review cure 4 (reason recorded in §2 dispositions above — the value is Plan-prescribed). No other deviations.
+- **Evidence binding:** recreation.html SHA-256 `1549786b7b989e52096c96e287f1b996171c90f6d10af74d58f1a636db67ff21` · segment.mp4 ffprobe facts above · census/measurement basis: RUN §1c/§1e/§1f (seat's record).
+
+=== FIT-TABLE ===
+# fit-table — T178 fade-from-black colonnade reveal · attempt 1 (guard-measured-fit leg, A6)
+
+Technique form: **text-free**. No text is the subject in this technique (RUN §1b/§2: no title, no logo in the specimen; the scene renders NO text elements at all). 
+
+## Text rows
+| element | disposition |
+|---|---|
+| (none — no subject text elements exist in recreation.html) | **N/A** — the measured-fit leg's text rows price text fitting its container; this build contains zero text elements by construction (purity grep + source read confirm no text nodes in the scene). A text row cannot be measured where no text exists; the leg's text class is inapplicable, priced here with its reason, not silently omitted. |
+
+## Geometry rows (measured from the build's own functions / source geometry, 960×540 stage)
+| element | measured | container | margin / note |
+|---|---|---|---|
+| black overlay | inset 0 → covers 960×540 at every t; opacity from `overlayOpacityAt` (harness: 1 @150ms · 0.3149 @500ms · 0 @700ms · 0 @960ms) | full stage | exact cover, no gap |
+| scene scale settle | scale 1.045 @t=0 → 1.0225 @475ms → 1.000 @650ms (harness raw) | stage, transform about centre (480,270) | at max scale the scene overfills the stage symmetrically (overflow hidden) — no black gap can appear at the edges during the settle |
+| columns (×2, from CONFIG.columnCount) | col centres x=120 and x=740, body width 80, cap width 104 → spans 68–172 and 688–792; height 26–486 | stage 960×540 | fully in-frame at scale 1.000 |
+| textile strands (×26, from CONFIG.textileStrands) | x from 560 to 680, y 96 to ~340 (strand length 235 + sway ≤9) | stage | fully in-frame; strand count asserted by harness (count.textileStrands default: 26) |
+| tables (×3) | spans x 330–680, y 320–470 | stage | fully in-frame |
+
+## HIT list
+**Empty — PASS for this leg** (text class N/A with reason printed above; geometry rows measured, none failing).
+
+=== FULL recreation.html SOURCE ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T178 — fade-from-black colonnade reveal, parameterized recreation</title>
+<style>
+  html, body { margin:0; padding:0; background:#000; height:100%; }
+  #stage { position:relative; width:100%; max-width:960px; margin:0 auto; aspect-ratio:16/9; overflow:hidden; background:#000; }
+  #stage svg { display:block; width:100%; height:100%; }
+  #overlay { position:absolute; inset:0; background:#000; pointer-events:none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="sceneSvg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <g id="scene"></g>
+  </svg>
+  <div id="overlay"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every subject-shaping value lives here (A9.6) ===== */
+const CONFIG = {
+  blackHoldMs: 300,
+  fadeMs: 350,
+  durationMs: 3040,
+  settleScaleFrom: 1.045,
+  fadeEasing: "easeInOutCubic",
+  columnCount: 2,
+  textileColor: "#b3402a",
+  textileStrands: 26,
+  interiorColor: "#17130f",
+  columnColor: "#ddd3bd",
+  tableColor: "#cfc8b4",
+  accentLabel: "colonnade"
+};
+
+/* ===== Easing — resolved through CONFIG.fadeEasing (§2c.2) ===== */
+const EASINGS = {
+  easeInOutCubic: function (x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; },
+  linear: function (x) { return x; },
+  easeOutQuad: function (x) { return 1 - (1 - x) * (1 - x); }
+};
+function easingFor(cfg) { return EASINGS[cfg.fadeEasing] || EASINGS.easeInOutCubic; }
+function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+/* ===== Phase functions (§2c.2 — pure functions of CONFIG) ===== */
+function overlayOpacityAt(t, cfg) {
+  if (t < cfg.blackHoldMs) return 1;
+  if (t >= cfg.blackHoldMs + cfg.fadeMs) return 0;
+  const p = (t - cfg.blackHoldMs) / cfg.fadeMs;
+  return 1 - easingFor(cfg)(clamp01(p));
+}
+function scaleAt(t, cfg) {
+  if (t < cfg.blackHoldMs) return cfg.settleScaleFrom;
+  if (t >= cfg.blackHoldMs + cfg.fadeMs) return 1;
+  const p = (t - cfg.blackHoldMs) / cfg.fadeMs;
+  return cfg.settleScaleFrom + (1 - cfg.settleScaleFrom) * easingFor(cfg)(clamp01(p));
+}
+function phaseAt(t, cfg) {
+  if (t < cfg.blackHoldMs) return "black-hold";
+  if (t < cfg.blackHoldMs + cfg.fadeMs) return "fade";
+  return "revealed";
+}
+function stateAtWith(cfg, t) {
+  return { t: t, phase: phaseAt(t, cfg), overlayOpacity: overlayOpacityAt(t, cfg), scale: scaleAt(t, cfg), accentLabel: cfg.accentLabel, textileStrands: cfg.textileStrands, textileColor: cfg.textileColor };
+}
+function stateAt(t) { return stateAtWith(CONFIG, t); }
+
+/* ===== Scene construction (code-drawn from CONFIG; no external assets) ===== */
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(name, attrs) {
+  const n = document.createElementNS(SVGNS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+function buildScene(cfg) {
+  const g = document.getElementById("scene");
+  while (g.firstChild) g.removeChild(g.firstChild);
+  const W = 960, H = 540;
+  // dark interior
+  g.appendChild(el("rect", { x: 0, y: 0, width: W, height: H, fill: cfg.interiorColor }));
+  // back wall shading band
+  g.appendChild(el("rect", { x: 0, y: 0, width: W, height: 120, fill: "#000000", opacity: 0.35 }));
+  // white-clothed tables inside (stylized shapes)
+  const tables = [ {x:330,y:360,w:130,h:44}, {x:520,y:385,w:150,h:50}, {x:430,y:320,w:100,h:36} ];
+  for (const tb of tables) {
+    g.appendChild(el("rect", { x: tb.x, y: tb.y, width: tb.w, height: tb.h, rx: 6, fill: cfg.tableColor, opacity: 0.92 }));
+    g.appendChild(el("rect", { x: tb.x + tb.w/2 - 6, y: tb.y + tb.h, width: 12, height: 34, fill: cfg.tableColor, opacity: 0.6 }));
+  }
+  // thin tree trunk (centre-right, beside the textile)
+  g.appendChild(el("rect", { x: 646, y: 90, width: 9, height: 330, fill: "#3a2c1e" }));
+  g.appendChild(el("line", { x1: 650, y1: 120, x2: 606, y2: 66, stroke: "#3a2c1e", "stroke-width": 6 }));
+  g.appendChild(el("line", { x1: 650, y1: 110, x2: 700, y2: 60, stroke: "#3a2c1e", "stroke-width": 6 }));
+  // hanging red textile — strand lines, count from CONFIG
+  const tx = 560, tw = 120, top = 96, len = 235;
+  g.appendChild(el("rect", { x: tx - 10, y: top - 12, width: tw + 20, height: 10, fill: "#5a4632" }));
+  for (let i = 0; i < cfg.textileStrands; i++) {
+    const fx = cfg.textileStrands === 1 ? tx + tw / 2 : tx + (tw * i) / (cfg.textileStrands - 1);
+    const sway = Math.sin(i * 1.7) * 7;
+    g.appendChild(el("line", { x1: fx, y1: top, x2: fx + sway, y2: top + len + Math.cos(i * 2.3) * 9, stroke: cfg.textileColor, "stroke-width": 3.4, "stroke-linecap": "round", opacity: 0.95 }));
+  }
+  // pale columns — count from CONFIG, evenly spaced across the frame
+  for (let c = 0; c < cfg.columnCount; c++) {
+    const cx = cfg.columnCount === 1 ? 130 : 120 + c * 620;
+    g.appendChild(el("rect", { x: cx - 52, y: 26, width: 104, height: 30, fill: cfg.columnColor }));
+    g.appendChild(el("rect", { x: cx - 40, y: 56, width: 80, height: 400, fill: cfg.columnColor }));
+    g.appendChild(el("rect", { x: cx - 52, y: 456, width: 104, height: 30, fill: cfg.columnColor }));
+    g.appendChild(el("rect", { x: cx - 40, y: 56, width: 16, height: 400, fill: "#000000", opacity: 0.14 }));
+  }
+  return g;
+}
+
+/* ===== Clock (requestAnimationFrame; __rec API for comparison sync) ===== */
+let clockMs = 0, playing = false, lastTs = null, rafId = null;
+function render() {
+  const s = stateAt(clockMs);
+  document.getElementById("overlay").style.opacity = String(s.overlayOpacity);
+  const g = document.getElementById("scene");
+  g.setAttribute("transform", "translate(480 270) scale(" + s.scale.toFixed(5) + ") translate(-480 -270)");
+}
+function tick(ts) {
+  if (!playing) return;
+  if (lastTs === null) lastTs = ts;
+  clockMs += ts - lastTs;
+  lastTs = ts;
+  if (clockMs >= CONFIG.durationMs) { clockMs = CONFIG.durationMs; playing = false; render(); return; }
+  render();
+  rafId = requestAnimationFrame(tick);
+}
+window.__rec = {
+  play: function () { if (!playing) { playing = true; lastTs = null; rafId = requestAnimationFrame(tick); } },
+  pause: function () { playing = false; if (rafId) cancelAnimationFrame(rafId); },
+  seek: function (t) { clockMs = Math.max(0, Math.min(CONFIG.durationMs, t)); render(); },
+  time: function () { return clockMs; }
+};
+window.__config = CONFIG;
+window.stateAt = stateAt;
+window.stateAtWith = stateAtWith;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, stateAt: stateAt, stateAtWith: stateAtWith, overlayOpacityAt: overlayOpacityAt, scaleAt: scaleAt };
+}
+if (typeof document !== "undefined" && document.getElementById) {
+  buildScene(CONFIG);
+  render();
+}
+</script>
+</body>
+</html>
+
+
+Return priced findings for THIS lens only, then end with SCORE: <int> and a BODY-WRITE: line.
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 98136 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Skipped project instructions in environment `local` starting at `/home/hatch/workspace/AGENTS.md` because the 32768-byte budget was exhausted. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+READABILITY: 86/100 — clears this lens’s minimum of 70; overall tier requires the other four independent scores.
+
+- **Composition remains readable by construction.** `buildScene()` places two broad pale columns around the dark interior, with three light table shapes between them. The responsive 16:9 SVG preserves these relationships at phone width. No scene text or controls compete with the subject.
+- **The red textile has a distinct silhouette, with a phone-size caveat.** Its 120×235-unit field contrasts with `interiorColor: "#17130f"`. At an assumed 320px stage width, that field becomes approximately 40×78px, while each 3.4-unit strand becomes approximately 1.13px wide. The textile should remain recognizable as a colored hanging field; individual strands and the nearby dark trunk are less securely legible. Evidence: `buildScene()` textile and trunk geometry.
+- **The fade does not extend obscuration past 650ms.** `overlayOpacityAt()` returns zero at `blackHoldMs + fadeMs = 650ms` and thereafter. At 500ms, the supplied harness reports overlay opacity 0.3149, leaving approximately 68.5% of the scene contribution visible. The subsequent hold introduces no additional obscuring element.
+- **Residual weakness:** the tables are simple rounded blocks with single supports, and the columns lack architectural detail. The arrangement communicates the prescribed place through broad shapes, but recognition as a particular colonnade interior is less certain than basic object separation.
+
+Limits: source-only assessment; no rendered phone-size frames were supplied. Actual rasterization, perceptual recognition during the fade, and contrast in playback remain unverified. The supplied SHA-256 is the declared binding, not independently checked. No mandatory readability cure is established from this stream.
+
+SCORE: 86
+BODY-WRITE: none (read-only run); consumer files this return verbatim as codex/lens-readability.md.
+tokens used
+19,960
+READABILITY: 86/100 — clears this lens’s minimum of 70; overall tier requires the other four independent scores.
+
+- **Composition remains readable by construction.** `buildScene()` places two broad pale columns around the dark interior, with three light table shapes between them. The responsive 16:9 SVG preserves these relationships at phone width. No scene text or controls compete with the subject.
+- **The red textile has a distinct silhouette, with a phone-size caveat.** Its 120×235-unit field contrasts with `interiorColor: "#17130f"`. At an assumed 320px stage width, that field becomes approximately 40×78px, while each 3.4-unit strand becomes approximately 1.13px wide. The textile should remain recognizable as a colored hanging field; individual strands and the nearby dark trunk are less securely legible. Evidence: `buildScene()` textile and trunk geometry.
+- **The fade does not extend obscuration past 650ms.** `overlayOpacityAt()` returns zero at `blackHoldMs + fadeMs = 650ms` and thereafter. At 500ms, the supplied harness reports overlay opacity 0.3149, leaving approximately 68.5% of the scene contribution visible. The subsequent hold introduces no additional obscuring element.
+- **Residual weakness:** the tables are simple rounded blocks with single supports, and the columns lack architectural detail. The arrangement communicates the prescribed place through broad shapes, but recognition as a particular colonnade interior is less certain than basic object separation.
+
+Limits: source-only assessment; no rendered phone-size frames were supplied. Actual rasterization, perceptual recognition during the fade, and contrast in playback remain unverified. The supplied SHA-256 is the declared binding, not independently checked. No mandatory readability cure is established from this stream.
+
+SCORE: 86
+BODY-WRITE: none (read-only run); consumer files this return verbatim as codex/lens-readability.md.

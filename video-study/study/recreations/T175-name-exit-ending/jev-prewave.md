@@ -1,0 +1,286 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T175-name-exit-ending
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e80f-b57b-7c70-9249-9652b394424e
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream. If a check needs material not in this stream, name it as a gap instead of fetching it.
+
+CONSUMER: recreation job INSTRUCTION §5 leg 3b (jev-prewave) for Cycle 026 Wave 23 item T175. DECISION PRICED: FIRE-WAVE (the five-lens scoring wave spends on this build) vs HOLD (the build returns to Execute with named defects). WORKING RECORD: hidden_files/study/recreations/T175-name-exit-ending/ (build-record.md + fit-table.md + config-census.md fed below). BODY-WRITE: your return is filed verbatim as jev-prewave.md at the item's artifact root; end with a BODY-WRITE: line.
+
+ITEM: T175 — Name-exit ending (Packet #9, SixMap) · attempt 1 · schedule basis t=0 allocation.
+
+=== GUARD DEFINITION (jev-prewave.md) ===
+# Jev call — jev-prewave (recreation)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14. The judgment: a scoring wave is the lane's expensive instrument — this call prices whether a build has EARNED its wave before the wave spends._
+
+## 1. What it judges
+- Deliverable: an attempt's build record (parameter table · construction route · own-checks results) BEFORE the Codex wave fires.
+- Call point: recreation INSTRUCTION §4, between the builder's own checks (§5.2) and the wave (§5.3). The verdict is advisory: applied, a HOLD returns the build to the builder with named defects and the wave does not fire on that item; set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this build record shows a recreation ready to be scored, or one whose defects are already visible in its own paperwork. Price: (1) PARAMETERIZATION — is the piece genuinely CONFIG-driven (fields named, ranges sane), or hard-coded with a config costume? (2) PURITY PRE-CHECK — does the construction route describe generation from parameters, with no tracing/embedding step hiding in the prose? (3) OWN-CHECKS COMPLETENESS — are the mechanical guards' results recorded (purity grep, swap test, syntax), or asserted? (4) TECHNIQUE FIDELITY PLAN — does the record state which packet mechanics the build implements and which it deliberately defers (a deferral named is lawful; a mechanic silently absent is not)? Score 0–1 per dimension, classify defects. You judge paperwork only: a build can pass you and still fail its wave — your job is that no wave is spent on a build its own record already condemns.
+
+## 3. Context contract (masked view)
+- FED: build-record.md · the CONFIG block of recreation.html · the technique's packet section · guards.md command list (what own-checks should exist) · **the item's A6 leg outputs (fit-table.md + config-census.md) — added 2026-11-16, recreation Cycle 024 Condense, on the Wave-21 pattern: prewave firings for T151, T153 and T154 all HOLDed or re-fired on feed completeness (the A6 files and packet section existed complete in the artifact directory but were not in the payload), the lane's recurring ASSERTED-CHECKS false-positive class. A payload lacking any FED element is a feeder defect, printed as such in the build record; a HOLD whose only named cure is feeding an already-filed FED element is disposed as a feed-completeness miss, with the miss recorded.**
+- NEVER FED: the builder's confidence prose · prior attempts' scores (each build is priced on its own record).
+- Ceiling: ≤32k tokens; the HTML enters as its CONFIG + construction sections, not media.
+
+## 4. Output space
+- Verdict classes: **FIRE-WAVE · HOLD**.
+- Dimensions (0–1): parameterization · purity pre-check · own-checks completeness · fidelity-plan honesty.
+- Rejection taxonomy (one primary): HARDCODED-CONFIG · TRACING-STEP · ASSERTED-CHECKS (results claimed, not recorded) · SILENT-DEFERRAL.
+- Accepted profile travels: cited in scores.md's pre-wave line; a wave fired over a HOLD is a deviation (WAVE-OVER-HOLD).
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → HOLD · ASSERTED-CHECKS at any score on other dimensions → HOLD (unrecorded checks are the lane's named failure class).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + classification + disposition land in the build record either way; an applied HOLD leaves the item IN PROGRESS and the wave moves to its next item (a held item never holds the wave hostage).
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: T15 attempt 1's build record (must FIRE-WAVE: checks recorded, deferral of the interlude named in its Plan) · a constructed record claiming a swap test with no harness output (must HOLD as ASSERTED-CHECKS) · a constructed record whose CONFIG is decorative over hard-coded phrases (must HOLD as HARDCODED-CONFIG).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all three must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.
+
+=== BUILD RECORD ===
+# build-record — T175 Name-exit ending · attempt 1 · Cycle 026 Wave 23 (queue #84)
+
+- **Item:** T175 — Name-exit ending (Packet #9, SixMap — nez&pez, Vimeo 1235931636) · P9 T10 · window 9.76–10.04 s.
+- **Schedule basis: `t=0 allocation`** (RUN §2 T175, as amended by §2c/§2d — binding). The technique's lifecycle is re-based to the build's own zero; the measured ending is stretched to an allocated loop for legibility, curing the packet's B1 short-hold bad per asset AS-74 (a production borrowing holds the result ≥1 s).
+- **Final build SHA-256:** `585ff7517b9dfbc060ed77c2487af917c216d9262650820311861d0817c2a3dc` (recreation.html; identical in all five lens payloads).
+- **PIXEL-UNVERIFIED** — no browser binary in this seat; verification is LOGIC level (node harness over the build's own state function + character-width instrument) and comparison.html is the render surface.
+
+## Segment facts
+- Source: `hidden_files/study/video-digests/2026-11-16-vimeo-sixmap/source.mp4` (1080×1080, 25 fps, 10.04 s).
+- Cut: window 9.76–10.04 s; cut 9.26–10.04 with handles (−0.50 / +0.00 clipped at source end), re-encoded h264 → `segment.mp4`.
+- ffprobe (raw): `codec_name=h264 · width=1080 · height=1080 · duration=0.760000` (≈0.78 s nominal; 0.76 s at frame boundaries — the source ends at 10.04 s). Evidence only: appears solely as the labeled ORIGINAL side of comparison.html.
+
+## Basis + census-anchor mapping (measured vs allocated)
+| phase | measured (source) | allocated (build) |
+|---|---|---|
+| settled hold | ≈120 ms (9.64–9.76) | 1000 ms — `holds.settledMs` |
+| exit roll | 120 ms (9.76–9.88) | 300 ms — `exit.durMs` |
+| alone hold | ≈160 ms (9.88–10.04) | 1300 ms — `holds.aloneMs` |
+| total | ≈400 ms | cycle 2600 ms (DERIVED = 1000+300+1300) |
+
+Census-anchor mapping (by state, per §2/§2c): source 9.72 (complete network + name settled) ↔ allocation t<1000 (settled) ✓ · source 9.88 (footer empty, network unchanged) ↔ allocation t≥1300 (alone: footerName null AND nodeCount 23 AND networkHash constant) ✓. Derivation (§2d, authoritative): exit.startMs = holds.settledMs = 1000 · alone start = settledMs + exit.durMs = 1300 · cycleMs DERIVED = settledMs + exit.durMs + aloneMs = 2600.
+
+## Mechanics implemented (packet §T10)
+After the last satellite lands and its name settles, one final footer-only burst rolls "NALPAK 3001" up and out, leaving the footer empty; the complete network then holds alone. Network change across the exit: 0.00% in the specimen (packet §4 frame-difference) — in the build this is a CONSTRUCTION property: the network group is rendered once from CONFIG and never transformed; probed by networkHash constancy (below). Deliberate deferrals: NONE — every §T10 mechanic is implemented; the footer rings/rule geometry is carried from the T170 footer contract (§2c spelled in full).
+
+## Construction (two-group separation)
+One self-contained recreation.html. CONFIG at top carries every subject-shaping value (A9.6): stage · hub · nodes[22] verbatim from positions-final.json · spoke.w · lastName.text · holds{settledMs, aloneMs} · exit.durMs · name.rollTravelPx · sheen.stops · gradSteps/ringSteps · footer{ruleY, ringCx, ringCy, ringR, ringStroke, lineH, fontPx, fontStack, clip} · palette{field, ink, ruleFrom, ruleTo}.
+- **Network group** (SVG `<g id="network">`): hub circle + 22 spoke lines (hub→node) + 22 node circles, all static, rendered once from CONFIG in palette.ink. Its rendered attributes are CONSTANT all cycle.
+- **Footer group**: gradient rule + two gradient rings drawn as interpolated segments from palette.ruleFrom→ruleTo (gradSteps/ringSteps segments — no paint-server references), plus the name as **live DOM text** from CONFIG.lastName.text inside the CONFIG clip box (A1 §2 DOM analogue: glyphs are the browser's rendering of the CONFIG string — never baked, never traced).
+- **Phase machine** (half-open, pure function of CONFIG): settled [0,1000) name flat ink · exiting [1000,1300) name rolls up name.rollTravelPx (64) with the sheen gradient (CSS linear-gradient clipped to the live text; stops from CONFIG.sheen.stops), transform ONLY on the footer name element · alone [1300,2600) the name element is REMOVED from the DOM — no name rendered anywhere.
+- Harness surface: `window.__seek(ms)` / `window.__config` / `stateAt(ms)` (+ module.exports) returning {phase, footerName|null, nameVisible, nodeCount: 23, networkHash} — networkHash = FNV-1a over the network's rendered attribute serialization (hub + per-node spoke endpoints/stroke + node cx/cy/r/fill, as emitted). Deterministic; no external assets; no text other than the CONFIG name.
+
+## Count assertion (A9.3)
+CONFIG.nodes = 22 satellites + 1 hub = **23** vs RUN §2 table 23 — **MATCH** (harness raw: `count.nodes: 22` · `count.nodeCount_stateAt0: 23`).
+
+## Fidelity plan
+Implemented: complete static network from census data · settled flat-ink name · single upward roll exit with sheen · footer emptied (element removed) · alone hold on the unchanged network · footer brand geometry (rings + gradient rule). Deferred: none.
+
+## Asset inventory
+recreation.html loads NO external assets — all content is code (SVG/DOM generated from CONFIG). segment.mp4 is referenced only by comparison.html as the labeled ORIGINAL side. No generated imagery files.
+
+## Own checks — RAW output (A9.4, from the final build)
+Harness: node, DOM stubs, inline script extracted from recreation.html; swap applied to a deep copy of CONFIG via stateAtWith.
+
+```
+count.nodes: 22
+count.nodeCount_stateAt0: 23
+derived.default: {"exitStartMs":1000,"aloneStartMs":1300,"cycleMs":2600}
+hash.samples: ["0ccb05ce","0ccb05ce","0ccb05ce","0ccb05ce","0ccb05ce"]
+hash.allEqual: true
+phase@999: {"phase":"settled","footerName":"NALPAK 3001","nameVisible":true}
+phase@1000: {"phase":"exiting","footerName":"NALPAK 3001","nameVisible":true}
+phase@1299: {"phase":"exiting","footerName":"NALPAK 3001","nameVisible":true}
+phase@1300: {"phase":"alone","footerName":null,"nameVisible":false}
+zero.stateAt1400: {"footerName":null,"nodeCount":23,"nameVisible":false}
+swap.derived: {"exitStartMs":1000,"aloneStartMs":1600,"cycleMs":2900}
+swap.phase@1000: {"phase":"exiting","footerName":"ACME 9000"}
+swap.phase@1599: {"phase":"exiting","footerName":"ACME 9000"}
+swap.phase@1600: {"phase":"alone","footerName":null}
+swap.phase@2899: {"phase":"alone","footerName":null}
+swap.name@500: "ACME 9000"
+swap.hashDiffersFromDefault: true
+swap.nodeCount: 23
+fit.default: {"em":7.12,"px":384.48}
+fit.swap: {"em":5.68,"px":306.72}
+fit.clipW: 700
+fit.inkHeightDesignPx: 38.88
+fit.inkHeightAt360Px: 12.96
+```
+
+1. **Swap test (EXACT §2/§2d values):** lastName.text "NALPAK 3001"→"ACME 9000" · exit.durMs 300→600 · palette.ink #ffffff→#ffd75e. Result: derived phases exiting [1000,1600), alone [1600,2900), cycleMs 2900 — exactly as §2d prescribes (alone hold preserved at 1300, never compressed); the swapped name renders in the settled/exiting phases; the ink swap flows into the network serialization (hash differs — hub/spokes/nodes/name share palette.ink by design, one subject ink). Technique still reads correctly. **PASS.**
+2. **Purity grep** over recreation.html, pattern `segment\.mp4|source\.mp4|<video|<img|url\(|1235931636`: **0 hits** (grep -c printed `0`). The build contains no specimen reference at all; gradient rendering uses interpolated segment strokes + a CSS linear-gradient (no paint-server `url()` references by construction).
+3. **Syntax:** `node --check` on the extracted inline script: **PASS**.
+4. **Count assertion:** 22 + 1 = 23 vs 23 — **MATCH** (above).
+5. **Zero-state probes (guards cmd 8):** stateAt(1400).footerName == null AND stateAt(1400).nodeCount == 23 AND nameVisible == false — **PASS** (raw above).
+6. **Network constancy:** networkHash `0ccb05ce` equal at 0/999/1299/2000/2599 — **PASS** (raw above).
+7. **Phase boundaries:** default 999 settled / 1000 exiting / 1299 exiting / 1300 alone; swapped 1599 exiting / 1600 alone — **PASS** (raw above).
+8. **Comparison check (LOGIC level):** one control set (Play/Pause/Restart, 44px-min buttons) drives segment.mp4 and slaves the recreation via __seek from a shared restart; BOTH at natural speed — no time-warp (the §2c-forbidden recreationMs = videoMs × (2600/780) mapping is NOT used); face prints "allocation stretches the measured 0.40 s ending to a 2.60 s loop — natural speed both sides, phases labeled" and a live recreation-phase label; labels verbatim "ORIGINAL — SixMap (nez&pez) @ 9.76–10.04" / "RECREATION — T175 Name-exit ending, parameterized"; phone stacking via flex-direction column ≤640 px. PIXEL-UNVERIFIED.
+
+## A6 legs (final build)
+- fit-table.md — HITs **0** (lastName ink width 384.48 px vs clip 700; ink height 12.96 px at 360 px stage vs 11 px floor).
+- config-census.md — HITs **0** (all-literal scan + classification; the 22-entry node table is CONFIG data).
+
+## Pointers
+Packet: digest.md §T10 · positions: positions-final.json · register: style-library/techniques-endings.md (T175) · RUN: runs/2026-11-17-cycle-026-wave-23/RUN.md §1b/§2/§2c/§2d · prewave: jev-prewave.md (artifact root) · wave: codex/lens-*.md · verdict: scores.md.
+
+=== CONFIG BLOCK (from recreation.html) ===
+const CONFIG = {
+  stage: { w: 1080, h: 1080 },
+  hub: { cx: 482, cy: 484, r: 32 },
+  nodes: [
+    {x:697,y:451,r:21.2},{x:331,y:510,r:21.2},{x:574,y:255,r:21.1},{x:463,y:265,r:21.1},
+    {x:540,y:308,r:21.1},{x:683,y:340,r:21.1},{x:386,y:357,r:21.1},{x:632,y:440,r:21.1},
+    {x:653,y:499,r:21.1},{x:365,y:565,r:21.1},{x:813,y:131,r:21.0},{x:518,y:255,r:21.0},
+    {x:691,y:258,r:21.0},{x:479,y:323,r:21.0},{x:628,y:330,r:21.0},{x:646,y:387,r:21.0},
+    {x:705,y:395,r:21.0},{x:301,y:563,r:21.0},{x:613.5,y:286,r:20.9},{x:561.5,y:363,r:20.9},
+    {x:415.5,y:305,r:20.8},{x:482.5,y:676,r:20.8}
+  ],
+  spoke: { w: 1.5 },
+  lastName: { text: "NALPAK 3001" },
+  holds: { settledMs: 1000, aloneMs: 1300 },
+  exit: { durMs: 300 },
+  name: { rollTravelPx: 64 },
+  sheen: { stops: [ {at:0, color:"INK"}, {at:0.5, color:"#9a9a9a"}, {at:1, color:"INK"} ] },
+  gradSteps: 36,
+  ringSteps: 24,
+  footer: { ruleY: 905, ringCx: [118, 962], ringCy: 905, ringR: 52, ringStroke: 10,
+            lineH: 64, fontPx: 54, fontStack: "Arial, Helvetica, sans-serif",
+            clip: { x: 190, y: 831, w: 700, h: 74 } },
+  palette: { field: "#000000", ink: "#ffffff", ruleFrom: "#2aa7c9", ruleTo: "#e07b39" }
+};
+=== PACKET SECTION (digest.md §T10) ===
+### T10 — Name-exit ending (9.76–10.04 s)
+- **Mechanics:** after the last satellite lands (B23 ends 9.64 s) and its name settles, one final footer-only burst (9.76–9.88 s, network change 0.00% by frame-difference) rolls "NALPAK 3001" up and out, leaving the footer empty; the complete network then holds alone for the final ≈0.16 s.
+- **Why it works:** emptying the label hands the last beat to the diagram itself — the network, not any single entity, is the final image.
+- **Evidence:** ev/009.72-final-network-last-name.jpg (full network + last name) · ev/009.88-name-exited.jpg (same network, footer empty).
+
+
+=== GUARDS LIST (what own-checks should exist) ===
+Own-checks owed (INSTRUCTION §5 legs 1-3 + RUN §2 Verify checklist): swap test with exact altered values + result · purity grep (segment.mp4|source.mp4|<video|<img|url(|1235931636) 0 hits · node --check on the inline script · count assertion (A9.3) · zero-state probe (guards command 8) · network-constancy probe · phase-boundary probes · A6 legs (guard-measured-fit + guard-config-census) filed pre-wave.
+
+=== A6 LEG 1 — fit-table.md ===
+# fit-table — T175 Name-exit ending (guard-measured-fit, A6 pre-wave leg)
+
+Method: the lastName element measured with the lane's standing character-width instrument — glyph-ink geometry from the build harness's per-class character-width table (upper 0.72em · lower 0.56em · digit 0.62em · space 0.32em · punct 0.28em), run in node over the build's own CONFIG (harness output filed verbatim in build-record.md). Ink height = cap height 0.72em (the string carries no descender glyphs). Instrument stated: node logic harness (DOM-free text metrics, canvas measureText equivalent) — no browser binary in this seat; PIXEL-UNVERIFIED. One subject text element exists in this build (the footer last name — the technique's subject text, not a caption).
+
+| element | container | measured ink bounds (post-fit) | container bounds | margin on binding side |
+|---|---|---|---|---|
+| lastName text "NALPAK 3001" (CONFIG.lastName.text, fontPx 54) | footer clip box (CONFIG.footer.clip) | ink width **384.48 px** (7.12em: 6 upper × 0.72 + 1 space × 0.32 + 4 digits × 0.62, × 54 px) at design scale; ink height 38.88 px design = **12.96 px at the 360 px stage** | clip width **700 px** (design scale); clip height 74 px | (700 − 384.48) / 2 = **157.76 px each side** (centred) |
+| lastName text under swap "ACME 9000" (same CONFIG values) | footer clip box | ink width **306.72 px** (5.68em × 54 px); ink height 12.96 px at 360 px stage | clip width 700 px | 196.64 px each side |
+
+- Ink width vs clip: 384.48 ≤ 700 — **HITs 0** (the name fits its clip box with margin; no fitting compression is applied or needed).
+- Legibility floor: measured ink height at the 360 px stage = 12.96 px ≥ ~11 px floor — **PASS**.
+- Hierarchy: only one text element; no hierarchy claim — no row owed.
+
+**HIT list: EMPTY — leg PASS (advisory).**
+
+=== A6 LEG 2 — config-census.md ===
+# config-census — T175 Name-exit ending (guard-config-census v3.1, A6 pre-wave leg)
+
+_Prices the final recreation.html (SHA-256 `585ff7517b9dfbc060ed77c2487af917c216d9262650820311861d0817c2a3dc`)._
+
+## 1. All-literal scan (outside the CONFIG block)
+Distinct literals outside CONFIG: `0x811c9dc5` / `0x01000193` (FNV-1a hash offset/prime) · `16` (hex radix in parseInt/toString + slice bounds in the colour mixer) · `100` (% / cqw unit conversions) · `2` (Math.PI × 2 full-turn; string padding) · `3` (hex channel count in mixColor loop) · `8` (hash hex width) · `0` / `1` (clamp01 bounds, indices, phase endpoints) · `"INK"` (sheen-stop sentinel resolved against palette.ink at render) · meta digits (charset/viewport `1`) · CSS `100%`/`100vmin` (full-container identities). Per-constant classification:
+
+| literal | site | classification |
+|---|---|---|
+| `0x811c9dc5` / `0x01000193` | fnv1a | structural — the FNV-1a algorithm's defining constants; the hash is a probe instrument, not subject shape |
+| `16`, `3`, `8`, padding strings | hexRgb/mixColor/fnv1a formatting | structural — base/channel-count/format identities |
+| `100` | pct() and cqw conversions | structural — percent/unit identity arithmetic over CONFIG values |
+| `2` | ring arc sweep Math.PI × 2 | structural — full-turn identity |
+| `0` / `1` | clamp01, loop indices, stop endpoints | structural — clamp/index identities |
+| `"INK"` | sheen stop resolution | structural sentinel — its VALUE is palette.ink (CONFIG); the sentinel names the key it resolves to |
+| font stack | — | subject-shaping and IN CONFIG (footer.fontStack) per the v3.1 clarification — no CSS font literal stands outside CONFIG (the comparison page's furniture stack is outside this leg's scope) |
+| node table (22 × {x,y,r}) | — | subject-shaping and IN CONFIG (CONFIG.nodes, verbatim from positions-final.json) — the census data is CONFIG, as required |
+
+No subject-shaping literal stands outside CONFIG. All shaping values (node table, hub, spoke width, name text, holds, exit duration, roll travel, sheen stops, gradient step counts, footer geometry/clip, palette) live in CONFIG.
+
+## 2. Application-site resolution (every CONFIG key → ≥1 site)
+| key | application site(s) |
+|---|---|
+| stage.w / stage.h | SVG viewBox · field rect · rule segment span · name font/line-height cqw scaling · pct() conversions |
+| hub.cx / cy / r | networkSerialization · spoke line endpoints (x1/y1) · hub circle |
+| nodes[].x / y / r | networkSerialization · spoke line endpoints (x2/y2) · node circles (cx/cy/r) — all 22 entries consumed by the same loops |
+| spoke.w | networkSerialization · spoke line stroke-width |
+| lastName.text | nameText.textContent · stateAt footerName |
+| holds.settledMs | derived() exitStartMs + cycleMs |
+| holds.aloneMs | derived() cycleMs |
+| exit.durMs | derived() aloneStartMs + cycleMs · stateAt exiting progress divisor |
+| name.rollTravelPx | render() exiting translateY |
+| sheen.stops[].at / color | sheenCss() gradient stop string (INK sentinel → palette.ink) |
+| gradSteps | rule segment loop count |
+| ringSteps | ring segment loop count |
+| footer.ruleY | rule segment y1/y2 |
+| footer.ringCx[] / ringCy / ringR / ringStroke | ring segment geometry + stroke-width (both centres consumed) · rule stroke-width |
+| footer.lineH | name line-height |
+| footer.fontPx | name font-size · fit instrument input |
+| footer.fontStack | name font-family |
+| footer.clip.x / y / w / h | nameClip left/top/width/height |
+| palette.field | field rect fill |
+| palette.ink | networkSerialization · spoke/node/hub fill+stroke · settled name colour · sheen INK stops |
+| palette.ruleFrom / ruleTo | mixColor endpoints for rule + ring segments |
+
+## 3. CSS-variable setter check
+No CSS variables are used; CONFIG values flow through JS setters directly. No unassigned-variable class present.
+
+**HIT list: EMPTY — leg PASS (advisory).**
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 98136 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Skipped project instructions in environment `local` starting at `/home/hatch/workspace/AGENTS.md` because the 32768-byte budget was exhausted. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**FIRE-WAVE** — the supplied paperwork shows no defect requiring a return to Execute.
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Parameterization | 1.0 | CONFIG names geometry, text, timing, palette and footer values. config-census §2 maps every key to application sites; recorded swaps change the name, timing and network ink hash. |
+| Purity pre-check | 1.0 | Construction describes CONFIG-generated SVG and live DOM text. Own-check 2 records the specified purity grep with **0 hits**; specimen video is confined to comparison.html. |
+| Own-checks completeness | 1.0 | Own-checks record swap outputs, syntax PASS, purity result, count, zero-state, network constancy and phase boundaries. Both required A6 outputs are supplied. No ASSERTED-CHECKS finding. |
+| Fidelity-plan honesty | 1.0 | “Mechanics implemented” and “Fidelity plan” cover packet §T10’s settled name, footer-only upward exit, empty footer and unchanged network hold. Timing expansion is explicitly allocated; deferrals are explicitly none. |
+
+**Findings:** No rejection findings. Primary rejection taxonomy: **none**.
+
+The fit-table arithmetic is consistent: `(6×0.72 + 0.32 + 4×0.62)×54 = 384.48 px`; cap-height estimate at 360 px is `0.72×54×360/1080 = 12.96 px`. These are character-table estimates, not measured browser glyph bounds. The table’s “canvas measureText equivalent” description overstates that instrument, but its method and PIXEL-UNVERIFIED limitation are disclosed; this does not establish a build defect.
+
+**Limits:** Fed-text review only. Actual source, execution, SHA-256, rendered fit, DOM removal and visual fidelity were not independently verified. State-function outputs support the recorded logic checks, not browser behavior.
+
+**BODY-WRITE: none (read-only run); consumer to file this return verbatim as jev-prewave.md.**
+tokens used
+18,861
+**FIRE-WAVE** — the supplied paperwork shows no defect requiring a return to Execute.
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Parameterization | 1.0 | CONFIG names geometry, text, timing, palette and footer values. config-census §2 maps every key to application sites; recorded swaps change the name, timing and network ink hash. |
+| Purity pre-check | 1.0 | Construction describes CONFIG-generated SVG and live DOM text. Own-check 2 records the specified purity grep with **0 hits**; specimen video is confined to comparison.html. |
+| Own-checks completeness | 1.0 | Own-checks record swap outputs, syntax PASS, purity result, count, zero-state, network constancy and phase boundaries. Both required A6 outputs are supplied. No ASSERTED-CHECKS finding. |
+| Fidelity-plan honesty | 1.0 | “Mechanics implemented” and “Fidelity plan” cover packet §T10’s settled name, footer-only upward exit, empty footer and unchanged network hold. Timing expansion is explicitly allocated; deferrals are explicitly none. |
+
+**Findings:** No rejection findings. Primary rejection taxonomy: **none**.
+
+The fit-table arithmetic is consistent: `(6×0.72 + 0.32 + 4×0.62)×54 = 384.48 px`; cap-height estimate at 360 px is `0.72×54×360/1080 = 12.96 px`. These are character-table estimates, not measured browser glyph bounds. The table’s “canvas measureText equivalent” description overstates that instrument, but its method and PIXEL-UNVERIFIED limitation are disclosed; this does not establish a build defect.
+
+**Limits:** Fed-text review only. Actual source, execution, SHA-256, rendered fit, DOM removal and visual fidelity were not independently verified. State-function outputs support the recorded logic checks, not browser behavior.
+
+**BODY-WRITE: none (read-only run); consumer to file this return verbatim as jev-prewave.md.**

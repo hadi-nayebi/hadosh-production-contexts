@@ -1,0 +1,991 @@
+CONSUMER + DECISION PRICED: the practice job (Video Study lane), Cycle 014 Wave 13, §5 Verify — your score is one of five lens scores whose average and floor decide whether technique T18 consolidates in the style library as RECREATED (pass bar: average >=85 AND no lens under 70), and name any residual defects the next attempt must carry if it fails.
+WORKING RECORD: you build from the technique facts + recreation source below; your return is filed verbatim in the artifact's codex/attempt-4/ directory and quoted into the artifact's scores.md; the working record you write to is the artifact's build record + scores.md.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. Scores are integers from 0 to 100. End your return with exactly one line: SCORE: <integer>. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: TIMING / TEMPO MATCH only. Score 0-100 how faithfully the recreation's timing reproduces the technique's timing. Other lenses own motion form, purity, reuse, readability.
+Judge: is ALL timing checkpoint-priced data (per-line records, per-message records, cut records) rather than hardcoded branches or a global cadence? Do the timing records reproduce the evidenced title-build checkpoints — first line partial at t=4000, complete by t=4550; second line's first word standing alone at t=4750-5100; second line complete by t=5400; full title by t=5650 — as states of the build, not just as endpoints? Does the 15s window carry the specimen's density — chat pops spread across the window, 6 hard cuts in ~14.5s (about one per 2.4s)? Do the tables stay coherent under overrides (a changed durationMs or replacement tables)? Are the reveal and sweep durations proportionate inside a fast-cut section? How are tightly spaced events (a chat pop shortly after a cut) handled in the timing design?
+
+TECHNIQUE FACTS (packet P1, frame-evidenced): T18 Keynote stage + heckler chat @ 2:02-2:17. Arena stage, huge curved screen: slide title builds line by line with highlight bars ('THE GREATEST TRANSFORMATION / IN HUMAN / HISTORY' — evidence frame t127 at 2:07 catches 'IN' in yellow mid-build, title white bold over the dark screen), stat cards 'MINUTES 18 / SLIDES 0', slide counter '2 / 40'. Audience chat bubbles pop in at the side over the screen ('he's buffering', 'It's a pause. for effect', 'Great point, will circle back on this!' — with sender names/times and coloured avatar circles in t127). Fastest-cut section of the video: 6 hard cuts in 14.5s. Tiny speaker silhouette + spotlight pool at the stage bottom, audience dots row. Why: presentation software becomes a stage; chat is a laugh track that also motivates the cuts; empty-slide stats tell the joke before the speaker speaks. Segment frames re-read with a defined origin (recreation t=0 at the window start; the segment file runs 0.5s ahead): at t=4000 the first line is mid-build ('THE GREATEST TRANSI' typed so far); by t=4550 the first line is complete and white; at t=4750-4900 the second line's first word stands yellow with the rest of its line absent; by t=5400 the second line is complete; by t=5650 the full title stands, lines two and three yellow, line one white. Denser sampling of the same segment (frames every 125ms) adds: the first line reveals at a roughly uniform per-character rate (about 2 characters visible at t=3450, about 7 at t=3575, about 19 at t=3950, about 26 at t=4075); the second line's second word begins only after its first word has stood alone for a few hundred milliseconds (still alone at t=5075, about two characters of the second word visible at t=5200); the third line is mid-build at t=5450 (about two characters) and complete by t=5575.
+OWN-CHECK PACKET (neutral, logic level; no rendered pixel verification was available in the build environment): a node harness ran the extracted inline script against a stubbed DOM — 72 checks, 72 passed. Check families: syntax compile; self-start and ending state under the file's own startup path; per-line reveal prefix states at the evidenced checkpoints (partial first line, first line complete, the second line's first word standing alone at three instants, partial second word, second line complete, third line partial, full title) asserted as displayed surfaces; per-word reveal onsets including the second word's hold; per-character displayed colours at the full-title state and the final hold (first line white, lines two and three yellow) and at the isolated-word state (yellow, with no highlight bar present on that line); highlight bar presence/absence at the checkpoints, with sweep windows read from per-line records; cut-event count and per-cut state indices; the 100ms chat-after-cut adjacency states; loop-boundary state equality; displayed-state bounds from a measured content model whose framing arithmetic follows the composed transform exactly, asserted for every framing, with the accumulated chat stack asserted inside the screen at four viewport heights (568/640/740/844 px at 360 px wide); modelled type sizes at 360 px width; title/chat column separation at 360 px; sweep character thresholds computed on the padded word advance (word padding and letter spacing included), one unrounded progress fraction driving both bar width and thresholds, and the bar's height covering the glyph cap region; a stylesheet parse of the recreation's own style block (every declaration well-formed, braces and parentheses balanced); measured content-fit rejection (a title word wider than the title column, an oversized single token, overlong chat text) and just-fits acceptance; cardinality state tests (1 and 5 title lines, 0 and 6 messages, 1 and 8 cuts) and malformed reveal-record rejection (reveal overlap into the next line, non-positive reveal duration, negative word hold, invalid retained colour, a sweep beginning inside its own reveal); duration-scaling coherence (text-only overrides accompanied by a duration change still scale every checkpoint and the idle bound; a timing-table replacement keeps absolute times); atomic URL override rejection for malformed or present-but-blank numeric fields (blank optional per-record fields included), escaped-delimiter text round-trip, and a comparison-page swap with complete replacement records; validation rejection of adversarial classes (non-finite values in every numeric detail field, null groups, absent detail fields, negative dimensions, non-numeric opacity values, invalid colours); a CONFIG consumption census (300 leaves, each resolved to an application site or a lookup effect; 41 CSS custom properties set from CONFIG and all used); a literal census outside CONFIG (structural values only); media-reference grep zero hits. Two pre-scoring leg tables are filed with the build: a measured-fit table (4 advisory hits on a stricter ink-height basis for secondary text) and a config census (0 hits).
+
+===== RECREATION SOURCE =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T18 — Keynote stage + heckler chat · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center;font-family:var(--t18-font);overflow:hidden}
+  #stage{position:relative;width:100%;height:100%;min-height:var(--t18-stage-min-h);overflow:hidden}
+  #world{position:absolute;inset:0;transform-origin:50% 50%}
+  #screenWrap{position:absolute;transform-origin:50% 50%}
+  #screen{position:absolute;inset:0;border-radius:var(--t18-screen-radius);overflow:hidden;
+         box-shadow:var(--t18-shadow-in),var(--t18-shadow-out);
+         transform:perspective(var(--t18-persp)) rotateX(var(--t18-rotx))}
+  #titleWrap{position:absolute}
+  .tline{font-weight:var(--t18-title-weight);line-height:var(--t18-title-lh);letter-spacing:var(--t18-title-ls);white-space:normal;word-break:break-word}
+  .tline .word{position:relative;display:inline-block;padding:0 var(--t18-word-pad)}
+  .tline .hlbar{position:absolute;left:0;top:var(--t18-hl-top);height:var(--t18-hl-height);z-index:-1}
+  #statWrap{position:absolute;display:flex}
+  .stat{background:var(--t18-stat-bg);border:var(--t18-stat-bw) solid var(--t18-stat-bc);border-radius:var(--t18-stat-radius);padding:var(--t18-stat-pad);text-align:center;line-height:var(--t18-normal-lh)}
+  .stat .v{font-weight:var(--t18-stat-v-weight)}
+  .stat .l{letter-spacing:var(--t18-stat-ls);opacity:var(--t18-stat-l-opacity)}
+  #counter{position:absolute;font-weight:var(--t18-counter-weight);opacity:var(--t18-counter-opacity)}
+  #chatWrap{position:absolute;display:flex;flex-direction:column}
+  .chat{border-radius:var(--t18-chat-radius);padding:var(--t18-chat-pad);transform-origin:var(--t18-chat-origin)}
+  .chat .meta{opacity:var(--t18-meta-opacity);margin-bottom:var(--t18-meta-mb);display:flex;align-items:center;gap:var(--t18-meta-gap);line-height:var(--t18-normal-lh)}
+  .avatar{width:var(--t18-avatar-size);height:var(--t18-avatar-size);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:var(--t18-avatar-weight);color:var(--t18-avatar-color);flex:0 0 auto}
+  .chat .txt{line-height:var(--t18-chat-lh)}
+  #spot{position:absolute;border-radius:50%}
+  #speaker{position:absolute}
+  #speaker .head{width:var(--t18-speaker-head-w);aspect-ratio:1;border-radius:50%;margin:0 auto}
+  #speaker .body{width:100%;height:var(--t18-speaker-body-h);border-radius:var(--t18-speaker-body-r) var(--t18-speaker-body-r) 0 0;margin-top:var(--t18-speaker-body-mt)}
+  #audience{position:absolute;display:flex;flex-wrap:wrap;gap:var(--t18-aud-gap);justify-content:center;overflow:hidden}
+  .aud{width:var(--t18-aud-size);height:var(--t18-aud-size);border-radius:50%;opacity:var(--t18-aud-opacity)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <div id="screenWrap"><div id="screen">
+      <div id="titleWrap"></div>
+      <div id="statWrap"></div>
+      <div id="counter"></div>
+      <div id="chatWrap"></div>
+    </div></div>
+    <div id="spot"></div>
+    <div id="speaker"><div class="head"></div><div class="body"></div></div>
+    <div id="audience"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — the shaping variables live here. Fixed construction conventions
+   outside CONFIG: the DOM topology, the circular avatar/audience/speaker shapes,
+   and the text tokenization and interpolation rules in the logic below. =====
+   Timing is checkpoint-priced: title lines, highlight targets, chat pops and hard cuts
+   are complete records in CONFIG, validated by validateConfig() before use.
+   The chat at 7400ms follows the cut at 7300ms by 100ms. The two events stay
+   distinguishable in state: at 7350ms the framing is already the 7300 cut while the
+   chat is not yet visible; at 7450ms the chat is visible with its pop mid-flight.
+   LOOP BOUNDARY: the final cut (13850ms) lands on a near-initial wide framing; the wrap
+   at durationMs is itself a designed cut back to initialFraming while content resets.
+   SHORT-DURATION POLICY: REJECT — a config whose events do not fit inside durationMs
+   (with minTailMs after the last event) fails validation; an invalid URL override is
+   rejected whole and the last valid CONFIG stands (window.__overrideErrors records it).
+   DENSITY POLICY: the idle span after the last event's end may not exceed
+   maxIdleTailMs. A durationMs override without a timing-table replacement
+   (title-line times, message times, cut times) scales every checkpoint and the
+   idle bound by the duration ratio, preserving density; text-only replacements
+   do not change that. An override that replaces a timing table keeps its
+   absolute checkpoints and must satisfy the density bound as written.
+   URL TEXT ESCAPING: inside URL text fields, a backslash escapes the next character,
+   so \~ \; \, and \\ carry the literal delimiter characters as text. */
+const CONFIG = {
+  durationMs: 15000,
+  minTailMs: 400,
+  maxIdleTailMs: 2500,
+  titleLines: [
+    {text:"THE GREATEST TRANSFORMATION", tMs:3400, revealStartMs:3400, revealMs:810, wordHoldMs:0, sweepStartMs:4250, retainColor:"#ffffff"},
+    {text:"IN HUMAN", tMs:4600, revealStartMs:4600, revealMs:480, wordHoldMs:280, highlightMs:700, sweepStartMs:5700, retainColor:"#f5c518"},
+    {text:"HISTORY", tMs:5375, revealStartMs:5375, revealMs:245, wordHoldMs:0, sweepStartMs:5750, retainColor:"#f5c518"}
+  ],
+  defaultRevealMs: 800,
+  defaultWordHoldMs: 0,
+  highlightTargets: [
+    {lineIndex:0, wordIndex:1},
+    {lineIndex:1, wordIndex:0},
+    {lineIndex:2, wordIndex:0}
+  ],
+  highlightMs: 700,
+  highlightColor: "#f5c518",
+  sweepTextColor: "#141414",
+  titleColor: "#ffffff",
+  titleSizeVw: 5.2, titleMinPx: 16, titleMaxPx: 44,
+  chatTextMinPx: 14.5, chatTextVw: 4.0, chatTextMaxPx: 17,
+  metaMinPx: 12, metaVw: 3.33, metaMaxPx: 14,
+  statValueMinPx: 16, statValueVw: 4.2, statValueMaxPx: 26,
+  statLabelMinPx: 12, statLabelVw: 3.33, statLabelMaxPx: 14,
+  counterMinPx: 11, counterVw: 2.8, counterMaxPx: 16,
+  layout: {screenLeftPct:2, screenRightPct:2, screenTopPct:4, screenHeightPct:74,
+           titleLeftPct:5, titleTopPct:14, titleWidthPct:52,
+           chatRightPct:3, chatTopPct:9, chatWidthPct:36, chatGapPx:6,
+           statLeftPct:5, statBottomPct:6, statGapPct:3,
+           counterRightPct:4, counterBottomPct:6,
+           spotLeftPct:50, spotBottomPct:13, spotWidthPct:16, spotHeightPct:5,
+           speakerLeftPct:50, speakerBottomPct:15, speakerWidthPct:3.2, speakerMinPx:14,
+           audienceBottomPct:1.5, audienceHeightPct:9, audiencePadPct:2},
+  statCards: [{label:"MINUTES", value:"18"}, {label:"SLIDES", value:"0"}],
+  slideCounter: "2 / 40",
+  chatMessages: [
+    {sender:"You", time:"9:19", text:"the file?", color:"#2f6fed", tMs:1200},
+    {sender:"Sam", time:"9:38", text:"he's buffering", color:"#3aa655", tMs:4200},
+    {sender:"Priya", time:"9:38", text:"It's a pause. for effect", color:"#7b4fd0", tMs:7400},
+    {sender:"Ted", time:"9:40", text:"Great point, will circle back on this!", color:"#e07b2a", tMs:10600}
+  ],
+  chatPopMs: 220, chatPopFrom: 0.8, chatPopTo: 1,
+  initialFraming: {scale:1.00, x:0, y:0, speakerXPct:0, spotScale:1.00, audienceShiftPct:0},
+  cuts: [
+    {tMs:2400,  scale:1.03, x:-1, y:0,  speakerXPct:-9, spotScale:1.18, audienceShiftPct:-4},
+    {tMs:4850,  scale:0.95, x:1,  y:1,  speakerXPct:8,  spotScale:0.84, audienceShiftPct:4},
+    {tMs:7300,  scale:1.04, x:-1, y:-1, speakerXPct:-11, spotScale:1.24, audienceShiftPct:-5},
+    {tMs:9700,  scale:0.98, x:2,  y:0,  speakerXPct:10, spotScale:0.92, audienceShiftPct:3},
+    {tMs:12150, scale:1.02, x:0,  y:-2, speakerXPct:-6, spotScale:1.14, audienceShiftPct:-2},
+    {tMs:13850, scale:0.99, x:0,  y:0,  speakerXPct:-2, spotScale:0.94, audienceShiftPct:0}
+  ],
+  framingMinDelta: 0.04,
+  capacity: {maxTitleLines:6, maxMessages:8, maxCuts:12, maxStatCards:4},
+  detail: {fontFamily:"Arial,Helvetica,sans-serif", titleWeight:900, titleLineHeight:1.04, titleLetterSpacing:".01em",
+           hlTopPct:0, hlHeightPct:100, screenRadius:"18px/28px", chatPadding:"5px 7px", chatRadiusPx:8,
+           chatLineHeight:1.25, statPadding:"4px 8px", statRadiusPx:6, audSizePx:9, audGapPx:3, audOpacity:0.5,
+           perspectivePx:900, rotateXDeg:2, shadowInset:"0 0 60px rgba(80,90,160,.35) inset",
+           shadowOuter:"0 6px 30px rgba(0,0,0,.8)", statBg:"rgba(255,255,255,.08)",
+           statBorderColor:"rgba(255,255,255,.22)", statBorderWidthPx:1, wordPaddingEm:0.08,
+           chatOrigin:"80% 50%", metaGapPx:4, metaMarginPx:2, metaOpacity:0.92, statLabelOpacity:0.92,
+           statLetterSpacingEm:0.14, avatarEm:1.5, avatarColor:"#ffffff", speakerHeadWidthPct:60,
+           speakerBodyHeightPx:14, speakerBodyRadiusPx:7, speakerBodyMarginPx:2, counterOpacity:0.9, stageMinHeightPx:240,
+           statValueWeight:900, avatarWeight:900, counterWeight:700,
+           lineHeightNormal:1.2},
+  fit: {referenceWidthPx:360, supportedHeightsPx:[568,640,740,844], minHeightPx:568,
+        glyphErrorFactor:1.15, perspectiveFactor:0.97, fallbackGlyphWidth:0.556,
+        maxChatLinesPerMessage:6, regionBottomMarginPct:2},
+  glyphWidths: {A:0.667,B:0.667,C:0.722,D:0.722,E:0.667,F:0.611,G:0.778,H:0.722,I:0.278,J:0.5,K:0.667,L:0.556,M:0.833,N:0.722,O:0.778,P:0.667,Q:0.778,R:0.722,S:0.611,T:0.611,U:0.722,V:0.667,W:0.944,X:0.667,Y:0.667,Z:0.611,
+                a:0.556,b:0.556,c:0.5,d:0.556,e:0.556,f:0.278,g:0.556,h:0.556,i:0.222,j:0.222,k:0.5,l:0.222,m:0.833,n:0.556,o:0.556,p:0.556,q:0.556,r:0.333,s:0.5,t:0.278,u:0.556,v:0.5,w:0.722,x:0.5,y:0.5,z:0.5,
+                "0":0.556,"1":0.556,"2":0.556,"3":0.556,"4":0.556,"5":0.556,"6":0.556,"7":0.556,"8":0.556,"9":0.556,
+                " ":0.278,".":0.278,",":0.278,"'":0.18,"!":0.278,"?":0.556,":":0.278,";":0.278,"-":0.333,"/":0.278,"(":0.333,")":0.333,"&":0.667,"%":0.889},
+  defaultChatColor: "#888888",
+  bg: "#030305",
+  screenBg: "#101426",
+  chatBg: "rgba(18,20,34,0.88)",
+  chatColor: "#eef1f8",
+  speakerColor: "#05060a",
+  spotColor: "rgba(255,230,160,0.35)",
+  audienceColor: "#2a2e44",
+  audienceCount: 90
+};
+
+/* ===== Text measurement — advance widths from the configured glyph table =====
+   Widths are advance fractions of the font size for the configured font stack.
+   Fit decisions multiply widths by fit.glyphErrorFactor (the upper error bound),
+   so content near a boundary is rejected rather than fitted on an optimistic width. */
+function tokenizeWords(text){ return String(text == null ? "" : text).split(" ").filter(Boolean); }
+function isNum(v){ return typeof v === "number" && isFinite(v); }
+function clampPx(minPx, vw, maxPx, widthPx){ return Math.min(Math.max(minPx, vw * widthPx / 100), maxPx); }
+function glyphAdvance(ch, cfg){
+  const w = cfg.glyphWidths ? cfg.glyphWidths[ch] : undefined;
+  return isNum(w) ? w : cfg.fit.fallbackGlyphWidth;
+}
+function textWidthPx(text, fontPx, cfg, factor){
+  let em = 0;
+  const s = String(text == null ? "" : text);
+  for (let i = 0; i < s.length; i++) em += glyphAdvance(s[i], cfg);
+  return em * fontPx * (factor || 1);
+}
+/* Sweep thresholds on the padded advance: the bar traverses the word's padded
+   box, so each character's threshold fraction is its right edge — leading
+   padding, glyph advance and the letter spacing that follows the character —
+   over the full padded span (both paddings, every glyph, every gap). */
+function wordThresholdsPadded(word, cfg){
+  const s = String(word == null ? "" : word);
+  const pad = cfg.detail.wordPaddingEm;
+  const spacing = parseFloat(cfg.detail.titleLetterSpacing) || 0;
+  let total = pad * 2 + spacing * s.length;
+  const cum = [];
+  for (let i = 0; i < s.length; i++){ total += glyphAdvance(s[i], cfg); }
+  if (total <= 0) return s.split("").map(function(){ return 1; });
+  let run = pad;
+  for (let i = 0; i < s.length; i++){ run += glyphAdvance(s[i], cfg) + spacing; cum.push(run / total); }
+  return cum;
+}
+function wordThresholds(word, cfg){
+  const s = String(word == null ? "" : word);
+  let total = 0;
+  const cum = [];
+  for (let i = 0; i < s.length; i++){ total += glyphAdvance(s[i], cfg); cum.push(total); }
+  if (total <= 0) return cum.map(function(){ return 1; });
+  return cum.map(function(v){ return v / total; });
+}
+function wrapCount(text, fontPx, innerWidthPx, cfg, factor){
+  const words = tokenizeWords(text);
+  if (!words.length) return {lines:1, overflow:false};
+  const spaceW = glyphAdvance(" ", cfg) * fontPx * (factor || 1);
+  let lines = 1, cur = 0, overflow = false;
+  words.forEach(function(w){
+    const ww = textWidthPx(w, fontPx, cfg, factor);
+    if (ww > innerWidthPx) overflow = true;
+    if (cur === 0) cur = ww;
+    else if (cur + spaceW + ww <= innerWidthPx) cur += spaceW + ww;
+    else { lines++; cur = ww; }
+  });
+  return {lines:lines, overflow:overflow};
+}
+function padPair(padding){
+  const p = String(padding || "").trim().split(/\s+/).map(function(x){ return parseFloat(x) || 0; });
+  if (p.length === 1) return {v:p[0], h:p[0]};
+  return {v:p[0] || 0, h:p[1] || 0};
+}
+function lineHighlightMs(line, cfg){ return line && isNum(line.highlightMs) ? line.highlightMs : cfg.highlightMs; }
+function lineRevealStart(line){ return isNum(line.revealStartMs) ? line.revealStartMs : line.tMs; }
+function lineRevealMs(line, cfg){ return isNum(line.revealMs) ? line.revealMs : cfg.defaultRevealMs; }
+function lineWordHoldMs(line, cfg){ return isNum(line.wordHoldMs) ? line.wordHoldMs : cfg.defaultWordHoldMs; }
+function lineRetainColor(line, cfg){ return typeof line.retainColor === "string" ? line.retainColor : cfg.titleColor; }
+function lineRevealComplete(line, cfg){
+  return lineRevealStart(line) + lineRevealMs(line, cfg) + (tokenizeWords(line.text || "").length > 1 ? lineWordHoldMs(line, cfg) : 0);
+}
+function lineSweepStart(line, cfg){ return isNum(line.sweepStartMs) ? line.sweepStartMs : lineRevealComplete(line, cfg); }
+/* Per-word reveal onsets: characters arrive sequentially across the line at a
+   uniform per-character rate; the second word additionally waits out the
+   line's word-hold after the first word (and its trailing space) completes. */
+function wordOnsets(line, cfg){
+  const words = tokenizeWords(line.text);
+  const total = String(line.text == null ? "" : line.text).length;
+  const per = total > 0 ? lineRevealMs(line, cfg) / total : 0;
+  const hold = lineWordHoldMs(line, cfg);
+  const out = [];
+  let pos = 0;
+  words.forEach(function(w, wi){
+    out.push({word:w, startChar:pos, onsetMs: lineRevealStart(line) + pos * per + (wi === 1 ? hold : 0),
+              completeMs: lineRevealStart(line) + (pos + w.length) * per + (wi >= 1 ? hold : 0)});
+    pos += w.length + 1;
+  });
+  return out;
+}
+function revealInfo(line, t, cfg){
+  const start = lineRevealStart(line), dur = lineRevealMs(line, cfg);
+  const total = String(line.text == null ? "" : line.text).length;
+  const hold = lineWordHoldMs(line, cfg);
+  /* effective span: the hold stretches the line's elapsed reveal window */
+  const span = dur + (tokenizeWords(line.text).length > 1 ? hold : 0);
+  let revealed = 0;
+  if (t >= start){
+    const per = total > 0 ? dur / total : 0;
+    const words = wordOnsets(line, cfg);
+    revealed = total;
+    for (let wi = 0; wi < words.length; wi++){
+      const w = words[wi];
+      if (t < w.onsetMs) { revealed = w.startChar; break; }
+      const n = Math.min(w.word.length, Math.floor((t - w.onsetMs) / per));
+      if (n < w.word.length) { revealed = w.startChar + n; break; }
+      revealed = w.startChar + w.word.length;
+      if (wi + 1 < words.length && t < words[wi + 1].onsetMs) { revealed = w.startChar + w.word.length; break; }
+    }
+    if (t >= start + span) revealed = total;
+  }
+  const prefix = String(line.text == null ? "" : line.text).slice(0, revealed);
+  return {startMs:start, durationMs:dur, spanMs:span, completeMs:start + span, totalChars:total,
+          revealedChars:revealed, prefix:prefix, progress: total > 0 ? revealed / total : 1,
+          complete: revealed >= total, started: t >= start};
+}
+function msgPopMs(msg, cfg){ return msg && isNum(msg.popMs) ? msg.popMs : cfg.chatPopMs; }
+
+/* Measured content model: displayed extents of the configured content at a given
+   stage size, from the same width basis the sweep uses. Pure in CONFIG — every
+   validation recomputes it, so an override or swap is measured as written. */
+function measureContent(cfg, widthPx, heightPx, factor){
+  const L = cfg.layout, d = cfg.detail, f = factor || 1;
+  const screenWPx = widthPx * (100 - L.screenLeftPct - L.screenRightPct) / 100;
+  const screenHPx = heightPx * L.screenHeightPct / 100;
+  const sizes = {
+    title: clampPx(cfg.titleMinPx, cfg.titleSizeVw, cfg.titleMaxPx, widthPx),
+    chat: clampPx(cfg.chatTextMinPx, cfg.chatTextVw, cfg.chatTextMaxPx, widthPx),
+    meta: clampPx(cfg.metaMinPx, cfg.metaVw, cfg.metaMaxPx, widthPx),
+    statValue: clampPx(cfg.statValueMinPx, cfg.statValueVw, cfg.statValueMaxPx, widthPx),
+    statLabel: clampPx(cfg.statLabelMinPx, cfg.statLabelVw, cfg.statLabelMaxPx, widthPx),
+    counter: clampPx(cfg.counterMinPx, cfg.counterVw, cfg.counterMaxPx, widthPx)
+  };
+  const titleColPx = screenWPx * L.titleWidthPct / 100;
+  const titleAvailPx = screenWPx * (100 - L.titleLeftPct) / 100;
+  const wordPadPx = d.wordPaddingEm * sizes.title * f;
+  const titleWraps = [], titleWordOverflow = [];
+  let titleBlockPx = 0;
+  cfg.titleLines.forEach(function(line){
+    tokenizeWords(line.text).forEach(function(wd){
+      if (textWidthPx(wd, sizes.title, cfg, 1) + 2 * d.wordPaddingEm * sizes.title > titleColPx) titleWordOverflow.push(wd);
+    });
+    const w = wrapCount(line.text, sizes.title, titleColPx, cfg, f);
+    const words = tokenizeWords(line.text);
+    let lines = w.lines;
+    /* word padding widens each rendered word; a line whose padded words no longer
+       fit on one wrapped row wraps further — approximate by re-wrapping with the
+       padding folded into each word's width via a widened effective font size. */
+    if (!w.overflow && words.length){
+      const widened = sizes.title * (titleColPx / Math.max(1, titleColPx - words.length * wordPadPx * 2));
+      lines = wrapCount(line.text, widened, titleColPx, cfg, f).lines;
+    }
+    titleWraps.push(lines);
+    titleBlockPx += lines * sizes.title * d.titleLineHeight;
+  });
+  const chatPad = padPair(d.chatPadding);
+  const chatInnerPx = screenWPx * L.chatWidthPct / 100 - chatPad.h * 2;
+  const metaRowPx = Math.max(d.avatarEm * sizes.meta, sizes.meta * d.lineHeightNormal);
+  const chatWraps = [], chatWordOverflow = [], metaOverflow = [];
+  let chatStackPx = 0;
+  cfg.chatMessages.forEach(function(m, i){
+    const w = wrapCount(m.text, sizes.chat, chatInnerPx, cfg, f);
+    chatWraps.push(w.lines);
+    if (w.overflow) chatWordOverflow.push(m.text);
+    const metaW = d.avatarEm * sizes.meta + d.metaGapPx + textWidthPx(m.sender + " " + m.time, sizes.meta, cfg, f);
+    if (metaW > chatInnerPx) metaOverflow.push(m.sender);
+    chatStackPx += chatPad.v * 2 + metaRowPx + d.metaMarginPx + w.lines * sizes.chat * d.chatLineHeight;
+    if (i > 0) chatStackPx += L.chatGapPx;
+  });
+  const statPad = padPair(d.statPadding);
+  let statRowPx = 0;
+  cfg.statCards.forEach(function(c, i){
+    statRowPx += Math.max(textWidthPx(c.label, sizes.statLabel, cfg, f), textWidthPx(c.value, sizes.statValue, cfg, f)) + statPad.h * 2;
+    if (i > 0) statRowPx += screenWPx * L.statGapPct / 100;
+  });
+  const statHPx = statPad.v * 2 + Math.max(sizes.statLabel, sizes.statValue) * d.lineHeightNormal;
+  const counterWPx = textWidthPx(cfg.slideCounter, sizes.counter, cfg, f);
+  const titleBottomPct = L.titleTopPct + titleBlockPx / screenHPx * 100;
+  const chatBottomPct = L.chatTopPct + chatStackPx / screenHPx * 100;
+  const statTopPct = 100 - L.statBottomPct - statHPx / screenHPx * 100;
+  const rectScreen = {
+    left: Math.min(L.titleLeftPct, L.statLeftPct),
+    right: Math.max(100 - L.chatRightPct, 100 - L.counterRightPct, L.titleLeftPct + L.titleWidthPct,
+                    L.statLeftPct + statRowPx / screenWPx * 100),
+    top: Math.min(L.titleTopPct, L.chatTopPct),
+    bottom: Math.max(chatBottomPct, titleBottomPct, 100 - L.statBottomPct, 100 - L.counterBottomPct)
+  };
+  const rect = {
+    left: L.screenLeftPct + rectScreen.left * (100 - L.screenLeftPct - L.screenRightPct) / 100,
+    right: L.screenLeftPct + rectScreen.right * (100 - L.screenLeftPct - L.screenRightPct) / 100,
+    top: L.screenTopPct + rectScreen.top * L.screenHeightPct / 100,
+    bottom: L.screenTopPct + rectScreen.bottom * L.screenHeightPct / 100
+  };
+  return {sizes:sizes, screenWPx:screenWPx, screenHPx:screenHPx, titleWraps:titleWraps,
+          titleBlockPx:titleBlockPx, titleBottomPct:titleBottomPct, chatWraps:chatWraps,
+          chatStackPx:chatStackPx, chatBottomPct:chatBottomPct, statRowPx:statRowPx,
+          statTopPct:statTopPct, counterWPx:counterWPx, rect:rect, rectScreen:rectScreen,
+          titleWordOverflow:titleWordOverflow, chatWordOverflow:chatWordOverflow, metaOverflow:metaOverflow};
+}
+
+/* ===== Validation — complete records, ordered checkpoints, in-range, length-checked ===== */
+const LAYOUT_KEYS = ["screenLeftPct","screenRightPct","screenTopPct","screenHeightPct","titleLeftPct","titleTopPct","titleWidthPct","chatRightPct","chatTopPct","chatWidthPct","chatGapPx","statLeftPct","statBottomPct","statGapPct","counterRightPct","counterBottomPct","spotLeftPct","spotBottomPct","spotWidthPct","spotHeightPct","speakerLeftPct","speakerBottomPct","speakerWidthPct","speakerMinPx","audienceBottomPct","audienceHeightPct","audiencePadPct"];
+const DETAIL_SCHEMA = [["fontFamily","string"],["titleWeight","number"],["titleLineHeight","number"],["titleLetterSpacing","string"],["hlTopPct","number"],["hlHeightPct","number"],["screenRadius","string"],["chatPadding","padding"],["chatRadiusPx","number"],["chatLineHeight","number"],["statPadding","padding"],["statRadiusPx","number"],["audSizePx","number"],["audGapPx","number"],["audOpacity","opacity"],["perspectivePx","number"],["rotateXDeg","number"],["shadowInset","string"],["shadowOuter","string"],["statBg","color"],["statBorderColor","color"],["statBorderWidthPx","number"],["wordPaddingEm","number"],["chatOrigin","string"],["metaGapPx","number"],["metaMarginPx","number"],["metaOpacity","opacity"],["statLabelOpacity","opacity"],["statLetterSpacingEm","number"],["avatarEm","number"],["avatarColor","color"],["speakerHeadWidthPct","number"],["speakerBodyHeightPx","number"],["speakerBodyRadiusPx","number"],["speakerBodyMarginPx","number"],["counterOpacity","opacity"],["stageMinHeightPx","number"],["lineHeightNormal","number"],["statValueWeight","number"],["avatarWeight","number"],["counterWeight","number"]];
+const DETAIL_KEYS = DETAIL_SCHEMA.map(function(e){ return e[0]; });
+const DETAIL_NONNEG = ["titleWeight","titleLineHeight","hlTopPct","hlHeightPct","chatRadiusPx","chatLineHeight","statRadiusPx","audSizePx","audGapPx","perspectivePx","statBorderWidthPx","wordPaddingEm","metaGapPx","metaMarginPx","avatarEm","speakerHeadWidthPct","speakerBodyHeightPx","speakerBodyRadiusPx","speakerBodyMarginPx","stageMinHeightPx","lineHeightNormal","statValueWeight","avatarWeight","counterWeight"];
+function isColor(v){
+  if (typeof v !== "string") return false;
+  if (/^#[0-9a-fA-F]{3}$/.test(v) || /^#[0-9a-fA-F]{6}$/.test(v)) return true;
+  const m = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(0|1|0?\.\d+)\s*)?\)$/.exec(v);
+  if (!m) return false;
+  return Number(m[1]) <= 255 && Number(m[2]) <= 255 && Number(m[3]) <= 255;
+}
+function fitErrors(cfg){
+  const errs = [];
+  try {
+    if (!cfg.fit || !cfg.layout || !cfg.detail || !Array.isArray(cfg.titleLines) ||
+        !Array.isArray(cfg.chatMessages) || !Array.isArray(cfg.statCards)) return errs;
+    const W = cfg.fit.referenceWidthPx, H = cfg.fit.minHeightPx, F = cfg.fit.glyphErrorFactor;
+    if (!isNum(W) || !isNum(H) || !isNum(F)) return errs;
+    const m = measureContent(cfg, W, H, F);
+    if (m.titleWordOverflow.length) errs.push("measured fit: a title word exceeds the title column at the upper width bound (reject)");
+    if (m.chatWordOverflow.length) errs.push("measured fit: a chat word exceeds the chat column at the upper width bound (reject)");
+    if (m.metaOverflow.length) errs.push("measured fit: a chat sender/time row exceeds the chat column at the upper width bound (reject)");
+    m.chatWraps.forEach(function(n, i){ if (n > cfg.fit.maxChatLinesPerMessage) errs.push("measured fit: chatMessages[" + i + "] wraps past the per-message line bound (reject)"); });
+    if (m.chatBottomPct > 100 - cfg.fit.regionBottomMarginPct) errs.push("measured fit: accumulated chat height exceeds the screen at the minimum supported height (reject)");
+    if (m.titleBottomPct > m.statTopPct) errs.push("measured fit: title block reaches the stat row at the minimum supported height (reject)");
+    const chatLeftPct = 100 - cfg.layout.chatRightPct - cfg.layout.chatWidthPct;
+    if (cfg.layout.statLeftPct + m.statRowPx / m.screenWPx * 100 > chatLeftPct) errs.push("measured fit: stat row reaches the chat column (reject)");
+    const counterZonePx = m.screenWPx * (100 - cfg.layout.counterRightPct - cfg.layout.titleLeftPct - cfg.layout.titleWidthPct) / 100;
+    if (m.counterWPx > counterZonePx) errs.push("measured fit: slide counter exceeds its zone (reject)");
+  } catch (e) { errs.push("measured fit: model failure (" + (e && e.message) + ")"); }
+  return errs;
+}
+function validateConfig(cfg){
+  const errs = [];
+  if (!cfg || typeof cfg !== "object" || Array.isArray(cfg)) return ["config not an object"];
+  if (!isNum(cfg.durationMs) || cfg.durationMs <= 0) errs.push("durationMs must be a positive number");
+  if (!isNum(cfg.minTailMs) || cfg.minTailMs < 0) errs.push("minTailMs must be a non-negative number");
+  if (!isNum(cfg.maxIdleTailMs) || cfg.maxIdleTailMs < 0) errs.push("maxIdleTailMs must be a non-negative number");
+  if (!isNum(cfg.highlightMs) || cfg.highlightMs <= 0) errs.push("highlightMs must be positive");
+  if (!isNum(cfg.chatPopMs) || cfg.chatPopMs <= 0) errs.push("chatPopMs must be positive");
+  if (!isNum(cfg.chatPopFrom) || !isNum(cfg.chatPopTo) || cfg.chatPopFrom <= 0 || cfg.chatPopTo <= 0 || cfg.chatPopFrom === cfg.chatPopTo) errs.push("chatPop endpoints must be two distinct positive numbers");
+  if (!Number.isInteger(cfg.audienceCount) || cfg.audienceCount < 0) errs.push("audienceCount must be a non-negative integer");
+  [["title", cfg.titleMinPx, cfg.titleSizeVw, cfg.titleMaxPx], ["chatText", cfg.chatTextMinPx, cfg.chatTextVw, cfg.chatTextMaxPx],
+   ["meta", cfg.metaMinPx, cfg.metaVw, cfg.metaMaxPx], ["statValue", cfg.statValueMinPx, cfg.statValueVw, cfg.statValueMaxPx],
+   ["statLabel", cfg.statLabelMinPx, cfg.statLabelVw, cfg.statLabelMaxPx], ["counter", cfg.counterMinPx, cfg.counterVw, cfg.counterMaxPx]
+  ].forEach(function(r){
+    if (!isNum(r[1]) || !isNum(r[2]) || !isNum(r[3]) || r[1] <= 0 || r[2] <= 0 || r[3] < r[1]) errs.push(r[0] + " font range must be positive with min <= max");
+  });
+  ["highlightColor","sweepTextColor","titleColor","defaultChatColor","bg","screenBg","chatBg","chatColor","speakerColor","spotColor","audienceColor"].forEach(function(k){
+    if (!isColor(cfg[k])) errs.push(k + " must be a valid CSS colour");
+  });
+  if (!cfg.capacity || !Number.isInteger(cfg.capacity.maxTitleLines) || !Number.isInteger(cfg.capacity.maxMessages) ||
+      !Number.isInteger(cfg.capacity.maxCuts) || !Number.isInteger(cfg.capacity.maxStatCards) ||
+      cfg.capacity.maxTitleLines < 1 || cfg.capacity.maxMessages < 0 || cfg.capacity.maxCuts < 1 || cfg.capacity.maxStatCards < 0)
+    errs.push("capacity limits must be integers in range");
+  if (!cfg.layout || typeof cfg.layout !== "object") errs.push("layout missing");
+  else LAYOUT_KEYS.forEach(function(k){
+    if (!isNum(cfg.layout[k])) errs.push("layout." + k + " must be a number");
+    else if (k !== "chatGapPx" && (cfg.layout[k] < 0 || cfg.layout[k] > 100)) errs.push("layout." + k + " out of percentage range");
+  });
+  if (!cfg.detail || typeof cfg.detail !== "object") errs.push("detail missing");
+  else {
+    DETAIL_SCHEMA.forEach(function(e){
+      const k = e[0], v = cfg.detail[k];
+      if (v === undefined || v === null) { errs.push("detail." + k + " missing"); return; }
+      if (e[1] === "number" || e[1] === "opacity") {
+        if (!isNum(v)) errs.push("detail." + k + " must be a number");
+        else if (e[1] === "opacity" && (v < 0 || v > 1)) errs.push("detail." + k + " out of range");
+        else if (DETAIL_NONNEG.indexOf(k) >= 0 && v < 0) errs.push("detail." + k + " must be non-negative");
+      }
+      else if (e[1] === "color") { if (!isColor(v)) errs.push("detail." + k + " must be a valid CSS colour"); }
+      else if (e[1] === "padding") { if (!/^\d+(\.\d+)?px(\s+\d+(\.\d+)?px)?$/.test(String(v).trim())) errs.push("detail." + k + " must be one or two px values"); }
+      else if (typeof v !== "string" || !v) errs.push("detail." + k + " must be a non-empty string");
+    });
+  }
+  if (!cfg.fit || typeof cfg.fit !== "object") errs.push("fit missing");
+  else {
+    if (!isNum(cfg.fit.referenceWidthPx) || cfg.fit.referenceWidthPx <= 0) errs.push("fit.referenceWidthPx must be positive");
+    if (!isNum(cfg.fit.minHeightPx) || cfg.fit.minHeightPx <= 0) errs.push("fit.minHeightPx must be positive");
+    if (!Array.isArray(cfg.fit.supportedHeightsPx) || !cfg.fit.supportedHeightsPx.length || !cfg.fit.supportedHeightsPx.every(isNum)) errs.push("fit.supportedHeightsPx must be a non-empty number array");
+    if (!isNum(cfg.fit.glyphErrorFactor) || cfg.fit.glyphErrorFactor < 1) errs.push("fit.glyphErrorFactor must be >= 1");
+    if (!isNum(cfg.fit.perspectiveFactor) || cfg.fit.perspectiveFactor <= 0 || cfg.fit.perspectiveFactor > 1) errs.push("fit.perspectiveFactor out of range");
+    if (!isNum(cfg.fit.fallbackGlyphWidth) || cfg.fit.fallbackGlyphWidth <= 0) errs.push("fit.fallbackGlyphWidth must be positive");
+    if (!Number.isInteger(cfg.fit.maxChatLinesPerMessage) || cfg.fit.maxChatLinesPerMessage < 1) errs.push("fit.maxChatLinesPerMessage must be a positive integer");
+    if (!isNum(cfg.fit.regionBottomMarginPct) || cfg.fit.regionBottomMarginPct < 0) errs.push("fit.regionBottomMarginPct must be non-negative");
+  }
+  if (!cfg.glyphWidths || typeof cfg.glyphWidths !== "object") errs.push("glyphWidths missing");
+  else Object.keys(cfg.glyphWidths).forEach(function(k){ if (!isNum(cfg.glyphWidths[k]) || cfg.glyphWidths[k] <= 0 || cfg.glyphWidths[k] > 2) errs.push("glyphWidths." + k + " out of range"); });
+  if (!Array.isArray(cfg.statCards)) errs.push("statCards must be an array");
+  else {
+    if (cfg.capacity && cfg.statCards.length > cfg.capacity.maxStatCards) errs.push("statCards exceed capacity (ill-fit policy: reject)");
+    cfg.statCards.forEach(function(c, i){
+      if (!c || typeof c.label !== "string" || !c.label || typeof c.value !== "string" || !c.value) errs.push("statCards[" + i + "] needs label+value strings");
+    });
+  }
+  if (!Array.isArray(cfg.titleLines) || cfg.titleLines.length < 1) errs.push("titleLines must be a non-empty array");
+  else {
+    if (cfg.capacity && cfg.titleLines.length > cfg.capacity.maxTitleLines) errs.push("titleLines exceed capacity (ill-fit policy: reject)");
+    let prev = -1;
+    cfg.titleLines.forEach(function(L, i){
+      if (!L || typeof L !== "object") { errs.push("titleLines[" + i + "] not a record"); return; }
+      if (typeof L.text !== "string" || !L.text.trim()) errs.push("titleLines[" + i + "].text missing");
+      if (L.highlightMs !== undefined && (!isNum(L.highlightMs) || L.highlightMs <= 0)) errs.push("titleLines[" + i + "].highlightMs must be positive");
+      if (L.tMs !== undefined && L.revealStartMs !== undefined && L.tMs !== L.revealStartMs) errs.push("titleLines[" + i + "].tMs must equal revealStartMs when both are present");
+      const rs = (L && typeof L === "object") ? lineRevealStart(L) : NaN;
+      if (!isNum(rs)) errs.push("titleLines[" + i + "].revealStartMs not a number");
+      else {
+        if (rs < 0 || rs >= cfg.durationMs) errs.push("titleLines[" + i + "].revealStartMs out of range");
+        if (rs <= prev) errs.push("titleLines revealStartMs must be strictly increasing (index " + i + ")");
+        prev = rs;
+      }
+      if (L.revealMs !== undefined && (!isNum(L.revealMs) || L.revealMs <= 0)) errs.push("titleLines[" + i + "].revealMs must be positive");
+      if (L.wordHoldMs !== undefined && (!isNum(L.wordHoldMs) || L.wordHoldMs < 0)) errs.push("titleLines[" + i + "].wordHoldMs must be a non-negative number");
+      if (L.retainColor !== undefined && !isColor(L.retainColor)) errs.push("titleLines[" + i + "].retainColor must be a valid CSS colour");
+      if (L.sweepStartMs !== undefined && (!isNum(L.sweepStartMs) || L.sweepStartMs < 0)) errs.push("titleLines[" + i + "].sweepStartMs must be a non-negative number");
+      if (L.sweepStartMs !== undefined && isNum(L.sweepStartMs) && isNum(rs) && L.sweepStartMs < lineRevealComplete(L, cfg))
+        errs.push("titleLines[" + i + "] sweep begins before its reveal completes (sweep/reveal check)");
+      if (isNum(rs) && isNum(cfg.durationMs)) {
+        const span = lineRevealMs(L, cfg) + (tokenizeWords(L.text || "").length > 1 ? lineWordHoldMs(L, cfg) : 0);
+        if (rs + span > cfg.durationMs) errs.push("titleLines[" + i + "] reveal completes past durationMs");
+      }
+    });
+    for (let i = 0; i + 1 < cfg.titleLines.length; i++){
+      const a = cfg.titleLines[i], b = cfg.titleLines[i + 1];
+      if (a && b && typeof a === "object" && typeof b === "object") {
+        const aComplete = lineRevealStart(a) + lineRevealMs(a, cfg) + (tokenizeWords(a.text || "").length > 1 ? lineWordHoldMs(a, cfg) : 0);
+        if (isNum(aComplete) && isNum(lineRevealStart(b)) && aComplete > lineRevealStart(b))
+          errs.push("reveal of line " + i + " completes after the next line reveal begins (reveal neighbour check)");
+      }
+    }
+    if (!isNum(cfg.defaultRevealMs) || cfg.defaultRevealMs <= 0) errs.push("defaultRevealMs must be positive");
+    if (!isNum(cfg.defaultWordHoldMs) || cfg.defaultWordHoldMs < 0) errs.push("defaultWordHoldMs must be a non-negative number");
+  }
+  if (!Array.isArray(cfg.highlightTargets)) errs.push("highlightTargets must be an array");
+  else if (Array.isArray(cfg.titleLines)) {
+    const seen = {};
+    cfg.highlightTargets.forEach(function(h, i){
+      if (!h || !Number.isInteger(h.lineIndex) || !Number.isInteger(h.wordIndex)) { errs.push("highlightTargets[" + i + "] needs integer lineIndex+wordIndex"); return; }
+      if (h.lineIndex < 0 || h.lineIndex >= cfg.titleLines.length) { errs.push("highlightTargets[" + i + "].lineIndex out of range"); return; }
+      if (seen[h.lineIndex]) errs.push("duplicate highlight target for line " + h.lineIndex);
+      seen[h.lineIndex] = true;
+      const line = cfg.titleLines[h.lineIndex];
+      const words = tokenizeWords(line && typeof line === "object" ? line.text : "");
+      if (h.wordIndex < 0 || h.wordIndex >= words.length) errs.push("highlightTargets[" + i + "].wordIndex out of range for line " + h.lineIndex);
+    });
+    cfg.titleLines.forEach(function(_, i){ if (!seen[i]) errs.push("line " + i + " has no highlight target"); });
+  }
+  if (!Array.isArray(cfg.chatMessages)) errs.push("chatMessages must be an array");
+  else {
+    if (cfg.capacity && cfg.chatMessages.length > cfg.capacity.maxMessages) errs.push("chatMessages exceed capacity (ill-fit policy: reject)");
+    let prev = -1;
+    cfg.chatMessages.forEach(function(m, i){
+      if (!m || typeof m !== "object") { errs.push("chatMessages[" + i + "] not a record"); return; }
+      if (typeof m.text !== "string" || !m.text) errs.push("chatMessages[" + i + "].text missing");
+      if (typeof m.sender !== "string" || !m.sender) errs.push("chatMessages[" + i + "].sender missing");
+      if (typeof m.time !== "string" || !m.time) errs.push("chatMessages[" + i + "].time missing");
+      if (!isColor(m.color)) errs.push("chatMessages[" + i + "].color must be a valid CSS colour");
+      if (m.popMs !== undefined && (!isNum(m.popMs) || m.popMs <= 0)) errs.push("chatMessages[" + i + "].popMs must be positive");
+      if (!isNum(m.tMs)) errs.push("chatMessages[" + i + "].tMs not a number");
+      else {
+        if (m.tMs < 0 || m.tMs >= cfg.durationMs) errs.push("chatMessages[" + i + "].tMs out of range");
+        if (m.tMs <= prev) errs.push("chatMessages tMs must be strictly increasing (index " + i + ")");
+        prev = m.tMs;
+      }
+    });
+    for (let i = 0; i + 1 < cfg.chatMessages.length; i++){
+      const a = cfg.chatMessages[i], b = cfg.chatMessages[i + 1];
+      if (a && b && isNum(a.tMs) && isNum(b.tMs) && a.tMs + msgPopMs(a, cfg) > b.tMs)
+        errs.push("pop of message " + i + " runs into the next message landing (neighbour check)");
+    }
+  }
+  if (typeof cfg.slideCounter !== "string" || !cfg.slideCounter) errs.push("slideCounter must be a non-empty string");
+  const framingFields = ["scale","x","y","speakerXPct","spotScale","audienceShiftPct"];
+  function checkFraming(f, where){
+    if (!f || typeof f !== "object") { errs.push(where + " missing"); return; }
+    framingFields.forEach(function(k){ if (!isNum(f[k])) errs.push(where + "." + k + " not a number"); });
+    if (isNum(f.scale) && f.scale <= 0) errs.push(where + ".scale must be positive");
+    if (isNum(f.spotScale) && f.spotScale <= 0) errs.push(where + ".spotScale must be positive");
+  }
+  checkFraming(cfg.initialFraming, "initialFraming");
+  if (!Array.isArray(cfg.cuts) || cfg.cuts.length < 1) errs.push("cuts must be a non-empty array");
+  else {
+    if (cfg.capacity && cfg.cuts.length > cfg.capacity.maxCuts) errs.push("cuts exceed capacity (ill-fit policy: reject)");
+    let prev = 0;
+    cfg.cuts.forEach(function(c, i){
+      if (!c || typeof c !== "object") { errs.push("cuts[" + i + "] not a record"); return; }
+      if (!isNum(c.tMs)) errs.push("cuts[" + i + "].tMs not a number");
+      else {
+        if (c.tMs <= 0 || c.tMs >= cfg.durationMs) errs.push("cuts[" + i + "].tMs out of range (cuts are events after the initial framing)");
+        if (c.tMs <= prev) errs.push("cuts tMs must be strictly increasing (index " + i + ")");
+        prev = c.tMs;
+      }
+      checkFraming(c, "cuts[" + i + "]");
+    });
+  }
+  if (isNum(cfg.framingMinDelta) && cfg.framingMinDelta >= 0 && cfg.initialFraming && Array.isArray(cfg.cuts) && cfg.cuts.length &&
+      framingFields.every(function(k){ return isNum(cfg.initialFraming[k]); })) {
+    const seqF = [cfg.initialFraming].concat(cfg.cuts);
+    for (let i = 1; i <= seqF.length; i++){
+      const a = seqF[i - 1], b = seqF[i % seqF.length];
+      if (a && b && typeof a === "object" && typeof b === "object" &&
+          framingFields.every(function(k){ return isNum(a[k]) && isNum(b[k]); }) && framingDelta(a, b) < cfg.framingMinDelta)
+        errs.push("framing distinction below framingMinDelta at transition " + (i - 1) + "->" + (i % seqF.length));
+    }
+  } else if (!isNum(cfg.framingMinDelta) || cfg.framingMinDelta < 0) errs.push("framingMinDelta must be a non-negative number");
+  if (isNum(cfg.durationMs)) {
+    let lastEnd = 0, lastMark = 0;
+    if (Array.isArray(cfg.titleLines)) cfg.titleLines.forEach(function(L){ if (L && typeof L === "object" && isNum(lineRevealStart(L))) { lastEnd = Math.max(lastEnd, lineRevealComplete(L, cfg), lineSweepStart(L, cfg) + lineHighlightMs(L, cfg)); lastMark = Math.max(lastMark, lineRevealStart(L)); } });
+    if (Array.isArray(cfg.chatMessages)) cfg.chatMessages.forEach(function(m){ if (m && isNum(m.tMs)) { lastEnd = Math.max(lastEnd, m.tMs + msgPopMs(m, cfg)); lastMark = Math.max(lastMark, m.tMs); } });
+    if (Array.isArray(cfg.cuts)) cfg.cuts.forEach(function(c){ if (c && isNum(c.tMs)) { lastEnd = Math.max(lastEnd, c.tMs); lastMark = Math.max(lastMark, c.tMs); } });
+    if (lastEnd + (isNum(cfg.minTailMs) ? cfg.minTailMs : 0) > cfg.durationMs)
+      errs.push("durationMs too short for configured events (short-duration policy: reject)");
+    if (isNum(cfg.maxIdleTailMs) && cfg.durationMs - lastEnd > cfg.maxIdleTailMs)
+      errs.push("idle tail after the last event exceeds maxIdleTailMs (density policy: reject)");
+  }
+  if (!errs.length) errs.push.apply(errs, fitErrors(cfg));
+  return errs;
+}
+
+/* ===== Framing clamp — the measured content bounds stay inside the stage =====
+   The clamped rectangle comes from measureContent (the configured title lines,
+   chat rows, stat row and counter at their configured sizes), and the displayed
+   bounds follow the composed transform exactly: with the origin at the stage
+   centre, a point p displays at 50 + scale * (p - 50 + translate), because the
+   composed scale scales the translation with it. */
+function clampFraming(f, cfg){
+  const m = measureContent(cfg, cfg.fit.referenceWidthPx, cfg.fit.minHeightPx, 1);
+  const b = m.rect;
+  const w = b.right - b.left, h = b.bottom - b.top;
+  let scale = Math.min(f.scale, 100 / w, 100 / h);
+  let x = f.x, y = f.y;
+  function rect(){
+    return {left: 50 + scale * (b.left - 50 + x), right: 50 + scale * (b.right - 50 + x),
+            top: 50 + scale * (b.top - 50 + y), bottom: 50 + scale * (b.bottom - 50 + y)};
+  }
+  let r = rect();
+  if (r.left < 0) x += -r.left / scale;
+  r = rect();
+  if (r.right > 100) x -= (r.right - 100) / scale;
+  r = rect();
+  if (r.top < 0) y += -r.top / scale;
+  r = rect();
+  if (r.bottom > 100) y -= (r.bottom - 100) / scale;
+  return {scale:scale, x:x, y:y, speakerXPct:f.speakerXPct, spotScale:f.spotScale, audienceShiftPct:f.audienceShiftPct, rect:rect(), contentRect:b};
+}
+function framingDelta(a, b){
+  return Math.abs(a.scale - b.scale) + (Math.abs(a.x - b.x) + Math.abs(a.y - b.y)) / 100 +
+         Math.abs(a.speakerXPct - b.speakerXPct) / 100 + Math.abs(a.spotScale - b.spotScale);
+}
+
+/* Per-character sweep colour: a character turns dark only once the bar has covered
+   its own right edge, measured on proportional glyph widths — uncovered letters
+   stay in the title colour against the dark screen throughout the sweep. */
+function charColor(progress, phase, thresholds, charIndex, cfg, retainColor){
+  const retain = typeof retainColor === "string" ? retainColor : cfg.titleColor;
+  if (phase !== "sweeping") return retain;
+  return (progress >= thresholds[charIndex]) ? cfg.sweepTextColor : retain;
+}
+
+/* Pure state from time — checkpoint tables decide everything. */
+function computeState(tMs, cfg){
+  const errs = validateConfig(cfg);
+  if (errs.length) throw new Error("invalid CONFIG: " + errs.join("; "));
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const titleVisible = cfg.titleLines.map(function(L){ return t >= lineRevealStart(L); });
+  const titleLines = cfg.titleLines.map(function(L){
+    const info = revealInfo(L, t, cfg);
+    return {text:L.text, visible:info.started, revealStartMs:info.startMs, revealCompleteMs:info.completeMs,
+            revealProgress:info.progress, revealedChars:info.revealedChars, totalChars:info.totalChars,
+            prefix:info.prefix, complete:info.complete, retainColor:lineRetainColor(L, cfg),
+            words: wordOnsets(L, cfg).map(function(w){
+              const n = Math.max(0, Math.min(w.word.length, info.revealedChars - w.startChar));
+              return {text:w.word, onsetMs:w.onsetMs, completeMs:w.completeMs, revealedChars:n, visibleText:w.word.slice(0, n)};
+            })};
+  });
+  const hlByLine = {};
+  cfg.highlightTargets.forEach(function(h){ hlByLine[h.lineIndex] = h; });
+  const highlights = cfg.highlightTargets.map(function(h){
+    const line = cfg.titleLines[h.lineIndex];
+    const start = lineSweepStart(line, cfg);
+    const dur = lineHighlightMs(line, cfg);
+    let progress = 0, phase = "pending";
+    if (t >= start + dur) { progress = 1; phase = "swept"; }
+    else if (t >= start) { progress = (t - start) / dur; phase = "sweeping"; }
+    const words = tokenizeWords(line.text);
+    const word = words[h.wordIndex] || "";
+    return {lineIndex:h.lineIndex, wordIndex:h.wordIndex, progress:progress, phase:phase, durationMs:dur, startMs:start,
+            barWidthPct: phase === "sweeping" ? progress * 100 : 0,
+            charThresholds: wordThresholdsPadded(word, cfg),
+            textColor: phase === "sweeping" ? cfg.sweepTextColor : (phase === "swept" ? lineRetainColor(line, cfg) : lineRetainColor(line, cfg))};
+  });
+  const chatVisible = cfg.chatMessages.map(function(m){ return t >= m.tMs; });
+  const chatScales = cfg.chatMessages.map(function(m){
+    if (t < m.tMs) return cfg.chatPopFrom;
+    const age = t - m.tMs;
+    const dur = msgPopMs(m, cfg);
+    return age >= dur ? cfg.chatPopTo : cfg.chatPopFrom + (cfg.chatPopTo - cfg.chatPopFrom) * (age / dur);
+  });
+  let cutIndex = -1;
+  for (let i = 0; i < cfg.cuts.length; i++){ if (cfg.cuts[i].tMs <= t) cutIndex = i; else break; }
+  const rawFraming = cutIndex < 0 ? cfg.initialFraming : cfg.cuts[cutIndex];
+  const framing = clampFraming(rawFraming, cfg);
+  return {t:t, titleVisible:titleVisible, titleLines:titleLines, highlights:highlights,
+          chatVisible:chatVisible, chatScales:chatScales,
+          cutIndex:cutIndex, cutCount:cfg.cuts.length, framing:framing};
+}
+
+/* URL overrides: ?lines=TEXT~tMs~wordIdx[~highlightMs[~revealMs[~wordHoldMs[~sweepStartMs]]]];... · ?messages=sender~time~text~color~tMs[~popMs];...
+   (empty messages value = zero messages) · ?cuts=tMs,scale,x,y,speakerXPct,spotScale,audienceShiftPct;...
+   ?stats=LABEL~VALUE;... · ?counter= · ?popMs= ?popFrom= ?popTo= · ?highlight= ?screen= ?title= ?bg= ?chatBg=
+   ?durationMs= · legacy: ?titles=A|B|C · ?chats=x;y (exact-length text replacement) · ?titleMs=...
+   Inside text fields a backslash escapes the next character (\~ \; \, \\ carry literal delimiters).
+   ATOMICITY: any error anywhere in the override set — a malformed or blank numeric
+   field included — rejects the WHOLE override; the last valid CONFIG stands. */
+window.__overrideErrors = [];
+/* Split on UNESCAPED delimiters only, keeping escape pairs verbatim in the
+   fields; each field is unescaped once, after every split level is done. */
+function splitEscaped(str, delim){
+  const out = [];
+  let cur = "", esc = false;
+  const s = String(str == null ? "" : str);
+  for (let i = 0; i < s.length; i++){
+    const ch = s[i];
+    if (esc) { cur += "\\" + ch; esc = false; }
+    else if (ch === "\\") esc = true;
+    else if (ch === delim) { out.push(cur); cur = ""; }
+    else cur += ch;
+  }
+  if (esc) cur += "\\";
+  out.push(cur);
+  return out;
+}
+function unescapeField(s){
+  let out = "", esc = false;
+  const str = String(s == null ? "" : s);
+  for (let i = 0; i < str.length; i++){
+    const ch = str[i];
+    if (esc) { out += ch; esc = false; }
+    else if (ch === "\\") esc = true;
+    else out += ch;
+  }
+  if (esc) out += "\\";
+  return out;
+}
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  if (![...q.keys()].length) return;
+  const errs = [];
+  const cand = JSON.parse(JSON.stringify(CONFIG));
+  function strictParam(k){
+    if (!q.has(k)) return undefined;
+    const raw = q.get(k);
+    if (raw === null || String(raw).trim() === "") { errs.push(k + ": blank numeric override"); return undefined; }
+    if (!/^-?\d+(\.\d+)?$/.test(String(raw).trim())) { errs.push(k + ": malformed numeric override"); return undefined; }
+    return Number(raw);
+  }
+  function strictField(raw, where){
+    if (raw === undefined || raw === null || String(raw).trim() === "") { errs.push(where + ": blank numeric field"); return NaN; }
+    if (!/^-?\d+(\.\d+)?$/.test(String(raw).trim())) { errs.push(where + ": malformed numeric field"); return NaN; }
+    return Number(raw);
+  }
+  const timingTableParam = ["lines","titleMs","messages","cuts"].some(function(k){ return q.has(k); });
+  const newDuration = strictParam("durationMs");
+  if (newDuration !== undefined) {
+    cand.durationMs = newDuration;
+    if (!timingTableParam && newDuration !== CONFIG.durationMs && CONFIG.durationMs > 0) {
+      const f = newDuration / CONFIG.durationMs;
+      cand.minTailMs = Math.round(CONFIG.minTailMs * f);
+      cand.maxIdleTailMs = Math.round(CONFIG.maxIdleTailMs * f);
+      cand.highlightMs = Math.round(CONFIG.highlightMs * f);
+      cand.chatPopMs = Math.round(CONFIG.chatPopMs * f);
+      cand.titleLines.forEach(function(L){ L.tMs = Math.round(L.tMs * f); if (L.revealStartMs !== undefined) L.revealStartMs = Math.round(L.revealStartMs * f); if (L.revealMs !== undefined) L.revealMs = Math.round(L.revealMs * f); if (L.wordHoldMs !== undefined) L.wordHoldMs = Math.round(L.wordHoldMs * f); if (L.sweepStartMs !== undefined) L.sweepStartMs = Math.round(L.sweepStartMs * f); if (L.highlightMs !== undefined) L.highlightMs = Math.round(L.highlightMs * f); });
+      cand.chatMessages.forEach(function(m){ m.tMs = Math.round(m.tMs * f); if (m.popMs !== undefined) m.popMs = Math.round(m.popMs * f); });
+      cand.cuts.forEach(function(c){ c.tMs = Math.round(c.tMs * f); });
+    }
+  }
+  if (q.has("lines")) {
+    cand.titleLines = []; cand.highlightTargets = [];
+    splitEscaped(q.get("lines"), ";").forEach(function(e, i){
+      const p = splitEscaped(e, "~");
+      const start = strictField(p[1], "lines[" + i + "].tMs");
+      const rec = {text:unescapeField(p[0] || ""), tMs:start, revealStartMs:start};
+      if (p.length > 3 && p[3] !== undefined) rec.highlightMs = strictField(p[3], "lines[" + i + "].highlightMs");
+      if (p.length > 4 && p[4] !== undefined) rec.revealMs = strictField(p[4], "lines[" + i + "].revealMs");
+      if (p.length > 5 && p[5] !== undefined) rec.wordHoldMs = strictField(p[5], "lines[" + i + "].wordHoldMs");
+      if (p.length > 6 && p[6] !== undefined) rec.sweepStartMs = strictField(p[6], "lines[" + i + "].sweepStartMs");
+      cand.titleLines.push(rec);
+      cand.highlightTargets.push({lineIndex:i, wordIndex:strictField(p[2] === undefined ? "" : p[2], "lines[" + i + "].wordIndex")});
+    });
+  } else if (q.has("titles")) {
+    const parts = splitEscaped(q.get("titles"), "|");
+    if (parts.length === cand.titleLines.length) cand.titleLines = cand.titleLines.map(function(L, i){ return Object.assign({}, L, {text:unescapeField(parts[i])}); });
+    else errs.push("titles count mismatch — override rejected");
+  }
+  if (q.has("titleMs")) {
+    const parts = String(q.get("titleMs")).split(",");
+    if (parts.length === cand.titleLines.length) {
+      const vals = parts.map(function(p, i){ return strictField(p, "titleMs[" + i + "]"); });
+      cand.titleLines = cand.titleLines.map(function(L, i){ return Object.assign({}, L, {tMs:vals[i]}); });
+    } else errs.push("titleMs length mismatch — override rejected");
+  }
+  if (q.has("messages")) {
+    const raw = q.get("messages");
+    cand.chatMessages = raw === "" ? [] : splitEscaped(raw, ";").map(function(e, i){
+      const p = splitEscaped(e, "~");
+      const rec = {sender:unescapeField(p[0] || ""), time:unescapeField(p[1] || ""), text:unescapeField(p[2] || ""), color:unescapeField(p[3] || "") || CONFIG.defaultChatColor, tMs:strictField(p[4], "messages[" + i + "].tMs")};
+      if (p.length > 5 && p[5] !== undefined) rec.popMs = strictField(p[5], "messages[" + i + "].popMs");
+      return rec;
+    });
+  } else if (q.has("chats")) {
+    const parts = splitEscaped(q.get("chats"), ";");
+    if (parts.length === cand.chatMessages.length) cand.chatMessages = cand.chatMessages.map(function(m, i){ return Object.assign({}, m, {text:unescapeField(parts[i])}); });
+    else errs.push("chats count mismatch — override rejected");
+  }
+  if (q.has("cuts")) {
+    cand.cuts = splitEscaped(q.get("cuts"), ";").map(function(e, i){
+      const p = String(e).split(",");
+      const fields = ["tMs","scale","x","y","speakerXPct","spotScale","audienceShiftPct"];
+      const rec = {};
+      fields.forEach(function(k, j){ rec[k] = strictField(p[j], "cuts[" + i + "]." + k); });
+      return rec;
+    });
+  }
+  if (q.has("stats")) {
+    cand.statCards = splitEscaped(q.get("stats"), ";").map(function(e){
+      const p = splitEscaped(e, "~"); return {label:unescapeField(p[0] || ""), value:unescapeField(p[1] || "")};
+    });
+  }
+  if (q.has("counter")) cand.slideCounter = q.get("counter");
+  const popMs = strictParam("popMs"); if (popMs !== undefined) cand.chatPopMs = popMs;
+  const popFrom = strictParam("popFrom"); if (popFrom !== undefined) cand.chatPopFrom = popFrom;
+  const popTo = strictParam("popTo"); if (popTo !== undefined) cand.chatPopTo = popTo;
+  if (q.get("highlight")) cand.highlightColor = q.get("highlight");
+  if (q.get("screen")) cand.screenBg = q.get("screen");
+  if (q.get("title")) cand.titleColor = q.get("title");
+  if (q.get("bg")) cand.bg = q.get("bg");
+  if (q.get("chatBg")) cand.chatBg = q.get("chatBg");
+  const verrs = validateConfig(cand);
+  if (verrs.length) errs.push.apply(errs, verrs);
+  if (errs.length) { window.__overrideErrors = errs; return; }
+  Object.keys(cand).forEach(function(k){ CONFIG[k] = cand[k]; });
+})();
+
+/* CONFIG.detail drives the CSS detail layer via custom properties. */
+(function applyDetail(){
+  const d = CONFIG.detail, r = document.documentElement.style;
+  r.setProperty("--t18-font", d.fontFamily);
+  r.setProperty("--t18-title-weight", String(d.titleWeight));
+  r.setProperty("--t18-title-lh", String(d.titleLineHeight));
+  r.setProperty("--t18-title-ls", d.titleLetterSpacing);
+  r.setProperty("--t18-hl-top", d.hlTopPct + "%");
+  r.setProperty("--t18-hl-height", d.hlHeightPct + "%");
+  r.setProperty("--t18-screen-radius", d.screenRadius);
+  r.setProperty("--t18-chat-pad", d.chatPadding);
+  r.setProperty("--t18-chat-radius", d.chatRadiusPx + "px");
+  r.setProperty("--t18-chat-lh", String(d.chatLineHeight));
+  r.setProperty("--t18-stat-pad", d.statPadding);
+  r.setProperty("--t18-stat-radius", d.statRadiusPx + "px");
+  r.setProperty("--t18-aud-size", d.audSizePx + "px");
+  r.setProperty("--t18-aud-gap", d.audGapPx + "px");
+  r.setProperty("--t18-aud-opacity", String(d.audOpacity));
+  r.setProperty("--t18-persp", d.perspectivePx + "px");
+  r.setProperty("--t18-rotx", d.rotateXDeg + "deg");
+  r.setProperty("--t18-shadow-in", d.shadowInset);
+  r.setProperty("--t18-shadow-out", d.shadowOuter);
+  r.setProperty("--t18-stat-bg", d.statBg);
+  r.setProperty("--t18-stat-bc", d.statBorderColor);
+  r.setProperty("--t18-stat-bw", d.statBorderWidthPx + "px");
+  r.setProperty("--t18-word-pad", d.wordPaddingEm + "em");
+  r.setProperty("--t18-chat-origin", d.chatOrigin);
+  r.setProperty("--t18-meta-gap", d.metaGapPx + "px");
+  r.setProperty("--t18-meta-mb", d.metaMarginPx + "px");
+  r.setProperty("--t18-meta-opacity", String(d.metaOpacity));
+  r.setProperty("--t18-stat-l-opacity", String(d.statLabelOpacity));
+  r.setProperty("--t18-stat-ls", d.statLetterSpacingEm + "em");
+  r.setProperty("--t18-avatar-size", d.avatarEm + "em");
+  r.setProperty("--t18-avatar-color", d.avatarColor);
+  r.setProperty("--t18-speaker-head-w", d.speakerHeadWidthPct + "%");
+  r.setProperty("--t18-speaker-body-h", d.speakerBodyHeightPx + "px");
+  r.setProperty("--t18-speaker-body-r", d.speakerBodyRadiusPx + "px");
+  r.setProperty("--t18-counter-opacity", String(d.counterOpacity));
+  r.setProperty("--t18-stage-min-h", d.stageMinHeightPx + "px");
+  r.setProperty("--t18-stat-v-weight", String(d.statValueWeight));
+  r.setProperty("--t18-avatar-weight", String(d.avatarWeight));
+  r.setProperty("--t18-counter-weight", String(d.counterWeight));
+  r.setProperty("--t18-speaker-body-mt", d.speakerBodyMarginPx + "px");
+  r.setProperty("--t18-normal-lh", String(d.lineHeightNormal));
+})();
+
+const stage = document.getElementById("stage");
+const world = document.getElementById("world");
+const screenWrap = document.getElementById("screenWrap");
+const screenEl = document.getElementById("screen");
+const titleWrap = document.getElementById("titleWrap");
+const statWrap = document.getElementById("statWrap");
+const counterEl = document.getElementById("counter");
+const chatWrap = document.getElementById("chatWrap");
+const spotEl = document.getElementById("spot");
+const speakerEl = document.getElementById("speaker");
+const audienceEl = document.getElementById("audience");
+const L = CONFIG.layout;
+document.body.style.background = CONFIG.bg;
+document.documentElement.style.background = CONFIG.bg;
+stage.style.background = CONFIG.bg;
+screenEl.style.background = CONFIG.screenBg;
+screenWrap.style.left = L.screenLeftPct + "%"; screenWrap.style.right = L.screenRightPct + "%";
+screenWrap.style.top = L.screenTopPct + "%"; screenWrap.style.height = L.screenHeightPct + "%";
+titleWrap.style.left = L.titleLeftPct + "%"; titleWrap.style.top = L.titleTopPct + "%"; titleWrap.style.width = L.titleWidthPct + "%";
+chatWrap.style.right = L.chatRightPct + "%"; chatWrap.style.top = L.chatTopPct + "%";
+chatWrap.style.width = L.chatWidthPct + "%"; chatWrap.style.gap = L.chatGapPx + "px";
+statWrap.style.left = L.statLeftPct + "%"; statWrap.style.bottom = L.statBottomPct + "%"; statWrap.style.gap = L.statGapPct + "%";
+counterEl.style.right = L.counterRightPct + "%"; counterEl.style.bottom = L.counterBottomPct + "%";
+counterEl.style.fontSize = "clamp(" + CONFIG.counterMinPx + "px," + CONFIG.counterVw + "vw," + CONFIG.counterMaxPx + "px)";
+spotEl.style.left = L.spotLeftPct + "%"; spotEl.style.bottom = L.spotBottomPct + "%";
+spotEl.style.width = L.spotWidthPct + "%"; spotEl.style.height = L.spotHeightPct + "%";
+spotEl.style.background = CONFIG.spotColor;
+speakerEl.style.left = L.speakerLeftPct + "%"; speakerEl.style.bottom = L.speakerBottomPct + "%";
+speakerEl.style.width = L.speakerWidthPct + "%"; speakerEl.style.minWidth = L.speakerMinPx + "px";
+audienceEl.style.left = "0"; audienceEl.style.right = "0"; audienceEl.style.bottom = L.audienceBottomPct + "%";
+audienceEl.style.height = L.audienceHeightPct + "%"; audienceEl.style.padding = "0 " + L.audiencePadPct + "%";
+
+const hlByLine = {};
+CONFIG.highlightTargets.forEach(function(h){ hlByLine[h.lineIndex] = h; });
+const wordEls = [];
+const lineEls = [];
+const titleEls = CONFIG.titleLines.map(function(line, li){
+  const d = document.createElement("div"); d.className = "tline";
+  d.style.color = lineRetainColor(line, CONFIG);
+  d.style.fontSize = "clamp(" + CONFIG.titleMinPx + "px," + CONFIG.titleSizeVw + "vw," + CONFIG.titleMaxPx + "px)";
+  const target = hlByLine[li];
+  const lineRec = {words:[]};
+  tokenizeWords(line.text).forEach(function(w, wi){
+    const s = document.createElement("span"); s.className = "word";
+    let bar = null;
+    if (target && wi === target.wordIndex){
+      bar = document.createElement("span"); bar.className = "hlbar"; bar.style.background = CONFIG.highlightColor; bar.style.width = "0%";
+      s.appendChild(bar);
+    }
+    const chars = w.split("").map(function(ch){
+      const cs = document.createElement("span"); cs.className = "ch"; cs.textContent = ch; cs.style.visibility = "hidden"; s.appendChild(cs); return cs;
+    });
+    if (bar) wordEls.push({line:li, bar:bar, word:s, chars:chars});
+    lineRec.words.push({word:s, chars:chars});
+    d.appendChild(s); d.appendChild(document.createTextNode(" "));
+  });
+  lineEls.push(lineRec);
+  d.style.display = "none"; titleWrap.appendChild(d); return d;
+});
+CONFIG.statCards.forEach(function(c){
+  const d = document.createElement("div"); d.className = "stat"; d.style.color = CONFIG.titleColor;
+  const v = document.createElement("div"); v.className = "v"; v.textContent = c.value;
+  v.style.fontSize = "clamp(" + CONFIG.statValueMinPx + "px," + CONFIG.statValueVw + "vw," + CONFIG.statValueMaxPx + "px)";
+  const l = document.createElement("div"); l.className = "l"; l.textContent = c.label;
+  l.style.fontSize = "clamp(" + CONFIG.statLabelMinPx + "px," + CONFIG.statLabelVw + "vw," + CONFIG.statLabelMaxPx + "px)";
+  d.appendChild(l); d.appendChild(v); statWrap.appendChild(d);
+});
+counterEl.textContent = CONFIG.slideCounter; counterEl.style.color = CONFIG.titleColor;
+
+const chatEls = CONFIG.chatMessages.map(function(m){
+  const d = document.createElement("div"); d.className = "chat";
+  d.style.background = CONFIG.chatBg; d.style.color = CONFIG.chatColor;
+  const meta = document.createElement("div"); meta.className = "meta";
+  meta.style.fontSize = "clamp(" + CONFIG.metaMinPx + "px," + CONFIG.metaVw + "vw," + CONFIG.metaMaxPx + "px)";
+  const av = document.createElement("span"); av.className = "avatar"; av.style.background = m.color; av.textContent = m.sender.charAt(0);
+  const who = document.createElement("span"); who.textContent = m.sender + " " + m.time;
+  meta.appendChild(av); meta.appendChild(who);
+  const txt = document.createElement("div"); txt.className = "txt"; txt.textContent = m.text;
+  txt.style.fontSize = "clamp(" + CONFIG.chatTextMinPx + "px," + CONFIG.chatTextVw + "vw," + CONFIG.chatTextMaxPx + "px)";
+  d.appendChild(meta); d.appendChild(txt); d.style.display = "none"; chatWrap.appendChild(d); return d;
+});
+speakerEl.children[0].style.background = CONFIG.speakerColor; speakerEl.children[1].style.background = CONFIG.speakerColor;
+for (let i = 0; i < CONFIG.audienceCount; i++){ const a = document.createElement("div"); a.className = "aud"; a.style.background = CONFIG.audienceColor; audienceEl.appendChild(a); }
+
+window.__configErrors = validateConfig(CONFIG);
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  s.titleVisible.forEach(function(v, i){ titleEls[i].style.display = v ? "block" : "none"; });
+  s.titleLines.forEach(function(L, li){
+    const rec = lineEls[li]; if (!rec) return;
+    const hl = s.highlights.filter(function(h){ return h.lineIndex === li; })[0];
+    L.words.forEach(function(w, wi){
+      const wrec = rec.words[wi]; if (!wrec) return;
+      wrec.chars.forEach(function(cs, ci){
+        const revealed = ci < w.revealedChars;
+        cs.style.visibility = revealed ? "visible" : "hidden";
+        cs.style.color = (hl && wi === hl.wordIndex)
+          ? charColor(hl.progress, hl.phase, hl.charThresholds, ci, CONFIG, L.retainColor)
+          : L.retainColor;
+      });
+    });
+  });
+  wordEls.forEach(function(w){
+    const hl = s.highlights.filter(function(h){ return h.lineIndex === w.line; })[0];
+    w.bar.style.width = (hl.barWidthPct).toFixed(3) + "%";
+  });
+  s.chatVisible.forEach(function(v, i){
+    chatEls[i].style.display = v ? "block" : "none";
+    if (v) chatEls[i].style.transform = "scale(" + s.chatScales[i].toFixed(3) + ")";
+  });
+  const f = s.framing;
+  world.style.transform = "scale(" + f.scale + ") translate(" + f.x + "%, " + f.y + "%)";
+  speakerEl.style.transform = "translateX(calc(-50% + " + f.speakerXPct + "%))";
+  spotEl.style.transform = "translateX(-50%) scale(" + f.spotScale + ")";
+  audienceEl.style.transform = "translateX(" + f.audienceShiftPct + "%)";
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T175 — Name-exit ending · comparison</title>
+<style>
+  body { margin:0; background:#111; color:#eee; font-family: Arial, Helvetica, sans-serif; }
+  .wrap { max-width:1200px; margin:0 auto; padding:12px; }
+  .note { font-size:15px; line-height:1.45; margin:8px 0 12px; }
+  .sides { display:flex; gap:12px; flex-wrap:wrap; }
+  .side { flex:1 1 320px; min-width:280px; }
+  .side h2 { font-size:16px; margin:0 0 6px; }
+  .side video, .side iframe { width:100%; aspect-ratio:1/1; border:0; background:#000; display:block; }
+  .controls { display:flex; gap:10px; margin:14px 0; flex-wrap:wrap; }
+  .controls button { min-height:44px; min-width:44px; padding:10px 18px; font-size:16px; cursor:pointer; }
+  #phaseLabel { font-size:15px; margin:6px 0; }
+  @media (max-width:640px){ .sides{ flex-direction:column; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="note">allocation stretches the measured 0.40 s ending to a 2.60 s loop — natural speed both sides, phases labeled</p>
+  <div class="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+  <p id="phaseLabel">Recreation phase: settled</p>
+  <div class="sides">
+    <div class="side">
+      <h2>ORIGINAL — SixMap (nez&amp;pez) @ 9.76–10.04</h2>
+      <video id="orig" src="segment.mp4" playsinline muted loop></video>
+    </div>
+    <div class="side">
+      <h2>RECREATION — T175 Name-exit ending, parameterized</h2>
+      <iframe id="rec" src="recreation.html" title="T175 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+var video = document.getElementById("orig");
+var rec = document.getElementById("rec");
+var phaseLabel = document.getElementById("phaseLabel");
+var playing = false, startStamp = null, baseMs = 0, rafId = null;
+function recWin(){ try { return rec.contentWindow; } catch(e){ return null; } }
+function drive(now) {
+  if (!playing) return;
+  if (startStamp === null) startStamp = now;
+  var ms = baseMs + (now - startStamp);
+  var w = recWin();
+  if (w && w.__seek) {
+    var st = w.__seek(ms);
+    if (st) phaseLabel.textContent = "Recreation phase: " + st.phase + " (cycle " + Math.round(ms) + " ms)";
+  }
+  rafId = requestAnimationFrame(drive);
+}
+function playBoth() {
+  video.play();
+  if (!playing) { playing = true; startStamp = null; rafId = requestAnimationFrame(drive); }
+}
+function pauseBoth() {
+  video.pause();
+  playing = false;
+  if (startStamp !== null) { baseMs += performance.now() - startStamp; startStamp = null; }
+  if (rafId) cancelAnimationFrame(rafId);
+}
+function restartBoth() {
+  video.currentTime = 0;
+  baseMs = 0; startStamp = null;
+  var w = recWin();
+  if (w && w.__seek) w.__seek(0);
+  playBoth();
+}
+document.getElementById("btnPlay").addEventListener("click", playBoth);
+document.getElementById("btnPause").addEventListener("click", pauseBoth);
+document.getElementById("btnRestart").addEventListener("click", restartBoth);
+</script>
+</body>
+</html>

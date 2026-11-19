@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T18 — Keynote stage + heckler chat · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.08em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T18 — Keynote stage + heckler chat</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 2:02–2:17.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation — an arena stage with a huge curved screen where the slide
+title builds line by line with highlight sweeps, stat cards and a slide counter sit on the slide,
+audience chat bubbles pop in at the screen's side, and the framing jumps on six hard-cut
+checkpoints. One control set drives both.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — new title, chat, timing, palette</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — Look What I Can Do (P1) @ 2:02–2:17<small>segment.mp4 · specimen window 121.5–137.5 s (±0.5 handles) · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T18 Keynote stage + heckler chat, parameterized<small>recreation.html · CONFIG: title line records (optional per-line sweep duration), highlight target records, stat cards, counter, chat records (optional per-message pop duration), initial framing + cut records, pop duration/endpoints, palette · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T18 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click, so both start together. The recreation runs a 15 s loop
+(<code>durationMs</code> 15000, the technique window) inside the segment's 16 s loop; its title builds,
+chat pops and framing jumps are decided by CONFIG checkpoint records (<code>titleLines</code>
+{text, tMs, optional highlightMs}, <code>highlightTargets</code> {lineIndex, wordIndex}, per-message
+<code>chatMessages</code> records with optional popMs, and <code>initialFraming</code> + six
+<code>cuts</code> records), not by hardcoded branches. URL override text fields escape delimiters
+with a backslash (<code>\~ \; \, \\</code>), numeric overrides are strict and reject atomically,
+and a <code>durationMs</code>-only override scales every checkpoint so the event density is preserved.
+The Swap test button reloads the recreation with complete replacement records —
+<code>?lines=SMALL STEPS~400~0;BUILD DAILY~2600~0;SHIP IT~4800~0&amp;messages=…&amp;highlight=%2337c8ff</code> —
+new title lines with their own times and highlight words, new chat records, and a blue highlight;
+if the title, chat, highlight and build cadence all follow the new values, the build is the technique, not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+function cmd(c){ rec.contentWindow && rec.contentWindow.postMessage({cmd:c}, "*"); }
+document.getElementById("btnPlay").addEventListener("click", function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ vid.currentTime = 0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click", function(){
+  rec.src = "recreation.html?lines=SMALL%20STEPS~400~0;BUILD%20DAILY~2600~0;SHIP%20IT~4800~0&messages=Ana~9%3A41~first!~%2337c8ff~1000;Bo~9%3A42~nice%20pace~%233aa655~3800;Cy~9%3A43~keep%20going~%237b4fd0~7000;Di~9%3A44~done%20yet%3F~%23e07b2a~10200&highlight=%2337c8ff";
+  vid.currentTime = 0; vid.play();
+});
+</script>
+</body>
+</html>
