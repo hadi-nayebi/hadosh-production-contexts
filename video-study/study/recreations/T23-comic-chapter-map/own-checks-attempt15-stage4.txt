@@ -1,0 +1,15 @@
+STAGE 4 — C-15-04 data-derived schema + validated baseline + commit-or-retain + coupled commit rule
+Checkpoint: checkpoint-attempt15-stage4.html sha256 91181d3a085e41e762530d0e710fb8b5235cb67887f73e42f38eb946cc967882 (content copy, inode != working file).
+BEFORE (Stage-3 checkpoint / attempt-14 filings): schema enumerates shipped kinds (terminal rect-only) — a new kind is dropped from the reset snapshot and a circle added to terminal loses cx/cy/r; the reset snapshot derives from edited values before validation (shrinkStepPx = 0 restores 0 and stalls resolution); ?cfg:limits.targetOutlineMaxPx=1 commits an incoherent state (3 px outline over a 1 px maximum); the final geometry check can report REJECTED and still return the candidate.
+AFTER (candidate), paired probes:
+PASS shipped-data deep-equal: baseline leaves 610 expanded (attempt 14's 609 + the added cut.clockPolicy) and TRUSTED_DEFAULTS deep-equals the shipped CONFIG.
+PASS edit-introduced kind (newkind, circle primitive) survives into the baseline by the data-derived walk (cx/cy/r intact) AND survives resolution.
+PASS circle added to terminal keeps cx/cy/r through derivation (union of the kind contract + the primitive's own shape; schema rect fields default-filled).
+PASS new palette key (artNew) survives into the baseline by the same walk.
+PASS validated baseline: shrinkStepPx = 0 in the configured object — resolution TERMINATES and the resolved step is 0.05 (the validator's floor); the reset default itself is floored (Math.max(0.05, trusted)) and every shrink-loop consumer guards a non-positive step, so no snapshot can reintroduce the stall.
+PASS commit-or-retain lens case: ?cfg:limits.targetOutlineMaxPx=1 commits a COHERENT state (the limit change is rejected with the retained value, warning named) — no committed value violates its committed limit.
+PASS coupled commit probe, both orders (existing valid binding + malformed replacement candidate + limits tightened below the candidate's need in one request): prior value (3) AND prior limit (12) stand in both orders, pair warning named (commit-or-retain / coupled-commit form).
+PASS coupled valid pair (value 2 under tightened limit 2) commits value + limit together, both orders.
+PASS final geometry check: a still-infeasible candidate is retained-as-prior (last valid geometry restored and re-checked, named warning) — never returned with a rejection report.
+PIXEL-UNVERIFIED.
+stage4: PASS

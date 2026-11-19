@@ -1,0 +1,19 @@
+STAGE 1 — C-15-01 clock policy (FIXED-DEADLINE) + single armTimer path + buffered skip reconciliation
+Checkpoint: checkpoint-attempt15-stage1.html sha256 5e83a4b7809cc642fc21d13908059ddb15ee2f27f69c978b528986d9330f679c (content copy, inode != working file).
+Incoming (Stage-0 checkpoint = attempt-14 source, same battery): 9 PASS / 9 FAIL — the attempt-14 SHIFT construction passes the SHIFT controls and fails every FIXED-DEADLINE expectation, as priced.
+Outgoing (candidate after Stage 1): clock battery T1-T5 on the REAL engine (stub-DOM harness, manual clock, test config holdZoomMs=50, all other durations Basis B defaults; timeline: app0 approach 0-365 / dive 365-700 / hold 700-750, app1 approach 750-1115 / dive 1115-1450, app2 dive ends 2200, hold 2200-2250, total 2250):
+PASS T1-FIXED armed == nominal end of phase containing 760 (1115); presented hold 0 ms (window 700-750 expired); committed skips == exactly ONE (the hold)
+PASS T1-FIXED flushLatenessMs recorded == 60 on the deferred-apply record, clockPolicy fixed-deadline; consumed phase 0:1:approach (mid-phase entry on the unchanged origin)
+PASS T1-SHIFT (control) armed == 810; presented hold 50 ms (760-810); committed skips ZERO for the hold
+PASS T2-FIXED (flush 720) armed == 750; presented hold remainder 30 ms (entered at elapsed pose); skips ZERO
+PASS T2-SHIFT (control) armed == 770
+PASS T3-FIXED (flush at expiry 750) presented hold == 50 ms as the pending phase of record; committed skips ZERO; armed == 1115 (next nominal end)
+PASS T3-SHIFT (control) armed == 800
+PASS T4-FIXED (flush across wrap, claim at app2 dive end 2200, flush 2210) armed == 2250 (nominal hold end, no +10 anywhere); presented hold remainder 40 ms; skips ZERO. NOTE on the plan's T4 numerals: the plan tables the wrap at 2100 with the hold opening the next cycle; on the built timeline with holdZoomMs=50 the cycle total is 2250 and the wrap dive ends at 2200 — the battery runs the isomorphic case (flush 10 ms after the cycle's final dive end, hold remainder 40 ms, later deadlines nominal) and files the mapping here rather than silently re-numbering.
+PASS T5-FIXED (flush 1120, +5 ms past the app1 approach->dive join at 1115) presented phase is app1 dive entered at its elapsed pose; armed == 1450 (nominal dive end)
+BATTERY TOTAL: 18 PASS / 0 FAIL.
+PASS config consumption: cut.clockPolicy resolves default fixed-deadline; ?cfg:cut.clockPolicy=shift selects the control; bogus value warns (cut.clockPolicy: invalid, reset to default) and retains fixed-deadline; default resolution warning-free.
+PASS dependent re-derivation (A-C012-2): schedulerDelay/wrap deadline/releaseHandoff restart origin all read the unchanged-origin schedule — releaseHandoff re-bases from the held dive's NOMINAL end (its own act, unchanged); flushPending no longer writes startStamp under the scored policy (source-asserted); the deferred-apply record carries flushLatenessMs.
+PASS preserved copies re-verified after the candidate's first overwrite: recreation-attempt-14.html sha == baseline 39f63f53...; comparison-preserved-attempt-14.html sha == baseline 3fdbe113... (unchanged).
+PIXEL-UNVERIFIED.
+stage1: PASS

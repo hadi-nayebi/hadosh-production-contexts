@@ -1,0 +1,11 @@
+T23 attempt 10 — Stage 4 check output (geometry mirror, header break, overlap, resolved art height)
+Stage source: recreation.html sha256 ae227c05b60f7122ab44b34320b35177d1bbc1de4e08ed657edcd8e6118468d8
+Checkpoint: checkpoint-attempt10-stage4-delta.md
+Probe: probe-T23-stage4.js — 13 checks, 0 fails. Regressions: stage3 29/29, stage2 7/7, stage1 resume PASS on this source.
+
+Results:
+- Feasibility mirror: cfg:layout.paddingPx=100 (predecessor: validation passed it, computeLayout produced a 6.67 px panel at 240 px) now trips the mirrored feasibility model — columns/gap clamp with named warnings and the post-validation layout is feasible.
+- Header break: with a 110-char header at 240 px, headerBreak=break-word yields wrap mode; headerBreak=normal yields floor mode and headerHeightFor reports 1 line (no growth the setting forbids).
+- Overlap: tabOverlapPx=5 raises panel 07's resolved art rect by exactly 5 (y 224.17 -> 219.17, h 26.28 -> 31.28); tabOverlapPx=60 (meets/exceeds the smallest tab band) resets to 0 with a named warning.
+- Resolved art height: render() now passes resolvedArtRect(...).h as the detail branch's artH (source-asserted). Panel 07's resolved height at 360 px is 26.28 px. Registry fact correcting the plan's parenthetical expectation: panel 07's inscription primitive is size 21, above the detail cutoff of 14, so the branch cannot change shipped output for that panel; the discrimination is therefore proven on a detail-sensitive synthetic kind (text size 9 + graph) priced at a below-threshold slot — suppressed/scaled at the resolved height, untouched at the old proxy height (37.71 px).
+- Tab anchor: top-right now sets alignSelf flex-end on the flex-column panel's tab (the predecessor set right:0 on a stretched relative element, which has no effect); source-asserted.

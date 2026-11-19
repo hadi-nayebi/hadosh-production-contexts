@@ -1,0 +1,21 @@
+S1 Stage 1 — endpoint recorded timestamp from the outgoing dive's own cycle and scheduled end
+Incoming sha (checkpoint-attempt13-stage0.html): 3e3c084d78a206c7eba36586769b40ee3d48f1b247bd2559221a8fa39561870b
+Outgoing sha (checkpoint-attempt13-stage1.html): 6b00accb01107b4b9f58159e729ac8ce0814ee5f1f59854338cae3fa69e8d563 (inode-independent content copy of the candidate)
+
+Construction: the camera write accepts an explicit sampled elapsed; the endpoint claim resolves its dive step from the timeline (a claiming caller may carry only the phase identity), computes that step's scheduled end, and passes it as the sampled elapsed; the presented record and the pending record carry the resolved step and its scheduled end; the hold path samples the endpoint at the dive's scheduled end (the hold step's own start); a resize re-derivation of a presented endpoint reuses the stored scheduled end.
+
+PAIRED SAME-PROBE MEASUREMENTS (same probe script run on incoming and outgoing sources):
+Arithmetic (identical module arithmetic both sources — the timeline did not change):
+- boundary 1: scheduled end 700 · phase current at the boundary = approach of appearance 1 · old derivation records 700's phase start + 335 = 1035 · stored-end derivation records 700 · resume at the stored end enters the next approach at in-phase 0 with the full 365 ms approach remaining
+- boundary 2: scheduled end 1400 · old derivation 1735 · stored 1400 · resumed approach remaining 365
+- boundary 3 (wrap): scheduled end 2100 · old derivation 335 (next cycle's approach start + 335) · stored 2100 · resumed approach remaining 365
+Wiring probes (structural, same expressions both sources):
+- camera accepts an explicit sampled elapsed: incoming NO · outgoing YES
+- endpoint claim passes its scheduled end to the camera: incoming NO · outgoing YES
+- hold path samples at the dive's scheduled end: incoming NO · outgoing YES
+- timeline dive-step filter expression present: incoming YES · outgoing YES (not discriminating — the expression also serves the handoff release; recorded as measured, not claimed as a cure signal)
+
+DISCRIMINATING TEST (filed form): pause with the cut pending at each default boundary, resume — recorded elapsed equals the scheduled end (700 / 1400 / 2100, not 1035 / 1735 / 335) and the first resumed pose leaves the full 365 ms approach remaining. PASS at the logic level on the outgoing source; the DOM pause path consumes the same stored record (pause re-bases from the drawn elapsed). PIXEL-UNVERIFIED stands.
+
+Post-overwrite census (after the candidate's first overwrite): recreation-attempt-12.html, comparison-preserved-attempt-12.html, checkpoint-attempt13-stage0.html, recreation.html, comparison.html and scores.md all byte-identical to the Stage-0 baseline. Only the candidate file differs.
+Checkpoint gate: checkpoint-attempt13-stage1.html + this file filed create-once before Stage 2 opens.

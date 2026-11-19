@@ -1,0 +1,32 @@
+S4 Stage 4 — C-14-04 timing: single cut owner + presentation-shift clock governance
+Incoming sha (checkpoint-attempt14-stage3.html): 4791de01f987a6e26ecbfbd9b09d5bb72b872fc167043bb82ad8742dd5ff77e8
+Outgoing sha (checkpoint-attempt14-stage4.html): 150e182baa6719bb433bf91fb6d358094ff4e175180a27f4a1ac12bfbe2c849c (content copy of candidate, inode-independent)
+
+Construction: endpoint claims are keyed to the APPLIED dive's identity (appliedDiveRecord captured at dive entry); while a flush is outstanding the pending record is the single owner and a late boundary observation claims nothing (it can never re-key the outgoing dive's cut under the new cycle's key); skip logging runs through one reconciler with a watermark, so the timer and the flush cannot log the same interval twice; the approach gains the dive's post-render identity check.
+CLOCK GOVERNANCE (plan-review finding 1, named decision): presentation time SHIFTS. A delayed flush re-bases the schedule origin by its lateness past the dive's scheduled end (flush-rebase-presentation-shift, delayMs recorded); the following phase presents its FULL scheduled duration from the flush frame — no phase absorbs the delay by shortening, and a configured hold/pause after the boundary is presented in full rather than swallowed. Deadlines re-arm from the shifted origin; a second delayed wrap shifts again by its own lateness.
+Evidence level: the real deadline engine driven in a stub DOM (manual clock/timers/rAF) — logic level, PIXEL-UNVERIFIED stands. The incoming source reproduces the filed defects under the identical drive: an extra cut keyed 1:2:dive (outgoing dive under the new cycle's key) plus a duplicate 0:2:dive claim, the following approach consumed (skip-logged 1:0:approach), and a 50ms hold skip-logged and swallowed (consumed phase 0:1:approach). The outgoing source emits exactly one cut per appearance, rebases +365 on each delayed flush, presents the shifted approach for its full 365ms (next cut at the shifted time), and consumes the 50ms hold at its own start (consumedPhaseKey 0:0:hold, no skip entry).
+
+PAIRED PROBES (identical drive on both sources):
+sha 4791de01f987a6e26ecbfbd9b09d5bb72b872fc167043bb82ad8742dd5ff77e8
+FAIL race-one-cut-per-appearance — cuts=["0:0:dive","0:1:dive","0:2:dive","1:2:dive"]
+FAIL race-cut-keyed-outgoing — ["0:0:dive","0:1:dive","0:2:dive","1:2:dive"]
+FAIL flush-rebase-logged — []
+FAIL shifted-approach-full-duration — cuts before shifted dive end=6
+FAIL second-cycle-cut-at-shifted-time — ["0:0:dive","0:1:dive","0:2:dive","1:2:dive","0:2:dive","1:0:dive"]
+PASS no-duplicate-skip-entries — ["1:0:approach"]
+FAIL two-delayed-wraps-two-rebases — first=[] second=[]
+FAIL hold-consumed-at-its-start — ["0:1:approach"]
+FAIL hold-not-skip-logged — [{"type":"skipped","phase":"hold","appearance":0,"cycle":0,"endpointPresented":false}]
+stage4-checkpoint-attempt14-stage3.html: 1 PASS / 8 FAIL
+
+sha 150e182baa6719bb433bf91fb6d358094ff4e175180a27f4a1ac12bfbe2c849c
+PASS race-one-cut-per-appearance — cuts=["0:0:dive","0:1:dive","0:2:dive"]
+PASS race-cut-keyed-outgoing — ["0:0:dive","0:1:dive","0:2:dive"]
+PASS flush-rebase-logged — [{"type":"flush-rebase-presentation-shift","cycle":0,"key":"0:2:dive","delayMs":365,"absorbedBy":"following-phase-presentation-shift","scheduledEndElapsedMs":2100,"flushElapsedMs":2465}]
+PASS shifted-approach-full-duration — cuts before shifted dive end=3
+PASS second-cycle-cut-at-shifted-time — ["0:0:dive","0:1:dive","0:2:dive","1:0:dive"]
+PASS no-duplicate-skip-entries — []
+PASS two-delayed-wraps-two-rebases — first=[[0,365]] second=[[1,365]]
+PASS hold-consumed-at-its-start — ["0:0:hold"]
+PASS hold-not-skip-logged — []
+stage4-recreation-work-attempt14.html: 9 PASS / 0 FAIL

@@ -1,0 +1,13 @@
+T23 attempt 10 — Stage 3 check output (configuration: trusted defaults, route parity, validate-before-commit, detail keys, dispatch lock)
+Stage source: recreation.html sha256 f98fa7a3430d0e35880f537452426ee1da4e28eabb4191ce4790f4f2b3e09201
+Checkpoint: checkpoint-attempt10-stage3-delta.md
+Probe: probe-T23-stage3.js (run dir) — 29 checks, 0 fails. Regressions: Stage 1 resume probe PASS, Stage 2 probes 7/7 PASS on this source.
+
+Coverage of the stage's charges:
+- Trusted defaults: CONFIG deep-frozen at load (object, groups, panel entries, registry all frozen); TRUSTED_DEFAULTS snapshot deep-equals CONFIG; new resets read the snapshot.
+- approachFromScale: unguarded on the predecessor (any value landed); now range-guarded 0.1-1 on the validation path shared by both routes; route value 5 resets to 0.88 with a named warning, 0.5 honored.
+- Both-routes corpus: negative duration warns+resets; null layout group resets without throwing; whitespace-only header/title/separator reset in validation; cfg:detail negative rejected identically to the direct path; padded boolean (" true ") now parses consistently with a trim.
+- Route coverage: cfg: allowlist gains cut + detail; top-level routes added for approachFromScale, artDetailMinPx, headerBreak, artViewBox origin (cfg:artViewBox.x); every key in CONFIG now has a route (asserted key-by-key in the Stage 7 census leg). Probe also exposed a predecessor wart inside this charge: approachMs was missing from the known-keys list, so its own route double-warned "unknown query key" — fixed in this stage.
+- Validate-before-commit: filled=999 warns "out of range, appearances preserved" and the 3 default appearances survive (predecessor: single clamped entry replaced them); a registry replacement whose primitives all fail validation restores the prior entry with a named warning; valid replacements commit.
+- Detail keys: panelArtSVG's detail branch consumes CONFIG.detail (text cutoff, graph multipliers, fallback edge width/radius) — probe: graph below threshold renders edge width 2 (=fallback 1 x 2) and node radius 6.4 (=4 x 1.6) from the group; viewBox origin consumed (viewBox="5 7 160 100").
+- Dispatch residual (partial cure + deferral): PRIM_KINDS is now the single kind list consumed by the validator and by the renderer's entry guard; the suite asserts renderer branch kinds == validator case kinds == PRIM_KINDS (9 kinds, set-equal). The per-kind rendering bodies and per-kind validator cases remain separate code — the residual is DEFERRED with this disposition: kind membership can no longer diverge silently (the check fails the suite), but a single dispatch table was not constructed this attempt; recorded as the stage's one partial cure.

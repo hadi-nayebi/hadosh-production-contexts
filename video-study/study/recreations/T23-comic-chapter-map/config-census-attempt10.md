@@ -1,0 +1,5 @@
+# T23 attempt 10 — config-census leg (guard-config-census, on the NEW source)
+Source sha256: 79f89c062a90ef3224b9caa124645a66a4cbaf1fc7f5210e00b9494e89ce352d
+CONFIG leaves walked: 164. Unconsumed: 0 (consumption = key referenced in the validation/render body, or a palette token referenced as $key from the art registry — the 41 art tokens are consumed by registry reference and resolve through fillOf).
+New keys this attempt, each with a consumed effect asserted in the own-check suite: detail.textCutoffUnits, detail.graphEdgeMultiplier, detail.graphNodeMultiplier, detail.fallbackEdgeWidth, detail.fallbackNodeRadius, artViewBox.x, artViewBox.y, layout.approachEasing, layout.doneBarHeightPx. Route coverage: every CONFIG key is reachable by a route (cfg: group routes for layout/labels/typography/artViewBox/progress/ceilings/limits/artDefaults/handoff/cut/detail; top-level routes for the scalar keys incl. approachFromScale, artDetailMinPx, headerBreak) — asserted key-by-key in probe-T23-stage3.js.
+HIT list: 0.

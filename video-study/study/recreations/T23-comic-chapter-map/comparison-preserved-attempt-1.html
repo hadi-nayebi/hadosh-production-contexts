@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T23 — Comic chapter-map motif · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38;overflow:hidden}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+  @media (max-width:560px){ .panel{flex-basis:100%} }
+</style>
+</head>
+<body>
+<h1>T23 — Comic chapter-map motif</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 2:12 appearance
+(verified flash at 2:16 in the archived source; also 1:05 and 2:51).
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation — a cream comic page of numbered, yellow-tabbed panels;
+each appearance fills more panels, holds, then the camera dives into the next chapter panel.
+One control set drives both.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — new titles, filled 7, faster, orange tab</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — “Look What I Can Do” @ 2:12<small>segment.mp4 · specimen window 2:10–2:17 (source 130–137 s) · chapter-map flash at ≈2:16 · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T23 Comic chapter-map motif, parameterized<small>recreation.html · CONFIG: header, panel list, filled-count per appearance, dwell/dive timing, palette · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T23 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click, so both start together. The recreation loops its three appearances
+(filled 4 → 8 → 12; dwell <code>1500 ms</code>, dive <code>650 ms</code>, zoom hold <code>350 ms</code>,
+pause <code>400 ms</code> — full cycle ≈ 8.7 s against the segment's 7 s, whose flash sits at its tail).
+The Swap test button reloads the recreation with
+<code>?panels=OPENING DAY|FIRST SALE|THE INBOX|RIVALS|THE PIVOT|NIGHT SHIFT|THE DEMO|FEEDBACK|THE LEAK|VERDICT|INTERMISSION|FINALE&amp;filled=7&amp;dwellMs=900&amp;tab=%23ff9f1c</code> —
+if the new titles still fit their yellow tabs at phone width, exactly 7 panels fill, and the dive still
+lands, the build is the technique, not a copy of the specimen. On a phone-width screen the two sides
+stack vertically, the controls stay reachable above them, and the recreation's grid re-flows to
+3 columns so the chapter tabs stay legible.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+function cmd(c){ rec.contentWindow && rec.contentWindow.postMessage({cmd:c}, "*"); }
+document.getElementById("btnPlay").addEventListener("click", function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ vid.currentTime = 0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click", function(){
+  rec.src = "recreation.html?panels=OPENING DAY|FIRST SALE|THE INBOX|RIVALS|THE PIVOT|NIGHT SHIFT|THE DEMO|FEEDBACK|THE LEAK|VERDICT|INTERMISSION|FINALE&filled=7&dwellMs=900&tab=%23ff9f1c";
+  vid.currentTime = 0; vid.play();
+});
+</script>
+</body>
+</html>

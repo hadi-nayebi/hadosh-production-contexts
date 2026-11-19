@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T23 — Comic chapter-map motif · parameterized recreation</title>
+<style>
+  html,body{margin:0;padding:0}
+  #stage{position:relative;width:100%;margin:0 auto;overflow:hidden;user-select:none}
+  #zoomwrap{position:absolute;inset:0;transform-origin:0 0;will-change:transform}
+  #header{white-space:nowrap;overflow:hidden}
+  #grid{display:grid}
+  .panel{position:relative;overflow:hidden;box-sizing:border-box}
+  .tab{position:absolute;top:0;left:0;box-sizing:border-box;max-width:100%;overflow:hidden}
+  .art{position:absolute;inset:0}
+  .art svg{display:block;width:100%;height:100%}
+  .ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div id="stage"><div id="zoomwrap"><div id="header"></div><div id="grid"></div></div><div id="warn" style="display:none"></div></div>
+<script>
+"use strict";
+/* ================= CONFIG — every variable of the technique lives here.
+   Specimen values are the defaults; URL parameters override them after
+   strict validation (see validateInto / resolveConfig). ================= */
+const CONFIG = {
+  headerText: "ADITAZZZ — A COMIC OF EVERYTHING WE MADE — ISSUE #1",
+  panels: [
+    { n: "01", title: "THE TERMINAL",     art: "terminal" },
+    { n: "02", title: "THE WALL",         art: "tiles"    },
+    { n: "03", title: "SHIP IT",          art: "ship"     },
+    { n: "04", title: "THE COMMENTS",     art: "comments" },
+    { n: "05", title: "IN THE WALLS",     art: "walls"    },
+    { n: "06", title: "THE SWARM",        art: "swarm"    },
+    { n: "07", title: "THE DAILY STANDUP",art: "paper"    },
+    { n: "08", title: "THE KEYNOTE",      art: "keynote"  },
+    { n: "09", title: "THE SEERESS",      art: "seeress"  },
+    { n: "10", title: "I KNEW IT",        art: "slam"     },
+    { n: "11", title: "PLEASE HOLD",      art: "tower"    },
+    { n: "12", title: "USAGE LIMIT",      art: "receipt"  }
+  ],
+  appearances: [
+    { filled: 4,  dive: 4  },
+    { filled: 8,  dive: 8  },
+    { filled: 12, dive: 11 }
+  ],
+  dwellMs: 300,
+  diveMs: 430,
+  holdZoomMs: 0,
+  loopPauseMs: 0,
+  progress: {
+    forceFillTarget: "mark",
+    targetOutlinePx: 3
+  },
+  ceilings: {
+    maxGridCells: 96,
+    maxCirclesRowCount: 24,
+    maxGraphNodes: 24,
+    maxGraphEdges: 64
+  },
+  limits: {
+    maxPanels: 24,
+    maxCols: 6,
+    headerMaxChars: 120,
+    titleMaxChars: 60,
+    numberMaxChars: 8,
+    clampMaxIterations: 300,
+    borderClampStep: 1
+  },
+  diveScale: 3.1,
+  colsWide: 4,
+  colsNarrow: 3,
+  narrowBreakpointPx: 520,
+  panelAspect: 1.55,
+  gapPx: 10,
+  borderPx: 4,
+  palette: {
+    paper: "#e9e5d6",
+    ink:   "#141414",
+    tab:   "#ffd21f",
+    tabDim:"#b9b091",
+    empty: "#d9d3bf",
+    accent:"#e2483d",
+    tabTarget: "#ff9f1c",
+    dark:  "#20201c",
+    panelBg: "#ffffff"
+  },
+  fontFamily: "\"Arial Narrow\", Arial, Helvetica, sans-serif",
+  layout: {
+    stageMaxPx: 960,
+    stageBottomPadPx: 6,
+    headerHeightFactor: 0.034,
+    headerMinPx: 18,
+    headerFontFactor: 0.021,
+    headerMinFontPx: 11,
+    headerPaddingPx: 8,
+    tabBorderPx: 3,
+    tabPaddingYPx: 1,
+    tabPaddingLeftPx: 5,
+    tabPaddingRightPx: 6,
+    ghostFontFactor: 0.3,
+    ghostOpacity: 0.16,
+    diveEasing: "cubic-bezier(.55,0,.85,.4)",
+    diveCoverMargin: 1.03,
+    minStepMs: 0,
+    fallbackStagePx: 360,
+    tabTopPx: 0,
+    tabLeftPx: 0,
+    tabZIndex: 3,
+    minPanelPx: 48,
+    warnFontPx: 12,
+    headerReservePx: 16,
+    headerAbsoluteMinPx: 8,
+    minStagePx: 240,
+    minInnerWPx: 24,
+    minInnerHPx: 12,
+    gapClampStepPx: 5,
+    warnPadding: "4px 8px",
+    warnZIndex: 9,
+    primDefaultStrokeWidth: 1,
+    primDefaultTextWeight: "normal"
+  },
+  artViewBox: { w: 160, h: 100, preserveAspectRatio: "none" },
+  fallbackArtKind: "tiles",
+  artDefaults: { fill: "$ink" },
+  typography: {
+    headerWeight: 700,
+    headerLetterSpacingEm: 0.04,
+    tabWeight: 900,
+    tabLetterSpacingEm: 0.02,
+    tabLineHeight: 1.25,
+    headerWrapLineHeight: 1.15,
+    ghostWeight: 900
+  },
+  labels: {
+    baseFactor: 0.14,
+    maxPx: 18,
+    minPx: 11,
+    glyphEm: 0.52,
+    chromePx: 14,
+    separator: " · ",
+    shrinkStepPx: 0.5,
+    maxTabHeightFraction: 0.65,
+    numberPadWidth: 2,
+    generatedTitlePrefix: "CHAPTER "
+  },
+  /* Art registry: every miniature is data — a list of drawing primitives
+     (rect / circle / line / polygon / path / text / grid / graph /
+     circlesRow). "$ink" and "$accent" resolve from the palette.
+     Inscriptions are registry data, never literals in the renderer. */
+  artRegistry: {
+    terminal: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#101418" },
+      { t:"rect", x:10, y:10, w:86, h:6, fill:"#57e389" },
+      { t:"rect", x:10, y:24, w:120, h:6, fill:"#3f7d55" },
+      { t:"rect", x:10, y:38, w:64, h:6, fill:"#57e389" },
+      { t:"rect", x:10, y:56, w:14, h:10, fill:"#57e389" } ] },
+    tiles: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#1b2030" },
+      { t:"grid", x:8, y:8, cols:6, rows:4, cellW:20, cellH:17, gapX:5, gapY:5,
+        fills:["#6fb7ff","#31405e","#31405e"] } ] },
+    ship: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#12160f" },
+      { t:"path", d:"M45 88 L45 45 A35 30 0 0 1 115 45 L115 88 Z", fill:"#233118", stroke:"#7ac74f", strokeWidth:2 },
+      { t:"circlesRow", cx0:30, cy:93, dx:20, count:6, r:4, fill:"#9fb0c3" },
+      { t:"rect", x:58, y:8, w:44, h:12, fill:"#7ac74f" },
+      { t:"text", x:80, y:18, size:9, anchor:"middle", fill:"#101408", weight:"bold", content:"SHIPPED" } ] },
+    comments: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#171a21" },
+      { t:"rect", x:14, y:12, w:132, h:76, rx:6, fill:"#f2f2ee" },
+      { t:"rect", x:24, y:24, w:90, h:7, fill:"#222222" },
+      { t:"rect", x:24, y:38, w:112, h:7, fill:"#c9a227" },
+      { t:"rect", x:24, y:52, w:70, h:7, fill:"#555555" },
+      { t:"path", d:"M34 78 c-6-8 6-14 10-6 c4-8 16-2 10 6 l-10 8 z", fill:"$accent" } ] },
+    walls: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#232a26" },
+      { t:"rect", x:42, y:24, w:76, h:50, fill:"#0d0f0e", stroke:"#4a554e", strokeWidth:2 },
+      { t:"rect", x:52, y:36, w:56, h:6, fill:"#e8b23a" },
+      { t:"rect", x:52, y:48, w:42, h:6, fill:"#e8b23a" },
+      { t:"rect", x:70, y:74, w:20, h:8, fill:"#4a554e" } ] },
+    swarm: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#0e1420" },
+      { t:"graph", nodes:[[80,16],[44,44],[116,44],[24,78],[64,78],[96,78],[136,78]],
+        edges:[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]], edgeStroke:"#5f7fa6", edgeWidth:1.5,
+        nodeFill:"#cfe4ff", nodeR:4 } ] },
+    paper: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#efe9dc" },
+      { t:"rect", x:14, y:10, w:132, h:5, fill:"$ink" },
+      { t:"text", x:16, y:42, size:21, fill:"$ink", weight:"900",
+        segments:[ { t:"$0 ×3 = ", fill:"$ink" }, { t:"$0", fill:"$accent" } ] },
+      { t:"rect", x:98, y:56, w:48, h:32, fill:"#5b2a86" },
+      { t:"circle", cx:110, cy:82, r:6, fill:"#222222" },
+      { t:"circle", cx:134, cy:82, r:6, fill:"#222222" } ] },
+    keynote: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#191410" },
+      { t:"polygon", points:"66,8 94,8 118,88 42,88", fill:"#e8b23a", opacity:0.85 },
+      { t:"circle", cx:80, cy:34, r:7, fill:"#14100c" },
+      { t:"rect", x:76, y:41, w:8, h:24, fill:"#14100c" },
+      { t:"rect", x:60, y:48, w:16, h:5, fill:"#14100c", transform:"rotate(-24 68 50)" } ] },
+    seeress: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#26232b" },
+      { t:"circle", cx:112, cy:42, r:19, fill:"#e8ddc8", stroke:"$ink", strokeWidth:2 },
+      { t:"circle", cx:105, cy:40, r:3, fill:"$ink" },
+      { t:"circle", cx:119, cy:40, r:3, fill:"$ink" },
+      { t:"path", d:"M103 52 q9 6 18 0", fill:"none", stroke:"$ink", strokeWidth:2 },
+      { t:"rect", x:30, y:52, w:5, h:26, fill:"#e8ddc8" },
+      { t:"rect", x:46, y:58, w:5, h:20, fill:"#e8ddc8" },
+      { t:"circle", cx:32, cy:49, r:3, fill:"#ffb84d" },
+      { t:"circle", cx:48, cy:55, r:3, fill:"#ffb84d" } ] },
+    slam: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#2b2b2b" },
+      { t:"text", x:80, y:62, size:24, anchor:"middle", fill:"#f2f2ee", weight:"900", content:"I KNEW IT!" },
+      { t:"rect", x:18, y:14, w:70, h:5, fill:"#8a8f98" },
+      { t:"rect", x:18, y:25, w:52, h:5, fill:"#8a8f98" } ] },
+    tower: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#2a1440" },
+      { t:"rect", x:58, y:10, w:44, h:84, fill:"#101018", stroke:"#5ee7e0", strokeWidth:2 },
+      { t:"grid", x:66, y:18, cols:3, rows:5, cellW:7, cellH:9, gapX:4, gapY:6,
+        fills:["#ffe9a3","#5ee7e0"] },
+      { t:"rect", x:14, y:52, w:26, h:42, fill:"#17122b" },
+      { t:"rect", x:120, y:44, w:28, h:50, fill:"#17122b" } ] },
+    receipt: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#3c3c3c" },
+      { t:"polygon", points:"48,6 118,6 112,94 54,94", fill:"#f4f1e8" },
+      { t:"rect", x:62, y:46, w:42, h:34, rx:4, fill:"#26282e" },
+      { t:"rect", x:60, y:16, w:46, h:5, fill:"$ink" },
+      { t:"rect", x:60, y:27, w:34, h:5, fill:"#777777" } ] }
+  }
+};
+
+/* ================= validation / normalization ========================= */
+function strictInt(v) { return /^-?\d+$/.test(String(v).trim()) ? parseInt(v, 10) : null; }
+function strictNum(v) { return /^-?\d+(\.\d+)?$/.test(String(v).trim()) ? parseFloat(v) : null; }
+function isColor(v) { return /^#[0-9a-fA-F]{6}$/.test(String(v).trim()) || /^#[0-9a-fA-F]{3}$/.test(String(v).trim()); }
+function validateInto(cfg, warnings) {
+  const W = function (m) { warnings.push(m); };
+  const clampInt = function (obj, key, lo, hi) {
+    const v = strictInt(obj[key]);
+    if (v === null) { W(key + ": non-integer value discarded"); return false; }
+    const c = Math.max(lo, Math.min(hi, v));
+    if (c !== v) W(key + ": clamped " + v + " -> " + c);
+    obj[key] = c; return true;
+  };
+  if (!cfg.limits || typeof cfg.limits !== "object") { W("limits: malformed, reset to default"); cfg.limits = JSON.parse(JSON.stringify(CONFIG.limits)); }
+  ["maxPanels", "maxCols", "headerMaxChars", "titleMaxChars", "numberMaxChars", "clampMaxIterations", "borderClampStep"].forEach(function (k) {
+    if (!Number.isInteger(cfg.limits[k]) || cfg.limits[k] < 1 || cfg.limits[k] > 100000) { W("limits." + k + ": invalid, reset to default"); cfg.limits[k] = CONFIG.limits[k]; }
+  });
+  clampInt(cfg, "dwellMs", 0, 60000); clampInt(cfg, "diveMs", 0, 10000);
+  clampInt(cfg, "holdZoomMs", 0, 60000); clampInt(cfg, "loopPauseMs", 0, 60000);
+  clampInt(cfg, "colsWide", 1, cfg.limits.maxCols); clampInt(cfg, "colsNarrow", 1, cfg.limits.maxCols);
+  clampInt(cfg, "narrowBreakpointPx", 200, 2000);
+  clampInt(cfg, "gapPx", 0, 40); clampInt(cfg, "borderPx", 0, 12);
+  const ds = strictNum(cfg.diveScale);
+  if (ds === null || ds < 1 || ds > 12) { W("diveScale: invalid, reset to default"); cfg.diveScale = CONFIG.diveScale; }
+  const pa = strictNum(cfg.panelAspect);
+  if (pa === null || pa < 0.5 || pa > 3) { W("panelAspect: invalid, reset to default"); cfg.panelAspect = CONFIG.panelAspect; }
+  if (typeof cfg.headerText !== "string" || !cfg.headerText.length) { W("headerText: empty, reset to default"); cfg.headerText = CONFIG.headerText; }
+  if (cfg.headerText.length > cfg.limits.headerMaxChars) W("headerText: truncated to " + cfg.limits.headerMaxChars + " characters");
+  cfg.headerText = cfg.headerText.slice(0, cfg.limits.headerMaxChars);
+  Object.keys(cfg.palette).forEach(function (k) {
+    if (!isColor(cfg.palette[k])) { W("palette." + k + ": invalid color, reset to default"); cfg.palette[k] = CONFIG.palette[k]; }
+    else cfg.palette[k] = String(cfg.palette[k]).trim();
+  });
+  /* the progress/ceilings groups are validated BEFORE the registry
+     cleaning below, because the primitive schema consumes cfg.ceilings */
+  if (!cfg.progress || typeof cfg.progress !== "object") { W("progress: malformed, reset to default"); cfg.progress = JSON.parse(JSON.stringify(CONFIG.progress)); }
+  if (typeof cfg.progress.forceFillTarget === "string") cfg.progress.forceFillTarget = cfg.progress.forceFillTarget.trim();
+  if (["mark", "fill"].indexOf(cfg.progress.forceFillTarget) === -1) { W("progress.forceFillTarget: invalid, reset to default"); cfg.progress.forceFillTarget = CONFIG.progress.forceFillTarget; }
+  const earlyGuard = function (obj, key, lo, hi, def) {
+    const v = strictNum(obj[key]);
+    if (v === null || v < lo || v > hi) { W(key + ": out of range, reset to default"); obj[key] = def; }
+  };
+  earlyGuard(cfg.progress, "targetOutlinePx", 0, 12, CONFIG.progress.targetOutlinePx);
+  if (!cfg.ceilings || typeof cfg.ceilings !== "object") { W("ceilings: malformed, reset to default"); cfg.ceilings = JSON.parse(JSON.stringify(CONFIG.ceilings)); }
+  ["maxGridCells", "maxCirclesRowCount", "maxGraphNodes", "maxGraphEdges"].forEach(function (k) {
+    if (!Number.isInteger(cfg.ceilings[k]) || cfg.ceilings[k] < 1 || cfg.ceilings[k] > 10000) { W("ceilings." + k + ": invalid, reset to default"); cfg.ceilings[k] = CONFIG.ceilings[k]; }
+  });
+  earlyGuard(cfg.layout, "minStagePx", 120, 2000, CONFIG.layout.minStagePx);
+  earlyGuard(cfg.layout, "minInnerWPx", 1, 200, CONFIG.layout.minInnerWPx);
+  earlyGuard(cfg.layout, "minInnerHPx", 1, 200, CONFIG.layout.minInnerHPx);
+  earlyGuard(cfg.layout, "gapClampStepPx", 1, 40, CONFIG.layout.gapClampStepPx);
+  earlyGuard(cfg.layout, "warnZIndex", 0, 99, CONFIG.layout.warnZIndex);
+  earlyGuard(cfg.layout, "primDefaultStrokeWidth", 0.1, 40, CONFIG.layout.primDefaultStrokeWidth);
+  if (typeof cfg.layout.warnPadding !== "string" || !/^\d+px \d+px$/.test(cfg.layout.warnPadding)) { W("layout.warnPadding: invalid, reset to default"); cfg.layout.warnPadding = CONFIG.layout.warnPadding; }
+  if (typeof cfg.layout.primDefaultTextWeight !== "string" || !/^(normal|bold|bolder|lighter|[1-9]00)$/.test(cfg.layout.primDefaultTextWeight)) { W("layout.primDefaultTextWeight: invalid, reset to default"); cfg.layout.primDefaultTextWeight = CONFIG.layout.primDefaultTextWeight; }
+  earlyGuard(cfg.typography, "headerWrapLineHeight", 1, 2, CONFIG.typography.headerWrapLineHeight);
+  if (typeof cfg.artViewBox.preserveAspectRatio === "string") cfg.artViewBox.preserveAspectRatio = cfg.artViewBox.preserveAspectRatio.trim();
+  if (typeof cfg.artViewBox.preserveAspectRatio !== "string" || ["none", "xMidYMid meet", "xMidYMid slice"].indexOf(cfg.artViewBox.preserveAspectRatio) === -1) { W("artViewBox.preserveAspectRatio: invalid, reset to default"); cfg.artViewBox.preserveAspectRatio = CONFIG.artViewBox.preserveAspectRatio; }
+  /* registry primitive-field schema validation (runs BEFORE panel art
+     references and the fallback kind are resolved, so both resolve
+     against the cleaned registry) */
+  const primKinds = ["rect","circle","line","polygon","path","text","grid","graph","circlesRow"];
+  const isNum = function (v) { return typeof v === "number" && isFinite(v); };
+  const numFields = function (pr, fields) { return fields.every(function (f) { return isNum(pr[f]); }); };
+  const paintOk = function (v) {
+    return typeof v === "string" && (isColor(v) || v === "none" ||
+      (v.charAt(0) === "$" && Object.prototype.hasOwnProperty.call(cfg.palette, v.slice(1))));
+  };
+  const pointsOk = function (s) {
+    if (typeof s !== "string") return false;
+    const nums = s.trim().split(/[\s,]+/).filter(Boolean);
+    return nums.length >= 4 && nums.length % 2 === 0 &&
+      nums.every(function (a) { return /^-?(?:\d+(?:\.\d+)?|\.\d+)$/.test(a); });
+  };
+  /* transform grammar: a whitespace-separated sequence of
+     rotate(a [x y]) / translate(x [,] y) / scale(sx [,] sy) calls with
+     finite numeric arguments, each |value| <= 10000 — anything else is
+     an invalid field and the primitive is dropped with a warning */
+  const transformOk = function (s) {
+    if (typeof s !== "string") return false;
+    const t = s.trim(); if (!t) return false;
+    const callRe = /(rotate|translate|scale)\(([^()]*)\)/g;
+    const numRe = /^-?(?:\d+(?:\.\d+)?|\.\d+)$/;
+    let m, joined = "", count = 0;
+    while ((m = callRe.exec(t)) !== null) {
+      const args = m[2].trim().split(/[\s,]+/).filter(Boolean);
+      const okCount = m[1] === "rotate" ? (args.length === 1 || args.length === 3) : (args.length === 1 || args.length === 2);
+      if (!okCount) return false;
+      if (!args.every(function (a) { return numRe.test(a) && Math.abs(parseFloat(a)) <= 10000; })) return false;
+      joined += m[0].replace(/\s+/g, ""); count++;
+    }
+    /* full coverage: the calls must account for the entire string —
+       any garbage between or around calls fails the grammar */
+    return count > 0 && joined === t.replace(/\s+/g, "");
+  };
+  const validPrim = function (pr) {
+    if (!pr || primKinds.indexOf(pr.t) === -1) return false;
+    /* optional-field validation: a present-but-invalid optional
+       field invalidates the primitive — silent acceptance is how bad
+       data reached the renderer in earlier attempts */
+    if (pr.strokeWidth !== undefined && !(isNum(pr.strokeWidth) && pr.strokeWidth > 0 && pr.strokeWidth <= 40)) return false;
+    if (pr.opacity !== undefined && !(isNum(pr.opacity) && pr.opacity >= 0 && pr.opacity <= 1)) return false;
+    if (pr.fill !== undefined && !paintOk(pr.fill)) return false;
+    if (pr.stroke !== undefined && !paintOk(pr.stroke)) return false;
+    if (pr.transform !== undefined && !transformOk(pr.transform)) return false;
+    if (pr.anchor !== undefined && ["start", "middle", "end"].indexOf(pr.anchor) === -1) return false;
+    if (pr.rx !== undefined && !(isNum(pr.rx) && pr.rx >= 0)) return false;
+    if (pr.t === "rect") return numFields(pr, ["x","y","w","h"]) && pr.w >= 0 && pr.h >= 0;
+    if (pr.t === "circle") return numFields(pr, ["cx","cy","r"]) && pr.r >= 0;
+    if (pr.t === "line") return numFields(pr, ["x1","y1","x2","y2"]);
+    if (pr.t === "polygon") return pointsOk(pr.points);
+    if (pr.t === "path") return typeof pr.d === "string" && pr.d.trim().length > 0;
+    if (pr.t === "text") {
+      if (!numFields(pr, ["x","y","size"]) || pr.size <= 0 || pr.size > 200) return false;
+      if (pr.weight !== undefined && !/^(normal|bold|bolder|lighter|[1-9]00)$/.test(String(pr.weight))) return false;
+      if (pr.segments !== undefined) return Array.isArray(pr.segments) && pr.segments.length > 0 &&
+        pr.segments.every(function (sg) { return sg && typeof sg.t === "string" && (sg.fill === undefined || paintOk(sg.fill)); });
+      return typeof pr.content === "string";
+    }
+    if (pr.t === "grid") return Number.isInteger(pr.cols) && pr.cols >= 1 && Number.isInteger(pr.rows) && pr.rows >= 1 &&
+      pr.cols * pr.rows <= cfg.ceilings.maxGridCells &&
+      numFields(pr, ["x","y","cellW","cellH","gapX","gapY"]) && pr.cellW > 0 && pr.cellH > 0 &&
+      Array.isArray(pr.fills) && pr.fills.length > 0 && pr.fills.every(function (f) { return paintOk(f); });
+    if (pr.t === "graph") {
+      if (!Array.isArray(pr.nodes) || pr.nodes.length === 0 || pr.nodes.length > cfg.ceilings.maxGraphNodes) return false;
+      if (!pr.nodes.every(function (n) { return Array.isArray(n) && n.length === 2 && isNum(n[0]) && isNum(n[1]); })) return false;
+      if (!Array.isArray(pr.edges) || pr.edges.length > cfg.ceilings.maxGraphEdges) return false;
+      if (!pr.edges.every(function (e) { return Array.isArray(e) && e.length === 2 &&
+        Number.isInteger(e[0]) && Number.isInteger(e[1]) && e[0] >= 0 && e[1] >= 0 &&
+        e[0] < pr.nodes.length && e[1] < pr.nodes.length; })) return false;
+      if (pr.edgeWidth !== undefined && !(isNum(pr.edgeWidth) && pr.edgeWidth > 0 && pr.edgeWidth <= 40)) return false;
+      if (pr.edgeStroke !== undefined && !paintOk(pr.edgeStroke)) return false;
+      if (pr.nodeFill !== undefined && !paintOk(pr.nodeFill)) return false;
+      return isNum(pr.nodeR) && pr.nodeR > 0;
+    }
+    if (pr.t === "circlesRow") return numFields(pr, ["cx0","cy","dx","r"]) && pr.r > 0 &&
+      Number.isInteger(pr.count) && pr.count >= 1 && pr.count <= cfg.ceilings.maxCirclesRowCount;
+    return false;
+  };
+  if (!cfg.artRegistry || typeof cfg.artRegistry !== "object") { W("artRegistry: malformed, reset to default"); cfg.artRegistry = JSON.parse(JSON.stringify(CONFIG.artRegistry)); }
+  Object.keys(cfg.artRegistry).forEach(function (k) {
+    const e = cfg.artRegistry[k];
+    if (!e || !Array.isArray(e.primitives)) { W("artRegistry." + k + ": malformed entry removed"); delete cfg.artRegistry[k]; return; }
+    e.primitives = e.primitives.filter(function (pr) {
+      if (!validPrim(pr)) { W("artRegistry." + k + ": unsupported or field-invalid primitive dropped"); return false; }
+      return true;
+    });
+    if (e.primitives.length === 0) { W("artRegistry." + k + ": no valid primitives, entry removed"); delete cfg.artRegistry[k]; }
+  });
+  /* an entirely rejected registry restores the DEFAULT registry (deep
+     copy) with a named warning — blank art is not a lawful fallback */
+  if (Object.keys(cfg.artRegistry).length === 0) {
+    W("artRegistry: all entries rejected, default registry restored");
+    cfg.artRegistry = JSON.parse(JSON.stringify(CONFIG.artRegistry));
+  }
+  /* fallback art kind resolves from the RESOLVED config's registry */
+  if (!cfg.artDefaults || typeof cfg.artDefaults !== "object" || typeof cfg.artDefaults.fill !== "string" ||
+      !paintOk(cfg.artDefaults.fill) ||
+      (cfg.artDefaults.fill.charAt(0) === "$" && !Object.prototype.hasOwnProperty.call(cfg.palette, cfg.artDefaults.fill.slice(1)))) {
+    W("artDefaults.fill: invalid, reset to default"); cfg.artDefaults = JSON.parse(JSON.stringify(CONFIG.artDefaults));
+  }
+  if (!Object.prototype.hasOwnProperty.call(cfg.artRegistry, cfg.fallbackArtKind)) {
+  const fb = Object.prototype.hasOwnProperty.call(cfg.artRegistry, CONFIG.fallbackArtKind)
+      ? CONFIG.fallbackArtKind : Object.keys(cfg.artRegistry)[0];
+    W("fallbackArtKind: '" + cfg.fallbackArtKind + "' not in registry, reset to '" + fb + "'");
+    cfg.fallbackArtKind = fb;
+  }
+  if (!Array.isArray(cfg.panels) || cfg.panels.length === 0) { W("panels: empty, reset to default"); cfg.panels = JSON.parse(JSON.stringify(CONFIG.panels)); }
+  if (cfg.panels.length > cfg.limits.maxPanels) { W("panels: truncated to " + cfg.limits.maxPanels); cfg.panels = cfg.panels.slice(0, cfg.limits.maxPanels); }
+  cfg.panels.forEach(function (p, i) {
+    if (!p || typeof p !== "object") { W("panels[" + i + "]: malformed entry, placeholder used"); p = cfg.panels[i] = {}; }
+    if (typeof p.title !== "string" || !p.title.length) { W("panels[" + i + "].title: empty, placeholder used"); p.title = cfg.labels.generatedTitlePrefix + (i + 1); }
+    if (p.title.length > cfg.limits.titleMaxChars) W("panels[" + i + "].title: truncated to " + cfg.limits.titleMaxChars + " characters");
+    p.title = p.title.toUpperCase().slice(0, cfg.limits.titleMaxChars);
+    if (typeof p.n !== "string" || !p.n.trim()) p.n = String(i + 1).padStart(cfg.labels.numberPadWidth, "0");
+    else { if (p.n.trim().length > cfg.limits.numberMaxChars) W("panels[" + i + "].n: truncated to " + cfg.limits.numberMaxChars + " characters"); p.n = p.n.trim().slice(0, cfg.limits.numberMaxChars); }
+    const has = Object.prototype.hasOwnProperty.call(cfg.artRegistry, p.art);
+    const entry = has ? cfg.artRegistry[p.art] : null;
+    if (!entry || !Array.isArray(entry.primitives)) { W("panels[" + i + "].art: unknown or malformed kind '" + p.art + "', fallback '" + cfg.fallbackArtKind + "'"); p.art = cfg.fallbackArtKind; }
+  });
+  /* terminating-range audit: EVERY numeric nested field */
+  const numGuard = function (obj, key, lo, hi, def) {
+    const v = strictNum(obj[key]);
+    if (v === null || v < lo || v > hi) { W(key + ": out of range, reset to default"); obj[key] = def; }
+  };
+  numGuard(cfg.layout, "stageMaxPx", 200, 4000, CONFIG.layout.stageMaxPx);
+  numGuard(cfg.layout, "stageBottomPadPx", 0, 100, CONFIG.layout.stageBottomPadPx);
+  numGuard(cfg.layout, "headerHeightFactor", 0.005, 0.3, CONFIG.layout.headerHeightFactor);
+  numGuard(cfg.layout, "headerMinPx", 8, 120, CONFIG.layout.headerMinPx);
+  numGuard(cfg.layout, "headerFontFactor", 0.005, 0.2, CONFIG.layout.headerFontFactor);
+  numGuard(cfg.layout, "headerMinFontPx", 6, 24, CONFIG.layout.headerMinFontPx);
+  numGuard(cfg.layout, "headerPaddingPx", 0, 60, CONFIG.layout.headerPaddingPx);
+  numGuard(cfg.layout, "headerReservePx", 0, 100, CONFIG.layout.headerReservePx);
+  numGuard(cfg.layout, "headerAbsoluteMinPx", 5, 12, CONFIG.layout.headerAbsoluteMinPx);
+  numGuard(cfg.layout, "tabBorderPx", 0, 12, CONFIG.layout.tabBorderPx);
+  numGuard(cfg.layout, "tabPaddingYPx", 0, 30, CONFIG.layout.tabPaddingYPx);
+  numGuard(cfg.layout, "tabPaddingLeftPx", 0, 40, CONFIG.layout.tabPaddingLeftPx);
+  numGuard(cfg.layout, "tabPaddingRightPx", 0, 40, CONFIG.layout.tabPaddingRightPx);
+  numGuard(cfg.layout, "ghostOpacity", 0, 1, CONFIG.layout.ghostOpacity);
+  numGuard(cfg.layout, "ghostFontFactor", 0.05, 1, CONFIG.layout.ghostFontFactor);
+  numGuard(cfg.layout, "diveCoverMargin", 1, 2, CONFIG.layout.diveCoverMargin);
+  numGuard(cfg.layout, "minStepMs", 0, 1000, CONFIG.layout.minStepMs);
+  numGuard(cfg.layout, "fallbackStagePx", 200, 2000, CONFIG.layout.fallbackStagePx);
+  numGuard(cfg.layout, "tabTopPx", 0, 100, CONFIG.layout.tabTopPx);
+  numGuard(cfg.layout, "tabLeftPx", 0, 100, CONFIG.layout.tabLeftPx);
+  numGuard(cfg.layout, "tabZIndex", 0, 99, CONFIG.layout.tabZIndex);
+  numGuard(cfg.layout, "minPanelPx", 10, 200, CONFIG.layout.minPanelPx);
+  numGuard(cfg.layout, "warnFontPx", 8, 24, CONFIG.layout.warnFontPx);
+  numGuard(cfg.labels, "minPx", 6, 24, CONFIG.labels.minPx);
+  numGuard(cfg.labels, "maxPx", 8, 40, CONFIG.labels.maxPx);
+  numGuard(cfg.labels, "baseFactor", 0.05, 0.4, CONFIG.labels.baseFactor);
+  numGuard(cfg.labels, "glyphEm", 0.3, 0.9, CONFIG.labels.glyphEm);
+  numGuard(cfg.labels, "chromePx", 0, 60, CONFIG.labels.chromePx);
+  /* strictly positive shrink step: a zero/negative step would loop the
+     shrink helpers forever — this guard is what makes them terminate */
+  numGuard(cfg.labels, "shrinkStepPx", 0.05, 5, CONFIG.labels.shrinkStepPx);
+  numGuard(cfg.labels, "maxTabHeightFraction", 0.1, 1, CONFIG.labels.maxTabHeightFraction);
+  if (!Number.isInteger(cfg.labels.numberPadWidth) || cfg.labels.numberPadWidth < 1 || cfg.labels.numberPadWidth > 4) {
+    W("labels.numberPadWidth: out of range, reset to default"); cfg.labels.numberPadWidth = CONFIG.labels.numberPadWidth; }
+  if (typeof cfg.labels.separator !== "string" || !cfg.labels.separator) { W("labels.separator: invalid, reset"); cfg.labels.separator = CONFIG.labels.separator; }
+  if (typeof cfg.labels.generatedTitlePrefix !== "string" || !cfg.labels.generatedTitlePrefix) { W("labels.generatedTitlePrefix: invalid, reset"); cfg.labels.generatedTitlePrefix = CONFIG.labels.generatedTitlePrefix; }
+  numGuard(cfg.typography, "headerWeight", 100, 900, CONFIG.typography.headerWeight);
+  numGuard(cfg.typography, "headerLetterSpacingEm", 0, 1, CONFIG.typography.headerLetterSpacingEm);
+  numGuard(cfg.typography, "tabWeight", 100, 900, CONFIG.typography.tabWeight);
+  numGuard(cfg.typography, "tabLetterSpacingEm", 0, 1, CONFIG.typography.tabLetterSpacingEm);
+  numGuard(cfg.typography, "tabLineHeight", 1, 2, CONFIG.typography.tabLineHeight);
+  numGuard(cfg.typography, "ghostWeight", 100, 900, CONFIG.typography.ghostWeight);
+  numGuard(cfg.artViewBox, "w", 20, 1000, CONFIG.artViewBox.w);
+  numGuard(cfg.artViewBox, "h", 20, 1000, CONFIG.artViewBox.h);
+  if (cfg.labels.maxPx < cfg.labels.minPx) { W("labels.maxPx: below minPx, raised to fit"); cfg.labels.maxPx = Math.max(CONFIG.labels.maxPx, cfg.labels.minPx); }
+  const easingStr = typeof cfg.layout.diveEasing === "string" ? cfg.layout.diveEasing.trim() : "";
+  /* validation consumes the SAME single easing parse the camera
+     consumes (parseEasing, hoisted): a string that validates is a
+     string that evaluates as itself — no second, stricter pattern
+     downstream can silently substitute a different curve */
+  if (!parseEasing(easingStr)) { W("diveEasing: invalid, reset"); cfg.layout.diveEasing = CONFIG.layout.diveEasing; }
+  else cfg.layout.diveEasing = easingStr;
+  if (typeof cfg.fontFamily !== "string" || !cfg.fontFamily.trim()) { W("fontFamily: invalid, reset"); cfg.fontFamily = CONFIG.fontFamily; }
+  /* appearances: validate, and RE-validate restored defaults against
+     the CURRENT panel count (a restore is not exempt from the range) */
+  const fixAppearances = function () {
+    cfg.appearances = cfg.appearances.filter(function (a, i) {
+      if (!a || typeof a !== "object") { W("appearances[" + i + "]: malformed entry dropped"); return false; }
+      const f = strictInt(a.filled), d = strictInt(a.dive);
+      if (f === null || d === null) { W("appearances[" + i + "]: non-integer filled/dive, entry dropped"); return false; }
+      a.filled = Math.max(0, Math.min(cfg.panels.length, f));
+      if (a.filled !== f) W("appearances[" + i + "].filled: clamped " + f + " -> " + a.filled);
+      a.dive = Math.max(0, Math.min(cfg.panels.length - 1, d));
+      if (a.dive !== d) W("appearances[" + i + "].dive: clamped " + d + " -> " + a.dive);
+      return true;
+    });
+  };
+  if (!Array.isArray(cfg.appearances) || cfg.appearances.length === 0) { W("appearances: empty, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(CONFIG.appearances)); }
+  fixAppearances();
+  if (cfg.appearances.length === 0) { W("appearances: all invalid, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(CONFIG.appearances)); fixAppearances(); }
+  /* relational geometry safe fallback: individually valid columns /
+     gap / border can combine into non-positive inner panel dimensions
+     at phone width — CLAMP the combination to a feasible one (never
+     warning-only), priced at the fallback stage width */
+  (function () {
+    /* both breakpoint regimes are priced: the narrow regime at the
+       fallback stage width, and the wide regime at its SMALLEST width
+       (the breakpoint itself) — a combination feasible in one regime
+       can be infeasible in the other */
+    const regimes = [];
+    const refKey = cfg.layout.fallbackStagePx < cfg.narrowBreakpointPx ? "colsNarrow" : "colsWide";
+    regimes.push({ refW: cfg.layout.fallbackStagePx, key: refKey });
+    if (refKey !== "colsWide" || cfg.narrowBreakpointPx !== cfg.layout.fallbackStagePx)
+      regimes.push({ refW: cfg.narrowBreakpointPx, key: "colsWide" });
+    /* the declared minimum stage width is priced as its own regime:
+       feasibility AT minStagePx is part of the contract */
+    const minKey = cfg.layout.minStagePx < cfg.narrowBreakpointPx ? "colsNarrow" : "colsWide";
+    if (!regimes.some(function (r) { return r.refW === cfg.layout.minStagePx && r.key === minKey; }))
+      regimes.push({ refW: cfg.layout.minStagePx, key: minKey });
+    const before = { colsNarrow: cfg.colsNarrow, colsWide: cfg.colsWide, gapPx: cfg.gapPx, borderPx: cfg.borderPx };
+    const feasibleFor = function (r) {
+      const cols = cfg[r.key];
+      const pw = (r.refW - cfg.gapPx * (cols + 1)) / cols;
+      return pw - cfg.borderPx * 2 >= cfg.layout.minInnerWPx && pw / cfg.panelAspect - cfg.borderPx * 2 >= cfg.layout.minInnerHPx;
+    };
+    let guard = 0;
+    while (regimes.some(function (r) { return !feasibleFor(r); }) && guard++ < cfg.limits.clampMaxIterations) {
+      if (cfg.borderPx > 0) cfg.borderPx = Math.max(0, cfg.borderPx - cfg.limits.borderClampStep);
+      else if (cfg.gapPx > 0) cfg.gapPx = Math.max(0, cfg.gapPx - cfg.layout.gapClampStepPx);
+      else {
+        const bad = regimes.filter(function (r) { return !feasibleFor(r) && cfg[r.key] > 1; })[0];
+        if (!bad) break;
+        cfg[bad.key]--;
+      }
+    }
+    regimes.forEach(function (r) {
+      if (cfg[r.key] !== before[r.key]) W("geometry: " + r.key + " clamped " + before[r.key] + " -> " + cfg[r.key] + " for positive inner panel dimensions at " + r.refW + "px");
+    });
+    if (cfg.gapPx !== before.gapPx) W("geometry: gapPx clamped " + before.gapPx + " -> " + cfg.gapPx + " for positive inner panel dimensions");
+    if (cfg.borderPx !== before.borderPx) W("geometry: borderPx clamped " + before.borderPx + " -> " + cfg.borderPx + " for positive inner panel dimensions");
+    /* final feasibility: if the clamped combination still cannot meet
+       the declared inner-dimension contract at a priced width, the
+       combination is REJECTED — the geometry fields and the inner
+       thresholds restore to their defaults together, so the accepted
+       configuration is coherent under its own contract */
+    if (regimes.some(function (r) { return !feasibleFor(r); })) {
+      /* the rejection restores the FULL joint geometry state (columns,
+         gaps, borders, panel aspect, narrow breakpoint) as one state,
+         then RE-CHECKS feasibility over the restored state */
+      W("geometry: combination infeasible at a priced width, joint geometry state restored and re-checked");
+      cfg.colsNarrow = CONFIG.colsNarrow; cfg.colsWide = CONFIG.colsWide;
+      cfg.gapPx = CONFIG.gapPx; cfg.borderPx = CONFIG.borderPx;
+      cfg.panelAspect = CONFIG.panelAspect; cfg.narrowBreakpointPx = CONFIG.narrowBreakpointPx;
+    }
+    if (regimes.some(function (r) { return !feasibleFor(r); })) {
+      /* the restored joint state still fails: the full geometry group
+         (including the inner-dimension thresholds and minimum stage)
+         restores to defaults and is re-checked a final time */
+      W("geometry: restored joint state still infeasible, full geometry group restored to defaults and re-checked");
+      cfg.colsNarrow = CONFIG.colsNarrow; cfg.colsWide = CONFIG.colsWide;
+      cfg.gapPx = CONFIG.gapPx; cfg.borderPx = CONFIG.borderPx;
+      cfg.panelAspect = CONFIG.panelAspect; cfg.narrowBreakpointPx = CONFIG.narrowBreakpointPx;
+      cfg.layout.minInnerWPx = CONFIG.layout.minInnerWPx;
+      cfg.layout.minInnerHPx = CONFIG.layout.minInnerHPx;
+      cfg.layout.minStagePx = CONFIG.layout.minStagePx;
+    }
+    if (regimes.some(function (r) { return !feasibleFor(r); })) {
+      W("geometry: REJECTED - configuration remains infeasible after the full default restore");
+    }
+  })();
+  const nzPhases = [["dwellMs", cfg.dwellMs], ["diveMs", cfg.diveMs], ["holdZoomMs", cfg.holdZoomMs], ["loopPauseMs", cfg.loopPauseMs]].filter(function (e) { return e[1] > 0; });
+  if (cfg.layout.minStepMs > 0 && nzPhases.length) {
+    let shortest = nzPhases[0];
+    nzPhases.forEach(function (e) { if (e[1] < shortest[1]) shortest = e; });
+    if (cfg.layout.minStepMs > shortest[1]) W("layout.minStepMs: " + cfg.layout.minStepMs + "ms exceeds the shortest non-zero phase " + shortest[0] + " (" + shortest[1] + "ms); the scheduler delay is boundary-capped so the floor cannot cross a phase boundary");
+  }
+  if (cfg.dwellMs + cfg.diveMs + cfg.holdZoomMs + cfg.loopPauseMs <= 0) {
+    W("schedule: zero total duration, timing defaults restored");
+    cfg.dwellMs = CONFIG.dwellMs; cfg.diveMs = CONFIG.diveMs;
+    cfg.holdZoomMs = CONFIG.holdZoomMs; cfg.loopPauseMs = CONFIG.loopPauseMs;
+  }
+  return cfg;
+}
+function resolveConfig(search) {
+  const cfg = JSON.parse(JSON.stringify(CONFIG));
+  const warnings = [];
+  if (search) {
+    const q = new URLSearchParams(search);
+    /* duplicate scalar keys: the first value wins (URLSearchParams.get)
+       — the duplication itself is named, never silent */
+    (function () {
+      const seen = Object.create(null);
+      q.forEach(function (val, key) {
+        if (key.indexOf("cfg:") === 0) return;
+        if (seen[key]) warnings.push(key + ": duplicate query key, first value wins");
+        seen[key] = true;
+      });
+    })();
+    const numKeys = ["dwellMs","diveMs","holdZoomMs","loopPauseMs","colsWide","colsNarrow","narrowBreakpointPx","gapPx","borderPx"];
+    numKeys.forEach(function (k) {
+      if (q.get(k) !== null) {
+        const v = strictInt(q.get(k));
+        if (v === null) warnings.push(k + ": malformed override '" + q.get(k) + "' ignored");
+        else cfg[k] = v;
+      }
+    });
+    ["diveScale","panelAspect"].forEach(function (k) {
+      if (q.get(k) !== null) {
+        const v = strictNum(q.get(k));
+        if (v === null) warnings.push(k + ": malformed override '" + q.get(k) + "' ignored");
+        else cfg[k] = v;
+      }
+    });
+    /* generic nested overrides: ?cfg:layout.stageMaxPx=800&cfg:labels.minPx=12
+       Duplicate nested keys follow the same contract as scalar keys:
+       the duplication is named and the FIRST value wins. String values
+       are whitespace-normalized before they land, so a padded enum
+       value normalizes instead of resetting downstream. */
+    const seenCfg = Object.create(null);
+    q.forEach(function (val, key) {
+      if (key.indexOf("cfg:") !== 0) return;
+      if (seenCfg[key]) { warnings.push(key + ": duplicate query key, first value wins"); return; }
+      seenCfg[key] = true;
+      const path = key.slice(4).split(".");
+      if (path.length !== 2 || ["layout", "labels", "typography", "artViewBox", "progress", "ceilings", "limits"].indexOf(path[0]) === -1) {
+        warnings.push(key + ": unknown configuration path ignored"); return;
+      }
+      const group = cfg[path[0]], field = path[1];
+      if (!Object.prototype.hasOwnProperty.call(group, field)) { warnings.push(key + ": unknown field ignored"); return; }
+      if (typeof group[field] === "number") {
+        const v = strictNum(val);
+        if (v === null) warnings.push(key + ": malformed number '" + val + "' ignored");
+        else group[field] = v;
+      } else if (typeof group[field] === "string") {
+        /* field classes: TOKEN fields are trimmed before validation;
+           FREE-TEXT fields (labels.separator, labels.generatedTitlePrefix)
+           are preserved verbatim — validation checks type and length
+           only, never trims */
+        const freeText = path[0] === "labels" && (field === "separator" || field === "generatedTitlePrefix");
+        if (freeText) { if (val.length) group[field] = val; else warnings.push(key + ": blank value ignored"); }
+        else if (val.trim()) group[field] = val.trim(); else warnings.push(key + ": blank value ignored");
+      }
+    });
+    if (q.get("panelCount") !== null) {
+      const n = strictInt(q.get("panelCount"));
+      if (n === null || n < 1 || n > cfg.limits.maxPanels) warnings.push("panelCount: malformed/out-of-range override ignored");
+      else if (n < cfg.panels.length) cfg.panels = cfg.panels.slice(0, n);
+      else while (cfg.panels.length < n) {
+        const i = cfg.panels.length;
+        cfg.panels.push({ n: String(i + 1).padStart(cfg.labels.numberPadWidth, "0"), title: cfg.labels.generatedTitlePrefix + (i + 1), art: cfg.fallbackArtKind });
+      }
+    }
+    if (q.get("panels") !== null) {
+      if (!q.get("panels")) warnings.push("panels: empty override ignored");
+      else q.get("panels").split("|").forEach(function (t, i) {
+        if (!cfg.panels[i]) { warnings.push("panels: entry " + i + " beyond panel count ignored"); return; }
+        const parts = t.split("@");
+        if (parts.length > 2) warnings.push("panels[" + i + "]: extra '@' components ignored");
+        if (parts[0].trim()) cfg.panels[i].title = parts[0].trim();
+        else warnings.push("panels[" + i + "]: blank title slot ignored");
+        if (parts[1] && parts[1].trim()) cfg.panels[i].art = parts[1].trim();
+        else if (parts.length > 1) warnings.push("panels[" + i + "]: blank art slot ignored, art unchanged");
+      });
+    }
+    if (q.get("numbers") !== null) {
+      if (!q.get("numbers").trim()) warnings.push("numbers: empty override ignored");
+      else q.get("numbers").split(",").forEach(function (n, i) {
+        if (!cfg.panels[i]) { warnings.push("numbers: entry " + i + " beyond panel count ignored"); return; }
+        if (n.trim()) cfg.panels[i].n = n.trim();
+        else warnings.push("numbers[" + i + "]: blank number slot ignored");
+      });
+    }
+    if (q.get("artViewBox") !== null) {
+      const m = /^(\d+)x(\d+)$/.test(q.get("artViewBox").trim()) ? q.get("artViewBox").trim().split("x") : null;
+      if (!m) warnings.push("artViewBox: malformed override '" + q.get("artViewBox") + "' ignored");
+      else { cfg.artViewBox.w = parseInt(m[0], 10); cfg.artViewBox.h = parseInt(m[1], 10); }
+    }
+    if (q.get("fallbackArtKind") !== null) {
+      if (q.get("fallbackArtKind").trim()) cfg.fallbackArtKind = q.get("fallbackArtKind").trim();
+      else warnings.push("fallbackArtKind: blank override ignored");
+    }
+    if (q.get("header") !== null) cfg.headerText = q.get("header");
+    if (q.get("filled") !== null) {
+      const f = strictInt(q.get("filled"));
+      if (f === null) warnings.push("filled: malformed override '" + q.get("filled") + "' ignored");
+      else {
+        const fc = Math.max(0, Math.min(cfg.panels.length, f));
+        if (fc !== f) warnings.push("filled: clamped " + f + " -> " + fc);
+        cfg.appearances = [{ filled: fc, dive: Math.min(cfg.panels.length - 1, fc) }];
+      }
+    }
+    if (q.get("appearances") !== null && !q.get("appearances").trim()) warnings.push("appearances: empty override ignored");
+    if (q.get("appearances")) {
+      const list = [];
+      q.get("appearances").split(",").forEach(function (pair) {
+        const kv = pair.split(":");
+        if (kv.length > 2) warnings.push("appearances: extra fields in '" + pair + "' ignored");
+        const f = strictInt(kv[0]), d = strictInt(kv[1]);
+        if (f === null || d === null) warnings.push("appearances: malformed entry '" + pair + "' dropped");
+        else list.push({ filled: f, dive: d });
+      });
+      if (list.length) cfg.appearances = list;
+    }
+    Object.keys(cfg.palette).forEach(function (k) {
+      if (q.get(k) !== null) {
+        if (isColor(q.get(k))) cfg.palette[k] = q.get(k).trim();
+        else warnings.push("palette." + k + ": malformed color '" + q.get(k) + "' ignored");
+      }
+    });
+    if (q.get("fontFamily") !== null) {
+      if (q.get("fontFamily").trim()) cfg.fontFamily = q.get("fontFamily");
+      else warnings.push("fontFamily: blank override ignored");
+    }
+    /* registry data route: ?registry=<kind>:<JSON array of primitive
+       objects> — the value after the kind colon is ONE JSON structure,
+       so characters inside JSON strings are data, never separators.
+       A complete new art kind composed of supported primitives is
+       suppliable as DATA with no source edit. A new PRIMITIVE kind
+       remains a code change (validPrim + primSVG); that boundary is
+       printed in comparison.html. */
+    if (q.get("registry") !== null) {
+      const raw = q.get("registry");
+      const ci = raw.indexOf(":");
+      if (ci <= 0) warnings.push("registry: malformed override '" + raw + "' ignored");
+      else {
+        const kind = raw.slice(0, ci).trim();
+        if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(kind)) warnings.push("registry: invalid kind name '" + kind + "' ignored");
+        else {
+          let prims = null;
+          try { prims = JSON.parse(raw.slice(ci + 1)); } catch (e) { prims = null; }
+          if (!Array.isArray(prims) || !prims.length) warnings.push("registry: malformed primitive JSON for kind '" + kind + "' ignored");
+          else cfg.artRegistry[kind] = { primitives: prims };
+        }
+      }
+    }
+    /* unknown query keys are named, never silently ignored */
+    const knownKeys = Object.create(null);
+    ["dwellMs","diveMs","holdZoomMs","loopPauseMs","colsWide","colsNarrow","narrowBreakpointPx","gapPx","borderPx",
+     "diveScale","panelAspect","panelCount","panels","numbers","artViewBox","fallbackArtKind","header","filled",
+     "appearances","fontFamily","registry"].concat(Object.keys(cfg.palette)).forEach(function (k) { knownKeys[k] = true; });
+    q.forEach(function (val, key) {
+      if (key.indexOf("cfg:") === 0) return;
+      if (!knownKeys[key]) warnings.push(key + ": unknown query key ignored");
+    });
+  }
+  validateInto(cfg, warnings);
+  cfg._warnings = warnings;
+  return cfg;
+}
+
+/* ================= geometry (pure, source-bound model) ================ */
+/* Header height at a stage width: in wrap mode the header's
+   own height GROWS to the wrapped content height — lines x px x the
+   configured wrap line-height — and every other geometry derives from
+   the grown height from this single source, so wrapped lines cannot
+   be clipped by a fixed-height header. */
+function headerHeightFor(cfg, stageW, hf) {
+  const base = Math.max(cfg.layout.headerMinPx, stageW * cfg.layout.headerHeightFactor);
+  if (!hf || hf.mode !== "wrap") return { headerH: base, lines: 1 };
+  const avail = Math.max(1, stageW - cfg.layout.headerPaddingPx * 2);
+  const perLine = Math.max(1, Math.floor(avail / Math.max(1, hf.px * cfg.labels.glyphEm)));
+  const lines = Math.max(1, Math.ceil(cfg.headerText.length / perLine));
+  const grown = Math.ceil(lines * hf.px * cfg.typography.headerWrapLineHeight);
+  return { headerH: Math.max(base, grown), lines: lines };
+}
+function computeLayout(cfg, stageW) {
+  const cols = stageW < cfg.narrowBreakpointPx ? cfg.colsNarrow : cfg.colsWide;
+  const rows = Math.ceil(cfg.panels.length / cols);
+  const hf = headerFitPx(cfg, cfg.headerText, stageW, Math.max(cfg.layout.headerMinFontPx, stageW * cfg.layout.headerFontFactor));
+  const hh = headerHeightFor(cfg, stageW, hf);
+  const headerH = hh.headerH;
+  const panelW = (stageW - cfg.gapPx * (cols + 1)) / cols;
+  const panelH = panelW / cfg.panelAspect;
+  const gridH = panelH * rows + cfg.gapPx * (rows + 1);
+  const stageH = headerH + gridH + cfg.layout.stageBottomPadPx;
+  return { stageW: stageW, stageH: stageH, cols: cols, rows: rows, headerH: headerH, panelW: panelW, panelH: panelH, gridH: gridH,
+           headerLines: hh.lines, headerMode: hf.mode, headerPx: hf.px };
+}
+function panelRect(cfg, lay, idx) {
+  const col = idx % lay.cols, row = Math.floor(idx / lay.cols);
+  return { x: cfg.gapPx + col * (lay.panelW + cfg.gapPx),
+           y: lay.headerH + cfg.gapPx + row * (lay.panelH + cfg.gapPx),
+           w: lay.panelW, h: lay.panelH };
+}
+/* Label policy: single-line first; two-line is the primary readable
+   fallback; number-only engages only when two lines cannot fit at the
+   minimum readable size. Base size derives from the actual panel width. */
+function labelBasePx(cfg, panelInnerW) {
+  return Math.max(cfg.labels.minPx, Math.min(cfg.labels.maxPx, panelInnerW * cfg.labels.baseFactor));
+}
+function estWidth(cfg, text, px) { return text.length * cfg.labels.glyphEm * px + cfg.labels.chromePx; }
+function splitTwoLines(cfg, text) {
+  const sepStr = cfg.labels.separator;
+  const sep = text.indexOf(sepStr);
+  const num = sep >= 0 ? text.slice(0, sep) : text;
+  const title = sep >= 0 ? text.slice(sep + sepStr.length) : "";
+  const words = title.split(" ").filter(Boolean);
+  if (!words.length) return [text];
+  if (words.length === 1) return [num + sepStr.trimEnd(), words[0]];
+  let best = null;
+  for (let i = 1; i < words.length; i++) {
+    const l1 = num + sepStr + words.slice(0, i).join(" ");
+    const l2 = words.slice(i).join(" ");
+    const m = Math.max(l1.length, l2.length);
+    if (!best || m < best.m) best = { m: m, lines: [l1, l2] };
+  }
+  return best.lines;
+}
+function labelPolicy(cfg, text, availPx, basePx, panelInnerH) {
+  const minPx = cfg.labels.minPx;
+  const step = cfg.labels.shrinkStepPx;
+  /* every decrement is CLAMPED at the floor: the size can land exactly
+     on minPx but never undershoot it */
+  let px = Math.max(minPx, basePx);
+  while (px > minPx && estWidth(cfg, text, px) > availPx) px = Math.max(minPx, px - step);
+  if (estWidth(cfg, text, px) <= availPx) return { mode: "single", px: px, lines: [text], fits: true };
+  const lines = splitTwoLines(cfg, text);
+  const longest = lines.reduce(function (m, l) { return Math.max(m, l.length); }, 0);
+  px = Math.max(minPx, basePx);
+  while (px > minPx && longest * cfg.labels.glyphEm * px + cfg.labels.chromePx > availPx) px = Math.max(minPx, px - step);
+  if (longest * cfg.labels.glyphEm * px + cfg.labels.chromePx <= availPx) {
+    /* vertical term (model side): a two-line tab must
+       also fit the panel's inner HEIGHT — two rendered lines at px,
+       plus the tab's vertical padding and border — or it shrinks
+       further within the floor, and at the floor falls to number-only */
+    if (typeof panelInnerH === "number") {
+      /* the tab's share of the panel interior is BUDGETED: its height
+         may not exceed the configured fraction of the panel's inner
+         height, so the miniature keeps the rest of the panel */
+      const hBudget = panelInnerH * cfg.labels.maxTabHeightFraction;
+      const hAt = function (s) { return 2 * s * cfg.typography.tabLineHeight + cfg.layout.tabPaddingYPx * 2 + cfg.layout.tabBorderPx; };
+      let q = px;
+      while (q > minPx && hAt(q) > hBudget) q = Math.max(minPx, q - step);
+      if (hAt(q) <= hBudget) return { mode: "two-line", px: q, lines: lines, fits: true };
+    } else return { mode: "two-line", px: px, lines: lines, fits: true };
+  }
+  const sepAt = text.indexOf(cfg.labels.separator);
+  const num = sepAt >= 0 ? text.slice(0, sepAt) : text.split(" ")[0];
+  return { mode: "number-only", px: minPx, lines: [num], fits: estWidth(cfg, num, minPx) <= availPx };
+}
+/* Header policy (honored by the DOM layer): shrink toward the named
+   floor; if the text still does not fit, shrink further toward the
+   absolute floor (mode "reduced-floor"); only if it still does not fit
+   may the header wrap (mode "wrap", fits:false) — the fits result is
+   never ignored. The available width carries a named reserve. */
+function headerFitPx(cfg, text, availPx, basePx) {
+  const minPx = cfg.layout.headerMinFontPx;
+  const absMinPx = cfg.layout.headerAbsoluteMinPx;
+  const step = cfg.labels.shrinkStepPx;
+  const avail = Math.max(0, availPx - cfg.layout.headerReservePx);
+  const est = function (p) { return text.length * cfg.labels.glyphEm * p + cfg.layout.headerPaddingPx * 2; };
+  let px = Math.max(minPx, basePx);
+  while (px > minPx && est(px) > avail) px = Math.max(minPx, px - step);
+  if (est(px) <= avail) return { px: px, fits: true, mode: "floor" };
+  while (px > absMinPx && est(px) > avail) px = Math.max(absMinPx, px - step);
+  if (est(px) <= avail) return { px: px, fits: true, mode: "reduced-floor" };
+  return { px: absMinPx, fits: false, mode: "wrap" };
+}
+/* Dive transform: translate the target panel to the stage centre and
+   scale it until its transformed bounds cover the whole viewport. */
+function diveTransform(cfg, lay, rect) {
+  /* coverage is computed from the panel's INNER art rectangle (inside
+     its border), so the miniature itself — not just its border box —
+     covers the viewport at dive end */
+  const inner = { x: rect.x + cfg.borderPx, y: rect.y + cfg.borderPx,
+                  w: Math.max(1, rect.w - cfg.borderPx * 2), h: Math.max(1, rect.h - cfg.borderPx * 2) };
+  const need = Math.max(lay.stageW / inner.w, lay.stageH / inner.h);
+  const s = Math.max(cfg.diveScale, need) * cfg.layout.diveCoverMargin;
+  const cx = inner.x + inner.w / 2, cy = inner.y + inner.h / 2;
+  const tx = lay.stageW / 2 - s * cx, ty = lay.stageH / 2 - s * cy;
+  return { scale: s, tx: tx, ty: ty,
+           bounds: { left: s * inner.x + tx, top: s * inner.y + ty,
+                     right: s * (inner.x + inner.w) + tx, bottom: s * (inner.y + inner.h) + ty } };
+}
+function coversViewport(bounds, lay) {
+  return bounds.left <= 0.01 && bounds.top <= 0.01 && bounds.right >= lay.stageW - 0.01 && bounds.bottom >= lay.stageH - 0.01;
+}
+
+/* ================= time-derived camera =====================
+   The camera transform is a PURE function of dive progress:
+   p = clamp(inPhaseMs / diveMs); the configured easing maps p to the
+   interpolation fraction; the transform interpolates identity ->
+   endpoint. Late entry, resume, and resize all evaluate the SAME
+   function at the CURRENT progress — no restart, no snap, and no
+   frozen-transform handoff. */
+/* ONE shared easing parse: validation and the camera consume this
+   same normalized form. Keyword easings map to their true CSS
+   cubic-bezier coordinates (ease .25,.1,.25,1 · ease-in .42,0,1,1 ·
+   ease-out 0,0,.58,1 · ease-in-out .42,0,.58,1 · linear 0,0,1,1);
+   a cubic-bezier is valid only with its 1st/3rd coordinates in [0,1]. */
+function parseEasing(str) {
+  const s = typeof str === "string" ? str.trim() : "";
+  if (s === "step-start") return { type: "step-start" };
+  if (s === "step-end") return { type: "step-end" };
+  const kw = { "ease": [0.25, 0.1, 0.25, 1], "linear": [0, 0, 1, 1],
+               "ease-in": [0.42, 0, 1, 1], "ease-out": [0, 0, 0.58, 1],
+               "ease-in-out": [0.42, 0, 0.58, 1] };
+  if (Object.prototype.hasOwnProperty.call(kw, s)) {
+    const c = kw[s];
+    return { type: "bezier", x1: c[0], y1: c[1], x2: c[2], y2: c[3] };
+  }
+  const m = /^cubic-bezier\(\s*(-?(?:\d+(?:\.\d+)?|\.\d+))\s*,\s*(-?(?:\d+(?:\.\d+)?|\.\d+))\s*,\s*(-?(?:\d+(?:\.\d+)?|\.\d+))\s*,\s*(-?(?:\d+(?:\.\d+)?|\.\d+))\s*\)$/.exec(s);
+  if (m) {
+    const x1 = +m[1], y1 = +m[2], x2 = +m[3], y2 = +m[4];
+    if (isFinite(x1) && isFinite(y1) && isFinite(x2) && isFinite(y2) &&
+        x1 >= 0 && x1 <= 1 && x2 >= 0 && x2 <= 1) return { type: "bezier", x1: x1, y1: y1, x2: x2, y2: y2 };
+  }
+  return null;
+}
+function easingFraction(easingStr, p) {
+  const t = Math.max(0, Math.min(1, p));
+  let ez = parseEasing(easingStr);
+  if (!ez) ez = parseEasing("ease");
+  if (ez.type === "step-start") return t <= 0 ? 0 : 1;
+  if (ez.type === "step-end") return t < 1 ? 0 : 1;
+  const bx = function (u) { return 3 * (1 - u) * (1 - u) * u * ez.x1 + 3 * (1 - u) * u * u * ez.x2 + u * u * u; };
+  const by = function (u) { return 3 * (1 - u) * (1 - u) * u * ez.y1 + 3 * (1 - u) * u * u * ez.y2 + u * u * u; };
+  let lo = 0, hi = 1, u = t;
+  for (let i = 0; i < 24; i++) { u = (lo + hi) / 2; if (bx(u) < t) lo = u; else hi = u; }
+  return by(u);
+}
+function diveProgress(inPhaseMs, diveMs) {
+  /* a zero-duration dive is complete at every point of its phase, so
+     the hold state that follows it displays the endpoint itself */
+  if (!(diveMs > 0)) return 1;
+  return Math.max(0, Math.min(1, inPhaseMs / diveMs));
+}
+function transformAt(cfg, endpoint, p) {
+  const f = easingFraction(cfg.layout.diveEasing, p);
+  return { scale: 1 + (endpoint.scale - 1) * f, tx: endpoint.tx * f, ty: endpoint.ty * f, fraction: f };
+}
+function transformCss(tr) {
+  return "translate(" + tr.tx + "px," + tr.ty + "px) scale(" + tr.scale + ")";
+}
+
+/* ================= timeline (deadline-based, derived cycle) =========== */
+function panelState(cfg, appearanceIdx, panelIdx, forceFilledIdx) {
+  const a = cfg.appearances[appearanceIdx % cfg.appearances.length];
+  const completed = panelIdx < a.filled;
+  const isTarget = panelIdx === a.dive;
+  /* completed membership and target membership are INDEPENDENT:
+     the target may already be completed (final appearance: filled 12,
+     dive 11) — that overlap is its own state, not "upcoming". The
+     force-fill parameter is retained for call compatibility; the fill
+     behaviour now comes from CONFIG.progress.forceFillTarget.
+     A dive target ALWAYS renders its miniature — the camera dives
+     into the chapter's scene, never into a blank panel. Under "mark"
+     the upcoming target carries its distinct mark and is NOT counted
+     as completed; under "fill" it renders in completed style. */
+  const forceFilled = !completed && isTarget && cfg.progress.forceFillTarget === "fill";
+  const rendered = completed || isTarget;
+  return { filled: rendered, rendered: rendered, completed: completed, isTarget: isTarget,
+           isDive: isTarget, forceFilled: forceFilled,
+           overlap: completed && isTarget, filledCount: a.filled };
+}
+function buildTimeline(cfg) {
+  const steps = [];
+  let start = 0;
+  cfg.appearances.forEach(function (a, i) {
+    [["dwell", cfg.dwellMs], ["dive", cfg.diveMs], ["hold", cfg.holdZoomMs], ["pause", cfg.loopPauseMs]].forEach(function (ph) {
+      steps.push({ phase: ph[0], appearance: i, dur: ph[1], startMs: start, dive: a.dive });
+      start += ph[1];
+    });
+  });
+  return { steps: steps, totalMs: start };
+}
+function stateAt(cfg, tMs) {
+  const tl = buildTimeline(cfg);
+  if (tl.totalMs <= 0) return tl.steps[0];
+  let t = ((tMs % tl.totalMs) + tl.totalMs) % tl.totalMs;
+  for (let i = 0; i < tl.steps.length; i++) {
+    const s = tl.steps[i];
+    if (t >= s.startMs && t < s.startMs + s.dur) return s;
+  }
+  return tl.steps[tl.steps.length - 1];
+}
+function phaseAt(cfg, elapsedMs) {
+  const tl = buildTimeline(cfg);
+  const step = stateAt(cfg, elapsedMs);
+  const cyclePos = tl.totalMs > 0 ? ((elapsedMs % tl.totalMs) + tl.totalMs) % tl.totalMs : 0;
+  return { step: step, cyclePos: cyclePos, inPhaseMs: cyclePos - step.startMs,
+           remainingMs: step.startMs + step.dur - cyclePos,
+           cycleIndex: tl.totalMs > 0 ? Math.floor(elapsedMs / tl.totalMs) : 0,
+           key: (tl.totalMs > 0 ? Math.floor(elapsedMs / tl.totalMs) : 0) + ":" + step.appearance + ":" + step.phase };
+}
+const schedulerClamps = [];
+function schedulerDelay(stepEndMs, elapsedMs, minStepMs) {
+  /* boundary cap: the REQUESTED delay handed to the scheduler never
+     exceeds the remaining time to the current step's end, so a floor
+     can delay a callback within its phase but never across a boundary.
+     This guarantees the requested delay only; a callback that fires
+     late or a render that overruns can still collapse a phase's
+     presented interval — that outcome is recorded by
+     simulatePresentation, never silently absorbed. */
+  const remaining = stepEndMs - elapsedMs;
+  const raw = Math.max(minStepMs, remaining);
+  const capped = Math.min(raw, Math.max(0, remaining));
+  if (capped < raw) schedulerClamps.push({ requestedMs: raw, cappedMs: capped, remainingMs: remaining });
+  return capped;
+}
+function simulatePresentation(cfg, latenessMs, overrunMs) {
+  const tl = buildTimeline(cfg);
+  const extra = (latenessMs || 0) + (overrunMs || 0);
+  const skipped = [];
+  tl.steps.forEach(function (s) {
+    if (s.dur <= 0) return;
+    const presented = Math.max(0, s.dur - extra);
+    if (presented <= 0) skipped.push({ phase: s.phase, appearance: s.appearance, latenessMs: latenessMs || 0, overrunMs: overrunMs || 0, presentedMs: presented });
+  });
+  return skipped;
+}
+
+/* ================= art renderer (generic, registry-driven) ============ */
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function escAttr(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function fillOf(palette, v) {
+  if (typeof v === "string" && v.charAt(0) === "$") {
+    const k = v.slice(1);
+    return Object.prototype.hasOwnProperty.call(palette, k) ? palette[k] : v;
+  }
+  return v;
+}
+function wrapGroup(p, s, palette) {
+  if (p.opacity === undefined && !p.transform && !p.stroke && p.strokeWidth === undefined) return s;
+  const pal = palette || CONFIG.palette;
+  return "<g" + (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+         (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") +
+         (p.stroke ? ' stroke="' + escAttr(fillOf(pal, p.stroke)) + '"' : "") +
+         (p.strokeWidth !== undefined ? ' stroke-width="' + p.strokeWidth + '"' : "") + ">" + s + "</g>";
+}
+function primSVG(p, palette, defs) {
+  const F = function (v) { return escAttr(fillOf(palette, v)); };
+  const defFill = (defs && defs.defaultFill !== undefined) ? defs.defaultFill :
+    (CONFIG.artDefaults ? CONFIG.artDefaults.fill : "#000000");
+  const FD = function (v) { return F(v === undefined ? defFill : v); };
+  const D = defs || { strokeWidth: CONFIG.layout.primDefaultStrokeWidth, textWeight: CONFIG.layout.primDefaultTextWeight };
+  const SW = function (q) { return q.strokeWidth !== undefined ? q.strokeWidth : D.strokeWidth; };
+  if (p.t === "rect") return '<rect x="' + p.x + '" y="' + p.y + '" width="' + p.w + '" height="' + p.h + '"' +
+    (p.rx ? ' rx="' + p.rx + '"' : "") + ' fill="' + FD(p.fill) + '"' +
+    (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") +
+    (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+    (p.transform ? ' transform="' + p.transform + '"' : "") + "/>";
+  if (p.t === "circle") return '<circle cx="' + p.cx + '" cy="' + p.cy + '" r="' + p.r + '" fill="' + FD(p.fill) + '"' +
+    (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") +
+    (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+    (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") + "/>";
+  if (p.t === "line") return '<line x1="' + p.x1 + '" y1="' + p.y1 + '" x2="' + p.x2 + '" y2="' + p.y2 +
+    '" stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' +
+    (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+    (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") + "/>";
+  if (p.t === "polygon") return '<polygon points="' + escAttr(p.points) + '" fill="' + FD(p.fill) + '"' +
+    (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") +
+    (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+    (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") + "/>";
+  if (p.t === "path") return '<path d="' + escAttr(p.d) + '" fill="' + F(p.fill || "none") + '"' +
+    (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") +
+    (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+    (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") + "/>";
+  if (p.t === "text") {
+    const inner = p.segments ? p.segments.map(function (sg) {
+      return '<tspan fill="' + FD(sg.fill) + '">' + esc(sg.t) + "</tspan>"; }).join("") : esc(p.content || "");
+    return '<text x="' + p.x + '" y="' + p.y + '" font-size="' + p.size + '"' +
+      (p.anchor ? ' text-anchor="' + escAttr(p.anchor) + '"' : "") +
+      ' fill="' + FD(p.fill) + '" font-weight="' + (p.weight || D.textWeight) + '"' +
+      (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") +
+      (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+      (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") + ">" + inner + "</text>";
+  }
+  if (p.t === "grid") { let s = "";
+    for (let r = 0; r < p.rows; r++) for (let c = 0; c < p.cols; c++)
+      s += '<rect x="' + (p.x + c * (p.cellW + p.gapX)) + '" y="' + (p.y + r * (p.cellH + p.gapY)) +
+           '" width="' + p.cellW + '" height="' + p.cellH + '" fill="' + F(p.fills[(r + c) % p.fills.length]) + '"/>';
+    return wrapGroup(p, s, palette); }
+  if (p.t === "circlesRow") { let s = "";
+    for (let i = 0; i < p.count; i++)
+      s += '<circle cx="' + (p.cx0 + i * p.dx) + '" cy="' + p.cy + '" r="' + p.r + '" fill="' + FD(p.fill) + '"/>';
+    return wrapGroup(p, s, palette); }
+  if (p.t === "graph") { let s = "";
+    p.edges.forEach(function (e) {
+      s += '<line x1="' + p.nodes[e[0]][0] + '" y1="' + p.nodes[e[0]][1] + '" x2="' + p.nodes[e[1]][0] +
+           '" y2="' + p.nodes[e[1]][1] + '" stroke="' + F(p.edgeStroke) + '" stroke-width="' + (p.edgeWidth !== undefined ? p.edgeWidth : D.strokeWidth) + '"/>'; });
+    p.nodes.forEach(function (n) { s += '<circle cx="' + n[0] + '" cy="' + n[1] + '" r="' + p.nodeR + '" fill="' + FD(p.nodeFill) + '"/>'; });
+    return wrapGroup(p, s, palette); }
+  return "";
+}
+function panelArtSVG(panel, palette, filled, registry, viewBox, fallbackKind, defs) {
+  if (!filled) return "";
+  const fb = fallbackKind || CONFIG.fallbackArtKind;
+  const has = registry && Object.prototype.hasOwnProperty.call(registry, panel.art);
+  let entry = has ? registry[panel.art] : (registry && registry[fb]);
+  if (!entry || !Array.isArray(entry.primitives)) {
+    const keys = registry ? Object.keys(registry) : [];
+    entry = keys.length ? registry[keys[0]] : null;
+  }
+  if (!entry || !Array.isArray(entry.primitives)) return "";
+  const vb = viewBox || CONFIG.artViewBox;
+  return '<svg viewBox="0 0 ' + vb.w + " " + vb.h + '" preserveAspectRatio="' + (vb.preserveAspectRatio || CONFIG.artViewBox.preserveAspectRatio) + '" aria-hidden="true">' +
+         entry.primitives.map(function (p) { return primSVG(p, palette, defs); }).join("") + "</svg>";
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, resolveConfig: resolveConfig, validateInto: validateInto,
+                     panelState: panelState, buildTimeline: buildTimeline, stateAt: stateAt,
+                     schedulerDelay: schedulerDelay, schedulerClamps: schedulerClamps, simulatePresentation: simulatePresentation, phaseAt: phaseAt, labelBasePx: labelBasePx, labelPolicy: labelPolicy,
+                     headerFitPx: headerFitPx, computeLayout: computeLayout, panelRect: panelRect,
+                     diveTransform: diveTransform, coversViewport: coversViewport,
+                     splitTwoLines: splitTwoLines, estWidth: estWidth,
+                     panelArtSVG: panelArtSVG, strictInt: strictInt, isColor: isColor,
+                     easingFraction: easingFraction, parseEasing: parseEasing, escAttr: escAttr, diveProgress: diveProgress,
+                     transformAt: transformAt, transformCss: transformCss,
+                     headerHeightFor: headerHeightFor };
+}
+
+/* ================= DOM build + deadline sequence engine =============== */
+if (typeof document !== "undefined") {
+  const cfg = resolveConfig(window.location.search);
+  if (cfg._warnings.length && typeof console !== "undefined") console.warn("T23 config warnings:", cfg._warnings);
+  const stage = document.getElementById("stage");
+  const zoomwrap = document.getElementById("zoomwrap");
+  const headerEl = document.getElementById("header");
+  const gridEl = document.getElementById("grid");
+  const warnEl = document.getElementById("warn");
+  function showWarnings(extra) {
+    const all = cfg._warnings.concat(extra || []);
+    if (!all.length) { warnEl.style.display = "none"; return; }
+    warnEl.style.display = "block";
+    warnEl.style.position = "absolute"; warnEl.style.left = "0"; warnEl.style.right = "0"; warnEl.style.bottom = "0";
+    warnEl.style.zIndex = String(cfg.layout.warnZIndex); warnEl.style.padding = cfg.layout.warnPadding;
+    warnEl.style.background = cfg.palette.accent; warnEl.style.color = cfg.palette.panelBg;
+    warnEl.style.fontSize = cfg.layout.warnFontPx + "px";
+    warnEl.textContent = "Config warnings: " + all.join(" · ");
+  }
+  showWarnings([]);
+  document.body.style.background = cfg.palette.dark;
+  stage.style.background = cfg.palette.dark;
+  stage.style.maxWidth = cfg.layout.stageMaxPx + "px";
+  stage.style.fontFamily = cfg.fontFamily;
+  const tl = buildTimeline(cfg);
+  let appIdx = 0, timer = null, playing = false, generation = 0;
+  let startStamp = 0, stepIdx = 0, pausedElapsed = 0, frozenTransform = null;
+  /* ONE elapsed accessor shared by every camera evaluation: while
+     paused, the elapsed time IS the frozen elapsed — a resize during
+     pause re-evaluates the camera at the frozen progress, never at
+     wall-clock time that kept running underneath the pause */
+  function currentElapsed() { return playing ? performance.now() - startStamp : pausedElapsed; }
+
+  function effectiveStageW() {
+    const raw = stage.clientWidth || cfg.layout.fallbackStagePx;
+    /* below-minimum contract: below the declared minimum
+       the layout is computed AT the minimum width and the stage takes
+       that explicit width (visible overflow) with a named warning —
+       geometry is never silently recomputed at an unsupported width
+       or masked by a transform floor */
+    return raw < cfg.layout.minStagePx ? cfg.layout.minStagePx : raw;
+  }
+  function layout() {
+    const rawW = stage.clientWidth || cfg.layout.fallbackStagePx;
+    const belowMin = rawW < cfg.layout.minStagePx;
+    const w = effectiveStageW();
+    const lay = computeLayout(cfg, w);
+    const extra = [];
+    if (belowMin) extra.push("stage geometry: actual width " + rawW + "px is below the declared minimum " + cfg.layout.minStagePx + "px \u2014 minimum-width layout rendered with explicit overflow");
+    if (lay.panelW < cfg.layout.minPanelPx) extra.push("stage geometry: panel width " + lay.panelW.toFixed(1) + "px below the " + cfg.layout.minPanelPx + "px minimum for the configured columns/gap");
+    showWarnings(extra);
+    stage.style.width = belowMin ? (cfg.layout.minStagePx + "px") : "";
+    stage.style.height = lay.stageH + "px";
+    headerEl.style.height = lay.headerH + "px";
+    const hf = headerFitPx(cfg, cfg.headerText, w, Math.max(cfg.layout.headerMinFontPx, w * cfg.layout.headerFontFactor));
+    /* the fits result is HONORED: wrap mode wraps instead of clipping,
+       and the header element's height is the GROWN height from
+       computeLayout — grid and stage already derive from it */
+    headerEl.style.whiteSpace = hf.mode === "wrap" ? "normal" : "nowrap";
+    headerEl.style.lineHeight = hf.mode === "wrap" ? String(cfg.typography.headerWrapLineHeight) : (lay.headerH + "px");
+    headerEl.dataset.headerMode = hf.mode;
+    headerEl.dataset.headerLines = String(lay.headerLines);
+    headerEl.style.fontSize = hf.px + "px";
+    headerEl.style.fontWeight = String(cfg.typography.headerWeight);
+    headerEl.style.letterSpacing = cfg.typography.headerLetterSpacingEm + "em";
+    headerEl.style.background = cfg.palette.paper;
+    headerEl.style.color = cfg.palette.ink;
+    headerEl.style.padding = "0 " + cfg.layout.headerPaddingPx + "px";
+    headerEl.textContent = cfg.headerText;
+    gridEl.style.background = cfg.palette.paper;
+    gridEl.style.gridTemplateColumns = "repeat(" + lay.cols + ", 1fr)";
+    gridEl.style.gap = cfg.gapPx + "px";
+    gridEl.style.padding = cfg.gapPx + "px";
+    return lay;
+  }
+  function render() {
+    const lay = layout();
+    const forceFilledIdx = cfg.appearances[appIdx % cfg.appearances.length].dive;
+    gridEl.innerHTML = "";
+    cfg.panels.forEach(function (p, i) {
+      const st = panelState(cfg, appIdx, i, forceFilledIdx);
+      const d = document.createElement("div");
+      d.className = "panel";
+      d.style.aspectRatio = String(cfg.panelAspect);
+      d.style.border = cfg.borderPx + "px solid " + cfg.palette.ink;
+      d.style.background = st.filled ? cfg.palette.panelBg : cfg.palette.empty;
+      /* progress surface: completed and target membership
+         are exposed independently; an upcoming target is marked with
+         the accent outline + target tab colour, never counted as
+         completed; an already-completed target carries the overlap
+         state instead of the upcoming mark */
+      d.dataset.completed = st.completed ? "1" : "0";
+      d.dataset.target = st.isTarget ? "1" : "0";
+      d.dataset.overlap = st.overlap ? "1" : "0";
+      if (st.isTarget && !st.completed && cfg.progress.forceFillTarget === "mark") {
+        d.classList.add("target-upcoming");
+        d.style.outline = cfg.progress.targetOutlinePx + "px solid " + cfg.palette.accent;
+        d.style.outlineOffset = "-" + cfg.progress.targetOutlinePx + "px";
+      }
+      if (st.overlap) d.classList.add("target-completed");
+      const art = document.createElement("div");
+      art.className = "art";
+      art.innerHTML = panelArtSVG(p, cfg.palette, st.filled, cfg.artRegistry, cfg.artViewBox, cfg.fallbackArtKind, { strokeWidth: cfg.layout.primDefaultStrokeWidth, textWeight: cfg.layout.primDefaultTextWeight, defaultFill: cfg.artDefaults.fill });
+      d.appendChild(art);
+      if (!st.filled) {
+        const g = document.createElement("div");
+        g.className = "ghost"; g.textContent = p.n;
+        g.style.color = cfg.palette.ink;
+        g.style.opacity = String(cfg.layout.ghostOpacity);
+        g.style.fontWeight = String(cfg.typography.ghostWeight);
+        g.style.fontSize = (lay.panelW * cfg.layout.ghostFontFactor) + "px";
+        d.appendChild(g);
+      }
+      const tab = document.createElement("div");
+      tab.className = "tab";
+      const innerW = lay.panelW - cfg.borderPx * 2;
+      const innerH = lay.panelH - cfg.borderPx * 2;
+      const base = labelBasePx(cfg, innerW);
+      const pol = labelPolicy(cfg, p.n + cfg.labels.separator + p.title, innerW, base, innerH);
+      tab.textContent = pol.lines.join("\n");
+      tab.dataset.text = p.n + cfg.labels.separator + p.title;
+      tab.style.whiteSpace = pol.mode === "two-line" ? "pre-line" : "nowrap";
+      tab.style.background = (st.completed || st.forceFilled) ? cfg.palette.tab : (st.isTarget ? cfg.palette.tabTarget : cfg.palette.tabDim);
+      tab.style.color = cfg.palette.ink;
+      tab.style.borderRight = cfg.layout.tabBorderPx + "px solid " + cfg.palette.ink;
+      tab.style.borderBottom = cfg.layout.tabBorderPx + "px solid " + cfg.palette.ink;
+      tab.style.padding = cfg.layout.tabPaddingYPx + "px " + cfg.layout.tabPaddingRightPx + "px " +
+                          cfg.layout.tabPaddingYPx + "px " + cfg.layout.tabPaddingLeftPx + "px";
+      tab.style.fontSize = pol.px + "px";
+      tab.style.fontWeight = String(cfg.typography.tabWeight);
+      tab.style.letterSpacing = cfg.typography.tabLetterSpacingEm + "em";
+      tab.style.lineHeight = String(cfg.typography.tabLineHeight);
+      tab.style.top = cfg.layout.tabTopPx + "px";
+      tab.style.left = cfg.layout.tabLeftPx + "px";
+      tab.style.zIndex = String(cfg.layout.tabZIndex);
+      tab.dataset.mode = pol.mode; tab.dataset.px = String(pol.px); tab.dataset.base = String(base);
+      tab.dataset.state = st.completed ? "completed" : (st.isTarget ? "target" : "upcoming");
+      d.appendChild(tab);
+      gridEl.appendChild(d);
+    });
+    /* measured refinement: the fallback decision is driven
+       by MEASURED rendered state, not the glyph model — the tab's line
+       count comes from a Range over its rendered content (one client
+       rect per rendered line box), horizontal containment from
+       scrollWidth vs clientWidth, and tab height against the panel's
+       inner height. A forced three-line fixture (pre-line text with
+       three explicit lines) exercises this exact path: countLines()
+       returns 3, violates() holds at every size, and the tab falls to
+       number-only. Arrangement order stays single -> two-line ->
+       number-only, every decrement clamped at the floor. */
+    gridEl.querySelectorAll(".tab").forEach(function (tab, i) {
+      const step = cfg.labels.shrinkStepPx, floor = cfg.labels.minPx;
+      const panelEl = tab.parentElement;
+      const countLines = function () {
+        try {
+          if (!tab.firstChild) return 1;
+          const range = document.createRange();
+          range.selectNodeContents(tab);
+          return Math.max(1, range.getClientRects().length);
+        } catch (e) { return 1; }
+      };
+      const violates = function () {
+        if (tab.scrollWidth > tab.clientWidth) return true;
+        if (countLines() > 2) return true;
+        if (panelEl && tab.offsetHeight > (panelEl.clientHeight - cfg.borderPx * 2) * cfg.labels.maxTabHeightFraction) return true;
+        return false;
+      };
+      let px = parseFloat(tab.style.fontSize);
+      while (px > floor && violates()) { px = Math.max(floor, px - step); tab.style.fontSize = px + "px"; }
+      if (violates() && tab.dataset.mode === "single") {
+        const lines = splitTwoLines(cfg, tab.dataset.text || tab.textContent);
+        if (lines.length > 1) {
+          tab.textContent = lines.join("\n");
+          tab.style.whiteSpace = "pre-line";
+          tab.dataset.mode = "two-line";
+          px = parseFloat(tab.dataset.base) || floor;
+          tab.style.fontSize = px + "px";
+          while (px > floor && violates()) { px = Math.max(floor, px - step); tab.style.fontSize = px + "px"; }
+        }
+      }
+      if (violates() && tab.dataset.mode !== "number-only") {
+        tab.textContent = cfg.panels[i].n;
+        tab.dataset.mode = "number-only";
+        tab.style.whiteSpace = "nowrap";
+        tab.style.fontSize = floor + "px";
+      }
+      tab.dataset.px = tab.style.fontSize;
+      tab.dataset.lines = String(countLines());
+    });
+    return lay;
+  }
+  let camAnim = null;
+  function diveEndpoint(panelIdx) {
+    const lay = computeLayout(cfg, effectiveStageW());
+    const rect = panelRect(cfg, lay, panelIdx);
+    return diveTransform(cfg, lay, rect);
+  }
+  function applyCamera(panelIdx, inPhaseMs) {
+    const p = diveProgress(inPhaseMs, cfg.diveMs);
+    const tr = transformAt(cfg, diveEndpoint(panelIdx), p);
+    zoomwrap.style.transition = "none";
+    zoomwrap.style.transform = transformCss(tr);
+    zoomwrap.dataset.progress = String(p);
+    zoomwrap.dataset.fraction = String(tr.fraction);
+    return tr;
+  }
+  function stopCam() { if (camAnim && camAnim.raf) cancelAnimationFrame(camAnim.raf); camAnim = null; }
+  function camTick() {
+    if (!playing || !camAnim) return;
+    const ph = phaseAt(cfg, currentElapsed());
+    if (ph.step.phase === "dive" && ph.step.appearance === camAnim.appearance) {
+      applyCamera(camAnim.dive, ph.inPhaseMs);
+      camAnim.raf = requestAnimationFrame(camTick);
+    } else camAnim = null;
+  }
+  function startCam(step) {
+    stopCam();
+    camAnim = { dive: step.dive, appearance: step.appearance, raf: 0 };
+    const ph = phaseAt(cfg, currentElapsed());
+    applyCamera(step.dive, ph.step.phase === "dive" ? ph.inPhaseMs : 0);
+    camAnim.raf = requestAnimationFrame(camTick);
+  }
+  let activeStep = null;
+  function applyStep(s, inPhaseMs, opts) {
+    opts = opts || {};
+    activeStep = s;
+    if (s.phase === "dwell") {
+      stopCam();
+      appIdx = s.appearance; frozenTransform = null;
+      zoomwrap.style.transition = "none"; zoomwrap.style.transform = "none"; zoomwrap.style.opacity = "1";
+      render();
+    } else if (s.phase === "dive") {
+      appIdx = s.appearance;
+      zoomwrap.style.opacity = "1";
+      render();
+      /* after the render, re-derive the due phase: a dive whose phase
+         EXPIRED during rendering is REJECTED — the currently due phase
+         is applied instead of starting the dive from a fallback span */
+      const ph2 = phaseAt(cfg, currentElapsed());
+      if (ph2.step.phase !== "dive" || ph2.step.appearance !== s.appearance) {
+        if (!opts.rederived) applyStep(ph2.step, ph2.inPhaseMs, { rederived: true });
+        return;
+      }
+      /* time-derived camera: entry at ANY point of the phase —
+         fresh, late, or resumed — evaluates transformAt at the current
+         progress. There is no identity restart to special-case and no
+         frozen-transform handoff: the state IS the elapsed time. */
+      startCam(s);
+    } else if (s.phase === "hold") {
+      stopCam();
+      appIdx = s.appearance;
+      zoomwrap.style.opacity = "1";
+      render();
+      applyCamera(s.dive, cfg.diveMs); /* p = 1: the endpoint itself */
+    } else if (s.phase === "pause") {
+      stopCam();
+      zoomwrap.style.transition = "none"; zoomwrap.style.transform = "none"; zoomwrap.style.opacity = "0";
+    }
+  }
+  let lastKey = null;
+  function tick(gen) {
+    if (!playing || gen !== generation) return;
+    const elapsed = performance.now() - startStamp;
+    const ph = phaseAt(cfg, elapsed);
+    if (ph.key !== lastKey) {
+      lastKey = ph.key;
+      frozenTransform = null;
+      applyStep(ph.step, ph.inPhaseMs, {});
+    }
+    /* the next deadline is recomputed AFTER applyStep's render work:
+       if rendering crossed a phase boundary, the newly due phase is
+       APPLIED before scheduling (never silently skipped), and the
+       delay is the due phase's REMAINING time — a cycle-relative
+       quantity, correct in every cycle (a cycle-local endpoint priced
+       against absolute elapsed time collapses to zero-delay polling
+       after the first cycle) */
+    let elapsed2 = performance.now() - startStamp;
+    let ph2 = phaseAt(cfg, elapsed2);
+    if (ph2.key !== lastKey) {
+      lastKey = ph2.key;
+      applyStep(ph2.step, ph2.inPhaseMs, {});
+      elapsed2 = performance.now() - startStamp;
+      ph2 = phaseAt(cfg, elapsed2);
+    }
+    timer = setTimeout(function () { tick(gen); },
+      schedulerDelay(ph2.remainingMs, 0, cfg.layout.minStepMs));
+  }
+  function play() {
+    if (playing) return; playing = true; generation++;
+    if (pausedElapsed > 0 || frozenTransform !== null) {
+      /* resume: shift the deadline origin by the paused duration and
+         re-derive the current phase from elapsed time */
+      startStamp = performance.now() - pausedElapsed;
+      lastKey = null;
+    } else {
+      startStamp = performance.now(); lastKey = null;
+    }
+    tick(generation);
+  }
+  function pause() {
+    if (!playing) return; playing = false; generation++;
+    if (timer) clearTimeout(timer);
+    stopCam();
+    pausedElapsed = performance.now() - startStamp;
+    /* the inline transform simply stops being updated — on resume the
+       camera re-derives from the shifted elapsed origin, so the frozen
+       frame and the resumed frame are the same function at the same
+       progress (live-output continuity) */
+    frozenTransform = zoomwrap.style.transform || null;
+  }
+  function restart() { pause(); frozenTransform = null; pausedElapsed = 0; appIdx = 0; lastKey = null; render(); play(); }
+  window.addEventListener("resize", function () {
+    render();
+    /* a resize during dive/hold re-evaluates the camera at the SAME
+       progress against the recomputed endpoint — the progress fraction
+       is preserved, the endpoint moves; no snap. The
+       running rAF loop keeps evaluating at that progress. */
+    if (activeStep && activeStep.phase === "dive") {
+      const ph = phaseAt(cfg, currentElapsed());
+      applyCamera(activeStep.dive, ph.inPhaseMs);
+    } else if (activeStep && activeStep.phase === "hold") {
+      applyCamera(activeStep.dive, cfg.diveMs);
+    }
+  });
+  window.addEventListener("message", function (e) {
+    if (!e.data || !e.data.cmd) return;
+    if (e.data.cmd === "play") play();
+    if (e.data.cmd === "pause") pause();
+    if (e.data.cmd === "restart") restart();
+  });
+  render(-1);
+  play();
+}
+</script>
+</body>
+</html>

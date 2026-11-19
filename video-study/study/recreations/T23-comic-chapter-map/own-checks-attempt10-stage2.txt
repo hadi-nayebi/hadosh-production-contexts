@@ -1,0 +1,11 @@
+T23 attempt 10 — Stage 2 check output (labels: separate parts + span-structure counting)
+Stage source: recreation.html sha256 f2301bd648b92ad34ed2187959de58c5035c9d142f4629b0e25fed91f727114c
+Checkpoint: checkpoint-attempt10-stage2-delta.md
+
+DISCRIMINATING PROBES (probe-T23-stage2.js, run dir):
+Separate parts (pure): splitTwoLinesNT(cfg,"07","THE DAILY · STANDUP") = ["07 · THE DAILY","· STANDUP"] — the title's own separator survives as content (2 separator glyphs across the joined lines); labelPolicy from parts at a two-line width returns two-line with those lines. Predecessor: no NT construction exists (not exported).
+Fixed span-pair counting fixture (DOM, Range stub returns 4 rects for any content — the predecessor defect's condition; expected counts/modes stated before the run: span-structured tabs must count 1 or 2, never 4; two-line tabs must remain two-line):
+S0 predecessor: ALL 12 tabs number-only/4 — every label destroyed by the miscount. FAIL as designed.
+S2 source: modes two-line/2, single/1, single/1, two-line/2, two-line/2, single/1, two-line/2, two-line/2, two-line/2, single/1, two-line/2, two-line/2 — exactly the policy modes at 360 px from the Stage 0 model table; no count above 2. PASS.
+Model table cross-check (Stage 0): at 240 px all 12 labels are number-only under the height budget (2 lines at the floor = 32.5 px > 22.76 px budget) — a policy result, unchanged by this stage; the counting cure governs the DOM refinement path only. The two results are different instruments and are not conflated.
+Regression: Stage 1 resume probe re-run on this source — PASS (timers=1 after resume+flush, presentations 1->5).

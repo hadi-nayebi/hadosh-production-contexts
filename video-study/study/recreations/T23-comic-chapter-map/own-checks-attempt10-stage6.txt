@@ -1,0 +1,10 @@
+T23 attempt 10 — Stage 6 check output (cut-held scene, dive curve, approach easing key)
+Stage source: recreation.html sha256 79f89c062a90ef3224b9caa124645a66a4cbaf1fc7f5210e00b9494e89ce352d
+Checkpoint: checkpoint-attempt10-stage6-delta.md
+Probe: probe-T23-stage6.js — 10 checks, 0 fails. Regressions: stages 5/4/3/2 probes and the stage-1 resume probe all green on this source.
+
+Results:
+- Cut-held scene: at the first dive endpoint (t=700 ms pending window) the stage overlay is visible, targeted at panel 4 (the appearance-0 dive target), and carries that panel's SVG art; the presented log orders cut-scene-held before cut-scene-released.
+- Cut-held resume check (discriminating successor probe): pausing inside the held window keeps the scene visible; on resume the flush applies and only then is the scene released — the held scene survives the pause/resume boundary exactly as the deferred apply does.
+- Dive curve: the shipped default now measures easingFraction f(0.75) = 0.738 (predecessor 0.4009) under the source's own easing function, with the dive duration unchanged (335 ms; cycle total 2100 ms). This is a judgment cure — no segment anchor exists for the intra-dive shape; the measurement and the predecessor value are both filed here.
+- Approach easing key: approachTransformAt consumes layout.approachEasing — setting approachEasing=linear changes the approach fraction (0.430 -> 0.500 at p=0.5) while setting diveEasing=linear no longer moves it; diveEasing governs the dive only.

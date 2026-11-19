@@ -1,0 +1,67 @@
+FINAL INTERFACE CENSUS — T23 attempt 15 (regenerated on the FROZEN candidate)
+Frozen candidate: checkpoint-attempt15-final.html, sha256 17e9434de0147f57e8c9ed4fd39cd986a626d8cf49b82c35ce4da39c6ea067bb
+Instrument: census + generative sweep (sweep.js), expectations frozen before the run.
+
+CENSUS INVENTORIES (identical to the Stage-3 census — Stage 4 changed no dispatch surface)
+- walk 1 (URL intake): 14 literal q.get keys + the scalar dispatch lists (per-group key arrays).
+- walk 2 (configuration shape): 12 cfg: groups.
+- walk 3 (schema/trusted walk): 192 group-structure leaves; the full primitive-leaf count of the
+  derived baseline is 610 (Stage-4 derivation walk; 609 prior + cut.clockPolicy).
+- One-walk check: artViewBox prints as a one-walk item in the sweep's keying; dispositioned at
+  Stage 3 — it is a group key present in all three walks (intake dispatch, cfg: group, schema
+  group); no field exists in exactly one walk. No added or removed fields vs Stage 3.
+
+GENERATIVE SWEEP (regenerated on the frozen sha)
+- 447 cases across the REPRESENTABLE / DIRECT-ONLY / ABSENT partitions, expectations frozen first.
+- FROZEN-EXPECTATION failures: 0. SURVIVORS: 0. RESULT: GREEN.
+
+PER-MECHANISM BEFORE / AFTER (incoming = Stage-0 checkpoint, attempt-14 source; after = frozen candidate)
+- Typed candidate parser: BEFORE decimal-string direct edit "1.0" silently became 1 while the URL
+  route rejected it. AFTER both routes share one parser: "1.0" resolves to the validated value
+  (365) with a named warning on both routes.
+- Whole-group null head-guard: BEFORE only some groups guarded. AFTER resolveConfig guards every
+  group; a null group resolves to the validated baseline group with a named warning.
+- fontFamily character check: BEFORE applied on one route only. AFTER the [A-Za-z] check lives in
+  the shared validator; both routes reject identically.
+- knownKeys (dispatch-derived): BEFORE ?colsMicro=3 was consumed AND reported unknown. AFTER
+  knownKeys derives from the dispatch tables: consumed keys are never reported unknown; genuinely
+  unknown keys are still named.
+- Schema walk / baseline derivation: BEFORE the reset snapshot was a hand-maintained parallel
+  structure (609 leaves). AFTER the baseline derives from the configured data's own shape (union
+  of schema keys + configured keys, per-primitive union with the kind-field contract): 610 leaves,
+  deep-equals the shipped CONFIG.
+- Validated baseline: BEFORE a reset could restore unvalidated values. AFTER the baseline is a
+  validated clone; resets restore validated values only.
+- Commit-or-retain: BEFORE a rejected candidate could displace prior good state. AFTER progress
+  fields are checked against the active maximum and the final geometry check retains the prior
+  value instead of returning a rejected candidate.
+- Coupled rule: BEFORE a value/limit pair could half-commit. AFTER the pair commits atomically or
+  the prior pair stands, in both edit orders, with the pair named in the warning.
+
+CROSS-STAGE INTERACTION PROBES (Execute step 10)
+- (i) clock x camera (battery T5): a flush landing mid-dive presents the dive rather than skipping
+  it; armed deadline is the nominal dive end (1450). PASS (in battery, 18/18 on the frozen sha).
+- (ii) parser x baseline: with approachMs configured to 400, the decimal-string URL override
+  "1.0" is ignored and the VALIDATED CONFIGURED value 400 stands; a valid override (450) lands.
+  PASS (both assertions).
+- (iii) coupled probe re-run against this census's regenerated case set: the malformed x tightened
+  pair resolves to the prior value 3 + prior limit 12 in both orders. PASS (Stage-4 probes re-run
+  on this sha as part of the final suite pass).
+- Pre-split interaction pairs not in this attempt's split file as DEFERRED, not probed.
+
+PIXEL-UNVERIFIED: no render route exists in this environment (no browser binary, no puppeteer,
+no playwright — hunt filed at Stage 0); all geometry/timing evidence is source-model evidence.
+
+PUBLISHED-SOURCE SPOT CHECKS (step 15, on recreation.html AFTER publish)
+Published sha256 == frozen sha256 (17e9434d...) — verified. Preserved copies re-verified after the
+live replacement: recreation-attempt-14.html 39f63f53... (baseline), comparison.html 3fdbe113...
+(unchanged), scores.md a003073d... (untouched, 170136 bytes).
+- cut.clockPolicy: reached via the group route ?cfg:cut.clockPolicy=shift -> resolves "shift"
+  (the bare key ?clockPolicy= is correctly reported as an unknown query key — group keys route
+  through cfg:, per the census). PASS.
+- approachMs: ?approachMs=400 -> every appearance's approach window in buildTimeline is 400
+  (400,400,400). PASS.
+- diveScale: ?diveScale=12 -> dive endpoint scale 12.36 = 12 x diveCoverMargin (1.03); the key is
+  the endpoint floor (max of configured scale and geometric cover need 9.16, margin applied).
+  ?diveScale=20 is rejected to the validated default by limits.diveScaleMax. PASS (consumed,
+  bounded).

@@ -1,0 +1,22 @@
+STAGE 1 — C-16-03 contract-first initialization + restored-default revalidation + dispatch single-sourcing (attempt 16)
+Checkpoint: checkpoint-attempt16-stage1.html sha256 3b98acbec6529152039c2ba81b5aa2fa165f4588bcb653bda7ee7100c24f4033 (content copy, inode 7349883 != working-file inode 7347693).
+Construction: KIND_FIELD_CONTRACT + PRIM_KINDS moved BEFORE the baseline derivation (the derivation at the former line 390 ran before the contract at 406; the try/catch masked the TDZ failure and the schema-shaped terminal kind derived through the rect-shaped fallback). PRIM_KINDS is now DERIVED (Object.keys(KIND_FIELD_CONTRACT)) — the contract is the single membership source. INT_FIELD_ROSTER is one frozen roster consumed by the validator's typed candidate parser AND the URL scalar dispatch (the duplicated 10-key lists are gone). Restored defaults pass revalidateRestore (default re-checked against the ACTIVE bounds; on violation the restore is rejected, the prior value retained, the active bound named). resetScalar's silent clamp tail is removed (prior-in-bounds, else default-in-bounds, else prior retained — never a manufactured clamp value). The two narrow-breakpoint guards evaluate against the PRE-candidate (prior) bounds (P3), and a final joint bound-pair check prices value x limits under P3/P4/P5. validPrim decides contract-only kinds by the contract checks; primSVG renders contract-only kinds through the generic shape their contract requires (points -> polygon, x/y/w/h -> rect).
+Paired probes (stage1-probes.js; incoming = Stage-0 checkpoint a15 bytes, outgoing = candidate):
+INCOMING 5 PASS / 8 FAIL — defects reproduced on the a15 source: restored default 280 committed under active min 300 (no bound named) · cfg: 999 under same-candidate max 500 reset to 280 with the tightening committed · S3c tightening clamped the committed value 520 -> 400 · S3b restore committed 280 · inverted limits pair 900/500 committed both sides · contract-only kind not a member, not validated, not rendered. Baseline circle note: the a15 baseline entry for the edit-introduced circle carries cx/cy/r BUT polluted with rect-schema defaults (x/y/w/h = 0) — the union form filed as D4 at a15; the contract-first derivation carries exactly the contract fields.
+OUTGOING 13 PASS / 0 FAIL:
+PASS shipped baseline 610 leaves
+PASS shipped baseline deep-equals resolved default (shipped-data deep-equal still holds)
+PASS baseline entry for edit-introduced circle in terminal carries cx/cy/r (exact contract fields, no rect pollution)
+PASS baseline-ALONE recovery (garbage registry replacement for terminal) restores the circle intact
+PASS restored default 280 rejected vs active bound 300, prior 360 retained — warning: "narrowColsBreakpointPx: restored default 280 rejected against the active bound [300, 2000], prior value 360 retained (restored-default revalidation)"
+PASS cfg: narrowColsBreakpointPx 999 commits under active limits [200,2000]
+PASS S3a-form: cfg: 999 under same-candidate tightened max 500 — value commits under the pre-candidate bounds, the tightening is rejected (P3/P4): v=999, max=2000, pair-warning filed
+PASS S3c: tightening (max 2000->400) that would orphan the committed 520 rejected — old bounds + value stand
+PASS S3b: restore under a separately tightened bound (min 300): prior 360 retained, active min stays 300, one warning set
+PASS inverted limits pair 900-500 commits NEITHER side (prior bounds 200/2000 stand, pair-warning)
+PASS contract-only kind "diamond" added to the contract alone is a member (PRIM_KINDS derived)
+PASS contract-only kind validates + binds + renders: registry route supplies diamond prims, panelsJson binds panel 01 to it, panelArtSVG emits <polygon>
+Bypass census (candidate): no surviving literal kind list ("rect","circle","line" enumeration: 0 hits — PRIM_KINDS is derived); no second integer roster (numKeys literal: 0 hits — both routes read INT_FIELD_ROSTER); `const primKinds = PRIM_KINDS` is a read of the single source, not an enumeration. primSVG/validPrim per-kind semantic branches remain as the renderer's/validator's kind semantics; membership and field sets read the contract only.
+Preserved copies re-verified after the candidate's first overwrite (plan §3 step 5a): recreation-attempt-15.html sha == baseline 17e9434d...; comparison-preserved-attempt-15.html sha == baseline 3fdbe113... (unchanged).
+PIXEL-UNVERIFIED.
+stage1: PASS

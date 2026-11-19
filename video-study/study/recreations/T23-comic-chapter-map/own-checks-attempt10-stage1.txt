@@ -1,0 +1,14 @@
+T23 attempt 10 — Stage 1 check output (engine resume + entry reconciliation)
+Stage source: recreation.html sha256 1da3df6afdcebe3d93e3b28cb2a8de45fe081010e111f80e141ba5c1c91f3060
+Checkpoint form this stage: checkpoint-attempt10-stage1-delta.md (see build record Stage 1 entry for the form + reason).
+
+E3 PRESERVATION RE-VERIFICATION (immediately after the working file's first overwrite):
+recreation-attempt-9.html sha256 244a0c2c2f8a229bca3792d3e055cdafd1dee52a77503c2d09592f3c90f19572 = baseline OK
+comparison-preserved-attempt-9.html sha256 3fdbe113d26ecf0e0a8b61f1daeaac663aef4a248be413ac80438973162731a8 = baseline OK
+
+DISCRIMINATING PROBE — pause-in-pending-window resume (same harness, same scenario, both sources):
+S0 (predecessor): pending at t=700, 1 presented; pause; resume; flush; timers=0; presentations after +3000 ms = 1. FAIL/FAIL (stall reproduced).
+S1 (this stage): pending at t=700, 1 presented; pause; resume; flush; timers=1; presentations after +3000 ms = 5 (0:0, 0:1, 0:2, 1:0, 1:1), skipped=0. PASS/PASS.
+Resume branches covered: flush-pending branch (this probe — now arms the deadline timer in play() itself); no-pending branch (tick(generation), unchanged, exercised by every ordinary resume in the same run); flush-applied branch cannot arise across a pause because flushPending returns early while paused, leaving the apply pending — recorded as the reason the pending branch is the only resume-with-deferred-apply form.
+
+ENTRY RECONCILIATION (cross-cycle): applyStep captures the scheduled cycle key at entry (callers set lastCycleIdx to the due cycle before applying); the dive re-derivation now rejects on phase, appearance OR cycle mismatch; the entry-render skip record carries the scheduled key (cycle: schedCycle) plus dueCycle. Forced cross-cycle entry probe: the fake-DOM render consumes no virtual time, so a render-crossed cycle boundary cannot be forced in this harness; the discrimination rests on (a) the predecessor source comparing phase+appearance only (read firsthand) vs this source comparing all three (read firsthand post-edit), and (b) the skip record's scheduled-key field presence in source. Filed honestly as source-level discrimination, harness limitation named.

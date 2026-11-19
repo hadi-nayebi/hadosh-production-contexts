@@ -1,0 +1,68 @@
+S1 Stage 1 — C-14-01 one normalization-then-validation commit for both intake routes (+ plan-review finding 2 reset contract)
+Incoming sha (checkpoint-attempt14-stage0.html): 9cb3c51e6be0ded3b999e10b521d74b9d1f0b69b8662b77ec580afab5ba2ebc4
+Outgoing sha (checkpoint-attempt14-stage1.html): 5d54153b40f6c141789874f5c0c113a7f18f94414bfb9bf68a1dc89060c3ce35 (content copy of candidate, inode-independent)
+
+Construction: validateInto opens with ONE coercion phase (schema-typed: string->number via the shared strict parser, string->boolean, recursively over the trusted shape, before any guard reads a value); field existence/type for the cfg: route derives from the schema, not the edited object; the preliminary pass no longer normalizes panel content or runs joint geometry/overlap checks (final pass only, after every route lands); clampInt and the fractional scalar guards restore the prior working value when it satisfies the active bounds, else the trusted default, and every reset result is re-checked and clamped into the active bounds; registry route kinds count as route-supplied only when a candidate was actually staged; a malformed registry entry form (incl. no primitives field) restores the prior/default entry re-validated instead of deleting the kind; panel art bindings are disposed as candidates — the prior binding stands; appearance unknown fields are named in warnings; a null palette group restore is named.
+Reset contract outcomes are asserted SEPARATELY in the probe: coercion (int/boolean, both routes + parity) · precedence (malformed registry string vs valid map candidate) · binding retention (panelsJson unknown kind, missing-primitives kind) · unknown-field warnings (appearance diveMs) · refusal (panelCount 99 commits nothing; invalid new-kind candidate installs nothing).
+Boundary dimension (A-C028-2 + finding 2): coupled limits 1500-1600 with breakpoint values 1499/1500/1600/1601 -> 1500/1500/1600/1500, all inside the active bounds (the 1601 case resets from the prior/default source 520 clamped to the nearest bound 1500 — probe expectation corrected in-stage from 1600 after the clamp arithmetic was inspected; the registry-recovery expectation was likewise corrected to the shipped tiles entry's actual 2 primitives, JSON-equal).
+Generative sweep: 50 generated cases (5 field classes x 10 value types incl. 400-digit magnitude, non-finite, array/object-where-scalar) asserting final-consumer types — 0 survivors. Unsupported combination recorded separately: panelsJson art kind with a space in the name -> prior binding stands with warning (not a pass claim for that grammar position).
+Preserved copies re-verified AFTER the candidate's first overwrite: recreation-attempt-13.html == 9cb3c51e… · comparison-preserved-attempt-13.html == 3fdbe113… (byte-identical to baseline).
+
+PAIRED PROBES (same probe file on incoming and outgoing):
+sha 9cb3c51e6be0ded3b999e10b521d74b9d1f0b69b8662b77ec580afab5ba2ebc4
+FAIL coercion-limits-int-direct — direct '8' -> 6
+PASS coercion-limits-int-url
+FAIL coercion-parity-limits
+FAIL coercion-boolean-direct — direct 'true' -> false
+PASS coercion-boolean-url
+FAIL coercion-parity-boolean
+FAIL schema-deleted-field-resolves — -> 960 warns: cfg:layout.stageMaxPx: unknown field ignored · stageMaxPx: out of range, reset to default
+PASS palette-null-named — palette: malformed, reset to default
+FAIL reset-parseable-oor-restores-prior — -> 335
+PASS reset-malformed-preserves-prior
+FAIL reset-bounds-recheck — -> 520
+FAIL boundary-coupled-1499 — -> 520
+PASS boundary-coupled-1500 — -> 1500
+PASS boundary-coupled-1600 — -> 1600
+FAIL boundary-coupled-1601 — -> 520
+PASS refusal-panelcount — panels=12
+FAIL panelsjson-binding-retained — art=tiles
+PASS panelsjson-binding-warned
+FAIL registry-malformed-no-suppress — tiles prims=2
+FAIL registry-missing-primitives-restores — artRegistry.tiles: malformed entry removed | fallbackArtKind: 'tiles' not in registry, reset to 'terminal' | panels[1].art: unknown or malfo
+PASS registry-recovery-revalidated — tiles prims=2
+PASS registry-refusal-no-install
+FAIL appearance-unknown-named
+PASS appearance-timeline-untouched — total=2100
+PASS generative-sweep-50-cases — 0 survivors
+FAIL unsupported-kind-name-recorded — art=tiles
+stage1-checkpoint-attempt14-stage0.html: 12 PASS / 14 FAIL
+
+sha 5d54153b40f6c141789874f5c0c113a7f18f94414bfb9bf68a1dc89060c3ce35
+PASS coercion-limits-int-direct — direct '8' -> 8
+PASS coercion-limits-int-url
+PASS coercion-parity-limits
+PASS coercion-boolean-direct — direct 'true' -> true
+PASS coercion-boolean-url
+PASS coercion-parity-boolean
+PASS schema-deleted-field-resolves — -> 800 warns: 
+PASS palette-null-named — palette: malformed, reset to default
+PASS reset-parseable-oor-restores-prior — -> 444
+PASS reset-malformed-preserves-prior
+PASS reset-bounds-recheck — -> 1500
+PASS boundary-coupled-1499 — -> 1500
+PASS boundary-coupled-1500 — -> 1500
+PASS boundary-coupled-1600 — -> 1600
+PASS boundary-coupled-1601 — -> 1500
+PASS refusal-panelcount — panels=12
+PASS panelsjson-binding-retained — art=terminal
+PASS panelsjson-binding-warned
+PASS registry-malformed-no-suppress — tiles prims=1
+PASS registry-missing-primitives-restores — artRegistry.tiles: malformed entry form (no primitives list), prior working entry restored (re-validated)
+PASS registry-recovery-revalidated — tiles prims=2
+PASS registry-refusal-no-install
+PASS appearance-unknown-named — appearances[0]: unknown field 'diveMs' named here and ignored by the timeline
+PASS appearance-timeline-untouched — total=2100
+PASS generative-sweep-50-cases — 0 survivors
+PASS unsupported-kind-name-recorded — art=terminal
+stage1-recreation-work-attempt14.html: 26 PASS / 0 FAIL

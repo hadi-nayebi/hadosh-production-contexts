@@ -1,0 +1,11 @@
+S0 Stage 0 — preservation, baseline, render hunt (no source mutation)
+Render-route hunt: no browser binary on PATH (chromium / chromium-browser / google-chrome / chrome / firefox all absent); node modules puppeteer / playwright / jsdom not resolvable — PIXEL-UNVERIFIED stands for this attempt (deferral D-14-2).
+Preservation baseline: preservation-baseline-T23-attempt14.txt filed in the run directory (runs/2026-11-18-cycle-029-wave-28/) — script-generated (python hashlib), 408 files == inventory count 408, every hash validated exactly 64 hex chars at capture. Per-copy hashes bound individually (plan-review finding 4): recreation.html 9cb3c51e6be0ded3b999e10b521d74b9d1f0b69b8662b77ec580afab5ba2ebc4 · comparison.html 3fdbe113d26ecf0e0a8b61f1daeaac663aef4a248be413ac80438973162731a8 (DIFFERENT files, different hashes).
+Create-once content copies (never hardlinks; inode independence asserted mechanically):
+- recreation-attempt-13.html — created, sha == 9cb3c51e… (its own source hash), inode 7172701 != working inode 4342645
+- comparison-preserved-attempt-13.html — created, sha == 3fdbe113… (its own source hash), inode 7172702 != source inode 4342872
+- comparison-replay-attempt-13.html — created from comparison.html with BOTH recreation references pinned to recreation-attempt-13.html (iframe src + Swap handler query URL); zero live recreation.html references remain in the wrapper; segment.mp4 + ORIGINAL pane unchanged (segment.mp4 sha e648e64c42949c99…).
+- recreation-work-attempt14.html — candidate created as content copy of the a13 final (sha 9cb3c51e…); all construction happens here; recreation.html is published only at consolidation.
+- checkpoint-attempt14-stage0.html — created, content copy, sha 9cb3c51e…, inode 7172705 != working-file inode.
+GAP RECORDED (not reconstructed): comparison-preserved-attempt-10.html is MISSING from the artifact directory (standing gap from a13).
+Checkpoint gate: checkpoint-attempt14-stage0.html + this file exist create-once on disk before Stage 1 opens.
