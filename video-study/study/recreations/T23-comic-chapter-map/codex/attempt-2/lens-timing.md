@@ -1,0 +1,16 @@
+The timing arithmetic is sound, but the playback engine has defects that prevent lifting it as-is. This verdict is source-based; perceived tempo remains unverified in playback.
+
+- **Default schedule passes.** Each appearance lasts 900 + 650 + 150 + 250 = **1,950 ms**; three appearances total **5,850 ms**. `stateAt` uses half-open intervals correctly: 900 enters dive, 1550 hold, 1700 pause, 1950 the next appearance, and 5850 wraps. Negative times normalize correctly. Zero-duration phases occupy no selectable interval; validation restores defaults for an all-zero schedule.
+
+- **900 ms is an honest but generous flash.** It meets the specimen’s stated “<1 s” condition, near its upper limit. It gives viewers time to recognize filled-versus-empty progress and locate the next chapter; it does not establish that twelve titles, especially two-line phone labels, can be read. **Cost:** the tracker works as a recognition cue, while the build record overstates label readability as timing evidence. Exact specimen tempo cannot be established from the supplied sub-second description.
+
+- **Absolute elapsed time prevents cumulative timeline drift, but timer scheduling includes avoidable lateness.** `tick` calculates `ph.remainingMs` **before** `applyStep`, then waits that full remainder **after** rendering and layout work. A phase-entry render costing R ms schedules the next callback approximately R ms late. Later ticks still select the phase due against the original clock, so errors do not accumulate into a permanently lengthened cycle. **Cost:** phase boundaries jitter, and short holds or pauses can be shortened or skipped. Recompute the next deadline’s remaining time after applying the step.
+
+- **Late-dive handling fails when rendering crosses the deadline.** If the post-render `phaseAt` is already in hold or another phase, `applyStep` falls back to `s.dur - inPhaseMs`, which excludes time just spent rendering. It starts an expired dive anyway. **Cost:** the promised deadline arrival fails under load. Re-derive and apply the currently due phase instead.
+
+- **Pause/resume continuity is broken.** `tick` installs the frozen transform, then clears it and calls `applyStep("dive")`, which unconditionally resets to identity. **Cost:** resuming midway through a dive jumps back to the full page and repeats the zoom over the remaining time. Preserve the frozen starting transform through dive application; the build record’s continuity claim must be corrected.
+
+- **The default duration/scale pairing supports a dive in principle.** The effective scale is coverage-derived, not merely 3.1: approximately **5.23× at 360 px**, reached in 650 ms with accelerating easing. That supports a forceful entry rather than a gentle zoom. However, late entry restarts the entire spatial journey in less time, changing velocity sharply. **Cost:** destination timing is prioritized over consistent motion tempo. Playback verification is still required before calling the pairing perceptually matched.
+
+SCORE: 76
+BODY-WRITE: This verdict records correct default timeline arithmetic and zero-duration selection, qualifies the 900 ms readability claim, and requires post-render deadline scheduling, expired-dive rejection, and genuine frozen-transform resume before timing machinery is lifted as-is.

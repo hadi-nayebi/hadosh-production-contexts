@@ -1,0 +1,14 @@
+Readability supports further verification, but does not yet justify lifting the machinery as-is.
+
+- **360 px labels: credible floor, unproven title retention.** Three columns yield panels approximately 106.7 px wide with 98.7 px interiors. The longest label splits into “07 · THE” / “DAILY STANDUP”; the model retains it at approximately 12.3 px. Shrinking is clamped at 11 px, so the default policy cannot silently shrink below that floor. However, actual font widths, letter spacing, wrapping, and Range measurements remain untested. The browser may legitimately fall back to “07,” losing the chapter title. **Cost: the central phone-readability claim remains conditional.**
+
+- **Miniatures lose meaningful content beneath tabs.** A 35.8 px tab covers approximately 59% of the longest-title panel’s interior. In panel 07, the equation at SVG y=42 falls beneath that tab; the lower vehicle survives. The documented 5.6 px “SHIPPED” inscription is also too small to function as readable text. Simple silhouettes should survive better than inscriptions and fine graph edges. **Cost: scene recognition becomes uneven, even when labels fit.**
+
+- **Header fitting lacks a rendered safeguard.** The default header is modelled at 11 px, but its estimator excludes the configured letter spacing and substitutes a uniform glyph width for actual font metrics. Unlike tabs, it receives no measured refinement; `nowrap` plus `overflow:hidden` can conceal an underestimated width. **Cost: the issue/header ending may clip without triggering a fallback.** Also, the general policy permits reduction to 8 px, so its 11 px minimum is not universal.
+
+- **Progress hierarchy is promising, but the glance test is outstanding.** Near-black ink against yellow, orange, and dim beige provides strong source-derived contrast. Ghost numbers at 16% opacity should remain subordinate. Illustrated versus blank panels supplies a stronger distinction than tab colour alone. However, the upcoming target is also illustrated, so completed membership requires noticing its orange tab and outline. No rendered 360 px frame or 900 ms viewing pass establishes that distinction at speed. **Cost: progress can plausibly read as five/nine illustrated chapters rather than four/eight completed chapters.**
+
+The DOM height check also subtracts panel borders from `clientHeight`, which already excludes them. This makes the occlusion budget unnecessarily strict and can cause earlier shrinking or title removal. Correct that calculation, then verify actual label retention, header containment, miniature recognition, and progress recognition in rendered phone-size playback.
+
+SCORE: 76
+BODY-WRITE: This verdict records readability as not cleared for as-is reuse; the next attempt must correct the DOM height budget and supply rendered 360 px label/header checks plus a 900 ms progress-recognition pass.

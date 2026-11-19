@@ -1,0 +1,14 @@
+Readability supports a browser verification pass, but does **not yet support lifting the machinery as-is**.
+
+- **360 px labels: plausible fit, unproven title retention.** Three columns produce 106.7 px panels with 98.7 px inner width. “07 · THE DAILY STANDUP” splits into “07 · THE DAILY” / “STANDUP” at a modelled ≈12.3 px. The refinement clamps shrinking at 11 px, so this path cannot silently undershoot the floor. However, actual font widths, weight and letter spacing can force additional wrapping and ultimately number-only mode. Containment can therefore pass while the chapter title disappears. **Cost: the named phone-readability requirement remains unverified.**
+
+- **Two-line tabs consume substantial miniature space.** At ≈12.3 px, the tab is approximately 35.8 px tall inside a 60.8 px-high panel interior—about 59% of its height. Its opaque background covers the upper artwork, including much of the standup inscription. Simple silhouettes and colour blocks should remain distinguishable; scene details and embedded text have little usable space. **Cost: labels gain readability at the expense of chapter recognition.**
+
+- **Header fitting is weaker than tab fitting.** The phone header starts at 10 px and can reduce to 8 px. Its fitting estimate omits actual glyph widths and letter spacing, with no DOM refinement. Wrap height also uses estimated character capacity rather than measured content height; `overflow:hidden` can conceal a mismatch. **Cost: a small masthead whose complete rendering and quick readability are not established.**
+
+- **Contrast and hierarchy are promising.** Default ink has approximately 12.7:1 contrast against yellow and 8.5:1 against the dim tab. Ghost numbers at 16% opacity should remain subordinate to illustrated panels. Muted empty panels versus coloured miniatures provide a strong progress cue, although the orange target introduces another prominent state. **Cost: the 900 ms glance must distinguish completion from target emphasis; colour arithmetic cannot establish that result.**
+
+- **Verification remains the decisive gap.** The record explicitly reports no pixel rendering or execution of the measured DOM path. The 137 assertions support construction claims, but establish neither unclipped phone labels nor miniature recognition nor filled/unfilled recognition during the dwell. Require final-font 360 px renders of all three appearances, measured title retention, and a timed glance check before reuse approval.
+
+SCORE: 73
+BODY-WRITE: Records readability reuse as unapproved pending rendered 360 px title retention, header containment, miniature visibility, and 900 ms progress recognition; identifies two-line tab occlusion and estimate-only header fitting as next-attempt risks.

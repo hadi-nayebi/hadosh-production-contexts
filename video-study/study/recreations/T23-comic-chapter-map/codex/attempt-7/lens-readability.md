@@ -1,0 +1,16 @@
+VERDICT: READABILITY does not yet support lifting as-is. The phone layout is plausible, but title survival and rapid progress recognition remain unverified.
+
+- **Longest label fits the model, not yet proven on screen.** Independently evaluating `computeLayout()` and `resolvedArtRect()` gives three columns at 360 px, with 98.67 px panel interiors. Panel 07 becomes `07 · THE` / `DAILY STANDUP` at 11.81 px, above the 11 px floor. Its estimated width leaves only about 1.7 px spare. Border-box tabs and clamped shrinking prevent the former undersizing problem; DOM refinement can nevertheless remove the title through number-only fallback. Thus “no clipping” would not establish “THE DAILY STANDUP remains readable.” Evidence: `recreation.html:810–862, 1321–1359`; `fit-table.md`, tab 07. Cost: the named phone-width trap remains unresolved in actual fonts.
+
+- **Header fitting has reasonable safeguards but limited reading scale.** The default header models at 11 px in an 18 px strip; measured shrinking and wrapping are implemented. That supports containment in principle, but neither default nor extended-header containment was rendered. Evidence: `recreation.html:865`, header refinement at `1225–1240`; build record, **Limitations (3)**. Cost: the branding line remains small and unproven during the brief dwell.
+
+- **Contrast and empty-panel hierarchy are strong on paper.** Calculated from the configured sRGB colors, ink contrast is approximately 12.71:1 on yellow, 8.49:1 on dim tabs, and 8.97:1 on target orange. Empty panels omit artwork and use ghost numerals at 0.16 opacity; this should subordinate them despite their larger size. Evidence: `recreation.html:77–104, 1275–1295`. No source-level contrast defect found; actual visual competition remains unobserved.
+
+- **Miniatures lose substantial recognition detail.** Recomputed panel 07 art height is 26.28 px; several other two-line tabs leave about 22.5 px. `preserveAspectRatio: "none"` compresses the 160×100 artwork into these shallow regions. Internal inscriptions consequently become depiction rather than readable information. Evidence: `recreation.html:120`, `resolvedArtRect()`; `fit-table.md`, miniature rows and HIT list. Cost: scene identification relies heavily on tabs and broad silhouettes; miniature recognition cannot be credited from geometric non-overlap.
+
+- **The 300 ms progress glance is the decisive missing check.** Artwork versus blank cream provides a useful filled/unfilled cue. However, the upcoming target also displays artwork, distinguished through orange and an accent outline, so illustrated membership differs from completed membership. Whether that distinction registers immediately is untested. Evidence: `recreation.html`, `panelState()` and `render()`; build record, **Limitations (5)**. Cost: the recurring tracker’s central communication remains unproven.
+
+Limits: Source hash matches the build record. Checks here evaluated source geometry and palette arithmetic; no pixels, rendered font behavior, or timed glance recognition were verified. This score prices that uncertainty without claiming observed clipping.
+
+SCORE: 76
+BODY-WRITE: none (read-only run); verdict supplied for verbatim filing: retain the layout safeguards, but carry rendered 360 px title/header survival, miniature recognition, and the 300 ms progress-glance check into the next attempt.

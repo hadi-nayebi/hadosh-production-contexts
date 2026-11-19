@@ -1,0 +1,35 @@
+**Readability verdict — hold as-is reuse.** The source model preserves every default chapter number and title across integer stage widths from 240 to 360 px. The progress cues are structurally distinct, but the brief moving view leaves phone-speed comprehension unverified, and the measured fallback can discard a title before trying a viable wrap.
+
+### Tab text at the full-grid pose
+
+`/` marks a modelled line break. These are the results of running the artifact’s `resolveConfig`, `computeLayout`, and `resolvedGeometry` functions. The 240 px stage uses two columns with 97 px of inner panel width. The 360 px stage uses three columns with about 98.7 px of inner panel width. All 12 numbers and titles survive at both widths and in all three appearances because the label policy receives the same width and height inputs regardless of completion state. (`recreation.html`, `computeLayout`, `labelPolicy`, `resolvedArtRect`)
+
+| Panel | 240 px | 360 px |
+|---|---|---|
+| 01 | 01 · THE / TERMINAL | 01 · THE / TERMINAL |
+| 02 | 02 · THE WALL | 02 · THE WALL |
+| 03 | 03 · SHIP IT | 03 · SHIP IT |
+| 04 | 04 · THE / COMMENTS | 04 · THE / COMMENTS |
+| 05 | 05 · IN / THE WALLS | 05 · IN / THE WALLS |
+| 06 | 06 · THE / SWARM | 06 · THE SWARM |
+| 07 | 07 · THE / DAILY STANDUP | 07 · THE / DAILY STANDUP |
+| 08 | 08 · THE / KEYNOTE | 08 · THE / KEYNOTE |
+| 09 | 09 · THE / SEERESS | 09 · THE / SEERESS |
+| 10 | 10 · I / KNEW IT | 10 · I KNEW IT |
+| 11 | 11 · PLEASE / HOLD | 11 · PLEASE / HOLD |
+| 12 | 12 · USAGE / LIMIT | 12 · USAGE / LIMIT |
+
+### Priced findings
+
+- **Tab fitting can hide titles when the font or chapter copy changes.** `labelPolicy` shrinks the full label in 0.5 px steps to 11 px, then tries a two-line split that minimizes the longest line by character count. The live path passes number and title separately to `splitTwoLinesNT`, so a separator inside a title stays title text. Phones permit three lines with 1.02 line height and a 75% tab-height budget. At 281 px, the switch to three columns puts all tabs at 11 px and gives panels 07, 11, and 12 three lines. The DOM checks horizontal overflow, tab height, and a sum of Range rectangles from each span, which catches ordinary wrapping within a span. Rectangles are a proxy for visual lines and can count multiple fragments on one line. More importantly, a modelled single line that fails the measured check at 11 px goes directly to number-only. The three-line retry is restricted to tabs already marked two-line. A 60-character unbroken replacement title at 281 px also resolves to number-only in the source model, and the terminal DOM fallback can leave even the identifier clipped if it overflows. The cost is a lost chapter name on valid replacement copy. The smallest correction is to try the shared two- and three-line candidates from a failed measured single line and check containment after the final fallback. (`recreation.html`, `splitTwoLines`, `splitTwoLinesNT`, `splitLinesNT`, `labelPolicy`, `render` tab refinement)
+
+- **The masthead preserves the text in the default model, with a small reading window.** Both header floors are 11 px and the starting size is already 11 px throughout this phone range. The 51-character width estimate, including padding and reserve, is 346.16 px. The default `break-word` mode therefore models two lines and a 26 px header at 240 px, and a single line in an 18 px header at 360 px. The DOM can shrink and remeasure overflow, then wrap and grow the header and stage under `break-word`. A header that begins wrapped can retain the model’s extra height or line-count metadata even when the actual font needs less space. Configured `normal` keeps `nowrap`, so an overflowing masthead at the floor can clip. The build record’s 240 px wrap is one reported probe outcome. The source model also predicts wrap at 281 px. (`recreation.html`, `headerFitPx`, `headerHeightFor`, `layout`; `build-record-attempt14-blind.md`, pre-scoring legs)
+
+- **Progress has redundant cues while the grid is in view.** The appearances give 4 completed with 05 targeted, 8 completed with 09 targeted, then 12 completed with 12 targeted. There are three useful cue families across the map. Tab color distinguishes yellow completed, muted upcoming, and orange upcoming-target. The art field distinguishes miniature from ghost-number placeholder. Edge markers add a 5 px bottom completion bar, a 3 px inset outline for the upcoming target, or a separate 4 px top strip for the completed target. The panel-face tint is an additional configured treatment, but opaque SVG art covers it. Art is in a separate region from the tab and bars, and the inset outline lies within the default 4 px frame. In the final appearance, panel 12 shares the completed tab and art treatment with its peers, so its top strip is the sole pre-dive target cue. At either width, the dive endpoint fills the stage with the target art and takes the labels and progress cues out of view. Even before the dive, the default gives the full grid no static hold. A viewer who misses the moving overview has no persistent count to recover the series position. (`recreation.html`, `CONFIG.appearances`, `panelState`, `render`, `cameraPoseAt`, `diveTransform`)
+
+- **The smallest miniatures occur just above the column breakpoint.** Taking the minimum across all panels and appearances gives approximately 43.6 px of modelled art height at 240 px and 44.6 px at 360 px, both above the 30 px simplification threshold. The 240 px minimum occurs on the completed target after subtracting its additional 4 px strip. This corrects the build record’s 47.6 px minimum claim. At 281 px, finished-state art falls to about 20.2 px on panels 07 and 11 and 16.2 px on panel 12. Below 30 px, the renderer removes SVG text under 14 viewBox units and scales graph strokes by 2 and node radii by 1.6. The 21-unit inscription on panel 07 survives at roughly 4.2 CSS px of vertical scale at that width, so it cannot reliably carry scene information. The grid rebuilds art when the refined band crosses the threshold. The optional held-cut overlay independently uses modelled height, so it can select a different detail tier near that boundary. (`recreation.html`, `resolvedArtRect`, `panelArtSVG`, `render` detail rebuild, `presentEndpoint`; `build-record-attempt14-blind.md`, Grid)
+
+**Limits.** I read both named files from disk and verified the supplied HTML hash. The tab census and dimensions are source-model results. Browser font metrics, painted line breaks, and what viewers can decode during playback remain unverified. The reported stub DOM does not provide that evidence. This score prices readability only.
+
+SCORE: 81  
+BODY-WRITE: Record the readability hold, default tab census, corrected 240 px art minimum, and measured-wrap fallback gap for the next attempt. No file was modified in this read-only run.

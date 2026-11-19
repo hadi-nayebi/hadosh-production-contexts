@@ -1,0 +1,13 @@
+Timing machinery is reusable, but this lens does **not** clear the tempo for lifting as-is. Static source audit; playback and runtime tests were unavailable.
+
+- **Timeline arithmetic passes.** Each appearance lasts 1,950 ms: dwell [0,900), dive [900,1550), hold [1550,1700), pause [1700,1950). Three appearances total **5,850 ms**. `stateAt` uses correct half-open boundaries, wraps cycles and negative times, and skips zero-duration steps.
+- **Callback lateness does not accumulate.** Phase selection derives from elapsed time against `startStamp`; subsequent delays use remaining phase time. Late callbacks shorten or skip phases instead of shifting every later deadline. Recovery after rendering is bounded, however: sufficiently expensive repeated renders can still leave the displayed phase temporarily behind the clock.
+- **900 ms is defensible as a glance, weak as a reading allowance.** It satisfies “<1 s,” near that bound’s upper edge. It supports recognizing progress and locating the next chapter; it does not establish that viewers can read twelve titles, particularly wrapped phone labels. The outstanding glance test matters.
+- **Specimen tempo remains unmatched.** Dwell plus dive occupies **1,550 ms**, versus the recorded ≈700–730 ms visible moving-map window. That excerpt does not establish complete phase timings, so an exact mismatch ratio would overclaim. Nevertheless, a stationary 900 ms opening produces a more deliberate rhythm than the observed continuous pull-back-and-dive.
+- **650 ms has credible dive geometry.** Coverage makes actual endpoint scale approximately **4.5× at 960 px** and **5.9× at 360 px**, exceeding the nominal 3.1× floor. The accelerating default easing concentrates movement toward the finish, supporting a dive rather than an even slow zoom. Perceptual confirmation remains outstanding.
+- **Zero-duration bug:** with `diveMs=0` and a positive hold, `applyCamera(s.dive, cfg.diveMs)` calls `diveProgress(0,0)`, returning **0**. Hold displays identity instead of the endpoint. The instantaneous-dive configuration therefore fails.
+- **Reusable easing semantics diverge.** `ease-in`, `ease-out`, and `ease-in-out` use cubic polynomial approximations rather than their CSS curves. Selecting those accepted values changes the expected tempo.
+- **Production punctuation remains unresolved.** The 150 ms hold and 250 ms dark pause add 400 ms per appearance. They work as preview punctuation, but do not demonstrate the specimen’s immediate chapter takeover.
+
+SCORE: 78
+BODY-WRITE: This verdict records correct 5850 ms arithmetic and nonaccumulating scheduling, while requiring a zero-dive hold fix, faithful easing semantics, and verified glance/dive/handoff tempo before reuse as-is.

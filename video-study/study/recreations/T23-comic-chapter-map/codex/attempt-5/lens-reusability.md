@@ -1,0 +1,16 @@
+**76/100 — broadly reusable, but lifting it as-is still carries configuration hazards.** Header, panels, appearance count, timings, geometry, typography, and artwork are substantially data-driven. Neither 12 panels nor three appearances is hardwired into the core machinery. These findings come from source inspection; runtime probes and file writes were unavailable because the execution tool failed to start.
+
+- **Geometry rejection can restore another infeasible configuration.** In `validateInto`, the final fallback restores columns/gaps/borders but retains `panelAspect` and `narrowBreakpointPx`, then performs no second feasibility check. With `panelAspect=3&narrowBreakpointPx=200&cfg:layout.minInnerHPx=200`, rejection restores four wide columns at 240px: inner height becomes approximately **5.2px**, below the restored 12px contract. **Cost:** the advertised safe fallback cannot be trusted across valid combinations.
+
+- **Override order makes configuration incomplete in practice.** `panelCount` runs before nested `limits` and label overrides. Raising `cfg:limits.maxPanels=32` cannot enable `panelCount=32`; that count is rejected against the original 24 ceiling. Generated numbers/titles likewise use the original padding/prefix. **Cost:** callers must edit source or compensate manually for settings that appear independently configurable.
+
+- **Accepted registry attributes disappear silently.** `validPrim` accepts `stroke` and `strokeWidth` for `grid`, `graph`, and `circlesRow`, but `wrapGroup` forwards only opacity and transform. Missing fills also validate for several primitives, then render as `fill="undefined"` instead of a defined default. **Cost:** new art kinds require renderer knowledge and corrective data despite passing validation; the build record overstates grouped-attribute consistency.
+
+- **Easing validation admits non-finite coordinates.** `parseEasing` bounds x coordinates but never checks finiteness of y coordinates. An extremely long decimal can parse as `Infinity`, pass validation, and produce invalid camera transforms without a warning. **Cost:** malformed URL input can break the animation instead of falling back safely.
+
+- **Whitespace normalization changes meaningful strings.** Generic string overrides call `.trim()`, including `labels.separator` and `generatedTitlePrefix`. A requested `" / "` separator becomes `"/"`; a trailing space in a generated prefix cannot survive. **Cost:** the URL surface cannot faithfully express all CONFIG string values.
+
+- **Some production choices remain embedded in logic.** Two-line-only label fallback, uppercase title conversion, generated zero-padding character, four-phase looping, shared timings across every appearance, and top-left transform origin are fixed policies. New art compositions using existing primitives need no code surgery; a new primitive requires edits to both schema and renderer. **Cost:** ordinary series swaps work, but broader production variation still requires implementation changes.
+
+SCORE: 76
+BODY-WRITE: This verdict supplies six priced findings for the build record and next attempt; no on-disk write was completed because the execution tool was unavailable.

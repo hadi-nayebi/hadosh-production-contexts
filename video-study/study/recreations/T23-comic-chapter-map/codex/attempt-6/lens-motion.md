@@ -1,0 +1,14 @@
+Verdict: motion structure is substantially faithful, but the machinery is not ready to lift as-is: the default engine does not guarantee a presented full-frame arrival before cutting away.
+
+- **Major — arrival endpoint is skipped.** `camTick` updates only while the current phase is `dive`; after its boundary it stops without applying the endpoint (`recreation.html:1337–1343`). With zero hold, `stateAt` selects the next dwell immediately, and `applyStep` resets the transform (`1356–1360`). Thus the build record’s “dive endpoint is the handoff frame” claim is unsupported. My source-model probe found that all three targets at both 360 and 960 px cover the stage at the mathematical endpoint, but none covers it 16.67 ms earlier. Cost: a normal frame cadence can cut away while neighbouring page content remains visible. Cure: present the endpoint for a painted frame before the hard handoff.
+
+- **Material — camera geometry can diverge from rendered geometry.** `diveEndpoint` uses `computeLayout` and `artRectFor` (`1322–1325`), while rendered header height and tab sizes can change through DOM refinement (`1186–1198`, `1280–1317`). Those corrections never reach the camera rectangle. Cost: arrival centring and coverage are conditional on model/DOM agreement. Cure: derive the endpoint from the rendered art rectangle and actual stage dimensions.
+
+- **Faithful core sequence and progress.** `buildTimeline` orders dwell → dive → hold → pause; `stateAt` skips zero-duration phases. Defaults compute to three × (300 + 430) = 2,190 ms. Dwell resets directly to identity and full opacity without a fade or scale entrance. The interpolated dive targets panels 05, 09 and 12; `panelState` supplies their miniatures throughout. Independently computed completed counts rise 4 → 8 → 12, with illustrated counts 5 → 9 → 12. Configured hold pins the endpoint; configured pause hard-hides the page. These match the requested structural vocabulary.
+
+- **Rhythm evidence remains disputed.** `build-record-attempt6.md`, “Evidence basis,” describes Basis B as continuous motion without an observed static hold. The default 300 ms static dwell follows this run’s explicit technique description, but matching the observed total does not establish matching internal rhythm. I have not penalized the required dwell as an invented motion.
+
+Limits: read both named files from disk and verified the source hash. Checks were source execution and geometry probes; rendered playback, actual frame presentation, and archival footage comparison remain NOT ASSESSED.
+
+SCORE: 80
+BODY-WRITE: none (read-only run); this verdict supplies the build record with two motion blockers for the next attempt: guaranteed painted arrival and camera geometry derived from rendered bounds.

@@ -1,0 +1,14 @@
+Verdict: 82/100 — the core motion is faithful, but this lens does not support lifting the machinery as-is.
+
+- **Correct entrance, hold, dive, and progress.** `recreation.html`, `buildTimeline`, `stateAt`, `phaseAt`, and `applyStep`: dwell sets identity transform and full opacity immediately, with no page entrance animation. Defaults produce 300 ms static dwell followed by 430 ms dive; zero-duration hold/pause phases are bypassed. `transformAt` interpolates toward the selected art region. Executed source checks confirm targets 05/09/12, completed counts 4→8→12, and illustrated counts 5→9→12. All three target endpoints cover the model viewport at each tested width: 240/360/520/960. No deduction.
+
+- **Endpoint commitment does not guarantee visible arrival (−8).** `recreation.html`, `tick` → `presentEndpoint` → `requestAnimationFrame(flushPending)`: when the timer commits the endpoint before the next animation frame, that frame’s callback can reset the transform before painting. The camera-first callback path can behave differently. Consequently, the target’s full-frame takeover remains callback-order dependent at the paint level. `build-record-attempt7.md`, “Limitations,” correctly leaves painted presentation unverified. Cure: establish an endpoint paint opportunity before resetting, then verify both callback orders in browser frames.
+
+- **The outgoing scene has no sustained handoff (−7).** `recreation.html`, `flushPending` and `applyStep("dwell")`: after the endpoint, the next state immediately restores the grid; there is no scene-output or completion handoff. This demonstrates a repeating map sampler, but omits the between-act structure in which the selected scene takes over before a later map appearance. Cure: expose a completion/handoff boundary that preserves the arrived scene until the consuming sequence cuts away.
+
+- **Pending-endpoint resize can undo arrival (−3).** `recreation.html`, resize listener: it applies the endpoint before `render()`, then the active-dive branch uses the following phase’s `inPhaseMs`. During pending presentation this can replace the endpoint with an early-dive transform, against stale pre-render geometry. Cure: render first and give pending endpoint presentation precedence over ordinary dive evaluation.
+
+Limits: Source and build record read from disk; source hash matches the stated hash. Geometry checks were executed against the source model. Browser painting, rendered alignment, and archived-source motion were not independently observed. The build record’s Basis B conflicts with the charge’s static-hold description; the requested static-hold specification governed this score.
+
+SCORE: 82
+BODY-WRITE: none (read-only run); advisory return for verbatim filing records faithful core motion and unresolved endpoint painting, scene handoff, and pending-resize defects.

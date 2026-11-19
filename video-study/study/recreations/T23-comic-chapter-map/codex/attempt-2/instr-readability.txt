@@ -1,0 +1,834 @@
+STANDING HEADER — Codex scoring run, Video Study practice job.
+(1) CONSUMER + DECISION PRICED: Consumer = practice §5 Verify (the delta and consolidation record for this item) plus series design / openings production, which will lift this recreation's machinery as a recurring comic chapter-map / series progress tracker between acts. The decision this run prices: does this ONE lens of the T23 attempt-2 recreation support lifting the machinery as-is, without re-deriving it?
+(2) WORKING RECORD: this run builds from the recreation.html source and the build record fed below (build-record-attempt2.md in the item's artifact directory), and its return is filed verbatim in that directory.
+(3) BODY-WRITE: your return MUST name what it wrote into the body — end your return with exactly these two lines:
+SCORE: <int 0-100>
+BODY-WRITE: <what this verdict writes into the build record / next attempt>
+
+TECHNIQUE RECORD (T23, packet P1 "Look What I Can Do", appearances 1:05, ~2:16 filed as 2:12, 2:51 — verified firsthand from the archived source and source stills): Between acts, a storyboard grid FLASHES: cream comic page, header 'ADITAZZZ — A COMIC OF EVERYTHING WE MADE — ISSUE #1', a 4x3 grid of panels with thick black borders; each panel carries a yellow tab overlapping its top-left corner reading 'NN · TITLE' in heavy condensed black capitals (03 SHIP IT, 04 THE COMMENTS, 05 IN THE WALLS, 06 THE SWARM, 07 THE DAILY STANDUP, 08 THE KEYNOTE, 09 THE SEERESS, 10 I KNEW IT, 11 PLEASE HOLD, 12 USAGE LIMIT) and a miniature of its scene. The grid holds briefly (<1 s), then the camera ZOOM-DIVES into the next chapter's panel and that scene takes over. Later appearances show MORE panels filled — the map is a series progress tracker.
+Score ONLY your assigned lens. Give priced findings (what is wrong, where, what it costs), then the two closing lines.
+
+YOUR LENS: READABILITY. The named trap: a 12-panel grid at 360 px phone width. Judge: the 3-column re-flow below 520 px; the tab label policy (base size derived from the actual panel width, border-box tabs, single-line then two-line then number-only modes, 11 px minimum size) — can 'NN · THE DAILY STANDUP' actually be read at 360 px under this policy, or does text still clip/shrink below legibility? Judge header legibility and its fitting, ghost numbers on unfilled panels (do they compete with filled panels?), yellow-tab contrast (ink on the tab color; dim tab for unfilled), panel miniature legibility vs noise, and whether the filled/unfilled distinction reads at a glance during a 900 ms dwell. The build record states whether pixel rendering was exercised; if it was not, say what remains unverified and price it.
+
+===== recreation.html (final source) =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T23 — Comic chapter-map motif · parameterized recreation</title>
+<style>
+  html,body{margin:0;padding:0}
+  #stage{position:relative;width:100%;margin:0 auto;overflow:hidden;user-select:none}
+  #zoomwrap{position:absolute;inset:0;transform-origin:0 0;will-change:transform}
+  #header{white-space:nowrap;overflow:hidden}
+  #grid{display:grid}
+  .panel{position:relative;overflow:hidden;box-sizing:border-box}
+  .tab{position:absolute;top:0;left:0;box-sizing:border-box;max-width:100%;overflow:hidden;z-index:3}
+  .art{position:absolute;inset:0}
+  .art svg{display:block;width:100%;height:100%}
+  .ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div id="stage"><div id="zoomwrap"><div id="header"></div><div id="grid"></div></div><div id="warn" style="display:none"></div></div>
+<script>
+"use strict";
+/* ================= CONFIG — every variable of the technique lives here.
+   Specimen values are the defaults; URL parameters override them after
+   strict validation (see validateInto / resolveConfig). ================= */
+const CONFIG = {
+  headerText: "ADITAZZZ — A COMIC OF EVERYTHING WE MADE — ISSUE #1",
+  panels: [
+    { n: "01", title: "THE TERMINAL",     art: "terminal" },
+    { n: "02", title: "THE WALL",         art: "tiles"    },
+    { n: "03", title: "SHIP IT",          art: "ship"     },
+    { n: "04", title: "THE COMMENTS",     art: "comments" },
+    { n: "05", title: "IN THE WALLS",     art: "walls"    },
+    { n: "06", title: "THE SWARM",        art: "swarm"    },
+    { n: "07", title: "THE DAILY STANDUP",art: "paper"    },
+    { n: "08", title: "THE KEYNOTE",      art: "keynote"  },
+    { n: "09", title: "THE SEERESS",      art: "seeress"  },
+    { n: "10", title: "I KNEW IT",        art: "slam"     },
+    { n: "11", title: "PLEASE HOLD",      art: "tower"    },
+    { n: "12", title: "USAGE LIMIT",      art: "receipt"  }
+  ],
+  appearances: [
+    { filled: 4,  dive: 4  },
+    { filled: 8,  dive: 8  },
+    { filled: 12, dive: 11 }
+  ],
+  dwellMs: 900,
+  diveMs: 650,
+  holdZoomMs: 150,
+  loopPauseMs: 250,
+  diveScale: 3.1,
+  colsWide: 4,
+  colsNarrow: 3,
+  narrowBreakpointPx: 520,
+  panelAspect: 1.55,
+  gapPx: 10,
+  borderPx: 4,
+  palette: {
+    paper: "#e9e5d6",
+    ink:   "#141414",
+    tab:   "#ffd21f",
+    tabDim:"#b9b091",
+    empty: "#d9d3bf",
+    accent:"#e2483d",
+    dark:  "#20201c",
+    panelBg: "#ffffff"
+  },
+  fontFamily: "\"Arial Narrow\", Arial, Helvetica, sans-serif",
+  layout: {
+    stageMaxPx: 960,
+    stageBottomPadPx: 6,
+    headerHeightFactor: 0.034,
+    headerMinPx: 18,
+    headerFontFactor: 0.021,
+    headerMinFontPx: 10,
+    headerPaddingPx: 8,
+    tabBorderPx: 3,
+    tabPaddingYPx: 1,
+    tabPaddingLeftPx: 5,
+    tabPaddingRightPx: 6,
+    ghostFontFactor: 0.3,
+    ghostOpacity: 0.16,
+    diveEasing: "cubic-bezier(.55,0,.85,.4)",
+    diveCoverMargin: 1.03,
+    minStepMs: 0,
+    fallbackStagePx: 360,
+    tabTopPx: 0,
+    tabLeftPx: 0,
+    tabZIndex: 3,
+    tabOverflowAllowancePx: 34,
+    minPanelPx: 48,
+    warnFontPx: 12
+  },
+  artViewBox: { w: 160, h: 100 },
+  fallbackArtKind: "tiles",
+  typography: {
+    headerWeight: 700,
+    headerLetterSpacingEm: 0.04,
+    tabWeight: 900,
+    tabLetterSpacingEm: 0.02,
+    tabLineHeight: 1.25,
+    ghostWeight: 900
+  },
+  labels: {
+    baseFactor: 0.14,
+    maxPx: 18,
+    minPx: 11,
+    glyphEm: 0.52,
+    chromePx: 14,
+    separator: " · ",
+    shrinkStepPx: 0.5,
+    numberPadWidth: 2,
+    generatedTitlePrefix: "CHAPTER "
+  },
+  /* Art registry: every miniature is data — a list of drawing primitives
+     (rect / circle / line / polygon / path / text / grid / graph /
+     circlesRow). "$ink" and "$accent" resolve from the palette.
+     Inscriptions are registry data, never literals in the renderer. */
+  artRegistry: {
+    terminal: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#101418" },
+      { t:"rect", x:10, y:10, w:86, h:6, fill:"#57e389" },
+      { t:"rect", x:10, y:24, w:120, h:6, fill:"#3f7d55" },
+      { t:"rect", x:10, y:38, w:64, h:6, fill:"#57e389" },
+      { t:"rect", x:10, y:56, w:14, h:10, fill:"#57e389" } ] },
+    tiles: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#1b2030" },
+      { t:"grid", x:8, y:8, cols:6, rows:4, cellW:20, cellH:17, gapX:5, gapY:5,
+        fills:["#6fb7ff","#31405e","#31405e"] } ] },
+    ship: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#12160f" },
+      { t:"path", d:"M45 88 L45 45 A35 30 0 0 1 115 45 L115 88 Z", fill:"#233118", stroke:"#7ac74f", strokeWidth:2 },
+      { t:"circlesRow", cx0:30, cy:93, dx:20, count:6, r:4, fill:"#9fb0c3" },
+      { t:"rect", x:58, y:8, w:44, h:12, fill:"#7ac74f" },
+      { t:"text", x:80, y:18, size:9, anchor:"middle", fill:"#101408", weight:"bold", content:"SHIPPED" } ] },
+    comments: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#171a21" },
+      { t:"rect", x:14, y:12, w:132, h:76, rx:6, fill:"#f2f2ee" },
+      { t:"rect", x:24, y:24, w:90, h:7, fill:"#222222" },
+      { t:"rect", x:24, y:38, w:112, h:7, fill:"#c9a227" },
+      { t:"rect", x:24, y:52, w:70, h:7, fill:"#555555" },
+      { t:"path", d:"M34 78 c-6-8 6-14 10-6 c4-8 16-2 10 6 l-10 8 z", fill:"$accent" } ] },
+    walls: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#232a26" },
+      { t:"rect", x:42, y:24, w:76, h:50, fill:"#0d0f0e", stroke:"#4a554e", strokeWidth:2 },
+      { t:"rect", x:52, y:36, w:56, h:6, fill:"#e8b23a" },
+      { t:"rect", x:52, y:48, w:42, h:6, fill:"#e8b23a" },
+      { t:"rect", x:70, y:74, w:20, h:8, fill:"#4a554e" } ] },
+    swarm: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#0e1420" },
+      { t:"graph", nodes:[[80,16],[44,44],[116,44],[24,78],[64,78],[96,78],[136,78]],
+        edges:[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]], edgeStroke:"#5f7fa6", edgeWidth:1.5,
+        nodeFill:"#cfe4ff", nodeR:4 } ] },
+    paper: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#efe9dc" },
+      { t:"rect", x:14, y:10, w:132, h:5, fill:"$ink" },
+      { t:"text", x:16, y:42, size:21, fill:"$ink", weight:"900",
+        segments:[ { t:"$0 ×3 = ", fill:"$ink" }, { t:"$0", fill:"$accent" } ] },
+      { t:"rect", x:98, y:56, w:48, h:32, fill:"#5b2a86" },
+      { t:"circle", cx:110, cy:82, r:6, fill:"#222222" },
+      { t:"circle", cx:134, cy:82, r:6, fill:"#222222" } ] },
+    keynote: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#191410" },
+      { t:"polygon", points:"66,8 94,8 118,88 42,88", fill:"#e8b23a", opacity:0.85 },
+      { t:"circle", cx:80, cy:34, r:7, fill:"#14100c" },
+      { t:"rect", x:76, y:41, w:8, h:24, fill:"#14100c" },
+      { t:"rect", x:60, y:48, w:16, h:5, fill:"#14100c", transform:"rotate(-24 68 50)" } ] },
+    seeress: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#26232b" },
+      { t:"circle", cx:112, cy:42, r:19, fill:"#e8ddc8", stroke:"$ink", strokeWidth:2 },
+      { t:"circle", cx:105, cy:40, r:3, fill:"$ink" },
+      { t:"circle", cx:119, cy:40, r:3, fill:"$ink" },
+      { t:"path", d:"M103 52 q9 6 18 0", fill:"none", stroke:"$ink", strokeWidth:2 },
+      { t:"rect", x:30, y:52, w:5, h:26, fill:"#e8ddc8" },
+      { t:"rect", x:46, y:58, w:5, h:20, fill:"#e8ddc8" },
+      { t:"circle", cx:32, cy:49, r:3, fill:"#ffb84d" },
+      { t:"circle", cx:48, cy:55, r:3, fill:"#ffb84d" } ] },
+    slam: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#2b2b2b" },
+      { t:"text", x:80, y:62, size:24, anchor:"middle", fill:"#f2f2ee", weight:"900", content:"I KNEW IT!" },
+      { t:"rect", x:18, y:14, w:70, h:5, fill:"#8a8f98" },
+      { t:"rect", x:18, y:25, w:52, h:5, fill:"#8a8f98" } ] },
+    tower: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#2a1440" },
+      { t:"rect", x:58, y:10, w:44, h:84, fill:"#101018", stroke:"#5ee7e0", strokeWidth:2 },
+      { t:"grid", x:66, y:18, cols:3, rows:5, cellW:7, cellH:9, gapX:4, gapY:6,
+        fills:["#ffe9a3","#5ee7e0"] },
+      { t:"rect", x:14, y:52, w:26, h:42, fill:"#17122b" },
+      { t:"rect", x:120, y:44, w:28, h:50, fill:"#17122b" } ] },
+    receipt: { primitives: [
+      { t:"rect", x:0, y:0, w:160, h:100, fill:"#3c3c3c" },
+      { t:"polygon", points:"48,6 118,6 112,94 54,94", fill:"#f4f1e8" },
+      { t:"rect", x:62, y:46, w:42, h:34, rx:4, fill:"#26282e" },
+      { t:"rect", x:60, y:16, w:46, h:5, fill:"$ink" },
+      { t:"rect", x:60, y:27, w:34, h:5, fill:"#777777" } ] }
+  }
+};
+
+/* ================= validation / normalization ========================= */
+function strictInt(v) { return /^-?\d+$/.test(String(v).trim()) ? parseInt(v, 10) : null; }
+function strictNum(v) { return /^-?\d+(\.\d+)?$/.test(String(v).trim()) ? parseFloat(v) : null; }
+function isColor(v) { return /^#[0-9a-fA-F]{6}$/.test(String(v).trim()) || /^#[0-9a-fA-F]{3}$/.test(String(v).trim()); }
+function validateInto(cfg, warnings) {
+  const W = function (m) { warnings.push(m); };
+  const clampInt = function (obj, key, lo, hi) {
+    const v = strictInt(obj[key]);
+    if (v === null) { W(key + ": non-integer value discarded"); return false; }
+    const c = Math.max(lo, Math.min(hi, v));
+    if (c !== v) W(key + ": clamped " + v + " -> " + c);
+    obj[key] = c; return true;
+  };
+  clampInt(cfg, "dwellMs", 0, 60000); clampInt(cfg, "diveMs", 0, 10000);
+  clampInt(cfg, "holdZoomMs", 0, 60000); clampInt(cfg, "loopPauseMs", 0, 60000);
+  clampInt(cfg, "colsWide", 1, 6); clampInt(cfg, "colsNarrow", 1, 6);
+  clampInt(cfg, "narrowBreakpointPx", 200, 2000);
+  clampInt(cfg, "gapPx", 0, 40); clampInt(cfg, "borderPx", 0, 12);
+  const ds = strictNum(cfg.diveScale);
+  if (ds === null || ds < 1 || ds > 12) { W("diveScale: invalid, reset to default"); cfg.diveScale = CONFIG.diveScale; }
+  const pa = strictNum(cfg.panelAspect);
+  if (pa === null || pa < 0.5 || pa > 3) { W("panelAspect: invalid, reset to default"); cfg.panelAspect = CONFIG.panelAspect; }
+  if (typeof cfg.headerText !== "string" || !cfg.headerText.trim()) { W("headerText: empty, reset to default"); cfg.headerText = CONFIG.headerText; }
+  if (cfg.headerText.trim().length > 120) W("headerText: truncated to 120 characters");
+  cfg.headerText = cfg.headerText.trim().slice(0, 120);
+  Object.keys(cfg.palette).forEach(function (k) {
+    if (!isColor(cfg.palette[k])) { W("palette." + k + ": invalid color, reset to default"); cfg.palette[k] = CONFIG.palette[k]; }
+  });
+  if (!Array.isArray(cfg.panels) || cfg.panels.length === 0) { W("panels: empty, reset to default"); cfg.panels = JSON.parse(JSON.stringify(CONFIG.panels)); }
+  if (cfg.panels.length > 24) { W("panels: truncated to 24"); cfg.panels = cfg.panels.slice(0, 24); }
+  cfg.panels.forEach(function (p, i) {
+    if (!p || typeof p.title !== "string" || !p.title.trim()) { W("panels[" + i + "].title: empty, placeholder used"); p.title = cfg.labels.generatedTitlePrefix + (i + 1); }
+    if (p.title.trim().length > 60) W("panels[" + i + "].title: truncated to 60 characters");
+    p.title = p.title.trim().toUpperCase().slice(0, 60);
+    if (!p.n) p.n = String(i + 1).padStart(cfg.labels.numberPadWidth, "0");
+    const has = Object.prototype.hasOwnProperty.call(cfg.artRegistry, p.art);
+    const entry = has ? cfg.artRegistry[p.art] : null;
+    if (!entry || !Array.isArray(entry.primitives)) { W("panels[" + i + "].art: unknown or malformed kind '" + p.art + "', fallback '" + cfg.fallbackArtKind + "'"); p.art = cfg.fallbackArtKind; }
+  });
+  /* registry primitive schema + nested numeric guards */
+  const primKinds = ["rect","circle","line","polygon","path","text","grid","graph","circlesRow"];
+  Object.keys(cfg.artRegistry).forEach(function (k) {
+    const e = cfg.artRegistry[k];
+    if (!e || !Array.isArray(e.primitives)) { W("artRegistry." + k + ": malformed entry removed"); delete cfg.artRegistry[k]; return; }
+    e.primitives = e.primitives.filter(function (pr) {
+      if (!pr || primKinds.indexOf(pr.t) === -1) { W("artRegistry." + k + ": unsupported primitive dropped"); return false; }
+      return true;
+    });
+  });
+  const numGuard = function (obj, key, lo, hi, def) {
+    const v = strictNum(obj[key]);
+    if (v === null || v < lo || v > hi) { W(key + ": out of range, reset to default"); obj[key] = def; }
+  };
+  numGuard(cfg.layout, "stageMaxPx", 200, 4000, CONFIG.layout.stageMaxPx);
+  numGuard(cfg.layout, "ghostOpacity", 0, 1, CONFIG.layout.ghostOpacity);
+  numGuard(cfg.layout, "ghostFontFactor", 0.05, 1, CONFIG.layout.ghostFontFactor);
+  numGuard(cfg.layout, "diveCoverMargin", 1, 2, CONFIG.layout.diveCoverMargin);
+  numGuard(cfg.layout, "tabBorderPx", 0, 12, CONFIG.layout.tabBorderPx);
+  numGuard(cfg.layout, "minPanelPx", 10, 200, CONFIG.layout.minPanelPx);
+  numGuard(cfg.labels, "minPx", 6, 24, CONFIG.labels.minPx);
+  numGuard(cfg.labels, "maxPx", 8, 40, CONFIG.labels.maxPx);
+  numGuard(cfg.labels, "baseFactor", 0.05, 0.4, CONFIG.labels.baseFactor);
+  numGuard(cfg.labels, "glyphEm", 0.3, 0.9, CONFIG.labels.glyphEm);
+  if (cfg.labels.maxPx < cfg.labels.minPx) { W("labels.maxPx: below minPx, reset"); cfg.labels.maxPx = CONFIG.labels.maxPx; }
+  if (typeof cfg.layout.diveEasing !== "string" || !cfg.layout.diveEasing) { W("diveEasing: invalid, reset"); cfg.layout.diveEasing = CONFIG.layout.diveEasing; }
+  if (typeof cfg.fontFamily !== "string" || !cfg.fontFamily.trim()) { W("fontFamily: invalid, reset"); cfg.fontFamily = CONFIG.fontFamily; }
+  if (!Array.isArray(cfg.appearances) || cfg.appearances.length === 0) { W("appearances: empty, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(CONFIG.appearances)); }
+  cfg.appearances = cfg.appearances.filter(function (a, i) {
+    const f = strictInt(a.filled), d = strictInt(a.dive);
+    if (f === null || d === null) { W("appearances[" + i + "]: non-integer filled/dive, entry dropped"); return false; }
+    a.filled = Math.max(0, Math.min(cfg.panels.length, f));
+    if (a.filled !== f) W("appearances[" + i + "].filled: clamped " + f + " -> " + a.filled);
+    a.dive = Math.max(0, Math.min(cfg.panels.length - 1, d));
+    if (a.dive !== d) W("appearances[" + i + "].dive: clamped " + d + " -> " + a.dive);
+    return true;
+  });
+  if (cfg.appearances.length === 0) { W("appearances: all invalid, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(CONFIG.appearances)); }
+  if (cfg.dwellMs + cfg.diveMs + cfg.holdZoomMs + cfg.loopPauseMs <= 0) {
+    W("schedule: zero total duration, timing defaults restored");
+    cfg.dwellMs = CONFIG.dwellMs; cfg.diveMs = CONFIG.diveMs;
+    cfg.holdZoomMs = CONFIG.holdZoomMs; cfg.loopPauseMs = CONFIG.loopPauseMs;
+  }
+  return cfg;
+}
+function resolveConfig(search) {
+  const cfg = JSON.parse(JSON.stringify(CONFIG));
+  const warnings = [];
+  if (search) {
+    const q = new URLSearchParams(search);
+    const numKeys = ["dwellMs","diveMs","holdZoomMs","loopPauseMs","colsWide","colsNarrow","narrowBreakpointPx","gapPx","borderPx"];
+    numKeys.forEach(function (k) {
+      if (q.get(k) !== null) {
+        const v = strictInt(q.get(k));
+        if (v === null) warnings.push(k + ": malformed override '" + q.get(k) + "' ignored");
+        else cfg[k] = v;
+      }
+    });
+    ["diveScale","panelAspect"].forEach(function (k) {
+      if (q.get(k) !== null) {
+        const v = strictNum(q.get(k));
+        if (v === null) warnings.push(k + ": malformed override '" + q.get(k) + "' ignored");
+        else cfg[k] = v;
+      }
+    });
+    if (q.get("panelCount") !== null) {
+      const n = strictInt(q.get("panelCount"));
+      if (n === null || n < 1 || n > 24) warnings.push("panelCount: malformed/out-of-range override ignored");
+      else if (n < cfg.panels.length) cfg.panels = cfg.panels.slice(0, n);
+      else while (cfg.panels.length < n) {
+        const i = cfg.panels.length;
+        cfg.panels.push({ n: String(i + 1).padStart(cfg.labels.numberPadWidth, "0"), title: cfg.labels.generatedTitlePrefix + (i + 1), art: cfg.fallbackArtKind });
+      }
+    }
+    if (q.get("panels") !== null) {
+      if (!q.get("panels")) warnings.push("panels: empty override ignored");
+      else q.get("panels").split("|").forEach(function (t, i) {
+        if (!cfg.panels[i]) { warnings.push("panels: entry " + i + " beyond panel count ignored"); return; }
+        const parts = t.split("@");
+        if (parts.length > 2) warnings.push("panels[" + i + "]: extra '@' components ignored");
+        if (parts[0].trim()) cfg.panels[i].title = parts[0].trim();
+        else if (parts.length > 1) warnings.push("panels[" + i + "]: blank title slot ignored");
+        if (parts[1] && parts[1].trim()) cfg.panels[i].art = parts[1].trim();
+      });
+    }
+    if (q.get("header") !== null) cfg.headerText = q.get("header");
+    if (q.get("filled") !== null) {
+      const f = strictInt(q.get("filled"));
+      if (f === null) warnings.push("filled: malformed override '" + q.get("filled") + "' ignored");
+      else {
+        const fc = Math.max(0, Math.min(cfg.panels.length, f));
+        if (fc !== f) warnings.push("filled: clamped " + f + " -> " + fc);
+        cfg.appearances = [{ filled: fc, dive: Math.min(cfg.panels.length - 1, fc) }];
+      }
+    }
+    if (q.get("appearances")) {
+      const list = [];
+      q.get("appearances").split(",").forEach(function (pair) {
+        const kv = pair.split(":");
+        if (kv.length > 2) warnings.push("appearances: extra fields in '" + pair + "' ignored");
+        const f = strictInt(kv[0]), d = strictInt(kv[1]);
+        if (f === null || d === null) warnings.push("appearances: malformed entry '" + pair + "' dropped");
+        else list.push({ filled: f, dive: d });
+      });
+      if (list.length) cfg.appearances = list;
+    }
+    Object.keys(cfg.palette).forEach(function (k) {
+      if (q.get(k) !== null) {
+        if (isColor(q.get(k))) cfg.palette[k] = q.get(k);
+        else warnings.push("palette." + k + ": malformed color '" + q.get(k) + "' ignored");
+      }
+    });
+    if (q.get("fontFamily") !== null) {
+      if (q.get("fontFamily").trim()) cfg.fontFamily = q.get("fontFamily");
+      else warnings.push("fontFamily: blank override ignored");
+    }
+    /* generic nested overrides: ?cfg:layout.stageMaxPx=800&cfg:labels.minPx=12 */
+    q.forEach(function (val, key) {
+      if (key.indexOf("cfg:") !== 0) return;
+      const path = key.slice(4).split(".");
+      if (path.length !== 2 || ["layout", "labels", "typography"].indexOf(path[0]) === -1) {
+        warnings.push(key + ": unknown configuration path ignored"); return;
+      }
+      const group = cfg[path[0]], field = path[1];
+      if (!Object.prototype.hasOwnProperty.call(group, field)) { warnings.push(key + ": unknown field ignored"); return; }
+      if (typeof group[field] === "number") {
+        const v = strictNum(val);
+        if (v === null) warnings.push(key + ": malformed number '" + val + "' ignored");
+        else group[field] = v;
+      } else if (typeof group[field] === "string") {
+        if (val.trim()) group[field] = val; else warnings.push(key + ": blank value ignored");
+      }
+    });
+  }
+  validateInto(cfg, warnings);
+  cfg._warnings = warnings;
+  return cfg;
+}
+
+/* ================= geometry (pure, source-bound model) ================ */
+function computeLayout(cfg, stageW) {
+  const cols = stageW < cfg.narrowBreakpointPx ? cfg.colsNarrow : cfg.colsWide;
+  const rows = Math.ceil(cfg.panels.length / cols);
+  const headerH = Math.max(cfg.layout.headerMinPx, stageW * cfg.layout.headerHeightFactor);
+  const panelW = (stageW - cfg.gapPx * (cols + 1)) / cols;
+  const panelH = panelW / cfg.panelAspect;
+  const gridH = panelH * rows + cfg.gapPx * (rows + 1);
+  const stageH = headerH + gridH + cfg.layout.stageBottomPadPx;
+  return { stageW: stageW, stageH: stageH, cols: cols, rows: rows, headerH: headerH, panelW: panelW, panelH: panelH, gridH: gridH };
+}
+function panelRect(cfg, lay, idx) {
+  const col = idx % lay.cols, row = Math.floor(idx / lay.cols);
+  return { x: cfg.gapPx + col * (lay.panelW + cfg.gapPx),
+           y: lay.headerH + cfg.gapPx + row * (lay.panelH + cfg.gapPx),
+           w: lay.panelW, h: lay.panelH };
+}
+/* Label policy: single-line first; two-line is the primary readable
+   fallback; number-only engages only when two lines cannot fit at the
+   minimum readable size. Base size derives from the actual panel width. */
+function labelBasePx(cfg, panelInnerW) {
+  return Math.max(cfg.labels.minPx, Math.min(cfg.labels.maxPx, panelInnerW * cfg.labels.baseFactor));
+}
+function estWidth(cfg, text, px) { return text.length * cfg.labels.glyphEm * px + cfg.labels.chromePx; }
+function splitTwoLines(cfg, text) {
+  const sepStr = cfg.labels.separator;
+  const sep = text.indexOf(sepStr);
+  const num = sep >= 0 ? text.slice(0, sep) : text;
+  const title = sep >= 0 ? text.slice(sep + sepStr.length) : "";
+  const words = title.split(" ").filter(Boolean);
+  if (!words.length) return [text];
+  if (words.length === 1) return [num + sepStr.trimEnd(), words[0]];
+  let best = null;
+  for (let i = 1; i < words.length; i++) {
+    const l1 = num + sepStr + words.slice(0, i).join(" ");
+    const l2 = words.slice(i).join(" ");
+    const m = Math.max(l1.length, l2.length);
+    if (!best || m < best.m) best = { m: m, lines: [l1, l2] };
+  }
+  return best.lines;
+}
+function labelPolicy(cfg, text, availPx, basePx) {
+  const minPx = cfg.labels.minPx;
+  let px = basePx;
+  while (px > minPx && estWidth(cfg, text, px) > availPx) px -= cfg.labels.shrinkStepPx;
+  if (estWidth(cfg, text, px) <= availPx) return { mode: "single", px: px, lines: [text], fits: true };
+  const lines = splitTwoLines(cfg, text);
+  const longest = lines.reduce(function (m, l) { return Math.max(m, l.length); }, 0);
+  px = basePx;
+  while (px > minPx && longest * cfg.labels.glyphEm * px + cfg.labels.chromePx > availPx) px -= cfg.labels.shrinkStepPx;
+  if (longest * cfg.labels.glyphEm * px + cfg.labels.chromePx <= availPx)
+    return { mode: "two-line", px: px, lines: lines, fits: true };
+  const num = text.split(" ")[0];
+  return { mode: "number-only", px: minPx, lines: [num], fits: estWidth(cfg, num, minPx) <= availPx };
+}
+function headerFitPx(cfg, text, availPx, basePx) {
+  const minPx = cfg.layout.headerMinFontPx;
+  let px = basePx;
+  const est = function (p) { return text.length * cfg.labels.glyphEm * p + cfg.layout.headerPaddingPx * 2; };
+  while (px > minPx && est(px) > availPx) px -= cfg.labels.shrinkStepPx;
+  return { px: px, fits: est(px) <= availPx };
+}
+/* Dive transform: translate the target panel to the stage centre and
+   scale it until its transformed bounds cover the whole viewport. */
+function diveTransform(cfg, lay, rect) {
+  /* coverage is computed from the panel's INNER art rectangle (inside
+     its border), so the miniature itself — not just its border box —
+     covers the viewport at dive end */
+  const inner = { x: rect.x + cfg.borderPx, y: rect.y + cfg.borderPx,
+                  w: rect.w - cfg.borderPx * 2, h: rect.h - cfg.borderPx * 2 };
+  const need = Math.max(lay.stageW / inner.w, lay.stageH / inner.h);
+  const s = Math.max(cfg.diveScale, need) * cfg.layout.diveCoverMargin;
+  const cx = inner.x + inner.w / 2, cy = inner.y + inner.h / 2;
+  const tx = lay.stageW / 2 - s * cx, ty = lay.stageH / 2 - s * cy;
+  return { scale: s, tx: tx, ty: ty,
+           bounds: { left: s * inner.x + tx, top: s * inner.y + ty,
+                     right: s * (inner.x + inner.w) + tx, bottom: s * (inner.y + inner.h) + ty } };
+}
+function coversViewport(bounds, lay) {
+  return bounds.left <= 0.01 && bounds.top <= 0.01 && bounds.right >= lay.stageW - 0.01 && bounds.bottom >= lay.stageH - 0.01;
+}
+
+/* ================= timeline (deadline-based, derived cycle) =========== */
+function panelState(cfg, appearanceIdx, panelIdx, forceFilledIdx) {
+  const a = cfg.appearances[appearanceIdx % cfg.appearances.length];
+  return { filled: panelIdx < a.filled || panelIdx === forceFilledIdx,
+           isDive: panelIdx === a.dive, filledCount: a.filled };
+}
+function buildTimeline(cfg) {
+  const steps = [];
+  let start = 0;
+  cfg.appearances.forEach(function (a, i) {
+    [["dwell", cfg.dwellMs], ["dive", cfg.diveMs], ["hold", cfg.holdZoomMs], ["pause", cfg.loopPauseMs]].forEach(function (ph) {
+      steps.push({ phase: ph[0], appearance: i, dur: ph[1], startMs: start, dive: a.dive });
+      start += ph[1];
+    });
+  });
+  return { steps: steps, totalMs: start };
+}
+function stateAt(cfg, tMs) {
+  const tl = buildTimeline(cfg);
+  if (tl.totalMs <= 0) return tl.steps[0];
+  let t = ((tMs % tl.totalMs) + tl.totalMs) % tl.totalMs;
+  for (let i = 0; i < tl.steps.length; i++) {
+    const s = tl.steps[i];
+    if (t >= s.startMs && t < s.startMs + s.dur) return s;
+  }
+  return tl.steps[tl.steps.length - 1];
+}
+function phaseAt(cfg, elapsedMs) {
+  const tl = buildTimeline(cfg);
+  const step = stateAt(cfg, elapsedMs);
+  const cyclePos = tl.totalMs > 0 ? ((elapsedMs % tl.totalMs) + tl.totalMs) % tl.totalMs : 0;
+  return { step: step, cyclePos: cyclePos, inPhaseMs: cyclePos - step.startMs,
+           remainingMs: step.startMs + step.dur - cyclePos,
+           cycleIndex: tl.totalMs > 0 ? Math.floor(elapsedMs / tl.totalMs) : 0,
+           key: (tl.totalMs > 0 ? Math.floor(elapsedMs / tl.totalMs) : 0) + ":" + step.appearance + ":" + step.phase };
+}
+function schedulerDelay(stepEndMs, elapsedMs, minStepMs) {
+  return Math.max(minStepMs, stepEndMs - elapsedMs);
+}
+
+/* ================= art renderer (generic, registry-driven) ============ */
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function fillOf(palette, v) {
+  if (typeof v === "string" && v.charAt(0) === "$") {
+    const k = v.slice(1);
+    return Object.prototype.hasOwnProperty.call(palette, k) ? palette[k] : v;
+  }
+  return v;
+}
+function primSVG(p, palette) {
+  const F = function (v) { return fillOf(palette, v); };
+  const SW = function (q) { return q.strokeWidth !== undefined ? q.strokeWidth : 1; };
+  if (p.t === "rect") return '<rect x="' + p.x + '" y="' + p.y + '" width="' + p.w + '" height="' + p.h + '"' +
+    (p.rx ? ' rx="' + p.rx + '"' : "") + ' fill="' + F(p.fill) + '"' +
+    (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") +
+    (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+    (p.transform ? ' transform="' + p.transform + '"' : "") + "/>";
+  if (p.t === "circle") return '<circle cx="' + p.cx + '" cy="' + p.cy + '" r="' + p.r + '" fill="' + F(p.fill) + '"' +
+    (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") + "/>";
+  if (p.t === "line") return '<line x1="' + p.x1 + '" y1="' + p.y1 + '" x2="' + p.x2 + '" y2="' + p.y2 +
+    '" stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"/>';
+  if (p.t === "polygon") return '<polygon points="' + p.points + '" fill="' + F(p.fill) + '"' +
+    (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") + "/>";
+  if (p.t === "path") return '<path d="' + p.d + '" fill="' + F(p.fill || "none") + '"' +
+    (p.stroke ? ' stroke="' + F(p.stroke) + '" stroke-width="' + SW(p) + '"' : "") + "/>";
+  if (p.t === "text") {
+    const inner = p.segments ? p.segments.map(function (sg) {
+      return '<tspan fill="' + F(sg.fill) + '">' + esc(sg.t) + "</tspan>"; }).join("") : esc(p.content || "");
+    return '<text x="' + p.x + '" y="' + p.y + '" font-size="' + p.size + '"' +
+      (p.anchor ? ' text-anchor="' + p.anchor + '"' : "") +
+      ' fill="' + F(p.fill) + '" font-weight="' + (p.weight || "normal") + '">' + inner + "</text>";
+  }
+  if (p.t === "grid") { let s = "";
+    for (let r = 0; r < p.rows; r++) for (let c = 0; c < p.cols; c++)
+      s += '<rect x="' + (p.x + c * (p.cellW + p.gapX)) + '" y="' + (p.y + r * (p.cellH + p.gapY)) +
+           '" width="' + p.cellW + '" height="' + p.cellH + '" fill="' + F(p.fills[(r + c) % p.fills.length]) + '"/>';
+    return s; }
+  if (p.t === "circlesRow") { let s = "";
+    for (let i = 0; i < p.count; i++)
+      s += '<circle cx="' + (p.cx0 + i * p.dx) + '" cy="' + p.cy + '" r="' + p.r + '" fill="' + F(p.fill) + '"/>';
+    return s; }
+  if (p.t === "graph") { let s = "";
+    p.edges.forEach(function (e) {
+      s += '<line x1="' + p.nodes[e[0]][0] + '" y1="' + p.nodes[e[0]][1] + '" x2="' + p.nodes[e[1]][0] +
+           '" y2="' + p.nodes[e[1]][1] + '" stroke="' + F(p.edgeStroke) + '" stroke-width="' + p.edgeWidth + '"/>'; });
+    p.nodes.forEach(function (n) { s += '<circle cx="' + n[0] + '" cy="' + n[1] + '" r="' + p.nodeR + '" fill="' + F(p.nodeFill) + '"/>'; });
+    return s; }
+  return "";
+}
+function panelArtSVG(panel, palette, filled, registry, viewBox) {
+  if (!filled) return "";
+  const has = registry && Object.prototype.hasOwnProperty.call(registry, panel.art);
+  const entry = has ? registry[panel.art] : (registry && registry[CONFIG.fallbackArtKind]);
+  if (!entry || !Array.isArray(entry.primitives)) return "";
+  const vb = viewBox || CONFIG.artViewBox;
+  return '<svg viewBox="0 0 ' + vb.w + " " + vb.h + '" preserveAspectRatio="none" aria-hidden="true">' +
+         entry.primitives.map(function (p) { return primSVG(p, palette); }).join("") + "</svg>";
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, resolveConfig: resolveConfig, validateInto: validateInto,
+                     panelState: panelState, buildTimeline: buildTimeline, stateAt: stateAt,
+                     schedulerDelay: schedulerDelay, phaseAt: phaseAt, labelBasePx: labelBasePx, labelPolicy: labelPolicy,
+                     headerFitPx: headerFitPx, computeLayout: computeLayout, panelRect: panelRect,
+                     diveTransform: diveTransform, coversViewport: coversViewport,
+                     panelArtSVG: panelArtSVG, strictInt: strictInt, isColor: isColor };
+}
+
+/* ================= DOM build + deadline sequence engine =============== */
+if (typeof document !== "undefined") {
+  const cfg = resolveConfig(window.location.search);
+  if (cfg._warnings.length && typeof console !== "undefined") console.warn("T23 config warnings:", cfg._warnings);
+  const stage = document.getElementById("stage");
+  const zoomwrap = document.getElementById("zoomwrap");
+  const headerEl = document.getElementById("header");
+  const gridEl = document.getElementById("grid");
+  const warnEl = document.getElementById("warn");
+  function showWarnings(extra) {
+    const all = cfg._warnings.concat(extra || []);
+    if (!all.length) { warnEl.style.display = "none"; return; }
+    warnEl.style.display = "block";
+    warnEl.style.position = "absolute"; warnEl.style.left = "0"; warnEl.style.right = "0"; warnEl.style.bottom = "0";
+    warnEl.style.zIndex = "9"; warnEl.style.padding = "4px 8px";
+    warnEl.style.background = cfg.palette.accent; warnEl.style.color = cfg.palette.panelBg;
+    warnEl.style.fontSize = cfg.layout.warnFontPx + "px";
+    warnEl.textContent = "Config warnings: " + all.join(" · ");
+  }
+  showWarnings([]);
+  document.body.style.background = cfg.palette.dark;
+  stage.style.background = cfg.palette.dark;
+  stage.style.maxWidth = cfg.layout.stageMaxPx + "px";
+  stage.style.fontFamily = cfg.fontFamily;
+  const tl = buildTimeline(cfg);
+  let appIdx = 0, timer = null, playing = false, generation = 0;
+  let startStamp = 0, stepIdx = 0, pausedElapsed = 0, frozenTransform = null;
+
+  function layout() {
+    const w = stage.clientWidth || cfg.layout.fallbackStagePx;
+    const lay = computeLayout(cfg, w);
+    if (lay.panelW < cfg.layout.minPanelPx) showWarnings(["stage geometry: panel width " + lay.panelW.toFixed(1) + "px below the " + cfg.layout.minPanelPx + "px minimum for the configured columns/gap"]);
+    else showWarnings([]);
+    stage.style.height = lay.stageH + "px";
+    headerEl.style.height = lay.headerH + "px";
+    headerEl.style.lineHeight = lay.headerH + "px";
+    const hb = Math.max(cfg.layout.headerMinFontPx, w * cfg.layout.headerFontFactor);
+    const hf = headerFitPx(cfg, cfg.headerText, w, hb);
+    headerEl.style.fontSize = hf.px + "px";
+    headerEl.style.fontWeight = String(cfg.typography.headerWeight);
+    headerEl.style.letterSpacing = cfg.typography.headerLetterSpacingEm + "em";
+    headerEl.style.background = cfg.palette.paper;
+    headerEl.style.color = cfg.palette.ink;
+    headerEl.style.padding = "0 " + cfg.layout.headerPaddingPx + "px";
+    headerEl.textContent = cfg.headerText;
+    gridEl.style.background = cfg.palette.paper;
+    gridEl.style.gridTemplateColumns = "repeat(" + lay.cols + ", 1fr)";
+    gridEl.style.gap = cfg.gapPx + "px";
+    gridEl.style.padding = cfg.gapPx + "px";
+    return lay;
+  }
+  function render() {
+    const lay = layout();
+    const forceFilledIdx = cfg.appearances[appIdx % cfg.appearances.length].dive;
+    gridEl.innerHTML = "";
+    cfg.panels.forEach(function (p, i) {
+      const st = panelState(cfg, appIdx, i, forceFilledIdx);
+      const d = document.createElement("div");
+      d.className = "panel";
+      d.style.aspectRatio = String(cfg.panelAspect);
+      d.style.border = cfg.borderPx + "px solid " + cfg.palette.ink;
+      d.style.background = st.filled ? cfg.palette.panelBg : cfg.palette.empty;
+      const art = document.createElement("div");
+      art.className = "art";
+      art.innerHTML = panelArtSVG(p, cfg.palette, st.filled, cfg.artRegistry, cfg.artViewBox);
+      d.appendChild(art);
+      if (!st.filled) {
+        const g = document.createElement("div");
+        g.className = "ghost"; g.textContent = p.n;
+        g.style.color = cfg.palette.ink;
+        g.style.opacity = String(cfg.layout.ghostOpacity);
+        g.style.fontWeight = String(cfg.typography.ghostWeight);
+        g.style.fontSize = (lay.panelW * cfg.layout.ghostFontFactor) + "px";
+        d.appendChild(g);
+      }
+      const tab = document.createElement("div");
+      tab.className = "tab";
+      const innerW = lay.panelW - cfg.borderPx * 2;
+      const base = labelBasePx(cfg, innerW);
+      const pol = labelPolicy(cfg, p.n + " · " + p.title, innerW, base);
+      tab.textContent = pol.lines.join("\n");
+      tab.style.whiteSpace = pol.mode === "two-line" ? "pre-line" : "nowrap";
+      tab.style.background = st.filled ? cfg.palette.tab : cfg.palette.tabDim;
+      tab.style.color = cfg.palette.ink;
+      tab.style.borderRight = cfg.layout.tabBorderPx + "px solid " + cfg.palette.ink;
+      tab.style.borderBottom = cfg.layout.tabBorderPx + "px solid " + cfg.palette.ink;
+      tab.style.padding = cfg.layout.tabPaddingYPx + "px " + cfg.layout.tabPaddingRightPx + "px " +
+                          cfg.layout.tabPaddingYPx + "px " + cfg.layout.tabPaddingLeftPx + "px";
+      tab.style.fontSize = pol.px + "px";
+      tab.style.fontWeight = String(cfg.typography.tabWeight);
+      tab.style.letterSpacing = cfg.typography.tabLetterSpacingEm + "em";
+      tab.style.lineHeight = String(cfg.typography.tabLineHeight);
+      tab.style.top = cfg.layout.tabTopPx + "px";
+      tab.style.left = cfg.layout.tabLeftPx + "px";
+      tab.style.zIndex = String(cfg.layout.tabZIndex);
+      tab.dataset.mode = pol.mode; tab.dataset.px = String(pol.px); tab.dataset.base = String(base);
+      d.appendChild(tab);
+      gridEl.appendChild(d);
+    });
+    /* measured refinement: shrink only within the modelled policy; if a
+       rendered tab still overflows at the floor, fall to number-only. */
+    gridEl.querySelectorAll(".tab").forEach(function (tab, i) {
+      let px = parseFloat(tab.style.fontSize);
+      while (px > cfg.labels.minPx && (tab.scrollWidth > tab.clientWidth || tab.scrollHeight > tab.clientHeight + cfg.layout.tabOverflowAllowancePx)) {
+        px -= 0.5; tab.style.fontSize = px + "px";
+      }
+      if (tab.scrollWidth > tab.clientWidth && tab.dataset.mode !== "number-only") {
+        tab.textContent = cfg.panels[i].n;
+        tab.dataset.mode = "number-only";
+        tab.style.fontSize = cfg.labels.minPx + "px";
+      }
+      tab.dataset.px = tab.style.fontSize;
+    });
+    return lay;
+  }
+  function setDive(panelIdx, durationMs) {
+    const lay = computeLayout(cfg, stage.clientWidth || cfg.layout.fallbackStagePx);
+    const rect = panelRect(cfg, lay, panelIdx);
+    const tr = diveTransform(cfg, lay, rect);
+    zoomwrap.style.transition = durationMs > 0 ? ("transform " + durationMs + "ms " + cfg.layout.diveEasing) : "none";
+    zoomwrap.style.transform = "translate(" + tr.tx + "px," + tr.ty + "px) scale(" + tr.scale + ")";
+    return tr;
+  }
+  function applyStep(s, inPhaseMs) {
+    if (s.phase === "dwell") {
+      appIdx = s.appearance; frozenTransform = null;
+      zoomwrap.style.transition = "none"; zoomwrap.style.transform = "none"; zoomwrap.style.opacity = "1";
+      render();
+    } else if (s.phase === "dive") {
+      appIdx = s.appearance;
+      zoomwrap.style.opacity = "1";
+      render();
+      /* entering a dive always starts from the page at identity — a
+         dive entered directly (without its dwell) never animates from
+         a previous appearance's enlarged transform */
+      zoomwrap.style.transition = "none"; zoomwrap.style.transform = "none";
+      void zoomwrap.offsetWidth;
+      /* animate over the time REMAINING in this phase, recomputed after
+         the render, so a late start still arrives at the phase deadline */
+      const ph2 = phaseAt(cfg, performance.now() - startStamp);
+      const remain = (ph2.step.phase === "dive" && ph2.step.appearance === s.appearance)
+        ? ph2.remainingMs : Math.max(0, s.dur - (inPhaseMs || 0));
+      setDive(s.dive, remain);
+    } else if (s.phase === "hold") {
+      appIdx = s.appearance;
+      zoomwrap.style.opacity = "1";
+      render();
+      setDive(s.dive, 0);
+    } else if (s.phase === "pause") {
+      zoomwrap.style.transition = "none"; zoomwrap.style.transform = "none"; zoomwrap.style.opacity = "0";
+    }
+  }
+  let lastKey = null;
+  function tick(gen) {
+    if (!playing || gen !== generation) return;
+    const elapsed = performance.now() - startStamp;
+    const ph = phaseAt(cfg, elapsed);
+    if (ph.key !== lastKey) {
+      lastKey = ph.key;
+      if (frozenTransform !== null && (ph.step.phase === "dive")) {
+        /* resume continuity: start from the frozen transform, then
+           animate to the target over the remaining phase time */
+        zoomwrap.style.transition = "none";
+        zoomwrap.style.transform = frozenTransform;
+        void zoomwrap.offsetWidth;
+      }
+      frozenTransform = null;
+      applyStep(ph.step, ph.inPhaseMs);
+    }
+    timer = setTimeout(function () { tick(gen); },
+      schedulerDelay(ph.remainingMs, 0, cfg.layout.minStepMs));
+  }
+  function play() {
+    if (playing) return; playing = true; generation++;
+    if (pausedElapsed > 0 || frozenTransform !== null) {
+      /* resume: shift the deadline origin by the paused duration and
+         re-derive the current phase from elapsed time */
+      startStamp = performance.now() - pausedElapsed;
+      lastKey = null;
+    } else {
+      startStamp = performance.now(); lastKey = null;
+    }
+    tick(generation);
+  }
+  function pause() {
+    if (!playing) return; playing = false; generation++;
+    if (timer) clearTimeout(timer);
+    pausedElapsed = performance.now() - startStamp;
+    const cs = window.getComputedStyle(zoomwrap).transform;
+    frozenTransform = (cs && cs !== "none") ? cs : null;
+    zoomwrap.style.transition = "none";
+    if (frozenTransform) zoomwrap.style.transform = frozenTransform;
+  }
+  function restart() { pause(); frozenTransform = null; pausedElapsed = 0; appIdx = 0; lastKey = null; render(); play(); }
+  window.addEventListener("resize", function () { render(); });
+  window.addEventListener("message", function (e) {
+    if (!e.data || !e.data.cmd) return;
+    if (e.data.cmd === "play") play();
+    if (e.data.cmd === "pause") pause();
+    if (e.data.cmd === "restart") restart();
+  });
+  render(-1);
+  play();
+}
+</script>
+</body>
+</html>
+
+===== build-record-attempt2.md =====
+# T23 — Comic Chapter-Map Motif · BUILD RECORD (attempt 2)
+
+Technique: T23 (packet P1, "Look What I Can Do" @aditazzz.music) · Practice Cycle 004, Wave 3 · Attempt 2 · 2026-11-14
+Artifact dir: `hidden_files/study/recreations/T23-comic-chapter-map/`
+Consumer: series design · openings — a recurring chapter-map / progress-tracker surface for serialized shorts: between acts, the map flashes, shows how far the series has come, and dives into the next chapter.
+Evidence basis: the recreation + source stills viewed firsthand from the archived source (the packet frames filed for this technique do not depict the map and are not cited as evidence).
+
+## Final source binding
+- Final `recreation.html` sha256: `0112efc3b9fe6b63775a23cfbff9c34feb92a16d97847d018ebf9abaefb1f767`
+- Source revisions during this build: draft `70a180b8453172d1c7b20fc9d057d50b771d5780cc7784bc450aa0316d609ec9` (diagnostics) → interim freezes `b7d8c431fc417e03c1e74f7d82dc164fee62699fad04462d7e6c96d5b86d2b72`, `ef56e12c31750dd4a55edb769a044f7e347764323ed66baf6bf972df0485bb70`, and `76707885a135f8fe6bddd4761779acd1335d09beba0c0b58f67961b8d6fbea24` (interim scoring returns fired against them are preserved in the attempt directory as run-tagged returns with their payload sets; the source was revised after those returns and the complete wave re-fires against the final sha above; no return from a different sha is combined with the final wave) → final sha above (integrated regression re-run, 50/50).
+- Preservation (verified before any mutation, against the run baseline): `recreation-attempt-1.html` sha256 `3af98e8eed385a8d3c172917436e74590890941332e38413f5da70badb9ca1ad` (hash-match with the baseline) · `comparison-preserved-attempt-1.html` sha256 `9a4b0bd1e77537f45d0b84b5c420cc420d69b0b63b0526fe7bfc7a4ded8ad3d2` (hash-match with the baseline).
+
+## Construction
+
+One self-contained HTML file. A DOM grid page (cream comic page, header strip, numbered yellow-tabbed panels with code-drawn SVG miniatures) plays a looping sequence of appearances: each appearance fills more panels, holds, then the camera dives into the next chapter's panel, which takes over the frame. All variables live in one CONFIG object at the top of the script; URL parameters override them after strict validation. No specimen media, no traced assets, no captions/subtitles (header + tab titles are the technique's subject text).
+
+### Named behaviors and constants
+- **Label sizing (N1).** The tab label base size derives from the actual panel inner width: `base = clamp(panelInnerW × 0.14, 11, 18)` px. Tabs are `box-sizing: border-box` with `max-width: 100%`, so padding and border live inside the measured box. Overflow policy, in order: (1) single line, shrunk from the base toward the floor; (2) **two-line mode (primary readable policy)** — the number prefix stays on line 1 and the title balances across two lines, shrunk from the base toward the floor; (3) **number-only mode (fallback)** — engages only when two lines cannot fit at the floor. Named floor: **minimum readable label size 11 px**. Named fallback threshold: number-only engages when the tab-available width is below the width the balanced two-line form needs at 11 px (for the longest default title, whose balanced longest line is 12 glyphs: 12 × 0.52 × 11 + 14 ≈ **83 px** of tab width). A rendered-DOM refinement pass re-checks each tab's real scroll size and drops to number-only if a tab still overflows at the floor. Each tab records its mode, size, and base in `data-` attributes.
+- **Header fitting (N5).** The header strip fits its text by shrinking from its width-derived base toward a named 10 px floor using the same glyph model.
+- **Configuration, art registry, validation (N2).** Every layout constant lives in CONFIG: stage cap 960 px, header height factor 0.034 / minimum 18 px, header font factor 0.021, tab border 3 px, tab padding 1/5/6 px, tab placement (top/left/z-index), panel background, ghost glyph factor 0.30 and opacity 0.16, dive easing `cubic-bezier(.55,0,.85,.4)`, dive cover margin 1.03, fallback stage width 360 px, minimum panel width 48 px, typography (weights, letter-spacing, line height 1.25), the label model (base factor 0.14, max 18 px, floor 11 px, 0.52 em/glyph, 14 px chrome, separator, shrink step, number padding, generated-title prefix), and the art viewBox 160×100 with a named fallback art kind. Miniature art is a CONFIG **art registry**: each kind is data — a list of drawing primitives (rect / circle / line / polygon / path / text / grid / graph / circlesRow) with palette references (`$<palette-key>` for any palette key); a generic renderer serializes them, and all inscriptions are registry data fields. **All URL overrides are strictly parsed and normalized**: integers must match `^-?\d+$` and are range-clamped **with a named warning for every clamp, truncation, or discarded component**, numbers likewise, colors must be hex, a blank header falls back; nested groups are overridable via `?cfg:layout.<field>=…`, `?cfg:labels.<field>=…`, `?cfg:typography.<field>=…` plus `?fontFamily=…`, and nested values are range-validated with defaults restored on violation. Registry lookups use **own-property** checks and entry-schema validation (an entry must carry a primitives array; unsupported primitive types are dropped with a warning), so inherited object keys can never be mistaken for art kinds. Panel-count changes are guarded (1–24; appearances are re-validated against the panel list; dive targets clamp into range with warnings). All warnings are **visible on the surface**: a warning strip renders at the stage bottom listing `cfg._warnings`, and a geometry warning appears when the computed panel width falls below the configured minimum for the chosen columns/gap.
+- **Dive behavior (N3).** The dive translates the target panel to the stage centre and scales it by `max(configured scale, stageW/innerW, stageH/innerH) × 1.03` computed from the panel's **inner art rectangle** (inside its border), so the miniature itself — not only its border box — covers the entire viewport at dive end (every viewport edge inside the inner rectangle's transformed bounds; the header and all neighboring panels are occluded). Panels are `box-sizing: border-box`, so the rendered panel box (border included) is exactly the geometry model's panel rectangle — the camera model and the rendered layout cannot drift apart. The dive target panel is rendered **filled** (its miniature shown) throughout its appearance — during the hold and at dive start, for every appearance; non-target panels keep their filled/ghost state. Visible filled totals per appearance are therefore **5 → 9 → 12** (configured counts 4 → 8 → 12 plus the target panel, which is the chapter about to play). Every phase entry establishes its own appearance and visibility independently (dwell, dive, and hold each render the due appearance and restore full opacity), so entering any phase directly — after a stall — shows the correct, visible state.
+- **Schedule (N4).** Steps carry absolute start offsets; the cycle length is **derived** as the sum of the resolved schedule (default 5,850 ms). The engine derives the current phase from elapsed time on every tick (`phaseAt`: step, position inside the phase, remaining time, cycle index), so a stalled or backgrounded tab resumes at the phase actually due — expired phases are never replayed and cycle boundaries are crossed by the same derivation. A dive that starts late animates over the time **remaining** in its phase — recomputed after its render, immediately before the transition starts — arriving at the phase deadline; a dive entered directly (without its preceding dwell) first snaps the page to identity, so it never animates from a previous appearance's enlarged transform. Zero-duration steps are never selected by the phase derivation (they occupy no time interval), and a schedule whose four durations total zero is rejected at validation: the timing defaults are restored with a named warning. Pause freezes the active zoom transform where it stands and records the elapsed time; resume shifts the deadline origin by the paused duration, restores the frozen transform, and animates from it to the target over the remaining phase time.
+- **Phase durations (defaults, with the tracker-reading reason).** dwell 900 ms · dive 650 ms · zoom hold 150 ms · dark pause 250 ms. Reason: with labels glance-readable in two-line mode at the 11 px floor and filled/ghost contrast carrying progress at a glance, the grid hold is priced as a flash-with-readability beat (the specimen's appearances are sub-second flashes) rather than a reading pause; the zoom hold is a brief settle only, because the dive target is already filled when the camera arrives; the dark pause is a short punctuation beat between appearances.
+
+## Diagnostic ledger (per behavior: diagnostics first, then integrated regression)
+
+Diagnostics ran on draft source revision `70a180b8453172d1c7b20fc9d057d50b771d5780cc7784bc450aa0316d609ec9` (node harness, source-bound geometry model); the identical suite then re-ran as an integrated regression on each subsequent revision, plus two further suites (6 + 11 assertions) for the elapsed-time engine and the validation/registry behaviors. Suite totals on the final source: 50 assertions, 50 pass, 0 fail. Evidence pointer: suite output transcribed in the ledger below; harness = node extraction of the inline script (`node --check` PASS).
+
+| Behavior | Changed variables | Fixed controls | Expected effect | Measured result |
+|---|---|---|---|---|
+| N1 label sizing | label base source (panel inner width), tab box model, overflow policy modes, floor 11 px | stage 360 px and 960 px, longest title "07 · THE DAILY STANDUP", all 12 default titles, swapped titles | longest title fits at 360 px in two-line mode at ≥11 px; all titles fit and stay inside panel height; number-only only below the named threshold | 360 px geometry: panel 106.67 px, inner 98.67 px, base 13.81 px; longest title → two-line at 12.31 px, fits; modes across 12 titles: 8 two-line, 4 single, 0 number-only; at 60 px available width → number-only; at 960 px → single line at 17.5 px |
+| N2 config / registry / validation | CONFIG layout + typography + label groups, art registry data, strict parsers, warning channel, panel-count guard | override cases: `filled=-3`, `filled=7junk`, `dwellMs=7junk`, `tab=red`, `tab=#ff9f1c`, blank header, `panelCount=9`, `panelCount=16`, unknown art kind, `appearances=4:99` | malformed values fall back with named warnings; valid values land exactly; dive targets never leave the panel range; 9- and 16-panel layouts stay coherent | all 10 cases behave as expected (e.g. `filled=-3` → filled 0, dive 0; `7junk` → default kept + warning; dive 99 → clamped 11 + warning; 16 panels → 6 rows at 3 columns); default config produces zero warnings; registry renders the slam miniature with its inscription from data |
+| N3 dive behavior | dive transform (centred translate + cover scale), filled-at-dive-start rendering | all 12 panel positions at 360 px and 960 px stage geometry; appearance 1 target (index 4, beyond its filled count) | transformed target covers the whole viewport for every panel; target filled at dive start; non-targets unchanged | coverage holds for all 24 panel/stage combinations (360 px dive scale for panel 4: 5.23); target state filled=true at dive start, neighboring ghost panel stays unfilled; viewport coverage implies header occlusion at dive end |
+| N4 schedule | deadline origin scheduling, derived cycle, exact step durations, pause/resume origin shift | boundary times 0 / 900 / 1550 / 1700 / 1950 / 5849 / 5850 ms; late-callback model (+37 ms); `diveMs=0` case | phases land on the derived schedule regardless of callback lateness; cycle = 5,850 ms; a 0 ms step consumes 0 ms | `stateAt` matches the schedule at every boundary; scheduler delay to the 1550 ms deadline from 937 ms elapsed = 613 ms (deadline-true); `diveMs=0` step duration = 0 |
+| N4b elapsed-time engine | phase derivation on every tick (`phaseAt`), remaining-duration dive animation, frozen-transform resume, zero-duration selection, zero-total validation guard | elapsed 6,000 ms (stalled tab model); elapsed 937 ms (late dive start); cycle boundary 6,750 ms; all-zero durations override; `diveMs=0` phase selection; target filled state during its appearance | the phase due at any elapsed time is selected directly (no replay of expired phases); a late dive retains exactly its remaining time; a zero-total schedule is rejected with defaults restored; zero-duration phases are skipped by selection | at 6,000 ms: cycle 1, dwell, appearance 0, 750 ms remaining; at 937 ms: dive, 37 ms in, 613 ms remaining; at 6,750 ms: cycle 1 dive; all-zero override → defaults restored + "zero total duration" warning; `diveMs=0` → `stateAt(900)` = hold; target panel filled throughout its appearance |
+| N2b validation / registry hardening | own-property registry lookup, entry + primitive schema validation, clamp/truncation warnings, generic `cfg:` nested overrides with range guards, generic palette tokens, zero stroke width | override cases: art kinds `constructor` / `toString`, `filled=-3`, `filled=99`, `cfg:labels.minPx=13`, `cfg:labels.minPx=99`, `appearances=4:2:99`, 70-char title, registry entry with an unsupported primitive, `$tab` token fill, strokeWidth 0 | inherited keys fall back with warnings; every clamp/truncation warns; nested overrides land when in range and reset with warnings when out of range; unsupported primitives drop with warnings; any palette key resolves as a token; a configured zero stroke width survives | all 11 cases behave as expected (e.g. `constructor` → fallback kind + warning, no crash; `filled=-3` → 0 + "clamped -3 -> 0" warning; `minPx=99` → default restored + warning; unsupported primitive dropped + warning; `$tab` → `#ffd21f`; stroke-width "0" rendered) |
+| N5 header fitting | header shrink-to-fit toward the 10 px floor | default header text at 360 px | header text fits its strip at phone width | fits at 10 px (the floor) at 360 px |
+| Swap (integrated) | titles ×12, filled 7, dwell 900, tab `#ff9f1c` via `resolveConfig` | — | values land by position; dive = panel index 7; single-appearance cycle derives to 1,950 ms; swapped labels fit at 360 px | all asserted values land; derived total 1,950 ms; all swapped labels fit |
+
+## Own checks summary
+- Node suites (above): **50 pass / 0 fail** (33 + 6 + 11), run per-behavior before integration and again on the final source.
+- Syntax: extracted inline script passes `node --check`.
+- Purity grep on the final source (specimen segment/source filenames, video/img tags, image extensions, packet frame names): **0 hits**. The file loads nothing external; all art is generated from the registry data.
+- Pixel evidence: **PIXEL-UNVERIFIED** — no Chrome/Chromium/Firefox binary exists in this environment (`which chromium chromium-browser google-chrome chrome` returns nothing; no browser binary under /usr/bin), so no headless render could be attempted. All geometry claims above are source-bound modelled assertions, printed as such.
+- Additional behaviors filed from the pre-build source review (implemented within N4/N5 above): pause/resume continuity for an in-flight zoom, and header-strip fitting.
+- `comparison.html`: recreation-side timing note updated to the current defaults (900 / 650 / 150 / 250 ms, ≈5.9 s cycle); the ORIGINAL side (label, segment reference) is unchanged, verified against its pre-change snapshot.

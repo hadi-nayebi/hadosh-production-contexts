@@ -1,0 +1,16 @@
+**READABILITY verdict: do not lift as-is yet.** The phone layout is plausible, but title retention and brief-glance readability remain unproved.
+
+- **360 px layout — useful improvement.** Three columns produce panels approximately 106.7 × 68.8 px, with 98.7 px inner width. The explicit clamps prevent tab fonts dropping below 11 px. This fixes numerical undersizing; it does not guarantee readable titles.
+
+- **“07 · THE DAILY STANDUP” — fit is estimated, not established.** The model selects two lines, `07 · THE` / `DAILY STANDUP`, at approximately 12.3 px. Its fixed 0.52-em glyph estimate omits actual bold-font widths and letter spacing. DOM refinement helps, but `white-space:pre-line` permits additional automatic wrapping. A nominal two-line tab can become three lines without triggering the horizontal-overflow fallback; auto-height and the 34 px vertical allowance do not enforce two lines. **Cost:** the longest title may obscure much of its miniature or lose its title through number-only fallback. Full-title readability at 360 px is unverified.
+
+- **Header — fitting and reading are different thresholds.** The default header remains at 10 px by the model, giving a long masthead little reading time during 900 ms. Actual font metrics remain unchecked. For longer overrides, wrap-mode stage growth does **not** grow the header’s fixed height: `overflow:hidden` can still hide subsequent lines while the grid retains its original position. **Cost:** the header’s claimed general fitting guarantee is incomplete.
+
+- **Contrast and progress hierarchy — promising by construction.** Ink on yellow has approximately **12.7:1** contrast; ink on dim tabs approximately **8.5:1**. Ghost numbers at 16% opacity should remain subordinate. Colored artwork plus yellow tabs versus blank beige panels plus dim tabs provides redundant progress cues. However, forcing the dive target filled means the first two views visibly contain **five and nine** illustrated panels, despite configured filled counts of four and eight. **Cost:** viewers may read the upcoming chapter as already completed.
+
+- **Miniatures and 900 ms dwell — recognition, not detailed reading.** Simple silhouettes and color blocks should survive reduction; miniature inscriptions and fine graph details will not reliably read. Two-line tabs consume roughly half the available art height. **Cost:** chapter identification depends heavily on retained labels, precisely the unverified part of the policy.
+
+**Evidence limit:** both build records explicitly retain PIXEL-UNVERIFIED status. No rendered phone frame or timed viewing evidence establishes clipping, actual line count, header visibility, ghost competition, or glance recognition. Before reuse, verify all three appearances at 360 px using the actual fallback font, especially panel 07; enforce two lines by measured layout rather than the current overflow heuristic.
+
+SCORE: 65
+BODY-WRITE: This verdict records readability as conditional: the 11 px floor holds, but full-title retention, header wrap containment, and 900 ms progress recognition require rendered verification; the next attempt must enforce a measured two-line limit and distinguish the upcoming panel from completed panels.

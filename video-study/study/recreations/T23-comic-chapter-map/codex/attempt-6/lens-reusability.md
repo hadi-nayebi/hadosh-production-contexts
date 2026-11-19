@@ -1,0 +1,25 @@
+Verdict: **Not ready to lift as-is.** The machinery is substantially parameterized, but unsafe override ordering, incomplete renderer defaults, and fixed presentation policies break the stated reuse contract.
+
+1. **High — URL values are consumed before validation.** In `recreation.html`, `resolveConfig()` generates panels using overridden `labels.numberPadWidth` before `validateInto()` checks its range. Executed probe: `?cfg:labels.numberPadWidth=1000000000&panelCount=13` throws `RangeError: Invalid string length`. Startup aborts before the visible warning surface exists. Likewise, overridden `limits.maxPanels` controls allocation before its validation. **Cost:** a malformed production URL can stop playback instead of falling back. **Cure:** validate all generation dependencies and allocation limits before generating panels.
+
+2. **High — Accepted registry data can silently render invisible artwork.** In `validPrim()` and `primSVG()`:
+   - A path without `fill` validates without warnings but emits `fill="none"`, bypassing `artDefaults.fill`.
+   - A line without `stroke` validates without warnings but emits `stroke="undefined"`.
+   - A graph without `edgeStroke` likewise emits `stroke="undefined"` on its edges.
+
+   These were reproduced through the URL registry route. **Cost:** new art kinds require knowledge of undocumented renderer exceptions; accepted data does not guarantee usable artwork. The path behavior also contradicts the build record’s “missing fill on any primitive kind” claim. **Cure:** provide configured paint defaults consistently, or reject missing required paint with named warnings.
+
+3. **Medium — URL configuration is incomplete.** `resolveConfig()`’s nested-group allowlist excludes `artDefaults`; `?cfg:artDefaults.fill=%23ff0000` produces “unknown configuration path ignored.” The registry route accepts only one kind per URL; repeated `registry` keys retain the first. **Cost:** changing the default art paint requires editing CONFIG, while supplying multiple new chapter illustrations requires replacing source data or separate loading machinery. **Cure:** expose art defaults and a validated registry-map route.
+
+4. **Medium — Typography and label policies remain fixed outside CONFIG.** `validateInto()` forces `.toUpperCase()`; the `panels` URL route trims titles. Executed input `" Mixed Case "` becomes `"MIXED CASE"` without warning, contradicting the build record’s verbatim free-text claim. `splitTwoLines()`, `labelPolicy()`, and DOM `violates()` hardcode a two-line ceiling and number-only fallback. **Cost:** preserving title case, significant whitespace, or choosing a different wrapping policy requires code changes. **Cure:** configure casing, whitespace treatment, maximum lines, and fallback policy.
+
+5. **Medium — Layout changes are not fully carried into camera geometry.** DOM `layout()` can grow the measured header, and `render()` can change tab sizing and fallback mode. `diveEndpoint()` instead rebuilds the estimated layout through `computeLayout()` and `artRectFor()`. **Cost:** custom fonts, titles, and padding can move the rendered art rectangle without moving the camera’s assumed rectangle correspondingly. **Cure:** derive the endpoint from the final measured art region, or share the resolved geometry between rendering and camera calculation.
+
+6. **Low — A timing control has no scheduling effect.** `schedulerDelay()` computes `min(max(minStepMs, remaining), max(0, remaining))`; for nonnegative remaining time this always equals `remaining`. Executed calls with remaining 300 ms and floors 0 or 100 both return 300. **Cost:** `layout.minStepMs` appears reusable but cannot alter callback timing. **Cure:** remove the control or define and implement an effective scheduling policy.
+
+Positive evidence: executed `panelCount=9` and `panelCount=16` probes resolve successfully. Nine panels trigger explicit appearance clamps; sixteen panels generate additional entries. `computeLayout()` derives rows from panel count, and `buildTimeline()` iterates the appearance array: neither requires twelve panels or three appearances. New named artwork composed of supported primitives is data-driven; adding a new primitive type remains a documented code boundary. Structural CSS positioning and standard easing coordinates are not, by themselves, specimen-content leaks.
+
+Limits: Read the source and build record from disk; computed source SHA-256 matches the supplied hash. Findings use source inspection and Node execution, without browser rendering. Rendered warning visibility and the magnitude of DOM/camera divergence remain unverified. No files changed.
+
+SCORE: 68
+BODY-WRITE: none (read-only run); this verdict supplies the build record with reproduced override and renderer failures, configuration gaps, and next-attempt corrections.

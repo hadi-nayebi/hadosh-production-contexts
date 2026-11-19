@@ -1,0 +1,20 @@
+**64/100 — reusable foundation; lifting it as-is still requires configuration and registry repairs.** Header, panels, progress, timing, geometry, typography and art definitions largely live in CONFIG. Panel count and appearance count derive from arrays: 9 or 16 panels need no renderer surgery, and new art kinds can compose existing primitives through registry data.
+
+Priced findings:
+
+- **−12: Registry input can escape SVG attributes.** `validPrim()` accepts arbitrary nonempty `path.d` and `polygon.points`; `text.anchor` and `rect.rx` lack validation. `primSVG()` inserts these into quoted attributes without escaping. A URL-supplied value can introduce additional attributes or markup. Cost: the registry override is unsafe for production-facing inputs. Validate every consumed field and escape attribute values independently.
+
+- **−7: Validated primitive options silently disappear.** Common validation accepts `opacity`, `transform` and `stroke` across primitive kinds, but rendering is inconsistent: circles discard opacity/transform; polygons discard stroke/transform; paths discard opacity/transform; text discards these options too. Undefined palette tokens such as `$missing` also pass validation and reach SVG unresolved. Cost: an apparently valid new art kind renders differently from its data without warning. Share attribute rendering or reject unsupported fields, and verify palette-token membership.
+
+- **−5: URL overrides have silent inconsistency.** Duplicate `cfg:` keys bypass duplicate detection and use the last value, whereas ordinary keys warn and use the first. Whitespace around string enums such as `cfg:progress.forceFillTarget= fill ` causes a reset rather than normalization. The registry’s raw semicolon split also rejects otherwise valid JSON containing a semicolon inside text. Cost: configuration transport requires undocumented conventions. Normalize consistently, report every duplicate, and transport registry data as one JSON structure.
+
+- **−5: The “every variable in CONFIG” claim remains overstated.** Panel limit 24, column limit 6, text-length caps 120/60/8, two-line fallback policy, forced title uppercasing, geometry border decrement 1 and iteration cap 300 remain embedded in logic. Structural CSS literals are generally scaffolding; these values constrain production choices. Cost: exceeding these policies requires code edits. Expose the policies or explicitly narrow the advertised configuration contract. A genuinely new primitive still requires schema and renderer edits; that boundary is documented correctly.
+
+- **−4: Individually valid geometry can remain infeasible.** For example, `minStagePx=120`, `minInnerWPx=200` and `minInnerHPx=200` pass their respective guards. The relational loop eventually reaches one column with zero border/gap, then exits despite unmet constraints. No final feasibility rejection exists. Cost: accepted configurations violate their declared layout contract. Validate the combined constraints and restore a coherent configuration with a warning.
+
+- **−3: Accepted easing strings can execute another easing silently.** Validation accepts whitespace before the closing parenthesis in `cubic-bezier(...)`; `easingFraction()` uses a stricter regex there and falls through to `"ease"`. Cost: a valid URL override changes motion without a warning. Parse once into a normalized representation consumed by the camera.
+
+This is a static source verdict; I could not run probes or write a local verdict file because the execution tool failed to start. The findings above do not rely on the build record’s assertion totals.
+
+SCORE: 64
+BODY-WRITE: Verdict supplied for filing: require registry attribute safety, faithful primitive rendering, consistent override parsing, explicit policy configuration, relational geometry rejection and shared easing parsing before approving as-is production reuse.

@@ -1,0 +1,11 @@
+The core motion is faithful, but the engine needs correction before reuse as-is. This is a source-based verdict; playback and pixels remain unverified.
+
+- **Pause/resume visibly restarts the dive.** `tick()` restores `frozenTransform`, then `applyStep("dive")` immediately replaces it with identity and forces layout. Resuming mid-zoom therefore snaps back to the full grid and repeats the dive over the remaining time. Remove that identity reset on the resume path; preserve it for a fresh dive entry. The build record’s continuity claim is false for this source.
+- **The dark interval adds unsupported punctuation.** Each appearance ends with a 150 ms enlarged hold, then a hard cut to 250 ms of darkness. The technique supports a hard cut out, but supplies no evidence for that repeated blackout. For production, cut directly into the chapter scene; treat the blackout as preview scaffolding.
+- **Late entry preserves deadlines, not camera position.** `phaseAt()` correctly skips expired phases, but a dive entered late starts at identity and compresses the entire zoom into the remaining time. A stall near the deadline can produce an abrupt rush. Derive the current transform from elapsed dive progress if motion continuity must survive stalls.
+- **Resizing can invalidate the landing.** The resize handler rebuilds layout without recomputing the active dive transform. During dive or hold, the camera can lose its target alignment or coverage.
+
+The normal sequence otherwise matches: instantaneous page reveal with no entrance animation, static 900 ms dwell, accelerating 650 ms zoom toward the configured panel, enlarged hold, and hard disappearance. `diveTransform()` centres the target and mathematically covers the **stage** with its inner art rectangle. Forced target filling keeps the miniature present throughout arrival. Visible progress rises **5 → 9 → 12** across appearances, correctly expressing accumulation; the reset to five belongs to the preview loop.
+
+SCORE: 82
+BODY-WRITE: This verdict records faithful normal-path motion and rising progress, rejects the claimed pause/resume continuity, and requires resume-path correction plus explicit production handoff behavior before reuse as-is.
