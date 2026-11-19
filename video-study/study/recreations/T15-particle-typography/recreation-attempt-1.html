@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T15 — Particle Typography (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+  canvas{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script>
+"use strict";
+/* ================================================================
+   T15 — PARTICLE TYPOGRAPHY (form · hold · dissolve)
+   Recreation of the technique catalogued in Video Study packet #1
+   ("Look What I Can Do", @aditazzz.music, 1:25–1:40).
+   PARAMETERIZED, NOT TRACED: every content / timing / palette value
+   is read from CONFIG below. Swap the words and the technique still
+   works — that is the swap test. URL overrides for testing:
+   ?phrases=HELLO|WORLD&formMs=900&holdMs=2000&colorA=%23ffd75e
+   ================================================================ */
+const CONFIG = {
+  phrases: ["WHAT", "LOOK WHAT I CAN DO!"], // the words, in order; looped
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontWeight: 900,
+  maxFontPx: 150,          // shrunk to fit maxWidthRatio of the canvas
+  maxWidthRatio: 0.92,
+  sampleGap: 4,            // px between sampled target points (lower = denser)
+  particleRadius: 1.6,     // px
+  colorA: "#f4f7fb",       // particle color range: A (bright) …
+  colorB: "#9fb0c3",       // … to B (dim silver-blue)
+  background: "#000000",
+  formMs: 1500,            // streams condense into letterforms
+  holdMs: 1500,            // held, readable (the packet's device: long enough to read)
+  dissolveMs: 1300,        // letterforms dissolve back to streams
+  gapMs: 250,              // near-dark beat between phrases
+  windX: 26,               // px/s drift while unformed (streams flow)
+  windY: -9,               // px/s upward drift (dust rises)
+  jitter: 0.35,            // px of life while held
+  seed: 1337               // fixed seed: same config = same choreography
+};
+/* URL overrides (used by the swap test) */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("phrases")) CONFIG.phrases = q.get("phrases").split("|");
+  for (const k of ["formMs","holdMs","dissolveMs","gapMs","sampleGap","maxFontPx"])
+    if (q.has(k)) CONFIG[k] = parseFloat(q.get(k));
+  for (const k of ["colorA","colorB","background"])
+    if (q.has(k)) CONFIG[k] = q.get(k);
+})();
+window.RECREATION_CONFIG = CONFIG;
+
+/* deterministic RNG (mulberry32) so choreography is reproducible */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+const rand = mulberry32(CONFIG.seed);
+
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+let W = 0, H = 0;
+function fit(){ W = canvas.width = canvas.clientWidth || 960; H = canvas.height = canvas.clientHeight || 540; }
+fit(); addEventListener("resize", ()=>{ fit(); buildPhrase(current); });
+
+/* --- sample a phrase's letterforms into target points --- */
+const probe = document.createElement("canvas");
+const pctx = probe.getContext("2d", { willReadFrequently: true });
+function samplePhrase(text){
+  probe.width = W; probe.height = H;
+  pctx.clearRect(0,0,W,H);
+  let px = CONFIG.maxFontPx;
+  pctx.textAlign = "center"; pctx.textBaseline = "middle";
+  do { pctx.font = CONFIG.fontWeight + " " + px + "px " + CONFIG.fontFamily; px -= 4; }
+  while (pctx.measureText(text).width > W * CONFIG.maxWidthRatio && px > 12);
+  pctx.fillStyle = "#fff";
+  pctx.fillText(text, W/2, H/2);
+  const img = pctx.getImageData(0,0,W,H).data;
+  const pts = [];
+  for (let y = 0; y < H; y += CONFIG.sampleGap)
+    for (let x = 0; x < W; x += CONFIG.sampleGap)
+      if (img[(y*W + x)*4 + 3] > 128) pts.push({x, y});
+  return pts;
+}
+function hexRgb(h){ const n = parseInt(h.slice(1), 16); return [n>>16&255, n>>8&255, n&255]; }
+const cA = hexRgb(CONFIG.colorA), cB = hexRgb(CONFIG.colorB);
+function particleColor(){
+  const t = rand();
+  const r = Math.round(cB[0] + (cA[0]-cB[0])*t), g = Math.round(cB[1] + (cA[1]-cB[1])*t), b = Math.round(cB[2] + (cA[2]-cB[2])*t);
+  return "rgb(" + r + "," + g + "," + b + ")";
+}
+
+/* --- particle pool: particles persist across phrases (streams re-form) --- */
+let particles = [];
+function buildPhrase(idx){
+  const targets = samplePhrase(CONFIG.phrases[idx]);
+  while (particles.length < targets.length)
+    particles.push({ x: rand()*W, y: rand()*H, vx: 0, vy: 0, c: particleColor(), delay: rand()*0.45 });
+  particles.length = Math.max(particles.length, targets.length);
+  for (let i = 0; i < particles.length; i++){
+    const p = particles[i];
+    if (i < targets.length){ p.tx = targets[i].x; p.ty = targets[i].y; p.active = true; }
+    else { p.active = false; p.tx = p.x; p.ty = p.y; } // surplus particles drift as ambient dust
+    p.sx = p.x; p.sy = p.y; // form start = wherever the stream currently is
+  }
+}
+
+/* --- phase machine: FORM -> HOLD -> DISSOLVE -> GAP -> next phrase --- */
+let current = 0, phase = "form", phaseT = 0, lastTs = null, paused = false, frozenAt = 0;
+buildPhrase(0);
+const DUR = () => ({ form: CONFIG.formMs, hold: CONFIG.holdMs, dissolve: CONFIG.dissolveMs, gap: CONFIG.gapMs })[phase];
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const easeIn  = t => t * t * t;
+
+function step(ts){
+  requestAnimationFrame(step);
+  if (lastTs === null) lastTs = ts;
+  let dt = Math.min(64, ts - lastTs); lastTs = ts;
+  if (paused) return;
+  phaseT += dt;
+  const dur = DUR();
+  let t = Math.min(1, phaseT / dur);
+  if (t >= 1){
+    phaseT = 0;
+    if (phase === "form") phase = "hold";
+    else if (phase === "hold") { phase = "dissolve"; for (const p of particles){ p.sx = p.x; p.sy = p.y; p.vx = (rand()-0.5)*90; p.vy = (rand()-0.7)*70; } }
+    else if (phase === "dissolve") phase = "gap";
+    else { phase = "form"; current = (current + 1) % CONFIG.phrases.length; buildPhrase(current); }
+    t = 0;
+  }
+  /* background: near-black with a breath of the previous frame (stream trails) */
+  ctx.fillStyle = CONFIG.background; ctx.globalAlpha = 0.32; ctx.fillRect(0,0,W,H); ctx.globalAlpha = 1;
+  const r = CONFIG.particleRadius;
+  for (const p of particles){
+    if (phase === "form"){
+      const lt = Math.max(0, Math.min(1, (t - p.delay) / (1 - p.delay || 1)));
+      const e = easeOut(lt);
+      p.x = p.sx + (p.tx - p.sx) * e;
+      p.y = p.sy + (p.ty - p.sy) * e;
+    } else if (phase === "hold"){
+      if (p.active){ p.x = p.tx + (rand()-0.5) * CONFIG.jitter; p.y = p.ty + (rand()-0.5) * CONFIG.jitter; }
+      else { p.x += CONFIG.windX * dt/1000; p.y += CONFIG.windY * dt/1000; wrap(p); }
+    } else if (phase === "dissolve"){
+      p.vx += CONFIG.windX * dt/1000; p.vy += CONFIG.windY * dt/1000;
+      p.x += p.vx * dt/1000 * (0.4 + easeIn(t)); p.y += p.vy * dt/1000 * (0.4 + easeIn(t));
+      wrap(p);
+    } else { /* gap: free streams */
+      p.x += CONFIG.windX * dt/1000 * 1.6; p.y += CONFIG.windY * dt/1000 * 1.6; wrap(p);
+    }
+    ctx.fillStyle = p.c;
+    ctx.fillRect(p.x - r/2, p.y - r/2, r, r);
+  }
+}
+function wrap(p){ if (p.x < -4) p.x = W + 4; if (p.x > W + 4) p.x = -4; if (p.y < -4) p.y = H + 4; if (p.y > H + 4) p.y = -4; }
+requestAnimationFrame(step);
+
+/* comparison sync hooks: the comparison page drives play/pause/restart */
+addEventListener("message", (e) => {
+  if (e.data === "recreation:restart"){ current = 0; phase = "form"; phaseT = 0; buildPhrase(0); paused = false; }
+  else if (e.data === "recreation:pause"){ paused = true; }
+  else if (e.data === "recreation:play"){ paused = false; lastTs = null; }
+});
+</script>
+</body>
+</html>

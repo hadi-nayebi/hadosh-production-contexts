@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T14 — CCTV room + wall-projected text · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.08em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T14 — CCTV room + wall-projected text</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 1:20–1:25.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation — a locked-off security-camera frame of a dark room
+where the TV types its question in amber pixel text and the answer writes itself onto
+the wall in large glowing letters, before the TV types its follow-up. One control set drives both.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — new texts, timing, palette</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — Look What I Can Do (P1) @ 1:20–1:25<small>segment.mp4 · specimen window 1:19.5–1:25.5 (±0.5 handles) · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T14 CCTV room + wall-projected text, parameterized<small>recreation.html · CONFIG: cam chrome, timestamp base, TV/wall texts, typing speeds, phase checkpoints, palette · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T14 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click, so both start together. The recreation runs a 6 s loop
+(<code>durationMs</code> 6000, the segment length); its phases are decided by the CONFIG checkpoint
+table (<code>tvTypeStart</code> 400 · <code>wallWriteAt</code> 2400 · <code>tvFollowAt</code> 4400),
+and its CCTV timestamp advances in real time from the CONFIG base. The camera never moves — the
+locked-off frame is the technique. The Swap test button reloads the recreation with
+<code>?q1=Are you even awake?&amp;wall=YES. ALWAYS.&amp;q2=Since when?&amp;wallAt=2600&amp;amber=%2337ffd0</code> —
+new question, wall answer and follow-up texts, a later wall checkpoint, and a mint TV palette;
+if the room, the typing and the wall writing all follow the new values, the build is the technique,
+not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+function cmd(c){ rec.contentWindow && rec.contentWindow.postMessage({cmd:c}, "*"); }
+document.getElementById("btnPlay").addEventListener("click", function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ vid.currentTime = 0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click", function(){
+  rec.src = "recreation.html?q1=Are you even awake?&wall=YES. ALWAYS.&q2=Since when?&wallAt=2600&amber=%2337ffd0";
+  vid.currentTime = 0; vid.play();
+});
+</script>
+</body>
+</html>

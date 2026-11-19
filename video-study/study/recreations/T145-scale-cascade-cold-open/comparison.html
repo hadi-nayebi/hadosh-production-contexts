@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T145 comparison</title>
+<style>body{background:#111;color:#fff;font-family:Arial,sans-serif;margin:0;padding:12px}.wrap{max-width:380px;margin:0 auto;display:flex;flex-direction:column;gap:10px}video,iframe{width:100%;max-width:360px;height:203px;border:0;background:#000}.lab{font-size:13px;font-weight:700}button{padding:10px 14px;font-size:14px;min-height:44px}</style></head><body>
+<div class="wrap">
+<div class="lab">ORIGINAL — Kurzgesagt GDSf2h9_39I @ 0:00–0:20</div>
+<video id="v" src="segment.mp4" playsinline></video>
+<div class="lab">RECREATION — T145 scale-cascade cold open, parameterized</div>
+<iframe id="r" src="recreation.html" title="recreation"></iframe>
+<div><button id="play">Play</button> <button id="pause">Pause</button> <button id="restart">Restart</button></div>
+</div>
+<script>
+const v=document.getElementById('v'),r=document.getElementById('r');
+function sync(){try{const w=r.contentWindow;if(w&&w.__seek){let ms=v.currentTime*1000;if(ms<0)ms=0;w.__seek(ms);}}catch(e){}}
+v.addEventListener('timeupdate',sync);
+v.addEventListener('seeked',sync);
+setInterval(()=>{if(!v.paused)sync();},100);
+document.getElementById('play').onclick=()=>{v.play();sync();};
+document.getElementById('pause').onclick=()=>{v.pause();sync();};
+document.getElementById('restart').onclick=()=>{v.currentTime=0;v.play();sync();};
+r.addEventListener('load',sync);
+</script></body></html>

@@ -1,0 +1,693 @@
+CONSUMER + DECISION PRICED: the practice job (Video Study lane), Cycle 008 Wave 7 re-score wave — your score is one of five lens scores filed for technique T15's attempt 3 record in the artifact's scores.md, where the five scores together inform the item's standing in the style library.
+WORKING RECORD: you build from the reusability standard + recreation source + build record below; your return is filed verbatim at hidden_files/study/recreations/T15-particle-typography/codex/attempt-3/lens-reusability.md and quoted into the artifact's scores.md.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. A return with no BODY-WRITE line is incomplete.
+
+YOUR LENS: REUSABILITY / PARAMETERIZATION only. Score 0-100. The consumer is a production job building a language short: it wants to lift this file and, by changing config only, get the same technique with ITS words (any language, longer/shorter phrases), ITS durations (a 3 s short beat, not a 15 s window), and ITS palette — without editing animation logic. Audit: (1) Is every content/timing/palette variable actually read from CONFIG, or are specimen values hardcoded inside the logic? (2) Edge cases the config does not survive: a much longer phrase (does the fit loop hold?), an empty phrase, one phrase only, a phrase with spaces/diacritics, a tiny canvas, extreme durations (formMs 0, holdMs 10000). (3) The build record below reports a logic-level swap test with changed phrases, palette, and tempo preset; price any place where such a swap would silently degrade (e.g. particle pool behaviour when the new phrase needs far fewer/more points). (4) Determinism: is the choreography reproducible from config (seeded RNG)?
+
+THE RECREATION SOURCE FOLLOWS, THEN THE BUILD RECORD.
+End your return with exactly one line: SCORE: <integer 0-100>
+===== RECREATION SOURCE =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T15 — Particle Typography (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+  canvas{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script>
+"use strict";
+/* ================================================================
+   T15 — PARTICLE TYPOGRAPHY (form · hold · dissolve)
+   PARAMETERIZED, NOT TRACED: every content / timing / palette value
+   is read from CONFIG below. Swap the words and the technique still
+   works. URL overrides for testing:
+   ?phrases=HELLO|WORLD&preset=brisk&reserveFraction=0.3
+     &surplusPolicy=capped-ambient&colorA=%23ffd75e
+
+   DURATION PRECEDENCE (the one printed interface for durations):
+     URL duration parameter (formMs / holdMs / dissolveMs in the
+       query string)
+       > CONFIG.durations (an object holding any of
+         { formMs, holdMs, dissolveMs } — the direct-edit interface)
+       > the named preset entry CONFIG.presets[CONFIG.preset].
+   The resolved effective durations are written back to
+   CONFIG.formMs / holdMs / dissolveMs and exposed via T15_API.
+
+   TEMPO LABEL: the "original" preset (3000 / 2500 / 2000 ms) is a
+   retained implementation preset; its reference match is UNVERIFIED
+   (no identifiable segment timestamps for the individual phase
+   boundaries were filed this cycle).
+
+   Motion model — ONE constant flow field:
+   - Every particle carries a persistent stream velocity at all times.
+   - FORM: a borrowable subset is borrowed onto sampled letterform
+     targets. Trajectory equation (per borrowed particle, per frame):
+       anchor a(t): the particle's form-start position, advected by
+         its own stream velocity every frame (a += sv * dt) — during
+         the stagger delay (u = 0) the particle IS its anchor, i.e.
+         it keeps streaming, never frozen.
+       u = clamp((phaseProgress - delay) / (1 - delay), 0, 1),
+         e = easeOutCubic(u) = 1 - (1 - u)^3.
+       position = a(t) + (target - a(t)) * e + jitterOffset(t) * e,
+         where jitterOffset is the same sinusoidal offset HOLD uses.
+     Endpoint conditions at FORM -> HOLD: at u = 1, e = 1 and
+     de/du = 0, so position = target + jitterOffset(t) — exactly the
+     HOLD expression — and velocity = jitterOffset'(t) — exactly the
+     HOLD velocity. Position and velocity are both continuous across
+     the boundary; HOLD motion is bounded by the jitter amplitude.
+   - HOLD: borrowed particles sit at target + jitterOffset(t)
+     (bounded, never still); every other particle streams.
+   - DISSOLVE: borrowing ends through a RELEASED state. Each released
+     particle has a staggered release time inside the dissolve; its
+     release velocity component grows with its release progress q
+     (0 -> 1 across its own release window) on top of the stream
+     velocity, and its render alpha ramps from foregroundAlpha down
+     to surplusAlpha across the same q — alpha reaches the surplus
+     level only at q = 1, at the end of its release window. After
+     dissolve, the release component decays over releaseDecayMs.
+   - A CONFIG-sized reserve share of the pool is never borrowed,
+     never assigned a letterform target, and is never removed or
+     hidden; it streams in every phase.
+   - Render intensity rides the borrow flag: borrowed particles
+     render at foreground intensity, reserve particles at the
+     dimmer background (reserve) intensity, released particles on
+     the ramp described above.
+   - The scheduler is strictly sequential: form -> hold -> dissolve
+     -> gap -> form of the next phrase. A phrase begins forming
+     only after the previous phrase's dissolve has completed.
+   - All motion integrates in seconds (dt-based) and the jitter is a
+     function of the absolute logical clock, so the choreography is
+     frame-rate independent up to the per-frame dt clamp.
+   ================================================================ */
+const CONFIG = {
+  phrases: ["WHAT", "LOOK WHAT I CAN DO!"], // the words, in order; looped
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontWeight: 900,
+  maxFontPx: 150,          // shrunk to fit the width/height bounds
+  fontFloorPx: 12,         // smallest font the fit loop will use
+  maxWidthRatio: 0.92,     // fitted line width bound, fraction of W
+  maxHeightRatio: 0.92,    // fitted block height bound, fraction of H
+  wrap: "single",          // "single" | "multiline"
+  maxLines: 3,             // line cap in multiline mode
+  lineHeightRatio: 1.15,   // line pitch = fontPx * this
+  sampleGap: 4,            // px between sampled target points (lower = denser)
+  particleRadius: 1.6,     // px
+  colorA: "#f4f7fb",       // particle color range: A (bright) …
+  colorB: "#9fb0c3",       // … to B (dim silver-blue)
+  background: "#000000",
+  preset: "original",      // named tempo preset (see presets below)
+  presets: {
+    original: { formMs: 3000, holdMs: 2500, dissolveMs: 2000 },
+    brisk:    { formMs: 1500, holdMs: 1500, dissolveMs: 1300 }
+  },
+  durations: {},           // direct-edit interface: any of {formMs, holdMs, dissolveMs}
+  formMs: 3000,            // effective durations, resolved per the precedence above
+  holdMs: 2500,
+  dissolveMs: 2000,
+  gapMs: 250,              // near-dark beat between phrases
+  windX: 46,               // px/s stream drift (the constant flow field)
+  windY: -14,              // px/s upward stream drift (dust rises)
+  driftXRange: 16,         // per-particle stream drift spread, x (full width, px/s)
+  driftYRange: 10,         // per-particle stream drift spread, y (full width, px/s)
+  staggerFraction: 0.45,   // per-particle form stagger, fraction of form phase
+  jitter: 0.35,            // px of low-amplitude life while borrowed on target
+  jitterFreqX: 0.004,      // jitter angular rate, x (rad per logical ms)
+  jitterFreqY: 0.0034,     // jitter angular rate, y (rad per logical ms)
+  releaseRangeX: 60,       // release velocity spread, x (full width, px/s)
+  releaseRangeY: 45,       // release velocity spread, y (full width, px/s)
+  releaseBiasY: 0.6,       // release y centre offset (fraction of the y spread; upward-biased)
+  releaseStaggerFraction: 0.35, // release start times spread over this fraction of dissolve
+  releaseDecayMs: 900,     // release component decay window after dissolve
+  trailFade: 0.32,         // per-frame background fade alpha (stream trails)
+  wrapMargin: 4,           // px beyond the edge at which streaming particles wrap
+  reserveFraction: 0.22,   // share of the pool that is never borrowed
+  foregroundAlpha: 1.0,    // render intensity of borrowed (word) particles
+  reserveAlpha: 0.28,      // render intensity of reserve (background) particles
+  surplusPolicy: "drift-fade", // "drift-fade" | "capped-ambient"
+  surplusAlpha: 0.16,      // render intensity of surplus under drift-fade
+  ambientCap: 140,         // max surplus particles drawn under capped-ambient
+  seed: 1337               // fixed seed: same config = same choreography
+};
+const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+const normalizationNotes = [];
+const urlDurations = {};
+/* URL overrides (used by the swap test and the own-check suite) */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("phrases")) CONFIG.phrases = q.get("phrases").split("|");
+  for (const k of ["formMs","holdMs","dissolveMs"])
+    if (q.has(k)) urlDurations[k] = parseFloat(q.get(k));
+  for (const k of ["gapMs","sampleGap","maxFontPx","fontFloorPx","maxWidthRatio","maxHeightRatio",
+                   "maxLines","lineHeightRatio","particleRadius","windX","windY","driftXRange","driftYRange",
+                   "staggerFraction","jitter","jitterFreqX","jitterFreqY","releaseRangeX","releaseRangeY",
+                   "releaseBiasY","releaseStaggerFraction","releaseDecayMs","trailFade","wrapMargin",
+                   "reserveFraction","foregroundAlpha","reserveAlpha","surplusAlpha","ambientCap","seed"])
+    if (q.has(k)) CONFIG[k] = parseFloat(q.get(k));
+  for (const k of ["colorA","colorB","background","surplusPolicy","wrap","preset","fontFamily"])
+    if (q.has(k)) CONFIG[k] = q.get(k);
+})();
+/* --- config validation: every numeric key is clamped or falls back
+   to its default; enums resolve to a named member; the phrases list
+   is filtered to non-empty strings with a default fallback. The
+   effective CONFIG is what T15_API exposes. --- */
+function normalizeConfig(){
+  const num = (k, lo, hi, integer) => {
+    let v = CONFIG[k];
+    if (typeof v !== "number" || !Number.isFinite(v)){ if (CONFIG[k] !== DEFAULTS[k]) normalizationNotes.push(k + ":nonfinite->default"); v = DEFAULTS[k]; }
+    v = Math.min(hi, Math.max(lo, v));
+    if (integer) v = Math.floor(v);
+    CONFIG[k] = v;
+  };
+  num("maxFontPx", 1, 10000); num("fontFloorPx", 1, 10000);
+  if (CONFIG.fontFloorPx > CONFIG.maxFontPx) CONFIG.fontFloorPx = CONFIG.maxFontPx;
+  num("maxWidthRatio", 0.01, 1); num("maxHeightRatio", 0.01, 1);
+  num("maxLines", 1, 40, true); num("lineHeightRatio", 0.5, 4);
+  num("sampleGap", 1, 200, true); num("particleRadius", 0.1, 100);
+  num("gapMs", 0, 3600000);
+  num("windX", -100000, 100000); num("windY", -100000, 100000);
+  num("driftXRange", 0, 100000); num("driftYRange", 0, 100000);
+  num("staggerFraction", 0, 0.95);
+  num("jitter", 0, 1000); num("jitterFreqX", 0, 1); num("jitterFreqY", 0, 1);
+  num("releaseRangeX", 0, 100000); num("releaseRangeY", 0, 100000); num("releaseBiasY", -10, 10);
+  num("releaseStaggerFraction", 0, 0.95); num("releaseDecayMs", 0, 3600000);
+  num("trailFade", 0, 1); num("wrapMargin", 0, 10000);
+  num("reserveFraction", 0.000001, 0.9);
+  num("foregroundAlpha", 0, 1); num("reserveAlpha", 0, 1); num("surplusAlpha", 0, 1);
+  num("ambientCap", 0, 100000000, true); num("seed", -2147483648, 2147483647, true);
+  if (!["single","multiline"].includes(CONFIG.wrap)){ normalizationNotes.push("wrap:invalid->single"); CONFIG.wrap = "single"; }
+  if (!["drift-fade","capped-ambient"].includes(CONFIG.surplusPolicy)){ normalizationNotes.push("surplusPolicy:invalid->drift-fade"); CONFIG.surplusPolicy = "drift-fade"; }
+  if (!CONFIG.presets || typeof CONFIG.presets !== "object") CONFIG.presets = JSON.parse(JSON.stringify(DEFAULTS.presets));
+  for (const name of Object.keys(CONFIG.presets)){
+    const e = CONFIG.presets[name];
+    if (!e || typeof e !== "object"){ delete CONFIG.presets[name]; continue; }
+    for (const k of ["formMs","holdMs","dissolveMs"])
+      if (typeof e[k] !== "number" || !Number.isFinite(e[k]) || e[k] < 0) e[k] = DEFAULTS.presets.original[k];
+  }
+  if (!CONFIG.presets[CONFIG.preset]){ normalizationNotes.push("preset:invalid->original"); CONFIG.preset = "original"; }
+  if (!CONFIG.durations || typeof CONFIG.durations !== "object") CONFIG.durations = {};
+  for (const k of Object.keys(CONFIG.durations)){
+    if (!["formMs","holdMs","dissolveMs"].includes(k) ||
+        typeof CONFIG.durations[k] !== "number" || !Number.isFinite(CONFIG.durations[k]) || CONFIG.durations[k] < 0)
+      delete CONFIG.durations[k];
+  }
+  if (!Array.isArray(CONFIG.phrases)) CONFIG.phrases = [];
+  CONFIG.phrases = CONFIG.phrases.filter(s => typeof s === "string" && s.trim().length > 0);
+  if (CONFIG.phrases.length === 0){ normalizationNotes.push("phrases:empty->defaults"); CONFIG.phrases = DEFAULTS.phrases.slice(); }
+}
+/* Resolve durations per the printed precedence, then guard the
+   all-zero lifecycle (a zero-sum lifecycle would spin the scheduler
+   with no visible beat: the gap is restored to its default). */
+function resolveDurations(){
+  const p = CONFIG.presets[CONFIG.preset] || CONFIG.presets.original;
+  CONFIG.formMs = p.formMs; CONFIG.holdMs = p.holdMs; CONFIG.dissolveMs = p.dissolveMs;
+  for (const k of ["formMs","holdMs","dissolveMs"]) if (k in CONFIG.durations) CONFIG[k] = CONFIG.durations[k];
+  for (const k of ["formMs","holdMs","dissolveMs"])
+    if (k in urlDurations && Number.isFinite(urlDurations[k]) && urlDurations[k] >= 0) CONFIG[k] = urlDurations[k];
+  if (CONFIG.formMs + CONFIG.holdMs + CONFIG.dissolveMs + CONFIG.gapMs === 0){
+    normalizationNotes.push("lifecycle:all-zero->gapMs-default");
+    CONFIG.gapMs = DEFAULTS.gapMs;
+  }
+}
+normalizeConfig();
+resolveDurations();
+window.RECREATION_CONFIG = CONFIG;
+
+/* deterministic RNG (mulberry32) so choreography is reproducible */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+let rand = mulberry32(CONFIG.seed);
+
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+let W = 0, H = 0;
+function fit(){ W = canvas.width = canvas.clientWidth || 960; H = canvas.height = canvas.clientHeight || 540; }
+fit(); addEventListener("resize", ()=>{ fit(); buildPhrase(current); });
+
+/* --- sample a phrase's letterforms into target points ---
+   Layout: words wrap per CONFIG.wrap; the font shrinks until the
+   widest line fits the width bound AND the block fits the height
+   bound, or the font floor is reached — in which case the layout
+   record reports the shortfall instead of clipping silently. */
+const probe = document.createElement("canvas");
+const pctx = probe.getContext("2d", { willReadFrequently: true });
+let lastLayout = null;
+function layoutPhrase(text){
+  const widthBound = W * CONFIG.maxWidthRatio, heightBound = H * CONFIG.maxHeightRatio;
+  const words = text.split(/\s+/).filter(Boolean);
+  const linesFor = (px) => {
+    pctx.font = CONFIG.fontWeight + " " + px + "px " + CONFIG.fontFamily;
+    if (CONFIG.wrap !== "multiline" || words.length === 0) return [text];
+    const lines = []; let line = "";
+    for (const w of words){
+      const cand = line ? line + " " + w : w;
+      if (line && pctx.measureText(cand).width > widthBound){ lines.push(line); line = w; }
+      else line = cand;
+    }
+    if (line) lines.push(line);
+    while (lines.length > CONFIG.maxLines){
+      const extra = lines.pop();
+      lines[lines.length - 1] = lines[lines.length - 1] + " " + extra;
+    }
+    return lines;
+  };
+  let px = CONFIG.maxFontPx, lines = linesFor(px), maxLineWidth = 0, blockHeight = 0;
+  while (true){
+    pctx.font = CONFIG.fontWeight + " " + px + "px " + CONFIG.fontFamily;
+    maxLineWidth = 0;
+    for (const ln of lines) maxLineWidth = Math.max(maxLineWidth, pctx.measureText(ln).width);
+    blockHeight = lines.length * px * CONFIG.lineHeightRatio;
+    if ((maxLineWidth <= widthBound && blockHeight <= heightBound) || px <= CONFIG.fontFloorPx) break;
+    px = Math.max(CONFIG.fontFloorPx, px - 4);
+    lines = linesFor(px);
+  }
+  const fits = maxLineWidth <= widthBound && blockHeight <= heightBound;
+  return { text: text, lines: lines, fontPx: px, fits: fits, shortfall: !fits,
+           maxLineWidth: maxLineWidth, blockHeight: blockHeight,
+           widthBound: widthBound, heightBound: heightBound };
+}
+function samplePhrase(text){
+  probe.width = W; probe.height = H;
+  pctx.clearRect(0,0,W,H);
+  const lay = layoutPhrase(text);
+  lastLayout = lay;
+  pctx.textAlign = "center"; pctx.textBaseline = "middle";
+  pctx.font = CONFIG.fontWeight + " " + lay.fontPx + "px " + CONFIG.fontFamily;
+  pctx.fillStyle = "#fff";
+  lay.lines.forEach((ln, i) => {
+    const y = H/2 + (i - (lay.lines.length - 1)/2) * lay.fontPx * CONFIG.lineHeightRatio;
+    pctx.fillText(ln, W/2, y);
+  });
+  const img = pctx.getImageData(0,0,W,H).data;
+  const pts = [];
+  for (let y = 0; y < H; y += CONFIG.sampleGap)
+    for (let x = 0; x < W; x += CONFIG.sampleGap)
+      if (img[(y*W + x)*4 + 3] > 128) pts.push({x, y});
+  return pts;
+}
+function hexRgb(h){ const n = parseInt(h.slice(1), 16); return [n>>16&255, n>>8&255, n&255]; }
+const cA = hexRgb(CONFIG.colorA), cB = hexRgb(CONFIG.colorB);
+function particleColor(){
+  const t = rand();
+  const r = Math.round(cB[0] + (cA[0]-cB[0])*t), g = Math.round(cB[1] + (cA[1]-cB[1])*t), b = Math.round(cB[2] + (cA[2]-cB[2])*t);
+  return "rgb(" + r + "," + g + "," + b + ")";
+}
+
+/* --- particle pool: one persistent pool, two fixed roles ---
+   Every particle is created either BORROWABLE or RESERVE; the role
+   never changes. Reserve particles are never given a target.
+   Every particle carries its own stream velocity (svx, svy): the
+   shared wind plus a small per-particle drift, fixed at creation. */
+let particles = [];
+function newParticle(isReserve){
+  const driftX = (rand() - 0.5) * CONFIG.driftXRange, driftY = (rand() - 0.5) * CONFIG.driftYRange;
+  return {
+    x: rand() * W, y: rand() * H,
+    svx: CONFIG.windX + driftX, svy: CONFIG.windY + driftY,
+    rvx: 0, rvy: 0,               // release component (dissolve only)
+    c: particleColor(),
+    delay: rand() * CONFIG.staggerFraction, // per-particle form stagger
+    phase: rand() * Math.PI * 2,  // jitter phase while borrowed
+    isReserve: !!isReserve,
+    borrowed: false,
+    released: false,              // dissolve release state (render/targeting separated)
+    releaseAt: 0,                 // ms into dissolve at which this particle's release begins
+    q: 0,                         // release progress 0..1 during dissolve
+    tx: 0, ty: 0, sx: 0, sy: 0,
+    renderAlpha: CONFIG.reserveAlpha
+  };
+}
+function reserveCount(){ let n = 0; for (const p of particles) if (p.isReserve) n++; return n; }
+function borrowableCount(){ return particles.length - reserveCount(); }
+/* Grow the pool until the borrowable share can cover targetCount
+   targets AND the reserve share is at least reserveFraction of the
+   whole pool. The pool never shrinks, so the reserve share can only
+   grow toward the configured fraction, never drop below the count
+   already established. */
+function ensureCapacity(targetCount){
+  while (borrowableCount() < targetCount) particles.push(newParticle(false));
+  while (particles.length > 0 && reserveCount() / particles.length < CONFIG.reserveFraction)
+    particles.push(newParticle(true));
+  if (particles.length === 0) particles.push(newParticle(true));
+}
+
+/* --- scheduler: strictly one lifecycle at a time ---
+   FORM -> HOLD -> DISSOLVE -> GAP -> FORM (next phrase).
+   buildPhrase for phrase N+1 runs only in the GAP -> FORM
+   transition, i.e. after phrase N's dissolve has completed.
+   schedulerTrace records the transitions for inspection. */
+let current = 0, phase = "gap", phaseT = 0, lastTs = null, paused = false;
+let clockMs = 0;
+const schedulerTrace = [];
+function trace(event, phraseIdx){ schedulerTrace.push({ event: event, phrase: phraseIdx, t: Math.round(clockMs) }); }
+
+function buildPhrase(idx){
+  const targets = samplePhrase(CONFIG.phrases[idx]);
+  ensureCapacity(targets.length);
+  let ti = 0;
+  for (const p of particles){
+    p.released = false; p.q = 0; p.rvx = 0; p.rvy = 0;
+    if (p.isReserve){ p.borrowed = false; continue; }   // reserve: never borrowed
+    if (ti < targets.length){
+      p.borrowed = true;
+      p.tx = targets[ti].x; p.ty = targets[ti].y; ti++;
+      p.sx = p.x; p.sy = p.y;   // form starts wherever the stream currently is
+    } else {
+      p.borrowed = false;       // surplus: governed by surplusPolicy at render
+    }
+  }
+  trace("formStart", idx);
+}
+
+const DUR = () => ({ form: CONFIG.formMs, hold: CONFIG.holdMs, dissolve: CONFIG.dissolveMs, gap: CONFIG.gapMs })[phase];
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+function wrapCoords(o){ if (o.x < -CONFIG.wrapMargin) o.x = W + CONFIG.wrapMargin; if (o.x > W + CONFIG.wrapMargin) o.x = -CONFIG.wrapMargin; if (o.y < -CONFIG.wrapMargin) o.y = H + CONFIG.wrapMargin; if (o.y > H + CONFIG.wrapMargin) o.y = -CONFIG.wrapMargin; }
+
+function releaseBorrowed(){
+  for (const p of particles){
+    if (!p.borrowed) continue;
+    /* the particle enters the RELEASED state: targeting ends, but
+       its render alpha and release velocity follow the release
+       progress q — nothing flips in one frame */
+    p.released = true;
+    p.releaseAt = rand() * CONFIG.releaseStaggerFraction * CONFIG.dissolveMs;
+    p.rvx = (rand() - 0.5) * CONFIG.releaseRangeX;
+    p.rvy = (rand() - CONFIG.releaseBiasY) * CONFIG.releaseRangeY;
+    p.q = 0;
+  }
+}
+
+function step(ts){
+  requestAnimationFrame(step);
+  if (lastTs === null) lastTs = ts;
+  let dt = Math.min(64, ts - lastTs); lastTs = ts;
+  if (paused) return;
+  phaseT += dt; clockMs += dt;
+  const dur = DUR();
+  let t = dur > 0 ? Math.min(1, phaseT / dur) : 1;
+  if (t >= 1){
+    phaseT = 0;
+    if (phase === "gap"){ phase = "form"; buildPhrase(current); }
+    else if (phase === "form"){ phase = "hold"; trace("holdStart", current); }
+    else if (phase === "hold"){ phase = "dissolve"; trace("dissolveStart", current); releaseBorrowed(); }
+    else if (phase === "dissolve"){
+      trace("dissolveEnd", current);
+      /* finalize every release at the boundary: a released particle
+         leaves dissolve as ordinary surplus (q = 1, alpha already at
+         the surplus end of its ramp) — it never re-enters a borrowed
+         branch during the gap */
+      for (const p of particles) if (p.released){ p.released = false; p.borrowed = false; p.q = 1; }
+      phase = "gap";
+      current = (current + 1) % CONFIG.phrases.length;
+    }
+    t = 0;
+  }
+  /* background: near-black with a breath of the previous frame (stream trails) */
+  ctx.fillStyle = CONFIG.background; ctx.globalAlpha = CONFIG.trailFade; ctx.fillRect(0,0,W,H); ctx.globalAlpha = 1;
+  const r = CONFIG.particleRadius;
+  const dtS = dt / 1000;
+  let surplusDrawn = 0;
+  /* draw reserve first (background), then surplus/released, then borrowed (foreground) */
+  const ordered = [];
+  for (const p of particles) if (p.isReserve) ordered.push(p);
+  for (const p of particles) if (!p.isReserve && !p.borrowed) ordered.push(p);
+  for (const p of particles) if (p.borrowed) ordered.push(p);
+  for (const p of ordered){
+    if (p.borrowed && p.released && phase === "dissolve"){
+      /* RELEASED: release progress q over its own staggered window;
+         motion = stream + release component growing with q;
+         alpha ramps foreground -> surplus across the same q */
+      const win = Math.max(1, CONFIG.dissolveMs - p.releaseAt);
+      p.q = Math.max(0, Math.min(1, (phaseT - p.releaseAt) / win));
+      p.x += (p.svx + p.rvx * p.q) * dtS;
+      p.y += (p.svy + p.rvy * p.q) * dtS;
+      wrapCoords(p);
+      p.renderAlpha = CONFIG.foregroundAlpha + (CONFIG.surplusAlpha - CONFIG.foregroundAlpha) * p.q;
+      if (p.q >= 1){ p.released = false; p.borrowed = false; }
+    } else if (p.borrowed && phase === "form"){
+      /* anchor advects with the stream every frame (during the
+         stagger delay the particle is its anchor: it streams) */
+      p.sx += p.svx * dtS; p.sy += p.svy * dtS;
+      const anchor = { x: p.sx, y: p.sy }; wrapCoords(anchor); p.sx = anchor.x; p.sy = anchor.y;
+      const lt = Math.max(0, Math.min(1, (t - p.delay) / (1 - p.delay || 1)));
+      const e = easeOut(lt);
+      const jx = Math.sin(clockMs * CONFIG.jitterFreqX + p.phase) * CONFIG.jitter;
+      const jy = Math.cos(clockMs * CONFIG.jitterFreqY + p.phase) * CONFIG.jitter;
+      p.x = p.sx + (p.tx - p.sx) * e + jx * e;
+      p.y = p.sy + (p.ty - p.sy) * e + jy * e;
+      p.renderAlpha = CONFIG.foregroundAlpha;
+    } else if (p.borrowed){ /* HOLD: on target, low-amplitude jitter, never still */
+      p.x = p.tx + Math.sin(clockMs * CONFIG.jitterFreqX + p.phase) * CONFIG.jitter;
+      p.y = p.ty + Math.cos(clockMs * CONFIG.jitterFreqY + p.phase) * CONFIG.jitter;
+      p.renderAlpha = CONFIG.foregroundAlpha;
+    } else {
+      /* streaming: reserve, surplus, and released particles all ride
+         the flow field; a decaying release component rides on top
+         during and after dissolve — stream velocity never resets */
+      const decay = phase === "dissolve" ? 1 : Math.max(0, 1 - phaseT / (CONFIG.releaseDecayMs || 1));
+      p.x += (p.svx + p.rvx * decay) * dtS;
+      p.y += (p.svy + p.rvy * decay) * dtS;
+      if (phase !== "dissolve" && decay === 0){ p.rvx = 0; p.rvy = 0; }
+      wrapCoords(p);
+      if (p.isReserve){
+        p.renderAlpha = CONFIG.reserveAlpha;
+      } else if (CONFIG.surplusPolicy === "capped-ambient"){
+        surplusDrawn++;
+        if (surplusDrawn > CONFIG.ambientCap) continue; // surplus only; reserve always drawn
+        p.renderAlpha = CONFIG.reserveAlpha;
+      } else { /* drift-fade */
+        p.renderAlpha = CONFIG.surplusAlpha;
+      }
+    }
+    ctx.globalAlpha = p.renderAlpha;
+    ctx.fillStyle = p.c;
+    ctx.fillRect(p.x - r/2, p.y - r/2, r, r);
+  }
+  ctx.globalAlpha = 1;
+}
+trace("gapStart", 0);
+requestAnimationFrame(step);
+
+/* inspection hook for logic-level diagnostics (no effect on rendering) */
+window.T15_API = {
+  CONFIG: CONFIG,
+  samplePhrase: samplePhrase,
+  getParticles: () => particles,
+  getPhase: () => phase,
+  getCurrent: () => current,
+  getTrace: () => schedulerTrace.slice(),
+  getSize: () => ({ W: W, H: H }),
+  getLayout: () => lastLayout,
+  getNormalization: () => normalizationNotes.slice()
+};
+
+/* comparison sync hooks: the comparison page drives play/pause/restart.
+   Restart re-seeds the RNG from the effective CONFIG.seed, clears and
+   rebuilds the pool, and resets the scheduler and clock — it
+   reproduces the fresh-load state. */
+addEventListener("message", (e) => {
+  if (e.data === "recreation:restart"){
+    rand = mulberry32(CONFIG.seed);
+    particles = [];
+    current = 0; phase = "gap"; phaseT = 0; clockMs = 0; lastTs = null;
+    schedulerTrace.length = 0; trace("gapStart", 0); paused = false;
+  }
+  else if (e.data === "recreation:pause"){ paused = true; }
+  else if (e.data === "recreation:play"){ paused = false; lastTs = null; }
+});
+</script>
+</body>
+</html>
+
+===== BUILD RECORD =====
+# T15 — Particle Typography · BUILD RECORD (attempt 3 construction)
+
+Artifact: `recreation.html` (single self-contained HTML/canvas file) · Face: `comparison.html`
+Final source sha256: **8cef752faff72a5e6a2e041a48b48391892cacfe110952c72069fcd31736f640**
+Preserved prior source: `recreation-attempt-2.html`, sha256 3147ed9b53df39a48a56a81b39cb2ec004b3432df454e18878b56c6832dfade6 (verified identical before and after this build).
+Construction: parameterized HTML/CSS/JS only. Letterform targets are derived at runtime by
+rendering the configured text to an offscreen canvas and sampling its alpha channel. No media
+files, no external references, no baked letterform geometry.
+
+## Configuration surface (all values read from CONFIG at runtime; effective CONFIG exposed via T15_API)
+
+- Content/layout: `phrases` (ordered, looped), `fontFamily`, `fontWeight` (900), `maxFontPx` (150),
+  `fontFloorPx` (12), `maxWidthRatio` (0.92), `maxHeightRatio` (0.92), `wrap` ("single" | "multiline"),
+  `maxLines` (3), `lineHeightRatio` (1.15), `sampleGap` (4).
+- Tempo: `preset` selects a named entry of `presets` (`original` = 3000/2500/2000, `brisk` = 1500/1500/1300);
+  `gapMs` = 250 between phrases. Duration precedence (printed in the source header):
+  URL duration parameter > `CONFIG.durations` object > preset entry. Resolved effective durations
+  are written to `CONFIG.formMs` / `holdMs` / `dissolveMs`.
+  Tempo label: the `original` entry is a retained implementation preset; its reference match is
+  UNVERIFIED — no identifiable segment timestamps for the individual phase boundaries were filed
+  this cycle.
+- Validation: `normalizeConfig()` runs at load before sampling. Every numeric key is clamped to a
+  stated range or falls back to its default on a non-finite value; integer keys are floored;
+  `reserveFraction` clamps to (0, 0.9]; alphas clamp to [0,1]; the enums `wrap`, `surplusPolicy`,
+  and `preset` resolve to a named member or their default; preset entries are validated per
+  duration; `CONFIG.durations` entries are validated per key; `phrases` is filtered to non-empty
+  strings and an empty result restores the default phrase list. An all-zero lifecycle
+  (form+hold+dissolve+gap = 0) restores `gapMs` to its default. Every fallback/clamp decision is
+  recorded in a normalization-notes list exposed via T15_API.
+- Pool: `reserveFraction` (0.22) sizes the never-borrowed share; `surplusPolicy` is `drift-fade`
+  (default) or `capped-ambient` (with `ambientCap` = 140).
+- Intensity: `foregroundAlpha` = 1.0, `reserveAlpha` = 0.28, `surplusAlpha` = 0.16.
+- Field/motion: `windX` = 46, `windY` = -14 (px/s), `driftXRange` = 16, `driftYRange` = 10,
+  `staggerFraction` = 0.45, `jitter` = 0.35 px, `jitterFreqX` = 0.004, `jitterFreqY` = 0.0034,
+  `releaseRangeX` = 60, `releaseRangeY` = 45, `releaseBiasY` = 0.6,
+  `releaseStaggerFraction` = 0.35, `releaseDecayMs` = 900, `trailFade` = 0.32, `wrapMargin` = 4.
+- Palette/misc: `particleRadius` = 1.6, `colorA` / `colorB`, `background`, `seed` (mulberry32).
+
+URL overrides: `phrases`, `preset`, every numeric key listed above, the duration parameters, and
+the string keys — the same override mechanism the swap test and the own-check suite use.
+
+## Motion model (one constant flow field)
+
+- Every particle is created with a fixed role — borrowable or reserve — and a persistent stream
+  velocity: the shared wind plus a per-particle drift drawn from the configured drift ranges.
+- FORM: a borrowed particle's trajectory is `position = a(t) + (target − a(t))·e + jitterOffset(t)·e`,
+  where `a(t)` is its form-start anchor advected by its own stream velocity every frame,
+  `e = easeOutCubic(clamp((phaseProgress − delay)/(1 − delay)))`, and `jitterOffset` is the same
+  sinusoidal offset used in HOLD. During the stagger delay (e = 0) the particle sits exactly on
+  its advecting anchor, i.e. it streams. At e = 1 the position equals `target + jitterOffset(t)`
+  (the HOLD expression) and, since de/du = 0 at u = 1, the velocity equals the HOLD jitter
+  velocity; both were measured continuous across the boundary (own-check results below). HOLD
+  deviation from target is bounded by the jitter amplitude.
+- HOLD: borrowed particles sit at target + jitterOffset; every non-borrowed particle streams.
+- DISSOLVE: each borrowed particle enters a released state with a staggered release time
+  (`releaseAt`, spread over `releaseStaggerFraction` of the dissolve). Its release progress q runs
+  0→1 over its own release window; its velocity is stream + release component × q; its render
+  alpha is `foregroundAlpha + (surplusAlpha − foregroundAlpha)·q`. At the dissolve→gap boundary
+  every release is finalized (q = 1, borrowed/released flags cleared), so a released particle
+  enters the gap as ordinary surplus. After dissolve, the release component decays over
+  `releaseDecayMs`.
+- GAP: all particles stream; the next phrase's targets are sampled and assigned only in the
+  GAP → FORM transition.
+- Render order is reserve first, surplus/released second, borrowed last; each particle's render
+  alpha is assigned from its current role/state every frame.
+- All motion integrates in seconds from the frame dt (clamped at 64 ms); jitter is a function of
+  the absolute logical clock.
+
+## Scheduler
+
+States: `gap → form → hold → dissolve → gap`, one phrase lifecycle at a time. A
+`schedulerTrace` array records `{event, phrase, t}` for `gapStart`, `formStart`, `holdStart`,
+`dissolveStart`, `dissolveEnd` against an accumulated logical clock. Default trace (own-check
+run): gapStart(0)@0 · formStart(0)@250 · holdStart(0)@3250 · dissolveStart(0)@5750 ·
+dissolveEnd(0)@7750 · formStart(1)@8000 — the next phrase's formation begins strictly after the
+previous dissolve ends. `window.T15_API` exposes CONFIG, the sampler, the particle array, the
+current phase/phrase, the trace, the last layout record, and the normalization notes; it has no
+effect on rendering.
+
+## Layout
+
+`samplePhrase` lays the phrase out before sampling: in single mode the whole phrase is one line;
+in multiline mode words wrap greedily to at most `maxLines` lines. The font shrinks from
+`maxFontPx` until the widest line fits `maxWidthRatio` of the canvas AND the block height
+(lines × fontPx × `lineHeightRatio`) fits `maxHeightRatio`, or `fontFloorPx` is reached. The
+layout record (`T15_API.getLayout()`) reports lines, fontPx, measured widths/heights, bounds, and
+a `shortfall` flag when the floor is reached without fitting.
+
+## Restart
+
+The `recreation:restart` handler re-seeds the RNG from the effective `CONFIG.seed`, clears the
+particle pool (it rebuilds at the next formation), and resets current/phase/phaseT/clock/trace.
+Restart reproduces the fresh-load state exactly under fixed-step driving (own-check result below).
+
+## Surplus disposition
+
+Surplus rendering is policy-governed: under `drift-fade` every surplus particle is drawn at
+`surplusAlpha`; under `capped-ambient` at most `ambientCap` surplus particles are drawn in a
+frame (reserve and borrowed always drawn). The pool itself never shrinks: its size is set by the
+largest phrase sampled so far, and the reserve count is non-decreasing across phrases. Bounded
+pool shrinkage is not implemented in this attempt.
+
+## Interlude accounting
+
+No interlude beat is allocated: the configured cycle allocates 0 ms to any between-phrase
+interlude. The reference interlude's duration is not measured in the filed evidence available to
+this build.
+
+## Size-split statement
+
+No split was invoked for this attempt. The plan's deferred items (interlude mechanism, bounded
+pool shrink) were already split out in writing in the plan; everything else in the plan was
+executed in this attempt, in the plan's cure order, inside the single recreation file.
+
+## Own checks (suite: `own-checks-T15.js` in the cycle run directory; run with node)
+
+Logic-level suite against the extracted inline script with a stubbed canvas (deterministic
+text-measure model: width = 0.55 × fontPx × character count; alpha rectangle as the sampled
+glyph area), driving the animation callback at fixed steps. Final run against the final source
+above: **all checks pass, 0 fail** (exit code 0). Coverage, with measured values:
+
+- Scheduler: phase exclusivity over two lifecycles; default trace deltas match the resolved
+  durations.
+- Stream-advected formation: delayed borrowed particles displace at exactly stream velocity × dt
+  (1,644/1,644 sampled); median mid-form deviation from the straight start→target segment
+  11.87 px (threshold 2.5 px), 93% of sampled particles deviating in the stream-perpendicular
+  direction (threshold 70%).
+- Boundary continuity: max position jump across FORM→HOLD 0.000 px (threshold 0.6); max velocity
+  change 0.27 px/s (threshold 10); HOLD deviation max 0.484 px, mean 0.341 px (bound 0.515).
+- Dissolve: HOLD alpha sets {1.0} borrowed vs {0.28} reserve, disjoint; release-time spread
+  700 ms (threshold >100); per-particle alpha monotonically non-increasing for all 3,154 released
+  particles; alpha reached 0.5 only after ≥12 px displacement for 100% of released particles
+  (threshold ≥90%); at dissolve midpoint mean displacement 50.8 px with mean alpha 0.68
+  (thresholds >20 px, >0.58); after dissolve, formerly borrowed particles render at 0.16.
+- Composited trail model (modelled, not rendered): word-pixel steady intensity 1.00, background
+  steady intensity 0.0052 at the measured reserve hit-rate (thresholds >0.95, <0.10).
+- Stream band: per-particle svx within [38, 54] px/s, mean 45.9; a reserve particle's 1 s
+  hold-phase displacement 53.2 px (threshold ≥38).
+- Fit: default phrases fit at 960×540 and 390×693 with all targets in bounds; multiline fixture
+  at 390×693 produced 3 lines fitting both bounds; a named over-capacity fixture (70-character
+  single word, stub width 475 px vs 359 px bound at the font floor) reported `shortfall` at
+  fontPx = 12; a feasible fixture reported no shortfall.
+- Validation fixtures: reserveFraction 1→0.9 with target coverage intact; sampleGap 0→1 and
+  2.5→2; holdMs NaN→preset value; empty/`|`-only phrases→defaults; invalid wrap/surplusPolicy/
+  preset enums→defaults; all-zero lifecycle→gap restored to 250 with the scheduler progressing;
+  seed NaN→1337; trailFade 7→1; foregroundAlpha −1→0; staggerFraction 2→0.95; ambientCap −3→0.
+- Duration precedence: preset-only instance resolves 3000/2500/2000; a source variant with
+  `CONFIG.durations.holdMs = 4321` resolves holdMs 4321; the same variant with `?holdMs=2222`
+  resolves 2222; a `?formMs=1111` instance moves holdStart to gap+1111 (±50 ms).
+- Restart: positions + trace after restart are byte-identical to a fresh load over 400 fixed
+  steps, including after an abuse-valued configuration was normalized.
+- Frame-rate: reserve-particle positions at 2,000 logical ms agree between dt=20 and dt=50
+  driving within 1.55 px (toroidal distance; threshold 2.5).
+- Resize: after a 960×540 → 390×693 resize during HOLD, the size rebuilds and all borrowed
+  targets lie in the new bounds with a layout record present.
+- Reassignment: after a phrase swap, borrowed count equals the new phrase's target count and
+  every borrowed target belongs to the new phrase's target set.
+- Swap test (logic level): instance configured with phrases `HELLO|WORLD`, the `brisk` preset,
+  and a gold palette via URL overrides — borrowed count 3,914 equals the sampler's target count
+  for `HELLO`, phase progression reaches HOLD, palette and preset values are the overridden ones.
+- CONFIG consumption census: 42 entries, each asserting one consumed effect per key or key
+  group (content, layout, tempo, validation, field, release, intensity, palette, seed) — 42/42
+  passing.
+- Purity grep over `recreation.html` for specimen/media references (media file names, media
+  extensions, `video`/`img` tags, external URLs, base64, `url(`): 0 hits.
+- Syntax: the extracted inline script passes `node --check`.
+- One defect was found by this suite during the build (releases were not finalized at the
+  dissolve→gap boundary in an interim source) and was corrected; the full suite was then re-run
+  against the final source with the result above.
+- PIXEL-UNVERIFIED: no working render route was available to this build session, so all geometry
+  and readability-relevant statements rest on the deterministic logic-level suite above, which
+  uses a stubbed measure model rather than a real font engine. No pixel/render verification is
+  claimed.
+
+## Comparison face
+
+`comparison.html` was updated on its RECREATION side only (config-surface description and the
+tempo-preset label), because the recreation's interface changed (new CONFIG keys, the
+`CONFIG.durations` interface, multiline wrap). The ORIGINAL side (panel, label, and
+`segment.mp4` element) was not changed.
+
+## Deviations
+
+- None from the plan's construction list or from the wave amendments handed to this build.
+  The frame-rate check measures wrap-aware (toroidal) distance, because the wrap teleport makes
+  raw coordinate distance meaningless across a wrap event; this is a measurement definition in
+  the suite, not a construction change.

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T15 — Particle Typography · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T15 — Particle typography (form · hold · dissolve)</h1>
+<div class="sub">Video Study packet #1, “Look What I Can Do” (@aditazzz.music) @ 1:25–1:40.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the lane’s recreation, built parameterized in HTML/canvas — change its words and it still works.
+One control set drives both, in sync.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — different words</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL<small>segment.mp4 · specimen @ 1:24–1:40 (segment handles ±1 s) · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION<small>recreation.html · config-driven: phrases, tempo preset or CONFIG.durations, palette, reserve share, surplus policy, stream/release/jitter constants, width+height fit with multiline wrap · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T15 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation’s clock in the same click, so both start from zero together. The recreation loops its two
+phrases on a ≈15.5 s cycle under its default “original” tempo preset (form 3 s · hold 2.5 s ·
+dissolve 2 s · gap 0.25 s per phrase) — a retained implementation preset whose reference match is
+unverified; a “brisk” preset (1.5 s · 1.5 s · 1.3 s) is available in its config, and direct
+duration edits go through CONFIG.durations (URL duration parameters win over it, it wins over the
+preset). Borrowed particles ride the stream into their targets; word particles render at
+full foreground intensity while a never-borrowed reserve share of the pool streams past dimmer in
+the background, and on dissolve each word particle streams away on a staggered release while its
+intensity ramps down. Restart re-seeds and rebuilds the pool. The Swap test button reloads the recreation
+with <code>?phrases=VANISHING|WORDS</code> and a gold palette — if the words still form, hold, and
+dissolve, the build is the technique, not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+const btnPlay = document.getElementById("btnPlay");
+function recPost(msg){ rec.contentWindow.postMessage(msg, "*"); }
+let playing = false;
+function setPlaying(p){
+  playing = p;
+  btnPlay.textContent = p ? "⏸ Pause both" : "▶ Play both";
+  if (p){ vid.play(); recPost("recreation:play"); } else { vid.pause(); recPost("recreation:pause"); }
+}
+btnPlay.addEventListener("click", () => setPlaying(!playing));
+document.getElementById("btnRestart").addEventListener("click", () => {
+  vid.currentTime = 0; recPost("recreation:restart"); setPlaying(true);
+});
+document.getElementById("btnSwap").addEventListener("click", () => {
+  rec.src = "recreation.html?phrases=VANISHING|WORDS&colorA=%23ffe98a&colorB=%23c9962e&holdMs=2200";
+  if (playing) setTimeout(() => recPost("recreation:restart"), 400);
+});
+</script>
+</body>
+</html>

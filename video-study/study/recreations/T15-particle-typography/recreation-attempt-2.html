@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T15 — Particle Typography (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+  canvas{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script>
+"use strict";
+/* ================================================================
+   T15 — PARTICLE TYPOGRAPHY (form · hold · dissolve)
+   PARAMETERIZED, NOT TRACED: every content / timing / palette value
+   is read from CONFIG below. Swap the words and the technique still
+   works. URL overrides for testing:
+   ?phrases=HELLO|WORLD&preset=brisk&reserveFraction=0.3
+     &surplusPolicy=capped-ambient&colorA=%23ffd75e
+
+   Motion model — ONE constant flow field:
+   - Every particle carries a persistent stream velocity at all times.
+   - FORM: a borrowable subset is borrowed onto sampled letterform
+     targets. A borrowed particle travels from wherever the stream
+     currently is to its target; on target it keeps a low-amplitude
+     jitter — its velocity is never zero.
+   - HOLD: borrowed particles jitter on their targets; every other
+     particle streams past at full stream velocity.
+   - DISSOLVE: borrowed particles are released. Their position is
+     continuous (no reset, no teleport) and their velocity returns
+     to the stream velocity plus a decaying release component that
+     was added on top of — never instead of — the stream velocity.
+   - A CONFIG-sized reserve share of the pool is never borrowed,
+     never assigned a letterform target, and is never removed or
+     hidden; it streams in every phase.
+   - Render intensity rides the borrow flag: borrowed particles
+     render at foreground intensity, reserve particles at the
+     dimmer background (reserve) intensity.
+   - The scheduler is strictly sequential: form -> hold -> dissolve
+     -> gap -> form of the next phrase. A phrase begins forming
+     only after the previous phrase's dissolve has completed.
+   ================================================================ */
+const CONFIG = {
+  phrases: ["WHAT", "LOOK WHAT I CAN DO!"], // the words, in order; looped
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontWeight: 900,
+  maxFontPx: 150,          // shrunk to fit maxWidthRatio of the canvas
+  maxWidthRatio: 0.92,
+  sampleGap: 4,            // px between sampled target points (lower = denser)
+  particleRadius: 1.6,     // px
+  colorA: "#f4f7fb",       // particle color range: A (bright) …
+  colorB: "#9fb0c3",       // … to B (dim silver-blue)
+  background: "#000000",
+  preset: "original",      // named tempo preset (see presets below)
+  presets: {
+    original: { formMs: 3000, holdMs: 2500, dissolveMs: 2000 },
+    brisk:    { formMs: 1500, holdMs: 1500, dissolveMs: 1300 }
+  },
+  formMs: 3000,            // effective durations, resolved from preset below
+  holdMs: 2500,
+  dissolveMs: 2000,
+  gapMs: 250,              // near-dark beat between phrases
+  windX: 26,               // px/s stream drift (the constant flow field)
+  windY: -9,               // px/s upward stream drift (dust rises)
+  jitter: 0.35,            // px of low-amplitude life while borrowed on target
+  reserveFraction: 0.22,   // share of the pool that is never borrowed
+  foregroundAlpha: 1.0,    // render intensity of borrowed (word) particles
+  reserveAlpha: 0.28,      // render intensity of reserve (background) particles
+  surplusPolicy: "drift-fade", // "drift-fade" | "capped-ambient"
+  surplusAlpha: 0.16,      // render intensity of surplus under drift-fade
+  ambientCap: 140,         // max surplus particles drawn under capped-ambient
+  seed: 1337               // fixed seed: same config = same choreography
+};
+/* Resolve the named preset into the effective duration fields. An
+   explicit URL duration override wins over the preset. */
+(function resolvePreset(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("preset") && CONFIG.presets[q.get("preset")]) CONFIG.preset = q.get("preset");
+  const p = CONFIG.presets[CONFIG.preset] || CONFIG.presets.original;
+  CONFIG.formMs = p.formMs; CONFIG.holdMs = p.holdMs; CONFIG.dissolveMs = p.dissolveMs;
+})();
+/* URL overrides (used by the swap test) */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("phrases")) CONFIG.phrases = q.get("phrases").split("|");
+  for (const k of ["formMs","holdMs","dissolveMs","gapMs","sampleGap","maxFontPx","reserveFraction","foregroundAlpha","reserveAlpha","surplusAlpha","ambientCap"])
+    if (q.has(k)) CONFIG[k] = parseFloat(q.get(k));
+  for (const k of ["colorA","colorB","background","surplusPolicy"])
+    if (q.has(k)) CONFIG[k] = q.get(k);
+})();
+window.RECREATION_CONFIG = CONFIG;
+
+/* deterministic RNG (mulberry32) so choreography is reproducible */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+const rand = mulberry32(CONFIG.seed);
+
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+let W = 0, H = 0;
+function fit(){ W = canvas.width = canvas.clientWidth || 960; H = canvas.height = canvas.clientHeight || 540; }
+fit(); addEventListener("resize", ()=>{ fit(); buildPhrase(current); });
+
+/* --- sample a phrase's letterforms into target points --- */
+const probe = document.createElement("canvas");
+const pctx = probe.getContext("2d", { willReadFrequently: true });
+function samplePhrase(text){
+  probe.width = W; probe.height = H;
+  pctx.clearRect(0,0,W,H);
+  let px = CONFIG.maxFontPx;
+  pctx.textAlign = "center"; pctx.textBaseline = "middle";
+  do { pctx.font = CONFIG.fontWeight + " " + px + "px " + CONFIG.fontFamily; px -= 4; }
+  while (pctx.measureText(text).width > W * CONFIG.maxWidthRatio && px > 12);
+  pctx.fillStyle = "#fff";
+  pctx.fillText(text, W/2, H/2);
+  const img = pctx.getImageData(0,0,W,H).data;
+  const pts = [];
+  for (let y = 0; y < H; y += CONFIG.sampleGap)
+    for (let x = 0; x < W; x += CONFIG.sampleGap)
+      if (img[(y*W + x)*4 + 3] > 128) pts.push({x, y});
+  return pts;
+}
+function hexRgb(h){ const n = parseInt(h.slice(1), 16); return [n>>16&255, n>>8&255, n&255]; }
+const cA = hexRgb(CONFIG.colorA), cB = hexRgb(CONFIG.colorB);
+function particleColor(){
+  const t = rand();
+  const r = Math.round(cB[0] + (cA[0]-cB[0])*t), g = Math.round(cB[1] + (cA[1]-cB[1])*t), b = Math.round(cB[2] + (cA[2]-cB[2])*t);
+  return "rgb(" + r + "," + g + "," + b + ")";
+}
+
+/* --- particle pool: one persistent pool, two fixed roles ---
+   Every particle is created either BORROWABLE or RESERVE; the role
+   never changes. Reserve particles are never given a target.
+   Every particle carries its own stream velocity (svx, svy): the
+   shared wind plus a small per-particle drift, fixed at creation. */
+let particles = [];
+function newParticle(isReserve){
+  const driftX = (rand() - 0.5) * 16, driftY = (rand() - 0.5) * 10;
+  return {
+    x: rand() * W, y: rand() * H,
+    svx: CONFIG.windX + driftX, svy: CONFIG.windY + driftY,
+    rvx: 0, rvy: 0,               // release component (dissolve only)
+    c: particleColor(),
+    delay: rand() * 0.45,         // per-particle form stagger
+    phase: rand() * Math.PI * 2,  // jitter phase while borrowed
+    isReserve: !!isReserve,
+    borrowed: false,
+    tx: 0, ty: 0, sx: 0, sy: 0,
+    renderAlpha: CONFIG.reserveAlpha
+  };
+}
+function reserveCount(){ let n = 0; for (const p of particles) if (p.isReserve) n++; return n; }
+function borrowableCount(){ return particles.length - reserveCount(); }
+/* Grow the pool until the borrowable share can cover targetCount
+   targets AND the reserve share is at least reserveFraction of the
+   whole pool. The pool never shrinks, so the reserve share can only
+   grow toward the configured fraction, never drop below the count
+   already established. */
+function ensureCapacity(targetCount){
+  while (borrowableCount() < targetCount) particles.push(newParticle(false));
+  while (particles.length > 0 && reserveCount() / particles.length < CONFIG.reserveFraction)
+    particles.push(newParticle(true));
+  if (particles.length === 0) particles.push(newParticle(true));
+}
+
+/* --- scheduler: strictly one lifecycle at a time ---
+   FORM -> HOLD -> DISSOLVE -> GAP -> FORM (next phrase).
+   buildPhrase for phrase N+1 runs only in the GAP -> FORM
+   transition, i.e. after phrase N's dissolve has completed.
+   schedulerTrace records the transitions for inspection. */
+let current = 0, phase = "gap", phaseT = 0, lastTs = null, paused = false;
+let clockMs = 0;
+const schedulerTrace = [];
+function trace(event, phraseIdx){ schedulerTrace.push({ event: event, phrase: phraseIdx, t: Math.round(clockMs) }); }
+
+function buildPhrase(idx){
+  const targets = samplePhrase(CONFIG.phrases[idx]);
+  ensureCapacity(targets.length);
+  let ti = 0;
+  for (const p of particles){
+    if (p.isReserve){ p.borrowed = false; continue; }   // reserve: never borrowed
+    if (ti < targets.length){
+      p.borrowed = true;
+      p.tx = targets[ti].x; p.ty = targets[ti].y; ti++;
+      p.sx = p.x; p.sy = p.y;   // form starts wherever the stream currently is
+      p.rvx = 0; p.rvy = 0;
+    } else {
+      p.borrowed = false;       // surplus: governed by surplusPolicy at render
+    }
+  }
+  trace("formStart", idx);
+}
+
+const DUR = () => ({ form: CONFIG.formMs, hold: CONFIG.holdMs, dissolve: CONFIG.dissolveMs, gap: CONFIG.gapMs })[phase];
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+
+function releaseBorrowed(){
+  for (const p of particles){
+    if (!p.borrowed) continue;
+    p.borrowed = false;
+    /* release component ADDS to the persistent stream velocity;
+       position and stream velocity themselves are untouched */
+    p.rvx = (rand() - 0.5) * 60;
+    p.rvy = (rand() - 0.6) * 45;
+  }
+}
+
+function step(ts){
+  requestAnimationFrame(step);
+  if (lastTs === null) lastTs = ts;
+  let dt = Math.min(64, ts - lastTs); lastTs = ts;
+  if (paused) return;
+  phaseT += dt; clockMs += dt;
+  const dur = DUR();
+  let t = dur > 0 ? Math.min(1, phaseT / dur) : 1;
+  if (t >= 1){
+    phaseT = 0;
+    if (phase === "gap"){ phase = "form"; buildPhrase(current); }
+    else if (phase === "form"){ phase = "hold"; trace("holdStart", current); }
+    else if (phase === "hold"){ phase = "dissolve"; trace("dissolveStart", current); releaseBorrowed(); }
+    else if (phase === "dissolve"){
+      trace("dissolveEnd", current);
+      phase = "gap";
+      current = (current + 1) % CONFIG.phrases.length;
+    }
+    t = 0;
+  }
+  /* background: near-black with a breath of the previous frame (stream trails) */
+  ctx.fillStyle = CONFIG.background; ctx.globalAlpha = 0.32; ctx.fillRect(0,0,W,H); ctx.globalAlpha = 1;
+  const r = CONFIG.particleRadius;
+  const dtS = dt / 1000;
+  let surplusDrawn = 0;
+  /* draw reserve first (background), then surplus, then borrowed (foreground) */
+  const ordered = [];
+  for (const p of particles) if (p.isReserve) ordered.push(p);
+  for (const p of particles) if (!p.isReserve && !p.borrowed) ordered.push(p);
+  for (const p of particles) if (p.borrowed) ordered.push(p);
+  for (const p of ordered){
+    if (p.borrowed && phase === "form"){
+      const lt = Math.max(0, Math.min(1, (t - p.delay) / (1 - p.delay || 1)));
+      const e = easeOut(lt);
+      p.x = p.sx + (p.tx - p.sx) * e;
+      p.y = p.sy + (p.ty - p.sy) * e;
+      if (lt >= 1){ /* arrived: settle into the same jitter as HOLD */
+        p.x = p.tx + Math.sin(clockMs * 0.004 + p.phase) * CONFIG.jitter;
+        p.y = p.ty + Math.cos(clockMs * 0.0034 + p.phase) * CONFIG.jitter;
+      }
+      p.renderAlpha = CONFIG.foregroundAlpha;
+    } else if (p.borrowed){ /* HOLD: on target, low-amplitude jitter, never still */
+      p.x = p.tx + Math.sin(clockMs * 0.004 + p.phase) * CONFIG.jitter;
+      p.y = p.ty + Math.cos(clockMs * 0.0034 + p.phase) * CONFIG.jitter;
+      p.renderAlpha = CONFIG.foregroundAlpha;
+    } else {
+      /* streaming: reserve, surplus, and released particles all ride
+         the flow field; a decaying release component rides on top
+         during and after dissolve — stream velocity never resets */
+      const decay = phase === "dissolve" ? 1 : Math.max(0, 1 - phaseT / 900);
+      p.x += (p.svx + p.rvx * decay) * dtS;
+      p.y += (p.svy + p.rvy * decay) * dtS;
+      if (phase !== "dissolve" && decay === 0){ p.rvx = 0; p.rvy = 0; }
+      wrap(p);
+      if (p.isReserve){
+        p.renderAlpha = CONFIG.reserveAlpha;
+      } else if (CONFIG.surplusPolicy === "capped-ambient"){
+        surplusDrawn++;
+        if (surplusDrawn > CONFIG.ambientCap) continue; // surplus only; reserve always drawn
+        p.renderAlpha = CONFIG.reserveAlpha;
+      } else { /* drift-fade */
+        p.renderAlpha = CONFIG.surplusAlpha;
+      }
+    }
+    ctx.globalAlpha = p.renderAlpha;
+    ctx.fillStyle = p.c;
+    ctx.fillRect(p.x - r/2, p.y - r/2, r, r);
+  }
+  ctx.globalAlpha = 1;
+}
+function wrap(p){ if (p.x < -4) p.x = W + 4; if (p.x > W + 4) p.x = -4; if (p.y < -4) p.y = H + 4; if (p.y > H + 4) p.y = -4; }
+trace("gapStart", 0);
+requestAnimationFrame(step);
+
+/* inspection hook for logic-level diagnostics (no effect on rendering) */
+window.T15_API = {
+  CONFIG: CONFIG,
+  samplePhrase: samplePhrase,
+  getParticles: () => particles,
+  getPhase: () => phase,
+  getCurrent: () => current,
+  getTrace: () => schedulerTrace.slice(),
+  getSize: () => ({ W: W, H: H })
+};
+
+/* comparison sync hooks: the comparison page drives play/pause/restart */
+addEventListener("message", (e) => {
+  if (e.data === "recreation:restart"){ current = 0; phase = "gap"; phaseT = 0; clockMs = 0; schedulerTrace.length = 0; trace("gapStart", 0); paused = false; }
+  else if (e.data === "recreation:pause"){ paused = true; }
+  else if (e.data === "recreation:play"){ paused = false; lastTs = null; }
+});
+</script>
+</body>
+</html>

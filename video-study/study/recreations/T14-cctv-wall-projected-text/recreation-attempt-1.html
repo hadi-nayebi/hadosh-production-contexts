@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T14 — CCTV room + wall-projected text · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,Consolas,monospace}
+  #stage{position:relative;width:100%;height:100%;min-height:200px;overflow:hidden}
+  #blinds{position:absolute;left:0;top:16%;width:17%;height:56%;display:flex;flex-direction:column;justify-content:space-between;padding:1.2% 0}
+  .slat{flex:1 1 0;margin:0 6%}
+  #tvGlow{position:absolute;border-radius:50%;filter:blur(18px);pointer-events:none}
+  #stand{position:absolute}
+  #tv{position:absolute;border-style:solid;border-radius:3px;overflow:hidden}
+  #tvText{position:absolute;inset:0;padding:7% 8%;white-space:pre-wrap;word-break:break-word;line-height:1.45}
+  #wallText{position:absolute;text-align:left;line-height:1.3;white-space:pre-wrap;pointer-events:none}
+  .chrome{position:absolute;font-weight:700;letter-spacing:.04em;z-index:5}
+  #camBox{left:2.5%;top:3%}
+  #recBox{right:2.5%;top:3%;text-align:right}
+  #recDot{display:inline-block;border-radius:50%;width:.62em;height:.62em;margin-right:.35em;vertical-align:baseline}
+  #scan{position:absolute;inset:0;pointer-events:none;z-index:6}
+  #vig{position:absolute;inset:0;pointer-events:none;z-index:7}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="blinds"></div>
+  <div id="tvGlow"></div>
+  <div id="wallText"></div>
+  <div id="stand"></div>
+  <div id="tv"><div id="tvText"></div></div>
+  <div class="chrome" id="camBox"><div id="camLabel"></div><div id="ts"></div></div>
+  <div class="chrome" id="recBox"><div><span id="recDot"></span><span id="recLabel"></span></div><div id="ptzLabel"></div></div>
+  <div id="scan"></div>
+  <div id="vig"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; the logic below reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: the phase table (checkpoints) decides when each text event
+   starts — TV question typing, the wall answer writing on, the TV follow-up — never a
+   cadence assumed inside the animation logic. The camera never moves: locked-off is the
+   technique (the found-footage frame licenses the stillness). */
+const CONFIG = {
+  durationMs: 6000,                  /* segment window 1:19.5-1:25.5 = 6 s, loops */
+  camLabel: "CAM 01  LIVING RM",
+  recLabel: "REC",
+  ptzLabel: "PTZ 2X",
+  timestampBase: "2026-11-08 03:14:09",  /* frame-evidenced in the specimen still */
+  tvPrompt: "* ",
+  tvLine1: "What are your qualifications?",
+  wallText: "I HAVE A SUBSCRIPTION.",
+  tvLine2: "To what?",
+  tvCharMs: 55,                      /* TV typing speed, ms per char */
+  wallCharMs: 65,                    /* wall write-on speed, ms per char */
+  checkpoints: { tvTypeStart: 400, wallWriteAt: 2400, tvFollowAt: 4400 },
+  wallLineMaxChars: 13,              /* wall answer wraps to lines of at most this many chars */
+  wallCharWidthFactor: 0.60,         /* monospace advance as a fraction of font size (fit math) */
+  wallMaxFontPx: 64,
+  blindsCount: 11,
+  bg: "#0b0e0c",
+  wallColor: "#5f7263",              /* green-grey wallpaper */
+  wallShadeColor: "#46564a",         /* darker right wall / corner shade */
+  blindColor: "#c9cfc4",
+  blindFrameColor: "#2c352e",
+  standColor: "#23282a",
+  tvFrameColor: "#0a0a0a",
+  tvBg: "#050505",
+  tvTextColor: "#ffb347",            /* amber pixel text on the TV */
+  wallTextColor: "#ffe9a8",          /* glowing letters written on the wall */
+  wallGlowColor: "#ffd75e",
+  tvGlowColor: "#9db8a2",
+  overlayColor: "#d8dde2",           /* CCTV chrome text */
+  recColor: "#e33b3b",
+  scanlineIntensity: 0.16,           /* opacity of the scanline overlay */
+  vignetteIntensity: 0.55            /* strength of the corner falloff */
+};
+
+/* URL overrides (swap test / reuse):
+   ?q1=...&wall=...&q2=...  texts  ·  ?wallAt=3000&followAt=4800  checkpoints
+   ?tvCharMs=30&wallCharMs=30  typing speeds  ·  ?amber=%23ff5555&glow=%2377ffcc  palette
+   ?cam=...&ts=2027-01-01%2000:00:00  chrome  ·  ?durationMs=8000 */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (num("durationMs") !== null) CONFIG.durationMs = Math.max(1000, num("durationMs"));
+  if (q.get("q1")) CONFIG.tvLine1 = q.get("q1");
+  if (q.get("wall")) CONFIG.wallText = q.get("wall");
+  if (q.get("q2")) CONFIG.tvLine2 = q.get("q2");
+  if (q.get("cam")) CONFIG.camLabel = q.get("cam");
+  if (q.get("ts")) CONFIG.timestampBase = q.get("ts");
+  if (num("tvCharMs") !== null) CONFIG.tvCharMs = Math.max(5, num("tvCharMs"));
+  if (num("wallCharMs") !== null) CONFIG.wallCharMs = Math.max(5, num("wallCharMs"));
+  if (num("wallAt") !== null) CONFIG.checkpoints.wallWriteAt = Math.max(0, num("wallAt"));
+  if (num("followAt") !== null) CONFIG.checkpoints.tvFollowAt = Math.max(0, num("followAt"));
+  if (num("tvStart") !== null) CONFIG.checkpoints.tvTypeStart = Math.max(0, num("tvStart"));
+  if (q.get("amber")) CONFIG.tvTextColor = q.get("amber");
+  if (q.get("glow")) { CONFIG.wallTextColor = q.get("glow"); CONFIG.wallGlowColor = q.get("glow"); }
+  if (q.get("wallpaper")) CONFIG.wallColor = q.get("wallpaper");
+})();
+
+/* Timestamp: base parsed as UTC components so the rendered clock is timezone-free;
+   it advances in real time with the loop clock. */
+function parseBaseMs(s){
+  const m = /^(\d{4})-(\d{2})-(\d{2})[ ](\d{2}):(\d{2}):(\d{2})$/.exec(s);
+  if (!m) return 0;
+  return Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
+}
+function pad2(n){ return (n < 10 ? "0" : "") + n; }
+function formatTimestamp(baseMs, elapsedMs){
+  const d = new Date(baseMs + elapsedMs);
+  return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth() + 1) + "-" + pad2(d.getUTCDate()) +
+         " " + pad2(d.getUTCHours()) + ":" + pad2(d.getUTCMinutes()) + ":" + pad2(d.getUTCSeconds());
+}
+
+/* Wall answer wraps into lines of at most maxChars (word boundaries kept) so the
+   computed fit below prices the longest line, not the whole sentence. */
+function splitLines(text, maxChars){
+  const words = text.split(" "); const lines = []; let cur = "";
+  for (let i = 0; i < words.length; i++){
+    const w = words[i];
+    const next = cur === "" ? w : cur + " " + w;
+    if (next.length <= maxChars || cur === "") cur = next;
+    else { lines.push(cur); cur = w; }
+  }
+  if (cur !== "") lines.push(cur);
+  return lines;
+}
+/* Computed fit: font size derived from the wall box width and the longest line,
+   so the wall text fits and reads at any stage width (360 px phone included). */
+function wallFontPx(boxWidthPx, longestLineChars, cfg){
+  if (longestLineChars <= 0) return cfg.wallMaxFontPx;
+  return Math.min(cfg.wallMaxFontPx, boxWidthPx / (longestLineChars * cfg.wallCharWidthFactor));
+}
+
+/* Pure state from time — the checkpoint table decides every phase. */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  const typed = (start, speed, len) => t < start ? 0 : Math.min(len, Math.floor((t - start) / speed) + 1);
+  const tv1 = typed(cp.tvTypeStart, cfg.tvCharMs, cfg.tvLine1.length);
+  const wall = typed(cp.wallWriteAt, cfg.wallCharMs, cfg.wallText.length);
+  const tv2 = typed(cp.tvFollowAt, cfg.tvCharMs, cfg.tvLine2.length);
+  const phase = tv2 > 0 ? "follow" : (wall > 0 ? "wall" : (tv1 > 0 ? "question" : "idle"));
+  return { t: t, tv1Chars: tv1, wallChars: wall, tv2Chars: tv2, phase: phase,
+           timestamp: formatTimestamp(parseBaseMs(cfg.timestampBase), t) };
+}
+
+/* ===== DOM construction — all colors, sizes and texts applied from CONFIG ===== */
+const stage = document.getElementById("stage");
+stage.style.background = "linear-gradient(90deg," + CONFIG.wallColor + " 0%," + CONFIG.wallColor + " 72%," + CONFIG.wallShadeColor + " 100%)";
+document.body.style.background = CONFIG.bg;
+
+const blinds = document.getElementById("blinds");
+blinds.style.background = CONFIG.blindFrameColor;
+for (let i = 0; i < CONFIG.blindsCount; i++){
+  const s = document.createElement("div");
+  s.className = "slat"; s.style.background = CONFIG.blindColor;
+  blinds.appendChild(s);
+}
+const tvGlow = document.getElementById("tvGlow");
+tvGlow.style.left = "30%"; tvGlow.style.top = "26%"; tvGlow.style.width = "52%"; tvGlow.style.height = "44%";
+tvGlow.style.background = CONFIG.tvGlowColor; tvGlow.style.opacity = "0.35";
+
+const stand = document.getElementById("stand");
+stand.style.left = "31%"; stand.style.top = "84%"; stand.style.width = "46%"; stand.style.height = "11%";
+stand.style.background = CONFIG.standColor;
+
+const tv = document.getElementById("tv");
+tv.style.left = "34%"; tv.style.top = "47%"; tv.style.width = "40%"; tv.style.height = "36%";
+tv.style.background = CONFIG.tvBg; tv.style.borderColor = CONFIG.tvFrameColor; tv.style.borderWidth = "6px";
+
+const tvText = document.getElementById("tvText");
+tvText.style.color = CONFIG.tvTextColor;
+tvText.style.textShadow = "0 0 6px " + CONFIG.tvTextColor;
+
+const wallEl = document.getElementById("wallText");
+wallEl.style.left = "24%"; wallEl.style.top = "10%"; wallEl.style.width = "58%";
+wallEl.style.color = CONFIG.wallTextColor;
+wallEl.style.fontWeight = "700";
+wallEl.style.textShadow = "0 0 10px " + CONFIG.wallGlowColor + ",0 0 26px " + CONFIG.wallGlowColor;
+
+document.getElementById("camLabel").textContent = CONFIG.camLabel;
+document.getElementById("recLabel").textContent = CONFIG.recLabel;
+document.getElementById("ptzLabel").textContent = CONFIG.ptzLabel;
+document.getElementById("recDot").style.background = CONFIG.recColor;
+const camBox = document.getElementById("camBox"), recBox = document.getElementById("recBox");
+camBox.style.color = CONFIG.overlayColor; recBox.style.color = CONFIG.overlayColor;
+camBox.style.fontSize = "clamp(9px,2.2vw,17px)"; recBox.style.fontSize = "clamp(9px,2.2vw,17px)";
+tvText.style.fontSize = "clamp(9px,2.4vw,19px)";
+
+const scan = document.getElementById("scan");
+scan.style.background = "repeating-linear-gradient(0deg, rgba(0,0,0,0.55) 0px, rgba(0,0,0,0.55) 1px, transparent 1px, transparent 3px)";
+scan.style.opacity = String(CONFIG.scanlineIntensity);
+const vig = document.getElementById("vig");
+vig.style.background = "radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.85) 100%)";
+vig.style.opacity = String(CONFIG.vignetteIntensity);
+
+const tsEl = document.getElementById("ts");
+const wallLines = splitLines(CONFIG.wallText, CONFIG.wallLineMaxChars);
+const longestLine = wallLines.reduce((a, l) => Math.max(a, l.length), 0);
+function fitWall(){
+  const w = stage.clientWidth || 0;
+  if (w > 0) wallEl.style.fontSize = wallFontPx(w * 0.58, longestLine, CONFIG).toFixed(1) + "px";
+}
+fitWall();
+window.addEventListener("resize", fitWall);
+
+let lastKey = "";
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  const key = s.tv1Chars + "|" + s.wallChars + "|" + s.tv2Chars + "|" + s.timestamp;
+  if (key === lastKey) return s;
+  lastKey = key;
+  let tv = CONFIG.tvPrompt + CONFIG.tvLine1.slice(0, s.tv1Chars);
+  if (s.tv2Chars > 0) tv += "\n\n" + CONFIG.tvLine2.slice(0, s.tv2Chars);
+  tvText.textContent = tv;
+  /* wall reveal is per-char over the wrapped lines: count chars across lines */
+  let remaining = s.wallChars; const out = [];
+  for (let i = 0; i < wallLines.length; i++){
+    const take = Math.max(0, Math.min(wallLines[i].length, remaining));
+    out.push(wallLines[i].slice(0, take));
+    remaining -= wallLines[i].length + 1; /* the space that joined the lines */
+    if (remaining < 0) remaining = 0;
+  }
+  wallEl.textContent = out.join("\n");
+  tsEl.textContent = s.timestamp;
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; lastKey = ""; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>
