@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T71 — comparison</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 12px; background: #14202b; color: #f2f2f2; }
+  h1 { font-size: 16px; margin: 0 0 10px; }
+  .wrap { display: flex; gap: 12px; align-items: flex-start; }
+  .side { flex: 1 1 0; min-width: 0; }
+  .label { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  video, iframe { width: 100%; border: 0; background: #000; }
+  iframe { height: 420px; background: #256a7d; }
+  .controls { display: flex; gap: 8px; margin: 12px 0; }
+  button { min-height: 48px; min-width: 88px; font-size: 15px; font-weight: 700; cursor: pointer; }
+  @media (max-width: 640px) { .wrap { flex-direction: column; } .side { width: 100%; } }
+</style>
+</head>
+<body>
+<h1>T71 — Your-ballot ending · side-by-side comparison</h1>
+<div class="controls">
+  <button id="playBtn" type="button">Play</button>
+  <button id="pauseBtn" type="button">Pause</button>
+  <button id="restartBtn" type="button">Restart</button>
+</div>
+<div class="wrap">
+  <div class="side">
+    <div class="label">ORIGINAL — Epochs in Ink @ 918–932 s</div>
+    <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+  </div>
+  <div class="side">
+    <div class="label">RECREATION — T71 Your-ballot ending, parameterized</div>
+    <iframe id="rec" src="recreation.html" title="T71 recreation"></iframe>
+  </div>
+</div>
+<script>
+"use strict";
+const video = document.getElementById("orig");
+const rec = document.getElementById("rec");
+function recSeek() {
+  try {
+    const w = rec.contentWindow;
+    if (w && w.__T71) w.__T71.seek(video.currentTime * 1000);
+  } catch (e) { /* not ready */ }
+}
+video.addEventListener("timeupdate", recSeek);
+video.addEventListener("seeked", recSeek);
+document.getElementById("playBtn").addEventListener("click", () => { video.play(); });
+document.getElementById("pauseBtn").addEventListener("click", () => { video.pause(); recSeek(); });
+document.getElementById("restartBtn").addEventListener("click", () => { video.currentTime = 0; recSeek(); video.play(); });
+rec.addEventListener("load", recSeek);
+</script>
+</body>
+</html>

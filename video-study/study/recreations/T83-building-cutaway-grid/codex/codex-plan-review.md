@@ -1,0 +1,16 @@
+**Verdict: REVISE — advisory.** T83 identifies the relevant risks, but its construction leaves the cumulative inventory and parameterized timing insufficiently defined.
+
+1. **Convergent defect: translate the cure to this mechanic.** T15’s flowing reserve is inapplicable to an architectural grid; a settled building may legitimately hold still. The relevant fleet failures are broken reveal properties and arrivals detached from specimen timing. “One floor owns the stage at a time” must mean **one floor is revealing**, while completed floors remain visible. Specify a cumulative visibility rule, with both flats on each floor sharing its reveal progress. Verify completed-floor persistence and the final `floors × cols` filled inventory.
+
+2. **Owner catches: construction is still underspecified.** “CONFIG intensity step” names a requirement without supplying its binding. Add explicit foreground/background intensity fields and assign glyphs and flat fields to those roles in the renderer. Apply phase exclusivity to *reveal transitions*, not persistent floors: otherwise the proposed cure could erase the very inventory T83 must demonstrate. Derive the active floor from one phase state rather than independent timers.
+
+3. **Parameterization: the swap exposes a duration defect.** With the stated extension unchanged, the swap produces  
+   `3 × 350 + 4200 + 6550 = 11,800 ms`, **not 14,000 ms**. Derive `endHoldMs = durationMs − floors × revealMs − holdMs`; validate that the remainder is nonnegative. The swapped remainder is **8,750 ms**. Also specify count-derived building geometry, window/glyph placement, terrace placement, and a glyph renderer registry. Hardcoded five-floor heights, two-column offsets, glyph dimensions, and override merging are the likely hiding places. Test reduced columns, `windowLit:false`, and `terrace.enabled:false` in addition to the promised swap.
+
+4. **Bar arithmetic: reusability is the credible minimum, but remains unpriced.** The supplied grid-family average of 85.6 does not establish a safe lens floor. The supplied family records include reusability **62**, below the required 70. Name a predicted minimum score and justify its recovery through explicit construction and checks. For five lenses, passing requires a total of **425** and every lens ≥70. Logic checks can support reuse claims; **PIXEL-UNVERIFIED** leaves readability and visual motion provisional.
+
+5. **Size discipline: keep the inventory mechanic central.** The core is a parameterized cutaway whose repeated glyphs fill every flat. Keep terrace figures optional and subordinate; defer city, sun, HUD, and character animation. The segment-anchored claim also needs measured reveal-order evidence **before implementation chooses the schedule**. If extraction establishes only the settled state, label the 650 ms floor sequence **ALLOCATION**, rather than implying it was observed.
+
+Consume these revisions in the Plan record before Execute, or record an explicit disposition explaining any decision to proceed over them. This review used the supplied stream; local file access failed, so no files were changed.
+
+BODY-WRITE: none (read-only run); consumer: the wave’s RUN.md §2 Plan section must persist this return verbatim.

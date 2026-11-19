@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T83 — Building cutaway grid (recreation)</title>
+<!--
+  T83 — The building cutaway: universality as a grid. Parameterized recreation.
+  Technique: a cutaway apartment block (floors x cols flats from CONFIG); EVERY flat
+  carries the SAME code-drawn generic device glyph, so universality reads as a filled
+  inventory (10/10 at default). MEASURED from the 275-289 s segment (build-record):
+  the inventory is already complete in the first frame, which is a CLOSE view; the
+  camera pulls back to the wide city frame by ~3 s; the settled block then holds;
+  from ~10 s glowing notice-rings land in the flats and the scene dims toward the end.
+  The per-floor stagger (revealMs) drives the pull-back phase length and the ring
+  stagger — its ORDER is an ALLOCATION (frames prove the settled inventory and the
+  late rings, not a floor-by-floor glyph reveal). All flats are GENERATED from CONFIG
+  loops (no per-flat literals); the glyph is a generic case mark drawn from CONFIG
+  geometry via a renderer registry — NOT a tracing of the frame's glyph.
+  Cycle: exactly durationMs, looping. endHoldMs is DERIVED
+  (durationMs - floors*revealMs - holdMs, validated >= 0) per codex-plan-review.
+  Seekable: render(tMs) is a pure function of t. No captions; the specimen's bottom
+  narration line is excluded by fleet law. No specimen media. PIXEL-UNVERIFIED.
+-->
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #stage svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+'use strict';
+/* ================= CONFIG (specimen values are the defaults) ================= */
+const CONFIG = {
+  block: { floors: 5, cols: 2 },
+  cell: { glyph: "earbud-case", windowLit: true },
+  terrace: { enabled: true, figures: 2 },
+  palette: { bg: "#33549e", wall: "#274b8f", flat: "#3d5ea6", glyph: "#f0c93f", ink: "#f5f2e6" },
+  revealMs: 650,
+  holdMs: 4200,
+  durationMs: 14000,
+  hud: { year: 2037, dayLine: "A POSSIBLE TUESDAY", clock: "16:00" },
+  type: { font: "Georgia, 'Times New Roman', serif" },
+  intensity: { glyph: 1, flatField: 0.55, ring: 1 },
+  geom: {
+    stageW: 360, stageH: 240,
+    blockX: 92, blockY: 24, blockW: 176, blockH: 190, wallPad: 5,
+    glyphW: 30, glyphH: 19, glyphRx: 5, budR: 3.4, winW: 17, winH: 21,
+    zoomFrom: 1.32, zoomMs: 3000, ringStartMs: 9500, ringR: 16, ringStroke: 2, ringFadeMs: 300,
+    sunX: 302, sunY: 34, sunR: 17, sunColor: "#f2d98c",
+    citySeed: 7, cityCount: 9, cityOpacity: 0.55, cityWMin: 22, cityWVar: 30,
+    cityHMin: 40, cityHVar: 80, cityJitter: 8, cityClear: 6,
+    groundH: 14, dimMax: 0.32, dimMs: 2000,
+    winGroupOpacity: 0.9, winLitOpacity: 0.85, winUnlitOpacity: 0.6, winStroke: 1.6,
+    winXFrac: 0.16, glyphXFrac: 0.1, budDividerW: 2,
+    hudX: 10, hudY: 8, yearPx: 16, clockPx: 30, yearSpacingPx: 1, clockGapPx: 4,
+    terraceFloor: 1, terraceW: 20, figureH: 17, terraceYFrac: 0.28,
+    terraceSlabH: 3, figOff: 4, figGap: 9, figHeadR: 2.6, figBodyW: 4.4, figBodyOff: 5.6
+  }
+};
+/* ================= CONFIG end ================= */
+
+/* URL override (?cfg={...}) — deep merge; arrays replace wholesale. */
+function deepMerge(base, over){
+  if (Array.isArray(over)) return over.slice();
+  if (over && typeof over === 'object'){
+    const out = {};
+    for (const k of Object.keys(base)) out[k] = deepMerge(base[k], over[k]);
+    for (const k of Object.keys(over)) if (!(k in out)) out[k] = over[k];
+    return out;
+  }
+  return over === undefined ? base : over;
+}
+let CFG = CONFIG;
+try {
+  const q = new URLSearchParams(location.search).get('cfg');
+  if (q) CFG = deepMerge(CONFIG, JSON.parse(q));
+} catch (e) { /* malformed override: fall back to defaults */ }
+
+/* Derived schedule (codex-plan-review cure: endHold is derived, never a stale literal). */
+const floorsTotal = CFG.block.floors, colsTotal = CFG.block.cols;
+const revealPhaseMs = floorsTotal * CFG.revealMs;              // pull-back phase
+const endHoldMs = CFG.durationMs - revealPhaseMs - CFG.holdMs; // rings + dim + settle
+const derivedOk = endHoldMs >= 0;
+
+/* Deterministic city generator (seed from CONFIG; geometry is subject-shaping, in CONFIG). */
+function rng(seed){ let s = seed >>> 0; return function(){ s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+
+/* Glyph renderer registry (plan-review cure): cell.glyph names the renderer. */
+const GLYPHS = {
+  "earbud-case": function(g, cx, cy){
+    const w = g.glyphW, h = g.glyphH;
+    let s = '<rect x="' + (cx - w/2) + '" y="' + (cy - h/2) + '" width="' + w + '" height="' + h + '" rx="' + g.glyphRx + '"/>';
+    s += '<circle cx="' + (cx - w/4) + '" cy="' + cy + '" r="' + g.budR + '" fill="' + CFG.palette.flat + '"/>';
+    s += '<circle cx="' + (cx + w/4) + '" cy="' + cy + '" r="' + g.budR + '" fill="' + CFG.palette.flat + '"/>';
+    s += '<rect x="' + (cx - g.budDividerW/2) + '" y="' + (cy - h/2) + '" width="' + g.budDividerW + '" height="' + h + '" fill="' + CFG.palette.flat + '"/>';
+    return s;
+  }
+};
+
+function buildScene(){
+  const g = CFG.geom, P = CFG.palette;
+  const W = g.stageW, H = g.stageH;
+  const rand = rng(g.citySeed);
+  let city = '';
+  for (let i = 0; i < g.cityCount; i++){
+    const bw = g.cityWMin + rand() * g.cityWVar, bh = g.cityHMin + rand() * g.cityHVar;
+    const bx = (W / g.cityCount) * i + rand() * g.cityJitter;
+    if (bx > g.blockX - g.cityClear && bx < g.blockX + g.blockW - g.cityClear) continue; // keep the block's face clear
+    city += '<rect x="' + bx.toFixed(1) + '" y="' + (H - g.groundH - bh) + '" width="' + bw.toFixed(1) + '" height="' + bh + '" fill="' + P.wall + '" opacity="' + g.cityOpacity + '"/>';
+  }
+  /* flats: generated, floor 0 = TOP row; every flat from the same loop */
+  const innerW = g.blockW - g.wallPad * 2, innerH = g.blockH - g.wallPad * 2;
+  const cellW = innerW / colsTotal, cellH = innerH / floorsTotal;
+  let flats = '';
+  for (let f = 0; f < floorsTotal; f++){
+    for (let c = 0; c < colsTotal; c++){
+      const x = g.blockX + g.wallPad + c * cellW, y = g.blockY + g.wallPad + f * cellH;
+      const cx = x + cellW / 2, cy = y + cellH / 2;
+      flats += '<g class="flat" data-floor="' + f + '">';
+      flats += '<rect x="' + x + '" y="' + y + '" width="' + cellW + '" height="' + cellH + '" fill="' + P.flat + '" opacity="' + CFG.intensity.flatField + '" stroke="' + P.wall + '"/>';
+      /* window cross, left of the glyph */
+      const wx = x + cellW * g.winXFrac, wy = cy - g.winH / 2;
+      flats += '<g opacity="' + g.winGroupOpacity + '"><rect x="' + wx + '" y="' + wy + '" width="' + g.winW + '" height="' + g.winH + '" fill="' + (CFG.cell.windowLit ? P.glyph : P.wall) + '" opacity="' + (CFG.cell.windowLit ? g.winLitOpacity : g.winUnlitOpacity) + '"/>' +
+        '<path d="M' + (wx + g.winW/2) + ' ' + wy + ' V' + (wy + g.winH) + ' M' + wx + ' ' + (wy + g.winH/2) + ' H' + (wx + g.winW) + '" stroke="' + P.wall + '" stroke-width="' + g.winStroke + '"/></g>';
+      /* the device glyph — foreground intensity (Cure 1) */
+      flats += '<g class="glyph" fill="' + P.glyph + '" opacity="' + CFG.intensity.glyph + '">' + GLYPHS[CFG.cell.glyph](g, cx + cellW * g.glyphXFrac, cy) + '</g>';
+      /* notice ring (phase C), hidden until its floor's stagger lands */
+      flats += '<circle class="ring" data-floor="' + f + '" cx="' + (cx + cellW * g.glyphXFrac) + '" cy="' + cy + '" r="' + g.ringR + '" fill="none" stroke="' + P.ink + '" stroke-width="' + g.ringStroke + '" opacity="0"/>';
+      flats += '</g>';
+    }
+  }
+  /* terrace: CONFIG-gated context on the block's right edge */
+  let terrace = '';
+  if (CFG.terrace.enabled && CFG.terrace.figures > 0){
+    const ty = g.blockY + g.wallPad + g.terraceFloor * cellH + cellH * g.terraceYFrac;
+    terrace = '<g><rect x="' + (g.blockX + g.blockW) + '" y="' + (ty + g.figureH) + '" width="' + g.terraceW + '" height="' + g.terraceSlabH + '" fill="' + P.wall + '"/>';
+    for (let i = 0; i < CFG.terrace.figures; i++){
+      const fx = g.blockX + g.blockW + g.figOff + i * g.figGap;
+      terrace += '<g fill="' + P.ink + '"><circle cx="' + fx + '" cy="' + (ty + g.terraceSlabH) + '" r="' + g.figHeadR + '"/><rect x="' + (fx - g.figBodyW/2) + '" y="' + (ty + g.figBodyOff) + '" width="' + g.figBodyW + '" height="' + (g.figureH - g.figBodyOff) + '" rx="2"/></g>';
+    }
+    terrace += '</g>';
+  }
+  const hud = '<g font-family="' + CFG.type.font + '" fill="' + P.ink + '">' +
+    '<text x="' + g.hudX + '" y="' + (g.hudY + g.yearPx) + '" font-size="' + g.yearPx + '" letter-spacing="' + g.yearSpacingPx + '">' + CFG.hud.year + ' · ' + CFG.hud.dayLine + '</text>' +
+    '<text x="' + g.hudX + '" y="' + (g.hudY + g.yearPx + g.clockPx + g.clockGapPx) + '" font-size="' + g.clockPx + '">' + CFG.hud.clock + '</text></g>';
+  document.getElementById('stage').style.cssText = 'width:' + W + 'px;height:' + H + 'px;background:' + P.bg + ';font-family:' + CFG.type.font + ';';
+  document.getElementById('stage').innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">' +
+    '<g id="world">' +
+      '<circle cx="' + g.sunX + '" cy="' + g.sunY + '" r="' + g.sunR + '" fill="' + g.sunColor + '"/>' +
+      city +
+      '<rect x="0" y="' + (H - g.groundH) + '" width="' + W + '" height="' + g.groundH + '" fill="' + P.wall + '"/>' +
+      '<rect x="' + g.blockX + '" y="' + g.blockY + '" width="' + g.blockW + '" height="' + g.blockH + '" fill="' + P.wall + '"/>' +
+      flats + terrace +
+    '</g>' +
+    '<rect id="dim" x="0" y="0" width="' + W + '" height="' + H + '" fill="' + P.bg + '" opacity="0"/>' +
+    hud +
+    '</svg>';
+}
+
+function render(tMs){
+  if (!derivedOk) return;
+  const g = CFG.geom;
+  const t = ((tMs % CFG.durationMs) + CFG.durationMs) % CFG.durationMs;
+  /* Phase A (0..revealPhaseMs): camera pull-back, close -> wide (OBSERVED 0-~3 s). */
+  const zp = Math.min(1, t / g.zoomMs);
+  const scale = g.zoomFrom + (1 - g.zoomFrom) * zp;
+  const world = document.querySelector('#world');
+  if (world) world.setAttribute('transform', 'translate(' + (g.stageW/2) + ' ' + (g.stageH/2) + ') scale(' + scale.toFixed(4) + ') translate(' + (-g.stageW/2) + ' ' + (-g.stageH/2) + ')');
+  /* Phase C (rings): floor stagger inside the end hold (OBSERVED late accent; order ALLOCATION). */
+  const ringStart = g.ringStartMs;
+  document.querySelectorAll('.ring').forEach(function(el){
+    const f = Number(el.getAttribute('data-floor'));
+    const local = t - (ringStart + f * CFG.revealMs);
+    let o = 0;
+    if (local > 0) o = Math.min(1, local / g.ringFadeMs) * CFG.intensity.ring;
+    el.setAttribute('opacity', o.toFixed(3));
+  });
+  /* Dim ramp over the final dimMs (OBSERVED darkening toward the segment end). */
+  const dim = document.querySelector('#dim');
+  if (dim){
+    const dp = Math.max(0, Math.min(1, (t - (CFG.durationMs - g.dimMs)) / g.dimMs));
+    dim.setAttribute('opacity', (dp * g.dimMax).toFixed(3));
+  }
+}
+window.__render = render;
+window.__config = CFG;
+window.__derived = { revealPhaseMs: revealPhaseMs, endHoldMs: endHoldMs, derivedOk: derivedOk };
+
+buildScene();
+render(0);
+if (!new URLSearchParams(location.search).has('still')){
+  const t0 = performance.now();
+  (function loop(now){ render(now - t0); requestAnimationFrame(loop); })(t0);
+}
+</script>
+</body>
+</html>

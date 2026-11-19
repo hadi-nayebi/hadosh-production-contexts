@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T68 — Threshold-interpretation ladder (parameterized recreation)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; display: flex; justify-content: center; }
+  #stage { position: relative; overflow: hidden; }
+  #card { position: absolute; opacity: 0; }
+  #cardTitle { font-weight: 800; white-space: nowrap; overflow: hidden; }
+  #cardRule { }
+  .band { display: flex; align-items: flex-start; opacity: 0; font-weight: 700; }
+  .bandText { word-break: normal; overflow-wrap: break-word; }
+  .bandRange { font-weight: 800; }
+  .dot { flex: 0 0 auto; border-radius: 50%; }
+  #cal { position: absolute; opacity: 0; overflow: hidden; text-align: center; }
+  #calHead { font-weight: 800; }
+  #calDay { font-weight: 800; line-height: 1; }
+  #calWeekday { }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="card">
+    <div id="cardTitle"></div>
+    <div id="cardRule"></div>
+    <div id="bands"></div>
+  </div>
+  <div id="cal">
+    <div id="calHead"></div>
+    <div id="calDay"></div>
+    <div id="calWeekday"></div>
+  </div>
+</div>
+<script>
+"use strict";
+let CONFIG = {
+  card: { title: "December 1: the number" },
+  bands: [
+    { range: "45 or more", meaning: "louder on TV than in the room" },
+    { range: "Mid-30s", meaning: "a leader who owes people" }
+  ],
+  calendar: { enabled: true, month: "Dec", day: "1", weekday: "Tuesday" },
+  palette: { card: "#232d36", ink: "#ffffff", accent: "#e8b62a", bg: "#256a7d", calHead: "#d84a35", calHeadInk: "#ffffff", calPaper: "#f7efdc", calInk: "#1d2733" },
+  stage: { width: 360 },
+  layout: { cardX: 104, cardY: 14, cardW: 244, calX: 10, calY: 102, calW: 88, calH: 94 },
+  geom: { padX: 14, padY: 12, radius: 8, ruleHPx: 2, ruleTopPx: 6, ruleBottomPx: 8, bulletPx: 7, bulletGapPx: 6, bulletTopPx: 5, bandGapPx: 6, calHeadHPx: 24, calRadius: 6 },
+  type: { titlePx: 17, titleMinPx: 12, bandPx: 14, bandMinPx: 11, maxBandLines: 2, lineHeight: 1.25, charWidthFrac: 0.56, calMonthPx: 16, calDayPx: 32, calWeekdayPx: 13 },
+  cardAtMs: 5800,
+  enterMs: 600,
+  enterScaleFrom: 0.96,
+  firstBandDelayMs: 300,
+  bandMs: 700,
+  bandAnimMs: 350,
+  holdMs: 5000,
+  fadeMs: 600,
+  durationMs: 14000
+};
+// URL overrides: ?config=<url-encoded JSON>, ALLOWLISTED schema only:
+// unknown keys dropped; colors must be #rrggbb; numbers finite.
+const OVERRIDE_SCHEMA = {
+  card: { title: "string" },
+  bands: "bandArray",
+  calendar: { enabled: "boolean", month: "string", day: "string", weekday: "string" },
+  palette: { card: "color", ink: "color", accent: "color", bg: "color", calHead: "color", calHeadInk: "color", calPaper: "color", calInk: "color" },
+  stage: { width: "number" },
+  layout: { cardX: "number", cardY: "number", cardW: "number", calX: "number", calY: "number", calW: "number", calH: "number" },
+  geom: { padX: "number", padY: "number", radius: "number", ruleHPx: "number", ruleTopPx: "number", ruleBottomPx: "number", bulletPx: "number", bulletGapPx: "number", bulletTopPx: "number", bandGapPx: "number", calHeadHPx: "number", calRadius: "number" },
+  type: { titlePx: "number", titleMinPx: "number", bandPx: "number", bandMinPx: "number", maxBandLines: "number", lineHeight: "number", charWidthFrac: "number", calMonthPx: "number", calDayPx: "number", calWeekdayPx: "number" },
+  cardAtMs: "number", enterMs: "number", enterScaleFrom: "number", firstBandDelayMs: "number", bandMs: "number",
+  bandAnimMs: "number", holdMs: "number", fadeMs: "number", durationMs: "number"
+};
+function validOverride(kind, v) {
+  if (kind === "string") return typeof v === "string";
+  if (kind === "boolean") return typeof v === "boolean";
+  if (kind === "number") return typeof v === "number" && isFinite(v);
+  if (kind === "color") return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v);
+  if (kind === "bandArray") return Array.isArray(v) && v.length > 0 && v.every((b) => b && typeof b.range === "string" && typeof b.meaning === "string");
+  return false;
+}
+function applyOverrides(cfg) {
+  try {
+    const q = new URLSearchParams(location.search).get("config");
+    if (!q) return cfg;
+    const o = JSON.parse(q);
+    for (const k of Object.keys(OVERRIDE_SCHEMA)) {
+      if (!(k in o)) continue;
+      const spec = OVERRIDE_SCHEMA[k];
+      if (typeof spec === "string") { if (validOverride(spec, o[k])) cfg[k] = o[k]; }
+      else if (o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) {
+        for (const sub of Object.keys(spec)) if (sub in o[k] && validOverride(spec[sub], o[k][sub])) cfg[k][sub] = o[k][sub];
+      }
+    }
+  } catch (e) { /* malformed override ignored */ }
+  return cfg;
+}
+const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+applyOverrides(CONFIG);
+
+function schedule(cfg) {
+  const n = cfg.bands.length;
+  const cardDone = cfg.cardAtMs + cfg.enterMs;
+  // Band 1 lands WITH the card (wave cure): band starts are anchored to the
+  // card's entrance start, so band 1's wipe completes as the unit lands.
+  const bandStarts = cfg.bands.map((_, i) => cfg.cardAtMs + cfg.firstBandDelayMs + i * cfg.bandMs);
+  const lastBandDone = n ? bandStarts[n - 1] + cfg.bandAnimMs : cardDone;
+  const holdEnd = lastBandDone + cfg.holdMs;
+  const fadeEnd = holdEnd + cfg.fadeMs;
+  return { cardDone, bandStarts, lastBandDone, holdEnd, fadeEnd };
+}
+function configOk(cfg) {
+  const L = cfg.layout, G = cfg.geom, T = cfg.type;
+  const nums = [cfg.stage.width, L.cardX, L.cardY, L.cardW, L.calX, L.calY, L.calW, L.calH,
+    G.padX, G.padY, cfg.cardAtMs, cfg.enterMs, cfg.firstBandDelayMs, cfg.bandMs, cfg.bandAnimMs,
+    cfg.holdMs, cfg.fadeMs, cfg.durationMs, T.titlePx, T.bandPx];
+  if (!nums.every((v) => typeof v === "number" && isFinite(v))) return false;
+  if (!(L.cardW > 0 && cfg.stage.width > 0 && cfg.enterMs > 0 && cfg.bandMs > 0 && cfg.bandAnimMs > 0)) return false;
+  if (!(cfg.cardAtMs >= 0 && cfg.firstBandDelayMs >= 0 && cfg.holdMs >= 0 && cfg.fadeMs >= 0)) return false;
+  if (!(L.cardX + L.cardW <= cfg.stage.width)) return false;
+  if (!Array.isArray(cfg.bands) || cfg.bands.length === 0) return false;
+  if (!cfg.bands.every((b) => b && typeof b.range === "string" && typeof b.meaning === "string")) return false;
+  return true;
+}
+// Duration policy (plan-review cure): durationMs is the floor, not a cap —
+// the piece expands so the derived schedule always completes; an override
+// that adds bands lengthens the piece instead of truncating or rejecting it.
+function effectiveDuration(cfg) { return Math.max(cfg.durationMs, schedule(cfg).fadeEnd); }
+if (!configOk(CONFIG)) { CONFIG = JSON.parse(JSON.stringify(DEFAULTS)); }
+
+// Text measurement: canvas when available, CONFIG char-width model otherwise.
+const measureCtx = (typeof document !== "undefined" && document.createElement) ? document.createElement("canvas").getContext("2d") : null;
+function textWidth(text, px, weight, cfg) {
+  if (measureCtx) { measureCtx.font = weight + " " + px + "px Arial, Helvetica, sans-serif"; return measureCtx.measureText(text).width; }
+  return text.length * px * cfg.type.charWidthFrac;
+}
+function fitPx(text, maxPx, minPx, availW, weight, cfg) {
+  let px = maxPx;
+  while (px > minPx && textWidth(text, px, weight, cfg) > availW) px -= 1;
+  return px;
+}
+function wrapLines(text, px, weight, availW, cfg) {
+  const words = text.split(" ");
+  let lines = 1, cur = "";
+  for (const w of words) {
+    const trial = cur ? cur + " " + w : w;
+    if (cur && textWidth(trial, px, weight, cfg) > availW) { lines += 1; cur = w; } else cur = trial;
+  }
+  return lines;
+}
+function bandLine(band) { return band.range + ": " + band.meaning; }
+function metrics(cfg) {
+  const L = cfg.layout, G = cfg.geom, T = cfg.type;
+  const innerW = L.cardW - G.padX * 2;
+  const titlePx = fitPx(cfg.card.title, T.titlePx, T.titleMinPx, innerW, "800", cfg);
+  const bandAvail = innerW - G.bulletPx - G.bulletGapPx;
+  const bandRows = cfg.bands.map((b) => {
+    // Per-band measured fit (plan-review cure): shrink from bandPx toward
+    // bandMinPx until the band wraps within maxBandLines; bandMinPx is a
+    // real bound here, and fitOk() below rejects a config that still
+    // cannot fit at the floor.
+    let px = T.bandPx;
+    let lines = wrapLines(bandLine(b), px, "700", bandAvail, cfg);
+    while (px > T.bandMinPx && lines > T.maxBandLines) { px -= 1; lines = wrapLines(bandLine(b), px, "700", bandAvail, cfg); }
+    return { px, lines, height: lines * px * T.lineHeight };
+  });
+  const bandsH = bandRows.reduce((a, r) => a + r.height, 0) + G.bandGapPx * Math.max(0, cfg.bands.length - 1);
+  const cardH = G.padY * 2 + titlePx * T.lineHeight + G.ruleTopPx + G.ruleHPx + G.ruleBottomPx + bandsH;
+  return { innerW, titlePx, bandAvail, bandRows, cardH };
+}
+function fitOk(cfg) {
+  const m = metrics(cfg);
+  if (textWidth(cfg.card.title, cfg.type.titleMinPx, "800", cfg) > m.innerW) return false;
+  for (let i = 0; i < cfg.bands.length; i++) {
+    if (m.bandRows[i].lines > cfg.type.maxBandLines) return false;
+    const words = bandLine(cfg.bands[i]).split(" ");
+    for (const w of words) if (textWidth(w, cfg.type.bandMinPx, "700", cfg) > m.bandAvail) return false;
+  }
+  if (cfg.layout.cardY + m.cardH > Math.round(cfg.stage.width * 9 / 16)) return false;
+  return true;
+}
+if (!fitOk(CONFIG)) { CONFIG = JSON.parse(JSON.stringify(DEFAULTS)); }
+
+const stageEl = document.getElementById("stage");
+const cardEl = document.getElementById("card");
+const titleEl = document.getElementById("cardTitle");
+const ruleEl = document.getElementById("cardRule");
+const bandsEl = document.getElementById("bands");
+const calEl = document.getElementById("cal");
+const calHeadEl = document.getElementById("calHead");
+const calDayEl = document.getElementById("calDay");
+const calWeekdayEl = document.getElementById("calWeekday");
+let bandEls = [];
+function build(cfg) {
+  const L = cfg.layout, G = cfg.geom, T = cfg.type, P = cfg.palette;
+  const m = metrics(cfg);
+  const stageH = Math.round(cfg.stage.width * 9 / 16);
+  stageEl.style.width = cfg.stage.width + "px";
+  stageEl.style.height = stageH + "px";
+  stageEl.style.background = P.bg;
+  cardEl.style.left = L.cardX + "px";
+  cardEl.style.top = L.cardY + "px";
+  cardEl.style.width = L.cardW + "px";
+  cardEl.style.height = m.cardH + "px";
+  cardEl.style.background = P.card;
+  cardEl.style.borderRadius = G.radius + "px";
+  cardEl.style.padding = G.padY + "px " + G.padX + "px";
+  titleEl.textContent = cfg.card.title;
+  titleEl.style.color = P.accent;
+  titleEl.style.fontSize = m.titlePx + "px";
+  titleEl.style.lineHeight = String(T.lineHeight);
+  ruleEl.style.background = P.accent;
+  ruleEl.style.height = G.ruleHPx + "px";
+  ruleEl.style.marginTop = G.ruleTopPx + "px";
+  ruleEl.style.marginBottom = G.ruleBottomPx + "px";
+  bandsEl.innerHTML = "";
+  bandEls = cfg.bands.map((b, i) => {
+    const row = document.createElement("div");
+    row.className = "band";
+    if (i > 0) row.style.marginTop = G.bandGapPx + "px";
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    dot.style.width = G.bulletPx + "px";
+    dot.style.height = G.bulletPx + "px";
+    dot.style.marginRight = G.bulletGapPx + "px";
+    dot.style.marginTop = G.bulletTopPx + "px";
+    dot.style.background = P.accent;
+    const txt = document.createElement("span");
+    txt.className = "bandText";
+    txt.style.fontSize = m.bandRows[i].px + "px";
+    txt.style.lineHeight = String(T.lineHeight);
+    txt.style.color = P.ink;
+    const rng = document.createElement("span");
+    rng.className = "bandRange";
+    rng.textContent = b.range + ": ";
+    const mean = document.createElement("span");
+    mean.textContent = b.meaning;
+    txt.appendChild(rng); txt.appendChild(mean);
+    row.appendChild(dot); row.appendChild(txt);
+    bandsEl.appendChild(row);
+    return row;
+  });
+  calEl.style.display = cfg.calendar.enabled ? "block" : "none";
+  calEl.style.left = L.calX + "px";
+  calEl.style.top = L.calY + "px";
+  calEl.style.width = L.calW + "px";
+  calEl.style.height = L.calH + "px";
+  calEl.style.background = P.calPaper;
+  calEl.style.borderRadius = G.calRadius + "px";
+  calHeadEl.textContent = cfg.calendar.month;
+  calHeadEl.style.background = P.calHead;
+  calHeadEl.style.color = P.calHeadInk;
+  calHeadEl.style.height = G.calHeadHPx + "px";
+  calHeadEl.style.lineHeight = G.calHeadHPx + "px";
+  calHeadEl.style.fontSize = T.calMonthPx + "px";
+  calDayEl.textContent = cfg.calendar.day;
+  calDayEl.style.color = P.calInk;
+  calDayEl.style.fontSize = T.calDayPx + "px";
+  calWeekdayEl.textContent = cfg.calendar.weekday;
+  calWeekdayEl.style.color = P.calInk;
+  calWeekdayEl.style.fontSize = T.calWeekdayPx + "px";
+  return m;
+}
+const METRICS = build(CONFIG);
+function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+function render(t) {
+  const cfg = CONFIG, s = schedule(cfg);
+  // Card + calendar land as ONE unit (T57 cure): a single entrance progress
+  // drives the whole card (title, rule, shell) and the companion calendar.
+  const enter = clamp01((t - cfg.cardAtMs) / cfg.enterMs);
+  const exit = clamp01((t - s.holdEnd) / cfg.fadeMs);
+  const vis = enter * (1 - exit);
+  cardEl.style.opacity = String(vis);
+  cardEl.style.transform = "scale(" + String(cfg.enterScaleFrom + (1 - cfg.enterScaleFrom) * enter) + ")";
+  calEl.style.opacity = String(enter);
+  for (let i = 0; i < bandEls.length; i++) {
+    // Horizontal wipe reveal (the specimen's mechanic; wave cure for the
+    // fade substitution): progress unclips the band left-to-right. Exit
+    // rides the parent card only - band opacity is NOT compounded.
+    const p = clamp01((t - s.bandStarts[i]) / cfg.bandAnimMs);
+    bandEls[i].style.opacity = p > 0 ? "1" : "0";
+    bandEls[i].style.clipPath = "inset(0 " + String((1 - p) * 100) + "% 0 0)";
+  }
+  return { t, enter, bandProgress: bandEls.map((_, i) => clamp01((t - s.bandStarts[i]) / cfg.bandAnimMs)) };
+}
+let startStamp = null, seeked = null;
+function frame(now) {
+  if (seeked === null) {
+    if (startStamp === null) startStamp = now;
+    render((now - startStamp) % effectiveDuration(CONFIG));
+  }
+  requestAnimationFrame(frame);
+}
+if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(frame);
+window.__T68 = { seek: (ms) => { seeked = ms; return render(ms); }, render, CONFIG, schedule: schedule(CONFIG), metrics: METRICS, effectiveDuration: effectiveDuration(CONFIG) };
+</script>
+</body>
+</html>

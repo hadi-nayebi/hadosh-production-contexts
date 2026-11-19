@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T66 comparison — money stacks with sourced totals</title>
+<style>
+  html,body{margin:0;padding:0;background:#2e2a20;font-family:Arial,Helvetica,sans-serif;color:#f3eedd;}
+  h1{font-size:16px;margin:12px;}
+  #wrap{display:flex;gap:12px;padding:0 12px;box-sizing:border-box;}
+  .side{flex:1 1 0;min-width:0;}
+  .label{font-size:13px;font-weight:700;margin:6px 0;}
+  video,iframe{width:100%;border:1px solid #6a5f42;border-radius:4px;background:#000;}
+  video{aspect-ratio:16/9;}
+  iframe{aspect-ratio:360/460;}
+  #controls{display:flex;gap:10px;padding:12px;}
+  #controls button{min-height:48px;min-width:96px;font-size:15px;font-weight:700;border-radius:6px;border:0;background:#e8b62a;color:#1c1c1c;cursor:pointer;}
+  @media (max-width:640px){ #wrap{flex-direction:column;} }
+</style>
+</head>
+<body>
+<h1>T66 — Money stacks with sourced totals · comparison</h1>
+<div id="controls">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnPause" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+</div>
+<div id="wrap">
+  <div class="side">
+    <div class="label">ORIGINAL — Epochs in Ink @ 638–652 s</div>
+    <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+  </div>
+  <div class="side">
+    <div class="label">RECREATION — T66 money stacks with sourced totals, parameterized</div>
+    <iframe id="rec" src="recreation.html" title="T66 recreation"></iframe>
+  </div>
+</div>
+<script>
+"use strict";
+const orig = document.getElementById("orig");
+const rec = document.getElementById("rec");
+function api() { try { return rec.contentWindow && rec.contentWindow.__T66; } catch (e) { return null; } }
+let driftTimer = null;
+function startDrift() {
+  stopDrift();
+  driftTimer = setInterval(() => {
+    const a = api(); if (!a || orig.paused) return;
+    a.seek(orig.currentTime * 1000); a.play();
+  }, 4000);
+}
+function stopDrift() { if (driftTimer) { clearInterval(driftTimer); driftTimer = null; } }
+document.getElementById("btnPlay").addEventListener("click", () => {
+  const a = api(); orig.play();
+  if (a) { a.seek(orig.currentTime * 1000); a.play(); }
+  startDrift();
+});
+document.getElementById("btnPause").addEventListener("click", () => {
+  const a = api(); orig.pause(); if (a) a.pause(); stopDrift();
+});
+document.getElementById("btnRestart").addEventListener("click", () => {
+  const a = api(); orig.currentTime = 0; orig.play();
+  if (a) { a.seek(0); a.play(); }
+  startDrift();
+});
+orig.addEventListener("ended", () => { const a = api(); if (a) a.pause(); stopDrift(); });
+</script>
+</body>
+</html>

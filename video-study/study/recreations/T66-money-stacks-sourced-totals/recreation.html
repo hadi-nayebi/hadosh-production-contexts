@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T66 — Money stacks with sourced totals (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  .bundle{position:absolute;box-sizing:border-box;}
+  .bundle .band{position:absolute;left:0;right:0;}
+  .tag{position:absolute;box-sizing:border-box;}
+  .tag .hole{position:absolute;border-radius:50%;}
+  .tag .sponsor{position:absolute;white-space:nowrap;}
+  .tag .total{position:absolute;white-space:nowrap;}
+  #counter{position:absolute;box-sizing:border-box;text-align:center;}
+  #counter .clabel{white-space:nowrap;}
+  #counter .ctotal{white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+/* ============ CONFIG — every variable of the technique lives here ============ */
+const CONFIG = {
+  durationMs: 14000,
+  segment: { stack1EnterMs: 2000, stack1EnterDurMs: 500 },
+  lifecycle: { startMs: 15000 },
+  stage: { width: 360, height: 460 },
+  stacks: [
+    { sponsor: "SENATE MAJORITY PAC", total: "$67 million", rows: 5, x: 118, baseY: 120, tagColor: "#f3e3a1" },
+    { sponsor: "SENATE MAJORITY PAC", total: "$65 million", rows: 5, x: 242, baseY: 302, tagColor: "#f3e3a1" }
+  ],
+  palette: { bg: "#8a7a52", bundle: "#d8cf9f", band: "#b8860b", tag: "#f3e3a1", ink: "#1d2733" },
+  geom: { bundleW: 24, bundleH: 11, bundleGapPx: 2, rowGapPx: 2, bandTopPx: 4, bandHPx: 3,
+          tagW: 248, tagH: 58, tagGapY: 14, tagPointFrac: 0.07, holePx: 10, holeLeftPx: 15,
+          tagPadLeftPx: 38, tagPadRightPx: 8, sponsorTopPx: 8, totalTopPx: 28,
+          counterW: 244, counterH: 60, counterY: 392, counterLabelTopPx: 7, counterTotalTopPx: 28,
+          tagRisePx: 8, borderPx: 1 },
+  rowMs: 220,
+  tagMs: 500,
+  holdMs: 4000,
+  stackStaggerMs: 2000,
+  popMs: 140,
+  popFromScale: 0.7,
+  counter: { enabled: false, label: "NEW VOTERS REGISTERED", total: "100,000", color: "#e8b62a" },
+  type: { sponsorPx: 16, totalPx: 22, counterLabelPx: 16, counterTotalPx: 18, boldWeight: 700 }
+};
+
+/* ============ Pure layout core (no DOM — node-testable) ============ */
+function computeLayout(cfg) {
+  const g = cfg.geom;
+  let prevTagEndMs = 0;
+  const stacks = cfg.stacks.map((s, si) => {
+    /* stackStaggerMs is the EARLIEST eligible start; a stack never starts
+       before the previous stack's tag completes (phase exclusivity by
+       construction, not by checkpoint). */
+    const startMs = Math.max(si * cfg.stackStaggerMs, prevTagEndMs);
+    const bundles = [];
+    for (let r = 0; r < s.rows; r++) {
+      const count = s.rows - r;
+      const rowWidth = count * g.bundleW + (count - 1) * g.bundleGapPx;
+      for (let j = 0; j < count; j++) {
+        bundles.push({ stack: si, row: r, j,
+          x: s.x - rowWidth / 2 + j * (g.bundleW + g.bundleGapPx),
+          y: s.baseY - (r + 1) * g.bundleH - r * g.rowGapPx,
+          atMs: startMs + r * cfg.rowMs });
+      }
+    }
+    /* the tag enters only after the final row's pop has fully ended */
+    const tagAtMs = startMs + Math.max(s.rows * cfg.rowMs, (s.rows - 1) * cfg.rowMs + cfg.popMs);
+    const tagX = Math.min(Math.max(s.x - g.tagW / 2, 0), cfg.stage.width - g.tagW);
+    const out = { sponsor: s.sponsor, total: s.total, rows: s.rows, startMs, bundles,
+             bundleCount: bundles.length,
+             tagAtMs, tagEndMs: tagAtMs + cfg.tagMs,
+             tagX, tagY: s.baseY + g.tagGapY,
+             tagColor: s.tagColor, holeColor: cfg.palette.tag };
+    prevTagEndMs = out.tagEndMs;
+    return out;
+  });
+  const lastTagEndMs = stacks.reduce((m, s) => Math.max(m, s.tagEndMs), 0);
+  const counterAtMs = lastTagEndMs + cfg.tagMs;
+  const counterEndMs = counterAtMs + cfg.tagMs;
+  const buildEndMs = cfg.counter.enabled ? counterEndMs : lastTagEndMs;
+  const counterX = (cfg.stage.width - g.counterW) / 2;
+  /* ACT 1 (segment, 0..durationMs) replays the measured window; ACT 2
+     (lifecycle, from lifecycle.startMs) demonstrates the allocation-model
+     build on the schedule above; runtime ends after its hold. */
+  const runtimeMs = cfg.lifecycle.startMs + buildEndMs + cfg.holdMs;
+  return { stacks, lastTagEndMs, counterAtMs, counterEndMs, buildEndMs, counterX, runtimeMs };
+}
+function checkpointsOk(cfg, L) {
+  L = L || computeLayout(cfg);
+  if (!cfg.stacks || cfg.stacks.length < 1) return false;
+  for (const s of L.stacks) {
+    if (!(s.rows >= 1)) return false;
+    if (s.bundleCount !== s.rows * (s.rows + 1) / 2) return false;
+    if (!(s.tagAtMs === s.startMs + Math.max(s.rows * cfg.rowMs, (s.rows - 1) * cfg.rowMs + cfg.popMs))) return false;
+    if (!(s.tagEndMs === s.tagAtMs + cfg.tagMs)) return false;
+    if (s.tagX < 0 || s.tagX + cfg.geom.tagW > cfg.stage.width) return false;
+    for (const b of s.bundles) {
+      if (b.x < 0 || b.x + cfg.geom.bundleW > cfg.stage.width) return false;
+      if (b.y < 0) return false;
+    }
+  }
+  for (let i = 1; i < L.stacks.length; i++) {
+    if (!(L.stacks[i].startMs >= L.stacks[i - 1].tagEndMs)) return false;
+  }
+  if (!(cfg.segment.stack1EnterMs + cfg.segment.stack1EnterDurMs <= cfg.durationMs)) return false;
+  if (!(cfg.durationMs - (cfg.segment.stack1EnterMs + cfg.segment.stack1EnterDurMs) >= cfg.holdMs)) return false;
+  if (!(cfg.lifecycle.startMs > cfg.durationMs)) return false;
+  if (!(L.runtimeMs === cfg.lifecycle.startMs + L.buildEndMs + cfg.holdMs)) return false;
+  if (cfg.counter.enabled && !(L.counterEndMs === L.buildEndMs)) return false;
+  return true;
+}
+function stateAt(cfg, L, t) {
+  L = L || computeLayout(cfg);
+  if (t < cfg.lifecycle.startMs) {
+    /* ACT 1 — the measured segment: stack 0 complete from t=0; every later
+       stack arrives COMPLETE at the segment entry (the camera-pan entry),
+       then the completed state holds. */
+    const p1 = Math.max(0, Math.min(1, (t - cfg.segment.stack1EnterMs) / cfg.segment.stack1EnterDurMs));
+    const stacks = L.stacks.map((s, si) => si === 0
+      ? { bundlesShown: s.bundleCount, rowsShown: s.rows, tagP: 1 }
+      : { bundlesShown: p1 > 0 ? s.bundleCount : 0, rowsShown: p1 > 0 ? s.rows : 0, tagP: p1 });
+    const phase = t < cfg.segment.stack1EnterMs ? "segment-first" : p1 < 1 ? "segment-enter" : "segment-hold";
+    return { stacks, counterP: 0, phase };
+  }
+  /* ACT 2 — the allocation-model build, on the derived schedule. */
+  const lt = t - cfg.lifecycle.startMs;
+  const stacks = L.stacks.map(s => {
+    let bundlesShown = 0;
+    for (const b of s.bundles) if (lt >= b.atMs) bundlesShown++;
+    const rowsShown = s.bundles.reduce((m, b) => lt >= b.atMs ? Math.max(m, b.row + 1) : m, 0);
+    const tagP = Math.max(0, Math.min(1, (lt - s.tagAtMs) / cfg.tagMs));
+    return { bundlesShown, rowsShown, tagP };
+  });
+  const counterP = cfg.counter.enabled ? Math.max(0, Math.min(1, (lt - L.counterAtMs) / cfg.tagMs)) : 0;
+  const phase = lt < L.lastTagEndMs ? "lifecycle-build" : cfg.counter.enabled && lt < L.counterEndMs ? "lifecycle-counter" : "lifecycle-hold";
+  return { stacks, counterP, phase };
+}
+
+/* ============ DOM rendering (browser only) ============ */
+function deepMerge(base, over) {
+  if (Array.isArray(base) && Array.isArray(over)) {
+    return base.map((b, i) => i < over.length ? deepMerge(b, over[i]) : b)
+               .concat(over.slice(base.length));
+  }
+  if (base && over && typeof base === "object" && typeof over === "object") {
+    const out = {}; for (const k in base) out[k] = k in over ? deepMerge(base[k], over[k]) : base[k];
+    for (const k in over) if (!(k in base)) out[k] = over[k]; return out;
+  }
+  return over === undefined ? base : over;
+}
+function effectiveConfig() {
+  let cfg = CONFIG;
+  try {
+    const q = new URLSearchParams(location.search).get("config");
+    if (q) cfg = deepMerge(JSON.parse(JSON.stringify(CONFIG)), JSON.parse(q));
+  } catch (e) { /* keep defaults */ }
+  return cfg;
+}
+if (typeof document !== "undefined" && document.getElementById("stage")) {
+  const cfg = effectiveConfig();
+  const L = computeLayout(cfg);
+  const g = cfg.geom, pal = cfg.palette;
+  const stage = document.getElementById("stage");
+  stage.style.width = cfg.stage.width + "px";
+  stage.style.height = cfg.stage.height + "px";
+  stage.style.background = pal.bg;
+  const stackEls = L.stacks.map((s, si) => {
+    const bundleEls = s.bundles.map(b => {
+      const el = document.createElement("div");
+      el.className = "bundle";
+      el.style.width = g.bundleW + "px"; el.style.height = g.bundleH + "px";
+      el.style.left = b.x + "px"; el.style.top = b.y + "px";
+      el.style.background = pal.bundle;
+      el.style.border = g.borderPx + "px solid " + pal.band;
+      el.style.opacity = "0";
+      const band = document.createElement("div");
+      band.className = "band";
+      band.style.top = g.bandTopPx + "px"; band.style.height = g.bandHPx + "px";
+      band.style.background = pal.band;
+      el.appendChild(band);
+      stage.appendChild(el); return el;
+    });
+    const tag = document.createElement("div");
+    tag.className = "tag";
+    tag.style.width = g.tagW + "px"; tag.style.height = g.tagH + "px";
+    tag.style.left = s.tagX + "px"; tag.style.top = s.tagY + "px";
+    tag.style.background = s.tagColor;
+    const pf = g.tagPointFrac * 100;
+    tag.style.clipPath = "polygon(" + pf + "% 0, 100% 0, 100% 100%, " + pf + "% 100%, 0 50%)";
+    tag.style.opacity = "0";
+    const hole = document.createElement("div");
+    hole.className = "hole";
+    hole.style.width = g.holePx + "px"; hole.style.height = g.holePx + "px";
+    hole.style.left = g.holeLeftPx + "px"; hole.style.top = (g.tagH - g.holePx) / 2 + "px";
+    hole.style.background = s.holeColor;
+    hole.style.border = g.borderPx + "px solid " + pal.ink;
+    tag.appendChild(hole);
+    const sponsor = document.createElement("div");
+    sponsor.className = "sponsor"; sponsor.textContent = s.sponsor;
+    sponsor.style.left = g.tagPadLeftPx + "px"; sponsor.style.top = g.sponsorTopPx + "px";
+    sponsor.style.fontSize = cfg.type.sponsorPx + "px"; sponsor.style.color = pal.ink;
+    tag.appendChild(sponsor);
+    const total = document.createElement("div");
+    total.className = "total"; total.textContent = s.total;
+    total.style.left = g.tagPadLeftPx + "px"; total.style.top = g.totalTopPx + "px";
+    total.style.fontSize = cfg.type.totalPx + "px"; total.style.color = pal.ink;
+    total.style.fontWeight = String(cfg.type.boldWeight);
+    tag.appendChild(total);
+    stage.appendChild(tag);
+    return { bundleEls, tag };
+  });
+  let counterEl = null, counterLabelEl = null, counterTotalEl = null;
+  if (cfg.counter.enabled) {
+    counterEl = document.createElement("div");
+    counterEl.id = "counter";
+    counterEl.style.width = g.counterW + "px"; counterEl.style.height = g.counterH + "px";
+    counterEl.style.left = L.counterX + "px"; counterEl.style.top = g.counterY + "px";
+    counterEl.style.background = cfg.counter.color; counterEl.style.color = pal.ink;
+    counterEl.style.opacity = "0";
+    counterLabelEl = document.createElement("div");
+    counterLabelEl.className = "clabel"; counterLabelEl.textContent = cfg.counter.label;
+    counterLabelEl.style.marginTop = g.counterLabelTopPx + "px";
+    counterLabelEl.style.fontSize = cfg.type.counterLabelPx + "px";
+    counterEl.appendChild(counterLabelEl);
+    counterTotalEl = document.createElement("div");
+    counterTotalEl.className = "ctotal"; counterTotalEl.textContent = cfg.counter.total;
+    counterTotalEl.style.marginTop = (g.counterTotalTopPx - g.counterLabelTopPx - cfg.type.counterLabelPx) + "px";
+    counterTotalEl.style.fontSize = cfg.type.counterTotalPx + "px";
+    counterTotalEl.style.fontWeight = String(cfg.type.boldWeight);
+    counterEl.appendChild(counterTotalEl);
+    stage.appendChild(counterEl);
+  }
+  let t0 = null, pausedAt = 0, playing = false, curT = 0;
+  function render(t) {
+    const st = stateAt(cfg, L, t);
+    if (t < cfg.lifecycle.startMs) {
+      /* ACT 1: completed artwork only — stack 0 at full, later stacks fade
+         in complete at the segment entry. */
+      L.stacks.forEach((s, si) => {
+        const refs = stackEls[si];
+        const o = si === 0 ? 1 : st.stacks[si].tagP;
+        s.bundles.forEach((b, bi) => {
+          refs.bundleEls[bi].style.opacity = String(o);
+          refs.bundleEls[bi].style.transform = "";
+        });
+        refs.tag.style.opacity = String(o);
+        refs.tag.style.transform = "";
+      });
+      if (counterEl) counterEl.style.opacity = "0";
+      return;
+    }
+    const lt = t - cfg.lifecycle.startMs;
+    L.stacks.forEach((s, si) => {
+      const refs = stackEls[si];
+      s.bundles.forEach((b, bi) => {
+        const el = refs.bundleEls[bi];
+        if (lt < b.atMs) { el.style.opacity = "0"; return; }
+        const p = Math.min(1, (lt - b.atMs) / cfg.popMs);
+        const e = 1 - Math.pow(1 - p, 3);
+        el.style.opacity = String(e);
+        el.style.transform = "scale(" + (cfg.popFromScale + (1 - cfg.popFromScale) * e) + ")";
+      });
+      const tp = st.stacks[si].tagP;
+      refs.tag.style.opacity = String(tp);
+      refs.tag.style.transform = "translateY(" + ((1 - tp) * g.tagRisePx) + "px)";
+    });
+    if (counterEl) counterEl.style.opacity = String(st.counterP);
+  }
+  function frame(now) {
+    if (!playing) return;
+    if (t0 === null) t0 = now - pausedAt;
+    const t = now - t0; curT = t;
+    if (t >= L.runtimeMs) { render(L.runtimeMs); playing = false; return; }
+    render(t); requestAnimationFrame(frame);
+  }
+  window.__T66 = {
+    config: cfg, layout: L, checkpointsOk: () => checkpointsOk(cfg, L), stateAt: t => stateAt(cfg, L, t),
+    play() { if (!playing) { playing = true; t0 = null; requestAnimationFrame(frame); } },
+    pause() { playing = false; pausedAt = curT; },
+    seek(tMs) { playing = false; pausedAt = tMs; curT = tMs; render(tMs); },
+    restart() { pausedAt = 0; t0 = null; playing = true; requestAnimationFrame(frame); }
+  };
+  render(0);
+  window.__T66.play();
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG, computeLayout, checkpointsOk, stateAt, deepMerge };
+}
+</script>
+</body>
+</html>

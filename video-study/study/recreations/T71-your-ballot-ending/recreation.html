@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T71 — Your-ballot ending (parameterized recreation)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; display: flex; justify-content: center; }
+  #stage { position: relative; overflow: hidden; }
+  #backdrop { position: absolute; left: 50%; transform: translateX(-50%); }
+  #card { position: relative; margin-left: auto; margin-right: auto; opacity: 0; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+  #org { font-weight: 800; letter-spacing: 1.2px; white-space: normal; }
+  #office { font-weight: 700; }
+  #dateLine { font-weight: 700; }
+  #rule { border: none; }
+  .choice { display: flex; align-items: center; opacity: 0; }
+  .oval { flex: 0 0 auto; border-radius: 50%; }
+  .choiceText { font-weight: 800; white-space: nowrap; overflow: hidden; }
+  #prompt { font-weight: 700; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="backdrop" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+  <div id="card">
+    <div id="org"></div>
+    <div id="office"></div>
+    <div id="dateLine"></div>
+    <hr id="rule">
+    <div id="choices"></div>
+    <div id="prompt"></div>
+  </div>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  ballot: { org: "SENATE DEMOCRATIC CAUCUS", office: "Leader", date: "Dec. 1", choices: ["Chuck Schumer", "Chris Van Hollen"] },
+  prompt: { text: "Your ballot — pick one" },
+  backdrop: { enabled: true, arcColor: "#4a3220", slotFill: "#e9dfc8", slotCount: 28, arcOpacity: 0.92, slotRadiusFrac: 0.78 },
+  palette: { paper: "#f7efdc", ink: "#1d2733", bg: "#256a7d" },
+  stage: { width: 360 },
+  geom: { cardW: 252, cardPadX: 18, cardPadTop: 14, cardPadBottom: 14, cardTopPx: 18, radius: 3, ruleHPx: 2, ruleTopPx: 8, ruleBottomPx: 10, ovalW: 26, ovalH: 15, ovalBorderPx: 2, ovalGapPx: 10, choiceGapPx: 10, promptTopPx: 12, backdropTopPx: 196, backdropW: 330, backdropH: 150, slotW: 16, slotH: 11, bottomPadPx: 18, enterLiftPx: 14, boxW: 52, boxH: 30 },
+  type: { orgPx: 11, officePx: 21, datePx: 12, choicePx: 15, promptPx: 13, fitMinPx: 11, charWidthFrac: 0.58, orgLineH: 1.25, choiceLineH: 1.3, contrastMin: 7 },
+  revealAtMs: 4900,
+  enterMs: 600,
+  choiceMs: 500,
+  holdMs: 5200,
+  promptDelayMs: 300,
+  promptMs: 400,
+  choiceAnimMs: 300,
+  durationMs: 14000
+};
+const OVERRIDE_SCHEMA = {
+  ballot: { org: "string", office: "string", date: "string", choices: "stringArray" },
+  prompt: { text: "string" },
+  backdrop: { enabled: "boolean", arcColor: "color", slotFill: "color", slotCount: "number", arcOpacity: "number", slotRadiusFrac: "number" },
+  palette: { paper: "color", ink: "color", bg: "color" },
+  stage: { width: "number" },
+  geom: { cardW: "number", cardPadX: "number", cardPadTop: "number", cardPadBottom: "number", cardTopPx: "number", radius: "number", ruleHPx: "number", ruleTopPx: "number", ruleBottomPx: "number", ovalW: "number", ovalH: "number", ovalBorderPx: "number", ovalGapPx: "number", choiceGapPx: "number", promptTopPx: "number", backdropTopPx: "number", backdropW: "number", backdropH: "number", slotW: "number", slotH: "number", bottomPadPx: "number", enterLiftPx: "number", boxW: "number", boxH: "number" },
+  type: { orgPx: "number", officePx: "number", datePx: "number", choicePx: "number", promptPx: "number", fitMinPx: "number", charWidthFrac: "number", orgLineH: "number", choiceLineH: "number", contrastMin: "number" },
+  revealAtMs: "number", enterMs: "number", choiceMs: "number", holdMs: "number", promptDelayMs: "number", promptMs: "number", choiceAnimMs: "number", durationMs: "number"
+};
+function validOverride(kind, v) {
+  if (kind === "string") return typeof v === "string";
+  if (kind === "stringArray") return Array.isArray(v) && v.every((x) => typeof x === "string");
+  if (kind === "number") return typeof v === "number" && isFinite(v);
+  if (kind === "boolean") return typeof v === "boolean";
+  if (kind === "color") return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v);
+  return false;
+}
+function applyOverrides(cfg) {
+  try {
+    const q = new URLSearchParams(location.search).get("config");
+    if (!q) return cfg;
+    const o = JSON.parse(q);
+    for (const k of Object.keys(OVERRIDE_SCHEMA)) {
+      if (!(k in o)) continue;
+      const spec = OVERRIDE_SCHEMA[k];
+      if (typeof spec === "string") { if (validOverride(spec, o[k])) cfg[k] = o[k]; }
+      else if (o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) {
+        for (const sub of Object.keys(spec)) if (sub in o[k] && validOverride(spec[sub], o[k][sub])) cfg[k][sub] = o[k][sub];
+      }
+    }
+  } catch (e) { /* malformed override ignored */ }
+  return cfg;
+}
+const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+applyOverrides(CONFIG);
+
+function schedule(cfg) {
+  // Segment-time placement (timing cure): the ballot act is offset by
+  // revealAtMs so its completion lands on the measured ~7 s boundary;
+  // the deferred replay phase occupies the segment time before it.
+  const n = cfg.ballot.choices.length;
+  const choiceStarts = cfg.ballot.choices.map((_, i) => cfg.revealAtMs + cfg.enterMs + i * cfg.choiceMs);
+  const lastChoiceDone = n ? choiceStarts[n - 1] + cfg.choiceAnimMs : cfg.revealAtMs + cfg.enterMs;
+  const promptAt = lastChoiceDone + cfg.promptDelayMs;
+  const promptDone = promptAt + cfg.promptMs;
+  const holdEnd = promptDone + cfg.holdMs;
+  return { choiceStarts, lastChoiceDone, promptAt, promptDone, holdEnd };
+}
+function checkpointsOk(cfg) {
+  const G = cfg.geom, T = cfg.type;
+  const nums = [cfg.revealAtMs, cfg.enterMs, cfg.choiceMs, cfg.holdMs, cfg.promptDelayMs, cfg.promptMs, cfg.choiceAnimMs, cfg.durationMs, cfg.stage.width, G.cardW, G.backdropW, G.backdropH, cfg.backdrop.slotCount, cfg.backdrop.arcOpacity];
+  if (!nums.every((v) => typeof v === "number" && isFinite(v))) return false;
+  if (!(cfg.enterMs > 0 && cfg.choiceMs > 0 && cfg.choiceAnimMs > 0 && cfg.promptMs > 0 && cfg.durationMs > 0 && cfg.holdMs >= 0 && cfg.promptDelayMs >= 0 && cfg.revealAtMs >= 0)) return false;
+  if (!Object.keys(G).every((k) => typeof G[k] === "number" && G[k] > 0)) return false;
+  if (!Object.keys(T).every((k) => typeof T[k] === "number" && T[k] > 0)) return false;
+  if (!Array.isArray(cfg.ballot.choices) || cfg.ballot.choices.length < 1) return false;
+  if (typeof cfg.ballot.org !== "string" || !cfg.ballot.org) return false;
+  if (G.cardW > cfg.stage.width) return false;
+  if (G.cardW <= G.cardPadX * 2 + G.ovalW + G.ovalGapPx + 20) return false;
+  if (!(cfg.backdrop.arcOpacity > 0 && cfg.backdrop.arcOpacity <= 1)) return false;
+  if (!Number.isInteger(cfg.backdrop.slotCount) || cfg.backdrop.slotCount < 0) return false;
+  const s = schedule(cfg);
+  if (!(s.holdEnd <= cfg.durationMs)) return false;
+  if (!(T.fitMinPx >= 9 && T.choicePx >= T.fitMinPx)) return false;
+  // Phase-exclusivity invariant (plan-review cure): the prompt may never
+  // begin before the last choice has fully landed, under any override.
+  const lastStart = s.choiceStarts.length ? s.choiceStarts[s.choiceStarts.length - 1] : cfg.revealAtMs + cfg.enterMs;
+  if (!(s.promptAt >= lastStart + cfg.choiceAnimMs)) return false;
+  // Figure-ground invariant (plan-review cure): ink-on-paper contrast is
+  // validated, so a palette override cannot defeat text separation.
+  if (!(contrastRatio(cfg.palette.ink, cfg.palette.paper) >= T.contrastMin)) return false;
+  return true;
+}
+function luminance(hex) {
+  const c = [1, 3, 5].map((i) => parseInt(hex.substr(i, 2), 16) / 255).map((v) => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function contrastRatio(a, b) { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+// Atomic fallback (plan-review cure): an invalid configuration restores
+// the specimen defaults WHOLESALE — never a mix of rejected + derived values.
+if (!checkpointsOk(CONFIG)) { for (const k of Object.keys(DEFAULTS)) CONFIG[k] = JSON.parse(JSON.stringify(DEFAULTS[k])); }
+
+function estTextWidth(text, px, cfg) { return text.length * px * cfg.type.charWidthFrac; }
+function fitChoicePx(text, cfg) {
+  const inner = cfg.geom.cardW - cfg.geom.cardPadX * 2 - cfg.geom.ovalW - cfg.geom.ovalGapPx;
+  let px = cfg.type.choicePx;
+  while (px > cfg.type.fitMinPx && estTextWidth(text, px, cfg) > inner) px -= 1;
+  return px;
+}
+function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+const stage = document.getElementById("stage");
+const card = document.getElementById("card");
+const backdropEl = document.getElementById("backdrop");
+function build(cfg) {
+  const G = cfg.geom, T = cfg.type, P = cfg.palette;
+  stage.style.width = cfg.stage.width + "px";
+  stage.style.background = P.bg;
+  stage.style.height = (G.backdropTopPx + G.backdropH + G.bottomPadPx) + "px";
+  card.style.width = G.cardW + "px";
+  card.style.marginTop = G.cardTopPx + "px";
+  card.style.background = P.paper;
+  card.style.color = P.ink;
+  card.style.borderRadius = G.radius + "px";
+  card.style.padding = G.cardPadTop + "px " + G.cardPadX + "px " + G.cardPadBottom + "px";
+  const org = document.getElementById("org");
+  org.textContent = cfg.ballot.org; org.style.fontSize = T.orgPx + "px"; org.style.lineHeight = String(T.orgLineH);
+  const office = document.getElementById("office");
+  office.textContent = cfg.ballot.office; office.style.fontSize = T.officePx + "px";
+  const dateLine = document.getElementById("dateLine");
+  dateLine.textContent = cfg.ballot.date; dateLine.style.fontSize = T.datePx + "px";
+  const rule = document.getElementById("rule");
+  rule.style.background = P.ink; rule.style.height = G.ruleHPx + "px";
+  rule.style.margin = G.ruleTopPx + "px 0 " + G.ruleBottomPx + "px";
+  const choicesEl = document.getElementById("choices");
+  choicesEl.innerHTML = "";
+  cfg.ballot.choices.forEach((c) => {
+    const row = document.createElement("div"); row.className = "choice";
+    row.style.gap = G.ovalGapPx + "px"; row.style.marginBottom = G.choiceGapPx + "px"; row.style.lineHeight = String(T.choiceLineH);
+    const oval = document.createElement("span"); oval.className = "oval";
+    oval.style.width = G.ovalW + "px"; oval.style.height = G.ovalH + "px";
+    oval.style.border = G.ovalBorderPx + "px solid " + P.ink;
+    const txt = document.createElement("span"); txt.className = "choiceText";
+    txt.textContent = c; txt.style.fontSize = fitChoicePx(c, cfg) + "px";
+    row.appendChild(oval); row.appendChild(txt); choicesEl.appendChild(row);
+  });
+  const prompt = document.getElementById("prompt");
+  prompt.textContent = cfg.prompt.text; prompt.style.fontSize = T.promptPx + "px"; prompt.style.marginTop = G.promptTopPx + "px";
+  // Simplified arc backdrop (context only; the full count board is T53's surface).
+  if (cfg.backdrop.enabled) {
+    backdropEl.style.display = "block";
+    backdropEl.setAttribute("width", String(G.backdropW)); backdropEl.setAttribute("height", String(G.backdropH));
+    backdropEl.style.top = G.backdropTopPx + "px"; backdropEl.style.opacity = String(cfg.backdrop.arcOpacity);
+    const cx = G.backdropW / 2, cy = G.backdropH, r = G.backdropW / 2;
+    let inner = '<path d="M 0 ' + cy + ' A ' + r + ' ' + r + ' 0 0 1 ' + G.backdropW + ' ' + cy + ' Z" fill="' + cfg.backdrop.arcColor + '"/>';
+    const n = cfg.backdrop.slotCount;
+    for (let i = 0; i < n; i++) {
+      const a = Math.PI * (i + 0.5) / n;
+      const rr = r * cfg.backdrop.slotRadiusFrac;
+      const x = cx + rr * Math.cos(a) * -1, y = cy - rr * Math.sin(a);
+      inner += '<rect x="' + (x - G.slotW / 2).toFixed(1) + '" y="' + (y - G.slotH / 2).toFixed(1) + '" width="' + G.slotW + '" height="' + G.slotH + '" fill="' + cfg.backdrop.slotFill + '" transform="rotate(' + ((a * 180 / Math.PI) - 90).toFixed(1) + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ')"/>';
+    }
+    inner += '<rect x="' + (cx - G.boxW / 2) + '" y="' + (cy - G.boxH) + '" width="' + G.boxW + '" height="' + G.boxH + '" fill="' + cfg.backdrop.arcColor + '" stroke="' + cfg.backdrop.slotFill + '"/>';
+    backdropEl.innerHTML = inner;
+  } else { backdropEl.style.display = "none"; }
+}
+build(CONFIG);
+const choiceRows = () => Array.prototype.slice.call(document.querySelectorAll(".choice"));
+function render(tMs) {
+  const cfg = CONFIG, s = schedule(cfg);
+  const enterP = clamp01((tMs - cfg.revealAtMs) / cfg.enterMs);
+  card.style.opacity = String(enterP);
+  card.style.transform = "translateY(" + ((1 - enterP) * cfg.geom.enterLiftPx).toFixed(2) + "px)";
+  choiceRows().forEach((row, i) => { row.style.opacity = String(clamp01((tMs - s.choiceStarts[i]) / cfg.choiceAnimMs)); });
+  document.getElementById("prompt").style.opacity = String(clamp01((tMs - s.promptAt) / cfg.promptMs));
+}
+let startTs = null;
+function frame(ts) { if (startTs === null) startTs = ts; render(Math.min(ts - startTs, CONFIG.durationMs)); if (ts - startTs < CONFIG.durationMs) requestAnimationFrame(frame); }
+requestAnimationFrame(frame);
+window.__T71 = { CONFIG, schedule, checkpointsOk, fitChoicePx, estTextWidth, contrastRatio, render, seek: render };
+</script>
+</body>
+</html>

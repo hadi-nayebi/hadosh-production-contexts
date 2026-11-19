@@ -1,0 +1,11 @@
+# T75 — config-census AUDIT under the CLARIFIED rule (separately dated, post-wave)
+
+Filed 2026-11-15 by the recreation seat (Cycle 013 Condense, codex-condense firing-3 leg 4). This audit is a SEPARATE, dated filing: it does not modify, replace, or re-score the attempt's filed `config-census.md`, and the scored attempt (recreation.html sha256 f22a562afc47031a8499c6c81f018ff41bb36733f70039b98bee2f5b47b96ddc) is untouched. It re-prices the SAME final build under guard-config-census.md §1 as amended 2026-11-15 (Cycle 013 clarification: scene/asset-generator constants that scale or shape the generated subject are subject-shaping; CSS font-family stacks are subject-shaping and must be CONFIG keys or HITs).
+
+## Findings under the clarified rule
+- **HIT 1 — font-family stacks outside CONFIG:** recreation.html CSS carries `font-family:Georgia,'Times New Roman',serif` (#stage) and `font-family:Verdana,Geneva,sans-serif` (#yearLine) as literals. Under the clarified rule these are subject-shaping typography decisions standing outside CONFIG = HIT ×2 stacks. (This is the gap the reusability lens named at `codex/lens-reusability.md` line 15: "expose font families and remaining geometry constants".)
+- **HIT 2 — scene-generator geometry:** the scene silhouette generator (seedOf/rng + building construction in recreation.html) derives building geometry from in-code constants and the scene-name seed; `chapters[].scene` changes only the seed, not a scene class (lens-reusability.md line 12). Under the clarified rule, generator constants that shape the generated subject are subject-shaping; standing in code without CONFIG keys = HIT (class-level, one HIT covering the generator constant set).
+- All other classes from the filed census stand as filed (key→site resolution was complete; no CSS-variable setters exist).
+
+## HIT list (clarified rule): 3 HITs (2 font stacks · 1 generator-geometry class)
+Disposition: these HITs are the next attempt's (practice's) priced cures, already named as cure 3 in this item's scores.md; the attempt's PASS verdict is unaffected (the wave scored the build as filed; reusability 76 ≥ 70 floor with the gap priced in its own return). The clarified rule binds every census from Wave 12 / practice's next wave onward.

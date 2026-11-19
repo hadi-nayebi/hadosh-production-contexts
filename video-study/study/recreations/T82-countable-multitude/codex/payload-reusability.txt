@@ -1,0 +1,123 @@
+STANDING HEADER
+1. Consumer: recreation job S5 Verify (tier recommendation) + the cycle's Condense (cure list). Decision priced: whether T82 attempt 1 is RECREATED-tier (five-lens average >=85 AND no lens <70), and exactly what a next attempt must cure.
+2. Working record: the artifact directory hidden_files/study/recreations/T82-countable-multitude/ (codex/ returns + scores.md) — this run builds from the neutral facts + score-blind build record + full recreation.html below, and its return files verbatim at codex/lens-<lens>.md.
+3. Body-write: the return MUST end with "SCORE: <integer 0-100>" on its own line and a "BODY-WRITE:" line naming what it filed; a read-only run closes BODY-WRITE: none (read-only run).
+
+NEUTRAL TECHNIQUE FACTS (no scores anywhere in this payload):
+- Technique T82 Countable multitude (Packet #4, The Good Takeoff, 0:37-0:45): a multitude claim drawn as a countable wall — roughly a thousand tiny scan thumbnails on a grid, exactly one highlighted at the center (the protagonist's), beside a small amber grid. The grid is the claim; the lit cell is the story.
+- Measured segment anchors (segment 34-48s, frames at 1s + 0.5s brackets): lit scan stands ALONE at seg 4.0-4.5s; wall expanding (oval) at 5.0s; wall rectangular complete in (5.0,5.5]s with amber partial; amber complete in (5.5,6.5]s; wall+lit+amber hold through 13s. HUD "2037 / A POSSIBLE TUESDAY / 06:15" persists top-left throughout. The segment's bottom narration line is a caption, excluded from the recreation by fleet law. Pre-wall lung-scan beats (seg 0-4s) are a different beat, deferred by name.
+- Recreation: one self-contained HTML file, CONFIG at top drives all content/timing/palette/geometry; canvas grid of 40x27=1080 code-drawn generic scan glyphs populating in count (index) order; exactly one lit cell at CONFIG index 539 rendered white, 3x footprint, glow, clamped inside the wall; amber 8x10 block beside the wall growing after wall completion; phases lit-alone (to 4500ms) -> build (to 5500ms) -> amber (to 6500ms) -> hold with lit pulse (pulseMs 900) to the 14000ms loop. recreation.html SHA-256: ff3f24271d5df45cd7a8eef9d9117a3a3eb4d3e64f9368fe8992d6f9544c9a66
+- Score-blind build record facts: swap test passed with altered CONFIG (clock text, lit index, build timing + phase set, amber palette); purity grep 0 hits, no external assets; measured-fit leg 0 HITs (HUD ink 11.5px / 25.9px at 360px); config-census leg 0 HITs. Verification is LOGIC level — PIXEL-UNVERIFIED (no browser in this seat); judge the source.
+
+YOUR LENS: reusability — reusability/parameterization — could production drive this machinery from CONFIG alone for a different piece (different grid, lit index, palette, timings, HUD text)? Are shaping decisions stranded outside CONFIG?
+Score ONLY this lens, 0-100, with priced findings. End with SCORE: <int> and the BODY-WRITE line.
+
+=== FULL recreation.html ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T82 — Countable multitude, parameterized recreation</title>
+<!-- T82 recreation: countable wall of code-drawn scan glyphs, one lit cell. No captions. No specimen media. -->
+<style>
+  html,body{margin:0;padding:0;background:black;}
+  #stage{display:block;margin:0 auto;max-width:100%;}
+</style></head><body>
+<canvas id="stage" width="720" height="640"></canvas>
+<script>
+"use strict";
+/* ============ CONFIG — every content/timing/palette/geometry value lives here ============ */
+const CONFIG = {
+  hud:  { year: 2037, dayLine: "A POSSIBLE TUESDAY", clock: "06:15" },
+  grid: { cols: 40, rows: 27 },
+  lit:  { index: 539, scale: 3 },
+  amber:{ cols: 8, rows: 10 },
+  palette: { bg: "#0d2150", cell: "#7d9cc9", lit: "#ffffff", amber: "#e8a91c", hudInk: "#f5f2e6", panel: "#12305e" },
+  buildMs: 5500,   /* re-anchored: measured wall-complete time from segment start (was Plan 2600); see build-record */
+  pulseMs: 900,
+  holdMs: 7500,    /* post-amber-complete hold: amberDoneMs 6500 + holdMs 7500 = 14000 loop */
+  timeline: { litAloneMs: 4500, amberDoneMs: 6500 },
+  type: { font: "Georgia, 'Times New Roman', serif" },
+  geom: {
+    stageW: 360, stageH: 320, dpr: 2,
+    hudX: 12, hudYearY: 26, hudClockY: 60, hudYearPx: 16, hudClockPx: 36,
+    wallX: 80, wallY: 62, wallW: 272, wallH: 240,
+    amberX: 34, amberY: 196, amberW: 36, amberH: 100,
+    glyphInset: 0.18, glowPx: 8, shadeMin: 0.55, shadeSpan: 0.45,
+    glyphLineA: 0.28, glyphLineB: 0.58, glyphLineH: 0.16, pulseGain: 0.12
+  }
+};
+/* URL override ?cfg=<json> deep-merges over CONFIG (swap-test route) */
+function deepMerge(dst, src){ for(const k in src){ if(src[k] && typeof src[k]==="object" && !Array.isArray(src[k]) && dst[k]) deepMerge(dst[k], src[k]); else dst[k]=src[k]; } return dst; }
+try{ const q=new URLSearchParams(location.search).get("cfg"); if(q) deepMerge(CONFIG, JSON.parse(q)); }catch(e){}
+const C = CONFIG, G = C.geom;
+const TOTAL = C.timeline.amberDoneMs + C.holdMs; /* 14000 with defaults */
+
+/* deterministic per-cell variation (generic scan glyph shading, no specimen data) */
+function cellShade(i){ const h = Math.sin(i*127.1)*43758.5453; return G.shadeMin + G.shadeSpan*(h-Math.floor(h)); }
+
+function computeState(t){
+  t = ((t % TOTAL) + TOTAL) % TOTAL;
+  const total = C.grid.cols * C.grid.rows;
+  let phase, shown;
+  if(t < C.timeline.litAloneMs){ phase="lit-alone"; shown=0; }
+  else if(t < C.buildMs){ phase="build"; shown = Math.floor(total * (t - C.timeline.litAloneMs) / Math.max(1,(C.buildMs - C.timeline.litAloneMs))); }
+  else { phase = (t < C.timeline.amberDoneMs) ? "amber" : "hold"; shown = total; }
+  let amberShown = 0; const aTotal = C.amber.cols * C.amber.rows;
+  if(t >= C.buildMs) amberShown = (t >= C.timeline.amberDoneMs) ? aTotal : Math.floor(aTotal * (t - C.buildMs) / Math.max(1,(C.timeline.amberDoneMs - C.buildMs)));
+  const pulse = (phase==="hold" || phase==="amber") ? 1 + G.pulseGain * Math.sin(2*Math.PI * t / C.pulseMs) : 1;
+  return { t, phase, shown, total, amberShown, litVisible: true, pulse };
+}
+
+function drawGlyph(ctx, x, y, w, h, color, alpha){
+  ctx.globalAlpha = alpha; ctx.fillStyle = color;
+  ctx.fillRect(x, y, w, h);
+  ctx.globalAlpha = alpha*0.85; ctx.fillStyle = C.palette.bg;
+  const ix = x + w*G.glyphInset, iw = w*(1-2*G.glyphInset);
+  ctx.fillRect(ix, y + h*G.glyphLineA, iw, h*G.glyphLineH);
+  ctx.fillRect(ix, y + h*G.glyphLineB, iw, h*G.glyphLineH);
+  ctx.globalAlpha = 1;
+}
+
+function render(t){
+  const cv = document.getElementById("stage"); if(!cv) return computeState(t||0);
+  const ctx = cv.getContext("2d"); const s = computeState(t||0);
+  ctx.setTransform(G.dpr,0,0,G.dpr,0,0);
+  ctx.fillStyle = C.palette.bg; ctx.fillRect(0,0,G.stageW,G.stageH);
+  ctx.fillStyle = C.palette.panel; ctx.fillRect(G.wallX-8, G.wallY-8, G.wallW+16, G.wallH+16);
+  /* HUD furniture — built every frame identically, never part of the wall phases */
+  ctx.fillStyle = C.palette.hudInk; ctx.textBaseline = "alphabetic";
+  ctx.font = G.hudYearPx + "px " + C.type.font;
+  ctx.fillText(C.hud.year + " \u00B7 " + C.hud.dayLine, G.hudX, G.hudYearY);
+  ctx.font = G.hudClockPx + "px " + C.type.font;
+  ctx.fillText(C.hud.clock, G.hudX, G.hudClockY);
+  /* amber block (beside the wall, lower left) */
+  const acw = G.amberW / C.amber.cols, ach = G.amberH / C.amber.rows;
+  for(let i=0;i<s.amberShown;i++){
+    const ax = G.amberX + (i % C.amber.cols) * acw, ay = G.amberY + Math.floor(i / C.amber.cols) * ach;
+    drawGlyph(ctx, ax+0.5, ay+0.5, acw-1, ach-1, C.palette.amber, 0.95);
+  }
+  /* the multitude: cells populate in count (index) order; the lit cell is always present */
+  const cw = G.wallW / C.grid.cols, ch = G.wallH / C.grid.rows;
+  for(let i=0;i<s.shown;i++){
+    if(i === C.lit.index) continue;
+    const x = G.wallX + (i % C.grid.cols) * cw, y = G.wallY + Math.floor(i / C.grid.cols) * ch;
+    drawGlyph(ctx, x+0.6, y+0.6, cw-1.2, ch-1.2, C.palette.cell, cellShade(i));
+  }
+  /* exactly ONE lit cell: foreground intensity (Cure 1) — white, enlarged footprint, clamped inside the wall */
+  const li = Math.max(0, Math.min(C.grid.cols*C.grid.rows-1, C.lit.index));
+  const lx0 = G.wallX + (li % C.grid.cols) * cw, ly0 = G.wallY + Math.floor(li / C.grid.cols) * ch;
+  const lw = cw * C.lit.scale * s.pulse, lh = ch * C.lit.scale * s.pulse;
+  const lx = Math.max(G.wallX, Math.min(G.wallX + G.wallW - lw, lx0 + cw/2 - lw/2));
+  const ly = Math.max(G.wallY, Math.min(G.wallY + G.wallH - lh, ly0 + ch/2 - lh/2));
+  ctx.save(); ctx.shadowColor = C.palette.lit; ctx.shadowBlur = G.glowPx;
+  ctx.fillStyle = C.palette.lit; ctx.fillRect(lx, ly, lw, lh); ctx.restore();
+  drawGlyph(ctx, lx+lw*G.glyphInset, ly+lh*G.glyphInset, lw*(1-2*G.glyphInset), lh*(1-2*G.glyphInset), C.palette.cell, 0.9);
+  return s;
+}
+window.__render = render; window.__state = computeState; window.__CONFIG = CONFIG; window.__TOTAL = TOTAL;
+if(typeof document!=="undefined" && document.getElementById("stage") && !new URLSearchParams(location.search).get("slave")){
+  let start = null;
+  function loop(ts){ if(start===null) start=ts; render(ts-start); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+}
+</script></body></html>
