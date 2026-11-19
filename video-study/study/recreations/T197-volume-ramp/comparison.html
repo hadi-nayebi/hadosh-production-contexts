@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T197 comparison</title>
+<style>body{background:#111;color:#fff;font-family:Arial,sans-serif;margin:0;padding:12px}.wrap{max-width:380px;margin:0 auto;display:flex;flex-direction:column;gap:10px}video,iframe{width:360px;height:203px;border:0;background:#000}.lab{font-size:13px;font-weight:700}button{padding:10px 14px;font-size:14px}</style></head><body>
+<div class="wrap">
+<div class="lab">ORIGINAL — Caption with Intention @ 0:48–0:58</div>
+<video id="v" src="segment.mp4" playsinline></video>
+<div class="lab">RECREATION — T197 volume ramp, parameterized</div>
+<iframe id="r" src="recreation.html" title="recreation"></iframe>
+<div><button id="play">Play</button> <button id="pause">Pause</button> <button id="restart">Restart</button></div>
+</div>
+<script>
+// Comparison policy (plan-amendment-cycle035.md §B): build time = clamp(videoMs + segmentHandleOffsetMs, 0, coreMs),
+// with both values read from the recreation's own CONFIG (window.__T197.config) — no duplicated literals here.
+// Video 0.0-0.5 s (header handle) holds build 0; video 10.5-11.0 s holds the recreation end state; no mid-comparison loop restart.
+const v=document.getElementById('v'),r=document.getElementById('r');
+function recCfg(){ try{const w=r.contentWindow;if(w&&w.__T197)return w.__T197.config;}catch(e){} return null; }
+function buildMs(){ const c=recCfg(); if(!c) return null; return Math.max(0, Math.min(c.coreMs, v.currentTime*1000 + c.segmentHandleOffsetMs)); }
+function sync(){try{const w=r.contentWindow,b=buildMs();if(w&&w.__T197&&b!==null)w.__T197.seek(b);}catch(e){}}
+v.addEventListener('timeupdate',sync);
+v.addEventListener('seeked',sync);
+document.getElementById('play').onclick=()=>{v.play();sync();};
+document.getElementById('pause').onclick=()=>{v.pause();sync();};
+document.getElementById('restart').onclick=()=>{v.currentTime=0;v.play();sync();};
+</script></body></html>

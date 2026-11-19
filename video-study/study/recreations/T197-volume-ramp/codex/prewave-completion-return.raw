@@ -1,0 +1,602 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1ee6c-e47b-7642-bf5e-06433725659b
+--------
+user
+FED REVIEW — judge ONLY the material below; do not attempt tool use or file access.
+STANDING HEADER
+Consumer: recreation INSTRUCTION section 5 leg 3b (jev-prewave gate), item T197 attempt 1, Cycle 036 Wave 33 — A12.3 COMPLETION RE-FIRE (third firing). Firings 1 and 2 returned HOLD · ASSERTED-CHECKS and bind the PRE-CURE builds; firing 2 confirmed all firing-1 cures and named the sole remaining ground: the fit leg (model-derived rows + the unmeasured portrait-stage wrapped-block overlap). Both cures are applied and filed in the build record's COMPLETION section: (1) a CONFIG-priced narrow-stage layout cure (new CONFIG keys narrowStageAspectMax + narrowLineTopPctOfStage) with MEASURED post-fit block geometry showing no overlap at 360x640 and unchanged 16:9 form; (2) the fit table re-filed whole as A12.2 rendered measurements (PIL, stand-in font Liberation Sans named, PROXY-labeled) — no model rows stand.
+Decision priced: FIRE-WAVE (spend the five-lens Codex scoring wave on this cured build) or HOLD (return the build to Execute with named defects).
+Working record: this artifact directory (hidden_files/study/recreations/T197-volume-ramp/) — build-record.md, recreation.html, fit-table.md, config-census.md, plan-amendment-cycle035.md.
+BINDING: this payload binds the CURED recreation.html SHA-256 65b4de69d1d384601613ba93e5cc892c55693d7b1decd68b593690dcfb9f0dcf (12,819 B). The pre-cure hash 42578a0d59fc2f05ace09f4fcf28b9d372b40941a047c8300bb98e70e0dca32b is superseded.
+Your return must end with a BODY-WRITE: line naming what it wrote into the body.
+
+
+===== JEV-PREWAVE INSTRUCTION (guards/jev-prewave.md, full) =====
+# Jev call — jev-prewave (recreation)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14. The judgment: a scoring wave is the lane's expensive instrument — this call prices whether a build has EARNED its wave before the wave spends._
+
+## 1. What it judges
+- Deliverable: an attempt's build record (parameter table · construction route · own-checks results) BEFORE the Codex wave fires.
+- Call point: recreation INSTRUCTION §4, between the builder's own checks (§5.2) and the wave (§5.3). The verdict is advisory: applied, a HOLD returns the build to the builder with named defects and the wave does not fire on that item; set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this build record shows a recreation ready to be scored, or one whose defects are already visible in its own paperwork. Price: (1) PARAMETERIZATION — is the piece genuinely CONFIG-driven (fields named, ranges sane), or hard-coded with a config costume? (2) PURITY PRE-CHECK — does the construction route describe generation from parameters, with no tracing/embedding step hiding in the prose? (3) OWN-CHECKS COMPLETENESS — are the mechanical guards' results recorded (purity grep, swap test, syntax), or asserted? **Census-checkpoint mapping (Amendment A11, landed 2026-11-17, Cycle 028 Condense): every Observe census checkpoint for the item must map to an executable own-check assertion whose evaluation instant is CONFIG-derived; the build-record identifies checkpoint · assertion · CONFIG expression · evaluated result. ASSERTED-CHECKS is returned if any checkpoint lacks this mapping, any evaluation instant uses hardcoded defaults, or execution evidence is absent; a CONFIG timing swap must be shown to move the corresponding assertion's evaluation instant. Receipt form (Amendment A12, landed 2026-11-18, Cycle 035 Condense): the execution evidence for each assertion is its EXECUTABLE RECEIPT — harness command or run · CONFIG expression evaluated · raw result from the build under review (for a timing swap, the receipt shows the changed evaluation instant); a claim without its receipt is execution evidence absent. The same leg prices the A6 fit evidence: a fit-table row lacking measurement provenance, or carrying model-derived bounds, per guard-measured-fit.md checks 1–2 is an ASSERTED-CHECKS ground.** (4) TECHNIQUE FIDELITY PLAN — does the record state which packet mechanics the build implements and which it deliberately defers (a deferral named is lawful; a mechanic silently absent is not)? Score 0–1 per dimension, classify defects. You judge paperwork only: a build can pass you and still fail its wave — your job is that no wave is spent on a build its own record already condemns.
+
+## 3. Context contract (masked view)
+- FED: build-record.md · the CONFIG block of recreation.html · the technique's packet section · guards.md command list (what own-checks should exist) · **the item's A6 leg outputs (fit-table.md + config-census.md) — added 2026-11-16, recreation Cycle 024 Condense, on the Wave-21 pattern: prewave firings for T151, T153 and T154 all HOLDed or re-fired on feed completeness (the A6 files and packet section existed complete in the artifact directory but were not in the payload), the lane's recurring ASSERTED-CHECKS false-positive class. A payload lacking any FED element is a feeder defect, printed as such in the build record; a HOLD whose only named cure is feeding an already-filed FED element is disposed as a feed-completeness miss, with the miss recorded.**
+- FED (added 2026-11-17, Cycle 026 Condense — the T167 miss): **the wave record's binding census-anchor mapping for the item + any Observe dispositions pricing source ambiguities** (the §1d-form: where a packet caption or digest line admits two readings, the wave record's priced reading governs). A HOLD founded on a source ambiguity the wave record has already priced is a feeder defect, disposed as such in the build record — the judge prices the build against the binding mapping, not against raw source prose. (Founding miss: Cycle 026 T167 — HOLD priced a packet caption's ambiguous reading against a build that followed the gate-approved mapping; the seat upheld the set-aside at §5.)
+- NEVER FED: the builder's confidence prose · prior attempts' scores (each build is priced on its own record).
+- Ceiling: ≤32k tokens; the HTML enters as its CONFIG + construction sections, not media.
+
+## 4. Output space
+- Verdict classes: **FIRE-WAVE · HOLD**.
+- Dimensions (0–1): parameterization · purity pre-check · own-checks completeness · fidelity-plan honesty.
+- Rejection taxonomy (one primary): HARDCODED-CONFIG · TRACING-STEP · ASSERTED-CHECKS (results claimed, not recorded) · SILENT-DEFERRAL.
+- Accepted profile travels: cited in scores.md's pre-wave line; a wave fired over a HOLD is a deviation (WAVE-OVER-HOLD).
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → HOLD · ASSERTED-CHECKS at any score on other dimensions → HOLD (unrecorded checks are the lane's named failure class).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + classification + disposition land in the build record either way; an applied HOLD leaves the item IN PROGRESS and the wave moves to its next item (a held item never holds the wave hostage).
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: T15 attempt 1's build record (must FIRE-WAVE: checks recorded, deferral of the interlude named in its Plan) · a constructed record claiming a swap test with no harness output (must HOLD as ASSERTED-CHECKS) · a constructed record whose CONFIG is decorative over hard-coded phrases (must HOLD as HARDCODED-CONFIG).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all three must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.
+
+
+===== BUILD RECORD (build-record.md, full — completion section at tail) =====
+# build-record — T197 volume ramp · Cycle 035 Wave 32 · attempt 1 (COMPLETION of Cycle 034 Wave 31 Phase A)
+
+Artifact: `hidden_files/study/recreations/T197-volume-ramp/`
+Technique: Packet #11 ("Caption with Intention", FCB Chicago) P11-T08 — volume ramp: size and weight track vocal emphasis. Window 48–58 s. Queue #93.
+Plan authority: `runs/2026-11-18-cycle-034-wave-31/item-T197-observe-plan.md` AS AMENDED by `plan-amendment-cycle035.md` in this directory (filed before any build script, A9.2; jev-plan-exit REVISE + jev-observe-exit charges from Cycle 035 RUN.md §2b applied there). Consumed, not re-fired: `codex/codex-observe.md` (CONFIRMED-WITH-GAPS) + `codex/codex-plan-review.md` (REVISE, findings applied in the Plan + amendment).
+Schedule basis: **segment-anchored** (A7). Segment 47.5–58.5 s; build t=0 ≡ source 48.0 s; comparison handle offset −500 ms as CONFIG (`segmentHandleOffsetMs`).
+
+## Segment binding (guards.md command 5)
+- Source: `hidden_files/study/video-digests/2026-11-17-lia-caption-with-intention/source.mp4` — ffprobe 113.734 s · 1920×1080 · 24 fps · 10,213,125 B (re-verified this run).
+- Cut: `ffmpeg -ss 47.5 -t 11` re-encoded (libx264, yuv420p, crf 18, faststart; aac 128k) → `segment.mp4`: **11.000 s · 927,929 B · h264 1920×1080 @24fps + aac** (ffprobe, this run). Evidence only; appears solely as the labeled ORIGINAL side of comparison.html.
+
+## Construction
+One self-contained HTML file; DOM word spans on a STILL black plate (A9.1 — any background motion exceeds this technique) with CONFIG guide rules; a rAF clock evaluates each word's envelope from CONFIG (single schema per A9.6, amendment §F) and sets font-size (baseSizePctOfStage × ratio) + `font-variation-settings 'wght'` on the CONFIG variable-font stack. Spoken color flips at each word's speech `onsetMs`; the visual envelope runs on its own `envOnsetMs` (plan-review finding 3's separation). `or`+`softer` carry `envelopeRef:'shrink'` → the single canonical `sharedEnvelopes.shrink` definition (amendment §E). Line ownership: Line A release derived = max(speechEndMs 4500, lastTransientEnd 4160) + lineExitMs 350 + lineGapMs 320 = **5170 ms**, envelopes gated with clamp-and-print (amendment §C — the ONE chosen outcome). Inline spans reflow as a word grows (font-metric reflow, by construction). No external assets; NO captions/subtitles — the ramped words ARE the subject (§6.5).
+Fidelity plan — deferred/named: header card (48.0) NOT BUILT (section furniture) · strip pan NOT BUILT (T195/T196 mechanics) · "animation," letter-bounce NOT BUILT (§8 ornament split) · guide rules built as the two horizontal strip rules; the source frame also shows vertical grid lines right of the strip (segment frame @55.0 s viewed this run) — not built, named here as a framing approximation · easing `easeInOut` is a labeled CONFIG choice, UNMEASURED in the specimen (register limit carried on the face).
+
+## Count assertion (A9.3)
+CONFIG word count **21** (Line A 10 + Line B 11) vs built span count **21** — MATCH (harness, raw output below). No halt.
+
+## A11 checkpoint → assertion mapping (amended twins; CONFIG-derived instants)
+All executed by the node harness over the build's own inline script (buildStateAt). Final-build results (raw in §Own-checks):
+CP1 @3000 sizes, 1.3500/760 PASS · CP2 @3500 weights 1.0000/743 PASS · CP2b @7000 louder 1.0000/400 (BASE) PASS · CP3 @7500 louder 2.0000/820 PASS · CP3b @8000 or+softer 0.4500/300 (ALREADY SMALL) PASS · CP4 @8500 louder 1.0000 + softer 0.4500/300 PASS · CP5 @9500 softer 0.4500 PASS. Timing swap D3 moves CP3's instant via envOnset+rampUp (7500→5600) — executed, PASS (§Own-checks).
+
+## 57.167 s boundary observation (jev-observe-exit charge; amendment §G)
+Segment frames extracted from the cut segment and viewed firsthand this run:
+- @ source 55.0 s (segment 7.5 s): Line B at base, spoken prefix yellow through "gets", "louder or softer" still white/unscaled — census CP2b state confirmed firsthand.
+- @ source **57.167 s** (segment 9.667 s): the frame shows the NEXT section's header — "Character Identification" (white, first letters yellowing) on black, with a yellow bar fragment at top. **The ramp line is no longer on screen in the source at 57.167**: the source's last visible ramp state is the persisted shrink (or/softer small+light, line otherwise base), which holds from its landing (≤56.5 s) until the section change at 57.167 s replaces the line. The filed Plan's "holds through 57.5–58.0" is therefore true of the RAMP STATE (nothing resets it) but not of the line's screen presence — the header is the next section's furniture (T196/T09 surface), not a T197 state change, and is NOT BUILT (departure named).
+- @ source 57.5 s (segment 10.0 s): header mid-speech ("Characte" yellow) with the next section's falling-bar animation — confirms the boundary is a section change, not a ramp event.
+- Build side (evaluator, raw below): state at build 9167 / 9500 / 10000 is IDENTICAL — softer+or 0.4500 / wght 300 persisted, louder back at 1.0000/400, Line A opacity 0. The build holds the technique's end state through its core end per the persist semantics; the comparison policy (amendment §B) holds that same state under the segment's final seconds.
+
+## Rendered-weight evidence (plan-review finding 1) — LOGIC LEVEL + LIMITATION
+No browser binary exists in this seat (`which chromium/google-chrome` empty, this run), so rendered intermediate-weight frames cannot be captured. Evaluator mid-ramp `font-variation-settings` values on the build's own code (raw below): sizes, mid-ramp @2540 → wght **580** (env 0.5) · weights mid-ramp @3010 → wght **600** (env 0.5) · louder mid-ramp @7400 → wght **610** (env 0.5) · shrink mid-ramp @7730 → wght **350** (env 0.5). The evaluator produces true intermediate axis values; whether the playback stack's local fonts render them continuously depends on the stack's variable fonts (CONFIG fontStack names Roboto Flex first — the packet's demonstrated design font — with local fallbacks; no webfont is fetched, purity).
+**LIMITATION (printed on the build's face here and in scores.md): PIXEL-UNVERIFIED — no browser binary in this seat; continuous weight UNVERIFIED on this stack; if the stack holds only static faces, weight renders stepped — a declared fidelity limitation, never a silent claim. Lens scores are source/logic-level; comparison.html is the render surface.**
+
+## Own checks (§5 legs 1–3) — RAW harness output (A9.4)
+
+### First draft — defect found + cured (raw excerpts, harness run 1)
+```
+== OWNERSHIP ==
+Line releases: [4830,10670]
+== SWAP D1: INTENTIONAL VIOLATION (clamp-and-print) ==
+clamps: []
+CP3 instant moved to 5170+200=5370; louder @5370: size=1.9422 sizePct=11.847 wght=796 env=0.9422 spoken=false => PASS (peak at clamped instant)
+```
+Defect: release computed 4830 (last-onset used as speech end) so the D1 violation (onset 5000) never crossed it and NO clamp fired — the amendment §C mechanism was inert. Cure: `speechEndMs` bound as a line-level CONFIG field (Line A 4500, Line B 8800 — the filed derivation's own numbers); releases recompute [5170, 10670]. Census cures in the same pass: comparison.html literals (−500/10000) removed — it now reads both from the recreation CONFIG; line tops + line-height moved into CONFIG (config-census.md).
+
+### Final build — full own-check output (harness run 3, verbatim excerpts; complete output retained in the run's harness log)
+```
+== COUNT ASSERTION (A9.3) ==
+CONFIG word count: 21
+Built span count (state model): 21
+Count match: MATCH
+== OWNERSHIP ==
+Line releases: [5170,10670]
+Ownership clamps (specimen CONFIG): []
+== A11 CHECKPOINTS (amended twins) ==
+CP1 @3000ms sizes,: size=1.3500 sizePct=8.235 wght=760 env=1.0000 spoken=true => PASS
+CP2 @3500ms weights: size=1.0000 sizePct=6.100 wght=743 env=0.8578 spoken=true => PASS
+CP2b @7000ms louder: size=1.0000 sizePct=6.100 wght=400 env=0.0000 spoken=true => PASS
+CP3 @7500ms louder: size=2.0000 sizePct=12.200 wght=820 env=1.0000 spoken=true => PASS
+CP3b @8000ms softer: size=0.4500 sizePct=2.745 wght=300 env=1.0000 spoken=false => PASS
+CP3b @8000ms or: size=0.4500 sizePct=2.745 wght=300 env=1.0000 spoken=true => PASS
+CP4-louder @8500ms louder: size=1.0000 sizePct=6.100 wght=400 env=0.0000 spoken=true => PASS
+CP4-softer @8500ms softer: size=0.4500 sizePct=2.745 wght=300 env=1.0000 spoken=true => PASS
+CP5 @9500ms softer: size=0.4500 sizePct=2.745 wght=300 env=1.0000 spoken=true => PASS
+== 57.167s BOUNDARY (build 9167) ==
+@9167ms softer: size=0.4500 sizePct=2.745 wght=300 env=1.0000 spoken=true | or: size=0.4500 sizePct=2.745 wght=300 env=1.0000 spoken=true | louder: size=1.0000 sizePct=6.100 wght=400 env=0.0000 spoken=true | lineA opacity=0.000
+@9500ms softer: (identical) | lineA opacity=0.000
+@10000ms softer: (identical) | lineA opacity=0.000
+== MID-RAMP WEIGHT EVIDENCE (evaluator font-variation values) ==
+@2540ms sizes,: size=1.1750 sizePct=7.167 wght=580 env=0.5000
+@3010ms weights: size=1.0000 sizePct=6.100 wght=600 env=0.5000
+@7400ms louder: size=1.5000 sizePct=9.150 wght=610 env=0.5000
+@7730ms softer: size=0.7250 sizePct=4.422 wght=350 env=0.5000
+== SWAP D1: INTENTIONAL VIOLATION (clamp-and-print) ==
+clamps: [{"word":"louder","requestedOnset":5000,"clampedOnset":5170,"releaseMs":5170}]
+CP3 instant moved to 5170+200=5370; louder @5370: size=2.0000 sizePct=12.200 wght=820 env=1.0000 => PASS (peak at clamped instant)
+== SWAP D3: TIMING SWAP (louder envOnset 7300->5300, rampUp 200->300) ==
+clamps (must be empty): []
+CP3 instant via expression envOnset+rampUp = 5600
+louder @5600: size=2.0000 sizePct=12.200 wght=820 env=1.0000 => PASS
+louder @7500 (old instant, must be decayed to base): size=1.0000 sizePct=6.100 wght=400 => PASS
+== SWAP D2: REPLACEMENT PHRASE (complete envelope table, amendment §D2) ==
+grow @1900 (peak): size=1.7000 wght=780 => PASS
+grow @2300 (mid-decay p=0.5): size=1.3500 wght=590 expected size=1.3500 wght=590 => PASS
+still @2800 (landed): size=0.5000 wght=300 => PASS
+still @5000 (persist): size=0.5000 wght=300 => PASS
+palette: spokenColor=#ff9f1c guideColor=#3a86ff (consumption sites: render color branch + guide background)
+== DETERMINISM CENSUS ==
+Math.random present: false | Date.now present: false
+```
+Harness tally: 16 PASS / 0 FAIL.
+
+### Leg 2 — purity (guards.md command 1)
+`grep -n -E "segment\.mp4|source\.mp4|<video|<img" recreation.html` → **exit 1, zero hits**. Frame-id pattern (`t050|t055|t056`) → 0. No `url(#id)` occurrences exist in this build (nothing to classify). Asset inventory: **zero external assets** — recreation.html is code only (HTML/CSS/JS); segment.mp4 is evidence, referenced ONLY by comparison.html as the labeled ORIGINAL.
+### Leg 3 — comparison check
+comparison.html: both sides at 360×203, labels "ORIGINAL — Caption with Intention @ 0:48–0:58" / "RECREATION — T197 volume ramp, parameterized" exactly as charged; ONE control set (Play/Pause/Restart) drives the video and slaves the recreation via `__T197.seek(buildMs())` under the amendment §B policy (offset + core read from the recreation CONFIG — no duplicated literals); phone stacking via the shared prior-wave form (max-width 380 column). Both inline scripts pass `node --check` (raw: BOTH_NODE_CHECK_PASS).
+### Syntax
+`node --check` on recreation.html's extracted inline script: PASS · comparison.html's: PASS.
+
+## A6 legs (pre-wave, final build)
+fit-table.md HITs **0 on the recreation's own stage; 1 carried** (comparison-surface scale parity, disposition in fit-table.md — added at the prewave cure below) · config-census.md HITs **0** (two first-draft census HITs cured pre-scoring, recorded in config-census.md).
+
+## jev-prewave firing 1 — HOLD · ASSERTED-CHECKS (filed: jev-prewave.md) → CURED → re-fire
+Dimensions: parameterization 0.9 · purity pre-check 1.0 · own-checks completeness **0.4** · fidelity-plan honesty 0.9. Findings + dispositions (all APPLIED):
+1. **A11 mapping incomplete** — CP2b/CP3b/CP5 instants lacked CONFIG derivations; CP4's log showed only `softer`. Cure: `censusAnchorsMs` bound in CONFIG (the seven census twins as data); harness v2 derives every CP instant from the anchors + envelope expressions and prints the agreement checks (CP1 anchor == sizes peak expression 3000 · CP3 anchor == louder peak expression 7500 · CP4 anchor == louder decay-end 8500 · CP3b anchor ≥ shrink landing 7900 · CP5 landing < anchor < coreMs); CP4 now asserts BOTH `or` and `softer` at 8500. The CP3 timing swap re-proves the expression governs under swap (7500→5600). Raw harness-v2 output:
+```
+CP1 instant: CONFIG.censusAnchorsMs.sizesPeak=3000 ; expression sizes.envOnset+rampUp=3000 ; agree=true
+CP1 @3000 sizes,: size=1.3500 wght=760 env=1.0000 => PASS
+CP2 instant: CONFIG.censusAnchorsMs.weightsBold=3500 ; weights envelope at anchor: peak=3260 decayEnd=4160 anchor inside decay=true
+CP2 @3500 weights: size=1.0000 wght=743 env=0.8578 => PASS
+CP2b instant: CONFIG.censusAnchorsMs.louderBase=7000 ; louder.envOnsetMs=7300 ; anchor<envOnset=true
+CP2b @7000 louder: size=1.0000 wght=400 env=0.0000 => PASS
+CP3 instant: CONFIG.censusAnchorsMs.louderPeak=7500 ; expression louder.envOnset+rampUp=7500 ; agree=true
+CP3 @7500 louder: size=2.0000 wght=820 env=1.0000 => PASS
+CP3b instant: CONFIG.censusAnchorsMs.shrinkSmall=8000 ; shrink landing expression envOnset+rampMs=7900 ; anchor>=landing=true
+CP3b @8000 or: size=0.4500 wght=300 env=1.0000 => PASS
+CP3b @8000 softer: size=0.4500 wght=300 env=1.0000 => PASS
+CP4 instant: CONFIG.censusAnchorsMs.shrinkLanded=8500 ; louder decay-end expression=8500 ; agree=true
+CP4 @8500 louder: size=1.0000 wght=400 env=0.0000 => PASS
+CP4 @8500 or: size=0.4500 wght=300 env=1.0000 => PASS
+CP4 @8500 softer: size=0.4500 wght=300 env=1.0000 => PASS
+CP5 instant: CONFIG.censusAnchorsMs.shrinkPersist=9500 ; shrink landing=7900 ; coreMs=10000 ; landing<anchor<core=true
+CP5 @9500 softer: size=0.4500 wght=300 env=1.0000 => PASS
+swapped expression instant=5600 (anchor 7500 no longer governs; expression governs under swap)
+louder @5600: size=2.0000 wght=820 env=1.0000 => PASS
+CONFIG words=21 built=21 match=true
+releases=[5170,10670] clamps=[]
+```
+Full own-check suite re-run on the cured build: harness v1 16 PASS / 0 FAIL · node --check PASS.
+2. **Fit result covered a different playback size** (comparison 360×203 → shrink ink ≈4.0 px). Cure: comparison-surface rows + the parity computation filed in fit-table.md; HIT carried with its disposition printed there (curing by enlargement would break size parity with the ORIGINAL — the comparison's purpose).
+3. **Census inaccuracy** — the CSS `line-height:1.25` had NOT in fact been removed (JS overrode it inline). Cure: removed from the stylesheet in fact; census text corrected.
+4. **Noted, recorded (not a HOLD ground):** at the 55.0 s twin the build already marks `louder` spoken (color flips at the ASR onset 6640 ≡ 54.64 s) while the source frame at 55.0 still shows it white. Priced: the ASR onset is the binding timing authority (packet + filed Plan); the frame sits inside the word's spoken span (54.64–55.76) before its visible flip. CP2b's assertion covers size/weight only, as filed. Named here as a micro-departure, not silently absorbed.
+
+recreation.html SHA-256 (FINAL, post-cure): **42578a0d59fc2f05ace09f4fcf28b9d372b40941a047c8300bb98e70e0dca32b** (12,610 B) · comparison.html a0e283a78a145c5be7295544757c405d4379fd6e41fc69c922c40a0a82e50414 (2,016 B) · segment.mp4 899128ba75b34d8c62489bc328f0d6bc7cdf573e632adddc49ac100af39456c6 (927,929 B). (Pre-cure build 831046a4… was never scored; the wave binds the final SHA only.)
+
+## jev-prewave RE-FIRE — HOLD · ASSERTED-CHECKS (second HOLD; filed: jev-prewave-refire.md) — ITEM STOPS HERE
+Dimensions: parameterization 0.90 · purity pre-check 1.00 · own-checks completeness **0.40** · fidelity-plan honesty 0.90. The re-fire CONFIRMED the firing-1 cures (all seven A11 checkpoints reproduced incl. both CP4 shrink words and the CP3 swap 7500→5600; census cure supported at code level; hashes matched; fresh purity scan zero). The remaining HOLD ground is the fit leg: this attempt's fit rows are a character-width × 0.72-factor MODEL, and guard-measured-fit §2 counts assumed-factor rows as HITs; the wrapped block bounds were unmeasured, and the judge's overlap flag reproduces from the model itself (Line A wrapped bottom ≈387.0 px vs Line B top 358.4 px at 360×640 — fit-table.md hit-list revision, this pass). Per the item's charge (HOLD = cure + re-fire once; second HOLD = file honestly, STOP, no wave): **the five-lens scoring wave is NOT fired; no verdict is computed; the item stands IN PROGRESS.** Named cure for the next attempt: (1) post-fit rendered-geometry measurement of both wrapped blocks + words (peaks + shrink) on the final 360 px stage — needs a layout/render measurement instrument this seat lacks (no browser binary); a coefficient model is not a measurement and is not filed as one; (2) a CONFIG-priced layout cure for the portrait-stage Line A/Line B overlap region. Disposition of the verdict: APPLIED (not set aside) — the guard text is explicit and the overlap arithmetic is the build's own.
+
+## COMPLETION — Cycle 036 Wave 33 (Amendment A12.3; cures for the jev-prewave re-fire HOLD)
+
+Start-state verification (A8): recreation.html on disk at completion start = **12,610 B, SHA-256 42578a0d59fc2f05ace09f4fcf28b9d372b40941a047c8300bb98e70e0dca32b** — MATCHES the filed Wave-32 hash; the completion builds on the filed build, not over a mismatch.
+
+### Cure 1 — CONFIG-priced layout cure for the portrait-stage overlap
+The re-fire's overlap flag is CONFIRMED by measurement before curing (instrument below): on the pre-cure build at 360×640, Line A's measured worst block bottom = 404.28 px (top 192.0 + measured block height 212.28 at the sizes-peak instant) vs Line B top 358.4 px → **45.88 px overlap** (the judge's model estimate was 28.6 px at base state; the measured peak-state overlap is larger). Cure, through CONFIG only (subject-shaping values are CONFIG data per A9.6): two new keys — **`narrowStageAspectMax: 0.75`** and **`narrowLineTopPctOfStage: [11, 49]`** — and one layout() change: when the stage aspect W/H ≤ narrowStageAspectMax, the line tops come from narrowLineTopPctOfStage; otherwise the original lineTopPctOfStage [30, 56] governs. No other value moved: baseSizePctOfStage (the specimen's 6.1% size class), lineHeight, envelopes, and all wide-stage geometry are untouched. Post-cure measurement (fit-table.md, completion filing): at 360×640 Line A top 70.4 → worst bottom **282.68** vs Line B top **313.6** → **30.92 px clearance, NO OVERLAP at any measured instant**; Line B worst bottom 557.60 (82.40 px stage margin). At 640×360 (16:9) the wide predicate is false, the original tops govern, measured clearance 29.09 px — wide behavior unchanged in form.
+
+### Cure 2 — fit evidence re-filed as MEASUREMENT (A12.2)
+fit-table.md is re-filed whole: every Wave-32 character-width × factor MODEL row is REMOVED, and every standing row is a rendered measurement — A12.2 form (ii): PIL ImageFont rendering, stand-in font NAMED (Liberation Sans Regular; Liberation Sans Bold for state weight ≥ 600), supersample ×8, ink bounds from the rendered glyph boxes; per-word states from the cured build's own `buildStateAt`; greedy wrap from rendered advance widths in the build's 345.6 px inner box. Rows cover all 21 words at base + sizes, at PEAK (143.75 × 46.38 px) + louder at PEAK (238.75 × 57.38 px, margin 106.9) + or/softer at the persisted SHRUNK state (softer ink height 12.88 ≥ 11 floor ✓; or full ink 9.62, cap height at its fitted size 12.12 — HIT-D carried with disposition) + both wrapped blocks at four census instants + the 16:9 check + the comparison surface re-measured (HIT-C carried, parity disposition unchanged). Revised A6 fit state: HIT-A CURED · HIT-B CURED · HIT-C carried (dispositioned) · HIT-D carried (dispositioned) · 0 undispositioned.
+
+### Fresh own-checks on the cured build — A12 EXECUTABLE RECEIPTS
+Harness command (one run, this cycle): the build's inline script extracted verbatim → `node harness.js ./build-cured.js` (completion harness: the filed Wave-32 v1 assertion suite + harness-v2 A11 derivations + the completion layout assertions). Fit instrument command: `node dump-states.js ./build-cured.js 100,3000,7500,8500` → per-word states → `python3 measure.py <states> 360 640 6.1 1.25 0.02` (and the 640×360 wide run). Syntax: `node --check` on both extracted inline scripts. Purity: guards.md command 1 grep on the cured recreation.html.
+
+| assertion | CONFIG expression evaluated | raw result (receipt) |
+|---|---|---|
+| COUNT (A9.3) | Σ CONFIG.lines[].words vs built spans | `CONFIG words=21 built=21 match=true` → PASS |
+| OWNERSHIP | lineReleaseMs = max(speechEndMs, transientEnd) + lineExitMs 350 + lineGapMs 320, per line | `releases=[5170,10670] clamps=[]` → PASS ×2 |
+| CP1 @3000 | censusAnchorsMs.sizesPeak=3000 ; sizes.envOnset+rampUp = 2080+920 = 3000 ; agree=true | `CP1@3000 sizes, :: size=1.3500 wght=760` → PASS |
+| CP2 @3500 | censusAnchorsMs.weightsBold=3500 ; weights peak=3260 decayEnd=4160, anchor inside decay=true | `CP2@3500 weights :: size=1.0000 wght=743` → PASS |
+| CP2b @7000 | censusAnchorsMs.louderBase=7000 < louder.envOnsetMs=7300 → true | `CP2b@7000 louder :: size=1.0000 wght=400` → PASS |
+| CP3 @7500 | censusAnchorsMs.louderPeak=7500 ; louder.envOnset+rampUp = 7300+200 = 7500 ; agree=true | `CP3@7500 louder :: size=2.0000 wght=820` → PASS |
+| CP3b @8000 | censusAnchorsMs.shrinkSmall=8000 ≥ shrink landing envOnset+rampMs = 7560+340 = 7900 → true | `CP3b@8000 or :: size=0.4500 wght=300` · `CP3b@8000 softer :: size=0.4500 wght=300` → PASS ×2 |
+| CP4 @8500 | censusAnchorsMs.shrinkLanded=8500 ; louder decay-end = 7500+1000 = 8500 ; agree=true | `CP4@8500 louder :: size=1.0000 wght=400` · `CP4@8500 softer :: size=0.4500 wght=300` → PASS ×2 |
+| CP5 @9500 | shrink landing 7900 < censusAnchorsMs.shrinkPersist=9500 < coreMs=10000 → true | `CP5@9500 softer :: size=0.4500 wght=300` → PASS |
+| BOUNDARY 57.167 s | buildStateAt at 9167 / 9500 / 10000 compared field-for-field | identical states, `lineA opacity=0` → PASS |
+| MID-RAMP weights | envelopeAt env=0.5 instants 2540/3010/7400/7730 | wght 580 / 600 / 610 / 350, env=0.5000 each → PASS ×4 |
+| SWAP D1 (violation) | louder.envOnsetMs 7300→5000 on scratch CONFIG; clamp = Line A release 5170; instant = 5170+200 = 5370 | `D1 clamps=[{"word":"louder","requestedOnset":5000,"clampedOnset":5170,"releaseMs":5170}]` · `@5370 size=2.0000 wght=820` → PASS ×2 |
+| SWAP D3 (timing) | louder envOnset 7300→5300, rampUp 200→300 on scratch CONFIG; instant via envOnset+rampUp | `D3 clamps=[] instant via envOnset+rampUp=5600` · `@5600 size=2.0000 wght=820` · `@7500 (old instant) size=1.0000 wght=400` → **the changed instant 7500→5600 is the receipt** → PASS ×3 |
+| SWAP D2 (content+palette) | replacement envelope table (amendment §D2) + spokenColor→#ff9f1c, guideColor→#3a86ff | grow @1900 1.7000/780 · grow @2300 1.3500/590 · still @2800 0.5000/300 · still @5000 0.5000/300 · palette CONFIG values at the render color branch + guide background sites (census-verified) → PASS ×5 |
+| LAYOUT (completion) | 360/640 = 0.5625 ≤ CONFIG.narrowStageAspectMax 0.75 → narrow tops [11, 49]; 640/360 = 1.7778 ≤ 0.75 → false → wide tops [30, 56] | `PASS LAYOUT-NARROW-SELECTED-360x640 :: tops=[11,49] -> A top 70.4px, B top 313.6px @640H` · `PASS LAYOUT-WIDE-UNCHANGED-640x360` → PASS ×2 |
+| FIT (completion) | measure.py on cured-build states at 360×640, narrow tops [70.4, 313.6] | Line A worst bottom 282.68 (t=3000) vs Line B top 313.6 → clearance 30.92, no overlap; Line B worst bottom 557.60 (t=7500) → PASS (full rows: fit-table.md) |
+| PURITY (leg 2) | `grep -n -E "segment\.mp4\|source\.mp4\|<video\|<img" recreation.html` (cured) | exit 1, zero hits; `Math.random` count 0 · `Date.now` count 0 → PASS |
+| SYNTAX (leg 3) | `node --check` extracted inline scripts | recreation PASS · comparison PASS |
+| COMPARISON (leg 3) | comparison.html unchanged this cycle (SHA a0e283a7…) — it reads coreMs + segmentHandleOffsetMs from the cured CONFIG at sync time; CONFIG keys unchanged in name/value | both sides 360×203, labels as charged, one control set → PASS (carried form, re-verified by hash + node --check) |
+
+Harness tally on the cured build: **36 PASS / 0 FAIL** (raw output, verbatim):
+```
+CONFIG words=21 built=21 match=true
+PASS COUNT :: 21==21
+releases=[5170,10670] clamps=[]
+PASS OWNERSHIP-RELEASES :: [5170,10670]
+PASS OWNERSHIP-NOCLAMP-SPECIMEN :: []
+PASS CP1@3000 sizes, :: size=1.3500 wght=760
+PASS CP2@3500 weights :: size=1.0000 wght=743
+PASS CP2b@7000 louder :: size=1.0000 wght=400
+PASS CP3@7500 louder :: size=2.0000 wght=820
+PASS CP3b@8000 or :: size=0.4500 wght=300
+PASS CP3b@8000 softer :: size=0.4500 wght=300
+PASS CP4@8500 louder :: size=1.0000 wght=400
+PASS CP4@8500 softer :: size=0.4500 wght=300
+PASS CP5@9500 softer :: size=0.4500 wght=300
+PASS BOUNDARY-9167-9500-10000-IDENTICAL :: lineA opacity=0
+PASS MIDRAMP@2540 sizes, :: wght=580 env=0.5000
+PASS MIDRAMP@3010 weights :: wght=600 env=0.5000
+PASS MIDRAMP@7400 louder :: wght=610 env=0.5000
+PASS MIDRAMP@7730 softer :: wght=350 env=0.5000
+D1 clamps=[{"word":"louder","requestedOnset":5000,"clampedOnset":5170,"releaseMs":5170}]
+PASS D1-CLAMP :: {"word":"louder","requestedOnset":5000,"clampedOnset":5170,"releaseMs":5170}
+PASS D1-PEAK-AT-CLAMPED-INSTANT :: @5370 size=2.0000 wght=820
+D3 clamps=[] instant via envOnset+rampUp=5600
+PASS D3-NOCLAMP :: []
+PASS D3-INSTANT-MOVED-7500->5600 :: @5600 size=2.0000 wght=820
+PASS D3-OLD-INSTANT-DECAYED :: @7500 size=1.0000 wght=400
+PASS D2-GROW-PEAK@1900 :: size=1.7000 wght=780
+PASS D2-GROW-MIDDECAY@2300 :: size=1.3500 wght=590
+PASS D2-STILL-LANDED@2800 :: size=0.5000 wght=300
+PASS D2-STILL-PERSIST@5000 :: size=0.5000 wght=300
+PASS D2-PALETTE-CONFIG :: spokenColor=#ff9f1c guideColor=#3a86ff (consumption sites: render color branch + guide background, census-verified)
+CP1 instant: CONFIG.censusAnchorsMs.sizesPeak=3000 ; expression sizes.envOnset+rampUp=3000 ; agree=true
+PASS V2-CP1-AGREE :: 3000==3000
+CP2 instant: CONFIG.censusAnchorsMs.weightsBold=3500 ; weights envelope at anchor: peak=3260 decayEnd=4160 anchor inside decay=true
+PASS V2-CP2-ANCHOR-IN-DECAY :: peak=3260 decayEnd=4160
+CP2b instant: CONFIG.censusAnchorsMs.louderBase=7000 ; louder.envOnsetMs=7300 ; anchor<envOnset=true
+PASS V2-CP2b-ANCHOR-BEFORE-ONSET :: 7000<7300
+CP3 instant: CONFIG.censusAnchorsMs.louderPeak=7500 ; expression louder.envOnset+rampUp=7500 ; agree=true
+PASS V2-CP3-AGREE :: 7500==7500
+CP3b instant: CONFIG.censusAnchorsMs.shrinkSmall=8000 ; shrink landing expression envOnset+rampMs=7900 ; anchor>=landing=true
+PASS V2-CP3B-ANCHOR-AFTER-LANDING :: 8000>=7900
+CP4 instant: CONFIG.censusAnchorsMs.shrinkLanded=8500 ; louder decay-end expression=8500 ; agree=true
+PASS V2-CP4-AGREE :: 8500==8500
+CP5 instant: CONFIG.censusAnchorsMs.shrinkPersist=9500 ; shrink landing=7900 ; coreMs=10000 ; landing<anchor<core=true
+PASS V2-CP5-WINDOW :: 7900<9500<10000
+narrow predicate: 360/640=0.5625 <= CONFIG.narrowStageAspectMax=0.75 -> true ; tops applied=[11,49]
+wide predicate: 640/360=1.7778 <= 0.75 -> false ; tops applied=[30,56]
+PASS LAYOUT-NARROW-SELECTED-360x640 :: tops=[11,49] -> A top 70.4px, B top 313.6px @640H
+PASS LAYOUT-WIDE-UNCHANGED-640x360 :: lineTopPctOfStage=[30,56] governs 16:9
+TALLY pass=36 fail=0
+```
+One harness-form note, printed honestly: the completion harness compares sizeRatio at 4-dp rounding (the evaluator's float arithmetic yields 0.449999… for the 0.45 shrink ratio; the Wave-32 filed values are the same numbers at 4-dp print). No assertion value changed.
+
+### A6 legs on the cured build
+fit-table.md HITs **2 carried, both dispositioned (C comparison-surface parity · D `or` full-ink) · 0 undispositioned** · config-census.md HITs **0** (re-scan section filed at its head; the two new CONFIG keys resolve to their layout() application sites).
+
+### Hashes (completion build)
+recreation.html SHA-256 (CURED, FINAL for this completion): **65b4de69d1d384601613ba93e5cc892c55693d7b1decd68b593690dcfb9f0dcf** (12,819 B) · comparison.html a0e283a78a145c5be7295544757c405d4379fd6e41fc69c922c40a0a82e50414 (2,016 B, unchanged) · segment.mp4 899128ba75b34d8c62489bc328f0d6bc7cdf573e632adddc49ac100af39456c6 (927,929 B, unchanged). The PIXEL-UNVERIFIED limitation stands as filed (no browser binary in this seat; fit evidence is the A12.2(ii) named-stand-in rendered measurement, labeled PROXY in fit-table.md).
+
+
+===== CONFIG BLOCK (from cured recreation.html, verbatim) =====
+var CONFIG = {
+  "baseSizePctOfStage": 6.1,
+  "baseWeight": 400,
+  "easingName": "easeInOut",
+  "plateColor": "#000000",
+  "guideColor": "#7fd4e6",
+  "guideInsetPct": 8,
+  "guideThicknessPx": 2,
+  "guideGapPctOfStage": 34,
+  "unspokenColor": "#f2f2f2",
+  "spokenColor": "#ffe600",
+  "fontStack": "'Roboto Flex','Inter var',system-ui,-apple-system,'Segoe UI',sans-serif",
+  "minSizePctOfStage": 2.7,
+  "lineExitMs": 350,
+  "lineGapMs": 320,
+  "endHoldMs": 1800,
+  "coreMs": 10000,
+  "segmentHandleOffsetMs": -500,
+  "ownershipPolicy": "clamp-and-print",
+  "lineTopPctOfStage": [30, 56],
+  "narrowStageAspectMax": 0.75,
+  "narrowLineTopPctOfStage": [11, 49],
+  "lineHeight": 1.25,
+  "censusAnchorsMs": { "sizesPeak": 3000, "weightsBold": 3500, "louderBase": 7000, "louderPeak": 7500, "shrinkSmall": 8000, "shrinkLanded": 8500, "shrinkPersist": 9500 },
+  "sharedEnvelopes": {
+    "shrink": { "envOnsetMs": 7560, "rampMs": 340, "sizePeak": 0.45, "weightPeak": 300, "persist": true }
+  },
+  "lines": [
+    { "id": "lineA", "speechEndMs": 4500, "words": [
+      { "text": "The", "onsetMs": 240, "envOnsetMs": 240, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "system", "onsetMs": 920, "envOnsetMs": 920, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "brings", "onsetMs": 1140, "envOnsetMs": 1140, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "in", "onsetMs": 1380, "envOnsetMs": 1380, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "varying", "onsetMs": 1540, "envOnsetMs": 1540, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "type", "onsetMs": 1780, "envOnsetMs": 1780, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "sizes,", "onsetMs": 2080, "envOnsetMs": 2080, "sizePeak": 1.35, "weightPeak": 760, "rampUpMs": 920, "rampDownMs": 900, "peakHoldMs": 0, "persist": false },
+      { "text": "weights", "onsetMs": 2760, "envOnsetMs": 2760, "sizePeak": 1.0, "weightPeak": 800, "rampUpMs": 500, "rampDownMs": 900, "peakHoldMs": 0, "persist": false },
+      { "text": "and", "onsetMs": 3980, "envOnsetMs": 3980, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "animation,", "onsetMs": 4140, "envOnsetMs": 4140, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false }
+    ]},
+    { "id": "lineB", "speechEndMs": 8800, "words": [
+      { "text": "so", "onsetMs": 4820, "envOnsetMs": 4820, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "you", "onsetMs": 4920, "envOnsetMs": 4920, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "can", "onsetMs": 5040, "envOnsetMs": 5040, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "feel", "onsetMs": 5160, "envOnsetMs": 5160, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "when", "onsetMs": 5560, "envOnsetMs": 5560, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "my", "onsetMs": 5900, "envOnsetMs": 5900, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "voice", "onsetMs": 6100, "envOnsetMs": 6100, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "gets", "onsetMs": 6400, "envOnsetMs": 6400, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "louder", "onsetMs": 6640, "envOnsetMs": 7300, "sizePeak": 2.0, "weightPeak": 820, "rampUpMs": 200, "rampDownMs": 1000, "peakHoldMs": 0, "persist": false },
+      { "text": "or", "onsetMs": 7760, "envelopeRef": "shrink" },
+      { "text": "softer", "onsetMs": 8400, "envelopeRef": "shrink" }
+    ]}
+  ]
+};
+
+===== PACKET SECTION (Packet #11 digest, T08) =====
+### T08 — Volume ramp: size and weight track vocal emphasis (48–58 s)
+- **Mechanics:** the narration line "types sizes, weights and animation," sets the demo's own terms (~50 s: "sizes" stands larger and bolder than its neighbours). Then the line "so you can feel when my voice gets louder or softer" performs the mapping: the channel the film's own grid names "Font Size Range (percentage of the screen height)" (T05) is performed: "louder" grows transiently at its onset (~55.3 s, ev/t055-louder-onset.jpg, bound by the clip), and the persistent frame-verifiable end state is the shrink — at 56 s "or softer" sits visibly smaller and lighter while the line's earlier words hold full size (ev/t056-ramp-softer.jpg); at 55 s the ramp words are still white and unscaled (ev/t055-line-before-ramp.jpg). Size is a continuous-feeling ramp tied to the phrase's dynamics, not a per-word pop. Easing curve: UNMEASURED (no frame-level size series was extracted; the claim is the before/after states + the clip).
+- **Why it works:** loudness becomes a spatial fact a Deaf viewer can see — the sentence about volume is itself set at two volumes.
+- **Evidence:** ev/t050-types-sizes.jpg ("sizes" enlarged in its line) · ev/t055-line-before-ramp.jpg (the ramp line before its size states) · ev/t055-louder-onset.jpg ("louder" at its onset) · ev/t056-ramp-softer.jpg ("or softer" shrunk, the end state). Clip: clips/050-volume-ramp-7s.mp4 (50–57 s).
+
+===== GUARDS LIST (guards/guards.md, full — the own-checks that should exist) =====
+# Guards — recreation
+
+## The judgment layer's home (owner's order, 2026-11-14 — 100% form)
+Form: **In-job form.** This job's judging = the Codex scoring wave (its review type, defined in `codex-scoring-wave.md` in this directory) + the mechanical guards below + `jev-prewave.md`. The wave's execution may be shared tooling; the definitions are this job's own files.
+
+## The commands (mechanical guards — callable, demonstrated)
+1. Construction-purity grep — recreation.html must contain no reference to source media, frames, or tracing (pattern census over the file).
+   Demonstrated: 2026-11-13, T15 attempt 1 (zero hits; Codex purity lens independently returned 100).
+   Pattern precision (2026-11-17, Cycle 026 Condense — priced across T167 · T170 · T175 in one wave): an in-file fragment reference `url(#id)` (an SVG paint-server or clip definition inside the same file) is NOT a specimen reference; such hits are classified in the item's build record and never counted as purity hits. The refusal class is specimen media, source files, and tracing — the grep's specimen alternatives (`segment.mp4|source.mp4|<video|<img|1235931636`-form source ids) stay unmodified.
+2. Swap test (parameterization proof) — headless harness loads the recreation with a swapped CONFIG phrase; target geometry must regenerate for the new words (a traced copy cannot).
+   Demonstrated: 2026-11-13, T15 attempt 1, LOGIC level (node harness, stubbed canvas: 5,060 → 2,728 targets). Pixel-level render proof is NOT exercisable from this seat (no browser binary) — printed limitation, carried in scores.md; the comparison page is the render surface.
+3. Syntax + determinism check — `node --check` on inline scripts; seeded-RNG presence census.
+   Demonstrated: 2026-11-13, T15 attempt 1 (both scripts clean).
+4. Scores arithmetic — recompute the wave average + min from the filed lens returns before scores.md prints a verdict.
+   Demonstrated: 2026-11-13, T15 attempt 1 (68/82/100/64 → 78.5 recomputed at filing).
+5. Segment binding — segment.mp4's timestamps/duration/ffprobe facts recorded against the packet's technique window before any build starts.
+   Demonstrated: 2026-11-13, T15 attempt 1 (1:24–1:40 · 16.0 s · ffprobe-cited).
+6. **Measured-fit leg** — `guard-measured-fit.md` in this directory. Per item, pre-wave: every subject text element carries a MEASURED fit row (post-fit ink bounds vs container at the 360 px stage, legibility floor ~11 px); a formula-claimed fit or a missing row is a HIT. Owns the "fit asserted, not measured" readability class (Waves 2–5, 10). **Built 2026-11-15 (HQ owed-checks charge); fires unconditionally at the pre-wave step from the next cycle; a wave record lacking a fit table for any item prints INCOMPLETE.** Verdict advisory; firing is not.
+7. **Config-census leg (v3.1 codified)** — `guard-config-census.md` in this directory. Per item, pre-wave: all-literal scan with per-constant subject-shaping/structural classification + CONFIG key→application-site resolution (nested/array keys included) + CSS-variable setter check; unapplied keys and unset-variable references are HITs. Owns the config-incompleteness reusability class. **Built 2026-11-15 (HQ owed-checks charge); fires unconditionally at the pre-wave step from the next cycle; a wave record lacking a census for any item prints INCOMPLETE.** Verdict advisory; firing is not.
+
+## Jev call definitions
+- `jev-prewave.md` — judges a build record's readiness to spend a scoring wave. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (Designed 2026-11-14; attempt 1 predates it and ran under the §5 panel, which runs alongside.)
+- `jev-observe-exit.md` — the Observe→Plan gate for a recreation wave (queue state priced · prior/family scores read · mechanics seen · variables extracted · flow-field model + Owner Cures 1–2 carried in working memory · consumer named). Call point: INSTRUCTION §1 gate out. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (Phase-guard augmentation, 2026-11-14.)
+- `jev-plan-exit.md` — the Plan→Execute gate (parameter table · Execute + Verify checklists as instruments · failure points priced · plateau floor rule priced in Plan). Call point: INSTRUCTION §2 gate out. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- Deliverable Jev: **none separate, by design** — the deliverable class (a scored recreation attempt) is judged by the five-lens Codex scoring wave + §5.5 consolidation; a jev-verify file would duplicate the wave. jev-prewave is its pre-wave gate. (Printed in INSTRUCTION §5 step 3b.)
+
+## Codex review types
+- `codex-scoring-wave.md` — the five-lens scoring wave (motion fidelity · timing/tempo · construction purity · reusability · readability). Demonstrated: 2026-11-13, T15 attempt 1 (four lenses then; readability added 2026-11-14 under the owner's order — the five-lens form demonstrates at the next wave).
+- `codex-observe.md` — Observe-phase source-record audit (packet-section completeness · prior-attempt record audit · segment facts). Call point: INSTRUCTION §1 step 1, per item. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- `codex-plan-review.md` — Plan attack priced against this job's recorded failure modes (convergent freeze · owner's two catches · parameterization reality · bar arithmetic · §8 size discipline). Call point: INSTRUCTION §2 gate out, alongside jev-plan-exit. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- `codex-condense.md` — Condense review: amendment faithfulness + four-layer coverage attack. Call point: INSTRUCTION §9, at Condense close. Consumer: the job's next cycle. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+
+## Judge facts
+- Judges: Codex scoring wave (floors: average ≥85 AND no lens <70 — the recreation law) · jev-prewave (floors per its §5; fires at its step on every cycle).
+- Verdict history: ../verdict-history.md
+
+## Presence (2026-11-14, founding of this layer)
+JUDGMENT LAYER: **INCOMPLETE** — mechanical guards hosted + demonstrated (5/5); Codex wave defined in-job and demonstrated (four-lens form; five-lens form pending its first wave); jev-prewave designed, DEFINED — it fires at its step on every cycle.
+
+## Presence update (2026-11-14, phase-guard augmentation)
+JUDGMENT LAYER: **INCOMPLETE** — phase-transition layer now hosted: jev-observe-exit + jev-plan-exit (both DEFINED) · codex-observe + codex-plan-review + codex-condense (all DEFINED) · jev-prewave DEFINED · five-lens scoring wave still pending its first demonstration. Every call in this layer fires at its step on every cycle; a cycle in which one did not fire prints INCOMPLETE. Build record: `BUILD-LOG.md` in this directory.
+
+## Ruling update (2026-11-14 ~20:55 EST — owner's judgment-call ruling)
+ARMING = FIRING abolishes the arming states printed in this index: this job's calls are DEFINED and fire unconditionally in its next live cycle (raw responses filed in the run record); verdicts are advisory (applied, or set aside with the miss + the call-file amendment recorded in Condense). The founding Presence print stands as the 2026-11-14 founding record; from the next cycle, the presence evaluation prices FIRING (fired / not fired — not fired = INCOMPLETE), not arming.
+
+8. **Census-anchor probes (2026-11-16, recreation Cycle 025 Condense — mechanical layer of the allocation/count consistency landing).** Where a census anchor asserts an empty/zero state at a named instant (e.g. "no territory at 449 s"), the builder's own-checks harness MUST probe the recreation's state function at that instant (mapped segment-relative) and file the raw result in build-record.md; a prescribed schedule that is nonzero at a zero-state anchor is a build-record defect to cure BEFORE the wave, not a finding for the timing lens to discover. Forcing evidence: T160 Wave 22 (prescribed purple front 8.33% grown at the 449 s zero-state anchor; timing lens priced it 68 in `hidden_files/study/recreations/T160-expansion-front-envelopment/codex/lens-timing.md`).
+
+
+===== CENSUS-ANCHOR MAPPING (binding for this item; A10.2/A11) =====
+Schedule basis: segment-anchored; build t=0 ≡ source 48.0 s; segment 47.5–58.5 s with CONFIG segmentHandleOffsetMs −500 in comparison only. Census anchors are CONFIG data (CONFIG.censusAnchorsMs) and every A11 assertion's evaluation instant derives from them + the envelope expressions (receipts in build-record.md, completion section).
+
+| census anchor (CONFIG key) | build ms | source s | prescribed state at the instant |
+|---|---|---|---|
+| sizesPeak | 3000 | 51.0 | "sizes," at peak: size 1.35, wght 760 (expression envOnset+rampUp = 2080+920 = 3000, agree) |
+| weightsBold | 3500 | 51.5 | "weights" weight-only, in decay: size 1.00, wght 743 (peak 3260, decayEnd 4160; anchor inside decay) |
+| louderBase | 7000 | 55.0 | "louder" still BASE: size 1.00, wght 400 (anchor < envOnsetMs 7300) |
+| louderPeak | 7500 | 55.5 | "louder" at peak: size 2.00, wght 820 (expression envOnset+rampUp = 7300+200 = 7500, agree) |
+| shrinkSmall | 8000 | 56.0 | "or" + "softer" ALREADY SMALL: size 0.45, wght 300 (shrink landing = envOnset+rampMs = 7560+340 = 7900 ≤ anchor) |
+| shrinkLanded | 8500 | 56.5 | "louder" decayed to base (decay-end = 7500+1000 = 8500, agree) AND shrink persisted 0.45/300 |
+| shrinkPersist | 9500 | 57.5 | shrink persists inside core (7900 < 9500 < coreMs 10000): "softer" 0.45/300 |
+
+Timing-swap receipt (A11/A12): on a scratch CONFIG with louder envOnsetMs 7300→5300 and rampUpMs 200→300, the CP3 evaluation instant moves via the same expression envOnset+rampUp: 7500→5600; at 5600 size 2.0000 wght 820; at the old instant 7500 size 1.0000 wght 400 (raw harness lines in build-record.md completion section).
+
+
+===== A6 LEG 1: fit-table.md (VERBATIM) =====
+# fit-table — T197 volume ramp · Cycle 036 Wave 33 COMPLETION (guard-measured-fit, Amendment A6 + A12.2)
+
+Build: recreation.html SHA-256 **65b4de69d1d384601613ba93e5cc892c55693d7b1decd68b593690dcfb9f0dcf** (12,819 B — post-completion-cure; the Wave-32 build 42578a0d… is superseded for this leg).
+
+**Method — MEASUREMENT, A12.2 form (ii), PROXY (stand-in font named):** every row below is a rendered measurement, not a formula product. Instrument: PIL ImageFont rendering at supersample ×8; ink bounds are the rendered glyphs' actual ink bounding boxes. Stand-in font: **Liberation Sans** (Regular; **Liberation Sans Bold** for words whose state weight ≥ 600 — the nearest named static face to the build's variable `wght` axis; Roboto Flex is not installed in this seat, the instrument limit printed, not hidden). Per-word states (sizeRatio · weight · fontPx) come from the cured build's own `buildStateAt` evaluator (node harness, Cycle 036 completion run). Wrap geometry: greedy inline wrap driven by the rendered ADVANCE widths inside the build's inner box (stage 360 px − 2 × 2vw padding = **345.6 px**), exactly as the build's inline spans lay out; row height = CONFIG lineHeight 1.25 × the row's largest fontPx. Liberation runs ≈15% wider than the film's Roboto Flex (T195 cross-check), so every width margin here is conservative. The Wave-32 character-width × 0.72-factor MODEL rows are REMOVED by this filing — no model row stands as a measurement (guard-measured-fit §2).
+
+Stage: **360×640 portrait** (the leg's reference stage). Base fontPx = 640 × CONFIG baseSizePctOfStage 6.1% = **39.04**. Line tops on this stage are the CONFIG narrow-stage values (completion layout cure): Line A top = 11% × 640 = **70.4 px** · Line B top = 49% × 640 = **313.6 px** (predicate: 360/640 = 0.5625 ≤ CONFIG narrowStageAspectMax 0.75).
+
+## Word rows — 360×640 stage (instrument: PIL/Liberation as above; container = line inner box 345.6 px; margin = binding-side slack = inner width − measured ink width, the unbreakable-word bound)
+
+| element | state | fontPx | wght (face) | measured ink w (px) | measured ink h (px) | margin (px) | flag |
+|---|---|---|---|---|---|---|---|
+| The | base | 39.04 | 400 (Regular) | 67.25 | 28.62 | 278.4 | |
+| system | base | 39.04 | 400 (Regular) | 123.50 | 33.38 | 222.1 | |
+| brings | base | 39.04 | 400 (Regular) | 106.25 | 36.38 | 239.4 | |
+| in | base | 39.04 | 400 (Regular) | 30.38 | 28.25 | 315.2 | |
+| varying | base | 39.04 | 400 (Regular) | 125.75 | 36.38 | 219.9 | |
+| type | base | 39.04 | 400 (Regular) | 73.75 | 33.38 | 271.9 | |
+| sizes, | base | 39.04 | 400 (Regular) | 99.75 | 33.25 | 245.9 | |
+| sizes, | PEAK 1.35× | 52.70 | 760 (Bold) | 143.75 | 46.38 | 201.9 | peak row |
+| weights | base (weight-only peak 800 in-envelope) | 39.04 | 400 (Regular) | 132.38 | 36.38 | 213.2 | widest base Line A word by ink |
+| and | base | 39.04 | 400 (Regular) | 65.12 | 28.62 | 280.5 | |
+| animation, | base | 39.04 | 400 (Regular) | 179.88 | 33.25 | 165.7 | |
+| so | base | 39.04 | 400 (Regular) | 41.25 | 21.38 | 304.4 | |
+| you | base | 39.04 | 400 (Regular) | 62.88 | 29.12 | 282.7 | |
+| can | base | 39.04 | 400 (Regular) | 62.88 | 21.38 | 282.7 | |
+| feel | base | 39.04 | 400 (Regular) | 62.88 | 28.62 | 282.7 | |
+| when | base | 39.04 | 400 (Regular) | 93.38 | 28.62 | 252.2 | |
+| my | base | 39.04 | 400 (Regular) | 52.00 | 29.12 | 293.6 | |
+| voice | base | 39.04 | 400 (Regular) | 91.00 | 28.62 | 254.6 | |
+| gets | base | 39.04 | 400 (Regular) | 73.75 | 33.38 | 271.9 | |
+| louder | base | 39.04 | 400 (Regular) | 108.38 | 28.62 | 237.2 | |
+| louder | PEAK 2.0× | 78.08 | 820 (Bold) | 238.75 | 57.38 | 106.9 | widest element overall |
+| or | base | 39.04 | 400 (Regular) | 34.62 | 21.38 | 311.0 | |
+| or | SHRUNK 0.45× (persisted) | 17.57 | 300 (Regular) | 15.62 | 9.62 | 330.0 | see floor note + HIT-D |
+| softer | base | 39.04 | 400 (Regular) | 97.50 | 28.62 | 248.1 | |
+| softer | SHRUNK 0.45× (persisted) | 17.57 | 300 (Regular) | 44.12 | 12.88 | 301.5 | min-state row |
+
+Guide rules (for the record): measured from CONFIG geometry — left 8% × 360 = 28.8 px, width 84% × 360 = 302.4 px, thickness 2 px; margin 28.8 px/side. (Geometry row, not a text element.)
+
+## Wrapped-block rows — MEASURED post-fit rendered geometry (the completion cure for HIT-B)
+
+Instrument as above; block height = Σ row heights (1.25 × row-max fontPx) over the measured greedy wrap; block ink width = widest row's summed word ink. States from the build's own evaluator at the census instants.
+
+| stage | instant | line | rows | measured block ink w (px) | measured block h (px) | block top (px) | block bottom (px) | clearance to next line top / stage bottom (px) |
+|---|---|---|---|---|---|---|---|---|
+| 360×640 | t=100 (base) | A | 4 | 297.25 | 195.20 | 70.4 | 265.60 | 48.00 to B top |
+| 360×640 | t=100 (base) | B | 3 | 310.12 | 146.40 | 313.6 | 460.00 | 180.00 to stage bottom |
+| 360×640 | t=3000 (sizes, PEAK) | A | 4 | 297.00 | 212.28 | 70.4 | 282.68 | **30.92 to B top** |
+| 360×640 | t=3000 | B | 3 | 310.12 | 146.40 | 313.6 | 460.00 | 180.00 |
+| 360×640 | t=7500 (louder PEAK) | A | 4 | 297.25 | 195.20 | 70.4 | 265.60 | 48.00 to B top |
+| 360×640 | t=7500 (louder PEAK) | B | 4 | 310.12 | 244.00 | 313.6 | 557.60 | 82.40 to stage bottom |
+| 360×640 | t=8500 (shrink landed) | A | 4 | 297.25 | 195.20 | 70.4 | 265.60 | 48.00 to B top |
+| 360×640 | t=8500 (shrink landed) | B | 3 | 310.12 | 146.40 | 313.6 | 460.00 | 180.00 |
+
+**Overlap verdict (measured): NO OVERLAP at any measured instant on the cured build.** Worst case is the sizes-peak instant: Line A bottom 282.68 vs Line B top 313.6 → 30.92 px clearance. Pre-cure reproduction with the same instrument (filed for the record): Line A worst bottom 404.28 (top 192.0 + 212.28) vs Line B top 358.4 → 45.88 px overlap — the Wave-32 flag confirmed by measurement, then cured by CONFIG (narrowLineTopPctOfStage [11, 49] + narrowStageAspectMax 0.75; wide-stage tops unchanged).
+
+## 16:9 stage check (640×360 — the cure must not break wide behavior)
+
+Wide predicate false (640/360 = 1.7778 > 0.75) → original CONFIG lineTopPctOfStage [30, 56] governs: A top 108.0 · B top 201.6. Measured (same instrument, inner width 614.4, basePx 21.96): A worst bottom 172.51 (t=3000) → 29.09 px clearance to B top · B worst bottom 256.50 (t=7500) → 103.50 px to stage bottom. No overlap; wide-stage layout form unchanged by the cure.
+
+## Hierarchy (measured, guard check 4)
+louder peak ink height 57.38 vs its base 28.62 = **2.00×** ✓ (the claimed ratio, measured) · sizes, peak ink height 46.38 vs base 33.25 = 1.39× (fontPx ratio exactly 1.35; the ink-height excess is the Bold face's taller bbox at wght 760 — printed, not rounded away) · softer shrunk 12.88 vs base 28.62 = **0.45×** ✓ · or shrunk 9.62 vs base 21.38 = **0.45×** ✓.
+
+## Legibility floor (~11 px at the 360 px stage, guard check 3)
+Smallest subject size class is the persisted shrink state at fontPx 17.57: softer full ink height **12.88 px ≥ 11 ✓** · cap height at that fitted size (rendered 'H', same instrument) **12.12 px ≥ 11 ✓** · `or` full ink height **9.62 px** — below 11 on the full-ink reading; `or` is two x-height glyphs with no ascender or capital, so its full ink is x-height-bound at ANY faithful rendering, including the source's own 0.45× shrink state (the specimen's ratio, CONFIG-floored at minSizePctOfStage 2.7). Filed as HIT-D below with disposition — printed, never hidden inside an average.
+
+## Comparison surface (360×203 iframe) — measured this cycle (same instrument)
+Base fontPx = 203 × 6.1% = 12.38 · softer base ink height 9.12 px · louder peak (24.77 px, Bold) ink 75.62 × 18.12 px · shrink state (5.57 px): softer ink height **4.12 px**, or ink height 3.00 px — below the ~11 px floor. **HIT-C (this surface only), carried with disposition (unchanged from Wave 32):** the comparison iframe is a reduced-scale inspection surface; the reduction is IDENTICAL on the original side — the source's own text at 6.1% of its 1080 px height scaled to a 203 px-high frame is the same ≈9 px base / ≈4 px shrink ink. The recreation matches the original's physical text size in the comparison exactly (that parity is the comparison's purpose); the legibility floor governs the recreation's own playback stage (360×640 above), where the size class clears it. Enlarging type only in comparison would break size parity with the ORIGINAL — the defect would be the cure. Disposition: CARRIED, priced, not cured by construction.
+
+## Hit list (revised at completion)
+- **HIT-A (Wave 32: model-derived rows) — CURED:** every row above is a rendered measurement with instrument + stand-in font named; the model rows are removed, not relabeled.
+- **HIT-B (Wave 32: wrapped blocks unmeasured + portrait overlap) — CURED:** blocks measured post-fit at four census instants; overlap reproduced by measurement on the pre-cure build (45.88 px) and eliminated on the cured build (worst clearance 30.92 px) by the CONFIG narrow-stage layout cure; 16:9 behavior verified unchanged in form.
+- **HIT-C (comparison-surface scale parity) — CARRIED** with disposition above.
+- **HIT-D (`or` full-ink 9.62 px at the persisted shrink state) — CARRIED** with disposition in the floor section: cap height at the same fitted size is 12.12 px and the line's other shrink word clears full-ink at 12.88 px; curing by enlarging `or` alone would break the shared-envelope 0.45× specimen ratio that IS the technique's end state.
+
+HITs: **2 carried (C · D), both dispositioned · 0 undispositioned · 0 on the recreation's own stage without disposition**
+
+
+===== A6 LEG 2: config-census.md (VERBATIM) =====
+# config-census — T197 volume ramp · Cycle 035 Wave 32 · attempt 1 (guard-config-census v3.1, Amendment A6 + A9.6)
+
+Scan run on the FINAL recreation.html (SHA-256 42578a0d59fc2f05ace09f4fcf28b9d372b40941a047c8300bb98e70e0dca32b — re-scanned after the jev-prewave HOLD cure: CSS line-height removed in fact, censusAnchorsMs bound) + comparison.html for cross-file application sites. Reference counts are occurrences in code after the CONFIG block (seat script, this run).
+
+## RE-SCAN — Cycle 036 Wave 33 COMPLETION (cured build)
+Re-scanned on the completion build, recreation.html SHA-256 **65b4de69d1d384601613ba93e5cc892c55693d7b1decd68b593690dcfb9f0dcf** (12,819 B). The completion cure adds exactly two CONFIG keys; both resolve to application sites in `layout()` (value-flow checked, seat grep this run):
+| CONFIG key | sites | flows to |
+|---|---|---|
+| narrowStageAspectMax | 1 (layout predicate) | `var narrowStage = (W / H) <= CONFIG.narrowStageAspectMax` — selects the line-top set per stage aspect |
+| narrowLineTopPctOfStage | 1 (array-indexed, via the `lineTops` selection) | `el.style.top = (H * lineTops[li]/100)` when the narrow predicate holds — the portrait-stage line tops (completion layout cure) |
+All other key→site resolutions below stand unchanged on the cured build (the cure touched only the CONFIG block's two new keys + the layout() top-selection lines; no other literal or site moved — verified by the literal scan re-run: no new hex colors, durations, or geometry literals outside CONFIG; the `0.75` threshold and `[11, 49]` tops exist ONLY as the CONFIG values above). CSS-variable setter check: no CSS variables are used by this build (unchanged) — no unset-variable HIT class applies.
+HITs (cured build): **0**
+
+## Key → application-site resolution (value-flow checked, Cycle-021 rule)
+| CONFIG key | sites | flows to |
+|---|---|---|
+| baseSizePctOfStage | 3 | wordStateAt ratio math + render basePx |
+| baseWeight | 4 | envelope weight lerp (wordStateAt) |
+| easingName | 1 | EASINGS selection in envelopeAt |
+| plateColor | 1 | stage background |
+| guideColor | 1 | guide-rule background |
+| guideInsetPct | 2 | guide left/width geometry |
+| guideThicknessPx | 1 | guide height |
+| guideGapPctOfStage | 2 | guide top positions |
+| unspokenColor / spokenColor | 1 each | render color branch on spoken state |
+| fontStack | 1 | stage fontFamily (typography as CONFIG, Cycle-013 clarification) |
+| minSizePctOfStage | 1 | ratio floor + FIT-FAIL arming in wordStateAt |
+| lineExitMs | 3 | release derivation + Line A fade |
+| lineGapMs | 1 | release derivation |
+| endHoldMs | 1 | standalone loop period |
+| coreMs | 5 | persist end, comparison clamp (read cross-file by comparison.html), seek clamp |
+| segmentHandleOffsetMs | cross-file | comparison.html buildMs() reads it from the recreation CONFIG via window.__T197.config — applied; NO duplicated literal in comparison.html (cured at first draft, see below) |
+| ownershipPolicy | 2 | clamp branch predicate in computeOwnership/effectiveEnvOnset |
+| lineTopPctOfStage[] | 1 (array-indexed) | line row tops in layout (cured at first draft, see below) |
+| lineHeight | 1 | line leading in layout (cured at first draft; the CSS copy was removed in fact at the prewave cure — the stylesheet carries no line-height now) |
+| censusAnchorsMs.* | harness-side | the A11 checkpoints' evaluation instants (bound at the prewave cure; the harness derives every CP instant from these anchors + envelope expressions and prints the agreement checks) |
+| sharedEnvelopes.shrink.* | envOnset 9 · rampMs 1 · sizePeak 7 · weightPeak 7 · persist 6 (shared resolver refs) | resolveEnv — the SINGLE canonical shrink definition; `or`/`softer` carry envelopeRef only, no inline copies (amendment §E) |
+| lines[].speechEndMs | 1 | lineReleaseMs speech-end term (bound at first-draft cure — amendment §C note) |
+| lines[].words[].text/onsetMs/envOnsetMs/sizePeak/weightPeak/rampUpMs/rampDownMs/peakHoldMs/persist/envelopeRef | 1–12 each | span construction, color timing, envelope resolution |
+
+## Literal scan outside CONFIG
+- Hex colors in JS logic: NONE. In CSS: `#000` (page void outside the stage — structural, T137 precedent; the stage plate color itself reads plateColor) · `#ff5252` (FIT-FAIL diagnostic banner only — structural-diagnostic, not subject matter).
+- CSS layout constants: `.line` padding `0 2vw` (container inset — structural), `line-height` REMOVED from CSS (now CONFIG lineHeight), `#fitfail` bottom 2% / 13px / monospace (diagnostic banner geometry — structural-diagnostic).
+- JS numeric literals: 0 / 1 / 2 (indices, identity, clamp bounds — structural) · 100 (percent divisor — mathematical identity) · 0.5 / 2 in easing formulas (the named curves' defining constants — structural; the curve itself is CONFIG-selected by easingName) · 50 in guide-centre math (= 100/2 — structural identity).
+- JS strings: easing names (EASINGS map keys, selected via CONFIG easingName — structural) · 'clamp-and-print' (the policy token the CONFIG value is compared against — structural; the value lives in CONFIG) · element ids / 'px' / 'span' / 'block'/'none' (DOM mechanics — structural).
+
+## First-draft HITs — cured before this filing (not carried)
+1. `segmentHandleOffsetMs` resolved to 0 sites in recreation.html and comparison.html carried its own −500 / 10000 literals → CURED: comparison.html now reads segmentHandleOffsetMs + coreMs from the recreation CONFIG at sync time; no fallback literals remain.
+2. Line row tops (0.30 / 0.56) and line-height 1.25 stood as code/CSS literals (subject-shaping geometry per A9.6) → CURED as CONFIG keys lineTopPctOfStage + lineHeight, applied in layout.
+
+HITs (final build): 0
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 99110 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**HOLD · ASSERTED-CHECKS — T197 attempt 1, Cycle 036 Wave 33, cured build `65b4de69…`.** The portrait layout change has supporting proxy evidence, but the cured-build receipt omits the CP4 result for `or`, and the fit table presents calculated wrapped-block bounds as rendered measurements.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.95 |
+| Purity pre-check | 1.00 |
+| Own-checks completeness | 0.40 |
+| Fidelity-plan honesty | 0.90 |
+
+### Findings
+
+1. **The cured-build CP4 receipt is incomplete.** `build-record.md` → firing 1, finding 1 explicitly records the cure as asserting both `or` and `softer` at 8500 ms, and its earlier harness output shows both. The Completion receipt table and verbatim log for the cured hash show `louder` and `softer` only. The 36 visible `PASS` lines reconcile to 27 core checks, seven anchor checks and two layout checks. None records `or` at CP4. The fresh CP3b receipt covers both shrink words, and D3 demonstrates the CONFIG-derived CP3 instant moving from `7300 + 200 = 7500` to `5300 + 300 = 5600`. **Cure** — file the cured-build raw `or` result at the CONFIG-derived CP4 instant, including the evaluated `0.4500 / 300` state. `guards/jev-prewave.md` §2 requires that receipt from the build under review.
+2. **The word-level fit evidence has measurement provenance. The wrapped-block bounds still rely on a layout calculation.** `fit-table.md` → Method and Wrapped-block rows name PIL and Liberation Sans and report rendered word ink bounds. The block rows use a greedy wrap over measured advances, sum calculated row heights and report the widest row’s summed word ink. Summed word ink omits the positions of the words and their intervening spaces, so it cannot establish the row’s placed ink extent. Likewise, the reported **30.92 px** clearance is `313.60 − 282.68`, with `282.68` coming from the proxy layout calculation. This supports the cure at the sampled instants, but the table’s claim of measured post-fit block bounds remains unsupported under `guards/jev-prewave.md` §2. **Cure** — file bounds from the placed, wrapped lines at the listed instants using the named proxy instrument or a browser layout capture, with the instrument and measured extents identified. HIT-C and HIT-D already have explicit dispositions in `fit-table.md`.
+3. **The other dimensions clear the floor.** `config-census.md` → Completion re-scan ties the two new keys to the aspect predicate and applied line tops. The fresh layout receipt selects `[11, 49]` at 360×640 and `[30, 56]` at 640×360. `build-record.md` → Construction and Completion purity receipt describe DOM generation from CONFIG and record a zero-hit specimen-media scan. Construction and the 57.167 s boundary observation name the omitted header, strip pan, letter bounce and vertical grid lines, and disclose the continued end-state display, unmeasured easing and unverified browser weight rendering.
+
+**Limits** — Fed review only. The run instruction to use the supplied material exclusively supersedes the standing disk-read rule. The hash, harness execution, browser behavior and proxy render outputs were assessed from the supplied record. **NOT ASSESSED** — the standalone `plan-amendment-cycle035.md`, which was referenced but absent from the feed.
+
+**Body-write: none (read-only run)**
+tokens used
+33,015
+**HOLD · ASSERTED-CHECKS — T197 attempt 1, Cycle 036 Wave 33, cured build `65b4de69…`.** The portrait layout change has supporting proxy evidence, but the cured-build receipt omits the CP4 result for `or`, and the fit table presents calculated wrapped-block bounds as rendered measurements.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.95 |
+| Purity pre-check | 1.00 |
+| Own-checks completeness | 0.40 |
+| Fidelity-plan honesty | 0.90 |
+
+### Findings
+
+1. **The cured-build CP4 receipt is incomplete.** `build-record.md` → firing 1, finding 1 explicitly records the cure as asserting both `or` and `softer` at 8500 ms, and its earlier harness output shows both. The Completion receipt table and verbatim log for the cured hash show `louder` and `softer` only. The 36 visible `PASS` lines reconcile to 27 core checks, seven anchor checks and two layout checks. None records `or` at CP4. The fresh CP3b receipt covers both shrink words, and D3 demonstrates the CONFIG-derived CP3 instant moving from `7300 + 200 = 7500` to `5300 + 300 = 5600`. **Cure** — file the cured-build raw `or` result at the CONFIG-derived CP4 instant, including the evaluated `0.4500 / 300` state. `guards/jev-prewave.md` §2 requires that receipt from the build under review.
+2. **The word-level fit evidence has measurement provenance. The wrapped-block bounds still rely on a layout calculation.** `fit-table.md` → Method and Wrapped-block rows name PIL and Liberation Sans and report rendered word ink bounds. The block rows use a greedy wrap over measured advances, sum calculated row heights and report the widest row’s summed word ink. Summed word ink omits the positions of the words and their intervening spaces, so it cannot establish the row’s placed ink extent. Likewise, the reported **30.92 px** clearance is `313.60 − 282.68`, with `282.68` coming from the proxy layout calculation. This supports the cure at the sampled instants, but the table’s claim of measured post-fit block bounds remains unsupported under `guards/jev-prewave.md` §2. **Cure** — file bounds from the placed, wrapped lines at the listed instants using the named proxy instrument or a browser layout capture, with the instrument and measured extents identified. HIT-C and HIT-D already have explicit dispositions in `fit-table.md`.
+3. **The other dimensions clear the floor.** `config-census.md` → Completion re-scan ties the two new keys to the aspect predicate and applied line tops. The fresh layout receipt selects `[11, 49]` at 360×640 and `[30, 56]` at 640×360. `build-record.md` → Construction and Completion purity receipt describe DOM generation from CONFIG and record a zero-hit specimen-media scan. Construction and the 57.167 s boundary observation name the omitted header, strip pan, letter bounce and vertical grid lines, and disclose the continued end-state display, unmeasured easing and unverified browser weight rendering.
+
+**Limits** — Fed review only. The run instruction to use the supplied material exclusively supersedes the standing disk-read rule. The hash, harness execution, browser behavior and proxy render outputs were assessed from the supplied record. **NOT ASSESSED** — the standalone `plan-amendment-cycle035.md`, which was referenced but absent from the feed.
+
+**Body-write: none (read-only run)**

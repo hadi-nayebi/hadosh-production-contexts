@@ -1,0 +1,7 @@
+# CP4 — Stage E4 (literals into CONFIG) own-check output · T20 attempt 2
+
+Checkpoint source: CP4-source.html — sha256 1cb9ff4df3752c5d416c67b43ea551b81d66a9b7cd01993196d2eea08e004170 (content copy, filed before E5 began).
+Instrument: own-check-census.js (widened scope — numeric shaping constants, not hex/rgba/clamp only).
+- Moved into CONFIG this stage: sampleMinFontPx (E1) · orbit.referenceWidthPx = 960 · geom.edgeMinStrokePx = 1.5 · marquee.fontFamily · stageMin {wPx 300, hPx 170} · overrideMinDurationMs = 1000 (the plan §2 C5 borderline case — moved into CONFIG rather than whitelisted).
+- Hex outside CONFIG: 0. RGBA outside CONFIG: 1 string-construction hit — scaleHexColor builds "rgb(r,g,b)" from a CONFIG hex × a CONFIG intensity scale; computed, not a stranded literal (classified in the final census filing).
+- Stage state printed honestly: the literal 960 still stands at the two render drift sites at this checkpoint — its consumption site is the E5 orbit construction (plan C5: "consumed by C6/render drift scaling, both neighbor and hero sites"); the key exists and E5 consumes it. All other remaining outside literals are classified per-literal in config-census-attempt2.md (structural: percent divisor 100, channel max 255, RGBA stride 4 / alpha index 3, midpoint 0.5, gradient endpoints 0/1, BT.709 luma coefficients as measurement standard, mulberry32 algorithm constants, hex radix/shifts, index sentinel −1, comment numerals; CSS 200px stage min-height as layout-structural).

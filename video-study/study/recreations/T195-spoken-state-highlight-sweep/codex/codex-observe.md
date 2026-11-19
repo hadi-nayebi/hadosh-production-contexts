@@ -1,0 +1,18 @@
+**CONFIRMED-WITH-GAPS.** T195’s source record is sufficient for Observe. The digest and family entry agree on the 38–48 s window, the evidence files, and the pre-lit white-to-yellow sweep at letter scale. The register agrees on the core mechanic and records T195 as DESCRIBED — OWED #91. The fed census identifies corrections to chunking, motion, and timing that Observe should resolve firsthand before Plan. [1]–[3], [5]
+
+**Findings**
+
+- **Window and evidence.** The digest and family entry both cite `ev/t044-sync-highlight-mid.jpg`, `ev/t046-sync-highlight-complete.jpg`, and `clips/040-sync-highlight-7s.mp4`. The register gives the mechanic and status without listing the window or evidence. The cited clip covers 40–47 s. The builder reports viewing 23 frames from `source.mp4` across the full 38–48 s window, with denser sampling from 41.6 to 42.6 s. That makes the full window checkable through the archive, including the reported completion at 47.1 s beyond the clip’s stated endpoint. [1] T06 Evidence, [2] line 138, [3] Feeds, [5].
+- **Chunking and word motion.** The digest’s example lists three chunks. The census reports four, with `dynamic text animation,` between `Caption with Intention uses` and `so captions are synchronized`. The digest already mentions those words in its mid-word example. Both the digest and family entry say the line does not move, while the census reports a word-level lift, with `is` raised at 46.1 and 46.6 s. A stationary line and a raised word can coexist. Observe should confirm the four chunk boundaries, the line’s anchoring, and the lift’s timing relative to the color sweep. The raised white `is` at 46.1 s makes that last distinction material. [1] T06 Mechanics, [3] Mechanics, [5].
+- **Timing and frame labels.** The digest says `each` has just flipped at 44 s. The census reports `precisely` mid-sweep at 44.4 s, and the fed ASR places the onset of `each` at 44.88 s. The digest also labels `ev/t046-sync-highlight-complete.jpg` fully yellow, while the census reports `is spoken.` still white in that frame, with `is` raised, and first observed full completion at 47.1 s. Observe should correct the frame label, record 47.1 s as the first sampled complete frame, and check the alignment of visible sweep starts with the corresponding speech onsets. The fed record supports a progressive sweep through each word. Exact onset alignment still needs firsthand verification, and automatic real-time operation remains unverified under P-A1. [1] T06 Mechanics and Evidence, [3] Mechanics, [5].
+- **Prior attempt and sibling baseline.** T195 has no prior attempt in the fed record. The register and family entry both identify it as DESCRIBED — OWED #91. All three sibling attempt-one calculations match the filed arithmetic. The T03 attempt-three average of 89.0 is **UNVERIFIED** because its component scores were omitted. [2] line 138, [3] Tier, [4].
+
+| Sibling, attempt 1 | Lens count | Recomputed sum | Average | Minimum | Filed result |
+|---|---:|---|---:|---:|---|
+| T03 | 5 | 83 + 55 + 100 + 78 + 80 = 396 | 79.2 | 55 | FAIL |
+| T12 | 5 | 83 + 64 + 94 + 74 + 62 = 377 | 75.4 | 62 | FAIL |
+| T132 | 5 | 76 + 82 + 100 + 76 + 82 = 416 | 83.2 | 76 | FAIL, average term only |
+
+**Limits** — This fed audit relies on the builder’s census for frame contents and timing. The archive, stills, transcript, and scoring thresholds were outside the supplied material, so the visual observations and pass/fail thresholds were not independently checked. The archive is identified as a trade-press re-upload with unverified version fidelity. The Observe working memory was outside scope. [1] §5, [4], [5].
+
+Body-write: none (read-only run)

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T196 — pre-lighting, parameterized recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;}
+  #box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;}
+  .card{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;flex-wrap:wrap;align-content:center;}
+  .card.active{display:flex;}
+  .w{display:inline-block;margin:0 .18em;}
+  #hud{position:absolute;left:8px;bottom:6px;color:#888;font:12px monospace;}
+  #ctl{display:flex;gap:8px;padding:8px;background:#181818;}
+  #ctl button{font:14px sans-serif;padding:10px 16px;}
+</style>
+</head>
+<body>
+<div id="stage"><div id="box"><div id="slot"></div></div><div id="hud"></div></div>
+<div id="ctl"><button id="playBtn" type="button">Play / Pause</button><button id="restartBtn" type="button">Restart</button></div>
+<script>
+"use strict";
+/* ================= CONFIG — every parameter-table key (Plan §2, as amended Cycle 035) ================= */
+const CONFIG = {
+  windowStartS: 47.76,
+  headHandleS: 0.5,
+  timingScale: 1.0,
+  finalHoldMs: 1920,
+  epsilonMs: 1,
+  bg: "#000000",
+  unspoken: { color: "#f5f5f5", opacity: 1, weight: 400, scale: 1 },
+  spoken:   { color: "#ffe600", opacity: 1, weight: 400, scale: 1 },
+  contrastFloor: 7,
+  pairDeltaEMin: 30,
+  stageBox: { widthPct: 88, heightPct: 62 },
+  font: { family: "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+          minSizePx: 20, maxSizePx: 64, lineHeight: 1.25, wrap: "wrap-in-box",
+          overflow: "shrink-to-min-then-fail-fit" },
+  cards: [
+    { id: "c1", onsetMs: 1032, words: [
+      { w: "This", onsetMs: 480 }, { w: "system", onsetMs: 1160 }, { w: "brings", onsetMs: 1380 },
+      { w: "in", onsetMs: 1620 }, { w: "varying", onsetMs: 1780 } ] },
+    { id: "c2", onsetMs: 2080, words: [
+      { w: "types", onsetMs: 2020 }, { w: "sizes,", onsetMs: 2320 }, { w: "weights", onsetMs: 3000 },
+      { w: "and", onsetMs: 4220 }, { w: "animation,", onsetMs: 4380 } ] },
+    { id: "c3", onsetMs: 5032, words: [
+      { w: "so", onsetMs: 5060 }, { w: "you", onsetMs: 5160 }, { w: "can", onsetMs: 5280 },
+      { w: "feel", onsetMs: 5400 }, { w: "when", onsetMs: 5800 }, { w: "my", onsetMs: 6140 },
+      { w: "voice", onsetMs: 6340 }, { w: "gets", onsetMs: 6640 }, { w: "louder", onsetMs: 6880 },
+      { w: "or", onsetMs: 8000 }, { w: "softer", onsetMs: 8640 } ] }
+  ]
+};
+/* ================= Engine — everything derived from CONFIG ================= */
+function derive(cfg){
+  const ts = cfg.timingScale;
+  const cards = cfg.cards.map(c => ({
+    id: c.id, onsetMs: c.onsetMs * ts,
+    words: c.words.map(w => ({ w: w.w, onsetMs: w.onsetMs * ts }))
+  }));
+  let lastFlip = 0;
+  for (const c of cards) for (const w of c.words) lastFlip = Math.max(lastFlip, w.onsetMs);
+  const totalMs = lastFlip + cfg.finalHoldMs * ts;
+  return { cards, totalMs, lastFlip };
+}
+function activeCardAt(derived, t){
+  let act = null;
+  for (const c of derived.cards) if (t >= c.onsetMs) act = c;
+  return act;
+}
+/* Pure state function: spoken iff word.onsetMs < t (explicit tie rule). Terminal state (t >= totalMs) clamps to the final card fully spoken. */
+function stateAt(cfg, t){
+  const d = derive(cfg);
+  const tc = Math.min(Math.max(t, 0), d.totalMs);
+  const act = activeCardAt(d, tc);
+  if (!act) return { t: tc, totalMs: d.totalMs, activeCardId: null, cards: d.cards.map(c => ({ id: c.id, visible: false, words: c.words.map(w => ({ w: w.w, present: true, visible: false, spoken: false })) })) };
+  return { t: tc, totalMs: d.totalMs, activeCardId: act.id,
+    cards: d.cards.map(c => ({ id: c.id, visible: c.id === act.id,
+      words: c.words.map(w => ({ w: w.w, present: true, visible: c.id === act.id, spoken: w.onsetMs < tc })) })) };
+}
+/* ================= Rendering — prebuilt spans, one stage slot, atomic handoff ================= */
+const stage = document.getElementById("stage");
+stage.style.background = CONFIG.bg;
+const box = document.getElementById("box");
+const slot = document.getElementById("slot");
+const hud = document.getElementById("hud");
+box.style.width = CONFIG.stageBox.widthPct + "%";
+box.style.height = CONFIG.stageBox.heightPct + "%";
+slot.style.position = "relative"; slot.style.width = "100%"; slot.style.height = "100%";
+const cardEls = {};
+function buildDom(cfg){
+  slot.textContent = "";
+  for (const c of cfg.cards){
+    const el = document.createElement("div");
+    el.className = "card"; el.dataset.card = c.id;
+    el.style.fontFamily = cfg.font.family; el.style.lineHeight = cfg.font.lineHeight;
+    const spans = [];
+    for (const wd of c.words){
+      const s = document.createElement("span");
+      s.className = "w"; s.textContent = wd.w; s.dataset.onset = wd.onsetMs;
+      el.appendChild(s); spans.push(s);
+    }
+    slot.appendChild(el);
+    cardEls[c.id] = { el, spans };
+  }
+}
+function fitCard(cfg, cardId){
+  const stageW = stage.clientWidth || 360;
+  const boxW = stageW * cfg.stageBox.widthPct / 100;
+  const boxH = (stageW * 9 / 16) * cfg.stageBox.heightPct / 100;
+  const rec = cardEls[cardId]; if (!rec) return null;
+  let size = cfg.font.maxSizePx;
+  /* Probe contract = fit-table contract: the card is measured while laid out
+     (display:flex, visibility:hidden — never display:none, whose spans report
+     zero widths), each word's ink includes its CSS word margins
+     (0.18em each side), and wrapping is greedy per word inside boxW. */
+  const probe = (px) => {
+    const el = rec.el;
+    const prevDisplay = el.style.display, prevVis = el.style.visibility;
+    el.style.display = "flex"; el.style.visibility = "hidden";
+    el.style.fontSize = px + "px";
+    const marginPx = 0.36 * px;
+    let inkW = 0, inkH = 0, lines = 1, lineW = 0, maxWordW = 0;
+    const lineWidths = [];
+    for (const s of rec.spans){
+      const wW = s.offsetWidth + marginPx;
+      inkW += wW; inkH = Math.max(inkH, s.offsetHeight);
+      maxWordW = Math.max(maxWordW, wW);
+      if (lineW > 0 && lineW + wW > boxW) { lineWidths.push(lineW); lines += 1; lineW = wW; } else { lineW += wW; }
+    }
+    lineWidths.push(lineW);
+    el.style.display = prevDisplay; el.style.visibility = prevVis;
+    const totalH = lines * px * cfg.font.lineHeight;
+    /* Width is judged as well as height (Cycle 036 cure): a single word wider
+       than the box fails fit at any size, as does any wrapped line. */
+    const widthFits = maxWordW <= boxW && lineWidths.every(w => w <= boxW);
+    return { inkW, inkH, lines, totalH, maxWordW, lineWidths, fits: totalH <= boxH && widthFits };
+  };
+  let m = probe(size);
+  while (size > cfg.font.minSizePx && !m.fits) { size -= 2; m = probe(size); }
+  const fits = m.fits && size >= cfg.font.minSizePx;
+  return { cardId, fontSizePx: size, inkW: Math.round(m.inkW), inkH: Math.round(m.inkH), lines: m.lines, maxWordW: Math.round(m.maxWordW), lineWidths: m.lineWidths.map(w => Math.round(w)), boxW: Math.round(boxW), boxH: Math.round(boxH), fits };
+}
+function render(cfg, t){
+  const st = stateAt(cfg, t);
+  for (const c of st.cards){
+    const rec = cardEls[c.id]; if (!rec) continue;
+    rec.el.classList.toggle("active", c.visible);
+    c.words.forEach((w, i) => {
+      const sp = rec.spans[i]; if (!sp) return;
+      const sty = w.spoken ? cfg.spoken : cfg.unspoken;
+      sp.style.color = sty.color; sp.style.opacity = sty.opacity;
+      sp.style.fontWeight = sty.weight; sp.style.transform = "scale(" + sty.scale + ")";
+    });
+  }
+  hud.textContent = "t=" + Math.round(st.t) + "ms / " + Math.round(st.totalMs) + "ms · card " + (st.activeCardId || "—");
+  return st;
+}
+/* ================= Playback — timestamp-derived state (seek/restart derive identically) ================= */
+let playing = false, startStamp = 0, baseMs = 0;
+function nowMs(){ return playing ? baseMs + (performance.now() - startStamp) : baseMs; }
+function tick(){ render(CONFIG, nowMs()); if (playing) requestAnimationFrame(tick); }
+document.getElementById("playBtn").addEventListener("click", () => {
+  playing = !playing;
+  if (playing) { startStamp = performance.now(); requestAnimationFrame(tick); }
+  else { baseMs = nowMs(); render(CONFIG, baseMs); }
+});
+document.getElementById("restartBtn").addEventListener("click", () => {
+  baseMs = 0; startStamp = performance.now(); render(CONFIG, 0);
+});
+buildDom(CONFIG);
+/* Startup fit results are CONSUMED, not discarded (Cycle 036 cure): the
+   per-card results are retained in fitReport, exposed on window.__T196, and
+   branched on — a card that does not fit flags the stage dataset. */
+const fitReport = {};
+for (const c of CONFIG.cards) fitReport[c.id] = fitCard(CONFIG, c.id);
+const fitOk = Object.values(fitReport).every(r => r && r.fits);
+stage.dataset.fit = fitOk ? "ok" : "fail";
+if (!fitOk && typeof console !== "undefined") console.warn("T196 fit FAIL", fitReport);
+render(CONFIG, 0);
+window.__T196 = { CONFIG, derive, stateAt, render, fitCard, fitReport, fitOk };
+</script>
+</body>
+</html>

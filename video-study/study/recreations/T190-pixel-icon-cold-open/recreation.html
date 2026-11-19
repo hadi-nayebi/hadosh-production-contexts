@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T190 — pixel-icon cold open, parameterized recreation</title>
+<style>
+  body { margin:0; background:#111; display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:'Courier New', Courier, monospace; }
+  #stage { position:relative; overflow:hidden; }
+  #icon { position:absolute; left:50%; top:0; transform-origin:50% 50%; display:grid; }
+  #icon .cell { display:block; }
+  #caption { position:absolute; left:0; right:0; text-align:center; white-space:pre-line; }
+  #controls { position:absolute; right:8px; top:8px; z-index:5; }
+  #controls button { font:inherit; cursor:pointer; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="icon"></div>
+  <div id="caption"></div>
+  <div id="controls"><button id="playBtn" type="button">Pause</button><button id="restartBtn" type="button">Restart</button></div>
+</div>
+<script id="logic">
+"use strict";
+const CONFIG = {
+  "beatScale": 1,
+  "captionOnlyMs": 2000,
+  "endMs": 13917,
+  "turnDeg": 90,
+  "turnDir": 1,
+  "turnBezier": [
+    0.4,
+    0,
+    0.2,
+    1
+  ],
+  "pivot": "50% 50%",
+  "perspectivePx": 900,
+  "scalePeak": 1.35,
+  "scalePeakAt": 0.5,
+  "bg": "#000000",
+  "ink": "#ffffff",
+  "pixelUnitPx": 13,
+  "stageWPx": 640,
+  "stageHPx": 360,
+  "iconCenterYPx": 108,
+  "captionFontPx": 28,
+  "captionBottomPx": 18,
+  "captionSafeBandPx": 64,
+  "captionPadPx": 6,
+  "captionCharWidthFactor": 0.6023,
+  "captionLineHeightFactor": 1.1,
+  "fontStack": "'Courier New', Courier, monospace",
+  "captions": [
+    {
+      "text": "MORE THAN 430 MILLION PEOPLE WITH DISABLING HEARING LOSS",
+      "fromMs": 0,
+      "toMs": 4000
+    },
+    {
+      "text": "RELY ON CAPTIONS TO WATCH MOVIES AND SHOWS",
+      "fromMs": 4000,
+      "toMs": 6000
+    },
+    {
+      "text": "",
+      "fromMs": 6000,
+      "toMs": 8000
+    },
+    {
+      "text": "HOWEVER, THE CURRENT CAPTIONING SYSTEM HAS SEVERAL SHORTCOMINGS",
+      "fromMs": 8000,
+      "toMs": 10000
+    },
+    {
+      "text": "THAT CAN MAKE THE VIEWING EXPERIENCE FRUSTRATING",
+      "fromMs": 10000,
+      "toMs": 12000
+    },
+    {
+      "text": "FOR DEAF AUDIENCES",
+      "fromMs": 12000,
+      "toMs": 13917
+    }
+  ],
+  "scenes": [
+    {
+      "id": "globe",
+      "mapFront": [
+        ".....######.....",
+        "...##########...",
+        "..####.##.####..",
+        ".###...##...###.",
+        ".##....##....##.",
+        "##.....##.....##",
+        "##.....##.....##",
+        "##.....##.....##",
+        "##.....##.....##",
+        "##.....##.....##",
+        "##.....##.....##",
+        ".##....##....##.",
+        ".###...##...###.",
+        "..####.##.####..",
+        "...##########...",
+        ".....######....."
+      ],
+      "turnStartMs": 2000,
+      "readableMs": 3000,
+      "turnOutStartMs": 3500,
+      "turnOutEndMs": 4000,
+      "scalePeak": 1.35,
+      "scalePeakAt": 0.5
+    },
+    {
+      "id": "ear",
+      "mapFront": [
+        ".....#####......",
+        "...##.....##....",
+        "..#.........##..",
+        ".#.....####...#.",
+        ".#....#....#..#.",
+        "#....#......#.#.",
+        "#....#......#.#.",
+        "#.....#....#..#.",
+        ".#.....####.#.#.",
+        ".#..........#.#.",
+        "..#.........#...",
+        "...#.......#....",
+        "....##...##.....",
+        "......###......."
+      ],
+      "turnStartMs": 4000,
+      "readableMs": 5000,
+      "turnOutStartMs": 5000,
+      "turnOutEndMs": 5250,
+      "scalePeak": 1.35,
+      "scalePeakAt": 0.5
+    },
+    {
+      "id": "cc",
+      "mapFront": [
+        ".##################.",
+        "####################",
+        "####...######...####",
+        "###.###.####.###.###",
+        "###.########.#######",
+        "###.########.#######",
+        "###.########.#######",
+        "###.###.####.###.###",
+        "####...######...####",
+        "####################",
+        "####################",
+        ".##################."
+      ],
+      "turnStartMs": 5250,
+      "readableMs": 6000,
+      "turnOutStartMs": 6500,
+      "turnOutEndMs": 7000,
+      "scalePeak": 1.35,
+      "scalePeakAt": 0.5
+    },
+    {
+      "id": "camera",
+      "mapFront": [
+        "...###.....###........",
+        "..#...#...#...#.......",
+        "..#...#...#...#.......",
+        "...###.....###........",
+        "..################....",
+        ".##################...",
+        ".###################..",
+        ".####################.",
+        ".###################..",
+        ".##################...",
+        "..################....",
+        "..###..........###....",
+        "..#.#..........#.#....",
+        ".#...#........#...#..."
+      ],
+      "turnStartMs": 7000,
+      "readableMs": 8000,
+      "turnOutStartMs": 8000,
+      "turnOutEndMs": 10000,
+      "scalePeak": 1.35,
+      "scalePeakAt": 0.75
+    },
+    {
+      "id": "couch",
+      "mapFront": [
+        ".############...........",
+        ".#..........#...........",
+        ".#..........#...........",
+        ".#..........#...........",
+        ".############...........",
+        "......##................",
+        "....######..............",
+        "..##################....",
+        ".####################...",
+        ".##................##...",
+        ".##................##...",
+        ".####################...",
+        "..##################....",
+        "..##...##....##...##....",
+        "..##...##....##...##...."
+      ],
+      "mapProfile": [
+        "..........###...........",
+        ".........#...#..........",
+        ".............#..........",
+        "............#...........",
+        "....................#...",
+        ".........###............",
+        "........#...#...........",
+        ".........###............",
+        "..........##............",
+        "..#......####...........",
+        "..#....########.........",
+        "..##################....",
+        "..###################...",
+        "...#.....#......#.......",
+        "...##....##.....##......"
+      ],
+      "turnStartMs": 10000,
+      "readableMs": 11000,
+      "turnOutStartMs": 13917,
+      "turnOutEndMs": 13917,
+      "scalePeak": 1.35,
+      "scalePeakAt": 0.5,
+      "profileTurnStartMs": 12000,
+      "profileReadableMs": 13000
+    }
+  ]
+};
+function sc(v){ return Math.round(v * CONFIG.beatScale); }
+function bez(p){
+  const b = CONFIG.turnBezier, x1=b[0], y1=b[1], x2=b[2], y2=b[3];
+  let lo=0, hi=1, t=p;
+  for(let i=0;i<24;i++){ t=(lo+hi)/2; const u=1-t;
+    const x=3*u*u*t*x1 + 3*u*t*t*x2 + t*t*t;
+    if(x<p) lo=t; else hi=t; }
+  const u=1-t; return 3*u*u*t*y1 + 3*u*t*t*y2 + t*t*t;
+}
+function captionEntryAt(t){
+  for(const c of CONFIG.captions){ if(t >= sc(c.fromMs) && t < sc(c.toMs)) return c; }
+  return null;
+}
+function captionAt(t){ const e = captionEntryAt(t); return e ? e.text : ""; }
+function captionLayout(text){
+  let fontPx = CONFIG.captionFontPx;
+  const avail = CONFIG.stageWPx - 2 * CONFIG.captionPadPx;
+  if(!text) return { lines: [], fontPx, lineWidthPx: 0 };
+  let charW = fontPx * CONFIG.captionCharWidthFactor;
+  if(text.length * charW <= avail) return { lines: [text], fontPx, lineWidthPx: text.length * charW };
+  const words = text.split(" ");
+  let best = null;
+  for(let i=1;i<words.length;i++){
+    const a = words.slice(0,i).join(" "), b = words.slice(i).join(" ");
+    const w = Math.max(a.length, b.length) * charW;
+    if(!best || w < best.w) best = { lines:[a,b], w };
+  }
+  if(best.w > avail){
+    fontPx = Math.floor(fontPx * avail / best.w * 10) / 10;
+    charW = fontPx * CONFIG.captionCharWidthFactor;
+    best = { lines: best.lines, w: Math.max(best.lines[0].length, best.lines[1].length) * charW };
+  }
+  return { lines: best.lines, fontPx, lineWidthPx: best.w };
+}
+function sceneScalePeakMs(s){
+  return Math.round((s.turnOutStartMs + (s.scalePeakAt != null ? s.scalePeakAt : CONFIG.scalePeakAt) * (s.turnOutEndMs - s.turnOutStartMs)) * CONFIG.beatScale);
+}
+function mapDims(map){ return { cols: map[0].length, rows: map.length, wPx: map[0].length * CONFIG.pixelUnitPx, hPx: map.length * CONFIG.pixelUnitPx }; }
+function boundsFor(map, angleDeg, scale){
+  const d = mapDims(map);
+  const a = angleDeg * Math.PI / 180, cos = Math.cos(a), sin = Math.sin(a);
+  const cx = CONFIG.stageWPx / 2, cy = CONFIG.iconCenterYPx, P = CONFIG.perspectivePx;
+  let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+  for(const sx of [-1, 1]){ for(const sy of [-1, 1]){
+    const x = sx * d.wPx * scale / 2, y = sy * d.hPx * scale / 2;
+    const proj = P / (P - x * sin);
+    const px = cx + x * cos * proj, py = cy + y * proj;
+    if(px < left) left = px; if(px > right) right = px;
+    if(py < top) top = py; if(py > bottom) bottom = py;
+  } }
+  return { left, right, top, bottom, wPx: right - left, hPx: bottom - top };
+}
+function stateAt(t){
+  const cap = captionAt(t);
+  if(t >= sc(CONFIG.endMs)) return { phase:"CUT", sceneId:null, map:null, mapName:null, angleDeg:0, scale:1, caption:cap, bounds:null };
+  if(t < sc(CONFIG.captionOnlyMs)) return { phase:"CAPTION-ONLY", sceneId:null, map:null, mapName:null, angleDeg:0, scale:1, caption:cap, bounds:null };
+  for(const s of CONFIG.scenes){
+    const tIn0 = sc(s.turnStartMs), tIn1 = sc(s.readableMs);
+    const hasProfile = !!s.mapProfile;
+    const prof0 = hasProfile ? sc(s.profileTurnStartMs) : Infinity;
+    const prof1 = hasProfile ? sc(s.profileReadableMs) : Infinity;
+    const out0 = sc(s.turnOutStartMs), out1 = sc(s.turnOutEndMs);
+    if(t >= tIn0 && t < tIn1){
+      const p = (t - tIn0) / Math.max(1, tIn1 - tIn0);
+      const angle = -CONFIG.turnDeg * CONFIG.turnDir * (1 - bez(p));
+      const scale = 1 + ((s.scalePeak != null ? s.scalePeak : CONFIG.scalePeak) - 1) * Math.sin(Math.PI * p);
+      return { phase:"TURN", sceneId:s.id, map:s.mapFront, mapName:"mapFront", angleDeg:angle, scale, caption:cap, bounds:boundsFor(s.mapFront, angle, scale) };
+    }
+    if(hasProfile && t >= prof0 && t < prof1){
+      const p = (t - prof0) / Math.max(1, prof1 - prof0);
+      const first = p < 0.5;
+      const angle = first ? CONFIG.turnDeg * CONFIG.turnDir * bez(p * 2) : -CONFIG.turnDeg * CONFIG.turnDir * (1 - bez((p - 0.5) * 2));
+      const scale = 1 + ((s.scalePeak != null ? s.scalePeak : CONFIG.scalePeak) - 1) * Math.sin(Math.PI * p);
+      const map = first ? s.mapFront : s.mapProfile;
+      return { phase:"TURN", sceneId:s.id, map, mapName: first ? "mapFront" : "mapProfile", angleDeg:angle, scale, caption:cap, bounds:boundsFor(map, angle, scale) };
+    }
+    if(hasProfile && t >= prof1 && t < sc(CONFIG.endMs)){
+      return { phase:"HOLD", sceneId:s.id, map:s.mapProfile, mapName:"mapProfile", angleDeg:0, scale:1, caption:cap, bounds:boundsFor(s.mapProfile, 0, 1) };
+    }
+    if(!hasProfile && t >= tIn1 && t < out0){
+      return { phase:"HOLD", sceneId:s.id, map:s.mapFront, mapName:"mapFront", angleDeg:0, scale:1, caption:cap, bounds:boundsFor(s.mapFront, 0, 1) };
+    }
+    if(!hasProfile && t >= out0 && t < out1){
+      const p = (t - out0) / Math.max(1, out1 - out0);
+      const angle = CONFIG.turnDeg * CONFIG.turnDir * bez(p);
+      const pa = (s.scalePeakAt != null ? s.scalePeakAt : CONFIG.scalePeakAt);
+      const q = p <= pa ? p / (2 * pa) : 0.5 + (p - pa) / (2 * (1 - pa));
+      const sc2 = 1 + ((s.scalePeak != null ? s.scalePeak : CONFIG.scalePeak) - 1) * Math.sin(Math.PI * q);
+      return { phase:"TURN", sceneId:s.id, map:s.mapFront, mapName:"mapFront", angleDeg:angle, scale:sc2, caption:cap, bounds:boundsFor(s.mapFront, angle, sc2) };
+    }
+    if(hasProfile && t >= tIn1 && t < prof0){
+      return { phase:"HOLD", sceneId:s.id, map:s.mapFront, mapName:"mapFront", angleDeg:0, scale:1, caption:cap, bounds:boundsFor(s.mapFront, 0, 1) };
+    }
+  }
+  return { phase:"CUT", sceneId:null, map:null, mapName:null, angleDeg:0, scale:1, caption:cap, bounds:null };
+}
+</script>
+<script id="render">
+"use strict";
+(function(){
+  const stage = document.getElementById("stage");
+  const icon = document.getElementById("icon");
+  const capEl = document.getElementById("caption");
+  stage.style.width = CONFIG.stageWPx + "px";
+  stage.style.height = CONFIG.stageHPx + "px";
+  stage.style.background = CONFIG.bg;
+  capEl.style.height = CONFIG.captionSafeBandPx + "px";
+  capEl.style.bottom = "0px";
+  capEl.style.display = "flex";
+  capEl.style.alignItems = "flex-end";
+  capEl.style.justifyContent = "center";
+  capEl.style.paddingBottom = CONFIG.captionBottomPx + "px";
+  capEl.style.boxSizing = "content-box";
+  capEl.style.fontSize = CONFIG.captionFontPx + "px";
+  capEl.style.lineHeight = String(CONFIG.captionLineHeightFactor);
+  capEl.style.color = CONFIG.ink;
+  capEl.style.fontFamily = CONFIG.fontStack;
+  let curMapKey = null;
+  function drawMap(map){
+    const key = map ? map.join("\n") : "";
+    if(key === curMapKey) return;
+    curMapKey = key;
+    icon.innerHTML = "";
+    if(!map) return;
+    const d = mapDims(map);
+    icon.style.gridTemplateColumns = "repeat(" + d.cols + ", " + CONFIG.pixelUnitPx + "px)";
+    icon.style.width = d.wPx + "px";
+    icon.style.marginLeft = (-d.wPx / 2) + "px";
+    icon.style.top = (CONFIG.iconCenterYPx - d.hPx / 2) + "px";
+    for(const row of map){ for(const ch of row){
+      const cell = document.createElement("span");
+      cell.className = "cell";
+      cell.style.width = CONFIG.pixelUnitPx + "px";
+      cell.style.height = CONFIG.pixelUnitPx + "px";
+      cell.style.background = ch === "#" ? CONFIG.ink : "transparent";
+      icon.appendChild(cell);
+    } }
+  }
+  function render(t){
+    const st = stateAt(t);
+    drawMap(st.map);
+    icon.style.transform = "perspective(" + CONFIG.perspectivePx + "px) rotateY(" + st.angleDeg + "deg) scale(" + st.scale + ")";
+    icon.style.transformOrigin = CONFIG.pivot;
+    const lay = captionLayout(st.caption);
+    capEl.style.fontSize = lay.fontPx + "px";
+    capEl.textContent = lay.lines.join("\n");
+    capEl.style.color = CONFIG.ink;
+  }
+  let startStamp = null, pausedAt = 0, playing = true, externalT = null;
+  function frame(now){
+    if(externalT != null){ render(externalT); requestAnimationFrame(frame); return; }
+    if(playing){
+      if(startStamp == null) startStamp = now - pausedAt;
+      const t = (now - startStamp) % Math.max(1, sc(CONFIG.endMs));
+      render(t);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  document.getElementById("playBtn").addEventListener("click", function(){
+    playing = !playing;
+    if(!playing){ pausedAt = performance.now() - startStamp; this.textContent = "Play"; }
+    else { startStamp = null; this.textContent = "Pause"; }
+  });
+  document.getElementById("restartBtn").addEventListener("click", function(){ startStamp = null; pausedAt = 0; externalT = null; });
+  window.__T190 = { CONFIG, stateAt, captionAt, captionLayout, sceneScalePeakMs, setExternalTime: function(ms){ externalT = ms; }, clearExternalTime: function(){ externalT = null; } };
+})();
+</script>
+</body>
+</html>

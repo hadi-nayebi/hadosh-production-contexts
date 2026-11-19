@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T195 — comparison: spoken-state highlight sweep</title>
+<style>
+  html,body{margin:0;padding:0;background:#141414;color:#eee;font-family:Arial,sans-serif;}
+  #wrap{display:flex;flex-direction:row;gap:10px;padding:10px;box-sizing:border-box;}
+  .side{flex:1 1 0;min-width:0;}
+  .side h2{font-size:15px;margin:0 0 6px 0;font-weight:bold;}
+  .side video,.side iframe{width:100%;aspect-ratio:16/9;border:1px solid #444;background:#000;display:block;}
+  .side iframe{border:1px solid #444;}
+  #bar{display:flex;gap:8px;align-items:center;justify-content:center;padding:12px;flex-wrap:wrap;}
+  #bar button{min-height:48px;min-width:76px;font-size:16px;border:1px solid #666;border-radius:8px;background:#2a2a2a;color:#eee;cursor:pointer;}
+  #clock{color:#bbb;font-size:14px;min-width:110px;text-align:center;}
+  @media (max-width:700px){ #wrap{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div class="side">
+    <h2>ORIGINAL — Caption with Intention @ 0:40–0:47</h2>
+    <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+  </div>
+  <div class="side">
+    <h2>RECREATION — T195 spoken-state highlight sweep, parameterized</h2>
+    <iframe id="rec" src="recreation.html" title="T195 recreation"></iframe>
+  </div>
+</div>
+<div id="bar">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnRestart" type="button">Restart</button>
+  <span id="clock">0 ms / 8000 ms</span>
+</div>
+<script>
+"use strict";
+/* ONE synchronized control set: the video's currentTime is the master clock;
+   the recreation is slaved to it via its T195.seek() hook (shared start on play). */
+const video = document.getElementById("orig");
+const rec = document.getElementById("rec");
+const btnPlay = document.getElementById("btnPlay");
+const btnRestart = document.getElementById("btnRestart");
+const clockEl = document.getElementById("clock");
+const TOTAL_MS = 8000;
+function recSeek(ms) {
+  try {
+    if (rec.contentWindow && rec.contentWindow.T195) rec.contentWindow.T195.seek(ms);
+  } catch (e) { /* iframe not ready yet; next tick retries */ }
+}
+function tick() {
+  const ms = Math.min(TOTAL_MS, Math.round(video.currentTime * 1000));
+  recSeek(ms);
+  clockEl.textContent = ms + " ms / " + TOTAL_MS + " ms";
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+btnPlay.addEventListener("click", () => {
+  if (video.paused) { video.play(); btnPlay.textContent = "Pause"; }
+  else { video.pause(); btnPlay.textContent = "Play"; }
+});
+btnRestart.addEventListener("click", () => {
+  video.currentTime = 0;
+  recSeek(0);
+  video.play();
+  btnPlay.textContent = "Pause";
+});
+video.addEventListener("ended", () => { btnPlay.textContent = "Play"; });
+rec.addEventListener("load", () => { recSeek(Math.round(video.currentTime * 1000)); });
+</script>
+</body>
+</html>

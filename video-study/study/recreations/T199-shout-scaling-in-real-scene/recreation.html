@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T199 — shout scaling inside a real scene (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;color:#eee;font-family:Arial,sans-serif;}
+  #wrap{max-width:960px;margin:0 auto;padding:10px;}
+  #stage{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#222;}
+  #scene{position:absolute;inset:0;}
+  #plate{position:absolute;transform:translateX(-50%);background:#000;}
+  #line{position:absolute;transform:translateX(-50%);white-space:nowrap;text-align:center;}
+  .slot{display:inline-block;vertical-align:baseline;text-align:center;overflow:visible;}
+  .word{display:inline-block;white-space:nowrap;position:relative;}
+  #hud{font-size:13px;line-height:1.5;padding:8px 2px;color:#ccc;}
+  #reject{display:none;padding:24px;font-size:20px;color:#ff6b6b;text-align:center;}
+  button{font-size:15px;padding:8px 14px;margin:4px 4px 4px 0;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <svg id="scene" preserveAspectRatio="none" aria-hidden="true"></svg>
+    <div id="plate"></div>
+    <div id="line"></div>
+    <div id="reject"></div>
+  </div>
+  <div id="hud">
+    <button id="btnPlay" type="button">Play / Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+    <span id="clock">0 ms</span>
+    <div>T199 shout scaling inside a real scene — parameterized recreation. Per-word size/weight peaks fire on a shared trigger with the spoken-state color flip at each word onset; peaks are transient, color persists. Envelope durations are design ALLOCATIONS inside census brackets, not measurements. Easing: easeOut = 1-(1-x)^3 (named choice; source easing unmeasured). L0's release is truncated at L1's entry (1100 ms) — no census state governs the truncated span.</div>
+    <div id="fitstate"></div>
+  </div>
+</div>
+<script>
+'use strict';
+const CONFIG = {
+  baseSizePctOfStage: 5.6,
+  baseWeight: 700,
+  peakWeightDefault: 850,
+  attackMs: 200,
+  peakHoldMs: 150,
+  releaseMs: 500,
+  easingName: 'easeOut',
+  fontStack: "'Roboto Flex','Liberation Sans',Arial,sans-serif",
+  unspokenColor: '#f2f2f2',
+  speakerAColor: '#2ee66b',
+  speakerBColor: '#f59e2d',
+  plateColor: '#000000',
+  plateOpacity: 0.55,
+  platePadXPct: 2.2,
+  platePadYPct: 1.6,
+  plateRadiusPx: 6,
+  lineBottomPct: 6.5,
+  peakLineWidthMaxPctOfStage: 96,
+  peakOverlapMaxPct: 40,
+  endHoldMs: 1200,
+  wordGapEm: 0.28,
+  plateHeightFactor: 1.55,
+  stageAspect: '16 / 9',
+  segmentHandleOffsetMs: -500,
+  censusAnchors: {
+    hailTwinMs: 1000,
+    yourTwinMs: 2000,
+    purposeTwinMs: 3000,
+    thisMs: 3500,
+    questionHoldMs: 4000,
+    replyPrefixMs: 5000,
+    drillMs: 6000,
+    shoutPreLightMs: 7000,
+    goddamnitMs: 7500,
+    gumpMs: 8000
+  },
+  minBasePxAt360: 11,
+  showHeaderFurniture: false,
+  scenePlate: {
+    gradientStops: [ {at:0, color:'#3a4149'}, {at:0.55, color:'#2b3036'}, {at:1, color:'#1d2126'} ],
+    columns: [ {xPct:18, wPct:3.2}, {xPct:38, wPct:3.2}, {xPct:62, wPct:3.2}, {xPct:82, wPct:3.2} ],
+    columnColor: '#454d57',
+    silhouetteLeft: {xPct:6, wPct:26, hPct:62, color:'#14171b'},
+    silhouetteRight: {xPct:70, wPct:24, hPct:66, color:'#101216'},
+    columnOpacity: 0.5,
+    viewBoxW: 1600,
+    viewBoxH: 900,
+    rowRx: 26,
+    rowRy: 34,
+    rowBaseXPct: 40,
+    rowBaseYPct: 34,
+    rowStepPct: 3.0,
+    rowRisePx: 8,
+    rowCount: 5,
+    rowSpacingPct: 7.5,
+    rowColor: '#22262c',
+    plateMaxLuminance: 0.35
+  },
+  lines: [
+    { speaker:'A', entryMs:800, entryMode:'at-peak', words:[
+      {text:'GUMP!', onsetMs:600, peakScale:1.35, peakWeight:850}
+    ]},
+    { speaker:'A', entryMs:1100, entryMode:'pre-visible', envelope:{releaseMs:300}, words:[
+      {text:"What's", onsetMs:1200, peakScale:1.0, peakWeight:700},
+      {text:'your', onsetMs:1700, peakScale:1.50, peakWeight:850},
+      {text:'sole', onsetMs:2200, peakScale:1.0, peakWeight:700},
+      {text:'purpose', onsetMs:2700, peakScale:1.50, peakWeight:850},
+      {text:'in', onsetMs:3150, peakScale:1.0, peakWeight:700},
+      {text:'this', onsetMs:3300, peakScale:1.60, peakWeight:850},
+      {text:'army?', onsetMs:3750, peakScale:1.0, peakWeight:700}
+    ]},
+    { speaker:'B', entryMs:4200, entryMode:'pre-visible', words:[
+      {text:'To', onsetMs:4450, peakScale:1.0, peakWeight:700},
+      {text:'do', onsetMs:4600, peakScale:1.0, peakWeight:700},
+      {text:'whatever', onsetMs:4800, peakScale:1.0, peakWeight:700},
+      {text:'you', onsetMs:5150, peakScale:1.0, peakWeight:700},
+      {text:'tell', onsetMs:5400, peakScale:1.0, peakWeight:700},
+      {text:'me,', onsetMs:5550, peakScale:1.0, peakWeight:700},
+      {text:'Drill', onsetMs:5800, peakScale:1.45, peakWeight:850},
+      {text:'Sergeant.', onsetMs:6400, peakScale:1.0, peakWeight:700}
+    ]},
+    { speaker:'A', entryMs:6950, entryMode:'pre-visible', envelope:{releaseMs:150}, words:[
+      {text:'Goddamnit', onsetMs:7300, peakScale:2.00, peakWeight:880},
+      {text:'Gump!', onsetMs:7800, peakScale:1.50, peakWeight:850}
+    ]}
+  ]
+};
+const GOVERNED_END_MS = 8500;
+function envParams(line){ return {
+  attackMs: (line.envelope && line.envelope.attackMs) || CONFIG.attackMs,
+  peakHoldMs: (line.envelope && line.envelope.peakHoldMs) || CONFIG.peakHoldMs,
+  releaseMs: (line.envelope && line.envelope.releaseMs) || CONFIG.releaseMs
+};}
+function envelopeValue(word, line, t){
+  if (t < word.onsetMs) return 0;
+  const p = envParams(line);
+  const peakT = word.onsetMs + p.attackMs;
+  if (t < peakT){ const x = (t - word.onsetMs) / p.attackMs; return 1 - Math.pow(1 - x, 3); }
+  if (t < peakT + p.peakHoldMs) return 1;
+  const x = (t - peakT - p.peakHoldMs) / p.releaseMs;
+  if (x >= 1) return 0;
+  return Math.pow(1 - x, 3);
+}
+function speakerColor(line){ return line.speaker === 'A' ? CONFIG.speakerAColor : CONFIG.speakerBColor; }
+function lineIndexAt(t){
+  let idx = -1;
+  for (let i = 0; i < CONFIG.lines.length; i++){ if (t >= CONFIG.lines[i].entryMs) idx = i; }
+  return idx;
+}
+function stateAt(t){
+  const idx = lineIndexAt(t);
+  if (idx < 0) return { lineIndex:-1, owner:'scene-plate', words:[] };
+  const line = CONFIG.lines[idx];
+  return { lineIndex: idx, owner:'L' + idx, words: line.words.map(function(w){
+    const env = envelopeValue(w, line, t);
+    const spoken = t >= w.onsetMs;
+    return { text:w.text, env:env, scale: 1 + (w.peakScale - 1) * env,
+      weight: CONFIG.baseWeight + (w.peakWeight - CONFIG.baseWeight) * env,
+      spoken: spoken, color: spoken ? speakerColor(line) : CONFIG.unspokenColor };
+  })};
+}
+function validateConfig(cfg){
+  const L = cfg.lines;
+  for (let i = 1; i < L.length; i++){
+    if (!(L[i].entryMs > L[i-1].entryMs)) return { ok:false, predicate:'entryMs-not-increasing', line:i };
+  }
+  for (let i = 0; i < L.length; i++){
+    const line = L[i], p = { attackMs:(line.envelope&&line.envelope.attackMs)||cfg.attackMs };
+    for (const w of line.words){
+      // P-ENTRY: a pre-visible line's words cannot onset before the line exists.
+      // At-peak lines are exempt: their first word's attack sits inside the unobserved fade-in (Plan departure table).
+      if (w.onsetMs < line.entryMs && line.entryMode !== 'at-peak') return { ok:false, predicate:'onsetMs < entryMs', line:i, word:w.text };
+    }
+    const first = line.words[0];
+    if (line.entryMode === 'at-peak'){
+      if (!(line.entryMs >= first.onsetMs && line.entryMs <= first.onsetMs + p.attackMs + 200)) return { ok:false, predicate:'at-peak-entry-outside-window', line:i };
+    } else {
+      if (!(line.entryMs <= first.onsetMs)) return { ok:false, predicate:'entryMs-after-first-onset', line:i };
+    }
+    // envelope overlap: consecutive stressed words
+    const stressed = line.words.filter(function(w){ return w.peakScale > 1; });
+    const ep = { attackMs:(line.envelope&&line.envelope.attackMs)||cfg.attackMs, peakHoldMs:(line.envelope&&line.envelope.peakHoldMs)||cfg.peakHoldMs, releaseMs:(line.envelope&&line.envelope.releaseMs)||cfg.releaseMs };
+    for (let k = 1; k < stressed.length; k++){
+      const prev = stressed[k-1], next = stressed[k];
+      const prevEnd = prev.onsetMs + ep.attackMs + ep.peakHoldMs + ep.releaseMs;
+      if (next.onsetMs < prevEnd){
+        const envAtNext = envelopeValue(prev, line, next.onsetMs);
+        const prevScale = 1 + (prev.peakScale - 1) * envAtNext;
+        if (prevScale > 1.10) return { ok:false, predicate:'envelope-overlap-above-tolerance', line:i, word:next.text, prevScale:prevScale };
+      }
+    }
+  }
+  return { ok:true };
+}
+// NOTE on P-ENTRY for at-peak L0: its single word onset (600) precedes entryMs (800) by design —
+// the attack sits inside the source fade-in (Plan departure table). The validator's P-ENTRY
+// predicate (onsetMs < entryMs) applies to pre-visible lines; the negative swap test exercises it on L3.
+function buildScene(){
+  const sp = CONFIG.scenePlate, svg = document.getElementById('scene');
+  const W = sp.viewBoxW, H = sp.viewBoxH;
+  let g = '<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">';
+  for (const s of sp.gradientStops) g += '<stop offset="' + s.at + '" stop-color="' + s.color + '"/>';
+  g += '</linearGradient></defs>';
+  g += '<rect width="' + W + '" height="' + H + '" fill="url(#bg)"/>';
+  for (const c of sp.columns) g += '<rect x="' + (c.xPct/100*W) + '" y="0" width="' + (c.wPct/100*W) + '" height="' + H + '" fill="' + sp.columnColor + '" opacity="' + sp.columnOpacity + '"/>';
+  for (let i = 0; i < sp.rowCount; i++){
+    const cx = W*sp.rowBaseXPct/100 + i * sp.rowStepPct/100*W, cy = H*sp.rowBaseYPct/100 + i*sp.rowRisePx;
+    g += '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + sp.rowRx + '" ry="' + sp.rowRy + '" fill="' + sp.rowColor + '"/>';
+  }
+  const sl = sp.silhouetteLeft, sr = sp.silhouetteRight;
+  g += '<path d="M ' + (sl.xPct/100*W) + ' ' + H + ' L ' + (sl.xPct/100*W) + ' ' + (H - sl.hPct/100*H*0.55) + ' A ' + (sl.wPct/100*W*0.32) + ' ' + (sl.hPct/100*H*0.30) + ' 0 1 1 ' + ((sl.xPct+sl.wPct)/100*W) + ' ' + (H - sl.hPct/100*H*0.55) + ' L ' + ((sl.xPct+sl.wPct)/100*W) + ' ' + H + ' Z" fill="' + sl.color + '"/>';
+  g += '<path d="M ' + (sr.xPct/100*W) + ' ' + H + ' L ' + (sr.xPct/100*W) + ' ' + (H - sr.hPct/100*H*0.55) + ' A ' + (sr.wPct/100*W*0.32) + ' ' + (sr.hPct/100*H*0.32) + ' 0 1 1 ' + ((sr.xPct+sr.wPct)/100*W) + ' ' + (H - sr.hPct/100*H*0.55) + ' L ' + ((sr.xPct+sr.wPct)/100*W) + ' ' + H + ' Z" fill="' + sr.color + '"/>';
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.innerHTML = g;
+}
+const verdict = validateConfig(CONFIG);
+window.__T199 = { CONFIG: CONFIG, stateAt: stateAt, validateConfig: validateConfig, envelopeValue: envelopeValue, GOVERNED_END_MS: GOVERNED_END_MS, verdict: verdict };
+const stage = document.getElementById('stage'), lineEl = document.getElementById('line'), plateEl = document.getElementById('plate');
+const rejectEl = document.getElementById('reject'), clockEl = document.getElementById('clock'), fitEl = document.getElementById('fitstate');
+let slots = [], currentLine = -2;
+const meas = document.createElement('canvas').getContext('2d');
+function basePx(){ return stage.clientHeight * CONFIG.baseSizePctOfStage / 100; }
+function layout(){
+  const bp = basePx();
+  meas.font = CONFIG.baseWeight + ' ' + bp + 'px ' + CONFIG.fontStack;
+  const line = CONFIG.lines[Math.max(0, currentLine)];
+  let total = 0;
+  slots.forEach(function(s, i){
+    const w = meas.measureText(line.words[i].text).width;
+    s.el.style.width = w + 'px'; total += w;
+  });
+  const gap = bp * CONFIG.wordGapEm;
+  total += gap * (slots.length - 1);
+  const padX = stage.clientWidth * CONFIG.platePadXPct / 100, padY = stage.clientHeight * CONFIG.platePadYPct / 100;
+  plateEl.style.width = (total + 2 * padX) + 'px';
+  plateEl.style.height = (bp * CONFIG.plateHeightFactor + 2 * padY) + 'px';
+  plateEl.style.left = '50%';
+  plateEl.style.bottom = 'calc(' + CONFIG.lineBottomPct + '% - ' + padY + 'px)';
+  plateEl.style.background = CONFIG.plateColor;
+  plateEl.style.opacity = String(CONFIG.plateOpacity);
+  plateEl.style.borderRadius = CONFIG.plateRadiusPx + 'px';
+  lineEl.style.left = '50%';
+  lineEl.style.bottom = CONFIG.lineBottomPct + '%';
+  lineEl.style.fontFamily = CONFIG.fontStack;
+  slots.forEach(function(s, i){ if (i > 0) s.el.style.marginLeft = gap + 'px'; });
+  const at360 = 202.5 * CONFIG.baseSizePctOfStage / 100;
+  fitEl.textContent = at360 < CONFIG.minBasePxAt360 ? 'FIT-FAIL: base ' + at360.toFixed(1) + 'px at 360 stage < floor ' + CONFIG.minBasePxAt360 : 'Base size at 360px stage: ' + at360.toFixed(2) + ' px (floor ' + CONFIG.minBasePxAt360 + ' px) — OK';
+}
+function mountLine(idx){
+  currentLine = idx;
+  lineEl.innerHTML = ''; slots = [];
+  if (idx < 0){ plateEl.style.display = 'none'; return; }
+  plateEl.style.display = 'block';
+  CONFIG.lines[idx].words.forEach(function(w){
+    const slot = document.createElement('span'); slot.className = 'slot';
+    const word = document.createElement('span'); word.className = 'word'; word.textContent = w.text;
+    slot.appendChild(word); lineEl.appendChild(slot);
+    slots.push({ el: slot, wordEl: word });
+  });
+  layout();
+}
+function render(t){
+  const st = stateAt(t);
+  if (st.lineIndex !== currentLine) mountLine(st.lineIndex);
+  if (st.lineIndex < 0){ clockEl.textContent = Math.round(t) + ' ms — scene plate (no line)'; return; }
+  st.words.forEach(function(w, i){
+    const s = slots[i]; if (!s) return;
+    const bp = basePx();
+    s.wordEl.style.fontSize = (bp * w.scale) + 'px';
+    s.wordEl.style.fontWeight = String(Math.round(w.weight));
+    s.wordEl.style.fontVariationSettings = "'wght' " + Math.round(w.weight);
+    s.wordEl.style.color = w.color;
+    s.wordEl.style.zIndex = w.env > 0 ? '3' : '1';
+  });
+  clockEl.textContent = Math.round(t) + ' ms — L' + st.lineIndex;
+}
+let playing = true, startStamp = null, pausedAt = 0;
+function frame(ts){
+  if (!verdict.ok) return;
+  if (startStamp === null) startStamp = ts - pausedAt;
+  let t = ts - startStamp;
+  const cycle = GOVERNED_END_MS + CONFIG.endHoldMs;
+  if (t >= cycle){ startStamp = ts; t = 0; }
+  if (playing) pausedAt = t; else startStamp = ts - pausedAt;
+  render(pausedAt);
+  requestAnimationFrame(frame);
+}
+document.getElementById('btnPlay').addEventListener('click', function(){ playing = !playing; });
+document.getElementById('btnRestart').addEventListener('click', function(){ startStamp = null; pausedAt = 0; });
+window.addEventListener('resize', function(){ if (currentLine >= 0) layout(); });
+stage.style.aspectRatio = CONFIG.stageAspect;
+  stage.style.background = CONFIG.scenePlate.gradientStops[1].color;
+  buildScene();
+if (!verdict.ok){
+  rejectEl.style.display = 'block';
+  rejectEl.textContent = 'CONFIG-REJECTED: ' + verdict.predicate + (verdict.line !== undefined ? ' (line ' + verdict.line + ')' : '');
+  lineEl.style.display = 'none'; plateEl.style.display = 'none';
+} else {
+  mountLine(-1);
+  requestAnimationFrame(frame);
+}
+</script>
+</body>
+</html>

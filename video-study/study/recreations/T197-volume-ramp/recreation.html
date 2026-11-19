@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T197 volume ramp — recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;height:100vh;overflow:hidden}
+.guide{position:absolute;pointer-events:none}
+.line{position:absolute;left:0;right:0;text-align:center;white-space:normal;padding:0 2vw}
+.word{display:inline-block;white-space:nowrap}
+#fitfail{position:absolute;left:0;right:0;bottom:2%;text-align:center;color:#ff5252;font-family:monospace;font-size:13px;display:none}
+</style></head><body>
+<div id="stage">
+<div class="guide" id="guideTop"></div>
+<div class="guide" id="guideBottom"></div>
+<div class="line" id="lineA"></div>
+<div class="line" id="lineB"></div>
+<div id="fitfail">FIT-FAIL</div>
+</div>
+<script>
+var CONFIG = {
+  "baseSizePctOfStage": 6.1,
+  "baseWeight": 400,
+  "easingName": "easeInOut",
+  "plateColor": "#000000",
+  "guideColor": "#7fd4e6",
+  "guideInsetPct": 8,
+  "guideThicknessPx": 2,
+  "guideGapPctOfStage": 34,
+  "unspokenColor": "#f2f2f2",
+  "spokenColor": "#ffe600",
+  "fontStack": "'Roboto Flex','Inter var',system-ui,-apple-system,'Segoe UI',sans-serif",
+  "minSizePctOfStage": 2.7,
+  "lineExitMs": 350,
+  "lineGapMs": 320,
+  "endHoldMs": 1800,
+  "coreMs": 10000,
+  "segmentHandleOffsetMs": -500,
+  "ownershipPolicy": "clamp-and-print",
+  "lineTopPctOfStage": [30, 56],
+  "narrowStageAspectMax": 0.75,
+  "narrowLineTopPctOfStage": [11, 49],
+  "lineHeight": 1.25,
+  "censusAnchorsMs": { "sizesPeak": 3000, "weightsBold": 3500, "louderBase": 7000, "louderPeak": 7500, "shrinkSmall": 8000, "shrinkLanded": 8500, "shrinkPersist": 9500 },
+  "sharedEnvelopes": {
+    "shrink": { "envOnsetMs": 7560, "rampMs": 340, "sizePeak": 0.45, "weightPeak": 300, "persist": true }
+  },
+  "lines": [
+    { "id": "lineA", "speechEndMs": 4500, "words": [
+      { "text": "The", "onsetMs": 240, "envOnsetMs": 240, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "system", "onsetMs": 920, "envOnsetMs": 920, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "brings", "onsetMs": 1140, "envOnsetMs": 1140, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "in", "onsetMs": 1380, "envOnsetMs": 1380, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "varying", "onsetMs": 1540, "envOnsetMs": 1540, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "type", "onsetMs": 1780, "envOnsetMs": 1780, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "sizes,", "onsetMs": 2080, "envOnsetMs": 2080, "sizePeak": 1.35, "weightPeak": 760, "rampUpMs": 920, "rampDownMs": 900, "peakHoldMs": 0, "persist": false },
+      { "text": "weights", "onsetMs": 2760, "envOnsetMs": 2760, "sizePeak": 1.0, "weightPeak": 800, "rampUpMs": 500, "rampDownMs": 900, "peakHoldMs": 0, "persist": false },
+      { "text": "and", "onsetMs": 3980, "envOnsetMs": 3980, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "animation,", "onsetMs": 4140, "envOnsetMs": 4140, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false }
+    ]},
+    { "id": "lineB", "speechEndMs": 8800, "words": [
+      { "text": "so", "onsetMs": 4820, "envOnsetMs": 4820, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "you", "onsetMs": 4920, "envOnsetMs": 4920, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "can", "onsetMs": 5040, "envOnsetMs": 5040, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "feel", "onsetMs": 5160, "envOnsetMs": 5160, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "when", "onsetMs": 5560, "envOnsetMs": 5560, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "my", "onsetMs": 5900, "envOnsetMs": 5900, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "voice", "onsetMs": 6100, "envOnsetMs": 6100, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "gets", "onsetMs": 6400, "envOnsetMs": 6400, "sizePeak": 1.0, "weightPeak": 400, "rampUpMs": 0, "rampDownMs": 0, "peakHoldMs": 0, "persist": false },
+      { "text": "louder", "onsetMs": 6640, "envOnsetMs": 7300, "sizePeak": 2.0, "weightPeak": 820, "rampUpMs": 200, "rampDownMs": 1000, "peakHoldMs": 0, "persist": false },
+      { "text": "or", "onsetMs": 7760, "envelopeRef": "shrink" },
+      { "text": "softer", "onsetMs": 8400, "envelopeRef": "shrink" }
+    ]}
+  ]
+};
+var EASINGS = {
+  "easeInOut": function(p){ return p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2; },
+  "linear": function(p){ return p; },
+  "easeOut": function(p){ return 1 - Math.pow(1 - p, 3); },
+  "easeIn": function(p){ return p*p*p; }
+};
+function resolveEnv(cfg, w){
+  if (w.envelopeRef) {
+    var s = cfg.sharedEnvelopes[w.envelopeRef];
+    return { envOnsetMs: s.envOnsetMs, rampUpMs: s.rampMs, rampDownMs: 0, peakHoldMs: 0, sizePeak: s.sizePeak, weightPeak: s.weightPeak, persist: !!s.persist };
+  }
+  return { envOnsetMs: w.envOnsetMs, rampUpMs: w.rampUpMs, rampDownMs: w.rampDownMs, peakHoldMs: w.peakHoldMs || 0, sizePeak: w.sizePeak, weightPeak: w.weightPeak, persist: !!w.persist };
+}
+function lineReleaseMs(cfg, line){
+  var speechEnd = line.speechEndMs || 0, transientEnd = 0, i, w, e;
+  for (i = 0; i < line.words.length; i++) {
+    w = line.words[i]; e = resolveEnv(cfg, w);
+    var end = e.persist ? cfg.coreMs : e.envOnsetMs + e.rampUpMs + e.peakHoldMs + e.rampDownMs;
+    if ((e.sizePeak !== 1.0 || e.weightPeak !== cfg.baseWeight) && end > transientEnd) transientEnd = end;
+  }
+  return Math.max(speechEnd, transientEnd) + cfg.lineExitMs + cfg.lineGapMs;
+}
+function computeOwnership(cfg){
+  var clamps = [], releases = [], prevRelease = 0, li, wi;
+  for (li = 0; li < cfg.lines.length; li++) {
+    var line = cfg.lines[li], rel = lineReleaseMs(cfg, line);
+    releases.push(rel);
+    if (li > 0) {
+      for (wi = 0; wi < line.words.length; wi++) {
+        var w = line.words[wi], e = resolveEnv(cfg, w);
+        if ((e.sizePeak !== 1.0 || e.weightPeak !== cfg.baseWeight) && e.envOnsetMs < prevRelease && cfg.ownershipPolicy === "clamp-and-print") {
+          clamps.push({ word: w.text, requestedOnset: e.envOnsetMs, clampedOnset: prevRelease, releaseMs: prevRelease });
+        }
+      }
+    }
+    prevRelease = rel;
+  }
+  return { releases: releases, clamps: clamps };
+}
+function effectiveEnvOnset(cfg, ownership, lineIdx, w){
+  var e = resolveEnv(cfg, w), onset = e.envOnsetMs;
+  if (lineIdx > 0 && cfg.ownershipPolicy === "clamp-and-print") {
+    for (var i = 0; i < ownership.clamps.length; i++) {
+      if (ownership.clamps[i].word === w.text && ownership.clamps[i].requestedOnset === e.envOnsetMs) onset = ownership.clamps[i].clampedOnset;
+    }
+  }
+  return onset;
+}
+function envelopeAt(cfg, e, onset, t){
+  var ease = EASINGS[cfg.easingName] || EASINGS.easeInOut;
+  if (t < onset) return 0;
+  var peakAt = onset + e.rampUpMs;
+  if (t < peakAt) return e.rampUpMs > 0 ? ease((t - onset)/e.rampUpMs) : 1;
+  if (t < peakAt + e.peakHoldMs) return 1;
+  if (e.persist) return 1;
+  var decayStart = peakAt + e.peakHoldMs;
+  if (t < decayStart + e.rampDownMs) return e.rampDownMs > 0 ? 1 - ease((t - decayStart)/e.rampDownMs) : 0;
+  return 0;
+}
+function wordStateAt(cfg, ownership, lineIdx, w, t){
+  var e = resolveEnv(cfg, w);
+  var onset = effectiveEnvOnset(cfg, ownership, lineIdx, w);
+  var env = envelopeAt(cfg, e, onset, t);
+  var minRatio = cfg.minSizePctOfStage / cfg.baseSizePctOfStage;
+  var ratio = 1 + (e.sizePeak - 1) * env;
+  var fitFail = false;
+  if (ratio < minRatio) { ratio = minRatio; fitFail = true; }
+  return {
+    env: env,
+    sizeRatio: ratio,
+    sizePctOfStage: cfg.baseSizePctOfStage * ratio,
+    weight: Math.round(cfg.baseWeight + (e.weightPeak - cfg.baseWeight) * env),
+    spoken: t >= w.onsetMs,
+    fitFail: fitFail
+  };
+}
+function buildStateAt(cfg, t){
+  var ownership = computeOwnership(cfg);
+  var out = { t: t, ownership: ownership, lines: [], fitFail: false };
+  for (var li = 0; li < cfg.lines.length; li++) {
+    var line = cfg.lines[li], lo = { id: line.id, opacity: 1, words: [] };
+    if (li < cfg.lines.length - 1) {
+      var rel = ownership.releases[li];
+      if (t >= rel + cfg.lineExitMs) lo.opacity = 0;
+      else if (t >= rel) lo.opacity = 1 - (t - rel)/cfg.lineExitMs;
+    }
+    for (var wi = 0; wi < line.words.length; wi++) {
+      var st = wordStateAt(cfg, ownership, li, line.words[wi], t);
+      if (st.fitFail) out.fitFail = true;
+      lo.words.push({ text: line.words[wi].text, env: st.env, sizeRatio: st.sizeRatio, sizePctOfStage: st.sizePctOfStage, weight: st.weight, spoken: st.spoken });
+    }
+    out.lines.push(lo);
+  }
+  return out;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, EASINGS: EASINGS, resolveEnv: resolveEnv, lineReleaseMs: lineReleaseMs, computeOwnership: computeOwnership, envelopeAt: envelopeAt, wordStateAt: wordStateAt, buildStateAt: buildStateAt };
+}
+if (typeof document !== "undefined") {
+  var stage = document.getElementById("stage");
+  stage.style.background = CONFIG.plateColor;
+  stage.style.fontFamily = CONFIG.fontStack;
+  var ownership0 = computeOwnership(CONFIG);
+  if (ownership0.clamps.length) { try { console.log("OWNERSHIP-CLAMP " + JSON.stringify(ownership0.clamps)); } catch (e) {} }
+  var guides = [document.getElementById("guideTop"), document.getElementById("guideBottom")];
+  var spans = [];
+  function layout(){
+    var H = stage.clientHeight, W = stage.clientWidth;
+    guides.forEach(function(g, i){
+      g.style.left = (W * CONFIG.guideInsetPct/100) + "px";
+      g.style.width = (W * (1 - 2 * CONFIG.guideInsetPct/100)) + "px";
+      g.style.height = CONFIG.guideThicknessPx + "px";
+      g.style.background = CONFIG.guideColor;
+      g.style.top = (H * (i === 0 ? (50 - CONFIG.guideGapPctOfStage/2)/100 : (50 + CONFIG.guideGapPctOfStage/2)/100)) + "px";
+    });
+    var narrowStage = (W / H) <= CONFIG.narrowStageAspectMax;
+    var lineTops = narrowStage ? CONFIG.narrowLineTopPctOfStage : CONFIG.lineTopPctOfStage;
+    CONFIG.lines.forEach(function(line, li){
+      var el = document.getElementById(line.id);
+      el.style.top = (H * lineTops[li]/100) + "px";
+      el.style.lineHeight = CONFIG.lineHeight;
+    });
+    return H;
+  }
+  CONFIG.lines.forEach(function(line, li){
+    var el = document.getElementById(line.id), arr = [];
+    line.words.forEach(function(w, wi){
+      var s = document.createElement("span");
+      s.className = "word"; s.textContent = w.text;
+      el.appendChild(s);
+      if (wi < line.words.length - 1) el.appendChild(document.createTextNode(" "));
+      arr.push(s);
+    });
+    spans.push(arr);
+  });
+  var startStamp = null, externalMs = null;
+  function render(now){
+    var H = layout();
+    var loopMs = CONFIG.coreMs + CONFIG.endHoldMs;
+    var t;
+    if (externalMs !== null && externalMs !== undefined) t = Math.max(0, Math.min(CONFIG.coreMs, externalMs));
+    else {
+      if (startStamp === null) startStamp = now;
+      t = (now - startStamp) % loopMs;
+      if (t > CONFIG.coreMs) t = CONFIG.coreMs;
+    }
+    var state = buildStateAt(CONFIG, t), anyFitFail = state.fitFail;
+    state.lines.forEach(function(lo, li){
+      document.getElementById(lo.id).style.opacity = lo.opacity;
+      lo.words.forEach(function(ws, wi){
+        var s = spans[li][wi], basePx = H * CONFIG.baseSizePctOfStage/100;
+        s.style.fontSize = (basePx * ws.sizeRatio) + "px";
+        s.style.fontVariationSettings = "'wght' " + ws.weight;
+        s.style.fontWeight = ws.weight;
+        s.style.color = ws.spoken ? CONFIG.spokenColor : CONFIG.unspokenColor;
+      });
+    });
+    document.getElementById("fitfail").style.display = anyFitFail ? "block" : "none";
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+  window.__T197 = { seek: function(ms){ externalMs = ms; }, config: CONFIG, stateAt: function(ms){ return buildStateAt(CONFIG, ms); } };
+}
+</script>
+</body></html>

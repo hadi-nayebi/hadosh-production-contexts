@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T199 comparison — original vs recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;color:#eee;font-family:Arial,sans-serif;}
+  #wrap{max-width:1200px;margin:0 auto;padding:10px;}
+  .cols{display:flex;gap:12px;}
+  .col{flex:1;min-width:0;}
+  .col h2{font-size:16px;margin:6px 0;}
+  video,iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;display:block;}
+  #controls{padding:10px 0;}
+  button{font-size:16px;padding:10px 16px;margin:4px 6px 4px 0;}
+  #checks{font-size:13px;line-height:1.6;color:#ccc;white-space:pre-wrap;}
+  @media (max-width:700px){ .cols{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+    <button id="btnSeek" type="button">Seek to 5.0s (Drill peak)</button>
+    <span id="status">ready</span>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <h2>ORIGINAL — Caption with Intention (Packet #11) @ source 67–75 s (segment 66.5–75.5 s)</h2>
+      <video id="seg" src="segment.mp4" preload="auto" playsinline></video>
+    </div>
+    <div class="col">
+      <h2>RECREATION — T199 shout scaling in a real scene, parameterized</h2>
+      <iframe id="rec" src="recreation.html" title="T199 recreation"></iframe>
+    </div>
+  </div>
+  <div id="checks">Instrumented comparison checks run against the slaved recreation clock (buildMs = segmentTimeMs - 500, CONFIG segmentHandleOffsetMs). Media-end behavior: when the segment ends, the recreation freezes on the terminal governed state (L3 both words spoken color, base scale); the standalone 1200 ms endHold is a standalone-clock state only and does not extend the comparison.</div>
+</div>
+<script>
+'use strict';
+const seg = document.getElementById('seg');
+const rec = document.getElementById('rec');
+const status = document.getElementById('status');
+const checks = document.getElementById('checks');
+let recWin = null;
+rec.addEventListener('load', function(){ recWin = rec.contentWindow; });
+function recStateAt(buildMs){
+  if (!recWin || !recWin.__T199) return null;
+  return recWin.__T199.stateAt(buildMs);
+}
+function logChecks(label){
+  const segMs = Math.round(seg.currentTime * 1000);
+  const buildMs = segMs - 500;
+  const st = recStateAt(Math.max(0, buildMs));
+  let line = 'CHECK ' + label + ': segment=' + segMs + 'ms buildMs=' + buildMs;
+  if (st) line += ' line=' + st.lineIndex + (st.words.length ? ' words=' + st.words.map(function(w){ return w.text + ':' + w.scale.toFixed(3) + ':' + (w.spoken ? 'spoken' : 'unspoken'); }).join(',') : ' (scene plate)');
+  checks.textContent += '\n' + line;
+  status.textContent = line;
+  return st;
+}
+document.getElementById('btnPlay').addEventListener('click', function(){ seg.play(); setTimeout(function(){ logChecks('play'); }, 600); });
+document.getElementById('btnPause').addEventListener('click', function(){ seg.pause(); logChecks('pause'); });
+document.getElementById('btnRestart').addEventListener('click', function(){ seg.currentTime = 0; seg.play(); logChecks('restart'); });
+document.getElementById('btnSeek').addEventListener('click', function(){ seg.currentTime = 5.0; setTimeout(function(){ logChecks('seek-5.0s'); }, 300); });
+seg.addEventListener('ended', function(){
+  const st = recStateAt(8500);
+  checks.textContent += '\nCHECK terminal-frame: segment ended; recreation terminal state line=' + (st ? st.lineIndex : '?') + ' words=' + (st ? st.words.map(function(w){ return w.text + ':' + w.scale.toFixed(3) + ':' + (w.spoken ? 'spoken' : 'unspoken'); }).join(',') : 'n/a');
+});
+</script>
+</body>
+</html>

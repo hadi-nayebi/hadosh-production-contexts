@@ -1,0 +1,17 @@
+# T196 — Pre-lighting · scores (attempt 1, Cycle 036 Wave 33 completion)
+
+**NO VERDICT — the five-lens scoring wave was NOT fired.** Tier: **IN PROGRESS** (§6.4). The A12.3 completion re-fire of jev-prewave on the Cycle-036 cured build returned HOLD, so per the completion charge no wave fired. The substantive record is `build-record.md` (Cycle-036 completion section) + `jev-prewave-completion.md` in this directory. Filing any lens average here would counterfeit a wave that never ran.
+
+## Completion state (Cycle 036)
+- Start-of-cycle verification: the Cycle-035 cured build matched its filed hash (recreation.html `d7dfe940…`, 8,255 B) — no stop.
+- Both firing-2 cures applied: (1) CP4/handoff executable evidence filed (active-card geometry across interior flips · card-3 handoff exercised · boundary-skipping seek exercised) and comparison.html's card-3 seek made CONFIG-derived (`CONFIG.headHandleS + derive(CONFIG).cards[2].onsetMs/1000` = 5.532 s video time; no hardcoded 5.032 s remains); (2) fitCard's `fits` judges width as well as height and its startup result is consumed (`fitReport` retained/exposed/branched on); fit-table.md re-filed with POST-FIT RECORDED bounds per A12.2 form (i) (harness post-fit ink measurement, Liberation Sans stand-in named).
+- Cured build: recreation.html 9,210 B, SHA-256 `80f16c832df567465c8a51ceed85794a76df46d34cc0eecfa47f95a286873d18`. Fresh own-checks on it: purity grep 0 hits · `node --check` OK · completion harness exit 0, 38 PASS / 0 FAIL with A12 executable receipts for every A11 assertion (filed in build-record.md's completion section; raw output `codex/harness-completion036-output.txt`).
+- A6 legs on the cured build: fit-table.md 0 HITs · config-census.md 0 HITs.
+
+## jev-prewave — A12.3 completion re-fire (on the cured build `80f16c83…`)
+**HOLD — ASSERTED-CHECKS** (parameterization 1.00 · purity 1.00 · own-checks completeness 0.75 · fidelity-plan honesty 1.00). Return filed verbatim at `jev-prewave-completion.md` (+ `codex/jev-prewave-completion-return.raw`, 57,704 B); payload at `codex/payload-prewave-completion.txt` (50,597 B, size+tail-verified before firing).
+- Confirmed closed by this firing: the measured-fit cure in full (post-fit recorded bounds recomputed by the judge: horizontal margins 4.8/14.8/15.8 px, vertical 25.55/45.55/5.55 px; overwide-word probe `fits:false`; FIT-STARTUP consumption) and the CONFIG-derived comparison seek (parameterization rose 0.75 → 1.00).
+- Sole remaining defect (own-checks 0.75): the boundary-skipping handoff receipt files its seek endpoints as fixed numbers (`1000 → 7000`) and its boundary samples as fixed numbers, so that assertion's CONFIG dependence is unverified under A11/A12; the CP5a tie receipt likewise files its evaluation expression as the literal `t = 8640` rather than as `cards[2].words[10].onsetMs`.
+
+## Next act (named consumer)
+Recreation's next cycle, completion form: file the evaluated CONFIG expressions for the boundary-skipping endpoints and checkpoints and for the CP5a tie (endpoints/checkpoints expressed from CONFIG onsets, e.g. seek from a CONFIG-derived instant to a CONFIG-derived instant across both card boundaries), re-run those assertions under the timing swap and record their moved instants and outcomes; then ONE jev-prewave re-fire on that record; on FIRE-WAVE, fire the five-lens wave bound to the build. A technique mid-attempt here finishes its verdict here (INSTRUCTION A3 §3) — this item does NOT route to practice unscored.

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T195 — spoken-state highlight sweep, parameterized</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;min-height:100%;}
+  body{display:flex;flex-direction:column;align-items:center;font-family:Arial,sans-serif;}
+  #stage{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;}
+  #chunk{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;}
+  .word{display:inline-block;white-space:nowrap;}
+  .sp{display:inline-block;}
+  #labelCard{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;}
+  #bar{display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;background:#1c1c1c;width:100%;box-sizing:border-box;}
+  #bar button{min-height:44px;min-width:64px;font-size:15px;border:1px solid #555;border-radius:8px;background:#2a2a2a;color:#eee;cursor:pointer;}
+  #clock{color:#bbb;font-size:14px;min-width:120px;text-align:center;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="labelCard"></div>
+  <div id="chunk"></div>
+</div>
+<div id="bar">
+  <button id="btnPlay" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+  <span id="clock">0 ms</span>
+</div>
+<script>
+"use strict";
+/* T195 — spoken-state highlight sweep (Packet #11 P11-T06), parameterized recreation.
+   Construction: DOM per-letter spans inside per-word wrappers inside one mounted chunk;
+   a single rAF clock; state is a pure function of segment-relative time.
+   Visual schedule is CONFIG data (amendment-cycle035 §3): measured visual windows where
+   the census/micro-census measured them, engine-derived windows elsewhere. */
+const CONFIG = {
+  segmentStartS: 39.5,
+  totalMs: 8000,
+  bgColor: "#000000",
+  unspokenColor: "#dedede",
+  spokenColor: "#f0ff05",
+  fontStack: "\"Roboto Flex\", Roboto, Arial, sans-serif",
+  fontPx: 86,
+  fitWidthFraction: 0.92,
+  sweepFraction: 0.55,
+  visualLagMs: 120,
+  minSweepMs: 120,
+  frontSoftnessLetters: 3.5,
+  liftPx: 28,
+  liftRiseMs: 120,
+  liftSettleMs: 120,
+  chunkLeadMs: 60,
+  stageRefWidthPx: 1920,
+  wordSpaceEm: 0.28,
+  lineTopFraction: 0.46,
+  stageAspect: "16:9",
+  labelCard: { show: true, text: "Synchronization", startSourceMs: 39560, dissolveStartSourceMs: 39980, endSourceMs: 40200 },
+  lines: [
+    { words: [
+      { text: "Caption", onsetSourceMs: 40180, endSourceMs: 40820, visualOnsetSourceMs: 40280, visualEndSourceMs: 40750 },
+      { text: "with", onsetSourceMs: 40820, endSourceMs: 40960 },
+      { text: "Intention", onsetSourceMs: 40960, endSourceMs: 41200 },
+      { text: "uses", onsetSourceMs: 41200, endSourceMs: 41560 }
+    ]},
+    { words: [
+      { text: "dynamic", onsetSourceMs: 41560, endSourceMs: 41920, visualOnsetSourceMs: 41675, visualEndSourceMs: 41860 },
+      { text: "text", onsetSourceMs: 41920, endSourceMs: 42180, visualOnsetSourceMs: 41930, visualEndSourceMs: 42090 },
+      { text: "animation,", onsetSourceMs: 42180, endSourceMs: 42480, visualOnsetSourceMs: 42190, visualEndSourceMs: 42400 }
+    ]},
+    { words: [
+      { text: "so", onsetSourceMs: 42960, endSourceMs: 43040 },
+      { text: "captions", onsetSourceMs: 43040, endSourceMs: 43300 },
+      { text: "are", onsetSourceMs: 43300, endSourceMs: 43500 },
+      { text: "synchronized", onsetSourceMs: 43500, endSourceMs: 44040, visualOnsetSourceMs: 43510, visualEndSourceMs: 43700 }
+    ]},
+    { words: [
+      { text: "precisely", onsetSourceMs: 44040, endSourceMs: 44420, visualOnsetSourceMs: 44170, visualEndSourceMs: 44470 },
+      { text: "as", onsetSourceMs: 44420, endSourceMs: 44880 },
+      { text: "each", onsetSourceMs: 44880, endSourceMs: 45200 },
+      { text: "word", onsetSourceMs: 45200, endSourceMs: 45560 },
+      { text: "is", onsetSourceMs: 45560, endSourceMs: 46120, visualOnsetSourceMs: 46560, visualEndSourceMs: 46710 },
+      { text: "spoken.", onsetSourceMs: 46120, endSourceMs: 47140, visualOnsetSourceMs: 46560, visualEndSourceMs: 46750 }
+    ]}
+  ]
+};
+
+/* Optional URL override: ?config=<urlencoded JSON> deep-merges over CONFIG (swap-test route). */
+function applyUrlConfig(cfg) {
+  try {
+    const raw = new URLSearchParams(window.location.search).get("config");
+    if (!raw) return cfg;
+    const over = JSON.parse(raw);
+    const merge = (a, b) => {
+      if (Array.isArray(b)) return b;
+      if (b && typeof b === "object") { const o = Object.assign({}, a); for (const k in b) o[k] = merge(a ? a[k] : undefined, b[k]); return o; }
+      return b;
+    };
+    return merge(cfg, over);
+  } catch (e) { return cfg; }
+}
+
+function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+function hexRgb(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+function lerpColor(a, b, f) {
+  const ca = hexRgb(a), cb = hexRgb(b);
+  return "rgb(" + Math.round(ca[0] + (cb[0] - ca[0]) * f) + "," + Math.round(ca[1] + (cb[1] - ca[1]) * f) + "," + Math.round(ca[2] + (cb[2] - ca[2]) * f) + ")";
+}
+
+/* Derive the visual schedule: measured overrides stand; other windows derive from
+   onset + visualLagMs over (end-onset) x sweepFraction, tile-capped at the next
+   word's visual onset inside the chunk (amendment §3/§5). All times returned
+   segment-relative ms. */
+function deriveSchedule(cfg) {
+  const base = cfg.segmentStartS * 1000;
+  return cfg.lines.map((line) => {
+    const ws = line.words.map((w) => {
+      const onset = w.onsetSourceMs - base, end = w.endSourceMs - base;
+      let vOn, vEnd;
+      if (typeof w.visualOnsetSourceMs === "number" && typeof w.visualEndSourceMs === "number") {
+        vOn = w.visualOnsetSourceMs - base; vEnd = w.visualEndSourceMs - base;
+      } else {
+        vOn = onset + cfg.visualLagMs;
+        vEnd = vOn + Math.max(cfg.minSweepMs, (w.endSourceMs - w.onsetSourceMs) * cfg.sweepFraction);
+      }
+      return { text: w.text, onset: onset, end: end, vOn: vOn, vEnd: vEnd, measured: typeof w.visualOnsetSourceMs === "number" };
+    });
+    for (let i = 0; i + 1 < ws.length; i++) {
+      if (!ws[i].measured && ws[i].vEnd > ws[i + 1].vOn) ws[i].vEnd = ws[i + 1].vOn;
+    }
+    return { words: ws, mount: ws[0].onset - cfg.chunkLeadMs };
+  });
+}
+
+function wordState(cfg, w, t) {
+  const n = w.text.length;
+  const p = clamp01((t - w.vOn) / (w.vEnd - w.vOn));
+  const front = p * (n - 1 + cfg.frontSoftnessLetters);
+  const letterFills = [];
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const f = clamp01((front - i) / cfg.frontSoftnessLetters);
+    letterFills.push(f); sum += f;
+  }
+  const meanFill = n ? sum / n : 1;
+  let lift;
+  if (t <= w.vEnd) {
+    lift = cfg.liftPx * clamp01((t - w.onset) / cfg.liftRiseMs);
+  } else {
+    const s = clamp01((t - w.vEnd) / cfg.liftSettleMs);
+    const easeOut = 1 - Math.pow(1 - s, 3);
+    lift = cfg.liftPx * (1 - easeOut);
+  }
+  if (t < w.onset) lift = 0;
+  return { text: w.text, p: p, front: front, letterFills: letterFills, meanFill: meanFill, lift: lift, vOn: w.vOn, vEnd: w.vEnd, onset: w.onset };
+}
+
+function stateAt(cfg, t) {
+  const sched = deriveSchedule(cfg);
+  let mounted = -1;
+  for (let i = 0; i < sched.length; i++) {
+    const nextMount = (i + 1 < sched.length) ? sched[i + 1].mount : cfg.totalMs;
+    if (t >= sched[i].mount && t < nextMount) mounted = i;
+  }
+  const base = cfg.segmentStartS * 1000;
+  const lc = cfg.labelCard;
+  let label = { visible: false, opacity: 0 };
+  if (lc && lc.show) {
+    const ls = lc.startSourceMs - base, ld = lc.dissolveStartSourceMs - base, le = lc.endSourceMs - base;
+    if (t >= ls && t < le) label = { visible: true, opacity: t < ld ? 1 : 1 - (t - ld) / (le - ld) };
+  }
+  return {
+    t: t, mountedChunk: mounted, label: label,
+    chunks: sched.map((line) => ({ mount: line.mount, words: line.words.map((w) => wordState(cfg, w, t)) }))
+  };
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, deriveSchedule: deriveSchedule, stateAt: stateAt, wordState: wordState, lerpColor: lerpColor };
+}
+
+if (typeof document !== "undefined") {
+  const CFG = applyUrlConfig(CONFIG);
+  const stage = document.getElementById("stage");
+  const chunkEl = document.getElementById("chunk");
+  const labelEl = document.getElementById("labelCard");
+  const clockEl = document.getElementById("clock");
+  const btnPlay = document.getElementById("btnPlay");
+  const btnRestart = document.getElementById("btnRestart");
+  stage.style.background = CFG.bgColor;
+  stage.style.aspectRatio = CFG.stageAspect.replace(":", "/");
+  labelEl.textContent = CFG.labelCard ? CFG.labelCard.text : "";
+  labelEl.style.fontFamily = CFG.fontStack;
+  labelEl.style.color = CFG.spokenColor;
+  chunkEl.style.fontFamily = CFG.fontStack;
+
+  const measureCtx = document.createElement("canvas").getContext("2d");
+  function fittedFontPx(chunkText) {
+    const stageW = stage.clientWidth || CFG.stageRefWidthPx;
+    let fp = CFG.fontPx * stageW / CFG.stageRefWidthPx;
+    measureCtx.font = fp + "px " + CFG.fontStack;
+    const w = measureCtx.measureText(chunkText).width;
+    const bound = CFG.fitWidthFraction * stageW;
+    if (w > bound) fp = fp * bound / w;
+    return fp;
+  }
+
+  let wordSpans = [], letterSpans = [], curChunk = -2, curFont = 0;
+  function buildChunk(idx, fp) {
+    chunkEl.innerHTML = ""; wordSpans = []; letterSpans = [];
+    if (idx < 0) { curChunk = idx; return; }
+    CFG.lines[idx].words.forEach((w, wi) => {
+      const wEl = document.createElement("span");
+      wEl.className = "word";
+      const letters = [];
+      for (const ch of w.text) {
+        const lEl = document.createElement("span");
+        lEl.textContent = ch;
+        wEl.appendChild(lEl); letters.push(lEl);
+      }
+      chunkEl.appendChild(wEl); wordSpans.push(wEl); letterSpans.push(letters);
+      if (wi + 1 < CFG.lines[idx].words.length) {
+        const sp = document.createElement("span"); sp.className = "sp"; sp.style.width = CFG.wordSpaceEm + "em"; chunkEl.appendChild(sp);
+      }
+    });
+    chunkEl.style.fontSize = fp + "px";
+    curChunk = idx; curFont = fp;
+  }
+
+  function render(t) {
+    const st = stateAt(CFG, t);
+    const stageW = stage.clientWidth || CFG.stageRefWidthPx;
+    const scale = stageW / CFG.stageRefWidthPx;
+    labelEl.style.top = (CFG.lineTopFraction * 100) + "%";
+    labelEl.style.fontSize = (CFG.fontPx * scale) + "px";
+    labelEl.style.opacity = st.label.visible ? String(st.label.opacity) : "0";
+    if (st.mountedChunk >= 0) {
+      const text = CFG.lines[st.mountedChunk].words.map((w) => w.text).join(" ");
+      const fp = fittedFontPx(text);
+      if (st.mountedChunk !== curChunk || Math.abs(fp - curFont) > 0.5) buildChunk(st.mountedChunk, fp);
+      chunkEl.style.top = (CFG.lineTopFraction * 100) + "%";
+      const words = st.chunks[st.mountedChunk].words;
+      words.forEach((ws, wi) => {
+        wordSpans[wi].style.transform = "translateY(" + (-ws.lift * scale) + "px)";
+        ws.letterFills.forEach((f, li) => {
+          letterSpans[wi][li].style.color = lerpColor(CFG.unspokenColor, CFG.spokenColor, f);
+        });
+      });
+      chunkEl.style.visibility = "visible";
+    } else {
+      chunkEl.style.visibility = "hidden";
+    }
+    clockEl.textContent = Math.round(t) + " ms";
+  }
+
+  let playing = true, startStamp = null, pausedAt = 0, seekMs = null;
+  function frame(ts) {
+    if (seekMs !== null) { render(seekMs); requestAnimationFrame(frame); return; }
+    if (playing) {
+      if (startStamp === null) startStamp = ts - pausedAt;
+      let t = (ts - startStamp) % CFG.totalMs;
+      if (t < 0) t += CFG.totalMs;
+      pausedAt = t;
+      render(t);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  btnPlay.addEventListener("click", () => {
+    playing = !playing;
+    if (!playing) { startStamp = null; }
+    btnPlay.textContent = playing ? "Pause" : "Play";
+  });
+  btnRestart.addEventListener("click", () => { pausedAt = 0; startStamp = null; seekMs = null; });
+  window.T195 = {
+    seek: (ms) => { seekMs = ms; render(ms); },
+    release: () => { seekMs = null; },
+    stateAt: (ms) => stateAt(CFG, ms),
+    CONFIG: CFG
+  };
+}
+</script>
+</body>
+</html>

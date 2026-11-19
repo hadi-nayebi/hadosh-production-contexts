@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T196 comparison — pre-lighting</title>
+<style>
+  body{margin:0;background:#111;color:#eee;font-family:sans-serif;}
+  .wrap{display:flex;gap:12px;padding:12px;box-sizing:border-box;}
+  .side{flex:1;min-width:0;}
+  .side h2{font-size:15px;margin:0 0 6px;}
+  video{width:100%;background:#000;}
+  iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;}
+  #ctl{display:flex;gap:8px;padding:0 12px 12px;}
+  #ctl button{font:15px sans-serif;padding:12px 18px;}
+  .note{padding:0 12px 12px;font-size:13px;color:#aaa;max-width:900px;}
+  @media (max-width:640px){ .wrap{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div id="ctl">
+  <button id="playBtn" type="button">Play / Pause</button>
+  <button id="restartBtn" type="button">Restart</button>
+  <button id="seekBtn" type="button">Seek to card 3</button>
+</div>
+<div class="wrap">
+  <div class="side">
+    <h2>ORIGINAL — Caption with Intention @ 0:48–0:58</h2>
+    <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+  </div>
+  <div class="side">
+    <h2>RECREATION — T196 pre-lighting, parameterized</h2>
+    <iframe id="rec" src="recreation.html" title="T196 recreation"></iframe>
+  </div>
+</div>
+<p class="note">One synchronized control set drives both sides on ONE clock: the video's file-local currentTime, with the head handle — core build zero &#8801; video 0.5 s, so buildMs = (video.currentTime &#8722; 0.5) &#215; 1000. The recreation's state is a pure function of that timestamp (seek and restart derive the same states as playback). Departure D5: size/weight emphasis (T197's ramp) is excluded from the recreation by the §8 split — the original's "sizes" and louder/softer emphasis have no counterpart on the recreation side. Departure D4: the recreation holds card 3 fully spoken to the segment end, past the source's next-header onset at source 57.167 s.</p>
+<script>
+"use strict";
+const HEAD_HANDLE_S = 0.5;
+const video = document.getElementById("orig");
+const rec = document.getElementById("rec");
+function recWin(){ try { return rec.contentWindow; } catch (e) { return null; } }
+function drive(){
+  const w = recWin(); if (!w || !w.__T196) return;
+  const buildMs = (video.currentTime - HEAD_HANDLE_S) * 1000;
+  w.__T196.render(w.__T196.CONFIG, buildMs);
+}
+video.addEventListener("timeupdate", drive);
+video.addEventListener("seeked", drive);
+setInterval(drive, 100);
+document.getElementById("playBtn").addEventListener("click", () => {
+  if (video.paused) video.play(); else video.pause();
+});
+document.getElementById("restartBtn").addEventListener("click", () => {
+  video.currentTime = 0; drive(); video.play();
+});
+/* Card-3 seek target is CONFIG-derived from the recreation itself (Cycle 036
+   cure — no hardcoded instant): the derived onset of the third CONFIG card,
+   plus the head handle read from the same CONFIG. */
+function card3SeekTargetS(){
+  const w = recWin(); if (!w || !w.__T196) return null;
+  const cfg = w.__T196.CONFIG;
+  const d = w.__T196.derive(cfg);
+  const c3 = d.cards[2]; if (!c3) return null;
+  return { videoS: cfg.headHandleS + c3.onsetMs / 1000, buildMs: c3.onsetMs, handleS: cfg.headHandleS };
+}
+document.getElementById("seekBtn").addEventListener("click", () => {
+  const tgt = card3SeekTargetS(); if (!tgt) return;
+  video.currentTime = tgt.videoS; drive();
+});
+rec.addEventListener("load", () => {
+  drive();
+  const tgt = card3SeekTargetS();
+  if (tgt) document.getElementById("seekBtn").textContent = "Seek to card 3 (build " + tgt.buildMs.toLocaleString("en-US") + " ms, CONFIG-derived)";
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T192 comparison</title>
+<style>
+  body{margin:0;font-family:system-ui,sans-serif;background:#181818;color:#eee;}
+  .wrap{display:flex;gap:12px;flex-wrap:wrap;padding:12px;}
+  .side{flex:1 1 420px;min-width:280px;}
+  .side h2{font-size:14px;margin:0 0 6px;}
+  video,iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;display:block;}
+  .controls{padding:12px;display:flex;gap:10px;}
+  button{font-size:16px;padding:12px 18px;min-height:48px;}
+  @media (max-width:640px){.wrap{flex-direction:column;}.side{flex:1 1 auto;}}
+</style></head><body>
+<div class="controls">
+  <button id="playBtn" type="button">Play</button>
+  <button id="restartBtn" type="button">Restart</button>
+</div>
+<div class="wrap">
+  <div class="side"><h2>ORIGINAL — Caption with Intention @ 0:22–0:27</h2>
+    <video id="orig" src="segment.mp4" playsinline muted></video></div>
+  <div class="side"><h2>RECREATION — T192 giant pixel numeral, parameterized</h2>
+    <iframe id="rec" src="recreation.html" title="recreation"></iframe></div>
+</div>
+<script>
+"use strict";
+/* ONE synchronized control set. Single clock mapping (plan, as amended):
+   recreationMs = videoMs - 500  (video 0 = source 21.5s; recreation 0 = source 22.0s).
+   The recreation iframe renders from its own rAF loop started on load; Play/Restart
+   drive the video and reload the recreation so both clocks share the start act. */
+var orig = document.getElementById("orig");
+var rec = document.getElementById("rec");
+var playBtn = document.getElementById("playBtn");
+function recApi(){ try { return rec.contentWindow && rec.contentWindow.__T192; } catch(e){ return null; } }
+function slaveRec(){
+  var a = recApi(); if(!a) return;
+  var ms = orig.currentTime*1000 - 500; /* single mapping: recreationMs = videoMs - 500 */
+  if(ms < 0) ms = 0;
+  if(a.cycleMs && ms > a.cycleMs) ms = a.cycleMs; /* non-looping follower: clamp at cycle end, never wrap */
+  a.seek(ms);
+  a.setPaused(orig.paused);
+}
+function restartBoth(){
+  orig.currentTime = 0.5; /* recreation zero */
+  var a = recApi(); if(a){ a.seek(0); a.setPaused(false); }
+  orig.play();
+  playBtn.textContent = "Pause";
+}
+playBtn.addEventListener("click", function(){
+  if(orig.paused){ orig.play(); playBtn.textContent = "Pause"; }
+  else { orig.pause(); playBtn.textContent = "Play"; }
+  slaveRec();
+});
+document.getElementById("restartBtn").addEventListener("click", restartBoth);
+orig.addEventListener("timeupdate", slaveRec);
+orig.addEventListener("seeked", slaveRec);
+orig.addEventListener("pause", slaveRec);
+orig.addEventListener("ended", function(){ playBtn.textContent = "Play"; slaveRec(); });
+rec.addEventListener("load", slaveRec);
+</script></body></html>
