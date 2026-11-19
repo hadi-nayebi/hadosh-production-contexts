@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T111 — Logo outro sting (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #stage svg{display:block;width:100%;height:100%;}
+  #wordmark{position:absolute;left:0;width:100%;text-align:center;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="scene" viewBox="0 0 360 203" preserveAspectRatio="xMidYMid meet" aria-label="Logo outro sting">
+    <rect id="field" x="0" y="0" width="360" height="203"></rect>
+    <g id="cluster"></g>
+    <rect id="seam" x="0" y="0" width="360" height="203"></rect>
+  </svg>
+  <div id="wordmark"></div>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  triangles: [
+    {color:"#e8443a", size:30, points:"0,-1 1,1 -1,1", from:{x:-70, y:-46}},
+    {color:"#3ac95c", size:30, points:"0,-1 1,1 -1,1", from:{x:0, y:-64}},
+    {color:"#3a6fe8", size:30, points:"0,-1 1,1 -1,1", from:{x:70, y:-46}}
+  ],
+  assemblyMs: 1800,
+  staggerMs: 220,
+  wordmark: {text:"SCHOOL OF MOTION", resolveMs:700, fontFamily:"Arial, Helvetica, sans-serif", fontSize:20, fontWeight:700, letterSpacing:3, y:126, risePx:6},
+  holdMs: 2400,
+  loopFadeMs: 600,
+  ease: "easeOutCubic",
+  palette: {field:"#0a0a0a", ink:"#ffffff"},
+  mark: {spacingFactor:0.5, centreY:84, blend:"screen"},
+  stage: {width:360, height:203},
+  cycleMs: 14000
+};
+
+/* Construction: exactly CONFIG.triangles.length persistent polygon nodes +
+   one wordmark node + one JS clock. Phase machine ASSEMBLE -> RESOLVE ->
+   LOOP-FADE -> REST, implemented as a pure function of cycle time:
+   render(t) recomputes every visual property from t alone, so a clock
+   jump across boundaries or a wrap can leave no stale state.
+   Triangles translate+settle from their CONFIG from-offsets into the
+   cluster (opacity always 1 — travel/settle, never fade-in). RESOLVE is
+   entered only at t >= assemblyMs, which by construction is when the
+   last staggered triangle completes (the effective stagger is clamped
+   so the last piece always completes at assemblyMs); the wordmark is
+   driven only in RESOLVE/HOLD/LOOP-FADE. The visible sting is brisk:
+   assembly + resolve + holdMs + loopFadeMs (= 5500 ms at default); the
+   residual cycleMs - 5500 (= 8500 ms) is REST — the stage faded to the
+   field colour, outside the visible sting — so the cycle totals
+   exactly cycleMs without extending the resolved-logo hold. The loop
+   fade covers mark AND wordmark together. All content, timing,
+   palette and shaping geometry are read from CONFIG; numbers in the
+   logic are structural identities (coordinate system, clamp bounds,
+   indices, the /2 centre of the viewBox). */
+
+const stageEl = document.getElementById("stage");
+const sceneEl = document.getElementById("scene");
+const fieldEl = document.getElementById("field");
+const clusterEl = document.getElementById("cluster");
+const seamEl = document.getElementById("seam");
+const wordEl = document.getElementById("wordmark");
+const SVGNS = "http://www.w3.org/2000/svg";
+
+const stageW = CONFIG.stage.width;
+const stageH = CONFIG.stage.height;
+stageEl.style.width = stageW + "px";
+stageEl.style.height = stageH + "px";
+stageEl.style.background = CONFIG.palette.field;
+document.body.style.background = CONFIG.palette.field;
+sceneEl.setAttribute("viewBox", "0 0 " + stageW + " " + stageH);
+fieldEl.setAttribute("width", String(stageW));
+fieldEl.setAttribute("height", String(stageH));
+fieldEl.setAttribute("fill", CONFIG.palette.field);
+seamEl.setAttribute("width", String(stageW));
+seamEl.setAttribute("height", String(stageH));
+seamEl.setAttribute("fill", CONFIG.palette.field);
+seamEl.setAttribute("opacity", "0");
+
+const centreX = stageW / 2;
+function finalCentre(i) {
+  const tri = CONFIG.triangles[i];
+  const spacing = tri.size * 2 * CONFIG.mark.spacingFactor;
+  return { cx: centreX + (i - (CONFIG.triangles.length - 1) / 2) * spacing, cy: CONFIG.mark.centreY };
+}
+function pointsFor(i) {
+  const tri = CONFIG.triangles[i];
+  const c = finalCentre(i);
+  return tri.points.trim().split(/\s+/).map(function (pair) {
+    const parts = pair.split(",");
+    return (c.cx + parseFloat(parts[0]) * tri.size) + "," + (c.cy + parseFloat(parts[1]) * tri.size);
+  }).join(" ");
+}
+
+const pieceEls = CONFIG.triangles.map(function (tri, i) {
+  const g = document.createElementNS(SVGNS, "g");
+  const poly = document.createElementNS(SVGNS, "polygon");
+  poly.setAttribute("points", pointsFor(i));
+  poly.setAttribute("fill", tri.color);
+  poly.style.mixBlendMode = CONFIG.mark.blend;
+  g.appendChild(poly);
+  clusterEl.appendChild(g);
+  return g;
+});
+
+wordEl.textContent = CONFIG.wordmark.text;
+wordEl.style.color = CONFIG.palette.ink;
+wordEl.style.fontFamily = CONFIG.wordmark.fontFamily;
+wordEl.style.fontSize = CONFIG.wordmark.fontSize + "px";
+wordEl.style.fontWeight = CONFIG.wordmark.fontWeight;
+wordEl.style.letterSpacing = CONFIG.wordmark.letterSpacing + "px";
+wordEl.style.top = CONFIG.wordmark.y + "px";
+wordEl.style.opacity = "0";
+if (typeof wordEl.scrollWidth === "number" && wordEl.scrollWidth > stageW) {
+  wordEl.style.fontSize = (CONFIG.wordmark.fontSize * stageW / wordEl.scrollWidth) + "px";
+}
+
+const EASINGS = {
+  easeOutCubic: function (x) { return 1 - Math.pow(1 - x, 3); },
+  easeOutQuad: function (x) { return 1 - (1 - x) * (1 - x); },
+  linear: function (x) { return x; }
+};
+function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+function staggerEff() {
+  const n = CONFIG.triangles.length;
+  if (n <= 1) return 0;
+  return Math.min(CONFIG.staggerMs, Math.max(0, (CONFIG.assemblyMs - 1) / (n - 1)));
+}
+function pieceDuration() {
+  return Math.max(1, CONFIG.assemblyMs - (CONFIG.triangles.length - 1) * staggerEff());
+}
+function resolveStart() { return CONFIG.assemblyMs; }
+function holdStart() { return CONFIG.assemblyMs + CONFIG.wordmark.resolveMs; }
+function fadeStart() { return holdStart() + CONFIG.holdMs; }
+function fadeEnd() { return fadeStart() + CONFIG.loopFadeMs; }
+function cycleEff() { return Math.max(CONFIG.cycleMs, fadeEnd()); }
+function phaseAt(t) {
+  t = ((t % cycleEff()) + cycleEff()) % cycleEff();
+  if (t < resolveStart()) return "ASSEMBLE";
+  if (t < holdStart()) return "RESOLVE";
+  if (t < fadeStart()) return "HOLD";
+  if (t < fadeEnd()) return "LOOP-FADE";
+  return "REST";
+}
+function render(t) {
+  t = ((t % cycleEff()) + cycleEff()) % cycleEff();
+  const ease = EASINGS[CONFIG.ease] || EASINGS.linear;
+  const dur = pieceDuration();
+  const stag = staggerEff();
+  CONFIG.triangles.forEach(function (tri, i) {
+    const local = clamp01((t - i * stag) / dur);
+    const e = ease(local);
+    const dx = tri.from.x * (1 - e);
+    const dy = tri.from.y * (1 - e);
+    pieceEls[i].setAttribute("transform", "translate(" + dx + "," + dy + ")");
+  });
+  let fade = 0;
+  if (t >= fadeEnd()) { fade = 1; }
+  else if (t >= fadeStart()) { fade = clamp01((t - fadeStart()) / Math.max(1, CONFIG.loopFadeMs)); }
+  let wop = 0;
+  if (t >= holdStart()) { wop = 1; }
+  else if (t >= resolveStart()) { wop = clamp01((t - resolveStart()) / Math.max(1, CONFIG.wordmark.resolveMs)); }
+  wordEl.style.opacity = String(wop * (1 - fade));
+  wordEl.style.transform = "translateY(" + (CONFIG.wordmark.risePx * (1 - wop)) + "px)";
+  seamEl.setAttribute("opacity", String(fade));
+}
+window.__CONFIG = CONFIG;
+window.__render = render;
+window.__phaseAt = phaseAt;
+window.__pieceEls = pieceEls;
+
+let startTs = null;
+function tick(ts) {
+  if (startTs === null) startTs = ts;
+  render(ts - startTs);
+  requestAnimationFrame(tick);
+}
+render(0);
+if (typeof requestAnimationFrame === "function") requestAnimationFrame(tick);
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T12 — Marker Highlight Sweep · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T12 — Marker highlight sweep + RECEIPT stamp</h1>
+<div class="sub">Video Study packet #1, “Look What I Can Do” (@aditazzz.music) @ 1:05–1:14.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the lane’s recreation, built parameterized in HTML/DOM — change its phrases and it still works.
+One control set drives both, in sync.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — different phrases</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — P1 @ 1:05–1:14<small>segment.mp4 · specimen cut 1:04.5–1:14.5 (handles ±0.5 s) · 10.0 s · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T12, parameterized<small>recreation.html · config-driven: phrases, sweep timing, marker + stamp palette · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T12 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation’s clock in the same click, so both start from zero together. The recreation’s choreography
+is computed from its CONFIG: card settles 0.7 s, then the marker sweeps “Principal Slopcore Architect”
+(1.5 s, one fill segment per visual line, in reading order) — the specimen’s highlighted phrase wraps
+inside the card — waits 0.38 s, then the RECEIPT stamp presses (0.19 s fall from 2.6× scale, −7°) into a
+reserved zone below the body text; the contact shake and settle finish by ≈3.0 s and the verdict holds
+6 s before looping (≈8.8 s cycle). In the original’s 10 s cut the sweeps and stamp
+complete early (the stamp is already on the card at 1:08) and the stamped card holds while the scene
+continues around it. The Swap test button reloads the recreation with different lines and phrases
+(<code>beta gamma</code>, <code>Second</code>), a faster sweep (300 ms), a cyan marker and a VERIFIED
+stamp — if the new phrases still sweep in reading order and the stamp still presses, the build is the
+technique, not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+const btnPlay = document.getElementById("btnPlay");
+function recPost(msg){ rec.contentWindow.postMessage(msg, "*"); }
+let playing = false;
+function setPlaying(p){
+  playing = p;
+  btnPlay.textContent = p ? "⏸ Pause both" : "▶ Play both";
+  if (p){ vid.play(); recPost("recreation:play"); } else { vid.pause(); recPost("recreation:pause"); }
+}
+btnPlay.addEventListener("click", () => setPlaying(!playing));
+document.getElementById("btnRestart").addEventListener("click", () => {
+  vid.currentTime = 0; recPost("recreation:restart"); setPlaying(true);
+});
+document.getElementById("btnSwap").addEventListener("click", () => {
+  rec.src = "recreation.html?lines=Alpha%20beta%20gamma%20delta%7CSecond%20line%20here&highlights=beta%20gamma%7CSecond&sweepMs=300&markerColor=%2300e5ff&stampText=VERIFIED";
+  if (playing) setTimeout(() => recPost("recreation:restart"), 400);
+});
+</script>
+</body>
+</html>

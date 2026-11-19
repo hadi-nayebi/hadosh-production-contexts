@@ -1,0 +1,13 @@
+The supplied record is sufficient to start firsthand Observe, with a material timing correction. It does not independently verify the archived footage or prior filings: filesystem access failed, so this audit covers the excerpts supplied.
+
+1. **Packet agreement:** `digest.md` §3 T13 and `TECHNIQUES.md` T111 agree on triangle-mark reassembly, black background, wordmark resolution, bookending, the 59–62 s window, and `ev/59.0-logo-outro.jpg`. Digest §4 repeats that window. The cross-reference differs: digest names packet-local **T01**, while the register names **T99**. Their equivalence needs confirmation from the opening entry.
+
+2. **Material timing disagreement:** the packet’s **59–62 s** window conflicts with RUN.md §1’s binding measured sequence: black at ≈55.5 s, first triangle at ≈56 s, assembly resolved at ≈58–58.5 s, hold ending at ≈60.5 s, and CTA from ≈61 s. The packet starts roughly three seconds late and includes CTA time. Its 59 s still supports the resolved logo’s appearance, **not the assembly mechanics or onset**. Observe must use the measured timeline and flag the packet window for correction. The “under three seconds” claim remains plausible for assembly alone (≈2–2.5 s), not the complete sting lifecycle (≈5 s).
+
+3. **Prior attempts:** the supplied census reports no T111 directory, score, Codex return, or verdict-history entry. T111 therefore has **zero prior scoring lenses**; absence was reported, not independently checked here. Named sibling T99 has **five lenses**: 80 + 100 + 100 + 80 + 90 = **450; 450/5 = 90.0; minimum = 80**. Arithmetic agrees with PASS 90.0. Its scores do not transfer to T111. Agreement between its actual returns, verdict history, and bound SHA-256 remains unverified.
+
+4. **Segment facts:** 80.994 s rounds correctly to the digest’s 80.99 s. The proposed 54–68 s cut is arithmetically **14.000 s** and contains both claimed windows. Within that cut, measured black onset is ≈1.5 s, triangle onset ≈2 s, resolution ≈4–4.5 s, hold end ≈6.5 s, and CTA onset ≈7 s. Actual encoded duration and frame correspondence require checking after extraction.
+
+**Named firsthand gaps:** confirm T01↔T99 identity; establish frame-level assembly onset, resolution, hold end, and CTA boundary; capture evidence across assembly rather than relying on the resolved still; inspect colors, geometry, trajectories, ordering, wordmark reveal, and easing; explicitly record which measured event becomes build t=0. No judgment of the Observe working memory is made.
+
+BODY-WRITE: none (read-only run); consumer must persist this return verbatim to `hidden_files/study/recreations/T111-logo-outro-sting/codex/codex-observe.md`.

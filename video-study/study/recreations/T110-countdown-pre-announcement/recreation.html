@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T110 — Countdown pre-announcement · recreation</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .layer{position:absolute;left:0;top:0;}
+  .box{position:absolute;box-sizing:border-box;}
+  .txt{position:absolute;box-sizing:border-box;white-space:nowrap;overflow:hidden;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  stage: {width:360, height:203},
+  label: {template:"{name} in {n}", name:"Hard cut", steps:[3,2,1], stepMs:1000},
+  scene: {kind:"laptop", label:"Laptop scene"},
+  demo: {kind:"webpage", heading:"Motion Design Training", title:"Hard cut", lines:["Instant switch","No blend frames"], marker:"▲"},
+  demoTrigger: "on-count-complete-same-frame",
+  band: {heightPct:18, align:"bottom", fontSizePx:30, fontWeight:700, strip:"#1a0a12", stripOpacity:0.34},
+  anchor: {countStartMs:3000, cutMs:6117, cycleMs:14000},
+  holdAfterMs: 2600,
+  loopFadeMs: 600,
+  palette: {field:"#e75480", bandInk:"#ffffff", accent:"#ffd23c", teal:"#57c8b4", body:"#3b4a6b", screen:"#7fe7d2", dark:"#22304a", card:"#f4f4f4", dim:"rgba(34,48,74,0.55)"},
+  type: {font:"Arial, sans-serif", headSize:16, titleSize:16, lineSize:16, titleWeight:700, lineWeight:400, lineHeight:1.2},
+  geom: {laptopX:105, laptopY:52, laptopW:150, laptopH:92, baseX:95, baseY:148, baseW:170, baseH:10, screenPad:8, groundW:2, groundX:75, groundY:166, groundWpx:210,
+         pagePad:14, barY:12, barH:22, heroY:42, heroH:72, cardY:120, cardH:36, card2Y:162, radius:4,
+         tileW:34, tileX:10, tileY:12, textX:54, stripH:8, stripGap:5, headY:1, titleDY:-2, tileGlyphX:7, tileGlyphY:5, stripTop:7, lineTop:24, lineGap:21,
+         barFrac:[0.92,0.78], barFrac2:[0.85,0.66]}
+};
+const CYCLE = CONFIG.anchor.cycleMs;
+const COUNT_START = CONFIG.anchor.countStartMs;
+const CUT = CONFIG.anchor.cutMs;
+const FADE_START = CYCLE - CONFIG.loopFadeMs;
+const HOLD_START = FADE_START - CONFIG.holdAfterMs;
+function stateAt(t){
+  t = ((t % CYCLE) + CYCLE) % CYCLE;
+  const cutAt = CONFIG.demoTrigger === "on-count-complete-same-frame" ? CUT : CUT + CONFIG.label.stepMs;
+  if (t < COUNT_START) return {scene:"out", step:-1, phase:"pre"};
+  if (t < cutAt){
+    let idx = Math.floor((t - COUNT_START) / CONFIG.label.stepMs);
+    if (idx > CONFIG.label.steps.length - 1) idx = CONFIG.label.steps.length - 1;
+    return {scene:"out", step:idx, phase:"count"};
+  }
+  if (t < HOLD_START) return {scene:"demo", step:-1, phase:"demo"};
+  if (t < FADE_START) return {scene:"demo", step:-1, phase:"demo-hold"};
+  return {scene:"demo", step:-1, phase:"fade"};
+}
+function seamOpacity(t){
+  t = ((t % CYCLE) + CYCLE) % CYCLE;
+  if (t < FADE_START) return 0;
+  return (t - FADE_START) / CONFIG.loopFadeMs;
+}
+function labelText(stepIdx){
+  const n = CONFIG.label.steps[stepIdx];
+  return CONFIG.label.template.replace("{name}", CONFIG.label.name).replace("{n}", String(n));
+}
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+document.body.style.background = CONFIG.palette.field;
+document.body.style.fontFamily = CONFIG.type.font;
+function el(parent, x, y, w, h, bg){
+  const d = document.createElement("div");
+  d.className = "box";
+  d.style.left = x + "px"; d.style.top = y + "px";
+  d.style.width = w + "px"; d.style.height = h + "px";
+  if (bg) d.style.background = bg;
+  parent.appendChild(d);
+  return d;
+}
+function txt(parent, x, y, size, weight, color, text){
+  const d = document.createElement("div");
+  d.className = "txt";
+  d.style.left = x + "px"; d.style.top = y + "px";
+  d.style.fontSize = size + "px"; d.style.fontWeight = weight;
+  d.style.color = color; d.style.lineHeight = String(CONFIG.type.lineHeight);
+  d.textContent = text;
+  parent.appendChild(d);
+  return d;
+}
+function buildOutgoing(){
+  const g = CONFIG.geom, p = CONFIG.palette;
+  const layer = document.createElement("div");
+  layer.className = "layer"; layer.id = "layerOut";
+  layer.style.width = CONFIG.stage.width + "px"; layer.style.height = CONFIG.stage.height + "px";
+  layer.style.background = p.field;
+  layer.setAttribute("aria-label", CONFIG.scene.label);
+  if (CONFIG.scene.kind === "laptop"){
+    const body = el(layer, g.laptopX, g.laptopY, g.laptopW, g.laptopH, p.body);
+    body.style.borderRadius = g.radius + "px";
+    const scr = el(body, g.screenPad, g.screenPad, g.laptopW - g.screenPad * 2, g.laptopH - g.screenPad * 2, p.screen);
+    scr.style.borderRadius = g.radius + "px";
+    el(layer, g.baseX, g.baseY, g.baseW, g.baseH, p.dark);
+    const ground = el(layer, g.groundX, g.groundY, g.groundWpx, g.groundW, p.body);
+    ground.style.background = "transparent";
+    ground.style.borderTop = g.groundW + "px dashed " + p.body;
+  }
+  stage.appendChild(layer);
+  return layer;
+}
+function buildDemo(){
+  const g = CONFIG.geom, p = CONFIG.palette, ty = CONFIG.type, d = CONFIG.demo;
+  const layer = document.createElement("div");
+  layer.className = "layer"; layer.id = "layerDemo";
+  layer.style.width = CONFIG.stage.width + "px"; layer.style.height = CONFIG.stage.height + "px";
+  layer.style.background = p.teal;
+  if (d.kind === "webpage"){
+    const bar = el(layer, g.pagePad, g.barY, CONFIG.stage.width - g.pagePad * 2, g.barH, p.accent);
+    bar.style.borderRadius = g.radius + "px";
+    txt(bar, g.screenPad, g.headY, ty.headSize, ty.titleWeight, p.dark, d.heading);
+    const hero = el(layer, g.pagePad, g.heroY, CONFIG.stage.width - g.pagePad * 2, g.heroH, p.body);
+    hero.style.borderRadius = g.radius + "px";
+    const tile = el(hero, g.tileX, g.tileY, g.tileW, g.tileW, p.dark);
+    txt(tile, g.tileGlyphX, g.tileGlyphY, ty.titleSize, ty.titleWeight, p.bandInk, d.marker);
+    txt(hero, g.textX, g.tileY + g.titleDY, ty.titleSize, ty.titleWeight, p.bandInk, d.title);
+    d.lines.forEach(function(line, i){
+      txt(hero, g.textX, g.tileY + g.lineTop + i * g.lineGap, ty.lineSize, ty.lineWeight, p.bandInk, line);
+    });
+    [g.cardY, g.card2Y].forEach(function(cy, ci){
+      const card = el(layer, g.pagePad, cy, CONFIG.stage.width - g.pagePad * 2, g.cardH, p.card);
+      card.style.borderRadius = g.radius + "px";
+      const fr = ci === 0 ? g.barFrac : g.barFrac2;
+      fr.forEach(function(f, i){
+        el(card, g.textX, g.stripTop + i * (g.stripH + g.stripGap), (CONFIG.stage.width - g.pagePad * 2 - g.textX - g.screenPad) * f, g.stripH, p.dim);
+      });
+    });
+  }
+  stage.appendChild(layer);
+  return layer;
+}
+function buildBand(){
+  const b = CONFIG.band, p = CONFIG.palette;
+  const h = CONFIG.stage.height * b.heightPct / 100;
+  const layer = document.createElement("div");
+  layer.className = "layer"; layer.id = "layerBand";
+  layer.style.width = CONFIG.stage.width + "px"; layer.style.height = h + "px";
+  layer.style.left = "0px";
+  layer.style.top = (b.align === "bottom" ? CONFIG.stage.height - h : 0) + "px";
+  const stripEl = document.createElement("div");
+  stripEl.className = "box";
+  stripEl.style.left = "0px"; stripEl.style.top = "0px";
+  stripEl.style.width = CONFIG.stage.width + "px"; stripEl.style.height = h + "px";
+  stripEl.style.background = b.strip;
+  stripEl.style.opacity = String(b.stripOpacity);
+  layer.appendChild(stripEl);
+  const inner = document.createElement("div");
+  inner.className = "txt"; inner.id = "bandText";
+  inner.style.left = "0px"; inner.style.top = "0px";
+  inner.style.width = CONFIG.stage.width + "px";
+  inner.style.textAlign = "center";
+  inner.style.fontSize = b.fontSizePx + "px"; inner.style.fontWeight = b.fontWeight;
+  inner.style.color = p.bandInk; inner.style.lineHeight = String(h / b.fontSizePx);
+  layer.appendChild(inner);
+  stage.appendChild(layer);
+  return {layer: layer, text: inner};
+}
+function buildSeam(){
+  const layer = document.createElement("div");
+  layer.className = "layer"; layer.id = "layerSeam";
+  layer.style.width = CONFIG.stage.width + "px"; layer.style.height = CONFIG.stage.height + "px";
+  layer.style.background = CONFIG.palette.field;
+  layer.style.opacity = "0";
+  stage.appendChild(layer);
+  return layer;
+}
+const layerOut = buildOutgoing();
+const layerDemo = buildDemo();
+const band = buildBand();
+const layerSeam = buildSeam();
+function render(t){
+  const s = stateAt(t);
+  layerOut.style.display = s.scene === "out" ? "block" : "none";
+  layerDemo.style.display = s.scene === "demo" ? "block" : "none";
+  if (s.phase === "count"){
+    band.layer.style.display = "block";
+    band.text.textContent = labelText(s.step);
+  } else {
+    band.layer.style.display = "none";
+  }
+  layerSeam.style.opacity = String(seamOpacity(t));
+}
+window.__CONFIG = CONFIG;
+window.__stateAt = stateAt;
+window.__seamOpacity = seamOpacity;
+window.__labelText = labelText;
+window.__render = render;
+render(0);
+let startStamp = null;
+function frame(ts){
+  if (startStamp === null) startStamp = ts;
+  render(ts - startStamp);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

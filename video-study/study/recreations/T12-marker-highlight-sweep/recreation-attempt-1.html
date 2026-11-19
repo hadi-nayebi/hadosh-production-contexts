@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T12 — Marker Highlight Sweep + RECEIPT Stamp (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#0d1117;display:flex;align-items:center;justify-content:center;
+       font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+  #stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  .card{position:relative;width:86%;max-width:560px;background:#ffffff;color:#14181d;
+        border-radius:14px;padding:18px 20px 14px;box-shadow:0 10px 34px rgba(0,0,0,.5);
+        box-sizing:border-box}
+  .head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .avatar{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:#7a4fd0;color:#fff;
+          display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px}
+  .who{min-width:0}
+  .nameline{display:flex;align-items:center;gap:5px;font-weight:800;font-size:16px;white-space:nowrap}
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+         border-radius:50%;background:#1d9bf0;color:#fff;font-size:10px;font-weight:900}
+  .handle{color:#5b6770;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .close{margin-left:auto;color:#14181d;font-size:16px;font-weight:700}
+  .line{font-size:19px;line-height:1.42;font-weight:600}
+  .hl{position:relative;display:inline;padding:0 1px}
+  .hl-fill{position:absolute;left:-2px;top:10%;height:84%;width:0%;z-index:0;
+           border-radius:3px;transform:skewX(-8deg) rotate(-.6deg);pointer-events:none}
+  .hl-word{position:relative;z-index:1;font-weight:800}
+  .foot{display:flex;gap:26px;align-items:center;margin-top:12px;color:#5b6770;font-size:14px}
+  .foot .heart{color:#e0245e}
+  .stamp{position:absolute;right:5%;top:42%;z-index:5;padding:5px 14px 6px;
+         font-weight:900;font-size:30px;letter-spacing:.1em;text-transform:uppercase;
+         border:4px double currentColor;border-radius:5px;opacity:0;pointer-events:none;
+         background:rgba(255,255,255,.08)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="card" id="card"></div>
+</div>
+<script>
+"use strict";
+/* ================================================================
+   T12 — MARKER HIGHLIGHT SWEEP + RECEIPT STAMP
+   Recreation of the technique catalogued in Video Study packet #1
+   ("Look What I Can Do", @aditazzz.music, 1:05-1:14) as
+   "Marker highlight + RECEIPT stamp" (TECHNIQUES.md T12):
+   yellow marker sweeps phrases in reading order on a post card;
+   a red stamp presses the verdict.
+   PARAMETERIZED, NOT TRACED: every content / timing / palette value
+   is read from CONFIG below. Swap the phrases and the technique
+   still works — that is the swap test. URL overrides for testing:
+   ?lines=A|B&highlights=X|Y&sweepMs=300&markerColor=%2300e5ff&stampText=VERIFIED
+   ================================================================ */
+const CONFIG = {
+  authorName: "aditazzz",
+  authorHandle: "@aditazzz",
+  dateLabel: "10/27/26",
+  avatarInitial: "a",
+  lines: [
+    "Currently upskilling to transition",
+    "to a Principal Slopcore Architect role.",
+    "Trying to stay ahead of the curve.",
+    "Follow along and support my",
+    "professional development."
+  ],
+  highlights: ["Principal Slopcore", "Architect"], // swept in reading order; the specimen phrase "Principal Slopcore Architect" wraps across two card lines, so it is two targets in order
+  sweepMs: 620,            // marker fill duration per phrase (linear, hand speed)
+  gapMs: 420,              // pause between successive sweeps
+  startDelayMs: 800,       // card settle time before the first sweep
+  cardEnterMs: 450,        // card fade / rise-in duration
+  holdBeforeStampMs: 550,  // beat after the last sweep before the stamp presses
+  stampText: "RECEIPT",
+  stampColor: "#c1272d",
+  stampAngleDeg: -7,
+  stampPressMs: 190,       // stamp scale-down press duration (accelerating fall)
+  stampFromScale: 2.6,     // stamp start scale
+  stampShakePx: 3,         // card impact shake amplitude at the press instant
+  markerColor: "#ffd81a",
+  markerOpacity: 0.9,
+  cardBg: "#ffffff",
+  cardText: "#14181d",
+  mutedColor: "#5b6770",
+  pageBg: "#0d1117",
+  likesLabel: "5",
+  viewsLabel: "169",
+  endHoldMs: 2600          // verdict hold before the loop restarts
+};
+/* URL overrides (used by the swap test) */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("lines")) CONFIG.lines = q.get("lines").split("|");
+  if (q.has("highlights")) CONFIG.highlights = q.get("highlights").split("|");
+  for (const k of ["sweepMs","gapMs","startDelayMs","cardEnterMs","holdBeforeStampMs","stampPressMs","stampFromScale","stampShakePx","stampAngleDeg","endHoldMs"])
+    if (q.has(k)) CONFIG[k] = parseFloat(q.get(k));
+  for (const k of ["markerColor","stampColor","cardBg","cardText","mutedColor","pageBg"])
+    if (q.has(k)) CONFIG[k] = q.get(k);
+  for (const k of ["stampText","authorName","authorHandle","dateLabel"])
+    if (q.has(k)) CONFIG[k] = q.get(k);
+})();
+window.RECREATION_CONFIG = CONFIG;
+
+/* --- timeline: computed from CONFIG, never hardcoded --- */
+function computeTimeline(cfg){
+  const starts = cfg.highlights.map((_, i) => cfg.startDelayMs + i * (cfg.sweepMs + cfg.gapMs));
+  const lastEnd = starts.length ? starts[starts.length - 1] + cfg.sweepMs : cfg.startDelayMs;
+  const stampAt = lastEnd + cfg.holdBeforeStampMs;
+  const total = stampAt + cfg.stampPressMs + cfg.endHoldMs;
+  return { starts, lastEnd, stampAt, total };
+}
+const TIMELINE = computeTimeline(CONFIG);
+
+/* --- pure state at time t (ms): the whole choreography as a function --- */
+const clamp01 = v => Math.max(0, Math.min(1, v));
+function computeState(cfg, tl, t){
+  const enter = clamp01(t / cfg.cardEnterMs);
+  const fills = tl.starts.map(s => clamp01((t - s) / cfg.sweepMs)); // linear sweep: a hand marker moves at hand speed
+  const sp = clamp01((t - tl.stampAt) / cfg.stampPressMs);
+  const easeIn = sp * sp; // accelerating fall
+  let scale = cfg.stampFromScale + (1 - cfg.stampFromScale) * easeIn;
+  const settleT = t - (tl.stampAt + cfg.stampPressMs);
+  if (sp >= 1 && settleT >= 0 && settleT < 150) scale = 1 - 0.045 * Math.sin(Math.PI * (settleT / 150)); // impact dip, then settle
+  const shakeWindow = 240;
+  const shake = (t >= tl.stampAt && t < tl.stampAt + shakeWindow)
+    ? cfg.stampShakePx * (1 - (t - tl.stampAt) / shakeWindow) * Math.sin((t - tl.stampAt) / 22) : 0;
+  return {
+    enter, fills,
+    stamp: { progress: sp, scale, opacity: sp <= 0 ? 0 : Math.min(1, sp * 3), angleDeg: cfg.stampAngleDeg },
+    shake
+  };
+}
+
+/* --- segment the card text: find each highlight in reading order --- */
+function segmentLines(cfg){
+  const tokenLines = cfg.lines.map(text => [{ text, hl: -1 }]);
+  let cursorLine = 0, missing = [];
+  cfg.highlights.forEach((phrase, hi) => {
+    let placed = false;
+    for (let li = cursorLine; li < tokenLines.length && !placed; li++){
+      const toks = tokenLines[li];
+      for (let ti = 0; ti < toks.length; ti++){
+        if (toks[ti].hl !== -1) continue;
+        const idx = toks[ti].text.indexOf(phrase);
+        if (idx === -1) continue;
+        const before = toks[ti].text.slice(0, idx), after = toks[ti].text.slice(idx + phrase.length);
+        const repl = [];
+        if (before) repl.push({ text: before, hl: -1 });
+        repl.push({ text: phrase, hl: hi });
+        if (after) repl.push({ text: after, hl: -1 });
+        toks.splice(ti, 1, ...repl);
+        cursorLine = li; placed = true; break;
+      }
+    }
+    if (!placed) missing.push(phrase);
+  });
+  return { tokenLines, missing };
+}
+
+/* --- build the card DOM from CONFIG --- */
+const card = document.getElementById("card");
+card.style.background = CONFIG.cardBg;
+card.style.color = CONFIG.cardText;
+document.body.style.background = CONFIG.pageBg;
+const fills = [];
+let stampEl = null;
+(function build(){
+  const head = document.createElement("div"); head.className = "head";
+  const avatar = document.createElement("div"); avatar.className = "avatar"; avatar.textContent = CONFIG.avatarInitial;
+  const who = document.createElement("div"); who.className = "who";
+  const nameLine = document.createElement("div"); nameLine.className = "nameline";
+  const nameSpan = document.createElement("span"); nameSpan.textContent = CONFIG.authorName;
+  const badge = document.createElement("span"); badge.className = "badge"; badge.textContent = "✓";
+  nameLine.appendChild(nameSpan); nameLine.appendChild(badge);
+  const handle = document.createElement("div"); handle.className = "handle";
+  handle.style.color = CONFIG.mutedColor;
+  handle.textContent = CONFIG.authorHandle + " · " + CONFIG.dateLabel;
+  who.appendChild(nameLine); who.appendChild(handle);
+  const close = document.createElement("div"); close.className = "close"; close.textContent = "✕";
+  head.appendChild(avatar); head.appendChild(who); head.appendChild(close);
+  card.appendChild(head);
+
+  const seg = segmentLines(CONFIG);
+  window.RECREATION_SEGMENT = seg;
+  seg.tokenLines.forEach(toks => {
+    const lineEl = document.createElement("div"); lineEl.className = "line";
+    toks.forEach(tok => {
+      if (tok.hl === -1){
+        const s = document.createElement("span"); s.textContent = tok.text; lineEl.appendChild(s);
+      } else {
+        const hl = document.createElement("span"); hl.className = "hl";
+        const fill = document.createElement("span"); fill.className = "hl-fill";
+        fill.style.background = CONFIG.markerColor; fill.style.opacity = String(CONFIG.markerOpacity);
+        const word = document.createElement("span"); word.className = "hl-word"; word.textContent = tok.text;
+        hl.appendChild(fill); hl.appendChild(word); lineEl.appendChild(hl);
+        fills[tok.hl] = fill;
+      }
+    });
+    card.appendChild(lineEl);
+  });
+
+  const foot = document.createElement("div"); foot.className = "foot"; foot.style.color = CONFIG.mutedColor;
+  const likes = document.createElement("span"); likes.innerHTML = "";
+  const likeHeart = document.createElement("span"); likeHeart.className = "heart"; likeHeart.textContent = "♥ ";
+  const likeNum = document.createElement("span"); likeNum.textContent = CONFIG.likesLabel;
+  likes.appendChild(likeHeart); likes.appendChild(likeNum);
+  const views = document.createElement("span"); views.textContent = "▥ " + CONFIG.viewsLabel;
+  const share = document.createElement("span"); share.textContent = "⤴ Share";
+  foot.appendChild(likes); foot.appendChild(views); foot.appendChild(share);
+  card.appendChild(foot);
+
+  stampEl = document.createElement("div"); stampEl.className = "stamp";
+  stampEl.textContent = CONFIG.stampText; stampEl.style.color = CONFIG.stampColor;
+  card.appendChild(stampEl);
+})();
+
+/* --- clock: one rAF loop, all motion from computeState --- */
+let startTs = null, paused = false, frozenT = 0;
+function render(t){
+  const st = computeState(CONFIG, TIMELINE, t);
+  card.style.opacity = String(0.25 + 0.75 * st.enter);
+  card.style.transform = "translateY(" + ((1 - st.enter) * 14 + st.shake) + "px)";
+  for (let i = 0; i < fills.length; i++)
+    if (fills[i]) fills[i].style.width = (st.fills[i] * 100) + "%";
+  if (stampEl){
+    stampEl.style.opacity = String(st.stamp.opacity);
+    stampEl.style.transform = "rotate(" + st.stamp.angleDeg + "deg) scale(" + st.stamp.scale.toFixed(3) + ")";
+  }
+}
+function tick(ts){
+  requestAnimationFrame(tick);
+  if (startTs === null) startTs = ts;
+  if (paused) return;
+  const t = (ts - startTs) % TIMELINE.total;
+  frozenT = t; render(t);
+}
+requestAnimationFrame(tick);
+
+/* comparison sync hooks: the comparison page drives play/pause/restart */
+addEventListener("message", (e) => {
+  if (e.data === "recreation:restart"){ startTs = null; paused = false; }
+  else if (e.data === "recreation:pause"){ paused = true; }
+  else if (e.data === "recreation:play"){ paused = false; startTs = null; if (frozenT) { /* resume near frozen point is approximated by restart of cycle phase */ } }
+});
+
+/* test surface: the swap test drives these in a stubbed-DOM harness */
+window.RECREATION_TEST = { CONFIG, TIMELINE, computeTimeline, computeState, segmentLines, fills: () => fills.map(f => f ? { bg: f.style.background, width: f.style.width } : null), stampText: () => stampEl ? stampEl.textContent : null, stampColor: () => stampEl ? stampEl.style.color : null };
+</script>
+</body>
+</html>

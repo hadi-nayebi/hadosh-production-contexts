@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T12 — Marker Highlight Sweep + RECEIPT Stamp (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#0d1117;display:flex;align-items:center;justify-content:center;
+       font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+  #stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  .card{position:relative;width:86%;max-width:560px;background:#ffffff;color:#14181d;
+        border-radius:14px;padding:16px 20px 12px;box-shadow:0 10px 34px rgba(0,0,0,.5);
+        box-sizing:border-box;flex:0 0 auto}
+  .fill-layer{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:14px}
+  .fill-seg{position:absolute;border-radius:3px;transform:skewX(-8deg) rotate(-.6deg);pointer-events:none}
+  .head{position:relative;z-index:1;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .avatar{flex:0 0 auto;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px}
+  .who{min-width:0}
+  .nameline{display:flex;align-items:center;gap:5px;font-weight:800;font-size:16px;white-space:nowrap}
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+         border-radius:50%;font-size:10px;font-weight:900}
+  .handle{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .close{margin-left:auto;font-size:16px;font-weight:700}
+  .line{position:relative;z-index:1;font-size:19px;line-height:1.4;font-weight:600}
+  .hl{position:relative;display:inline;padding:0 1px}
+  .hl-word{position:relative;z-index:1;font-weight:800}
+  .stamp-zone{position:relative;z-index:1;margin-top:6px}
+  .stamp{position:absolute;right:4%;top:50%;z-index:5;padding:3px 12px 4px;
+         font-weight:900;font-size:26px;letter-spacing:.1em;text-transform:uppercase;
+         border:4px double currentColor;border-radius:5px;opacity:0;pointer-events:none;
+         background:rgba(255,255,255,.08);white-space:nowrap}
+  .foot{position:relative;z-index:1;display:flex;gap:26px;align-items:center;margin-top:8px;font-size:14px}
+  .warn{position:absolute;left:8px;bottom:8px;z-index:9;background:#5a1010;color:#ffd7d7;
+        font-size:12px;padding:6px 10px;border-radius:6px;max-width:90%}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="card" id="card"></div>
+</div>
+<script>
+"use strict";
+/* ================================================================
+   T12 — MARKER HIGHLIGHT SWEEP + RECEIPT STAMP (attempt 2 build)
+   Technique: a yellow marker sweeps phrases in reading order on a
+   post card; a red stamp presses the verdict onto the card; the
+   stamped card then holds.
+   PARAMETERIZED, NOT TRACED: every content / timing / palette /
+   layout value is read from CONFIG below. No specimen media.
+   Construction, in order: layout -> reserved stamp-zone allocation
+   -> per-visual-line fill measurement -> fit-to-stage scaling ->
+   final geometry measurement (window.RECREATION_GEOMETRY).
+   Phrase matching runs over NORMALIZED text mapped back to DOM
+   ranges, so a phrase crossing source lines/nodes can match;
+   matching is occurrence-aware and cursor-ordered; a missing
+   phrase consumes no timeline slot and raises a visible warning.
+   URL overrides: ?lines=A|B&highlights=X|Y&sweepMs=300&...
+   ================================================================ */
+const CONFIG = {
+  authorName: "aditazzz",
+  authorHandle: "@aditazzz",
+  dateLabel: "10/27/26",
+  avatarInitial: "a",
+  avatarColor: "#7a4fd0",
+  avatarTextColor: "#ffffff",
+  badgeColor: "#1d9bf0",
+  badgeTextColor: "#ffffff",
+  badgeGlyph: "✓",
+  closeGlyph: "✕",
+  heartGlyph: "♥ ",
+  viewsGlyph: "▥ ",
+  shareGlyph: "⤴ ",
+  shareLabel: "Share",
+  heartColor: "#e0245e",
+  lines: [
+    "Currently upskilling to transition",
+    "to a Principal Slopcore Architect role.",
+    "Trying to stay ahead of the curve.",
+    "Follow along and support my",
+    "professional development."
+  ],
+  highlights: ["Principal Slopcore Architect"],
+  sweepMs: 1500,
+  gapMs: 350,
+  startDelayMs: 700,
+  cardEnterMs: 450,
+  holdBeforeStampMs: 380,
+  stampText: "RECEIPT",
+  stampColor: "#c1272d",
+  stampAngleDeg: -7,
+  stampPressMs: 190,
+  stampFromScale: 2.6,
+  stampSettleMs: 150,
+  stampShakeMs: 240,
+  stampShakePx: 3,
+  shakeDivisorMs: 22,
+  stampZoneHeightPx: 52,
+  markerColor: "#ffd81a",
+  markerOpacity: 0.9,
+  cardBg: "#ffffff",
+  cardText: "#14181d",
+  mutedColor: "#5b6770",
+  pageBg: "#0d1117",
+  bodyFontPx: 19,
+  likesLabel: "5",
+  viewsLabel: "169",
+  endHoldMs: 6000
+};
+/* numeric ranges for load-time validation/clamping */
+const NUM_RANGES = {
+  sweepMs:[50,10000], gapMs:[0,5000], startDelayMs:[0,5000], cardEnterMs:[0,3000],
+  holdBeforeStampMs:[0,5000], stampPressMs:[30,2000], stampFromScale:[1,5],
+  stampSettleMs:[0,1000], stampShakeMs:[0,2000], stampShakePx:[0,20], shakeDivisorMs:[5,100],
+  stampAngleDeg:[-45,45], stampZoneHeightPx:[30,140], markerOpacity:[0,1], bodyFontPx:[10,32],
+  endHoldMs:[0,20000]
+};
+function validateConfig(cfg){
+  const warnings = [];
+  for (const k of Object.keys(NUM_RANGES)){
+    const v = Number(cfg[k]);
+    if (!isFinite(v)){ cfg[k] = CONFIG_DEFAULTS[k]; warnings.push("config " + k + " not numeric; default restored"); }
+    else cfg[k] = Math.max(NUM_RANGES[k][0], Math.min(NUM_RANGES[k][1], v));
+  }
+  if (!Array.isArray(cfg.lines) || !cfg.lines.length || cfg.lines.some(l => typeof l !== "string")){
+    cfg.lines = ["(no card text configured)"]; warnings.push("config lines invalid; fallback line used");
+  }
+  if (!Array.isArray(cfg.highlights)) cfg.highlights = [];
+  cfg.highlights = cfg.highlights.filter(h => typeof h === "string" && h.trim().length > 0);
+  return warnings;
+}
+const CONFIG_DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+const CONFIG_WARNINGS = validateConfig(CONFIG);
+/* URL overrides (used by the swap test), then re-validate */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("lines")) CONFIG.lines = q.get("lines").split("|");
+  if (q.has("highlights")) CONFIG.highlights = q.get("highlights").split("|");
+  for (const k of Object.keys(NUM_RANGES)) if (q.has(k)) CONFIG[k] = parseFloat(q.get(k));
+  for (const k of ["markerColor","stampColor","cardBg","cardText","mutedColor","pageBg","avatarColor","badgeColor","heartColor"])
+    if (q.has(k)) CONFIG[k] = q.get(k);
+  for (const k of ["stampText","authorName","authorHandle","dateLabel","shareLabel"])
+    if (q.has(k)) CONFIG[k] = q.get(k);
+  validateConfig(CONFIG);
+})();
+window.RECREATION_CONFIG = CONFIG;
+
+/* --- normalized text matching with mapping back to source ranges --- */
+function normalizeWithMap(lines){
+  let norm = "", map = [];
+  lines.forEach((line, li) => {
+    if (li > 0){ norm += " "; map.push({ line: li, offset: 0, joiner: true }); }
+    let prevSpace = false;
+    for (let i = 0; i < line.length; i++){
+      const ch = line[i];
+      if (/\s/.test(ch)){ if (prevSpace) continue; norm += " "; map.push({ line: li, offset: i }); prevSpace = true; }
+      else { norm += ch; map.push({ line: li, offset: i }); prevSpace = false; }
+    }
+  });
+  return { norm, map };
+}
+function normalizePhrase(p){ return p.replace(/\s+/g, " ").trim(); }
+/* segmentText: pure. Returns per-line segments per highlight + missing list.
+   Occurrence-aware + cursor-ordered: the search resumes after the previous
+   placement, so repeated phrases take successive occurrences. */
+function segmentText(lines, highlights){
+  const built = normalizeWithMap(lines);
+  const norm = built.norm, map = built.map;
+  let cursor = 0;
+  const placed = [], missing = [];
+  highlights.forEach((phrase, hi) => {
+    const np = normalizePhrase(phrase);
+    if (!np){ missing.push(phrase); return; }
+    const at = norm.indexOf(np, cursor);
+    if (at === -1){ missing.push(phrase); return; }
+    const end = at + np.length;
+    const perLine = [];
+    let cur = null;
+    for (let i = at; i < end; i++){
+      const m = map[i];
+      if (m.joiner) continue;
+      if (!cur || cur.line !== m.line){ cur = { line: m.line, start: m.offset, end: m.offset + 1 }; perLine.push(cur); }
+      else cur.end = m.offset + 1;
+    }
+    perLine.forEach(s => { s.text = lines[s.line].slice(s.start, s.end); s.hl = hi; });
+    placed.push({ hi, phrase, segments: perLine });
+    cursor = end;
+  });
+  return { placed, missing };
+}
+function tokenLinesFrom(lines, placed){
+  const segsByLine = lines.map(() => []);
+  placed.forEach(p => p.segments.forEach(s => segsByLine[s.line].push(s)));
+  return lines.map((text, li) => {
+    const segs = segsByLine[li].slice().sort((a, b) => a.start - b.start);
+    const toks = []; let pos = 0;
+    segs.forEach(s => {
+      if (s.start > pos) toks.push({ text: text.slice(pos, s.start), hl: -1 });
+      toks.push({ text: text.slice(s.start, s.end), hl: s.hl });
+      pos = s.end;
+    });
+    if (pos < text.length) toks.push({ text: text.slice(pos), hl: -1 });
+    return toks.length ? toks : [{ text, hl: -1 }];
+  });
+}
+
+/* --- timeline: computed from CONFIG over PLACED highlights only --- */
+function computeTimeline(cfg, placedCount){
+  const n = (typeof placedCount === "number") ? placedCount : cfg.highlights.length;
+  const starts = [];
+  for (let i = 0; i < n; i++) starts.push(cfg.startDelayMs + i * (cfg.sweepMs + cfg.gapMs));
+  const lastEnd = n ? starts[n - 1] + cfg.sweepMs : cfg.startDelayMs;
+  const stampAt = lastEnd + cfg.holdBeforeStampMs;
+  const contact = stampAt + cfg.stampPressMs;
+  const actionEnd = Math.max(contact + cfg.stampSettleMs, contact + cfg.stampShakeMs);
+  const total = stampAt + cfg.stampPressMs + cfg.endHoldMs;
+  return { starts, lastEnd, stampAt, contact, actionEnd, total };
+}
+
+/* --- pure state at time t (ms) --- */
+const clamp01 = v => Math.max(0, Math.min(1, v));
+function computeState(cfg, tl, t){
+  const enter = clamp01(t / cfg.cardEnterMs);
+  const fills = tl.starts.map(s => clamp01((t - s) / cfg.sweepMs));
+  const sp = clamp01((t - tl.stampAt) / cfg.stampPressMs);
+  const easeIn = sp * sp;
+  let scale = cfg.stampFromScale + (1 - cfg.stampFromScale) * easeIn;
+  const settleT = t - tl.contact;
+  if (sp >= 1 && settleT >= 0 && settleT < cfg.stampSettleMs)
+    scale = 1 - 0.045 * Math.sin(Math.PI * (settleT / cfg.stampSettleMs));
+  /* shake starts AT CONTACT (stamp fully pressed) and decays afterward */
+  const shakeT = t - tl.contact;
+  const shake = (shakeT >= 0 && shakeT < cfg.stampShakeMs)
+    ? cfg.stampShakePx * (1 - shakeT / cfg.stampShakeMs) * Math.sin(shakeT / cfg.shakeDivisorMs) : 0;
+  return { enter, fills,
+    stamp: { progress: sp, scale, opacity: sp <= 0 ? 0 : Math.min(1, sp * 3), angleDeg: cfg.stampAngleDeg },
+    shake };
+}
+/* per-visual-line segment progress: a phrase's progress is divided across
+   its line segments in reading order, proportional to segment width */
+function segmentLocalProgress(phraseProgress, seg){
+  if (seg.fracEnd <= seg.fracStart) return phraseProgress >= seg.fracEnd ? 1 : 0;
+  return clamp01((phraseProgress - seg.fracStart) / (seg.fracEnd - seg.fracStart));
+}
+
+/* --- build the card DOM from CONFIG --- */
+const card = document.getElementById("card");
+const stage = document.getElementById("stage");
+card.style.background = CONFIG.cardBg;
+card.style.color = CONFIG.cardText;
+document.body.style.background = CONFIG.pageBg;
+const SEGMENTATION = segmentText(CONFIG.lines, CONFIG.highlights);
+const TIMELINE = computeTimeline(CONFIG, SEGMENTATION.placed.length);
+window.RECREATION_SEGMENT = SEGMENTATION;
+const hlSpans = [];
+let stampEl = null, stampZoneEl = null, fillLayer = null, lineEls = [], headEl = null, footEl = null;
+(function build(){
+  fillLayer = document.createElement("div"); fillLayer.className = "fill-layer"; card.appendChild(fillLayer);
+  const head = document.createElement("div"); head.className = "head"; headEl = head;
+  const avatar = document.createElement("div"); avatar.className = "avatar";
+  avatar.style.background = CONFIG.avatarColor; avatar.style.color = CONFIG.avatarTextColor;
+  avatar.textContent = CONFIG.avatarInitial;
+  const who = document.createElement("div"); who.className = "who";
+  const nameLine = document.createElement("div"); nameLine.className = "nameline";
+  const nameSpan = document.createElement("span"); nameSpan.textContent = CONFIG.authorName;
+  const badge = document.createElement("span"); badge.className = "badge";
+  badge.style.background = CONFIG.badgeColor; badge.style.color = CONFIG.badgeTextColor;
+  badge.textContent = CONFIG.badgeGlyph;
+  nameLine.appendChild(nameSpan); nameLine.appendChild(badge);
+  const handle = document.createElement("div"); handle.className = "handle";
+  handle.style.color = CONFIG.mutedColor;
+  handle.textContent = CONFIG.authorHandle + " · " + CONFIG.dateLabel;
+  who.appendChild(nameLine); who.appendChild(handle);
+  const close = document.createElement("div"); close.className = "close"; close.textContent = CONFIG.closeGlyph;
+  head.appendChild(avatar); head.appendChild(who); head.appendChild(close);
+  card.appendChild(head);
+
+  const toks = tokenLinesFrom(CONFIG.lines, SEGMENTATION.placed);
+  toks.forEach(lineToks => {
+    const lineEl = document.createElement("div"); lineEl.className = "line";
+    lineEl.style.fontSize = CONFIG.bodyFontPx + "px";
+    lineToks.forEach(tok => {
+      if (tok.hl === -1){
+        const s = document.createElement("span"); s.textContent = tok.text; lineEl.appendChild(s);
+      } else {
+        const hl = document.createElement("span"); hl.className = "hl";
+        const word = document.createElement("span"); word.className = "hl-word"; word.textContent = tok.text;
+        hl.appendChild(word); lineEl.appendChild(hl);
+        hlSpans.push({ hi: tok.hl, el: hl, wordEl: word });
+      }
+    });
+    lineEls.push(lineEl); card.appendChild(lineEl);
+  });
+
+  /* reserved stamp zone: in-flow row below the body text; the stamp lives
+     inside it, so its rect can intersect no body line by construction */
+  stampZoneEl = document.createElement("div"); stampZoneEl.className = "stamp-zone";
+  stampZoneEl.style.height = CONFIG.stampZoneHeightPx + "px";
+  stampEl = document.createElement("div"); stampEl.className = "stamp";
+  stampEl.textContent = CONFIG.stampText; stampEl.style.color = CONFIG.stampColor;
+  stampEl.style.transform = "translateY(-50%)";
+  stampZoneEl.appendChild(stampEl); card.appendChild(stampZoneEl);
+
+  const foot = document.createElement("div"); foot.className = "foot"; footEl = foot;
+  foot.style.color = CONFIG.mutedColor;
+  const likes = document.createElement("span");
+  const likeHeart = document.createElement("span"); likeHeart.style.color = CONFIG.heartColor;
+  likeHeart.textContent = CONFIG.heartGlyph;
+  const likeNum = document.createElement("span"); likeNum.textContent = CONFIG.likesLabel;
+  likes.appendChild(likeHeart); likes.appendChild(likeNum);
+  const views = document.createElement("span"); views.textContent = CONFIG.viewsGlyph + CONFIG.viewsLabel;
+  const share = document.createElement("span"); share.textContent = CONFIG.shareGlyph + CONFIG.shareLabel;
+  foot.appendChild(likes); foot.appendChild(views); foot.appendChild(share);
+  card.appendChild(foot);
+
+  if (SEGMENTATION.missing.length || CONFIG_WARNINGS.length){
+    const warn = document.createElement("div"); warn.className = "warn"; warn.id = "build-warning";
+    const parts = [];
+    if (SEGMENTATION.missing.length) parts.push("Highlight not found (no timeline slot): " + SEGMENTATION.missing.join(", "));
+    if (CONFIG_WARNINGS.length) parts.push(CONFIG_WARNINGS.join("; "));
+    warn.textContent = "⚠ " + parts.join(" · ");
+    stage.appendChild(warn);
+    if (typeof console !== "undefined" && console.warn) console.warn("[T12] " + warn.textContent);
+  }
+})();
+
+/* --- per-visual-line fill segments: measured after layout settles --- */
+let fillSegs = [], currentScale = 1;
+function layoutFills(){
+  fillSegs = [];
+  if (!fillLayer) return;
+  while (fillLayer.firstChild) fillLayer.removeChild(fillLayer.firstChild);
+  if (typeof document.createRange !== "function" || !card.getBoundingClientRect) return;
+  const cardRect = card.getBoundingClientRect();
+  const byHi = {};
+  hlSpans.forEach(hs => {
+    const node = hs.wordEl.firstChild;
+    if (!node) return;
+    const range = document.createRange(); range.selectNodeContents(node);
+    let rects = [];
+    if (range.getClientRects) rects = Array.prototype.slice.call(range.getClientRects());
+    rects = rects.filter(r => r.width > 1 && r.height > 1);
+    if (!rects.length && hs.el.getBoundingClientRect) rects = [hs.el.getBoundingClientRect()];
+    rects.sort((a, b) => (Math.abs(a.top - b.top) > 2 ? a.top - b.top : a.left - b.left));
+    rects.forEach(r => {
+      const seg = { hi: hs.hi,
+        x: (r.left - cardRect.left) / currentScale, y: (r.top - cardRect.top) / currentScale,
+        w: r.width / currentScale, h: r.height / currentScale, fracStart: 0, fracEnd: 0, el: null };
+      const el = document.createElement("div"); el.className = "fill-seg";
+      el.style.background = CONFIG.markerColor; el.style.opacity = String(CONFIG.markerOpacity);
+      el.style.left = seg.x + "px"; el.style.top = (seg.y + seg.h * 0.08) + "px";
+      el.style.height = (seg.h * 0.84) + "px"; el.style.width = "0px";
+      fillLayer.appendChild(el); seg.el = el;
+      fillSegs.push(seg); (byHi[hs.hi] = byHi[hs.hi] || []).push(seg);
+    });
+  });
+  Object.keys(byHi).forEach(hi => {
+    const segs = byHi[hi]; const total = segs.reduce((a, s) => a + s.w, 0) || 1; let acc = 0;
+    segs.forEach(s => { s.fracStart = acc / total; acc += s.w; s.fracEnd = acc / total; });
+  });
+}
+/* --- fit: scale the laid-out card into the stage (after zone allocation) --- */
+function applyFit(){
+  currentScale = 1; card.style.transform = "";
+  const sw = stage.clientWidth || card.offsetWidth, sh = stage.clientHeight || card.offsetHeight;
+  const cw = card.offsetWidth || 1, ch = card.offsetHeight || 1;
+  currentScale = Math.min(1, (sw - 8) / cw, (sh - 8) / ch);
+  if (!(currentScale > 0)) currentScale = 1;
+  return currentScale;
+}
+/* layout -> zone (already in flow) -> fill measurement -> fit -> measure */
+function settleLayout(){
+  currentScale = 1; card.style.transform = "";
+  layoutFills();
+  const s = applyFit();
+  render(frozenT || 0);
+  return s;
+}
+function rectOf(el){ if (!el || !el.getBoundingClientRect) return null; const r = el.getBoundingClientRect();
+  return { x: r.left, y: r.top, w: r.width, h: r.height, right: r.right, bottom: r.bottom }; }
+function overlaps(a, b){ return !!(a && b && a.x < b.right - 0.5 && b.x < a.right - 0.5 && a.y < b.bottom - 0.5 && b.y < a.bottom - 0.5); }
+function measureGeometry(){
+  const stageRect = rectOf(stage), cardRect = rectOf(card), stampRect = rectOf(stampEl);
+  const bodyRects = lineEls.map(rectOf), segRects = fillSegs.map(s => s.el ? rectOf(s.el) : null);
+  const stampVsBody = bodyRects.map(r => overlaps(stampRect, r));
+  const stampVsSeg = segRects.map(r => overlaps(stampRect, r));
+  const inside = r => !!(r && stageRect && r.x >= stageRect.x - 0.5 && r.y >= stageRect.y - 0.5 && r.right <= stageRect.right + 0.5 && r.bottom <= stageRect.bottom + 0.5);
+  return { viewport: { w: stage.clientWidth, h: stage.clientHeight }, scale: currentScale,
+    cardRect, stampRect, bodyRects, headRect: rectOf(headEl), footRect: rectOf(footEl),
+    stampZoneRect: rectOf(stampZoneEl), fillSegmentCount: fillSegs.length,
+    fillSegmentsPerHi: fillSegs.reduce((m, s) => { m[s.hi] = (m[s.hi] || 0) + 1; return m; }, {}),
+    stampOverlapsBody: stampVsBody.some(Boolean), stampOverlapsAnyBodyLine: stampVsBody,
+    stampOverlapsFill: stampVsSeg.some(Boolean),
+    headerContained: inside(rectOf(headEl)), footerContained: inside(rectOf(footEl)),
+    cardContained: inside(cardRect),
+    effectiveBodyPx: CONFIG.bodyFontPx * currentScale };
+}
+window.RECREATION_GEOMETRY = measureGeometry;
+
+/* --- clock: one rAF loop, all motion from computeState --- */
+let startTs = null, paused = false, frozenT = 0;
+function render(t){
+  const st = computeState(CONFIG, TIMELINE, t);
+  card.style.opacity = String(0.25 + 0.75 * st.enter);
+  card.style.transform = "scale(" + currentScale + ") translateY(" + ((1 - st.enter) * 14 + st.shake) + "px)";
+  fillSegs.forEach(seg => {
+    if (!seg.el) return;
+    const p = (st.fills[seg.hi] || 0);
+    seg.el.style.width = (seg.w * segmentLocalProgress(p, seg)) + "px";
+  });
+  if (stampEl){
+    stampEl.style.opacity = String(st.stamp.opacity);
+    stampEl.style.transform = "translateY(-50%) rotate(" + st.stamp.angleDeg + "deg) scale(" + st.stamp.scale.toFixed(3) + ")";
+  }
+}
+function tick(ts){
+  requestAnimationFrame(tick);
+  if (startTs === null) startTs = ts;
+  if (paused) return;
+  const t = (ts - startTs) % TIMELINE.total;
+  frozenT = t; render(t);
+}
+if (typeof requestAnimationFrame === "function") requestAnimationFrame(tick);
+if (typeof window !== "undefined" && window.addEventListener){
+  let rzTimer = null;
+  window.addEventListener("resize", () => { if (rzTimer) clearTimeout(rzTimer); rzTimer = setTimeout(settleLayout, 80); });
+}
+if (typeof document !== "undefined" && document.fonts && document.fonts.ready && document.fonts.ready.then)
+  document.fonts.ready.then(() => settleLayout());
+if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => settleLayout());
+else settleLayout();
+
+addEventListener("message", (e) => {
+  if (e.data === "recreation:restart"){ startTs = null; paused = false; }
+  else if (e.data === "recreation:pause"){ paused = true; }
+  else if (e.data === "recreation:play"){ paused = false; startTs = null; }
+});
+
+window.RECREATION_TEST = { CONFIG, TIMELINE, computeTimeline, computeState, segmentText, tokenLinesFrom,
+  segmentLocalProgress, validateConfig,
+  segmentation: () => SEGMENTATION,
+  fills: () => fillSegs.map(s => ({ hi: s.hi, w: s.w, fracStart: s.fracStart, fracEnd: s.fracEnd })),
+  stampText: () => stampEl ? stampEl.textContent : null,
+  stampColor: () => stampEl ? stampEl.style.color : null,
+  geometry: measureGeometry, settleLayout };
+</script>
+</body>
+</html>

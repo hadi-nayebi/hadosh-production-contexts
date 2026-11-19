@@ -1,0 +1,117 @@
+Consumer: practice job section 5 Verify — this score decides whether this recreation attempt passes, and feeds the artifact's permanent scores record.
+Working record: this payload only (neutral facts + source + neutral check packet below). BODY-WRITE: name what you wrote into the body; if you write no files, say so.
+Bar: average at least 85 across five lenses AND no lens below 70. Scores are integers from 0 to 100. Judge only the build in front of you.
+End your return with exactly: SCORE: <integer>
+
+LENS: readability. Judge legibility and hierarchy at phone size (360px stage, logic model only; rendering unverified): headline hierarchy, support text sizes and fit margins at every wrap state, checklist/warning fit, stack position, and whether headline transitions ever overlap text.
+
+NEUTRAL TECHNIQUE FACTS — T122 headline-card grammar
+A headline-card grammar: dark-navy grid ground; a bold white headline at top with operative spans either blue or inverted on a white chip; a support zone below the headline that is, per beat, an insert card, nothing, or an accumulating checklist followed by a warning line.
+Segment window 14 seconds, looping. Beat starts at 0, 4000, 7000, 11000 ms. On the checklist beat, rows reveal at beat-local offsets and a warning follows. Headline replacement between beats is discrete: the previous headline leaves and the next enters with a short fade-in. Checklist timing values in the source are construction defaults.
+The recreation is one self-contained HTML file, parameterized by a CONFIG object; all content, timing, geometry and palette are CONFIG values. It loads no external assets and no specimen media.
+
+NEUTRAL OWN-CHECK PACKET (logic-level, no browser; rendering unverified)
+- Boundary states at every beat boundary and at loop wrap: outgoing headline opacity is zero immediately; incoming opacity rises over the enter duration and reaches one. 25 of 25 behavior checks pass.
+- Seek: seeking renders the state for the requested timestamp deterministically; repeated seeks to the same timestamp give identical states; backward seeks and wrap seeks verified; continuous playback and comparison-style repeated synchronization use the same rendering function.
+- Swap suite in the unchanged renderer (CONFIG-only changes): new headline wording renders; compressed timing (shorter beat starts and shorter cycle) scales checklist reveals proportionally and the final beat renders; a complete palette change leaves no trace of the previous accent color in any rendered border or variable; an overlong headline and a single oversized token shrink to a stated minimum size with wrapping enabled instead of clipping. 16 of 16 swap checks pass.
+- Fit model at 360px stage: every text element measured at every reachable wrap state; all inside their containers; completed checklist stack inside the stage. Zero fit hits. Zero census hits (every CONFIG key has a consumed effect; no unlisted literal outside CONFIG).
+- Magnitude probe: every numeric CONFIG field probed with a non-finite value; all fields rejected by validation.
+
+RECREATION SOURCE (sha256 fafb1e68a866dc4497dbd09c3ecc36b263ab13e7bc6faf9cc658cea4ba52d03c):
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T122 headline-card grammar — recreation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh}
+#stage{position:relative;overflow:hidden}
+.headline{position:absolute;left:0;right:0;font-weight:800;line-height:1.25}
+.headline .blue{color:var(--blue)}
+.headline .chip{display:inline-block}
+.support{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center}
+.card{display:flex;align-items:center;justify-content:center;text-align:center}
+.check{display:flex;flex-direction:column;align-items:center}
+.checkrow{display:flex;align-items:center}
+.beat{position:absolute;inset:0;opacity:0;pointer-events:none}
+</style></head><body>
+<div id="stage"></div>
+<script>
+const CONFIG={
+ stage:{w:360,h:203},
+ cycleMs:14000,
+ grid:{cellPx:24,linePx:1},
+ enterMs:450,
+ headline:{top:18,fontPx:20,chipRadius:6,padX:18,chipPadY:1,chipPadX:7,cardRadius:10,checkRadius:8,warnRadius:8,overflow:"shrink-to-floor",minFontPx:11},
+ support:{top:86},
+ insert:{w:250,h:80,fontPx:13,pad:10,borderW:2},
+ check:{w:210,rowH:24,gap:6,fontPx:12,offsets:[0,600,1200],warnAt:1800,warnFontPx:12,warnW:280,borderW:1,rowPadY:0,rowPadX:10,warnPadY:5,warnPadX:8,glyph:"✓  ",baseBeatMs:4000},
+ font:"Arial, Helvetica, sans-serif",
+ beats:[
+  {headline:[{t:"I'll show you "},{t:"step by step",style:"chip"}],support:{kind:"insertCard",label:"HEIR TO AUSTRIAN THRONE ASSASSINATED"}},
+  {headline:[{t:"Follow these "},{t:"exact steps",style:"blue"}],support:{kind:"none"}},
+  {headline:[{t:"Or the quality "},{t:"won't match",style:"chip"}],support:{kind:"checklist",items:["Step 1","Step 2","Step 3"],warning:"Skip a step → lower quality results"}},
+  {headline:[{t:"Don't skip "},{t:"any part",style:"chip"}],support:{kind:"none"}}
+ ],
+ atMs:[0,4000,7000,11000],
+ palette:{field:"#0b1026",grid:"rgba(120,140,255,0.07)",ink:"#ffffff",blue:"#3b82f6",chipBg:"#ffffff",chipInk:"#10131f",card:"#131a33",warnBg:"#3a1420",warnInk:"#ffb3c1"},
+ bodyBg:"#05070f"
+};
+function validateConfig(cfg){
+ (function walk(v,path){
+   if(typeof v==="number"&&!Number.isFinite(v))throw new Error("non-finite CONFIG field: "+path);
+   if(Array.isArray(v))v.forEach((x,i)=>walk(x,path+"["+i+"]"));
+   else if(v&&typeof v==="object")Object.keys(v).forEach(k=>walk(v[k],path+"."+k));
+ })(cfg,"CONFIG");
+ return cfg;
+}
+validateConfig(CONFIG);
+function beatDur(cfg,idx){const next=idx+1<cfg.atMs.length?cfg.atMs[idx+1]:cfg.cycleMs;return next-cfg.atMs[idx];}
+function effCheck(cfg,idx){const d=beatDur(cfg,idx);const s=d/cfg.check.baseBeatMs;return{offsets:cfg.check.offsets.map(o=>o*s),warnAt:cfg.check.warnAt*s};}
+function estWidth(text,fontPx){let w=0;for(const ch of text){let f=0.55;if(ch===" ")f=0.32;else if(ch>="A"&&ch<="Z")f=0.68;else if(ch==="'")f=0.30;else if(ch==="→")f=0.9;w+=f*fontPx;}return w;}
+function headlineFont(cfg,text){const avail=cfg.stage.w-2*cfg.headline.padX;const base=cfg.headline.fontPx;if(cfg.headline.overflow!=="shrink-to-floor")return base;const w=estWidth(text,base);if(w<=avail)return base;return Math.max(cfg.headline.minFontPx,Math.floor(base*avail/w));}
+const stage=document.getElementById('stage');
+document.body.style.background=CONFIG.bodyBg;
+stage.style.width=CONFIG.stage.w+'px';stage.style.height=CONFIG.stage.h+'px';
+stage.style.backgroundColor=CONFIG.palette.field;
+stage.style.setProperty('--blue',CONFIG.palette.blue);
+stage.style.fontFamily=CONFIG.font;
+const gp=CONFIG.grid.cellPx,gl=CONFIG.grid.linePx;
+stage.style.backgroundImage='linear-gradient('+CONFIG.palette.grid+' '+gl+'px, transparent '+gl+'px),linear-gradient(90deg,'+CONFIG.palette.grid+' '+gl+'px, transparent '+gl+'px)';
+stage.style.backgroundSize=gp+'px '+gp+'px';
+const beatEls=CONFIG.beats.map((b,bi)=>{
+ const el=document.createElement('div');el.className='beat';
+ const h=document.createElement('div');h.className='headline';h.style.top=CONFIG.headline.top+'px';
+ const fullText=b.headline.map(s=>s.t).join('');
+ const fpx=headlineFont(CONFIG,fullText);
+ h.style.fontSize=fpx+'px';h.dataset.fontPx=fpx;h.style.color=CONFIG.palette.ink;h.style.padding='0 '+CONFIG.headline.padX+'px';h.style.overflowWrap='anywhere';
+ b.headline.forEach(s=>{const sp=document.createElement('span');sp.textContent=s.t;if(s.style==='blue'){sp.className='blue';}if(s.style==='chip'){sp.className='chip';sp.style.background=CONFIG.palette.chipBg;sp.style.color=CONFIG.palette.chipInk;sp.style.borderRadius=CONFIG.headline.chipRadius+'px';sp.style.padding=CONFIG.headline.chipPadY+'px '+CONFIG.headline.chipPadX+'px';}h.appendChild(sp);});
+ el.appendChild(h);
+ const sup=document.createElement('div');sup.className='support';sup.style.top=CONFIG.support.top+'px';
+ if(b.support.kind==='insertCard'){const c=document.createElement('div');c.className='card';c.style.width=CONFIG.insert.w+'px';c.style.height=CONFIG.insert.h+'px';c.style.background=CONFIG.palette.card;c.style.border=CONFIG.insert.borderW+'px solid '+CONFIG.palette.blue;c.style.borderRadius=CONFIG.headline.cardRadius+'px';c.style.color=CONFIG.palette.ink;c.style.fontSize=CONFIG.insert.fontPx+'px';c.style.padding=CONFIG.insert.pad+'px';c.textContent=b.support.label;sup.appendChild(c);}
+ if(b.support.kind==='checklist'){
+   const wrap=document.createElement('div');wrap.className='check';wrap.style.gap=CONFIG.check.gap+'px';wrap.dataset.beat=bi;
+   b.support.items.forEach((it,i)=>{const r=document.createElement('div');r.className='checkrow';r.dataset.idx=i;r.style.width=CONFIG.check.w+'px';r.style.height=CONFIG.check.rowH+'px';r.style.background=CONFIG.palette.card;r.style.border=CONFIG.check.borderW+'px solid '+CONFIG.palette.blue;r.style.borderRadius=CONFIG.headline.checkRadius+'px';r.style.color=CONFIG.palette.ink;r.style.fontSize=CONFIG.check.fontPx+'px';r.style.padding=CONFIG.check.rowPadY+'px '+CONFIG.check.rowPadX+'px';r.style.opacity='0';r.textContent=CONFIG.check.glyph+it;wrap.appendChild(r);});
+   const w=document.createElement('div');w.className='warn';w.dataset.warn='1';w.style.width=CONFIG.check.warnW+'px';w.style.background=CONFIG.palette.warnBg;w.style.color=CONFIG.palette.warnInk;w.style.fontSize=CONFIG.check.warnFontPx+'px';w.style.padding=CONFIG.check.warnPadY+'px '+CONFIG.check.warnPadX+'px';w.style.borderRadius=CONFIG.headline.warnRadius+'px';w.style.opacity='0';w.textContent=b.support.warning;wrap.appendChild(w);
+   sup.appendChild(wrap);
+ }
+ el.appendChild(sup);stage.appendChild(el);return el;
+});
+let start=performance.now();
+function render(t){
+ let cur=0;CONFIG.atMs.forEach((a,i)=>{if(t>=a)cur=i;});
+ const local=t-CONFIG.atMs[cur];
+ const enter=CONFIG.enterMs>0?Math.min(1,Math.max(0,local/CONFIG.enterMs)):1;
+ beatEls.forEach((el,i)=>{el.style.opacity=i===cur?String(enter):'0';});
+ const b=CONFIG.beats[cur];
+ if(b.support.kind==='checklist'){
+   const eff=effCheck(CONFIG,cur);
+   const wrap=beatEls[cur].querySelector('.check');
+   if(wrap){wrap.querySelectorAll('.checkrow').forEach(r=>{const idx=+r.dataset.idx;r.style.opacity=local>=eff.offsets[idx]?'1':'0';});
+   const w=wrap.querySelector('[data-warn]');if(w)w.style.opacity=local>=eff.warnAt?'1':'0';}
+ }
+ return cur;
+}
+function tick(now){const t=((now-start)%CONFIG.cycleMs+CONFIG.cycleMs)%CONFIG.cycleMs;render(t);requestAnimationFrame(tick);}
+requestAnimationFrame(tick);
+window.__T122={CONFIG,validateConfig,effCheck,headlineFont,seek(ms){const m=((ms%CONFIG.cycleMs)+CONFIG.cycleMs)%CONFIG.cycleMs;start=performance.now()-m;render(m);}};
+</script></body></html>
