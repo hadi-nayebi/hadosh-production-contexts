@@ -1,0 +1,942 @@
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream. If a check needs material not in this stream, name it as a gap instead of fetching it.
+
+CONSUMER: recreation job INSTRUCTION §1 Observe-exit gate for Cycle 035 Wave 32 — the COMPLETION wave for Cycle 034 Wave 31 (items T190/T192/T195/T196/T197, queue #89–#93, Packet #11). DECISION PRICED: whether the consumed Observe record (Cycle 034 Phase A, filed whole) can support the already-filed Plans, per item — this completing cycle restates the dispositions in its RUN §1 and consumes your verdict in §2b before Execute opens. WORKING RECORD: runs/2026-11-18-cycle-035-wave-32/RUN.md (its §1 is the completion-form Observe) + runs/2026-11-18-cycle-034-wave-31/RUN.md + item-T<nnn>-observe-plan.md in that directory (all supplied below). BODY-WRITE: your return is filed verbatim in the Cycle 035 run directory as jev-observe-exit-return.md; end with a BODY-WRITE: line.
+
+=== GUARD DEFINITION ===
+# Jev call — jev-observe-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: a recreation wave may not enter Plan on a catalogue summary alone — Observe must have priced the queue, read the prior scores where they exist, seen the evidence frames, and carried the standing construction guidance into working memory._
+
+## 1. What it judges
+- Deliverable: the wave's Observe working memory — RUN.md gate-out block (§1: mechanics summary + sub-beat timings + variable list + named consumer) for each item in the wave (up to 5 owed items).
+- Call point: recreation INSTRUCTION §1, at the gate out of Observe, before §2 Plan opens for any item in the wave. The verdict is advisory per item: applied, a RETURN-TO-OBSERVE item is held out of the wave's Plan (the wave proceeds with its advancing items; a held item never holds the wave hostage — same rule as jev-prewave §5); set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Observe record can support a Plan for THIS recreation wave, item by item. Price, in order:
+(1) QUEUE STATE PRICED — does the record state the recreation queue's current position (../QUEUE.md read this cycle), each item's queue number and OWED status, and the ownership split (Amendment A3 §3: this job owns FIRST attempts; an already-scored technique belongs to practice — a wave item that is a re-attempt is a routing defect, named)? T15 is the standing example: attempt 1 scored FAIL 78.5 on 2026-11-13, so T15 attempt 2 is practice's charge, never this job's wave item.
+(2) PRIOR SCORES READ — for any item whose technique already has a scores.md or a verdict-history line (a techniques' family sibling counts: e.g. T16 shares T15's particle machinery), does the record cite the actual filed scores and cure list, or does it plan from the catalogue description alone? Planning that ignores a filed failure is the defect this leg exists to catch.
+(3) MECHANICS SEEN, NOT SUMMARIZED — does the record carry the packet section's mechanics + sub-beat timings from firsthand viewing of the evidence frames and the source segment in motion (§1.1–1.2), with timings in seconds — or only a restatement of the TECHNIQUES.md one-liner? A mechanic the builder has not seen is a guess (§1.1).
+(4) VARIABLES EXTRACTED — is the §1.3 variable list complete for this technique (text content, phrase count, timing/durations, palette, scale, direction, density — plus technique-specific variables), so Plan's parameter table has something to bind? A variable missing here becomes a hardcoded accident in Execute (§1.3).
+(5) CONSTRUCTION GUIDANCE CARRIED — where the technique's family has standing guidance, is it IN the working memory, named? For particle-field techniques: the flow-field model (Amendment A5 §4: one constant flow field, borrowing with low-amplitude jitter, never-borrowed reserve fraction, release with velocity continuity) AND Owner Cure 1 (foreground/background intensity separation riding the borrow flag) AND Owner Cure 2 (strict phrase sequencing / phase exclusivity). For typography techniques: the typography construction precedent (Amendment A1 §2: runtime sampling of config-rendered text). Guidance that exists in INSTRUCTION but is absent from the wave's working memory is scored as absent.
+(6) CONSUMER NAMED — §1.4: which production surface lifts this machinery (container type + owning lane), named per item, not "production generally."
+(7) CODEX/OWNER INPUTS — were any Codex calls fired in this Observe (e.g. a record audit of a prior attempt's codex/ returns) with receipts filed, or is the absence printed? Does the wave need owner-only information (it almost never does — recreation prices from packets and filed scores); if claimed, is it routed as a named gap rather than silently assumed?
+Score 0–1 per dimension (§4), classify defects from the taxonomy, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Observe gate-out blocks · ../QUEUE.md recreation-queue section (current) · each item's packet digest.md technique section + TECHNIQUES.md entry · prior scores.md + verdict-history.md lines for the item and its named family siblings · INSTRUCTION Amendments A1/A3/A5 guidance lines relevant to the item's family · any Observe-phase Codex receipts filed this cycle.
+- NEVER FED: the builder's confidence prose · HQ's supervision faces · scores from attempts not yet filed (unfiled scores do not exist).
+- Ceiling: ≤32k tokens; packet sections enter as the technique's section only, never the whole digest; evidence frames are referenced by path/timestamp, never fed as images (text-only judge).
+
+## 4. Output space
+- Verdict classes (per item): **ADVANCE · ADVANCE-WITH-GAPS · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): queue-state-priced · prior-scores-read · mechanics-seen · variables-extracted · guidance-carried · consumer-named. (1.0 = evidenced in the record with citations; 0.5 = asserted without citation; 0.0 = absent.)
+- Rejection taxonomy (one primary per returned item): QUEUE-STALE (queue position/status not read this cycle) · REATTEMPT-MISROUTED (scored technique in a first-attempt wave) · SCORES-UNREAD (prior scores/cures exist, uncited) · MECHANICS-UNSEEN (no firsthand sub-beat record) · VARIABLES-THIN (variable list cannot bind a parameter table) · GUIDANCE-DROPPED (standing family guidance absent from working memory) · CONSUMER-VAGUE.
+- Accepted profiles travel: cited in RUN.md at the Plan gate; ADVANCE-WITH-GAPS items carry their gap list into §2 as named Plan charges.
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → RETURN-TO-OBSERVE for that item. GUIDANCE-DROPPED on a particle-field or typography item → RETURN-TO-OBSERVE at any other score (T15 attempt 1's founding lesson: the frozen-flow defect and both owner catches were guidance-shaped failures discovered only after the wave was spent).
+- ADVANCE-WITH-GAPS requires every gap named with its Plan-phase cure; an unnamed gap is a RETURN.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + primary classification + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. Binding the exact runner command here is the first firing's own first step. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 Cycle-002's Observe record reconstructed from its RUN.md (must ADVANCE — mechanics, timings and consumer were recorded before building). (b) A constructed record proposing T15 as a wave item for attempt 2 (must RETURN-TO-OBSERVE as REATTEMPT-MISROUTED). (c) A constructed particle-technique record with no flow-field / Owner Cure 1 / Owner Cure 2 lines (must RETURN as GUIDANCE-DROPPED). (d) A constructed record whose variable list names only "text and color" for a timed multi-phrase technique (must RETURN as VARIABLES-THIN).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. First expected amendment pressure: whether family-sibling scores (leg 2) should be mandatory for all items or only same-machinery families — priced from the first waves' returns.
+
+
+=== CYCLE 035 RUN RECORD (§§0b–2 stand as written at payload assembly) ===
+# RUN — recreation Cycle 035 · Wave 32 · 2026-11-18 (COMPLETION WAVE — completes Cycle 034 Wave 31, queue #89–#93, Packet #11)
+
+Opened BEFORE any building (INSTRUCTION §0). Trigger: cron `study-recreation` 2026-11-18 03:20 EST.
+Governing: recreation INSTRUCTION.md (§0 wave form incl. completion-wave form Amendment A8 + skeleton-record step · §1–§9 · Amendments A1/A2/A3/A5/A6/A7/A9/A10/A11 + 2026-11-14 ruling: arming=firing, verdicts advisory), bounded_probe_discipline (probes named in advance, capped in code ≤6,000 chars: QUEUE recreation section in capped slices · Cycle-034 RUN.md in capped slices · artifact census per directory · HQ.json tail entries · heartbeat tail · guard-file call sections; breaches: 0).
+Pre-action judgment: (1) objective — complete Wave 31 under the A8 completion form: consume Cycle 034's filed Phase A whole (five item Observe+Plan records + per-item codex-observe + codex-plan-review returns), fire the two Plan-close gates that never fired, write the §2b dispositions, then carry queue #89 T190 · #90 T192 · #91 T195 · #92 T196 · #93 T197 (all Packet #11, "Caption with Intention") to scored five-lens verdicts on builds executed from the filed plans. (2) Forward movement — Wave 31 stopped at the Plan-close gates and left five fully-planned first attempts unbuilt and the refilled pool (13 owed, #89–#101) unconsumed; this wave is the named resumption on Cycle 034's own close face. (3) Cost to owner — none; no ask, no schedule change. (4) Why now — scheduled firing; A8 makes the completing cycle the next cycle, and queue order is the only triage (A3). (5) Body-write — this RUN.md, five artifact directories' builds + records under `hidden_files/study/recreations/`, HQ.json skeleton→closed entry (same id `rec-2026-11-18-wave32`), heartbeat skeleton→closed beat 112, verdict-history ×5 + the T102 transposition correction (§0b.3), QUEUE.md rows #89–#93 entered + WAVE 32 footer. (6) Order check — this record's §1 prices each unfinished item's on-disk state BEFORE any firing; the wave-level gates fire and are consumed in §2b BEFORE Execute opens (A9.2); per-item Execute+Verify fans out as five parallel agent tasks (§0 fan-out form) only after §2b stands.
+
+## §0b — Replan items carried
+1. **Feed-standard candidate** (Cycle 034 §0b.1, carried from Cycles 032/033): price at this Condense against this wave's Codex-feeding experience. Cycle 034 evidence on its face: the wave-level gate payloads stand truncated at 737/873 bytes (header only — payload assembly died under the platform write fault, the gates never fired); the working construction demonstrated ×5 items was `-s read-only` + stdout capture + file-tool filing. This cycle's seat test at open (2026-11-18 ~03:25 EST): exec writes after reads landed complete on both /tmp and the workspace tree (8028 B + 10438 B test files, sha-verified, removed) — the fault is not active at this hour; discipline stands regardless: every payload is size+tail-verified before firing, every return is size+tail-verified after.
+2. **Practice census-guard proposal** (Cycle 034 §0b.2): price at §9 against this wave's timing-lens returns — all five items encode census checkpoints as own-check assertions (A11 form).
+3. **Verdict-history defect** (Cycle 034 §0b.3, found by T190's codex-observe): verdict-history.md line 63 transposes T102's reusability/readability (84/88 printed vs 86/84 in the filed returns) — seat correction with citation at this cycle's close filings.
+4. Standing forms (A10/A11): every schedule table prints its census-anchor mapping (A10.2 — filed in the Cycle-034 item records, consumed whole); §1 frame censuses stand filed in Cycle 034's run directory (A10.3); jev-prewave payloads carry both A6 leg outputs verbatim (A10.1); census checkpoints map to executable own-check assertions with CONFIG-derived instants (A11).
+
+## §1 — Observe (completion form, A8: per-item on-disk state priced before any firing)
+
+**Wave manifest: 5 completion items** — queue #89–#93, all Packet #11 ("Caption with Intention", FCB Chicago with Chicago Hearing Society + Rakish Entertainment, LIA entry 106334; bound case film YouTube xmo3_URTIlg, 113.734 s; archived source `hidden_files/study/video-digests/2026-11-17-lia-caption-with-intention/source.mp4`, 10,213,125 B, re-verified present this run). Packet #11 adopted WITH GAPS (cured on the face) by video-digestion Cycle-018; registered by style-library Cycle-019 (catalogue 223 techniques). Registration limits carried per item in the Cycle-034 records (provenance UNVERIFIED · variable-font automatic operation UNVERIFIED · cut count UNVERIFIED · ASR gap ~66–75 s verified not touching any of these five windows).
+Consumer (all): word-animation containers (the DLC assembler's word-animation surface + Hadosh Academy explainer production) — T190 additionally the opening surface. In every build the text IS the technique subject, not a caption (INSTRUCTION §3.2/§6.5).
+
+### Pool census (fresh this run, 2026-11-18 03:20 EST)
+1. QUEUE.md RECREATION QUEUE: rows #1–#88 all attempted (Waves 1–25); rows #89+ do not yet exist as rows — they are entered by recreation at this wave's close from the style-library Cycle-019 register (the Wave-10 precedent, followed at Waves 14–25 and charged by Cycle 034's close).
+2. Catalogue register (style-library Cycle-019 state, as read by Cycle 034 and re-confirmed against QUEUE/TECHNIQUES this run): 223 techniques · OWED 13 at queue #89–#101 (T190 · T192 · T195 · T196 · T197 · T199 · T204 · T205 · T208 · T210 · T212 · T218 · T219). This wave's five completion items occupy all five §0 slots; the remaining 8 owed items (#94–#101) stand for Waves 33–34.
+3. Artifact census (binding, this run): 94 directories under `hidden_files/study/recreations/` — 88 scored (scores.md + codex/ returns each) + the five Wave-31 artifact directories below + T19's directory counted in the 88-form (seat count: 94 total listed, five named Wave-31 dirs verified individually below; the scored-pool count is re-verified mechanically at this cycle's Verify).
+4. Ownership split (A3 §3): all five are first attempts → this job. All IN PROGRESS techniques are practice's re-attempt pool.
+
+### Per-item state (A8 pricing — artifact census + prescribed calls already fired, per item)
+- **T190 — pixel-icon cold open** (`T190-pixel-icon-cold-open/`): directory holds AGENTS.md + codex/ only. Filed: codex-observe.md (7,168 B, CONFIRMED-WITH-GAPS) + codex-plan-review.md (5,574 B, REVISE, findings applied in the item record) + both payloads. NOT present: segment.mp4 · recreation.html · comparison.html · build-record.md · A6 legs · jev-prewave · lens returns · scores.md. Item record: Cycle-034 `item-T190-observe-plan.md` (20,654 B chars) — Observe+Plan complete, Execute checklist stands. Hash binding (A8): no build exists, so no payload is hash-bound to a build; the two filed returns bind to the item record + packet record they judged, consumed as filed.
+- **T192 — giant pixel numeral** (`T192-giant-pixel-numeral/`): same shape. codex-observe.md (5,409 B, CONFIRMED-WITH-GAPS) + codex-plan-review.md (6,659 B, REVISE applied) + payloads. No build artifacts. Item record 19,904 chars.
+- **T195 — spoken-state highlight sweep** (`T195-spoken-state-highlight-sweep/`): same shape. codex-observe.md (3,703 B, CONFIRMED-WITH-GAPS) + codex-plan-review.md (4,419 B, REVISE — 4 applied + 1 sub-point rebutted with ASR citation) + payloads. No build artifacts. Item record 29,857 chars. Execute is gated on the 24 fps micro-census (gap G-µ) — carried into its Execute checklist, not waived.
+- **T196 — pre-lighting** (`T196-pre-lighting/`): same shape + codex-observe-attempt1-platform-failure.md (611 B — the first firing's transport failure, filed honestly by Cycle 034; the successful re-firing's return is codex-observe.md, 5,953 B, CONFIRMED-WITH-GAPS) + codex-plan-review.md (7,207 B, REVISE applied) + payloads. No build artifacts. Item record 26,984 chars.
+- **T197 — volume ramp** (`T197-volume-ramp/`): same shape. codex-observe.md (5,405 B, CONFIRMED-WITH-GAPS) + codex-plan-review.md (5,583 B, REVISE applied) + payloads (payload-plan.txt naming variant, same content role). No build artifacts. Item record 20,688 chars.
+- **Standing payloads whose hash binding A8 requires verifying before firing:** NONE — the only unfired prescribed calls are the two wave-level gates (jev-observe-exit · jev-plan-exit), whose Cycle-034 payload files stand truncated (737/873 B, header only) and are therefore NOT consumed; this cycle assembles fresh payloads, verifies them (size + tail) before firing, and files them in this run directory. The per-item codex-observe / codex-plan-review returns are consumed, never re-fired (A8).
+
+### Standing guidance dispositions (restated for this completing cycle, per A8 — Cycle 034 §1 gate-out, with reasoning inline per A9.5)
+A1.2 runtime text sampling BINDS T192 (its letterforms are sampled from config-rendered text — the lawful construction, purity-100 precedent) and does not bind the DOM-text items (T190/T195/T196/T197 render text as DOM, where no sampling exists to trace). A5's flow-field model + Owner Cures 1–2 BIND T192 only (the wave's sole particle field): reserve fraction never borrowed, borrow-flag intensity separation, phase exclusivity. For the DOM items the Cures' underlying defect class is priced as state-style separation (T195/T196: unspoken-vs-spoken contrast floor) and single-slot phase exclusivity (T190's caption slot, T196's card slot, T197's line-ownership rule). A9.1 plate construction: T197 still plate (any background motion exceeds the technique); T192's field is the A5 flow field, not a plate. A9.6: every subject-shaping value is CONFIG data in all five plans. A11: every item record maps census checkpoints to executable assertions with CONFIG-derived instants.
+
+## §2 — Plan (consumed whole from Cycle 034 — restated summary; the item records are the Execute authority)
+- **T190:** continuous-turn construction (single renderer, signed transform, edge-on swap, transformed-bounds crop assertion); caption track as a single-slot half-open schedule (five captions); normalized CONFIG timeline from which every A11 checkpoint derives; segment cut 0.000–14.417 s (core 0–13.917 + tail handle). Five-lens estimate 81/86/98/85/87 → 87.4, motion predicted minimum. Schedule basis: segment-anchored.
+- **T192:** canvas flow-field per A5 (ONE constant field; borrow/release with velocity continuity; runtime sampling per A1.2; pool budgeted from the sampled target count); single logical canvas 960×540; segment cut 21.5–27.5 s, recreationMs = videoMs − 500; departures D1–D3 printed in the item record. Schedule basis: segment-anchored with departure table.
+- **T195:** DOM word spans with a soft-front gradient sweep (`frontSoftnessLetters` as CONFIG), per-word lift envelope owned by the phase machine (lift-leads-color); single source-absolute timing authority; segment 39.50–47.50 s (8.00 s, segment-anchored); Execute gated on the 24 fps micro-census (G-µ). Conservative five-lens projection 84/78/97/88/85 = 432 ≥ 425 filed by the plan review.
+- **T196:** one stage slot with prebuilt spans, atomic handoff, timestamp-derived state, explicit onset-tie rule; color-only state property with a computed contrast floor + pair-difference check on the palette swap; `timingScale` stretches the whole timeline; segment 47.76–58.32 s, departures D1–D4 printed. Timing priced as the predicted minimum lens.
+- **T197:** DOM word spans, still plate (A9.1); rAF envelope evaluator driving font-size × variable-font `wght` from a per-word CONFIG envelope (A9.6); one canonical envelope schema; Line A release derived (max(speech end, transient end) + exit + gap = 5,170 ms) with clamp-and-print; segment 47.5–58.5 s, build t=0 ≡ source 48.0 s, comparison handle offset (−500 ms) as CONFIG. Forecast avg 90.0, reusability ~82 predicted minimum. Schedule basis: segment-anchored.
+- **Bar (standing, §2.3):** five-lens average ≥85 AND no lens <70, for every item.
+- **Per-item codex-plan-review (consumed, filed in each artifact's `codex/codex-plan-review.md`):** T190 REVISE (4 groups, all applied) · T192 REVISE (5 findings, all applied) · T195 REVISE (4 applied + 1 sub-point rebutted with ASR citation) · T196 REVISE (5 cure groups, all applied) · T197 REVISE (4 findings, all applied). No plan stands unrevised-into-Execute: each Cycle-034 item record carries the revised Plan as its Execute authority, and this cycle does not re-author any plan (A8); a plan found unexecutable at Execute is recorded against the plan.
+
+## §2b — Wave gate dispositions
+_(jev-observe-exit + jev-plan-exit returns file in this run directory; dispositions land here BEFORE Execute opens — A9.2. Skeleton board/heartbeat entries are written at this Plan close, before the gate firings' outcomes are known, per the skeleton form.)_
+
+
+=== CYCLE 034 RUN RECORD (consumed whole) ===
+# RUN — recreation Cycle 034 · Wave 31 · 2026-11-18 (queue #89–#93 — Packet #11, "Caption with Intention", first five of the refilled pool)
+
+Opened BEFORE any building (INSTRUCTION §0). Trigger: cron `study-recreation` 2026-11-18 00:20 EST.
+Governing: recreation INSTRUCTION.md (§0 wave form incl. skeleton-record step · §1–§9 · Amendments A1/A2/A3/A5/A6/A7/A9/A10/A11 + 2026-11-14 ruling: arming=firing, verdicts advisory), bounded_probe_discipline (probes named in advance, capped in code ≤6,000 chars: QUEUE recreation section in capped slices · style-library TECHNIQUES.md obligation lines · Packet #11 digest sections · evidence frames viewed firsthand · seat + per-item census frames · artifact census · style-library Cycle-019 RUN §CLOSE; breaches: 0 at seat level — per-item extraction/codex-feeding faults under the platform write fault are recorded on the item records' faces, with their recoveries).
+Pre-action judgment: (1) objective — take the first five OWED first attempts of the refilled pool (queue #89 T190 · #90 T192 · #91 T195 · #92 T196 · #93 T197, all Packet #11) to scored verdicts. (2) Forward movement — Waves 24 + 26–30 closed EMPTY-POOL because Packets #11/#12 stood unregistered; style-library Cycle-019 (2026-11-17, closed INCOMPLETE at Verify but with its Execute core landed) REGISTERED Packets #11+#12 (catalogue 223 techniques) and classified 13 OWED at queue #89–#101 (T190, T192, T195, T196, T197, T199, T204, T205, T208, T210, T212, T218, T219) — the pool is refilled and this wave is its first consumer; Packet #13 ("Fresh Guacamole", adopted clean by video-digestion Cycle-020) is NOT yet registered, so its techniques are not this wave's items. (3) Cost to owner — none; no ask, no schedule change. (4) Why now — scheduled firing; queue order is the only triage (A3). (5) Body-write — this RUN.md, five artifact directories under `hidden_files/study/recreations/`, HQ.json skeleton→closed entry (same id `rec-2026-11-18-wave31`), heartbeat skeleton→closed beat, verdict-history ×5, QUEUE.md rows #89–#93 + WAVE 31 footer. (6) Order check — Observe + Plan stand in this record BEFORE Execute opens; skeleton board/heartbeat entries written at Plan close; gate verdicts consumed in §2b before any build; NO build script written before the exit-gate returns are filed (A9.2) — Phase A was fanned out as five parallel per-item agent tasks (§0 fan-out form), each filing its own codex-observe + codex-plan-review returns before the seat's wave-level gates fire.
+
+## §0b — Replan items carried
+1. **Feed-standard candidate** (carried by Cycles 032 §9 item 2 + 033 §9 item 2; consumers: HQ + next Condense): price at this Condense against this wave's Codex-feeding experience — this wave's per-item records carry fresh feeding-fault evidence (prescribed `cat | codex` pipe + redirect forms failing under the platform write fault; `-s read-only` + stdout capture + file-tool filing as the working construction, demonstrated ×5 items).
+2. **Practice census-guard proposal** (carried by Cycles 032/033 §9 item 3; consumer: next non-empty wave's Condense = THIS one): price at §9 against this wave's timing-lens returns — all five items encode census checkpoints as own-check assertions (A11 form, adopted Cycle 028).
+3. **Verdict-history defect found by T190's codex-observe (this cycle, §1):** verdict-history.md line 63 transposes T102's reusability/readability (84/88 printed vs 86/84 in the filed returns) — seat correction with citation at this cycle's close filings, or a named charge; never silent.
+4. Standing forms (A10/A11): every schedule table prints its census-anchor mapping (A10.2); §1 files a frame census at ≤2 s spacing with full SHA-256 (A10.3); jev-prewave payloads carry both A6 leg outputs verbatim (A10.1); census checkpoints map to executable own-check assertions with CONFIG-derived instants (A11).
+
+## §1 — Observe
+
+**Wave manifest: 5 items** — queue #89–#93, all Packet #11 ("Caption with Intention", FCB Chicago with Chicago Hearing Society + Rakish Entertainment, LIA entry 106334; bound case film YouTube xmo3_URTIlg, 113.734 s — packet probe; archived source `hidden_files/study/video-digests/2026-11-17-lia-caption-with-intention/source.mp4`). Packet #11 adopted WITH GAPS (cured on the face) by video-digestion Cycle-018; registered by style-library Cycle-019 with limits carried: provenance — bound film is a trade-press re-upload, version fidelity to the LIA submission UNVERIFIED · variable-font mechanism DEMONSTRATED as stated design, automatic operation UNVERIFIED · true cut count UNVERIFIED · ASR census gap at the film-within-film exchange (~66–75 s; T195's record verifies it does not touch its window). None of those limits blocks Observe; each item record carries the ones that touch it.
+Consumer (all): word-animation containers (the DLC assembler's word-animation surface + Hadosh Academy explainer production) — T190 additionally the opening surface. The five techniques are the specimen's caption-system mechanics studied as motion graphics; in the builds the text IS the technique subject, not a caption (INSTRUCTION §3.2/§6.5, stated per item in Plan).
+
+### Pool census (fresh this run, 2026-11-18 00:20 EST)
+1. QUEUE.md RECREATION QUEUE: rows #1–#88 all attempted (Waves 1–25); its footer still prints the Wave-25 state (DESCRIBED-OWED 0 on the 189-technique catalogue) — predating style-library Cycle-019's registration, and rows #89+ do not yet exist as rows: they are entered by recreation at this wave's close from the Cycle-019 register (the Wave-10 precedent, followed at Waves 14–25).
+2. Catalogue register (style-library Cycle-019 state, read this run): 223 techniques · DESCRIBED 135 (of which OWED 13: queue #89 T190 · #90 T192 · #91 T195 · #92 T196 · #93 T197 · #94 T199 · #95 T204 · #96 T205 · #97 T208 · #98 T210 · #99 T212 · #100 T218 · #101 T219 — TECHNIQUES.md lines 136–149) · IN PROGRESS 13 · RECREATED 75. The remaining 8 owed items (#94–#101) stand for Waves 32–33 at the §0 cap.
+3. Artifact census (binding, this run): 88 directories under `hidden_files/study/recreations/`, every one with scores.md + codex/ returns; NO directory existed for T190/T192/T195/T196/T197 at wave open — all five DESCRIBED+OWED+unattempted (directories created at Plan, §0 form).
+4. Ownership split (A3 §3): all five are first attempts → this job. All IN PROGRESS techniques are practice's re-attempt pool.
+5. Prior/family scores read (§1 resource 3): no Packet #11 technique has a prior attempt. Family baselines per item are priced in the item records (T190: openings family T99 90.0 / T102 88.8, mean 89.4 · T192: particle-typography family incl. T15's three attempts via practice, five-lens family mean 84.47 · T195: T03 79.2 / T12 75.4 / T132 83.2 recomputed · T196: T03 supersession confirmed — a1 79.2 FAIL historical, T03 RECREATED 89.0 via practice, T132 90.8 · T197: T137 91.0 PASS / T12 a1 75.4 + a2 87.0).
+
+### Per-item Observe (full records: `item-T<nnn>-observe-plan.md` in this run directory; census frames in `census/T<nnn>/`)
+- **T190 (P11-T01, 0–13 s):** census (14 frames @1 s, SHA-256 each, viewed firsthand) CORRECTS the packet in kind: the icons do not build in place — each form TURNS (turntable rotation with scale/framing change) into the next; captions number FIVE, not three (L4/L5 unlisted in the packet); the packet's sole evidence frame shows the stat line over a blank center (globe seated 1 s later). codex-observe CONFIRMED-WITH-GAPS (applied in full; true window end fixed at the 13.917 s signer cut; the verdict-history T102 transposition in §0b.3 found here).
+- **T192 (P11-T03, 22–27 s):** census (9 frames, ≤1 s inside the dissolve) corrects the digest twice: at 23.0 s the caption line is already crisp (the particles are the numeral's top band coalescing) and formation sweeps TOP→BOTTOM, complete by 24.0 s; measured legible hold ≈2.0 s, not the register's ~3 s; no background particles visible in the hold (priced as `reserveHoldOpacity = 0.0` under the A5 flow-field model). codex-observe CONFIRMED-WITH-GAPS (applied/carried; T15 attempts 2–3 surfaced from practice, completing the family baseline).
+- **T195 (P11-T06, 38–48 s):** census (23 frames @≤1 s) corrects the packet in four places: the sentence plays as FOUR pre-lit chunks (not three); the sweep is a soft white→yellow gradient through each word over ~70% of its spoken duration, with letter-scale mid-word states; the sweeping word LIFTS off the baseline; true completion is 47.1 s (the packet's ev/t046 "fully yellow" frame is mid-sweep). codex-observe CONFIRMED-WITH-GAPS (disposition APPLIED — gaps already closed firsthand by the census; sibling arithmetic recomputed correct). Gap G-µ carried to Execute: sweep micro-structure unsettled at 1 s resolution — a 24 fps micro-census of 41.50–42.00 s + 46.00–46.80 s is gated into the Execute checklist before the sweep function is finalized.
+- **T196 (P11-T07, 38–67 s):** chosen demonstration sub-window 47.76–58.32 s (the "Intonation" demonstration — the only ~10–14 s span holding a complete pre-lit sentence whose final card enters complete and white; the 40–47 s sync line is T195's home line, the 58–66 s lines are confounded by T09 speaker-green). Census (29 packet 1 fps frames hardlinked + hash-verified, 12 seat ffmpeg frames): the contract holds at line start — card 3 complete and all-white at its visual onset 52.792 s; card 1's word 1 is already flipped at its visual onset (speech precedes the card by ~552 ms, departure D1); visual flips lag ASR by up to ~0.4 s on card 3 (the priced timing exposure). codex-observe CONFIRMED-WITH-GAPS (its firsthand decoding corrected the seat census: the sentence is THREE cards; visual onsets recorded separately from ASR; dispositions applied).
+- **T197 (P11-T08, 48–58 s):** census (21 frames @0.5 s): the ramp is a sequence of TRANSIENT envelopes on pre-visible lines — "sizes" ~1.35× + bold, peak 51.0 s, decayed by 52.5 s; "weights" carries a WEIGHT-ONLY ramp (~400→~800, size 1.0); "louder" ramps continuously to ~2.0× + heavy (peak 55.5 s); "or softer" ramps DOWN to ~0.45× + light and PERSISTS as the end state. Envelope shape OBSERVED from bracketed states; easing UNMEASURED, carried as a named CONFIG choice. The packet's "louder onset" conflated ASR onset with the visual peak — closed by the census. codex-observe CONFIRMED-WITH-GAPS (all gaps closed by the census).
+
+**Observe gate-out (per item):** mechanics summary + sub-beat timings + variable list + consumer — filed in each item record (§§1–3 of `item-T<nnn>-observe-plan.md`). Standing guidance dispositions, with reasoning inline (A9.5): A1.2 runtime text sampling BINDS T192 (its letterforms are sampled from config-rendered text — the lawful construction, purity 100 precedent) and does not bind the DOM-text items (T190/T195/T196/T197 render text as DOM, where no sampling exists to trace); A5's flow-field model + Owner Cures 1–2 BIND T192 only (the wave's sole particle field) — its reserve fraction, borrow-flag intensity separation and phase exclusivity are in T192's Plan; for the DOM items the Cures' underlying defect class (same-intensity competition / overlapping lifecycles) is priced per item as state-style separation (T195/T196: unspoken vs spoken state contrast floor) and single-slot phase exclusivity (T190's caption slot, T196's card slot, T197's line-ownership rule).
+
+## §2 — Plan
+
+Per-item Plan products (parameter table · construction choice + rejected alternatives · schedule basis + census-anchor mapping (A10.2) · verification plan · Execute + Verify checklists · failure-point evaluation · plateau priced in Plan · A11 checkpoint→assertion mapping) stand in full in the item records; the seat's summary per item:
+- **T190:** continuous-turn construction (single renderer, signed transform, edge-on swap, transformed-bounds crop assertion); caption track as a single-slot half-open schedule (five captions); normalized CONFIG timeline from which every A11 checkpoint derives; segment cut proposed 0.000–14.417 s (core 0–13.917 + tail handle). Five-lens estimate 81/86/98/85/87 → 87.4, motion predicted minimum. Schedule basis: segment-anchored.
+- **T192:** canvas flow-field per A5 (ONE constant field; borrow/release with velocity continuity; runtime sampling per A1.2; pool budgeted from the sampled target count — 6,563 bright cells priced by the plan review's sample, against the draft's 1,050 borrowers); single logical canvas 960×540; segment cut 21.5–27.5 s, recreationMs = videoMs − 500; departures D1–D3 printed in the item record. Schedule basis: segment-anchored with departure table.
+- **T195:** DOM word spans with a soft-front gradient sweep (`frontSoftnessLetters` as CONFIG), per-word lift envelope owned by the phase machine (lift-leads-color); single source-absolute timing authority; segment 39.50–47.50 s (8.00 s, segment-anchored); Execute gated on the 24 fps micro-census (G-µ). Conservative five-lens projection 84/78/97/88/85 = 432 ≥ 425 filed by the plan review.
+- **T196:** one stage slot with prebuilt spans, atomic handoff, timestamp-derived state, explicit onset-tie rule; color-only state property with a computed contrast floor + pair-difference check on the palette swap; `timingScale` stretches the whole timeline (no per-knob lead time); segment 47.76–58.32 s, departures D1–D4 printed. Timing priced as the predicted minimum lens (at timing 70 the other lenses must average 88.75 for the bar — the 85–90 forecast was withdrawn under the plan review).
+- **T197:** DOM word spans, still plate (A9.1 — any background motion exceeds the technique), rAF envelope evaluator driving font-size × variable-font `wght` from a per-word CONFIG envelope (A9.6); one canonical envelope schema; Line A release derived (max(speech end, transient end) + exit + gap = 5,170 ms) with clamp-and-print; segment 47.5–58.5 s, build t=0 ≡ source 48.0 s, comparison handle offset (−500 ms) as CONFIG. Forecast avg 90.0, reusability ~82 predicted minimum. Schedule basis: segment-anchored.
+- **Bar (standing, §2.3):** five-lens average ≥85 AND no lens <70, for every item.
+- **codex-plan-review (per item, filed in each artifact's `codex/codex-plan-review.md`):** T190 REVISE (4 groups, all applied) · T192 REVISE (5 findings, all applied) · T195 REVISE (4 applied + 1 sub-point rebutted with ASR citation) · T196 REVISE (5 cure groups, all applied) · T197 REVISE (4 findings, all applied). No plan stands unrevised-into-Execute: each item record carries the revised Plan as its Execute authority.
+
+## §2b — Wave gate dispositions
+_(jev-observe-exit + jev-plan-exit returns file in this run directory at Plan close; dispositions land here BEFORE Execute opens — A9.2.)_
+
+## §CLOSE — CYCLE INCOMPLETE (seat close, 2026-11-18 ~00:55 EST)
+
+Wave 31 (Cycle 034) prints **INCOMPLETE**. Phase A completed for all five items — per-item Observe+Plan files stand in this directory (motion censuses · codex-observe CONFIRMED-WITH-GAPS ×5 · codex-plan-review REVISE ×5 with findings applied, one sub-point rebutted with citation on T195) — and the run stopped at the Plan-close gates: jev-observe-exit's result was never consumed, jev-plan-exit never fired, the §2b gate dispositions (A9.2) were never written, and Execute never opened. No recreation.html, no scores, no verdicts exist for T190 · T192 · T195 · T196 · T197; all five remain OWED.
+
+The skeleton (board entry rec-2026-11-18-wave31 + heartbeat beat 110) stood correctly at Plan close in the planned state; this close updates both in place to the incomplete state, per the skeleton form.
+
+**Resumption:** the next recreation cycle consumes this wave's Phase A whole — fire and consume the two Plan-close gates, write the §2b dispositions, then Execute the five items as planned. The per-item plans are not re-authored; a plan found unexecutable at Execute is recorded against the plan (standing precedent).
+
+
+=== ITEM RECORD T190 (Cycle 034, consumed whole) ===
+# Item T190 — Observe + Plan · Cycle 034 Wave 31 · PHASE A ONLY (A9.2: no build before wave gate returns are consumed by the seat)
+
+Queue #89 · T190 pixel-icon cold open with a stat line · Packet #11 ("Caption with Intention", FCB Chicago) technique P11-T01, window 0–13 s (corrected below to 0–13.917 s).
+Artifact dir: `hidden_files/study/recreations/T190-pixel-icon-cold-open/` (created this phase, with `codex/`).
+Registration limits carried: bound film is a trade-press re-upload (ReelChicago Reel360, YouTube xmo3_URTIlg) — version fidelity UNVERIFIED · cut count UNVERIFIED.
+
+## §1 Observe
+
+### Mechanics summary (census-corrected — supersedes the packet's "builds / substitution" wording for this item's Plan)
+On black, a single white pixel-art form occupies center stage on a ~2 s beat. Each form holds a readable front pose briefly, then TURNS — a turntable-style rotation carrying scale and framing change — into the next form. Sequence: globe → ear → CC badge → film camera → couch+TV scene; the couch scene itself rotates front-three-quarter → side profile, and the seated figure with a "?" above his head is the profile state of that same scene, not a sixth substitution. One form owns the stage at a time; no competing element. A separate caption track in small-caps pixel type at the bottom carries FIVE lines (not the packet's three), changes not locked 1:1 to icon beats, with at least one blank interval. At one turn (~9 s sample) the rotating form grows oversized and is cropped by the top frame edge — a specimen excursion, priced as content, not a containment defect.
+
+### Sub-beat timings (segment-relative, census + codex-observe playback samples; ±500 ms sampling tolerance unless noted)
+| instant | state |
+|---|---|
+| 0 ms | black; caption line 1 onset window opens |
+| ~2000 ms | caption 1 fully present, center BLANK (census f003 = the packet's ev/t002, misdescribed there as showing the globe) |
+| ~3000 ms | globe readable, front pose (f004) |
+| ~5000 ms | ear readable; caption 2 (f006) |
+| ~6000 ms | CC badge readable (codex-observe playback sample, between census frames) |
+| ~7000 ms | mid-turn, large tilted form; caption BLANK (f008) |
+| ~8000 ms | film camera readable (codex-observe playback sample) |
+| ~9000 ms | turn excursion: oversized form cropped at top edge; caption 3 (f010) |
+| ~11000 ms | couch+TV front three-quarter; caption 4 (f012) |
+| ~13000 ms | couch profile + seated figure + "?"; caption 5 (f014) |
+| 13917 ms | editorial cut to first signer (frame 334, zero-based) — true end of the cold open |
+
+Caption lines (exact): L1 "MORE THAN 430 MILLION PEOPLE WITH DISABLING HEARING LOSS" (56 chars) · L2 "RELY ON CAPTIONS TO WATCH MOVIES AND SHOWS" · L3 "HOWEVER, THE CURRENT CAPTIONING SYSTEM HAS SEVERAL SHORTCOMINGS" (63 chars — the longest, binding fit row) · L4 "THAT CAN MAKE THE VIEWING EXPERIENCE FRUSTRATING" · L5 "FOR DEAF AUDIENCES".
+
+### Motion census (A10.3) — findings per instant
+Census dir: `runs/2026-11-18-cycle-034-wave-31/census/T190/` — 14 frames at 1 s spacing (≤2 s as required), f00N ≈ (N−1) s. Extraction note: direct ffmpeg writes into the run dir hit the platform write fault (EPERM, 0-byte files — TOOLS.md measured fault); the census frames are the packet's own 1 fps extraction of the same source.mp4, hardlinked into the census dir (metadata-only route per TOOLS.md) and viewed firsthand by the builder. The three frames ffmpeg did land before the fault (t2/t3/t12 equivalents) agree in kind with the packet frames at the same instants.
+- f001 (≈0 s) `ff11133c184d23c8b3d2a677ea56a18af0638be513ccc4a5a8f159811df59dbd` — black, opening state.
+- f002 (≈1 s) `06444a959a83793c233c345cc39842223244c265d12cc80f910afe0c3b3bf6a3` — black/caption onset window.
+- f003 (≈2 s) `3866e7743890ff54f8be7e3a2d54d42a27d10bd33689eeb2c35f020dc77c0105` — caption 1 present, center blank. MOTION: none (hold of the caption-only state). Identical hash to ev/t002-globe-430m.jpg — the packet's evidence caption is wrong on its face.
+- f004 (≈3 s) `41fc5789471d3a33ef3f5721f6529d513e7d1f4e6e18f269df79de9e7cf5dbf7` — globe fully formed over caption 1. CHANGE from f003: icon has arrived (turn-in completed inside the 2–3 s interval).
+- f005 (≈4 s) `c72c0ed56907d8296265a1f02a40b9e05b4c37bd864ef664bf9d1f9c51406af6` — globe/turn-out interval (not individually viewed; priced as transition window).
+- f006 (≈5 s) `58d359922506c47dc67d6404b6f638763bf51c936b66e8851ef5664450a1f3da` — ear fully formed, caption 2. CHANGE: second readable pose seated.
+- f007 (≈6 s) `848ba7c1cd7faacdf17c81a4b02259e37180c285b29a652b9282ae01b7585bb1` — CC-badge window (readable pose priced from codex-observe playback sample ~6 s).
+- f008 (≈7 s) `21b580705d13b3804ddca1a3b29fab64cc37d1ce8da39edc6d8962a79c2eebfd` — large white form mid-ROTATION, tilted off-axis, NO caption. MOTION: this is the turn itself — the census's key frame; it kills the "builds in place / substitution" reading.
+- f009 (≈8 s) `14aeac941a92dae5a791471a6d93949d3ab48438a4c2a2742ae61310c2fdd7be` — camera window (readable pose ~8 s per codex-observe sample).
+- f010 (≈9 s) `b9363cde7c7b32962770ab2ad71734b38a66cb36e780ddd0843b90d2b239f6b4` — oversized rotating form CROPPED by the top frame edge over caption 3. MOTION: scale excursion peaks inside this interval.
+- f011 (≈10 s) `95a77bb6fadf5d277a5e6502821e6098486a46140a23e6c5fcdaa975e0ae097f` — couch-scene arrival window.
+- f012 (≈11 s) `a1728502e3e2804fd73f0db4da925fc48cd987245e07ea66824d7fe091b0853e` — couch+TV front three-quarter, caption 4. HOLD: readable pose.
+- f013 (≈12 s) `2e377de87ee03b97cda6fd156c8e952e8e2119fbef943d0c3cd48e9ad761f5a6` — couch internal turn window.
+- f014 (≈13 s) `56cb3dbd51fb24849e4ae268fac27e422c7dc7e1b548a9133952a54c8edb1f1a` — couch side profile, seated figure + "?", TV edge-on, caption 5. HOLD to the 13917 ms cut.
+Motion summary: motion lives INSIDE each ~2 s beat (turn-in → readable hold → turn-out); holds are the readable poses only; exits are rotations, not cuts (the window's only editorial cut is its end, per codex-observe's detector classification: the 9.6667 s detector hit is an expanding pixel graphic, not a cut).
+
+### Variable list (§1.3)
+Scene set + order · per-scene pixel maps (front view ×5, profile view for couch) · per-event times (turn starts, readable instants, end) · hold vs turn split · turn direction, easing, pivot, perspective · scale curve + per-scene scale peak (incl. the cropping excursion) · caption texts ×5 · caption schedule (onsets/offsets/blank) · palette (bg, ink) · pixel unit size · stage size · caption font size, bottom offset, caption-safe band height.
+
+### Consumer
+Hadosh Academy shorts production — the cold-open slot of explainer shorts on the Let's Build It Together lane: a stat-first opening that lands an argument before narration. The machinery is lifted as the opening scene module of the one-HTML piece form; the production surface is the short's opening 14 s container segment.
+
+### Codex-observe — verdict + disposition
+Verdict: **CONFIRMED-WITH-GAPS** (filed verbatim at artifact `codex/codex-observe.md`). Disposition: APPLIED in full — (1) mechanics rewritten from census (rotation, not build/substitution); (2) caption count corrected to five with a blank interval; (3) window end corrected to the 13917 ms signer cut; (4) evidence-frame misdescription recorded (f003 = stat-only; globe seated at f004); (5) family arithmetic verified (T99 90.0, T102 88.8, mean 89.4, five lenses each); (6) side finding carried to the seat: recreation verdict-history.md line 63 transposes T102's reusability/readability (prints 84/88; filed returns support 86/84, row total 446→89.2 vs printed 88.8) — a seat-side record correction, not a T190 build input. Registration limits priced: re-upload suffices for a recreation scoped to this specimen; equivalence to the LIA submission stays UNVERIFIED and prints on scores.md at Verify.
+
+## §2 Plan
+
+### Schedule basis + census-anchor mapping (A7 / A10.2)
+**Schedule basis: segment-anchored.** Window offset: build t=0 = source 0.000 s. All build times are segment-relative ms from the resolved timeline below (a normalized CONFIG timeline — codex-plan-review revision 3 applied: every assertion instant derives from this one timeline).
+Resolved timeline (CONFIG data; per-event where the sampled rhythm varies):
+- `captionOnlyMs` [0, 2000) — caption 1 on, no map.
+- Scenes (turnStartMs → readableMs, turnMs = readable − turnStart): globe 2000→3000 · ear 4000→5000 · cc 5250→6000 · camera 7000→8000 · couchFront 10000→11000 · couchProfile (same scene, internal turn) 12000→13000.
+- `endMs` 13917 — cut state (no scene after couchProfile).
+- Caption schedule (single slot, ordered half-open intervals, overlaps rejected at load — revision 2 applied): [0,4000) L1 · [4000,6000) L2 · [6000,8000) BLANK · [8000,10000) L3 · [10000,12000) L4 · [12000,13917) L5.
+Census-anchor mapping: each census state above maps to the timeline state at the same segment-relative ms (f003 2000 ms → captionOnly end/turn start, center blank ✓ · f004 3000 → globe readable ✓ · f006 5000 → ear readable + L2 ✓ · f008 7000 → camera turn start + BLANK ✓ · f010 9000 → camera hold, excursion priced inside the 8000–10000 turn-out/scale window — departure noted: census shows the crop at ~9000, the timeline prices the scale peak at the camera turn-out midpoint 9500, within the ±500 ms sampling tolerance extended by one half-beat; the Execute builder must sample the 8500–10000 window at frame resolution and re-anchor `scalePeakMs` before the wave · f012 11000 → couchFront readable + L4 ✓ · f014 13000 → couchProfile readable + L5 ✓).
+Departure table (A10.2): packet nominal poses 2/4/6/8/10/12 s vs census readable poses ~3/5/6/8/11/13 s — the build follows the CENSUS; the packet's times mix transition states with poses (codex-observe finding 2). Packet caption list (3 lines) departs from census (5 lines + blank) — census governs.
+
+### Parameter table (every variable = named CONFIG key, specimen default; ALL content/timing/palette from CONFIG)
+| CONFIG key | default | role |
+|---|---|---|
+| `scenes` | 5 entries {id, mapFront, mapProfile (couch only), turnStartMs, readableMs, scalePeak} | scene set, order, pixel maps (code-authored row-string arrays), per-event timing |
+| `captionOnlyMs` | 2000 | initial caption-only phase length |
+| `endMs` | 13917 | cycle end / cut instant |
+| `turnDeg` | 90 | turn sweep per half (0→90 swap → 0) |
+| `turnDir` | +1 (left-to-right turntable) | signed transform direction |
+| `turnEasing` | "cubic-bezier(0.4, 0, 0.2, 1)" | MOVE intent class (library easing-by-intent rule) |
+| `pivot` | "50% 50%" + `perspectivePx` 900 | shared pivot/framing for all turns |
+| `scalePeak` | 1.35 (global) / 1.6 on camera scene | scale curve peak; camera override reproduces the top-edge crop |
+| `scalePeakAt` | 0.5 (fraction of turn) | scale-peak position in the turn |
+| `bg` / `ink` | "#000000" / "#ffffff" | palette (single-ink specimen) |
+| `pixelUnitPx` | 10 | rendered pixel cell size |
+| `stageWPx` / `stageHPx` | 640 / 360 | stage |
+| `captions` | [{text, fromMs, toMs} ×5 + one BLANK entry] | the single-slot caption schedule above |
+| `captionFontPx` | 15 | caption type size |
+| `captionBottomPx` | 18 | caption offset from stage bottom |
+| `captionSafeBandPx` | 64 | bottom band the transformed icon bounds may never enter |
+| `cycleMs` | derived = `endMs` | no literal in logic |
+
+### Construction choice + rejected alternatives
+CHOSEN: one self-contained HTML; a single DOM-grid renderer (square cells) drawing the active CONFIG pixel map; ONE signed rotateY transform with shared pivot + perspective and a continuous CONFIG scale curve; a single map swap at the edge-on instant; a phase machine driven by the resolved timeline (caption-only → per-scene turn/hold → couch internal turn → cut). Caption layer is a separate single-slot resolver over the CONFIG schedule. (Revision 1 applied: renderer/transform/swap specified as construction, both sides of the swap sampled at Verify.)
+Rejected: canvas particle system — no particle mechanic exists in the specimen; surplus machinery that re-imports T15's freeze class. · SVG draw-on — wrong register: the forms are filled pixel masses, not strokes. · CSS keyframes + <img> sprites — sprites would be frame-derived (purity) and keyframes scatter the schedule out of CONFIG. · Video / frame-sequence embed — refusal-class (§6.1). · WebGL true-3D model — a whole scene wearing a technique's name (§8); the rotateY approximation is priced openly in the motion-lens forecast instead.
+
+### Verification plan
+- Swap test (values): `captions` L3 text → "HOWEVER, THE PRESENT CAPTIONING SYSTEM HAS SEVERAL SERIOUS SHORTCOMINGS" (71 chars — a HARDER fit case than the 63-char specimen longest; revision 2 applied, the first-draft 53-char swap was not) · tempo: `beatScale` 0.8 applied uniformly to every timeline instant (normalization rule declared: all CONFIG times × 0.8; predicted moved instants — captionOnly ends 1600, globe readable 2400, blank midpoint 5600, endMs/cut 11133.6→11134 rounded; assertions must check BOTH moved instants and expected states) · palette: `ink` → "#ffd23f". Technique must still read correctly; results recorded with exact values.
+- Purity greps on recreation.html (0 hits demanded, raw output filed per A9.4): `source\.mp4` · `segment\.mp4` · `<video` · `<img` · `\.jpg` · `f0[0-9][0-9]` · `url\(` · `http` — plus asset inventory: single HTML file, zero external assets, pixel maps code-authored in CONFIG.
+- A6 legs pre-wave: guard-measured-fit (fit rows: L3 63 chars and swapped 71 chars at `captionFontPx` in actual glyphs vs stage width; icon transformed bounds vs stage + caption-safe band at every turn sample) → `fit-table.md`; guard-config-census → `config-census.md`.
+- Comparison sync method: comparison.html drives both sides from one control set; recreation clock slaved to the segment video's `currentTime` (source-time offset + handles kept in the comparison harness, separate from the recreation's own timeline — revision 3 applied); durations matched (segment cut 0.000–14.417 s with handles vs recreation cycle 13917 ms, handle region labeled).
+- Codex wave composition: five separate lens runs (motion · timing · purity · reusability · readability), fed per §5, returns filed verbatim before consolidation.
+
+### Failure-point evaluation (priced from this job's record)
+- Convergent freeze (T15): no particle pool exists; the analogue is slideshow stasis — cured by construction (continuous signed turn inside every beat; holds are CONFIG-bounded readable poses; both sides of each swap sampled at Verify).
+- Intensity collapse: single-ink specimen — icon/caption separation is positional (caption-safe band enforced on TRANSFORMED bounds through the whole turn, incl. the intentional top crop) + measured caption size at phone width; shared ink is specimen-faithful.
+- Phrase overlap: two single-slot machines (one active map; one caption slot resolved from ordered half-open intervals, overlaps rejected at load) — overlap is a CONFIG validation failure, not a runtime possibility.
+- Fitting limits: binding rows are L3 (63 chars) and the 71-char swap; measured-fit leg owns them with actual-glyph measurement.
+- Render-proof limitation: PIXEL-UNVERIFIED (family precedent T99/T102) — logic-level node harness + comparison page as the render surface; printed on scores.md, never upgraded in prose.
+
+### Plateau priced in Plan (A2 — before Execute)
+Family baseline: T99 PASS 90.0 (motion 80 · timing 100 · purity 100 · reuse 80 · readability 90) · T102 PASS 88.8 (88 · 86 · 100 · 86 · 84) · family mean 89.4, both five-lens, both t=0 allocation (this item is segment-anchored — a deliberate, census-forced difference). Five-lens estimate for T190 (revision 4 applied): motion 81 · timing 86 · purity 98 · reusability 85 · readability 87 → sum 437, average 87.4. Predicted minimum: MOTION — the rotateY-of-flat-maps turn approximates a per-pixel 3D redraw; intermediate turn poses will read flatter than the specimen. Stuck-lens hypothesis: motion sticks first (turn credibility is a playback judgment no logic check can pre-clear); timing second (1 s census sampling, ±500 ms onsets; the f010 scale-peak anchor carries a priced half-beat tolerance the builder must close at frame resolution). Floor arithmetic: at motion 78 the other four must total ≥347 (avg 86.75) — the estimate's 356 clears it; at motion <70 the item FAILs on the floor regardless of average, and that outcome is a lawful filed verdict, not a cue to grind.
+
+### Census-checkpoint → executable own-check assertions (A11; every instant is a CONFIG expression)
+| CP | census anchor | evaluation instant (CONFIG-derived) | assertion |
+|---|---|---|---|
+| CP1 | f003 blank center | `captionOnlyMs − 1` | activeMap == null (strict — no fallback; revision 3 applied) |
+| CP2 | f004 globe | `scenes[0].readableMs` | activeScene == globe && phase == HOLD |
+| CP3 | f006 ear + L2 | `scenes[1].readableMs` | activeScene == ear && captionAt(t) == L2 |
+| CP4 | f008 blank caption, mid-turn | midpoint of the BLANK caption entry (`(fromMs+toMs)/2`) | captionAt(t) == "" && phase == TURN |
+| CP5 | f010 top crop | `scenes[3].scalePeakMs` (derived: turn window start + `scalePeakAt` × window) | TRANSFORMED map bounds top < 0 (crop) && bounds bottom < stageH − `captionSafeBandPx` (band intact) |
+| CP6 | f012 couch front | `scenes[4].readableMs` | activeMap == couch.mapFront && captionAt(t) == L4 |
+| CP7 | f014 profile + "?" | `scenes[4].profileReadableMs` | activeMap == couch.mapProfile && captionAt(t) == L5 |
+| CP8 | end / cut | `endMs` | state == CUT (no further scene; comparison offset lives in the harness, not here) |
+A CONFIG timing swap (beatScale 0.8) must move every positive CP instant by the declared rule — the swap harness asserts moved instants AND states (CP1 1999→1599, CP8 13917→11134).
+
+### Execute checklist (itemized — §3, fires only after the seat consumes the wave gate)
+1. Cut segment from source.mp4: 0.000–14.417 s (13.917 window + 0.5 s tail handle; head handle truncated at file start), re-encoded for browser playback → artifact `segment.mp4`, labeled ORIGINAL in comparison only.
+2. Frame-resolution sampling of the 8500–10000 ms window; re-anchor `scalePeakMs` from it; record the re-anchor in build-record.
+3. Build `recreation.html` from the parameter table (CONFIG first, logic literal-free); count assertion (A9.3): CONFIG scenes == 5, captions == 6 entries (5 lines + BLANK) — print source vs built counts in build-record.
+4. Build `comparison.html` (labels ORIGINAL — Caption with Intention PR film @ 0–13.9 s · RECREATION — T190, parameterized; shared controls; phone stacking).
+5. Self-verify legs 1–3 (swap · purity · comparison) with raw output filed (A9.4); run A11 assertions; run A6 legs → `fit-table.md`, `config-census.md`.
+6. jev-prewave → five-lens Codex wave → scores.md + tier hand-off.
+
+### Verify checklist (itemized instruments)
+Swap values as above with recorded results · purity grep patterns as above (raw output) · comparison check (both sides play from shared control; durations matched; labels correct; phone-width stacking holds; tappable controls reachable) · A11 assertion table executed with CONFIG-derived instants, results in build-record · A6 leg outputs filed and cited in the wave record · five lens returns filed verbatim before arithmetic · scores.md shows the arithmetic (no rounding up across the bar).
+
+### Codex-plan-review — verdict + dispositions
+Verdict: **REVISE** (filed verbatim at artifact `codex/codex-plan-review.md`). Dispositions — ALL APPLIED into this Plan: (1) continuous-turn construction specified (single renderer, signed transform, shared pivot/perspective, single edge-on swap, both-sides sampling; CP5 asserts transformed bounds) · (2) caption single-slot schedule with the draft's overlap cured (L2 now ends 6000; BLANK is a schedule entry); caption-safe band enforced on transformed bounds; swap text replaced with a 71-char harder fit case; character counts corrected (L1 56, L3 63 — L3 is the binding row) · (3) normalized timeline declared (caption-only phase, per-event times, couch internal turn, explicit endMs); scene `captionIndex` removed as a caption source; CP1 made strict; tempo-swap normalization rule + predicted moved instants declared; comparison offset separated from recreation state · (4) five-lens estimate filed with floor arithmetic · (5) size discipline — reviewer's PASS noted, no change. No point set aside.
+codex-observe disposition: APPLIED (see §1). Gate state: Phase A complete; Execute does NOT open until the seat consumes the wave gate returns (A9.2).
+
+
+=== ITEM RECORD T192 (Cycle 034, consumed whole) ===
+# Cycle 034 · Wave 31 · Item T192 — Observe + Plan (PHASE A ONLY, Amendment A9.2: no build before wave gate returns are consumed by the seat)
+
+- Item: queue #90 · T192 — giant pixel numeral as a stagnation stake ("1971") · Packet #11 ("Caption with Intention", FCB Chicago) technique P11-T03, window 22–27 s.
+- Artifact dir: `hidden_files/study/recreations/T192-giant-pixel-numeral/` (+ `codex/`).
+- Registration limits (Packet #11): bound film is a trade-press re-upload, version fidelity UNVERIFIED; cut count UNVERIFIED. Neither blocks measuring T192 against this archive (codex-observe finding 4).
+- Source: `hidden_files/study/video-digests/2026-11-17-lia-caption-with-intention/source.mp4` — 1920×1080, 24 fps, 113.734 s, sha256 `68c14baae69f4f05c2ebb28d59afc4c9e3ce28d7d31acb7393a67d8c185c435b` (probe.json; re-verified by codex-observe).
+
+## §1 Observe
+
+### Mechanics summary (census-priced, not digest-priced)
+On black: the line "DESPITE THIS, CAPTIONS HAVE REMAINED UNCHANGED, SINCE 1971" stands crisp in small pixel type at the bottom (y≈0.875) while particles coalesce in four loose clusters at the numeral's top band → a formation front sweeps top→bottom: rows above the front are SOLID block-pixel glyph, rows below are falling particle rain → by ~24.0 s the numeral "1971" is fully solid (white block-pixel glyphs ≈70% frame width, ≈44% height, centre y≈0.47) with only residual specks at its bottom edges → clean static HOLD (no background particles visible) → exit somewhere inside 26.0–27.0 s (form unmeasured) into the next beat's particle band. One number carries the claim; nothing else moves during the hold. The digest's claim that the *line* "appears lettered in dissolving particles" is contradicted by the census (line crisp at the first black frame; the particles belong to the numeral) — census governs (departure D3 below). The register's "held ~3 s" is an estimate: measured legible span 24.0→26.0 = 2.0 s minimum (codex-observe finding 2).
+
+### Sub-beat timings (segment time → state)
+| Segment | State |
+|---|---|
+| 22.0–~22.7 | Tail of prior beat T02 (signer, "#3 DON'T IDENTIFY SPEAKER" leaving) — NOT this technique |
+| ~22.7–23.0 | Cut to black; line present; particle clusters coalescing at numeral top band |
+| 23.0–24.0 | FORM: front sweeps top→bottom; downward particle rain below the front |
+| 24.0 | Formation complete (residual specks at bottom edges) |
+| 24.0/24.5–26.0 | HOLD: clean, static, no visible background particles |
+| 26.0–27.0 | EXIT (form unmeasured — allocation A-EXIT) |
+| 27.0 | Next beat T04 particle band — NOT this technique |
+
+### Motion census (A10.3) — `census/T192/`, viewed firsthand by the builder
+| Frame | SHA-256 | Per-instant finding |
+|---|---|---|
+| f-22.0.jpg | cde149b71f2399f55b5ab8adacf8b7a4c343af49c44382fe4aa372e215be79a1 | MOTION (prior beat): signer mid-gesture, "#3 DON'T IDENTIFY SPEAKER" overlay standing |
+| f-22.5.jpg | 23ff1a662986f40293cdebc44c720e4a95cd5e450c2f55d1a94e6d4f78bfdff2 | Prior beat tail: signer only, big text gone; technique not yet begun |
+| f-23.0.jpg | edc5cc5d66849ab41a37a9c8f36642f4bc877280e9d7c75026965497ea302eff | TECHNIQUE OPENS: black; line crisp at bottom; 4 loose particle clusters at numeral top band — coalescence in motion |
+| f-23.5.jpg | a80abee7b6eba14639b7d2b934b26a9119b8805259856421877fed7ed171d1a4 | FORM mid: digit top halves solid; particle rain falling below the front |
+| f-24.0.jpg | 0e6ba13f9743d62bdbc94e26f7ca5ff214741ed57dc568ee9f0a0c29bbfce30b | FORM complete: numeral solid; tiny residual specks at bottom edges |
+| f-24.5.png | 826100edc36677b2238e21eecb13ba641523625257cbfc573a7a1224d4807aea | HOLD: clean, static |
+| f-25.0.jpg | 8061599d9ad3c8d249bdd21caccc5a17cb39cbbc92286c652fb53745582aa002 | HOLD: clean, static (identical composition) |
+| f-26.0.jpg | d98f57459718d2a029197df6bbc3c99dff22a4aff76847a58c7aec7dc5e48799 | HOLD: clean, static — last confirmed hold frame |
+| f-27.0.jpg | f7904f3c24557ab3f9a52730e8959bb73670ffb68ac5fb286e28a1662cf39555 | EXITED: numeral gone; sparse mid-frame particle band = next beat T04 |
+
+Motion summary: motion lives ONLY at 22.7–24.0 (coalescence + front + rain) and inside 26.0–27.0 (exit, unmeasured); 24.5–26.0 is a true hold. Extraction note: three frames (22.0/23.0/24.5) initially landed 0-byte under the measured exec write-fault and were re-extracted singly (24.5 as PNG via post-input seek); all nine finals are non-zero with distinct hashes above.
+
+Evidence frame viewed firsthand: `ev/t024-since-1971.jpg` (sha256 5b62acfd4de4c55947738ed6021d044cabb5f4a4944b084f3cf2306b2206be27) — solid "1971" over the line, matches census hold state.
+
+### Variable list (§1.3)
+Numeral text · line text · palette bg/fg/reserve · flow direction · stream speed · pool sizing mode + reserve fraction · particle size · jitter amplitude · borrow/reserve/reserve-hold opacities · sampling grid step · numeral width + height fit + centre · line size + y · formation start/duration · front sweep duration · cluster lead · line fade duration · exit start/duration · seed.
+
+### Consumer
+Academy explainer production — openings / diagram surfaces (Let's Build It Together shorts): one load-bearing number planted as a stagnation stake at full-frame scale (a founding year, a count, a price) that forms from the production's own particle register and holds. Family file feeds: opening · diagram. The line slot carries the stake's one-sentence claim (specimen's own technique text, not a caption overlay — §6.5 priced: it is part of the observed composition, codex-plan-review finding 5).
+
+### Codex-observe — verdict + disposition
+**CONFIRMED-WITH-GAPS** (filed verbatim: artifact `codex/codex-observe.md`). Dispositions: (1) digest's particle-line claim — SET ASIDE on census evidence, census governs (D3). (2) "~3 s hold" — APPLIED as gap: Plan prices the measured 2.0 s legible span, hold end bounded by exit window. (3) Window edges are neighbouring beats — APPLIED: departures D1/D2 + §3 cut with handles. (4) UNVERIFIED limits — carried on this record's face (above). (5) Family audit — APPLIED and EXTENDED: T15 attempts 2 (80.0, 5-lens, FAIL) and 3 (85.2, 5-lens, PASS → RECREATED) from practice filings join the baseline; its caution that the clean hold gives "no basis for importing visible reserve particles as a source mechanic" is APPLIED via `particle.reserveHoldOpacity = 0.0`. Its "Limits" note (this file absent at firing time) is closed by this filing.
+
+## §2 Plan (as amended by codex-plan-review dispositions — see below)
+
+### Schedule basis + census-anchor mapping (A7 · A10.2)
+**Schedule basis: segment-anchored.** Proposed §3 segment window: **cut 21.5–27.5 s** from source.mp4 (catalogue 22–27 s ± 0.5 s handles) into the artifact dir as `segment.mp4`. ONE clock origin for comparison + assertions (plan-review finding 3): recreationMs = videoMs − 500, so recreation 0 ms ≡ segment 22.0 s; the 21.5–22.0 handle plays as pre-roll black in the comparison only. Recreation duration 5000 ms ≡ segment 22.0–27.0.
+
+| Census anchor (segment) | Recreation ms (CONFIG expression) | Prescribed state |
+|---|---|---|
+| 23.0 clusters + line | `time.formationStartMs` = 500 | Line rendered; top-band borrowed fraction ∈ (0.2, 0.6) — reachable because borrowing starts at formationStartMs − clusterLeadMs |
+| 23.5 front mid | formationStartMs + frontSweepMs×0.5 + (formationDurationMs − frontSweepMs)×0.5 = 1000 | Rows above front occupancy ≥0.95; downward-moving particles present below front |
+| 24.0 formed | formationStartMs + formationDurationMs = 1500 | Occupancy ≥0.98; residual specks allowed |
+| 24.5 clean hold | formationStartMs + formationDurationMs + 500 = 2000 | ALL visible loose particles (reserve included) = 0 above threshold |
+| 26.0 hold standing | `time.exitStartMs` = 4000 | Occupancy ≥0.98 |
+| 27.0 exited | exitStartMs + exitDurationMs = 5000 | Occupancy ≤0.02 |
+
+### Departure table (A10.2)
+| # | Departure | Reason |
+|---|---|---|
+| D1 | Build opens on black; original 22.0–22.5 is T02's signer tail | Signer footage is the prior technique (T191/T02 family), not T192's mechanic; §8 core-mechanic scope (plan-review finding 5 concurs) |
+| D2 | Exit modeled as RELEASE back to stream velocity over exitDurationMs (A-EXIT allocation) | Census bounds the exit only to the 26.0–27.0 interval; its form is unmeasured at 0.5 s sampling |
+| D3 | Line does NOT form from particles; it fades in over line.fadeMs during the pre-state | Census contradicts the digest prose (line crisp at first black frame); codex-observe finding 1 |
+
+### Parameter table (every variable = named CONFIG key · specimen default · ONE coordinate basis: logical canvas 960×540, all px values logical)
+| CONFIG key | Default | Notes |
+|---|---|---|
+| text.numeral | "1971" | sampled at runtime (A1.2) |
+| text.line | "DESPITE THIS, CAPTIONS HAVE REMAINED UNCHANGED, SINCE 1971" | specimen technique text |
+| palette.bg / palette.fg / palette.reserve | "#000000" / "#ffffff" / "#ffffff" | separation rides opacity + borrow flag, validated under swaps |
+| flow.directionDeg | 90 | downward stream (rain direction, census) |
+| flow.streamVelocityPxPerSec | 140 | logical px/s along directionDeg |
+| particle.poolFromTargets | true | pool = sampled target count + reserve, computed at init (plan-review finding 1); particle.poolCountMin = 900 is a floor, not the budget |
+| particle.reserveFraction | 0.25 | of total pool; never borrowed |
+| particle.sizePx | 5 | logical |
+| particle.jitterPx | 1.5 | borrowed particles keep low-amplitude jitter, never zero velocity (A5.4) |
+| particle.borrowOpacity | 1.0 | FOREGROUND (borrow flag) |
+| particle.reserveOpacity | 0.35 | BACKGROUND during PRE/FORM/RELEASE |
+| particle.reserveHoldOpacity | 0.0 | census-priced: no reserve visible in hold (codex-observe finding 5) |
+| grid.sampleStepPx | 5 | logical; targets = occupied cells of the sampled glyph |
+| numeral.widthFraction | 0.70 | fit rule: scale sampled glyph box to widthFraction × canvas width AND height ≤ numeral.heightFractionMax, uniform scale, centred |
+| numeral.heightFractionMax | 0.44 | census glyph height ≈44% |
+| numeral.centerYFraction | 0.47 | |
+| line.sizeFraction | 0.028 | of canvas height |
+| line.yFraction | 0.875 | |
+| line.fadeMs | 300 | D3 fade-in |
+| time.clusterLeadMs | 350 | borrowing for top band starts before formationStartMs (plan-review finding 3) |
+| time.formationStartMs | 500 | ≡ segment 23.0 |
+| time.formationDurationMs | 1000 | |
+| time.frontSweepMs | 700 | top→bottom front lag inside formation |
+| time.exitStartMs | 4000 | ≡ segment 26.0 |
+| time.exitDurationMs | 1000 | A-EXIT |
+| seed | 19211 | deterministic RNG |
+
+### Construction choice + rejected alternatives
+**Chosen:** one self-contained HTML file, canvas 2D, ONE constant flow field (A5.4): every particle always carries the stream velocity along flow.directionDeg; FORM = borrowing onto runtime-sampled targets (A1.2: CONFIG.text.numeral rendered offscreen in a heavy monospace face, sampled on grid.sampleStepPx — the lawful letterform construction, T15 purity 100 precedent), borrow windows ordered by target row via time.frontSweepMs with per-particle seeded jitter so the front reads as coalescence, not a wipe; borrowed particles keep jitter (never zero velocity); reserve fraction never borrowed; unassigned surplus keeps streaming (never freezes — T15 convergent cure). LOCK: when a borrowed particle arrives, its cell takes over rendering as a solid filled rect at borrowOpacity and the particle returns to the stream (defines the census solid hold + the takeover the plan-review demanded); RELEASE starts from each cell's on-screen position with stream velocity continuity. Rendering states defined for every class: streaming-reserve (reserveOpacity), streaming-surplus (reserveOpacity), borrowing (borrowOpacity ramp), locked cell (borrowOpacity), released (borrowOpacity → reserveOpacity over exit). Phase machine PRE → FORM → HOLD → RELEASE → DONE is the single stage owner (A5 Cure 2 exclusivity survives reuse/restarts). Intensity separation (A5 Cure 1) rides the borrow flag and is asserted as an invariant (borrowOpacity > reserveOpacity; composited background dimmer than foreground) under palette swaps.
+Rejected: CSS keyframes (no per-particle borrow/reserve state) · SVG draw-on (stroke register, not pixel cells) · DOM-per-particle (pool-scale perf, no canvas sampling) · traced bitmap / frame image (purity refusal class §6.1).
+
+### Verification plan
+- Swap test (scratch copy / URL params): text.numeral "1971"→"2049" AND glyph-count change "1971"→"12345" in a second pass · text.line → "SAME FRAME, FIFTY YEARS LATER" · time.formationDurationMs 1000→1600 (all A11 instants must move) · palette.fg "#ffffff"→"#ffd23f" with separation invariant re-asserted. Technique must still read.
+- Purity: greps on recreation.html for `segment.mp4|source.mp4|t024|<video|<img` = 0 hits; asset inventory = code only (no external assets).
+- A6 legs pre-wave: fit-table.md + config-census.md filed in artifact dir.
+- Count assertion (A9.3): sampled target cells vs built locked cells printed in build-record, halt on mismatch; source-count vs built-count also in wave summary.
+- Comparison sync: comparison.html, shared play/pause/restart, recreation clock slaved to video currentTime via the single mapping recreationMs = videoMs − 500; labels ORIGINAL — Caption with Intention @ 22–27 s · RECREATION — T192, parameterized; phone-width stacking.
+- Scoring wave: five lenses (motion · timing · purity · reusability · readability), bar avg ≥85 AND min ≥70.
+
+### Execute checklist (§3)
+1. Cut segment.mp4 (21.5–27.5 s, re-encoded) into artifact dir — evidence only.
+2. Build recreation.html from the parameter table (CONFIG first, logic reads CONFIG only).
+3. Build comparison.html (shared controls, single clock mapping, labels, phone stacking).
+4. Own checks in order: swap test → purity greps + asset inventory → comparison check → A6 legs → A11 checkpoint assertions via logic harness (raw output filed in build-record from first draft, A9.4).
+5. jev-prewave, then the five-lens Codex wave; scores.md with arithmetic; tier hand-off. (Execute opens ONLY after the seat consumes the wave gate returns — A9.2.)
+
+### Verify checklist (§5)
+Swap altered values recorded + result · purity grep raw output · comparison both-sides play + duration match + labels + phone stacking · A6 leg outputs filed + cited · checkpoint assertions all evaluated at CONFIG-derived instants · five lens returns filed verbatim before verdict · scores.md arithmetic shown, no rounding across the bar.
+
+### Failure-point evaluation + plateau priced in Plan (A2)
+Family baseline (lens counts labeled): T15 a1 78.5 (4-lens) FAIL — motion 68, reuse 64 convergent on surplus freeze · T15 a2 80.0 (5-lens) FAIL — reuse floor 58 · T15 a3 85.2 (5-lens) PASS — motion floor 76 after reuse cured · T45 a1 88.2 (5-lens) PASS — reuse floor 78. Five-lens family mean = (400+426+441)/15 = **84.47** (plan-review arithmetic, adopted). Named failure classes priced: convergent freeze — impossible by construction (reserve + surplus always streaming, jitter never zero, velocity continuity incl. lock/release) · intensity collapse — borrow-flag opacities + swap-invariant assertion · phrase overlap — single-subject phase machine · fitting limits — one logical canvas (960×540), fit rule binds width AND height; at 360 px phone width the numeral spans ≈134 logical cells across (0.70×960÷5), legibility re-checked in swap at phone size · render-proof limitation — no browser binary in this seat: logic-harness checks + PIXEL-UNVERIFIED printed on the attempt (lane standing limitation).
+**Plateau / stuck-lens hypothesis (before Execute):** plan-review finding 4 is ADOPTED over the draft's motion-first guess — **as drafted, REUSABILITY is the predicted minimum** (unbounded pool, ambiguous basis, coupled timing — the family's recurring floor: 64/58/78). The Plan amendments above (pool-from-targets, one coordinate basis, single clock origin, derived checkpoints) are the priced cures; **after those cures, MOTION becomes the predicted floor** (T15 a3's pattern: motion 76 once reuse was fixed) — hypothesis: the directed top→bottom front is this family's hardest motion to keep reading as particle coalescence rather than a wipe; mitigations priced in construction (seeded per-particle borrow windows, front lag 700 < formation 1000, rain continuity). If the wave lands reuse < motion anyway, the plateau is named in scores.md per A2 with this paragraph as the prior.
+
+### Census-checkpoint → own-check assertion mapping (A11)
+| Checkpoint | Assertion | CONFIG-derived instant |
+|---|---|---|
+| CP-23.0 | top-band borrowed fraction ∈ (0.2, 0.6); line rendered | `time.formationStartMs` (borrowing pre-seeded by `time.clusterLeadMs`) |
+| CP-23.5 | rows above front occupancy ≥0.95 AND downward-moving particles present below front | formationStartMs + frontSweepMs×0.5 + (formationDurationMs − frontSweepMs)×0.5 |
+| CP-24.0 | glyph occupancy ≥0.98 | formationStartMs + formationDurationMs |
+| CP-24.5 | visible loose particles (ALL classes incl. reserve) = 0 | formationStartMs + formationDurationMs + 500 |
+| CP-26.0 | occupancy ≥0.98 (hold standing) | `time.exitStartMs` |
+| CP-27.0 | occupancy ≤0.02 (exited) | exitStartMs + exitDurationMs |
+Plus continuity assertions (plan-review finding 1): free-particle displacement > 0 across FORM for every class incl. surplus; position/velocity sampled on both sides of LOCK and RELEASE boundaries. A CONFIG timing swap must move every instant above (verified in the swap pass).
+
+### Codex verdicts + dispositions
+- **codex-observe: CONFIRMED-WITH-GAPS** → dispositions in §1 above (all gaps applied or carried; none set aside except the digest prose claim, set aside ON census evidence).
+- **codex-plan-review: REVISE** → ALL findings APPLIED to this Plan before Execute: (1) pool budgeted from sampled targets, surplus streams, lock/release takeover + continuity assertions defined · (2) rendering states for idle/released particles, separation invariant under swaps, CP-24.5 counts ALL loose particles, single stage-owner phase machine · (3) flow.directionDeg + height fit rule + clusterLead/line-fade/exit as CONFIG keys, ONE logical canvas (960×540), ONE clock origin (cut 21.5–27.5, recreationMs = videoMs − 500), glyph-count swap added, CP-23.5 gains the below-front rain assertion · (4) predicted minimum corrected to REUSABILITY-as-drafted → MOTION-post-cure; five-lens family mean 84.47 adopted · (5) size discipline PASS — no change. No finding set aside.
+- Firing notes (both calls): the prescribed `> codex/*.md` redirect dies under the measured exec write-fault (exit 101, 0-byte) and the local binary's default workspace-write sandbox panics on its bubblewrap mount; both calls were fired ONE-stream via `cat payload | ~/workspace/codex-local/node_modules/.bin/codex exec -s read-only -` from the artifact dir (TOOLS.md working route), stdout captured, returns transcribed verbatim into the artifact `codex/` files with the note on their faces. The plan-review capture lost its first line(s) to the tail window; the REVISE verdict + all five findings are intact on the filed return.
+
+## Phase A gate state
+Observe + Plan complete for T192. NO HTML built (A9.2). Remaining Phase-A gap for the seat: jev-observe-exit / jev-plan-exit are wave-level calls owned by the seat's §2b, not this item task; the exit form of the numeral (26.0–27.0) and the line's exact entrance frame (22.5–23.0) remain bracketed, not frame-exact — both are bounded allocations in this Plan, not open unknowns.
+
+
+=== ITEM RECORD T195 (Cycle 034, consumed whole) ===
+# Item T195 — Observe + Plan · recreation Cycle 034 Wave 31 · PHASE A ONLY (no HTML built — Amendment A9.2)
+
+- **Item:** queue #91 · T195 — word-by-word spoken-state highlight sweep · Packet #11 ("Caption with Intention", FCB Chicago) technique P11-T06, window 38–48 s.
+- **Artifact dir:** `hidden_files/study/recreations/T195-spoken-state-highlight-sweep/` (+ `codex/` with payload-observe.txt, codex-observe.md, payload-plan-review.txt, codex-plan-review.md).
+- **Tier state:** DESCRIBED — OWED #91 (TECHNIQUES.md line 138; family file techniques-word-animation.md, canonical T195 entry). No prior attempt.
+- **Governing:** recreation INSTRUCTION §§0–3, 5–6 + Amendments A5/A6/A7/A9/A10/A11 as charged.
+
+## §1 OBSERVE
+
+### 1.1 Mechanics (census-governed; packet prose corrected where the census disagrees)
+On a black stage, one line-chunk at a time sits centered. The 17-word sync-demo sentence (ASR 40.18–47.14 s) plays as **four successive chunks**, each chunk **fully pre-lit in white (the unspoken state) from its first frame** — nothing appears at a word's onset; something *changes* (packet T07 pre-lighting, confirmed in this window):
+- L1 `Caption with Intention uses` · L2 `dynamic text animation,` · L3 `so captions are synchronized` · L4 `precisely as each word is spoken.`
+- Chunk change is a **cut** at the next chunk's first word onset (bracketed: L2 on screen @41.6 and @42.6; L3 on screen @43.6; the L2→L3 cut sits between the 42.48 s word end and the 42.96 s onset).
+- At each word's spoken onset, a **white→yellow gradient sweeps left→right through the word's letters**, completing at roughly the first ~70% of the word's spoken duration; letters behind the front are fully yellow, ahead fully white, and the front itself is a **soft gradient band several letters wide** (mid-word states viewed firsthand: `Caption` @40.6, `animation,` @42.3, `synchronized` @43.6, `precisely` @44.4).
+- The **currently-sweeping word lifts above the baseline** while it sweeps: word `is` is raised and still white @46.1, pale and raised @46.6, settled and yellow @47.1. The packet's "the line does not move" is corrected: the line is anchored; the active word lifts (departure D1 below).
+- After the last word, the completed chunk holds fully yellow with baseline restored — first observed complete @47.1 s.
+- Head/tail of the catalogue window: @38.0 the system-grid montage (T05 territory, not this technique); @39.0 a pixel-dissolve transition field; the `Synchronization` label card runs 39.56–~40.2 s and is dissolving @40.2 (pixel squares above the word); @47.8 the next demo's `Intonation` card (T197) — outside this technique.
+
+### 1.2 Registration limits — verified and stated
+- Bound film is a **trade-press re-upload** ("Caption With Intention PR FILM", ReelChicago Reel360, YouTube id xmo3_URTIlg, uploaded 2025-05-02), not the entrant's own channel — **version fidelity UNVERIFIED** (packet §1/P-A3). Carried, not cured: the recreation proves the mechanic as bound, not the entrant's master.
+- **ASR census gap does NOT touch this window — verified:** transcript.json's segment list is continuous through the window (segments 31.86–38.58, 39.56–40.18, 40.18–47.14, 47.76–48.24 all present with word timestamps); the priced gap is the Forrest Gump film-within-film exchange ~66–75 s, which returned no ASR segments. No overlap with 38–48 s.
+- Automatic real-time operation **UNVERIFIED** (P-A1): frames demonstrate speech-associated state flips; the recreation proves the visual mechanic against a fixed onset table, not live ASR.
+- Packet §5 measured facts used: pre-lighting confirmed · narration 161 wpm · sync-demo 17 words onset 40.18–46.12 s ≈ 2.9 words/s.
+
+### 1.3 Variables (§1.3 — every property that can change without changing the technique)
+Word list/content · chunk grouping (words per chunk) · per-word onsets and durations (the schedule) · unspoken color · spoken color · background color · font stack · font size · sweep speed fraction (share of word duration the sweep occupies) · sweep front softness (letters) · lift height · lift settle time · label-card presence/text/timing · stage aspect/size · end hold duration · line vertical position.
+
+### 1.4 Consumer
+DLC assembler + Hadosh Academy production — **word-animation containers** (dialogue/emphasis surfaces): the parameter source is the SPEECH EVENT (an onset table), not sequence position. Secondary: Academy explainer Q&A/dialogue pieces.
+**Captions note (fleet law):** no captions/subtitles anywhere in the build — the swept text IS the technique subject, not a caption (INSTRUCTION §3.2/§6.5). No caption plate, no subtitle track; the comparison's labels are the only added text.
+
+### 1.5 Motion census (A10.3) — 23 frames, source.mp4, ≤1 s spacing (denser 41.6–42.6), viewed firsthand
+Census dir: `runs/2026-11-18-cycle-034-wave-31/census/T195/` · Per-instant findings (segment-relative ms = (source s − 39.50) × 1000):
+
+| frame | source s | seg ms | finding |
+|---|---|---|---|
+| f-38.0 | 38.0 | −1500 | system-grid montage (T05) — window head context, not T195 |
+| f-39.0 | 39.0 | −500 | pixel-dissolve transition field (white dashes on black) |
+| f-39.8 | 39.8 | 300 | label-card beat (not individually re-described; card window 39.56–40.18 per ASR) |
+| f-40.2 | 40.2 | 700 | `Synchronization` card in yellow, pixel-dissolving top-right |
+| f-40.6 | 40.6 | 1100 | L1: `Cap` bright yellow, `tion` pale gradient — Caption mid-sweep, soft front; rest white |
+| f-41.0 | 41.0 | 1500 | L1 mid-sweep (Intention onset zone) |
+| f-41.6 | 41.6 | 2100 | L2 already up: `dynamic text animation` all white except a pale tint on the LAST letter of `dynamic` — AMBIGUOUS vs L→R model (see gap G-µ) |
+| f-41.9 | 41.9 | 2400 | L2: `dynamic` fully yellow, `text animation` white |
+| f-42.0 | 42.0 | 2500 | L2 sweep continuing into `text` |
+| f-42.1 | 42.1 | 2600 | L2: `dynamic text` fully yellow, `animation` white |
+| f-42.3 | 42.3 | 2800 | L2: `anima` yellow, `tion` white — animation, mid-sweep |
+| f-42.6 | 42.6 | 3100 | L2 complete/hold (chunk fully yellow before L3 cut) |
+| f-43.2 | 43.2 | 3700 | L3 up, sweep in progress (captions zone) |
+| f-43.6 | 43.6 | 4100 | L3: `so captions are synch` yellow, `ronized` white — synchronized mid-sweep |
+| f-44.0 | 44.0 | 4500 | L3 complete; L4 cut at 4540 |
+| f-44.4 | 44.4 | 4900 | L4: `precise` yellow, `ly` white — precisely mid-sweep (this is the packet's ev/t044 instant) |
+| f-44.9 | 44.9 | 5400 | L4: precisely + as yellow; each onset zone |
+| f-45.2 | 45.2 | 5700 | L4: `word` yellow at its onset frame; `is spoken.` white on baseline |
+| f-45.6 | 45.6 | 6100 | L4: is onset zone |
+| f-46.1 | 46.1 | 6600 | L4: `is` RAISED ~0.35 em above baseline, still white; `spoken.` white |
+| f-46.6 | 46.6 | 7100 | L4: `is` pale yellow, STILL RAISED; `spo` of `spoken.` yellow |
+| f-47.1 | 47.1 | 7600 | L4 FULLY yellow, baseline restored — completion |
+| f-47.8 | 47.8 | 8300 | `Intonation` label card (T197) — window closed |
+
+Full SHA-256 (census frames):
+```
+f-38.0.jpg  5c0f246e96917b1a5efefb830f6d75a65d27a07527ee153132d07e33f1edfba0
+f-39.0.jpg  060b1eb83c728f953511f85c3968d7d637bbd119ed820d9bdc7039cabb2191e9
+f-39.8.jpg  5986fc54a4c53e725fddd2a1ddd15580db3516bbc1515fc6701bff4812e08dcc
+f-40.2.jpg  b57d9d19423b3754831a3bc33caeba98b5fad73df8bec6e3b5060516205525bf
+f-40.6.jpg  f16c4c59bc9f2e0a39d76c5be2f2f38ad9eeb471a8f5b66d02dd1dbfeea1dda6
+f-41.0.jpg  179494ddc43869d9e3144d9f5501ed335f4347d98bedec64681a218df514645d
+f-41.6.jpg  2620401792eff26039e432fb6ee111c7443e519c6cb67b1335d080732d4d8fc5
+f-41.9.jpg  699ced8d9bbd4c323d52e92c85d5bf38705b85e3f0d632ee852c63591ba3ea9f
+f-42.0.jpg  c8511df63e9762bcfef4c2831dc538ab4aa55852fe85b4d0419a63c75eb84842
+f-42.1.jpg  42bbf26bfd1a132f54c5c17474c2a10c5732211d099d178cd9d16364a1869edc
+f-42.3.jpg  51d5c1ca9230b7afcb05522b3f6e59b11a8e29f9d602906761c56135ea87951c
+f-42.6.jpg  9b8ce58a7d90f94b3a61bc0434dda63e31a5c5ab193cf138aa1bb248ac66aa76
+f-43.2.jpg  62c10f83969fee91cd263cc0aa13b31136f6467026b35c0cdafc9304a591ebd0
+f-43.6.jpg  5017b3fb3c3f118712a857af70a67e03deb6d61359d9999db2237c08a1ba8315
+f-44.0.jpg  92f2557b049e53ced2cb37d5813c7745d40873d9c415bc44a5c44ba428575f6c
+f-44.4.jpg  eb4a3673cb634dd3fa8e22f9100784ab6986801c8f8a99fa1189707b124fee6b
+f-44.9.jpg  f4dccd07f3539da11cdb63b21442e6627088a9da43204cc368f1cd6972a16054
+f-45.2.jpg  f71bcadf3950b74094e83cb9156796023b2e6dfd50896f8c1564a7b105235826
+f-45.6.jpg  7160c24a64da1fc52f3fdd938f10f2f44911ec5ce165734c135cf4eb885df94f
+f-46.1.jpg  c83ca54ab83e1a757ef27599f929202acfa4f850524fd2b900ef57e531d28649
+f-46.6.jpg  d7acd8a2a69333d0c7d55f71c9fa0c2d4a42f2312caaea5e9bc229ba3b94169d
+f-47.1.jpg  78b32684e178d2e372634a8af29ddd04f46dc4fffcf3085fdef3f122f7ee1505
+f-47.8.jpg  6f1ee00971fb2f8e5f8b05f781afc5f8b5785e6e75cfb6bd0b8a0624fbe88fbe
+```
+Evidence frames viewed firsthand: ev/t044-sync-highlight-mid.jpg (sha256 8fe5b44cc55b32a2cfa74ad028ce80aeb82144f5e42fd671607784c831fadcca — the 44.4 s `precisely` mid-sweep) · ev/t046-sync-highlight-complete.jpg (sha256 09132ce4c278c3d112fbd26ec9bc0dfde1edbd28f80dce5d63b7eb0cffc840a4 — actually the 46.1 s state: `is` raised/white, NOT complete; label corrected by census f-47.1).
+Census production note: the platform write fault (TOOLS.md) zeroed 8 first-pass frames on overwrite; all 8 were re-extracted to non-existing targets with retries until non-zero (sizes verified) — final set above is complete, no 0-byte frames.
+
+**Gap G-µ (named, carried into Execute as a gate):** f-41.6's tint sits on the LAST letter of `dynamic` where the L→R model predicts the first letters, and several census fronts run behind a naive onset→end model while `text` completes early (full at ASR p≈0.69). The sweep micro-structure (soft-band width, visual lag vs ASR on short function words) is NOT settled at 1 s census resolution. Execute opens with a 24 fps micro-census of 41.50–42.00 s and 46.00–46.80 s; the sweep function is finalized only from those frames (Plan §2 construction is conditional on this, per codex-plan-review finding 1).
+
+### 1.6 Codex-observe — verdict + disposition
+**Verdict: CONFIRMED-WITH-GAPS** (filed verbatim: artifact `codex/codex-observe.md`; payload `codex/payload-observe.txt`).
+Findings: (1) chunking + word motion — packet lists 3 chunks, census shows 4; packet/family say line does not move, census shows word lift; (2) timing/labels — packet's "at 44 s `each` has just flipped" conflicts with ASR onset 44.88 and the 44.4 mid-sweep of `precisely`; ev/t046 "fully yellow" label wrong, completion at 47.1; (3) segment coverage — clip is 40–47 s, full source needed for edges (census supplies it); ASR gap outside window; P-A1 + version fidelity unverified; (4) sibling arithmetic all recomputed correct (T03 396/79.2/55 · T12 377/75.4/62 · T132 416/83.2/76, all five-lens FAIL); T03 practice attempt-3 89.0 UNVERIFIED in the fed record (component scores not fed).
+**Disposition: APPLIED in full.** Every gap was already closed firsthand by the §1.5 census before the return landed; the census governs where it and the packet prose disagree (departures table, Plan §2). Sibling arithmetic independently recomputed by the builder from the filed scores.md files — matches.
+**Firing record (honesty):** the prescribed redirect form (`> codex/codex-observe.md`) died twice at exit 101 with 0-byte output under the platform write fault (any file-redirect in the same invocation as the payload read is refused); two stdout-capture firings returned NOT-CONFIRMED because Codex attempted tool use and its sandbox host panicked (bubblewrap mount EPERM) — void tool-host failures, not record findings; the payload then gained an explicit fed-only line (the guard's feeding contract is a fed review) and the next two stdout firings both returned CONFIRMED-WITH-GAPS with agreeing findings; the later return is filed verbatim via the file tool.
+
+## §2 PLAN (revised under codex-plan-review REVISE — dispositions in §2.7)
+
+### 2.1 Schedule basis + census-anchor mapping (A7/A10.2)
+**Schedule basis: segment-anchored.** Proposed §3 segment window: **source 39.50–47.50 s (8.00 s)** — label card (39.56–~40.2) + full demo (40.18–47.14) + completion hold; the Intonation card (47.76+) is excluded.
+**Single authority (plan-review finding 3, applied):** CONFIG stores ALL times as **source-absolute ms** plus `segmentStartS: 39.5`; the build derives segment-relative time as `sourceMs − segmentStartS×1000` at load for every word, chunk, and the label card. Changing segmentStartS re-derives the whole schedule; no second basis exists.
+
+Per-word schedule (CONFIG `lines`; source-absolute onset–end ms, from transcript.json ASR word timestamps; segment-relative in parentheses):
+- **L1** (visible from 40180): Caption 40180–40820 (680–1320) · with 40820–40960 (1320–1460) · Intention 40960–41200 (1460–1700) · uses 41200–41560 (1700–2060)
+- **L2** (from 41560): dynamic 41560–41920 (2060–2420) · text 41920–42180 (2420–2680) · animation, 42180–42480 (2680–2980); hold to 42960
+- **L3** (from 42960): so 42960–43040 (3460–3540) · captions 43040–43300 (3540–3800) · are 43300–43500 (3800–4000) · synchronized 43500–44040 (4000–4540)
+- **L4** (from 44040): precisely 44040–44420 (4540–4920) · as 44420–44880 (4920–5380) · each 44880–45200 (5380–5700) · word 45200–45560 (5700–6060) · is 45560–46120 (6060–6620) · spoken. 46120–47140 (6620–7640); end hold to segment end 47500 (8000)
+
+Census-anchor mapping — prescribed state at each census instant (model: sweep progress p = clamp((t−onset)/((end−onset)×sweepFraction)); front position = p × letterCount, blended over frontSoftnessLetters):
+| census instant (seg ms) | prescribed state | census observed | match |
+|---|---|---|---|
+| 1100 (Caption) | front ≈ 0.94×7 letters, soft band trailing | `Cap` bright, `tion` pale gradient | PARTIAL — band wider/slower than naive model; priced as softness+lag slack, micro-census gate |
+| 2800 (animation,) | p=0.57 → ~5/9 letters | `anima` yellow | ✓ |
+| 4100 (synchronized) | p=0.26 → ~3–5/12 letters | `synch` (5) | ✓-ish |
+| 4900 (precisely) | p capped 1.0 → full | `precise` 7/9 | BEHIND model — visual lag named; source-fidelity assertion SF4 prices it |
+| 6600 (is) | is lifted, fill ≈ 0 (visual) | is raised, white | ✓ under lift-leads-color model (§2.3) |
+| 7100 (spoken.) | spoken. front ≈ 0.67; is pale + raised | `spo` yellow; is pale, raised | PARTIAL — is's visual completion lags ASR end; lift/fill follow the VISUAL state (§2.3) |
+| 7600 (all) | every fill = 1, lift = 0 | fully yellow, baseline restored | ✓ |
+
+**Departure table (A10.2):**
+- D1 — packet "the line does not move" → Plan adds per-word lift (census f-46.1/f-46.6). The line/chunk never translates; the active word does.
+- D2 — packet ev/t046 "completed line, fully yellow" → completion asserted at 47.1 s (census f-47.1), not 46 s.
+- D3 — packet's 3-chunk example sequence → 4 chunks (census; L2 `dynamic text animation,` restored).
+- D4 — naive onset→end sweep → sweepFraction 0.7 default (census: `text` fully yellow at ASR p≈0.69; several fronts behind on long words — fraction + softness are CONFIG slack, settled by the Execute micro-census, gap G-µ).
+- D5 — f-41.6 trailing tint → NO schedule claim made; micro-census charge in Execute.
+
+### 2.2 Parameter table (CONFIG keys + specimen defaults — A9.6: every subject-shaping value is data)
+| key | default | role |
+|---|---|---|
+| `segmentStartS` | 39.5 | single timing authority (see §2.1) |
+| `totalMs` | 8000 | build duration (= 47.50 − 39.50) |
+| `lines` | §2.1 table (4 chunks, 17 words, source-absolute onset/end) | words + chunking + schedule — all content |
+| `bgColor` | `#000000` | stage |
+| `unspokenColor` | `#ededed` | pre-lit / unspoken state |
+| `spokenColor` | `#f7e017` | spoken state (sampled yellow, approx) |
+| `fontStack` | `"Roboto Flex", Roboto, Arial, sans-serif` | local stack only — no external font load (film grid names Roboto Flex; if absent locally the stack falls back, priced) |
+| `fontPx` | 54 | at 1920-wide stage; stage-relative scaling |
+| `fitWidthFraction` | 0.92 | measured-width fit bound (canvas measureText at CONFIG font; font scales down by measured ratio — NOT a char-count rule) |
+| `sweepFraction` | 0.7 | share of word duration the sweep occupies |
+| `frontSoftnessLetters` | 3 | gradient band width at the sweep front (plan-review finding 1) |
+| `liftPx` | 14 | active-word lift at fontPx 54 (≈0.26 em; census peak ~0.35 em — PIXEL-UNVERIFIED, micro-census prices it) |
+| `liftRiseMs` | 120 | lift rise at word onset (lift leads color) |
+| `liftSettleMs` | 400 | lift settle after the word's VISUAL fill completes |
+| `labelCard` | `{show:true, text:"Synchronization", startSourceMs:39560, dissolveStartSourceMs:39980, endSourceMs:40200}` | NON-CORE ornament (see §2.7 finding 5): CONFIG-gated, isolated from the sweep engine; comparison registration only |
+| `stageAspect` | `"16:9"` | stage |
+| `lineTopFraction` | 0.46 | chunk vertical position (census: text sits just above middle) |
+
+### 2.3 Construction choice
+One self-contained HTML file. DOM: per-letter spans inside per-word wrappers inside one mounted chunk container; a single rAF clock. Per frame, per word: visual progress `p = clamp((tRel − onsetRel) / ((endRel − onsetRel) × sweepFraction))`; per letter `fill = clamp((p × letterCount − letterIndex) / frontSoftnessLetters + (letterIndex < p × letterCount − frontSoftnessLetters ? 1 : 0))` — equivalently a front at `p × letterCount` with a soft band of `frontSoftnessLetters`; `color = lerp(unspokenColor, spokenColor, fill)`. **Lift ownership (plan-review finding 2, applied):** the phase machine owns lift per word — lift rises over `liftRiseMs` from the word's onset (lift LEADS color, per census f-46.1), holds while the word's visual fill < 1, and settles over `liftSettleMs` after visual fill reaches 1; a later word's onset never cancels an earlier word's settle — envelopes are per-word and independent, so source state and tests agree by construction. **Intensity separation as construction (finding 2):** at any instant at most one word per chunk has 0 < fill < 1 (sweeps are sequential and non-overlapping in the schedule); the completed prefix renders exactly `spokenColor`, the unspoken suffix exactly `unspokenColor`, and the transition region is confined to the active word's soft front — separation is a state invariant, asserted in Verify at phone width by reading DOM state (exact endpoint colors), not by eyeball. **Chunk exclusivity (Owner Cure 2 form):** exactly one chunk is mounted at a time (cut at chunk start = first word onset) — phrase exclusivity is structural, not arithmetic. A5 flow-field guidance priced **NOT APPLICABLE** (no particle pool; the two-state color system IS the intensity separation). Label card: separate CONFIG block rendering before L1, dissolve approximated by opacity+pixel-block fade — named approximation, outside the core engine.
+**Rejected alternatives:** CSS keyframes per word — the 17-word onset/duration schedule would hardcode into CSS, failing parameterization/A9.6 · canvas text rendering — DOM gives layout, wrapping, phone scaling and per-letter color without glyph measurement; canvas is the fallback only if DOM perf fails · per-word `background-clip:text` gradient — still needs the JS clock for the schedule and cannot carry the per-word lift as cleanly; spans subsume it · video/frame-sequence of the original — refusal-class (§6.1).
+
+### 2.4 Failure-point evaluation + plateau priced in Plan (A2)
+Family first-attempt baseline (five-lens): T03 avg 79.2 (timing 55) · T12 avg 75.4 (timing 64, readability 62) · T132 avg 83.2 (motion 76, reusability 76). **Family mean ≈ 79.3 — the plateau this attempt must beat is ~79–83, and TIMING is the family's stuck lens class.**
+- Convergent freeze: impossible by construction (no particle pool, no borrowed reserve — A5 model N/A).
+- Phrase overlap: impossible by construction (single mounted chunk; state is a pure function of t).
+- Intensity collapse: the named risk is the REVERSE — mid-gradient states too similar at phone size; cured by the §2.3 state invariant + endpoint-color assertions.
+- Fitting limits: longest chunk L4 = 38 chars at fontPx 54 fits the 1920 stage; phone fit via stage-relative font + measured-width fit rule (`fitWidthFraction`, canvas measureText — plan-review finding 3).
+- Render-proof limitation: PIXEL-UNVERIFIED — no browser binary guaranteed in this seat; Verify prices source/logic-level checks + the comparison face, labeled as such (fleet precedent T132).
+- **Conservative five-lens projection (plan-review finding 4, applied):** motion 84 · timing 78 · purity 97 · reusability 88 · readability 85 → sum 432 ≥ 425 required, avg 86.4, min 78 ≥ 70 — PASS *iff* the Execute micro-census confirms the gradient+lift model. Downside scenario named honestly: if the micro-census shows discrete letter flips or a different lift profile and the model is not rebuilt, timing falls to ~68 → FAIL on the floor term. Predicted minimum lens: **timing** (family stuck class), conditional as stated.
+
+### 2.5 Verification plan
+- **Swap test (own, before Codex):** different sentence — 2 chunks, e.g. L1 `Reading follows the voice` / L2 `exactly as it is spoken` with fresh onsets — plus ONE timing change (`sweepFraction` 0.7 → 1.0) and ONE palette change (`spokenColor` `#f7e017` → `#ff9f1c`). Technique must still read; exact altered values + result recorded in build-record.
+- **Purity (§5 leg 2):** grep recreation.html for `segment\.mp4|source\.mp4|<video|<img>|\.jpg|\.mp4` → 0 hits required; asset inventory = code only (no external fonts/assets).
+- **A6 legs (pre-wave, non-skippable):** `guards/guard-measured-fit.md` + `guards/guard-config-census.md` outputs filed as `fit-table.md` + `config-census.md` in the artifact dir before the scoring wave.
+- **Comparison check:** segment cut in Execute at 39.50–47.50 s as `segment.mp4` (evidence only, labeled ORIGINAL); comparison.html — shared play/pause/restart, recreation clock slaved to the video/shared start, labels `ORIGINAL — Caption with Intention sync demo @ 40.18–47.14 s` / `RECREATION — T195 spoken-state highlight sweep, parameterized`; phone-width vertical stacking with reachable controls.
+- **Comparison sync method:** sample both sides at the §2.6 source-fidelity instants and compare word states (prefix completeness, active word, lift presence).
+
+### 2.6 Census-checkpoint → assertion mapping (A11) — two classes (plan-review finding 1, applied)
+CONFIG-derived evaluation instant = the CONFIG expression evaluated on the CURRENT schedule (a timing/content swap moves every instant; no hardcoded defaults).
+**Class I — schedule-invariant assertions** (must hold for ANY valid CONFIG; evaluated by the build's own state function in a node harness):
+| # | checkpoint | CONFIG-derived instant | assertion |
+|---|---|---|---|
+| I1 | Caption mid-sweep | `onset(Caption) + 0.66×(end−onset)×sweepFraction` | fill(Caption) ∈ (0.3, 0.95); fill(with/Intention/uses) = 0 |
+| I2 | animation, mid-sweep | `onset(animation,) + 120 ms` (schedule-relative) | fill(dynamic) = fill(text) = 1; fill(animation,) ∈ (0.2, 0.8) |
+| I3 | synchronized mid-sweep | `onset(synchronized) + 100 ms` | fill(so/captions/are) = 1; fill(synchronized) ∈ (0.1, 0.7) |
+| I4 | lift ownership | `onset(is) + 240 ms` | lift(is) = liftPx (risen, leads color); lift(words with fill=1 settled) = 0; lift(word) ≤ lift(is) (settling allowed) |
+| I5 | completion | `totalMs − 400` | every fill = 1; every lift = 0 |
+**Class II — source-fidelity assertions** (at the ACTUAL census timestamps, specimen CONFIG only; these price the model against the film):
+| # | census instant (seg ms) | assertion |
+|---|---|---|
+| SF1 | 1100 | Caption is the only transitioning word in L1; its front lies within the word (0 < front < letterCount) |
+| SF2 | 2800 | front(animation,) ∈ letters 3–7 of 9 |
+| SF3 | 4100 | front(synchronized) ∈ letters 3–7 of 12 |
+| SF4 | 4900 | front(precisely) ∈ letters 5–9 of 9 (NOT complete — prices the visual lag honestly) |
+| SF5 | 6600 | lift(is) > 0 AND fill(is) < 0.5 (lift leads color) |
+| SF6 | 7100 | fill(spoken.) ∈ (0.1, 0.6); lift(is) > 0 (settle follows visual completion) |
+| SF7 | 7600 | all fills = 1; all lifts = 0 |
+
+### 2.7 Codex-plan-review — verdict + dispositions
+**Verdict: REVISE** (filed verbatim: artifact `codex/codex-plan-review.md`; payload `codex/payload-plan-review.txt`). Firing note: fired once, clean, in the fed-only form (same write-fault routing as Observe: stdout capture, filed via file tool).
+- **Finding 1 (sweep/checks disagree; no soft-front parameter; CP instants off-census) — APPLIED:** `frontSoftnessLetters` added (§2.2/§2.3); assertions split into Class I (CONFIG-derived invariants) vs Class II (source-fidelity at actual census timestamps 1100/2800/4100/4900/6600/7100/7600) (§2.6); sweep model explicitly conditional on the Execute micro-census gate (G-µ).
+- **Finding 2 (lift handoff contradicts CP5 and the 46.6 s state; intensity separation needs a construction rule) — APPLIED:** per-word lift envelope owned by the phase machine — rise at onset (leads color), hold while visual fill < 1, settle after visual completion, independent per word (§2.3); Class I4 rewritten to allow the previous word's settle; separation restated as a state invariant (≤1 transitioning word; exact endpoint colors) asserted at phone width in Verify.
+- **Finding 3 (fit rule unbound; two timing authorities; spoken. timing) — APPLIED in part, REBUTTED in part:** fit rule bound as measured-width (`fitWidthFraction` + canvas measureText), char-count rule dropped; single authority = source-absolute CONFIG times + `segmentStartS` (§2.1). REBUTTED sub-point: the Plan's `spoken.` 6620–7640 is NOT a retiming — transcript.json gives the word `spoken.` s=46.12, e=47.14; 47.14 s is the word's END (and the sentence segment's end), not its onset. The fed Observe summary's phrase "onsets 40.18–46.12" was the correct form; Codex misread 47.14 as an onset. No schedule change results. (§1.3 full variable list: Codex priced it NOT ASSESSED from the fed summary — the full list stands in §1.3 of this record and is bound key-by-key in §2.2.)
+- **Finding 4 (bar arithmetic under-supported) — APPLIED:** conservative five-lens projection with sum vs the 425 requirement + a named downside scenario (§2.4).
+- **Finding 5 (label card out of the core) — APPLIED as isolation, not deletion:** the card is a CONFIG-gated non-core block (§2.2), excluded from the sweep engine and from what the technique's score is claimed to prove; it stays because the §3 segment (39.50–47.50) contains the card and the comparison's first 680 ms must not present a wrong state. Setting `labelCard.show:false` removes it with zero core change.
+
+## §3 EXECUTE CHECKLIST (Phase B — not run in this cycle's Phase A)
+1. Micro-census gate (G-µ): extract 41.50–42.00 s and 46.00–46.80 s at 24 fps from source.mp4 into the census dir, view, and settle: sweep front softness, visual lag vs ASR, lift profile (rise/hold/settle), the f-41.6 trailing-tint question. Record findings in the artifact `build-record.md`; adjust `sweepFraction`/`frontSoftnessLetters`/`liftPx` defaults ONLY from those frames.
+2. Cut segment: source 39.50–47.50 s → artifact `segment.mp4` (re-encoded, browser-playable; evidence only).
+3. Build `recreation.html` per §2.2/§2.3 — CONFIG at top (source-absolute schedule), DOM per-letter spans, rAF clock, single mounted chunk, per-word lift envelopes, label-card block. Count assertion (A9.3): CONFIG words built vs schedule table = 17 words / 4 chunks, printed in build-record; halt on mismatch.
+4. Build `comparison.html` per §2.5 (shared controls, slaved clock, labels, phone stacking).
+5. Self-verify legs 1–3 (§5): swap test (values in §2.5), purity greps, comparison check — raw harness output filed in build-record from the first draft (A9.4).
+6. A6 legs: fit-table.md + config-census.md on the final build; cure hits or carry with dispositions.
+7. Class I + Class II assertion harness (§2.6) run and filed; a Class II miss returns the item to the micro-census/model, not to cosmetic tuning.
+
+## §4 VERIFY CHECKLIST (Phase B)
+1. Swap test result recorded with exact altered values (sentence + sweepFraction 1.0 + spokenColor #ff9f1c).
+2. Purity grep output = 0 hits; asset inventory = code only.
+3. Comparison: both sides play from shared control; durations matched (8.00 s); labels correct; phone-width stacking + tappable controls verified.
+4. jev-prewave fired with A6 legs in payload (A10.1); census-checkpoint mapping present (A11) — ASSERTED-CHECKS risk priced if any checkpoint lacks an assertion.
+5. Five-lens Codex scoring wave (motion · timing · purity · reusability · readability), returns filed verbatim in artifact `codex/`; consolidation arithmetic in scores.md (avg ≥85 AND min ≥70 → PASS).
+6. Skeleton HQ.json + heartbeat entries for the wave updated at close by the seat (this Phase A record is the per-item working record the seat's RUN.md cites).
+
+## Phase A gate state
+Observe complete (census + codex-observe CONFIRMED-WITH-GAPS, disposition applied) · Plan complete as revised (codex-plan-review REVISE, dispositions in §2.7 — 4 applied, 1 applied-as-isolation, 1 sub-point rebutted with transcript citation). **No HTML built** (A9.2). Remaining gap for Phase B: G-µ sweep micro-structure, gated as Execute step 1.
+
+
+=== ITEM RECORD T196 (Cycle 034, consumed whole) ===
+# Item T196 — Observe + Plan · Cycle 034 Wave 31 · PHASE A ONLY (A9.2: no build script written)
+
+- **Item:** queue #92 · T196 — pre-lighting: the whole line visible before it is spoken · Packet #11 ("Caption with Intention", FCB Chicago) technique P11-T07, catalogue window 38–67 s (demonstration sections throughout).
+- **Artifact dir:** `hidden_files/study/recreations/T196-pre-lighting/` (+ `codex/`).
+- **State:** Observe + Plan complete; both Codex gate returns filed and consumed (§2b below). Execute does NOT open in this task (Phase A only, per charge + A9.2 gate-order).
+- **Fleet law (stated per charge):** no captions/subtitles in the build — the line IS the technique subject (INSTRUCTION §3.2/§6.5). No caption plate, no subtitle track; the demonstration cards are the subject matter itself.
+
+## §1 Observe
+
+### Mechanics (the trick)
+A visibility-state system. Every word of a demonstration card is **present and visible in the UNSPOKEN state** (white, full opacity, baseline size/weight) **from the card's first frame**; at each word's spoken onset **only its state changes** (here white → spoken yellow). Nothing appears at onset; no word is created, moved, or resized at onset. Anticipation is a visibility state, not a reveal — the reader can pre-read the whole line while the state change still marks the voice's position. The onset state changes are the motion (TECHNIQUES.md register, line 139).
+
+### The T195 distinction (required, stated plainly)
+Sibling T195 (same packet, this same wave, no scores yet) is the sweep's **color-state flip**: its subject is the change itself — white→yellow per word at spoken onset, sweeping at letter scale. **T196 is the visibility contract**: its subject is what is true *before* any change — the whole line present from the start in its unspoken state; only state changes at onset. A build that renders words progressively but flips them on time could satisfy T195 and would FAIL T196. T196's scored invariant: word-node count, visibility, and geometry are constant across every onset; only state classes change. The recreation's assertion suite (A11 map below) tests presence, not flip color.
+
+### Chosen demonstration segment (one line/window, with reason)
+- **Window: source 47.76–58.32 s (10.56 s)** — the "Intonation" demonstration, retained as a **transcript-based cut** (codex-observe gap disposition). It is the only ~10–14 s span inside 38–67 s that contains a complete pre-lit sentence whose final card enters **complete and white** (52.792 s) — the contract's strongest, frame-verified proof — plus the contrasting card-1 case (speech precedes the card). The 40.18–47.14 sync line was rejected as the segment: its clean window is only ~8.2 s header-to-header, and it is T195's home line (choosing it would blur the distinction this item exists to prove). The 58.32–66.18 color lines were rejected: green speaker-color (T09's device) confounds the unspoken-white state.
+- **Demonstration line (one sentence, shown by the film as three successive cards):** "This system brings in varying / types sizes, weights and animation, / so you can feel when my voice gets louder or softer" — 21 words (film wording; ASR reads "The system…", the film card reads "This system…" — film wording governs).
+
+### Sub-beats (visual onsets measured by census + codex-observe decoding; ASR onsets from transcript.json)
+| Beat | Source s | Content / state |
+|---|---|---|
+| Header card | visual 47.625 (ASR 47.76) | "Intonation" + bars icon — section ornament, EXCLUDED from build (§8), present in original segment only |
+| Card 1 onset | visual 48.792 (ASR seg 48.24) | "This system brings in varying" — all 5 words present; word 1 ("This") ALREADY yellow at first frame (speech precedes card by ~552 ms) |
+| Card 2 onset | visual UNMEASURED (≈ASR 49.78) | "types sizes, weights and animation," — bracketed by pf050 (49 s, card 1) and pf051 (50 s, card 2 up) |
+| Card 3 onset | visual 52.792 (ASR 52.82) | "so you can feel when my voice gets louder or softer" — COMPLETE AND WHITE at entry; first flip "so" by t052.9 |
+| Card 3 mid | ~55.0 (ev/t055) | prefix yellow through "gets"; "louder or softer" still white + unscaled |
+| Card 3 exit | bracket 56.9–57.167 | card survives at t056.9; next header ("Character Identification") first appears 57.167 (ASR 56.80–58.32 is its narration span) |
+
+Per-word ASR onsets (source s): This 48.24 · system 48.92 · brings 49.14 · in 49.38 · varying 49.54 · types 49.78 · sizes 50.08 · weights 50.76 · and 51.98 · animation, 52.14 · so 52.82 · you 52.92 · can 53.04 · feel 53.16 · when 53.56 · my 53.90 · voice 54.10 · gets 54.40 · louder 54.64 · or 55.76 · softer. 56.40 · speech end 56.80.
+
+### Motion census (A10.3) — findings per instant
+Census dir: `runs/2026-11-18-cycle-034-wave-31/census/T196/` — packet 1 fps frames hardlinked as pf039–pf067 (pfNNN ≈ source second NNN−1; mapping verified by hash: pf045 = ev/t044, pf063 = ev/t062) + seat ffmpeg frames t040.0/t044.0/t047.8/t049.0/t052.0/t052.9/t053.6/t056.9/t057.6/t058.4/t060.0/t066.0. Full SHA-256 table: `census/T196/census-sha256.txt` (also reproduced at the foot of this record). 11 fractional extractions landed 0-byte under the platform write fault and are NOT cited as evidence.
+- **t=line-start, card 3 (52.792):** whole card present, ALL words in unspoken white — CONFIRMED by codex-observe's direct decoding (complete white at 52.792) + seat frame t052.9 (only "so" flipped 0.1 s later). **The contract holds at line start.**
+- **t=line-start, card 1 (48.792):** whole card present; word 1 already spoken-state (negative pre-light lead, −552 ms vs ASR) — presence holds, all-white entry does NOT (source fact, preserved in Plan).
+- **Unspoken-state rendering:** white (#f5f5f5-class), full opacity, same size/weight as spoken state; no dimming, no placeholder boxes (census pf050, t052.9, ev/t055 viewed firsthand).
+- **State change at onset:** color only in this isolation (yellow prefix grows word by word; ev/t044 mid-word letter-scale sweep belongs to T195's flip mechanics); card 3's "louder" is still white at source 55.0 despite ASR onset 54.64 — **visual flips lag ASR by up to ~0.4 s on card 3** (per-word visual onset series UNMEASURED; priced in Plan as the timing exposure).
+- **Holds vs motion:** motion exists ONLY at card entries and word onsets; all other instants are holds (pf064–pf067 black/header transitions; t056.9→t057.6 card exit bracket).
+- Spot frames across 38–67 s justify the window: t040.0/t044.0 (sync line mid-flip — T195's line), t047.8 (header flipping its first letter — headers are themselves pre-lit single words), t058.4/t060.0/pf063 (green color section — pre-light holds there too, but under T09's device), t066.0 (combination card tail).
+
+### Variables (§1.3)
+Line text + word segmentation · card segmentation + card count · per-word onsets · card visual onsets · unspoken/spoken colors · background · font family/size/wrap · total window + holds · spoken-state persistence (flips persist vs reset) · timing scale. (Size/weight ramp and layout guides are variables of SIBLING techniques T197/film-UI, excluded by §8 split — named, not silently dropped.)
+
+### Consumer
+Academy explainer production — word-animation surfaces (narration and dialogue/Q&A lines in shorts): a line the viewer can pre-read whole, with the voice's position marked by state only. Secondary: multi-speaker dialogue surfaces via the same presence contract under speaker colors (T09's layer, not this build).
+
+### Registration limits (carried, not hidden)
+Source bound to a trade-press re-upload (YouTube xmo3_URTIlg, ReelChicago Reel360, 2025-05-02), not the entrant's channel; **version fidelity UNVERIFIED**; automatic real-time operation UNVERIFIED (packet P-A1). All mechanics claims above are speech-associated behaviors demonstrated in this upload.
+
+## §2 Plan (REVISED per codex-plan-review — dispositions in §2b)
+
+**Schedule basis (A7): segment-anchored.** Build timeline = source time − 47.76 s. Card onsets anchored to measured VISUAL onsets; word flips anchored to ASR onsets (visual-lag exposure priced). Comparison keeps source trim + handles separate from the build timeline.
+
+### Census-anchor mapping (A10.2) — build ms = (source s − 47.76) × 1000
+| Phase | Build interval (half-open) | Anchor (source) | Prescribed state |
+|---|---|---|---|
+| P0 header-hold (excluded header; black stage) | [0, 1032) | header visual 47.625–48.792 | stage empty — the excluded interval carries an explicit phase state (plan-review cure 1) |
+| Card 1 | [1032, 2020) | visual onset 48.792 | at entry: 5/5 spans present, word 1 SPOKEN (onset 480 < entry), words 2–5 unspoken; flips at 1160/1380/1620/1780 |
+| Card 2 | [2020, 5032) | ASR-derived 49.78 (departure D2) | at entry: 5/5 present, all unspoken (word-1 onset == entry 2020 → tie rule: flip applies for t > onsetMs, so unspoken AT the entry instant); flips at 2020+/2320/3000/4220/4380 — all inside the interval ✓ |
+| Card 3 | [5032, 10560) | visual onset 52.792 | at entry: 11/11 present, ALL UNSPOKEN (first flip 5060 — a 28 ms all-white interval, asserted at the exact timestamp + painted-frame check, plan-review cure 2); flips 5060…8640; fully spoken from 8640 |
+| P4 final hold | [8640, 10560) within card 3 | source card survival to ≥56.9 | fully spoken hold, 1920 ms from last flip (NOT 1520 — plan-review cure 1: measured from last flip, not ASR line end); departure D4 (extension past next-header visual onset) recorded below |
+
+### Departure table (A10.2)
+| # | Departure | Reason / evidence |
+|---|---|---|
+| D1 | Card 1 word 1 prescribed SPOKEN at entry (no all-white instant for card 1) | Source fact: speech (ASR 48.24) precedes the card (visual 48.792) by ~552 ms; codex-observe finding 2. Inventing an all-white card 1 would falsify the specimen. |
+| D2 | Card 2 onset anchored to ASR 49.78, not a measured visual onset | No frame-level extraction at 49.7–49.8 survived the write fault; pf050/pf051 bracket it. Named cure if timing lens prices it: frame-measure card 2's onset in Phase B Observe-refresh. |
+| D3 | Word flips anchored to ASR onsets; census shows card-3 visual flips lag ASR (e.g. "louder" white at 55.0 vs ASR 54.64) | Per-word visual onset series UNMEASURED in the packet and this census. ASR is the only complete onset series; the lag is the priced timing exposure (predicted minimum lens). |
+| D4 | Card 3 held to build 10560 (source 58.32) although the source's next header appears at 57.167 (build 9407) — extension ≥1153 ms | The retained transcript-based segment ends at 58.32 (comparison sync requires matched duration); the hold is the source card's own fully-spoken state, extended. Intentional, priced here — not a silent re-base (A7). |
+| D5 | Size/weight held constant: T197's ramp excluded — incl. "sizes" standing larger/bolder on card 2 (pf051) and louder/softer states on card 3 | §8 split: T196 isolates the visibility contract; size/weight emphasis is T197 (queue #93), a separate owed item. The comparison face carries this departure on its label. |
+| D6 | Film's cyan layout guides + section headers excluded | Film UI frame / section ornament, not this technique (plan-review §8 verdict concurs). |
+| D7 | Font: system sans stack substitutes Roboto Flex | The film's stated variable font is not locally available; geometry/legibility contract is font-independent at this isolation. |
+
+### Parameter table (CONFIG — single content source: `cards[].words[]`; engine derives everything else)
+| Key | Specimen default | Notes |
+|---|---|---|
+| `windowStartS` | 47.76 | source trim for comparison only; build timeline is local |
+| `totalMs` | 10560 | DERIVED by engine from phases; under swap, derived from swapped CONFIG |
+| `timingScale` | 1.0 | stretches the WHOLE local timeline incl. totalMs + checkpoints (plan-review cure 3: scaling onsets alone would push the last flip to 10800 > window) |
+| `cards[]` | 3 cards: id, `onsetMs` (1032/2020/5032), `words[]` {w, onsetMs} | word onsets build ms: C1 480/1160/1380/1620/1780 · C2 2020/2320/3000/4220/4380 · C3 5060/5160/5280/5400/5800/6140/6340/6640/6880/8000/8640. Film wording ("This…", "types…") |
+| `unspoken` | {color #f5f5f5, opacity 1, weight 400, scale 1} | color is the SOLE state-dependent property; shared geometry across states (cure 2) |
+| `spoken` | {color #ffe600, opacity 1, weight 400, scale 1} | palette swap key = `spoken.color` |
+| `contrastFloor` | both state colors ≥ 7:1 vs bg (WCAG ratio computed in harness); pair-difference check (ΔE or luminance+ hue distance) asserted for default AND swapped palettes | plan-review cure 2 — hex difference alone does not discharge the swap |
+| `bg` | #000000 | |
+| `font` | {family: system sans stack, minSizePx 20, maxSizePx 64, lineHeight 1.25, wrap: "wrap-in-box", overflow: "shrink-to-min then FAIL the fit check — never clip, never hide"} | fit contract (cure 3): stage box bounds in % of stage; widest card fitted at build start; a line that cannot fit at minSizePx fails the fit leg openly |
+| presence invariant | NOT a config knob (plan-review cure 3: `preLightLeadMs` REMOVED) | whole-card presence at card onset is an invariant of the construction, not a variable |
+
+### Construction choice (revised)
+**DOM word spans + one rAF clock + one stage slot.** ALL cards' spans are **prebuilt** at load (hidden); the stage slot shows exactly one card per half-open interval with **atomic handoff** (at a boundary instant: incoming card complete + visible, outgoing spans zero visible — asserted). State is a pure function of the timestamp — `state(word, t) = spoken iff word.onsetMs < t` (tie rule explicit) — so playback, seek, and restart derive identical states from the same t (cure 2). Entry states are computed from onsets, never stored. Stage box size is reserved before first paint (T03 readability cure: no layout shift). Rejected alternatives: typing/textContent append (T03's construction — IS the reveal T196 negates) · per-word CSS keyframes (timing in CSS, not CONFIG — A9.6 failure) · canvas + runtime text sampling (A1.2 precedent — lawful for formation techniques; here no formation exists, only state, so it adds a purity-priced surface for zero mechanic) · `<video>`/`<img>` of specimen (refusal class §6.1).
+
+### Failure-point evaluation (priced from this job's record)
+- **Convergent freeze (T15 class):** structurally impossible — no particle pool. The live analog is **dead time (T03 timing 55)**: cured by explicit phase states for every interval (P0 header-hold named; P4 hold measured from last flip at 1920 ms and departed openly as D4, not hidden).
+- **Intensity collapse (A5 cure 1 analog):** no background field; the analog is state separation — discharged by shared geometry + full opacity + color-only difference + a computed contrast floor for BOTH colors and a pair-difference check, exercised on the palette swap (cure 2).
+- **Phrase overlap (A5 cure 2 analog):** one stage slot + half-open intervals + atomic handoff, enforced by the phase machine; each card's flips validated to fit inside its interval at build time (count assertion, A9.3: source words 21 = built words 5+5+11 = 21 ✓).
+- **Fitting limits:** card 3 is 11 words; fit contract above; long-line/multilingual overflow fails the fit leg openly rather than clipping (T03 cure list).
+- **Render-proof limitation:** no browser binary in this seat (fleet-measured) — verification is source/logic-level + comparison surface, printed PIXEL-UNVERIFIED (T132 precedent), incl. CP1's painted-frame caveat.
+
+### Plateau priced in Plan (A2)
+Family first attempts (five lenses, codex-observe recomputed): T03 a1 **79.2 FAIL** (min timing 55) → a3 89.0 PASS; T132 a1 **83.2 FAIL** → a2 90.8 PASS. **Predicted minimum: TIMING** — exposures: D2 (card-2 inferred boundary), D3 (ASR-vs-visual flip lag), D4 (hold extension), comparison clock mapping. Secondary: REUSABILITY (fit + CONFIG-only swaps). Bar arithmetic priced honestly (plan-review cure 4): at timing 70 the other four lenses must average 88.75 to reach the 425-point pass total — so the earlier 85–90 forecast is WITHDRAWN as unsupported; the defensible forecast is **conditional**: PASS is plausible only if timing lands ≥ ~78 after the revised anchors, which the wave — not this Plan — decides.
+
+### Verification plan
+- **Swap test:** different words (3 new cards, different word counts — expectations derived from card ids/lengths/onsets, no harness edits) · one timing (`timingScale` 1.25 — whole timeline incl. totalMs + assertion instants) · one palette (`spoken.color` #ffe600 → #00e676, with contrast-floor + pair-difference checks re-run). Technique must still read as presence-then-state-change.
+- **Purity:** greps on recreation.html — `segment.mp4|source.mp4|<video|<img>|.jpg|.png` → 0 hits; asset inventory = code only.
+- **Comparison sync:** original segment (47.76–58.32, ±0.5 s handles kept separate) vs live recreation; ONE shared control set; recreation time derived from the video's currentTime via the printed mapping t_build = (t_video − windowStartS) × 1000 × timingScale; seek + restart derive state from t (no stored state); phone-width stacking, controls reachable.
+- **A6 legs** (fit-table + config-census) on the final build pre-wave · **jev-prewave** · **five-lens wave** (motion · timing · purity · reusability · readability), bar avg ≥85 AND min ≥70.
+
+### Census-checkpoint → assertion map (A11; every instant is a CONFIG expression)
+| Checkpoint | CONFIG instant | Assertion |
+|---|---|---|
+| CP1 — **t=line-start, card 3: all words present in unspoken state** | t = `cards[2].onsetMs` (5032) | active card = card 3; 11/11 spans exist, visible, unspoken; zero outgoing spans visible. ALSO painted-frame check: during continuous playback, at least one painted frame in [5032, 5060) shows the all-white card (28 ms window — a dropped frame or coarse media clock can skip it; a miss here is recorded, not smoothed) |
+| CP2 — card 1 entry | t = `cards[0].onsetMs` (1032) | 5/5 present; word 1 spoken (onset < entry), words 2–5 unspoken; stage was empty before (P0) |
+| CP3a — "gets" flip (schedule) | t = `cards[2].words[7].onsetMs` (6640) | prefix through "gets" spoken at t+ε; "louder/or/softer" present + unspoken |
+| CP3b — census state at source 55.0 (ev/t055) | census checkpoint, not a schedule instant | prefix through "gets" spoken; "louder or softer" white + unscaled — reconciled against CP3a as the D3 lag evidence (ASR 54.64 vs visual >55.0), priced individually per plan-review cure 2 |
+| CP4 — interior-flip stability | every word onset ±1 frame, per active card | active card's CONFIG-derived span count constant (5/5/11 by card), node identities unchanged, geometry stable; NO node created at any onset (a whole-inventory 21-node check proves prebuilding only and is NOT this assertion) |
+| CP5a — last flip | t = `cards[2].words[10].onsetMs` (8640) | all 11 active spans spoken |
+| CP5b — last visible | t = `totalMs` (10560) | all 11 active spans spoken; card 3 still the active card (D4 hold) |
+| Handoff checks | t = `cards[1].onsetMs`, `cards[2].onsetMs`; plus a seek that skips a boundary | incoming complete + visible; outgoing zero visible; seek-derived state == playback-derived state at same t |
+Under any CONFIG swap, every instant above re-derives from the swapped CONFIG (timingScale moves the instants; a word-count swap changes the counts).
+
+### Execute checklist (Phase B — NOT run in this task)
+1. Cut segment.mp4 from source.mp4 at 47.76–58.32 (±0.5 s handles, re-encoded) into the artifact dir — ORIGINAL evidence only.
+2. Build recreation.html: CONFIG per the parameter table (single content source `cards[].words[]`), prebuilt spans, one stage slot, timestamp-derived state, reserved stage box, fit contract enforced.
+3. Count assertion (A9.3): source words 21 vs built words 21 printed in build-record; halt on mismatch.
+4. Build comparison.html: labeled sides, one shared control set, printed time mapping, phone stacking.
+5. Own checks with RAW output filed (A9.4): swap test, purity greps, A11 assertions at CONFIG instants, node-census across onsets.
+6. A6 legs (fit-table.md + config-census.md) → jev-prewave → five-lens Codex wave → scores.md (arithmetic shown; PASS = avg ≥85 AND min ≥70).
+
+### Verify checklist (Phase B)
+Swap values recorded + result · purity grep raw output (0 hits) · comparison both sides play from shared controls, durations matched, labels carry D5 · A11 map complete with evaluated results (any checkpoint lacking a mapping or using hardcoded instants = ASSERTED-CHECKS at prewave) · five lens returns filed verbatim before the verdict is computed · tier hand-off filed to style-library board.
+
+## §2b Gate returns + dispositions
+- **codex-observe** (artifact `codex/codex-observe.md`): attempt 1 = NOT-CONFIRMED, platform failure (bubblewrap tool-host panic; filed verbatim at `codex/codex-observe-attempt1-platform-failure.md`) — re-fired with `-s read-only`, stdout capture (shell redirect is write-fault-poisoned in this seat). Re-fire = **CONFIRMED-WITH-GAPS**. Dispositions: ALL APPLIED — three-card structure adopted; seat's "card 1 clipped at 49 s" claim withdrawn (guides ≠ clipping; lettering fits); window relabeled transcript-based with visual onsets recorded separately; card-1 negative lead recorded as source fact (D1); baseline supersession confirmed (T03 a1 79.2 is historical; T03 RECREATED at 89.0, T132 at 90.8 — arithmetic recomputed by the reviewer). Its CANNOT-READ note (item record / RUN.md absent at firing time) is expected: this record is the §2 product written after the return, per the wave's per-item form.
+- **codex-plan-review** (artifact `codex/codex-plan-review.md`): **REVISE before Execute**. Dispositions: ALL FIVE GROUPS APPLIED in the Plan above — (1) phase states for excluded intervals + hold re-measured from last flip (1920 ms) + D4 extension recorded; (2) color-only state property + contrast floor + pair-difference check · one stage slot, prebuilt spans, timestamp-derived state, explicit tie rule · assertions rebuilt per-card (CP4/CP5 corrected; CP1 28 ms painted-frame check added; CP3 split into schedule vs census checkpoints); (3) `preLightLeadMs` removed as a knob · `timingScale` stretches the whole timeline · fit contract with bounds/min/overflow policy · swap expectations derived from CONFIG; (4) forecast withdrawn → conditional, timing priced as primary minimum with the 425-point arithmetic; (5) §8 scope CONFIRMED sufficient (three cards; headers/guides out) — fixed-size departures recorded incl. "sizes" (D5). No disposition is set aside; Execute (Phase B) opens only on this revised Plan.
+
+## Census SHA-256 (full table; also `census/T196/census-sha256.txt`)
+pf039 0d02a01ac9a8d2bcdcf7b68507836e8cbb3171b089bb9e1be155a267490f3cd8 · pf040 caae93b05b91a6e5a7649a0368963b4c98614e1c90b65cde960eeeb5d4e9cd10 · pf041 780c44b2811c1d1209742de1f6f00b536d4603d6287d8917f9bc7d40f82d64a0 · pf042 21acf32d5f34e9fe5942dd59973dff6d5732169722663a1748a07cd43d26e08a · pf043 237bd23f078292b2d0e5b9296b82d99d43780893faa1c009c51fd0dfc895ef69 · pf044 1e696f96ff9b3a7bfd2756cc5275dc040c0f57442673d327ba12d8ed22491e70 · pf045 8fe5b44cc55b32a2cfa74ad028ce80aeb82144f5e42fd671607784c831fadcca · pf046 a8b97c3f5f144f909c2cd3ac0dc538870a0069c80240847ced0748c0111f3603 · pf047 09132ce4c278c3d112fbd26ec9bc0dfde1edbd28f80dce5d63b7eb0cffc840a4 · pf048 51515b9b410bf48f6e460dac01b08a7983416cf9aec49d566c19030347ba0e28 · pf049 4796f24580b037f4900b4b41a01ed2dc6a2aed02e0eef0f0cb1b871964b3233a · pf050 e475e04f9a69621178b07200496daea97944526702f345485d2312e9aeeca07d · pf051 48b656f16cb2df64e9bee5b168cbc76b24e9cbd920f470add2d7ecf82bf04efa · pf052 cef5260f68a0e42fb9efd16bacdd504957a8a0f13407812048259ec4ef807c2d · pf053 c7c568f612a19f6aa1bcdbfd205120f0a15e2e96cc629c9afe85a257e07edbd3 · pf054 ca8c845ab06a846fa5418567fd632aecea0bfae389b53f31fc96e0cf28328e73 · pf055 5b5365ba5cba4ab57e375a4825d0783f794882dc2fc1073f3413a3e5697e2b06 · pf056 1b2b48e7ef5a4f20a1db29c3d7e3ceabfe471235ad3d4ae68f1bea8f960ea592 · pf057 8850ccdd2321bd3270eb4b2712c99be7a85eaec3b15ac5cb9250da1a9f5b5035 · pf058 691169ed3586afbd89c49a18037099d76b94159bd964eb144cc7aba078149582 · pf059 a4a73278b83ffeb0f15fa96f69b7e862d2d2ffdc823edb3f75547cfc31891b70 · pf060 3b7cbdb2c90979b270697caec2e010a45bdf7eb2b85648605e9c75ef57e53d67 · pf061 b28c497b6037fa093386f3135dadd134f1ea903a5eb8171dfbfbc46fe8a926ff · pf062 a086b92497274c78a2f1e8610f8a0bf67ccdc34c5cf257722f349ac4c2faa221 · pf063 ed0ed125ccd3bcea89be4b99572b2afeffd37ca282287e9e37cc5b7a5b2dcf98 · pf064 15e2d42eecf604996f7941784b7a7626312ca3ba90ecd5f6293e4d76fb5a3258 · pf065 9d0c79303752d5bd36327eca33d4ee23c1bda89af7a75159414b5ee2a3c99313 · pf066 74aae09e0dc79ea9d2b4753cebc8eda7bf86b07f5e2d15a90e9051cfc7235ea7 · pf067 24e258f9fa3fae782342db5390b49c1e210f20c9f2de4656a2d3d7f49eb86cd5
+t040.0 5cae8d17e173e864d7cd96f7c44d72be76e8044673c40c145d1a2bc2d4b5d971 · t044.0 92f2557b049e53ced2cb37d5813c7745d40873d9c415bc44a5c44ba428575f6c · t047.8 6f1ee00971fb2f8e5f8b05f781afc5f8b5785e6e75cfb6bd0b8a0624fbe88fbe · t049.0 05346aa1fbc12fbee68a13e36b0146c32850fa9777eb6bd23ef275b6ffedc467 · t052.0 d07e52bb07b899ca1d767d089b3cb6219b6af4b5ff39bda3675296c325316471 · t052.9 56515e7f4bf5a05415de04b9d2d7f280eb838b135c1fa408148c4989e519c3de · t053.6 00c15ebac8b717016f89e4fd119d36e0b910c934594cbede8d63d1654a9a6fbd · t056.9 c9d8e177898aac9f125e215accc592be81da43d04682a93fc75819cbb852da7c · t057.6 b4639a7fbc5eccb30a4a4e6ad268027847294167d3a11d85aaa7f708ed134144 · t058.4 fc3d3c1abf35cd9430399ccb4e1aef5b87ceef697bbf890763bfe1b6a27ac0e9 · t060.0 be6d7c2868f35c33480f88615fb381df97ab5bf908c22001cf831cf4d82a9e8c · t066.0 517f9d842160953a29c1e79fc6d128e9940d9ba4a1def44a2048ccd1adf9ad37
+Packet ev (viewed firsthand): t055-line-before-ramp 3df89d45ea9e17a200d844248e65717db0cb5c892af8ac1f752ab91b2ad6f08e · t044-sync-highlight-mid 8fe5b44cc55b32a2cfa74ad028ce80aeb82144f5e42fd671607784c831fadcca · t046-sync-highlight-complete 09132ce4c278c3d112fbd26ec9bc0dfde1edbd28f80dce5d63b7eb0cffc840a4 · t062-whos-speaking ed0ed125ccd3bcea89be4b99572b2afeffd37ca282287e9e37cc5b7a5b2dcf98
+
+## Gaps carried into Phase B (named, not hidden)
+1. Card 2's frame-exact visual onset UNMEASURED (D2) — Phase B Observe-refresh should frame-measure it before the build's schedule is frozen.
+2. Per-word VISUAL flip onsets UNMEASURED (D3) — ASR anchors used; visual lag up to ~0.4 s on card 3 is the priced timing exposure.
+3. Source is a trade-press re-upload; version fidelity UNVERIFIED (registration limit — no Phase B act can cure it).
+4. PIXEL-UNVERIFIED seat: no browser binary; CP1's painted-frame check may be dischargeable only at logic level.
+
+
+=== ITEM RECORD T197 (Cycle 034, consumed whole) ===
+# Item T197 — Observe + Plan · recreation Cycle 034 Wave 31 · PHASE A ONLY (A9.2 — no build written)
+
+- **Item:** queue #93 · T197 — volume ramp: size and weight track vocal emphasis · Packet #11 ("Caption with Intention", FCB Chicago) technique P11-T08, window 48–58 s.
+- **Artifact dir:** `hidden_files/study/recreations/T197-volume-ramp/` (+ `codex/`).
+- **Tier at open:** DESCRIBED — OWED #93. No prior attempt (codex-observe finding 6 confirms: no scores.md, no lens returns, T199 sibling has no artifact dir).
+- **Fleet law stated:** NO captions/subtitles in the build (§3.2/§6.5) — the ramped text IS the technique subject, not a caption.
+- **Registration limits carried on the face:** trade-press re-upload, version fidelity UNVERIFIED · variable-font mechanism DEMONSTRATED as stated design (Roboto Flex grid @37.5 s), automatic real-time operation UNVERIFIED · easing curve UNMEASURED (packet + register) — the build's easing is a named CONFIG choice, never claimed as measured.
+
+## §1 Observe
+
+### Mechanics + sub-beats (census-verified firsthand; ASR word timings from packet transcript.json)
+Plate: black, still (no plate motion in-window), thin cyan guide rules framing the text strip (still plate priced per A9.1 — motion here is typographic only). Two lines, each FULLY PRE-VISIBLE at base size/weight before it is spoken (pre-lighting rides along as surface; it is T196's claim, not T197's); spoken prefix flips white→yellow at each word onset (T195's surface, supporting state only).
+
+- **Sub-beat 0 — header (48.0–48.24):** "Intonation" section card (bars icon + title). Window furniture, NOT the technique; excluded from the build (departure table).
+- **Sub-beat 1 — Line A terms (speech 48.24–52.50):** "The system brings in varying type sizes, weights, and animation," — visible tail in-frame: "types sizes, weights and animation," (head off-frame left in the original's panning strip; pan = T195/T196 strip mechanics, not built).
+  - **1a "sizes," (50.08–50.48):** size+weight ramp UP to ~1.35× / bold; peak state at census 51.0; DECAYS to base by 52.5 (transient).
+  - **1b "weights" (50.76–51.58):** WEIGHT-ONLY ramp (~400→~800, size stays 1.0); bold at census 51.5; decays after.
+  - **1c "animation," (52.14–52.50):** per-letter bounce flourish at line end (census 52.5, trailing letters raised) — census-observed, packet-unclaimed; NOT BUILT (§8 split, departure table).
+- **Sub-beat 2 — Line B performance (speech 52.82–56.80):** "so you can feel when my voice gets louder or softer" — all words base until their events:
+  - **2a "louder" (54.64–55.76):** continuous ramp UP to ~2.0× size + heavy weight; PEAK at census 55.5; DECAYS to base by 56.5 (transient).
+  - **2b "or softer" (55.76–56.80):** shared ramp DOWN to ~0.45× size + light weight (~300); small state already present at census 56.0–56.5; PERSISTS as the line's end state through 57.5+ (no following word resets it; resets only at loop boundary).
+- **Envelope shape as OBSERVED:** up-ramps and the weight ramp are transient (peak inside/just after the word, decay to base); the down-ramp lands and holds. Ramp up/down durations are CONFIG allocations from census brackets (louder: onset 54.64 → peak by 55.5 → base by 56.5; shrink: base at 55.5 → small by 56.0–56.5). **Easing UNMEASURED** — no frame-level size series was extracted; the claim is the bracketed states + ordering, per the register limit.
+
+### Motion census (A10.3) — 21 frames @ 0.5 s, 48.0–58.0 s, `census/T197/` in this run dir
+Extraction note: the platform write fault (TOOLS.md) zeroed several first-pass frames; every frame was retried until non-empty — all 21 frames are real extractions (sizes 23–63 KB). Per-instant findings (viewed firsthand: 48.0, 50.0, 51.0, 51.5, 52.5, 53.5, 54.5, 55.5, 56.5, 57.0 + the 4 packet evidence frames):
+- 48.0 Intonation header card · 48.5–49.5 header→Line A transition, Line A pre-visible forming · 50.0 Line A full, all base, prefix yellow through "types" — sizes NOT yet enlarged (ramp starts inside its word) · 51.0 "sizes," at ~1.35× bold peak · 51.5 "weights" bold (weight-only), "sizes," back at base · 52.0–52.5 Line A fully yellow, all base size/weight; "animation" tail letters bounced up at 52.5 · 53.0–53.5 Line B pre-visible, all base, prefix through "feel" · 54.0–54.5 Line B all base, "louder" still white/unscaled · 55.0 ramp words still base (ev t055 form) · 55.5 "louder" at ~2.0× + heavy, yellow · 56.0 "or softer" already small (ev t056 form) · 56.5 "louder" back at base; "or softer" ~0.45× light, persists · 57.0–57.5 end state holds · 58.0 window closes on the held end state (next section begins 56.80 speech-wise; frame at 58.0 is the tail of the hold).
+
+SHA-256 (full, per frame):
+```
+f1824a5b0db6c092a2eea0d3dfb6e8104aa1a80b2a91214bfc720d2697df0cbc  f-48.0.jpg
+9b9cd7b9ef55b3728ad7ade2341a86544eb666cdde97075dbe25d94289a36b72  f-48.5.jpg
+05346aa1fbc12fbee68a13e36b0146c32850fa9777eb6bd23ef275b6ffedc467  f-49.0.jpg
+376811dfce205345132648de460b42f9f174ad9fad431f886f1ec3442c31f376  f-49.5.jpg
+7f0458dd788115fdd140ec9dc22f224727e6b66dab8d3a54e1f6d054c3871f03  f-50.0.jpg
+a404948c8cdf2f91a6b71bf5fec46ab70f2e6b5ce7d5962b06bcb702f250c468  f-50.5.jpg
+177721b8d6bbe64a9971c1ed614892b51f33cb6bf034f18c1ae2bd720f0a1c1f  f-51.0.jpg
+b843403250cb584812587062aca1b29757fe6ce1585264e3f7c205ca3fbd935a  f-51.5.jpg
+d07e52bb07b899ca1d767d089b3cb6219b6af4b5ff39bda3675296c325316471  f-52.0.jpg
+ca08f9a5b2d02d9c9cf1199281c41d2ad5bf79c7541551cbdfd8023aa5ba8deb  f-52.5.jpg
+593ad5fca07b7ec33f4397aa3ace51981385063fa1cd1d5becda15a7861645f4  f-53.0.jpg
+f32a03ca713e9ea3b1fb36e4ce5465c69efa3871de2eb783eadb6717527f0f6b  f-53.5.jpg
+7cbdf4190228a0e7e76ae22f7b492d19eb5b4cf5126a287b34811876940703ce  f-54.0.jpg
+87d08fe7597e1df70f0a724eb9100c437e71a544e11953898295a0eaff85c359  f-54.5.jpg
+cf27c55c34ce077d37671e42fe5ec8c37b99962ce28c46db61cbda4a4a8470b4  f-55.0.jpg
+bc8099f3ee8f2a0d9fb78e4020972975a69509c49490a1af757ab2c9cd45b174  f-55.5.jpg
+1b3e65a97056a383a540cef8c5b7af9bd5a509474a8b1d8c60a0a4573fe261a8  f-56.0.jpg
+dba187808c80faf4fdef72738613f19c9af9b38ff74aaa7453d6e36607e42c2c  f-56.5.jpg
+c6afd6ca4bc8553e49f2645a8afbb1efb43a8c2e8d3ddeb37ca5baa5e946d328  f-57.0.jpg
+bf82f78f80d993cd310f81aafd5214caffa538a44414986afb30e3725cfce010  f-57.5.jpg
+10933033da126f50def3280892fc4866748ad4ab43d3adaf642fe0c3af4eb1ea  f-58.0.jpg
+```
+Source: `source.mp4` 113.734 s · 1920×1080 · 24 fps · 10,213,125 B (ffprobe, this run).
+
+### Variables (§1.3)
+Phrase text (both lines, per-word tokens) · per-word onset times · per-word size peak · per-word weight peak · ramp-up duration · ramp-down duration · persist flag · shared-envelope grouping (or+softer) · base size (one canonical unit: % of stage height) · base weight · easing name · plate color · guide-rule color/geometry · unspoken/spoken colors · line gap + exit duration · end hold · min-size floor.
+
+### Consumer
+Word-animation family surface: DLC / multilingual + Academy shorts' expressive-caption machinery — a parameterized emphasis envelope a production line can bind to any phrase's dynamics (the Caption-with-Intention channel "Font Size Range (% of screen height)" + variable weight, as data). Sibling techniques T195 (sync sweep) / T196 (pre-lighting) supply the surrounding states in their own items; T197's liftable unit is the envelope evaluator alone.
+
+### codex-observe — CONFIRMED-WITH-GAPS (filed verbatim: artifact `codex/codex-observe.md`)
+Firing note: first firing died on the Codex sandbox (bubblewrap `/tmp/.agents` panic, exit 101, empty redirect — write fault); the filed return is the second firing (`-s read-only`, one stream, stdout captured and filed verbatim via the file tool — deviation from the redirect form, machinery only, content verbatim). Dispositions — ALL APPLIED:
+- G1 caption fragment vs narration: Observe logs the VISIBLE line ("types sizes, weights and animation," = tail of the ASR sentence) — done above; build CONFIG carries the full spoken sentence's words with the visible-window priced as a layout fact, not a text change.
+- G2 onset conflation: speech onset / first change / peak / return / shrink onset+hold recorded separately — done in census findings (louder: onset 54.64 · peak 55.5 · base 56.5; shrink: onset ∈(55.5, 56.0) · landed by 56.5 · held ≥57.5).
+- G3 peak ratios from T197's own window: sizes ~1.35× · louder ~2.0× · softer ~0.45× (visual estimates from census frames, printed as estimates).
+- G4 T12 attempt-1 label corrected: five filed lenses, denominator 5 (75.4 stands).
+- Sibling arithmetic recomputed by the audit and matched: T137 455/5 = 91.0 PASS · T12 a1 377/5 = 75.4 FAIL · T12 a2 435/5 = 87.0 PASS.
+
+## §2 Plan
+
+### Schedule basis + census-anchor mapping (A7 / A10.2)
+**Schedule basis: segment-anchored.** Proposed §3 segment window: **source 47.5–58.5 s** (catalogue 48–58 ± 0.5 handles). Build timeline: segment-relative ms, build t=0 ≡ source 48.0 s (comparison clock maps segment currentTime 0.5 s → build 0; the −500 ms handle offset is a CONFIG key, per plan-review finding 3). Build duration 10,000 ms + endHoldMs.
+Census anchors (source → build rel): sizes peak state 51.0 → 3000 (configured envelope peak endpoint 2480 ≡ source 50.48 — 520 ms before the census state, which sits inside the peak/decay window; printed per plan-review) · weights bold 51.5 → 3500 · Line A all-base + bounce 52.5 → 4500 · Line B base 54.5 → 6500 · louder peak 55.5 → 7500 · softer small 56.5 → 8500 · end state held 57.5 → 9500.
+
+### Departure table (A10.2)
+| Census/source fact | Build treatment | Reason |
+|---|---|---|
+| Strip pans left; Line A head off-frame | Static centered rows; full sentence visible | Pan is T195/T196 strip mechanics; T197's claim is the envelope (§8 split) |
+| "animation," letter-bounce (52.5) | NOT BUILT | Census-observed, packet-unclaimed flourish; ornament split per §8, deferred to a later attempt |
+| "Intonation" header card (48.0) | NOT BUILT | Section furniture, not the technique |
+| T12 cure: action ≈⅓ of cycle | NOT ADOPTED | Segment-anchored timing governs; envelope action 50.1–56.8 s of the 10 s window is the source's own proportion |
+| Easing curve | CONFIG `easingName:'easeInOut'` | Source easing UNMEASURED — a named choice, printed on the build's face, never claimed as measured |
+
+### Parameter table (CONFIG — single envelope schema per A9.6 + plan-review finding 3)
+One schema for every word: `{text, onsetMs, sizePeak, weightPeak, rampUpMs, rampDownMs, persist}` — no alternative "emphasis" form. Inert words carry sizePeak 1.0 / weightPeak = baseWeight (envelope mathematically inert, not a code branch).
+Globals: `baseSizePctOfStage 6.1` (sole base-size unit) · `baseWeight 400` · `easingName 'easeInOut'` (UNMEASURED in source) · `plateColor #000000` · `guideColor #7fd4e6` · `guideInsetPct` (geometry as data) · `unspokenColor #f2f2f2` · `spokenColor #ffe600` · `fontStack` (variable-font stack, CONFIG) · `minSizePctOfStage 2.7` (legibility floor; if floor and ratio tolerance conflict at phone size the build prints a visible FIT-FAIL state — plan-review finding 2) · `lineExitMs 350` · `lineGapMs 320` · `endHoldMs 1800` · `segmentHandleOffsetMs -500`.
+Line A words (onsetMs rel; speech = source − 48.0): The 240 · system 920 · brings 1140 · in 1380 · varying 1540 · type 1780 · **sizes, {2080, 1.35, 760, 400, 900, false}** · **weights {2760, 1.0, 800, 500, 900, false}** · and 3980 · animation, 4140 (all unlisted = inert).
+Line B words: so 4820 · you 4920 · can 5040 · feel 5160 · when 5560 · my 5900 · voice 6100 · gets 6400 · **louder {6640, 2.0, 820, 860, 1000, false}** · **or {7760, 0.45, 300, shared-shrink}** · **softer {8400, 0.45, 300, shared-shrink}** — or+softer bind ONE shared shrink envelope (plan-review finding 3): visual onset 7760, rampMs 700, lands 8460 (source 56.46 — inside the census bracket "small by 56.0–56.5"), persist=true through end hold, resets at loop boundary. Visual envelope timing is separate from spoken-color timing (color flips at each word's own onset).
+**Line ownership (plan-review finding 2, A5 Cure-2 analogue):** both lines may be pre-visible at baseline; only the OWNING line's envelopes animate. Line A release = max(speechEnd 4500, lastTransientEnd 4160) + lineExitMs 350 + lineGapMs 320 = **5170** — CONFLICT with Line B's first onset 4820: disposition — Line B's onsets are speech-anchored and cannot move; the ownership rule therefore gates ENVELOPES only, and Line A's exit is priced as a fade of Line A to baseline (it carries no active envelope after 4160), completing under Line B's inert head (4820–6640, no B envelope fires until louder at 6640 > A's release 5170 ✓). The build's phase machine must REJECT (clamp + print) any CONFIG whose next line's first envelope onset precedes the prior line's release. Within Line B, louder's decay and the shared shrink coexist lawfully (same owning line, census-verified coexistence).
+
+### Construction choice + rejected alternatives
+**Chosen:** one self-contained HTML; DOM word spans on a still black plate + CONFIG guide rules; a rAF clock evaluates each word's envelope from CONFIG and sets `font-size` (base × lerp(1, sizePeak, env)) + `font-variation-settings 'wght'` (lerp(baseWeight, weightPeak, env)) on a CONFIG variable-font stack. Inline spans reflow as a word grows — the original's neighbour-shift is font-metric reflow, reproduced by construction. **Priced risk (plan-review finding 1):** no webfont may be fetched (purity — zero external assets); if the playback stack lacks a variable font, weight renders stepped/static — Execute MUST capture rendered intermediate-weight evidence on the actual stack, and if only static faces exist, the build declares the fidelity limitation on its face and the continuous-weight claim prints UNVERIFIED on that stack.
+Rejected: (a) CSS keyframes per word — envelope becomes CSS literals, fails A9.6, swap cannot retime; (b) canvas text — loses variable-font axis + DOM reflow; (c) transform scale() — no reflow, no weight axis, contradicts the observed font-metric mechanism; (d) panning strip / header / letter-bounce — sibling mechanics + unclaimed ornament (§8).
+
+### Verification plan
+- **Swap test:** different phrase (e.g. "watch the quiet part grow still" with its own envelope set: grow→1.7×/780, still→0.5×/300 persist) · one timing (louder onsetMs 6640→5000 AND rampUpMs 860→500 — CP3's evaluation instant must move with the CONFIG expression, A11) · one palette (spokenColor #ffe600→#ff9f1c, guideColor #7fd4e6→#3a86ff). Technique must still read.
+- **Purity:** greps for `segment.mp4`, `source.mp4`, `t050`/`t055`/`t056`, `<video`, `<img` in recreation.html — zero hits allowed; asset inventory = zero external assets (code only).
+- **A6 legs** pre-wave: fit-table.md + config-census.md filed in the artifact dir.
+- **Comparison sync:** comparison.html shared controls; recreation clock slaved to segment currentTime with `segmentHandleOffsetMs -500` applied; labels ORIGINAL — Caption with Intention @ 48–58 s · RECREATION — T197 volume ramp, parameterized; phone-width stacking verified.
+- **Rendered-weight evidence (plan-review finding 1):** frame captures at weights-envelope mid-ramp on the actual playback stack filed in build-record.
+
+### Census-checkpoint → assertion mapping (A11) — CONFIG-derived instants + source-time twins
+| CP | Checkpoint (census) | Assertion | CONFIG expression → instant |
+|---|---|---|---|
+| CP1 | sizes peak (51.0) | size ratio ∈ [1.28, 1.42] AND wght ≥ 700 | onset+rampUp = 2080+400 = **2480** (≡ source 50.48; census state 51.0 sits in peak/decay window — mapping printed) |
+| CP2 | weights weight-only (51.5) | size ∈ [0.97, 1.03] AND wght ≥ 740 | 2760+500 = **3260** |
+| CP3 | louder peak (55.5) | size ∈ [1.90, 2.10] AND wght ≥ 780 (heavy-at-peak, plan-review) | 6640+860 = **7500** |
+| CP4 | louder decayed + shrink landed (56.5) | louder size ≤ 1.08 AND or/softer size ∈ [0.40, 0.50] AND wght ≤ 340 | shared shrink onset+ramp = 7760+700 = 8460; assertion at **8560** (post-landing, source-anchored twin) |
+| CP5 | shrink persists (57.5) | softer size ∈ [0.40, 0.50] at end hold | **9800** (inside endHold) |
+A timing swap (louder onset/rampUp) must move CP3's instant via the same expression — hardcoded 7500 in a check = ASSERTED-CHECKS at prewave.
+
+### Failure-point evaluation + plateau priced in Plan (A2)
+Family record: T137 PASS 91.0 (min reusability 80 — emphasis-targeting semantics) · T12 a1 FAIL 75.4 (min readability 62) → a2 PASS 87.0 (min reusability 72). Priced failure points for T197: (1) **weight-beat disappearance** on a static-font stack (finding 1 — the attempt's likeliest motion/readability hit); (2) **reflow wrap** at louder 2.0× (fit leg owns it; single-line rows + measured fit); (3) **down-ramp legibility** — 0.45× is the source's own ratio; fidelity vs readability conflict is real and priced, floor key + visible FIT-FAIL is the guard, not a ratio change; (4) **phrase overlap** — cured by the ownership predicate above, envelopes-only gating with the clamp printed; (5) **render-proof limitation** — no browser binary guarantee in this seat (T137 printed PIXEL-UNVERIFIED); if playback capture is unavailable, scores print as source/logic-level with the limitation on the face. **Plateau prediction:** predicted minimum lens = **reusability ~82** (per-word envelope objects answer T137's targeting cure, but envelope semantics are specimen-shaped until the swap proves them); forecast motion 88 · timing 92 · purity 98 · reusability 82 · readability 90 → avg 90.0, min 82 — clears the bar (≥85 / ≥70) IF the weight evidence and CP4 cure land; timing or readability becomes the minimum if either fails (plan-review finding 4, adopted).
+
+### Execute checklist (§3 — for Phase B, NOT run in Phase A)
+1. Cut segment 47.5–58.5 s from source.mp4 → artifact `segment.mp4`, re-encoded for browser playback (evidence only).
+2. Build `recreation.html` from the parameter table above (count assertion A9.3: CONFIG word count vs built span count printed in build-record, halt on mismatch).
+3. Build `comparison.html` (shared controls, −500 ms handle offset, labels, phone stacking).
+4. Self-verify legs 1–3 (swap · purity greps + inventory · comparison check) with RAW harness output filed in build-record from the first draft (A9.4); A6 legs; A11 assertions executed at CONFIG-derived instants; rendered-weight evidence captured.
+5. jev-prewave with A6 outputs in payload (A10.1) → five-lens Codex wave → scores.md (avg ≥85 AND min ≥70 = PASS).
+
+### Verify checklist (per deliverable property)
+Swap values altered + result recorded · purity grep patterns run, hits = 0 · asset inventory complete · comparison both sides play from one control, durations matched · CP1–CP5 assertions pass at CONFIG-derived instants · weight mid-ramp rendered evidence on file · five lens returns filed verbatim BEFORE the verdict is computed (§6.3).
+
+### codex-plan-review — REVISE (filed verbatim: artifact `codex/codex-plan-review.md`) — dispositions, ALL APPLIED above
+1. Rendered-weight evidence required; static fallback = declared limitation, continuous-weight claim UNVERIFIED on that stack → Execute checklist step 4 + Verify checklist. **APPLIED.**
+2. Ownership as render rules: release derived from speech/transient completion + exit + gap; clamp-and-print on violation; shrink resets at loop boundary; inert-neighbour baseline + FIT-FAIL visibility → ownership paragraph + floor rule. **APPLIED** (with the priced resolution that B's speech onsets are segment-anchored: gating binds envelopes, whose first B onset 6640 > A release 5170 ✓).
+3. Single schema, canonical unit, handle offset as CONFIG, shared or+softer envelope, CP4 re-timed, CP1 mapping printed, source-time twin assertions, heavier-at-peak check in CP3. **APPLIED.**
+4. Forecast stands conditionally (avg 90.0 / min 82); timing/readability named as alternate minima. **APPLIED** in plateau pricing.
+5. Size discipline PASS — no action.
+
+## Phase A close
+Observe + Plan complete; both Codex calls fired and filed verbatim with dispositions applied. NO HTML built (A9.2). Remaining for the wave seat: jev-observe-exit / jev-plan-exit firings are the wave record's gate calls (not charged to this per-item Phase A task); Phase B (Execute) opens only after those returns are filed and consumed in the wave's §2b.
+
