@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T186 — Foreground pass, mid-coverage (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;width:100%;max-width:800px;margin:0 auto;aspect-ratio:800/450;overflow:hidden;}
+  svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+/* T186 — Foreground pass, mid-coverage. ONE blurred foreground shape transits a legible
+   street scene; at CONFIG.midMs its coverage equals CONFIG.coverageFraction (segment-anchored
+   checkpoint, source 189.32 s). Entry/exit/direction are ALLOCATIONS (not evidenced in the
+   specimen). NO scene swap occurs behind the pass; no hidden cut is asserted anywhere.
+   Pass width is DERIVED: w = coverageFraction x stage width (CONFIG equality, RUN §2d.3) —
+   passWidthFrac is therefore not an independent key; wherever it would appear it equals
+   coverageFraction by construction. */
+const CONFIG = {
+  midMs: 1020,
+  durationMs: 2500,
+  coverageFraction: 0.50,
+  passColor: "#f2ede2",
+  passDirection: "right-to-left",
+  blurPx: 18,
+  entryMs: 620,
+  exitMs: 480,
+  passEasing: "easeInOutQuad",
+  streetColor: "#6b7a72",
+  figureColor: "#274b52",
+  accentLabel: "street",
+  scene: {
+    stageW: 800, stageH: 450,
+    skyH: 300, groundColor: "#4d5a52",
+    doorway: { x: 300, y: 120, w: 130, h: 210, color: "#3a3f3a", lintelColor: "#8a7f63" },
+    standingFigure: { x: 92, y: 150, w: 54, h: 190, headR: 17, stripeCount: 6, stripeColor: "#e8e2d2", legColor: "#22303a" },
+    seatedFigure: { x: 520, y: 268, w: 62, h: 74, headR: 15, color: "#7a3b2e" },
+    wallBand: { y: 96, h: 14, color: "#5b6a60" }
+  },
+  pass: { heightFrac: 1.12, yFrac: -0.06, cornerRx: 60 }
+};
+
+const EASINGS = {
+  easeInOutQuad: p => p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2,
+  linear: p => p
+};
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+/* Derived pass width (CONFIG equality): w = coverageFraction x W. */
+function passWidth(cfg){ return cfg.coverageFraction * cfg.scene.stageW; }
+
+/* Position function (RUN §2d.3, right-to-left form): centre eased over
+   [midMs-entryMs, midMs] from W + w/2 to W*(1-coverageFraction) + w/2, then over
+   [midMs, midMs+exitMs] to -w/2. For "left-to-right" the path is mirrored about W/2. */
+function centreAt(t, cfg){
+  cfg = cfg || CONFIG;
+  const W = cfg.scene.stageW, w = passWidth(cfg);
+  const ease = EASINGS[cfg.passEasing] || EASINGS.easeInOutQuad;
+  const cMid = W * (1 - cfg.coverageFraction) + w / 2;
+  let c;
+  if (t <= cfg.midMs - cfg.entryMs) c = W + w / 2;
+  else if (t < cfg.midMs) c = (W + w / 2) + (cMid - (W + w / 2)) * ease(clamp01((t - (cfg.midMs - cfg.entryMs)) / cfg.entryMs));
+  else if (t < cfg.midMs + cfg.exitMs) c = cMid + (-w / 2 - cMid) * ease(clamp01((t - cfg.midMs) / cfg.exitMs));
+  else c = -w / 2;
+  if (cfg.passDirection === "left-to-right") c = W - c;
+  return c;
+}
+function passRect(t, cfg){
+  cfg = cfg || CONFIG;
+  const w = passWidth(cfg), c = centreAt(t, cfg);
+  return { x0: c - w / 2, x1: c + w / 2, y0: cfg.pass.yFrac * cfg.scene.stageH, y1: (cfg.pass.yFrac + cfg.pass.heightFrac) * cfg.scene.stageH, centre: c, width: w };
+}
+/* Coverage evaluator (RUN §2c.5): 100x56 grid; a cell counts covered if the pass shape
+   covers its centre, post-blur edge cells counting at alpha >= 0.5 (the alpha>=0.5 contour
+   of a blurred rect sits at its unblurred edge, so the unblurred rect is the evaluator). */
+function coverageAt(t, cfg){
+  cfg = cfg || CONFIG;
+  const W = cfg.scene.stageW, H = cfg.scene.stageH, r = passRect(t, cfg);
+  let covered = 0;
+  for (let gy = 0; gy < 56; gy++){
+    const cy = (gy + 0.5) * H / 56;
+    if (cy < r.y0 || cy > r.y1) continue;
+    for (let gx = 0; gx < 100; gx++){
+      const cx = (gx + 0.5) * W / 100;
+      if (cx >= r.x0 && cx <= r.x1) covered++;
+    }
+  }
+  return covered / 5600;
+}
+function coveredRightMass(t, cfg){
+  cfg = cfg || CONFIG;
+  const W = cfg.scene.stageW, H = cfg.scene.stageH, r = passRect(t, cfg);
+  let covered = 0, right = 0;
+  for (let gy = 0; gy < 56; gy++){
+    const cy = (gy + 0.5) * H / 56;
+    if (cy < r.y0 || cy > r.y1) continue;
+    for (let gx = 0; gx < 100; gx++){
+      const cx = (gx + 0.5) * W / 100;
+      if (cx >= r.x0 && cx <= r.x1){ covered++; if (cx > W / 2) right++; }
+    }
+  }
+  return covered ? right / covered : 0;
+}
+
+function buildScene(){
+  const s = CONFIG.scene, f = s.standingFigure, d = s.doorway, q = s.seatedFigure;
+  let stripes = "";
+  for (let i = 0; i < f.stripeCount; i++){
+    const y = f.y + f.headR * 2 + 12 + i * ((f.h - f.headR * 2 - 20) / f.stripeCount);
+    stripes += '<rect x="' + f.x + '" y="' + y.toFixed(1) + '" width="' + f.w + '" height="5" fill="' + f.stripeColor + '"/>';
+  }
+  return '' +
+  '<rect x="0" y="0" width="' + s.stageW + '" height="' + s.skyH + '" fill="' + CONFIG.streetColor + '"/>' +
+  '<rect x="0" y="' + s.skyH + '" width="' + s.stageW + '" height="' + (s.stageH - s.skyH) + '" fill="' + s.groundColor + '"/>' +
+  '<rect x="0" y="' + s.wallBand.y + '" width="' + s.stageW + '" height="' + s.wallBand.h + '" fill="' + s.wallBand.color + '"/>' +
+  '<rect x="' + d.x + '" y="' + d.y + '" width="' + d.w + '" height="' + d.h + '" fill="' + d.color + '"/>' +
+  '<rect x="' + (d.x - 8) + '" y="' + (d.y - 12) + '" width="' + (d.w + 16) + '" height="12" fill="' + d.lintelColor + '"/>' +
+  '<circle cx="' + (f.x + f.w / 2) + '" cy="' + (f.y + f.headR) + '" r="' + f.headR + '" fill="' + CONFIG.figureColor + '"/>' +
+  '<rect x="' + f.x + '" y="' + (f.y + f.headR * 2) + '" width="' + f.w + '" height="' + (f.h - f.headR * 2) + '" fill="' + CONFIG.figureColor + '"/>' +
+  stripes +
+  '<rect x="' + f.x + '" y="' + (f.y + f.h) + '" width="20" height="42" fill="' + f.legColor + '"/>' +
+  '<rect x="' + (f.x + f.w - 20) + '" y="' + (f.y + f.h) + '" width="20" height="42" fill="' + f.legColor + '"/>' +
+  '<circle cx="' + (q.x + q.w / 2) + '" cy="' + (q.y + q.headR) + '" r="' + q.headR + '" fill="' + q.color + '"/>' +
+  '<rect x="' + q.x + '" y="' + (q.y + q.headR * 2) + '" width="' + q.w + '" height="' + (q.h - q.headR * 2) + '" rx="10" fill="' + q.color + '"/>';
+}
+
+const stage = document.getElementById("stage");
+stage.innerHTML =
+  '<svg viewBox="0 0 ' + CONFIG.scene.stageW + ' ' + CONFIG.scene.stageH + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+  '<defs><filter id="passBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="' + (CONFIG.blurPx / 2) + '"/></filter></defs>' +
+  '<g id="sceneLayer">' + buildScene() + '</g>' +
+  '<rect id="passShape" y="' + (CONFIG.pass.yFrac * CONFIG.scene.stageH) + '" height="' + (CONFIG.pass.heightFrac * CONFIG.scene.stageH) + '" rx="' + CONFIG.pass.cornerRx + '" fill="' + CONFIG.passColor + '" filter="url(#passBlur)"/>' +
+  '</svg>';
+const passEl = document.getElementById("passShape");
+
+function render(t){
+  const r = passRect(t);
+  passEl.setAttribute("x", r.x0.toFixed(2));
+  passEl.setAttribute("width", r.width.toFixed(2));
+}
+
+let playing = false, startStamp = 0, startOffset = 0, rafId = 0;
+function nowMs(){
+  if (!playing) return startOffset;
+  return startOffset + (performance.now() - startStamp);
+}
+function tick(){
+  const t = nowMs();
+  if (t >= CONFIG.durationMs){ render(CONFIG.durationMs); pause(); return; }
+  render(t);
+  if (playing) rafId = requestAnimationFrame(tick);
+}
+function play(){ if (!playing){ playing = true; startStamp = performance.now(); rafId = requestAnimationFrame(tick); } }
+function pause(){ const t = nowMs(); playing = false; startOffset = Math.min(t, CONFIG.durationMs); if (rafId) cancelAnimationFrame(rafId); render(startOffset); }
+function seek(t){ startOffset = Math.max(0, Math.min(CONFIG.durationMs, t)); if (playing) startStamp = performance.now(); render(startOffset); }
+function time(){ return nowMs(); }
+
+window.__rec = { play: play, pause: pause, seek: seek, time: time, render: render,
+  centreAt: centreAt, coverageAt: coverageAt, coveredRightMass: coveredRightMass, passRect: passRect, CONFIG: CONFIG };
+render(0);
+</script>
+</body>
+</html>

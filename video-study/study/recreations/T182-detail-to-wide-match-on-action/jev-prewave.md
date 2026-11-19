@@ -1,0 +1,336 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T182-detail-to-wide-match-on-action
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e953-a15c-7a70-a1bf-5bf01fc28187
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream. If a check needs material not in this stream, name it as a gap instead of fetching it.
+
+CONSUMER: recreation job INSTRUCTION §5 leg 3b (jev-prewave) for Cycle 028 Wave 25 item T182. DECISION PRICED: FIRE-WAVE (the five-lens scoring wave spends on this build) vs HOLD (the build returns to Execute with named defects). WORKING RECORD: hidden_files/study/recreations/T182-detail-to-wide-match-on-action/ (build-record.md + fit-table.md + config-census.md fed verbatim below). BODY-WRITE: your return is filed verbatim as jev-prewave.md at the item's artifact root; end with a BODY-WRITE: line.
+
+ITEM: T182 — Detail-to-wide match on action (Packet #10, Watchtower of Turkey) · attempt 1 · schedule basis segment-anchored · recreation.html SHA-256 80221825fd720b36084ca54a0578309b8b0ff1811927023800b4de8244420497.
+
+=== GUARD DEFINITION (jev-prewave.md) ===
+# Jev call — jev-prewave (recreation)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14. The judgment: a scoring wave is the lane's expensive instrument — this call prices whether a build has EARNED its wave before the wave spends._
+
+## 1. What it judges
+- Deliverable: an attempt's build record (parameter table · construction route · own-checks results) BEFORE the Codex wave fires.
+- Call point: recreation INSTRUCTION §4, between the builder's own checks (§5.2) and the wave (§5.3). The verdict is advisory: applied, a HOLD returns the build to the builder with named defects and the wave does not fire on that item; set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this build record shows a recreation ready to be scored, or one whose defects are already visible in its own paperwork. Price: (1) PARAMETERIZATION — is the piece genuinely CONFIG-driven (fields named, ranges sane), or hard-coded with a config costume? (2) PURITY PRE-CHECK — does the construction route describe generation from parameters, with no tracing/embedding step hiding in the prose? (3) OWN-CHECKS COMPLETENESS — are the mechanical guards' results recorded (purity grep, swap test, syntax), or asserted? (4) TECHNIQUE FIDELITY PLAN — does the record state which packet mechanics the build implements and which it deliberately defers (a deferral named is lawful; a mechanic silently absent is not)? Score 0–1 per dimension, classify defects. You judge paperwork only: a build can pass you and still fail its wave — your job is that no wave is spent on a build its own record already condemns.
+
+## 3. Context contract (masked view)
+- FED: build-record.md · the CONFIG block of recreation.html · the technique's packet section · guards.md command list (what own-checks should exist) · **the item's A6 leg outputs (fit-table.md + config-census.md) — added 2026-11-16, recreation Cycle 024 Condense, on the Wave-21 pattern: prewave firings for T151, T153 and T154 all HOLDed or re-fired on feed completeness (the A6 files and packet section existed complete in the artifact directory but were not in the payload), the lane's recurring ASSERTED-CHECKS false-positive class. A payload lacking any FED element is a feeder defect, printed as such in the build record; a HOLD whose only named cure is feeding an already-filed FED element is disposed as a feed-completeness miss, with the miss recorded.**
+- FED (added 2026-11-17, Cycle 026 Condense — the T167 miss): **the wave record's binding census-anchor mapping for the item + any Observe dispositions pricing source ambiguities** (the §1d-form: where a packet caption or digest line admits two readings, the wave record's priced reading governs). A HOLD founded on a source ambiguity the wave record has already priced is a feeder defect, disposed as such in the build record — the judge prices the build against the binding mapping, not against raw source prose. (Founding miss: Cycle 026 T167 — HOLD priced a packet caption's ambiguous reading against a build that followed the gate-approved mapping; the seat upheld the set-aside at §5.)
+- NEVER FED: the builder's confidence prose · prior attempts' scores (each build is priced on its own record).
+- Ceiling: ≤32k tokens; the HTML enters as its CONFIG + construction sections, not media.
+
+## 4. Output space
+- Verdict classes: **FIRE-WAVE · HOLD**.
+- Dimensions (0–1): parameterization · purity pre-check · own-checks completeness · fidelity-plan honesty.
+- Rejection taxonomy (one primary): HARDCODED-CONFIG · TRACING-STEP · ASSERTED-CHECKS (results claimed, not recorded) · SILENT-DEFERRAL.
+- Accepted profile travels: cited in scores.md's pre-wave line; a wave fired over a HOLD is a deviation (WAVE-OVER-HOLD).
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → HOLD · ASSERTED-CHECKS at any score on other dimensions → HOLD (unrecorded checks are the lane's named failure class).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + classification + disposition land in the build record either way; an applied HOLD leaves the item IN PROGRESS and the wave moves to its next item (a held item never holds the wave hostage).
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: T15 attempt 1's build record (must FIRE-WAVE: checks recorded, deferral of the interlude named in its Plan) · a constructed record claiming a swap test with no harness output (must HOLD as ASSERTED-CHECKS) · a constructed record whose CONFIG is decorative over hard-coded phrases (must HOLD as HARDCODED-CONFIG).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all three must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.
+
+=== BUILD-RECORD.MD (verbatim) ===
+# build-record — T182 detail-to-wide match on action · attempt 1 · recreation Cycle 028 Wave 25
+
+Item: T182 (Packet #10 T05, "Watchtower of Turkey", Leonardo Dalessandri, Vimeo 108018156) · queue #86 · first attempt.
+Schedule basis (A7): **segment-anchored** — segment = source 80.30–83.30 s; cut at source 81.8 = build t=1500 ms.
+Census-anchor mapping (A10.2, from RUN §2): offset −80.30 s · census states (segment-relative): 300 ms detail · 900 ms detail · 1420 ms detail (f81.72) · 1580 ms WIDE (f81.88) · 2300 ms wide · prescribed: detail scene for t<1500 · wide scene for t≥1500 · rolling phase continuous at t=1500.
+Consumer: DLC assembler — transition surfaces (MATCH-ON-ACTION-SCALE form); secondary Hadosh Academy explainer opening surfaces.
+
+## §1 — Segment (Execute step 1)
+Cut: `ffmpeg -ss 80.30 -i study/video-digests/2026-11-16-vimeo-watchtower/source.mp4 -t 3.00` (input-seek, re-encoded libx264/yuv420p + AAC) → `segment.mp4`.
+ffprobe facts (filed raw): codec_name=h264 · width=1920 · height=1080 · r_frame_rate=25/1 · audio codec_name=aac · format duration=3.000000 · size=1701605 bytes. SHA-256: 9325f4cc59cea25c6e1ebc33dd864627fff9ec2a2063aeee5e63aaa447e4e1dc.
+Source: duration 212.68 s, 124588071 bytes (ffprobe this build).
+
+## §2 — Gate returns consumed BEFORE any build script (A9.2)
+Order proof: codex-observe and codex-plan-review payloads were assembled and fired, and both returns filed verbatim (`codex/codex-observe.md`, `codex/codex-plan-review.md`), before segment cut or any build file was written.
+
+**codex-observe — CONFIRMED WITH GAPS.** Dispositions:
+- Finding 1 (packet/register agree on core technique; evidence brackets 81.72 < 81.80 < 81.88): consumed as confirmation; no cure needed.
+- Finding 2 (segment arithmetic consistent: 3.00 s window, cut 1.50 s in): consumed; independently re-bound by this record's §1 ffprobe facts.
+- Finding 3 (§1e's "+0.90 s (= source 81.80)" implies an unnamed 80.90 s analysis origin): SET ASIDE with reason — the analysis window is the seat's RUN record, which the builder does not edit; the build's own binding (segment start 80.30 + cutMs 1500 = source 81.80) is independently established in §1 and does not rely on the seat's analysis origin.
+- Finding 4 (phase continuity is stronger than the fed evidence establishes; packet labels shared-action construction "inferred"): consumed as the priced motion risk — the Plan's construction makes continuity structural (one phase function), and the wave's motion lens prices whether it reads; the build-record claims continuity as CONSTRUCTION, not as specimen measurement. The 580 ms period stands as the seat's measured value (RUN §1e/§1f reconciliation, 550–600 ms range).
+- Finding 5 (family arithmetic recomputes where lens breakdowns were fed — T106 88.4 ✓, T104 85.2 ✓, family mean 83.7 ✓; filed returns not fed, binding NOT CONFIRMED from the stream): feeder limitation noted — returns live seat-side in the sibling artifact directories; no T182 fact depends on them beyond the averages the audit recomputed.
+- Finding 6 (consumer wording "location/subject change without a visible edit" misdescribes the specimen): APPLIED as clarification — this build implements the packet mechanic exactly as sourced: **shared subject + shared action phase + scale jump + direct cut, no cover**. The RUN's consumer line is seat text; the builder does not edit RUN.md (task boundary).
+
+**codex-plan-review — REVISE** (phase continuity structurally sound; readable action match + swap condition not yet guaranteed). Dispositions:
+- Cure 1 (convergent defect addressed by one scene graph + one phase function): no cure needed; noted.
+- Cure 2 (zero-transition needs an independent check, not only prose): APPLIED — the own-check suite asserts the camera as a STEP: scaleAt(cutMs−1)=detailScale and scaleAt(cutMs+1)=1 under default, swapped, and probe configs (raw output §4); no interpolation path exists in render() (the transform is set from scaleAt's branch, never eased).
+- Cure 3 (prescribed swap cutMs 1100 / rollPeriodMs 400 lands at phase 0.75 = stroke reversal, speed 0; assert a CONFIG-derived minimum translational speed at the cut; state permitted ranges): APPLIED IN PART + SET ASIDE IN PART. Applied: a speed-at-cut assertion now stands in the suite — DEFAULT config passes at speed fraction 0.8569 (≥0.5), and an additional SWAP-PROBE (cutMs 1150, rollPeriodMs 400, same swapped palette/label) passes all §2d.1 assertions with speed fraction 0.7071, proving a mid-stroke landing under swapped timing. Set aside: the prescribed swap values themselves (cutMs 1100) are NOT changed — they are fixed verbatim by RUN §2's swap table and the builder's tasking; under them the continuity assertions (the binding §2d.1 set) all pass, and the reversal landing is printed in the raw output (§4) as a known priced property of that prescribed probe, not hidden. Permitted parameter ranges (stated per the cure): cutMs ∈ (0, durationMs) · rollPeriodMs ∈ [200, 2000] ms · detailScale ∈ [1.5, 6] · rollAmplitudePx ∈ [20, 200] · rollTiltDeg ∈ [0, 30] — all defaults and swap values sit inside these ranges.
+- Cure 4 (name a provisional motion score + expected total): APPLIED — provisional pricing, recorded before the wave: motion predicted 84–88 (T106's filed motion 84 as the anchor; the structural phase driver argues above it, the 3.2× recognition risk argues at it); expected five-lens total ≈ 86 ± 3. The wave's actual returns govern; this prediction is printed so a miss is visible.
+- Cure 5 (hands must be visibly coupled to the pin; scene detail vs T105's specimen-adjacent cure): APPLIED (hands) + SET ASIDE (props). Applied: the hands are children of the pin group (they translate + rotate with the pin exactly), and arm lines are re-solved every frame from the CONFIG shoulder points to the hands' computed positions — the shared action is hands-on-pin, as the packet prices it. Set aside: the wide-scene elements (figure, round table, dough balls, griddle) are NOT deferred — they are prescribed verbatim by the binding Plan (RUN §2c.3 names the wide scene's contents); T105's cure targets specimen MEDIA/imagery, and this scene is code-drawn stylized geometry with zero specimen media (§4 purity: 0 hits, 0 external assets).
+
+## §3 — Construction (Execute steps 2–3)
+`recreation.html` (ONE self-contained file, SHA-256 at §7): CONFIG at top (all §2 T182 keys as amended by §2c+§2d: cutMs 1500 · durationMs 3000 · rollPeriodMs 580 · rollAmplitudePx 120 · rollTiltDeg 14 · detailScale 3.2 · doughColor #e8dcc4 · pinColor #a9743f · skinColor #8a5a3b · tableColor #7d5a38 · accentLabel "flatbread", plus applied scene keys wallColor/clothColor/flourColor/griddleColor/doughCxFrac/doughCyFrac/blurPxDetail/blurPxWide/flourOpacity and a geom object — every key resolved in config-census.md). ONE SVG scene graph (figure at round table, dough disc, long pin with hands riding it, dough balls, griddle shape) rendered under two camera scalings: detail = wide scene scaled by detailScale about the dough centre (0.50, 0.62); the cut at cutMs swaps camera scaling with ZERO transition frames. Single phase driver: phase(t)=(t mod rollPeriodMs)/rollPeriodMs · offset=rollAmplitudePx·sin(2π·phase) · angle=rollTiltDeg·sin(2π·phase+π/2), identical in both views. `window.__rec` exposes play/pause/seek/time (+ phaseAt/offsetAt/angleAt/sceneAt/scaleAt/config for the harness). NO rendered text, no captions, no external assets, no specimen media.
+`comparison.html`: segment + recreation (iframe) side by side, ONE shared control set (Play/Pause/Restart), recreation clock slaved to the video's currentTime (seek on timeupdate/seeked), labels "ORIGINAL — Watchtower of Turkey @ 80.30–83.30 (cut at 81.8)" and "RECREATION — T182 detail-to-wide match on action, parameterized", @media (max-width:640px) stacking.
+
+## §4 — Own checks, RAW output (A9.4 — filed from the final build)
+Swap values (RUN §2, exact): pinColor #a9743f→#34558b · cutMs 1500→1100 · rollPeriodMs 580→400 · accentLabel "flatbread"→"orchard". Checkpoint assertions per §2d.1, all instants CONFIG-derived and re-derived under the swapped cutMs. Node harness raw output (final build, after census cures; exit 0):
+
+```
+CONFIG default: {"cutMs":1500,"durationMs":3000,"rollPeriodMs":580,"rollAmplitudePx":120,"rollTiltDeg":14,"detailScale":3.2,"doughColor":"#e8dcc4","pinColor":"#a9743f","skinColor":"#8a5a3b","tableColor":"#7d5a38","accentLabel":"flatbread","wallColor":"#4a3826","clothColor":"#7a4a56","flourColor":"#f4ecd9","griddleColor":"#3b332a","doughCxFrac":0.5,"doughCyFrac":0.62,"blurPxDetail":3,"blurPxWide":0.6,"flourOpacity":0.55,"geom":{"tableCx":480,"tableCy":360,"tableRx":330,"tableRy":105,"doughRx":120,"doughRy":44,"pinLen":430,"pinH":17,"handRx":34,"handRy":24,"handInset":62,"headR":34,"headCx":448,"headCy":128,"torsoW":150,"torsoH":130,"torsoCx":452,"torsoCy":218,"shoulderLx":402,"shoulderLy":178,"shoulderRx":502,"shoulderRy":178,"armW":15,"ballR":21,"ballRyFrac":0.8,"ball1x":268,"ball1y":408,"ball2x":322,"ball2y":428,"ball3x":648,"ball3y":420,"torsoRx":38,"griddleX":700,"griddleY":300,"griddleW":170,"griddleH":92,"griddleR":16,"flourRx":190,"flourRy":62}}
+PASS DEFAULT phase_detail(cutMs)==phase_wide(cutMs) exactly :: 0.5862068965517241 == 0.5862068965517241
+PASS DEFAULT |offset(cut+1)-offset(cut-1)| <= 2% stage width (19.2px) :: 2.2277px
+PASS DEFAULT |angle(cut+1)-angle(cut-1)| <= 3deg :: 0.1564deg
+PASS DEFAULT scene at cutMs-1 is detail :: detail
+PASS DEFAULT scene at cutMs+1 is wide :: wide
+PASS DEFAULT scale step: scaleAt(cut-1)=detailScale, scaleAt(cut+1)=1 :: 3.2 -> 1
+INFO DEFAULT translational speed fraction at cut = 0.8569 (1 = mid-stroke max, 0 = reversal)
+PASS DEFAULT speed at cut >= 0.5 (mid-stroke, plan-review cure 3 assertion) :: 0.8569
+PASS DEFAULT accentLabel is flatbread :: flatbread
+CONFIG swapped: pinColor=#34558b cutMs=1100 rollPeriodMs=400 accentLabel=orchard
+PASS SWAPPED phase_detail(cutMs)==phase_wide(cutMs) exactly :: 0.75 == 0.75
+PASS SWAPPED |offset(cut+1)-offset(cut-1)| <= 2% stage width (19.2px) :: 0.0000px
+PASS SWAPPED |angle(cut+1)-angle(cut-1)| <= 3deg :: 0.4398deg
+PASS SWAPPED scene at cutMs-1 is detail :: detail
+PASS SWAPPED scene at cutMs+1 is wide :: wide
+PASS SWAPPED scale step: scaleAt(cut-1)=detailScale, scaleAt(cut+1)=1 :: 3.2 -> 1
+INFO SWAPPED translational speed fraction at cut = 0.0000 (1 = mid-stroke max, 0 = reversal)
+INFO SWAPPED speed fraction at swapped cut = 0.0000 (phase 0.75 = stroke reversal instant; continuity assertions above are the binding §2d.1 set)
+PASS SWAP-PROBE-1150 phase_detail(cutMs)==phase_wide(cutMs) exactly :: 0.875 == 0.875
+PASS SWAP-PROBE-1150 |offset(cut+1)-offset(cut-1)| <= 2% stage width (19.2px) :: 2.6656px
+PASS SWAP-PROBE-1150 |angle(cut+1)-angle(cut-1)| <= 3deg :: 0.3110deg
+PASS SWAP-PROBE-1150 scene at cutMs-1 is detail :: detail
+PASS SWAP-PROBE-1150 scene at cutMs+1 is wide :: wide
+PASS SWAP-PROBE-1150 scale step: scaleAt(cut-1)=detailScale, scaleAt(cut+1)=1 :: 3.2 -> 1
+INFO SWAP-PROBE-1150 translational speed fraction at cut = 0.7071 (1 = mid-stroke max, 0 = reversal)
+PASS SWAP-PROBE-1150 speed at cut >= 0.5 (mid-stroke landing demonstrable under swapped timing, plan-review cure 3) :: 0.7071
+HARNESS RESULT: ALL PASS
+```
+
+Syntax check raw: `node --check` on the extracted inline script → `SYNTAX OK` (exit 0).
+Purity grep raw (§2c.1(a), final build): `grep -nEi 'segment\.mp4|source\.mp4|<video|<img|108018156|watchtower|vimeo' recreation.html` → no output, exit 1 = **0 hits**. Permitted exceptions: none; no `url(#id)` references exist in the file.
+Asset inventory raw (§2c.1(b)): `grep -oE '(src|href)="[^"]+"|url\(|@import|fetch\(' recreation.html` → no output, exit 1 = **0 external references**; every asset is inline code in the one file.
+Comparison check raw (node harness per §2c.1(c), exit 0):
+```
+PASS one <video> for segment
+PASS video src is segment.mp4
+PASS recreation stage present (iframe recreation.html)
+PASS exactly ONE control set (3 buttons) :: 3 buttons
+PASS label ORIGINAL verbatim
+PASS label RECREATION verbatim
+PASS recreation clock slaved to video currentTime
+PASS @media (max-width:640px) stacking rule present
+COMPARISON RESULT: ALL PASS
+```
+
+## §5 — A6 legs (pre-wave, on the final build)
+- `fit-table.md` — text-free priced N/A (0 text elements, mechanically proven) + scene geometry measured from CONFIG. HITs: 0.
+- `config-census.md` — all-literal scan (3 subject-shaping literals found and cured into CONFIG before filing: ballRyFrac, torsoRx, flourOpacity) · every CONFIG key resolved to an application site (unapplied: 0) · CSS-variable setter check: no CSS variables exist (empty set). HITs: 0.
+Both legs' outputs are carried verbatim in the jev-prewave payload (A10.1).
+
+## §6 — jev-prewave
+_(filled after firing)_
+
+## §7 — Five-lens wave + evidence binding
+_(filled after firing)_
+
+## Faithfulness trace
+_(completed at close of this record)_
+
+=== CONFIG BLOCK OF recreation.html (verbatim) ===
+const CONFIG = {
+  "cutMs": 1500,
+  "durationMs": 3000,
+  "rollPeriodMs": 580,
+  "rollAmplitudePx": 120,
+  "rollTiltDeg": 14,
+  "detailScale": 3.2,
+  "doughColor": "#e8dcc4",
+  "pinColor": "#a9743f",
+  "skinColor": "#8a5a3b",
+  "tableColor": "#7d5a38",
+  "accentLabel": "flatbread",
+  "wallColor": "#4a3826",
+  "clothColor": "#7a4a56",
+  "flourColor": "#f4ecd9",
+  "griddleColor": "#3b332a",
+  "doughCxFrac": 0.50,
+  "doughCyFrac": 0.62,
+  "blurPxDetail": 3,
+  "blurPxWide": 0.6,
+  "flourOpacity": 0.55,
+  "geom": {
+    "tableCx": 480, "tableCy": 360, "tableRx": 330, "tableRy": 105,
+    "doughRx": 120, "doughRy": 44,
+    "pinLen": 430, "pinH": 17,
+    "handRx": 34, "handRy": 24, "handInset": 62,
+    "headR": 34, "headCx": 448, "headCy": 128,
+    "torsoW": 150, "torsoH": 130, "torsoCx": 452, "torsoCy": 218,
+    "shoulderLx": 402, "shoulderLy": 178, "shoulderRx": 502, "shoulderRy": 178,
+    "armW": 15,
+    "ballR": 21, "ballRyFrac": 0.8, "ball1x": 268, "ball1y": 408, "ball2x": 322, "ball2y": 428, "ball3x": 648, "ball3y": 420,
+    "torsoRx": 38,
+    "griddleX": 700, "griddleY": 300, "griddleW": 170, "griddleH": 92, "griddleR": 16,
+    "flourRx": 190, "flourRy": 62
+  }
+};
+
+=== PACKET + REGISTER FACTS + CENSUS-ANCHOR MAPPING (binding, RUN §2) ===
+
+=== T182 PACKET + REGISTER FACTS ===
+Packet #10 digest (2026-11-16-vimeo-watchtower/digest.md), section T05 — Detail-to-wide match on action:
+- Timestamps: cut at 81.8 s (census cluster 81.16 / 81.80 / 82.44).
+- Mechanics: an extreme close-up of hands rolling dough (motion-blurred, frame-filling) cuts to the wide shot of the same activity — a woman making flatbread at her griddle. The action and subject are continuous; only the scale jumps. Observable: hand working dough -> wide kitchen. Inferred construction: cut on the shared action, not on a cover.
+- Why it works: the viewer completes the scale change themselves because the action never breaks; it is the film's clearest teachable transition — detail first, context second, no cover needed.
+- Evidence: ev/081-hand-detail.jpg (hands rolling dough, motion-blurred close-up, before the cut, 81.72 s) · ev/082-gozleme-wide.jpg (the same activity wide, after the cut, 81.88 s). Clip: clips/081-match-action-1.4s.mp4 (81.2 s + 1.4 s).
+- Packet good G1 (81.8 s): the detail-to-wide match on action (T05) — the single most transferable transition in the film; scale change with zero cover and zero confusion.
+- Packet consumer: DLC assembler — transition containers; add a MATCH-ON-ACTION-SCALE form: outgoing detail shot and incoming wide shot must share subject + action phase.
+
+Style-library TECHNIQUES.md register line 115: "T182 detail-to-wide match on action (from P10) | DESCRIBED — OWED #86 | classified at registration (Cycle-017): precedent T106 cut on action (RECREATED as an HTML recreation) — the scale-jump cut on the shared action is the lesson, HTML scenes can carry it". Queue position #86. No prior attempt exists for T182 (artifact census this wave: no directory existed before this Plan).
+
+Archived source: study/video-digests/2026-11-16-vimeo-watchtower/source.mp4 — ffprobe: duration 212.68 s, size 124588071 bytes. Technique window for the segment: source 80.30–83.30 s (3.00 s); cut at source 81.8 s.
+
+=== RUN.md (Cycle 028 Wave 25) §1 EXCERPTS FOR T182 ===
+§1b: Extreme close-up: motion-blurred hands rolling dough, frame-filling, warm brown (ev/081, 81.72 s, viewed) -> wide: a woman at a round wooden table rolling the same dough with a long pin, griddle + dough balls + flour in frame (ev/082, 81.88 s, viewed). Action and subject continuous; ONLY the scale jumps; no cover, no dissolve. Packet prices it the film's single most transferable transition (good G1).
+§1c census finding: 80.60 + 81.20 + 81.72 detail (hands/dough, motion-blurred, continuous rolling action) · 81.88 wide (same action, pin mid-stroke) · 82.60 wide (action continues). The cut sits between 81.72 and 81.88 (packet: 81.8); the rolling action's phase is continuous across it — no hold, no gap on either side.
+§1e measured playback (ffmpeg signalstats, 25 fps): detail-act YAVG oscillates 65–132 with dips at +0.26–0.38 and +0.70–0.86 s (the rolling hand's shadow sweeping the dough — the action's phase is visible in the series, cycle ≈0.55–0.6 s) · at +0.90 s (= source 81.80) a STEP to 129.2, then 128.5 / 127.3 / 126.3 — flat, bright, stable (the wide shot). Playback finding: the cut is at exactly 81.80 s measured; the detail action is mid-cycle at the cut (descending into a dip), and the wide act continues the same activity — no luminance gap, no fade frames between the acts (consecutive frames straddle the step).
+§1f visual playback: in the detail frames the blurred hands sweep across the dough — at 81.62 the hand mass fills the frame moving right-to-left over a pale dough shape at upper right, heavy horizontal motion blur, flour line at the bottom edge · the wide frames (81.98 viewed) show the same woman mid-stroke: both hands on the long pin over the dough disc on the round table, pin angled down to the right, dough balls and flour at the table's near edge — the rolling action plainly CONTINUES (same hands, same dough, same stroke in progress; nothing restarts). Cut precision: the cut sits between the viewed frames at 81.74 (detail) and 81.86 (wide) — a 0.12 s bracket on the viewed grid, consistent with the packet's 81.8 and the §1e step at 81.80 (frame grid 0.04 s). Cycle reconciliation: §1e's luminance dips put the rolling cycle at ≈550–600 ms; §2's rollPeriodMs is 580 (the measured value).
+
+=== T106 SIBLING BINDING (named family sibling, binding on T182) ===
+T106 cut on action: PASS 88.4, five lenses (motion 84 · timing 100 · purity 100 · reusability 79 · readability 79). Its scores.md binds the construction: cut at peak action with the action's phase continuous across the cut, schedule basis printed, timing lens 100 against the named basis. T182 is the same machinery plus a scale jump: cut on a continuing action, phase continuous, no cover.
+Transition family filed scores (verdict-history, read this wave): T104 hard cut 85.2 PASS (94·82·93·77·80) · T105 dissolve 80.0 FAIL (purity 62 — its cure: never let a transition build carry specimen-adjacent imagery) · T106 88.4 PASS · T107 match cut 82.0 FAIL · T108 dynamic zoom 84.2 FAIL · T109 morph 82.4 FAIL. Family mean = 83.7.
+Consumer (T182): DLC assembler — transition/opening surfaces (location/subject change without a visible edit — T182's mechanic as its transition specification); secondary: Hadosh Academy explainer production — opening surfaces.
+
+=== T182 PLAN (RUN.md §2 AS AMENDED BY §2c + §2d — the binding Plan) ===
+Segment: source 80.30–83.30 s -> segment.mp4 3.00 s; cut at source 81.8 = build t=1500 ms (segment-anchored).
+Schedule basis (A7): segment-anchored. Census-anchor mapping: offset −80.30 s · census states (segment-relative): 300 ms detail · 900 ms detail · 1420 ms detail (f81.72) · 1580 ms WIDE (f81.88) · 2300 ms wide · prescribed: detail scene for t<1500 · wide scene for t>=1500 · the rolling action's phase function is CONTINUOUS at t=1500 — asserted in the own-check suite.
+CONFIG keys (specimen defaults): cutMs 1500 · durationMs 3000 · rollPeriodMs 580 (one back-forth rolling cycle — measured, RUN §1f) · rollAmplitudePx 120 · rollTiltDeg 14 (added §2c.3, wide-scene coordinates) · detailScale 3.2 (detail magnification vs wide) · doughColor #e8dcc4 · pinColor #a9743f · skinColor #8a5a3b · tableColor #7d5a38 · accentLabel "flatbread" (data-only scene identifier used by the swap harness, never rendered).
+Construction (§2c.3, binding): ONE SVG scene graph (wide scene: figure at round table, dough disc, long pin, dough balls, griddle shape) rendered under two camera scalings — detail view = the wide scene scaled by detailScale about the dough centre (0.50, 0.62 of stage); the cut at cutMs swaps camera scaling with ZERO transition frames. The pin is driven by the single phase function phase(t)=(t mod rollPeriodMs)/rollPeriodMs, offset=rollAmplitudePx·sin(2π·phase), angle=rollTiltDeg·sin(2π·phase+π/2), identical in both views — continuity is structural, not tuned. Rejected: cross-fade/dissolve (that is T185/T105's mechanic, the opposite defect here) · canvas blur-trace of the specimen hand (purity refusal class).
+Swap test: pinColor→#34558b · cutMs 1500→1100 · rollPeriodMs 580→400 · accentLabel "flatbread"→"orchard" — the cut must still land mid-action with phase continuity, and every checkpoint assertion re-derives from the swapped CONFIG.
+Checkpoint assertions (§2d.1, binding): phase_detail(cutMs)==phase_wide(cutMs) exactly (same function, same instant, both representations); |offset(cutMs+1)−offset(cutMs−1)| ≤2% of stage width; |angle(cutMs+1)−angle(cutMs−1)| ≤3°; scene=detail at cutMs−1, scene=wide at cutMs+1 — all instants CONFIG-derived, re-derived under the swapped cutMs.
+Failure points priced in Plan: phase break at the cut (the T106 precedent's whole lesson; checkpoint assertion is the cure) · a dissolve sneaking in (zero transition frames asserted) · allocation presented as measured (census-anchor mapping is the cure). Plateau pricing (A2): first attempt, no prior attempt; comparator T106 (same machinery, 88.4 PASS) — predicted stuck lens MOTION, cause hypothesis: phase continuity asserted structurally may still read as a jump at the 3.2× scale change. Family baseline mean 83.7; historically stuck lens TIMING on allocation-vs-census defects.
+Purity: recreation.html contains NO text elements at all (no text is the subject), no external assets, no specimen media; purity grep per RUN §2c.1(a) acceptance 0 hits; asset inventory per §2c.1(b) acceptance 0 external references.
+A5 flow-field / Owner Cures 1–2: priced NOT APPLICABLE (no particle field, no sequenced phrases). A1 §2 runtime text sampling: NOT APPLICABLE (no typography). A9.1 plate rule: no moving plate is the technique; priced not applicable.
+
+=== A6 LEG 1: fit-table.md (verbatim, A10.1) ===
+# fit-table — T182 detail-to-wide match on action · attempt 1 (guard-measured-fit leg, A6)
+
+## Text elements
+The recreation is TEXT-FREE by construction (RUN §2: no text is the subject in this technique; no rendered text, no captions, no labels inside the scene). Mechanical proof on the final recreation.html (SHA-256 80221825fd720b36084ca54a0578309b8b0ff1811927023800b4de8244420497):
+- `grep -c '<text' recreation.html` → 0
+- No DOM text nodes are created by the build script (scene built exclusively from SVG shape elements: rect / ellipse / circle / line).
+- The only text strings in the file are the HTML `<title>` (browser chrome, never rendered on the stage) and the CONFIG data-only `accentLabel` (never rendered; swap-harness identifier only, RUN §2c.1(e)).
+
+**Text-fit rows: NONE — priced N/A.** There is no subject text element to measure, so the leg's fit class (fit asserted, not measured) has no instance in this build. This is a priced N/A, not an omitted leg: the guard's checks 1–4 each require a text element, and the census above proves the set is empty.
+
+## Geometry measurement (in place of text rows — the scene's legibility geometry, measured from the final build's CONFIG via the node harness)
+Stage 960×540 (16:9). All values evaluated from the filed CONFIG, not formula-claimed:
+- Dough centre: (480.0, 334.8) = (doughCxFrac 0.50 × 960, doughCyFrac 0.62 × 540).
+- Dough disc (wide view): 240 × 88 px (doughRx 120 × doughRy 44) — the action's subject, centred.
+- Pin: length 430 px, height 17 px; hands 68 × 48 px each (handRx 34 × handRy 24), inset 62 px from the pin ends, riding the pin group.
+- Detail view: the same scene at detailScale 3.2 about the dough centre — the dough disc presents at 768 × 281.6 px effective, frame-filling as the specimen's detail act does; the pin presents at 1376 px effective length (cropped by the frame, as in the specimen).
+- Table ellipse: 660 × 210 px; griddle 170 × 92 px; dough balls r 21 px (ry 16.8 px via ballRyFrac 0.8).
+
+## HIT list
+EMPTY — PASS for this leg (0 hits). Text class: no instances (priced N/A above). Geometry: every subject-shaping value above is a CONFIG value (see config-census.md).
+
+=== A6 LEG 2: config-census.md (verbatim, A10.1) ===
+# config-census — T182 detail-to-wide match on action · attempt 1 (guard-config-census leg v3.1, A6)
+
+Final build: recreation.html, SHA-256 80221825fd720b36084ca54a0578309b8b0ff1811927023800b4de8244420497.
+
+## 1. All-literal scan (literals OUTSIDE the CONFIG block)
+Method: the CONFIG object was extracted and the remaining file scanned for numeric / color / string literals; each is classified below.
+
+Colors outside CONFIG: `#14100c` (page background, CSS) — page chrome, not scene content: STRUCTURAL (the scene's own background is CONFIG wallColor). No other hex/rgba outside CONFIG.
+Numeric literals outside CONFIG, with classification:
+- `960` / `540` (stage W/H constants + viewBox + CSS max-width) — stage frame dimensions; the scene's subject geometry is all CONFIG geom relative to this frame: STRUCTURAL (frame, not subject-shaping; changing the frame rescales the whole stage uniformly).
+- `16/9` (CSS aspect-ratio) — STRUCTURAL (same frame).
+- `2` in `2 * Math.PI`, `/ 2` divisions (pin half-length, torso half extents), `180` in rad conversion, `%` moduli — mathematical identities: STRUCTURAL.
+- `0` / `1` (initial render instant, scaleAt wide value 1 = the identity camera, loop indices/bounds) — STRUCTURAL. Note: scaleAt's wide value 1 is the identity transform, not a shaping coefficient; the detail camera value is CONFIG detailScale.
+- `100` (%) CSS widths/heights — STRUCTURAL page chrome.
+- Strings outside CONFIG: SVG namespace URI, element ids, "blur(...)px" filter assembly (its magnitude is CONFIG blurPxDetail/blurPxWide), transform function names — STRUCTURAL (machinery, values flow from CONFIG).
+
+Census-driven cures applied BEFORE this filing (found by this scan, fixed, harness re-run ALL PASS): `ballRyFrac` 0.8 (dough-ball squash — was a code literal `* 0.8`), `torsoRx` 38 (torso corner radius — was a literal), `flourOpacity` 0.55 (flour-layer opacity — was a literal) are now CONFIG keys with application sites. Subject-shaping literals remaining outside CONFIG: **0**.
+
+## 2. CONFIG key → application-site resolution (every key resolves; nested geom keys included)
+- cutMs → sceneAt() + scaleAt() (camera swap instant) · durationMs → __rec.seek/play clock wrap · rollPeriodMs → phaseAt() · rollAmplitudePx → offsetAt() · rollTiltDeg → angleAt() · detailScale → scaleAt() + render() camera transform · doughColor → dough disc + dough balls fill · pinColor → pin rect fill · skinColor → head, arms, hands fill/stroke · tableColor → table ellipse fill · accentLabel → data-only (swap-harness identifier; application = harness identity check, never rendered — priced in RUN §2 as data-only) · wallColor → background rect fill · clothColor → torso fill · flourColor → flour ellipse fill · griddleColor → griddle rect fill · doughCxFrac/doughCyFrac → doughCx/doughCy computation (camera centre + dough position) · blurPxDetail/blurPxWide → pinGroup filter in render() · flourOpacity → flour ellipse opacity.
+- geom.tableCx/tableCy/tableRx/tableRy → table ellipse · geom.doughRx/doughRy → dough disc · geom.pinLen/pinH → pin rect · geom.handRx/handRy/handInset → hand ellipses + arm endpoint computation · geom.headR/headCx/headCy → head circle · geom.torsoW/torsoH/torsoCx/torsoCy/torsoRx → torso rect · geom.shoulderLx/shoulderLy/shoulderRx/shoulderRy → arm line origins · geom.armW → arm stroke-width · geom.ballR/ballRyFrac/ball1x/ball1y/ball2x/ball2y/ball3x/ball3y → dough-ball ellipses · geom.griddleX/griddleY/griddleW/griddleH/griddleR → griddle rect · geom.flourRx/flourRy → flour ellipse.
+Unapplied keys: **0**.
+
+## 3. CSS-variable setter check
+The build uses NO CSS variables (no `var(--…)` references, no CSS custom-property setters) — the check's class has no instance: PASS by empty set. CONFIG flows through JS application sites only (table above).
+
+## HIT list
+EMPTY — PASS for this leg (0 hits), after the three census-driven cures recorded in §1.
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 98136 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Skipped project instructions in environment `local` starting at `/home/hatch/workspace/AGENTS.md` because the 32768-byte budget was exhausted. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**FIRE-WAVE — the supplied paperwork earns scoring.** No rejection taxonomy applies.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.95 |
+| Purity pre-check | 0.95 |
+| Own-checks completeness | 0.90 |
+| Fidelity-plan honesty | 0.95 |
+
+Findings:
+
+1. **Parameterization is substantive.** The CONFIG supplies timing, motion, camera scale, colors, and subject geometry. `config-census.md` §1 records three shaping literals moved into CONFIG; §2 maps keys to application sites. Build-record §4 records default, prescribed swap, and additional timing-probe results. The data-only `accentLabel` is explicitly declared; its identity check is not evidence of visual variation.
+
+2. **The construction route passes the paperwork purity check.** Build-record §3 describes one code-drawn SVG scene with one phase driver and a camera-scale step. §4 records the purity grep and asset inventory commands, empty outputs, and exit statuses. No tracing or specimen-embedding step appears in the supplied route.
+
+3. **Mechanical checks are recorded, not merely asserted.** Build-record §4 supplies checkpoint values, scene and scale assertions, syntax output, purity results, and comparison-check output. Both A6 outputs are supplied. This is not ASSERTED-CHECKS.
+
+4. **The fidelity plan names its risks honestly.** The binding Plan implements shared subject, continuous action phase, a direct scale jump, and no cover. The prescribed swap lands at a translational reversal: §4 prints phase `0.75` and speed fraction `0.0000`. That limits what this swap proves about a visibly mid-stroke cut, but is disclosed alongside the fixed swap requirement. The default and additional probe record speed fractions above the stated `0.5` threshold. This warrants wave scrutiny of motion readability, not a paperwork HOLD or a silent-deferral finding.
+
+**Limits:** Text-only review; no tools used. The standalone `guards.md` command list and executable construction/harness source are absent, so exhaustive guard coverage, actual rendering, and SHA binding are not independently verified. The missing command list is a feed-completeness gap, not evidence that checks were omitted. Source-phase continuity remains the disclosed inference priced in build-record §2.
+
+**BODY-WRITE: none (read-only run); return supplied for the consumer to file verbatim as jev-prewave.md.**
+tokens used
+24,241
+**FIRE-WAVE — the supplied paperwork earns scoring.** No rejection taxonomy applies.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.95 |
+| Purity pre-check | 0.95 |
+| Own-checks completeness | 0.90 |
+| Fidelity-plan honesty | 0.95 |
+
+Findings:
+
+1. **Parameterization is substantive.** The CONFIG supplies timing, motion, camera scale, colors, and subject geometry. `config-census.md` §1 records three shaping literals moved into CONFIG; §2 maps keys to application sites. Build-record §4 records default, prescribed swap, and additional timing-probe results. The data-only `accentLabel` is explicitly declared; its identity check is not evidence of visual variation.
+
+2. **The construction route passes the paperwork purity check.** Build-record §3 describes one code-drawn SVG scene with one phase driver and a camera-scale step. §4 records the purity grep and asset inventory commands, empty outputs, and exit statuses. No tracing or specimen-embedding step appears in the supplied route.
+
+3. **Mechanical checks are recorded, not merely asserted.** Build-record §4 supplies checkpoint values, scene and scale assertions, syntax output, purity results, and comparison-check output. Both A6 outputs are supplied. This is not ASSERTED-CHECKS.
+
+4. **The fidelity plan names its risks honestly.** The binding Plan implements shared subject, continuous action phase, a direct scale jump, and no cover. The prescribed swap lands at a translational reversal: §4 prints phase `0.75` and speed fraction `0.0000`. That limits what this swap proves about a visibly mid-stroke cut, but is disclosed alongside the fixed swap requirement. The default and additional probe record speed fractions above the stated `0.5` threshold. This warrants wave scrutiny of motion readability, not a paperwork HOLD or a silent-deferral finding.
+
+**Limits:** Text-only review; no tools used. The standalone `guards.md` command list and executable construction/harness source are absent, so exhaustive guard coverage, actual rendering, and SHA binding are not independently verified. The missing command list is a feed-completeness gap, not evidence that checks were omitted. Source-phase continuity remains the disclosed inference priced in build-record §2.
+
+**BODY-WRITE: none (read-only run); return supplied for the consumer to file verbatim as jev-prewave.md.**

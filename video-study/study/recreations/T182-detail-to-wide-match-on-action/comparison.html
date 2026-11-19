@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T182 comparison — detail-to-wide match on action</title>
+<style>
+  html,body{margin:0;padding:0;background:#14100c;color:#e8e2d4;font-family:Georgia,serif;}
+  .wrap{max-width:1180px;margin:0 auto;padding:14px;}
+  .sides{display:flex;gap:14px;}
+  .side{flex:1 1 0;min-width:0;}
+  .side h2{font-size:15px;margin:0 0 8px 0;font-weight:normal;}
+  video,iframe{width:100%;aspect-ratio:16/9;display:block;border:0;background:#000;}
+  .controls{margin:14px 0;display:flex;gap:10px;}
+  .controls button{font-size:16px;padding:10px 18px;cursor:pointer;}
+  @media (max-width:640px){
+    .sides{flex-direction:column;}
+    .side{width:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+  <div class="sides">
+    <div class="side">
+      <h2>ORIGINAL — Watchtower of Turkey @ 80.30–83.30 (cut at 81.8)</h2>
+      <video id="seg" src="segment.mp4" preload="auto" playsinline></video>
+    </div>
+    <div class="side">
+      <h2>RECREATION — T182 detail-to-wide match on action, parameterized</h2>
+      <iframe id="rec" src="recreation.html" title="T182 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+var seg = document.getElementById("seg");
+var recFrame = document.getElementById("rec");
+function rec(){ return recFrame.contentWindow && recFrame.contentWindow.__rec; }
+function syncToVideo(){
+  var r = rec();
+  if (r && seg.duration) r.seek(seg.currentTime * 1000);
+}
+seg.addEventListener("timeupdate", syncToVideo);
+seg.addEventListener("seeked", syncToVideo);
+document.getElementById("btnPlay").addEventListener("click", function(){
+  var r = rec(); seg.play(); if (r) r.play(); syncToVideo();
+});
+document.getElementById("btnPause").addEventListener("click", function(){
+  var r = rec(); seg.pause(); if (r) r.pause(); syncToVideo();
+});
+document.getElementById("btnRestart").addEventListener("click", function(){
+  var r = rec(); seg.currentTime = 0; if (r) r.seek(0); seg.play(); if (r) r.play();
+});
+recFrame.addEventListener("load", syncToVideo);
+</script>
+</body>
+</html>

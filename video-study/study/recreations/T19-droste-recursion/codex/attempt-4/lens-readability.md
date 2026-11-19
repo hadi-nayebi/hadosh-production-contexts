@@ -1,0 +1,21 @@
+**Readability verdict** — The outer “THIS VIDEO” header has room at both phone widths. The second header is readable in principle but overruns its vertical budget. The deepest scene preserves the figure and frame cues, while the candles and staff are marginal as distinct objects.
+
+### Header fit at 360 and 390 px
+
+I ran `resolveConfig`, `contentBoxChain`, and `headerModel` from the disk copy of the supplied source. Width includes the star medallion. Fit dimensions are before the stage transform. Displayed type sizes are CSS px after applying the configured 0.94× and 1.20× scales. [recreation.html source in payload.txt](/home/hatch/workspace/.scratch/c027-T19-readability/payload.txt:432)
+
+| Header | Row width / available at 360 and 390 px | One-line height / available at 360 and 390 px | Displayed label size at 360 and 390 px |
+|---|---|---|---|
+| Outer | 134.93 / 190.40 · 146.17 / 206.60 | 18.00 / 28.36 · 19.50 / 30.82 | 16.92–21.60 · 18.33–23.40 |
+| Second | 82.46 / 90.53 · 82.46 / 98.41 | 11.00 / 10.06 · 11.00 / 10.98 | 10.34–13.20 at both widths |
+| Deepest | 33.48 / 42.00 · 35.96 / 45.83 | 6.00 / 3.21 · 6.00 / 3.55, set by the star | 4.00–5.10 · 4.33–5.53 |
+
+- **Outer and second headers.** The outer phrase fits on one line with clearance in both dimensions. The second phrase has horizontal room, but even one line exceeds the modeled bar height by 0.94 px at 360 and 0.02 px at 390. The renderer uses `nowrap` and centers the row vertically. The model shows a line-box overrun, with actual ink clipping unresolved. For the next attempt, give the second header 32% of its frame’s inner height, about 11.50 px at 360, and use the same boundary for the curtains and inset. Recheck the deepest scene dimensions after that change. [Header renderer](/home/hatch/workspace/.scratch/c027-T19-readability/payload.txt:663)
+- **Deepest header.** The phrase works as a letter band at the stated sizes. The star’s 6 px line box exceeds the bar at both widths. A terminal-only treatment with a plain dark header band would preserve the frame cue and remove the overrun. [Label sizing and intended reading depth](/home/hatch/workspace/.scratch/c027-T19-readability/payload.txt:396)
+- **Deepest objects.** At opening scale, the face has an unobscured short axis of 5.98–6.53 px and sits to the right of a roughly 41–45 × 13–14 px gold-edged frame. Those are the strongest distinct cues. The candle bodies are 1.52–1.65 px wide with only 0.55–0.60 px gaps between them, so the three candles may register as a cluster. The frame leaves roughly 61% of the staff shaft exposed, about 6.81–7.43 px tall and 1.69–1.83 px wide. Its bright orb helps locate it, but the shaft is the weak cue for recognizing it as a staff. Increase candle spacing and give the staff a brighter shaft edge, then check that the two silhouettes remain separate at 360 px. [Occlusion model](/home/hatch/workspace/.scratch/c027-T19-readability/payload.txt:492) [Object renderer](/home/hatch/workspace/.scratch/c027-T19-readability/payload.txt:600)
+- **Contrast.** The configured colors give about 11.6:1 for gold type against navy, 13.7:1 for candle bodies against the hall, and 13.5:1 for the pale face against the hood. The staff wood against the hall is about 2.1:1, and the lighter robe against the brighter drape is about 1.1:1. These ratios come from the relative luminance of the named palette colors. The robe’s weak edge makes the face carry much of the figure recognition at the deepest level. [Palette](/home/hatch/workspace/.scratch/c027-T19-readability/payload.txt:101)
+
+**Limits** — PIXEL-UNVERIFIED. Rendered phone-size playback was unavailable. The assessment uses the HTML source embedded in `payload.txt`. Browser font metrics, rasterization, actual ink clearance, and viewer recognition remain unverified. The filing directory was absent at the checked workspace paths.
+
+SCORE: 72  
+BODY-WRITE: none (read-only run). For the consuming seat to file this return verbatim at `codex/attempt-4/lens-readability.md` and record readability 72 in `scores.md`.

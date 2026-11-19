@@ -1,0 +1,16 @@
+READABILITY — 58/100. Source-based assessment; rendered phone-size playback was unavailable.
+
+- **Depth-0 header: readable, with limited clearance.** At 360 × 202.5 px, `frameWidthPercent:44` gives a 158.4 px outer frame. The 18 px gold label contrasts strongly with `frameBg:"#10182e"`. However, the medallion and label occupy separate normal-flow lines inside `frameHeaderPercent:20`, approximately 20 px high. Their combined height exceeds that header, so the declared font size alone does not establish unobstructed reading. **Cure:** reserve explicit space for both elements and verify their bounding boxes against the interior.
+
+- **Depth-1 header: the 11 px floor does not guarantee a readable phrase.** `buildScene` places this frame within an approximately 126.6 px-wide nested scene, making its frame approximately 55.7 px wide before borders. `"THIS VIDEO"` at 11 px with `letterSpacing:"0.14em"` cannot comfortably fit on one line. Normal wrapping competes with a header only approximately 7 px high; the subsequently painted interior can obscure overflowing text. The push enlarges this conflict without resolving it. **Cure:** enlarge the nested header’s usable width and height, or change its text layout; test the complete phrase rather than font size alone.
+
+- **The deeper-label stop is appropriate, but its stated arithmetic disagrees with construction.** The recursive call already passes `stageWidthPx * levelScale`; `labelFontPx` then multiplies by `levelScale^level` again. Consequently, the actual depth-2 label is approximately **0.56 px**, rather than the declared 3.18 px. The 6 px medallion floor can dominate that header. **Cure:** apply the nesting factor once and record effective rendered sizes. Depth 2 may remain an intentionally unreadable glyph-band.
+
+- **Three scene levels are recognizable unevenly.** Repeated pale faces, gold borders, red curtains, and candle clusters provide strong recursion cues. However, the actual interior width ratio is approximately 0.35, after curtains and fixed borders, rather than 0.42. The third scene is approximately 43 px wide before zoom: individual candle bodies are below 1 px wide, and the staff shaft is approximately 1 px. At the opening scale of 0.94 these details are especially fragile; the 1.20 hold improves them but does not establish clear separation of every claimed component. **Cure:** increase usable interior area and give the deepest candles and staff sufficient screen-space separation.
+
+- **Contrast supports the recursive premise.** `face`, `candleBody`, and `label` are pale against dark backgrounds. The deepest level should retain a recognizable repeated figure-and-frame arrangement, but its fine objects and crowded header risk reading as marks rather than a fully distinguishable hall. **Cure:** verify opening, mid-push, and hold stills at native 360 px width before claiming three clearly readable scene levels.
+
+The strongest readability cues are the faces and repeated frames. The principal defect is the depth-1 header’s available space; the deepest scene’s fine-detail claim also remains unsupported.
+
+SCORE: 58
+BODY-WRITE: This return supplies the readability findings and cure list for codex/lens-readability.md and scores.md; direct filesystem filing was unavailable because the execution tool failed to start.

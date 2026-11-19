@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T190 comparison — Caption with Intention cold open</title>
+<style>
+  body { margin:0; background:#181818; color:#eee; font-family:Georgia, serif; }
+  .wrap { display:flex; gap:16px; justify-content:center; align-items:flex-start; flex-wrap:wrap; padding:16px; }
+  figure { margin:0; width:640px; max-width:96vw; }
+  figcaption { padding:8px 4px; font-size:17px; }
+  video, iframe { width:640px; max-width:96vw; height:360px; background:#000; border:1px solid #444; display:block; }
+  #controls { text-align:center; padding:14px; }
+  #controls button { font-size:19px; padding:12px 22px; margin:0 6px; cursor:pointer; }
+  #clock { font-size:16px; margin-left:10px; }
+  @media (max-width: 760px) {
+    .wrap { flex-direction:column; align-items:center; }
+    figure { width:96vw; }
+    video, iframe { width:96vw; height:54vw; }
+    #controls button { padding:14px 20px; }
+  }
+</style>
+</head>
+<body>
+<div id="controls">
+  <button id="playBtn" type="button">Play both</button>
+  <button id="restartBtn" type="button">Restart both</button>
+  <span id="clock">0.00 s / segment 14.46 s · recreation cycle 13.917 s (+0.5 s tail handle on the original)</span>
+</div>
+<div class="wrap">
+  <figure>
+    <figcaption>ORIGINAL — Caption with Intention @ 0:00–0:14</figcaption>
+    <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+  </figure>
+  <figure>
+    <figcaption>RECREATION — T190 pixel-icon cold open, parameterized</figcaption>
+    <iframe id="rec" src="recreation.html" title="T190 recreation"></iframe>
+  </figure>
+</div>
+<script>
+"use strict";
+(function(){
+  var video = document.getElementById("orig");
+  var frame = document.getElementById("rec");
+  var clock = document.getElementById("clock");
+  function recWin(){ try { return frame.contentWindow; } catch(e){ return null; } }
+  function drive(){
+    var w = recWin();
+    if(w && w.__T190){ w.__T190.setExternalTime(video.currentTime * 1000); }
+    clock.textContent = video.currentTime.toFixed(2) + " s / segment 14.46 s · recreation cycle 13.917 s (+0.5 s tail handle on the original)";
+    if(!video.paused && !video.ended) requestAnimationFrame(drive);
+  }
+  document.getElementById("playBtn").addEventListener("click", function(){
+    if(video.paused){ video.play(); this.textContent = "Pause both"; requestAnimationFrame(drive); }
+    else { video.pause(); this.textContent = "Play both"; }
+  });
+  document.getElementById("restartBtn").addEventListener("click", function(){
+    video.currentTime = 0; video.play();
+    document.getElementById("playBtn").textContent = "Pause both";
+    requestAnimationFrame(drive);
+  });
+  video.addEventListener("seeked", drive);
+  video.addEventListener("pause", drive);
+})();
+</script>
+</body>
+</html>

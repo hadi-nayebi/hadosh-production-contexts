@@ -1,0 +1,140 @@
+# T19 attempt 5 — config-census leg (guard-config-census v3.1, by reference)
+
+Source: recreation.html sha256 `f89af02eafea695edc7400a2a5bc388b723c8c7e473bfd7b7e04dcfe5f38c43d` (frozen before the wave). Census against THIS attempt's own CONFIG (**126 leaf keys** — attempt 4's 122, minus `zoomEnd` (retired with the continuous push), plus `events.insertScale`, `checkpointPolicy.minDurationMs`, `palette.staffEdge`, `components.staff.edgeWidthPercent`, `components.staff.edgeGradientDeg`). Consumption is counted as application-site references outside the CONFIG definition, and mutation-checked in the own-check suite for the changed keys (event checkpoints, insert scale, duration floor, aspect, staff edge, candle step cap), not counted alone (A-C006-2). The derived recursion scale (0.486) and zoom anchor (32 / 64) remain resolution-time derived values, not CONFIG leaves.
+
+## Key -> application-site resolution
+
+| CONFIG key = value | Resolution |
+|---|---|
+| durationMs = 3625 | applied (46 site refs in source incl. definition) |
+| playbackMode = "once" | applied (16 site refs in source incl. definition) |
+| labelText = "THIS VIDEO" | applied (15 site refs in source incl. definition) |
+| depth = 3 | applied (23 site refs in source incl. definition) |
+| candleCount = 3 | applied (12 site refs in source incl. definition) |
+| figureButtons = 3 | applied (8 site refs in source incl. definition) |
+| checkpoints.pushStartMs = 500 | applied (8 site refs in source incl. definition) |
+| checkpoints.anchorMs = 875 | applied (11 site refs in source incl. definition) |
+| checkpoints.pushEndMs = 2625 | applied (12 site refs in source incl. definition) |
+| checkpoints.holdEndMs = 3250 | applied (13 site refs in source incl. definition) |
+| checkpointPolicy.minSeparationMs = 250 | applied (7 site refs in source incl. definition) |
+| checkpointPolicy.minDurationMs = 1000 | applied (9 site refs in source incl. definition) |
+| zoomStart = 0.94 | applied (22 site refs in source incl. definition) |
+| events.insertScale = 1.5 | applied (12 site refs in source incl. definition) |
+| labelFontFactor = 0.05 | applied (6 site refs in source incl. definition) |
+| labelMinPx = 11 | applied (6 site refs in source incl. definition) |
+| medallionText = "✶" | applied (13 site refs in source incl. definition) |
+| typography.letterSpacingEm = 0.08 | applied (3 site refs in source incl. definition) |
+| typography.lineHeight = 1 | applied (7 site refs in source incl. definition) |
+| typography.medallionFactor = 0.8 | applied (3 site refs in source incl. definition) |
+| typography.medallionMinPx = 6 | applied (3 site refs in source incl. definition) |
+| typography.glyphAdvanceEm = 0.62 | applied (3 site refs in source incl. definition) |
+| typography.medallionAdvanceEm = 0.62 | applied (2 site refs in source incl. definition) |
+| typography.fontFamily = "Georgia, 'Times New Roman', serif" | applied (3 site refs in source incl. definition) |
+| flicker.amp = 0 | applied (24 site refs in source incl. definition) |
+| flicker.periodDivisorMs = 170 | applied (6 site refs in source incl. definition) |
+| flicker.phaseStepRad = 2.1 | applied (6 site refs in source incl. definition) |
+| palette.bg = "#07050a" | applied (2 site refs in source incl. definition) |
+| palette.hall = "#171019" | applied (15 site refs in source incl. definition) |
+| palette.drape = "#7e1f2b" | applied (45 site refs in source incl. definition) |
+| palette.drapeDark = "#4a121d" | applied (4 site refs in source incl. definition) |
+| palette.drapeFold = "#5d1724" | applied (6 site refs in source incl. definition) |
+| palette.candleBody = "#e8dcc0" | applied (6 site refs in source incl. definition) |
+| palette.flame = "#ffca7a" | applied (36 site refs in source incl. definition) |
+| palette.flameCore = "#fff3d0" | applied (3 site refs in source incl. definition) |
+| palette.glow = "#ffb35c" | applied (3 site refs in source incl. definition) |
+| palette.staffWood = "#6e3b22" | applied (5 site refs in source incl. definition) |
+| palette.staffEdge = "#b57e3e" | applied (4 site refs in source incl. definition) |
+| palette.staffOrb = "#ffc46b" | applied (2 site refs in source incl. definition) |
+| palette.robe = "#2c3a5e" | applied (21 site refs in source incl. definition) |
+| palette.robeShade = "#1d2742" | applied (2 site refs in source incl. definition) |
+| palette.hood = "#14100e" | applied (17 site refs in source incl. definition) |
+| palette.face = "#f0d7ae" | applied (34 site refs in source incl. definition) |
+| palette.faceRim = "#caa06a" | applied (2 site refs in source incl. definition) |
+| palette.button = "#ffd98c" | applied (12 site refs in source incl. definition) |
+| palette.table = "#3d1420" | applied (41 site refs in source incl. definition) |
+| palette.frameBg = "#10182e" | applied (3 site refs in source incl. definition) |
+| palette.frameBorder = "#d9b96a" | applied (8 site refs in source incl. definition) |
+| palette.frameInner = "#05070f" | applied (2 site refs in source incl. definition) |
+| palette.curtain = "#8e2434" | applied (27 site refs in source incl. definition) |
+| palette.label = "#e9cf8f" | applied (57 site refs in source incl. definition) |
+| geometry.drapeLeftPercent = 55 | applied (5 site refs in source incl. definition) |
+| geometry.drapeWidthPercent = 45 | applied (3 site refs in source incl. definition) |
+| geometry.drapeTransitionOffsetPercent = 6 | applied (2 site refs in source incl. definition) |
+| geometry.drapeFoldPeriodPx = 18 | applied (4 site refs in source incl. definition) |
+| geometry.backdropGradientDeg = 90 | applied (2 site refs in source incl. definition) |
+| geometry.drapeGradientDeg = 90 | applied (3 site refs in source incl. definition) |
+| geometry.drapeSplitPercent = 50 | applied (2 site refs in source incl. definition) |
+| geometry.stageAspectW = 16 | applied (7 site refs in source incl. definition) |
+| geometry.stageAspectH = 9 | applied (7 site refs in source incl. definition) |
+| geometry.stageFallbackWidthPx = 960 | applied (4 site refs in source incl. definition) |
+| geometry.candleLeftPercent = 33 | applied (3 site refs in source incl. definition) |
+| geometry.candleTopPercent = 10 | applied (3 site refs in source incl. definition) |
+| geometry.candleWidthPercent = 9 | applied (6 site refs in source incl. definition) |
+| geometry.candleHeightPercent = 34 | applied (4 site refs in source incl. definition) |
+| geometry.staffLeftPercent = 43 | applied (3 site refs in source incl. definition) |
+| geometry.staffTopPercent = 10 | applied (3 site refs in source incl. definition) |
+| geometry.staffWidthPercent = 2.2 | applied (4 site refs in source incl. definition) |
+| geometry.staffHeightPercent = 46 | applied (3 site refs in source incl. definition) |
+| geometry.figureRightPercent = 3 | applied (3 site refs in source incl. definition) |
+| geometry.figureTopPercent = 6 | applied (3 site refs in source incl. definition) |
+| geometry.figureWidthPercent = 36 | applied (6 site refs in source incl. definition) |
+| geometry.figureHeightPercent = 82 | applied (5 site refs in source incl. definition) |
+| geometry.tableLeftPercent = 0 | applied (3 site refs in source incl. definition) |
+| geometry.tableTopPercent = 86 | applied (3 site refs in source incl. definition) |
+| geometry.tableWidthPercent = 62 | applied (3 site refs in source incl. definition) |
+| geometry.tableHeightPercent = 14 | applied (3 site refs in source incl. definition) |
+| geometry.frameLeftPercent = 5 | applied (5 site refs in source incl. definition) |
+| geometry.frameTopPercent = 38 | applied (7 site refs in source incl. definition) |
+| geometry.frameWidthPercent = 54 | applied (9 site refs in source incl. definition) |
+| geometry.frameHeightPercent = 52 | applied (9 site refs in source incl. definition) |
+| geometry.frameHeaderPercent = 35 | applied (13 site refs in source incl. definition) |
+| geometry.curtainWidthPercent = 5 | applied (11 site refs in source incl. definition) |
+| geometry.frameBorderPx = 2 | applied (3 site refs in source incl. definition) |
+| geometry.frameBorderMinPx = 1 | applied (3 site refs in source incl. definition) |
+| geometry.tableRadiusPercent = 50 | applied (3 site refs in source incl. definition) |
+| components.candle.stepCapPercent = 38 | applied (8 site refs in source incl. definition) |
+| components.candle.widthPercent = 22 | applied (16 site refs in source incl. definition) |
+| components.candle.baseHeightPercent = 62 | applied (3 site refs in source incl. definition) |
+| components.candle.altHeightDeltaPercent = 16 | applied (3 site refs in source incl. definition) |
+| components.candle.borderRadiusPercent = 12 | applied (4 site refs in source incl. definition) |
+| components.candle.flameLeftPercent = 22 | applied (2 site refs in source incl. definition) |
+| components.candle.flameTopPercent = -26 | applied (3 site refs in source incl. definition) |
+| components.candle.flameWidthPercent = 56 | applied (2 site refs in source incl. definition) |
+| components.candle.flameHeightPercent = 24 | applied (2 site refs in source incl. definition) |
+| components.candle.flameGradientStopPercent = 62 | applied (2 site refs in source incl. definition) |
+| components.staff.borderRadiusPercent = 40 | applied (4 site refs in source incl. definition) |
+| components.staff.orbLeftPercent = -90 | applied (2 site refs in source incl. definition) |
+| components.staff.orbTopPercent = -7 | applied (2 site refs in source incl. definition) |
+| components.staff.orbSizePercent = 280 | applied (3 site refs in source incl. definition) |
+| components.staff.orbGradientStopPercent = 55 | applied (2 site refs in source incl. definition) |
+| components.staff.edgeWidthPercent = 30 | applied (2 site refs in source incl. definition) |
+| components.staff.edgeGradientDeg = 90 | applied (2 site refs in source incl. definition) |
+| components.robe.leftPercent = 6 | applied (9 site refs in source incl. definition) |
+| components.robe.topPercent = 34 | applied (13 site refs in source incl. definition) |
+| components.robe.widthPercent = 88 | applied (16 site refs in source incl. definition) |
+| components.robe.heightPercent = 66 | applied (7 site refs in source incl. definition) |
+| components.robe.radiusTopPercent = 44 | applied (3 site refs in source incl. definition) |
+| components.robe.gradientDeg = 180 | applied (2 site refs in source incl. definition) |
+| components.hood.leftPercent = 14 | applied (9 site refs in source incl. definition) |
+| components.hood.topPercent = 0 | applied (13 site refs in source incl. definition) |
+| components.hood.widthPercent = 72 | applied (16 site refs in source incl. definition) |
+| components.hood.heightPercent = 46 | applied (7 site refs in source incl. definition) |
+| components.hood.radiusBottomPercent = 46 | applied (3 site refs in source incl. definition) |
+| components.hood.radiusTopLeftPercent = 50 | applied (2 site refs in source incl. definition) |
+| components.hood.radiusTopRightPercent = 50 | applied (2 site refs in source incl. definition) |
+| components.face.leftPercent = 27 | applied (9 site refs in source incl. definition) |
+| components.face.topPercent = 9 | applied (13 site refs in source incl. definition) |
+| components.face.widthPercent = 46 | applied (16 site refs in source incl. definition) |
+| components.face.heightPercent = 30 | applied (7 site refs in source incl. definition) |
+| components.face.gradientStopPercent = 58 | applied (2 site refs in source incl. definition) |
+| components.button.leftPercent = 47 | applied (9 site refs in source incl. definition) |
+| components.button.topStartPercent = 56 | applied (3 site refs in source incl. definition) |
+| components.button.stepCapPercent = 11 | applied (8 site refs in source incl. definition) |
+| components.button.sizePercent = 6 | applied (4 site refs in source incl. definition) |
+| components.button.maxTopPercent = 92 | applied (2 site refs in source incl. definition) |
+
+## Literal census (outside CONFIG)
+
+Per-literal classification on the final source: **hex 6** — the three diagnostics-badge colors (#10182e / #e9cf8f / #d9b96a) in the badge's own CSS plus their three namings in the source header's exception list (the named diagnostics-badge exclusion; playback UI, not scene construction) · **px 13** — the badge set (10px font, 2px/6px padding, 1px border, 4px offsets) + structural zeros + CONFIG-computed expressions · **vh 0** — the stage cap is computed at assembly from `geometry.stageAspectW / stageAspectH`; no vh literal stands anywhere in the source · **deg 0** — every gradient angle is a CONFIG leaf (backdrop/drape/staff edge) · the static CSS aspect is gone with the cap (0 occurrences of the former pair). Header exceptions ≡ census, exactly: the header names the badge exclusion and states the cap/aspect derivation, and nothing else stands outside CONFIG.
+
+**HIT count: 0.** Every one of the 126 leaves is consumed; the attempt-4 purity charge (the undeclared 177.78vh cap + duplicated CSS aspect) has no remaining instance — both values are derived from the CONFIG aspect at assembly, verified by the aspect swap test (4:3 edit → cap and rendered aspect follow with zero CSS edits).

@@ -1,0 +1,16 @@
+Readability: **77/100 — PIXEL-UNVERIFIED.** Rendered phone-size playback was unavailable. This score assesses the supplied source; the logic-suite results do not establish perceptual recognition.
+
+- **Outer header reads comfortably.** At 360–390 px width, its nominal font is 18–19.5 px, displayed at approximately 16.9–23.4 px across the configured scales. The phrase and medallion have ample horizontal space and strong gold-on-dark contrast.
+
+- **Second header is marginal vertically.** Its nominal font is 11 px, displayed at 10.34–13.2 px. At 360 px, the model gives approximately 11.04 px header height—almost no clearance. Actual percentage sizing occurs inside the bordered frame, reducing that height below the modeled value. `fitsHeight` also checks the label alone rather than the tallest row item. Width appears sufficient, but a clean vertical fit is not established. **Cure:** calculate the actual content-box height and reserve explicit clearance around the entire row.
+
+- **Deepest label is unreadable, as correctly disclosed.** Its nominal font is approximately 4.25–4.61 px, displayed at approximately 4.0–5.53 px. It functions as a text-shaped band. This is acceptable only because the claim concerns three recognizable scenes, rather than three readable phrases.
+
+- **Deepest scene recognition remains fragile.** Under the declared 16:9 model at 360 px, the opening shows candle bodies approximately 1.58 px wide, candle pitch approximately 2.16 px, a staff approximately 1.76 px wide, and a face approximately 6.56 px high. Candle spans remaining above the foreground frame are approximately 5.6–7.5 px high; the staff’s exposed span is approximately 7.47 px. These support small contrasting marks, but do not establish that viewers distinguish three candles and a separate staff immediately. Gold frame borders and the pale face are stronger recognition anchors. **Cure:** increase candle separation and the visible staff silhouette, then inspect actual 360 px screenshots without magnification.
+
+- **The geometry model does not fully describe the rendered layout.** CSS makes the stage fill its container; it never enforces the model’s 16:9 aspect ratio. Frame borders further reduce nested interiors, while the model propagates unbordered dimensions. Consequently, its deepest-detail estimates are optimistic for a 16:9 container and unreliable for other container heights. **Cure:** enforce the intended aspect ratio and derive recognition measurements from actual content boxes.
+
+Contrast supports the recursive premise well. The deductions concern the narrow second-header height budget and insufficient evidence that the deepest objects remain individually recognizable at phone size. No motion, timing, purity, or parameterization judgment enters this score.
+
+SCORE: 77
+BODY-WRITE: This return supplies the verbatim codex/attempt-3/lens-readability.md filing and the scores.md readability entry: 77/100, PIXEL-UNVERIFIED, with header-fit and deepest-object recognition cures.

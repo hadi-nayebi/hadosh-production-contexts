@@ -1,0 +1,23 @@
+**Verdict.** Both intended “THIS VIDEO” headers fit at 360–390 px in the source model. The third scene is identifiable as a repeat, but its candles, staff, and figure are harder to distinguish in the wide composition, especially at 360 px.
+
+### Findings
+
+1. **Both text rows fit. The second has little vertical clearance.** Width figures include the phrase and star medallion. Width and height budgets are before the uniform transform, which scales the row and its box together. The last column gives the effective label font size after the wide and enlarged transforms. [payload.txt, `contentBoxChain` and `headerModel`](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:505) · [payload.txt, header construction](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:760) · [payload.txt, scale transform](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:850)
+
+   | Stage width | Header | Row width / available | Line height / available | Effective font, wide / enlarged |
+   |---|---|---:|---:|---:|
+   | 360 px | Outer | 134.93 / 190.40 px | 18.00 / 35.46 px | 16.92 / 27.00 px |
+   | 360 px | Second | 82.46 / 90.53 px | 11.00 / 11.28 px | 10.34 / 16.50 px |
+   | 390 px | Outer | 146.17 / 206.60 px | 19.50 / 38.53 px | 18.33 / 29.25 px |
+   | 390 px | Second | 82.46 / 98.41 px | 11.00 / 12.32 px | 10.34 / 16.50 px |
+
+   Both rows are fixed to one line. At 360 px the second header clears that line by only 0.28 px before scaling. The deepest header is a plain band with no rendered text, so it carries no label-readability claim. [payload.txt, header model](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:525) · [payload.txt, label insertion](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:765)
+
+2. **The deepest frame reads more clearly than the objects around it.** Its gold outline encloses about 41.36 × 10.24 px at 360 px wide. At 360 and 390 px, the two short candles have modeled visible spans of 4.05 and 4.42 px respectively, below the packet’s 5 px recognition mark at both widths. Their bodies are 1.52–1.65 px wide with 1.10–1.20 px gaps. The face is spatially separate and unoccluded, with a short axis of 4.85 px at 360 and 5.29 px at 390. The enlarged view clears 5 px for all three candles and the face. The staff shaft clears the candle bodies horizontally, but its orb bounds overlap the rightmost flame’s bounds. The renderer paints the orb later, so those two lights may merge. A candidate cure is to raise `candle.baseHeightPercent` from 62 to 74 and `face.heightPercent` from 30 to 32, which puts both short candle spans and the face above 5 px in the 360 px wide model. Setting `staff.orbLeftPercent` to 0 clears the modeled flame overlap. [payload.txt, geometry and components](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:114) · [payload.txt, deepest-scene models](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:566) · [payload.txt, candle and staff paint order](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:691)
+
+3. **Contrast supports the text and bright landmarks. The staff shaft and robe are weaker.** The source palette gives the label 11.56:1 against its header, the candle body 13.72:1 against the hall, the face rim 7.88:1 against the hood, and the gold frame border 9.87:1 against the hall. The staff’s 5.35:1 edge color grades into 2.06:1 wood across a shaft only 1.69–1.83 px wide in the wide view. The robe and drape endpoint pairs are near 1:1, leaving the face to carry much of the figure recognition. Extending the brighter shaft color across more of its width and increasing robe-to-drape separation would strengthen both silhouettes. [payload.txt, palette](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:105) · [payload.txt, contrast calculation](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:609) · [payload.txt, shaft and robe gradients](/home/hatch/workspace/.scratch/c028-T19-readability/payload.txt:715)
+
+**Limits.** PIXEL-UNVERIFIED. Rendered phone-size playback was unavailable. Measurements come from the disk copy of the supplied source. Actual glyph bounds, antialiasing, and whether the orb and flame visually merge remain unverified.
+
+SCORE: 79  
+BODY-WRITE: none (read-only run). For consumer filing, save this return verbatim as `codex/attempt-5/lens-readability.md` and record attempt 5 readability as 79 in `scores.md`.

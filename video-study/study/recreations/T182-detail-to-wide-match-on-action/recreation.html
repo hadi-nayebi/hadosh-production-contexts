@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T182 — detail-to-wide match on action (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#14100c;height:100%;}
+  #stage{width:100%;max-width:960px;margin:0 auto;aspect-ratio:16/9;display:block;}
+  svg{width:100%;height:100%;display:block;}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid meet" aria-label="T182 recreation stage">
+  <g id="camera">
+    <g id="scene"></g>
+  </g>
+</svg>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  "cutMs": 1500,
+  "durationMs": 3000,
+  "rollPeriodMs": 580,
+  "rollAmplitudePx": 120,
+  "rollTiltDeg": 14,
+  "detailScale": 3.2,
+  "doughColor": "#e8dcc4",
+  "pinColor": "#a9743f",
+  "skinColor": "#8a5a3b",
+  "tableColor": "#7d5a38",
+  "accentLabel": "flatbread",
+  "wallColor": "#4a3826",
+  "clothColor": "#7a4a56",
+  "flourColor": "#f4ecd9",
+  "griddleColor": "#3b332a",
+  "doughCxFrac": 0.50,
+  "doughCyFrac": 0.62,
+  "blurPxDetail": 3,
+  "blurPxWide": 0.6,
+  "flourOpacity": 0.55,
+  "geom": {
+    "tableCx": 480, "tableCy": 360, "tableRx": 330, "tableRy": 105,
+    "doughRx": 120, "doughRy": 44,
+    "pinLen": 430, "pinH": 17,
+    "handRx": 34, "handRy": 24, "handInset": 62,
+    "headR": 34, "headCx": 448, "headCy": 128,
+    "torsoW": 150, "torsoH": 130, "torsoCx": 452, "torsoCy": 218,
+    "shoulderLx": 402, "shoulderLy": 178, "shoulderRx": 502, "shoulderRy": 178,
+    "armW": 15,
+    "ballR": 21, "ballRyFrac": 0.8, "ball1x": 268, "ball1y": 408, "ball2x": 322, "ball2y": 428, "ball3x": 648, "ball3y": 420,
+    "torsoRx": 38,
+    "griddleX": 700, "griddleY": 300, "griddleW": 170, "griddleH": 92, "griddleR": 16,
+    "flourRx": 190, "flourRy": 62
+  }
+};
+/* Construction: ONE SVG scene graph (the wide scene). The detail view is the
+   SAME scene under a camera scaling of CONFIG.detailScale about the dough
+   centre; the cut at CONFIG.cutMs swaps the camera scaling with zero
+   transition frames. One phase function drives the pin in both views. */
+const SVGNS = "http://www.w3.org/2000/svg";
+const W = 960, H = 540;
+const doughCx = CONFIG.doughCxFrac * W, doughCy = CONFIG.doughCyFrac * H;
+function phaseAt(t){ const p = CONFIG.rollPeriodMs; return (((t % p) + p) % p) / p; }
+function offsetAt(t){ return CONFIG.rollAmplitudePx * Math.sin(2 * Math.PI * phaseAt(t)); }
+function angleAt(t){ return CONFIG.rollTiltDeg * Math.sin(2 * Math.PI * phaseAt(t) + Math.PI / 2); }
+function sceneAt(t){ return t < CONFIG.cutMs ? "detail" : "wide"; }
+function scaleAt(t){ return t < CONFIG.cutMs ? CONFIG.detailScale : 1; }
+function el(name, attrs, parent){
+  const n = document.createElementNS(SVGNS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+const scene = document.getElementById("scene");
+const camera = document.getElementById("camera");
+const G = CONFIG.geom;
+el("rect", {x:0, y:0, width:W, height:H, fill:CONFIG.wallColor}, scene);
+const table = el("g", {}, scene);
+el("ellipse", {cx:G.tableCx, cy:G.tableCy, rx:G.tableRx, ry:G.tableRy, fill:CONFIG.tableColor}, table);
+el("ellipse", {cx:doughCx, cy:doughCy, rx:G.flourRx, ry:G.flourRy, fill:CONFIG.flourColor, opacity:CONFIG.flourOpacity}, table);
+const griddle = el("g", {}, table);
+el("rect", {x:G.griddleX, y:G.griddleY, width:G.griddleW, height:G.griddleH, rx:G.griddleR, fill:CONFIG.griddleColor}, griddle);
+el("ellipse", {cx:G.ball1x, cy:G.ball1y, rx:G.ballR, ry:G.ballR * G.ballRyFrac, fill:CONFIG.doughColor}, table);
+el("ellipse", {cx:G.ball2x, cy:G.ball2y, rx:G.ballR, ry:G.ballR * G.ballRyFrac, fill:CONFIG.doughColor}, table);
+el("ellipse", {cx:G.ball3x, cy:G.ball3y, rx:G.ballR, ry:G.ballR * G.ballRyFrac, fill:CONFIG.doughColor}, table);
+const figure = el("g", {}, scene);
+el("rect", {x:G.torsoCx - G.torsoW / 2, y:G.torsoCy - G.torsoH / 2, width:G.torsoW, height:G.torsoH, rx:G.torsoRx, fill:CONFIG.clothColor}, figure);
+el("circle", {cx:G.headCx, cy:G.headCy, r:G.headR, fill:CONFIG.skinColor}, figure);
+const dough = el("ellipse", {cx:doughCx, cy:doughCy, rx:G.doughRx, ry:G.doughRy, fill:CONFIG.doughColor}, scene);
+const armL = el("line", {x1:G.shoulderLx, y1:G.shoulderLy, x2:0, y2:0, stroke:CONFIG.skinColor, "stroke-width":G.armW, "stroke-linecap":"round"}, scene);
+const armR = el("line", {x1:G.shoulderRx, y1:G.shoulderRy, x2:0, y2:0, stroke:CONFIG.skinColor, "stroke-width":G.armW, "stroke-linecap":"round"}, scene);
+const pinGroup = el("g", {}, scene);
+el("rect", {x:-G.pinLen / 2, y:-G.pinH / 2, width:G.pinLen, height:G.pinH, rx:G.pinH / 2, fill:CONFIG.pinColor}, pinGroup);
+const handL = el("ellipse", {cx:-G.pinLen / 2 + G.handInset, cy:0, rx:G.handRx, ry:G.handRy, fill:CONFIG.skinColor}, pinGroup);
+const handR = el("ellipse", {cx:G.pinLen / 2 - G.handInset, cy:0, rx:G.handRx, ry:G.handRy, fill:CONFIG.skinColor}, pinGroup);
+function render(t){
+  const off = offsetAt(t), ang = angleAt(t);
+  pinGroup.setAttribute("transform", "translate(" + (doughCx + off) + "," + doughCy + ") rotate(" + ang + ")");
+  const rad = ang * Math.PI / 180, cos = Math.cos(rad), sin = Math.sin(rad);
+  const hx = G.pinLen / 2 - G.handInset;
+  armL.setAttribute("x2", doughCx + off - hx * cos); armL.setAttribute("y2", doughCy - hx * sin);
+  armR.setAttribute("x2", doughCx + off + hx * cos); armR.setAttribute("y2", doughCy + hx * sin);
+  const blur = sceneAt(t) === "detail" ? CONFIG.blurPxDetail : CONFIG.blurPxWide;
+  pinGroup.style.filter = "blur(" + blur + "px)";
+  if (sceneAt(t) === "detail"){
+    camera.setAttribute("transform", "translate(" + doughCx + "," + doughCy + ") scale(" + CONFIG.detailScale + ") translate(" + (-doughCx) + "," + (-doughCy) + ")");
+  } else {
+    camera.setAttribute("transform", "");
+  }
+}
+let playing = false, startStamp = 0, baseMs = 0, nowMs = 0;
+function tick(){
+  if (playing){
+    nowMs = (baseMs + (performance.now() - startStamp)) % CONFIG.durationMs;
+    render(nowMs);
+    requestAnimationFrame(tick);
+  }
+}
+window.__rec = {
+  play: function(){ if (!playing){ playing = true; startStamp = performance.now(); requestAnimationFrame(tick); } },
+  pause: function(){ if (playing){ baseMs = nowMs; playing = false; } render(nowMs); },
+  seek: function(ms){ nowMs = ((ms % CONFIG.durationMs) + CONFIG.durationMs) % CONFIG.durationMs; baseMs = nowMs; if (playing) startStamp = performance.now(); render(nowMs); },
+  time: function(){ return nowMs; },
+  phaseAt: phaseAt, offsetAt: offsetAt, angleAt: angleAt, sceneAt: sceneAt, scaleAt: scaleAt,
+  config: CONFIG
+};
+render(0);
+</script>
+</body>
+</html>

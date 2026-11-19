@@ -1,0 +1,449 @@
+STANDING HEADER - Codex review run, practice job re-scoring wave.
+(1) CONSUMER + DECISION: consumer is practice job INSTRUCTION S5 (the five-lens re-scoring wave is the deliverable gate for technique T19); this run prices the TIMING lens only - its score feeds the tier decision (PASS requires wave average >=85 AND no lens <70) and any cures for a next attempt.
+(2) WORKING RECORD: this run builds from and writes to the artifact directory hidden_files/study/recreations/T19-droste-recursion/ - its codex/attempt-2/ folder (returns) and scores.md. Your full return is filed verbatim at codex/attempt-2/lens-timing.md.
+(3) BODY-WRITE REQUIREMENT: your return MUST end with a line "BODY-WRITE: <what this return writes into the body - the lens-timing.md filing and the scores.md timing entry>" and, on the line before it, "SCORE: <integer 0-100>". A return without those two lines is incomplete.
+
+TECHNIQUE T19 - Droste recursion. Catalogue mechanics (packet P1, "Look What I Can Do" @aditazzz.music, segment 2:17-2:30, 14 s window): In a candlelit Viking hall, a hooded seeress figure with a pale oval face sits beside candles and a glowing staff before a red draped backdrop. Lower-left stands an ornate framed picture with a dark header bar reading "THIS VIDEO" and a star medallion, red side curtains. Inside the frame the SAME scene recurs - figure, candles, staff, framed picture - and inside that a third, smaller iteration. Three nesting levels are legible in a single still. The recursion is a held composition with a slow push-in toward the framed picture, not a cut-driven beat; the source shot is uninterrupted and held. Why it works: one image states the recursive premise (a video about making videos); the most pause-worthy, screenshot-worthy frame in the piece. Consumer: thumbnail (one-off).
+
+YOUR LENS - TIMING / TEMPO ONLY: judge the 14 s window allocation (settle / push / hold / final interval), the single timed anchor the packet supplies (a still at 4.5 s into the segment showing the held composition mid-push; intermediate timings are an allocation model around it), loop boundary semantics, and how malformed checkpoint inputs behave temporally. Do NOT score motion quality, purity, parameterization, or legibility - other lenses own those.
+
+NEUTRAL OWN-CHECK PACKET (logic level; rendered-pixel verification was not exercisable from the build seat - PIXEL-UNVERIFIED):
+- Node logic suite on the extracted inline script (stubbed DOM): 45 pass / 0 fail. Assertion names: duration; derived zoom anchor equals frame centre; levelScale equals frame-width x interior-width product; effective label sizes per level at 360px equal the values the source declares in its legibility comment, and the RENDERED label elements carry those same font sizes; header model fits width and height at 360px and 390px for levels 0-1; deepest-level candle-body and staff modelled displayed widths at 360px at opening scale; node counts per depth (depth 2/3/4); state at settle/anchor/push-end/hold/final-interval/wrap timestamps; checkpoint diagnostics subcases (reversed, duplicate, out-of-window, non-finite, impossible-window inputs) and their effective tables; diagnostics object published during playback; flame opacities under the default flicker configuration and under a non-default amplitude; count-swap layout bounds; swap test (new label + depth 4 + faster push end + new drape color) rendered end-to-end; invalid URL overrides rejected and reported.
+- node --check on the extracted inline script: PASS.
+- Purity grep on recreation.html (specimen-file patterns, media tags, image extensions, external URLs): 0 hits. The file loads nothing external.
+- Config census (measured, outside the CONFIG block): 0 hex color literals; remaining numeric literals are structural fills / circle radii / derived expressions, classified in the build record.
+
+Below is the recreation's full source (recreation.html). Return: priced findings for the timing lens, then SCORE and BODY-WRITE lines as specified. Score timing only, 0-100.
+==== recreation.html ====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T19 — Droste recursion · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center;font-family:Georgia,'Times New Roman',serif}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  #zoomWrap{position:absolute;inset:0}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  .abs{position:absolute}
+  .frameInterior{position:absolute;overflow:hidden}
+  #diagnostics{position:absolute;left:4px;bottom:4px;z-index:5;display:none;background:#10182e;color:#e9cf8f;
+    font-family:monospace;font-size:10px;padding:2px 6px;border:1px solid #d9b96a;max-width:96%}
+</style>
+</head>
+<body>
+<div id="stage"><div id="zoomWrap"></div><div id="diagnostics"></div></div>
+<script>
+"use strict";
+/* ===== CONFIG — the shaping defaults of the technique live here, in named groups:
+   palette · geometry (stage placement) · components (intra-element shaping) ·
+   typography · flicker · checkpoints + checkpointPolicy. The logic below reads
+   CONFIG for every shaping default. STRUCTURAL CONSTANTS are NOT shaping defaults
+   and are not claimed as CONFIG: 0%/100% full-bleed fills, the 50% radius that
+   makes a box a circle, and pure arithmetic identities stay in code, listed here.
+   Construction: ONE pure scene renderer builds the candlelit hall; the framed
+   picture's interior is rendered by CALLING THE SAME RENDERER recursively to
+   CONFIG depth — genuine Droste recursion from a single scene definition. Motion
+   is CHECKPOINT-PRICED: a slow push-in toward the frame's centre, then a hold;
+   the final interval is a CONTINUED HOLD and the loop ends in a HARD LOOP
+   RESTART at durationMs (scale snaps back to zoomStart) — there is no animated
+   reset, and the source shot is an uninterrupted held composition. */
+const CONFIG = {
+  durationMs: 14000,                 /* segment window 2:16.5-2:30.5 = 14 s, loops */
+  labelText: "THIS VIDEO",           /* the framed picture's header bar text */
+  depth: 3,                          /* recursion depth rendered by the one renderer */
+  candleCount: 3,
+  figureButtons: 3,
+  checkpoints: { pushStartMs: 800, anchorMs: 4500, pushEndMs: 9500, holdEndMs: 13000 },
+  checkpointPolicy: { minSeparationMs: 250 },  /* repair enforces at least this gap, roles preserved, never sorted */
+  zoomStart: 0.94,
+  zoomEnd: 1.20,
+  zoomAnchorXPercent: 32,            /* DERIVED = frameLeftPercent + frameWidthPercent/2 = 5 + 27 (asserted) */
+  zoomAnchorYPercent: 64,            /* DERIVED = frameTopPercent + frameHeightPercent/2 = 38 + 26 (asserted) */
+  levelScale: 0.486,                 /* TRUE interior width ratio = frameWidth 54% x interior 90% (asserted vs geometry) */
+  labelFontFactor: 0.05,             /* label font px per px of THAT LEVEL's scene width (applied exactly once) */
+  labelMinPx: 11,                    /* legibility floor enforced at depths 0 and 1 at phone width */
+  medallionText: "✶",
+  typography: { letterSpacingEm: 0.08, lineHeight: 1.0, medallionFactor: 0.8, medallionMinPx: 6 },
+  flicker: { amp: 0,                 /* DEFAULT ZERO: the observation establishes candlelight, not flicker;
+                                        synchronized pulsing was an unsupported invention (attempt 1) */
+             periodDivisorMs: 170,   /* sine divisor when amp > 0 */
+             phaseStepRad: 2.1 },    /* per-candle phase step: enabling amp desynchronizes by construction */
+  palette: {
+    bg: "#07050a", hall: "#171019", drape: "#7e1f2b", drapeDark: "#4a121d", drapeFold: "#5d1724",
+    candleBody: "#e8dcc0", flame: "#ffca7a", flameCore: "#fff3d0", glow: "#ffb35c",
+    staffWood: "#6e3b22", staffOrb: "#ffc46b", robe: "#2c3a5e", robeShade: "#1d2742",
+    hood: "#14100e", face: "#f0d7ae", faceRim: "#caa06a", button: "#ffd98c",
+    table: "#3d1420", frameBg: "#10182e", frameBorder: "#d9b96a", frameInner: "#05070f",
+    curtain: "#8e2434", label: "#e9cf8f"
+  },
+  geometry: {
+    drapeLeftPercent: 55, drapeWidthPercent: 45, drapeTransitionOffsetPercent: 6, drapeFoldPeriodPx: 18,
+    candleLeftPercent: 33, candleTopPercent: 30, candleWidthPercent: 9, candleHeightPercent: 24,
+    staffLeftPercent: 43, staffTopPercent: 10, staffWidthPercent: 2.2, staffHeightPercent: 46,
+    figureRightPercent: 3, figureTopPercent: 6, figureWidthPercent: 36, figureHeightPercent: 82,
+    tableLeftPercent: 0, tableTopPercent: 86, tableWidthPercent: 62, tableHeightPercent: 14,
+    frameLeftPercent: 5, frameTopPercent: 38, frameWidthPercent: 54, frameHeightPercent: 52,
+    frameHeaderPercent: 28, curtainWidthPercent: 5, frameBorderPx: 2, frameBorderMinPx: 1,
+    tableRadiusPercent: 50
+  },
+  components: {
+    candle: { stepCapPercent: 30, widthPercent: 22, baseHeightPercent: 62, altHeightDeltaPercent: 16,
+              borderRadiusPercent: 12, flameLeftPercent: 22, flameTopPercent: -26, flameWidthPercent: 56,
+              flameHeightPercent: 24, flameGradientStopPercent: 62 },
+    staff: { borderRadiusPercent: 40, orbLeftPercent: -90, orbTopPercent: -7, orbSizePercent: 280,
+             orbGradientStopPercent: 55 },
+    robe: { leftPercent: 6, topPercent: 34, widthPercent: 88, heightPercent: 66, radiusTopPercent: 44 },
+    hood: { leftPercent: 14, topPercent: 0, widthPercent: 72, heightPercent: 46, radiusBottomPercent: 46 },
+    face: { leftPercent: 27, topPercent: 9, widthPercent: 46, heightPercent: 30, gradientStopPercent: 58 },
+    button: { leftPercent: 47, topStartPercent: 56, stepCapPercent: 11, sizePercent: 6, maxTopPercent: 92 }
+  }
+};
+const DEFAULT_CHECKPOINTS = { pushStartMs: 800, anchorMs: 4500, pushEndMs: 9500, holdEndMs: 13000 };
+
+/* URL overrides (swap test / reuse):
+   ?label=...&depth=2|3|4  subject + recursion  ·  ?pushStart=...&pushEnd=...&holdEnd=...&durationMs=...
+   ?zoomStart=...&zoomEnd=...  push range  ·  ?drape=%23...&face=%23...&robe=%23...  palette
+   ?candles=5  count  ·  invalid values are ignored and reported in window.__T19_DIAGNOSTICS */
+const OVERRIDE_DIAGNOSTICS = [];
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  const hexOk = (v) => /^#[0-9a-fA-F]{6}$/.test(v || "");
+  if (q.get("label")) CONFIG.labelText = q.get("label");
+  if (num("depth") !== null) CONFIG.depth = Math.max(1, Math.min(6, Math.floor(num("depth"))));
+  if (num("durationMs") !== null) CONFIG.durationMs = Math.max(2000, num("durationMs"));
+  if (num("candles") !== null) CONFIG.candleCount = Math.max(0, Math.min(8, Math.floor(num("candles"))));
+  if (num("pushStart") !== null) CONFIG.checkpoints.pushStartMs = num("pushStart");
+  if (num("anchor") !== null) CONFIG.checkpoints.anchorMs = num("anchor");
+  if (num("pushEnd") !== null) CONFIG.checkpoints.pushEndMs = num("pushEnd");
+  if (num("holdEnd") !== null) CONFIG.checkpoints.holdEndMs = num("holdEnd");
+  if (num("zoomStart") !== null){ const v = num("zoomStart"); if (v > 0) CONFIG.zoomStart = v; else OVERRIDE_DIAGNOSTICS.push("zoomStart rejected"); }
+  if (num("zoomEnd") !== null){ const v = num("zoomEnd"); if (v > 0) CONFIG.zoomEnd = v; else OVERRIDE_DIAGNOSTICS.push("zoomEnd rejected"); }
+  const col = (param, key) => { const v = q.get(param); if (v){ if (hexOk(v)) CONFIG.palette[key] = v; else OVERRIDE_DIAGNOSTICS.push(param + " rejected: not #rrggbb"); } };
+  col("drape", "drape"); col("face", "face"); col("robe", "robe"); col("candle", "flame");
+})();
+
+function hexToRgba(hex, alpha){
+  const h = hex.replace("#", "");
+  const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+  return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+}
+
+/* Checkpoint coherence — EXPLICIT REJECT/REPAIR, roles never reassigned, never sorted.
+   Domain: four finite numbers; window [0, durationMs]; strictly increasing.
+   Policy: (1) any non-finite value -> FALLBACK to DEFAULT_CHECKPOINTS.
+   (2) otherwise REPAIR IN PLACE: clamp into the window, then a forward pass
+   enforces minSeparationMs preserving the supplied order and each checkpoint's
+   ROLE, then a backward pass from durationMs if the forward pass overran.
+   (3) if separation cannot fit the window, separation shrinks to
+   floor(durationMs/4) and the repair is flagged separationReduced; if even the
+   defaults cannot fit, status stays "fallback-defaults" with that flag.
+   Status is "coherent" (input untouched), "repaired" (effective != supplied,
+   distinguishable from untouched), or "fallback-defaults". The effective table —
+   including effectiveAnchorMs — is what computeState plays and what diagnostics
+   surface during playback. */
+function checkpointDiagnostics(cfg){
+  const names = ["pushStartMs", "anchorMs", "pushEndMs", "holdEndMs"];
+  const raw = names.map(n => cfg.checkpoints[n]);
+  const errors = [];
+  let sep = cfg.checkpointPolicy.minSeparationMs;
+  let separationReduced = false;
+  if (raw.some(v => !isFinite(v))){
+    errors.push("non-finite checkpoint");
+    const eff = {}; names.forEach((n, i) => eff[n] = DEFAULT_CHECKPOINTS[n]);
+    return { effective: eff, status: "fallback-defaults", errors: errors,
+             effectiveAnchorMs: eff.anchorMs, separationReduced: false, supplied: raw.slice() };
+  }
+  raw.forEach((v, i) => { if (v < 0 || v > cfg.durationMs) errors.push("out-of-window:" + names[i]); });
+  for (let i = 1; i < raw.length; i++) if (!(raw[i] > raw[i - 1])) errors.push("not-ordered:" + names[i]);
+  if (3 * sep > cfg.durationMs){ sep = Math.floor(cfg.durationMs / 4); separationReduced = true; }
+  const v = raw.map(x => Math.max(0, Math.min(cfg.durationMs, x)));
+  for (let i = 1; i < v.length; i++) v[i] = Math.max(v[i], v[i - 1] + sep);
+  if (v[v.length - 1] > cfg.durationMs){
+    v[v.length - 1] = cfg.durationMs;
+    for (let i = v.length - 2; i >= 0; i--) v[i] = Math.min(v[i], v[i + 1] - sep);
+  }
+  const changed = v.some((x, i) => x !== raw[i]);
+  const eff = {}; names.forEach((n, i) => eff[n] = v[i]);
+  return { effective: eff, status: changed ? "repaired" : "coherent", errors: errors,
+           effectiveAnchorMs: eff.anchorMs, separationReduced: separationReduced, supplied: raw.slice() };
+}
+function validateCheckpoints(cfg){
+  const d = checkpointDiagnostics(cfg);
+  return { coherent: d.status === "coherent", errors: d.errors, status: d.status };
+}
+function effectiveCheckpoints(cfg){ return checkpointDiagnostics(cfg).effective; }
+
+function smoothstep(x){ x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+
+/* Label legibility — the nesting factor is applied EXACTLY ONCE: the recursive
+   call already passes this level's true scene width (parent scene width x
+   levelScale), so the font is simply sceneWidth x labelFontFactor. The floor is
+   enforced at depths 0 and 1 only. Effective sizes at a 360 px stage:
+   level 0 scene 360.00 px -> 18.00 px · level 1 scene 174.96 px -> raw 8.75 px,
+   floored to 11 px · level 2 scene 85.03 px -> 4.25 px (glyph-band, not legible;
+   the legibility claim is three SCENE levels, matching the specimen still). */
+function sceneWidthAtLevel(stageWidthPx, level, cfg){ return stageWidthPx * Math.pow(cfg.levelScale, level); }
+function labelFontPx(stageWidthPx, level, cfg){
+  const raw = stageWidthPx * cfg.labelFontFactor;
+  if (level <= 1) return Math.max(cfg.labelMinPx, raw);
+  return raw;
+}
+function effectiveLabelSizes(stageWidthPx, cfg){
+  const out = [];
+  for (let l = 0; l < cfg.depth; l++) out.push(labelFontPx(sceneWidthAtLevel(stageWidthPx, l, cfg), l, cfg));
+  return out;
+}
+function labelLegibilityStopLevel(cfg){
+  let l = 0;
+  while (labelFontPx(sceneWidthAtLevel(360, l, cfg), l, cfg) >= cfg.labelMinPx && l < 12) l++;
+  return l;
+}
+
+/* Displayed-state geometry model (source-bound): stage is 16:9, so stage height
+   = width x 9/16. Header fit = phrase width AND header height at each level.
+   Phrase width model: Georgia capitals average 0.62 em per glyph plus
+   letter-spacing per glyph — a conservative upper-bound model, asserted in the
+   own-check suite for levels 0-1 at 360 and 390 px. */
+function headerModel(stageWidthPx, level, cfg){
+  const G = cfg.geometry;
+  const sceneW = sceneWidthAtLevel(stageWidthPx, level, cfg);
+  const sceneH = sceneW * 9 / 16;
+  const frameW = sceneW * G.frameWidthPercent / 100;
+  const frameH = sceneH * G.frameHeightPercent / 100;
+  const headerH = frameH * G.frameHeaderPercent / 100;
+  const font = labelFontPx(sceneW, level, cfg);
+  const phraseW = cfg.labelText.length * font * (0.62 + cfg.typography.letterSpacingEm);
+  const borderPx = Math.max(G.frameBorderMinPx, G.frameBorderPx * Math.pow(cfg.levelScale, level));
+  return { sceneW: sceneW, frameW: frameW, frameH: frameH, headerH: headerH, fontPx: font,
+           phraseW: phraseW, fitsWidth: phraseW <= frameW - 2 * borderPx,
+           fitsHeight: font * cfg.typography.lineHeight <= headerH, borderPx: borderPx };
+}
+function deepestDetailModel(stageWidthPx, cfg){
+  /* displayed widths at the deepest scene level, at the opening scale zoomStart */
+  const sceneW = sceneWidthAtLevel(stageWidthPx, cfg.depth - 1, cfg);
+  const candleGroupW = sceneW * cfg.geometry.candleWidthPercent / 100;
+  return { sceneW: sceneW,
+           candleBodyPx: candleGroupW * cfg.components.candle.widthPercent / 100 * cfg.zoomStart,
+           staffPx: sceneW * cfg.geometry.staffWidthPercent / 100 * cfg.zoomStart };
+}
+
+function scenePerLevelNodes(cfg){ return 19 + cfg.figureButtons + 2 * cfg.candleCount; }
+function sceneNodeCount(cfg){ return cfg.depth * scenePerLevelNodes(cfg); }
+
+/* Pure state from time — the EFFECTIVE checkpoint table decides the push.
+   Phases: settle -> push -> hold -> loopHold (continued hold; at durationMs the
+   loop HARD-RESTARTS to zoomStart — named, not disguised as a reset). */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const diag = checkpointDiagnostics(cfg);
+  const cp = diag.effective;
+  let progress = 0;
+  if (t >= cp.pushEndMs) progress = 1;
+  else if (t > cp.pushStartMs) progress = smoothstep((t - cp.pushStartMs) / (cp.pushEndMs - cp.pushStartMs));
+  const scale = cfg.zoomStart + (cfg.zoomEnd - cfg.zoomStart) * progress;
+  const phase = t < cp.pushStartMs ? "settle" : (t < cp.pushEndMs ? "push" : (t < cp.holdEndMs ? "hold" : "loopHold"));
+  return { t: t, progress: progress, scale: scale, phase: phase, depth: cfg.depth,
+           checkpointsCoherent: diag.status === "coherent", checkpointStatus: diag.status,
+           effectiveCheckpoints: cp, effectiveAnchorMs: diag.effectiveAnchorMs,
+           checkpointErrors: diag.errors, separationReduced: diag.separationReduced };
+}
+
+/* Count-derived spacing: the CONFIG step is a CAP; the effective step shrinks so
+   count-many items always end inside their group's bounds. */
+function derivedStep(count, widthPercent, stepCapPercent){
+  if (count <= 1) return 0;
+  return Math.min(stepCapPercent, (100 - widthPercent) / (count - 1));
+}
+
+/* ===== The ONE scene renderer — calls itself for the framed picture's interior ===== */
+function el(tag, cls){ const d = document.createElement(tag); if (cls) d.className = cls; return d; }
+function box(node, left, top, width, height){
+  node.style.left = left + "%"; node.style.top = top + "%";
+  node.style.width = width + "%"; node.style.height = height + "%";
+}
+function buildScene(cfg, level, stageWidthPx){
+  const P = cfg.palette, G = cfg.geometry, C = cfg.components;
+  const scene = el("div", "scene");
+  scene.style.background = P.hall;
+  const backdrop = el("div", "abs"); box(backdrop, 0, 0, 100, 100);
+  backdrop.style.background = "linear-gradient(90deg," + P.hall + " 0%," + P.hall + " " + G.drapeLeftPercent + "%," + P.drape + " " + (G.drapeLeftPercent + G.drapeTransitionOffsetPercent) + "%," + P.drapeDark + " 100%)";
+  scene.appendChild(backdrop);
+  const foldHalf = G.drapeFoldPeriodPx / 2;
+  const drapeL = el("div", "abs"); box(drapeL, G.drapeLeftPercent, 0, G.drapeWidthPercent / 2, 100);
+  drapeL.style.background = "repeating-linear-gradient(90deg," + P.drape + " 0px," + P.drapeFold + " " + foldHalf + "px," + P.drape + " " + G.drapeFoldPeriodPx + "px)";
+  scene.appendChild(drapeL);
+  const drapeR = el("div", "abs"); box(drapeR, G.drapeLeftPercent + G.drapeWidthPercent / 2, 0, G.drapeWidthPercent / 2, 100);
+  drapeR.style.background = "repeating-linear-gradient(90deg," + P.drapeDark + " 0px," + P.drape + " " + foldHalf + "px," + P.drapeDark + " " + G.drapeFoldPeriodPx + "px)";
+  scene.appendChild(drapeR);
+  const candleGroup = el("div", "abs");
+  box(candleGroup, G.candleLeftPercent, G.candleTopPercent, G.candleWidthPercent, G.candleHeightPercent);
+  scene.appendChild(candleGroup);
+  const candleStep = derivedStep(cfg.candleCount, C.candle.widthPercent, C.candle.stepCapPercent);
+  for (let i = 0; i < cfg.candleCount; i++){
+    const candle = el("div", "abs");
+    candle.style.left = (i * candleStep) + "%"; candle.style.bottom = "0%";
+    candle.style.width = C.candle.widthPercent + "%";
+    candle.style.height = (C.candle.baseHeightPercent + (i % 2) * C.candle.altHeightDeltaPercent) + "%";
+    candle.style.background = P.candleBody; candle.style.borderRadius = C.candle.borderRadiusPercent + "%";
+    const flame = el("div", "abs flame");
+    flame.style.left = C.candle.flameLeftPercent + "%"; flame.style.top = C.candle.flameTopPercent + "%";
+    flame.style.width = C.candle.flameWidthPercent + "%"; flame.style.height = C.candle.flameHeightPercent + "%";
+    flame.style.background = "radial-gradient(circle," + P.flameCore + " 0%," + P.flame + " " + C.candle.flameGradientStopPercent + "%," + hexToRgba(P.glow, 0) + " 100%)";
+    flame.style.borderRadius = "50%";
+    flame.dataset.phase = String((level * Math.max(1, cfg.candleCount) + i) * cfg.flicker.phaseStepRad);
+    candle.appendChild(flame);
+    candleGroup.appendChild(candle);
+  }
+  const staff = el("div", "abs");
+  box(staff, G.staffLeftPercent, G.staffTopPercent, G.staffWidthPercent, G.staffHeightPercent);
+  staff.style.background = P.staffWood; staff.style.borderRadius = C.staff.borderRadiusPercent + "%";
+  const orb = el("div", "abs");
+  orb.style.left = C.staff.orbLeftPercent + "%"; orb.style.top = C.staff.orbTopPercent + "%";
+  orb.style.width = C.staff.orbSizePercent + "%"; orb.style.paddingTop = C.staff.orbSizePercent + "%";
+  orb.style.background = "radial-gradient(circle," + P.flameCore + " 0%," + P.staffOrb + " " + C.staff.orbGradientStopPercent + "%," + hexToRgba(P.glow, 0) + " 100%)";
+  orb.style.borderRadius = "50%";
+  staff.appendChild(orb);
+  scene.appendChild(staff);
+  const figure = el("div", "abs");
+  figure.style.right = G.figureRightPercent + "%"; figure.style.top = G.figureTopPercent + "%";
+  figure.style.width = G.figureWidthPercent + "%"; figure.style.height = G.figureHeightPercent + "%";
+  const robe = el("div", "abs"); box(robe, C.robe.leftPercent, C.robe.topPercent, C.robe.widthPercent, C.robe.heightPercent);
+  robe.style.background = "linear-gradient(180deg," + P.robe + " 0%," + P.robeShade + " 100%)";
+  robe.style.borderRadius = C.robe.radiusTopPercent + "% " + C.robe.radiusTopPercent + "% 0% 0%";
+  figure.appendChild(robe);
+  const hood = el("div", "abs"); box(hood, C.hood.leftPercent, C.hood.topPercent, C.hood.widthPercent, C.hood.heightPercent);
+  hood.style.background = P.hood; hood.style.borderRadius = "50% 50% " + C.hood.radiusBottomPercent + "% " + C.hood.radiusBottomPercent + "%";
+  figure.appendChild(hood);
+  const face = el("div", "abs"); box(face, C.face.leftPercent, C.face.topPercent, C.face.widthPercent, C.face.heightPercent);
+  face.style.background = "radial-gradient(circle," + P.face + " " + C.face.gradientStopPercent + "%," + P.faceRim + " 100%)";
+  face.style.borderRadius = "50%";
+  figure.appendChild(face);
+  const btnStep = cfg.figureButtons > 1
+    ? Math.min(C.button.stepCapPercent, (C.button.maxTopPercent - C.button.topStartPercent - C.button.sizePercent) / (cfg.figureButtons - 1))
+    : 0;
+  for (let b = 0; b < cfg.figureButtons; b++){
+    const btn = el("div", "abs");
+    btn.style.left = C.button.leftPercent + "%"; btn.style.top = (C.button.topStartPercent + b * btnStep) + "%";
+    btn.style.width = C.button.sizePercent + "%"; btn.style.paddingTop = C.button.sizePercent + "%";
+    btn.style.background = P.button; btn.style.borderRadius = "50%";
+    figure.appendChild(btn);
+  }
+  scene.appendChild(figure);
+  const table = el("div", "abs");
+  box(table, G.tableLeftPercent, G.tableTopPercent, G.tableWidthPercent, G.tableHeightPercent);
+  table.style.background = P.table; table.style.borderRadius = G.tableRadiusPercent + "% " + G.tableRadiusPercent + "% 0% 0%";
+  scene.appendChild(table);
+  /* The framed picture — its interior is THIS renderer, one level deeper. */
+  const frameBox = el("div", "abs");
+  box(frameBox, G.frameLeftPercent, G.frameTopPercent, G.frameWidthPercent, G.frameHeightPercent);
+  frameBox.style.background = P.frameBg;
+  const borderPx = Math.max(G.frameBorderMinPx, G.frameBorderPx * Math.pow(cfg.levelScale, level));
+  frameBox.style.border = borderPx + "px solid " + P.frameBorder;
+  const header = el("div", "abs"); box(header, 0, 0, 100, G.frameHeaderPercent);
+  header.style.background = P.frameBg;
+  header.style.display = "flex"; header.style.alignItems = "center"; header.style.justifyContent = "center";
+  const medallion = el("span", "medallion");
+  medallion.textContent = cfg.medallionText; medallion.style.color = P.label;
+  medallion.style.fontSize = Math.max(cfg.typography.medallionMinPx, labelFontPx(stageWidthPx, level, cfg) * cfg.typography.medallionFactor) + "px";
+  medallion.style.lineHeight = String(cfg.typography.lineHeight);
+  header.appendChild(medallion);
+  const label = el("div", "framelabel");
+  label.textContent = cfg.labelText;
+  label.style.color = P.label; label.style.letterSpacing = cfg.typography.letterSpacingEm + "em";
+  label.style.whiteSpace = "nowrap"; label.style.lineHeight = String(cfg.typography.lineHeight);
+  label.style.fontSize = labelFontPx(stageWidthPx, level, cfg) + "px";
+  header.appendChild(label);
+  frameBox.appendChild(header);
+  const curtainL = el("div", "abs"); box(curtainL, 0, G.frameHeaderPercent, G.curtainWidthPercent, 100 - G.frameHeaderPercent);
+  curtainL.style.background = P.curtain; frameBox.appendChild(curtainL);
+  const curtainR = el("div", "abs");
+  curtainR.style.right = "0%"; curtainR.style.top = G.frameHeaderPercent + "%";
+  curtainR.style.width = G.curtainWidthPercent + "%"; curtainR.style.height = (100 - G.frameHeaderPercent) + "%";
+  curtainR.style.background = P.curtain; frameBox.appendChild(curtainR);
+  const interior = el("div", "frameInterior");
+  interior.style.left = G.curtainWidthPercent + "%"; interior.style.top = G.frameHeaderPercent + "%";
+  interior.style.width = (100 - 2 * G.curtainWidthPercent) + "%"; interior.style.height = (100 - G.frameHeaderPercent) + "%";
+  interior.style.background = P.frameInner;
+  if (level + 1 < cfg.depth){
+    interior.appendChild(buildScene(cfg, level + 1, stageWidthPx * cfg.levelScale));
+  }
+  frameBox.appendChild(interior);
+  scene.appendChild(frameBox);
+  return scene;
+}
+
+/* ===== Stage assembly + clock ===== */
+const stage = document.getElementById("stage");
+const zoomWrap = document.getElementById("zoomWrap");
+const diagEl = document.getElementById("diagnostics");
+document.body.style.background = CONFIG.palette.bg;
+zoomWrap.style.transformOrigin = CONFIG.zoomAnchorXPercent + "% " + CONFIG.zoomAnchorYPercent + "%";
+let builtDepth = -1;
+function buildAll(){
+  while (zoomWrap.children.length) zoomWrap.removeChild(zoomWrap.children[0]);
+  const w = stage.clientWidth || 960;
+  zoomWrap.appendChild(buildScene(CONFIG, 0, w));
+  builtDepth = CONFIG.depth;
+}
+buildAll();
+window.addEventListener("resize", buildAll);
+
+let lastDiagKey = "";
+function surfaceDiagnostics(s){
+  const diag = { checkpointStatus: s.checkpointStatus, effectiveCheckpoints: s.effectiveCheckpoints,
+                 effectiveAnchorMs: s.effectiveAnchorMs, checkpointErrors: s.checkpointErrors,
+                 separationReduced: s.separationReduced, overrideDiagnostics: OVERRIDE_DIAGNOSTICS };
+  window.__T19_DIAGNOSTICS = diag;
+  const key = JSON.stringify(diag);
+  if (key === lastDiagKey) return;
+  lastDiagKey = key;
+  if (s.checkpointStatus !== "coherent" || OVERRIDE_DIAGNOSTICS.length){
+    diagEl.style.display = "block";
+    diagEl.textContent = "checkpoints: " + s.checkpointStatus + " · effective anchor " + s.effectiveAnchorMs +
+      "ms · push " + s.effectiveCheckpoints.pushStartMs + "–" + s.effectiveCheckpoints.pushEndMs +
+      "ms · hold ends " + s.effectiveCheckpoints.holdEndMs + "ms" +
+      (s.checkpointErrors.length ? " · " + s.checkpointErrors.join(", ") : "") +
+      (OVERRIDE_DIAGNOSTICS.length ? " · " + OVERRIDE_DIAGNOSTICS.join(", ") : "");
+    if (typeof console !== "undefined" && console.warn) console.warn("T19 diagnostics", diag);
+  } else {
+    diagEl.style.display = "none"; diagEl.textContent = "";
+  }
+}
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  zoomWrap.style.transform = "scale(" + s.scale.toFixed(4) + ")";
+  surfaceDiagnostics(s);
+  const flames = zoomWrap.querySelectorAll ? zoomWrap.querySelectorAll(".flame") : [];
+  for (let i = 0; i < flames.length; i++){
+    const phase = parseFloat(flames[i].dataset.phase || "0");
+    const v = CONFIG.flicker.amp * Math.sin(s.t / CONFIG.flicker.periodDivisorMs + phase);
+    flames[i].style.opacity = String(1 - Math.abs(v));
+  }
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>
+

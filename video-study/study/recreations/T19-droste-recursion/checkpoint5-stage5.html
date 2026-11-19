@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T19 — Droste recursion · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:100%;height:auto;overflow:hidden}
+  #zoomWrap{position:absolute;inset:0}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  .abs{position:absolute}
+  .frameInterior{position:absolute;overflow:hidden}
+  #diagnostics{position:absolute;left:4px;bottom:4px;z-index:5;display:none;background:#10182e;color:#e9cf8f;
+    font-family:monospace;font-size:10px;padding:2px 6px;border:1px solid #d9b96a;max-width:96%}
+</style>
+</head>
+<body>
+<div id="stage"><div id="zoomWrap"></div><div id="diagnostics"></div></div>
+<script>
+"use strict";
+/* ===== CONFIG — the shaping defaults of the technique live here, in named groups:
+   palette · geometry (stage placement) · components (intra-element shaping) ·
+   typography · flicker · checkpoints + checkpointPolicy. Scene-shaping
+   defaults live in CONFIG; the measured exceptions are named, not claimed:
+   STRUCTURAL CONSTANTS (0%/100% full-bleed fills, the 50% radius that makes a
+   box a circle, pure arithmetic identities) stay in code, and the
+   #diagnostics badge's own CSS literals (playback UI, not scene construction:
+   hex #10182e / #e9cf8f / #d9b96a, 10px font, 2px/6px padding, 1px border,
+   4px offsets, 96% max-width) stay in the style block — both classes are
+   listed per-literal in the build record's literal census whitelist.
+   The stage-width fallback lives in CONFIG (geometry.stageFallbackWidthPx)
+   and is consumed where the stage is measured. The stage width cap and the
+   stage aspect are both computed at assembly from geometry.stageAspectW /
+   stageAspectH — no static cap or aspect value stands in the style block.
+   Construction: ONE pure scene renderer builds the candlelit hall; the framed
+   picture's interior is rendered by CALLING THE SAME RENDERER recursively to
+   CONFIG depth — genuine Droste recursion from a single scene definition. Motion
+   is an EVENT SEQUENCE priced by the checkpoint table: the hall alone, then
+   the framed picture appears empty, then its interior is revealed at the
+   populate checkpoint, then a populated wide hold at one unchanged scale,
+   then one enlarged-insert state rendered by the same renderer, then a
+   return to the wide state held to the shot end. Playback mode "once" (the
+   default) RETAINS the terminal state at durationMs — no snap back;
+   restart is an explicit playback action. Mode "loop" wraps at durationMs.
+   Timing basis: the specimen segment runs 14 s and contains several shots;
+   the Droste shot inside it is observed from frame samples at segment
+   approx. 3.5 s to approx. 7.19 s (hall onset, framed-picture onset,
+   interior populate, a wide populated hold with no measurable scale
+   change, an enlarged-insert cluster, wide again, shot end). This
+   reconstruction is timed against that observed shot interval in
+   shot-local time: durationMs spans the shot to its last confirmed hall
+   sample, and every checkpoint is the close of the sampled event window
+   it names. The wide scale and the insert scale are authored allocations;
+   the insert cluster's internal alternation is inside the sampling
+   granularity and is staged as one held enlarged state. */
+const CONFIG = {
+  durationMs: 3625,                  /* shot-local span of the observed Droste shot (segment approx. 3.5-7.19 s) */
+  playbackMode: "once",              /* "once": push plays once, terminal state retained, restart is explicit · "loop": wraps at durationMs */
+  labelText: "THIS VIDEO",           /* the framed picture's header bar text */
+  depth: 3,                          /* recursion depth rendered by the one renderer */
+  candleCount: 3,
+  figureButtons: 3,
+  checkpoints: { pushStartMs: 500, anchorMs: 875, pushEndMs: 2625, holdEndMs: 3375 },  /* event boundaries, each the close of its sampled window: pushStartMs = framed-picture onset · anchorMs = interior populate (the reveal fires here) · pushEndMs = enlarged-insert entry · holdEndMs = insert exit / return to wide */
+  checkpointPolicy: { minSeparationMs: 250, minDurationMs: 1000 },  /* repair enforces at least this gap, roles preserved, never sorted; durations below the shared floor are rejected to the baseline on both input routes, so a duration and its checkpoint table always form a compatible pair */
+  zoomStart: 0.94,                   /* the wide-state scale, held unchanged across the populated wide hold and again after the return to wide */
+  events: { insertScale: 1.50 },     /* the enlarged-insert state's scale: an authored allocation (the wide scale x the observed enlarged ratio, approx. 1.6); the insert is one held enlarged state rendered by the same recursive renderer — its internal alternation sits inside the sampling granularity and is not staged */
+  /* The recursion scale and the zoom anchor are NOT literals in this table:
+     resolveConfig derives them from geometry at resolution time and every
+     consumer reads only the derived values. */
+  labelFontFactor: 0.05,             /* label font px per px of THAT LEVEL's scene width (applied exactly once) */
+  labelMinPx: 11,                    /* legibility floor enforced at depths 0 and 1 at phone width */
+  medallionText: "✶",
+  typography: { letterSpacingEm: 0.08, lineHeight: 1.0, medallionFactor: 0.8, medallionMinPx: 6,
+                glyphAdvanceEm: 0.62, medallionAdvanceEm: 0.62,
+                fontFamily: "Georgia, 'Times New Roman', serif" },
+  flicker: { amp: 0,                 /* DEFAULT ZERO: the observation establishes candlelight,
+                                        not synchronized flame pulsing */
+             periodDivisorMs: 170,   /* sine divisor when amp > 0 */
+             phaseStepRad: 2.1 },    /* per-candle phase step: enabling amp desynchronizes by construction */
+  palette: {
+    bg: "#07050a", hall: "#171019", drape: "#7e1f2b", drapeDark: "#4a121d", drapeFold: "#5d1724",
+    candleBody: "#e8dcc0", flame: "#ffca7a", flameCore: "#fff3d0", glow: "#ffb35c",
+    staffWood: "#6e3b22", staffEdge: "#b57e3e", staffOrb: "#ffc46b", robe: "#2c3a5e", robeShade: "#1d2742",
+    hood: "#14100e", face: "#f0d7ae", faceRim: "#caa06a", button: "#ffd98c",
+    table: "#3d1420", frameBg: "#10182e", frameBorder: "#d9b96a", frameInner: "#05070f",
+    curtain: "#8e2434", label: "#e9cf8f"
+  },
+  geometry: {
+    drapeLeftPercent: 55, drapeWidthPercent: 45, drapeTransitionOffsetPercent: 6, drapeFoldPeriodPx: 18,
+    backdropGradientDeg: 90, drapeGradientDeg: 90, drapeSplitPercent: 50,
+    stageAspectW: 16, stageAspectH: 9, stageFallbackWidthPx: 960,  /* build width consumed when the stage reports no layout width yet */
+    candleLeftPercent: 33, candleTopPercent: 10, candleWidthPercent: 9, candleHeightPercent: 34,
+    staffLeftPercent: 43, staffTopPercent: 10, staffWidthPercent: 2.2, staffHeightPercent: 46,
+    figureRightPercent: 3, figureTopPercent: 6, figureWidthPercent: 36, figureHeightPercent: 82,
+    tableLeftPercent: 0, tableTopPercent: 86, tableWidthPercent: 62, tableHeightPercent: 14,
+    frameLeftPercent: 5, frameTopPercent: 38, frameWidthPercent: 54, frameHeightPercent: 52,
+    frameHeaderPercent: 35, curtainWidthPercent: 5, frameBorderPx: 2, frameBorderMinPx: 1,
+    tableRadiusPercent: 50
+  },
+  components: {
+    candle: { stepCapPercent: 38, widthPercent: 22, baseHeightPercent: 62, altHeightDeltaPercent: 16,
+              borderRadiusPercent: 12, flameLeftPercent: 22, flameTopPercent: -26, flameWidthPercent: 56,
+              flameHeightPercent: 24, flameGradientStopPercent: 62 },
+    staff: { borderRadiusPercent: 40, orbLeftPercent: -90, orbTopPercent: -7, orbSizePercent: 280,
+             orbGradientStopPercent: 55, edgeWidthPercent: 30, edgeGradientDeg: 90 },
+    robe: { leftPercent: 6, topPercent: 34, widthPercent: 88, heightPercent: 66, radiusTopPercent: 44, gradientDeg: 180 },
+    hood: { leftPercent: 14, topPercent: 0, widthPercent: 72, heightPercent: 46, radiusBottomPercent: 46,
+            radiusTopLeftPercent: 50, radiusTopRightPercent: 50 },
+    face: { leftPercent: 27, topPercent: 9, widthPercent: 46, heightPercent: 30, gradientStopPercent: 58 },
+    button: { leftPercent: 47, topStartPercent: 56, stepCapPercent: 11, sizePercent: 6, maxTopPercent: 92 }
+  }
+};
+/* Single source for defaults: the fallback checkpoint table and the full
+   defaults snapshot are DERIVED from the CONFIG literal above at declaration
+   (deep copies, frozen) — never re-entered as a second literal table. The
+   snapshot is captured BEFORE any URL override runs, so a fallback always
+   returns to the authored defaults and its provenance is printable. */
+const DEFAULT_CHECKPOINTS = Object.freeze(Object.assign({}, CONFIG.checkpoints));
+const CONFIG_DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+/* Pristine seed — a separately held literal copy of the identity and timing
+   core, validated before any resolution runs. The defaults snapshot above is
+   derived from the authored CONFIG literal, so an invalid authored literal
+   would otherwise contaminate its own fallback; the seed is the baseline a
+   fallback returns to in that case, never the invalid value itself. */
+const PRISTINE_SEED = { labelText: "THIS VIDEO", medallionText: "✶", playbackMode: "once",
+  durationMs: 3625, zoomStart: 0.94,
+  checkpoints: { pushStartMs: 500, anchorMs: 875, pushEndMs: 2625, holdEndMs: 3375 },
+  checkpointPolicy: { minSeparationMs: 250, minDurationMs: 1000 },
+  events: { insertScale: 1.50 } };
+function sanitizeDefaults(defaults){
+  const D = JSON.parse(JSON.stringify(defaults));
+  const fin = (v) => typeof v === "number" && isFinite(v);
+  if (typeof D.labelText !== "string" || D.labelText.trim() === "") D.labelText = PRISTINE_SEED.labelText;
+  if (typeof D.medallionText !== "string" || D.medallionText === "") D.medallionText = PRISTINE_SEED.medallionText;
+  if (D.playbackMode !== "once" && D.playbackMode !== "loop") D.playbackMode = PRISTINE_SEED.playbackMode;
+  if (!fin(D.durationMs) || D.durationMs <= 0) D.durationMs = PRISTINE_SEED.durationMs;
+  if (!fin(D.zoomStart) || D.zoomStart <= 0) D.zoomStart = PRISTINE_SEED.zoomStart;
+  if (!D.checkpoints || typeof D.checkpoints !== "object") D.checkpoints = JSON.parse(JSON.stringify(PRISTINE_SEED.checkpoints));
+  for (const n of Object.keys(PRISTINE_SEED.checkpoints)) if (!fin(D.checkpoints[n])) D.checkpoints[n] = PRISTINE_SEED.checkpoints[n];
+  if (!D.checkpointPolicy || typeof D.checkpointPolicy !== "object") D.checkpointPolicy = JSON.parse(JSON.stringify(PRISTINE_SEED.checkpointPolicy));
+  for (const n of Object.keys(PRISTINE_SEED.checkpointPolicy)) if (!fin(D.checkpointPolicy[n]) || D.checkpointPolicy[n] <= 0) D.checkpointPolicy[n] = PRISTINE_SEED.checkpointPolicy[n];
+  if (!D.events || typeof D.events !== "object") D.events = JSON.parse(JSON.stringify(PRISTINE_SEED.events));
+  if (!fin(D.events.insertScale) || D.events.insertScale <= 0) D.events.insertScale = PRISTINE_SEED.events.insertScale;
+  return D;
+}
+
+/* URL overrides (swap test / reuse):
+   ?label=...&depth=2|3|4  subject + recursion  ·  ?pushStart=...&pushEnd=...&holdEnd=...&durationMs=...
+   ?zoomStart=...  wide-state scale  ·  ?drape=%23...&face=%23...&robe=%23...  palette
+   ?candles=5  count  ·  invalid values are ignored and reported in window.__T19_DIAGNOSTICS */
+const OVERRIDE_DIAGNOSTICS = [];
+(function applyOverrides(){
+  /* Each URL parameter is read ONCE and parsed STRICTLY: a value must be a
+     complete finite number ("4junk" is rejected and reported, never truncated
+     to 4). Truncation/clamping of integer fields reports requested vs
+     effective values in the diagnostics record. */
+  const q = new URLSearchParams(window.location.search);
+  function strictNum(k){
+    if (!q.has(k)) return undefined;
+    const raw = q.get(k);
+    const v = (typeof raw === "string" && raw.trim() !== "" && /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(raw.trim())) ? Number(raw) : NaN;
+    if (!isFinite(v)){ OVERRIDE_DIAGNOSTICS.push(k + " rejected: not a complete finite number (supplied " + JSON.stringify(raw) + ")"); return null; }
+    return v;
+  }
+  function intParam(k, apply, min, max){
+    const v = strictNum(k); if (v === undefined || v === null) return;
+    const eff = Math.max(min, Math.min(max, Math.floor(v)));
+    if (eff !== v) OVERRIDE_DIAGNOSTICS.push(k + " clamped: requested " + v + " -> effective " + eff);
+    apply(eff);
+  }
+  function numParam(k, apply, rule, why){
+    const v = strictNum(k); if (v === undefined || v === null) return;
+    if (rule && !rule(v)){ OVERRIDE_DIAGNOSTICS.push(k + " rejected: " + why); return; }
+    apply(v);
+  }
+  const hexOk = (v) => /^#[0-9a-fA-F]{6}$/.test(v || "");
+  if (q.has("label")){ const lv = q.get("label");
+    if (lv && lv.trim() !== "") CONFIG.labelText = lv;
+    else OVERRIDE_DIAGNOSTICS.push("label rejected: empty supplied label"); }
+  const pb = q.get("playback");
+  if (q.has("playback")){
+    if (pb === "once" || pb === "loop") CONFIG.playbackMode = pb;
+    else OVERRIDE_DIAGNOSTICS.push("playback rejected: supplied " + JSON.stringify(pb) + " is not once|loop");
+  }
+  intParam("depth", v => CONFIG.depth = v, 1, 6);
+  intParam("candles", v => CONFIG.candleCount = v, 0, 8);
+  const dur = strictNum("durationMs");
+  if (dur !== undefined && dur !== null){
+    const floorMs = (CONFIG.checkpointPolicy && isFinite(CONFIG.checkpointPolicy.minDurationMs)) ? CONFIG.checkpointPolicy.minDurationMs : PRISTINE_SEED.checkpointPolicy.minDurationMs;
+    if (dur < floorMs){ OVERRIDE_DIAGNOSTICS.push("durationMs rejected: requested " + dur + " below the shared floor " + floorMs + " -> baseline " + PRISTINE_SEED.durationMs); CONFIG.durationMs = PRISTINE_SEED.durationMs; }
+    else CONFIG.durationMs = dur;
+  }
+  numParam("pushStart", v => CONFIG.checkpoints.pushStartMs = v);
+  numParam("anchor", v => CONFIG.checkpoints.anchorMs = v);
+  numParam("pushEnd", v => CONFIG.checkpoints.pushEndMs = v);
+  numParam("holdEnd", v => CONFIG.checkpoints.holdEndMs = v);
+  numParam("zoomStart", v => CONFIG.zoomStart = v, v => v > 0, "must be > 0");
+  const col = (param, key) => { if (!q.has(param)) return; const v = q.get(param);
+    if (!v) OVERRIDE_DIAGNOSTICS.push(param + " rejected: empty supplied color");
+    else if (hexOk(v)) CONFIG.palette[key] = v;
+    else OVERRIDE_DIAGNOSTICS.push(param + " rejected: not #rrggbb"); };
+  col("drape", "drape"); col("face", "face"); col("robe", "robe"); col("candle", "flame");
+})();
+
+function hexToRgba(hex, alpha){
+  const h = hex.replace("#", "");
+  const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+  return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+}
+
+/* Checkpoint coherence — EXPLICIT REJECT/REPAIR, roles never reassigned, never sorted.
+   Domain: four finite numbers; window [0, durationMs]; strictly increasing.
+   Policy: (1) any non-finite value -> FALLBACK to DEFAULT_CHECKPOINTS.
+   (2) otherwise REPAIR IN PLACE: clamp into the window, then a forward pass
+   enforces minSeparationMs preserving the supplied order and each checkpoint's
+   ROLE, then a backward pass from durationMs if the forward pass overran.
+   (3) if separation cannot fit the window, separation shrinks to
+   floor(durationMs/4) and the repair is flagged separationReduced; if even the
+   defaults cannot fit, status stays "fallback-defaults" with that flag.
+   Status is "coherent" (input untouched), "repaired" (effective != supplied,
+   distinguishable from untouched), or "fallback-defaults". The effective table —
+   including effectiveAnchorMs — is what computeState plays and what diagnostics
+   surface during playback. */
+function checkpointDiagnostics(cfg){
+  const names = ["pushStartMs", "anchorMs", "pushEndMs", "holdEndMs"];
+  const raw = names.map(n => cfg.checkpoints[n]);
+  const errors = [];
+  let sep = cfg.checkpointPolicy.minSeparationMs;
+  let separationReduced = false;
+  if (raw.some(v => !isFinite(v))){
+    errors.push("non-finite checkpoint");
+    /* fallback defaults pass through the SAME duration-aware repair as any
+       supplied table, so a short durationMs can never strand them outside
+       the window or collapse their separation */
+    const sub = { checkpoints: sanitizeDefaults({ checkpoints: DEFAULT_CHECKPOINTS }).checkpoints, durationMs: cfg.durationMs, checkpointPolicy: cfg.checkpointPolicy };
+    const repaired = checkpointDiagnostics(sub);
+    return { effective: repaired.effective, status: "fallback-defaults", errors: errors,
+             effectiveAnchorMs: repaired.effectiveAnchorMs, anchorRole: repaired.anchorRole,
+             namedHoldMs: repaired.namedHoldMs, totalStationaryMs: repaired.totalStationaryMs,
+             separationReduced: repaired.separationReduced, supplied: raw.slice(),
+             repairs: repaired.repairs, effectiveSeparationMs: repaired.effectiveSeparationMs,
+             allocationDegraded: repaired.allocationDegraded };
+  }
+  raw.forEach((v, i) => { if (v < 0 || v > cfg.durationMs) errors.push("out-of-window:" + names[i]); });
+  for (let i = 1; i < raw.length; i++) if (!(raw[i] > raw[i - 1])) errors.push("not-ordered:" + names[i]);
+  if (3 * sep > cfg.durationMs){ sep = cfg.durationMs / 4; separationReduced = true; }
+  const v = raw.map(x => Math.max(0, Math.min(cfg.durationMs, x)));
+  for (let i = 1; i < v.length; i++) v[i] = Math.max(v[i], v[i - 1] + sep);
+  if (v[v.length - 1] > cfg.durationMs){
+    v[v.length - 1] = cfg.durationMs;
+    for (let i = v.length - 2; i >= 0; i--) v[i] = Math.min(v[i], v[i + 1] - sep);
+  }
+  /* Strict order is ASSERTED on the repaired table, never assumed: a repair
+     that cannot publish four strictly ordered checkpoints inside the window
+     falls back to the baseline table scaled to this duration (the baseline
+     fractions are strictly increasing, so the scaled table is too). */
+  let strictOk = v[0] >= 0 && v[v.length - 1] <= cfg.durationMs;
+  for (let i = 1; i < v.length; i++) if (!(v[i] > v[i - 1])) strictOk = false;
+  let forcedFallback = false;
+  if (!strictOk){
+    forcedFallback = true;
+    errors.push("repair could not satisfy strict order");
+    const seed = PRISTINE_SEED.checkpoints;
+    names.forEach((n) => { v[names.indexOf(n)] = seed[n] / PRISTINE_SEED.durationMs * cfg.durationMs; });
+  }
+  const changed = v.some((x, i) => x !== raw[i]);
+  const eff = {}; names.forEach((n, i) => eff[n] = v[i]);
+  const repairs = [];
+  names.forEach((n, i) => { if (v[i] !== raw[i]) repairs.push({ name: n, supplied: raw[i], effective: eff[n] }); });
+  /* Temporal-suitability FLAG (no auto-replacement: supplied checkpoint roles
+     are preserved; a degraded allocation is reported, never silently replaced).
+     The named hold span is the insert window (holdEndMs - pushEndMs); total
+     stationary time is the populated wide time (the wide hold plus the
+     return-to-wide span). anchorMs is the POPULATE REVEAL: the interior is
+     revealed when playback reaches it, and checkpoint repair preserves its
+     role between the frame onset and the insert entry. The allocation is
+     degraded when any event span collapses: no wide hold, no insert window,
+     or no return span. */
+  const namedHoldMs = eff.holdEndMs - eff.pushEndMs;
+  const totalStationaryMs = (eff.pushEndMs - eff.anchorMs) + (cfg.durationMs - eff.holdEndMs);
+  const allocationDegraded = (eff.pushEndMs - eff.anchorMs) <= 0
+    || namedHoldMs <= 0 || (cfg.durationMs - eff.holdEndMs) <= 0;
+  return { effective: eff, status: forcedFallback ? "fallback-defaults" : (changed ? "repaired" : "coherent"), errors: errors,
+           effectiveAnchorMs: eff.anchorMs, anchorRole: "populate-reveal",
+           namedHoldMs: namedHoldMs, totalStationaryMs: totalStationaryMs,
+           separationReduced: separationReduced, supplied: raw.slice(),
+           repairs: repairs, effectiveSeparationMs: sep,
+           allocationDegraded: allocationDegraded };
+}
+function validateCheckpoints(cfg){
+  const d = checkpointDiagnostics(cfg);
+  return { coherent: d.status === "coherent", errors: d.errors, status: d.status };
+}
+function effectiveCheckpoints(cfg){ return checkpointDiagnostics(cfg).effective; }
+
+/* CONFIG resolution — GROUP-COMPLETE validation, run once before first
+   render (direct CONFIG edits included, not only URL overrides). Every
+   CONFIG group (geometry, components and each sub-group, typography,
+   palette, flicker, checkpoints, checkpointPolicy) resolves against the
+   frozen authored-defaults snapshot: an absent / null / non-object group
+   falls back whole-group and never throws; every numeric leaf is checked
+   for type and finiteness; dependent constraints bind flicker
+   (periodDivisorMs finite > 0, phaseStepRad finite, amp finite in [0, 1]);
+   empty label / medallion / color values are rejected to the snapshot.
+   Every rejection is recorded in the returned diagnostics list; one
+   rejected field or group never discards unrelated valid edits. */
+function resolveConfig(cfg, defaults){
+  defaults = sanitizeDefaults(defaults);
+  const diags = [];
+  const bad = (v) => typeof v !== "number" || !isFinite(v);
+  function numField(obj, key, path, rule, fallback){
+    const v = obj[key];
+    if (bad(v) || !rule(v)){ diags.push(path + " rejected: supplied " + String(v) + " -> fallback " + fallback + " (authored default)"); obj[key] = fallback; }
+  }
+  function intField(obj, key, path, min, max, fallback){
+    const v = obj[key];
+    if (bad(v)){ diags.push(path + " rejected: supplied " + String(v) + " -> fallback " + fallback + " (authored default)"); obj[key] = fallback; return; }
+    const eff = Math.max(min, Math.min(max, Math.floor(v)));
+    if (eff !== v) diags.push(path + " clamped: requested " + v + " -> effective " + eff);
+    obj[key] = eff;
+  }
+  function defaultsAt(path){ let d = defaults; for (const part of path.split(".")) d = d[part]; return d; }
+  function group(obj, key, path){
+    const v = obj[key];
+    if (!v || typeof v !== "object" || Array.isArray(v)){
+      diags.push(path + " rejected: group absent or not an object -> fallback authored group");
+      obj[key] = JSON.parse(JSON.stringify(defaultsAt(path)));
+    }
+    return obj[key];
+  }
+  /* EVERY group resolves against the frozen authored-defaults snapshot
+     (captured before any override ran), never against a re-read of the
+     edited CONFIG: an absent / null / non-object group falls back
+     whole-group, is recorded, and never throws; sibling groups keep their
+     own valid edits. */
+  group(cfg, "geometry", "geometry"); group(cfg, "typography", "typography");
+  group(cfg, "palette", "palette"); group(cfg, "flicker", "flicker");
+  group(cfg, "checkpoints", "checkpoints"); group(cfg, "checkpointPolicy", "checkpointPolicy");
+  group(cfg, "events", "events");
+  group(cfg, "components", "components");
+  ["candle", "staff", "robe", "hood", "face", "button"].forEach(k => group(cfg.components, k, "components." + k));
+  /* Numeric sweep: every numeric leaf of the defaults snapshot is checked
+     for type and finiteness against the snapshot — string-typed values and
+     extreme-magnitude values (which parse to Infinity) fall back per field. */
+  (function sweep(obj, def, path){
+    if (!obj || typeof obj !== "object") return;
+    for (const k of Object.keys(def)){
+      const dv = def[k], p = path ? path + "." + k : k;
+      if (dv && typeof dv === "object") sweep(obj[k], dv, p);
+      else if (typeof dv === "number" && bad(obj[k])){
+        diags.push(p + " rejected: supplied " + String(obj[k]) + " -> fallback " + dv + " (authored default)");
+        obj[k] = dv;
+      }
+    }
+  })(cfg, defaults, "");
+  numField(cfg.checkpointPolicy, "minSeparationMs", "minSeparationMs", v => v > 0, defaults.checkpointPolicy.minSeparationMs);
+  numField(cfg.checkpointPolicy, "minDurationMs", "minDurationMs", v => v > 0, defaults.checkpointPolicy.minDurationMs);
+  numField(cfg, "durationMs", "durationMs", v => v >= cfg.checkpointPolicy.minDurationMs, defaults.durationMs);
+  ["pushStartMs", "anchorMs", "pushEndMs", "holdEndMs"].forEach(n =>
+    numField(cfg.checkpoints, n, "checkpoints." + n, () => true, defaults.checkpoints[n]));
+  intField(cfg, "depth", "depth", 1, 6, defaults.depth);
+  intField(cfg, "candleCount", "candleCount", 0, 8, defaults.candleCount);
+  intField(cfg, "figureButtons", "figureButtons", 0, 6, defaults.figureButtons);
+  numField(cfg, "zoomStart", "zoomStart", v => v > 0, defaults.zoomStart);
+  numField(cfg.events, "insertScale", "events.insertScale", v => v > 0, defaults.events.insertScale);
+  /* Dependent flicker constraints: period must be finite and > 0, phase
+     finite, amplitude finite and inside [0, 1] (above 1 it would produce
+     invalid opacity values). */
+  numField(cfg.flicker, "periodDivisorMs", "flicker.periodDivisorMs", v => v > 0, defaults.flicker.periodDivisorMs);
+  numField(cfg.flicker, "phaseStepRad", "flicker.phaseStepRad", () => true, defaults.flicker.phaseStepRad);
+  numField(cfg.flicker, "amp", "flicker.amp", v => v >= 0 && v <= 1, defaults.flicker.amp);
+  numField(cfg, "labelFontFactor", "labelFontFactor", v => v > 0, defaults.labelFontFactor);
+  numField(cfg, "labelMinPx", "labelMinPx", v => v > 0, defaults.labelMinPx);
+  if (typeof cfg.labelText !== "string" || cfg.labelText.trim() === ""){
+    diags.push("labelText rejected: empty or not a string -> fallback " + JSON.stringify(defaults.labelText) + " (authored default)");
+    cfg.labelText = defaults.labelText;
+  }
+  if (typeof cfg.medallionText !== "string" || cfg.medallionText === ""){
+    diags.push("medallionText rejected: empty or not a string -> fallback authored default");
+    cfg.medallionText = defaults.medallionText;
+  }
+  for (const k of Object.keys(defaults.palette)){
+    const v = cfg.palette[k];
+    if (typeof v !== "string" || !/^#[0-9a-fA-F]{6}$/.test(v)){
+      diags.push("palette." + k + " rejected: supplied " + String(v) + " -> fallback " + defaults.palette[k] + " (authored default)");
+      cfg.palette[k] = defaults.palette[k];
+    }
+  }
+  if (cfg.playbackMode !== "once" && cfg.playbackMode !== "loop"){
+    diags.push("playbackMode rejected: supplied " + String(cfg.playbackMode) + " -> fallback " + defaults.playbackMode + " (authored default)");
+    cfg.playbackMode = defaults.playbackMode;
+  }
+  /* Geometry derivation (resolution-time): the recursion scale and the zoom
+     anchor are computed from the validated geometry here, before any
+     consumer runs; no independent literal for them exists in CONFIG. */
+  const G = cfg.geometry || {};
+  const geomNum = (v, fb) => (typeof v === "number" && isFinite(v)) ? v : fb;
+  function derive(){
+    const dFl = geomNum(G.frameLeftPercent, defaults.geometry.frameLeftPercent);
+    const dFw = geomNum(G.frameWidthPercent, defaults.geometry.frameWidthPercent);
+    const dFt = geomNum(G.frameTopPercent, defaults.geometry.frameTopPercent);
+    const dFh = geomNum(G.frameHeightPercent, defaults.geometry.frameHeightPercent);
+    const dCw = geomNum(G.curtainWidthPercent, defaults.geometry.curtainWidthPercent);
+    cfg.derivedLevelScale = (dFw / 100) * ((100 - 2 * dCw) / 100);
+    cfg.derivedZoomAnchorXPercent = dFl + dFw / 2;
+    cfg.derivedZoomAnchorYPercent = dFt + dFh / 2;
+  }
+  derive();
+  /* Positivity: the derived nesting scale and the frame interior (what
+     remains of the frame after the header, curtain and border allocations)
+     must both be positive; an edit that makes either non-positive is
+     rejected per-piece to the authored geometry and the derivation runs
+     again, so no consumer can emit a negative scale or an inverted box. */
+  const interiorW = (100 - 2 * G.curtainWidthPercent) / 100;
+  const interiorH = (100 - G.frameHeaderPercent) / 100;
+  if (!(cfg.derivedLevelScale > 0) || !(interiorW > 0) || !(interiorH > 0)
+      || !(G.frameWidthPercent > 0) || !(G.frameHeightPercent > 0)){
+    for (const k of ["curtainWidthPercent", "frameHeaderPercent", "frameWidthPercent", "frameHeightPercent"]){
+      if (cfg.geometry[k] !== defaults.geometry[k]){
+        diags.push("geometry." + k + " rejected: derived scale / frame interior not positive -> fallback " + defaults.geometry[k] + " (authored default)");
+        cfg.geometry[k] = defaults.geometry[k];
+      }
+    }
+    derive();
+  }
+  return diags;
+}
+
+/* Label legibility — the nesting factor is applied EXACTLY ONCE: the recursive
+   call already passes this level's true scene width (parent scene width x
+   levelScale), so the font is simply sceneWidth x labelFontFactor. The floor is
+   enforced at depths 0 and 1 only. Effective sizes at a 360 px stage:
+   level 0 scene 360.00 px -> 18.00 px · level 1 scene 174.96 px -> raw 8.75 px,
+   floored to 11 px · level 2 scene 85.03 px -> 4.25 px (glyph-band, not legible;
+   the legibility claim is three SCENE levels, matching the specimen still). */
+function sceneWidthAtLevel(stageWidthPx, level, cfg){ return stageWidthPx * Math.pow(cfg.derivedLevelScale, level); }
+function labelFontPx(stageWidthPx, level, cfg){
+  const raw = stageWidthPx * cfg.labelFontFactor;
+  if (level <= 1) return Math.max(cfg.labelMinPx, raw);
+  return raw;
+}
+function effectiveLabelSizes(stageWidthPx, cfg){
+  const out = [];
+  for (let l = 0; l < cfg.depth; l++) out.push(labelFontPx(sceneWidthAtLevel(stageWidthPx, l, cfg), l, cfg));
+  return out;
+}
+function labelLegibilityStopLevel(cfg){
+  let l = 0;
+  while (labelFontPx(sceneWidthAtLevel(360, l, cfg), l, cfg) >= cfg.labelMinPx && l < 12) l++;
+  return l;
+}
+
+/* Displayed-state geometry model (source-bound). Nesting is ANISOTROPIC: the
+   width factor per level is frame width x interior width; the height factor
+   is frame height x interior height (the interior starts below the header).
+   Both factors are DERIVED from CONFIG geometry here, never re-entered as
+   literals; the suite asserts they equal the priced anchors. Stage height =
+   stage width x CONFIG stageAspectH/stageAspectW. Header fit = the complete
+   medallion-plus-label row width AND the header height at each level. Glyph
+   advance model: CONFIG typography glyphAdvanceEm per glyph plus
+   letter-spacing per glyph — a conservative upper-bound model, asserted in
+   the own-check suite for levels 0-1 at 360 and 390 px. */
+function widthFactor(cfg){ const G = cfg.geometry; return (G.frameWidthPercent / 100) * ((100 - 2 * G.curtainWidthPercent) / 100); }
+function heightFactor(cfg){ const G = cfg.geometry; return (G.frameHeightPercent / 100) * ((100 - G.frameHeaderPercent) / 100); }
+function stageHeightPx(stageWidthPx, cfg){ return stageWidthPx * cfg.geometry.stageAspectH / cfg.geometry.stageAspectW; }
+function sceneHeightAtLevel(stageWidthPx, level, cfg){ return stageHeightPx(stageWidthPx, cfg) * Math.pow(heightFactor(cfg), level); }
+function borderPxAtLevel(level, cfg){
+  const G = cfg.geometry;
+  return Math.max(G.frameBorderMinPx, G.frameBorderPx * Math.pow(cfg.derivedLevelScale, level));
+}
+/* Border-propagated content-box chain (model basis = render basis): each
+   level's scene fills its parent frame's INTERIOR element, whose box is the
+   parent frame's CONTENT box (border box minus 2 x borderPx at that level)
+   reduced by the header share (top) and the curtain shares (sides). The
+   nominal derived level scale (0.486 on default geometry) sizes the
+   renderer's fonts and borders; the scene widths/heights in this chain are
+   the smaller content-box values the displayed layout actually resolves.
+   Both figures print in the fit table; neither substitutes for the other. */
+function contentBoxChain(stageWidthPx, cfg){
+  const G = cfg.geometry;
+  const chain = [];
+  let sceneW = stageWidthPx, sceneH = stageHeightPx(stageWidthPx, cfg);
+  for (let level = 0; level < cfg.depth; level++){
+    const borderPx = borderPxAtLevel(level, cfg);
+    const frameW = sceneW * G.frameWidthPercent / 100;
+    const frameH = sceneH * G.frameHeightPercent / 100;
+    const contentW = frameW - 2 * borderPx;
+    const contentH = frameH - 2 * borderPx;
+    const headerH = contentH * G.frameHeaderPercent / 100;
+    const interiorW = contentW * (100 - 2 * G.curtainWidthPercent) / 100;
+    const interiorH = contentH * (100 - G.frameHeaderPercent) / 100;
+    chain.push({ level: level, sceneW: sceneW, sceneH: sceneH, frameW: frameW, frameH: frameH,
+                 borderPx: borderPx, contentW: contentW, contentH: contentH, headerH: headerH,
+                 interiorW: interiorW, interiorH: interiorH });
+    sceneW = interiorW; sceneH = interiorH;
+  }
+  return chain;
+}
+function headerModel(stageWidthPx, level, cfg){
+  const T = cfg.typography;
+  const row = contentBoxChain(stageWidthPx, cfg)[level];
+  const nominalSceneW = sceneWidthAtLevel(stageWidthPx, level, cfg);
+  const font = labelFontPx(nominalSceneW, level, cfg);
+  const phraseW = cfg.labelText.length * font * (T.glyphAdvanceEm + T.letterSpacingEm);
+  const medallionFontPx = Math.max(T.medallionMinPx, font * T.medallionFactor);
+  /* the row prices the COMPLETE medallion string, not a single glyph */
+  const medallionW = medallionFontPx * T.medallionAdvanceEm * cfg.medallionText.length;
+  const rowW = phraseW + medallionW;
+  const labelLinePx = font * T.lineHeight;
+  const medallionPx = medallionFontPx * T.lineHeight;
+  const terminalBand = level === cfg.depth - 1;
+  const tallestItemPx = terminalBand ? 0 : Math.max(labelLinePx, medallionPx);
+  const lines = Math.max(1, Math.ceil(rowW / Math.max(1, row.contentW)));
+  const wrapStates = [];
+  for (let n = 1; n <= 3; n++){
+    const h = Math.max(n * labelLinePx, medallionPx);
+    wrapStates.push({ lines: n, rowHeightPx: h, fitsHeight: h <= row.headerH });
+  }
+  return { sceneW: row.sceneW, sceneH: row.sceneH, nominalSceneW: nominalSceneW,
+           frameW: row.frameW, frameH: row.frameH,
+           frameContentW: row.contentW, frameContentH: row.contentH, headerH: row.headerH, fontPx: font,
+           phraseW: phraseW, medallionFontPx: medallionFontPx, medallionW: medallionW, rowW: rowW,
+           tallestItemPx: tallestItemPx, terminalBand: terminalBand,
+           fitsWidth: terminalBand ? true : rowW <= row.contentW,
+           fitsHeight: tallestItemPx <= row.headerH,
+           lines: lines, wrapStates: wrapStates, borderPx: row.borderPx };
+}
+/* Occlusion model: the framed picture (drawn after the hall elements, inside
+   its footprint) occludes whatever hall element overlaps its rect. Visible
+   fraction per element = 1 - overlap area / element area, computed on the
+   element rects the renderer actually places (percent of scene width for x,
+   percent of scene height for y). Recognition dimensions are derived from
+   the VISIBLE REMAINDER (the span above the frame's top edge for elements
+   crossing it), never from the full element span. */
+function rectOverlapArea(a, b){
+  const w = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+  const h = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+  return (w > 0 && h > 0) ? w * h : 0;
+}
+function occlusionModel(stageWidthPx, cfg){
+  const G = cfg.geometry, C = cfg.components;
+  const level = cfg.depth - 1;
+  const chainRow = contentBoxChain(stageWidthPx, cfg)[level];
+  const sceneW = chainRow.sceneW;
+  const sceneH = chainRow.sceneH;
+  const frame = { x: G.frameLeftPercent, y: G.frameTopPercent, w: G.frameWidthPercent, h: G.frameHeightPercent };
+  const groupBottom = G.candleTopPercent + G.candleHeightPercent;
+  const candleStep = derivedStep(cfg.candleCount, C.candle.widthPercent, C.candle.stepCapPercent);
+  const out = { sceneW: sceneW, sceneH: sceneH, level: level, elements: {} };
+  for (let i = 0; i < cfg.candleCount; i++){
+    const bodyH = (C.candle.baseHeightPercent + (i % 2) * C.candle.altHeightDeltaPercent) / 100 * G.candleHeightPercent;
+    const bodyTop = groupBottom - bodyH;
+    const flameTop = bodyTop + (C.candle.flameTopPercent / 100) * bodyH;
+    const rect = { x: G.candleLeftPercent + (i * candleStep / 100) * G.candleWidthPercent,
+                   y: flameTop, w: (C.candle.widthPercent / 100) * G.candleWidthPercent, h: groupBottom - flameTop };
+    const visFrac = 1 - rectOverlapArea(rect, frame) / (rect.w * rect.h);
+    const visSpanPct = Math.max(0, G.frameTopPercent - rect.y);
+    out.elements["candle" + i] = { rect: rect, visibleFraction: visFrac, visibleSpanPct: visSpanPct,
+      visiblePxOpening: visSpanPct / 100 * sceneH * cfg.zoomStart,
+      visiblePxHold: visSpanPct / 100 * sceneH * cfg.events.insertScale,
+      bodyWidthPxOpening: rect.w / 100 * sceneW * cfg.zoomStart,
+      pitchPx: (candleStep / 100) * (G.candleWidthPercent / 100) * sceneW };
+  }
+  const staffRect = { x: G.staffLeftPercent, y: G.staffTopPercent, w: G.staffWidthPercent, h: G.staffHeightPercent };
+  const staffVisSpan = Math.max(0, G.frameTopPercent - staffRect.y);
+  out.elements.staff = { rect: staffRect, visibleFraction: 1 - rectOverlapArea(staffRect, frame) / (staffRect.w * staffRect.h),
+    visibleSpanPct: staffVisSpan, visiblePxOpening: staffVisSpan / 100 * sceneH * cfg.zoomStart,
+    visiblePxHold: staffVisSpan / 100 * sceneH * cfg.events.insertScale,
+    widthPxOpening: staffRect.w / 100 * sceneW * cfg.zoomStart };
+  const faceRect = { x: (100 - G.figureRightPercent - G.figureWidthPercent) + (C.face.leftPercent / 100) * G.figureWidthPercent,
+                     y: G.figureTopPercent + (C.face.topPercent / 100) * G.figureHeightPercent,
+                     w: (C.face.widthPercent / 100) * G.figureWidthPercent, h: (C.face.heightPercent / 100) * G.figureHeightPercent };
+  out.elements.face = { rect: faceRect, visibleFraction: 1 - rectOverlapArea(faceRect, frame) / (faceRect.w * faceRect.h),
+    diameterPxOpening: Math.min(faceRect.w / 100 * sceneW, faceRect.h / 100 * sceneH) * cfg.zoomStart };
+  const tableRect = { x: G.tableLeftPercent, y: G.tableTopPercent, w: G.tableWidthPercent, h: G.tableHeightPercent };
+  out.elements.table = { rect: tableRect, visibleFraction: 1 - rectOverlapArea(tableRect, frame) / (tableRect.w * tableRect.h) };
+  out.elements.frame = { rect: frame, visibleFraction: 1 };
+  out.borderPx = chainRow.borderPx;
+  out.pairs = Object.keys(out.elements).filter(k => k !== "frame").map(k => ({ occluder: "frame", occluded: k }));
+  out.pairScope = "ordered pairs enumerated at the deepest level's hold checkpoints: the framed picture (drawn last, on top) against every co-present hall element; no other pair overlaps at these checkpoints";
+  return out;
+}
+function paletteLuminance(hex){
+  const h = hex.replace("#", "");
+  const f = (i) => { const c = parseInt(h.substring(i, i + 2), 16) / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(0) + 0.7152 * f(2) + 0.0722 * f(4);
+}
+function paletteContrast(hexA, hexB){
+  const la = paletteLuminance(hexA), lb = paletteLuminance(hexB);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function deepestDetailModel(stageWidthPx, cfg){
+  /* displayed widths at the deepest scene level, at the opening scale zoomStart;
+     scene width is the border-propagated content-box width, not the nominal scale width */
+  const sceneW = contentBoxChain(stageWidthPx, cfg)[cfg.depth - 1].sceneW;
+  const candleGroupW = sceneW * cfg.geometry.candleWidthPercent / 100;
+  const candleBodyPx = candleGroupW * cfg.components.candle.widthPercent / 100 * cfg.zoomStart;
+  const candleStep = derivedStep(cfg.candleCount, cfg.components.candle.widthPercent, cfg.components.candle.stepCapPercent);
+  const candlePitchPx = candleGroupW * candleStep / 100 * cfg.zoomStart;
+  return { sceneW: sceneW, candleBodyPx: candleBodyPx,
+           candlePitchPx: candlePitchPx, candleGapPx: candlePitchPx - candleBodyPx,
+           staffPx: sceneW * cfg.geometry.staffWidthPercent / 100 * cfg.zoomStart,
+           staffEdgeContrast: paletteContrast(cfg.palette.staffEdge, cfg.palette.hall),
+           staffWoodContrast: paletteContrast(cfg.palette.staffWood, cfg.palette.hall) };
+}
+
+function scenePerLevelNodes(cfg){ return 19 + cfg.figureButtons + 2 * cfg.candleCount; }
+function sceneNodeCount(cfg){ return cfg.depth * scenePerLevelNodes(cfg); }
+
+/* Pure state from time — the EFFECTIVE checkpoint table prices the event
+   sequence. States: hall (no framed picture yet) -> frameEmpty (the frame
+   stands, its interior still black) -> wideHold (interior revealed at the
+   populate checkpoint, wide scale unchanged) -> insert (one enlarged
+   state) -> returnWide (wide scale again to the shot end). In "once" mode
+   time CLAMPS at durationMs and the phase at/after durationMs is
+   terminalHold (the wide state, retained); in "loop" mode time wraps at
+   durationMs as before. */
+function computeState(tMs, cfg){
+  const t = cfg.playbackMode === "loop"
+    ? ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs
+    : Math.max(0, Math.min(cfg.durationMs, tMs));
+  const diag = checkpointDiagnostics(cfg);
+  const cp = diag.effective;
+  const frameVisible = t >= cp.pushStartMs;
+  const populated = t >= cp.anchorMs;
+  const insertActive = populated && t >= cp.pushEndMs && t < cp.holdEndMs;
+  const scale = insertActive ? cfg.events.insertScale : cfg.zoomStart;
+  const progress = insertActive ? 1 : 0;
+  const phase = (cfg.playbackMode !== "loop" && t >= cfg.durationMs) ? "terminalHold"
+    : !frameVisible ? "hall" : (!populated ? "frameEmpty" : (insertActive ? "insert" : (t >= cp.holdEndMs ? "returnWide" : "wideHold")));
+  return { t: t, progress: progress, scale: scale, phase: phase, depth: cfg.depth,
+           frameVisible: frameVisible, populated: populated, insertActive: insertActive,
+           checkpointsCoherent: diag.status === "coherent", checkpointStatus: diag.status,
+           effectiveCheckpoints: cp, effectiveAnchorMs: diag.effectiveAnchorMs,
+           checkpointErrors: diag.errors, separationReduced: diag.separationReduced,
+           checkpointRepairs: diag.repairs, effectiveSeparationMs: diag.effectiveSeparationMs,
+           anchorRole: diag.anchorRole, namedHoldMs: diag.namedHoldMs,
+           totalStationaryMs: diag.totalStationaryMs,
+           allocationDegraded: diag.allocationDegraded };
+}
+
+/* Count-derived spacing: the CONFIG step is a CAP; the effective step shrinks so
+   count-many items always end inside their group's bounds. */
+function derivedStep(count, widthPercent, stepCapPercent){
+  if (count <= 1) return 0;
+  return Math.min(stepCapPercent, (100 - widthPercent) / (count - 1));
+}
+
+/* ===== The ONE scene renderer — calls itself for the framed picture's interior ===== */
+function el(tag, cls){ const d = document.createElement(tag); if (cls) d.className = cls; return d; }
+function box(node, left, top, width, height){
+  node.style.left = left + "%"; node.style.top = top + "%";
+  node.style.width = width + "%"; node.style.height = height + "%";
+}
+function buildScene(cfg, level, stageWidthPx){
+  const P = cfg.palette, G = cfg.geometry, C = cfg.components;
+  const scene = el("div", "scene");
+  scene.style.background = P.hall;
+  const backdrop = el("div", "abs"); box(backdrop, 0, 0, 100, 100);
+  backdrop.style.background = "linear-gradient(" + G.backdropGradientDeg + "deg," + P.hall + " 0%," + P.hall + " " + G.drapeLeftPercent + "%," + P.drape + " " + (G.drapeLeftPercent + G.drapeTransitionOffsetPercent) + "%," + P.drapeDark + " 100%)";
+  scene.appendChild(backdrop);
+  const foldHalf = G.drapeFoldPeriodPx / 2;
+  const drapeLeftW = G.drapeWidthPercent * G.drapeSplitPercent / 100;
+  const drapeL = el("div", "abs"); box(drapeL, G.drapeLeftPercent, 0, drapeLeftW, 100);
+  drapeL.style.background = "repeating-linear-gradient(" + G.drapeGradientDeg + "deg," + P.drape + " 0px," + P.drapeFold + " " + foldHalf + "px," + P.drape + " " + G.drapeFoldPeriodPx + "px)";
+  scene.appendChild(drapeL);
+  const drapeR = el("div", "abs"); box(drapeR, G.drapeLeftPercent + drapeLeftW, 0, G.drapeWidthPercent - drapeLeftW, 100);
+  drapeR.style.background = "repeating-linear-gradient(" + G.drapeGradientDeg + "deg," + P.drapeDark + " 0px," + P.drape + " " + foldHalf + "px," + P.drapeDark + " " + G.drapeFoldPeriodPx + "px)";
+  scene.appendChild(drapeR);
+  const candleGroup = el("div", "abs");
+  box(candleGroup, G.candleLeftPercent, G.candleTopPercent, G.candleWidthPercent, G.candleHeightPercent);
+  scene.appendChild(candleGroup);
+  const candleStep = derivedStep(cfg.candleCount, C.candle.widthPercent, C.candle.stepCapPercent);
+  for (let i = 0; i < cfg.candleCount; i++){
+    const candle = el("div", "abs");
+    candle.style.left = (i * candleStep) + "%"; candle.style.bottom = "0%";
+    candle.style.width = C.candle.widthPercent + "%";
+    candle.style.height = (C.candle.baseHeightPercent + (i % 2) * C.candle.altHeightDeltaPercent) + "%";
+    candle.style.background = P.candleBody; candle.style.borderRadius = C.candle.borderRadiusPercent + "%";
+    const flame = el("div", "abs flame");
+    flame.style.left = C.candle.flameLeftPercent + "%"; flame.style.top = C.candle.flameTopPercent + "%";
+    flame.style.width = C.candle.flameWidthPercent + "%"; flame.style.height = C.candle.flameHeightPercent + "%";
+    flame.style.background = "radial-gradient(circle," + P.flameCore + " 0%," + P.flame + " " + C.candle.flameGradientStopPercent + "%," + hexToRgba(P.glow, 0) + " 100%)";
+    flame.style.borderRadius = "50%";
+    flame.dataset.phase = String((level * Math.max(1, cfg.candleCount) + i) * cfg.flicker.phaseStepRad);
+    candle.appendChild(flame);
+    candleGroup.appendChild(candle);
+  }
+  const staff = el("div", "abs");
+  box(staff, G.staffLeftPercent, G.staffTopPercent, G.staffWidthPercent, G.staffHeightPercent);
+  staff.style.background = "linear-gradient(" + C.staff.edgeGradientDeg + "deg," + P.staffEdge + " 0%," + P.staffWood + " " + C.staff.edgeWidthPercent + "%," + P.staffWood + " 100%)";
+  staff.style.borderRadius = C.staff.borderRadiusPercent + "%";
+  const orb = el("div", "abs");
+  orb.style.left = C.staff.orbLeftPercent + "%"; orb.style.top = C.staff.orbTopPercent + "%";
+  orb.style.width = C.staff.orbSizePercent + "%"; orb.style.paddingTop = C.staff.orbSizePercent + "%";
+  orb.style.background = "radial-gradient(circle," + P.flameCore + " 0%," + P.staffOrb + " " + C.staff.orbGradientStopPercent + "%," + hexToRgba(P.glow, 0) + " 100%)";
+  orb.style.borderRadius = "50%";
+  staff.appendChild(orb);
+  scene.appendChild(staff);
+  const figure = el("div", "abs");
+  figure.style.right = G.figureRightPercent + "%"; figure.style.top = G.figureTopPercent + "%";
+  figure.style.width = G.figureWidthPercent + "%"; figure.style.height = G.figureHeightPercent + "%";
+  const robe = el("div", "abs"); box(robe, C.robe.leftPercent, C.robe.topPercent, C.robe.widthPercent, C.robe.heightPercent);
+  robe.style.background = "linear-gradient(" + C.robe.gradientDeg + "deg," + P.robe + " 0%," + P.robeShade + " 100%)";
+  robe.style.borderRadius = C.robe.radiusTopPercent + "% " + C.robe.radiusTopPercent + "% 0% 0%";
+  figure.appendChild(robe);
+  const hood = el("div", "abs"); box(hood, C.hood.leftPercent, C.hood.topPercent, C.hood.widthPercent, C.hood.heightPercent);
+  hood.style.background = P.hood; hood.style.borderRadius = C.hood.radiusTopLeftPercent + "% " + C.hood.radiusTopRightPercent + "% " + C.hood.radiusBottomPercent + "% " + C.hood.radiusBottomPercent + "%";
+  figure.appendChild(hood);
+  const face = el("div", "abs"); box(face, C.face.leftPercent, C.face.topPercent, C.face.widthPercent, C.face.heightPercent);
+  face.style.background = "radial-gradient(circle," + P.face + " " + C.face.gradientStopPercent + "%," + P.faceRim + " 100%)";
+  face.style.borderRadius = "50%";
+  figure.appendChild(face);
+  const btnSizeVertPercent = C.button.sizePercent * (G.figureWidthPercent * G.stageAspectW) / (G.figureHeightPercent * G.stageAspectH);
+  const btnStep = cfg.figureButtons > 1
+    ? Math.min(C.button.stepCapPercent, (C.button.maxTopPercent - C.button.topStartPercent - btnSizeVertPercent) / (cfg.figureButtons - 1))
+    : 0;
+  for (let b = 0; b < cfg.figureButtons; b++){
+    const btn = el("div", "abs");
+    btn.style.left = C.button.leftPercent + "%"; btn.style.top = (C.button.topStartPercent + b * btnStep) + "%";
+    btn.style.width = C.button.sizePercent + "%"; btn.style.paddingTop = C.button.sizePercent + "%";
+    btn.style.background = P.button; btn.style.borderRadius = "50%";
+    figure.appendChild(btn);
+  }
+  scene.appendChild(figure);
+  const table = el("div", "abs");
+  box(table, G.tableLeftPercent, G.tableTopPercent, G.tableWidthPercent, G.tableHeightPercent);
+  table.style.background = P.table; table.style.borderRadius = G.tableRadiusPercent + "% " + G.tableRadiusPercent + "% 0% 0%";
+  scene.appendChild(table);
+  /* The framed picture — its interior is THIS renderer, one level deeper. */
+  const frameBox = el("div", "abs frameBox");
+  box(frameBox, G.frameLeftPercent, G.frameTopPercent, G.frameWidthPercent, G.frameHeightPercent);
+  frameBox.style.background = P.frameBg;
+  const borderPx = Math.max(G.frameBorderMinPx, G.frameBorderPx * Math.pow(cfg.derivedLevelScale, level));
+  frameBox.style.border = borderPx + "px solid " + P.frameBorder;
+  const header = el("div", "abs"); box(header, 0, 0, 100, G.frameHeaderPercent);
+  header.style.background = P.frameBg;
+  header.style.display = "flex"; header.style.alignItems = "center"; header.style.justifyContent = "center";
+  const deepestLevel = level + 1 >= cfg.depth;
+  const medallion = el("span", "medallion");
+  medallion.textContent = cfg.medallionText; medallion.style.color = P.label;
+  medallion.style.fontSize = Math.max(cfg.typography.medallionMinPx, labelFontPx(stageWidthPx, level, cfg) * cfg.typography.medallionFactor) + "px";
+  medallion.style.lineHeight = String(cfg.typography.lineHeight);
+  const label = el("div", "framelabel");
+  label.textContent = cfg.labelText;
+  label.style.color = P.label; label.style.letterSpacing = cfg.typography.letterSpacingEm + "em";
+  label.style.whiteSpace = "nowrap"; label.style.lineHeight = String(cfg.typography.lineHeight);
+  label.style.fontSize = labelFontPx(stageWidthPx, level, cfg) + "px";
+  if (!deepestLevel){ header.appendChild(medallion); header.appendChild(label); }
+  frameBox.appendChild(header);
+  const curtainL = el("div", "abs"); box(curtainL, 0, G.frameHeaderPercent, G.curtainWidthPercent, 100 - G.frameHeaderPercent);
+  curtainL.style.background = P.curtain; frameBox.appendChild(curtainL);
+  const curtainR = el("div", "abs");
+  curtainR.style.right = "0%"; curtainR.style.top = G.frameHeaderPercent + "%";
+  curtainR.style.width = G.curtainWidthPercent + "%"; curtainR.style.height = (100 - G.frameHeaderPercent) + "%";
+  curtainR.style.background = P.curtain; frameBox.appendChild(curtainR);
+  const interior = el("div", "frameInterior");
+  interior.style.left = G.curtainWidthPercent + "%"; interior.style.top = G.frameHeaderPercent + "%";
+  interior.style.width = (100 - 2 * G.curtainWidthPercent) + "%"; interior.style.height = (100 - G.frameHeaderPercent) + "%";
+  interior.style.background = P.frameInner;
+  if (level + 1 < cfg.depth){
+    interior.appendChild(buildScene(cfg, level + 1, stageWidthPx * cfg.derivedLevelScale));
+  }
+  frameBox.appendChild(interior);
+  scene.appendChild(frameBox);
+  return scene;
+}
+
+/* ===== Stage assembly + clock ===== */
+const stage = document.getElementById("stage");
+const zoomWrap = document.getElementById("zoomWrap");
+const diagEl = document.getElementById("diagnostics");
+const RESOLVE_DIAGNOSTICS = resolveConfig(CONFIG, CONFIG_DEFAULTS);
+document.body.style.background = CONFIG.palette.bg;
+document.body.style.fontFamily = CONFIG.typography.fontFamily;
+zoomWrap.style.transformOrigin = CONFIG.derivedZoomAnchorXPercent + "% " + CONFIG.derivedZoomAnchorYPercent + "%";
+stage.style.aspectRatio = CONFIG.geometry.stageAspectW + " / " + CONFIG.geometry.stageAspectH;
+stage.style.width = "min(100%, " + (100 * CONFIG.geometry.stageAspectW / CONFIG.geometry.stageAspectH) + "vh)";
+let builtDepth = -1;
+function buildAll(){
+  while (zoomWrap.children.length) zoomWrap.removeChild(zoomWrap.children[0]);
+  const w = stage.clientWidth || CONFIG.geometry.stageFallbackWidthPx;
+  zoomWrap.appendChild(buildScene(CONFIG, 0, w));
+  builtDepth = CONFIG.depth;
+}
+buildAll();
+window.addEventListener("resize", function(){ buildAll(); render(pausedAt); });
+
+let lastDiagKey = "";
+function surfaceDiagnostics(s){
+  const diag = { phase: s.phase, frameVisible: s.frameVisible, populated: s.populated, insertActive: s.insertActive,
+                 checkpointStatus: s.checkpointStatus, effectiveCheckpoints: s.effectiveCheckpoints,
+                 effectiveAnchorMs: s.effectiveAnchorMs, anchorRole: s.anchorRole,
+                 namedHoldMs: s.namedHoldMs, totalStationaryMs: s.totalStationaryMs,
+                 checkpointErrors: s.checkpointErrors,
+                 separationReduced: s.separationReduced, overrideDiagnostics: OVERRIDE_DIAGNOSTICS,
+                 resolveDiagnostics: RESOLVE_DIAGNOSTICS, allocationDegraded: s.allocationDegraded,
+                 derived: { levelScale: CONFIG.derivedLevelScale, zoomAnchorXPercent: CONFIG.derivedZoomAnchorXPercent, zoomAnchorYPercent: CONFIG.derivedZoomAnchorYPercent },
+                 headerFit: (function(){ const wNow = stage.clientWidth || CONFIG.geometry.stageFallbackWidthPx; const rows = [];
+                   for (let l = 0; l < CONFIG.depth; l++){ const hm = headerModel(wNow, l, CONFIG);
+                     rows.push({ level: l, rowW: hm.rowW, contentW: hm.frameContentW, fitsWidth: hm.fitsWidth,
+                                 tallestItemPx: hm.tallestItemPx, headerH: hm.headerH, fitsHeight: hm.fitsHeight }); }
+                   return rows; })() };
+  window.__T19_DIAGNOSTICS = diag;
+  const key = JSON.stringify(diag);
+  if (key === lastDiagKey) return;
+  lastDiagKey = key;
+  if (s.checkpointStatus !== "coherent" || OVERRIDE_DIAGNOSTICS.length || RESOLVE_DIAGNOSTICS.length || s.allocationDegraded
+      || diag.headerFit.some(r => !r.fitsHeight || !r.fitsWidth)){
+    diagEl.style.display = "block";
+    diagEl.textContent = "checkpoints: " + s.checkpointStatus + " · populate reveal " + s.effectiveAnchorMs +
+      "ms · frame onset " + s.effectiveCheckpoints.pushStartMs + "ms · insert " + s.effectiveCheckpoints.pushEndMs + "–" + s.effectiveCheckpoints.holdEndMs +
+      "ms · state " + s.phase +
+      (s.checkpointErrors.length ? " · " + s.checkpointErrors.join(", ") : "") +
+      (s.allocationDegraded ? " · allocationDegraded: insert window " + s.namedHoldMs + "ms / total stationary " + s.totalStationaryMs + "ms" : "") +
+      (RESOLVE_DIAGNOSTICS.length ? " · " + RESOLVE_DIAGNOSTICS.join(", ") : "") +
+      (OVERRIDE_DIAGNOSTICS.length ? " · " + OVERRIDE_DIAGNOSTICS.join(", ") : "");
+    if (typeof console !== "undefined" && console.warn) console.warn("T19 diagnostics", diag);
+  } else {
+    diagEl.style.display = "none"; diagEl.textContent = "";
+  }
+}
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  zoomWrap.style.transform = "scale(" + s.scale.toFixed(4) + ")";
+  const frames = zoomWrap.querySelectorAll ? zoomWrap.querySelectorAll(".frameBox") : [];
+  for (let i = 0; i < frames.length; i++) frames[i].style.display = s.frameVisible ? "" : "none";
+  const interiors = zoomWrap.querySelectorAll ? zoomWrap.querySelectorAll(".frameInterior") : [];
+  for (let i = 0; i < interiors.length; i++){
+    const kids = interiors[i].children || [];
+    for (let k = 0; k < kids.length; k++) kids[k].style.display = s.populated ? "" : "none";
+  }
+  surfaceDiagnostics(s);
+  const flames = zoomWrap.querySelectorAll ? zoomWrap.querySelectorAll(".flame") : [];
+  for (let i = 0; i < flames.length; i++){
+    const phase = parseFloat(flames[i].dataset.phase || "0");
+    const v = CONFIG.flicker.amp * Math.sin(s.t / CONFIG.flicker.periodDivisorMs + phase);
+    flames[i].style.opacity = String(1 - Math.abs(v));
+  }
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){
+  if (!playing) return;
+  const s = render(nowMs() - startStamp);
+  if (s.phase === "terminalHold"){ /* once mode: STOP and RETAIN the terminal frame */
+    playing = false; pausedAt = CONFIG.durationMs; rafId = null; return; }
+  rafId = requestAnimationFrame(tick);
+}
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ /* the ONLY return to t=0 in once mode: an explicit action */
+  pausedAt = 0; if (rafId) cancelAnimationFrame(rafId); rafId = null;
+  if (playing){ startStamp = nowMs(); tick(); } else { playing = false; play(); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

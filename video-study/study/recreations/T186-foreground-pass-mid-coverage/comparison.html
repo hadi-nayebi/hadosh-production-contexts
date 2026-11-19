@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T186 — comparison</title>
+<style>
+  body{margin:0;font-family:system-ui,sans-serif;background:#181818;color:#eee;}
+  .wrap{display:flex;gap:12px;padding:12px;box-sizing:border-box;}
+  .side{flex:1;min-width:0;}
+  .label{font-size:14px;margin:0 0 6px;}
+  video{width:100%;display:block;background:#000;}
+  iframe{width:100%;aspect-ratio:800/450;border:0;display:block;background:#000;}
+  .controls{padding:0 12px 14px;display:flex;gap:8px;}
+  button{font-size:16px;padding:10px 18px;min-height:44px;}
+  @media (max-width: 640px){ .wrap{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="side">
+    <p class="label">ORIGINAL — Watchtower of Turkey @ 188.30–190.80 (pass mid-coverage at 189.32)</p>
+    <video id="seg" src="segment.mp4" preload="auto" playsinline></video>
+  </div>
+  <div class="side">
+    <p class="label">RECREATION — T186 foreground pass, mid-coverage, parameterized</p>
+    <iframe id="rec" src="recreation.html" title="T186 recreation"></iframe>
+  </div>
+</div>
+<div class="controls">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnPause" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+</div>
+<script>
+"use strict";
+/* ONE shared control set. The recreation's clock is slaved to the video's currentTime:
+   every control drives the segment video, and a timeupdate/interval sync pushes the
+   video's currentTime (x1000 ms) into the recreation via window.__rec.seek(). */
+const seg = document.getElementById("seg");
+const recFrame = document.getElementById("rec");
+function recApi(){ try { return recFrame.contentWindow && recFrame.contentWindow.__rec; } catch (e) { return null; } }
+function syncRecreationToVideo(){
+  const api = recApi();
+  if (api) api.seek(seg.currentTime * 1000);
+}
+seg.addEventListener("timeupdate", syncRecreationToVideo);
+setInterval(syncRecreationToVideo, 50);
+document.getElementById("btnPlay").addEventListener("click", function(){ seg.play(); const a = recApi(); if (a) a.play(); syncRecreationToVideo(); });
+document.getElementById("btnPause").addEventListener("click", function(){ seg.pause(); const a = recApi(); if (a) a.pause(); syncRecreationToVideo(); });
+document.getElementById("btnRestart").addEventListener("click", function(){ seg.currentTime = 0; seg.play(); const a = recApi(); if (a) { a.seek(0); a.play(); } });
+recFrame.addEventListener("load", syncRecreationToVideo);
+</script>
+</body>
+</html>
