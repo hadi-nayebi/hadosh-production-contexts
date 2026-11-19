@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T99 comparison — original vs recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#181818;color:#f2f2f2;font-family:Arial,Helvetica,sans-serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:12px;}
+  .panes{display:flex;gap:12px;flex-wrap:wrap;}
+  .pane{flex:1 1 320px;min-width:280px;}
+  .pane h2{font-size:14px;margin:0 0 6px 0;line-height:1.35;}
+  .pane video,.pane iframe{width:100%;aspect-ratio:1/1;height:auto;border:0;background:#000;display:block;}
+  .pane video{aspect-ratio:16/9;}
+  .controls{display:flex;gap:10px;margin:14px 0;}
+  .controls button{flex:1;padding:14px;font-size:16px;border:0;border-radius:8px;background:#2f6fed;color:#fff;cursor:pointer;min-height:48px;}
+  @media (max-width:560px){ .panes{flex-direction:column;} .pane{flex:1 1 auto;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+  <div class="panes">
+    <div class="pane">
+      <h2>ORIGINAL — School of Motion 'Six Essential Motion Design Transitions' @ 0–14 s</h2>
+      <video id="orig" src="segment.mp4" playsinline muted loop></video>
+    </div>
+    <div class="pane">
+      <h2>RECREATION — T99 logo-mark assembly opening, parameterized</h2>
+      <iframe id="rec" src="recreation.html" title="T99 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+/* One synchronized control set: play/pause/restart drive BOTH sides.
+   The recreation is slaved to the video clock: on every timeupdate and on
+   each control action, the recreation iframe's render() is driven with
+   video.currentTime * 1000 ms, so both sides share one timeline. */
+var orig = document.getElementById("orig");
+var rec = document.getElementById("rec");
+function driveRecreation() {
+  try {
+    var w = rec.contentWindow;
+    if (w && typeof w.render === "function") { w.__slaved = true; w.render(orig.currentTime * 1000); }
+  } catch (e) { /* cross-file iframe access unavailable; recreation free-runs its own identical 14000 ms cycle */ }
+}
+rec.addEventListener("load", driveRecreation);
+orig.addEventListener("timeupdate", driveRecreation);
+document.getElementById("btnPlay").addEventListener("click", function () { orig.play(); driveRecreation(); });
+document.getElementById("btnPause").addEventListener("click", function () { orig.pause(); driveRecreation(); });
+document.getElementById("btnRestart").addEventListener("click", function () { orig.currentTime = 0; orig.play(); driveRecreation(); });
+</script>
+</body>
+</html>

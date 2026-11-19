@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T99 — Logo-mark assembly opening (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #stage svg{display:block;width:100%;height:100%;}
+  #wordmark{position:absolute;left:0;width:100%;text-align:center;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="scene" viewBox="0 0 360 360" preserveAspectRatio="xMidYMid meet" aria-label="Logo mark assembly">
+    <rect id="field" x="0" y="0" width="360" height="360"></rect>
+    <g id="cluster"></g>
+  </svg>
+  <div id="wordmark"></div>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  pieces: [
+    { color: "#ee2f36", scale: 1, from: { dx: -120, dy: -40, rot: -18 } },
+    { color: "#12e03c", scale: 1.15, from: { dx: 0, dy: 70, rot: 10 } },
+    { color: "#4653c7", scale: 1, from: { dx: 120, dy: 40, rot: 18 } }
+  ],
+  wordmark: {
+    text: "SCHOOL OF MOTION",
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: 24,
+    fontWeight: 700,
+    letterSpacing: 2,
+    gap: 0.07,
+    revealTravel: 0.3
+  },
+  palette: { bg: "#000000", ink: "#ffffff" },
+  mark: { size: 120, blend: "screen", spacing: 0.45, baseline: 0.52 },
+  motion: { easing: "outCubic" },
+  assembleMs: 2600,
+  staggerMs: 350,
+  resolveMs: 1200,
+  endHoldMs: 10200,
+  stage: { width: 360 }
+};
+
+/* Construction: exactly pieces.length persistent triangle nodes + one wordmark
+   node + one JS clock. Phase machine: ASSEMBLE (pieces slide/settle staggered,
+   each piece's exact final transform is set on completion) -> RESOLVE
+   (wordmark only; entered only when every piece reports complete) -> HOLD.
+   All content, timing, palette and shaping geometry are read from CONFIG;
+   the only numbers in the logic are structural identities (the equilateral
+   height ratio, the viewBox coordinate system, clamp bounds, indices). */
+
+const stageEl = document.getElementById("stage");
+const fieldEl = document.getElementById("field");
+const clusterEl = document.getElementById("cluster");
+const wordEl = document.getElementById("wordmark");
+const SVGNS = "http://www.w3.org/2000/svg";
+
+const stageW = CONFIG.stage.width;
+const COORD = 360; /* structural identity: the SVG viewBox coordinate system */
+const displayScale = stageW / COORD;
+stageEl.style.width = stageW + "px";
+stageEl.style.height = stageW + "px";
+stageEl.style.background = CONFIG.palette.bg;
+fieldEl.setAttribute("fill", CONFIG.palette.bg);
+
+/* Final cluster geometry, derived from CONFIG: three upright equilateral
+   triangles on a SHARED baseline (mark.baseline x COORD), centres spaced
+   mark.spacing x mark.size; a piece's scale (pieces[].scale) grows it from
+   that shared baseline, so a larger centre piece stands taller with its
+   base on the same line — the frame-measured settled form. */
+const centreX = COORD / 2;
+const baseY = COORD * CONFIG.mark.baseline;
+function pieceGeom(i) {
+  const s = CONFIG.mark.size * (CONFIG.pieces[i].scale || 1);
+  const h = s * Math.sqrt(3) / 2;
+  const cx = centreX + (i - (CONFIG.pieces.length - 1) / 2) * CONFIG.mark.size * CONFIG.mark.spacing;
+  return { s: s, h: h, cx: cx, apexY: baseY - h, cy: baseY - h / 2 };
+}
+function pointsFor(i) {
+  const p = pieceGeom(i);
+  return (p.cx - p.s / 2) + "," + baseY + " " +
+         p.cx + "," + p.apexY + " " +
+         (p.cx + p.s / 2) + "," + baseY;
+}
+
+const pieceEls = CONFIG.pieces.map(function (piece, i) {
+  const g = document.createElementNS(SVGNS, "g");
+  g.setAttribute("class", "piece");
+  const poly = document.createElementNS(SVGNS, "polygon");
+  poly.setAttribute("points", pointsFor(i));
+  poly.setAttribute("fill", piece.color);
+  poly.style.mixBlendMode = CONFIG.mark.blend;
+  g.appendChild(poly);
+  clusterEl.appendChild(g);
+  return g;
+});
+
+const effFontSize = CONFIG.wordmark.fontSize * displayScale;
+wordEl.textContent = CONFIG.wordmark.text;
+wordEl.style.color = CONFIG.palette.ink;
+wordEl.style.fontFamily = CONFIG.wordmark.fontFamily;
+wordEl.style.fontSize = effFontSize + "px";
+wordEl.style.fontWeight = CONFIG.wordmark.fontWeight;
+wordEl.style.letterSpacing = (CONFIG.wordmark.letterSpacing * displayScale) + "px";
+wordEl.style.top = ((baseY + COORD * CONFIG.wordmark.gap) / COORD * 100) + "%";
+/* Wordmark fitting policy: if the rendered line exceeds the stage, the font
+   is scaled down proportionally — a longer swapped wordmark can never clip. */
+if (typeof wordEl.scrollWidth === "number" && wordEl.scrollWidth > stageW) {
+  wordEl.style.fontSize = (effFontSize * stageW / wordEl.scrollWidth) + "px";
+}
+
+const EASINGS = {
+  outCubic: function (x) { return 1 - Math.pow(1 - x, 3); },
+  outQuad: function (x) { return 1 - (1 - x) * (1 - x); },
+  linear: function (x) { return x; }
+};
+const ease = EASINGS[CONFIG.motion.easing] || EASINGS.outCubic;
+function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+/* Timing validity: durations are floored at 1 ms so a swapped CONFIG can
+   never produce a zero/negative piece duration or an undefined phase
+   boundary — the completion guarantee survives invalid timing swaps. */
+const pieceDur = Math.max(1, CONFIG.assembleMs - (CONFIG.pieces.length - 1) * CONFIG.staggerMs);
+const resolveDur = Math.max(1, CONFIG.resolveMs);
+const cycleMs = CONFIG.assembleMs + CONFIG.resolveMs + CONFIG.endHoldMs;
+
+function render(tMs) {
+  const t = ((tMs % cycleMs) + cycleMs) % cycleMs;
+  let allSettled = true;
+  CONFIG.pieces.forEach(function (piece, i) {
+    const p = clamp01((t - i * CONFIG.staggerMs) / pieceDur);
+    if (p < 1) { allSettled = false; }
+    const e = ease(p);
+    const dx = piece.from.dx * (1 - e);
+    const dy = piece.from.dy * (1 - e);
+    const rot = piece.from.rot * (1 - e);
+    const pose = pieceGeom(i);
+    pieceEls[i].setAttribute("transform",
+      "translate(" + dx + " " + dy + ") rotate(" + rot + " " + pose.cx + " " + pose.cy + ")");
+  });
+  /* Phase exclusivity (Owner Cure 2): the wordmark resolves only in the
+     RESOLVE phase, which the machine enters only after every piece has
+     reported its completed final transform (t >= assembleMs by construction:
+     last piece start + pieceDur == assembleMs). */
+  let wmOpacity = 0, wmShift = 0;
+  if (allSettled && t >= CONFIG.assembleMs) {
+    const rp = clamp01((t - CONFIG.assembleMs) / resolveDur);
+    const re = ease(rp);
+    wmOpacity = re;
+    wmShift = (1 - re) * effFontSize * CONFIG.wordmark.revealTravel;
+  }
+  wordEl.style.opacity = wmOpacity;
+  wordEl.style.transform = "translateY(" + wmShift + "px)";
+}
+
+window.render = render;
+let startStamp = null;
+function frame(now) {
+  if (startStamp === null) { startStamp = now; }
+  if (!window.__slaved) { render(now - startStamp); }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
