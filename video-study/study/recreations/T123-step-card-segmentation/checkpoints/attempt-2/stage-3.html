@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T123 — Step-card segmentation (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #headline{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;}
+  #headlinePrev{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;}
+  .chip{display:inline-block;}
+  #tiles{position:absolute;left:0;right:0;}
+  .tile{position:absolute;box-sizing:border-box;text-align:center;}
+  .tnum,.ttitle,.tsub{line-height:1;}
+  #err{position:absolute;left:0;top:0;right:0;display:none;color:#fff;background:#a00;font:12px monospace;padding:4px;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="headlinePrev"></div>
+  <div id="headline"></div>
+  <div id="tiles"></div>
+  <div id="err"></div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / font / geometry value lives here ============ */
+const CONFIG = {
+  steps: [
+    {n: "01", title: "Download", sub: "link in the description", headlineAtMs: 2000, tileAtMs: 3250,
+     headline: [{t: "First, "}, {t: "download the free plugin", style: "blue"}]},
+    {n: "02", title: "Add it", sub: "to Claude", headlineAtMs: 8000, tileAtMs: 6500,
+     headline: [{t: "Ask Claude to "}, {t: "install it", style: "chip"}]}
+  ],
+  tileEnterMs: 600,
+  headlineEnterMs: 600,
+  cycleMs: 14000,
+  stage: {width: 360, height: 203},
+  grid: {cellPx: 18, linePx: 1},
+  /* Palette ownership: numerals and blue headline spans consume palette.blue;
+     card borders consume the separate palette.cardEdge; the page background
+     behind the stage consumes palette.pageBg. */
+  palette: {pageBg: "#070a18", field: "#0b1026", grid: "rgba(120,140,255,0.07)", ink: "#ffffff", blue: "#3b82f6",
+            chipBg: "#ffffff", chipInk: "#10131f", card: "#131a33", cardEdge: "#3b82f6", subInk: "#c6cbdd"},
+  type: {font: "Arial, Helvetica, sans-serif",
+         headlinePx: 18, headlineWeight: 800, headlineLH: 1.15,
+         numeralPx: 24, numeralWeight: 800, numeralLH: 1.15,
+         titlePx: 16, titleWeight: 800, titleLH: 1.25,
+         subPx: 16, subWeight: 400, subLH: 1.25},
+  geom: {headlineTop: 12, tileY: 66, tileW: 158, tileH: 112, tileGap: 12, tileRadius: 10,
+         tilePadTop: 9, tilePadX: 8, tileBorderPx: 1, numTitleGap: 5, titleSubGap: 3,
+         chipPadX: 6, chipPadY: 1, chipRadius: 5,
+         enterRisePx: 10, enterFromScale: 0.94, enterFromOpacity: 0.0, enterEasing: "cubic-out"}
+};
+const TOP_KEYS = ["steps","tileEnterMs","headlineEnterMs","cycleMs","stage","grid","palette","type","geom"];
+
+/* ============ override (?cfg= JSON) ============ */
+function deepMerge(base, over){
+  if (Array.isArray(over)){
+    /* Array overrides are ATOMIC: an override array replaces the base
+       array whole — no trailing base entries survive. */
+    return JSON.parse(JSON.stringify(over));
+  }
+  if (over && typeof over === "object"){
+    const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
+    for (const k of Object.keys(over)) out[k] = deepMerge(base ? base[k] : undefined, over[k]);
+    return out;
+  }
+  return over;
+}
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+/* Validation: anchors finite, >= 0, < cycleMs; per-type anchor sequences
+   strictly increasing in array order (an unsorted or duplicate sequence is
+   REJECTED, never silently reordered — greatest-eligible selection in
+   stateAt then operates on validated sequences and on the cross-type order
+   the specimen needs, e.g. a tile anchor before the next headline anchor);
+   durations positive; steps non-empty; tile row fits the stage width.
+   Rejected configurations return {cfg: null, errors: [...]}. */
+function validateConfig(cfg){
+  const errors = [];
+  if (!cfg || typeof cfg !== "object") return ["cfg: expected object"];
+  if (!(cfg.cycleMs > 0) || !Number.isFinite(cfg.cycleMs)) errors.push("cycleMs: must be a positive finite number");
+  if (!(cfg.tileEnterMs > 0) || !Number.isFinite(cfg.tileEnterMs)) errors.push("tileEnterMs: must be a positive finite number");
+  if (!(cfg.headlineEnterMs > 0) || !Number.isFinite(cfg.headlineEnterMs)) errors.push("headlineEnterMs: must be a positive finite number");
+  if (!Array.isArray(cfg.steps) || cfg.steps.length === 0) { errors.push("steps: must be a non-empty array"); return errors; }
+  let prevH = -Infinity, prevT = -Infinity;
+  cfg.steps.forEach(function(s, i){
+    if (!s || typeof s !== "object"){ errors.push("steps[" + i + "]: must be an object"); return; }
+    if (typeof s.n !== "string" || typeof s.title !== "string" || typeof s.sub !== "string")
+      errors.push("steps[" + i + "]: n/title/sub must be strings");
+    if (!Array.isArray(s.headline) || s.headline.length === 0 ||
+        s.headline.some(function(sp){ return !sp || typeof sp.t !== "string"; }))
+      errors.push("steps[" + i + "].headline: must be a non-empty array of spans with text");
+    const a = stepAnchors(s);
+    if (!Number.isFinite(a.headlineAtMs) || a.headlineAtMs < 0 || a.headlineAtMs >= cfg.cycleMs)
+      errors.push("steps[" + i + "].headlineAtMs: must be finite, >= 0 and < cycleMs");
+    if (!Number.isFinite(a.tileAtMs) || a.tileAtMs < 0 || a.tileAtMs >= cfg.cycleMs)
+      errors.push("steps[" + i + "].tileAtMs: must be finite, >= 0 and < cycleMs");
+    if (Number.isFinite(a.headlineAtMs)){ if (a.headlineAtMs <= prevH) errors.push("steps: headline anchors must be strictly increasing"); prevH = a.headlineAtMs; }
+    if (Number.isFinite(a.tileAtMs)){ if (a.tileAtMs <= prevT) errors.push("steps: tile anchors must be strictly increasing"); prevT = a.tileAtMs; }
+  });
+  const g = cfg.geom || {};
+  const rowW = cfg.steps.length * g.tileW + Math.max(0, cfg.steps.length - 1) * g.tileGap;
+  if (!(g.tileW > 0) || !Number.isFinite(rowW) || rowW > cfg.stage.width)
+    errors.push("layout: tile row width " + rowW + " exceeds stage width " + (cfg.stage && cfg.stage.width));
+  return errors;
+}
+function resolveConfig(raw){
+  let cfg;
+  if (raw === null || raw === undefined || raw === "") cfg = clone(CONFIG);
+  else {
+    let over;
+    try { over = JSON.parse(raw); } catch(e){ return {cfg: null, errors: ["cfg: malformed JSON"]}; }
+    if (!over || typeof over !== "object" || Array.isArray(over)) return {cfg: null, errors: ["cfg: expected object"]};
+    cfg = deepMerge(clone(CONFIG), over);
+  }
+  if (Array.isArray(cfg.steps)) cfg.steps.forEach(function(s){
+    if (s && typeof s === "object"){ const a = stepAnchors(s); s.headlineAtMs = a.headlineAtMs; s.tileAtMs = a.tileAtMs; delete s.atMs; }
+  });
+  const errors = validateConfig(cfg);
+  if (errors.length) return {cfg: null, errors: errors};
+  return {cfg: cfg, errors: []};
+}
+
+/* ============ pure logic (node-testable) ============ */
+function easeOutCubic(p){ return 1 - Math.pow(1 - p, 3); }
+function enterP(u, atMs, durationMs, cfg){
+  if (u < atMs) return 0;
+  const raw = Math.min(1, (u - atMs) / durationMs);
+  const easing = (cfg && cfg.geom && cfg.geom.enterEasing) || "cubic-out";
+  if (easing === "linear") return raw;
+  return easeOutCubic(raw);
+}
+/* Split-anchor defaulting: a step that supplies only the legacy atMs derives
+   both split anchors from it (shared-anchor default preserved). */
+function stepAnchors(s){
+  const legacy = (s && typeof s.atMs === "number") ? s.atMs : undefined;
+  return {
+    headlineAtMs: (s && typeof s.headlineAtMs === "number") ? s.headlineAtMs : legacy,
+    tileAtMs: (s && typeof s.tileAtMs === "number") ? s.tileAtMs : legacy
+  };
+}
+/* State at cycle time t. Exactly one active headline: the step with the
+   GREATEST eligible headlineAtMs (not array order), or none before the
+   first. Tiles are MONOTONIC within a cycle: tile i is present iff
+   u >= steps[i].tileAtMs; only the cycle wrap (u returns to 0) clears
+   them. Accumulation is a construction property. Headline and tile
+   entrances use separate durations (headlineEnterMs / tileEnterMs);
+   onset is the anchor itself, fully-visible is anchor + duration. */
+function slotLeft(rank, count, cfg){
+  const g = cfg.geom;
+  return (cfg.stage.width - (count * g.tileW + Math.max(0, count - 1) * g.tileGap)) / 2 + rank * (g.tileW + g.tileGap);
+}
+/* Tile x positions at cycle time u. Slots are COMPUTED for the currently
+   present set (centred row), never reflowed: when a tile joins, every
+   already-present tile interpolates from its position at the join instant
+   to its new slot over the joining tile's entrance window, eased by the
+   same entrance progress. If another tile joins mid-shift, the new
+   segment starts from the positions interpolated at that instant, so x
+   stays continuous under overlapping entrances. A joining tile starts
+   at its own new slot (its entrance is scale/rise/opacity). */
+function tilePositions(u, cfg){
+  const joins = cfg.steps.map(function(s, i){ return {i: i, at: stepAnchors(s).tileAtMs}; })
+    .filter(function(j){ return typeof j.at === "number"; })
+    .sort(function(a, b){ return a.at - b.at; });
+  let segStart = null, fromPos = {}, targetPos = {}, presentList = [];
+  for (const j of joins){
+    if (u < j.at) break;
+    const atPos = {};
+    if (segStart !== null){
+      const p = enterP(j.at, segStart, cfg.tileEnterMs, cfg);
+      for (const k in targetPos) atPos[k] = fromPos[k] + (targetPos[k] - fromPos[k]) * p;
+    }
+    presentList = presentList.concat([j.i]).sort(function(a, b){ return a - b; });
+    const newTarget = {};
+    presentList.forEach(function(stepIdx, rank){ newTarget[stepIdx] = slotLeft(rank, presentList.length, cfg); });
+    if (!(j.i in atPos)) atPos[j.i] = newTarget[j.i];
+    fromPos = atPos; targetPos = newTarget; segStart = j.at;
+  }
+  if (segStart === null) return {};
+  const p = enterP(u, segStart, cfg.tileEnterMs, cfg);
+  const out = {};
+  for (const k in targetPos) out[k] = fromPos[k] + (targetPos[k] - fromPos[k]) * p;
+  return out;
+}
+function stateAt(t, cfg){
+  const u = ((t % cfg.cycleMs) + cfg.cycleMs) % cfg.cycleMs;
+  let active = -1, activeAt = -Infinity;
+  cfg.steps.forEach(function(s, i){
+    const a = stepAnchors(s).headlineAtMs;
+    if (typeof a === "number" && u >= a && a > activeAt){ active = i; activeAt = a; }
+  });
+  const headlineP = active < 0 ? 0 : enterP(u, activeAt, cfg.headlineEnterMs, cfg);
+  /* Crossfade: during the incoming headline's entrance window the outgoing
+     headline (the predecessor by anchor time) stays rendered at opacity
+     1 - headlineP. If a further headline arrives before the fade completes,
+     the predecessor is the then-active headline and earlier layers drop —
+     exactly one incoming + one outgoing layer ever render. Logical
+     exclusivity (one ACTIVE headline) is unchanged. */
+  let prevHeadline = -1, prevOpacity = 0;
+  if (active >= 0 && u < activeAt + cfg.headlineEnterMs){
+    let predAt = -Infinity;
+    cfg.steps.forEach(function(s, i){
+      const a = stepAnchors(s).headlineAtMs;
+      if (i !== active && typeof a === "number" && a < activeAt && a > predAt){ prevHeadline = i; predAt = a; }
+    });
+    if (prevHeadline >= 0) prevOpacity = 1 - headlineP;
+    else prevHeadline = -1;
+  }
+  const positions = tilePositions(u, cfg);
+  const tiles = cfg.steps.map(function(s, i){
+    const a = stepAnchors(s).tileAtMs;
+    const p = enterP(u, a, cfg.tileEnterMs, cfg);
+    return {index: i, present: u >= a, p: p, x: (i in positions) ? positions[i] : null,
+      opacity: cfg.geom.enterFromOpacity + (1 - cfg.geom.enterFromOpacity) * p,
+      scale: cfg.geom.enterFromScale + (1 - cfg.geom.enterFromScale) * p,
+      risePx: cfg.geom.enterRisePx * (1 - p)};
+  });
+  return {u: u, active: active, headlineP: headlineP,
+    prevHeadline: prevHeadline, prevOpacity: prevOpacity,
+    tiles: tiles};
+}
+function gridCSS(cfg){
+  const w = cfg.grid.linePx + "px";
+  return "linear-gradient(" + cfg.palette.grid + " " + w + ", transparent " + w + ")," +
+         "linear-gradient(90deg, " + cfg.palette.grid + " " + w + ", transparent " + w + ")";
+}
+/* Character width model (Arial advance widths, em fractions) for the fit harness. */
+const CHAR_W = {upper: 0.68, lower: 0.52, space: 0.278, digit: 0.556, punct: 0.30};
+function textWidthPx(text, fontPx, weight){
+  let em = 0;
+  for (const ch of text){
+    if (ch === " ") em += CHAR_W.space;
+    else if (ch >= "A" && ch <= "Z") em += CHAR_W.upper;
+    else if (ch >= "0" && ch <= "9") em += CHAR_W.digit;
+    else if (".,;:!?'’-—".indexOf(ch) >= 0) em += CHAR_W.punct;
+    else em += CHAR_W.lower;
+  }
+  if (weight >= 700) em *= 1.06;
+  return em * fontPx;
+}
+function wrapLines(text, fontPx, weight, maxW){
+  const words = text.split(" ");
+  const lines = []; let cur = "";
+  for (const w of words){
+    const trial = cur === "" ? w : cur + " " + w;
+    if (textWidthPx(trial, fontPx, weight) <= maxW || cur === "") cur = trial;
+    else { lines.push(cur); cur = w; }
+  }
+  if (cur !== "") lines.push(cur);
+  return lines;
+}
+function headlineText(step){ return step.headline.map(function(s){ return s.t; }).join(""); }
+function layoutModel(cfg){
+  const g = cfg.geom, ty = cfg.type;
+  const tileInnerW = g.tileW - 2 * g.tilePadX - 2 * g.tileBorderPx;
+  const rows = cfg.steps.map(function(s, i){
+    return {index: i,
+      headlineW: textWidthPx(headlineText(s), ty.headlinePx, ty.headlineWeight),
+      numeralW: textWidthPx(s.n, ty.numeralPx, ty.numeralWeight),
+      titleW: textWidthPx(s.title, ty.titlePx, ty.titleWeight),
+      subLines: wrapLines(s.sub, ty.subPx, ty.subWeight, tileInnerW),
+      subLineW: wrapLines(s.sub, ty.subPx, ty.subWeight, tileInnerW).map(function(l){ return textWidthPx(l, ty.subPx, ty.subWeight); })};
+  });
+  const ink = 0.716; /* cap/ascender ratio — every subject line carries ascenders or caps */
+  return {stageW: cfg.stage.width, stageH: cfg.stage.height, rows: rows, tileInnerW: tileInnerW,
+    headlineInkH: ty.headlinePx * ink, numeralInkH: ty.numeralPx * ink,
+    titleInkH: ty.titlePx * ink, subInkH: ty.subPx * ink,
+    tilesTotalW: cfg.steps.length * g.tileW + Math.max(0, cfg.steps.length - 1) * g.tileGap,
+    slotsFullSet: cfg.steps.map(function(s, i){ return slotLeft(i, cfg.steps.length, cfg); }),
+    tileBottom: g.tileY + g.tileH, cycle: cfg.cycleMs};
+}
+
+/* ============ DOM construction ============ */
+function build(cfg){
+  const g = cfg.geom, ty = cfg.type, pal = cfg.palette;
+  document.body.style.background = pal.pageBg;
+  const stage = document.getElementById("stage");
+  stage.style.width = cfg.stage.width + "px";
+  stage.style.height = cfg.stage.height + "px";
+  stage.style.background = pal.field;
+  stage.style.backgroundImage = gridCSS(cfg);
+  stage.style.backgroundSize = cfg.grid.cellPx + "px " + cfg.grid.cellPx + "px";
+  stage.style.fontFamily = ty.font;
+  const hl = document.getElementById("headline");
+  hl.style.top = g.headlineTop + "px";
+  hl.style.fontSize = ty.headlinePx + "px";
+  hl.style.fontWeight = String(ty.headlineWeight);
+  hl.style.lineHeight = String(ty.headlineLH);
+  hl.style.color = pal.ink;
+  const hp = document.getElementById("headlinePrev");
+  hp.style.top = g.headlineTop + "px";
+  hp.style.fontSize = ty.headlinePx + "px";
+  hp.style.fontWeight = String(ty.headlineWeight);
+  hp.style.lineHeight = String(ty.headlineLH);
+  hp.style.color = pal.ink;
+  hp.style.display = "none";
+  const row = document.getElementById("tiles");
+  row.style.top = g.tileY + "px";
+  cfg.steps.forEach(function(s){
+    const tile = document.createElement("div");
+    tile.className = "tile";
+    tile.style.width = g.tileW + "px"; tile.style.height = g.tileH + "px";
+    tile.style.background = pal.card;
+    tile.style.border = g.tileBorderPx + "px solid " + pal.cardEdge;
+    tile.style.borderRadius = g.tileRadius + "px";
+    tile.style.paddingTop = g.tilePadTop + "px";
+    tile.style.display = "none";
+    const num = document.createElement("div");
+    num.className = "tnum"; num.textContent = s.n;
+    num.style.color = pal.blue; num.style.fontSize = ty.numeralPx + "px"; num.style.fontWeight = String(ty.numeralWeight);
+    num.style.lineHeight = String(ty.numeralLH);
+    const ttl = document.createElement("div");
+    ttl.className = "ttitle"; ttl.textContent = s.title;
+    ttl.style.color = pal.ink; ttl.style.fontSize = ty.titlePx + "px"; ttl.style.fontWeight = String(ty.titleWeight);
+    ttl.style.lineHeight = String(ty.titleLH);
+    ttl.style.marginTop = g.numTitleGap + "px";
+    const sub = document.createElement("div");
+    sub.className = "tsub"; sub.textContent = s.sub;
+    sub.style.color = pal.subInk; sub.style.fontSize = ty.subPx + "px"; sub.style.fontWeight = String(ty.subWeight);
+    sub.style.lineHeight = String(ty.subLH);
+    sub.style.marginTop = g.titleSubGap + "px";
+    sub.style.paddingLeft = g.tilePadX + "px"; sub.style.paddingRight = g.tilePadX + "px";
+    tile.appendChild(num); tile.appendChild(ttl); tile.appendChild(sub);
+    row.appendChild(tile);
+  });
+  return layoutModel(cfg);
+}
+let renderedHeadline = -2, renderedPrev = -2;
+function renderHeadlineInto(cfg, el, stepIdx){
+  el.innerHTML = "";
+  if (stepIdx < 0) return;
+  const g = cfg.geom, pal = cfg.palette;
+  cfg.steps[stepIdx].headline.forEach(function(span){
+    const sp = document.createElement("span");
+    sp.textContent = span.t;
+    if (span.style === "blue"){ sp.style.color = pal.blue; }
+    else if (span.style === "chip"){
+      sp.className = "chip";
+      sp.style.background = pal.chipBg; sp.style.color = pal.chipInk;
+      sp.style.padding = g.chipPadY + "px " + g.chipPadX + "px";
+      sp.style.borderRadius = g.chipRadius + "px";
+    }
+    el.appendChild(sp);
+  });
+}
+function renderHeadline(cfg, active){
+  if (active === renderedHeadline) return;
+  renderedHeadline = active;
+  renderHeadlineInto(cfg, document.getElementById("headline"), active);
+}
+function renderPrev(cfg, prev){
+  if (prev === renderedPrev) return;
+  renderedPrev = prev;
+  renderHeadlineInto(cfg, document.getElementById("headlinePrev"), prev);
+}
+function applyFrame(cfg, t){
+  const st = stateAt(t, cfg);
+  renderHeadline(cfg, st.active);
+  renderPrev(cfg, st.prevHeadline);
+  const hl = document.getElementById("headline");
+  hl.style.opacity = String(cfg.geom.enterFromOpacity + (1 - cfg.geom.enterFromOpacity) * st.headlineP);
+  const hp = document.getElementById("headlinePrev");
+  hp.style.display = st.prevHeadline >= 0 ? "block" : "none";
+  hp.style.opacity = String(st.prevOpacity);
+  const row = document.getElementById("tiles");
+  st.tiles.forEach(function(tile, i){
+    const el = row.children[i];
+    el.style.display = tile.present ? "block" : "none";
+    if (tile.x !== null && tile.x !== undefined) el.style.left = tile.x + "px";
+    el.style.opacity = String(tile.opacity);
+    el.style.transform = "scale(" + tile.scale + ") translateY(" + tile.risePx + "px)";
+  });
+  return st;
+}
+if (typeof document !== "undefined"){
+  const params = new URLSearchParams(location.search);
+  const res = resolveConfig(params.get("cfg"));
+  if (!res.cfg){
+    const e = document.getElementById("err");
+    e.style.display = "block"; e.textContent = res.errors.join("; ");
+  } else {
+    const cfg = res.cfg;
+    build(cfg);
+    let start = performance.now();
+    let frozen = null;
+    window.addEventListener("message", function(ev){
+      if (ev.data === "pause" && frozen === null) frozen = performance.now() - start;
+      if (ev.data === "play" && frozen !== null){ start = performance.now() - frozen; frozen = null; }
+    });
+    function tick(now){ applyFrame(cfg, frozen !== null ? frozen : now - start); requestAnimationFrame(tick); }
+    requestAnimationFrame(tick);
+    window.__t123 = {cfg: cfg, stateAt: stateAt, layout: layoutModel(cfg)};
+  }
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = {CONFIG: CONFIG, resolveConfig: resolveConfig, stateAt: stateAt,
+    layoutModel: layoutModel, wrapLines: wrapLines, textWidthPx: textWidthPx, gridCSS: gridCSS,
+    stepAnchors: stepAnchors, enterP: enterP, build: build, applyFrame: applyFrame,
+    tilePositions: tilePositions, slotLeft: slotLeft, validateConfig: validateConfig};
+}
+</script>
+</body>
+</html>

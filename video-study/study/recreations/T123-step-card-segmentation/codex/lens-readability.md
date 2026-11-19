@@ -1,0 +1,388 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T123-step-card-segmentation/codex
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e4c9-f6a7-76b2-9a81-0dbad04e410c
+--------
+user
+# Codex scoring wave — lens: readability — T123 step-card segmentation, attempt 1, Cycle 020 Wave 17
+
+## Standing header
+1. Consumer: recreation job's §5 Verify (tier recommendation: RECREATED requires five-lens average >= 85 AND no lens < 70) + the cycle's Condense (cure list). The decision priced: this lens's score for attempt 1 and exactly what a next attempt must cure.
+2. Working record: the item's artifact directory hidden_files/study/recreations/T123-step-card-segmentation/ (codex/ returns + scores.md) — this run builds from the payload below and its return files verbatim at codex/lens-readability.md.
+3. Body-write: the return must end with "SCORE: <integer 0-100>" on its own line and a "BODY-WRITE:" line naming what it filed; a read-only run closes "Body-write: none (read-only run)" and the consumer persists the return verbatim.
+
+## Lens instruction
+READABILITY — subject text legible at phone size (360 px stage) against its own ground. Price: headline ink (18 px) and operative-span treatment (blue on dark navy; white chip), tile numeral (24 px blue), tile title and sub ink (16 px) against the ~11 px legibility floor as measured in the fit table, the grid ground's competition with the text, and the headline/tile hierarchy. The family's named risk is tile-text legibility at phone size.
+
+## Binding
+This payload binds recreation.html SHA-256: 49e2e08318bcd973038f099e35f246b58392f87070e107421ed27baf7ff570c2
+All five lens payloads of this attempt carry the identical hash.
+
+## NEUTRAL TECHNIQUE FACTS (catalogue + segment observation)
+- Mechanics (digest P6-T11 + TECHNIQUES T123): the procedure is chopped into numbered, titled step cards that appear as the narration reaches them ("01 Download"), each card a promise the next screen insert redeems; the viewer always knows which step they are inside and how the steps accumulate.
+- RUN §1b seat census: screen insert first (~264-271 s), then headline "First, download the free plugin" (blue operative) (~272 s) with step tile "01 / Download / link in the description" appearing below-left of centre (~272-273 s); headline "Ask Claude to install it" (chip) with a second tile "02 / Add it / to Claude" joining (~282-283 s) — tiles accumulate side by side, numbered in blue.
+- Builder's firsthand segment census (0.25 s frames, segment 270-284 s, filed in the build record): insert tail at seg 0.00; headline 1 present by seg 2.00, no tile at seg 2.75, tile 01 present at seg 3.50; BOTH tiles present under headline 1 at seg 7.00; headline 2 + prompt bar at seg 8.50; next (non-technique) headline at seg 12.50.
+- Schedule basis: segment-anchored (Amendment A7). Binding Plan amendment (§2b): per-step atMs — step 1 headline+tile at 2000 ms, step 2 headline+tile at 12000 ms; tiles accumulate and hold to cycle end; cycle 14000 ms.
+- Named deferral (printed): the specimen's screen inserts are not recreated (specimen media, purity-barred); the recreated layer is headlines + accumulating numbered tiles. The prompt bar under headline 2 is insert-layer support, same deferral class.
+- Construction: DOM, CONFIG at top, JS-clock state machine; stage 360x203; dark-navy grid ground.
+
+## SCORE-BLIND BUILD RECORD
+# T123 — Step-card segmentation · build record, SCORE-BLIND (attempt 1, Cycle 020 Wave 17, queue #60)
+
+## Observe gate-out
+- **Consumer: DLC assembler / Academy tutorial surfaces** — diagram/transition step segmentation (per wave RUN.md §1).
+- **Mechanics:** the procedure is chopped into numbered, titled step cards that appear as the narration reaches them; each card a promise the next screen insert redeems; tiles accumulate and the viewer always knows which step they are inside. Designed layer: headline per step at top on a dark-navy grid ground, operative span blue or in a white chip; numbered tiles below (blue numeral + title + sub).
+- **Schedule basis: `segment-anchored`** (Amendment A7) — segment 270–284 s of the Packet #6 source; per §2b the build's steps sit at atMs 2000 / 12000 inside a 14000 ms cycle.
+- **Named deferral (printed, §2b):** the specimen's screen inserts are NOT recreated — they are specimen media (purity-barred in any case). The technique recreated is the step-card segmentation layer (headlines + accumulating numbered tiles); the ORIGINAL side of the comparison carries the inserts.
+- **Guard firings at Observe/Plan:** codex-observe → **CONFIRMED-WITH-GAPS** (`codex/codex-observe.md`); codex-plan-review → **REVISE**, dispositions below. Wave gates: jev-observe-exit T123 ADVANCE · jev-plan-exit T123 REVISE cured by §2b amendments (per-step atMs; deferral named; G1-A instruments).
+
+## codex-observe gaps — dispositions
+1. *ev/t285.jpg timestamp vs the [270,284) cut* — CLOSED firsthand: the builder's own 0.25 s census of the cut segment (below) establishes the card states directly from the segment itself; ev/t285 (source ≈285 s) sits just past the cut and is not load-bearing for this build.
+2. *Verify the 264–283 s sub-beats against the source* — CLOSED by the segment census below (segment covers 270–284 s; the pre-270 insert portion is outside the cut and outside the recreated layer per the named deferral).
+3. *No-prior-attempt census + sibling status* — CLOSED firsthand: RUN §1's binding artifact census found no T123 directory before this wave (58 directories, none T123); this directory was created by this attempt. T102's scores.md was read firsthand by the builder (88/86/100/86/84 = 444/5 = 88.8, recomputes exactly); T45 PASS 88.2 is carried as a labeled family reference only — no sibling score enters this attempt's average (INSTRUCTION §6.3).
+4. *ffprobe evidence for 638.494 s* — CLOSED: builder re-ran ffprobe on the archived source this attempt: **638.494 s** (matches the seat census).
+
+## codex-plan-review — dispositions (REVISE; advisory per the 2026-11-14 ruling)
+1. *Accumulation promised, not guaranteed* — **CURED BY CONSTRUCTION:** one persistent tile node per step, created once at build; presence is monotonic within a cycle (`u >= atMs`, harness-swept at 50 ms steps: tile count never decreases inside a cycle); only the cycle wrap clears tiles. Numeral legibility is measured, not asserted (fit-table: numeral ink 17.18 px).
+2. *Headline exclusivity + separate headlineAtMs/tileAtMs* — exclusivity **CURED BY CONSTRUCTION:** exactly one active headline (the latest step whose atMs has passed), selected in stateAt; entrances cannot produce two active headlines. The separate-anchors revision is **SET ASIDE with reason:** RUN §2b — the wave's binding Plan amendment, consumed by the seat before Execute — fixes per-step `atMs` (step 1 headline+tile at 2000 ms, step 2 headline+tile at 12000 ms), and the builder's charge binds to §2 as amended. The measured tension is printed as a deviation below, not hidden; re-anchoring is the seat's/Condense's call, not the builder's.
+3. *Parameterization incomplete* — **CURED:** typography (sizes, weights, line-heights), grid cell, tile geometry, gaps, chip geometry, entrance distance/scale/opacity are all CONFIG keys (config-census.md, HIT list EMPTY; the census caught CSS line-height literals during Execute and they were moved into CONFIG pre-wave). Headline emphasis is the `style` field on each span with defined plain/blue/chip rendering branches. Added boundary checks beyond the swap: state sweeps at every event boundary + cycle reset (recorded under Own checks).
+4. *Bar arithmetic / five-lens forecast* — recorded: PASS needs sum ≥ 425 AND every lens ≥ 70. The bar's two gates are recorded above; the builder's priced risk, on the firsthand census, sits with the step-2 anchor deviation printed in the Segment section.
+5. *Size discipline* — noted: build scoped to headlines + accumulating tiles + grid ground only; inserts deferred.
+
+## Segment + measured frames
+- Segment: cut from `hidden_files/study/video-digests/2026-11-15-yt-l2pkb1ebmq/source.mp4` at 270.0–284.0 s, re-encoded (libx264/yuv420p/aac, faststart). ffprobe: **14.000 s**, 1920×1012, 1149456 bytes.
+- Frames extracted at 0.25 s steps (56 frames, `frames/seg-00.00.jpg` … `seg-13.75.jpg`), viewed firsthand by the builder. Measured table (segment time → source time → state):
+  - 0.00 s (src 270.0): screen-insert tail (ElevenLabs page) — the deferred layer.
+  - 2.00 s (src 272.0): headline 1 "First, **download the free plugin**" (blue operative) present on the grid ground; no tile yet.
+  - 2.75 s (src 272.75): headline 1, still no tile. 3.50 s (src 273.5): tile 01 present — centred card, blue "01", white "Download", grey "link in the description", blue edge, connector stub right.
+  - 5.00 s (src 275.0): headline 1 + tile 01, unchanged.
+  - 7.00 s (src 277.0): headline 1 + BOTH tiles (01 Download · 02 "Add it / to Claude") side by side with connector — accumulation confirmed inside the segment.
+  - 8.50 s (src 278.5): headline 2 "Ask Claude to **install it**" (chip) + prompt bar ("Instal|…") — the prompt bar is insert-layer support, outside the recreated layer.
+  - 10.00–12.00 s: headline 2 + completed prompt bar. 12.50 s (src 282.5): next headline "The plugin: **Kaz Documentary**" (blue) — outside this technique's two steps.
+- **DEVIATION (printed, priced):** the segment's own frames place tile 02 at seg ≈6–7 s and headline 2 at seg ≈8–8.5 s, while binding §2b anchors step 2 (headline+tile) at 12000 ms and step 1's tile with its headline at 2000 ms (segment: headline 1 by 2.00 ✓, tile 01 at ≈3.0–3.5). The build follows §2b exactly; the discrepancy is the timing lens's to price. The tile-01 lag (≈1–1.5 s after its headline) is likewise absorbed into the shared atMs by §2b's form.
+
+## Build
+- `recreation.html` — ONE self-contained file; CONFIG at top; DOM construction; JS-clock state machine (stateAt: exclusive active headline + monotonic tile accumulation, 14000 ms cycle, loops); grid ground from CONFIG; no captions/subtitles (headline/tile text is the technique's subject, per INSTRUCTION §3.2); no external assets; logic reads only CONFIG; `?cfg=` override supported.
+- `comparison.html` — labels "ORIGINAL — Grow With Kaz @ 4:30–4:44" / "RECREATION — T123 step-card segmentation, parameterized"; ONE synchronized control set (Play/Pause drive the video and postMessage the recreation's clock; Restart zeroes both); phone stacking at ≤560 px with 48 px-minimum controls.
+
+## Own checks (§5 legs 1–3, recorded — not asserted)
+1. **Swap test (EXACT §2 values, §2b timing form), node harness on a scratch copy:** words — step 1 title "Download" → "Prepare" · timing — step atMs scaled by the §2 ratio 6500→4000 (×0.6154): step 1 atMs 2000 → 1231, step 2 atMs 12000 → 7385 · palette — blue "#3b82f6" → "#3ac95c" (drives numeral, operative span, and tile edge via the single palette key). Result: **PASS** — swapped title "Prepare" re-measures 64.4 px (fits the 140 px tile inner), states at the swapped anchors are correct (t=1231: step 1 active, tile 01 present; t=7385: step 2 active, both tiles present), accumulation stays monotonic, cycle still exactly 14000 ms, headlines re-measure within the stage (288.0 / 225.8 px).
+2. **Purity:** grep over recreation.html for the G1-A patterns `segment\.mp4|source\.mp4|<video|<img|url\(|l2_pKB1EbMQ|t[0-9]+\.jpg` = **0 hits**. Asset inventory: recreation.html loads NO external assets (no src/href loads; grid, tiles, and chip are generated in-code from CONFIG). comparison.html legitimately references segment.mp4 + recreation.html and is not purity-grepped.
+3. **Comparison check (LOGIC level):** both sides present with the exact labels; video duration 14.000 s vs recreation cycle 14000 ms (CONFIG, harness-verified); shared controls wired to both sides; phone stacking CSS present. PIXEL-UNVERIFIED — no browser binary in this seat.
+4. **Syntax:** `node --check` on both inline scripts — clean (re-run after the line-height cure; clean).
+5. **Boundary checks (plan-review point 3 addition):** stateAt sampled at 0/1999/2000/2300/2600/6000/11999/12000/12600/13999/14000 — headline exclusivity holds at every sample (active ∈ {−1, 0, 1}, single value), tile presence is exactly {01} on [2000,12000) and {01,02} on [12000,14000), reset at the wrap is the only clearing event.
+
+## A6 legs (pre-wave, on the final build)
+- guard-measured-fit → `fit-table.md`: rows for both headlines, numeral, both titles, all sub lines (+ swap row); **HIT list EMPTY** (title/sub ink 11.46 px vs the ~11 px floor — margin 0.46 px, printed as a watch).
+- guard-config-census → `config-census.md`: literal scan classified, every CONFIG key resolved to an application site (incl. steps[] array-member keys), no CSS variables; **HIT list EMPTY** (one pre-wave cure: CSS line-heights moved into CONFIG).
+
+## Pre-wave Jev gate
+jev-prewave: filed at `jev-prewave.md`.
+
+## Faithfulness trace
+- Trace: §1 Observe (RUN §1/§1b + this record's gate-out) · §2 Plan (RUN §2 + §2b amendments, binding) · §3 Execute (segment, frames, builds above) · §5 Verify (own checks above, A6 legs, jev-prewave, five-lens wave in `codex/`) · §9 Condense is the seat's act.
+- Choice log: (1) DOM over canvas (RUN §2; A1 disposition — card text is DOM text, runtime sampling governs formed letterforms) · (2) shared per-step atMs per §2b over plan-review's separate anchors (set-aside with reason, above) · (3) two-line sub wrap inside a taller tile (112 px) over a smaller sub font (fit floor owns: 16 px sub keeps ink at 11.46 px).
+- Deviation register: step-2 anchor vs segment frames (tile 02 ≈ seg 6–7 s, headline 2 ≈ seg 8–8.5 s vs §2b 12000 ms) — printed in the Segment section · screen inserts deferred — NAMED DEFERRAL (§2b) · prompt bar under headline 2 not recreated (insert-layer support, same deferral class). No other deviations.
+- Evidence binding: segment.mp4 ffprobe 14.000 s · frames/ 56 files · recreation.html sha256 in scores.md · codex returns verbatim in `codex/`.
+- Git corroboration: UNCORROBORATED-BY-LOCAL-GIT at build time (lane sync is JOB-14's act).
+
+## RECREATION.HTML (full source, hash-bound above)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T123 — Step-card segmentation (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#070a18;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #headline{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;}
+  .chip{display:inline-block;}
+  #tiles{position:absolute;left:0;right:0;display:flex;justify-content:center;align-items:flex-start;}
+  .tile{box-sizing:border-box;text-align:center;flex:none;}
+  .tnum,.ttitle,.tsub{line-height:1;}
+  #err{position:absolute;left:0;top:0;right:0;display:none;color:#fff;background:#a00;font:12px monospace;padding:4px;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="headline"></div>
+  <div id="tiles"></div>
+  <div id="err"></div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / font / geometry value lives here ============ */
+const CONFIG = {
+  steps: [
+    {n: "01", title: "Download", sub: "link in the description", atMs: 2000,
+     headline: [{t: "First, "}, {t: "download the free plugin", style: "blue"}]},
+    {n: "02", title: "Add it", sub: "to Claude", atMs: 12000,
+     headline: [{t: "Ask Claude to "}, {t: "install it", style: "chip"}]}
+  ],
+  tileEnterMs: 600,
+  cycleMs: 14000,
+  stage: {width: 360, height: 203},
+  grid: {cellPx: 18},
+  palette: {field: "#0b1026", grid: "rgba(120,140,255,0.07)", ink: "#ffffff", blue: "#3b82f6",
+            chipBg: "#ffffff", chipInk: "#10131f", card: "#131a33", cardEdge: "#3b82f6", subInk: "#c6cbdd"},
+  type: {font: "Arial, Helvetica, sans-serif",
+         headlinePx: 18, headlineWeight: 800,
+         numeralPx: 24, numeralWeight: 800, numeralLH: 1.15,
+         titlePx: 16, titleWeight: 800, titleLH: 1.25,
+         subPx: 16, subWeight: 400, subLH: 1.25},
+  geom: {headlineTop: 12, tileY: 66, tileW: 158, tileH: 112, tileGap: 12, tileRadius: 10,
+         tilePadTop: 9, tilePadX: 8, tileBorderPx: 1, numTitleGap: 5, titleSubGap: 3,
+         chipPadX: 6, chipPadY: 1, chipRadius: 5,
+         enterRisePx: 10, enterFromScale: 0.94, enterFromOpacity: 0.0}
+};
+const TOP_KEYS = ["steps","tileEnterMs","cycleMs","stage","grid","palette","type","geom"];
+
+/* ============ override (?cfg= JSON) ============ */
+function deepMerge(base, over){
+  if (Array.isArray(over)){
+    if (!Array.isArray(base)) return over.slice();
+    const merged = base.map(function(b, i){ return i < over.length ? deepMerge(b, over[i]) : b; });
+    for (let i = base.length; i < over.length; i++) merged.push(over[i]);
+    return merged;
+  }
+  if (over && typeof over === "object"){
+    const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
+    for (const k of Object.keys(over)) out[k] = deepMerge(base ? base[k] : undefined, over[k]);
+    return out;
+  }
+  return over;
+}
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function resolveConfig(raw){
+  if (raw === null || raw === undefined || raw === "") return {cfg: clone(CONFIG), errors: []};
+  let over;
+  try { over = JSON.parse(raw); } catch(e){ return {cfg: null, errors: ["cfg: malformed JSON"]}; }
+  if (!over || typeof over !== "object" || Array.isArray(over)) return {cfg: null, errors: ["cfg: expected object"]};
+  return {cfg: deepMerge(clone(CONFIG), over), errors: []};
+}
+
+/* ============ pure logic (node-testable) ============ */
+function easeOutCubic(p){ return 1 - Math.pow(1 - p, 3); }
+function enterP(u, atMs, cfg){
+  if (u < atMs) return 0;
+  const raw = (u - atMs) / cfg.tileEnterMs;
+  return easeOutCubic(Math.min(1, raw));
+}
+/* State at cycle time t. Exactly one active headline (the latest step whose
+   atMs has passed, or none before the first). Tiles are MONOTONIC within a
+   cycle: tile i is present iff u >= steps[i].atMs; only the cycle wrap
+   (u returns to 0) clears them. Accumulation is a construction property. */
+function stateAt(t, cfg){
+  const u = ((t % cfg.cycleMs) + cfg.cycleMs) % cfg.cycleMs;
+  let active = -1;
+  for (let i = 0; i < cfg.steps.length; i++) if (u >= cfg.steps[i].atMs) active = i;
+  const tiles = cfg.steps.map(function(s, i){
+    const p = enterP(u, s.atMs, cfg);
+    return {index: i, present: u >= s.atMs, p: p,
+      opacity: cfg.geom.enterFromOpacity + (1 - cfg.geom.enterFromOpacity) * p,
+      scale: cfg.geom.enterFromScale + (1 - cfg.geom.enterFromScale) * p,
+      risePx: cfg.geom.enterRisePx * (1 - p)};
+  });
+  return {u: u, active: active,
+    headlineP: active < 0 ? 0 : enterP(u, cfg.steps[active].atMs, cfg),
+    tiles: tiles};
+}
+function gridCSS(cfg){
+  return "linear-gradient(" + cfg.palette.grid + " 1px, transparent 1px)," +
+         "linear-gradient(90deg, " + cfg.palette.grid + " 1px, transparent 1px)";
+}
+/* Character width model (Arial advance widths, em fractions) for the fit harness. */
+const CHAR_W = {upper: 0.68, lower: 0.52, space: 0.278, digit: 0.556, punct: 0.30};
+function textWidthPx(text, fontPx, weight){
+  let em = 0;
+  for (const ch of text){
+    if (ch === " ") em += CHAR_W.space;
+    else if (ch >= "A" && ch <= "Z") em += CHAR_W.upper;
+    else if (ch >= "0" && ch <= "9") em += CHAR_W.digit;
+    else if (".,;:!?'’-—".indexOf(ch) >= 0) em += CHAR_W.punct;
+    else em += CHAR_W.lower;
+  }
+  if (weight >= 700) em *= 1.06;
+  return em * fontPx;
+}
+function wrapLines(text, fontPx, weight, maxW){
+  const words = text.split(" ");
+  const lines = []; let cur = "";
+  for (const w of words){
+    const trial = cur === "" ? w : cur + " " + w;
+    if (textWidthPx(trial, fontPx, weight) <= maxW || cur === "") cur = trial;
+    else { lines.push(cur); cur = w; }
+  }
+  if (cur !== "") lines.push(cur);
+  return lines;
+}
+function headlineText(step){ return step.headline.map(function(s){ return s.t; }).join(""); }
+function layoutModel(cfg){
+  const g = cfg.geom, ty = cfg.type;
+  const tileInnerW = g.tileW - 2 * g.tilePadX - 2 * g.tileBorderPx;
+  const rows = cfg.steps.map(function(s, i){
+    return {index: i,
+      headlineW: textWidthPx(headlineText(s), ty.headlinePx, ty.headlineWeight),
+      numeralW: textWidthPx(s.n, ty.numeralPx, ty.numeralWeight),
+      titleW: textWidthPx(s.title, ty.titlePx, ty.titleWeight),
+      subLines: wrapLines(s.sub, ty.subPx, ty.subWeight, tileInnerW),
+      subLineW: wrapLines(s.sub, ty.subPx, ty.subWeight, tileInnerW).map(function(l){ return textWidthPx(l, ty.subPx, ty.subWeight); })};
+  });
+  const ink = 0.716; /* cap/ascender ratio — every subject line carries ascenders or caps */
+  return {stageW: cfg.stage.width, stageH: cfg.stage.height, rows: rows, tileInnerW: tileInnerW,
+    headlineInkH: ty.headlinePx * ink, numeralInkH: ty.numeralPx * ink,
+    titleInkH: ty.titlePx * ink, subInkH: ty.subPx * ink,
+    tilesTotalW: cfg.steps.length * g.tileW + Math.max(0, cfg.steps.length - 1) * g.tileGap,
+    tileBottom: g.tileY + g.tileH, cycle: cfg.cycleMs};
+}
+
+/* ============ DOM construction ============ */
+function build(cfg){
+  const g = cfg.geom, ty = cfg.type, pal = cfg.palette;
+  const stage = document.getElementById("stage");
+  stage.style.width = cfg.stage.width + "px";
+  stage.style.height = cfg.stage.height + "px";
+  stage.style.background = pal.field;
+  stage.style.backgroundImage = gridCSS(cfg);
+  stage.style.backgroundSize = cfg.grid.cellPx + "px " + cfg.grid.cellPx + "px";
+  stage.style.fontFamily = ty.font;
+  const hl = document.getElementById("headline");
+  hl.style.top = g.headlineTop + "px";
+  hl.style.fontSize = ty.headlinePx + "px";
+  hl.style.fontWeight = String(ty.headlineWeight);
+  hl.style.color = pal.ink;
+  const row = document.getElementById("tiles");
+  row.style.top = g.tileY + "px";
+  row.style.gap = g.tileGap + "px";
+  cfg.steps.forEach(function(s){
+    const tile = document.createElement("div");
+    tile.className = "tile";
+    tile.style.width = g.tileW + "px"; tile.style.height = g.tileH + "px";
+    tile.style.background = pal.card;
+    tile.style.border = g.tileBorderPx + "px solid " + pal.cardEdge;
+    tile.style.borderRadius = g.tileRadius + "px";
+    tile.style.paddingTop = g.tilePadTop + "px";
+    tile.style.display = "none";
+    const num = document.createElement("div");
+    num.className = "tnum"; num.textContent = s.n;
+    num.style.color = pal.blue; num.style.fontSize = ty.numeralPx + "px"; num.style.fontWeight = String(ty.numeralWeight);
+    num.style.lineHeight = String(ty.numeralLH);
+    const ttl = document.createElement("div");
+    ttl.className = "ttitle"; ttl.textContent = s.title;
+    ttl.style.color = pal.ink; ttl.style.fontSize = ty.titlePx + "px"; ttl.style.fontWeight = String(ty.titleWeight);
+    ttl.style.lineHeight = String(ty.titleLH);
+    ttl.style.marginTop = g.numTitleGap + "px";
+    const sub = document.createElement("div");
+    sub.className = "tsub"; sub.textContent = s.sub;
+    sub.style.color = pal.subInk; sub.style.fontSize = ty.subPx + "px"; sub.style.fontWeight = String(ty.subWeight);
+    sub.style.lineHeight = String(ty.subLH);
+    sub.style.marginTop = g.titleSubGap + "px";
+    sub.style.paddingLeft = g.tilePadX + "px"; sub.style.paddingRight = g.tilePadX + "px";
+    tile.appendChild(num); tile.appendChild(ttl); tile.appendChild(sub);
+    row.appendChild(tile);
+  });
+  return layoutModel(cfg);
+}
+let renderedHeadline = -2;
+function renderHeadline(cfg, active){
+  if (active === renderedHeadline) return;
+  renderedHeadline = active;
+  const hl = document.getElementById("headline");
+  hl.innerHTML = "";
+  if (active < 0) return;
+  const g = cfg.geom, pal = cfg.palette;
+  cfg.steps[active].headline.forEach(function(span){
+    const el = document.createElement("span");
+    el.textContent = span.t;
+    if (span.style === "blue"){ el.style.color = pal.blue; }
+    else if (span.style === "chip"){
+      el.className = "chip";
+      el.style.background = pal.chipBg; el.style.color = pal.chipInk;
+      el.style.padding = g.chipPadY + "px " + g.chipPadX + "px";
+      el.style.borderRadius = g.chipRadius + "px";
+    }
+    hl.appendChild(el);
+  });
+}
+function applyFrame(cfg, t){
+  const st = stateAt(t, cfg);
+  renderHeadline(cfg, st.active);
+  const hl = document.getElementById("headline");
+  hl.style.opacity = String(cfg.geom.enterFromOpacity + (1 - cfg.geom.enterFromOpacity) * st.headlineP);
+  const row = document.getElementById("tiles");
+  st.tiles.forEach(function(tile, i){
+    const el = row.children[i];
+    el.style.display = tile.present ? "block" : "none";
+    el.style.opacity = String(tile.opacity);
+    el.style.transform = "scale(" + tile.scale + ") translateY(" + tile.risePx + "px)";
+  });
+  return st;
+}
+if (typeof document !== "undefined"){
+  const params = new URLSearchParams(location.search);
+  const res = resolveConfig(params.get("cfg"));
+  if (!res.cfg){
+    const e = document.getElementById("err");
+    e.style.display = "block"; e.textContent = res.errors.join("; ");
+  } else {
+    const cfg = res.cfg;
+    build(cfg);
+    let start = performance.now();
+    let frozen = null;
+    window.addEventListener("message", function(ev){
+      if (ev.data === "pause" && frozen === null) frozen = performance.now() - start;
+      if (ev.data === "play" && frozen !== null){ start = performance.now() - frozen; frozen = null; }
+    });
+    function tick(now){ applyFrame(cfg, frozen !== null ? frozen : now - start); requestAnimationFrame(tick); }
+    requestAnimationFrame(tick);
+    window.__t123 = {cfg: cfg, stateAt: stateAt, layout: layoutModel(cfg)};
+  }
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = {CONFIG: CONFIG, resolveConfig: resolveConfig, stateAt: stateAt,
+    layoutModel: layoutModel, wrapLines: wrapLines, textWidthPx: textWidthPx, gridCSS: gridCSS};
+}
+</script>
+</body>
+</html>
+
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+I’ll assess phone-size readability from the bound source and available evidence, then file the score and cure list in `lens-readability.md`.
+2026-11-16T14:36:54.861689Z ERROR codex_core::tools::router: error=failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: No such file or directory (os error 2)
+codex
+Readability score: **86/100** — passes this lens’s 70-point floor.
+
+At the 360 px stage, the hierarchy is clear: 18 px headline, 24 px blue numerals, bold 16 px titles, and regular 16 px supporting text. White and pale-grey text separate well from the navy cards; the white operative chip provides strong emphasis. The low-opacity grid should remain subordinate.
+
+The named risk remains marginal tile-text size. The fit model estimates title/sub ink at **11.46 px**, only **0.46 px above** the stated floor. That is model evidence, not a measurement of rendered letterforms. Blue operative text and numerals have less contrast than the white text, though the specified palette appears adequate.
+
+Next attempt must cure the evidence gap: inspect settled frames at native 360 px width, confirming that “link in the description” wraps cleanly and reads comfortably, and that blue emphasis remains distinct. If that check fails, increase tile text size and adjust card geometry to preserve spacing.
+
+Assessment is source-based; no rendered frames were available to inspect. File writing failed because the execution tool could not start, so the consumer must persist this return verbatim as `codex/lens-readability.md`.
+
+BODY-WRITE: none (read-only run); return supplied for consumer persistence.
+SCORE: 86
+tokens used
+19,496
+Readability score: **86/100** — passes this lens’s 70-point floor.
+
+At the 360 px stage, the hierarchy is clear: 18 px headline, 24 px blue numerals, bold 16 px titles, and regular 16 px supporting text. White and pale-grey text separate well from the navy cards; the white operative chip provides strong emphasis. The low-opacity grid should remain subordinate.
+
+The named risk remains marginal tile-text size. The fit model estimates title/sub ink at **11.46 px**, only **0.46 px above** the stated floor. That is model evidence, not a measurement of rendered letterforms. Blue operative text and numerals have less contrast than the white text, though the specified palette appears adequate.
+
+Next attempt must cure the evidence gap: inspect settled frames at native 360 px width, confirming that “link in the description” wraps cleanly and reads comfortably, and that blue emphasis remains distinct. If that check fails, increase tile text size and adjust card geometry to preserve spacing.
+
+Assessment is source-based; no rendered frames were available to inspect. File writing failed because the execution tool could not start, so the consumer must persist this return verbatim as `codex/lens-readability.md`.
+
+BODY-WRITE: none (read-only run); return supplied for consumer persistence.
+SCORE: 86
