@@ -1,0 +1,238 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/runs/2026-11-17-cycle-028-wave-25
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e941-4ada-7892-9801-44193f941599
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream. If a check needs material not in this stream, name it as a gap instead of fetching it.
+
+CONSUMER: recreation job INSTRUCTION §1 Observe-exit gate for Cycle 028 Wave 25 (items T178/T182/T184/T186). DECISION PRICED: whether the wave Observe record can support a Plan, per item. WORKING RECORD: runs/2026-11-17-cycle-028-wave-25/RUN.md. BODY-WRITE: your return is filed verbatim in the run directory; end with a BODY-WRITE: line.
+
+=== GUARD DEFINITION ===
+# Jev call — jev-observe-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: a recreation wave may not enter Plan on a catalogue summary alone — Observe must have priced the queue, read the prior scores where they exist, seen the evidence frames, and carried the standing construction guidance into working memory._
+
+## 1. What it judges
+- Deliverable: the wave's Observe working memory — RUN.md gate-out block (§1: mechanics summary + sub-beat timings + variable list + named consumer) for each item in the wave (up to 5 owed items).
+- Call point: recreation INSTRUCTION §1, at the gate out of Observe, before §2 Plan opens for any item in the wave. The verdict is advisory per item: applied, a RETURN-TO-OBSERVE item is held out of the wave's Plan (the wave proceeds with its advancing items; a held item never holds the wave hostage — same rule as jev-prewave §5); set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Observe record can support a Plan for THIS recreation wave, item by item. Price, in order:
+(1) QUEUE STATE PRICED — does the record state the recreation queue's current position (../QUEUE.md read this cycle), each item's queue number and OWED status, and the ownership split (Amendment A3 §3: this job owns FIRST attempts; an already-scored technique belongs to practice — a wave item that is a re-attempt is a routing defect, named)? T15 is the standing example: attempt 1 scored FAIL 78.5 on 2026-11-13, so T15 attempt 2 is practice's charge, never this job's wave item.
+(2) PRIOR SCORES READ — for any item whose technique already has a scores.md or a verdict-history line (a techniques' family sibling counts: e.g. T16 shares T15's particle machinery), does the record cite the actual filed scores and cure list, or does it plan from the catalogue description alone? Planning that ignores a filed failure is the defect this leg exists to catch.
+(3) MECHANICS SEEN, NOT SUMMARIZED — does the record carry the packet section's mechanics + sub-beat timings from firsthand viewing of the evidence frames and the source segment in motion (§1.1–1.2), with timings in seconds — or only a restatement of the TECHNIQUES.md one-liner? A mechanic the builder has not seen is a guess (§1.1).
+(4) VARIABLES EXTRACTED — is the §1.3 variable list complete for this technique (text content, phrase count, timing/durations, palette, scale, direction, density — plus technique-specific variables), so Plan's parameter table has something to bind? A variable missing here becomes a hardcoded accident in Execute (§1.3).
+(5) CONSTRUCTION GUIDANCE CARRIED — where the technique's family has standing guidance, is it IN the working memory, named? For particle-field techniques: the flow-field model (Amendment A5 §4: one constant flow field, borrowing with low-amplitude jitter, never-borrowed reserve fraction, release with velocity continuity) AND Owner Cure 1 (foreground/background intensity separation riding the borrow flag) AND Owner Cure 2 (strict phrase sequencing / phase exclusivity). For typography techniques: the typography construction precedent (Amendment A1 §2: runtime sampling of config-rendered text). Guidance that exists in INSTRUCTION but is absent from the wave's working memory is scored as absent.
+(6) CONSUMER NAMED — §1.4: which production surface lifts this machinery (container type + owning lane), named per item, not "production generally."
+(7) CODEX/OWNER INPUTS — were any Codex calls fired in this Observe (e.g. a record audit of a prior attempt's codex/ returns) with receipts filed, or is the absence printed? Does the wave need owner-only information (it almost never does — recreation prices from packets and filed scores); if claimed, is it routed as a named gap rather than silently assumed?
+Score 0–1 per dimension (§4), classify defects from the taxonomy, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Observe gate-out blocks · ../QUEUE.md recreation-queue section (current) · each item's packet digest.md technique section + TECHNIQUES.md entry · prior scores.md + verdict-history.md lines for the item and its named family siblings · INSTRUCTION Amendments A1/A3/A5 guidance lines relevant to the item's family · any Observe-phase Codex receipts filed this cycle.
+- NEVER FED: the builder's confidence prose · HQ's supervision faces · scores from attempts not yet filed (unfiled scores do not exist).
+- Ceiling: ≤32k tokens; packet sections enter as the technique's section only, never the whole digest; evidence frames are referenced by path/timestamp, never fed as images (text-only judge).
+
+## 4. Output space
+- Verdict classes (per item): **ADVANCE · ADVANCE-WITH-GAPS · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): queue-state-priced · prior-scores-read · mechanics-seen · variables-extracted · guidance-carried · consumer-named. (1.0 = evidenced in the record with citations; 0.5 = asserted without citation; 0.0 = absent.)
+- Rejection taxonomy (one primary per returned item): QUEUE-STALE (queue position/status not read this cycle) · REATTEMPT-MISROUTED (scored technique in a first-attempt wave) · SCORES-UNREAD (prior scores/cures exist, uncited) · MECHANICS-UNSEEN (no firsthand sub-beat record) · VARIABLES-THIN (variable list cannot bind a parameter table) · GUIDANCE-DROPPED (standing family guidance absent from working memory) · CONSUMER-VAGUE.
+- Accepted profiles travel: cited in RUN.md at the Plan gate; ADVANCE-WITH-GAPS items carry their gap list into §2 as named Plan charges.
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → RETURN-TO-OBSERVE for that item. GUIDANCE-DROPPED on a particle-field or typography item → RETURN-TO-OBSERVE at any other score (T15 attempt 1's founding lesson: the frozen-flow defect and both owner catches were guidance-shaped failures discovered only after the wave was spent).
+- ADVANCE-WITH-GAPS requires every gap named with its Plan-phase cure; an unnamed gap is a RETURN.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + primary classification + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. Binding the exact runner command here is the first firing's own first step. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 Cycle-002's Observe record reconstructed from its RUN.md (must ADVANCE — mechanics, timings and consumer were recorded before building). (b) A constructed record proposing T15 as a wave item for attempt 2 (must RETURN-TO-OBSERVE as REATTEMPT-MISROUTED). (c) A constructed particle-technique record with no flow-field / Owner Cure 1 / Owner Cure 2 lines (must RETURN as GUIDANCE-DROPPED). (d) A constructed record whose variable list names only "text and color" for a timed multi-phrase technique (must RETURN as VARIABLES-THIN).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. First expected amendment pressure: whether family-sibling scores (leg 2) should be mandatory for all items or only same-machinery families — priced from the first waves' returns.
+
+=== WAVE RECORD (RUN.md §0-§2, at firing time) ===
+# RUN — recreation Cycle 028 · Wave 25 · 2026-11-17 (queue #85–#88 — Packet #10, Watchtower of Turkey, all four owed)
+
+Opened BEFORE any building (INSTRUCTION §0). Trigger: cron `study-recreation` 2026-11-17 06:20 EST.
+Governing: recreation INSTRUCTION.md (§0 wave form incl. skeleton-record step · §1–§9 · Amendments A1/A2/A3/A5/A6/A7/A9/A10 + 2026-11-14 ruling: arming=firing, verdicts advisory), bounded_probe_discipline (probes named in advance, capped in code ≤6,000 chars: QUEUE recreation section in capped slices · style-library TECHNIQUES.md obligation lines + family files for T178–T189 · Packet #10 digest.md §§T01/T05/T07/T09 · evidence frames viewed firsthand · seat census frames extracted this run at 20 named timestamps · artifact census of `hidden_files/study/recreations/` · style-library HQ tail; breaches: 0).
+Pre-action judgment: (1) objective — take the four OWED Packet #10 first attempts (queue #85 T178 · #86 T182 · #87 T184 · #88 T186) to scored verdicts, emptying the Packet #10 pool. (2) Forward movement — Wave 24 (Cycle 027) closed EMPTY-POOL because Packet #10 stood unregistered; style-library Cycle-017 (2026-11-17 04:56 EST) has since REGISTERED Packet #10 (189 techniques; DESCRIBED-OWED 4 at queue #85–#88), so this wave is the first non-empty wave since Wave 23 and is also the named consumer of two carried items (see §0b). (3) Cost to owner — none; no ask, no schedule change. (4) Why now — scheduled firing; queue order is the only triage (A3). (5) Body-write — this RUN.md, four artifact directories under `hidden_files/study/recreations/`, HQ.json skeleton→closed entry (same id `rec-2026-11-17-wave25`), heartbeat skeleton→closed beat 95, verdict-history ×4, QUEUE.md rows #85–#88 + WAVE 25 footer. (6) Order check — Observe + Plan stand in this record BEFORE builders spawn; skeleton board/heartbeat entries written at Plan close; gate verdicts consumed in §2b before Execute; NO build script is written before the exit-gate returns are filed (Amendment A9.2).
+
+## §0b — Replan items carried
+1. **Practice census-checkpoint note** (`practice-2026-11-17-census-checkpoint-note`, carried as CANDIDATE by Cycle 027 §9.1, consumer = THIS cycle's Condense as the first non-empty wave): price at §9 against this wave's timing-lens returns — its one non-overlapping element is checkpoint states asserted in the builder's own-check suite at the exact instants. Builders this wave DO encode census checkpoints as own-check assertions (see §2 checklists), so the candidate gets a recreation-side demonstration to price.
+2. **Cycle 027 §9.5 consumer:** re-price whether the heartbeat-append fusion protocol held on this cycle's appends (consumer: this Condense).
+3. Standing forms (A10): every schedule table prints its census-anchor mapping (A10.2); §1 files a frame census at ≤2 s spacing with full SHA-256 (A10.3); jev-prewave payloads carry both A6 leg outputs verbatim (A10.1).
+
+## §1 — Observe
+
+**Wave manifest: 4 items** — queue #85–#88, all Packet #10 ("Watchtower of Turkey", Leonardo Dalessandri, Vimeo 108018156, 212.68 s — packet probe; archived source `hidden_files/study/video-digests/2026-11-16-vimeo-watchtower/source.mp4`, ffprobe this run: see `probe-source.txt` in this run directory). Packet #10 adopted CLEAN by video-digestion Cycle-016; registered by style-library Cycle-017 with limits carried: shot-count/density phrasing OVERSTATED on the packet's face (lane-2026-11-16-005) · voiceover wording UNVERIFIED · T186 hidden cut NOT established. None of those limits touches these four techniques' mechanics except T186's, which is carried into its Plan as a binding constraint (the recreation must NOT assert a hidden cut).
+Consumer (all): DLC assembler — transition/opening surfaces (the packet's own §2 consumer: location/subject change without a visible edit — T182/T184/T186 mechanics as its transition specification; T178 as the opening reveal); secondary: Hadosh Academy explainer production — opening surfaces.
+
+### Pool census (fresh this run, 2026-11-17 06:20 EST)
+1. QUEUE.md RECREATION QUEUE: rows #1–#84 all attempted (Waves 1–23); WAVE 23 footer + Cycle 027 empty-pool finding print DESCRIBED-OWED 0 on the 177-technique catalogue — both predate style-library Cycle-017's Packet #10 registration.
+2. Catalogue register (style-library Cycle-017 state, read this run): 189 techniques · DESCRIBED 105 (of which OWED 4: queue #85 T178 fade-from-black colonnade reveal · #86 T182 detail-to-wide match on action · #87 T184 occlusion-framed cut landing · #88 T186 foreground pass, mid-coverage — TECHNIQUES.md lines 114–117 + family files) · IN PROGRESS 20 · RECREATED 64. QUEUE.md rows #85–#88 do not yet exist as rows — they are entered by recreation at this wave's close from the Cycle-017 register (the Wave-10 precedent, followed at Waves 14–23).
+3. Artifact census (binding, this run): 84 directories under `hidden_files/study/recreations/`, every one with scores.md + codex/; NO directory exists for T178/T182/T184/T186 — all four DESCRIBED+OWED+unattempted (directories created at this Plan, §0 form).
+4. Ownership split (A3 §3): all four are first attempts → this job. All IN PROGRESS techniques are practice's re-attempt pool (practice Cycle 020 closed 06:35 EST: pool 20→19 — practice's act, not this wave's items).
+5. Prior/family scores read (§1 resource 3): no Packet #10 technique has a prior attempt. Named family siblings with filed scores: T104 hard cut PASS 85.2 · T105 dissolve FAIL 80.0 · T106 cut on action PASS 88.4 (the T182 precedent: cut at peak action, no cover) · T183 foreground-arch framing is a sibling of T184/T186 but NOT OWED (static framing, priced at registration). The transition family's standing lesson from Wave 15: a cut item's schedule must be census-anchored, never allocated silently (A10.2).
+
+### §1b — Per-item mechanics (packet digest § + register entry + evidence frames viewed firsthand by the seat this run)
+- **T178 — Fade-from-black colonnade reveal (P10 T01) @ 0.00–3.04.** Film opens on black (ev/000, 0.16 s: pure black, viewed). First image: a shaded colonnade — two pale stone columns framing a dark interior, white-clothed tables inside, a hanging RED textile (strands) centre-right beside a thin tree trunk (ev/001, 0.96 s: fully legible, viewed). No title, no logo — the place is the first statement. Mechanics: exposure rises from black until the place is legible; the reveal IS the motion.
+- **T182 — Detail-to-wide match on action (P10 T05), cut at 81.8.** Extreme close-up: motion-blurred hands rolling dough, frame-filling, warm brown (ev/081, 81.72 s, viewed) → wide: a woman at a round wooden table rolling the same dough with a long pin, griddle + dough balls + flour in frame (ev/082, 81.88 s, viewed). Action and subject continuous; ONLY the scale jumps; no cover, no dissolve. Packet prices it the film's single most transferable transition (good G1).
+- **T184 — Occlusion-framed cut landing (P10 T07), cut at 102.40.** Before: panning townscape with a tall minaret, rooftops, hills (ev/102, 102.0 s, viewed). After: dark interior — a seated guitarist (tan guitar, centre-left) seen BETWEEN passing foreground silhouettes; the frame's majority is near-black foreground (ev/103, 102.8 s, viewed). The new shot lands already occluded; by the time the guitarist is legible the scene is established. Packet good G2.
+- **T186 — Foreground pass, mid-coverage (P10 T09) @ ~189.3.** Inside the 188.5–193.9 rapid cluster: a bright foreground body passes so close to the lens that the frame's RIGHT HALF is a white blur while the street scene continues legible at left — standing man in a striped shirt at the far left, a red-top figure blurred mid-frame (ev/190, 189.32 s, viewed). A photographed wipe caught mid-pass. **Limit: whether an edit hides inside the pass is NOT established — the recreation catalogues the pass itself and asserts no hidden cut.**
+
+### §1c — Seat frame + motion census (A10.3: extracted + viewed firsthand by the seat this run; full SHA-256 in `census/`)
+20 frames at ≤2 s spacing across each item's transitions (hashes in the census extraction output, filed in this run's record §7 evidence binding; seven census hashes are byte-identical to the packet's ev frames at the same instants — f0.16=ev/000 · f0.96=ev/001 · f81.72=ev/081 · f81.88=ev/082 · f102.00=ev/102 · f102.80=ev/103 · f189.32=ev/190 — binding the census to the packet's evidence):
+- **T178:** 0.16 BLACK (hold) · 0.96 colonnade FULLY LEGIBLE (motion = the fade, complete by this instant) · 1.60 PAVEMENT + blowing leaf — A DIFFERENT SHOT · 2.20 wet sand · 3.00 bokeh. **Finding (catalogue-fidelity): the colonnade shot does NOT hold to 3.04 s — the reveal completes by 0.96 s and the shot ends between 0.96 and 1.60 s. The digest's "0.00–3.04" span is the opening section, not one shot. The recreation's fade is census-anchored (black at 0 ms · legible by ~960 ms segment time); any hold past ~1.2 s in the build is an ALLOCATION, printed as a departure in §2.**
+- **T182:** 80.60 + 81.20 + 81.72 detail (hands/dough, motion-blurred, continuous rolling action) · 81.88 wide (same action, pin mid-stroke) · 82.60 wide (action continues). **Finding: the cut sits between 81.72 and 81.88 (packet: 81.8); the rolling action's phase is continuous across it — no hold, no gap on either side.**
+- **T184:** 100.50 arch panorama (the T183 shot, before) · 101.50 + 102.00 minaret townscape pan (minaret right-of-centre, dark frame edge at right) · 102.80 guitarist occluded (majority-dark foreground) · 103.80 A DIFFERENT SHOT (woman behind a pale pillar). **Finding: the landing shot is SHORT — it ends between 102.80 and 103.80; the occluded landing state is the state at +0.4 s after the cut, and the build's longer landing hold is an allocation printed in §2.**
+- **T186:** 188.60 (rapid-cluster insert sequence) · 189.00 pistol insert (the T187 montage's insert, immediately before) · 189.32 THE PASS mid-coverage (right ~50% white blur, street legible at left) · 189.80 + 190.60 post-pass cluster frames. **Finding: the pass is a single mid-coverage instant inside a fast cluster — its entry/exit are not separately evidenced; the build's pass entry/exit durations are ALLOCATIONS, the mid-coverage state at 189.32 is the census checkpoint.**
+
+**Observe gate-out (per item):** mechanics summary = §1b lines · sub-beat timings = §1c findings · variable lists = §2 parameter tables (each §1.3 variable named there) · consumer = DLC assembler transition/opening surfaces (above). Construction guidance carried: A9.1 plate rule — no moving plate is the technique in any of the four (all four are scene/cut mechanics, plates are the scenes themselves; priced, not applicable as tiled-pan) · A5 flow-field/owner cures — not applicable (no particle field, no sequenced phrases; priced in §2 per item) · A1 §2 runtime text sampling — not applicable (no typography technique; no text is the subject in any item) · practice census-checkpoint candidate (§0b item 1) — builders encode §1c checkpoints as own-check assertions.
+
+## §2 — Plan
+
+Schedule basis (A7) per item: **segment-anchored** for T182/T184/T186 cut/pass instants; T178 **segment-anchored fade + t=0 allocation hold** (departure printed below). Every build is ONE self-contained `recreation.html` (CONFIG object at top; all content/timing/palette from CONFIG; no external assets; no captions/subtitles — no text is the subject in any item, so no text elements at all in the scenes). Scenes are code-drawn stylized geometry (SVG/DOM/canvas shapes) — never traced from, and never loading, specimen media (§6.1). `comparison.html`: segment + live recreation side by side, ONE synchronized control set, labels per §3.3, phone stacking.
+
+### T178 — parameter table + verification plan
+Segment: source 0.00–3.04 s → `segment.mp4` 3.04 s. Build duration 3040 ms.
+Census-anchor mapping: window-start offset 0 ms (segment-anchored) · census states: 0 ms black (f0.16) · ~960 ms colonnade legible (f0.96) · prescribed build states: t=0 black · t=960 fade complete, scene legible · t>1200 hold = **DEPARTURE (allocation)**: the specimen's next shot begins between 960–1600 ms; the build holds the revealed place to 3040 ms so the reveal can be studied — the departure is printed here and in the build-record, never presented as measured.
+CONFIG keys (specimen defaults): `fadeMs` 960 · `durationMs` 3040 · `settleScaleFrom` 1.045 (slight settle as exposure rises — supplied curve, specimen settle UNMEASURED, named as supplied) · `columnCount` 2 · `textileColor` #b3402a · `textileStrands` 26 · `interiorColor` #17130f · `columnColor` #ddd3bd · `tableColor` #cfc8b4 · `accentLabel` "colonnade" (data-only scene identifier used by the swap harness, never rendered).
+Construction: DOM/SVG scene (columns, dark interior, table shapes, textile = strand lines from CONFIG) under a black overlay whose opacity is driven by the shared clock; rejected: canvas particle fade (no particle mechanic in the specimen) · CSS-only animation (clock must slave to comparison's shared control).
+Swap test: `textileColor`→#2a6db3 · `fadeMs` 960→480 · `textileStrands` 26→10 — technique must still read (black → place revealed, faster). Own-check assertions at census checkpoints: overlay opacity =1 at t=0 · =0 at t=960.
+
+### T182 — parameter table + verification plan
+Segment: source 80.30–83.30 s → `segment.mp4` 3.00 s; cut at source 81.8 = build t=1500 ms (segment-anchored).
+Census-anchor mapping: offset −80.30 s · census states (segment-relative): 300 ms detail · 900 ms detail · 1420 ms detail (f81.72) · 1580 ms WIDE (f81.88) · 2300 ms wide · prescribed: detail scene for t<1500 · wide scene for t≥1500 · the rolling action's phase function is CONTINUOUS at t=1500 (pin angle/position at 1500⁻ in detail coordinates equals its wide-scene counterpart at 1500⁺, scaled) — asserted in the own-check suite.
+CONFIG keys: `cutMs` 1500 · `durationMs` 3000 · `rollPeriodMs` 900 (one back-forth rolling cycle) · `detailScale` 3.2 (detail scene magnification vs wide) · `doughColor` #e8dcc4 · `pinColor` #a9743f · `skinColor` #8a5a3b · `tableColor` #7d5a38 · `accentLabel` "flatbread" (data-only).
+Construction: two SVG scenes sharing one action-phase driver (a single clock function drives the pin in both; the cut swaps scene visibility at cutMs with ZERO transition frames); rejected: cross-fade/dissolve (that is T185/T105's mechanic, the opposite defect here) · canvas blur-trace of the specimen hand (purity refusal class).
+Swap test: `pinColor`→#34558b · `cutMs` 1500→1100 · `rollPeriodMs` 900→600 — the cut must still land mid-action with phase continuity. Checkpoint assertions: scene=detail at 1499 · scene=wide at 1501 · pin phase equal across the cut within tolerance.
+
+### T184 — parameter table + verification plan
+Segment: source 100.90–104.40 s → `segment.mp4` 3.50 s (the packet's clip window 100.0+3.5 carries the same span); cut at source 102.40 = build t=1500 ms (segment-anchored).
+Census-anchor mapping: offset −100.90 s · census states: 600 ms townscape pan · 1100 ms townscape (f102.00) · 1900 ms guitarist OCCLUDED, majority-dark foreground (f102.80) · 2900 ms (f103.80) specimen has CUT AWAY — **DEPARTURE (allocation)**: the build holds the landing scene from 1900→3500 ms with the occluders completing their pass, so the landing's reveal can be studied; the departure is printed here and in the build-record.
+CONFIG keys: `cutMs` 1500 · `durationMs` 3500 · `panPxPerSec` 26 (townscape drift before the cut) · `occluderCount` 2 · `occluderColor` #0a0908 · `landingCoverage` 0.62 (foreground fraction at landing instant) · `revealMs` 1600 (occluders clear over this span after landing) · `guitarColor` #c98d4e · `skyColor` #a8c8cc · `accentLabel` "guitarist" (data-only).
+Construction: scene A = SVG townscape (rooftops, minaret) translating at panPxPerSec; scene B = SVG interior (musician figure + guitar shape) with dark occluder shapes ALREADY covering landingCoverage of the frame at the cut instant, then translating out over revealMs; the cut itself is instant (zero transition frames); rejected: fade-through-black (adds a cover the specimen does not use — its cover IS the foreground) · occluders entering after the cut (the landing must be occluded AT the first frame).
+Swap test: `guitarColor`→#7a4fc9 · `cutMs` 1500→1900 · `landingCoverage` 0.62→0.45 — landing must still read as occluded-first. Checkpoint assertions: scene=A at 1499 · scene=B + measured coverage ≥0.55 at 1501 (with default config) · subject legible by 1500+revealMs.
+
+### T186 — parameter table + verification plan
+Segment: source 188.30–190.80 s → `segment.mp4` 2.50 s; pass mid-coverage at source 189.32 = build t=1020 ms (segment-anchored checkpoint).
+Census-anchor mapping: offset −188.30 s · census states: 700 ms pre-pass cluster frame (f189.00 is the preceding insert — OUTSIDE the build's scene; the build models only the street scene + pass, printed here so the lens does not price the insert as missing) · 1020 ms MID-COVERAGE: right ~50% white blur, street legible at left (f189.32) · prescribed: street scene legible at t=0 · pass shape enters (entry duration = ALLOCATION, not evidenced) · coverage = `coverageFraction` at t=1020 · pass completes and the scene is legible again by duration end (exit = ALLOCATION). **No hidden cut is asserted anywhere in the build or record (registration limit).**
+CONFIG keys: `midMs` 1020 · `durationMs` 2500 · `coverageFraction` 0.50 · `passColor` #f2ede2 · `passDirection` "left-to-right" (the blur mass sits at right at mid-pass; entry side is allocation) · `blurPx` 18 · `streetColor` #6b7a72 · `figureColor` #274b52 (striped standing figure at left) · `accentLabel` "street" (data-only).
+Construction: SVG street scene (standing figure, doorway, second figure) + one large blurred foreground shape (SVG filter blur from CONFIG) translating across; its mid-pass position is pinned to the census checkpoint, entry/exit are eased allocations; rejected: a full white wipe to 100% (the specimen's priced state is MID-coverage ~50%, not full) · asserting a scene swap behind the pass (unestablished claim — barred).
+Swap test: `passColor`→#f2c94c · `midMs` 1020→700 · `coverageFraction` 0.50→0.35 — mid-pass state must still read (bright blur mass, scene legible at the uncovered side). Checkpoint assertions: coverage at t=1020 within ±0.07 of CONFIG · scene legible (coverage <0.05) at t=0 and t=duration.
+
+### Execute + Verify checklists (all items, per INSTRUCTION §2 standing product)
+Execute: (1) cut segment at the item's timestamps (±0.5 s handles honoured by the windows above) + ffprobe facts in build-record · (2) build recreation.html from the item's parameter table (CONFIG-only literals) · (3) build comparison.html (shared controls, labels, phone stacking) · (4) own checks with RAW output filed in build-record (A9.4): swap test with the item's exact altered values · purity grep (guards.md command 1 patterns; `url(#id)` classified per Cycle-026) · syntax check · checkpoint assertions (the practice candidate's demonstration, §0b.1) · (5) A6 legs pre-wave: fit-table.md + config-census.md in the artifact directory · (6) jev-prewave (payload carries both A6 outputs verbatim, A10.1) · (7) five-lens Codex wave (motion · timing · purity · reusability · readability), returns filed verbatim under codex/ BEFORE the verdict is computed · (8) scores.md with arithmetic shown (bar: average ≥85 AND min ≥70).
+Verify instruments: swap harness = node script evaluating the build's CONFIG + phase functions at named instants (assertions above) · purity grep patterns from guards.md · comparison check = both sides present, durations matched, labels correct (own read of comparison.html).
+Failure-point evaluation (priced from this job's record): T178 — fade priced as a dissolve into the NEXT shot (census forbids: the fade ends at black→place, the later shots are other techniques) · hold presented as measured (A10.2 departure printing is the cure) · T182 — phase break at the cut (the T106 precedent's whole lesson; checkpoint assertion is the cure) · a dissolve sneaking in (zero transition frames asserted) · T184 — occluders arriving after the cut instead of at it (landing-coverage assertion at 1501 ms) · pan continuing into scene B (scene swap must be total) · T186 — coverage overshoot to a full wipe (mid-coverage is the priced state) · hidden-cut claim (barred by the registration limit) · all items — allocation presented as measured (the Wave-22 timing pattern; census-anchor mappings above are the cure) · plateau priced in Plan (A2): no prior attempt exists for any item; family baseline = transition family Waves 15–16 (T104 85.2 PASS · T105 80.0 · T106 88.4 PASS · T107 82.0 · T108 84.2 · T109 82.4 — family mean ≈83.7, stuck lens historically TIMING on allocation-vs-census defects; this Plan's census-anchor mappings + checkpoint assertions are aimed at exactly that lens).
+
+## §2b — Gate verdicts consumed BEFORE Execute
+_(filled as returns land; builders receive §2 AS AMENDED by any cure section here)_
+
+## §3 — Execute (fan-out)
+_(filled at close)_
+
+## §5 — Verify (seat, firsthand)
+_(filled at close)_
+
+## §9 — Condense
+_(filled at close)_
+
+## §7 — Faithfulness trace
+_(filled at close)_
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 98136 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Skipped project instructions in environment `local` starting at `/home/hatch/workspace/AGENTS.md` because the 32768-byte budget was exhausted. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**T178 · T182 · T184 · T186: RETURN-TO-OBSERVE.** The supplied record supports useful planning detail, but does not evidence the required source-segment viewing in motion or carry the filed family scores and cure lists. Primary classification for each: **MECHANICS-UNSEEN**.
+
+Scores below assess evidence in the supplied stream. A 0.5 denotes an assertion or partial support without the required supporting citation.
+
+| Item | queue-state-priced | prior-scores-read | mechanics-seen | variables-extracted | guidance-carried | consumer-named |
+|---|---:|---:|---:|---:|---:|---:|
+| T178 | 1.0 | 0.5 | 0.5 | 1.0 | 1.0 | 1.0 |
+| T182 | 1.0 | 0.5 | 0.5 | 1.0 | 1.0 | 1.0 |
+| T184 | 1.0 | 0.5 | 0.5 | 0.5 | 1.0 | 1.0 |
+| T186 | 1.0 | 0.5 | 0.5 | 1.0 | 1.0 | 1.0 |
+
+**Findings**
+
+1. **Queue and ownership are adequately priced for all four.** RUN.md §1 “Pool census” explicitly distinguishes the freshly read, exhausted QUEUE.md from the newer catalogue registration. It identifies #85–#88 as pending row creation, names all four OWED items, reports no corresponding artifact directories, and assigns first attempts to recreation under A3 §3. The missing queue rows are disclosed; this is not evidence of a misrouted re-attempt.
+
+2. **The motion-viewing requirement remains unfulfilled in the supplied evidence.** RUN.md §1b records individual evidence frames as “viewed”; §1c records extracted frames viewed firsthand. Neither states that the source segments were played and inspected in motion. Sparse frames support observed states and timing brackets, but do not establish motion between them. This affects:
+   
+   - **T178:** the exposure-rise curve and any spatial settle; §2 correctly labels the settle UNMEASURED.
+   - **T182:** the claimed continuous rolling phase across the cut. §1c’s stills do not establish phase continuity.
+   - **T184:** foreground movement during the occluded landing and subsequent reveal.
+   - **T186:** pass movement and direction. The record properly identifies entry/exit as allocations, but still lacks source-motion observation.
+
+   **Cure before advancement:** record firsthand playback of each named source window, with observed motion, second-based sub-beats, and explicit boundaries between measured behavior and supplied allocations. Allocation disclosure is valuable, but does not replace the guard’s §2(3) viewing requirement.
+
+3. **Family scores are asserted, but the filed score evidence and cures are missing.** RUN.md §1 “Pool census,” item 5 names T104, T105 and T106 with numerical outcomes; §2 “Failure-point evaluation” adds T107–T109. No actual scores.md passages, verdict-history lines, or filed cure lists are supplied. The negative lessons about timing and action continuity are useful summaries, but cannot demonstrate that the filed failures were read. This is an additional **SCORES-UNREAD** defect for each item under the family-sibling requirement.
+
+   **Cure before advancement:** supply the relevant filed score/history excerpts and cure lists, identifying which sibling shares each item’s machinery. If a cited sibling has no filed cure list, state that explicitly. The quoted scores remain **UNVERIFIED** in this review.
+
+4. **T184’s Plan does not yet bind the observed occlusion checkpoint.** RUN.md §1c identifies majority-dark foreground at source 102.80 s, or build **1900 ms**. Its §2 table specifies `landingCoverage = 0.62` at the cut, then clearing over `revealMs = 1600`; its assertions check coverage at **1501 ms**, not 1900 ms. Nothing specifies how much coverage remains at the observed checkpoint.
+
+   **Exact cure:** add a configurable coverage checkpoint at build 1900 ms, its measurement definition and tolerance, and a trajectory that satisfies it. Assert majority-dark foreground at that instant. This clears the **VARIABLES-THIN** gap without treating the invented reveal duration as measured.
+
+5. **Standing guidance and consumers are carried adequately.** RUN.md’s “Observe gate-out” explicitly prices particle and typography guidance as inapplicable, consistent with the described scene mechanics. It names A9.1 and the census-checkpoint candidate. §1 names the **DLC assembler’s opening surface for T178 and transition surfaces for T182/T184/T186**, satisfying container-plus-lane specificity.
+
+6. **Observe-call accounting is absent.** The supplied record does not explicitly say whether earlier Observe-phase Codex calls occurred or that none occurred; §2b is an empty placeholder. Print either the receipt references or “No earlier Observe-phase Codex calls.” No owner-only information gap is apparent.
+
+**Limits:** This is a fed, text-only review. No tools or disk reads were used, following the explicit FED instruction over the general disk-reading convention. The underlying queue, packet sections, register entries, scores/history, guidance excerpts, motion playback and receipts were not supplied independently. The six-score family mean in §2 is also UNVERIFIED against filed scores. No disposition has yet been recorded in the supplied §2b.
+
+**BODY-WRITE: none (read-only run)**
+tokens used
+20,880
+**T178 · T182 · T184 · T186: RETURN-TO-OBSERVE.** The supplied record supports useful planning detail, but does not evidence the required source-segment viewing in motion or carry the filed family scores and cure lists. Primary classification for each: **MECHANICS-UNSEEN**.
+
+Scores below assess evidence in the supplied stream. A 0.5 denotes an assertion or partial support without the required supporting citation.
+
+| Item | queue-state-priced | prior-scores-read | mechanics-seen | variables-extracted | guidance-carried | consumer-named |
+|---|---:|---:|---:|---:|---:|---:|
+| T178 | 1.0 | 0.5 | 0.5 | 1.0 | 1.0 | 1.0 |
+| T182 | 1.0 | 0.5 | 0.5 | 1.0 | 1.0 | 1.0 |
+| T184 | 1.0 | 0.5 | 0.5 | 0.5 | 1.0 | 1.0 |
+| T186 | 1.0 | 0.5 | 0.5 | 1.0 | 1.0 | 1.0 |
+
+**Findings**
+
+1. **Queue and ownership are adequately priced for all four.** RUN.md §1 “Pool census” explicitly distinguishes the freshly read, exhausted QUEUE.md from the newer catalogue registration. It identifies #85–#88 as pending row creation, names all four OWED items, reports no corresponding artifact directories, and assigns first attempts to recreation under A3 §3. The missing queue rows are disclosed; this is not evidence of a misrouted re-attempt.
+
+2. **The motion-viewing requirement remains unfulfilled in the supplied evidence.** RUN.md §1b records individual evidence frames as “viewed”; §1c records extracted frames viewed firsthand. Neither states that the source segments were played and inspected in motion. Sparse frames support observed states and timing brackets, but do not establish motion between them. This affects:
+   
+   - **T178:** the exposure-rise curve and any spatial settle; §2 correctly labels the settle UNMEASURED.
+   - **T182:** the claimed continuous rolling phase across the cut. §1c’s stills do not establish phase continuity.
+   - **T184:** foreground movement during the occluded landing and subsequent reveal.
+   - **T186:** pass movement and direction. The record properly identifies entry/exit as allocations, but still lacks source-motion observation.
+
+   **Cure before advancement:** record firsthand playback of each named source window, with observed motion, second-based sub-beats, and explicit boundaries between measured behavior and supplied allocations. Allocation disclosure is valuable, but does not replace the guard’s §2(3) viewing requirement.
+
+3. **Family scores are asserted, but the filed score evidence and cures are missing.** RUN.md §1 “Pool census,” item 5 names T104, T105 and T106 with numerical outcomes; §2 “Failure-point evaluation” adds T107–T109. No actual scores.md passages, verdict-history lines, or filed cure lists are supplied. The negative lessons about timing and action continuity are useful summaries, but cannot demonstrate that the filed failures were read. This is an additional **SCORES-UNREAD** defect for each item under the family-sibling requirement.
+
+   **Cure before advancement:** supply the relevant filed score/history excerpts and cure lists, identifying which sibling shares each item’s machinery. If a cited sibling has no filed cure list, state that explicitly. The quoted scores remain **UNVERIFIED** in this review.
+
+4. **T184’s Plan does not yet bind the observed occlusion checkpoint.** RUN.md §1c identifies majority-dark foreground at source 102.80 s, or build **1900 ms**. Its §2 table specifies `landingCoverage = 0.62` at the cut, then clearing over `revealMs = 1600`; its assertions check coverage at **1501 ms**, not 1900 ms. Nothing specifies how much coverage remains at the observed checkpoint.
+
+   **Exact cure:** add a configurable coverage checkpoint at build 1900 ms, its measurement definition and tolerance, and a trajectory that satisfies it. Assert majority-dark foreground at that instant. This clears the **VARIABLES-THIN** gap without treating the invented reveal duration as measured.
+
+5. **Standing guidance and consumers are carried adequately.** RUN.md’s “Observe gate-out” explicitly prices particle and typography guidance as inapplicable, consistent with the described scene mechanics. It names A9.1 and the census-checkpoint candidate. §1 names the **DLC assembler’s opening surface for T178 and transition surfaces for T182/T184/T186**, satisfying container-plus-lane specificity.
+
+6. **Observe-call accounting is absent.** The supplied record does not explicitly say whether earlier Observe-phase Codex calls occurred or that none occurred; §2b is an empty placeholder. Print either the receipt references or “No earlier Observe-phase Codex calls.” No owner-only information gap is apparent.
+
+**Limits:** This is a fed, text-only review. No tools or disk reads were used, following the explicit FED instruction over the general disk-reading convention. The underlying queue, packet sections, register entries, scores/history, guidance excerpts, motion playback and receipts were not supplied independently. The six-score family mean in §2 is also UNVERIFIED against filed scores. No disposition has yet been recorded in the supplied §2b.
+
+**BODY-WRITE: none (read-only run)**

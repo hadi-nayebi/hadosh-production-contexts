@@ -1,0 +1,181 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/runs/2026-11-17-cycle-027-wave-24
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e89e-fded-7012-b100-a247508c4889
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream. If a check needs material not in this stream, price it as a feed gap.
+CONSUMER: recreation job INSTRUCTION §2 gate — jev-plan-exit for Cycle 027 Wave 24, an EMPTY-POOL wave (0 items). DECISION PRICED: EXECUTE / EXECUTE-WITH-GAPS / RETURN-TO-PLAN for the wave's Plan. In the empty-pool form the Plan product is: the finding-form product list (§0 form: census · four cycle-level guard firings · three filings · upstream intake priced), the codex-observe→jev-observe-exit sequencing rule, the §0 skeleton record written at Plan close, and the failure-point evaluation (counterfeit verdict / misrouting barred). Parameter tables, construction choices, Execute/Verify checklists for builds, and plateau pricing are inapplicable-by-form for zero items — name any leg you hold inapplicable-by-form as such rather than as a gap. WORKING RECORD: RUN.md §1–§2 + §2b dispositions so far (below), plus the filed jev-observe-exit return (ADVANCE, no gaps). BODY-WRITE: your return is filed verbatim in the run directory as jev-plan-exit-return.md and its disposition is consumed in RUN §2b; end with your verdict line and dimension scores.
+
+=== GUARD DEFINITION ===
+# Jev call — jev-plan-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: Execute is spent only on a Plan that already contains its checklists, its failure points, and its plateau exposure — priced in Plan, never discovered at close._
+
+## 1. What it judges
+- Deliverable: per-item Plan product in RUN.md (§2 gate out: parameter table + construction choice + verification plan) plus the wave manifest's per-item summaries.
+- Call point: recreation INSTRUCTION §2, at the gate out of Plan, before §3 Execute opens for an item. The verdict is advisory per item — applied, or set aside with the miss recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Plan can be executed and verified without improvisation, item by item. Price, in order:
+(1) PARAMETER TABLE COMPLETE — every variable from the Observe gate-out (§1.3 list, as passed by jev-observe-exit) is a named config key with the specimen's value as default (§2.1). A variable with no key, or animation logic the Plan already describes with literals, is a Plan failure named here — not an Execute surprise.
+(2) CONSTRUCTION CHOICE PRICED — the HTML-native construction is chosen for the technique's mechanics (canvas particle system · CSS keyframes · SVG draw-on · DOM animation · generated imagery + overlays) with rejected alternatives named in one line each (§2.2). For particle-field items the choice must instantiate the flow-field model (Amendment A5 §4); for typography items it must start from runtime text sampling (Amendment A1 §2) or name why not. Owner Cure 1 (intensity separation) and Owner Cure 2 (phase exclusivity) appear as construction requirements where the technique is a particle field or a sequenced-phrase piece — absent cures in a particle/sequence Plan = the T15 attempt-1 failure re-planned.
+(3) EXECUTE CHECKLIST EXISTS — a step list for §3 (segment cut with timestamps ±0.5 s handles · recreation.html build · comparison.html build with synchronized controls + phone stacking · self-verify legs) concrete enough that a builder who did not write the Plan could execute it.
+(4) VERIFY CHECKLIST EXISTS, AS INSTRUMENTS — §2.4's verification plan names: the swap test's exact altered values (words minimum + one timing + one palette value, §5.1) · the purity greps + asset inventory (§5.2/§6.1) · the comparison check (§5.3) · jev-prewave's call point (§5, between own checks and the wave) · the five-lens Codex wave composition (§5.4: motion fidelity · timing/tempo · construction purity · reusability · readability). A checklist item stated as an intention ("check purity") without its instrument (the grep patterns / harness) fails this leg.
+(5) FAILURE POINTS EVALUATED — the Plan names what breaks it, per item: at minimum priced from this job's record — surplus-particle freeze (T15: motion 68 + reuse 64 convergent defect) · word-vs-reserve intensity collapse (owner catch 1, readability) · phrase-lifecycle overlap (owner catch 2) · fitting/wrapping limits for long words (reuse 64: fitting stops ~14 px, no multiline) · pool/density guards · the render-proof limitation (no browser binary in this seat — the comparison page is the render surface; the Plan must state how its absence is carried, as attempt 1's scores.md did). Technique-specific failure points beyond this floor are expected; a Plan whose failure list is only this floor, copied, is scored down on specificity.
+(6) PLATEAU FLOOR PRICED IN PLAN — the floor rule (Amendment A2, practice §floor as close-out gate) is priced HERE: the Plan states the item's prior average where one exists in its family line or states FIRST-ATTEMPT (no prior), and names in advance what a non-beating result would mean (which lens is expected to be stuck, the hypothesized cause, the WHY the scores.md entry will carry). A re-attempt-shaped build (same machinery family, e.g. T16 on T15's pool) that reaches close-out and discovers its plateau there has failed this leg retroactively — the Condense record says so.
+(7) REDUCTIONS NAMED — anything the Plan quietly drops from the packet's mechanics (a sub-beat deferred, a phase simplified) is named as a deferral with its reason (§2/jev-prewave fidelity-plan honesty); a silent deferral found here is classified, not absorbed.
+Score 0–1 per dimension (§4), classify, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Plan gate-out blocks + wave manifest · the Observe gate-out blocks with jev-observe-exit's filed verdicts · the item's scores.md / family scores.md cure lists where they exist · INSTRUCTION §2, §5, §6 + Amendments A1/A2/A5 · guards.md command list.
+- NEVER FED: builder rationale prose about expected scores · prior waves' verdicts for unrelated techniques · any lens return not yet filed.
+- Ceiling: ≤32k tokens; recreation.html does not exist yet at this gate and is never fed.
+
+## 4. Output space
+- Verdict classes (per item): **EXECUTE · REVISE · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): parameter-table-complete · construction-priced · execute-checklist-ready · verify-checklist-instrumented · failure-points-priced · plateau-priced.
+- Rejection taxonomy (one primary): UNBOUND-VARIABLE · LITERAL-IN-LOGIC · CURE-ABSENT (Owner Cure 1/2 or family guidance missing from construction) · CHECKLIST-INTENTION (Verify item without instrument) · FAILURE-POINTS-GENERIC · PLATEAU-UNPRICED · SILENT-DEFERRAL · RETURN-TO-OBSERVE-ROOT (the Plan's defect is an Observe defect — mechanics/variables missing upstream).
+- Accepted profiles travel: cited in RUN.md at the Execute gate; REVISE items carry their classified defect as the Plan amendment charge.
+
+## 5. Floors and disposition
+- verify-checklist-instrumented < 0.5 → REVISE (a Plan that cannot say how it will check itself does not execute). CURE-ABSENT on a particle-field or sequenced item → REVISE at any other score. PLATEAU-UNPRICED on a family re-use build → REVISE.
+- RETURN-TO-OBSERVE is reserved for defects whose cure is upstream (missing mechanics/variables), and names the jev-observe-exit dimension that passed it — that citation is the observe-exit's firing-record evidence.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 attempt 1's Plan reconstructed from Cycle-002 RUN.md (must EXECUTE or REVISE only on named legs — it did carry a verification plan and a named interlude deferral). (b) A constructed particle Plan with no intensity-separation requirement (must REVISE as CURE-ABSENT). (c) A constructed Plan whose Verify checklist reads "run swap test, check purity, fire wave" with no altered values or grep patterns (must REVISE as CHECKLIST-INTENTION). (d) A constructed T16 Plan silent on T15's 78.5 and its stuck lenses (must REVISE as PLATEAU-UNPRICED).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. Standing watch: whether the §2.4 "four lenses" wording anywhere still survives against the five-lens form — any Plan citing four lenses is a FAILURE-POINTS-GENERIC signal, not a typo.
+
+## Amendment — allocation/count consistency leg (2026-11-16, recreation Cycle 025 Condense, pattern promotion)
+**The leg:** for every item whose Plan carries a schedule or allocation table, this gate prices the table's **census-anchor mapping** before Execute: each prescribed onset/duration is mapped into segment-relative time (window-start offset applied) and cross-checked against every census state the wave record names for that item. A prescribed value that contradicts a named census state at its instant (e.g. a front prescribed 8% grown at the census instant whose state reads "no territory"; arrivals prescribed complete at 11300 ms against a census anchor "crowded by ~7000 ms") is a REVISE charge, primary class **UNBOUND-SCHEDULE**. A Plan whose schedule table prints no census-anchor mapping is priced as carrying an unmapped schedule — the mapping's absence is itself the charge (the table cannot be checked, which is the defect's hiding place). Count assertions ride the same leg: a summary count in the Plan that disagrees with the table it summarizes is UNBOUND-SCHEDULE's count form (A9.3's gate side).
+**Forcing evidence (three instances, one class):** T153 Wave 21 (timing 45 — §2b allocation contradicted the §1c census checkpoints it claimed to rest on) · T160 Wave 22 (timing 68 — prescribed onsets 2500/3500 ms already 8.33%/45.45% grown at the 449 s/452 s census instants) · T162 Wave 22 (timing 64 — even-stepped allocation completing at 11300 ms against census anchors at ~2000/~7000 ms). For T160 and T162 the build implemented the prescribed schedule exactly (verified from this cycle's filed returns, bound in Cycle 025 RUN §9b item 2); for T153 the same compliance is attributed to the seat's Wave-21 cycle record (Cycle 024 RUN §5) and is unverified in the Wave-22 stream. In all three the defect was the Plan's, discovered by the timing lens at the cost of the item's verdict.
+**Before/after:** before — this gate priced parameter tables for completeness and checklists for instruments, but no leg owned schedule-vs-census consistency, so three instances across Waves 21–22 shipped census-contradicting schedules through a fired gate. After — the mapping is a named Plan product and this leg prices it at the gate, where the cure costs a table edit instead of a verdict.
+
+=== WAVE RECORD (RUN.md §1-§2) ===
+# RUN — recreation Cycle 027 · Wave 24 · 2026-11-17 (EMPTY-POOL — Packet #10 intake pending registration)
+
+Opened BEFORE any building (INSTRUCTION §0). Trigger: cron `study-recreation` 2026-11-17 03:20 EST.
+Governing: recreation INSTRUCTION.md (§0 wave form incl. empty-pool form promoted 2026-11-15 Cycle 010, skeleton-record step, Amendments A1/A2/A3/A5/A6/A7/A9/A10 + 2026-11-14 ruling: arming=firing, verdicts advisory), bounded_probe_discipline (probes named in advance, capped in code ≤6,000 chars: QUEUE recreation section in 6 capped slices · TECHNIQUES.md head/counts · INDEX.md head · style-library HQ own entries · video-digests directory listing · binding artifact census of `hidden_files/study/recreations/` · verdict-history head/tail/counts · heartbeat tail; breaches: 0).
+
+Pre-action judgment (six questions): (1) objective — one wave cycle carried faithfully; where no first attempts are owed, the lawful product is the empty-pool finding, never invented work (Cycles 009–011 precedent, §0 empty-pool clause). (2) Forward movement — pool state re-verified fresh across queue · register · intake · artifact census · board hand-offs; Packet #10's registration state is the new fact this wave must price (Wave 23 closed predicting empty-pool until style-library registers it). (3) Cost to owner — none; no ask, no schedule change. (4) Why now — scheduled firing; first recreation cycle after Wave 23 closed (2026-11-17 01:15 EST). (5) Body-write — this RUN.md, HQ.json skeleton→closed entry (same id `rec-2026-11-17-wave24`), heartbeat skeleton→closed beat 92, verdict-history no-verdict line for Cycle 027. (6) Order check — Observe (pool census) stands before Plan/Execute below; no build was started before this record; skeleton board/heartbeat entries are written at Plan close per §0, before the guard firings that constitute this form's Execute.
+
+## §1 — Observe (pool census, firsthand this run)
+
+**Wave manifest: 0 items.** No item is taken this wave; the census below is the wave's Observe product.
+
+1. **QUEUE.md RECREATION QUEUE:** rows #1–#84, every row attempted — RECREATED on recreation's filed first-attempt evidence or IN PROGRESS with "attempt 2 routes to practice". WAVE 23 footer (filed at Wave 23 close, read this run): T167 PASS 92.0 · T168 PASS 95.4 · T170 PASS 94.4 · T175 PASS 94.2; catalogue at Wave 23 close (177-technique catalogue, Cycle-016 register basis): RECREATED 57 · IN PROGRESS 18 · DESCRIBED 102, of which DESCRIBED-OWED 0 — Packet #9 owed pool EXHAUSTED, first-attempt queue CLEAR. No new row has been added since Wave 23.
+2. **Catalogue register (style-library TECHNIQUES.md + INDEX.md, state at its Cycle-016, 2026-11-16 22:56 EST — unchanged since Wave 23 read):** 177 techniques catalogued (P1 25 · P2 23 · P3 25 · P4 25 · P5 14 · P6 19 · P7 13 · P8 21 · P9 12 as T166–T177); TECHNIQUES.md tiers DESCRIBED 106 · IN PROGRESS 18 · RECREATED 53 (register tier counts lag recreation's filed-evidence count of 57 RECREATED — the four Wave-23 PASS tier moves T167/T168/T170/T175 are style-library's act, not yet landed; status-lag line identified here by subject + disposition: subjects T167/T168/T170/T175, disposition = tier move owed by style-library's next cycle, NOT a recreation gap). DESCRIBED-OWED on the register's own obligation line: 13 stood at Cycle-016 (queue #72–#84), of which #72–#80 were discharged Waves 21–22 and #81–#84 discharged Wave 23 — standing DESCRIBED-OWED = 0.
+3. **Intake census:** `hidden_files/study/video-digests/` holds 10 packet directories — the 9 catalogued packets (P1–P9) plus `2026-11-16-vimeo-watchtower/` — Packet #10 (Watchtower of Turkey, Leonardo Dalessandri, Vimeo 108018156, 212.68 s), BUILT and ADOPTED CLEAN by video-digestion Cycle-016 (2026-11-17 00:30 EST, heartbeat beat 89): 12 techniques, 10 lessons, 7 ideas. It has NO TECHNIQUES.md entry, NO OWED classification, and NO recreation-queue row — registration is style-library's act, pending (see source 4). Until registration exists, its techniques are NOT this wave's items under §1's resource list.
+4. **Board hand-off census:** video-digestion HQ entry `vd-2026-11-16-004` / lane entry `lane-2026-11-16-004` (status acted, to HQ) hands Packet #10 to style-library for registration under the `lane-2026-11-16-005` limit (Packet #10's shot-count/density phrasing is OVERSTATED on its face; registration must carry that limit — subject + disposition identified here: consumer style-library, consequence = any count/density claim it registers carries the limit). Style-library HQ.json's own entries end at `sl-2026-11-16-cycle-016` (Packet #9 registration) — no Packet #10 registration entry exists. Style-library HQ also carries two practice tier hand-offs dated 2026-11-17 01:30 EST (`practice-2026-11-17-t156-a2` PASS 87.2 · `practice-2026-11-17-t157-a2` PASS 94.6, both status sent) — subjects T156/T157 attempt 2, disposition = tier moves owed by style-library, practice's pool, NOT recreation items. Recreation HQ also carries `practice-2026-11-17-census-checkpoint-note` (status sent) — subject: census-checkpoint re-allocation candidate rule from practice Cycle 019; disposition: consumed or declined at THIS cycle's Condense (§9 below), not a wave item.
+5. **Artifact census (mechanical, binding form, this run):** `hidden_files/study/recreations/` = **84 artifact directories**, every one holding scores.md (missing: none) and a codex/ directory with ≥6 filed .md returns (per-directory codex_md counts, this run: T01 13 · T02 12 · T03 12 · T04 6 · T05 18 · T06 12 · T07 12 · T08 6 · T09 17 · T10 12 · T100 13 · T101 13 · T102 8 · T103 24 · T104 8 · T105 23 · T106 8 · T107 15 · T108 8 · T109 8 · T11 39 · T110 8 · T111 13 · T12 12 · T122 8 · T123 17 · T124 8 · T128 8 · T129 23 · T13 32 · T130 20 · T132 12 · T133 8 · T134 9 · T135 8 · T137 9 · T139 8 · T14 27 · T140 8 · T145 8 · T149 13 · T15 17 · T151 9 · T153 22 · T154 8 · T156 17 · T157 19 · T16 30 · T160 10 · T162 16 · T167 9 · T168 8 · T17 19 · T170 10 · T175 8 · T18 42 · T19 20 · T20 12 · T21 18 · T22 9 · T23 42 · T38 19 · T43 18 · T45 6 · T53 13 · T54 33 · T56 13 · T57 31 · T59 15 · T64 13 · T66 11 · T68 11 · T71 10 · T75 8 · T76 11 · T81 8 · T82 9 · T83 9 · T90 13 · T91 30 · T92 13 · T94 13 · T96 23 · T99 13 — counts include practice re-attempt filings in the same directories; binding basis per attempt = the attempt's scores.md recomputed against its filed lens returns at its own wave's Verify). Verdict-history.md: 99 lines, 84 "attempt 1" mentions matching the 84 directories 1:1, plus prior empty-pool no-verdict lines (Cycle 009 Wave 7 · Cycle 010 Wave 8 · Cycle 011 Wave 9 — subjects identified: each is a NO VERDICT empty-pool filing, disposition = pool finding filed, no build scored).
+6. **Ownership split (Amendment A3 §3):** all IN PROGRESS techniques are practice's re-attempt pool (practice Cycle 019 Wave 18 closed 2026-11-17, beat 91: T157/T153 PASS on re-attempt among its results). A wave item taken from that pool by this job would be a REATTEMPT-MISROUTED routing defect. This job takes none. Packet #10's unregistered techniques are upstream intake, not a pool this job can take from.
+
+**Observe gate-out:** mechanics summary = none (0 items; no technique is Observed for building this wave) · sub-beat timings = none · variable list = none · consumer = the empty-pool finding's consumers: HQ (pool state), style-library (Packet #10 registration is its next act), and this job's next cycle (re-censuses fresh, never inherits this finding).
+
+## §2 — Plan (empty-pool form)
+
+- **Wave product:** the finding form per §0: (1) pool census (§1, done) · (2) cycle-level guard firings — codex-observe (cycle-level form) · jev-observe-exit · jev-plan-exit · codex-condense — fired unconditionally, returns filed in this run directory; per-item/per-build calls printed NOT-DEMANDED-BY-FORM in §5 with reasons · (3) filings: HQ.json entry · verdict-history no-verdict line · lane heartbeat beat · (4) upstream intake state priced in the open (§1 sources 3–4).
+- **Sequencing (codex-observe sequencing amendment, 2026-11-15):** codex-observe's return is filed in this run directory BEFORE jev-observe-exit is started, and the filed return is fed to that judge as part of its record.
+- **Skeleton record (§0, NON-SKIPPABLE):** at this Plan close, HQ.json skeleton entry `rec-2026-11-17-wave24` (state "planned — Execute not yet run") and heartbeat skeleton beat 92 in the same state are written; the close UPDATES both in place (same ids).
+- **Parameter table / construction choice / verification plan:** NOT-DEMANDED-BY-FORM for 0 items — no build exists to parameterize; printing tables for invented items would be counterfeit. The verification plan for the finding itself is the binding census in §1.5 + the four guard firings.
+- **Failure-point evaluation:** the empty-pool form's named failure is counterfeiting a verdict for an unbuilt wave, or misrouting a practice re-attempt / unregistered intake technique as a first attempt — both barred in §1.6 and priced by the gate judges.
+
+## §2b — Gate dispositions
+_(filled as returns land, before Execute's filings close)_
+
+=== FILED JEV-OBSERVE-EXIT RETURN ===
+ier hand-offs.
+
+7. **Codex/owner inputs are accounted for.** The supplied codex-observe return is **CONFIRMED** and is explicitly represented as filed before this judge started, satisfying the supplied sequencing record. No owner-only information gap is claimed. The checkpoint note remains a named Condense action (§1.4), not an Observe blocker.
+
+**Defects / Plan gap charges:** none. No rejection taxonomy applies.
+
+**Limits:** Feed-only assessment. Underlying files, individual score bindings, and filing chronology were not independently verified. These limits do not create a material feed gap under the supplied empty-pool census contract. This verdict clears Observe only.
+
+**Body-write: none (read-only run)** — consumer to file this return verbatim as `jev-observe-exit-return.md` and record its disposition in RUN.md §2b.
+
+**ADVANCE — dimension scores:** queue-state-priced **1.0** · prior-scores-read **1.0** (census scope) · mechanics-seen **N/A, inapplicable-by-form** · variables-extracted **N/A, inapplicable-by-form** · guidance-carried **1.0** (applicable ownership guidance; family construction guidance N/A) · consumer-named **1.0**.
+tokens used
+22,151
+**ADVANCE — Cycle 027 Wave 24’s Observe record supports the empty-pool form.**
+
+Findings, in guard order:
+
+1. **Queue state priced.** RUN.md §1.1–§1.2 identifies the current queue and reconciles the remaining obligations: #72–#80 = 9 entries; #81–#84 = 4; 9 + 4 = 13 discharged, leaving 0 owed. §1.6 explicitly separates recreation’s first attempts from practice’s re-attempts. No routing defect is evidenced.
+
+2. **Prior scores priced as applicable to the census.** §1.5 supplies the binding artifact census, scores.md presence, per-directory return counts, and per-attempt binding basis. §1.1–§1.2 identifies the filed Wave-23 results and pending register updates. Individual score arithmetic and family-sibling cure review are **inapplicable-by-form**: no technique is entering Plan.
+
+3. **Mechanics viewing is inapplicable-by-form.** The §1 gate-out explicitly records no mechanics or sub-beat timings because the manifest contains no items. This is not MECHANICS-UNSEEN.
+
+4. **Variable extraction is inapplicable-by-form.** No technique requires a parameter table; §2 states that boundary explicitly. No VARIABLES-THIN defect applies.
+
+5. **Technique construction guidance is inapplicable-by-form.** No particle-field or typography construction is proposed. Applicable ownership guidance is carried in §1.6; absent family construction recipes do not constitute GUIDANCE-DROPPED here.
+
+6. **Consumers are named.** The §1 gate-out assigns the finding to HQ for pool state, style-library for Packet #10 registration, and recreation’s next cycle for a fresh census. §1.4 identifies the registration limitation and pending tier hand-offs.
+
+7. **Codex/owner inputs are accounted for.** The supplied codex-observe return is **CONFIRMED** and is explicitly represented as filed before this judge started, satisfying the supplied sequencing record. No owner-only information gap is claimed. The checkpoint note remains a named Condense action (§1.4), not an Observe blocker.
+
+**Defects / Plan gap charges:** none. No rejection taxonomy applies.
+
+**Limits:** Feed-only assessment. Underlying files, individual score bindings, and filing chronology were not independently verified. These limits do not create a material feed gap under the supplied empty-pool census contract. This verdict clears Observe only.
+
+**Body-write: none (read-only run)** — consumer to file this return verbatim as `jev-observe-exit-return.md` and record its disposition in RUN.md §2b.
+
+**ADVANCE — dimension scores:** queue-state-priced **1.0** · prior-scores-read **1.0** (census scope) · mechanics-seen **N/A, inapplicable-by-form** · variables-extracted **N/A, inapplicable-by-form** · guidance-carried **1.0** (applicable ownership guidance; family construction guidance N/A) · consumer-named **1.0**.
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+**EXECUTE — the Plan supports the empty-pool finding form.**
+
+1. **Finding product complete.** RUN.md §2 names the census, four cycle-level guard firings, three filings, and upstream intake pricing. The four named guards are codex-observe, jev-observe-exit, jev-plan-exit, and codex-condense; the three filings are HQ.json, verdict-history, and the lane heartbeat. No build is proposed.
+
+2. **Sequencing explicit.** §2 requires codex-observe’s filed return before jev-observe-exit starts and includes that return in its feed. The supplied jev-observe-exit return confirms this sequence and returns ADVANCE without gap charges.
+
+3. **Skeleton record specified.** §2 records the Plan-close HQ skeleton as `rec-2026-11-17-wave24` and heartbeat skeleton as beat 92, both marked “planned — Execute not yet run,” with closure updating the same identifiers. This satisfies the supplied textual record; persistence was not independently checked.
+
+4. **Applicable failure points priced.** §2 bars counterfeit verdicts for unbuilt work. §1.6 bars taking practice re-attempts or unregistered Packet #10 techniques as recreation first attempts. §1.3–§1.4 assigns registration to style-library and carries the shot-count/density limitation into that hand-off.
+
+5. **Build legs are inapplicable-by-form.** Parameter tables, construction alternatives and cures, build Execute/Verify checklists, plateau pricing, technique reductions, and schedule-to-census mapping have no object in this zero-item wave. Their absence is not a feed gap. The finding’s checks are identified in §2 as the §1.5 binding census and four guard firings.
+
+**Defects / gap charges:** none. No rejection taxonomy applies.
+
+**Limits:** Feed-only review. Underlying census evidence, skeleton persistence, filing chronology, and actual §2b dispositions were not independently verified. The supplied §2b contains no disposition entries; this return does not certify completion of Execute or Condense.
+
+**Body-write: none (read-only run)** — consumer to file this return verbatim as `jev-plan-exit-return.md` and consume its disposition in RUN.md §2b.
+
+**EXECUTE — dimension scores:** parameter-table-complete **N/A, inapplicable-by-form** · construction-priced **N/A, inapplicable-by-form** · execute-checklist-ready **N/A, inapplicable-by-form (builds)** · verify-checklist-instrumented **N/A, inapplicable-by-form (builds)** · failure-points-priced **1.0 (empty-pool scope)** · plateau-priced **N/A, inapplicable-by-form**.
+tokens used
+17,957
+**EXECUTE — the Plan supports the empty-pool finding form.**
+
+1. **Finding product complete.** RUN.md §2 names the census, four cycle-level guard firings, three filings, and upstream intake pricing. The four named guards are codex-observe, jev-observe-exit, jev-plan-exit, and codex-condense; the three filings are HQ.json, verdict-history, and the lane heartbeat. No build is proposed.
+
+2. **Sequencing explicit.** §2 requires codex-observe’s filed return before jev-observe-exit starts and includes that return in its feed. The supplied jev-observe-exit return confirms this sequence and returns ADVANCE without gap charges.
+
+3. **Skeleton record specified.** §2 records the Plan-close HQ skeleton as `rec-2026-11-17-wave24` and heartbeat skeleton as beat 92, both marked “planned — Execute not yet run,” with closure updating the same identifiers. This satisfies the supplied textual record; persistence was not independently checked.
+
+4. **Applicable failure points priced.** §2 bars counterfeit verdicts for unbuilt work. §1.6 bars taking practice re-attempts or unregistered Packet #10 techniques as recreation first attempts. §1.3–§1.4 assigns registration to style-library and carries the shot-count/density limitation into that hand-off.
+
+5. **Build legs are inapplicable-by-form.** Parameter tables, construction alternatives and cures, build Execute/Verify checklists, plateau pricing, technique reductions, and schedule-to-census mapping have no object in this zero-item wave. Their absence is not a feed gap. The finding’s checks are identified in §2 as the §1.5 binding census and four guard firings.
+
+**Defects / gap charges:** none. No rejection taxonomy applies.
+
+**Limits:** Feed-only review. Underlying census evidence, skeleton persistence, filing chronology, and actual §2b dispositions were not independently verified. The supplied §2b contains no disposition entries; this return does not certify completion of Execute or Condense.
+
+**Body-write: none (read-only run)** — consumer to file this return verbatim as `jev-plan-exit-return.md` and consume its disposition in RUN.md §2b.
+
+**EXECUTE — dimension scores:** parameter-table-complete **N/A, inapplicable-by-form** · construction-priced **N/A, inapplicable-by-form** · execute-checklist-ready **N/A, inapplicable-by-form (builds)** · verify-checklist-instrumented **N/A, inapplicable-by-form (builds)** · failure-points-priced **1.0 (empty-pool scope)** · plateau-priced **N/A, inapplicable-by-form**.
