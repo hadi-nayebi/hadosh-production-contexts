@@ -1,0 +1,9 @@
+# W1 stage-evidence checkpoints — timeline cures (attempt 3)
+Per deviation D-A3-1 in the build record: the build executed in one continuous pass, so these checkpoints are stage-evidence files generated against the FINAL source, not staged interim sources. Lens attribution for every cure prints BUNDLED.
+Final source: recreation.html sha256 `1ee27ef80cd62382bfdb561e0446034e416e2191e3dd1664fa0bdb9506e629c2`; create-once copy at `checkpoint-final-source.html` in this directory (same hash, verified at filing).
+Own-check evidence is the suite in the run directory (`own-checks-T54-attempt3.js`, 50 pass / 0 fail on this source). Per timeline cure:
+- **Stage C-X2 (placement completes by full arrival):** assertion "placement end + pop settle <= full arrival 2000" — PASS [1870 + 30.6 <= 2000]; assertion "at full arrival the roster is complete" — PASS.
+- **Stage C-T2 (regional budget to the resolved boundary):** assertion "regional hold end 1100 / arrival 2000" — PASS [1100/2000]; assertion "camera regional at 1000ms, full at 2000ms" — PASS.
+- **Stage C-T1 (pan-away restored, pass re-homed after it):** assertion "pan-away keys 6000 full / 7000 exit shifted" — PASS [6000/7000]; assertion "first pass entry starts at 7000" — PASS; camera continuity sampled every 25 ms across the whole timeline incl. 5900–7100 — PASS [max scale step 0.073, max centre step 25.0].
+- **Stage C-X1 (derived step + dwell):** assertions "step = move + dwell, dwell = formula(name count + longest label)", "dwell >= floor for every wave", "continuous settled exposure for every wave member" — PASS for the default fixture and for a three-wave fixture.
+Cross-cure regression: the full suite (displayed-state, validation, swap, census, purity, comparison sections) re-run against this final source at filing — 50/50 PASS.

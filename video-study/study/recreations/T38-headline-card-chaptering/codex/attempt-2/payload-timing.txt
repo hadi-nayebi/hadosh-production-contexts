@@ -1,0 +1,398 @@
+STANDING HEADER — Codex review run, practice job (re-scoring wave).
+(1) CONSUMER + DECISION: consumer is practice job INSTRUCTION §5 (the five-lens re-scoring wave is the deliverable gate for technique T38); this run prices the TIMING lens only — its score feeds the tier decision (PASS requires wave average >=85 AND no lens <70) and any cures for a next attempt.
+(2) WORKING RECORD: this run builds from and writes to the artifact directory hidden_files/study/recreations/T38-headline-card-chaptering/ — its codex/attempt-2/ folder (returns) and scores.md. Your full return is filed verbatim at codex/attempt-2/lens-timing.md.
+(3) BODY-WRITE REQUIREMENT: your return MUST end with a line "BODY-WRITE: <what this return writes into the body — the lens-timing.md filing and the scores.md timing entry>" and, on the line before it, "SCORE: <integer 0-100>". A return without those two lines is incomplete.
+
+TECHNIQUE T38 — Headline-card chaptering. Catalogue mechanics: every section opens on a designed title card in one visual system — a headline, often with a date/provenance chip, and the section's key object. Specimen window: a 14s segment (11:58–12:12) whose pie card is fully formed by t≈4s. A second card (formula card, from 5:02 elsewhere in the video) demonstrates the same system. The packet times only formed-card anchors; intermediate onsets are not measured in the packet.
+
+YOUR LENS — TIMING/TEMPO MATCH ONLY: judge the temporal design against the specimen window: formation completion vs the ≈4s anchor, per-card hold allocation and its stated rationale, the handover rhythm at the card boundary, total duration vs the 14s window, and the honesty of the timing model's labelling (measured vs allocated, stated uncertainty, the second card's status). Do NOT score motion form, purity, parameterization, or legibility — other lenses own those.
+
+Below: the score-blind build record, then the recreation's full source (recreation.html). Return: priced findings for the timing lens, then SCORE and BODY-WRITE lines as specified. Score timing only, 0-100.
+==== build record ====
+# T38 — Headline-card chaptering · build record (attempt 2)
+
+Artifact dir: `hidden_files/study/recreations/T38-headline-card-chaptering/`
+recreation.html sha256 (final, bound to all five lens returns of this attempt):
+`3530310a61d5a7e24756c1ec47f6a19f48394f38e8c8b8fdd4b9bc4754ba34b2`
+
+## Technique facts (neutral)
+Every section of the specimen opens on a designed title card in one visual system:
+a headline, often with a date/provenance chip, plus the section's key object
+(a computed pie; a formula with a legend). Cards double as the video's chapter
+map. Anchor frames: card 1 (headline "Dark energy", provenance line, pie with
+segment labels, takeaway pill) fully formed at segment t≈4s; card 2 (headline
+"Albert Einstein", date pill chip "1905", formula hero with legend, takeaway
+pill) is a specimen from elsewhere in the same video. The digest grid-change
+census (2s bins) at the two anchors reads 0.022 (t=302) and 0.030 (t=718),
+0.21 (t=722): no blank interval at a card anchor.
+
+## Construction facts
+- One self-contained HTML file; all content, timing, palette, geometry and
+  style values live in CONFIG; construction reads CONFIG only.
+- Timeline is derived, not hand-set: each card carries durationMs (formation
+  start → chapter boundary) and relative entrance offsets; deriveTimeline()
+  computes absolute checkpoints, the handover overlap (incoming formation
+  starts handoverMs before the boundary; the outgoing card stays fully opaque
+  until its boundary, then fades over fadeOutMs), formed times and holds.
+  validateConfig() rejects non-increasing offsets, formation ending after the
+  handover start, invalid pie data, and a timeline total ≠ totalDurationMs.
+- Per-card information load is computed by loadUnits() (headline + chip +
+  takeaway + hero words, plus the demonstration tag where present); the hold
+  pool is shared in proportion to load.
+- Derived timeline (ms): card 1 — start 0, boundary 7000, end 7300, formed
+  3420, hold 2980, load 26 units, load-proportional hold target 3440
+  (residual −460). Card 2 — start 6400, boundary/end 14000, formed 9570,
+  hold 4430, load 30 units, target 3970 (residual +460). Both residuals are
+  inside the model's stated ±600ms uncertainty.
+- Card 2 carries role "demonstration" and a rendered tag
+  "SYSTEM DEMONSTRATION — SECOND CHAPTER FORM"; the timing model states the
+  segment's second half is a labelled demonstration, not a source claim.
+- Pie segment label text is generated from segment values; a segment spanning
+  ≥359.99° renders a full-ellipse case; a zero/empty total is a validation
+  error and renders no paths.
+- Every CSS variable used in the stylesheet or SVG is bound from CONFIG
+  (geometry keys and style keys — weights, gradient endpoint, formula style —
+  are bound through the same setProperty loops as the other geometry).
+- Formula and legend occupy separate layout zones: the formula sits in a
+  56%-wide zone at the left of the hero row; the legend is positioned from
+  60% of stage width rightward. Card 1's provenance line sits on its own
+  right-aligned row below the headline.
+- Full-segment onset/hold measurement beyond the two anchors was not
+  performed; intermediate checkpoints are an allocation model with stated
+  ±600ms uncertainty (timingModel in CONFIG).
+
+## Own checks (node suite, effect mappings — 34 assertions, all PASS)
+- validate-clean · total-14000 · card2-start-is-boundary-minus-handover (6400)
+- checkpoints-derived · loads-differ (26 vs 30) · move-effect (extending
+  card 1's duration by 500ms shifts every card-2 checkpoint by exactly 500)
+- incoherent-rejected (a mismatched totalDurationMs produces an error)
+- pie-spans-sum360 · label-generated ("DARK ENERGY ≈ 70%" from value 70/100)
+- pie-360-case (single segment → full case) · pie-zero-total-error
+- override-effect (?headline= / ?pill= change the configured card text)
+- binding-census-0-unbound · geom-keys-all-bound · style-keys-all-bound
+- css-no-weight-literals · css-no-style-literals · css-gradient-uses-var
+- handover-no-blank (no sampled t in 6300–7400ms where both cards are at 0)
+- handover-minmax≥0.9 (from 6805ms on, max(outgoing opacity, incoming
+  headline opacity) ≥ 0.9 through the fade) · outgoing-opaque-until-boundary
+- Displayed-state model at 360px and 390px stage widths (rects computed from
+  the source's own layout rules): formula∩legend disjoint · headline row ∩
+  provenance row disjoint · all modelled rects inside the stage · smallest
+  modelled text size 11.02px at 360px (floor 11px).
+- purity: no media/external references in the recreation source.
+- Regression guards: hero element appended to its card · standalone autoplay
+  call present at load.
+- node --check on the inline script: OK.
+
+PIXEL-UNVERIFIED: no rendered-pixel verification was performed in this
+environment; layout statements rest on the source-bound displayed-state model
+above, which is a supplement, not a rendered verification.
+
+## Comparison
+Interface unchanged (total duration 14000ms, same control set, same sides);
+comparison.html was not modified and its ORIGINAL side is untouched.
+
+==== recreation.html ====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T38 — Headline-card chaptering (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:var(--pageBg);font-family:var(--fontStack);}
+  #stage{position:relative;width:100%;aspect-ratio:var(--stageRatio);overflow:hidden;
+    background:radial-gradient(ellipse at var(--glowX) var(--glowY), var(--bgGlow) 0%, var(--bg) var(--gradientEnd));}
+  .card{position:absolute;inset:0;opacity:0;pointer-events:none;}
+  .headline{position:absolute;left:var(--padX);top:var(--padY);color:var(--ink);
+    font-weight:var(--headlineWeight);font-size:var(--headlinePx);letter-spacing:var(--headlineTrack);white-space:nowrap;}
+  .chip{position:absolute;font-weight:var(--chipWeight);white-space:nowrap;}
+  .chip-tr{right:var(--padX);top:calc(var(--padY) + var(--headlinePx) + var(--chipGapY));color:var(--chipInkPlain);
+    font-size:var(--chipPx);letter-spacing:var(--chipTrack);background:transparent;padding:0;}
+  .chip-pill{left:var(--padX);top:calc(var(--padY) + var(--headlinePx) + var(--chipGapY));
+    color:var(--chipInkPill);background:var(--chipBgPill);font-size:var(--chipPillPx);
+    padding:var(--chipPadY) var(--chipPadX);border-radius:var(--pillRadius);}
+  .demotag{position:absolute;right:var(--padX);top:calc(var(--padY) + var(--headlinePx) + var(--chipGapY));
+    color:var(--chipInkPlain);font-size:var(--chipPx);font-weight:var(--chipWeight);white-space:nowrap;}
+  .hero{position:absolute;left:0;right:0;top:var(--heroTop);display:flex;justify-content:center;}
+  .hero-formula{justify-content:flex-start;}
+  .seglabel{position:absolute;font-weight:var(--labelWeight);white-space:nowrap;color:var(--labelInk);
+    font-size:var(--labelPx);padding:var(--labelPadY) var(--labelPadX);border-radius:var(--pillRadius);}
+  .formula{color:var(--ink);font-size:var(--formulaPx);font-weight:var(--formulaWeight);font-style:var(--formulaStyle);white-space:nowrap;
+    flex:0 0 var(--formulaZone);text-align:center;}
+  .formula .accent{color:var(--accentCyan);}
+  .legend{position:absolute;left:var(--legendLeft);right:var(--padX);top:var(--heroTop);color:var(--ink);font-size:var(--legendPx);line-height:var(--legendLine);}
+  .legend div{white-space:nowrap;}
+  .pill{position:absolute;left:50%;transform:translateX(-50%);bottom:var(--pillBottom);
+    background:var(--pillBg);color:var(--pillInk);font-weight:var(--pillWeight);white-space:nowrap;
+    font-size:var(--pillPx);padding:var(--pillPadY) var(--pillPadX);border-radius:var(--pillRadius);}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+/*PURE-BEGIN*/
+/* ============ CONFIG — every content / timing / palette / geometry / style value lives here ============ */
+const CONFIG = {
+  totalDurationMs: 14000,
+  stageRatio: "16 / 9",
+  fontStack: "'Segoe UI', Arial, Helvetica, sans-serif",
+  palette: {
+    pageBg: "#0b0620", bg: "#160a38", bgGlow: "#3b1470",
+    ink: "#ffffff", chipInkPlain: "#cfc4ee", chipInkPill: "#14100a", chipBgPill: "#ffd21f",
+    labelInk: "#14100a", pillBg: "#ffd21f", pillInk: "#14100a", accentCyan: "#4fe3e0"
+  },
+  geom: {
+    padX: "4.5%", padY: "6%", glowX: "72%", glowY: "88%", heroTop: "27%",
+    headlinePx: "4.8cqw", headlineTrack: "0.01em",
+    chipPx: "3.06cqw", chipTrack: "0em", chipOffsetY: "0.6cqw",
+    chipPillPx: "3.2cqw", chipGapY: "1.2cqw", chipPadY: "0.7cqw", chipPadX: "1.8cqw",
+    labelPx: "3.1cqw", labelPadY: "0.65cqw", labelPadX: "1.5cqw",
+    formulaPx: "8cqw", legendPx: "3.1cqw", legendLine: "1.65", formulaZone: "56%", legendLeft: "60%",
+    pillPx: "3.3cqw", pillPadY: "1cqw", pillPadX: "2.6cqw", pillBottom: "5.5%",
+    pillRadius: "999px", pieSize: "34cqw", legendRight: "6%", legendTop: "30%"
+  },
+  style: {
+    headlineWeight: "800", chipWeight: "700", labelWeight: "800", pillWeight: "800",
+    formulaWeight: "700", gradientEnd: "70%", formulaStyle: "italic"
+  },
+  pieGeom: { vbW: 100, vbH: 62, cx: 50, cy: 28, rx: 34, ry: 17, depth: 7, startDeg: -90, strokeW: 1.1, sideOpacity: 0.55, heroScaleFrom: 0.92 },
+  anim: { fadeMs: 450, risePx: 26, heroMs: 700, labelStaggerMs: 160, pillMs: 420, handoverMs: 600, fadeOutMs: 300 },
+  /* TIMING MODEL v2 — labelled allocation model. Anchor evidence: the packet times
+     only formed-card anchors (card 1 formed by segment t≈4s; card 2 is the specimen
+     from elsewhere in the video). The digest grid-change census at the two anchors
+     (t=302: 0.022, t=718: 0.030, 2s bins) shows NO blank interval and no large cut
+     spike at a card anchor, so the handover is modelled as an overlap: the incoming
+     headline starts handoverMs before the boundary while the outgoing card is still
+     fully opaque, and the outgoing card fades only after the boundary. Full-segment
+     onset/hold measurement is DEFERRED (see build record): intermediate checkpoints
+     remain ALLOCATED with uncertainty ±600ms. Per-card holds follow the allocation
+     rule holdTargetMs = holdBaseMs + holdPerUnitMs * loadUnits(card). */
+  timingModel: { kind: "ALLOCATION MODEL v2", uncertaintyMs: 600, holdRule: "hold pool shared in proportion to loadUnits(card)",
+    anchorNote: "card1 fully formed at the segment anchor frame (12:02, segment start 11:58); census shows no blank interval at card anchors" },
+  cards: [
+    {
+      headline: "Dark energy",
+      chip: { text: "PLANCK 2018: ≈ 68% · 27% · 5%", style: "plain-tr" },
+      hero: { type: "pie", segments: [
+        { name: "DARK ENERGY", value: 70, color: "#a678f0", labelSide: "right", labelTop: "34%", labelOff: "4%" },
+        { name: "DARK MATTER", value: 25, color: "#4fc9d8", labelSide: "left", labelTop: "38%", labelOff: "3%" },
+        { name: "ORDINARY MATTER", value: 5, color: "#ffd94d", labelSide: "left", labelTop: "57%", labelOff: "26%" }
+      ]},
+      takeaway: "ROUGHLY 70% OF ALL THE ENERGY CONTENT",
+      durationMs: 7000,
+      relOffsets: { headlineMs: 150, chipMs: 650, heroMs: 1100, labelsMs: 1900, pillMs: 3000 }
+    },
+    {
+      headline: "Albert Einstein",
+      chip: { text: "1905", style: "pill-bl" },
+      role: "demonstration",
+      demoTag: "SYSTEM DEMONSTRATION — SECOND CHAPTER FORM",
+      hero: { type: "formula",
+        formulaParts: [ { t: "E = m ", accent: false }, { t: "c²", accent: true } ],
+        legend: [ "E — energy", "m — mass", "c — speed of light" ] },
+      takeaway: "MASS AND ENERGY ARE ONE THING",
+      durationMs: 7600,
+      relOffsets: { headlineMs: 0, chipMs: 500, heroMs: 950, labelsMs: 1650, pillMs: 2750 }
+    }
+  ]
+};
+/* Optional URL overrides for the swap test: ?headline=...&chip=...&pill=... */
+function applyOverridesTo(cfg, search){
+  const q = new URLSearchParams(search || "");
+  if (q.get("headline")) cfg.cards[0].headline = q.get("headline");
+  if (q.get("chip")) cfg.cards[0].chip.text = q.get("chip");
+  if (q.get("pill")) cfg.cards[0].takeaway = q.get("pill");
+  return cfg;
+}
+function wordCount(s){ return s ? s.trim().split(/\s+/).filter(Boolean).length : 0; }
+function loadUnits(card){
+  let u = wordCount(card.headline) + wordCount(card.chip.text) + wordCount(card.takeaway);
+  if (card.demoTag) u += wordCount(card.demoTag);
+  if (card.hero.type === "pie") for (const s of card.hero.segments) u += wordCount(s.name) + 1;
+  if (card.hero.type === "formula"){
+    for (const p of card.hero.formulaParts) u += wordCount(p.t);
+    for (const l of card.hero.legend) u += wordCount(l);
+  }
+  return u;
+}
+function pieSpans(segments){
+  const total = segments.reduce((a,s)=>a+s.value,0);
+  if (!(total > 0)) return { total, spans: [], error: "zero-total" };
+  let a = CONFIG.pieGeom.startDeg;
+  const spans = segments.map(s=>{
+    const span = (s.value/total)*360, out = { name: s.name, value: s.value, start: a, span, pct: (s.value/total)*100, full: span >= 359.99 };
+    a += span; return out;
+  });
+  return { total, spans, error: null };
+}
+function segLabelText(seg, total){
+  const pct = (seg.value/total)*100;
+  const p = Number.isInteger(pct) ? String(pct) : pct.toFixed(1);
+  return seg.name + " ≈ " + p + "%";
+}
+function deriveTimeline(cfg){
+  /* durationMs = formation start -> chapter boundary. The outgoing card stays
+     fully opaque until its boundary, then fades over fadeOutMs (its end).
+     The next card's formation starts handoverMs BEFORE the boundary. */
+  const H = cfg.anim.handoverMs, F = cfg.anim.fadeOutMs;
+  let prevBoundary = 0;
+  const tl = cfg.cards.map((card, i)=>{
+    const start = i === 0 ? 0 : prevBoundary - H;
+    const boundary = start + card.durationMs;
+    const end = i + 1 < cfg.cards.length ? boundary + F : boundary;
+    const cp = {};
+    for (const k of Object.keys(card.relOffsets)) cp[k] = start + card.relOffsets[k];
+    const formed = cp.pillMs + cfg.anim.pillMs;
+    const holdUntil = i + 1 < cfg.cards.length ? boundary - H : end;
+    const out = { index: i, start, boundary, end, checkpoints: cp, formedMs: formed,
+      holdMs: holdUntil - formed, loadUnits: loadUnits(card), holdTargetMs: 0 };
+    prevBoundary = boundary;
+    return out;
+  });
+  const pool = tl.reduce((a,c)=>a+c.holdMs,0), units = tl.reduce((a,c)=>a+c.loadUnits,0);
+  for (const c of tl) c.holdTargetMs = Math.round(pool * c.loadUnits / units);
+  return { cards: tl, totalMs: prevBoundary, handoverMs: H, fadeOutMs: F };
+}
+function validateConfig(cfg){
+  const errs = [];
+  const tl = deriveTimeline(cfg);
+  cfg.cards.forEach((card, i)=>{
+    const offs = Object.values(card.relOffsets);
+    for (let j = 1; j < offs.length; j++) if (!(offs[j] > offs[j-1])) errs.push("card"+i+" offsets not increasing");
+    if (i + 1 < cfg.cards.length && tl.cards[i].formedMs > tl.cards[i].boundary - cfg.anim.handoverMs) errs.push("card"+i+" forms after handover start");
+    if (card.hero.type === "pie"){
+      const r = pieSpans(card.hero.segments);
+      if (r.error) errs.push("card"+i+" pie " + r.error);
+      for (const s of card.hero.segments) if (!(s.value >= 0)) errs.push("card"+i+" negative segment");
+    }
+  });
+  if (tl.totalMs !== cfg.totalDurationMs) errs.push("timeline total " + tl.totalMs + " != totalDurationMs " + cfg.totalDurationMs);
+  return { errors: errs, timeline: tl };
+}
+/*PURE-END*/
+/* ============ construction (reads CONFIG only) ============ */
+if (typeof location !== "undefined") applyOverridesTo(CONFIG, location.search);
+const stage = document.getElementById("stage");
+stage.style.containerType = "inline-size";
+stage.setAttribute("data-timing-model", CONFIG.timingModel.kind);
+stage.setAttribute("data-timing-uncertainty-ms", String(CONFIG.timingModel.uncertaintyMs));
+const VALIDATION = validateConfig(CONFIG);
+stage.setAttribute("data-validation-errors", VALIDATION.errors.join(";"));
+window.__recValidation = VALIDATION;
+const root = document.documentElement.style;
+const P = CONFIG.palette, G = CONFIG.geom, S = CONFIG.style;
+root.setProperty("--pageBg", P.pageBg); root.setProperty("--bg", P.bg); root.setProperty("--bgGlow", P.bgGlow);
+root.setProperty("--ink", P.ink); root.setProperty("--chipInkPlain", P.chipInkPlain);
+root.setProperty("--chipInkPill", P.chipInkPill); root.setProperty("--chipBgPill", P.chipBgPill);
+root.setProperty("--labelInk", P.labelInk); root.setProperty("--pillBg", P.pillBg); root.setProperty("--pillInk", P.pillInk);
+root.setProperty("--accentCyan", P.accentCyan); root.setProperty("--fontStack", CONFIG.fontStack);
+for (const k of ["padX","padY","glowX","glowY","heroTop","headlinePx","headlineTrack","chipPx","chipTrack",
+  "chipOffsetY","chipPillPx","chipGapY","chipPadY","chipPadX","labelPx","labelPadY","labelPadX",
+  "formulaPx","legendPx","legendLine","formulaZone","legendLeft","pillPx","pillPadY","pillPadX","pillBottom","pillRadius","pieSize","legendRight","legendTop"])
+  root.setProperty("--"+k, G[k]);
+for (const k of ["headlineWeight","chipWeight","labelWeight","pillWeight","formulaWeight","gradientEnd","formulaStyle"])
+  root.setProperty("--"+k, S[k]);
+root.setProperty("--stageRatio", CONFIG.stageRatio);
+
+function el(cls, text){ const d = document.createElement("div"); d.className = cls; if (text != null) d.textContent = text; return d; }
+function pieSVG(card){
+  const { total, spans, error } = pieSpans(card.hero.segments);
+  const NS = "http://www.w3.org/2000/svg", PG = CONFIG.pieGeom;
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${PG.vbW} ${PG.vbH}`); svg.style.width = "var(--pieSize)"; svg.style.overflow = "visible";
+  if (error) { svg.setAttribute("data-pie-error", error); return svg; }
+  const {cx, cy, rx, ry, depth} = PG;
+  const pt = (a,r)=>{ const r2 = a*Math.PI/180; return [cx + r*Math.cos(r2), cy + (r*Math.sin(r2))*ry/rx]; };
+  for (const sp of spans){
+    const s = card.hero.segments[spans.indexOf(sp)];
+    if (sp.full){
+      const side = document.createElementNS(NS,"ellipse");
+      side.setAttribute("cx", cx); side.setAttribute("cy", cy+depth); side.setAttribute("rx", rx); side.setAttribute("ry", ry);
+      side.setAttribute("fill", s.color); side.setAttribute("opacity", String(PG.sideOpacity)); svg.appendChild(side);
+      const top = document.createElementNS(NS,"ellipse");
+      top.setAttribute("cx", cx); top.setAttribute("cy", cy); top.setAttribute("rx", rx); top.setAttribute("ry", ry);
+      top.setAttribute("fill", s.color); top.setAttribute("stroke", P.bg); top.setAttribute("stroke-width", String(PG.strokeW));
+      svg.appendChild(top); continue;
+    }
+    const a0 = sp.start, a1 = sp.start + sp.span, [x0,y0] = pt(a0,rx), [x1,y1] = pt(a1,rx);
+    const large = sp.span > 180 ? 1 : 0;
+    const side = document.createElementNS(NS,"path");
+    side.setAttribute("d", `M ${x0} ${y0+depth} L ${x0} ${y0} A ${rx} ${ry} 0 ${large} 1 ${x1} ${y1} L ${x1} ${y1+depth} A ${rx} ${ry} 0 ${large} 0 ${x0} ${y0+depth} Z`);
+    side.setAttribute("fill", s.color); side.setAttribute("opacity", String(PG.sideOpacity)); svg.appendChild(side);
+    const top = document.createElementNS(NS,"path");
+    top.setAttribute("d", `M ${cx} ${cy} L ${x0} ${y0} A ${rx} ${ry} 0 ${large} 1 ${x1} ${y1} Z`);
+    top.setAttribute("fill", s.color); top.setAttribute("stroke", P.bg); top.setAttribute("stroke-width", String(PG.strokeW));
+    svg.appendChild(top);
+  }
+  return svg;
+}
+const TIMELINE = VALIDATION.timeline;
+const cardEls = CONFIG.cards.map((card, ci) => {
+  const c = el("card"); c.style.zIndex = String(ci + 1);
+  if (card.role) c.setAttribute("data-role", card.role);
+  const h = el("headline", card.headline); c.appendChild(h);
+  const chip = el("chip " + (card.chip.style === "pill-bl" ? "chip-pill" : "chip-tr"), card.chip.text); c.appendChild(chip);
+  let demo = null;
+  if (card.demoTag){ demo = el("demotag", card.demoTag); c.appendChild(demo); }
+  const hero = el("hero" + (card.hero.type === "formula" ? " hero-formula" : ""));
+  c.appendChild(hero);
+  const labels = [];
+  if (card.hero.type === "pie"){
+    hero.appendChild(pieSVG(card));
+    const { total } = pieSpans(card.hero.segments);
+    card.hero.segments.forEach(s=>{
+      const l = el("seglabel", segLabelText(s, total)); l.style.background = s.color;
+      l.style.top = s.labelTop;
+      l.style[s.labelSide] = s.labelOff;
+      c.appendChild(l); labels.push(l);
+    });
+  } else if (card.hero.type === "formula"){
+    const f = el("formula");
+    card.hero.formulaParts.forEach(p=>{ const sp = document.createElement("span"); if (p.accent) sp.className="accent"; sp.textContent = p.t; f.appendChild(sp); });
+    hero.appendChild(f);
+    const lg = el("legend");
+    card.hero.legend.forEach(t=>{ lg.appendChild(el("", t)); });
+    c.appendChild(lg); labels.push(lg);
+  }
+  const pill = el("pill", card.takeaway); c.appendChild(pill);
+  stage.appendChild(c);
+  return { card, tl: TIMELINE.cards[ci], c, h, chip, demo, hero, labels, pill };
+});
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function phase(t, at, dur){ return clamp01((t - at) / dur); }
+function applyAt(t){
+  for (const o of cardEls){
+    const cp = o.tl.checkpoints, A = CONFIG.anim;
+    const isLast = o.tl.index === cardEls.length - 1;
+    const visible = t >= o.tl.start && t <= o.tl.end;
+    let cardOpacity = visible ? 1 : 0;
+    if (visible && !isLast) cardOpacity = 1 - phase(t, o.tl.boundary, A.fadeOutMs);
+    o.c.style.opacity = cardOpacity;
+    if (!visible) continue;
+    const ph = phase(t, cp.headlineMs, A.fadeMs);
+    o.h.style.opacity = ph; o.h.style.transform = `translateY(${(1-ph)*A.risePx}px)`;
+    o.chip.style.opacity = phase(t, cp.chipMs, A.fadeMs);
+    if (o.demo) o.demo.style.opacity = phase(t, cp.chipMs, A.fadeMs);
+    const hh = phase(t, cp.heroMs, A.heroMs);
+    o.hero.style.opacity = hh; o.hero.style.transform = `scale(${CONFIG.pieGeom.heroScaleFrom + (1-CONFIG.pieGeom.heroScaleFrom)*hh})`;
+    o.labels.forEach((l,i)=>{ l.style.opacity = phase(t, cp.labelsMs + i*A.labelStaggerMs, A.fadeMs); });
+    o.pill.style.opacity = phase(t, cp.pillMs, A.pillMs);
+  }
+}
+/* clock: standalone rAF + external slave API for comparison.html */
+let playing = false, startStamp = 0, baseMs = 0, rafId = 0;
+function nowMs(){ return baseMs + (playing ? performance.now() - startStamp : 0); }
+function tick(){ applyAt(nowMs() % CONFIG.totalDurationMs); if (playing) rafId = requestAnimationFrame(tick); }
+window.__rec = {
+  play(){ if (!playing){ playing = true; startStamp = performance.now(); tick(); } },
+  pause(){ if (playing){ baseMs = nowMs(); playing = false; cancelAnimationFrame(rafId); } },
+  seek(ms){ baseMs = ms; if (playing) startStamp = performance.now(); applyAt(ms); },
+  durationMs: CONFIG.totalDurationMs,
+  timeline: TIMELINE
+};
+applyAt(0);
+window.__rec.play();
+</script>
+</body>
+</html>

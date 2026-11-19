@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T244 comparison — ORIGINAL vs RECREATION</title>
+<style>
+  html,body{margin:0;background:#111;color:#eee;font-family:Arial,sans-serif;}
+  #wrap{display:flex;gap:12px;justify-content:center;padding:10px;box-sizing:border-box;}
+  .side{flex:0 1 420px;text-align:center;}
+  .side h3{margin:4px 0 8px;font-size:14px;}
+  video{width:100%;background:#000;}
+  iframe{width:100%;aspect-ratio:9/16;border:0;background:#000;}
+  #bar{text-align:center;padding:8px;}
+  #bar button{background:#2a2a2a;color:#eee;border:1px solid #555;padding:8px 16px;cursor:pointer;}
+  @media (max-width:700px){ #wrap{flex-direction:column;align-items:center;} .side{width:100%;} }
+</style>
+</head>
+<body>
+<div id="bar"><button id="playBtn">Play both</button><button id="restartBtn">Restart both</button></div>
+<div id="wrap">
+  <div class="side"><h3>ORIGINAL — @ensan.besham "Hope = Failure (?)" @ source 73.50–82.10 s</h3><video id="orig" src="segment.mp4" preload="auto" playsinline></video></div>
+  <div class="side"><h3>RECREATION — T244 karaoke word-highlight, parameterized</h3><iframe id="rec" src="recreation.html" title="recreation"></iframe></div>
+</div>
+<script>
+"use strict";
+/* One synchronized control set: the video is the master clock; the recreation
+   iframe is driven by postMessage-free shared start — the recreation exposes its
+   own controls, so sync is by simultaneous start + matched 8.600 s duration. */
+const v = document.getElementById("orig");
+let playing = false;
+document.getElementById("playBtn").addEventListener("click", e => {
+  const recBtn = document.getElementById("rec").contentDocument.getElementById("playBtn");
+  if (!playing) { v.play(); if (recBtn.textContent === "Play") recBtn.click(); playing = true; e.target.textContent = "Pause both"; }
+  else { v.pause(); if (recBtn.textContent === "Pause") recBtn.click(); playing = false; e.target.textContent = "Play both"; }
+});
+document.getElementById("restartBtn").addEventListener("click", () => {
+  v.currentTime = 0;
+  const d = document.getElementById("rec").contentDocument;
+  d.getElementById("restartBtn").click();
+  if (!playing) document.getElementById("playBtn").click();
+});
+</script>
+</body>
+</html>

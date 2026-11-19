@@ -1,0 +1,12 @@
+Timing is internally coherent and honestly labelled, but specimen tempo remains only partly established.
+
+- **Formation anchor — strong fit.** Card 1 completes at 3420ms, 580ms before the ≈4s anchor. This satisfies “fully formed by ≈4s”; it does not establish matching formation speed because the specimen’s completion onset is unmeasured.
+- **Hold allocation — reasoned, approximate.** Fully formed holds are 3280ms and 3830ms, closely matching the stated 26:30 information-load ratio. Word-based load is a defensible allocation heuristic, not measured reading demand. The proportional targets are calculated from the resulting hold pool; their ±21ms residuals demonstrate internal agreement, not specimen fidelity.
+- **Boundary rhythm — coherent reconstruction.** Card 1 holds until 6700ms, fades through 7000ms, then card 2 begins forming. This creates a clear chapter handover without overlapping headings. A persistent background does not guarantee continuous visible card content: both cards’ elements are transparent at the boundary, with a brief low-content interval around it. The source correctly labels this rhythm as designed rather than observed.
+- **Duration — exact envelope, unverified subdivision.** The derived total is exactly 14000ms. However, fitting two seven-second cards into that window introduces an allocated chapter boundary unsupported by the supplied specimen evidence. The second card’s explicit demonstration status appropriately limits the claim.
+- **Timing labels — substantially honest.** Comments distinguish allocated checkpoints, chosen ±600ms tolerance, missing onset measurements, and the second card’s provenance. The `uncertaintyMs` field and `data-timing-uncertainty-ms` attribute remain less precise than that explanation: naming them “allocation tolerance” would prevent downstream misreading.
+
+The next improvement requires specimen onset, completion, hold, and boundary observations. Until those exist, retain the allocation label; do not present the seven-second split or handover as measured timing.
+
+SCORE: 82
+BODY-WRITE: This return supplies the verbatim review for codex/attempt-3/lens-timing.md and the timing score of 82 for scores.md; neither file was modified in this read-only run.

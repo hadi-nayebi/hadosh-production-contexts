@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T244 — Karaoke word-highlight captions as the transcript device (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;height:100%;}
+  body{display:flex;flex-direction:column;align-items:center;font-family:Arial,sans-serif;}
+  #stage{position:relative;width:min(100vw,56.25vh);aspect-ratio:9/16;background:#000;overflow:hidden;}
+  #band{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;}
+  #band span{display:inline-block;}
+  #bar{display:flex;gap:8px;align-items:center;padding:8px;background:#1c1c1c;width:min(100vw,56.25vh);box-sizing:border-box;}
+  #bar button{background:#2a2a2a;color:#eee;border:1px solid #555;padding:6px 12px;cursor:pointer;}
+  #clock{color:#bbb;font-size:13px;}
+</style>
+</head>
+<body>
+<div id="stage"><div id="band"></div></div>
+<div id="bar"><button id="playBtn">Play</button><button id="restartBtn">Restart</button><span id="clock">0.00 s</span></div>
+<script>
+"use strict";
+const CONFIG = {
+  segmentStartMs: 73500,
+  totalMs: 8600,
+  bgColor: "#000000",
+  dimColor: "#6b6b6b",
+  spokenColor: "#ffffff",
+  fontStack: "Tahoma, 'Noto Sans Arabic', Arial, sans-serif",
+  fontPx: 44,
+  fontWeight: 600,
+  dir: "rtl",
+  stageW: 720,
+  stageH: 1280,
+  bandTopFraction: 0.845,
+  wordSpaceEm: 0.28,
+  brightenMs: 120,
+  previewMs: 200,
+  fitWidthFraction: 0.94,
+  wordAllocMode: "length",
+  lines: [
+    { words: ["پدرش","که","سه","سال","شبها","اضافه","کاری","میموند"], onsetMs: 68040, endMs: 73660, displayEndMs: 73990 },
+    { words: ["اون","شب","زود","اومد","خونه"], onsetMs: 74000, endMs: 75420, displayEndMs: 75600 },
+    { words: ["هیچ","کس","خوشحال","نشد"], onsetMs: 75500, endMs: 77000, displayEndMs: 77550 },
+    { words: ["امید","اون","دختر","مال","خودش","نبود"], onsetMs: 78000, endMs: 79340, displayEndMs: 79600 },
+    { words: ["از","باباش","قرض","گرفته","بود"], onsetMs: 79480, endMs: 81580, displayEndMs: 81800 }
+  ]
+};
+function hexRgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function lerpColor(a, b, f){
+  const A = hexRgb(a), B = hexRgb(b);
+  return "rgb(" + A.map((v,i)=>Math.round(v + (B[i]-v)*f)).join(",") + ")";
+}
+/* Per-word onsets: ALLOCATED proportionally to word character length across the
+   line's measured ASR interval (ASR carries no word timings — allocation, named in the Plan). */
+function deriveWordOnsets(cfg, line){
+  const totalChars = line.words.reduce((s,w)=>s + w.length, 0);
+  const span = line.endMs - line.onsetMs;
+  let acc = 0;
+  return line.words.map(w => { const on = line.onsetMs + (acc/totalChars)*span; acc += w.length; return on; });
+}
+function stateAt(cfg, tRelMs){
+  const src = cfg.segmentStartMs + tRelMs;
+  let active = -1;
+  for (let i = 0; i < cfg.lines.length; i++){
+    const L = cfg.lines[i];
+    if (src >= L.onsetMs - cfg.previewMs && src < L.displayEndMs) active = i; // latest matching line owns the band
+  }
+  if (active < 0) return { activeLine: -1, fills: [] };
+  const line = cfg.lines[active];
+  const onsets = deriveWordOnsets(cfg, line);
+  const fills = line.words.map((w,i) => {
+    if (src < onsets[i]) return 0;
+    return Math.min(1, (src - onsets[i]) / cfg.brightenMs);
+  });
+  return { activeLine: active, fills };
+}
+/* ---- renderer (DOM only; all state from stateAt) ---- */
+const stage = document.getElementById("stage");
+const band = document.getElementById("band");
+stage.style.background = CONFIG.bgColor;
+band.style.top = (CONFIG.bandTopFraction * 100) + "%";
+band.dir = CONFIG.dir;
+let spans = [], builtLine = -2;
+function buildLine(idx){
+  band.innerHTML = ""; spans = [];
+  if (idx < 0) { builtLine = -1; return; }
+  const scale = stage.clientWidth / CONFIG.stageW;
+  /* measured fit: shrink this line's font until its rendered width fits the bound */
+  const meas = document.createElement("canvas").getContext("2d");
+  let px = CONFIG.fontPx * scale;
+  const linePx = () => { meas.font = CONFIG.fontWeight + " " + px + "px " + CONFIG.fontStack;
+    return CONFIG.lines[idx].words.reduce((s,w)=>s + meas.measureText(w).width, 0)
+      + CONFIG.wordSpaceEm * px * (CONFIG.lines[idx].words.length - 1); };
+  while (linePx() > CONFIG.fitWidthFraction * stage.clientWidth && px > 6) px *= (CONFIG.fitWidthFraction * stage.clientWidth) / linePx();
+  CONFIG.lines[idx].words.forEach((w,i) => {
+    if (i > 0) { const sp = document.createElement("span"); sp.style.width = (CONFIG.wordSpaceEm * px) + "px"; band.appendChild(sp); }
+    const s = document.createElement("span");
+    s.textContent = w;
+    s.style.font = CONFIG.fontWeight + " " + px + "px " + CONFIG.fontStack;
+    band.appendChild(s); spans.push(s);
+  });
+  builtLine = idx;
+}
+let playing = false, startStamp = 0, offsetMs = 0;
+function frame(now){
+  const t = playing ? offsetMs + (now - startStamp) : offsetMs;
+  const tt = ((t % CONFIG.totalMs) + CONFIG.totalMs) % CONFIG.totalMs;
+  const st = stateAt(CONFIG, tt);
+  if (st.activeLine !== builtLine) buildLine(st.activeLine);
+  spans.forEach((s,i) => { s.style.color = lerpColor(CONFIG.dimColor, CONFIG.spokenColor, st.fills[i]); });
+  document.getElementById("clock").textContent = (tt/1000).toFixed(2) + " s";
+  if (playing) requestAnimationFrame(frame);
+}
+document.getElementById("playBtn").addEventListener("click", e => {
+  playing = !playing;
+  e.target.textContent = playing ? "Pause" : "Play";
+  if (playing) { startStamp = performance.now(); requestAnimationFrame(frame); }
+});
+document.getElementById("restartBtn").addEventListener("click", () => { offsetMs = 0; startStamp = performance.now(); if (!playing) requestAnimationFrame(frame); });
+buildLine(-1);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+The motion model closely follows the observed sequence: artwork-bound tags remain stationary with the diagram and fade away with it; the full-height midpoint divider appears at transition onset; SOLID SCIENCE fades in first; SPECULATION and the settled-items panel follow together; the wave/barrier object enters after a hold; provenance enters last. No translation, divider drawing, or animated clipping replaces the observed fades.
+
+The main limitation is the crossfade’s narrow overlap: phase A begins fading immediately, but SOLID SCIENCE starts only after that fade is two-thirds complete. This produces a mostly outgoing fade before the incoming composition develops. The supplied observations establish a crossfade but lack enough intermediate-frame detail to confirm this exact overlap.
+
+The artwork-tag entrances are explicitly allocated rather than observed. Their fixed attachment and shared exit are faithful; their entrance motion remains unconfirmed. Likewise, opacity-only entrances for the later object and provenance are plausible, but “enters” alone does not establish their precise source mechanism. No runtime or pixel verification is supplied.
+
+BODY-WRITE: Preserve the stationary artwork tags, standing divider, and staged entrance order; require intermediate-frame evidence to validate the crossfade overlap and later entrance mechanisms before claiming exact motion fidelity.
+SCORE: 93

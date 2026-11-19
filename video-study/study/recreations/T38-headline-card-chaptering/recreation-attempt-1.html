@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T38 — Headline-card chaptering (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:var(--pageBg);font-family:var(--fontStack);}
+  #stage{position:relative;width:100%;aspect-ratio:var(--stageRatio);overflow:hidden;
+    background:radial-gradient(ellipse at var(--glowX) var(--glowY), var(--bgGlow) 0%, var(--bg) 70%);}
+  .card{position:absolute;inset:0;opacity:0;pointer-events:none;}
+  .headline{position:absolute;left:var(--padX);top:var(--padY);color:var(--ink);
+    font-weight:800;font-size:var(--headlinePx);letter-spacing:var(--headlineTrack);white-space:nowrap;}
+  .chip{position:absolute;font-weight:700;white-space:nowrap;}
+  .chip-tr{right:var(--padX);top:calc(var(--padY) + var(--chipOffsetY));color:var(--chipInkPlain);
+    font-size:var(--chipPx);letter-spacing:var(--chipTrack);background:transparent;padding:0;}
+  .chip-pill{left:var(--padX);top:calc(var(--padY) + var(--headlinePx) + var(--chipGapY));
+    color:var(--chipInkPill);background:var(--chipBgPill);font-size:var(--chipPillPx);
+    padding:var(--chipPadY) var(--chipPadX);border-radius:var(--pillRadius);}
+  .hero{position:absolute;left:0;right:0;top:var(--heroTop);display:flex;justify-content:center;}
+  .seglabel{position:absolute;font-weight:800;white-space:nowrap;color:var(--labelInk);
+    font-size:var(--labelPx);padding:var(--labelPadY) var(--labelPadX);border-radius:var(--pillRadius);}
+  .formula{color:var(--ink);font-size:var(--formulaPx);font-weight:700;font-style:italic;white-space:nowrap;}
+  .formula .accent{color:var(--accentCyan);}
+  .legend{position:absolute;color:var(--ink);font-size:var(--legendPx);line-height:var(--legendLine);}
+  .legend div{white-space:nowrap;}
+  .pill{position:absolute;left:50%;transform:translateX(-50%);bottom:var(--pillBottom);
+    background:var(--pillBg);color:var(--pillInk);font-weight:800;white-space:nowrap;
+    font-size:var(--pillPx);padding:var(--pillPadY) var(--pillPadX);border-radius:var(--pillRadius);}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / geometry value lives here ============ */
+const CONFIG = {
+  totalDurationMs: 14000,
+  stageRatio: "16 / 9",
+  fontStack: "'Segoe UI', Arial, Helvetica, sans-serif",
+  palette: {
+    pageBg: "#0b0620", bg: "#160a38", bgGlow: "#3b1470",
+    ink: "#ffffff", chipInkPlain: "#cfc4ee", chipInkPill: "#14100a", chipBgPill: "#ffd21f",
+    labelInk: "#14100a", pillBg: "#ffd21f", pillInk: "#14100a", accentCyan: "#4fe3e0"
+  },
+  geom: {
+    padX: "4.5%", padY: "6%", glowX: "72%", glowY: "88%", heroTop: "27%",
+    headlinePx: "4.8cqw", headlineTrack: "0.01em",
+    chipPx: "3.06cqw", chipTrack: "0em", chipOffsetY: "0.6cqw",
+    chipPillPx: "3.2cqw", chipGapY: "1.2cqw", chipPadY: "0.7cqw", chipPadX: "1.8cqw",
+    labelPx: "3.1cqw", labelPadY: "0.65cqw", labelPadX: "1.5cqw",
+    formulaPx: "8cqw", legendPx: "3.1cqw", legendLine: "1.65",
+    pillPx: "3.3cqw", pillPadY: "1cqw", pillPadX: "2.6cqw", pillBottom: "5.5%",
+    pillRadius: "999px", pieSize: "34cqw", legendRight: "6%", legendTop: "30%"
+  },
+  pieGeom: { vbW: 100, vbH: 62, cx: 50, cy: 28, rx: 34, ry: 17, depth: 7, startDeg: -90, strokeW: 1.1, sideOpacity: 0.55, heroScaleFrom: 0.92 },
+  anim: { fadeMs: 450, risePx: 26, heroMs: 700, labelStaggerMs: 160, pillMs: 420 },
+  /* LABELED ALLOCATION MODEL: only anchor frames are timed in the packet
+     (card 1 fully formed at segment t≈4s; card 2 is the 5:02 specimen from elsewhere
+     in the video). Intermediate checkpoints below are ALLOCATED, not measured:
+     uncertainty ±600ms per checkpoint. Card order/durations are a model choice. */
+  timingModel: { kind: "ALLOCATION MODEL", uncertaintyMs: 600, anchorNote: "card1 fully formed at the segment anchor frame (12:02, segment start 11:58)" },
+  cards: [
+    {
+      headline: "Dark energy",
+      chip: { text: "PLANCK 2018: ≈ 68% · 27% · 5%", style: "plain-tr" },
+      hero: { type: "pie", segments: [
+        { label: "DARK ENERGY ≈ 70%", value: 70, color: "#a678f0", labelSide: "right", labelTop: "34%", labelOff: "4%" },
+        { label: "DARK MATTER ≈ 25%", value: 25, color: "#4fc9d8", labelSide: "left", labelTop: "38%", labelOff: "3%" },
+        { label: "ORDINARY MATTER ≈ 5%", value: 5, color: "#ffd94d", labelSide: "left", labelTop: "57%", labelOff: "26%" }
+      ]},
+      takeaway: "ROUGHLY 70% OF ALL THE ENERGY CONTENT",
+      startMs: 0, endMs: 7000,
+      checkpoints: { headlineMs: 150, chipMs: 650, heroMs: 1100, labelsMs: 1900, pillMs: 3000 }
+    },
+    {
+      headline: "Albert Einstein",
+      chip: { text: "1905", style: "pill-bl" },
+      hero: { type: "formula",
+        formulaParts: [ { t: "E = m ", accent: false }, { t: "c²", accent: true } ],
+        legend: [ "E — energy", "m — mass", "c — speed of light ≈ 300,000 km/s" ] },
+      takeaway: "MASS AND ENERGY ARE ONE THING",
+      startMs: 7000, endMs: 14000,
+      checkpoints: { headlineMs: 7150, chipMs: 7650, heroMs: 8100, labelsMs: 8900, pillMs: 10000 }
+    }
+  ]
+};
+/* Optional URL overrides for the swap test: ?headline=...&chip=...&pill=... */
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("headline")) CONFIG.cards[0].headline = q.get("headline");
+  if (q.get("chip")) CONFIG.cards[0].chip.text = q.get("chip");
+  if (q.get("pill")) CONFIG.cards[0].takeaway = q.get("pill");
+})();
+/* ============ construction (reads CONFIG only) ============ */
+const stage = document.getElementById("stage");
+stage.style.containerType = "inline-size";
+stage.setAttribute("data-timing-model", CONFIG.timingModel.kind);
+stage.setAttribute("data-timing-uncertainty-ms", String(CONFIG.timingModel.uncertaintyMs));
+const root = document.documentElement.style;
+const P = CONFIG.palette, G = CONFIG.geom;
+root.setProperty("--pageBg", P.pageBg); root.setProperty("--bg", P.bg); root.setProperty("--bgGlow", P.bgGlow);
+root.setProperty("--ink", P.ink); root.setProperty("--chipInkPlain", P.chipInkPlain);
+root.setProperty("--chipInkPill", P.chipInkPill); root.setProperty("--chipBgPill", P.chipBgPill);
+root.setProperty("--labelInk", P.labelInk); root.setProperty("--pillBg", P.pillBg); root.setProperty("--pillInk", P.pillInk);
+root.setProperty("--accentCyan", P.accentCyan); root.setProperty("--fontStack", CONFIG.fontStack);
+for (const k of ["padX","padY","glowX","glowY","heroTop","headlinePx","headlineTrack","chipPx","chipTrack",
+  "chipOffsetY","chipPillPx","chipGapY","chipPadY","chipPadX","labelPx","labelPadY","labelPadX",
+  "formulaPx","legendPx","legendLine","pillPx","pillPadY","pillPadX","pillBottom","pillRadius"])
+  root.setProperty("--"+k, G[k]);
+root.setProperty("--stageRatio", CONFIG.stageRatio);
+
+function el(cls, text){ const d = document.createElement("div"); d.className = cls; if (text != null) d.textContent = text; return d; }
+function pieSVG(card){
+  const segs = card.hero.segments, total = segs.reduce((a,s)=>a+s.value,0);
+  const NS = "http://www.w3.org/2000/svg", PG = CONFIG.pieGeom;
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${PG.vbW} ${PG.vbH}`); svg.style.width = "var(--pieSize)"; svg.style.overflow = "visible";
+  let a0 = PG.startDeg; const {cx, cy, rx, ry, depth} = PG;
+  const pt = (a,r)=>{ const r2 = a*Math.PI/180; return [cx + r*Math.cos(r2), cy + (r*Math.sin(r2))*ry/rx]; };
+  for (const s of segs){
+    const a1 = a0 + (s.value/total)*360, [x0,y0] = pt(a0,rx), [x1,y1] = pt(a1,rx);
+    const large = (a1-a0) > 180 ? 1 : 0;
+    const side = document.createElementNS(NS,"path");
+    side.setAttribute("d", `M ${x0} ${y0+depth} L ${x0} ${y0} A ${rx} ${ry} 0 ${large} 1 ${x1} ${y1} L ${x1} ${y1+depth} A ${rx} ${ry} 0 ${large} 0 ${x0} ${y0+depth} Z`);
+    side.setAttribute("fill", s.color); side.setAttribute("opacity", String(PG.sideOpacity)); svg.appendChild(side);
+    const top = document.createElementNS(NS,"path");
+    top.setAttribute("d", `M ${cx} ${cy} L ${x0} ${y0} A ${rx} ${ry} 0 ${large} 1 ${x1} ${y1} Z`);
+    top.setAttribute("fill", s.color); top.setAttribute("stroke", P.bg); top.setAttribute("stroke-width", String(PG.strokeW));
+    svg.appendChild(top); a0 = a1;
+  }
+  return svg;
+}
+const cardEls = CONFIG.cards.map(card => {
+  const c = el("card");
+  const h = el("headline", card.headline); c.appendChild(h);
+  const chip = el("chip " + (card.chip.style === "pill-bl" ? "chip-pill" : "chip-tr"), card.chip.text); c.appendChild(chip);
+  const hero = el("hero");
+  c.appendChild(hero);
+  const labels = [];
+  if (card.hero.type === "pie"){
+    hero.appendChild(pieSVG(card));
+    card.hero.segments.forEach(s=>{
+      const l = el("seglabel", s.label); l.style.background = s.color;
+      l.style.top = s.labelTop;
+      l.style[s.labelSide] = s.labelOff;
+      c.appendChild(l); labels.push(l);
+    });
+  } else if (card.hero.type === "formula"){
+    const f = el("formula");
+    card.hero.formulaParts.forEach(p=>{ const sp = document.createElement("span"); if (p.accent) sp.className="accent"; sp.textContent = p.t; f.appendChild(sp); });
+    hero.appendChild(f);
+    const lg = el("legend"); lg.style.right = G.legendRight; lg.style.top = G.legendTop;
+    card.hero.legend.forEach(t=>{ lg.appendChild(el("", t)); });
+    c.appendChild(lg); labels.push(lg);
+  }
+  const pill = el("pill", card.takeaway); c.appendChild(pill);
+  stage.appendChild(c);
+  return { card, c, h, chip, hero, labels, pill };
+});
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function phase(t, at, dur){ return clamp01((t - at) / dur); }
+function applyAt(t){
+  for (const o of cardEls){
+    const cp = o.card.checkpoints, A = CONFIG.anim;
+    const active = t >= o.card.startMs && t < o.card.endMs;
+    o.c.style.opacity = active ? 1 : 0;
+    if (!active) continue;
+    const ph = phase(t, cp.headlineMs, A.fadeMs);
+    o.h.style.opacity = ph; o.h.style.transform = `translateY(${(1-ph)*A.risePx}px)`;
+    o.chip.style.opacity = phase(t, cp.chipMs, A.fadeMs);
+    const hh = phase(t, cp.heroMs, A.heroMs);
+    o.hero.style.opacity = hh; o.hero.style.transform = `scale(${CONFIG.pieGeom.heroScaleFrom + (1-CONFIG.pieGeom.heroScaleFrom)*hh})`;
+    o.labels.forEach((l,i)=>{ l.style.opacity = phase(t, cp.labelsMs + i*A.labelStaggerMs, A.fadeMs); });
+    o.pill.style.opacity = phase(t, cp.pillMs, A.pillMs);
+  }
+}
+/* clock: standalone rAF + external slave API for comparison.html */
+let playing = false, startStamp = 0, baseMs = 0, rafId = 0;
+function nowMs(){ return baseMs + (playing ? performance.now() - startStamp : 0); }
+function tick(){ applyAt(nowMs() % CONFIG.totalDurationMs); if (playing) rafId = requestAnimationFrame(tick); }
+window.__rec = {
+  play(){ if (!playing){ playing = true; startStamp = performance.now(); tick(); } },
+  pause(){ if (playing){ baseMs = nowMs(); playing = false; cancelAnimationFrame(rafId); } },
+  seek(ms){ baseMs = ms; if (playing) startStamp = performance.now(); applyAt(ms); },
+  durationMs: CONFIG.totalDurationMs
+};
+applyAt(0);
+window.__rec.play();
+</script>
+</body>
+</html>

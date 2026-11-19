@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T43 comparison</title>
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#12082e;color:#fff}
+#wrap{display:flex;gap:12px;padding:12px;box-sizing:border-box}
+.col{flex:1;min-width:0}
+video,iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;display:block}
+h2{font-size:15px;margin:0 0 8px}
+#controls{padding:0 12px 14px;display:flex;gap:10px}
+button{font-size:16px;padding:12px 20px;border-radius:10px;border:0;background:#4dffb8;color:#06281a;font-weight:700;cursor:pointer}
+@media (max-width:640px){#wrap{flex-direction:column}}
+</style></head><body>
+<div id="controls"><button id="playBtn">Play</button><button id="restartBtn">Restart</button></div>
+<div id="wrap">
+ <div class="col"><h2>ORIGINAL — Infinite Physics @ 18:50–19:04</h2><video id="vid" src="segment.mp4" preload="metadata" playsinline></video></div>
+ <div class="col"><h2>RECREATION — T43 epistemic status labeling, parameterized</h2><iframe id="rec" src="recreation.html" title="recreation"></iframe></div>
+</div>
+<script>
+const vid=document.getElementById("vid"), rec=document.getElementById("rec"), btn=document.getElementById("playBtn");
+function sync(){ try{ const w=rec.contentWindow; if(w&&w.__T43) w.__T43.setTime(vid.currentTime*1000); }catch(e){} if(!vid.paused&&!vid.ended) requestAnimationFrame(sync); }
+btn.onclick=()=>{ if(vid.paused){ vid.play(); btn.textContent="Pause"; requestAnimationFrame(sync);} else { vid.pause(); btn.textContent="Play"; sync(); } };
+document.getElementById("restartBtn").onclick=()=>{ vid.currentTime=0; vid.play(); btn.textContent="Pause"; requestAnimationFrame(sync); };
+vid.addEventListener("ended",()=>{btn.textContent="Play";});
+vid.addEventListener("seeked",sync);
+</script></body></html>

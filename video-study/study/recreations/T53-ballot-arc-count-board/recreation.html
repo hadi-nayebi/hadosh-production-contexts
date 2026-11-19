@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T53 — The ballot-arc count board (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#0e3a45;font-family:Arial,Helvetica,sans-serif;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #title{position:absolute;left:0;right:0;text-align:center;font-weight:700;color:#ffffff;}
+  #actLabel{position:absolute;left:8px;top:8px;color:#cfe6ea;}
+  .ballot{position:absolute;box-sizing:border-box;border-radius:2px;transform-origin:50% 50%;}
+  .ballot .tab{position:absolute;top:0;left:0;right:0;}
+  .ballot .line{position:absolute;left:3px;right:3px;height:1px;}
+  #box{position:absolute;box-sizing:border-box;border-radius:4px;}
+  #box .slot{position:absolute;left:18%;right:18%;top:22%;height:3px;border-radius:2px;}
+  #box .lock{position:absolute;left:50%;top:52%;width:6px;height:6px;margin-left:-3px;border-radius:50%;}
+  .chip{position:absolute;box-sizing:border-box;border-radius:4px;font-weight:700;text-align:center;transform:translate(-50%,-50%);}
+  #legend{position:absolute;left:0;right:0;text-align:center;color:#eaf4f6;}
+  #counts{position:absolute;left:0;right:0;text-align:center;color:#cfe6ea;}
+  svg.wire{position:absolute;left:0;top:0;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+/* ============ CONFIG — every variable of the technique lives here ============ */
+const CONFIG = {
+  title: "The ballot-arc count board",
+  durationMs: 14000,
+  runtimeMs: 23000,
+  stage: { width: 360, height: 420 },
+  units: 55,
+  columns: [
+    { id: "schumer",   label: "Schumer",    color: "#f2c230", count: 18 },
+    { id: "vh",        label: "Van Hollen", color: "#2bb3a3", count: 3 },
+    { id: "undecided", label: "Undecided",  color: null,      count: null },
+    { id: "against",   label: "Against",    color: "#b45fd0", count: 9 }
+  ],
+  threshold: 28,
+  brackets: [
+    { value: 10, label: "still needs", color: "#d9a441", startFrac: 0.327, endFrac: 0.509, kind: "span" },
+    { value: 28, label: "to win",      color: "#d9a441", startFrac: 0.509, endFrac: 0.509, kind: "point" },
+    { value: 19, label: "still needs", color: "#2bb3a3", startFrac: 0.509, endFrac: 0.836, kind: "span" },
+    { value: 9,  label: "against",     color: "#b45fd0", startFrac: 0.836, endFrac: 1.000, kind: "span" }
+  ],
+  palette: { bg: "#175d6e", board: "#5a4030", boardEdge: "#d9a441", paper: "#f3e9d2",
+             emptySlot: "#3d2b1f", ink: "#20242a", line: "#b9a888", chip: "#e8b93c",
+             chipInk: "#1c1c1c", box: "#7a4a26", boxSlot: "#2a1a0e" },
+  ballot: { w: 15, h: 20, tabH: 5 },
+  arc: { radiusPx: 158, centerX: 180, centerY: 252, startDeg: 180, endDeg: 0,
+         direction: "left-to-right", rows: 4,
+         rowFractions: [0.27, 0.27, 0.24, 0.22], rowRadiusFrac: [1.00, 0.85, 0.70, 0.55],
+         bracketLiftPx: 14, chipLiftPx: 32 },
+  /* ACT 1 — the measured segment (278–292 s): the board ARRIVES assembled
+     and tabbed (camera move ~1–3 s, 10/28 brackets already on), the
+     9-bracket lands ~6 s, the annotation card at ~9 s / ~10 s, hold. */
+  segment: { enterStartMs: 1000, enterMs: 2000, enterFromXPx: 140, enterFromScale: 0.45,
+             bracket9AtMs: 5600, bracketFadeMs: 400, label: "Segment — the count at 4:45" },
+  card: { title: "The nine against Schumer",
+          lines: ["3 for Van Hollen", "6 against Schumer, for no one yet"],
+          atMs: 9000, lineStaggerMs: 1000, fadeMs: 400 },
+  /* ACT 2 — the lifecycle, separately timed (the count itself, plus the
+     later states: 19-bracket at 465 s, sweep-hand verdict at 900 s). */
+  lifecycle: { startMs: 15000, resetMs: 600, fillMs: 55,
+               bracketDelayMs: 300, bracketStaggerMs: 350, bracketFadeMs: 400,
+               sweepDelayMs: 500, sweepMs: 1200, label: "Lifecycle — the count, the 19, the verdict" },
+  sweepHand: { enabled: true, targetColumn: "undecided", targetFrac: 0.72,
+               color: "#e8b93c", widthPx: 4, lengthFrac: 0.92, fromDeg: 90 },
+  box: { w: 74, h: 58 },
+  popMs: 180,
+  type: { titlePx: 17, chipPx: 13, legendPx: 11, countsPx: 10.5, chipMinWPx: 26, actPx: 10 }
+};
+
+/* ============ Pure layout core (no DOM — node-testable) ============ */
+function columnCounts(cfg) {
+  let used = 0;
+  const counts = cfg.columns.map(c => {
+    if (c.count === null || c.count === undefined) return null;
+    used += c.count; return c.count;
+  });
+  return cfg.columns.map((c, i) => counts[i] === null ? cfg.units - used : counts[i]);
+}
+function angleForFrac(cfg, frac) {
+  const a = cfg.arc;
+  const f = a.direction === "right-to-left" ? 1 - frac : frac;
+  return a.startDeg + f * (a.endDeg - a.startDeg);
+}
+function polar(cfg, radiusPx, angleDeg) {
+  const r = angleDeg * Math.PI / 180;
+  return { x: cfg.arc.centerX + radiusPx * Math.cos(r), y: cfg.arc.centerY - radiusPx * Math.sin(r) };
+}
+function rowDistribution(cfg) {
+  const rows = [], fr = cfg.arc.rowFractions;
+  let assigned = 0;
+  for (let i = 0; i < cfg.arc.rows; i++) {
+    let n = i === cfg.arc.rows - 1 ? cfg.units - assigned : Math.round(cfg.units * fr[i]);
+    rows.push(n); assigned += n;
+  }
+  return rows;
+}
+function computeLayout(cfg) {
+  const counts = columnCounts(cfg);
+  const seq = [];
+  cfg.columns.forEach((c, ci) => { for (let k = 0; k < counts[ci]; k++) seq.push(c.id); });
+  const rows = rowDistribution(cfg);
+  const ballots = [];
+  let idx = 0;
+  rows.forEach((rowCount, r) => {
+    const radius = cfg.arc.radiusPx * cfg.arc.rowRadiusFrac[r];
+    for (let j = 0; j < rowCount; j++) {
+      const frac = (j + 0.5) / rowCount;
+      const ang = angleForFrac(cfg, frac);
+      const p = polar(cfg, radius, ang);
+      ballots.push({ i: idx, columnId: null, row: r, frac, angleDeg: ang,
+                     x: p.x, y: p.y, rotDeg: 90 - ang, fillAtMs: 0 });
+      idx++;
+    }
+  });
+  /* Columns are arc SECTORS (as in the specimen): rank every ballot by angle
+     from the arc's start side and hand out the column counts in that order;
+     the lifecycle fill cadence follows the same rank. */
+  const byAngle = ballots.slice().sort((a, b) =>
+    cfg.arc.direction === "right-to-left" ? a.angleDeg - b.angleDeg : b.angleDeg - a.angleDeg);
+  const lc = cfg.lifecycle;
+  byAngle.forEach((b, rank) => {
+    b.columnId = seq[rank];
+    b.rank = rank;
+    b.fillAtMs = lc.startMs + lc.resetMs + rank * lc.fillMs;
+  });
+  const fillEndMs = lc.startMs + lc.resetMs + cfg.units * lc.fillMs;
+  const bracketAtMs = fillEndMs + lc.bracketDelayMs;
+  const brackets = cfg.brackets.map((b, bi) => {
+    const midFrac = (b.startFrac + b.endFrac) / 2;
+    const midAng = angleForFrac(cfg, midFrac);
+    const chipP = polar(cfg, cfg.arc.radiusPx + cfg.arc.chipLiftPx, midAng);
+    /* chips stay on-stage: clamp into the stage with an 18 px margin (the
+       right-edge bracket chip sits beside the arc, as in the specimen). */
+    const cx = Math.min(Math.max(chipP.x, 18), cfg.stage.width - 18);
+    const cy = Math.max(chipP.y, 16);
+    return { value: b.value, label: b.label, color: b.color, kind: b.kind,
+             startAngleDeg: angleForFrac(cfg, b.startFrac), endAngleDeg: angleForFrac(cfg, b.endFrac),
+             midAngleDeg: midAng, chipX: cx, chipY: cy,
+             atMs: bracketAtMs + bi * lc.bracketStaggerMs };
+  });
+  const bracketsEndMs = bracketAtMs + (cfg.brackets.length - 1) * lc.bracketStaggerMs + lc.bracketFadeMs;
+  const sweepAtMs = bracketsEndMs + lc.sweepDelayMs;
+  const sweepEndMs = sweepAtMs + lc.sweepMs;
+  const thrFrac = cfg.threshold / cfg.units;
+  const thrAng = angleForFrac(cfg, thrFrac);
+  const colAngles = {}, colSpans = {};
+  cfg.columns.forEach(c => {
+    const mine = ballots.filter(b => b.columnId === c.id).map(b => b.angleDeg);
+    colAngles[c.id] = mine.length ? mine.reduce((s, v) => s + v, 0) / mine.length : null;
+    colSpans[c.id] = mine.length ? { min: Math.min(...mine), max: Math.max(...mine) } : null;
+  });
+  const tgtSpan = colSpans[cfg.sweepHand.targetColumn];
+  const sweepTargetDeg = tgtSpan ? tgtSpan.max + cfg.sweepHand.targetFrac * (tgtSpan.min - tgtSpan.max) : null;
+  /* Segment-act bracket times: 10 + 28 arrive WITH the board; the 19 belongs
+     to a later state (never in the segment); the 9 lands at its anchor. */
+  const seg = cfg.segment;
+  const segmentBracketAt = brackets.map(b =>
+    b.value === 19 ? Infinity : b.value === 9 ? seg.bracket9AtMs : seg.enterStartMs);
+  return { counts, ballots, brackets, fillEndMs, bracketAtMs, bracketsEndMs, sweepAtMs, sweepEndMs,
+           thresholdFrac: thrFrac, thresholdAngleDeg: thrAng,
+           sweepFromDeg: cfg.sweepHand.fromDeg, sweepTargetDeg,
+           columnAngles: colAngles, columnSpans: colSpans, segmentBracketAt,
+           cardAtMs: cfg.card.atMs, cardEndMs: cfg.card.atMs + (cfg.card.lines.length - 1) * cfg.card.lineStaggerMs + cfg.card.fadeMs };
+}
+function checkpointsOk(cfg, L) {
+  L = L || computeLayout(cfg);
+  if (L.ballots.length !== cfg.units) return false;
+  if (L.counts.reduce((s, n) => s + n, 0) !== cfg.units) return false;
+  for (const b of L.ballots) if (!(b.fillAtMs < L.bracketAtMs)) return false;
+  if (!(L.fillEndMs === cfg.lifecycle.startMs + cfg.lifecycle.resetMs + cfg.units * cfg.lifecycle.fillMs)) return false;
+  if (!(L.bracketAtMs === L.fillEndMs + cfg.lifecycle.bracketDelayMs)) return false;
+  if (!(L.sweepAtMs === L.bracketsEndMs + cfg.lifecycle.sweepDelayMs)) return false;
+  if (!(L.sweepEndMs <= cfg.runtimeMs)) return false;
+  if (!(cfg.segment.enterStartMs + cfg.segment.enterMs <= cfg.segment.bracket9AtMs)) return false;
+  if (!(cfg.segment.bracket9AtMs + cfg.segment.bracketFadeMs <= cfg.card.atMs)) return false;
+  if (!(L.cardEndMs <= cfg.durationMs)) return false;
+  if (!(cfg.durationMs < cfg.lifecycle.startMs)) return false;
+  if (cfg.sweepHand.enabled && L.sweepTargetDeg === null) return false;
+  return true;
+}
+function stateAt(cfg, L, t) {
+  const seg = cfg.segment, lc = cfg.lifecycle;
+  const inLifecycle = t >= lc.startMs;
+  let filled = 0;
+  if (!inLifecycle) filled = t >= seg.enterStartMs ? cfg.units : 0;
+  else for (const b of L.ballots) if (t >= b.fillAtMs) filled++;
+  const bracketFlags = L.brackets.map((b, bi) => {
+    const at = inLifecycle ? b.atMs : L.segmentBracketAt[bi];
+    return t >= at;
+  });
+  let sweepAngleDeg = null;
+  if (inLifecycle && cfg.sweepHand.enabled && t >= L.sweepAtMs) {
+    const p = Math.min(1, (t - L.sweepAtMs) / lc.sweepMs);
+    const e = 1 - Math.pow(1 - p, 3);
+    sweepAngleDeg = L.sweepFromDeg + (L.sweepTargetDeg - L.sweepFromDeg) * e;
+  }
+  let cardLinesShown = 0;
+  if (!inLifecycle) cfg.card.lines.forEach((ln, li) => { if (t >= L.cardAtMs + li * cfg.card.lineStaggerMs) cardLinesShown++; });
+  const phase = inLifecycle ? (t < L.fillEndMs ? "lifecycle-fill" : t < L.bracketsEndMs ? "lifecycle-brackets" :
+                t < L.sweepAtMs ? "lifecycle-settle" : t < L.sweepEndMs ? "lifecycle-sweep" : "hold")
+              : t < seg.enterStartMs ? "pre-entry" : t < seg.enterStartMs + seg.enterMs ? "enter" :
+                t < seg.bracket9AtMs ? "segment-hold-1" : t < L.cardAtMs ? "segment-hold-2" : "segment-hold";
+  return { filledCount: filled, bracketsShown: bracketFlags.filter(Boolean).length,
+           bracketFlags, sweepAngleDeg, phase, cardLinesShown };
+}
+
+/* ============ DOM rendering (browser only) ============ */
+function deepMerge(base, over) {
+  if (Array.isArray(base) && Array.isArray(over)) {
+    return base.map((b, i) => i < over.length ? deepMerge(b, over[i]) : b)
+               .concat(over.slice(base.length));
+  }
+  if (base && over && typeof base === "object" && typeof over === "object") {
+    const out = {}; for (const k in base) out[k] = k in over ? deepMerge(base[k], over[k]) : base[k];
+    for (const k in over) if (!(k in base)) out[k] = over[k]; return out;
+  }
+  return over === undefined ? base : over;
+}
+function effectiveConfig() {
+  let cfg = CONFIG;
+  try {
+    const q = new URLSearchParams(location.search).get("config");
+    if (q) cfg = deepMerge(JSON.parse(JSON.stringify(CONFIG)), JSON.parse(q));
+  } catch (e) { /* keep defaults */ }
+  return cfg;
+}
+if (typeof document !== "undefined" && document.getElementById("stage")) {
+  const cfg = effectiveConfig();
+  const L = computeLayout(cfg);
+  const stage = document.getElementById("stage");
+  stage.style.width = cfg.stage.width + "px";
+  stage.style.height = cfg.stage.height + "px";
+  stage.style.background = cfg.palette.bg;
+  const colById = {}; cfg.columns.forEach(c => colById[c.id] = c);
+  const NS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs) { const el = document.createElementNS(NS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); return el; }
+  function arcPath(radiusPx, a0, a1) {
+    const p0 = polar(cfg, radiusPx, a0), p1 = polar(cfg, radiusPx, a1);
+    const large = Math.abs(a1 - a0) > 180 ? 1 : 0, sweep = a1 < a0 ? 1 : 0;
+    return "M " + p0.x.toFixed(1) + " " + p0.y.toFixed(1) + " A " + radiusPx + " " + radiusPx + " 0 " + large + " " + sweep + " " + p1.x.toFixed(1) + " " + p1.y.toFixed(1);
+  }
+  /* title + act label */
+  const title = document.createElement("div");
+  title.id = "title"; title.textContent = cfg.title;
+  title.style.top = "8px"; title.style.fontSize = cfg.type.titlePx + "px";
+  stage.appendChild(title);
+  const actLabel = document.createElement("div");
+  actLabel.id = "actLabel"; actLabel.style.fontSize = cfg.type.actPx + "px";
+  stage.appendChild(actLabel);
+  /* board wrap: the segment entrance is a camera move (small, from the
+     right, enlarging into place) applied to the whole board group. */
+  const boardWrap = document.createElement("div");
+  boardWrap.style.position = "absolute"; boardWrap.style.left = "0"; boardWrap.style.top = "0";
+  boardWrap.style.width = cfg.stage.width + "px"; boardWrap.style.height = cfg.stage.height + "px";
+  boardWrap.style.transformOrigin = cfg.arc.centerX + "px " + cfg.arc.centerY + "px";
+  stage.appendChild(boardWrap);
+  /* board (SVG underlay: sector, threshold line, bracket arcs, sweep hand) */
+  const svg = svgEl("svg", { width: cfg.stage.width, height: cfg.stage.height, "class": "wire" });
+  const R = cfg.arc.radiusPx, rIn = R * cfg.arc.rowRadiusFrac[cfg.arc.rows - 1] - 16;
+  const boardPath = arcPath(R + 12, cfg.arc.startDeg, cfg.arc.endDeg) + " L " +
+    polar(cfg, rIn, cfg.arc.endDeg).x + " " + polar(cfg, rIn, cfg.arc.endDeg).y + " " +
+    arcPath(rIn, cfg.arc.endDeg, cfg.arc.startDeg).replace(/^M[^A]+/, "") + " Z";
+  svg.appendChild(svgEl("path", { d: boardPath, fill: cfg.palette.board, stroke: cfg.palette.boardEdge, "stroke-width": 2 }));
+  const thrIn = polar(cfg, rIn, L.thresholdAngleDeg), thrOut = polar(cfg, R + cfg.arc.bracketLiftPx, L.thresholdAngleDeg);
+  svg.appendChild(svgEl("line", { x1: thrIn.x, y1: thrIn.y, x2: thrOut.x, y2: thrOut.y, stroke: cfg.palette.boardEdge, "stroke-width": 2 }));
+  const bracketPaths = L.brackets.map(b => {
+    const p = svgEl("path", { d: arcPath(R + cfg.arc.bracketLiftPx, b.startAngleDeg, b.endAngleDeg),
+      fill: "none", stroke: b.color, "stroke-width": 3, opacity: 0 });
+    svg.appendChild(p); return p;
+  });
+  const handTip = polar(cfg, R * cfg.sweepHand.lengthFrac, L.sweepFromDeg);
+  const hand = svgEl("line", { x1: cfg.arc.centerX, y1: cfg.arc.centerY, x2: handTip.x, y2: handTip.y,
+    stroke: cfg.sweepHand.color, "stroke-width": cfg.sweepHand.widthPx, opacity: 0, "stroke-linecap": "round" });
+  svg.appendChild(hand);
+  boardWrap.appendChild(svg);
+  /* ballot box */
+  const box = document.createElement("div");
+  box.id = "box";
+  box.style.width = cfg.box.w + "px"; box.style.height = cfg.box.h + "px";
+  box.style.left = (cfg.arc.centerX - cfg.box.w / 2) + "px"; box.style.top = (cfg.arc.centerY - 26) + "px";
+  box.style.background = cfg.palette.box;
+  const slot = document.createElement("div"); slot.className = "slot"; slot.style.background = cfg.palette.boxSlot; box.appendChild(slot);
+  const lock = document.createElement("div"); lock.className = "lock"; lock.style.background = cfg.palette.chip; box.appendChild(lock);
+  boardWrap.appendChild(box);
+  /* ballots */
+  const ballotEls = L.ballots.map(b => {
+    const el = document.createElement("div");
+    el.className = "ballot";
+    el.style.width = cfg.ballot.w + "px"; el.style.height = cfg.ballot.h + "px";
+    el.style.left = (b.x - cfg.ballot.w / 2) + "px"; el.style.top = (b.y - cfg.ballot.h / 2) + "px";
+    const col = colById[b.columnId];
+    let tab = null;
+    if (col && col.color) {
+      tab = document.createElement("div"); tab.className = "tab";
+      tab.style.height = cfg.ballot.tabH + "px"; tab.style.background = col.color; el.appendChild(tab);
+    }
+    const lines = [0.55, 0.78].map(f => {
+      const ln = document.createElement("div"); ln.className = "line";
+      ln.style.top = Math.round(cfg.ballot.h * f) + "px"; ln.style.background = cfg.palette.line; el.appendChild(ln);
+      return ln;
+    });
+    boardWrap.appendChild(el); return { el, tab, lines };
+  });
+  /* bracket chips */
+  const chipEls = L.brackets.map(b => {
+    const el = document.createElement("div");
+    el.className = "chip"; el.textContent = String(b.value);
+    el.style.left = b.chipX + "px"; el.style.top = b.chipY + "px";
+    el.style.minWidth = cfg.type.chipMinWPx + "px"; el.style.padding = "2px 4px";
+    el.style.fontSize = cfg.type.chipPx + "px";
+    el.style.background = cfg.palette.chip; el.style.color = cfg.palette.chipInk;
+    el.style.opacity = "0";
+    boardWrap.appendChild(el); return el;
+  });
+  /* legend + counts (technique annotations, generated from CONFIG) */
+  const legend = document.createElement("div");
+  legend.id = "legend"; legend.style.top = (cfg.stage.height - 44) + "px"; legend.style.fontSize = cfg.type.legendPx + "px";
+  legend.textContent = cfg.brackets.map(b => b.value + " " + b.label).join("  ·  ");
+  stage.appendChild(legend);
+  const counts = document.createElement("div");
+  counts.id = "counts"; counts.style.top = (cfg.stage.height - 24) + "px"; counts.style.fontSize = cfg.type.countsPx + "px";
+  counts.textContent = cfg.columns.map((c, i) => c.label + " " + L.counts[i]).join("  ·  ") + "  ·  " + cfg.threshold + " to win";
+  stage.appendChild(counts);
+  /* annotation card (segment device at ~9 s / ~10 s): title, then lines
+     land one by one; all content + timing from CONFIG.card. */
+  const card = document.createElement("div");
+  card.style.position = "absolute"; card.style.right = "10px"; card.style.top = "296px";
+  card.style.width = "196px"; card.style.boxSizing = "border-box";
+  card.style.background = "#1d2733"; card.style.borderRadius = "6px"; card.style.padding = "7px 10px";
+  card.style.opacity = "0";
+  const cardTitle = document.createElement("div");
+  cardTitle.textContent = cfg.card.title;
+  cardTitle.style.fontSize = "11px"; cardTitle.style.fontWeight = "700"; cardTitle.style.color = "#d9a0e8";
+  card.appendChild(cardTitle);
+  const cardLineEls = cfg.card.lines.map(txt => {
+    const d = document.createElement("div");
+    d.textContent = "• " + txt;
+    d.style.fontSize = "10px"; d.style.color = "#eaf4f6"; d.style.marginTop = "3px"; d.style.opacity = "0";
+    card.appendChild(d); return d;
+  });
+  stage.appendChild(card);
+  /* clock */
+  let t0 = null, pausedAt = 0, playing = false, curT = 0;
+  function render(t) {
+    const st = stateAt(cfg, L, t);
+    const seg = cfg.segment, lc = cfg.lifecycle;
+    const inLifecycle = t >= lc.startMs;
+    actLabel.textContent = inLifecycle ? lc.label : seg.label;
+    /* entrance camera move (segment act only) */
+    if (t < seg.enterStartMs) { boardWrap.style.opacity = "0"; }
+    else if (!inLifecycle && t < seg.enterStartMs + seg.enterMs) {
+      const ap = (t - seg.enterStartMs) / seg.enterMs, ae = 1 - Math.pow(1 - ap, 3);
+      boardWrap.style.opacity = String(ae);
+      boardWrap.style.transform = "translateX(" + ((1 - ae) * seg.enterFromXPx) + "px) scale(" + (seg.enterFromScale + (1 - seg.enterFromScale) * ae) + ")";
+    } else { boardWrap.style.opacity = "1"; boardWrap.style.transform = ""; }
+    L.ballots.forEach((b, i) => {
+      const ref = ballotEls[i], el = ref.el;
+      const on = inLifecycle ? t >= b.fillAtMs : t >= seg.enterStartMs;
+      const pop = inLifecycle && on ? Math.min(1, (t - b.fillAtMs) / cfg.popMs) : 1;
+      el.style.background = on ? cfg.palette.paper : cfg.palette.emptySlot;
+      el.style.opacity = String(on ? 1 : 0.55);
+      el.style.transform = "rotate(" + b.rotDeg + "deg) scale(" + (on ? 0.7 + 0.3 * pop : 1) + ")";
+      /* the tab + print are the ballot's counted state: in the lifecycle
+         they land WITH its count step; in the segment they arrive with it. */
+      if (ref.tab) ref.tab.style.opacity = on ? "1" : "0";
+      ref.lines.forEach(ln => ln.style.opacity = on ? "1" : "0");
+    });
+    L.brackets.forEach((b, i) => {
+      const at = inLifecycle ? b.atMs : L.segmentBracketAt[i];
+      const fade = inLifecycle ? lc.bracketFadeMs : seg.bracketFadeMs;
+      const p = at === Infinity ? 0 : Math.max(0, Math.min(1, (t - at) / fade));
+      bracketPaths[i].setAttribute("opacity", String(p)); chipEls[i].style.opacity = String(p);
+    });
+    if (cfg.sweepHand.enabled && st.sweepAngleDeg !== null) {
+      const tip = polar(cfg, R * cfg.sweepHand.lengthFrac, st.sweepAngleDeg);
+      hand.setAttribute("x2", tip.x); hand.setAttribute("y2", tip.y); hand.setAttribute("opacity", "1");
+    } else hand.setAttribute("opacity", "0");
+    const cardP = inLifecycle ? 0 : Math.max(0, Math.min(1, (t - L.cardAtMs) / cfg.card.fadeMs));
+    card.style.opacity = String(cardP);
+    cardLineEls.forEach((el, li) => {
+      const lp = inLifecycle ? 0 : Math.max(0, Math.min(1, (t - (L.cardAtMs + li * cfg.card.lineStaggerMs)) / cfg.card.fadeMs));
+      el.style.opacity = String(lp);
+    });
+  }
+  function frame(now) {
+    if (!playing) return;
+    if (t0 === null) t0 = now - pausedAt;
+    const t = now - t0; curT = t;
+    if (t >= cfg.runtimeMs) { render(cfg.runtimeMs); playing = false; return; }
+    render(t); requestAnimationFrame(frame);
+  }
+  window.__T53 = {
+    config: cfg, layout: L, checkpointsOk: () => checkpointsOk(cfg, L), stateAt: t => stateAt(cfg, L, t),
+    play() { if (!playing) { playing = true; t0 = null; requestAnimationFrame(frame); } },
+    pause() { playing = false; pausedAt = curT; },
+    seek(tMs) { playing = false; pausedAt = tMs; curT = tMs; render(tMs); },
+    restart() { pausedAt = 0; t0 = null; playing = true; requestAnimationFrame(frame); }
+  };
+  render(0);
+}
+</script>
+</body>
+</html>

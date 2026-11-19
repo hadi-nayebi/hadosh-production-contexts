@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T45 — Number-anchored beats (counters as arguments)</title>
+<style>
+  html,body{margin:0;padding:0;background:var(--page-bg);}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  #stage{position:relative;width:100%;max-width:var(--stage-max);aspect-ratio:16/9;overflow:hidden;
+    background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+    font-family:var(--font-family);}
+  .panel{position:absolute;top:var(--panel-top);width:var(--panel-width);
+    border:var(--panel-border-w) solid;border-radius:var(--panel-radius);
+    padding:var(--panel-pad-y) var(--panel-pad-x);text-align:center;box-sizing:border-box;
+    background:var(--panel-bg);}
+  #panel0{left:var(--panel0-left);border-color:var(--c0-border);}
+  #panel1{left:var(--panel1-left);border-color:var(--c1-border);}
+  .lab{color:var(--text);font-size:var(--label-size);letter-spacing:var(--label-spacing);font-weight:var(--label-weight);}
+  .val{font-size:var(--counter-size);font-weight:var(--counter-weight);line-height:var(--line-height);white-space:nowrap;}
+  #val0{color:var(--c0);} #val1{color:var(--c1);}
+  #hero{position:absolute;left:0;top:0;width:100%;height:100%;}
+  #callout{position:absolute;left:50%;top:var(--callout-top);transform:translateX(-50%);
+    background:var(--pill-bg);color:var(--pill-text);font-weight:var(--callout-weight);
+    font-size:var(--callout-size);padding:var(--pill-pad-y) var(--pill-pad-x);
+    border-radius:var(--pill-radius);white-space:nowrap;}
+  #subline{position:absolute;left:50%;top:var(--subline-top);transform:translateX(-50%);
+    color:var(--text);font-size:var(--subline-size);font-weight:var(--subline-weight);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="hero"></canvas>
+  <div class="panel" id="panel0"><div class="lab" id="lab0"></div><div class="val" id="val0"></div></div>
+  <div class="panel" id="panel1"><div class="lab" id="lab1"></div><div class="val" id="val1"></div></div>
+  <div id="callout"></div>
+  <div id="subline"></div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / geometry value lives here ============ */
+const CONFIG = {
+  durationMs: 14000,
+  pageBg: "#000000",
+  palette: { bgTop:"#0d0621", bgBottom:"#2b1154", text:"#ffffff",
+             panelBg:"rgba(10,6,32,0.55)", pillBg:"#f7dc0a", pillText:"#141414" },
+  fontFamily: "Arial, Helvetica, sans-serif",
+  counters: [
+    { label:"MATTER",     start:0, end:1000000001, color:"#63e6e6", border:"#3f9db4" },
+    { label:"ANTIMATTER", start:0, end:1000000000, color:"#ec4fec", border:"#a83fb0" }
+  ],
+  number: { grouping:true, groupSize:3, separator:",", negativeSign:"-" },
+  words: ["ZERO","ONE","TWO","THREE","FOUR","FIVE","SIX","SEVEN","EIGHT","NINE","TEN",
+          "ELEVEN","TWELVE","THIRTEEN","FOURTEEN","FIFTEEN","SIXTEEN","SEVENTEEN",
+          "EIGHTEEN","NINETEEN","TWENTY"],
+  scales: [ {value:1000000000,label:"A BILLION"}, {value:1000000,label:"A MILLION"},
+            {value:1000,label:"A THOUSAND"} ],
+  callout: { pattern:"{diff} LEFTOVER IN {base}", popMs:450, fromScale:0.6 },
+  subline: "Every galaxy, planet and atom in your body",
+  timeline: {
+    panelFadeMs: 900,
+    countStartMs: 1500, countDurationMs: 6500, easingPower: 3,
+    calloutAtMs: 8400, sublineAtMs: 9400, sublineFadeMs: 800,
+    checkpoints: [
+      { name:"panels-in",   atMs:0 },
+      { name:"count-start", atMs:1500 },
+      { name:"count-end",   atMs:8000 },
+      { name:"callout-in",  atMs:8400 },
+      { name:"subline-in",  atMs:9400 },
+      { name:"hold-end",    atMs:14000 }
+    ]
+  },
+  type: { counterFrac:0.042, labelFrac:0.032, calloutFrac:0.034, sublineFrac:0.032,
+          counterWeight:800, labelWeight:600, calloutWeight:800, sublineWeight:600,
+          labelSpacingEm:0.12, fitGuard:0.96, lineHeight:1.15 },
+  layout: { stageMaxPx:960, panelWidthFrac:0.40, panel0LeftFrac:0.055, panel1LeftFrac:0.545,
+            panelTopFrac:0.10, panelPadXFrac:0.018, panelPadYFrac:0.014,
+            panelRadiusFrac:0.016, panelBorderPx:2,
+            calloutTopFrac:0.735, sublineTopFrac:0.845,
+            pillPadXFrac:0.028, pillPadYFrac:0.012, pillRadiusFrac:0.05 },
+  hero: { seed:20261114, particleCount:850, ringRxFrac:0.185, ringRyFrac:0.115,
+          ringJitterFrac:0.035, centerXFrac:0.5, centerYFrac:0.47,
+          particleColor:"#c99bf2", particleMinPx:1, particleMaxPx:2.4,
+          particleBaseAlpha:0.55, twinkleRate:2, glowFade:"rgba(0,0,0,0)",
+          rotationRadPerSec:0.05, twinkleDepth:0.35,
+          sphereRadiusFrac:0.032, sphereCore:"#9be8f2", sphereEdge:"#1f7f96",
+          glowColor:"rgba(190,160,255,0.5)", glowRadiusFrac:0.085 }
+};
+/* Optional URL override: ?config={...json...} deep-merges over CONFIG (swap-test route). */
+(function(){ try{ const q=new URLSearchParams(location.search).get("config");
+  if(q){ const o=JSON.parse(q); (function merge(t,s){ for(const k in s){
+    if(Array.isArray(s[k])&&Array.isArray(t[k])){ s[k].forEach((v,i)=>{
+      if(v&&typeof v==="object"&&t[k][i]) merge(t[k][i],v); else t[k][i]=v; }); }
+    else if(s[k]&&typeof s[k]==="object"&&t[k]) merge(t[k],s[k]); else t[k]=s[k]; } })(CONFIG,o); }
+}catch(e){} })();
+
+/* ============ logic — reads CONFIG only ============ */
+const $=id=>document.getElementById(id);
+const stage=$("stage"), hero=$("hero"), ctx=hero.getContext("2d");
+const meas= document.createElement("canvas").getContext("2d");
+function fmt(n){ const neg=n<0; let s=String(Math.floor(Math.abs(n)));
+  if(CONFIG.number.grouping){ const g=CONFIG.number.groupSize, sep=CONFIG.number.separator;
+    let out=""; while(s.length>g){ out=sep+s.slice(s.length-g)+out; s=s.slice(0,s.length-g);} s=s+out; }
+  return (neg?CONFIG.number.negativeSign:"")+s; }
+function smallWord(n){ return (Number.isInteger(n)&&n>=0&&n<CONFIG.words.length)?CONFIG.words[n]:null; }
+function scalePhrase(n){ for(const s of CONFIG.scales){ if(n===s.value) return s.label; } return fmt(n); }
+function computeCallout(){ const a=CONFIG.counters[0].end, b=CONFIG.counters[1].end;
+  const diff=Math.abs(a-b), base=Math.min(a,b);
+  const d=smallWord(diff)||fmt(diff);
+  return CONFIG.callout.pattern.replace("{diff}",d).replace("{base}",scalePhrase(base)); }
+function ease(p){ const pw=CONFIG.timeline.easingPower; return 1-Math.pow(1-p,pw); }
+function mulberry(seed){ let a=seed>>>0; return function(){ a|=0; a=(a+0x6D2B79F5)|0;
+  let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t;
+  return ((t^(t>>>14))>>>0)/4294967296; }; }
+const rnd=mulberry(CONFIG.hero.seed);
+const parts=[]; for(let i=0;i<CONFIG.hero.particleCount;i++){
+  parts.push({ ang:rnd()*Math.PI*2, rad:1+(rnd()*2-1)*CONFIG.hero.ringJitterFrac,
+               size:CONFIG.hero.particleMinPx+rnd()*(CONFIG.hero.particleMaxPx-CONFIG.hero.particleMinPx),
+               ph:rnd()*Math.PI*2 }); }
+function applyVars(){ const W=stage.clientWidth, r=document.documentElement.style, L=CONFIG.layout, T=CONFIG.type;
+  const px=f=>String(W*f)+"px";
+  r.setProperty("--page-bg",CONFIG.pageBg); r.setProperty("--bg-top",CONFIG.palette.bgTop);
+  r.setProperty("--bg-bottom",CONFIG.palette.bgBottom); r.setProperty("--text",CONFIG.palette.text);
+  r.setProperty("--panel-bg",CONFIG.palette.panelBg); r.setProperty("--pill-bg",CONFIG.palette.pillBg);
+  r.setProperty("--pill-text",CONFIG.palette.pillText); r.setProperty("--font-family",CONFIG.fontFamily);
+  r.setProperty("--c0",CONFIG.counters[0].color); r.setProperty("--c0-border",CONFIG.counters[0].border);
+  r.setProperty("--c1",CONFIG.counters[1].color); r.setProperty("--c1-border",CONFIG.counters[1].border);
+  r.setProperty("--panel-top",px(L.panelTopFrac)); r.setProperty("--panel-width",px(L.panelWidthFrac));
+  r.setProperty("--panel0-left",px(L.panel0LeftFrac)); r.setProperty("--panel1-left",px(L.panel1LeftFrac));
+  r.setProperty("--panel-pad-x",px(L.panelPadXFrac)); r.setProperty("--panel-pad-y",px(L.panelPadYFrac));
+  r.setProperty("--panel-radius",px(L.panelRadiusFrac)); r.setProperty("--panel-border-w",String(L.panelBorderPx)+"px");
+  r.setProperty("--counter-size",px(T.counterFrac)); r.setProperty("--label-size",px(T.labelFrac));
+  r.setProperty("--callout-size",px(T.calloutFrac)); r.setProperty("--subline-size",px(T.sublineFrac));
+  r.setProperty("--counter-weight",String(T.counterWeight));
+  r.setProperty("--label-weight",String(T.labelWeight));
+  r.setProperty("--callout-weight",String(T.calloutWeight));
+  r.setProperty("--subline-weight",String(T.sublineWeight));
+  r.setProperty("--label-spacing",String(T.labelSpacingEm)+"em");
+  r.setProperty("--callout-top",px(L.calloutTopFrac)); r.setProperty("--subline-top",px(L.sublineTopFrac));
+  r.setProperty("--pill-pad-x",px(L.pillPadXFrac)); r.setProperty("--pill-pad-y",px(L.pillPadYFrac));
+  r.setProperty("--pill-radius",px(L.pillRadiusFrac));
+  r.setProperty("--stage-max",String(L.stageMaxPx)+"px");
+  r.setProperty("--line-height",String(T.lineHeight)); }
+function fitValue(el,text){ const W=stage.clientWidth; if(!W) return;
+  let size=W*CONFIG.type.counterFrac; const panel=$("panel0");
+  const inner=panel.clientWidth - W*CONFIG.layout.panelPadXFrac*2;
+  meas.font=String(CONFIG.type.counterWeight)+" "+String(size)+"px "+CONFIG.fontFamily;
+  const w=meas.measureText(text).width;
+  if(w>inner*CONFIG.type.fitGuard){ size=size*(inner*CONFIG.type.fitGuard)/w;
+    el.style.fontSize=String(size)+"px"; } else { el.style.fontSize=""; } }
+function drawHero(tSec,W,H){ ctx.clearRect(0,0,W,H); const hz=CONFIG.hero;
+  const cx=W*hz.centerXFrac, cy=H*hz.centerYFrac;
+  const rot=tSec*hz.rotationRadPerSec;
+  const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,W*hz.glowRadiusFrac);
+  glow.addColorStop(0,hz.glowColor); glow.addColorStop(1,hz.glowFade);
+  ctx.fillStyle=glow; ctx.fillRect(cx-W*hz.glowRadiusFrac,cy-W*hz.glowRadiusFrac,W*hz.glowRadiusFrac*2,W*hz.glowRadiusFrac*2);
+  ctx.fillStyle=hz.particleColor;
+  for(const p of parts){ const a=p.ang+rot;
+    const x=cx+Math.cos(a)*W*hz.ringRxFrac*p.rad, y=cy+Math.sin(a)*W*hz.ringRyFrac*p.rad;
+    ctx.globalAlpha=hz.particleBaseAlpha+hz.twinkleDepth*Math.sin(p.ph+tSec*hz.twinkleRate);
+    ctx.fillRect(x,y,p.size,p.size); }
+  ctx.globalAlpha=1;
+  const sr=W*hz.sphereRadiusFrac;
+  const g=ctx.createRadialGradient(cx-sr/3,cy-sr/3,sr/6,cx,cy,sr);
+  g.addColorStop(0,hz.sphereCore); g.addColorStop(1,hz.sphereEdge);
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,sr,0,Math.PI*2); ctx.fill(); }
+function render(tMs){ const TL=CONFIG.timeline, W=stage.clientWidth, H=stage.clientHeight;
+  if(hero.width!==W&&W){ hero.width=W; hero.height=H; }
+  const pIn=Math.min(1,tMs/TL.panelFadeMs);
+  $("panel0").style.opacity=String(pIn); $("panel1").style.opacity=String(pIn);
+  const cp=Math.max(0,Math.min(1,(tMs-TL.countStartMs)/TL.countDurationMs));
+  const e=ease(cp);
+  CONFIG.counters.forEach((c,i)=>{ const v=Math.round(c.start+(c.end-c.start)*e);
+    const el=$("val"+i); const txt=fmt(v); if(el.textContent!==txt) el.textContent=txt; });
+  drawHero(tMs/1000,W,H);
+  const co=$("callout");
+  if(tMs>=TL.calloutAtMs){ const pp=Math.min(1,(tMs-TL.calloutAtMs)/CONFIG.callout.popMs);
+    co.style.opacity="1"; co.style.transform="translateX(-50%) scale("+
+      String(CONFIG.callout.fromScale+(1-CONFIG.callout.fromScale)*pp)+")";
+    if(co.textContent!==computeCallout()) co.textContent=computeCallout();
+  } else { co.style.opacity="0"; }
+  const sl=$("subline");
+  sl.style.opacity=String(Math.max(0,Math.min(1,(tMs-TL.sublineAtMs)/TL.sublineFadeMs)));
+  return { t:tMs, progress:cp }; }
+/* clock: own rAF clock; comparison page slaves it via __T45.seek */
+let playing=true, baseT=0, baseStamp=performance.now();
+function nowMs(){ return playing ? baseT+(performance.now()-baseStamp) : baseT; }
+function loop(){ render(Math.min(nowMs(),CONFIG.durationMs)); requestAnimationFrame(loop); }
+function init(){ applyVars();
+  $("lab0").textContent=CONFIG.counters[0].label; $("lab1").textContent=CONFIG.counters[1].label;
+  $("subline").textContent=CONFIG.subline; $("callout").textContent=computeCallout();
+  fitValue($("val0"),fmt(CONFIG.counters[0].end)); fitValue($("val1"),fmt(CONFIG.counters[1].end));
+  render(0); requestAnimationFrame(loop); }
+function checkpointsOk(){ const c=CONFIG.timeline.checkpoints;
+  for(let i=0;i<c.length;i++){ if(!(c[i].atMs>=0&&c[i].atMs<=CONFIG.durationMs)) return false;
+    if(i>0&&!(c[i].atMs>c[i-1].atMs)) return false; } return true; }
+window.__T45={ config:CONFIG, fmt:fmt, computeCallout:computeCallout, render:render,
+  checkpointsOk:checkpointsOk,
+  play(){ if(!playing){ playing=true; baseStamp=performance.now(); } },
+  pause(){ if(playing){ baseT=nowMs(); playing=false; } },
+  seek(ms){ baseT=ms; baseStamp=performance.now(); render(ms); },
+  restart(){ baseT=0; baseStamp=performance.now(); playing=true; render(0); },
+  duration:CONFIG.durationMs };
+window.addEventListener("resize",()=>{ applyVars();
+  fitValue($("val0"),fmt(CONFIG.counters[0].end)); fitValue($("val1"),fmt(CONFIG.counters[1].end)); });
+init();
+</script>
+</body>
+</html>

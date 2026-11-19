@@ -1,0 +1,10 @@
+Readability is strong on the supplied source, with browser-rendered fit still unverified.
+
+- **Clear hierarchy and separation:** headlines occupy a dedicated top row; provenance follows below. The demonstration tag has its own row, and the formula and legend occupy separate columns. The model reports all text regions inside the stage and all simultaneous pairs disjoint at both phone widths.
+- **Small but serviceable type:** at 360px, headlines are 17.3px and the formula is 28.8px. Supporting text sits near the requested floor: provenance/demo text 11.0px, labels/legend 11.2px, takeaway 11.9px. These pass numerically but leave limited comfort for dense uppercase text.
+- **Strong configured contrast:** white and pale lavender against purple, plus dark lettering on the coloured labels and yellow pills, support legibility. The cyan formula accent remains distinct against the background.
+- **Main residual risk: modelled fit is not displayed-state proof.** The fixed 0.62 glyph-width factor does not establish actual browser text widths. Also, most text uses browser-default `line-height: normal`; the demonstration row’s stated 11px height is therefore not a verified line-box height. `nowrap` prevents wrapping but cannot prevent overflow or collisions.
+- **Highest-priority cure:** verify both formed cards at 360px and 390px using actual browser bounds and screenshots, especially the 2.8px label-to-pie clearances and demonstration-row clearance. Explicit line heights would also make vertical separation more deterministic.
+
+SCORE: 86
+BODY-WRITE: This return supplies the verbatim codex/attempt-3/lens-readability.md filing and the scores.md readability entry of 86/100, with the browser-metric verification gap and next-attempt cures recorded; no filesystem write was performed in this review.
