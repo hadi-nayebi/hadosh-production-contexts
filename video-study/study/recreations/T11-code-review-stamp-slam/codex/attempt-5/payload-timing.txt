@@ -1,0 +1,524 @@
+CONSUMER + DECISION: Video Study practice job (Cycle 011 Wave 10), item T11, attempt 5 re-score. Your return prices this recreation under one lens, feeding the practice job's delta and verdict filing (five-lens average and floor recorded by the job, not by you).
+WORKING RECORD: builds from the neutral technique facts below + the score-blind build record extract + the recreation.html source appended after these instructions; writes to the artifact's codex/attempt-5 returns, the attempt-5 build record, and scores.md.
+Scores are integers from 0 to 100.
+LENS: TIMING/TEMPO only. Judge the card dwell and cadence against the filed segment evidence (roughly 2-second dwell, stamps recurring on merged cards inside a 10-second window), counter windows, whip spacing, stamp slam/hold/hide placement, and loop closure. Penalize drift-prone scheduling, stamps cut off by transitions or the loop, and rhythms that contradict the filed evidence.
+CATALOGUE MECHANICS (neutral): A GitHub-like pull-request screen cycles review cards; an approvals counter rises across cards; a checks panel flips states (including a red down state); stick-figure reviewers multiply below; the PR body is pointillist arch art drawn in code; cards swap with horizontal motion-blur whip transitions; a green rotated stamp slams at merge moments. Segment evidence filed by the builders is stated in the extract below (state-at-sample observations, extraction granularity, uncertainty, and the timeline mapping). The recreation is one self-contained HTML file, CONFIG-first, DOM/CSS/JS only.
+End your return with exactly these two lines:
+SCORE: <int>
+BODY-WRITE: <what this return wrote into the body - the priced findings the filing must carry>
+
+=== score-blind build record extract follows ===
+# T11 — Code-review UI + stamp slam · neutral build facts (score-blind extract)
+
+Permitted-fields schema for this extract: construction facts (what the file does, stated neutrally) + specimen observations with their granularity and uncertainty + check names with pass/fail results only. No scores, no targets, no history.
+
+## Specimen observations and timeline mapping
+Specimen observations (builders' filed evidence): the segment is a 10-second window of a GitHub-like pull-request screen. State-at-sample observations: at approximately 2.5 s the first card (#1111) is displayed with its green stamp held at full size; at approximately 6.5 s the #1115-equivalent card is displayed with no stamp; at approximately 7.5 s that card's stamp is displayed held (not mid-slam). Frame-difference scans at 4 fps and at 10 fps found the specimen's own event spacing non-uniform (large transition clusters near 1.2–2.1 s and 9.6–10.0 s; no regular 2-second boundary grid at 100 ms granularity). Extraction granularity: 10 fps (100 ms) for the latest scan; boundary localisation on a continuously animated segment carries roughly ±100–300 ms uncertainty per edge. A uniform 2000 ms cadence from the loop origin would put the second card on screen at 2.5 s, which contradicts the first sample; the recreation's card durations are therefore non-uniform, and its card data set is its own parameterized set. Mapping: the recreation schedules five cards across a 10000 ms loop with per-card durations [2800, 1400, 1800, 2000, 2000] ms; the fourth card starts at 6000 ms so the 6.5 s and 7.5 s samples fall inside it; the first card's stamp is held across 2500 ms; the fourth card's counter settles before its stamp first appears, and its stamp is held across 7500 ms.
+
+## Construction facts
+- One self-contained HTML file; all variables in a CONFIG object at the top of the script. URL overrides for titles/stamp/cardMs/accent/bg are parsed strictly (an unsigned-integer grammar for cardMs), applied to a candidate copy, deep-validated, and only then adopted — an invalid candidate is rejected atomically and recorded in an observable rejected list while the default configuration renders. Empty, duplicate, excess, and unrecognised override parameters are each rejected with a named error in the same observable record. The effective configuration is also validated at startup before any timeline computation or DOM construction; an invalid shipped configuration records its named errors in the same observable record and construction halts without throwing, while a valid configuration starts playing on its own and loops.
+- Scheduling is a single absolute timeline computed from CONFIG: five cards with per-card durations [2800, 1400, 1800, 2000, 2000] ms across a 10000 ms loop, counter spans, and one stamp event per card whose data flag marks it merged. Displayed state is a pure function of loop phase; a frame that skips several checkpoints reconstructs exactly the state those checkpoints produce; pause stores the phase and resume shifts the time origin; loop rollover is phase modulo.
+- Derived subordinate durations: each card's counter span is the configured counter duration capped by the card duration minus the whip duration; on a merged card the span is further capped so the stamp's onset follows the counter's settle by a configured gap. Each merged card's stamp offset is the smaller of a configured fraction of its card duration and the latest offset that lets slam + hold + hide complete before the next whip window opens; the hold is the remainder of that budget and the hide completes at the whip window's opening edge. At the default durations: counter spans are [1400, 1100, 1400, 1160, 1400] ms; first merged card stamp spans 1764–2650 ms (held at the 2500 ms phase); second merged card stamp spans 7260–7850 ms (its counter settles at 7160 ms, slam completes at 7390 ms, held at the 7500 ms phase).
+- Stamp rendering: scale and opacity come only from the phase function; the stamp element's CSS transition is pinned to none at setup and on every render.
+- Approvals counter: three digit columns; the ones column's strip position is an unwrapped, monotonic function of the rising value within each card — as the count crosses a multiple of ten the strip continues into its duplicated repetitions instead of snapping back, and the strip is built with enough repetitions (a configured count) to cover the full unwrapped travel of every card; each higher column holds its settled digit and eases to the next digit only across the final fraction of its own carry span. At every counter completion each column's displayed strip position is exactly its settled digit. No blur is applied to the counter.
+- Card transitions: one 300 ms envelope per swap, including across the loop boundary (the final card whips into the first card's entrance); swap at the envelope midpoint, horizontal travel 130 px, blur peaking at the midpoint, a horizontal streak scale plus a skew component, opacity 1 throughout.
+- Checks panel: row states, status-pill text and tone, check-state symbols, and interface labels are data in CONFIG; while a merged card's stamp is displayed, the pill shows the merged entry. Check-state colors, pill tones, and palette colors are applied via CSS custom properties at init.
+- Arch: code-drawn pointillist arch from a shape function exposed as a pure cell function; geometry constants (profile knee, half-width base/top, crown exponent, inner opening top/ratio/curvature, leg gap, band frequency/phase/threshold, dark-cell pattern multipliers and modulus) and the three glyph characters live in CONFIG. The opening's half-width varies with height: widest at the base and narrowing smoothly toward the opening's top, whose boundary is an arc; measured opening half-widths rise from 0.111 of the half-frame at the top rows to 0.278 at the base row, the crown peakedness measure (one minus the upper-region half-width ratio) is 0.228, the opening height fraction is 0.464 of the arch height, and glyph size is 6.4 px on a 36×28 grid.
+- Reviewer figures are DOM figures (head, arms, body, legs) built from CONFIG figure dimensions including stroke widths; counts per card are CONFIG data.
+- Stamp placement (left/top percentages), border width, padding, background, and font stacks are CONFIG values applied at init. Type sizes are CONFIG values applied at init.
+- Validation enumerates every container the render path dereferences and rejects — without throwing — when any is absent or a required member is missing; counting dimensions and length-limit members validate as finite integers in named ranges; position and padding values validate as finite numbers without string or null coercion; arrays validate by explicit index so a sparse entry is rejected by its index; scalar ranges are checked for every numeric family (durations, digit base, whip scalars, stamp scalars and strings, arch fractions and pattern integers, type/stage/figure values); a rejected candidate leaves the default configuration and timeline completely unchanged.
+
+## Check results (names + results only)
+Own-check suite (node, source-bound): 204 assertions, all PASS. Families: timeline invariants and displayed states at named phases · counter-span floor and settled-display margins · displayed strip positions at settle checkpoints · ones-column position continuity and monotonicity across sampled wrap crossings · validation rejection cases (missing containers, scalar ranges, integer dimensions, length-limit members, coerced stamp values, sparse arrays) · startup validation of the shipped configuration (valid default self-starts and reaches loop rollover; an invalid direct edit halts observably) · override handling (documented swap effects; empty/duplicate/excess/non-integer/unknown rejections; atomicity) · CONFIG consumption census (every leaf key resolves to an application site; mutation effects for representative families) · literal census outside CONFIG against a named structural whitelist · arch profile measures (outer crown and inner opening) · displayed-state fit model at 360 px width / 300 px minimum height in single-line and wrapped check-row states (modelled totals 281.5 px in both states) · purity grep (zero specimen media, zero external assets). Pixel rendering was not available in the build session; geometry rests on the source-bound model.
+
+=== recreation.html source follows ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T11 — Code-review UI + stamp slam · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:#0b0e11}
+  #stage{position:relative;width:100%;height:100%;min-height:300px;overflow:hidden;
+         color:var(--fg);padding:8px}
+  #card{height:100%;display:flex;flex-direction:column;gap:6px;will-change:transform,filter}
+  .pr-head{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;min-width:0}
+  .pr-num{color:var(--muted);font-weight:700}
+  .pr-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+  .open-pill{border:1px solid var(--green);color:var(--green);border-radius:999px;padding:1px 7px}
+  .stats{display:flex;gap:14px;color:var(--muted);align-items:center}
+  .stats b{color:var(--fg)}
+  .counter{display:inline-flex;overflow:hidden;vertical-align:middle}
+  .digit{overflow:hidden;display:inline-block}
+  .digit-strip{display:flex;flex-direction:column;will-change:transform}
+  .digit-strip span{display:block;text-align:center;font-weight:700;color:var(--fg)}
+  .main{flex:1;display:flex;gap:8px;min-height:0}
+  .checks{border:1px solid var(--panel-border);border-radius:8px;padding:7px;background:var(--panel);align-self:flex-start}
+  .checks h3{margin:0 0 5px}
+  .check{display:flex;justify-content:space-between;gap:4px;padding:2px 0;flex-wrap:wrap}
+  .ok{color:var(--ok)}.bad{color:var(--bad);font-weight:700}.warn{color:var(--warn)}
+  .fixed-pill{display:inline-block;margin-top:5px;border-radius:999px;font-weight:700;padding:2px 8px}
+  .arch-wrap{flex:1;display:flex;align-items:flex-start;justify-content:center;min-width:0}
+  #arch{margin:0;white-space:pre}
+  #arch .g-band{color:var(--arch-band)} #arch .g-dark{color:var(--arch-dark)} #arch .g-base{color:var(--arch-base)}
+  .reviewers{display:flex;flex-wrap:wrap;gap:2px 5px;min-height:26px;align-content:flex-start}
+  .fig{display:inline-flex;flex-direction:column;align-items:center}
+  .fig .head{border-radius:50%;color:var(--green);text-align:center}
+  .fig .arms{display:block}
+  .fig .body{display:block}
+  .fig .legs{display:block}
+  #stamp{position:absolute;font-weight:900;letter-spacing:.08em;border-radius:8px;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="card">
+    <div class="pr-head"><span class="pr-num" id="prNum"></span><span class="pr-title" id="prTitle"></span><span class="open-pill" id="openPill"></span></div>
+    <div class="stats"><span><span id="approvalsLabel"></span> <span class="counter" id="approvals"></span></span><span><span id="linesLabel"></span> <b id="lines">0</b></span></div>
+    <div class="main">
+      <div class="checks"><h3 id="checksHeading"></h3><div id="checkList"></div><span class="fixed-pill" id="statusPill"></span></div>
+      <div class="arch-wrap"><pre id="arch" aria-hidden="true"></pre></div>
+    </div>
+    <div class="reviewers" id="reviewers"></div>
+  </div>
+  <div id="stamp"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every variable of the technique lives here; logic below reads only CONFIG ===== */
+/*PURE-BEGIN*/
+const CONFIG = {
+  prs: [
+    { number: "#1111", title: "ship: please-hold.mp4", approvalsFrom: 111, approvalsTo: 260, linesRead: 0, merged: true },
+    { number: "#1112", title: "ship: i-have-a-blocker.mp4", approvalsFrom: 260, approvalsTo: 380, linesRead: 0, merged: false },
+    { number: "#1113", title: "ship: rage-against-the-ml.mp4", approvalsFrom: 380, approvalsTo: 520, linesRead: 0, merged: false },
+    { number: "#1115", title: "ship: asking-for-a-friend.mp4", approvalsFrom: 520, approvalsTo: 800, linesRead: 0, merged: true },
+    { number: "#1116", title: "ship: dont-wait.mp4", approvalsFrom: 800, approvalsTo: 800, linesRead: 0, merged: false }
+  ],
+  cardDurationsMs: [2800, 1400, 1800, 2000, 2000],
+  whipMs: 300,
+  whipDistancePx: 130,
+  whipBlurPx: 8,
+  whipStreakPx: 22,
+  whipStreakDivisor: 600,
+  whipSkewDeg: 6,
+  counterMs: 1400,
+  rollCarryFrac: 0.1,
+  digitBase: 10,
+  counterDigits: 3,
+  counterDigitPx: 17,
+  onesStripReps: 29,
+  loopMs: 10000,
+  stampOffsetFrac: 0.63,
+  stampHideMs: 100,
+  stampSettleGapMs: 100,
+  stampText: "LGTM",
+  stampAngleDeg: -14,
+  stampColor: "#3fb950",
+  stampStartScale: 3.2,
+  slamMs: 130,
+  stampFontPx: 34,
+  stamp: { leftPct: 50, topPct: 46, borderPx: 4, padYPx: 4, padXPx: 14, bg: "rgba(4,21,10,.25)", fontStack: "Arial,Helvetica,sans-serif" },
+  mergePill: { text: "● merged", tone: "good" },
+  checksCycle: [
+    [ ["build","ok","pass"], ["tests","ok","pass"], ["prod","ok","hotfix"] ],
+    [ ["build","ok","pass"], ["tests","warn","0 ran"], ["prod","bad","prod is down"] ],
+    [ ["build","ok","pass"], ["tests","ok","pass"], ["prod","ok","hotfix"] ],
+    [ ["build","ok","pass"], ["tests","ok","pass"], ["prod","ok","ready"] ],
+    [ ["build","ok","pass"], ["tests","ok","pass"], ["prod","ok","hotfix"] ]
+  ],
+  statusPills: [
+    { text: "● fixed", tone: "good" }, { text: "● prod is down", tone: "bad" },
+    { text: "● fixed", tone: "good" }, { text: "● ready to merge", tone: "good" },
+    { text: "● fixed", tone: "good" }
+  ],
+  pillTones: { good: { bg: "#3fb950", fg: "#04150a" }, bad: { bg: "#f85149", fg: "#1a0505" } },
+  checkStates: { ok: "#3fb950", bad: "#f85149", warn: "#d29922" },
+  reviewersPerCard: [4, 6, 9, 13, 16],
+  archCols: 36, archRows: 28,
+  arch: { knee: 0.28, halfBase: 0.42, halfTop: 0.72, crownExp: 0.5, innerTopStart: 0.55, innerTopRatio: 0.35, innerCurveExp: 2, legGap: 0.34,
+          bandFreq: 22, bandPhase: 0.35, bandThreshold: 0.55, darkMod: 9, darkRem: 3,
+          darkMulX: 7, darkMulY: 13,
+          glyphBand: "▓", glyphDark: "░", glyphBase: "▒", fontPx: 6.4, lineHeight: 1.05 },
+  type: { prPx: 13, statsPx: 11, statsBPx: 14, checksPx: 12, checksHeadPx: 13, pillPx: 11, openPillPx: 10,
+          fontStack: "ui-monospace,Menlo,Consolas,monospace" },
+  figure: { widthPx: 15, headPx: 9, headFontPx: 7, armsPx: 11, armsHPx: 2, bodyWPx: 2, bodyHPx: 7,
+            legsWPx: 9, legsHPx: 6, strokePx: 1.4, legsStrokePx: 2 },
+  stage: { paddingPx: 8, checksWidthPct: 42, panelBorderPx: 1, minHeightPx: 300 },
+  overrideLimits: { maxTitleLen: 60, maxStampLen: 12 },
+  labels: { openPill: "Open", checksHeading: "Checks", approvals: "approvals", linesRead: "lines read" },
+  marks: { ok: "\u2713", bad: "\u2715", warn: "\u25d0" },
+  palette: { bg:"#0b0e11", panel:"#0d1117", panelBorder:"#30363d", fg:"#e6edf3", muted:"#8b949e", green:"#3fb950", archRed:"#c93a3a", archLight:"#d8d3c3", archDark:"#3a3f45" }
+};
+const DEFAULT_CONFIG_JSON = JSON.stringify(CONFIG);
+const REJECTED = [];
+function isHex(s){ return typeof s==="string" && /^#[0-9a-fA-F]{6}$/.test(s); }
+function isPosNum(v){ return typeof v==="number" && isFinite(v) && v>0; }
+function isNonNegInt(v){ return Number.isInteger(v) && v>=0; }
+function validateConfig(c){
+  const errs = [];
+  try {
+    if (!c || typeof c!=="object") return ["config not an object"];
+    ["arch","type","figure","stage","stamp","palette","pillTones","checkStates","mergePill","overrideLimits","labels","marks"].forEach(k=>{
+      if (!c[k] || typeof c[k]!=="object" || Array.isArray(c[k])) errs.push("missing container: "+k); });
+    if (!Array.isArray(c.prs) || !c.prs.length) errs.push("prs empty");
+    else for (let i = 0; i < c.prs.length; i++){ if (!(i in c.prs)){ errs.push("prs sparse hole at index " + i); continue; } const p = c.prs[i];
+      if (!p || typeof p!=="object"){ errs.push("prs["+i+"] not object"); continue; }
+      if (typeof p.number!=="string" || !p.number.length) errs.push("prs["+i+"].number invalid");
+      if (typeof p.title!=="string" || !p.title.length) errs.push("prs["+i+"].title invalid");
+      if (!isNonNegInt(p.approvalsFrom) || !isNonNegInt(p.approvalsTo)) errs.push("prs["+i+"].approvals invalid");
+      else if (p.approvalsTo < p.approvalsFrom) errs.push("prs["+i+"].approvals descending");
+      if (!isNonNegInt(p.linesRead)) errs.push("prs["+i+"].linesRead invalid");
+      if (typeof p.merged!=="boolean") errs.push("prs["+i+"].merged invalid");
+    }
+    if (!Array.isArray(c.checksCycle) || !c.checksCycle.length) errs.push("checksCycle empty");
+    else for (let i = 0; i < c.checksCycle.length; i++){ if (!(i in c.checksCycle)){ errs.push("checksCycle sparse hole at index " + i); continue; } const rows = c.checksCycle[i];
+      if (!Array.isArray(rows) || !rows.length){ errs.push("checksCycle["+i+"] empty"); continue; }
+      for (let j = 0; j < rows.length; j++){ if (!(j in rows)){ errs.push("checksCycle["+i+"] sparse hole at index " + j); continue; } const r = rows[j];
+        if (!Array.isArray(r) || r.length!==3){ errs.push("checksCycle["+i+"]["+j+"] shape"); continue; }
+        if (typeof r[0]!=="string" || !r[0].length) errs.push("checksCycle["+i+"]["+j+"] name");
+        if (!Object.prototype.hasOwnProperty.call(c.checkStates||{}, r[1])) errs.push("checksCycle["+i+"]["+j+"] state unknown");
+        if (typeof r[2]!=="string" || !r[2].length) errs.push("checksCycle["+i+"]["+j+"] label");
+      }
+    }
+    if (!Array.isArray(c.statusPills) || !c.statusPills.length) errs.push("statusPills empty");
+    else for (let i = 0; i < c.statusPills.length; i++){ if (!(i in c.statusPills)){ errs.push("statusPills sparse hole at index " + i); continue; } const p = c.statusPills[i];
+      if (!p || typeof p.text!=="string" || !p.text.length) errs.push("statusPills["+i+"].text invalid");
+      if (!p || !Object.prototype.hasOwnProperty.call(c.pillTones||{}, p.tone)) errs.push("statusPills["+i+"].tone unknown");
+    }
+    if (!c.mergePill || typeof c.mergePill.text!=="string" || !Object.prototype.hasOwnProperty.call(c.pillTones||{}, c.mergePill.tone)) errs.push("mergePill invalid");
+    if (c.pillTones) Object.keys(c.pillTones).forEach(k=>{ const t=c.pillTones[k]; if(!t||!isHex(t.bg)||!isHex(t.fg)) errs.push("pillTones."+k+" not hex pair"); });
+    if (!Array.isArray(c.reviewersPerCard) || !c.reviewersPerCard.length) errs.push("reviewersPerCard empty");
+    else for (let i = 0; i < c.reviewersPerCard.length; i++){ if (!(i in c.reviewersPerCard)){ errs.push("reviewersPerCard sparse hole at index " + i); continue; } if(!isNonNegInt(c.reviewersPerCard[i])) errs.push("reviewersPerCard["+i+"] invalid"); }
+    ["whipMs","counterMs","loopMs","slamMs","stampHideMs"].forEach(k=>{ if(!isPosNum(c[k])) errs.push(k+" invalid"); });
+    if (!(typeof c.stampSettleGapMs==="number" && isFinite(c.stampSettleGapMs) && c.stampSettleGapMs>=0)) errs.push("stampSettleGapMs invalid");
+    if (!Array.isArray(c.cardDurationsMs) || !Array.isArray(c.prs) || c.cardDurationsMs.length !== c.prs.length) errs.push("cardDurationsMs shape");
+    else { for (let i = 0; i < c.cardDurationsMs.length; i++){ if (!(i in c.cardDurationsMs)){ errs.push("cardDurationsMs sparse hole at index " + i); continue; } if(!isPosNum(c.cardDurationsMs[i])) errs.push("cardDurationsMs["+i+"] invalid"); }
+      if (isPosNum(c.loopMs) && c.cardDurationsMs.reduce((a,b)=>a+(isPosNum(b)?b:0),0) !== c.loopMs) errs.push("loop != sum(durations)");
+      if (isPosNum(c.whipMs) && !(c.whipMs < Math.min.apply(null, c.cardDurationsMs.filter(isPosNum)))) errs.push("whipMs>=min duration"); }
+    if (!isPosNum(c.whipDistancePx)) errs.push("whipDistancePx invalid");
+    if (!(typeof c.whipBlurPx==="number" && isFinite(c.whipBlurPx) && c.whipBlurPx>=0)) errs.push("whipBlurPx invalid");
+    if (!(typeof c.whipStreakPx==="number" && isFinite(c.whipStreakPx) && c.whipStreakPx>=0)) errs.push("whipStreakPx invalid");
+    if (!isPosNum(c.whipStreakDivisor)) errs.push("whipStreakDivisor invalid");
+    if (!(typeof c.whipSkewDeg==="number" && isFinite(c.whipSkewDeg))) errs.push("whipSkewDeg invalid");
+    if (!(typeof c.stampOffsetFrac==="number" && c.stampOffsetFrac>0 && c.stampOffsetFrac<1)) errs.push("stampOffsetFrac range");
+    if (!(typeof c.rollCarryFrac==="number" && c.rollCarryFrac>0 && c.rollCarryFrac<=0.5)) errs.push("rollCarryFrac range");
+    if (!Number.isInteger(c.digitBase) || c.digitBase<2 || c.digitBase>10) errs.push("digitBase range");
+    if (!(typeof c.stampStartScale==="number" && isFinite(c.stampStartScale) && c.stampStartScale>=1)) errs.push("stampStartScale invalid");
+    if (!(typeof c.stampAngleDeg==="number" && isFinite(c.stampAngleDeg) && Math.abs(c.stampAngleDeg)<=180)) errs.push("stampAngleDeg range");
+    if (!isPosNum(c.stampFontPx)) errs.push("stampFontPx invalid");
+    if (typeof c.stampText!=="string" || !c.stampText.length) errs.push("stampText invalid");
+    if (c.palette) ["bg","panel","panelBorder","fg","muted","green","archRed","archLight","archDark"].forEach(k=>{ if(!isHex(c.palette[k])) errs.push("palette."+k+" missing/not hex"); });
+    if (c.checkStates) ["ok","bad","warn"].forEach(k=>{ if(!isHex(c.checkStates[k])) errs.push("checkStates."+k+" missing/not hex"); });
+    if (c.labels) ["openPill","checksHeading","approvals","linesRead"].forEach(k=>{ if(typeof c.labels[k]!=="string" || !c.labels[k].length) errs.push("labels."+k+" invalid"); });
+    if (c.marks) ["ok","bad","warn"].forEach(k=>{ if(typeof c.marks[k]!=="string" || !c.marks[k].length) errs.push("marks."+k+" invalid"); });
+    if (!isHex(c.stampColor)) errs.push("stampColor not hex");
+    if (c.palette) Object.keys(c.palette).forEach(k=>{ if(!isHex(c.palette[k])) errs.push("palette."+k+" not hex"); });
+    if (c.checkStates) Object.keys(c.checkStates).forEach(k=>{ if(!isHex(c.checkStates[k])) errs.push("checkStates."+k+" not hex"); });
+    if (!Number.isInteger(c.archCols) || c.archCols < 1) errs.push("archCols not a positive integer");
+    if (!Number.isInteger(c.archRows) || c.archRows < 1) errs.push("archRows not a positive integer");
+    if (!Number.isInteger(c.onesStripReps) || c.onesStripReps < 1) errs.push("onesStripReps not a positive integer");
+    else if (Array.isArray(c.prs) && Number.isInteger(c.digitBase) && c.digitBase >= 2){ let need = 0;
+      c.prs.forEach(p=>{ if (p && isNonNegInt(p.approvalsFrom) && isNonNegInt(p.approvalsTo)) need = Math.max(need, p.approvalsTo - c.digitBase * Math.floor(p.approvalsFrom / c.digitBase)); });
+      if (c.onesStripReps * c.digitBase <= need) errs.push("onesStripReps strip too short for unwrapped ones travel"); }
+    if (c.arch){ ["knee","halfBase","halfTop","innerTopStart","innerTopRatio","legGap","bandFreq","bandPhase","bandThreshold"].forEach(k=>{ if(!isPosNum(c.arch[k]) && c.arch[k]!==0) errs.push("arch."+k+" invalid"); });
+      if (!(c.arch.legGap>0 && c.arch.legGap<1)) errs.push("arch.legGap range");
+      if (!(c.arch.knee>0 && c.arch.knee<1)) errs.push("arch.knee range");
+      if (!(c.arch.innerTopStart>0 && c.arch.innerTopStart<1)) errs.push("arch.innerTopStart range");
+      if (!(c.arch.innerTopRatio>0 && c.arch.innerTopRatio<=1)) errs.push("arch.innerTopRatio range");
+      if (!isPosNum(c.arch.innerCurveExp)) errs.push("arch.innerCurveExp invalid");
+      if (!(c.arch.halfBase>0 && c.arch.halfBase<=1 && c.arch.halfTop>0 && c.arch.halfTop<=1)) errs.push("arch half range");
+      if (!isPosNum(c.arch.crownExp)) errs.push("arch.crownExp invalid");
+      if (!(c.arch.bandThreshold>=0 && c.arch.bandThreshold<=1)) errs.push("arch.bandThreshold range");
+      if (!Number.isInteger(c.arch.darkMulX) || !Number.isInteger(c.arch.darkMulY) || !Number.isInteger(c.arch.darkMod) || !Number.isInteger(c.arch.darkRem)) errs.push("arch dark pattern invalid");
+      if (!(c.arch.darkMod>=1)) errs.push("arch.darkMod range");
+      if (!(c.arch.darkRem>=0 && c.arch.darkRem < Math.max(1, c.arch.darkMod))) errs.push("arch.darkRem range");
+      ["glyphBand","glyphDark","glyphBase"].forEach(k=>{ if(typeof c.arch[k]!=="string" || !c.arch[k].length) errs.push("arch."+k+" invalid"); });
+      if (!isPosNum(c.arch.fontPx) || !isPosNum(c.arch.lineHeight)) errs.push("arch type invalid");
+    }
+    if (c.type) { ["prPx","statsPx","statsBPx","checksPx","checksHeadPx","pillPx","openPillPx"].forEach(k=>{ if(!isPosNum(c.type[k])) errs.push("type."+k+" invalid"); });
+      if (typeof c.type.fontStack!=="string" || !c.type.fontStack.length) errs.push("type.fontStack invalid"); }
+    if (c.figure) ["widthPx","headPx","headFontPx","armsPx","armsHPx","bodyWPx","bodyHPx","legsWPx","legsHPx","strokePx","legsStrokePx"].forEach(k=>{ if(!isPosNum(c.figure[k])) errs.push("figure."+k+" invalid"); });
+    if (c.stage) { ["paddingPx","checksWidthPct","panelBorderPx","minHeightPx"].forEach(k=>{ if(!isPosNum(c.stage[k])) errs.push("stage."+k+" invalid"); });
+      if (!(c.stage.checksWidthPct>0 && c.stage.checksWidthPct<100)) errs.push("stage.checksWidthPct range"); }
+    if (c.overrideLimits) { if (!Number.isInteger(c.overrideLimits.maxTitleLen) || c.overrideLimits.maxTitleLen < 1 || c.overrideLimits.maxTitleLen > 500) errs.push("overrideLimits.maxTitleLen invalid");
+      if (!Number.isInteger(c.overrideLimits.maxStampLen) || c.overrideLimits.maxStampLen < 1 || c.overrideLimits.maxStampLen > 100) errs.push("overrideLimits.maxStampLen invalid"); }
+    if (c.stamp) { if(!(typeof c.stamp.leftPct==="number" && isFinite(c.stamp.leftPct) && c.stamp.leftPct>=0 && c.stamp.leftPct<=100) || !(typeof c.stamp.topPct==="number" && isFinite(c.stamp.topPct) && c.stamp.topPct>=0 && c.stamp.topPct<=100)) errs.push("stamp position range");
+      if (!(typeof c.stamp.borderPx==="number" && isFinite(c.stamp.borderPx) && c.stamp.borderPx>=0)) errs.push("stamp.borderPx invalid");
+      if (!(typeof c.stamp.padYPx==="number" && isFinite(c.stamp.padYPx) && c.stamp.padYPx>=0) || !(typeof c.stamp.padXPx==="number" && isFinite(c.stamp.padXPx) && c.stamp.padXPx>=0)) errs.push("stamp padding invalid");
+      if (typeof c.stamp.bg!=="string" || !c.stamp.bg.length) errs.push("stamp.bg invalid");
+      if (typeof c.stamp.fontStack!=="string" || !c.stamp.fontStack.length) errs.push("stamp.fontStack invalid"); }
+    if (!Number.isInteger(c.counterDigits) || c.counterDigits<1 || c.counterDigits>6) errs.push("counterDigits invalid");
+    if (!isPosNum(c.counterDigitPx)) errs.push("counterDigitPx invalid");
+    if (errs.length) return errs;
+    const tl = computeTimeline(c);
+    tl.counterSpans.forEach((s,i)=>{ if (!(s > 0)) errs.push("counter span <=0 card "+i); });
+    for (const s of tl.stamps){ const limit = s.cardStart + c.cardDurationsMs[s.cardIdx] - c.whipMs/2; if (s.hideEnd > limit) errs.push("stamp hide crosses whip"); if (s.hideEnd > c.loopMs) errs.push("stamp hide crosses loop"); if (s.holdEnd < s.slamEnd) errs.push("stamp hold negative"); if (!(s.at >= s.cardStart)) errs.push("stamp offset negative"); }
+    return errs;
+  } catch (e) { errs.push("validation threw: " + (e && e.message)); return errs; }
+}
+function computeTimeline(c){
+  const n = c.prs.length;
+  const starts = []; let acc = 0;
+  for (let i = 0; i < n; i++){ starts.push(acc); acc += c.cardDurationsMs[i]; }
+  const counterSpans = c.cardDurationsMs.map((d,i)=>{ let s = Math.min(c.counterMs, d - c.whipMs);
+    if (c.prs[i] && c.prs[i].merged){ const onset0 = Math.min(c.stampOffsetFrac * d, d - c.whipMs/2 - c.stampHideMs - c.slamMs); s = Math.min(s, onset0 - c.stampSettleGapMs); }
+    return s; });
+  const counterStarts = starts.slice();
+  const counterEnds = counterStarts.map((s,i)=> s + counterSpans[i]);
+  const stamps = [];
+  c.prs.forEach((p,i)=>{ if (p.merged){ const d = c.cardDurationsMs[i];
+    const offset = Math.min(c.stampOffsetFrac * d, d - c.whipMs/2 - c.stampHideMs - c.slamMs);
+    const at = starts[i] + offset;
+    const hideEnd = starts[i] + d - c.whipMs/2;
+    stamps.push({ cardIdx: i, cardStart: starts[i], at, slamEnd: at + c.slamMs, holdEnd: hideEnd - c.stampHideMs, hideEnd });
+  } });
+  const events = [];
+  starts.forEach((s,i)=> events.push({ at: s, kind: "cardStart", idx: i }));
+  counterEnds.forEach((s,i)=> events.push({ at: s, kind: "counterEnd", idx: i }));
+  stamps.forEach(s=>{ events.push({ at: s.at, kind: "stamp", idx: s.cardIdx }); events.push({ at: s.hideEnd, kind: "stampHide", idx: s.cardIdx }); });
+  events.push({ at: c.loopMs, kind: "loop" });
+  events.sort((a,b)=> a.at - b.at);
+  return { starts, counterStarts, counterEnds, counterSpans, counterSpanMs: counterSpans[0], stamps, events };
+}
+function digitsOf(c, value){
+  const out = [];
+  for (let i = c.counterDigits - 1; i >= 0; i--){ const place = Math.pow(c.digitBase, i); out.push(Math.floor(value / place) % c.digitBase); }
+  return out;
+}
+function rollPositions(c, value, fromValue){
+  const out = [];
+  const base0 = fromValue === undefined ? 0 : fromValue;
+  for (let i = c.counterDigits - 1; i >= 0; i--){ const place = Math.pow(c.digitBase, i);
+    if (place === 1){ out.push(value - c.digitBase * Math.floor(base0 / c.digitBase)); continue; }
+    const q = value / place, fl = Math.floor(q), frac = q - fl;
+    let e = 0; const w = c.rollCarryFrac;
+    if (frac > 1 - w){ const t = (frac - (1 - w)) / w; e = t * t * (3 - 2 * t); }
+    out.push((fl + e) % c.digitBase);
+  }
+  return out;
+}
+function archCell(c, x, y){
+  const A = c.arch, C = c.archCols, R = c.archRows;
+  const nx = (x - C/2) / (C/2), ny = y / R;
+  const halfW = ny < A.knee ? (A.halfBase + (A.halfTop - A.halfBase) * Math.pow(ny / A.knee, A.crownExp)) : A.halfTop;
+  const inside = Math.abs(nx) < halfW;
+  let legGap = false;
+  if (ny > A.innerTopStart){ const t = (ny - A.innerTopStart) / (1 - A.innerTopStart);
+    const hw = A.legGap * (A.innerTopRatio + (1 - A.innerTopRatio) * Math.pow(t, A.innerCurveExp));
+    legGap = Math.abs(nx) < hw; }
+  if (!inside || legGap) return { filled: false, cls: "", glyph: " " };
+  const band = Math.sin(ny * A.bandFreq + x * A.bandPhase) > A.bandThreshold;
+  const dark = (x * A.darkMulX + y * A.darkMulY) % A.darkMod < A.darkRem;
+  if (band) return { filled: true, cls: "g-band", glyph: A.glyphBand };
+  if (dark) return { filled: true, cls: "g-dark", glyph: A.glyphDark };
+  return { filled: true, cls: "g-base", glyph: A.glyphBase };
+}
+function stateAt(c, tl, phase){
+  const n = c.prs.length;
+  let cardIdx = 0, tx = 0, blur = 0, streak = 0, skew = 0, whipping = false, whipProgress = 0;
+  for (let i = 0; i < n; i++){ if (phase >= tl.starts[i]) cardIdx = i; }
+  const whips = [];
+  for (let i = 1; i < n; i++) whips.push({ at: tl.starts[i], from: i - 1, to: i });
+  whips.push({ at: c.loopMs, from: n - 1, to: 0 });
+  for (const w of whips){
+    let p0 = phase - (w.at - c.whipMs/2);
+    if (w.at === c.loopMs && phase < c.whipMs/2) p0 = phase + c.loopMs - (w.at - c.whipMs/2);
+    if (p0 >= 0 && p0 < c.whipMs){
+      whipping = true; whipProgress = p0 / c.whipMs;
+      const p = whipProgress;
+      blur = c.whipBlurPx * Math.sin(Math.PI * p);
+      streak = c.whipStreakPx * Math.sin(Math.PI * p);
+      skew = -c.whipSkewDeg * Math.sin(Math.PI * p);
+      if (p < 0.5){ cardIdx = w.from; tx = -c.whipDistancePx * (p * 2); }
+      else { cardIdx = w.to; tx = c.whipDistancePx * (1 - (p - 0.5) * 2); }
+    }
+  }
+  const cs = tl.counterStarts[cardIdx], cp = Math.max(0, Math.min(1, (phase - cs) / tl.counterSpans[cardIdx]));
+  const pr = c.prs[cardIdx];
+  const approvalsFloat = pr.approvalsFrom + (pr.approvalsTo - pr.approvalsFrom) * cp;
+  const approvals = Math.round(approvalsFloat);
+  const digits = digitsOf(c, approvals);
+  const roll = rollPositions(c, approvalsFloat, pr.approvalsFrom);
+  let stampState = "idle", stampScale = c.stampStartScale, stampOpacity = 0, stamped = false;
+  const st = tl.stamps.find(s=> s.cardIdx === cardIdx);
+  if (st){
+    if (phase >= st.at && phase < st.slamEnd){ stampState = "slamming"; const k = (phase - st.at) / c.slamMs; stampScale = c.stampStartScale + (1 - c.stampStartScale) * k; stampOpacity = 1; stamped = true; }
+    else if (phase >= st.slamEnd && phase < st.holdEnd){ stampState = "held"; stampScale = 1; stampOpacity = 1; stamped = true; }
+    else if (phase >= st.holdEnd && phase < st.hideEnd){ stampState = "hiding"; stampScale = 1; stampOpacity = Math.max(0, 1 - (phase - st.holdEnd) / c.stampHideMs); stamped = true; }
+  }
+  return { cardIdx, tx, blur, streak, skew, whipping, whipProgress, counterProgress: cp, approvals, approvalsFloat,
+           digits, roll, checksIdx: cardIdx, stamped, stampState, stampScale, stampOpacity, opacity: 1 };
+}
+/* URL overrides (swap test / reuse): ?titles=A|B&stamp=MERGED&cardMs=900&accent=%23ffd75e&bg=%23000000 */
+function parseOverrides(c, getAll, getKeys){
+  const errs = [];
+  const keys = ["titles","stamp","cardMs","accent","bg"];
+  const present = {}; let any = false;
+  keys.forEach(k=>{ const all = getAll(k); if (all !== null && all !== undefined){ present[k] = all; any = true; } });
+  if (getKeys) getKeys().forEach(k=>{ if (!keys.includes(k)){ errs.push("unknown parameter: " + k); any = true; } });
+  if (!any) return { candidate: null, errs, any: false };
+  if (errs.length) return { candidate: null, errs, any: true };
+  keys.forEach(k=>{ if (!(k in present)) return; const all = present[k];
+    if (all.length > 1) errs.push(k + " duplicate parameter");
+    if (all.length && all[0] === "") errs.push(k + " empty value"); });
+  if (errs.length) return { candidate: null, errs, any: true };
+  const candidate = JSON.parse(JSON.stringify(c));
+  if (present.titles){ const t = present.titles[0].split("|");
+    if (t.length > candidate.prs.length) errs.push("titles excess entries");
+    t.forEach((v,i)=>{ if (candidate.prs[i]) candidate.prs[i].title = v; }); }
+  if (present.stamp) candidate.stampText = present.stamp[0];
+  if (present.cardMs){ if (/^\d+$/.test(present.cardMs[0])){ const ms = parseInt(present.cardMs[0], 10);
+      candidate.cardDurationsMs = candidate.prs.map(()=> ms); candidate.loopMs = ms * candidate.prs.length; }
+    else errs.push("cardMs not an unsigned integer"); }
+  if (present.accent){ candidate.stampColor = present.accent[0]; candidate.palette.green = present.accent[0]; }
+  if (present.bg) candidate.palette.bg = present.bg[0];
+  if (candidate.stampText && candidate.stampText.length > c.overrideLimits.maxStampLen) errs.push("stamp text too long");
+  candidate.prs.forEach(p=>{ if (p.title.length > c.overrideLimits.maxTitleLen) errs.push("title too long"); });
+  if (errs.length) return { candidate: null, errs, any: true };
+  const verrs = validateConfig(candidate);
+  if (verrs.length) return { candidate: null, errs: verrs, any: true };
+  return { candidate, errs: [], any: true };
+}
+/*PURE-END*/
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const res = parseOverrides(CONFIG, k=> q.has(k) ? q.getAll(k) : null, ()=> Array.from(q.keys()));
+  if (!res.any) return;
+  if (res.errs.length){ REJECTED.push({ errs: res.errs, at: "overrides" }); }
+  else { Object.keys(CONFIG).forEach(k=> delete CONFIG[k]); Object.assign(CONFIG, res.candidate); }
+})();
+const STARTUP_ERRS = validateConfig(CONFIG);
+if (STARTUP_ERRS.length) REJECTED.push({ errs: STARTUP_ERRS, at: "startup" });
+const HALTED = STARTUP_ERRS.length > 0;
+window.__T11_REJECTED__ = REJECTED;
+let TL = HALTED ? null : computeTimeline(CONFIG);
+const $ = id => document.getElementById(id);
+const stage=$("stage"), cardEl=$("card"), stampEl=$("stamp");
+function applyVars(){
+  const r = document.documentElement.style, p = CONFIG.palette;
+  r.setProperty("--fg", p.fg); r.setProperty("--muted", p.muted); r.setProperty("--green", p.green);
+  r.setProperty("--panel", p.panel); r.setProperty("--panel-border", p.panelBorder);
+  r.setProperty("--ok", CONFIG.checkStates.ok); r.setProperty("--bad", CONFIG.checkStates.bad); r.setProperty("--warn", CONFIG.checkStates.warn);
+  r.setProperty("--arch-band", p.archRed); r.setProperty("--arch-dark", p.archDark); r.setProperty("--arch-base", p.archLight);
+  stage.style.background = p.bg;
+  stage.style.minHeight = CONFIG.stage.minHeightPx+"px";
+  stage.style.padding = CONFIG.stage.paddingPx+"px";
+  stage.style.fontFamily = CONFIG.type.fontStack;
+  document.querySelector(".checks").style.borderWidth = CONFIG.stage.panelBorderPx+"px";
+  document.querySelector(".pr-num").style.fontSize = CONFIG.type.prPx+"px";
+  document.querySelector(".pr-title").style.fontSize = CONFIG.type.prPx+"px";
+  document.querySelector(".open-pill").style.fontSize = CONFIG.type.openPillPx+"px";
+  document.querySelector(".stats").style.fontSize = CONFIG.type.statsPx+"px";
+  document.querySelectorAll(".stats b").forEach(b=> b.style.fontSize = CONFIG.type.statsBPx+"px");
+  document.querySelector(".checks").style.width = CONFIG.stage.checksWidthPct+"%";
+  document.querySelector(".checks h3").style.fontSize = CONFIG.type.checksHeadPx+"px";
+  $("openPill").textContent = CONFIG.labels.openPill;
+  $("checksHeading").textContent = CONFIG.labels.checksHeading;
+  $("approvalsLabel").textContent = CONFIG.labels.approvals;
+  $("linesLabel").textContent = CONFIG.labels.linesRead;
+  stampEl.textContent = CONFIG.stampText;
+  stampEl.style.color = CONFIG.stampColor;
+  stampEl.style.border = CONFIG.stamp.borderPx+"px solid "+CONFIG.stampColor;
+  stampEl.style.fontSize = CONFIG.stampFontPx+"px";
+  stampEl.style.fontFamily = CONFIG.stamp.fontStack;
+  stampEl.style.background = CONFIG.stamp.bg;
+  stampEl.style.left = CONFIG.stamp.leftPct+"%";
+  stampEl.style.top = CONFIG.stamp.topPct+"%";
+  stampEl.style.padding = CONFIG.stamp.padYPx+"px "+CONFIG.stamp.padXPx+"px";
+  stampEl.style.transition = "none";
+}
+if (!HALTED) applyVars();
+(function buildCounter(){
+  if (HALTED) return;
+  const wrap = $("approvals");
+  for (let col = 0; col < CONFIG.counterDigits; col++){
+    const d = document.createElement("span"); d.className = "digit";
+    d.style.height = CONFIG.counterDigitPx+"px"; d.style.width = CONFIG.counterDigitPx+"px";
+    const strip = document.createElement("span"); strip.className = "digit-strip";
+    const reps = col === CONFIG.counterDigits - 1 ? CONFIG.onesStripReps : 2;
+    for (let rep = 0; rep < reps; rep++) for (let v = 0; v < CONFIG.digitBase; v++){
+      const s = document.createElement("span"); s.textContent = v;
+      s.style.height = CONFIG.counterDigitPx+"px"; s.style.lineHeight = CONFIG.counterDigitPx+"px";
+      s.style.fontSize = CONFIG.type.statsBPx+"px";
+      strip.appendChild(s);
+    }
+    d.appendChild(strip); wrap.appendChild(d);
+  }
+})();
+(function drawArch(){
+  if (HALTED) return;
+  const C=CONFIG.archCols, R=CONFIG.archRows, frag=document.createDocumentFragment();
+  for(let y=0;y<R;y++){
+    for(let x=0;x<C;x++){
+      const cell = archCell(CONFIG, x, y);
+      const span=document.createElement("span");
+      if (cell.cls) span.className = cell.cls;
+      span.textContent = cell.glyph;
+      frag.appendChild(span);
+    }
+    frag.appendChild(document.createTextNode("\n"));
+  }
+  const arch=$("arch"); arch.appendChild(frag);
+  arch.style.fontSize = CONFIG.arch.fontPx+"px"; arch.style.lineHeight = CONFIG.arch.lineHeight;
+})();
+function drawReviewers(n){
+  const w=$("reviewers"); w.innerHTML=""; const F=CONFIG.figure;
+  for(let i=0;i<n;i++){
+    const f=document.createElement("span"); f.className="fig"; f.style.width=F.widthPx+"px";
+    f.innerHTML='<span class="head" style="width:'+F.headPx+'px;height:'+F.headPx+'px;border:'+F.strokePx+'px solid '+CONFIG.palette.fg+';font-size:'+F.headFontPx+'px;line-height:'+F.headPx+'px">' + CONFIG.marks.ok + '</span>'
+      +'<span class="arms" style="width:'+F.armsPx+'px;height:'+F.armsHPx+'px;background:'+CONFIG.palette.fg+'"></span>'
+      +'<span class="body" style="width:'+F.bodyWPx+'px;height:'+F.bodyHPx+'px;background:'+CONFIG.palette.fg+'"></span>'
+      +'<span class="legs" style="width:'+F.legsWPx+'px;height:'+F.legsHPx+'px;border-left:'+F.legsStrokePx+'px solid '+CONFIG.palette.fg+';border-right:'+F.legsStrokePx+'px solid '+CONFIG.palette.fg+'"></span>';
+    w.appendChild(f);
+  }
+}
+function drawChecks(idx, stamped){
+  const rows = CONFIG.checksCycle[idx % CONFIG.checksCycle.length];
+  $("checkList").innerHTML = rows.map(r=>{
+    const cls = r[1], mark = r[1]==="ok"?CONFIG.marks.ok:(r[1]==="bad"?CONFIG.marks.bad:CONFIG.marks.warn);
+    return '<div class="check" style="font-size:'+CONFIG.type.checksPx+'px"><span class="'+cls+'">'+mark+" "+r[0]+'</span><span class="'+cls+'">'+r[2]+"</span></div>";
+  }).join("");
+  const pill=$("statusPill"), entry = stamped ? CONFIG.mergePill : CONFIG.statusPills[idx % CONFIG.statusPills.length];
+  const tone = CONFIG.pillTones[entry.tone] || CONFIG.pillTones.good;
+  pill.textContent=entry.text; pill.style.background=tone.bg; pill.style.color=tone.fg; pill.style.fontSize=CONFIG.type.pillPx+"px";
+}
+let renderedCard = -1, renderedStamped = null;
+function render(st){
+  if (st.cardIdx !== renderedCard || st.stamped !== renderedStamped){
+    renderedCard = st.cardIdx; renderedStamped = st.stamped;
+    const pr=CONFIG.prs[st.cardIdx];
+    $("prNum").textContent=pr.number; $("prTitle").textContent=pr.title;
+    drawReviewers(CONFIG.reviewersPerCard[st.cardIdx % CONFIG.reviewersPerCard.length]);
+    drawChecks(st.checksIdx, st.stamped);
+  }
+  $("lines").textContent = CONFIG.prs[st.cardIdx].linesRead;
+  const strips = $("approvals").querySelectorAll(".digit-strip");
+  strips.forEach((strip, i)=>{ strip.style.transform = "translateY("+(-st.roll[i] * CONFIG.counterDigitPx)+"px)"; });
+  cardEl.style.transform = "translateX("+st.tx+"px) scaleX("+(1 + st.streak/CONFIG.whipStreakDivisor)+") skewX("+st.skew+"deg)";
+  cardEl.style.filter = st.blur ? "blur("+st.blur+"px)" : "none";
+  cardEl.style.opacity = "1";
+  stampEl.style.opacity = st.stampOpacity;
+  stampEl.style.transform = "translate(-50%,-50%) rotate("+CONFIG.stampAngleDeg+"deg) scale("+st.stampScale+")";
+  stampEl.style.transition = "none";
+}
+let playing=false, t0=0, pausedPhase=0, rafId=null;
+function frame(now){
+  if(!playing) return;
+  const phase = (now - t0) % CONFIG.loopMs;
+  render(stateAt(CONFIG, TL, phase));
+  rafId = requestAnimationFrame(frame);
+}
+function play(){ if(playing) return; playing=true; t0 = performance.now() - pausedPhase; rafId = requestAnimationFrame(frame); }
+function pause(){ if(!playing) return; pausedPhase = (performance.now() - t0) % CONFIG.loopMs; playing=false; if(rafId) cancelAnimationFrame(rafId); rafId=null; }
+function restart(){ playing=false; if(rafId) cancelAnimationFrame(rafId); pausedPhase=0; renderedCard=-1; renderedStamped=null; play(); }
+window.addEventListener("message", function(e){
+  if(!e.data||typeof e.data!=="object") return;
+  if(e.data.cmd==="play") play(); if(e.data.cmd==="pause") pause(); if(e.data.cmd==="restart") restart();
+});
+if (!HALTED) play();
+</script>
+</body>
+</html>

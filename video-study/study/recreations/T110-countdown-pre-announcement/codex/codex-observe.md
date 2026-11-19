@@ -1,0 +1,15 @@
+**CONFIRMED-WITH-GAPS** — the supplied record supports beginning Observe. Filed-return binding and source pixels remain unverified: the filesystem tool failed to start, so this audit relies on the supplied excerpts.
+
+1. **Packet/register agreement confirmed.** Digest §3 T12 and TECHNIQUES.md T110 agree on the named countdown, lower-third placement, approximately one-second numeral holds, outgoing-scene placement, ≈17–59 s scope, and both evidence-frame paths. No disagreement appears in the supplied text.
+
+2. **Prior-attempt binding remains open.** Wave RUN §1 reports no previous T110 artifact; the current attempt directory does not contradict that earlier census. T104’s supplied scores recompute correctly: five lenses, sum **426**, mean **85.2**, minimum **77**. T99’s five supplied lenses total **450**, mean **90.0**, minimum **80**. Their PASS labels are reported, not independently validated against filed returns or a scoring rule. T105’s **80.0 / purity 62** and T108’s **84.2** lack full lens vectors here; their arithmetic cannot be recomputed. No `scores.md`, `codex/` returns, or `verdict-history.md` was accessible. These claims are **unverified for binding**, rather than proven unbound.
+
+3. **Segment arithmetic confirmed; media verification remains open.** RUN §1’s proposed interval is **[20.000, 34.000) s**, within the reported **80.994 s** source duration. Countdown anchors map correctly to segment **3.000 / 4.000 / 5.000 s**, and the cut to **6.117 s**. This contains the complete selected hard-cut instance. Source duration and visible events still require firsthand verification.
+
+4. **Observe must close the countdown’s boundary details.** RUN §1 gives fully visible numeral anchors at ≈23/24/25 s; T104’s build-record census describes the overlay fading out through ≈25.75 s and absent by 26.00 s, before the 26.117 s cut. These statements are compatible, but do not establish exact entrance, swap, fade-start, or disappearance times. Observe must measure those independently and distinguish numeral holds from overlay exit.
+
+5. **Series-wide wording exceeds the supplied evidence.** Digest T12 says “every demonstration”; RUN §1 says the device repeats “identically.” The supplied anchors cover selected instances, not a complete series census. Observe must establish which properties repeat and qualify “identically” where necessary. The ≈17–59 s packet range is broad scope, not a precise selected-instance boundary.
+
+6. **Narration remains outside the evidence.** Digest §5 B6 explicitly records the failed caption fetch and absence of a verbatim transcript. On-screen wording may be verified visually; narration wording or synchronization cannot be treated as established. Digest §7 L4’s shortening after two uses is a reuse prescription, not evidence of source behavior.
+
+**BODY-WRITE: none (read-only run). Consumer: Wave 16 §1 Observe must persist this return verbatim in `T110-countdown-pre-announcement/codex/codex-observe.md`; no file was written by this run.**

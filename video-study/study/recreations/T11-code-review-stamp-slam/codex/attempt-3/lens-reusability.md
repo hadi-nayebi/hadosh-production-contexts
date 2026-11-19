@@ -1,0 +1,11 @@
+Reusability is substantial, but the claimed complete validation and CONFIG coverage do not hold.
+
+- CONFIG drives card data, timing, arch geometry, figures, colors, and typography. Pure timeline/state functions and the documented five-parameter URL example provide a practical swap surface.
+- Validation catches many malformed nested entries and guards exceptions, but accepts missing required containers such as `arch`, `type`, `figure`, `stage`, and `stamp`. Subsequent rendering dereferences these directly and can throw. Missing palette/check-state members also escape required-field checks.
+- Several consequential variables lack validation: `digitBase`, whip distance/blur/streak/divisor/skew, stamp text/scale/angle/font size, stamp padding/background/font stacks, and override limits. Zero `arch.darkMod`, fractional or string arch dimensions, and zero card/loop durations can pass validation and produce invalid calculations or rendering.
+- URL application correctly uses a candidate and adopts it atomically after validation; rejected candidates are observable through `window.__T11_REJECTED__`. However, empty values are silently ignored, excess titles are silently discarded, and duplicate parameters silently use their first value. Those are gaps in strict, observable override behavior.
+- Technique styling remains outside CONFIG: layout gaps, panel padding/radii, reviewer spacing/minimum height, stamp letter spacing/radius, check symbols, and interface labels. The reported literal census therefore does not establish complete parameterization.
+- `stampHoldMs` is consumed, but indirectly changes the offset cap rather than specifying the actual hold duration. This makes an otherwise useful timing control surprising to reuse.
+
+SCORE: 65
+BODY-WRITE: Priced findings for attempt-3 filing: substantial CONFIG consumption and practical URL swaps; incomplete required-container, scalar, and range validation; accepted configurations can fail during rendering; silent empty/duplicate/excess URL handling; stranded styling/content literals; indirect stampHoldMs semantics.
