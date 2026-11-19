@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T105 — Dissolve · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .layer{position:absolute;left:0;top:0;}
+  .abs{position:absolute;box-sizing:border-box;}
+  .txt{position:absolute;box-sizing:border-box;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  sceneA: {kind:"webpage", label:"Webpage scene", title:"Design Training Overview"},
+  sceneB: {kind:"mark", label:"Mark card", wordmark:"MOTION STUDIES"},
+  holdAMs: 2400,
+  dissolveMs: 250,
+  holdBMs: 3550,
+  ease: "smoothstep",
+  loopFadeMs: 250,
+  cycleMs: 14000,
+  palette: {fieldA:"#57c8b4", fieldB:"#101010", ink:"#ffffff", accent:"#ffd23c"},
+  stage: {width:360, height:203},
+  geom: {
+    barX:30, barY:14, barW:300, barH:22, barRadius:11, barPadX:10,
+    heroX:30, heroY:48, heroW:300, heroH:64, heroRadius:4,
+    tileX:10, tileY:12, tileW:40, tileH:40,
+    lineX:62, lineY:10, lineW:200, lineH:7, lineGap:6, lineCount:4,
+    rowX:30, rowW:300, rowH:26, rowGap:8, rowY:118, rowRadius:4, rowCount:2,
+    rowLineX:52, rowLineY:6, rowLineW:220, rowLineH:6, rowLineGap:5, rowLineCount:2,
+    markBarX:105, markBarY:44, markBarW:[150,110,70], markBarH:16, markBarGap:10, markBarRadius:8,
+    panelX:30, panelY:48, panelW:300, panelH:104, panelRadius:4, panelLineX:16, panelLineY:14, panelLineW:240, panelLineH:7, panelLineGap:8, panelLineCount:5,
+    ruleX:105, ruleY:158, ruleW:150, ruleH:3,
+    wordY:124, labelX:10, labelAY:182, labelBY:150
+  },
+  scene: {hero:"#2b3a8f", heroTile:"#101010", heroLine:"#ef4444", card:"#9aa3a8", rowLine:"#ffffff", dark:"#22304a"},
+  type: {font:"Arial, Helvetica, sans-serif", titleSize:16, labelSize:16, wordmarkSize:20, titleWeight:400, labelWeight:700, wordmarkWeight:700}
+};
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+stage.style.background = CONFIG.palette.fieldB;
+stage.style.fontFamily = CONFIG.type.font;
+
+function el(cls, parent){ const d = document.createElement("div"); d.className = cls; parent.appendChild(d); return d; }
+function box(parent, x, y, w, h, bg){
+  const d = el("abs", parent);
+  d.style.left = x + "px"; d.style.top = y + "px";
+  d.style.width = w + "px"; d.style.height = h + "px";
+  if (bg) d.style.background = bg;
+  return d;
+}
+function text(parent, str, x, y, size, weight, color, centerW){
+  const d = el("txt", parent);
+  d.textContent = str;
+  d.style.left = x + "px"; d.style.top = y + "px";
+  d.style.fontSize = size + "px"; d.style.fontWeight = String(weight);
+  d.style.color = color; d.style.fontFamily = CONFIG.type.font;
+  if (centerW){ d.style.width = centerW + "px"; d.style.textAlign = "center"; }
+  return d;
+}
+const G = CONFIG.geom, S = CONFIG.scene, P = CONFIG.palette, TY = CONFIG.type;
+
+/* ---------- validation (runs before any construction) ---------- */
+function validateConfig(C){
+  const errs = [];
+  const dur = ["holdAMs", "dissolveMs", "holdBMs", "loopFadeMs"];
+  for (let i = 0; i < dur.length; i++){
+    if (!isFinite(C[dur[i]]) || C[dur[i]] < 0) errs.push("duration " + dur[i] + " must be finite and >= 0");
+  }
+  if (!isFinite(C.cycleMs) || C.cycleMs <= 0) errs.push("cycleMs must be finite and > 0");
+  if (isFinite(C.holdAMs) && isFinite(C.dissolveMs) && isFinite(C.holdBMs) && isFinite(C.loopFadeMs) && isFinite(C.cycleMs)){
+    if (C.holdAMs + C.dissolveMs + C.holdBMs + C.loopFadeMs > C.cycleMs) errs.push("phase sum exceeds cycleMs");
+  }
+  if (!(C.stage.width > 0) || !(C.stage.height > 0)) errs.push("stage dimensions must be > 0");
+  if (!(C.type.titleSize > 0) || !(C.type.labelSize > 0) || !(C.type.wordmarkSize > 0)) errs.push("type sizes must be > 0");
+  if (!Array.isArray(C.geom.markBarW) || C.geom.markBarW.length < 1) errs.push("markBarW must hold at least one bar");
+  else for (let i = 0; i < C.geom.markBarW.length; i++){ if (!isFinite(C.geom.markBarW[i]) || C.geom.markBarW[i] <= 0) errs.push("markBarW[" + i + "] must be finite and > 0"); }
+  const counts = ["rowCount", "lineCount", "rowLineCount", "panelLineCount"];
+  for (let i = 0; i < counts.length; i++){ if (!Number.isInteger(C.geom[counts[i]]) || C.geom[counts[i]] < 0) errs.push("count " + counts[i] + " must be an integer >= 0"); }
+  if (["webpage", "panel"].indexOf(C.sceneA.kind) < 0) errs.push("unknown sceneA kind: " + C.sceneA.kind);
+  if (["mark", "title"].indexOf(C.sceneB.kind) < 0) errs.push("unknown sceneB kind: " + C.sceneB.kind);
+  return errs;
+}
+window.__validationErrors = validateConfig(CONFIG);
+
+/* ---------- scene builders (dispatched by kind) ---------- */
+function buildWebpage(layer){
+  const bar = box(layer, G.barX, G.barY, G.barW, G.barH, P.accent);
+  bar.style.borderRadius = G.barRadius + "px";
+  text(bar, CONFIG.sceneA.title, G.barPadX, 0, TY.titleSize, TY.titleWeight, S.dark);
+  bar.children[bar.children.length - 1].style.lineHeight = G.barH + "px";
+  const hero = box(layer, G.heroX, G.heroY, G.heroW, G.heroH, S.hero);
+  hero.style.borderRadius = G.heroRadius + "px";
+  box(hero, G.tileX, G.tileY, G.tileW, G.tileH, S.heroTile);
+  for (let i = 0; i < G.lineCount; i++){
+    box(hero, G.lineX, G.lineY + i * (G.lineH + G.lineGap), G.lineW, G.lineH, S.heroLine);
+  }
+  for (let r = 0; r < G.rowCount; r++){
+    const row = box(layer, G.rowX, G.rowY + r * (G.rowH + G.rowGap), G.rowW, G.rowH, S.card);
+    row.style.borderRadius = G.rowRadius + "px";
+    for (let i = 0; i < G.rowLineCount; i++){
+      box(row, G.rowLineX, G.rowLineY + i * (G.rowLineH + G.rowLineGap), G.rowLineW, G.rowLineH, S.rowLine);
+    }
+  }
+  text(layer, CONFIG.sceneA.label, G.labelX, G.labelAY, TY.labelSize, TY.labelWeight, P.ink);
+}
+function buildPanel(layer){
+  const band = box(layer, G.barX, G.barY, G.barW, G.barH, P.accent);
+  band.style.borderRadius = G.barRadius + "px";
+  text(band, CONFIG.sceneA.title, G.barPadX, 0, TY.titleSize, TY.titleWeight, S.dark);
+  band.children[band.children.length - 1].style.lineHeight = G.barH + "px";
+  const panel = box(layer, G.panelX, G.panelY, G.panelW, G.panelH, S.hero);
+  panel.style.borderRadius = G.panelRadius + "px";
+  for (let i = 0; i < G.panelLineCount; i++){
+    box(panel, G.panelLineX, G.panelLineY + i * (G.panelLineH + G.panelLineGap), G.panelLineW, G.panelLineH, S.heroLine);
+  }
+  text(layer, CONFIG.sceneA.label, G.labelX, G.labelAY, TY.labelSize, TY.labelWeight, P.ink);
+}
+function buildMark(layer){
+  const markColors = [P.accent, P.fieldA, P.ink];
+  for (let i = 0; i < G.markBarW.length; i++){
+    const bar = box(layer, G.markBarX, G.markBarY + i * (G.markBarH + G.markBarGap), G.markBarW[i], G.markBarH, markColors[i % markColors.length]);
+    bar.style.borderRadius = G.markBarRadius + "px";
+  }
+  text(layer, CONFIG.sceneB.wordmark, 0, G.wordY, TY.wordmarkSize, TY.wordmarkWeight, P.ink, CONFIG.stage.width);
+  text(layer, CONFIG.sceneB.label, G.labelX, G.labelBY, TY.labelSize, TY.labelWeight, P.ink);
+}
+function buildTitle(layer){
+  text(layer, CONFIG.sceneB.wordmark, 0, G.wordY, TY.wordmarkSize, TY.wordmarkWeight, P.ink, CONFIG.stage.width);
+  box(layer, G.ruleX, G.ruleY, G.ruleW, G.ruleH, P.accent);
+  text(layer, CONFIG.sceneB.label, G.labelX, G.labelBY, TY.labelSize, TY.labelWeight, P.ink);
+}
+const buildersA = {webpage: buildWebpage, panel: buildPanel};
+const buildersB = {mark: buildMark, title: buildTitle};
+
+/* --- Scene A layer (bottom): full-stage field, then its builder --- */
+const layerA = box(stage, 0, 0, CONFIG.stage.width, CONFIG.stage.height, P.fieldA);
+layerA.id = "layer-" + CONFIG.sceneA.kind;
+/* --- Scene B layer (top): full-stage opaque field, then its builder --- */
+const layerB = box(stage, 0, 0, CONFIG.stage.width, CONFIG.stage.height, P.fieldB);
+layerB.id = "layer-" + CONFIG.sceneB.kind;
+if (window.__validationErrors.length === 0){
+  buildersA[CONFIG.sceneA.kind](layerA);
+  buildersB[CONFIG.sceneB.kind](layerB);
+}
+
+/* ---------- ONE clock: A = 1-p, B = p ---------- */
+function easeFn(name, x){
+  if (name === "smoothstep") return x * x * (3 - 2 * x);
+  return x;
+}
+const D0 = CONFIG.holdAMs;
+const D1 = D0 + CONFIG.dissolveMs;
+const D2 = D1 + CONFIG.holdBMs;
+const D3 = D2 + CONFIG.loopFadeMs;
+const CYCLE = CONFIG.cycleMs;
+function progressAt(t){
+  t = ((t % CYCLE) + CYCLE) % CYCLE;
+  if (t < D0) return 0;
+  if (t < D1) return easeFn(CONFIG.ease, (t - D0) / CONFIG.dissolveMs);
+  if (t < D2) return 1;
+  if (t < D3) return 1 - easeFn(CONFIG.ease, (t - D2) / CONFIG.loopFadeMs);
+  return 0;
+}
+function render(t){
+  const p = progressAt(t);
+  layerA.style.opacity = "1";
+  layerB.style.opacity = String(p);
+  window.__state = {p: p, domOpacityA: 1, domOpacityB: p, renderedWeightA: (1 - p) * 1, renderedWeightB: p};
+  return window.__state;
+}
+window.__render = render;
+window.__layers = {A: layerA, B: layerB};
+render(0);
+if (typeof requestAnimationFrame === "function"){
+  const t0 = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+  const tick = function(){
+    const now = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+    render(now - t0);
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+</script>
+</body>
+</html>

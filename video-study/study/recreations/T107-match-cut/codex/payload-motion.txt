@@ -1,0 +1,307 @@
+# Codex scoring wave — lens run (recreation §5), FINAL build
+Standing header: (1) Consumer: recreation job's §5 Verify (tier recommendation: RECREATED requires five-lens average >=85 AND no lens <70) + the cycle's Condense cure list; the decision priced is whether this attempt is RECREATED-tier on THIS lens and what the next attempt must cure. (2) Working record: the artifact directory hidden_files/study/recreations/T107-match-cut/ (codex/ returns + scores.md). (3) Your return must end with `SCORE: <integer 0-100>` and a `BODY-WRITE:` line naming what it filed (read-only run: "BODY-WRITE: none (read-only run)").
+Binding: recreation.html SHA-256 = 5a874eb3d683f7df6dcf64408a1c5dd03ef747fe5fc255b755be8593b40778ba (identical for all five lens runs of this wave).
+Score-blind packet: you see no prior score and no other lens's return.
+
+NEUTRAL TECHNIQUE FACTS (Packet #5, School of Motion, digest T09 + register T107 + builder's 0.25 s segment census): Match cut, demo at ≈37–44 s in an 81 s film. Mechanics: elements are pushed into frame and the cut lands at their fastest movement, on a shared anchor shape — here the mountain/triangle mark: a white mountain glyph inside a black tile in the webpage scene's first result card, and the three-triangle cluster that is the black logo card's subject. Why it works: composition, not content, is continuous — the eye lands on the same shape in the same place and reads two scenes as one gesture. Measured (0.25 s census of the 35–49 s segment): webpage at base scale through source 43.25 s; push-in visible at 43.50 s and maximal at 43.75 s (anchor tile (582,288,115,115) source px; tile width growth concentrated in the final interval — the push accelerates); the cut lands in (43.75, 44.00]; at 44.00 the logo card's cluster spans (580,307,118,54) — the x-spans of tile and cluster coincide to ≤2 px. After the cut the cluster grows ≈2× over ≈0.5 s and the wordmark slides in from the left, centred by ≈45.0 s. The build's schedule basis is the named t=0 allocation: the lifecycle (hold-A → push → cut → settle → hold-B) is re-based to the build's own zero inside a 14.000 s cycle; phase positions inside the cycle are an allocation, not a claim about segment timestamps. The build's push duration (1500 ms) is the wave Plan's bound value; the measured specimen push is ≈0.5–0.75 s.
+
+YOUR LENS: motion fidelity — does the recreation's movement equal the technique's described movement? Price: the accelerating push-in (velocity peaking AT the cut, not constant speed), the cut as a true CUT (instant swap, no dissolve/blend hiding anchor mismatch), the shared anchor's continuity across the cut (rect + glyph), the post-cut settle (mark growth + wordmark slide-in), phase exclusivity, and the designed fade reset at the loop seam.
+Score ONLY this lens, 0-100, with priced findings. Judge the recreation source + the score-blind build record + fit table below.
+
+===== recreation.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T107 — Match cut · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .abs{position:absolute;box-sizing:border-box;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  anchor: {label:"MARK", x:118, y:52, w:64, h:64},
+  mark: {tri1:"#ef4444", tri2:"#22c55e", tri3:"#3b4a8f", glyphW:0.72, glyphH:0.42, glyphTop:0.16, triOverlap:0.30, triW:0.4, labelSize:16, labelGap:3, labelPad:2},
+  move: {fromDx:-50, fromDy:-18},
+  pushMs: 1500,
+  pushFrom: {scale:1.0},
+  pushTo: {scale:1.18},
+  pushEasePow: 3,
+  sceneA: {title:"Results — before"},
+  sceneB: {title:"Logo — after"},
+  settleMs: 700,
+  settleScale: 1.6,
+  wordmarkFromDx: -46,
+  wordmarkGap: 12,
+  holdBMs: 3000,
+  loopFadeMs: 600,
+  cycleMs: 14000,
+  outline: {startMs:5200, drawMs:900, offMs:8300, safetyMs:500, width:2, pad:5},
+  page: {searchX:60, searchY:8, searchW:240, searchH:24, card1X:40, card1Y:36, card1W:280, card1H:96, card2Y:140, cardH:24, cardGap:8, cardX:40, cardW:280, radius:6, barH:6, barGap:5, barsX:150, barsW:150, barsTop:14, padX:8, padY:3, barInsetX:12, barInsetY:5, barRowGap:3, barRightPad:90, barTrim:2, card1Bars:3, cardCount:2, cardBars:2, barOpacity:0.85},
+  palette: {field:"#57c8b4", card:"#f4f4f4", ink:"#22304a", accent:"#ff5a4c", cardA:"#2b3a8f", tile:"#101418", logoField:"#101010", logoInk:"#ffffff", bar:"#c9d4dd", search:"#ffd23c"},
+  type: {font:"Arial, Helvetica, sans-serif", titleSize:16, wordmarkSize:17, wordmarkPad:6, titleWeight:700, wordmarkWeight:700},
+  stage: {width:360, height:203}
+};
+
+/* ---------- derived schedule (half-open phase intervals) ---------- */
+const CUT_MS = CONFIG.cycleMs - CONFIG.settleMs - CONFIG.holdBMs;      /* 10300 */
+const PUSH_START = CUT_MS - CONFIG.pushMs;                             /* 8800 */
+const SETTLE_END = CUT_MS + CONFIG.settleMs;                           /* 11000 */
+const HOLD_A_MS = PUSH_START;                                          /* derived residual */
+if (HOLD_A_MS < 0) throw new Error("derived pre-push hold is negative");
+
+/* ---------- anchor geometry (single source of truth) ---------- */
+const cutCx = CONFIG.anchor.x + CONFIG.anchor.w/2, cutCy = CONFIG.anchor.y + CONFIG.anchor.h/2;
+const startCx = cutCx + CONFIG.move.fromDx, startCy = cutCy + CONFIG.move.fromDy;
+const baseW = CONFIG.anchor.w / CONFIG.pushTo.scale, baseH = CONFIG.anchor.h / CONFIG.pushTo.scale;
+const startW = baseW * CONFIG.pushFrom.scale, startH = baseH * CONFIG.pushFrom.scale;
+const startRect = {x: startCx - startW/2, y: startCy - startH/2, w: startW, h: startH};
+const tileWorld = {x: startCx - baseW/2, y: startCy - baseH/2, w: baseW, h: baseH};
+const cutRect = {x: CONFIG.anchor.x, y: CONFIG.anchor.y, w: CONFIG.anchor.w, h: CONFIG.anchor.h};
+function easeIn(u){ return Math.pow(u, CONFIG.pushEasePow); }
+function anchorRectAt(t){
+  if (t < PUSH_START) return {x:startRect.x, y:startRect.y, w:startRect.w, h:startRect.h};
+  if (t >= CUT_MS) return {x:cutRect.x, y:cutRect.y, w:cutRect.w, h:cutRect.h};
+  const u = easeIn((t - PUSH_START) / CONFIG.pushMs);
+  return {
+    x: startRect.x + (cutRect.x - startRect.x) * u,
+    y: startRect.y + (cutRect.y - startRect.y) * u,
+    w: startRect.w + (cutRect.w - startRect.w) * u,
+    h: startRect.h + (cutRect.h - startRect.h) * u
+  };
+}
+function glyphBounds(rect){
+  const gw = rect.w * CONFIG.mark.glyphW, gh = rect.h * CONFIG.mark.glyphH;
+  return {x: rect.x + (rect.w - gw)/2, y: rect.y + rect.h * CONFIG.mark.glyphTop, w: gw, h: gh};
+}
+function phaseAt(t){
+  if (t < PUSH_START) return "holdA";
+  if (t < CUT_MS) return "push";
+  if (t < SETTLE_END) return "settle";
+  return "holdB";
+}
+function outlineOpacityAt(t){
+  const o = CONFIG.outline;
+  const offMs = Math.min(o.offMs, PUSH_START - o.safetyMs);   /* the outline never survives into the push, whatever pushMs is swapped to */
+  if (t < o.startMs) return 0;
+  if (t < o.startMs + o.drawMs) return (t - o.startMs) / o.drawMs;
+  if (t < offMs) return 1;
+  return 0;
+}
+function pose(tms){
+  const t = ((tms % CONFIG.cycleMs) + CONFIG.cycleMs) % CONFIG.cycleMs;
+  const phase = phaseAt(t);
+  const scene = t < CUT_MS ? "A" : "B";
+  const rectA = anchorRectAt(Math.min(t, CUT_MS - 1));
+  const rectAtCutA = anchorRectAt(CUT_MS);
+  const rectB = {x:cutRect.x, y:cutRect.y, w:cutRect.w, h:cutRect.h};
+  let settleU = 0;
+  if (t >= CUT_MS) settleU = Math.min((t - CUT_MS) / CONFIG.settleMs, 1);
+  const markScaleB = 1 + (CONFIG.settleScale - 1) * settleU;
+  const fade = CONFIG.loopFadeMs;
+  const edge = Math.min(t, CONFIG.cycleMs - t);
+  const stageOpacity = edge < fade ? edge / fade : 1;
+  return {t: t, phase: phase, scene: scene, anchorRectA: rectA, anchorRectAtCutA: rectAtCutA,
+          anchorRectB: rectB, glyphA: glyphBounds(rectA), glyphAtCutA: glyphBounds(rectAtCutA),
+          glyphB: glyphBounds(rectB), outlineOpacity: outlineOpacityAt(t),
+          settleU: settleU, markScaleB: markScaleB,
+          wordmarkDx: CONFIG.wordmarkFromDx * (1 - settleU), wordmarkOpacity: settleU,
+          stageOpacity: stageOpacity};
+}
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+document.body.style.fontFamily = CONFIG.type.font;
+function el(cls, parent){ const d = document.createElement("div"); d.className = cls; parent.appendChild(d); return d; }
+function abs(d, x, y, w, h){ d.style.left = x+"px"; d.style.top = y+"px"; d.style.width = w+"px"; d.style.height = h+"px"; }
+
+/* shared mark primitive — ONE construction used by both scenes (glyph + label) */
+function makeMark(parent, inkColor){
+  const box = el("abs", parent);
+  const g = glyphBounds({x:0, y:0, w:CONFIG.anchor.w, h:CONFIG.anchor.h});
+  const cols = [CONFIG.mark.tri1, CONFIG.mark.tri2, CONFIG.mark.tri3];
+  for (let i = 0; i < cols.length; i++){
+    const tri = el("abs", box);
+    const tw = g.w * CONFIG.mark.triW;
+    abs(tri, g.x + i * g.w * CONFIG.mark.triOverlap, g.y, tw, g.h);
+    tri.style.background = cols[i];
+    tri.style.clipPath = "polygon(50% 0, 100% 100%, 0 100%)";
+  }
+  const lab = el("abs", box);
+  lab.textContent = CONFIG.anchor.label;
+  abs(lab, 0, g.y + g.h + CONFIG.mark.labelGap, CONFIG.anchor.w, CONFIG.mark.labelSize + CONFIG.mark.labelPad);
+  lab.style.fontSize = CONFIG.mark.labelSize + "px";
+  lab.style.fontWeight = CONFIG.type.titleWeight;
+  lab.style.color = inkColor;
+  lab.style.textAlign = "center";
+  return box;
+}
+
+/* ----- scene A: webpage (world scales/translates from the anchor rect) ----- */
+const sceneA = el("abs", stage); abs(sceneA, 0, 0, CONFIG.stage.width, CONFIG.stage.height);
+sceneA.style.background = CONFIG.palette.field;
+const world = el("abs", sceneA); abs(world, 0, 0, CONFIG.stage.width, CONFIG.stage.height);
+world.style.transformOrigin = "0 0";
+const P = CONFIG.page;
+const search = el("abs", world); abs(search, P.searchX, P.searchY, P.searchW, P.searchH);
+search.style.background = CONFIG.palette.search; search.style.borderRadius = P.radius + "px";
+const searchText = el("abs", search); abs(searchText, P.padX, P.padY, P.searchW - P.padX * 2, P.searchH - P.padY * 2);
+searchText.textContent = CONFIG.sceneA.title;
+searchText.style.fontSize = CONFIG.type.titleSize + "px";
+searchText.style.fontWeight = CONFIG.type.titleWeight;
+searchText.style.color = CONFIG.palette.ink;
+const card1 = el("abs", world); abs(card1, P.card1X, P.card1Y, P.card1W, P.card1H);
+card1.style.background = CONFIG.palette.cardA; card1.style.borderRadius = P.radius + "px";
+for (let r = 0; r < P.card1Bars; r++){
+  const bar = el("abs", card1); abs(bar, P.barsX - P.card1X, P.barsTop + r * (P.barH + P.barGap), P.barsW, P.barH);
+  bar.style.background = CONFIG.palette.accent; bar.style.opacity = String(P.barOpacity);
+}
+for (let c = 0; c < P.cardCount; c++){
+  const card = el("abs", world); abs(card, P.cardX, P.card2Y + c * (P.cardH + P.cardGap), P.cardW, P.cardH);
+  card.style.background = CONFIG.palette.card; card.style.borderRadius = P.radius + "px";
+  for (let r = 0; r < P.cardBars; r++){
+    const bar = el("abs", card); abs(bar, P.barInsetX, P.barInsetY + r * (P.barH + P.barRowGap), P.cardW - P.barRightPad, P.barH - P.barTrim);
+    bar.style.background = CONFIG.palette.bar;
+  }
+}
+const tile = el("abs", world); tile.style.background = CONFIG.palette.tile; tile.style.borderRadius = P.radius + "px";
+const markA = makeMark(tile, CONFIG.palette.logoInk);
+const outline = el("abs", world);
+outline.style.border = CONFIG.outline.width + "px solid " + CONFIG.palette.accent;
+outline.style.borderRadius = P.radius + "px";
+
+/* ----- scene B: black logo card ----- */
+const sceneB = el("abs", stage); abs(sceneB, 0, 0, CONFIG.stage.width, CONFIG.stage.height);
+sceneB.style.background = CONFIG.palette.logoField;
+const markB = makeMark(sceneB, CONFIG.palette.logoInk);
+const wordmark = el("abs", sceneB);
+wordmark.textContent = CONFIG.sceneB.title;
+const wmY = cutCy + (CONFIG.anchor.h * CONFIG.settleScale)/2 + CONFIG.wordmarkGap;
+abs(wordmark, 0, wmY, CONFIG.stage.width, CONFIG.type.wordmarkSize + CONFIG.type.wordmarkPad);
+wordmark.style.fontSize = CONFIG.type.wordmarkSize + "px";
+wordmark.style.fontWeight = CONFIG.type.wordmarkWeight;
+wordmark.style.color = CONFIG.palette.logoInk;
+wordmark.style.textAlign = "center";
+
+/* ---------- render ---------- */
+function render(tms){
+  const p = pose(tms);
+  stage.style.opacity = String(p.stageOpacity);
+  if (p.scene === "A"){
+    sceneA.style.display = "block"; sceneB.style.display = "none";
+    const r = p.anchorRectA;
+    const s = r.w / baseW;
+    const tx = r.x - tileWorld.x * s, ty = r.y - tileWorld.y * s;
+    world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + s + ")";
+    abs(tile, tileWorld.x, tileWorld.y, tileWorld.w, tileWorld.h);
+    abs(markA, 0, 0, CONFIG.anchor.w, CONFIG.anchor.h);
+    markA.style.transform = "scale(" + (baseW / CONFIG.anchor.w) + ")";
+    markA.style.transformOrigin = "0 0";
+    const op = CONFIG.outline.pad;
+    abs(outline, tileWorld.x - op, tileWorld.y - op, tileWorld.w + op * 2, tileWorld.h + op * 2);
+    outline.style.opacity = String(p.outlineOpacity);
+  } else {
+    sceneA.style.display = "none"; sceneB.style.display = "block";
+    abs(markB, cutRect.x, cutRect.y, cutRect.w, cutRect.h);
+    markB.style.transform = "scale(" + p.markScaleB + ")";
+    markB.style.transformOrigin = (CONFIG.anchor.w/2) + "px " + (CONFIG.anchor.h/2) + "px";
+    wordmark.style.transform = "translateX(" + p.wordmarkDx + "px)";
+    wordmark.style.opacity = String(p.wordmarkOpacity);
+  }
+}
+window.__render = render;
+window.__pose = pose;
+let start = null;
+function frame(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
+
+
+===== build-record-blind.md =====
+# T107 — Match cut · build record (attempt 1, recreation Cycle 018 Wave 15 RE-TAKE)
+
+Artifact dir: `hidden_files/study/recreations/T107-match-cut/` · Queue #54 · Packet #5 (School of Motion "Six Essential Motion Design Transitions", YxQ7JqVmqgY), technique P5-T09 @ ≈37–44 s · Segment 35–49 s.
+Consumer: **TRANSITION** surface (DLC assembler transition container + production transition vocabulary).
+Schedule basis (Amendment A7): **`t=0 allocation`** — the match-cut lifecycle is re-based to build zero inside the 14 s cycle (hold-A → push → cut → settle → hold-B), named allocation, never presented as measured.
+Final build: recreation.html sha256 5a874eb3d683f7df6dcf64408a1c5dd03ef747fe5fc255b755be8593b40778ba (pre-cure build 43976b14… superseded by the jev-prewave cure in §7 — its HOLD return is preserved at jev-prewave.md) · PIXEL-UNVERIFIED (no browser binary in this seat; verification is logic-level via the node harness + the comparison page as render surface).
+
+## 1. Observe gate-out
+Mechanics: a push-in on the outgoing webpage scene accelerates into a hard cut that lands on a shared anchor shape — the mountain/triangle mark — which the incoming black logo card carries as its centred subject; composition, not content, is continuous. After the cut the mark grows and the wordmark slides in (settle), then holds.
+Evidence viewed firsthand by the builder: seat census sheet (RUN §1b) + the builder's own 0.25 s segment census (§3) + packet clip frames (§3).
+Variables (all CONFIG-bound): anchor{label,x,y,w,h} · mark{tri1,tri2,tri3,glyphW,glyphH,glyphTop,triOverlap,triW,labelSize,labelGap,labelPad} · move{fromDx,fromDy} · pushMs · pushFrom{scale} · pushTo{scale} · pushEasePow · sceneA{title} · sceneB{title} · settleMs · settleScale · wordmarkFromDx · wordmarkGap · holdBMs · loopFadeMs · cycleMs · outline{startMs,drawMs,offMs,safetyMs,width,pad} · page{...} · palette{field,card,ink,accent,cardA,tile,logoField,logoInk,bar,search} · type{font,titleSize,wordmarkSize,wordmarkPad,titleWeight,wordmarkWeight} · stage{width,height}.
+
+## 2. Guard dispositions
+- **codex-observe** (fired FIRST, one stream): CONFIRMED-WITH-GAPS — verbatim at codex/codex-observe.md. Dispositions: anchor identity (digest's "webpage header element" vs §1b's first-card mark) → closed firsthand by the §3 census: the anchor is the first result card's black tile carrying the mountain glyph, NOT a header element · packet window ≈37–44 s understates the transition → measured cut at source 43.75–44.00 s inside the 35–49 s segment (§3) · peak-speed claim unproven by stills → push timing measured at 0.25 s (§3) and the build's push velocity is harness-verified to peak at the cut (§5) · sibling scores summary-only → recomputed from verdict-history.md by the builder (T101 426/5 = 85.2 · T99 450/5 = 90.0 · T22 441/5 = 88.2 · T08 443/5 = 88.6 · T103 400/5 = 80.0, all five-lens — arithmetic verified ✓); no lens-level sibling claim is used · source duration → ffprobe 80.994 s firsthand (§3).
+- **codex-plan-review** (one stream): REVISE — verbatim at codex/codex-plan-review.md. All six points APPLIED as construction requirements: (1) translated approach — the push is parameterized by anchor start centre (cut centre + move{fromDx,fromDy}) and cut centre; the world transform is DERIVED from the anchor rect each frame, and approach speed is harness-verified to peak at the cut (§5) · (2) phase exclusivity by a single pose function over half-open intervals, boundary-tested in the harness; intensity roles are explicit palette keys (field/card/tile/logoField/logoInk) with contrast: logoInk #ffffff on tile/logoField #101418/#101010 ≈ 17.9:1, ink #22304a on search #ffd23c ≈ 9.9:1, ink on card #f4f4f4 ≈ 13.9:1 — all ≥ 4.5:1 (Owner Cure 1); the selection outline is gone before the push by construction (off-time capped at PUSH_START − outline.safetyMs; the swap test caught the uncapped form and the cure is recorded in §5) · (3) complete CONFIG mapping — settleScale, wordmarkFromDx, outline timing, push translation (move), easing exponent (pushEasePow), and fade placement are all CONFIG keys; the §1 variable inventory above is the mapping; residual literals found by the config census were cured pre-wave (config-census.md). [Correction after jev-prewave: the first census ALSO filed pushFrom.scale as applied while the code never read it, and missed the triW proportion + wordmarkPad literals — that claim was wrong as filed; the cure + re-run census are recorded in §7 and the census addendum.] · (4) rendered-mark invariant — ONE shared mark primitive (makeMark) builds the glyph + label in both scenes; the harness compares the transformed GLYPH bounds (not only the container rect) across the cut: equal to the px (§5); PIXEL-UNVERIFIED stands · (5) lens forecast recorded (§6) — timing is the predicted minimum; no adverse score is pre-classified as a lens miss · (6) size discipline — page detail held minimal (search bar + three cards, simple bars); the countdown overlay is the tutorial's device, not the technique, and is NOT built (named deferral, §4).
+
+## 3. Segment + measured census (foreground, landed before building)
+Source: `hidden_files/study/video-digests/2026-11-14-som-six-transitions/source.mp4` — ffprobe: h264 1280×720, 30 fps, duration 80.994 s.
+Segment cut: ffmpeg `-ss 35 -t 14`, re-encoded libx264/yuv420p + aac → segment.mp4, ffprobe **duration 14.000 s**, size 648 828 bytes.
+Frames extracted at 0.25 s steps across the transition (frames/f_06.00–f_11.50.jpg, segment t; source t = segment t + 35). Measured table:
+
+| Seg t | Source t | Measured state |
+|---|---|---|
+| 6.00–7.00 | 41.00–42.00 | Webpage on teal: search bar + 3 result cards; first (dark) card holds a black tile with the white mountain glyph; countdown "Match cut in 2" at 7.00 |
+| 7.50–8.00 | 42.50–43.00 | Selection rectangle drawn around the page, cursor arrow at its corner (43.00, "in 1") |
+| 8.25 | 43.25 | Page still at base scale; selection outline gone |
+| 8.50 | 43.50 | PUSH IN PROGRESS: page larger and translated right-down; anchor tile centre ≈ (610,328) source px |
+| 8.75 | 43.75 | Push at max: anchor tile (582,288,115,115) source px, centre (640,346) — tile width 102 → ~100 → 115 px across 43.25 → 43.50 → 43.75: growth concentrated in the final interval (accelerating) |
+| 9.00 | 44.00 | BLACK LOGO CARD: three-triangle cluster (580,307,118,54), centre (639,334) — the CUT lands in (43.75, 44.00] |
+| 9.25–9.50 | 44.25–44.50 | Cluster grows (width 118 → ~212 → ~235 px); wordmark slides in from the left |
+| 10.00 | 45.00 | Wordmark "SCHOOL OF MOTION" centred under the settled cluster; hold |
+
+**Census-derived anchor rect (stage terms, gate charge):** at the cut, scene A's tile = (582,288,115,115) source px and scene B's cluster = (580,307,118,54): the x-spans coincide to ≤2 px and the cluster sits inside the tile's vertical span — the specimen's match is an x-span/centre match ((640,346) vs (639,334)). Mapped to a full-frame 360×203 stage: tile ≈ (164,81,32,32). The build's stage is a landscape re-composition of the specimen's portrait page column, so the build's cut-time anchor rect is the Plan's priced CONFIG value (118,52,64,64) under the named t=0 allocation; the census-derived facts that BIND the construction are the anchor's identity (first card's mountain-mark tile), the x-span coincidence at the cut, the accelerating push, and the post-cut growth + wordmark slide-in — all implemented and harness-verified (§5).
+**Measured push timing:** page at base through source 43.25; push visible at 43.50 and maximal at 43.75; cut in (43.75, 44.00] → push duration ≈0.5–0.75 s, velocity peaking at the cut. The build's pushMs 1500 is the Plan's bound value under t=0 allocation (forecast priced in §6).
+**Packet-clip line:** clips/39.5-match-cut.mp4 (source 39.5–44.0 s) showed the selection rectangle being drag-drawn to completion around the page, cursor at its corner — a gesture the census frames caught only as a static outline — and the clip ends AT the cut: it never shows scene B, so the cut and the logo card are evidenced only by this segment census.
+
+## 4. Construction
+DOM, one self-contained file, CONFIG at top, logic reads only CONFIG. ONE JS-clock pose function over half-open phases: HOLD-A [0, 8800) — page at base framing; the selection outline draws around the anchor tile late in the hold and is gone before the push · PUSH [8800, 10300) — the anchor rect interpolates start → cut under an ease-in cubic (pushEasePow 3), so approach velocity peaks AT the cut; the page world transform (scale + translation) is derived from the anchor rect every frame · CUT at 10300 — instant visibility swap, no opacity blend, no CSS transition/animation anywhere in the file · SETTLE [10300, 11000) — scene B's mark (placed at the CONFIG rect for the cut instant) grows by settleScale about its centre while the wordmark slides in from wordmarkFromDx · HOLD-B [11000, 14000) — with the loop fade (loopFadeMs) living inside the cycle seam: stage opacity ramps 0 → 1 over the first 600 ms and 1 → 0 over the last 600 ms (fade reaches 0 at the seam). Schedule arithmetic: hold-A is the derived residual cycleMs − pushMs − settleMs − holdBMs = 14000 − 1500 − 700 − 3000 = 8800 ms (a pushMs swap re-times hold-A; the cycle stays 14.000 s; a negative residual throws). `window.__render(t)` + `window.__pose(t)` expose the clock + geometry for the harness and the comparison's synchronized control.
+Named deferral: the specimen's countdown overlay ("Match cut in 3·2·1") is the tutorial's pre-announcement device (catalogued separately as T110), not part of the match-cut mechanic — not built, by the plan-review size-discipline point.
+Named deviations (jev-prewave finding 7, named on the cure pass): (a) the specimen's selection rectangle is drawn around the whole PAGE with a cursor arrow at its corner; the build draws the outline around the ANCHOR TILE only and builds no cursor — the tile is the build's anchor candidate, and the page-wide gesture is reduced to it deliberately (the packet clip's drag-draw gesture is the priced loss). (b) The specimen's cut-time geometry is approximate (tile 115×115 vs cluster 118×54 source px, centres 12 px apart in y); the build IDEALIZES it to exact rect + glyph equality — the idealization is the mechanism proof's point (a parameterized match cut must be able to land exactly), and it is named here rather than presented as the specimen's measured geometry.
+Owner Cure 1 (contrast): logoInk on tile/logoField ≈ 17.9:1 · ink on search ≈ 9.9:1 · ink on card ≈ 13.9:1 — recorded in §2. Owner Cure 2 (phase exclusivity): the single pose function owns the stage; scenes are never co-visible (harness boundary tests, §5).
+
+## 5. Own checks (recorded, not asserted)
+- **Mechanism proof (geometry table, node harness on the final build):** anchor rect in scene A at cut = {x:118, y:52, w:64, h:64}; anchor rect in scene B at cut = {x:118, y:52, w:64, h:64} — **equal to the px** ✓. Glyph bounds at cut: A {x:126.96, y:62.24, w:46.08, h:26.88} = B {x:126.96, y:62.24, w:46.08, h:26.88} ✓. Push velocity: anchor-centre speed first 150 ms of push 0.0004 px/ms vs last 149 ms 0.0959 px/ms — **peaks at the cut** ✓. Anchor size monotonic across the push ✓.
+- **Swap test (EXACT RUN §2 values, scratch copy):** anchor.label "MARK"→"LOGO" · pushMs 1500→2100 · palette.accent "#ff5a4c"→"#2255ff" · anchor.x 118→96. Result (harness on the scratch build, 23/23 PASS): label nodes read "LOGO" in BOTH scenes ✓ · accent #2255ff present in outline border + card bars ✓ · anchor rects at cut = {x:96, y:52, w:64, h:64} in scene A AND scene B — the rect moved in both scenes identically ✓ · cycle stays 14 000 ms (hold-A residual 8800 → 8200, named semantics §4) ✓ · velocity still peaks at the cut (0.0706 px/ms last interval) ✓. FIRST swap run caught a real defect: with pushMs 2100 the selection outline (offMs 8300) survived into the push (start 8200) — cured in construction (off-time capped at PUSH_START − outline.safetyMs), re-verified 23/23 on both builds.
+- **Purity grep** over recreation.html, pattern `segment\.mp4|source\.mp4|video-digests|ev/|\.jpg|\.png|<video|<img`: **0 hits**. Grep for `transition|animation|@keyframes` (a blend hiding the cut): **0 hits**. Asset inventory: recreation.html loads NO external assets — all elements are DOM generated from CONFIG in code. segment.mp4 appears only in comparison.html as the labeled ORIGINAL.
+- **node --check** on the extracted inline script: OK. Harness (default build, 23/23 PASS): phases half-open at every boundary (holdA@0 · push@cut−1 · settle@cut · holdB@settleEnd) · scene A@cut−1 / B@cut · markScaleB 1 at cut → settleScale at settle end · wordmark opacity/dx settle to 1/0 · stage opacity 0 at the seam, 1 mid-cycle · outline opacity 0 at pushStart−1, 1 mid-hold.
+- **Comparison check:** labels exact per charge (`ORIGINAL — School of Motion @ 35–49 s` · `RECREATION — Match cut, parameterized`) · one control set drives both (video currentTime slaves the recreation via __render) · durations matched (segment 14.000 s; recreation cycle 14 000 ms) · phone stacking via flex-wrap with controls above the panels, reachable.
+
+## 6. A6 legs + lens forecast
+- guard-measured-fit → fit-table.md: **1 HIT carried** — anchor label approach-state ink height 9.7 px vs the ~11 px floor; disposition in fit-table.md (reading states at/after the cut clear the floor at 11.5 → 18.4 px).
+- guard-config-census → config-census.md: **0 HITs** on the final build (first-pass literal hits cured pre-wave, listed in the census; one census MISS — a dead key filed as applied + two unlisted literals — was caught by jev-prewave, cured in construction, and is recorded in the census addendum).
+- **Lens forecast (plan-review point 5, recorded before the wave):** predicted minimum = **timing** — the build's pushMs 1500 is ≈2–3× the measured specimen push (≈0.5–0.75 s); the duration is the Plan's bound value under the named t=0 allocation, which explains the lifecycle's placement but not the duration stretch. Secondary risk = **reusability** (T101's minimum lens at 76; this build's derived-schedule semantics are its exposed surface). No adverse score is pre-classified as a lens miss; scores.md prices whatever the returns say.
+
+
+
+===== fit-table.md =====
+# T107 — guard-measured-fit output (A6 leg 1, FINAL build, pre-wave)
+
+Method: font-metric geometry measurement (Arial advance widths + cap-height factor 0.716) at the 360 px stage. States measured per element: the approach state (scene A at world scale 1.0) and the reading state (at/after the cut, where each element is actually read). Build: recreation.html sha256 5a874eb3d683f7df6dcf64408a1c5dd03ef747fe5fc255b755be8593b40778ba (final build after the jev-prewave cure; the cure changed no text size or container, so every measurement below is unchanged from the pre-cure build 43976b14…).
+
+| Element | Container | Ink width | Container width | Margin | Ink height: approach / reading |
+|---|---|---|---|---|---|
+| sceneA.title "Results — before" @16 px (search bar) | search text area 224×18 px | 126.3 px | 224 px | **97.7 px** | 11.5 / 13.5 px (grows with the push to cut scale 1.18) |
+| anchor.label "MARK" @16 px (both scenes, shared primitive) | anchor box 64 px wide at cut (54.2 px at base) | 47.1 px at cut · 39.9 px at base | 64 px · 54.2 px | **16.9 px · 14.3 px** | 9.7 / 11.5 px (approach = effective 13.6 px font inside the base-size tile; reading = at cut 11.5 px, settled 18.4 px) |
+| anchor.label swap "LOGO" @16 px | anchor box 64 px | 45.3 px | 64 px | 18.7 px | as above |
+| sceneB.title "Logo — after" @17 px (wordmark) | full-width strip 360 px, centred | 93.6 px | 360 px | **133.2 px per side** | — / 12.2 px (reading state = settled hold-B, opacity 1, dx 0) |
+
+Hierarchy: measured ink heights — wordmark 12.2 px · search title 11.5 px · anchor label 11.5 px at cut; the mark glyph itself measures 26.9 px tall at the cut and 43.0 px settled, dominating by size as designed. No hue-only hierarchy is claimed. ✓
+Legibility floor (~11 px ink height): search title clears it in both states (11.5 / 13.5); wordmark clears it in its reading state (12.2); anchor label clears it in its reading states (11.5 at cut, 18.4 settled) but measures 9.7 px in the approach state — **HIT-1 (carried, disposition below)**.
+
+HIT list: **1 HIT carried** — anchor label approach-state ink height 9.7 px < ~11 px floor. Disposition: the label rides inside the anchor tile as part of the mark cluster during the pre-push hold; its reading states are the cut instant (11.5 px) and scene B (11.5 → 18.4 px settled), where the floor clears. Enlarging the label breaks the anchor box fit at the cut (label box + glyph = 58.1 of 64 px at 16 px font; a larger font overflows the box the mechanism proof binds). The lens wave prices it with this table in the packet.
+

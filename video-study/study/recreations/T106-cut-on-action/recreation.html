@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T106 — Cut on action (completion cut, measured form) · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #fadeWrap{position:absolute;left:0;top:0;}
+  .scene{position:absolute;left:0;top:0;overflow:hidden;}
+  .framed{position:absolute;left:0;top:0;transform-origin:0 0;}
+  .desk{position:absolute;}
+  .base{position:absolute;box-sizing:border-box;}
+  .lid{position:absolute;transform-origin:0 50%;}
+  .lidScreen{position:absolute;}
+  .beam{position:absolute;}
+  .headerBar{position:absolute;}
+  .heroCard{position:absolute;box-sizing:border-box;}
+  .heroScreen{position:absolute;}
+  .glyphBase{position:absolute;}
+  .glyphLid{position:absolute;transform-origin:0 50%;}
+  .card{position:absolute;box-sizing:border-box;}
+  .bar{position:absolute;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  lid: {fromDeg:8, toDeg:64, actionMs:1800, len:96, thick:9, baseW:150, baseH:9, hingeX:112, baseY:150, screenOnDeg:40, screenFullDeg:64, screenInset:1},
+  cutAt: 1.0,
+  framingA: {scale:1.0, x:0, y:0},
+  framingB: {scale:1.45, x:-30, y:-14},
+  holdBeforeMs: 1200,
+  openHoldMs: 2600,
+  cycleMs: 14000,
+  loopFadeMs: 600,
+  palette: {field:"#e75480", fieldB:"#57c8b4", body:"#3b4a6b", screen:"#7fe7d2", ink:"#22304a", card:"#f4f4f4", accent:"#ffd23c"},
+  laptop: {beamOpacity:0.3, beamW:74, beamH:46, beamDx:6, beamDy:26, deskW:196, deskH:2, deskGap:3, deskOpacity:0.45},
+  sceneB: {headerH:16, hero:{x:52, y:32, w:150, h:62}, glyph:{x:14, y:16, scale:0.42, screenAspect:0.62, baseGap:4}, cards:[{x:52, y:100, w:150, h:22},{x:52, y:126, w:150, h:22}], bars:{h:4, gap:5, opacity:0.5, count:2, inset:5}},
+  type: {font:"Arial, Helvetica, sans-serif"},
+  stage: {width:360, height:203}
+};
+
+/* ---------- derived clock facts (all from CONFIG) ---------- */
+const ACTION_END = CONFIG.holdBeforeMs + CONFIG.lid.actionMs;
+const CUT_MS = CONFIG.holdBeforeMs + Math.round(CONFIG.cutAt * (CONFIG.lid.actionMs + CONFIG.openHoldMs));
+const CYCLE = CONFIG.cycleMs;
+
+function easeInOutCubic(p){ return p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p + 2, 3) / 2; }
+
+/* ONE continuous lid-angle function of the build clock — the only lid motion in the build. */
+function thetaAt(t){
+  if (t < CONFIG.holdBeforeMs) return CONFIG.lid.fromDeg;
+  if (t < ACTION_END){
+    const p = (t - CONFIG.holdBeforeMs) / CONFIG.lid.actionMs;
+    return CONFIG.lid.fromDeg + (CONFIG.lid.toDeg - CONFIG.lid.fromDeg) * easeInOutCubic(p);
+  }
+  return CONFIG.lid.toDeg;
+}
+function screenOpacityAt(theta){
+  const f = (theta - CONFIG.lid.screenOnDeg) / (CONFIG.lid.screenFullDeg - CONFIG.lid.screenOnDeg);
+  return Math.max(0, Math.min(1, f));
+}
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+document.body.style.fontFamily = CONFIG.type.font;
+
+const fadeWrap = document.createElement("div");
+fadeWrap.id = "fadeWrap";
+fadeWrap.style.width = CONFIG.stage.width + "px";
+fadeWrap.style.height = CONFIG.stage.height + "px";
+stage.appendChild(fadeWrap);
+
+function el(cls, parent){ const d = document.createElement("div"); d.className = cls; parent.appendChild(d); return d; }
+
+/* --- Scene A: laptop on the pink field (framingA) --- */
+const sceneA = el("scene", fadeWrap);
+sceneA.style.width = CONFIG.stage.width + "px";
+sceneA.style.height = CONFIG.stage.height + "px";
+sceneA.style.background = CONFIG.palette.field;
+const frameA = el("framed", sceneA);
+frameA.style.width = CONFIG.stage.width + "px";
+frameA.style.height = CONFIG.stage.height + "px";
+
+const desk = el("desk", frameA);
+desk.style.left = (CONFIG.lid.hingeX + CONFIG.lid.baseW / 2 - CONFIG.laptop.deskW / 2) + "px";
+desk.style.top = (CONFIG.lid.baseY + CONFIG.lid.baseH + CONFIG.laptop.deskGap) + "px";
+desk.style.width = CONFIG.laptop.deskW + "px";
+desk.style.height = CONFIG.laptop.deskH + "px";
+desk.style.background = CONFIG.palette.ink;
+desk.style.opacity = CONFIG.laptop.deskOpacity;
+
+const beam = el("beam", frameA);
+beam.style.left = (CONFIG.lid.hingeX + CONFIG.laptop.beamDx) + "px";
+beam.style.top = (CONFIG.lid.baseY - CONFIG.laptop.beamH - CONFIG.laptop.beamDy) + "px";
+beam.style.width = CONFIG.laptop.beamW + "px";
+beam.style.height = CONFIG.laptop.beamH + "px";
+beam.style.background = CONFIG.palette.screen;
+beam.style.clipPath = "polygon(0 100%, 100% 0, 100% 100%)";
+
+const base = el("base", frameA);
+base.style.left = CONFIG.lid.hingeX + "px";
+base.style.top = CONFIG.lid.baseY + "px";
+base.style.width = CONFIG.lid.baseW + "px";
+base.style.height = CONFIG.lid.baseH + "px";
+base.style.background = CONFIG.palette.body;
+
+const lidEl = el("lid", frameA);
+lidEl.style.left = CONFIG.lid.hingeX + "px";
+lidEl.style.top = (CONFIG.lid.baseY - CONFIG.lid.thick / 2) + "px";
+lidEl.style.width = CONFIG.lid.len + "px";
+lidEl.style.height = CONFIG.lid.thick + "px";
+lidEl.style.background = CONFIG.palette.body;
+const lidScreen = el("lidScreen", lidEl);
+lidScreen.style.left = CONFIG.lid.screenInset + "px";
+lidScreen.style.top = CONFIG.lid.screenInset + "px";
+lidScreen.style.width = (CONFIG.lid.len - CONFIG.lid.screenInset * 2) + "px";
+lidScreen.style.height = (CONFIG.lid.thick - CONFIG.lid.screenInset * 2) + "px";
+lidScreen.style.background = CONFIG.palette.screen;
+
+/* --- Scene B: webpage destination (framingB); hero carries the completed screen state --- */
+const sceneB = el("scene", fadeWrap);
+sceneB.style.width = CONFIG.stage.width + "px";
+sceneB.style.height = CONFIG.stage.height + "px";
+sceneB.style.background = CONFIG.palette.fieldB;
+const frameB = el("framed", sceneB);
+frameB.style.width = CONFIG.stage.width + "px";
+frameB.style.height = CONFIG.stage.height + "px";
+
+const headerBar = el("headerBar", frameB);
+headerBar.style.left = "0px";
+headerBar.style.top = "0px";
+headerBar.style.width = CONFIG.stage.width + "px";
+headerBar.style.height = CONFIG.sceneB.headerH + "px";
+headerBar.style.background = CONFIG.palette.accent;
+
+const heroCard = el("heroCard", frameB);
+heroCard.style.left = CONFIG.sceneB.hero.x + "px";
+heroCard.style.top = CONFIG.sceneB.hero.y + "px";
+heroCard.style.width = CONFIG.sceneB.hero.w + "px";
+heroCard.style.height = CONFIG.sceneB.hero.h + "px";
+heroCard.style.background = CONFIG.palette.card;
+
+/* carried final state: the screen block, present from scene B's first frame */
+const heroScreen = el("heroScreen", heroCard);
+heroScreen.style.left = CONFIG.sceneB.glyph.x + "px";
+heroScreen.style.top = CONFIG.sceneB.glyph.y + "px";
+heroScreen.style.width = (CONFIG.lid.len * CONFIG.sceneB.glyph.scale) + "px";
+heroScreen.style.height = (CONFIG.lid.len * CONFIG.sceneB.glyph.scale * CONFIG.sceneB.glyph.screenAspect) + "px";
+heroScreen.style.background = CONFIG.palette.screen;
+
+/* frozen lid glyph: the SAME theta function evaluated once at the cut — a static evaluation, not a second animation */
+const THETA_CUT = thetaAt(CUT_MS);
+const glyphBase = el("glyphBase", heroCard);
+glyphBase.style.left = CONFIG.sceneB.glyph.x + "px";
+glyphBase.style.top = (CONFIG.sceneB.glyph.y + CONFIG.lid.len * CONFIG.sceneB.glyph.scale * CONFIG.sceneB.glyph.screenAspect + CONFIG.sceneB.glyph.baseGap) + "px";
+glyphBase.style.width = (CONFIG.lid.baseW * CONFIG.sceneB.glyph.scale) + "px";
+glyphBase.style.height = (CONFIG.lid.baseH * CONFIG.sceneB.glyph.scale) + "px";
+glyphBase.style.background = CONFIG.palette.body;
+const glyphLid = el("glyphLid", heroCard);
+glyphLid.style.left = CONFIG.sceneB.glyph.x + "px";
+glyphLid.style.top = (CONFIG.sceneB.glyph.y + CONFIG.lid.len * CONFIG.sceneB.glyph.scale * CONFIG.sceneB.glyph.screenAspect + CONFIG.sceneB.glyph.baseGap - (CONFIG.lid.thick * CONFIG.sceneB.glyph.scale) / 2) + "px";
+glyphLid.style.width = (CONFIG.lid.len * CONFIG.sceneB.glyph.scale) + "px";
+glyphLid.style.height = (CONFIG.lid.thick * CONFIG.sceneB.glyph.scale) + "px";
+glyphLid.style.background = CONFIG.palette.body;
+glyphLid.style.transform = "rotate(" + (-THETA_CUT) + "deg)";
+
+CONFIG.sceneB.cards.forEach(c => {
+  const card = el("card", frameB);
+  card.style.left = c.x + "px";
+  card.style.top = c.y + "px";
+  card.style.width = c.w + "px";
+  card.style.height = c.h + "px";
+  card.style.background = CONFIG.palette.card;
+  for (let i = 0; i < CONFIG.sceneB.bars.count; i++){
+    const bar = el("bar", card);
+    bar.style.left = CONFIG.sceneB.bars.inset + "px";
+    bar.style.top = (CONFIG.sceneB.bars.inset + i * (CONFIG.sceneB.bars.h + CONFIG.sceneB.bars.gap)) + "px";
+    bar.style.width = (c.w - CONFIG.sceneB.bars.inset * 2) + "px";
+    bar.style.height = CONFIG.sceneB.bars.h + "px";
+    bar.style.background = CONFIG.palette.ink;
+    bar.style.opacity = CONFIG.sceneB.bars.opacity;
+  }
+});
+
+frameA.style.transform = "translate(" + CONFIG.framingA.x + "px," + CONFIG.framingA.y + "px) scale(" + CONFIG.framingA.scale + ")";
+frameB.style.transform = "translate(" + CONFIG.framingB.x + "px," + CONFIG.framingB.y + "px) scale(" + CONFIG.framingB.scale + ")";
+
+/* ---------- render: phase predicates partition the cycle; cutMs belongs to scene B ---------- */
+function render(t){
+  const tt = ((t % CYCLE) + CYCLE) % CYCLE;
+  const theta = thetaAt(tt);
+  lidEl.style.transform = "rotate(" + (-theta) + "deg)";
+  const so = screenOpacityAt(theta);
+  lidScreen.style.opacity = so;
+  beam.style.opacity = CONFIG.laptop.beamOpacity * so;
+  const inA = tt < CUT_MS;
+  sceneA.style.display = inA ? "block" : "none";
+  sceneB.style.display = inA ? "none" : "block";
+  const fadeStart = CYCLE - CONFIG.loopFadeMs;
+  fadeWrap.style.opacity = tt > fadeStart ? Math.max(0, (CYCLE - tt) / CONFIG.loopFadeMs) : 1;
+}
+window.__render = render;
+window.__theta = thetaAt;
+window.__state = function(t){
+  const tt = ((t % CYCLE) + CYCLE) % CYCLE;
+  return {theta: thetaAt(tt), scene: tt < CUT_MS ? "A" : "B", cutMs: CUT_MS, cycle: CYCLE, thetaCut: THETA_CUT};
+};
+
+let startStamp = null;
+let manualUntil = -1;
+function loop(now){
+  if (startStamp === null) startStamp = now;
+  if (now > manualUntil) render(now - startStamp);
+  requestAnimationFrame(loop);
+}
+const origRender = window.__render;
+window.__render = function(t){
+  manualUntil = performance.now() + 600;
+  origRender(t);
+};
+if (typeof requestAnimationFrame === "function") requestAnimationFrame(loop);
+render(0);
+</script>
+</body>
+</html>

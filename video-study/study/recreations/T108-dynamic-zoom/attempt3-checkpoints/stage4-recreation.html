@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T108 — Dynamic / infinite zoom · recreation</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
+  .laptop{position:absolute;box-sizing:border-box;}
+  .base{position:absolute;box-sizing:border-box;display:flex;align-items:center;justify-content:center;}
+  .screen{position:absolute;overflow:hidden;box-sizing:border-box;}
+  .content{position:absolute;left:0;top:0;transform-origin:0 0;display:flex;flex-direction:column;align-items:center;}
+  .ptitle{box-sizing:border-box;text-align:center;}
+  .pill{box-sizing:border-box;display:flex;align-items:center;justify-content:center;}
+  .row{box-sizing:border-box;display:flex;align-items:center;}
+  .cursor{position:absolute;box-sizing:border-box;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  inner: {title:"Webpage", lines:["Motion Design Training","Result one","Result two"]},
+  screenRect: {x:82, y:43, w:177, h:113},
+  startScale: 0.65,
+  zoomMs: 2600,
+  holdBeforeMs: 1400,
+  cycleMs: 14000,
+  ease: "easeInOutCubic-single",
+  loopFadeMs: 500,
+  cameraTravelMs: 750,
+  fit: {maxScale:1},
+  measure: {weight:400, fallbackCharRatio:0.52},
+  settle: {fromScale:0.94, fromDy:5, attackFraction:0.35, pillGrow:{offsetFraction:0.1429, spanFraction:0.2857, fromFraction:0.35}, rowOnsets:[0.45,0.62], rowSpanFraction:0.2, rowRise:4},
+  cursor: {w:15, h:20, color:"#ffffff", fadeMs:220,
+    polygon:[[0,0],[100,62],[58,68],[78,100],[58,100],[40,72],[0,100]],
+    path:[{seg:"distant",u:0,x:330,y:55},{seg:"distant",u:1,x:275,y:80},{seg:"camera",u:0.6,x:235,y:93},{seg:"camera",u:1,x:170.5,y:99.5}]},
+  laptop: {bezel:12, baseH:12, radius:6},
+  innerLayout: {titleSize:9, pillTextSize:7.5, lineSize:8.0, pillW:118, pillH:13, rowW:130, rowH:11, gap:5, titleWeight:700, pillRadius:7, rowRadius:3, rowPad:6, pillPadX:8, titleLineHeight:1.3},
+  palette: {page:"#111111", field:"#e75480", body:"#3b4a6b", screen:"#7fe7d2", ink:"#22304a", pill:"#ffc93c", row:"#ffffff"},
+  type: {font:"Arial, Helvetica, sans-serif"},
+  stage: {width:360, height:203}
+};
+
+/* ---------- ease registry (two supported curves) ---------- */
+function easeInOutCubic(u){ return u<0.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2; }
+function easeOutCubic(u){ return 1-Math.pow(1-u,3); }
+const EASES = {"easeInOutCubic-single": easeInOutCubic, "easeOutCubic": easeOutCubic};
+
+/* ---------- trusted defaults: frozen, outside the editable CONFIG surface.
+   Validation reads fallbacks ONLY from this block, never from CONFIG itself. ---------- */
+const DEFAULTS = Object.freeze({
+  inner:{title:"Webpage", lines:["Motion Design Training","Result one","Result two"]},
+  screenRect:{x:82, y:43, w:177, h:113},
+  startScale:0.65, zoomMs:2600, holdBeforeMs:1400, cycleMs:14000, ease:"easeInOutCubic-single", loopFadeMs:500, cameraTravelMs:750,
+  fit:{maxScale:1}, measure:{weight:400, fallbackCharRatio:0.52},
+  settle:{fromScale:0.94, fromDy:5, attackFraction:0.35, pillGrow:{offsetFraction:0.1429, spanFraction:0.2857, fromFraction:0.35}, rowOnsets:[0.45,0.62], rowSpanFraction:0.2, rowRise:4},
+  cursor:{w:15, h:20, color:"#ffffff", fadeMs:220, polygon:[[0,0],[100,62],[58,68],[78,100],[58,100],[40,72],[0,100]], path:[{seg:"distant",u:0,x:330,y:55},{seg:"distant",u:1,x:275,y:80},{seg:"camera",u:0.6,x:235,y:93},{seg:"camera",u:1,x:170.5,y:99.5}]},
+  laptop:{bezel:12, baseH:12, radius:6},
+  innerLayout:{titleSize:9, pillTextSize:7.5, lineSize:8.0, pillW:118, pillH:13, rowW:130, rowH:11, gap:5, titleWeight:700, pillRadius:7, rowRadius:3, rowPad:6, pillPadX:8, titleLineHeight:1.3},
+  palette:{page:"#111111", field:"#e75480", body:"#3b4a6b", screen:"#7fe7d2", ink:"#22304a", pill:"#ffc93c", row:"#ffffff"},
+  type:{font:"Arial, Helvetica, sans-serif"},
+  stage:{width:360, height:203}
+});
+function deepCopy(o){ return JSON.parse(JSON.stringify(o)); }
+
+/* ---------- validation: a single schema pass BEFORE any derivation or construction.
+   It cannot throw: every malformed field is substituted from DEFAULTS and named in
+   __layout.errors; construction proceeds on validated values only. ---------- */
+const validationErrors = [];
+function isObj(v){ return !!v && typeof v === "object" && !Array.isArray(v); }
+function numV(obj, key, fb){
+  const v = obj[key];
+  if (typeof v === "number" && isFinite(v)) return v;
+  if (typeof v === "string" && v.trim() !== "" && isFinite(Number(v))){ validationErrors.push("type:"+key+" string-numeric coerced"); obj[key] = Number(v); return obj[key]; }
+  validationErrors.push("invalid:"+key+" -> default"); obj[key] = fb; return fb;
+}
+["inner","screenRect","settle","cursor","laptop","innerLayout","palette","type","stage","fit","measure"].forEach(function(k){
+  if (!isObj(CONFIG[k])){ validationErrors.push("invalid group:"+k+" -> default"); CONFIG[k] = deepCopy(DEFAULTS[k]); }
+});
+if (!isObj(CONFIG.settle.pillGrow)){ validationErrors.push("invalid group:settle.pillGrow -> default"); CONFIG.settle.pillGrow = deepCopy(DEFAULTS.settle.pillGrow); }
+if (typeof CONFIG.inner.title !== "string"){ validationErrors.push("invalid:inner.title -> default"); CONFIG.inner.title = DEFAULTS.inner.title; }
+if (!Array.isArray(CONFIG.inner.lines)){ validationErrors.push("invalid:inner.lines -> default"); CONFIG.inner.lines = deepCopy(DEFAULTS.inner.lines); }
+CONFIG.inner.lines = CONFIG.inner.lines.map(function(s){ if (typeof s !== "string"){ validationErrors.push("type:inner.lines entry coerced to string"); return String(s); } return s; });
+if (CONFIG.inner.lines.length === 0){ validationErrors.push("empty:inner.lines has no pill line"); }
+function isNum(v){ return typeof v === "number" && isFinite(v); }
+if (!Array.isArray(CONFIG.cursor.path) || CONFIG.cursor.path.length === 0 || !CONFIG.cursor.path.every(function(pt){ return isObj(pt) && typeof pt.seg === "string" && isNum(pt.u) && isNum(pt.x) && isNum(pt.y); })){
+  validationErrors.push("invalid:cursor.path -> default"); CONFIG.cursor.path = deepCopy(DEFAULTS.cursor.path);
+}
+if (!Array.isArray(CONFIG.cursor.polygon) || CONFIG.cursor.polygon.length === 0 || !CONFIG.cursor.polygon.every(function(pt){ return Array.isArray(pt) && pt.length === 2 && isNum(pt[0]) && isNum(pt[1]); })){
+  validationErrors.push("invalid:cursor.polygon -> default"); CONFIG.cursor.polygon = deepCopy(DEFAULTS.cursor.polygon);
+}
+if (!Array.isArray(CONFIG.settle.rowOnsets) || CONFIG.settle.rowOnsets.length === 0 || !CONFIG.settle.rowOnsets.every(function(v){ return isNum(v) && v >= 0 && v <= 1; })){
+  validationErrors.push("invalid:settle.rowOnsets -> default"); CONFIG.settle.rowOnsets = deepCopy(DEFAULTS.settle.rowOnsets);
+}
+numV(CONFIG.screenRect,"x",DEFAULTS.screenRect.x); numV(CONFIG.screenRect,"y",DEFAULTS.screenRect.y);
+numV(CONFIG.screenRect,"w",DEFAULTS.screenRect.w); numV(CONFIG.screenRect,"h",DEFAULTS.screenRect.h);
+numV(CONFIG,"startScale",DEFAULTS.startScale); numV(CONFIG,"zoomMs",DEFAULTS.zoomMs); numV(CONFIG,"holdBeforeMs",DEFAULTS.holdBeforeMs);
+numV(CONFIG,"cycleMs",DEFAULTS.cycleMs); numV(CONFIG,"loopFadeMs",DEFAULTS.loopFadeMs); numV(CONFIG,"cameraTravelMs",DEFAULTS.cameraTravelMs);
+numV(CONFIG.fit,"maxScale",DEFAULTS.fit.maxScale); numV(CONFIG.measure,"weight",DEFAULTS.measure.weight); numV(CONFIG.measure,"fallbackCharRatio",DEFAULTS.measure.fallbackCharRatio);
+numV(CONFIG.settle,"fromScale",DEFAULTS.settle.fromScale); numV(CONFIG.settle,"fromDy",DEFAULTS.settle.fromDy); numV(CONFIG.settle,"attackFraction",DEFAULTS.settle.attackFraction);
+numV(CONFIG.settle.pillGrow,"offsetFraction",DEFAULTS.settle.pillGrow.offsetFraction); numV(CONFIG.settle.pillGrow,"spanFraction",DEFAULTS.settle.pillGrow.spanFraction); numV(CONFIG.settle.pillGrow,"fromFraction",DEFAULTS.settle.pillGrow.fromFraction);
+numV(CONFIG.settle,"rowSpanFraction",DEFAULTS.settle.rowSpanFraction); numV(CONFIG.settle,"rowRise",DEFAULTS.settle.rowRise);
+numV(CONFIG.cursor,"w",DEFAULTS.cursor.w); numV(CONFIG.cursor,"h",DEFAULTS.cursor.h); numV(CONFIG.cursor,"fadeMs",DEFAULTS.cursor.fadeMs);
+if (typeof CONFIG.cursor.color !== "string"){ validationErrors.push("invalid:cursor.color -> default"); CONFIG.cursor.color = DEFAULTS.cursor.color; }
+numV(CONFIG.laptop,"bezel",DEFAULTS.laptop.bezel); numV(CONFIG.laptop,"baseH",DEFAULTS.laptop.baseH); numV(CONFIG.laptop,"radius",DEFAULTS.laptop.radius);
+["titleSize","pillTextSize","lineSize","pillW","pillH","rowW","rowH","gap","titleWeight","pillRadius","rowRadius","rowPad","pillPadX","titleLineHeight"].forEach(function(k){ numV(CONFIG.innerLayout,k,DEFAULTS.innerLayout[k]); });
+if (!["titleSize","pillTextSize","lineSize","pillW","pillH","rowW","rowH","titleWeight","titleLineHeight"].every(function(k){ return CONFIG.innerLayout[k] > 0; }) || !["gap","pillRadius","rowRadius","rowPad","pillPadX"].every(function(k){ return CONFIG.innerLayout[k] >= 0; })){
+  validationErrors.push("range:innerLayout sizes -> default"); CONFIG.innerLayout = deepCopy(DEFAULTS.innerLayout);
+}
+["page","field","body","screen","ink","pill","row"].forEach(function(k){ if (typeof CONFIG.palette[k] !== "string"){ validationErrors.push("invalid:palette."+k+" -> default"); CONFIG.palette[k] = DEFAULTS.palette[k]; } });
+if (typeof CONFIG.type.font !== "string"){ validationErrors.push("invalid:type.font -> default"); CONFIG.type.font = DEFAULTS.type.font; }
+const HEX6 = /^#[0-9a-fA-F]{6}$/;
+["page","field","body","screen","ink","pill","row"].forEach(function(k){ if (!HEX6.test(CONFIG.palette[k])){ validationErrors.push("format:palette."+k+" not #rrggbb -> default"); CONFIG.palette[k] = DEFAULTS.palette[k]; } });
+if (!HEX6.test(CONFIG.cursor.color)){ validationErrors.push("format:cursor.color not #rrggbb -> default"); CONFIG.cursor.color = DEFAULTS.cursor.color; }
+if (/[;{}]/.test(CONFIG.type.font)){ validationErrors.push("format:type.font -> default"); CONFIG.type.font = DEFAULTS.type.font; }
+numV(CONFIG.stage,"width",DEFAULTS.stage.width); numV(CONFIG.stage,"height",DEFAULTS.stage.height);
+/* range rules, applied to the validated values */
+if (!(CONFIG.screenRect.w > 0 && CONFIG.screenRect.h > 0)){ validationErrors.push("range:screenRect dimensions -> default"); CONFIG.screenRect.w = DEFAULTS.screenRect.w; CONFIG.screenRect.h = DEFAULTS.screenRect.h; }
+if (!(CONFIG.stage.width > 0 && CONFIG.stage.height > 0)){ validationErrors.push("range:stage dimensions -> default"); CONFIG.stage.width = DEFAULTS.stage.width; CONFIG.stage.height = DEFAULTS.stage.height; }
+if (!(CONFIG.startScale > 0)){ validationErrors.push("range:startScale -> default"); CONFIG.startScale = DEFAULTS.startScale; }
+if (!(CONFIG.zoomMs > 0) || !(CONFIG.cameraTravelMs > 0 && CONFIG.cameraTravelMs < CONFIG.zoomMs) || !(CONFIG.cycleMs > CONFIG.holdBeforeMs + CONFIG.zoomMs) || CONFIG.cycleMs > 3600000 || CONFIG.holdBeforeMs > 3600000 || CONFIG.zoomMs > 3600000){
+  validationErrors.push("range:timing set inconsistent -> defaults"); CONFIG.zoomMs = DEFAULTS.zoomMs; CONFIG.cameraTravelMs = DEFAULTS.cameraTravelMs;
+  if (!(CONFIG.cycleMs > CONFIG.holdBeforeMs + CONFIG.zoomMs) || CONFIG.cycleMs > 3600000 || CONFIG.holdBeforeMs > 3600000){ CONFIG.cycleMs = DEFAULTS.cycleMs; CONFIG.holdBeforeMs = DEFAULTS.holdBeforeMs; CONFIG.zoomMs = DEFAULTS.zoomMs; }
+}
+if (!(CONFIG.settle.attackFraction > 0 && CONFIG.settle.attackFraction < 1)){ validationErrors.push("range:settle.attackFraction -> default"); CONFIG.settle.attackFraction = DEFAULTS.settle.attackFraction; }
+if (!(CONFIG.settle.pillGrow.offsetFraction >= 0 && CONFIG.settle.pillGrow.spanFraction > 0 && CONFIG.settle.pillGrow.offsetFraction + CONFIG.settle.pillGrow.spanFraction <= 1 && CONFIG.settle.pillGrow.fromFraction >= 0 && CONFIG.settle.pillGrow.fromFraction <= 1)){
+  validationErrors.push("range:settle.pillGrow -> default"); CONFIG.settle.pillGrow = deepCopy(DEFAULTS.settle.pillGrow);
+}
+if (!(CONFIG.settle.rowSpanFraction > 0 && CONFIG.settle.rowSpanFraction <= 1)){ validationErrors.push("range:settle.rowSpanFraction -> default"); CONFIG.settle.rowSpanFraction = DEFAULTS.settle.rowSpanFraction; }
+if (!(CONFIG.settle.fromScale > 0)){ validationErrors.push("range:settle.fromScale -> default"); CONFIG.settle.fromScale = DEFAULTS.settle.fromScale; }
+if (!(CONFIG.fit.maxScale > 0)){ validationErrors.push("range:fit.maxScale -> default"); CONFIG.fit.maxScale = DEFAULTS.fit.maxScale; }
+if (!Object.prototype.hasOwnProperty.call(EASES, CONFIG.ease)){ validationErrors.push("invalid:ease -> default"); CONFIG.ease = DEFAULTS.ease; }
+
+/* ---------- text measurement (canvas metric; estimate fallback) ---------- */
+const measureCtx = (function(){ try { const c = document.createElement("canvas"); return c.getContext("2d"); } catch(e){ return null; } })();
+function measureW(text, sizePx, weight){
+  if (measureCtx){ measureCtx.font = (weight?weight+" ":"") + sizePx + "px " + CONFIG.type.font; return measureCtx.measureText(String(text)).width; }
+  return String(text).length * sizePx * CONFIG.measure.fallbackCharRatio;
+}
+
+/* ---------- derived geometry (recomputed from CONFIG on every load) ---------- */
+const cameraFraction = CONFIG.cameraTravelMs / CONFIG.zoomMs;
+const insideT = CONFIG.holdBeforeMs + CONFIG.cameraTravelMs;
+const segBounds = {distant:[0,CONFIG.holdBeforeMs], camera:[CONFIG.holdBeforeMs, insideT], settle:[insideT, CONFIG.holdBeforeMs+CONFIG.zoomMs], hold:[CONFIG.holdBeforeMs+CONFIG.zoomMs, CONFIG.cycleMs]};
+const screenCx = CONFIG.screenRect.x + CONFIG.screenRect.w/2;
+const screenCy = CONFIG.screenRect.y + CONFIG.screenRect.h/2;
+/* the path's final waypoint IS the screen centre by construction: its configured
+   coordinates are the default-geometry expression of that centre, and the resolved
+   path snaps the final point to the centre of whatever screenRect is configured,
+   so a geometry swap keeps the camera endpoint centred */
+const resolvedPath = CONFIG.cursor.path.map(function(pt, i, arr){ const b = segBounds[pt.seg] || segBounds.distant; const last = i === arr.length-1; return {t:b[0]+pt.u*(b[1]-b[0]), x:last?screenCx:pt.x, y:last?screenCy:pt.y}; });
+const endScale = Math.max(CONFIG.stage.width / CONFIG.screenRect.w, CONFIG.stage.height / CONFIG.screenRect.h);
+const stageCx = CONFIG.stage.width/2, stageCy = CONFIG.stage.height/2;
+const visibleW = CONFIG.stage.width / endScale;
+const visibleH = CONFIG.stage.height / endScale;
+const visTop = (CONFIG.screenRect.h - visibleH)/2;
+const rowCount = Math.max(0, CONFIG.inner.lines.length - 1);
+const titleW = measureW(CONFIG.inner.title, CONFIG.innerLayout.titleSize, CONFIG.innerLayout.titleWeight);
+const pillTextW = CONFIG.inner.lines.length ? measureW(CONFIG.inner.lines[0], CONFIG.innerLayout.pillTextSize, CONFIG.measure.weight) : 0;
+let rowTextW = 0;
+for (let i=1;i<CONFIG.inner.lines.length;i++) rowTextW = Math.max(rowTextW, measureW(CONFIG.inner.lines[i], CONFIG.innerLayout.lineSize, CONFIG.measure.weight));
+const effPillW = Math.max(CONFIG.innerLayout.pillW, pillTextW + 2*CONFIG.innerLayout.pillPadX);
+const effRowW = Math.max(CONFIG.innerLayout.rowW, rowTextW + CONFIG.innerLayout.rowPad + CONFIG.innerLayout.pillPadX);
+function wrapLines(text, sizePx, weight, availW){
+  const words = String(text).split(/\s+/).filter(function(w){ return w.length > 0; });
+  if (!words.length) return {lines:1, maxW:0};
+  const spaceW = measureW(" ", sizePx, weight);
+  let lines = 1, cur = 0, maxW = 0;
+  words.forEach(function(w){
+    const ww = measureW(w, sizePx, weight);
+    if (cur === 0){ cur = ww; }
+    else if (cur + spaceW + ww <= availW){ cur += spaceW + ww; }
+    else { lines++; cur = ww; }
+    if (cur > maxW) maxW = cur;
+  });
+  return {lines:lines, maxW:maxW};
+}
+const titleAvailW = visibleW;
+const titleWrap = wrapLines(CONFIG.inner.title, CONFIG.innerLayout.titleSize, CONFIG.innerLayout.titleWeight, titleAvailW);
+const titleLines = titleWrap.lines;
+const naturalH = titleLines*CONFIG.innerLayout.titleSize*CONFIG.innerLayout.titleLineHeight + CONFIG.innerLayout.pillH + rowCount*CONFIG.innerLayout.rowH + (rowCount+1)*CONFIG.innerLayout.gap;
+/* the title's width contribution is its widest WRAPPED line — the width the stack
+   actually occupies — not its unwrapped single-line width */
+const naturalW = Math.max(titleWrap.maxW, effPillW, effRowW);
+const fitScale = Math.min(CONFIG.fit.maxScale, visibleH/naturalH, visibleW/naturalW);
+const aspectValid = visibleH <= CONFIG.screenRect.h + 1e-9;
+if (!aspectValid) validationErrors.push("aspect:visibleH "+visibleH.toFixed(1)+" exceeds screenRect.h "+CONFIG.screenRect.h+" — device would show at hold under width-derived scale");
+const holdMs = CONFIG.cycleMs - CONFIG.holdBeforeMs - CONFIG.zoomMs;
+const phaseTable = [
+  {phase:"distant", from:0, to:CONFIG.holdBeforeMs},
+  {phase:"zoom", from:CONFIG.holdBeforeMs, to:CONFIG.holdBeforeMs+CONFIG.zoomMs},
+  {phase:"hold", from:CONFIG.holdBeforeMs+CONFIG.zoomMs, to:CONFIG.cycleMs}
+];
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+stage.style.background = CONFIG.palette.field;
+document.documentElement.style.background = CONFIG.palette.page;
+document.body.style.background = CONFIG.palette.page;
+document.documentElement.style.fontFamily = CONFIG.type.font;
+document.body.style.fontFamily = CONFIG.type.font;
+if (validationErrors.length){ console.warn("T108 validation: " + validationErrors.join("; ")); stage.dataset.validationErrors = String(validationErrors.length); }
+
+const world = document.createElement("div");
+world.id = "world";
+world.style.width = CONFIG.stage.width + "px";
+world.style.height = CONFIG.stage.height + "px";
+world.style.background = CONFIG.palette.field;
+stage.appendChild(world);
+
+function el(cls, parent){ const d=document.createElement("div"); d.className=cls; parent.appendChild(d); return d; }
+
+const bz = CONFIG.laptop.bezel;
+const laptop = el("laptop", world);
+laptop.style.left = (CONFIG.screenRect.x-bz)+"px";
+laptop.style.top = (CONFIG.screenRect.y-bz)+"px";
+laptop.style.width = (CONFIG.screenRect.w+2*bz)+"px";
+laptop.style.height = (CONFIG.screenRect.h+bz+CONFIG.laptop.baseH)+"px";
+laptop.style.background = CONFIG.palette.body;
+laptop.style.borderRadius = CONFIG.laptop.radius+"px";
+const base = el("base", laptop);
+base.style.left = "0px";
+base.style.top = (CONFIG.screenRect.h+bz)+"px";
+base.style.width = (CONFIG.screenRect.w+2*bz)+"px";
+base.style.height = CONFIG.laptop.baseH+"px";
+
+const screen = el("screen", world);
+screen.style.left = CONFIG.screenRect.x+"px";
+screen.style.top = CONFIG.screenRect.y+"px";
+screen.style.width = CONFIG.screenRect.w+"px";
+screen.style.height = CONFIG.screenRect.h+"px";
+screen.style.background = CONFIG.palette.screen;
+
+const content = el("content", screen);
+content.style.width = CONFIG.screenRect.w+"px";
+content.style.height = CONFIG.screenRect.h+"px";
+content.style.justifyContent = "center";
+content.style.gap = CONFIG.innerLayout.gap+"px";
+content.style.transform = "scale("+fitScale+")";
+content.style.left = ((CONFIG.screenRect.w - CONFIG.screenRect.w*fitScale)/2)+"px";
+content.style.top = ((visTop + visibleH/2) - (CONFIG.screenRect.h*fitScale)/2)+"px";
+
+const ptitle = el("ptitle", content);
+ptitle.textContent = CONFIG.inner.title;
+ptitle.style.fontSize = CONFIG.innerLayout.titleSize+"px";
+ptitle.style.fontWeight = CONFIG.innerLayout.titleWeight;
+ptitle.style.lineHeight = String(CONFIG.innerLayout.titleLineHeight);
+ptitle.style.flexShrink = "0";
+ptitle.style.color = CONFIG.palette.ink;
+const pill = el("pill", content);
+pill.style.width = effPillW+"px";
+pill.style.height = CONFIG.innerLayout.pillH+"px";
+pill.style.background = CONFIG.palette.pill;
+pill.style.borderRadius = CONFIG.innerLayout.pillRadius+"px";
+pill.style.color = CONFIG.palette.ink;
+pill.style.fontSize = CONFIG.innerLayout.pillTextSize+"px";
+pill.style.fontWeight = String(CONFIG.measure.weight);
+pill.style.flexShrink = "0";
+pill.textContent = "";
+const rowEls = [];
+CONFIG.inner.lines.slice(1).forEach(function(txt){
+  const r = el("row", content);
+  rowEls.push(r);
+  r.style.width = effRowW+"px";
+  r.style.flexShrink = "0";
+  r.style.height = CONFIG.innerLayout.rowH+"px";
+  r.style.background = CONFIG.palette.row;
+  r.style.borderRadius = CONFIG.innerLayout.rowRadius+"px";
+  r.style.color = CONFIG.palette.ink;
+  r.style.fontSize = CONFIG.innerLayout.lineSize+"px";
+  r.style.fontWeight = String(CONFIG.measure.weight);
+  r.style.paddingLeft = CONFIG.innerLayout.rowPad+"px";
+  r.textContent = txt;
+});
+
+const cursor = el("cursor", world);
+cursor.style.width = CONFIG.cursor.w+"px";
+cursor.style.height = CONFIG.cursor.h+"px";
+cursor.style.background = CONFIG.cursor.color;
+cursor.style.clipPath = "polygon(" + CONFIG.cursor.polygon.map(function(pt){ return pt[0]+"% "+pt[1]+"%"; }).join(", ") + ")";
+cursor.style.left = resolvedPath[0].x+"px";
+cursor.style.top = resolvedPath[0].y+"px";
+
+/* ---------- camera: ONE transform, ONE ease family, single clock ---------- */
+function smooth(q){ return q*q*(3-2*q); }
+function cursorPosAt(t){
+  const P = resolvedPath;
+  if (t <= P[0].t) return {x:P[0].x, y:P[0].y};
+  for (let i=0;i<P.length-1;i++){
+    if (t < P[i+1].t){
+      const q = smooth((t-P[i].t)/(P[i+1].t-P[i].t));
+      return {x:P[i].x+(P[i+1].x-P[i].x)*q, y:P[i].y+(P[i+1].y-P[i].y)*q};
+    }
+  }
+  return {x:P[P.length-1].x, y:P[P.length-1].y};
+}
+/* entry event: first cycle time the cursor hotspot (its path point, the glyph tip)
+   lies inside the screen rectangle, both in world coordinates */
+let entryT = null;
+const entryStep = Math.max(1, Math.ceil((CONFIG.holdBeforeMs+CONFIG.zoomMs)/20000));
+for (let t=0;t<=CONFIG.holdBeforeMs+CONFIG.zoomMs;t+=entryStep){
+  const p = cursorPosAt(t);
+  if (p.x>=CONFIG.screenRect.x && p.x<=CONFIG.screenRect.x+CONFIG.screenRect.w && p.y>=CONFIG.screenRect.y && p.y<=CONFIG.screenRect.y+CONFIG.screenRect.h){ entryT = t; break; }
+}
+function pose(tms){
+  const t = ((tms % CONFIG.cycleMs) + CONFIG.cycleMs) % CONFIG.cycleMs;
+  const zoomStart = CONFIG.holdBeforeMs, zoomEnd = zoomStart + CONFIG.zoomMs;
+  let raw = 0, cam = 0, phase;
+  if (t < zoomStart){ raw = 0; cam = 0; phase = "distant"; }
+  else if (t < zoomEnd){ raw = (t-zoomStart)/CONFIG.zoomMs; cam = EASES[CONFIG.ease](Math.min(raw/cameraFraction,1)); phase = "zoom"; }
+  else { raw = 1; cam = 1; phase = "hold"; }
+  /* settle: inside the zoom window, after the camera sub-span (sp measures progress
+     across that post-arrival portion). The envelope is neutral at arrival, rises
+     smoothly to its peak displacement, and returns to neutral at the window's
+     end — no step anywhere in it */
+  let settleScale = 1, settleDy = 0;
+  if (phase === "zoom" && t > insideT){
+    const sp = (t-insideT)/(zoomEnd-insideT);
+    let disp;
+    if (sp < CONFIG.settle.attackFraction){ disp = smooth(sp/CONFIG.settle.attackFraction); }
+    else { disp = 1 - smooth((sp-CONFIG.settle.attackFraction)/(1-CONFIG.settle.attackFraction)); }
+    settleScale = 1 + (CONFIG.settle.fromScale-1)*disp;
+    settleDy = CONFIG.settle.fromDy*disp;
+  }
+  let pillProg = 0; const rowProg = [];
+  if (t >= insideT){
+    const sp2 = Math.min(Math.max((t-insideT)/(zoomEnd-insideT),0),1);
+    pillProg = Math.min(Math.max((sp2-CONFIG.settle.pillGrow.offsetFraction)/CONFIG.settle.pillGrow.spanFraction,0),1);
+    for (let i=0;i<rowCount;i++){ const on = CONFIG.settle.rowOnsets[Math.min(i,CONFIG.settle.rowOnsets.length-1)]; rowProg.push(Math.min(Math.max((sp2-on)/CONFIG.settle.rowSpanFraction,0),1)); }
+  }
+  const cp = cursorPosAt(t);
+  /* camera target: the screen centre until the cursor enters the screen, then a
+     smooth blend from the centre to the cursor; the blend completes at arrival,
+     where the path's final waypoint is the centre, so the target ends centred */
+  let txTarget = screenCx, tyTarget = screenCy;
+  if (entryT !== null && t >= entryT){
+    const q = smooth(Math.min((t-entryT)/Math.max(insideT-entryT,1),1));
+    txTarget = screenCx + (cp.x-screenCx)*q;
+    tyTarget = screenCy + (cp.y-screenCy)*q;
+  }
+  const s = CONFIG.startScale + (endScale - CONFIG.startScale)*cam;
+  const tx = stageCx - txTarget*s;
+  const ty = stageCy - tyTarget*s;
+  const edge = Math.min(t, CONFIG.cycleMs - t);
+  const opacity = edge < CONFIG.loopFadeMs ? edge/CONFIG.loopFadeMs : 1;
+  let cursorOpacity;
+  if (t < insideT - CONFIG.cursor.fadeMs) cursorOpacity = 1;
+  else if (t >= insideT) cursorOpacity = 0;
+  else cursorOpacity = 1 - (t-(insideT-CONFIG.cursor.fadeMs))/CONFIG.cursor.fadeMs;
+  const pillFull = CONFIG.inner.lines.length ? CONFIG.inner.lines[0] : "";
+  return {s:s, tx:tx, ty:ty, u:cam, raw:raw, opacity:opacity, cursorOpacity:cursorOpacity,
+          cursorX:cp.x, cursorY:cp.y, targetX:txTarget, targetY:tyTarget,
+          settleScale:settleScale, settleDy:settleDy, phase:phase, entryT:entryT,
+          pillProg:pillProg, pillChars:Math.floor(pillProg*pillFull.length), rowProg:rowProg};
+}
+function render(tms){
+  const p = pose(tms);
+  world.style.transform = "translate("+p.tx+"px,"+p.ty+"px) scale("+p.s+")";
+  world.style.opacity = String(p.opacity);
+  world.dataset.phase = p.phase;
+  cursor.style.opacity = String(p.cursorOpacity);
+  cursor.style.left = p.cursorX+"px";
+  cursor.style.top = p.cursorY+"px";
+  const pillFullText = CONFIG.inner.lines.length ? CONFIG.inner.lines[0] : "";
+  pill.style.width = (effPillW * (CONFIG.settle.pillGrow.fromFraction + (1-CONFIG.settle.pillGrow.fromFraction)*p.pillProg))+"px";
+  pill.textContent = pillFullText.slice(0, p.pillChars);
+  rowEls.forEach(function(r, i){ const q = p.rowProg[i] || 0; r.style.opacity = String(q); r.style.transform = "translateY("+((1-q)*CONFIG.settle.rowRise)+"px)"; });
+  const eff = fitScale * p.settleScale;
+  content.style.transform = "scale("+eff+")";
+  content.style.left = ((CONFIG.screenRect.w - CONFIG.screenRect.w*eff)/2)+"px";
+  content.style.top = ((visTop + visibleH/2) - (CONFIG.screenRect.h*eff)/2 + p.settleDy)+"px";
+}
+window.__render = render;
+window.__pose = pose;
+window.__config = CONFIG;
+window.__layout = {endScale:endScale, visibleW:visibleW, visibleH:visibleH, visTop:visTop, fitScale:fitScale, naturalH:naturalH, naturalW:naturalW, rowCount:rowCount, titleW:titleW, titleLines:titleLines, titleWrapW:titleWrap.maxW, titleAvailW:titleAvailW, holdMs:holdMs, effPillW:effPillW, effRowW:effRowW, aspectValid:aspectValid, errors:validationErrors, phaseTable:phaseTable, entryT:entryT, cameraFraction:cameraFraction, insideT:insideT, resolvedPath:resolvedPath};
+let start = null;
+function frame(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

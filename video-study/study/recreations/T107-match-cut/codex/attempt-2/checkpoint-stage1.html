@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T107 — Match cut · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .abs{position:absolute;box-sizing:border-box;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  anchor: {label:"MARK", x:118, y:52, w:64, h:64},
+  mark: {tri1:"#ef4444", tri2:"#22c55e", tri3:"#3b4a8f", glyphW:0.72, glyphH:0.42, glyphTop:0.16, triOverlap:0.30, triW:0.4, labelSize:16, labelGap:3, labelPad:2},
+  move: {fromDx:-50, fromDy:-18},
+  pushMs: 625,
+  pushFrom: {scale:1.0},
+  pushTo: {scale:1.18},
+  pushEasePow: 3,
+  sceneA: {title:"Results — before"},
+  sceneB: {title:"Logo — after"},
+  settleMs: 500,
+  settleScale: 2.0,
+  wordmarkMs: 1000,
+  wordmarkFromDx: -46,
+  wordmarkGap: 12,
+  holdBMs: 3000,
+  loopFadeMs: 600,
+  cycleMs: 14000,
+  outline: {startMs:5200, drawMs:900, offMs:8300, safetyMs:500, width:2, pad:5},
+  page: {searchX:60, searchY:8, searchW:240, searchH:24, card1X:40, card1Y:36, card1W:280, card1H:96, card2Y:140, cardH:24, cardGap:8, cardX:40, cardW:280, radius:6, barH:6, barGap:5, barsX:150, barsW:150, barsTop:14, padX:8, padY:3, barInsetX:12, barInsetY:5, barRowGap:3, barRightPad:90, barTrim:2, card1Bars:3, cardCount:2, cardBars:2, barOpacity:0.85},
+  palette: {field:"#57c8b4", card:"#f4f4f4", ink:"#22304a", accent:"#ff5a4c", cardA:"#2b3a8f", tile:"#101418", logoField:"#101010", logoInk:"#ffffff", bar:"#c9d4dd", search:"#ffd23c"},
+  type: {font:"Arial, Helvetica, sans-serif", titleSize:16, wordmarkSize:17, wordmarkPad:6, titleWeight:700, wordmarkWeight:700},
+  stage: {width:360, height:203}
+};
+
+/* ---------- derived schedule (half-open phase intervals) ---------- */
+const CUT_MS = CONFIG.cycleMs - CONFIG.settleMs - CONFIG.holdBMs;      /* 10300 */
+const PUSH_START = CUT_MS - CONFIG.pushMs;                             /* 8800 */
+const SETTLE_END = CUT_MS + CONFIG.settleMs;                           /* 11000 */
+const HOLD_A_MS = PUSH_START;                                          /* derived residual */
+if (HOLD_A_MS < 0) throw new Error("derived pre-push hold is negative");
+
+/* ---------- anchor geometry (single source of truth) ---------- */
+const cutCx = CONFIG.anchor.x + CONFIG.anchor.w/2, cutCy = CONFIG.anchor.y + CONFIG.anchor.h/2;
+const startCx = cutCx + CONFIG.move.fromDx, startCy = cutCy + CONFIG.move.fromDy;
+const baseW = CONFIG.anchor.w / CONFIG.pushTo.scale, baseH = CONFIG.anchor.h / CONFIG.pushTo.scale;
+const startW = baseW * CONFIG.pushFrom.scale, startH = baseH * CONFIG.pushFrom.scale;
+const startRect = {x: startCx - startW/2, y: startCy - startH/2, w: startW, h: startH};
+const tileWorld = {x: startCx - baseW/2, y: startCy - baseH/2, w: baseW, h: baseH};
+const cutRect = {x: CONFIG.anchor.x, y: CONFIG.anchor.y, w: CONFIG.anchor.w, h: CONFIG.anchor.h};
+function easeIn(u){ return Math.pow(u, CONFIG.pushEasePow); }
+function anchorRectAt(t){
+  if (t < PUSH_START) return {x:startRect.x, y:startRect.y, w:startRect.w, h:startRect.h};
+  if (t >= CUT_MS) return {x:cutRect.x, y:cutRect.y, w:cutRect.w, h:cutRect.h};
+  const u = easeIn((t - PUSH_START) / CONFIG.pushMs);
+  return {
+    x: startRect.x + (cutRect.x - startRect.x) * u,
+    y: startRect.y + (cutRect.y - startRect.y) * u,
+    w: startRect.w + (cutRect.w - startRect.w) * u,
+    h: startRect.h + (cutRect.h - startRect.h) * u
+  };
+}
+function glyphBounds(rect){
+  const gw = rect.w * CONFIG.mark.glyphW, gh = rect.h * CONFIG.mark.glyphH;
+  return {x: rect.x + (rect.w - gw)/2, y: rect.y + rect.h * CONFIG.mark.glyphTop, w: gw, h: gh};
+}
+function phaseAt(t){
+  if (t < PUSH_START) return "holdA";
+  if (t < CUT_MS) return "push";
+  if (t < SETTLE_END) return "settle";
+  return "holdB";
+}
+function outlineOpacityAt(t){
+  const o = CONFIG.outline;
+  const offMs = Math.min(o.offMs, PUSH_START - o.safetyMs);   /* the outline never survives into the push, whatever pushMs is swapped to */
+  if (t < o.startMs) return 0;
+  if (t < o.startMs + o.drawMs) return (t - o.startMs) / o.drawMs;
+  if (t < offMs) return 1;
+  return 0;
+}
+function pose(tms){
+  const t = ((tms % CONFIG.cycleMs) + CONFIG.cycleMs) % CONFIG.cycleMs;
+  const phase = phaseAt(t);
+  const scene = t < CUT_MS ? "A" : "B";
+  const rectA = anchorRectAt(Math.min(t, CUT_MS - 1));
+  const rectAtCutA = anchorRectAt(CUT_MS);
+  const rectB = {x:cutRect.x, y:cutRect.y, w:cutRect.w, h:cutRect.h};
+  let settleU = 0;
+  if (t >= CUT_MS) settleU = Math.min((t - CUT_MS) / CONFIG.settleMs, 1);
+  const growthE = 1 - Math.pow(1 - settleU, 3);
+  const markScaleB = 1 + (CONFIG.settleScale - 1) * growthE;
+  let wordmarkU = 0;
+  if (t >= CUT_MS) wordmarkU = Math.min((t - CUT_MS) / CONFIG.wordmarkMs, 1);
+  const wordmarkE = 1 - Math.pow(1 - wordmarkU, 3);
+  const fade = CONFIG.loopFadeMs;
+  const edge = Math.min(t, CONFIG.cycleMs - t);
+  const stageOpacity = edge < fade ? edge / fade : 1;
+  return {t: t, phase: phase, scene: scene, anchorRectA: rectA, anchorRectAtCutA: rectAtCutA,
+          anchorRectB: rectB, glyphA: glyphBounds(rectA), glyphAtCutA: glyphBounds(rectAtCutA),
+          glyphB: glyphBounds(rectB), outlineOpacity: outlineOpacityAt(t),
+          settleU: settleU, markScaleB: markScaleB, growthE: growthE,
+          wordmarkU: wordmarkU, wordmarkDx: CONFIG.wordmarkFromDx * (1 - wordmarkE), wordmarkOpacity: wordmarkE,
+          stageOpacity: stageOpacity};
+}
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+document.body.style.fontFamily = CONFIG.type.font;
+function el(cls, parent){ const d = document.createElement("div"); d.className = cls; parent.appendChild(d); return d; }
+function abs(d, x, y, w, h){ d.style.left = x+"px"; d.style.top = y+"px"; d.style.width = w+"px"; d.style.height = h+"px"; }
+
+/* shared mark primitive — ONE construction used by both scenes (glyph + label) */
+function makeMark(parent, inkColor){
+  const box = el("abs", parent);
+  const g = glyphBounds({x:0, y:0, w:CONFIG.anchor.w, h:CONFIG.anchor.h});
+  const cols = [CONFIG.mark.tri1, CONFIG.mark.tri2, CONFIG.mark.tri3];
+  for (let i = 0; i < cols.length; i++){
+    const tri = el("abs", box);
+    const tw = g.w * CONFIG.mark.triW;
+    abs(tri, g.x + i * g.w * CONFIG.mark.triOverlap, g.y, tw, g.h);
+    tri.style.background = cols[i];
+    tri.style.clipPath = "polygon(50% 0, 100% 100%, 0 100%)";
+  }
+  const lab = el("abs", box);
+  lab.textContent = CONFIG.anchor.label;
+  abs(lab, 0, g.y + g.h + CONFIG.mark.labelGap, CONFIG.anchor.w, CONFIG.mark.labelSize + CONFIG.mark.labelPad);
+  lab.style.fontSize = CONFIG.mark.labelSize + "px";
+  lab.style.fontWeight = CONFIG.type.titleWeight;
+  lab.style.color = inkColor;
+  lab.style.textAlign = "center";
+  return box;
+}
+
+/* ----- scene A: webpage (world scales/translates from the anchor rect) ----- */
+const sceneA = el("abs", stage); abs(sceneA, 0, 0, CONFIG.stage.width, CONFIG.stage.height);
+sceneA.style.background = CONFIG.palette.field;
+const world = el("abs", sceneA); abs(world, 0, 0, CONFIG.stage.width, CONFIG.stage.height);
+world.style.transformOrigin = "0 0";
+const P = CONFIG.page;
+const search = el("abs", world); abs(search, P.searchX, P.searchY, P.searchW, P.searchH);
+search.style.background = CONFIG.palette.search; search.style.borderRadius = P.radius + "px";
+const searchText = el("abs", search); abs(searchText, P.padX, P.padY, P.searchW - P.padX * 2, P.searchH - P.padY * 2);
+searchText.textContent = CONFIG.sceneA.title;
+searchText.style.fontSize = CONFIG.type.titleSize + "px";
+searchText.style.fontWeight = CONFIG.type.titleWeight;
+searchText.style.color = CONFIG.palette.ink;
+const card1 = el("abs", world); abs(card1, P.card1X, P.card1Y, P.card1W, P.card1H);
+card1.style.background = CONFIG.palette.cardA; card1.style.borderRadius = P.radius + "px";
+for (let r = 0; r < P.card1Bars; r++){
+  const bar = el("abs", card1); abs(bar, P.barsX - P.card1X, P.barsTop + r * (P.barH + P.barGap), P.barsW, P.barH);
+  bar.style.background = CONFIG.palette.accent; bar.style.opacity = String(P.barOpacity);
+}
+for (let c = 0; c < P.cardCount; c++){
+  const card = el("abs", world); abs(card, P.cardX, P.card2Y + c * (P.cardH + P.cardGap), P.cardW, P.cardH);
+  card.style.background = CONFIG.palette.card; card.style.borderRadius = P.radius + "px";
+  for (let r = 0; r < P.cardBars; r++){
+    const bar = el("abs", card); abs(bar, P.barInsetX, P.barInsetY + r * (P.barH + P.barRowGap), P.cardW - P.barRightPad, P.barH - P.barTrim);
+    bar.style.background = CONFIG.palette.bar;
+  }
+}
+const tile = el("abs", world); tile.style.background = CONFIG.palette.tile; tile.style.borderRadius = P.radius + "px";
+const markA = makeMark(tile, CONFIG.palette.logoInk);
+const outline = el("abs", world);
+outline.style.border = CONFIG.outline.width + "px solid " + CONFIG.palette.accent;
+outline.style.borderRadius = P.radius + "px";
+
+/* ----- scene B: black logo card ----- */
+const sceneB = el("abs", stage); abs(sceneB, 0, 0, CONFIG.stage.width, CONFIG.stage.height);
+sceneB.style.background = CONFIG.palette.logoField;
+const markB = makeMark(sceneB, CONFIG.palette.logoInk);
+const wordmark = el("abs", sceneB);
+wordmark.textContent = CONFIG.sceneB.title;
+const wmY = cutCy + (CONFIG.anchor.h * CONFIG.settleScale)/2 + CONFIG.wordmarkGap;
+abs(wordmark, 0, wmY, CONFIG.stage.width, CONFIG.type.wordmarkSize + CONFIG.type.wordmarkPad);
+wordmark.style.fontSize = CONFIG.type.wordmarkSize + "px";
+wordmark.style.fontWeight = CONFIG.type.wordmarkWeight;
+wordmark.style.color = CONFIG.palette.logoInk;
+wordmark.style.textAlign = "center";
+
+/* ---------- render ---------- */
+function render(tms){
+  const p = pose(tms);
+  stage.style.opacity = String(p.stageOpacity);
+  if (p.scene === "A"){
+    sceneA.style.display = "block"; sceneB.style.display = "none";
+    const r = p.anchorRectA;
+    const s = r.w / baseW;
+    const tx = r.x - tileWorld.x * s, ty = r.y - tileWorld.y * s;
+    world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + s + ")";
+    abs(tile, tileWorld.x, tileWorld.y, tileWorld.w, tileWorld.h);
+    abs(markA, 0, 0, CONFIG.anchor.w, CONFIG.anchor.h);
+    markA.style.transform = "scale(" + (baseW / CONFIG.anchor.w) + ")";
+    markA.style.transformOrigin = "0 0";
+    const op = CONFIG.outline.pad;
+    abs(outline, tileWorld.x - op, tileWorld.y - op, tileWorld.w + op * 2, tileWorld.h + op * 2);
+    outline.style.opacity = String(p.outlineOpacity);
+  } else {
+    sceneA.style.display = "none"; sceneB.style.display = "block";
+    abs(markB, cutRect.x, cutRect.y, cutRect.w, cutRect.h);
+    markB.style.transform = "scale(" + p.markScaleB + ")";
+    markB.style.transformOrigin = (CONFIG.anchor.w/2) + "px " + (CONFIG.anchor.h/2) + "px";
+    wordmark.style.transform = "translateX(" + p.wordmarkDx + "px)";
+    wordmark.style.opacity = String(p.wordmarkOpacity);
+  }
+}
+window.__render = render;
+window.__pose = pose;
+let start = null;
+function frame(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+**Verdict — 81/100 for motion fidelity.** The build delivers a continuous push through the laptop screen and a stable webpage end pose. The main fidelity losses are the cursor’s limited on-screen approach, the missing search-pill and typing reveal, and the visible fade used to reset the loop.
+
+**Findings**
+
+- **Camera continuity.** The recreation source’s `pose()` and `render()` apply one world translation-and-scale transform. The scale follows `easeInOutCubic` from 1.400 s to 2.570 s, calculated as `1.400 + 2.600 × 0.45`. It reaches the centered screen pose with zero slope and holds while the content settles. The supplied `camera.max-step-bound` and `camera.velocity-continuity-handoff` checks support continuity through the push and handoff.
+- **Nested reveal.** The construction block places the webpage inside the clipped `.screen` from the start, so the camera crosses into the same scene without a swap. The distant checkpoint and fit table show that the build already has inner text where the specimen shows blank teal. The pill and its full text are assigned during construction and stay present throughout `render()`. The specimen’s separate pill growth and typing beat at segment 8.50–9.00 is missing. The build supplies a small whole-content settle in its place.
+- **Cursor guidance.** `cursorPosAt()` moves the hotspot leftward along the configured path, and `pose()` shifts the camera target from that hotspot to the screen center. The supplied entry check reports 1.595 s. The configured 220 ms fade then reaches zero at 1.815 s. The path starts at world x=330, but `tx = stageCx - txTarget*s` puts the hotspot at stage center while `cam = 0`. The cursor therefore starts centered in the rendered frame and guides chiefly through the laptop’s movement relative to it. The specimen’s right-side approach reads less distinctly in this construction.
+- **Arrival and settle.** From 2.570 to 4.000 s, the camera is stationary while the content eases from scale 0.94 and a 5 px local downward offset to its final pose. That settle ends continuously. At 1.400 s, however, `pose()` switches the content instantly from scale 1 and zero offset to the displaced settle pose. The camera boundary checks do not cover that separate content jump.
+- **End pose and loop seam.** The centered end scale is `360/177`, about 2.034. The resulting viewport covers 177 × 99.8 local px within the 177 × 113 screen, consistent with the supplied full-coverage check. The world fades out over the final 500 ms and back in over the first 500 ms against the pink stage. Zero opacity conceals the pose reset at wrap. The fade remains a distinct transition between repetitions.
+
+**Limits** — Reviewed the full source and supplied checks in the run packet. Rendered playback and visual comparison against specimen footage were not independently verified.
+
+**Body-write: none (read-only run)**
+
+SCORE: 81
