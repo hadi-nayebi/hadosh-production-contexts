@@ -1,0 +1,19 @@
+Body-write: this return is intended for verbatim filing as `codex-plan-review-T13-return.md` beside `plan-T13.md`; the consumer must amend the plan and record disposition beside its pointer in RUN.md. No file was written here because this session has read-only filesystem access.
+
+The failure-point evaluation is item-specific: it addresses T13’s hardlink incident, phone fitting budget, opening anchor, and comparison clock. It nevertheless leaves these executable contradictions unresolved.
+
+PLAN: REVISE BEFORE GATE
+
+1. **[C1 · Execute §2 · Verify §2 — measurement authority]** Canvas word widths do not establish that the simulated wrapping matches CSS layout. Specify font readiness, whitespace and long-word breaking, letter spacing, marked-span padding at line breaks, and rounding. The pre-code feasibility valve also needs a named runnable measurement instrument; otherwise it depends on machinery not yet built. For the fallback, replace “upper-bound-only” with an explicit uncertainty/rejection rule: an estimated width table has no demonstrated upper-bound guarantee.
+
+2. **[C2/C5 · Verify §3 — invalid-input policy]** C2 freezes on `override invalid`, while Verify §3 expects malformed overrides to produce warnings with values unchanged. Choose one policy and assert it consistently. Name whether rejected overrides stop playback or are discarded before effective-config validation; distinguish their machine-readable outcomes.
+
+3. **[C4/C8 · Execute §4 · WHY scaffold — attribution and interactions]** Landing tint, active tint, and transitionless opening state share state transitions. A transition-string assertion plus different endpoint colours cannot establish a correct landing duration or backwards-scrub result. Add fixed-time checks before, during, and after landing, including restart and reverse seeking; explicitly price the added history dependence if CSS transitions implement C4. Require each cure’s diagnostic to pass before the next cure lands. Attribute lens movement only where return wording supports it; the aggregate wave cannot numerically isolate individual cures.
+
+4. **[C7 · Verify §1/§3 — accounting token contract]** `postWindowHoldMs` must change a constructed property under the every-key test, yet is expressly excluded from playback duration. Define its actual consumer and observable accounting effect, or classify it as record metadata outside the rendering-token census. Also separate the default specimen identity from override behavior: replacement titles and rates cannot universally retain `2,250 + derived performance + 942 = 12,000`.
+
+5. **[Execute §6 · Failure point (d) — anchor containment]** The score-blind build record is instructed to include the private cure mapping “kept seat-side only.” Put that mapping in a separately named, non-fed file. Define a payload preflight excluding prior vectors, targets, cure-to-lens mappings, prior-return quotations, and score-bearing paths or headings. Preserve the checked payload before firing.
+
+6. **[Verify §7–§9 · close — missing success branch]** Add an explicit post-wave decision table covering non-beating, beating below bar, and bar-passing outcomes. The passing branch must update `scores.md`, perform the style-library tier hand-off with its scores pointer, and verify consistent tier registers. The WHY branch is substantially scaffolded; the success branch is currently absent.
+
+7. **[Failure point (g) · Execute §2 — split decision]** “Targeted amendment of a 25 KB file” does not resolve the functional rebuild risk: fitting, validation, segmentation, state styling, and schedule edges all change. Justify their convergence by dependency and diagnostic boundaries. If feasibility fails, specify what stops, which coherent subset can proceed, and where every deferred cure and reason is filed; “C1/C2 splits out” leaves the remainder’s validity undecided.

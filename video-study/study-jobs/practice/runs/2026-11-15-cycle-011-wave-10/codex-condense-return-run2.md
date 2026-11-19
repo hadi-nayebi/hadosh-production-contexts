@@ -1,0 +1,17 @@
+CONDENSE: REGRADE BEFORE CLOSE
+
+1. **Amendment verification remains open.** The feed supplies descriptions of A-C011-1–4, but no actual INSTRUCTION before/after excerpts. RUN.md says they landed; that assertion cannot establish their wording, placement, or consistency with existing rules. Supply the excerpts before certifying Condense.
+
+2. **The mechanical-guard NO-DEFECT finding exceeds its evidence.** Four exact averages support guard 1’s operation this wave. The preservation census and absence of non-beating attempts support narrower observations; they do not establish guard 2’s coverage or guard 3’s behavior when triggered. Review guards 1–3 against their actual procedures, naming the checked receipts and marking unexercised branches UNTESTED.
+
+3. **The Jev layer remains explicitly incomplete.** Withdrawing NO-DEFECT is faithful, but seat-judged profiles do not review the definitions themselves. No definition text or comparison is supplied. Record this layer as OPEN pending definition review; no plateau lesson is owed from this all-beating wave.
+
+4. **The Codex-prompt NO-DEFECT claim is premature.** Corrections caught and consumed demonstrate useful operation, not complete prompt adequacy. This firing cannot certify itself before its return is consumed. The repeated unfinished-record firing also warrants an explicit procedural guard requiring filed §5/§9 and evidence excerpts before invocation; the feed does not demonstrate that such a guard landed.
+
+5. **Candidate status is appropriate; causal demonstration is limited.** T96’s returns support the new timing anchors, while remaining source-only and bundled. T91’s supplied passage supports incomplete validation and oversized-token handling, but truncates before several other claimed classes. T11’s a5 passage supports perception uncertainty; its a4 return is absent, so the two-attempt trigger is not independently established. T54’s supplied passage supports basis B’s camera anchors while identifying an opening-state mismatch; it does not substantiate the displacement ladder. Retain CANDIDATE labels and supply the missing passages or narrow the evidence claims.
+
+6. **Construction-note hand-offs are not reviewable as filed.** Their actual board text is absent. A-C011-1 describes authority and amendment procedure; it needs an accompanying construction contract a builder can apply: interval boundaries, transition behavior, simultaneous events, and acceptance checks. A-C011-2 is more directly actionable, but should specify malformed inputs and expected outcomes. Keep both explicitly unproven and distinguish SENT from received or consumed.
+
+7. **Divergence review is unresolved.** The feed identifies no shared-form amendment, but provides no before/after change inventory establishing that scope. Print an explicit finding naming the checked wave-definition, bar, and lens-set files; mirror any actual divergence in both required locations.
+
+8. **Body-write was not completed.** The execution host failed to start, preventing filesystem inspection and persistence. This return exists only in this response; it has **not** been filed verbatim in the cycle’s run directory. Condense remains open until that receipt and the disposition of these findings are written into the body.

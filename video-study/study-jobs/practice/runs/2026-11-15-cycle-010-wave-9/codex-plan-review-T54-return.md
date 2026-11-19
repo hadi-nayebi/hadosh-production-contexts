@@ -1,0 +1,19 @@
+Body-write: **not completed**. The execution tool failed to start (`codex-code-mode-host` missing), so I could not create `codex-plan-review-T54-return.md`. This review uses the supplied plan; the referenced cure inventory and Observe profile were not independently inspected.
+
+PLAN: REVISE BEFORE GATE
+
+1. **[§3(a), Execute 3/6 — Attribution]** Separate own-check summaries after the rebuild cannot isolate interacting cures. Require immutable checkpoints after each timeline cure, recording source hash, changed parameters, assertions, and unchanged invariants. Give each cure a falsifiable success condition before implementation. Keep lens-level attribution explicitly unresolved where changes remain bundled.
+
+2. **[C-T2, Execute 2/5, Verify 10 — Conflicting anchors]** Keeping the Midwest framing through approximately 3000 ms, then moving for 900 ms, conflicts with full arrival fixed at 3000 ms. “Regional portion” does not resolve this geometrically. Resolve the frame evidence before the gate and specify regional-hold end, transition start, and full-arrival time. If evidence changes an anchor, amend every dependent assertion together.
+
+3. **[C-X1/C-Ru1, Verify 1/10 — Wave interaction]** `floor(elapsedInRegion / dwellPerWave)` can consume exposure during camera movement, despite the requirement that switches occur only while stationary. Define stationary elapsed time explicitly and test every member’s continuous, settled exposure for both default and three-wave fixtures. Name-count and longest-label scaling also need an executable dwell formula.
+
+4. **[C-R1/C-M1/C-Ru3, Verify 9 — Collision during relocation]** Collision-free endpoints do not guarantee collision-free interpolated plate paths. Stable beat positions, foreground layering, and wider measured plates can collide during moves. Require swept-path collision checks or a named hide/relocate/reveal policy, and verify the resulting identity exposure.
+
+5. **[§3(g), §2 deferrals, Execute 3 — Split discipline]** Calling all single-lens changes “riders” does not establish convergence. Grapheme extraction, localization, connector animation, and generalized wave counts are not shown to be necessary dependencies of the convergent cures. Partition the work into required dependencies and independent cures; defer independent work with lens costs, or supply its concrete dependency rationale before gate entry.
+
+6. **[Execute 1/9, Verify 3/12 — Evidence preservation]** Preservation protects one HTML file but leaves prior build records, fit tables, config censuses, comparison dependencies, and filed returns without explicit create-once protection. Inventory and hash the complete prior evidence set before mutation. Preserve attempt-specific comparison targets and snapshot the exact scored source with its payloads. Require a new scoring wave after any subsequent source change.
+
+7. **[Execute 6/8, Verify 12 — Anchor leakage]** The build record is called neutral while also carrying cure-by-cure evidence and attribution. Split it into an internal cure ledger and a separately generated neutral facts packet. Scan the **final assembled payload**, including filenames, fixture labels, errors, comments, and attached records, for prior scores, targets, deduction language, and cure identifiers.
+
+8. **[§5 Verify 14/15, §7 — Outcome branches]** The supplied plan references a pre-drafted WHY scaffold without showing it or its evidence requirements. Place the actual scaffold in the working record before the gate: each cure’s predicted effect, observed effect, lens evidence, attribution limits, stuck-lens hypothesis, competing explanation, and discriminating next experiment. Specify `jev-plateau` inputs. For PASS, name the hand-off destination, required scores pointer, and receipt evidence; “file to the board” alone is not an executable hand-off.

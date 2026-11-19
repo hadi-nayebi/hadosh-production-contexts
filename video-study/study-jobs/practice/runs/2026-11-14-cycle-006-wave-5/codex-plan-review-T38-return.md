@@ -1,0 +1,15 @@
+PLAN: REVISE BEFORE GATE
+
+1. **[Plan / attribution; Verify V5] Cure effects remain confounded.** G1–G3 jointly change handover, formation, holds, and absolute checkpoints. Add per-cure checks before the wave: handover opacity traces; per-card formation/hold tables; CONFIG binding and mutation results. Map each cure to its expected lens response. These checks establish implementation effects; the final lens delta alone cannot establish which cure caused it.
+
+2. **[G1 / G2 / G3 interaction] The overlap contract is inconsistent and underspecified.** Ordinary complementary crossfades produce midpoint opacities of 0.5/0.5, failing `max-card-opacity > 0.9`. Specify opacity curves, stacking, and legibility during overlap. Define whether offsets derive from incoming formation start or chapter boundary, then validate that information-load allocation fits within 14,000ms without eliminating holds. Include the added demonstration tag in the load and layout calculations.
+
+3. **[Observe / G2 / plan-exit] The timing cure is only partly addressed.** Two boundary census observations support continuity but do not measure onsets and holds across the full segment. Add that evidence or explicitly defer this part of priced cure 2, with its consequence for timing fidelity. The supplied stream also lacks the item’s observe-exit profile and complete Execute checklist; their requirements and preservation order cannot be cleared from this material.
+
+4. **[Execute / evidence preservation; Verify V3–V5] Preservation needs an ordered procedure.** Before editing, preserve attempt 1’s recreation, comparison, build record, scores, and all returns with hashes. Build attempt 2 separately. Check comparison dependencies: unchanged controls and duration do not prove its ORIGINAL side remains unchanged. Append attempt 2’s scores and returns; never replace or re-average attempt 1 or its interim return.
+
+5. **[Verify V5 / anchor exclusion] “Allowlist-only” needs an explicit payload manifest.** Name exactly what each lens receives. Exclude this plan, prior scores and returns, score-bearing build-record passages, and target/delta language. Independently inspect the assembled payloads before firing. Compute comparisons only after all five returns bind to the same final hash.
+
+6. **[WHY / plateau / PASS hand-off / §8] Both close branches need executable steps.** Scaffold WHY for every non-beating outcome, including equality and regression: cure implemented, own-check evidence, lens response, interactions, remaining defect, and evidence required by `jev-plateau`. Treat the pixel-verification ceiling as a hypothesis requiring support from the new returns; persistent low scores do not prove it. For PASS, name the consumer and actual style-library update, with the scores pointer and read-back. Explain why G1–G5 fit §8’s convergent scope or defer independent work explicitly.
+
+Body-write: none. The execution tool failed to start, so I could not locate the run directory or file this return verbatim. Consumption into RUN.md and filing remain outstanding; this review is incomplete under the standing header.

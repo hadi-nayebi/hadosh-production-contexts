@@ -1,0 +1,23 @@
+1. **A-C004-2’s promotion is unsupported.** L1 names one attempt’s displayed-position assertion and score movements. Two lenses, two viewports, and two animation cycles do not establish the required **two separate cure movements**. The earlier qualifying instance and its filed return are absent. Keep **CANDIDATE** until two distinct attempts, their returns, and delta arithmetic are cited. “Accompanied improvement” also does not establish that the assertion caused the cure.
+
+2. **A-C005-1 needs a narrower demonstration label.** A clean preservation census supports “no preserved baseline bytes changed in the checked population.” It does not demonstrate the procedure’s three branches: new destination creation, matching-file reuse untouched, and mismatch stopping execution. Byte identity alone cannot prove an existing file was never overwritten. Label the census result as observed; keep the full enforcement claim **CANDIDATE** until branch-level evidence is filed. The create-once rule can remain a precautionary instruction.
+
+3. **A-C005-2 is honestly labelled CANDIDATE.** Preserve that qualification in §5.2 and the cycle record. Agent reports and preserved payloads establish neither allowlist compliance nor complete anchor scanning. Promotion requires independent inspection of the actual payload contents. L4 likewise remains a candidate observation: the supplied draft does not contain the Plan criterion or measurement record needed to verify its chronology.
+
+4. **The four-layer review is incomplete.**
+   - **INSTRUCTION:** amendment identifiers and summaries are supplied, but before/after excerpts are missing; faithful implementation cannot be checked.
+   - **Mechanical guards:** successful operational outputs do not establish that guards 1–3 have no defects. Their procedures/code and relevant failure-path checks are absent.
+   - **Jev definitions:** UNTESTED and UNARMED are honest limitations, not amendments or evidence-backed NO-DEFECT findings. This layer escaped substantive review.
+   - **Codex prompts:** useful corrections demonstrate usefulness, not absence of prompt defects. The prompt texts, returns, and correction receipts are missing. This firing remains pending until consumed.
+
+5. **The feeding-contract failure prevents several requested checks.** The stream lacks RUN.md’s faithfulness trace, amended-file excerpts, filed SCORE-line deltas, and primary lens returns. The numerical differences stated in the draft are arithmetically correct, but that does not independently verify scores, preservation, or “all load-bearing” claims. D1’s incomplete pool audit remains an explicit limitation; firsthand seat reading does not complete the missing Codex audit.
+
+6. **L5 is a plausible diagnosis, not a demonstrated construction lesson.** A readability score of 65 supports a remaining floor failure. It does not alone establish that unmeasured rendered fit caused it, nor prove equivalence with recreation’s finding. Keep the cross-job diagnosis **CANDIDATE** pending the filed readability return and recreation evidence. No consumable recreation hand-off is shown: such a note needs defined configuration inputs, rendered measurements, acceptance thresholds, and failure behavior.
+
+7. **L6 overstates both generality and wave repricing.** Three re-fired items support “re-fire occurred in this wave”; a documented caught regression could support its verification value. They do not establish “now the norm” across cycles. Remove elapsed-time material from this review under the feeding contract. Wave size and cadence may be retained as operational choices, but this feed does not demonstrate them as validated lessons.
+
+8. **The presence evaluation understates the remaining defects.** “INCOMPLETE stands on arming alone” conflicts with candidate amendments, incomplete pool audit, unsupported promotion, and unfinished layer reviews. Replace it with an explicit list of those limitations. Also distinguish jev-plateau’s construction state from its exercise state; “UNBUILT” and “UNTESTED” require separate evidence. No WHY is reported, so the plateau-lesson attack is not triggered. No shared-form amendment is shown, making divergence **not triggered on this feed**, rather than independently verified.
+
+9. **Required body-write and consumption:** file this return verbatim as `runs/2026-11-14-cycle-005-wave-4/codex-condense-return.md`. In RUN.md, record each regrade or evidence-backed rebuttal, correct the four-layer and presence claims, and cite the actual amendment excerpts. This return supplies the review; it does not claim those filesystem writes have already occurred.
+
+CONDENSE: REGRADE BEFORE CLOSE

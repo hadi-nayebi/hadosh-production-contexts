@@ -1,0 +1,15 @@
+PLAN: REVISE BEFORE GATE
+
+1. **[T06 failure points · E4 · E6 — attribution]** The cohort fix and `display:none` both change visible wall behavior. Add separate diagnostics: cohort opacity/scale with layout held fixed; layout occupancy with entrance progress held complete; then the combined construction. Record each result in the cure matrix. These establish cure operation; the combined lens-score delta remains jointly attributable.
+
+2. **[T06 failure points — interactions]** Removing grid occupants can reposition established tiles even when their opacity and scale remain 1. Explicitly decide whether established tiles retain positions or reflow, then check their rectangles immediately before, at, and after each boundary. Include the 32→24+4 transition, badge/hero separation, and swapped entrance durations that exceed wave spacing. The current +50ms opacity/scale assertion misses these conflicts.
+
+3. **[E1 · Plan-exit — evidence readiness]** Full prior lens returns remain unread until Execute. Move that read before Plan-exit and amend this item’s plan with any additional constraints. Otherwise the gate approves failure-point analysis before the evidence needed to make it item-specific has been consumed.
+
+4. **[E2 · E5 · V2 · V3 — evidence preservation]** Protect every attempt-2 instruction and return with create-once writes; refusing an existing directory at preflight does not prevent later overwrites. Before editing comparison.html, preserve its baseline and specify an ORIGINAL-side invariant covering source, segment, and playback mapping. Verify that invariant afterward. Enforce scores.md as an unchanged prior-byte prefix plus appended material; recompute each attempt’s average solely from its own filed returns.
+
+5. **[E4b · E4c · E6 · V1 — verification and anchors]** Cold-start, restart, backward-seek, and grid-flow cures require checks of actual rendered state. Logic diagnostics cannot establish browser layout or computed styling. Name a browser route or retain those claims as unverified. Also resolve the checklist dependency: finalize source → write the score-blind build record → assemble and inspect payloads → freeze source and payload hashes → fire lenses. Sanitize cure-matrix wording so it describes current behavior without prior defects, scores, or improvement claims.
+
+6. **[T06 deferrals · V4 · V5 — split and outcome branches]** The WHY and PASS branches are substantially scaffolded. Add pre-wave evidence filenames for each cure slot and an exact style-library HQ.json destination and receipt field. Explicitly file the intermediate-wave timing limitation as deferred, with its missing evidence and consequence; “Deferrals: none” currently obscures that unresolved fidelity question. Bound this attempt to the listed cures, with unrelated redesign deferred under §8.
+
+**Body-write:** No file was written: filesystem tooling failed to start because the code-mode host executable was unavailable. This response is the verbatim return for `codex-plan-review-T06-return.md`; filing and consumption remain outstanding.

@@ -1,0 +1,19 @@
+CONDENSE: REGRADE BEFORE CLOSE
+
+1. **The feeding contract is unmet.** The supplied stream contains results and draft lessons, but no RUN.md §5/§9, faithfulness trace, amended-file before/after excerpts, supporting lens passages, verbatim T54 WHY, or jev-plateau profile. The “4/4 exact” claim remains seat-reported here. This review can assess the draft’s logic; it cannot certify the filed Condense.
+
+2. **L1/A-C010-1: CANDIDATE; split its components.** Four convergent plan reviews demonstrate agreement about proposed safeguards, not two successful cure movements. T57/T14 passing does not establish checkpoint staging caused either improvement, especially with T14’s bundled execution. Score gains support artifact improvement; they do not independently support attribution to staging, preservation, or payload scanning.
+
+3. **A-C004-1 needs a compliance finding before another amendment.** T11’s repeated hardlinks indicate an existing construction rule was violated or insufficiently enforced. Record that distinction and the correction’s evidence. If independent checkpoint copies were already required, another restatement adds no demonstrated cure. A mechanical copy-independence check is a candidate improvement. This recurrence alone does not disprove the original rule.
+
+4. **L2/A-C010-2: CANDIDATE, with a supported defect hypothesis.** The reported T54 startup penalty supports adding startup-path coverage to own-checks. It does not demonstrate the proposed check works: no implementation, independent detection, or subsequent cure movement is supplied. Printing an external-start limitation discloses the defect; it does not establish successful self-start or warrant a scoring exemption. The claim that two earlier waves missed it also needs those returns.
+
+5. **L3/A-C010-3: CANDIDATE; attach it to A-C008-1’s scope.** The reported conflict supports exposing both evidence bases and their scoring consequences. It does not establish that frame granularity was correct, that the lens was wrong, or that binding the packet would improve timing. If A-C008-1 claims amendments propagate into scoring inputs, this is an implementation failure requiring correction of that claim. Otherwise, record a candidate extension. Preserve the dispute in the neutral facts.
+
+6. **L4 is a qualified observation, not demonstrated success.** T11’s reported +6 timing movement supports improvement, while the remaining cadence criticism limits what “worked” can mean. Feasibility filing and fidelity are separate claims. A cadence-versus-dwell comparison is a reasonable candidate check; the supplied evidence does not prove the filing caused the gain or that this added check cures the remaining defect.
+
+7. **L5 requires a narrower A-C005-2 status.** “Agent-reported + manifest-filed; assembled contents not independently inspected” is the defensible status. A manifest is not evidence that the assembled payload satisfies its contract. Any existing claim of independently verified payload compliance must be regraded. A-C009-1 likewise has reported evidence of process execution this cycle, but no supplied basis for promoting the fan-out split as an effective construction cure.
+
+8. **All four Condense layers remain unreviewable in this feed.** No actual amendments or evidence-backed NO-DEFECT findings are supplied for INSTRUCTION, mechanical guards, Jev definitions, or Codex prompts. T54’s reported WHY-ACCEPTED-NO-PLATEAU verdict does not establish a plateau lesson; the verbatim WHY and profile are required to check it. Recreation hand-offs must specify configuration, procedure, and pass conditions a builder can apply cold. Shared-form divergence compliance is also unverified until both affected files are shown.
+
+**Body-write:** None. The execution tool failed before filesystem access, so this return was not filed as `codex-condense-return.md`. §9 must remain open until the return is saved and its findings are consumed or disputed with evidence.

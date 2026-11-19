@@ -1,0 +1,19 @@
+The failure-point evaluation is item-specific, but several mitigations do not yet support its claims. The plan faithfully adopts RUN.md’s timing basis; that decision is not challenged here.
+
+Body-write: this return is intended for verbatim filing as `codex-plan-review-T43-return.md` in the run directory. No file was written because this session permits read-only access.
+
+PLAN: REVISE BEFORE GATE
+
+1. **[Attribution · E2–E8 · FP(a)] Per-cure assertions establish implementation, not attribution of lens movement.** E2 rebuilds all five cures before E8 checks them; no preserved intermediate states or per-cure results are required. Amend Execute to capture source hashes and relevant before/after own-check results at each cure boundary. Distinguish “construction effect verified” from “score movement attributable”: the combined wave cannot isolate each cure’s causal contribution. Shared edits, especially C2/C4, need explicit joint attribution.
+
+2. **[Evidence preservation · E11 · FP(c)] The promised immediate preservation check occurs too late.** E11 follows the entire rebuild, own checks, possible comparison edit, and build record. Move the census immediately after the working file’s first overwrite, before subsequent edits. E9/V6 must also distinguish the comparison wrapper’s hash from the ORIGINAL resource/reference and `segment.mp4` hashes: an intentionally edited wrapper cannot remain byte-identical. Record and compare each protected component separately.
+
+3. **[Lens feeding · V7 · FP(d)] The allowlist excludes the independent evidence needed to judge fidelity.** Source plus neutral own checks cannot establish whether entrances match the specimen. Explicitly permit the segment and neutral, source-cited observations under the governing lens contract. Scan out prior scores, targets, verdicts, and prescriptive cure commentary—not timing values merely because they occur in the implementation or specimen evidence. Otherwise the anchor mitigation removes the basis for independent timing judgment.
+
+4. **[Interaction · C1/C2 · V3/V4] Crossfade timing and content timing lack a joint visibility contract.** Phase-A opacity, phase-B opacity, individual entrance fades, and the standing divider combine during the compressed opening. Specify their composed opacity at transition boundaries and each tag’s fully visible dwell before fading. V3 explicitly exempts the midpoint from hold scoring but supplies no transition check. Add checks for unintended disappearance, text superposition, and divider interference during the crossfade; retain PIXEL-UNVERIFIED for visual conclusions.
+
+5. **[Reusability · C5 · V1/V2] Generic entry timing remains underspecified.** A type-to-checkpoint mapping can make multiple same-type entries share timing, without making each entry independently timed. Define entry-level checkpoint/offset overrides, defaults, and validation for missing or unknown mappings. Exercise two same-type entries with different timings, removal of each formerly mandatory type, and cross-pane placement. Do not constrain swaps solely to configurations that happen to pass the existing validator.
+
+6. **[Non-beating branch · WHY scaffold] The hypotheses pre-judge the cause.** H1 excludes a basis problem before the fresh return exists, while finer sampling is available evidence work rather than an established plateau. Allow construction error, evidence uncertainty, deferred legibility, and fresh findings as competing explanations. Require discriminating evidence before selecting the cause. Correct FP-T43-1’s reference to “H2”: its timing-granularity hypothesis is labeled H1 in the scaffold.
+
+7. **[Passing branch · V9] Make the hand-off executable.** Name the style-library destination, require the appended Attempt 3 `scores.md` pointer and bound source hash, and record hand-off completion. Trigger this on bar passage—average ≥85 and minimum ≥70—separately from improvement over 66.6.
