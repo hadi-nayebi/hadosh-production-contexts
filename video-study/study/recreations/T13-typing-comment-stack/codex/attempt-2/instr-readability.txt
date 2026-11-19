@@ -1,0 +1,542 @@
+CONSUMER + DECISION PRICED: practice job (Video Study lane), INSTRUCTION section 5 Verify — your score is one of five independent lens scores for technique T13; the seat prices from the five returns whether this build passes the practice bar and beats its predecessor. The delta arithmetic is the seat's, not yours: judge only the build in front of you.
+WORKING RECORD: the score-blind build record for this build (build-record-attempt2.md, included below); your return is filed verbatim at hidden_files/study/recreations/T13-typing-comment-stack/codex/attempt-2/lens-readability.md and quoted into the artifact's scores.md.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. End your return with exactly one line: SCORE: <integer 0-100>. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: READABILITY only. Score 0-100 whether the typed titles — the subject — are legible and followable: at full width and at phone widths (a 360px and a 390px stage), whether long titles remain fully readable under the build's wrapping behaviour, whether header rows, foot rows, badges, and timestamps stay legible with adequate contrast, whether the active card's partial text + caret reads as in-progress without confusion, whether the marked segment aids recognition, and whether completed cards stay fully legible as the stack grows. Price the build's own modelled sizes and its stated floors, and name any claim the source does not actually support. Other lenses own motion mechanics, timing, purity, reuse.
+
+TECHNIQUE FACTS (packet P1, digest + one evidence frame): T13 Typing comment stack, specimen "Look What I Can Do" @ 1:08-1:20 (12s window). At the right of a white post card, dark comment cards stack downward; each commenter's absurd job title types itself out live, one card at a time: "I'm a Senior Slopcore Architect" (Slopcore yellow-highlighted), "Chief Executive of What's Next", "VP of Things That Look Complete - 100% complete", "Director of the Missing Feet - feet.png not found", "Head of Vibes and Synergy", "Chief of Artificial Me". Typing supplies the rhythm: each title builds and lands before the next tops it; the stack's growth down the frame is the progress visual. Strict sequencing is part of the technique: one card's typing completes and lands before the next card begins. The ONE evidence frame (t=1:08, window start) already shows card 1 complete and card 2 mid-typing ("Chief Executive" typed, in a pale-blue tint). Per-card timings are NOT measurable checkpoints from a single frame; any schedule in a build is a labeled allocation and should be priced as one. Entrance translation and stack scrolling are not evidenced by the single frame.
+
+===== RECREATION SOURCE (recreation.html) =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T13 — Typing comment stack (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#000;}
+  body{display:flex;align-items:flex-start;justify-content:center;}
+  #stage{position:relative;width:100%;max-width:1916px;overflow:hidden;container-type:inline-size;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;}
+  #stage.narrow{display:flex;flex-direction:column;padding:var(--stagePad);}
+  /* ---- post card (static anchor) ---- */
+  #postCol{position:absolute;left:var(--postLeft);top:var(--postTop);width:var(--postWidth);}
+  #stage.narrow #postCol{position:static;width:100%;margin-bottom:var(--postGap);}
+  #postCard{position:relative;border-radius:var(--postRadius);padding:var(--postPadY) var(--postPadX);box-shadow:0 0.4cqw 1.6cqw rgba(0,0,0,.55);}
+  #postHead{display:flex;align-items:center;gap:var(--headGap);font-size:var(--postHeadFont);font-weight:700;}
+  #postHead .handle{font-weight:500;opacity:.75;}
+  #postHead .x{margin-left:auto;font-weight:400;font-size:var(--postHeadFont);}
+  #postBody{margin-top:var(--bodyMargin);font-size:var(--postBodyFont);line-height:1.32;font-weight:600;}
+  mark{padding:0 .25cqw;border-radius:.2cqw;}
+  #stamp{position:absolute;right:6%;top:44%;border:.32cqw solid;border-radius:.5cqw;padding:.15cqw .9cqw;font-size:var(--stampFont);font-weight:800;letter-spacing:.18cqw;transform:rotate(-9deg);opacity:.92;}
+  #postFoot{margin-top:var(--footMargin);font-size:var(--postFootFont);display:flex;gap:var(--footGap);align-items:center;}
+  /* ---- comments column ---- */
+  #commentsCol{position:absolute;left:var(--commentsLeft);right:var(--commentsRight);top:var(--commentsTop);bottom:var(--commentsBottom);display:flex;flex-direction:column;}
+  #stage.narrow #commentsCol{position:static;width:100%;}
+  #commentsHead{display:flex;align-items:baseline;font-size:var(--commentsHeadFont);font-weight:700;margin-bottom:var(--commentsHeadMargin);}
+  #commentsHead .sort{margin-left:auto;font-size:var(--sortFont);font-weight:500;opacity:.85;}
+  #stack{display:flex;flex-direction:column;}
+  .card{border-radius:var(--cardRadius);padding:var(--cardPadY) var(--cardPadX);box-sizing:border-box;overflow:hidden;opacity:0;transform:translateY(1.2cqw);}
+  .card.on{opacity:1;transform:translateY(0);}
+  .cardHead{display:flex;align-items:center;gap:var(--headGap);font-size:var(--cardHeadFont);}
+  .avatar{flex:0 0 auto;width:var(--avatarSize);height:var(--avatarSize);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--avatarFont);font-weight:800;}
+  .cHandle{font-weight:700;}
+  .badge{border-radius:1cqw;padding:.08cqw .7cqw;font-size:var(--badgeFont);font-weight:700;}
+  .cardTitle{margin-top:var(--titleMargin);font-size:var(--titleFont);line-height:1.25;font-weight:700;overflow-wrap:break-word;}
+  .caret{display:inline-block;width:.5cqw;height:1.6cqw;margin-left:.15cqw;vertical-align:-0.3cqw;animation-name:blink;animation-timing-function:steps(1);animation-iteration-count:infinite;}
+  @keyframes blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+  .cardFoot{margin-top:var(--footMargin);font-size:var(--cardFootFont);line-height:1.2;display:flex;gap:2.2cqw;}
+  #validationBanner{display:none;position:absolute;left:2%;top:2%;z-index:9;background:#7a1020;color:#fff;font-size:14px;padding:8px 12px;border-radius:6px;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="validationBanner"></div>
+  <div id="postCol"><div id="postCard">
+    <div id="postHead"><span id="postAuthor"></span><span class="handle" id="postHandle"></span><span class="x" id="postClose"></span></div>
+    <div id="postBody"></div>
+    <div id="stamp"></div>
+    <div id="postFoot"></div>
+  </div></div>
+  <div id="commentsCol">
+    <div id="commentsHead"><span id="commentsTitle"></span><span class="sort" id="sortLabel"></span></div>
+    <div id="stack"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* T13 — Typing comment stack. ALL content/timing/palette/geometry from CONFIG.
+   Construction: DOM post card (static anchor) + comment cards stacking downward.
+   Opening state: the performance window opens mid-sequence — card 1 is already
+   complete and card 2 already shows the configured initial prefix at t=0.
+   CONFIG.opening documents that anchor and the pre-window offset it represents.
+   Schedule: strictly sequential, derived from the per-card beat table — each
+   card's typing span is its grapheme count x its own priced per-grapheme rate,
+   and the next card appears only after the previous card's landing hold.
+   Total duration is the derived sum of the priced beats; it is never preserved
+   by compressing later beats. A longer replacement title extends the total at
+   that card's priced rate; a title beyond the supported wrapped length fails
+   validation at load with a named error instead of clipping silently.
+   Rendering is a pure function of performance time t (ms), so the comparison
+   page can slave this clock to the segment video.
+   URL overrides (swap test): ?titles=A|B|C  ?charMs=N  ?accent=HEX
+   ?cardBg=HEX  ?gapCqw=N (unit: cqw; 0 is a lawful value) */
+const CONFIG = {
+  opening: {
+    /* Pre-window progress represented by the opening state, priced from the
+       retained per-card rates: card 1 entrance 160 + typing 31 graphemes x 33
+       = 1023 + landing hold 367 + card 2 entrance 160 + partial typing
+       15 graphemes x 36 = 540. Sum = 2250 ms before the window opens. */
+    offsetMs: 2250,
+    firstCardLanded: true,
+    secondCardPrefix: "Chief Executive"
+  },
+  finalHoldMs: 1400, /* ending beat: time to read the completed six-card stack as a whole before the window closes */
+  landMs: 120,
+  caretBlinkMs: 1000,
+  maxCards: 8,
+  maxTitleLines: 2,
+  narrowBreakpointPx: 640,
+  narrowStageAspect: [360, 820],
+  wideStageAspect: [1916, 1078],
+  post: {
+    author: "aditazzz ✓",
+    handle: "@adi… · 10/27/26",
+    closeMark: "✕",
+    bodyBefore: "Currently upskilling to transition to a ",
+    bodyHighlight: "Principal Slopcore Architect",
+    bodyAfter: " role. Trying to stay ahead of the curve. Follow along and support my professional development.",
+    stampText: "RECEIPT",
+    actions: ["↩", "🔁", "♥ 5", "📊 169", "🔖", "↗"]
+  },
+  commentsTitle: "Comments 4",
+  sortLabel: "Sort by: Top",
+  cardFooter: { mark: "♡", label: "Reply" },
+  cards: [
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 340,
+      text: "I'm a Senior Slopcore Architect", highlight: "Slopcore" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 200,
+      text: "Chief Executive of What's Next", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 265,
+      text: "VP of Things That Look Complete - 100% complete", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 150,
+      text: "Director of the Missing Feet - feet.png not found", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 25,
+      text: "Head of Vibes and Synergy", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 300,
+      text: "Chief of Artificial Me", highlight: "" }
+  ],
+  /* Per-card beat pricing. Each card's typing duration and landing hold are
+     priced as its own beat, with the reason recorded beside the price. */
+  beats: [
+    { appearMs: 160, charMs: 33, holdAfterMs: 367, reason: "pre-window card; its priced beat is consumed by the opening offset" },
+    { appearMs: 160, charMs: 36, holdAfterMs: 420, reason: "finishing a half-typed line reads slightly slower while the eye catches up; its landing is the first in-window landing and sets the rhythm" },
+    { appearMs: 150, charMs: 30, holdAfterMs: 380, reason: "longest setup line; a brisker rate keeps the gag moving" },
+    { appearMs: 150, charMs: 30, holdAfterMs: 380, reason: "paired with the previous long line at the same brisk rate so the two longest lines read as one run" },
+    { appearMs: 170, charMs: 38, holdAfterMs: 460, reason: "short punch line typed slower per grapheme so it lands; longer hold is the pause before the final card" },
+    { appearMs: 180, charMs: 34, holdAfterMs: 0, reason: "final card; its landing hold is the priced ending beat (finalHoldMs), not a per-card hold" }
+  ],
+  cardTemplate: { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 210, highlight: "" },
+  layout: {
+    wide: {
+      postLeft: "1.2%", postTop: "16%", postWidth: "37%",
+      commentsLeft: "40.5%", commentsRight: "1.2%", commentsTop: "2.5%", commentsBottom: "2%",
+      postRadius: "1cqw", postPadY: "1.6cqw", postPadX: "1.8cqw",
+      postHeadFont: "1.55cqw", postBodyFont: "1.95cqw", postFootFont: "1.5cqw", stampFont: "2cqw",
+      commentsHeadFont: "1.9cqw", sortFont: "1.45cqw", commentsHeadMargin: "1cqw",
+      cardRadius: "0.9cqw", cardPadY: "0.55cqw", cardPadX: "1.2cqw", cardBorderCqw: 0.35,
+      headGap: "0.65cqw", avatarSize: "2.1cqw", avatarFont: "0.95cqw",
+      cardHeadFont: "1.25cqw", badgeFont: "1.1cqw",
+      titleFont: "1.85cqw", titleMargin: "0.25cqw",
+      cardFootFont: "1.15cqw", footMargin: "0.15cqw", footGap: "1.6cqw", bodyMargin: "1cqw",
+      stackGapCqw: 0.8, stagePad: "0px", postGap: "0px"
+    },
+    narrow: {
+      postLeft: "0px", postTop: "0px", postWidth: "100%",
+      commentsLeft: "0px", commentsRight: "0px", commentsTop: "0px", commentsBottom: "0px",
+      postRadius: "2.5cqw", postPadY: "2.8cqw", postPadX: "3.3cqw",
+      postHeadFont: "3.4cqw", postBodyFont: "4cqw", postFootFont: "3.2cqw", stampFont: "4.5cqw",
+      commentsHeadFont: "4.2cqw", sortFont: "3.4cqw", commentsHeadMargin: "2.2cqw",
+      cardRadius: "2.5cqw", cardPadY: "1.94cqw", cardPadX: "3.33cqw", cardBorderCqw: 0.83,
+      headGap: "1.8cqw", avatarSize: "6.67cqw", avatarFont: "3.06cqw",
+      cardHeadFont: "3.06cqw", badgeFont: "3.06cqw",
+      titleFont: "3.89cqw", titleMargin: "0.83cqw",
+      cardFootFont: "3.06cqw", footMargin: "0.83cqw", footGap: "3cqw", bodyMargin: "1.7cqw",
+      stackGapCqw: 2.22, stagePad: "2.8cqw", postGap: "3.3cqw"
+    }
+  },
+  palette: {
+    bg: "#050607",
+    postBg: "#ffffff",
+    postInk: "#101216",
+    cardBg: "#161a21",
+    cardInk: "#eef1f5",
+    accent: "#5b8def",
+    badgeBg: "#2456a6", /* white badge text on this background: modelled contrast 7.0:1 (floor 4.5:1) */
+    badgeInk: "#ffffff",
+    avatarInk: "#ffffff",
+    avatarSat: 65, avatarLightA: 55, avatarLightB: 38, avatarHueSpan: 60,
+    highlightBg: "#ffd83d",
+    highlightInk: "#101216",
+    stampInk: "#d43a2f",
+    caret: "#eef1f5"
+  },
+  fontFamily: '"Segoe UI", system-ui, -apple-system, Arial, sans-serif'
+};
+const OVERRIDE_WARNINGS = [];
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("titles")) {
+    const ts = q.get("titles").split("|");
+    CONFIG.cards = ts.map(function(t){
+      return Object.assign({}, CONFIG.cardTemplate, { text: t });
+    });
+    /* Extra cards beyond the priced beat table inherit the final card's beat
+       pricing (a printed rule, priced in the build record); identities come
+       from the single card template, never by cycling earlier cards. */
+    while (CONFIG.beats.length < CONFIG.cards.length) {
+      CONFIG.beats.push(Object.assign({}, CONFIG.beats[CONFIG.beats.length - 1]));
+    }
+  }
+  if (q.get("charMs")) { const v = parseFloat(q.get("charMs")); if (v > 0) CONFIG.beats.forEach(function(b){ b.charMs = v; }); else OVERRIDE_WARNINGS.push("T13_OVERRIDE_INVALID:charMs"); }
+  if (q.get("accent")) CONFIG.palette.accent = q.get("accent");
+  if (q.get("cardBg")) CONFIG.palette.cardBg = q.get("cardBg");
+  if (q.has("gapCqw")) { const v = parseFloat(q.get("gapCqw")); if (isFinite(v) && v >= 0) { CONFIG.layout.wide.stackGapCqw = v; CONFIG.layout.narrow.stackGapCqw = v; } else OVERRIDE_WARNINGS.push("T13_OVERRIDE_INVALID:gapCqw"); }
+})();
+
+function segmentGraphemes(text){
+  if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+    const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    return Array.from(seg.segment(text), function(s){ return s.segment; });
+  }
+  return Array.from(text);
+}
+function graphemeRangeOf(haystack, needle){
+  if (!needle) return null;
+  const h = segmentGraphemes(haystack), n = segmentGraphemes(needle);
+  for (let i = 0; i + n.length <= h.length; i++) {
+    let ok = true;
+    for (let j = 0; j < n.length; j++) if (h[i + j] !== n[j]) { ok = false; break; }
+    if (ok) return { start: i, end: i + n.length };
+  }
+  return null;
+}
+
+/* --- Geometry model (source-bound: the same tokens the styles consume) --- */
+const GLYPH_FACTOR = 0.58; /* conservative worst-case glyph width, in em */
+function cqwOf(token){ return parseFloat(token); }
+function modelFor(mode, stageWidthPx){
+  const L = CONFIG.layout[mode];
+  const cqwPx = stageWidthPx / 100;
+  const titleFontPx = cqwOf(L.titleFont) * cqwPx;
+  const commentsWidthCqw = mode === "wide" ? (100 - cqwOf(L.commentsLeft) - cqwOf(L.commentsRight)) : 94;
+  const innerCqw = commentsWidthCqw - 2 * cqwOf(L.cardPadX) - L.cardBorderCqw;
+  const charsPerLine = Math.max(1, Math.floor(innerCqw / (cqwOf(L.titleFont) * GLYPH_FACTOR)));
+  function linesFor(text){ return Math.max(1, Math.ceil(segmentGraphemes(text).length / charsPerLine)); }
+  function cardHeightCqw(text){
+    return 2 * cqwOf(L.cardPadY) + cqwOf(L.avatarSize) + cqwOf(L.titleMargin)
+      + linesFor(text) * cqwOf(L.titleFont) * 1.25 + cqwOf(L.footMargin) + cqwOf(L.cardFootFont) * 1.2;
+  }
+  const headCqw = cqwOf(L.commentsHeadFont) * 1.2 + cqwOf(L.commentsHeadMargin);
+  let stackCqw = headCqw;
+  CONFIG.cards.forEach(function(c, i){ stackCqw += cardHeightCqw(c.text) + (i ? CONFIG.layout[mode].stackGapCqw : 0); });
+  const stageHeightCqw = mode === "wide"
+    ? 100 * CONFIG.wideStageAspect[1] / CONFIG.wideStageAspect[0]
+    : 100 * CONFIG.narrowStageAspect[1] / CONFIG.narrowStageAspect[0];
+  const availCqw = mode === "wide"
+    ? stageHeightCqw * (100 - cqwOf(L.commentsTop) - cqwOf(L.commentsBottom)) / 100
+    : stageHeightCqw - 42; /* narrow: post card + margins priced in the feasibility filing */
+  return { titleFontPx: titleFontPx, headFontPx: cqwOf(L.cardHeadFont) * cqwPx,
+    footFontPx: cqwOf(L.cardFootFont) * cqwPx, charsPerLine: charsPerLine,
+    linesFor: linesFor, stackCqw: stackCqw, availCqw: availCqw };
+}
+function validateConfig(){
+  const errors = OVERRIDE_WARNINGS.slice();
+  if (CONFIG.cards.length > CONFIG.maxCards) errors.push("T13_CARD_COUNT_UNSUPPORTED");
+  if (CONFIG.beats.length < CONFIG.cards.length) errors.push("T13_BEAT_TABLE_MISMATCH");
+  CONFIG.beats.forEach(function(b){ if (!(b.charMs > 0) || !(b.appearMs >= 0) || !(b.holdAfterMs >= 0)) errors.push("T13_BEAT_INVALID"); });
+  const prefix = CONFIG.opening.secondCardPrefix;
+  if (CONFIG.cards.length > 1) {
+    const g = segmentGraphemes(CONFIG.cards[1].text), p = segmentGraphemes(prefix);
+    let ok = p.length <= g.length;
+    for (let i = 0; ok && i < p.length; i++) if (g[i] !== p[i]) ok = false;
+    if (!ok) errors.push("T13_PREFIX_MISMATCH");
+  }
+  ["wide", "narrow"].forEach(function(mode){
+    const m = modelFor(mode, mode === "wide" ? 1916 : 360);
+    CONFIG.cards.forEach(function(c){ if (m.linesFor(c.text) > CONFIG.maxTitleLines) errors.push("T13_TITLE_UNSUPPORTED:" + mode); });
+    if (m.stackCqw > m.availCqw) errors.push("T13_STACK_OVERFLOW:" + mode);
+  });
+  return errors;
+}
+const VALIDATION_ERRORS = validateConfig();
+
+/* --- Sequential schedule derivation (strict sequencing by construction) --- */
+function buildSchedule(){
+  const sched = [];
+  let t = 0;
+  CONFIG.cards.forEach(function(c, i){
+    const b = CONFIG.beats[i];
+    const n = segmentGraphemes(c.text).length;
+    if (i === 0 && CONFIG.opening.firstCardLanded) {
+      sched.push({ appearStart: -CONFIG.opening.offsetMs, typeStart: -CONFIG.opening.offsetMs, typeEnd: -CONFIG.opening.offsetMs, count: n, preLanded: true });
+      return;
+    }
+    if (i === 1 && CONFIG.opening.secondCardPrefix) {
+      const pre = segmentGraphemes(CONFIG.opening.secondCardPrefix).length;
+      const typeEnd = (n - pre) * b.charMs;
+      sched.push({ appearStart: -CONFIG.opening.offsetMs, typeStart: -pre * b.charMs, typeEnd: typeEnd, count: n, preTyped: pre });
+      t = typeEnd + b.holdAfterMs;
+      return;
+    }
+    const appearStart = t;
+    const typeStart = appearStart + b.appearMs;
+    const typeEnd = typeStart + n * b.charMs;
+    sched.push({ appearStart: appearStart, typeStart: typeStart, typeEnd: typeEnd, count: n });
+    t = typeEnd + b.holdAfterMs;
+  });
+  const lastEnd = sched.length ? sched[sched.length - 1].typeEnd : 0;
+  return { cards: sched, endMs: lastEnd + CONFIG.finalHoldMs };
+}
+const SCHEDULE = buildSchedule();
+
+/* --- DOM construction (all from CONFIG) --- */
+const P = CONFIG.palette;
+const stage = document.getElementById("stage");
+stage.style.background = P.bg;
+stage.style.fontFamily = CONFIG.fontFamily;
+function applyLayout(){
+  const narrow = stage.clientWidth > 0 && stage.clientWidth <= CONFIG.narrowBreakpointPx;
+  const L = CONFIG.layout[narrow ? "narrow" : "wide"];
+  stage.classList.toggle("narrow", narrow);
+  stage.style.aspectRatio = (narrow ? CONFIG.narrowStageAspect : CONFIG.wideStageAspect).join(" / ");
+  Object.keys(L).forEach(function(k){
+    if (typeof L[k] === "string") stage.style.setProperty("--" + k, L[k]);
+  });
+  stage.style.setProperty("--stackGap", L.stackGapCqw + "cqw");
+  return narrow;
+}
+const postCard = document.getElementById("postCard");
+postCard.style.background = P.postBg; postCard.style.color = P.postInk;
+document.getElementById("postAuthor").textContent = CONFIG.post.author;
+document.getElementById("postHandle").textContent = CONFIG.post.handle;
+document.getElementById("postClose").textContent = CONFIG.post.closeMark;
+const pb = document.getElementById("postBody");
+pb.appendChild(document.createTextNode(CONFIG.post.bodyBefore));
+const mk = document.createElement("mark");
+mk.textContent = CONFIG.post.bodyHighlight;
+mk.style.background = P.highlightBg; mk.style.color = P.highlightInk;
+pb.appendChild(mk);
+pb.appendChild(document.createTextNode(CONFIG.post.bodyAfter));
+const stamp = document.getElementById("stamp");
+stamp.textContent = CONFIG.post.stampText; stamp.style.color = P.stampInk; stamp.style.borderColor = P.stampInk;
+const postFoot = document.getElementById("postFoot");
+CONFIG.post.actions.forEach(function(a){
+  const s = document.createElement("span"); s.textContent = a; postFoot.appendChild(s);
+});
+document.getElementById("commentsTitle").textContent = CONFIG.commentsTitle;
+document.getElementById("commentsTitle").style.color = P.cardInk;
+document.getElementById("sortLabel").textContent = CONFIG.sortLabel;
+document.getElementById("sortLabel").style.color = P.cardInk;
+if (VALIDATION_ERRORS.length) {
+  const banner = document.getElementById("validationBanner");
+  banner.textContent = VALIDATION_ERRORS.join(" · ");
+  banner.style.display = "block";
+  if (typeof console !== "undefined") console.error(VALIDATION_ERRORS.join(" · "));
+}
+
+const stack = document.getElementById("stack");
+const cardEls = CONFIG.cards.map(function(c, i){
+  const b = CONFIG.beats[i];
+  const el = document.createElement("div");
+  el.className = "card";
+  el.style.background = P.cardBg; el.style.color = P.cardInk;
+  el.style.borderLeft = CONFIG.layout.wide.cardBorderCqw + "cqw solid " + P.accent;
+  el.style.transition = "opacity " + b.appearMs + "ms linear, transform " + b.appearMs + "ms ease-out";
+  el.style.marginTop = i ? "var(--stackGap)" : "0px";
+  const head = document.createElement("div"); head.className = "cardHead";
+  const av = document.createElement("span"); av.className = "avatar";
+  av.textContent = c.initials; av.style.color = P.avatarInk;
+  av.style.background = "linear-gradient(135deg, hsl(" + c.avatarHue + "," + P.avatarSat + "%," + P.avatarLightA + "%), hsl(" + ((c.avatarHue + P.avatarHueSpan) % 360) + "," + P.avatarSat + "%," + P.avatarLightB + "%))";
+  const hd = document.createElement("span"); hd.className = "cHandle"; hd.textContent = c.handle;
+  const bd = document.createElement("span"); bd.className = "badge"; bd.textContent = c.badge; bd.style.background = P.badgeBg; bd.style.color = P.badgeInk;
+  const wh = document.createElement("span"); wh.className = "when"; wh.textContent = c.when;
+  head.appendChild(av); head.appendChild(hd); head.appendChild(bd); head.appendChild(wh);
+  const title = document.createElement("div"); title.className = "cardTitle";
+  const foot = document.createElement("div"); foot.className = "cardFoot";
+  const fh = document.createElement("span"); fh.textContent = CONFIG.cardFooter.mark;
+  const fr = document.createElement("span"); fr.textContent = CONFIG.cardFooter.label;
+  foot.appendChild(fh); foot.appendChild(fr);
+  el.appendChild(head); el.appendChild(title); el.appendChild(foot);
+  stack.appendChild(el);
+  return { el: el, title: title, graphemes: segmentGraphemes(c.text),
+    hlRange: graphemeRangeOf(c.text, c.highlight), shown: -1, state: "", landedFlag: false };
+});
+
+function renderTitle(ce, c, typedCount){
+  ce.title.textContent = "";
+  const shown = ce.graphemes.slice(0, typedCount);
+  const r = ce.hlRange;
+  const hlShown = r ? Math.max(0, Math.min(typedCount, r.end) - r.start) : 0;
+  if (r && typedCount > r.start && hlShown > 0) {
+    const before = shown.slice(0, r.start).join("");
+    const hl = shown.slice(r.start, r.start + hlShown).join("");
+    const after = shown.slice(r.start + hlShown).join("");
+    if (before) ce.title.appendChild(document.createTextNode(before));
+    const m = document.createElement("mark"); m.textContent = hl;
+    m.style.background = P.highlightBg; m.style.color = P.highlightInk;
+    ce.title.appendChild(m);
+    if (after) ce.title.appendChild(document.createTextNode(after));
+  } else if (shown.length) {
+    ce.title.appendChild(document.createTextNode(shown.join("")));
+  }
+  const caret = document.createElement("span");
+  caret.className = "caret"; caret.style.background = P.caret;
+  caret.style.animationDuration = CONFIG.caretBlinkMs + "ms";
+  ce.title.appendChild(caret);
+  return caret;
+}
+
+function render(t){
+  CONFIG.cards.forEach(function(c, i){
+    const s = SCHEDULE.cards[i];
+    const ce = cardEls[i];
+    if (t < s.appearStart) {
+      if (ce.state !== "off") { ce.el.classList.remove("on", "landed"); ce.title.textContent = ""; ce.state = "off"; ce.shown = -1; ce.landedFlag = false; }
+      return;
+    }
+    if (ce.state !== "on") { ce.el.classList.add("on"); ce.state = "on"; }
+    let typed = 0;
+    if (t >= s.typeEnd) typed = s.count;
+    else if (s.preTyped) typed = Math.min(s.count, s.preTyped + Math.floor(Math.max(0, t) / CONFIG.beats[i].charMs));
+    else if (t > s.typeStart) typed = Math.min(s.count, Math.floor((t - s.typeStart) / CONFIG.beats[i].charMs));
+    else typed = 0;
+    const landed = t >= s.typeEnd;
+    if (typed !== ce.shown || landed !== ce.landedFlag) {
+      ce.shown = typed; ce.landedFlag = landed;
+      const caret = renderTitle(ce, c, typed);
+      if (landed) {
+        caret.style.display = "none";
+        ce.el.classList.add("landed");
+        ce.el.style.transition = "transform " + CONFIG.landMs + "ms ease-out";
+      } else {
+        ce.el.classList.remove("landed");
+        ce.el.style.transition = "opacity " + CONFIG.beats[i].appearMs + "ms linear, transform " + CONFIG.beats[i].appearMs + "ms ease-out";
+      }
+    }
+  });
+}
+
+/* --- Clock: free-running, externally slaveable for comparison.html --- */
+let playing = true, basePerf = 0, baseStamp = performance.now();
+function perfNow(){
+  let t = playing ? basePerf + (performance.now() - baseStamp) : basePerf;
+  if (t > SCHEDULE.endMs) { t = SCHEDULE.endMs; if (playing) { playing = false; basePerf = t; } }
+  return t;
+}
+applyLayout();
+if (typeof window !== "undefined" && window.addEventListener) window.addEventListener("resize", applyLayout);
+(function loop(){ render(perfNow()); requestAnimationFrame(loop); })();
+window.T13 = {
+  scheduleEndMs: SCHEDULE.endMs,
+  openingOffsetMs: CONFIG.opening.offsetMs,
+  validationErrors: VALIDATION_ERRORS,
+  modelFor: modelFor,
+  graphemes: segmentGraphemes,
+  graphemeRangeOf: graphemeRangeOf,
+  setTime: function(ms){ basePerf = Math.max(0, Math.min(ms, SCHEDULE.endMs)); baseStamp = performance.now(); render(basePerf); },
+  play: function(){ if (!playing) { playing = true; baseStamp = performance.now(); } },
+  pause: function(){ if (playing) { basePerf = perfNow(); playing = false; } },
+  restart: function(){
+    basePerf = 0; baseStamp = performance.now(); playing = true;
+    cardEls.forEach(function(ce, i){
+      ce.el.classList.remove("on", "landed");
+      ce.title.textContent = "";
+      ce.el.style.transition = "opacity " + CONFIG.beats[i].appearMs + "ms linear, transform " + CONFIG.beats[i].appearMs + "ms ease-out";
+      ce.shown = -1; ce.state = ""; ce.landedFlag = false;
+    });
+    render(0);
+  },
+  isPlaying: function(){ return playing; }
+};
+</script>
+</body>
+</html>
+
+===== BUILD RECORD (build-record-attempt2.md) =====
+# T13 — Typing Comment Stack · BUILD RECORD (attempt 2)
+
+Technique: T13 · Packet P1 "Look What I Can Do" @ 1:08–1:20 · practice Cycle 004 Wave 3
+Artifact dir: `hidden_files/study/recreations/T13-typing-comment-stack/`
+Consumer: word-animation family (typing machinery kin to T03/T01).
+Preservation: baseline recreation.html sha256 `92871de2d63a6d4bbd4b58c7f405ef181d6851a687ba00b23e5cdd73904f9e83`; preserved copy `recreation-attempt-1.html` hash-matches it. Baseline comparison.html sha256 `f0334795b08dfb3671b437b32e93ac48091ba48ed8cf64e2fc146e7aa8608b49`; snapshot `comparison-preserved-attempt-1.html` hash-matches it. Target attempt directory did not exist before this run.
+
+## Pre-build filing 1 — E1 full-return read: constraints beyond the seat's priced inventory
+
+All five prior lens returns, the prior build record, and the TECHNIQUES.md T13 entry were read firsthand before any code change. Four constraints appear in the returns that the seat's priced inventory does not name explicitly:
+
+1. Avatar gradient saturation/lightness values and the white avatar/badge text colour are fixed values outside the configuration.
+2. Long handles or badges have no fitting policy.
+3. When a replacement title list has a different count, identity and timing are inherited by modulo reuse, which can repeat unintended metadata.
+4. Reduced opacity on the timestamp weakens that small text in addition to the badge contrast item.
+
+Disposition (filed before building, per the stop rule): none of these changes the scope of the planned construction. Items 1 and 4 are subsumed by the planned move of palette values into configuration and the phone type/contrast work; item 2 is subsumed by the bounded-wrapping + validation construction (handle/badge text participates in the same fitting model); item 3 is subsumed by the override handling (a replacement list replaces the card list with its own per-card beat pricing derived from position in the new list, and the fitting validation bounds the count). They are built and asserted as part of the construction below and reported to the seat in the run return. No scope change; building proceeds.
+
+Deferred, explicitly: the entrance translation and the absence of stack scrolling remain unverified assumptions from a single evidence frame. Evidence needed to settle them = consecutive specimen frames. They are not claimed as settled by this build.
+
+## Pre-build filing 2 — Feasibility budget: six cards at 360px under bounded wrapping (hard valve)
+
+Decided policy: titles wrap, bounded at **2 lines maximum**, highlight-safe (the title is one inline text flow; any marked segment is an inline element inside that flow, so a wrap can split it across lines without breaking the highlight). A title needing more than the supported wrapped length fails configuration validation at load with the named error `T13_TITLE_UNSUPPORTED` (asserted in the own-check suite); there is no silent clipping path.
+
+Chosen type floors (modelled size at a 360px-wide stage; sizes scale with stage width above that):
+- Card title: **14px** floor (font token 3.89cqw of stage width)
+- Card header row (handle / badge / timestamp): **11px** floor (3.06cqw)
+- Card foot row: **11px** floor (3.06cqw)
+
+Geometry model at 360px (all values are the same formulas the source and the suite use):
+- Comments column width: 94% of stage = 338.4px. Card horizontal padding 12px each side + left edge rule ≈ 3px → title inner width ≈ 311px.
+- Conservative characters per line: inner width / (title font × 0.58 worst-case glyph factor) = 311 / (14 × 0.58) = 38 graphemes per line. Supported title length = 2 lines × 38 = **76 graphemes**. Longest specimen title = 49 graphemes → supported, wraps to 2 lines under the conservative model.
+- Card height, worst case (2-line title): vertical padding 14 + header row 24 (avatar) + title margin 3 + title 2 × 17.5 (14px × 1.25 line-height) + foot margin 3 + foot row 13.2 (11px × 1.2) = **92.2px**.
+- Six worst-case cards: 6 × 92.2 = 553.2 + 5 gaps × 8 = 40 → stack 593.2px. Comments header 20 + 8 margin = 28 → comments column 621.2px.
+- Phone stage: the narrow layout stacks the post card above the comments column and gives the stage a taller aspect (height = width × 820/360 = 820px at 360 wide). Post card modelled height ≈ 145px + top margin 10 + gap 12 + comments 621.2 + bottom margin 10 = **798.2px ≤ 820px** — the budget closes at the floors with ≈22px slack in the all-worst-case bound, and ≈90px slack for the specimen titles (four 1-line, two 2-line under the conservative model).
+- At 390px every token scales by 390/360, so modelled sizes rise (title ≈15.2px) and the same proportional fit holds.
+
+Budget outcome: **CLOSES** at the chosen floors under bounded wrapping. No §8 split is filed; building proceeds at these floors. If a later diagnostic contradicts this model, that is recorded in the ledger below, not silently absorbed.
+
+## Construction summary (neutral behavior names)
+
+- The performance opens in an already-progressed state: the first card is complete and the second card shows an initial typed prefix of exactly the grapheme sequence "Chief Executive" at time zero; a documented opening offset in the configuration records the pre-window progress this represents. Remaining beats are scheduled from that anchor.
+- Each card carries its own beat pricing in a configuration table: its entrance duration, its per-grapheme typing duration (so its typing span is its own priced beat), and its landing hold, each with a stated reason. The closing hold is a priced ending beat (time to read the completed stack), not a balancing remainder. Total duration is the derived sum of the priced beats plus the documented offset; it is never preserved by compressing later beats — a longer replacement title extends the total at that card's priced rate, and an over-long title fails validation instead.
+- All card chrome text (footer mark and label), the post card's action symbols and close mark, the comments header texts, avatar gradient parameters, and text colours are configuration values. Visual transition durations are set from the configuration at build time, so the configured entrance duration is the rendered transition duration; the caret blink period is likewise configuration-driven.
+- Layout geometry (column positions, widths, paddings, avatar size, radii, edge rule, font tokens for both the wide and narrow layouts) is parameterized in configuration and applied through style variables. A fitting validation models the stack height in both layouts and fails with the named error `T13_STACK_OVERFLOW` when the configured cards cannot fit; the narrow-layout model asserts both containment and the type floors above.
+- The gap override key names its unit (`gapCqw`) and accepts 0 as a lawful value; malformed override values fall back with a named validation warning rather than silent coercion.
+- Highlight reveal is computed in grapheme space end to end: the marked segment is located as a grapheme range and the reveal boundary is a grapheme count, so the marked segment appears exactly when typing reaches its grapheme range, for any Unicode content.
+- Restart explicitly removes the visible and landed classes from every card and resets all per-card render state before replaying; the suite verifies a second playback reproduces the first playback's state sequence.
+- Deferred (printed, not claimed): entrance translation and no-scroll behaviour remain single-frame assumptions.
+
+(Rest of this record — per-cure diagnostic ledger, integrated regression, final source hash — is completed after the diagnostics run, before any scoring payload is assembled.)
+
+## Per-cure diagnostic ledger (CA-1)
+
+Diagnostics ran per construction area during the build, against the in-progress source, before integration; every row was then re-run as an integrated regression on the frozen final source. Lens movement, if any, is a joint outcome of the whole construction — no per-area score attribution is claimed.
+
+| # | Construction area | Changed variables | Fixed controls | Expected effect | Measured result | Evidence |
+|---|---|---|---|---|---|---|
+| 1 | Opening anchor | `opening.offsetMs` (2250), `opening.secondCardPrefix`, schedule derivation for the first two cards | Remaining beat table, all texts | At t=0 the first card is complete and landed; the second shows exactly the configured prefix (15 graphemes); cards 3–6 hidden | PASS — t=0 snapshot matches exactly; second card lands at 540ms with its full text; not landed at 539ms | Suite checks "t0 …", "card2 …" (node DOM-stub suite, 31 checks) |
+| 2 | Bounded wrapping + named validation | Title wrapping (2-line bound), `maxTitleLines`, geometry model glyph factor | Type floors from the feasibility filing | Specimen titles model at ≤2 lines in both layouts; a 90-grapheme replacement title produces the named error `T13_TITLE_UNSUPPORTED` instead of clipping | PASS — error raised for the overlong case; default configuration validates clean | Suite checks "overlong title …", "validation default clean" |
+| 3 | Per-card beat pricing | `beats[]` table (entrance / per-grapheme rate / landing hold + reason per card), `finalHoldMs` 1400 as the ending beat | Texts, opening anchor | Total duration is the derived sum of the priced beats (8808ms in-window; last typing ends 7408ms, ending beat = 1400ms); a uniform-rate replacement recomputes the total (6850ms) at the priced rates with no compression of later beats | PASS — both totals match hand-derived sums | Suite checks "endMs derived 8808 …", "final hold …", "charMs swap …" |
+| 4 | Narrow-layout type + containment | Narrow layout tokens (title 3.89cqw, header/foot 3.06cqw, avatar 6.67cqw), taller narrow stage aspect, badge background `#2456a6` | Wide layout tokens | At 360px: title ≥13px, header/foot ≥10.5px, six-card stack contained; badge contrast ≥4.5:1; at 390px sizes rise proportionally | PASS — title 14.00px, header/foot 11.02px at 360px; stack 152.5 ≤ 185.8 (narrow), 51.0 ≤ 53.7 (wide); badge contrast modelled 7.10:1; title 15.17px at 390px | Suite checks "narrow 360 …", "wide containment …", "badge contrast …" |
+| 5 | Configuration completeness + effect mappings | Footer mark/label, post action symbols, close mark, avatar gradient parameters and text colours moved into configuration; card transition strings built from the beat table; caret blink period from configuration; gap override renamed to its unit (`gapCqw`) | Schedule derivation, texts | The configured entrance duration is the rendered transition duration; `gapCqw=0` is accepted as a lawful value; a malformed gap value produces the named warning `T13_OVERRIDE_INVALID:gapCqw` | PASS — a mid-sequence card's transition string carries its priced 150ms entrance; both gap cases behave as expected | Suite checks "transition maps appearMs …", "gapCqw …" |
+| 6 | Grapheme-consistent marked-segment reveal | Marked segment located and revealed in grapheme indices end to end | Typing schedule | A combining-accent sequence counts as one grapheme; a ZWJ emoji counts as one grapheme; a marked segment after such content is located at its grapheme index, not its UTF-16 offset | PASS — counts and ranges match hand counts (11 graphemes; range 5–6; post-emoji segment at grapheme 4); the first card's marked segment renders exactly | Suite checks "grapheme …", "highlight …", "card1 highlight mark …" |
+| 7 | Restart determinism | Restart explicitly removes the visible and landed classes from every card, clears title content, restores entrance transitions, and resets per-card render state; the hidden-state transition also clears title content | Schedule, beat table | A second playback reproduces the first playback's state sequence at nine sampled times | Initial diagnostic run: FAIL — title content from a completed playback remained on hidden cards after restart, and a landed card kept its landed styling when time was scrubbed backwards. Construction amended (content cleared on the hidden transition and on restart; landed styling restored to the entrance transition when a card is not landed). Re-run: PASS — second playback identical at all nine samples | Suite checks "restart clears …", "second playback identical …", "transition maps appearMs …" (the last sampled after a backwards scrub) |
+
+## Integrated regression (on the frozen final source)
+
+- Full suite: **31 PASS, 0 FAIL** (node, logic level, DOM stub; the extracted script also passes a syntax parse).
+- Purity grep on the final source (`segment.mp4|source.mp4|<video|<img|.jpg|http://|https://|url(`): **0 hits**. The string "feet.png not found" remains title text only.
+- Fitting validation on the default configuration: clean (no named errors) in both layouts.
+- **PIXEL-UNVERIFIED**: no Chrome/Chromium binary exists in this session (a `which` probe for chromium/chrome returned nothing), so no headless render was possible. All geometry and type evidence above is modelled from the source's own tokens; rendered-pixel behaviour is unverified and is carried as a limitation, not cleared by the modelled checks.
+- Comparison face: unchanged. The comparison page consumes only the recreation's clock API (setTime / play / pause / restart), whose names and semantics are unchanged, and it never referenced the renamed override key; its ORIGINAL side is byte-identical to its preserved snapshot.
+
+## Final source binding
+
+- `recreation.html` sha256: `7ef9422ea8c95052b7116962d2652db694eea32ff4d0d6b6e31fdc51752c55b8` (25,272 bytes). All scoring runs for this attempt must judge exactly this source; any later source change requires a fresh complete scoring wave against the new hash.

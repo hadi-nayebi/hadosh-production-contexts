@@ -1,0 +1,467 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T129-evidence-board-composition
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e4cf-0b77-7472-849a-a75400c83eca
+--------
+user
+Consumer: recreation job §5 Verify for T129 attempt 1 + decision priced: tier movement (RECREATED vs IN PROGRESS) and cure list.
+Working record: artifact codex/ directory + scores.md in hidden_files/study/recreations/T129-evidence-board-composition/
+BODY-WRITE: return must end with SCORE: <integer> and a BODY-WRITE: line naming what it filed.
+recreation.html SHA-256: 84491b05e3d38bae5111c61fe3ff43077d5fbe489dc0f55b942194ab1b4dabf6 (identical across all five lens payloads)
+
+LENS INSTRUCTION: Judge ONLY this lens: readability — board text legible at phone size (360px stage): map label chips, exhibit labels, stamp, note title/lines measured against their containers and grounds, intensity separation, legibility during hold after accumulation. Score 0-100 against bar (lens is one of five; PASS needs avg>=85 and min>=70). Do not judge other lenses.
+
+Neutral technique facts (Cycle-020 RUN §1b census): evidence-board composition — dark teal board ground; a period map ground fills the frame with small black label chips; a red route line is drawn on the map; portrait cards are pinned at story positions, tilted, with black name chips; a typed note card joins with a dashed route line; a car photo exhibit slides in tilted and is stamped FAILED in large red; a newspaper exhibit belongs to the broader packet window (named deferral in the build record: absent from the measured 400-431s assembly sub-window). The argument is spatial: elements accumulate on the board and stay. Segment 31.000s from 400.0s; recreation cycle 14s under t=0 allocation.
+
+SCORE-BLIND BUILD RECORD:
+# build-record — T129 evidence-board composition · Cycle 020 Wave 17 build, completed Cycle 021 Wave 18 · attempt 1
+Artifact: hidden_files/study/recreations/T129-evidence-board-composition/
+SOURCES ON ITS FACE (Cycle-021 §2b disposition): this record was authored in the Cycle-021 completion from the FILED build (recreation.html as built in Wave 17) + Cycle-020 RUN §1b census (seat sheet T129, source 400–431 s, viewed firsthand there) + Cycle-020 RUN §2 parameter table as amended in §2b + Cycle-021 RUN §2/§2b. It is not a contemporaneous builder record; no fact below is claimed from builder memory — every measurement was re-derived from the filed build by the completer's node harness in Cycle 021.
+Technique: Packet #6 T129 — evidence-board composition: dark teal board ground; period map fills frame with small black label chips; red route/circle drawn on map; portrait card pins in tilted with black name chip; car photograph exhibit slides in tilted and receives large red FAILED stamp; typed note card with dashed red route line joins. The argument is spatial: elements accumulate on the board and stay.
+Schedule basis: `t=0 allocation` (Cycle-020 §2/§2b) — the board assembles across a ≈31 s pan in the source; the build re-bases the assembly sequence to its own zero. Recreation cycle 14000 ms (CONFIG cycleMs) against the 31 s evidence segment. Phases (harness-measured from CONFIG): mapAt 0 · routeAt 2100 (=beatMs) · portraitAt 4200 · exhibitAt 6300 · stampAt 11800 (stamp.atMs, §2b key) · noteAt 12600 (stampAt + note.delayAfterStampMs 800); note typing ends 13950 < 14000 ✓.
+Faithfulness trace: packet mechanics → CONFIG: labels ["AUSTRIA-HUNGARY","SERBIA","BOSNIA"] + labelPos · route {cx:150,cy:104,r:25,widthPx:3,startDeg:-90} drawn via stroke-dashoffset · exhibits [{portrait, "GAVRILO PRINCIP", x242 y14 tilt-4},{photo, "FIRST ATTEMPT: BOMB", x202 y128 tilt3, stamp:"FAILED"}] as code-drawn cards (SVG glyphs — initials/head-shoulders + car outline; NEVER specimen photographs) · stamp {text:"FAILED", angle:-8, atMs:11800} (§2b) · note {title:"28 JUNE 1914", lines:["TOWN HALL","RECEPTION","VISIT WOUNDED"], typeMs:450} typed line by line · noteRoute {dash:[4,3], from:"note", to:"exhibit", widthPx:2} (§2b) · beatMs 2100 · palette {field:"#14201d", map:"#1d2f2a", ink:"#e8e2d0", red:"#c0392b", chip:"#0a0a0a"}. Variables (§1.3) → map label chips, route path, exhibits array (kind/label/tilt/position), stamp text+angle, note lines + dashed route, beat durations, palette — all CONFIG keys, plus type/geom/glyphs/motion/map keys added under the plan-review REVISE (below). Construction: DOM/SVG (A1 disposition, Cycle-020 §2b restated Cycle-021 §2b: DOM/SVG text lawful, measured-fit owns legibility).
+Named deferral (not silent): the newspaper exhibit named in the broader packet window does NOT appear in the measured 400–431 s assembly sub-window (§1b census) and is not built; the six built elements are the measured assembly. Codex-observe's gap on this point is disposed by that citation.
+Segment: segment.mp4 31.000 s from 400.0 s of source (638.494 s) per Cycle-020 §2b amendment (a 14 s cut would truncate the measured assembly). Completer ffprobe: duration 31.000000 s. Foreground census: frames/ 62 frames.
+Asset inventory: code only — recreation loads no external/generated assets. Lawful set per G1-A.
+codex-observe: fired Cycle 020, return codex/codex-observe.md — CONFIRMED-WITH-GAPS (packet agreement; segment facts; gaps: media verification by seat census, newspaper reconciliation, evidence-time mapping). Disposition: APPLIED — seat census (§1b) is the binding media evidence; newspaper disposed above.
+codex-plan-review: fired Cycle 020, return codex/codex-plan-review.md — REVISE. Disposition: APPLIED in the filed build — (1) CONFIG-driven type sizes (all subject text 16 px, stamp 22 px) + geom bounds + checkpointsOk overflow/ink-floor rejection in-code, (2) card/cardInk/chipInk palette tokens + in-code contrast checks (≥4.5 for text pairs), (3) explicit phase machine (phases() from beatMs + stamp.atMs; completed elements persist), (4) labelPos, typography, card dimensions, map borders, route styling, glyph geometry, entrance durations, note-route endpoints all CONFIG keys; duplicate stamp ownership (exhibits[].stamp + stamp.text) retained and bound by an in-code equality checkpoint (stamp ownership mismatch = check failure).
+Own checks (Cycle-021 completer, on the final filed build):
+- Swap test (EXACT Cycle-020 §2 values, node harness on the shipped script's CONFIG): words — stamp "FAILED" → "MISSED" (both stamp.text and exhibits[].stamp, the bound pair) → layout stamp text "MISSED", w 103.5 px, checkpointsOk ok PASS; timing — beatMs 2100 → 1200 → phases route 1200 / portrait 2400 / exhibit 3600, stamp/note unchanged (absolute keys), checkpointsOk ok PASS; palette — red "#c0392b" → "#e67e22" → old red absent from the swapped config JSON, checkpointsOk ok with one warning (accent contrast 2.20 under the 3:1 large-text guide under the SWAP value only — the default build carries no such warning) PASS. Combined swap: checkpointsOk ok.
+- Purity grep over recreation.html for segment\.mp4|source\.mp4|<video|<img|url\(|l2_pKB1EbMQ|t[0-9]+\.jpg: 0 hits PASS (no refusal-class defect; build not modified).
+- Syntax: node --check on extracted inline JS: PASS. In-code checkpointsOk on default CONFIG: ok, errs [], warnings [].
+- Comparison check: comparison.html carries ORIGINAL label "ORIGINAL — Grow With Kaz @ 6:40–7:11 (31s)" + RECREATION label (14 s cycle, t=0 allocation, asymmetry note printed on the page), ONE control set (Play/Pause/Restart) driving the video + recreation via window.__T129 (play/pause/restart + seek slaved to video time modulo 14 s), phone stacking @media (max-width:640px) column + flex-wrap — PASS (logic-level).
+A6 legs: fit-table.md HITs 0 (one watch: all 16 px subject text measures ink 11.46 px, 0.46 px above the ~11 px floor) · config-census.md HITs 0.
+jev-prewave: see jev-prewave.md (fired on this record).
+Final recreation.html SHA-256: 84491b05e3d38bae5111c61fe3ff43077d5fbe489dc0f55b942194ab1b4dabf6
+PIXEL-UNVERIFIED: no browser binary; verification logic-level.
+
+
+FULL recreation.html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T129 — Evidence-board composition (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#0b0f0e;font-family:Arial,Helvetica,sans-serif}
+  #stage{position:relative;margin:0 auto;overflow:hidden}
+  .el{position:absolute;box-sizing:border-box}
+  #err{display:none;background:#a00;color:#fff;font:12px monospace;padding:4px 8px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div id="err"></div>
+<div id="stage"></div>
+<script>
+"use strict";
+/* ============ CONFIG — every subject-shaping literal lives here ============ */
+const CONFIG = {
+  labels: ["AUSTRIA-HUNGARY", "SERBIA", "BOSNIA"],
+  labelPos: [{x:10, y:12}, {x:170, y:12}, {x:12, y:52}],
+  route: {cx:150, cy:104, r:25, widthPx:3, startDeg:-90},
+  exhibits: [
+    {kind:"portrait", label:"GAVRILO PRINCIP", x:242, y:14, tilt:-4},
+    {kind:"photo", label:"FIRST ATTEMPT: BOMB", x:202, y:128, tilt:3, stamp:"FAILED"}
+  ],
+  stamp: {text:"FAILED", angle:-8, atMs:11800},
+  note: {title:"28 JUNE 1914", lines:["TOWN HALL", "RECEPTION", "VISIT WOUNDED"], delayAfterStampMs:800, typeMs:450, x:8, y:116, w:184, h:84},
+  noteRoute: {dash:[4, 3], from:"note", to:"exhibit", widthPx:2},
+  beatMs: 2100,
+  cycleMs: 14000,
+  palette: {field:"#14201d", map:"#1d2f2a", ink:"#e8e2d0", red:"#c0392b", chip:"#0a0a0a", chipInk:"#e8e2d0", card:"#e8e2d0", cardInk:"#1c1c1c", line:"#3f5a50"},
+  stage: {w:360, h:203},
+  type: {font:"Arial, Helvetica, sans-serif", labelPx:16, exhibitLabelPx:16, noteTitlePx:16, noteLinePx:16, stampPx:22, weight:700, exhibitLineHeight:1.25, noteLineHeight:1.2},
+  geom: {
+    chipPadX:5, chipPadY:2, chipH:24,
+    portraitCard:{w:104, h:60}, portraitChip:{w:88, h:42, gapY:4},
+    photoCard:{w:138, h:66}, photoGlyphH:24,
+    stampPadX:10, stampPadY:5, pinR:4, cardBorderPx:2, stampBorderPx:3, notePadX:8, notePadY:4
+  },
+  glyphs: {
+    strokePx:2,
+    portraitHead:{cx:52, cy:20, r:11},
+    portraitShoulders:"M32,58 Q52,30 72,58",
+    carBody:"M14,20 L22,10 L96,10 L108,20 L124,20 L124,23 L14,23 Z",
+    carWheelCx:[30, 108], carWheelCy:23, carWheelR:4
+  },
+  motion: {mapFadeMs:600, routeDrawMs:1800, enterMs:500, slamMs:250, slamFromScale:2.2, noteRouteMs:600, enterRisePx:10, slidePx:16},
+  map: {
+    borders: [
+      "M20,30 L120,18 L210,26 L300,14 L344,34 L336,84 L300,96 L306,150 L268,196 L180,188 L120,198 L52,190 L16,150 L26,92 Z",
+      "M60,70 L130,62 L196,74 L188,120 L120,132 L66,118 Z",
+      "M220,120 L286,112 L318,140 L296,178 L232,176 L214,148 Z"
+    ],
+    coast: ["M16,150 Q60,138 84,158 T150,196", "M306,150 Q286,168 268,196"],
+    borderWidthPx:1.5, coastWidthPx:1
+  }
+};
+/* ============ pure core (node-testable) ============ */
+function charFactor(ch){
+  if(ch === " ") return 0.32;
+  if(ch === "-") return 0.36;
+  if(ch === ":") return 0.32;
+  if(ch === ">") return 0.55;
+  return 0.62;
+}
+function textWidthPx(text, fontPx, weight){
+  let s = 0;
+  for(const ch of text) s += charFactor(ch);
+  return s * fontPx * (weight >= 700 ? 1.02 : 1.0);
+}
+function inkHeightPx(fontPx){ return fontPx * 0.716; }
+function wrapLines(text, maxW, fontPx, weight){
+  const words = text.split(" ");
+  const lines = [];
+  let cur = "";
+  for(const w of words){
+    const cand = cur ? cur + " " + w : w;
+    if(textWidthPx(cand, fontPx, weight) <= maxW || !cur) cur = cand;
+    else { lines.push(cur); cur = w; }
+  }
+  if(cur) lines.push(cur);
+  return lines;
+}
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function easeOut(p){ return 1 - Math.pow(1 - p, 3); }
+function phases(cfg){
+  return {
+    mapAt: 0,
+    routeAt: cfg.beatMs,
+    portraitAt: 2 * cfg.beatMs,
+    exhibitAt: 3 * cfg.beatMs,
+    stampAt: cfg.stamp.atMs,
+    noteAt: cfg.stamp.atMs + cfg.note.delayAfterStampMs
+  };
+}
+function computeLayout(cfg){
+  const ph = phases(cfg);
+  const L = { phases: ph, labels: [], exhibits: [], note: null, stamp: null, route: null, noteRoute: null };
+  cfg.labels.forEach((text, i) => {
+    const w = textWidthPx(text, cfg.type.labelPx, cfg.type.weight) + 2 * cfg.geom.chipPadX;
+    L.labels.push({ text, x: cfg.labelPos[i].x, y: cfg.labelPos[i].y, w, h: cfg.geom.chipH, inkH: inkHeightPx(cfg.type.labelPx) });
+  });
+  for(const ex of cfg.exhibits){
+    if(ex.kind === "portrait"){
+      const card = { x: ex.x, y: ex.y, w: cfg.geom.portraitCard.w, h: cfg.geom.portraitCard.h, tilt: ex.tilt };
+      const lines = wrapLines(ex.label, cfg.geom.portraitChip.w - 2 * cfg.geom.chipPadX, cfg.type.exhibitLabelPx, cfg.type.weight);
+      const chip = { x: ex.x, y: ex.y + card.h + cfg.geom.portraitChip.gapY, w: cfg.geom.portraitChip.w, h: cfg.geom.portraitChip.h, lines,
+        lineW: lines.map(s => textWidthPx(s, cfg.type.exhibitLabelPx, cfg.type.weight)), inkH: inkHeightPx(cfg.type.exhibitLabelPx) };
+      L.exhibits.push({ kind: ex.kind, label: ex.label, card, chip, inkH: inkHeightPx(cfg.type.exhibitLabelPx) });
+    } else {
+      const card = { x: ex.x, y: ex.y, w: cfg.geom.photoCard.w, h: cfg.geom.photoCard.h, tilt: ex.tilt };
+      const lines = wrapLines(ex.label, card.w - 2 * cfg.geom.chipPadX, cfg.type.exhibitLabelPx, cfg.type.weight);
+      L.exhibits.push({ kind: ex.kind, label: ex.label, card, lines,
+        lineW: lines.map(s => textWidthPx(s, cfg.type.exhibitLabelPx, cfg.type.weight)), inkH: inkHeightPx(cfg.type.exhibitLabelPx) });
+    }
+  }
+  const stamped = cfg.exhibits.find(e => e.stamp);
+  const sc = stamped ? { x: stamped.x, y: stamped.y, w: cfg.geom.photoCard.w, h: cfg.geom.photoCard.h } : null;
+  const sw = textWidthPx(cfg.stamp.text, cfg.type.stampPx, cfg.type.weight) + 2 * cfg.geom.stampPadX;
+  const sh = cfg.type.stampPx + 2 * cfg.geom.stampPadY;
+  const rad = Math.abs(cfg.stamp.angle) * Math.PI / 180;
+  L.stamp = { text: cfg.stamp.text, angle: cfg.stamp.angle, atMs: cfg.stamp.atMs,
+    cx: sc.x + sc.w / 2, cy: sc.y + sc.h / 2, w: sw, h: sh,
+    bboxW: sw * Math.cos(rad) + sh * Math.sin(rad), bboxH: sh * Math.cos(rad) + sw * Math.sin(rad),
+    inkH: inkHeightPx(cfg.type.stampPx), target: stamped ? stamped.kind : null };
+  const n = cfg.note;
+  L.note = { x: n.x, y: n.y, w: n.w, h: n.h, title: n.title,
+    titleW: textWidthPx(n.title, cfg.type.noteTitlePx, cfg.type.weight),
+    lines: n.lines.map(s => ({ text: s, w: textWidthPx(s, cfg.type.noteLinePx, cfg.type.weight) })),
+    inkH: inkHeightPx(cfg.type.noteLinePx), titleInkH: inkHeightPx(cfg.type.noteTitlePx),
+    endMs: ph.noteAt + n.lines.length * n.typeMs };
+  L.route = { cx: cfg.route.cx, cy: cfg.route.cy, r: cfg.route.r, circ: 2 * Math.PI * cfg.route.r };
+  const exT = cfg.exhibits.find(e => e.kind === (cfg.noteRoute.to === "exhibit" ? "photo" : cfg.noteRoute.to));
+  L.noteRoute = { x1: n.x + n.w, y1: n.y + n.h / 2, x2: exT.x, y2: exT.y + cfg.geom.photoCard.h / 2, dash: cfg.noteRoute.dash.slice() };
+  return L;
+}
+function stateAt(cfg, tMs){
+  const L = computeLayout(cfg);
+  const ph = L.phases;
+  const t = ((tMs % cfg.cycleMs) + cfg.cycleMs) % cfg.cycleMs;
+  const st = { t, layout: L };
+  st.mapOpacity = clamp01(t / cfg.motion.mapFadeMs);
+  st.routeProgress = clamp01((t - ph.routeAt) / cfg.motion.routeDrawMs);
+  st.portraitP = easeOut(clamp01((t - ph.portraitAt) / cfg.motion.enterMs));
+  st.exhibitP = easeOut(clamp01((t - ph.exhibitAt) / cfg.motion.enterMs));
+  st.stampP = clamp01((t - ph.stampAt) / cfg.motion.slamMs);
+  st.stampScale = cfg.motion.slamFromScale + (1 - cfg.motion.slamFromScale) * easeOut(st.stampP);
+  st.noteP = clamp01((t - ph.noteAt) / cfg.motion.enterMs);
+  st.noteRouteP = clamp01((t - ph.noteAt) / cfg.motion.noteRouteMs);
+  st.noteChars = cfg.note.lines.map((s, i) => {
+    const start = ph.noteAt + i * cfg.note.typeMs;
+    return Math.floor(clamp01((t - start) / cfg.note.typeMs) * s.length);
+  });
+  return st;
+}
+function lum(hex){
+  const c = [1, 3, 5].map(i => parseInt(hex.substr(i, 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function contrast(a, b){
+  const la = lum(a), lb = lum(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function checkpointsOk(cfg){
+  const L = computeLayout(cfg);
+  const ph = L.phases;
+  const errs = [];
+  if(!(ph.mapAt < ph.routeAt && ph.routeAt < ph.portraitAt && ph.portraitAt < ph.exhibitAt && ph.exhibitAt < ph.stampAt && ph.stampAt < ph.noteAt)) errs.push("phase order");
+  if(L.note.endMs > cfg.cycleMs) errs.push("note overruns cycle");
+  if(ph.stampAt >= cfg.cycleMs) errs.push("stamp outside cycle");
+  const stamped = cfg.exhibits.find(e => e.stamp);
+  if(!stamped || stamped.stamp !== cfg.stamp.text) errs.push("stamp ownership mismatch");
+  for(const lb of L.labels){
+    if(lb.x + lb.w > cfg.stage.w || lb.y + lb.h > cfg.stage.h) errs.push("label off-stage: " + lb.text);
+    if(lb.inkH < 11) errs.push("label ink under floor: " + lb.text);
+  }
+  for(const ex of L.exhibits){
+    if(ex.card.x + ex.card.w > cfg.stage.w || ex.card.y + ex.card.h > cfg.stage.h) errs.push("exhibit off-stage: " + ex.kind);
+    if(ex.inkH < 11) errs.push("exhibit ink under floor: " + ex.kind);
+    const maxW = ex.kind === "portrait" ? cfg.geom.portraitChip.w - 2 * cfg.geom.chipPadX : ex.card.w - 2 * cfg.geom.chipPadX;
+    const ws = ex.kind === "portrait" ? ex.chip.lineW : ex.lineW;
+    ws.forEach((w, i) => { if(w > maxW) errs.push("exhibit line overflow: " + ex.kind + " line " + i); });
+  }
+  if(L.stamp.cx + L.stamp.bboxW / 2 > cfg.stage.w || L.stamp.cy + L.stamp.bboxH / 2 > cfg.stage.h) errs.push("stamp off-stage");
+  if(L.note.x + L.note.w > cfg.stage.w || L.note.y + L.note.h > cfg.stage.h) errs.push("note off-stage");
+  if(L.note.titleW > L.note.w - 2 * cfg.geom.notePadX) errs.push("note title overflow");
+  L.note.lines.forEach((ln, i) => { if(ln.w > L.note.w - 2 * cfg.geom.notePadX) errs.push("note line overflow " + i); });
+  if(L.note.inkH < 11 || L.note.titleInkH < 11) errs.push("note ink under floor");
+  if(contrast(cfg.palette.chipInk, cfg.palette.chip) < 4.5) errs.push("chip contrast");
+  if(contrast(cfg.palette.cardInk, cfg.palette.card) < 4.5) errs.push("card contrast");
+  if(contrast(cfg.palette.ink, cfg.palette.map) < 4.5) errs.push("map ink contrast");
+  const warnings = [];
+  if(contrast(cfg.palette.red, cfg.palette.card) < 3) warnings.push("accent red on card under 3:1 large-text guide: " + contrast(cfg.palette.red, cfg.palette.card).toFixed(2));
+  return { ok: errs.length === 0, errs, warnings, layout: L };
+}
+/* ============ DOM render layer (browser only) ============ */
+function deepMerge(base, over){
+  if(Array.isArray(over)) return over.slice();
+  if(over && typeof over === "object"){
+    const out = {};
+    for(const k of Object.keys(base)) out[k] = deepMerge(base[k], over[k]);
+    for(const k of Object.keys(over)) if(!(k in base)) out[k] = over[k];
+    return out;
+  }
+  return over === undefined ? base : over;
+}
+function effectiveConfig(){
+  try{
+    const q = new URLSearchParams(location.search).get("cfg");
+    if(q) return deepMerge(CONFIG, JSON.parse(q));
+  }catch(e){ /* default config stands */ }
+  return CONFIG;
+}
+let CFG = null, els = null, startStamp = null, pausedAt = 0, playing = false;
+function build(cfg){
+  const stage = document.getElementById("stage");
+  stage.style.width = cfg.stage.w + "px";
+  stage.style.height = cfg.stage.h + "px";
+  stage.style.background = cfg.palette.field;
+  stage.innerHTML = "";
+  const L = computeLayout(cfg);
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("width", cfg.stage.w); svg.setAttribute("height", cfg.stage.h);
+  svg.style.position = "absolute"; svg.style.left = "0"; svg.style.top = "0";
+  const rect = document.createElementNS(NS, "rect");
+  rect.setAttribute("width", cfg.stage.w); rect.setAttribute("height", cfg.stage.h); rect.setAttribute("fill", cfg.palette.map);
+  svg.appendChild(rect);
+  for(const d of cfg.map.borders){
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d); p.setAttribute("fill", "none");
+    p.setAttribute("stroke", cfg.palette.line); p.setAttribute("stroke-width", cfg.map.borderWidthPx);
+    svg.appendChild(p);
+  }
+  for(const d of cfg.map.coast){
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d); p.setAttribute("fill", "none");
+    p.setAttribute("stroke", cfg.palette.line); p.setAttribute("stroke-width", cfg.map.coastWidthPx);
+    svg.appendChild(p);
+  }
+  const routeC = document.createElementNS(NS, "circle");
+  routeC.setAttribute("cx", L.route.cx); routeC.setAttribute("cy", L.route.cy); routeC.setAttribute("r", L.route.r);
+  routeC.setAttribute("fill", "none"); routeC.setAttribute("stroke", cfg.palette.red);
+  routeC.setAttribute("stroke-width", cfg.route.widthPx);
+  routeC.setAttribute("stroke-dasharray", L.route.circ);
+  routeC.setAttribute("transform", "rotate(" + cfg.route.startDeg + " " + L.route.cx + " " + L.route.cy + ")");
+  svg.appendChild(routeC);
+  const nr = document.createElementNS(NS, "line");
+  nr.setAttribute("x1", L.noteRoute.x1); nr.setAttribute("y1", L.noteRoute.y1);
+  nr.setAttribute("x2", L.noteRoute.x2); nr.setAttribute("y2", L.noteRoute.y2);
+  nr.setAttribute("stroke", cfg.palette.red); nr.setAttribute("stroke-width", cfg.noteRoute.widthPx);
+  nr.setAttribute("stroke-dasharray", cfg.noteRoute.dash.join(" "));
+  svg.appendChild(nr);
+  stage.appendChild(svg);
+  const mk = (styles) => { const d = document.createElement("div"); d.className = "el"; Object.assign(d.style, styles); stage.appendChild(d); return d; };
+  const out = { svg, routeC, nr, labels: [], exhibits: [], stamp: null, note: null, noteLines: [] };
+  L.labels.forEach(lb => {
+    const d = mk({ left: lb.x + "px", top: lb.y + "px", width: lb.w + "px", height: lb.h + "px",
+      background: cfg.palette.chip, color: cfg.palette.chipInk, font: cfg.type.weight + " " + cfg.type.labelPx + "px " + cfg.type.font,
+      lineHeight: lb.h + "px", textAlign: "center", whiteSpace: "nowrap" });
+    d.textContent = lb.text;
+    out.labels.push(d);
+  });
+  L.exhibits.forEach(ex => {
+    const wrap = mk({ left: ex.card.x + "px", top: ex.card.y + "px", width: ex.card.w + "px" });
+    const card = document.createElement("div");
+    card.style.cssText = "position:relative;width:" + ex.card.w + "px;height:" + ex.card.h + "px;background:" + cfg.palette.card + ";border:" + cfg.geom.cardBorderPx + "px solid " + cfg.palette.chip + ";box-sizing:border-box";
+    const pin = document.createElement("div");
+    pin.style.cssText = "position:absolute;left:50%;top:-" + cfg.geom.pinR + "px;width:" + (2 * cfg.geom.pinR) + "px;height:" + (2 * cfg.geom.pinR) + "px;margin-left:-" + cfg.geom.pinR + "px;border-radius:50%;background:" + cfg.palette.red;
+    card.appendChild(pin);
+    const g = document.createElementNS(NS, "svg");
+    if(ex.kind === "portrait"){
+      g.setAttribute("width", ex.card.w); g.setAttribute("height", ex.card.h);
+      const head = document.createElementNS(NS, "circle");
+      head.setAttribute("cx", cfg.glyphs.portraitHead.cx); head.setAttribute("cy", cfg.glyphs.portraitHead.cy); head.setAttribute("r", cfg.glyphs.portraitHead.r);
+      head.setAttribute("fill", "none"); head.setAttribute("stroke", cfg.palette.cardInk); head.setAttribute("stroke-width", cfg.glyphs.strokePx);
+      const sh = document.createElementNS(NS, "path");
+      sh.setAttribute("d", cfg.glyphs.portraitShoulders);
+      sh.setAttribute("fill", "none"); sh.setAttribute("stroke", cfg.palette.cardInk); sh.setAttribute("stroke-width", cfg.glyphs.strokePx);
+      g.appendChild(head); g.appendChild(sh);
+      card.appendChild(g);
+      wrap.appendChild(card);
+      const chip = document.createElement("div");
+      chip.style.cssText = "margin-top:" + cfg.geom.portraitChip.gapY + "px;margin-left:" + ((ex.card.w - ex.chip.w) / 2) + "px;width:" + ex.chip.w + "px;min-height:" + ex.chip.h + "px;background:" + cfg.palette.chip + ";color:" + cfg.palette.chipInk + ";font:" + cfg.type.weight + " " + cfg.type.exhibitLabelPx + "px " + cfg.type.font + ";text-align:center;padding:" + cfg.geom.chipPadY + "px " + cfg.geom.chipPadX + "px;box-sizing:border-box";
+      chip.innerHTML = ex.chip.lines.join("<br>");
+      wrap.appendChild(chip);
+    } else {
+      g.setAttribute("width", ex.card.w); g.setAttribute("height", cfg.geom.photoGlyphH);
+      const body = document.createElementNS(NS, "path");
+      body.setAttribute("d", cfg.glyphs.carBody);
+      body.setAttribute("fill", "none"); body.setAttribute("stroke", cfg.palette.cardInk); body.setAttribute("stroke-width", cfg.glyphs.strokePx);
+      g.appendChild(body);
+      cfg.glyphs.carWheelCx.forEach(cx => {
+        const w = document.createElementNS(NS, "circle");
+        w.setAttribute("cx", cx); w.setAttribute("cy", cfg.glyphs.carWheelCy); w.setAttribute("r", cfg.glyphs.carWheelR);
+        w.setAttribute("fill", "none"); w.setAttribute("stroke", cfg.palette.cardInk); w.setAttribute("stroke-width", cfg.glyphs.strokePx);
+        g.appendChild(w);
+      });
+      card.appendChild(g);
+      const lab = document.createElement("div");
+      lab.style.cssText = "color:" + cfg.palette.cardInk + ";font:" + cfg.type.weight + " " + cfg.type.exhibitLabelPx + "px " + cfg.type.font + ";text-align:center;line-height:" + cfg.type.exhibitLineHeight;
+      lab.innerHTML = ex.lines.join("<br>");
+      card.appendChild(lab);
+      wrap.appendChild(card);
+    }
+    out.exhibits.push(wrap);
+  });
+  const st = L.stamp;
+  const stampEl = mk({ left: (st.cx - st.w / 2) + "px", top: (st.cy - st.h / 2) + "px", width: st.w + "px", height: st.h + "px",
+    border: cfg.geom.stampBorderPx + "px solid " + cfg.palette.red, color: cfg.palette.red,
+    font: cfg.type.weight + " " + cfg.type.stampPx + "px " + cfg.type.font, lineHeight: st.h + "px",
+    textAlign: "center", boxSizing: "border-box", background: "transparent" });
+  stampEl.textContent = st.text;
+  out.stamp = stampEl;
+  const noteEl = mk({ left: L.note.x + "px", top: L.note.y + "px", width: L.note.w + "px", height: L.note.h + "px",
+    background: cfg.palette.card, color: cfg.palette.cardInk, padding: cfg.geom.notePadY + "px " + cfg.geom.notePadX + "px",
+    font: cfg.type.weight + " " + cfg.type.noteLinePx + "px " + cfg.type.font, lineHeight: cfg.type.noteLineHeight });
+  const title = document.createElement("div");
+  title.style.fontSize = cfg.type.noteTitlePx + "px";
+  title.textContent = L.note.title;
+  noteEl.appendChild(title);
+  L.note.lines.forEach(() => {
+    const ln = document.createElement("div");
+    noteEl.appendChild(ln);
+    out.noteLines.push(ln);
+  });
+  out.note = noteEl;
+  return out;
+}
+function render(cfg, tMs){
+  const st = stateAt(cfg, tMs);
+  const L = st.layout;
+  els.svg.style.opacity = st.mapOpacity;
+  els.labels.forEach(d => { d.style.opacity = st.mapOpacity; });
+  els.routeC.setAttribute("stroke-dashoffset", L.route.circ * (1 - st.routeProgress));
+  els.routeC.style.opacity = st.routeProgress > 0 ? 1 : 0;
+  els.exhibits[0].style.opacity = st.portraitP;
+  els.exhibits[0].style.transform = "translateY(" + (cfg.motion.enterRisePx * (1 - st.portraitP)) + "px) rotate(" + cfg.exhibits[0].tilt + "deg)";
+  els.exhibits[1].style.opacity = st.exhibitP;
+  els.exhibits[1].style.transform = "translateX(" + (cfg.motion.slidePx * (1 - st.exhibitP)) + "px) rotate(" + cfg.exhibits[1].tilt + "deg)";
+  els.stamp.style.opacity = st.stampP > 0 ? 1 : 0;
+  els.stamp.style.transform = "rotate(" + cfg.stamp.angle + "deg) scale(" + st.stampScale + ")";
+  els.note.style.opacity = st.noteP;
+  els.nr.style.opacity = st.noteRouteP;
+  els.noteLines.forEach((ln, i) => { ln.textContent = cfg.note.lines[i].slice(0, st.noteChars[i]); });
+}
+function nowMs(){ return playing ? pausedAt + (performance.now() - startStamp) : pausedAt; }
+function frame(){
+  render(CFG, nowMs());
+  if(playing) requestAnimationFrame(frame);
+}
+if(typeof window !== "undefined") window.__T129 = {
+  play(){ if(!playing){ playing = true; startStamp = performance.now(); requestAnimationFrame(frame); } },
+  pause(){ if(playing){ pausedAt = nowMs(); playing = false; } render(CFG, pausedAt); },
+  seek(t01){ pausedAt = t01 * CFG.cycleMs; if(playing) startStamp = performance.now(); render(CFG, pausedAt); },
+  restart(){ pausedAt = 0; startStamp = performance.now(); playing = true; requestAnimationFrame(frame); },
+  stateAt(t){ return stateAt(CFG, t); },
+  config(){ return CFG; }
+};
+if(typeof document !== "undefined" && document.getElementById("stage")){
+  CFG = effectiveConfig();
+  const chk = checkpointsOk(CFG);
+  if(!chk.ok){
+    const e = document.getElementById("err");
+    e.style.display = "block";
+    e.textContent = "CONFIG CHECK FAILED: " + chk.errs.join("; ");
+  }
+  els = build(CFG);
+  render(CFG, 0);
+  window.__T129.play();
+}
+if(typeof module !== "undefined" && module.exports){
+  module.exports = { CONFIG, computeLayout, stateAt, checkpointsOk, textWidthPx, wrapLines, contrast, phases };
+}
+</script>
+</body>
+</html>
+
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+I’ll check the 360px layout and final reading window, then file the readability score and cure list in `codex/` and `scores.md`.
+
+2026-11-16T14:42:25.067252Z ERROR codex_core::tools::router: error=failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: No such file or directory (os error 2)
+codex
+Readability: **62/100 — below the 70-point lens floor.** This lens blocks RECREATED.
+
+The 16px map chips and note text have strong foreground/background contrast. The note’s four rows nominally fit its 184×84px container.
+
+Three defects need curing:
+
+- **Stamp obscures the exhibit label.** FAILED sits across the car card’s caption area; its transparent background leaves competing text underneath.
+- **Car caption lacks vertical clearance.** The 24px inline SVG plus two 20px caption lines already consume 64px, exceeding the card’s 62px inner height before baseline spacing.
+- **Completed-board hold is only 50ms.** Note typing ends at 13,950ms and the cycle resets at 14,000ms. The accumulated board provides virtually no fully readable hold.
+
+Cure: reserve separate caption and stamp regions, size the card for its actual rendered contents, and add several seconds of hold after typing completes. Verify browser-rendered text bounds and the accumulated board at 360px.
+
+Assessment is code-derived; browser pixels remain unverified. The tool host failed to start, preventing filesystem writes.
+
+BODY-WRITE: None; could not file the readability report in `codex/` or update `scores.md`.
+SCORE: 62
+tokens used
+19,245
+Readability: **62/100 — below the 70-point lens floor.** This lens blocks RECREATED.
+
+The 16px map chips and note text have strong foreground/background contrast. The note’s four rows nominally fit its 184×84px container.
+
+Three defects need curing:
+
+- **Stamp obscures the exhibit label.** FAILED sits across the car card’s caption area; its transparent background leaves competing text underneath.
+- **Car caption lacks vertical clearance.** The 24px inline SVG plus two 20px caption lines already consume 64px, exceeding the card’s 62px inner height before baseline spacing.
+- **Completed-board hold is only 50ms.** Note typing ends at 13,950ms and the cycle resets at 14,000ms. The accumulated board provides virtually no fully readable hold.
+
+Cure: reserve separate caption and stamp regions, size the card for its actual rendered contents, and add several seconds of hold after typing completes. Verify browser-rendered text bounds and the accumulated board at 360px.
+
+Assessment is code-derived; browser pixels remain unverified. The tool host failed to start, preventing filesystem writes.
+
+BODY-WRITE: None; could not file the readability report in `codex/` or update `scores.md`.
+SCORE: 62

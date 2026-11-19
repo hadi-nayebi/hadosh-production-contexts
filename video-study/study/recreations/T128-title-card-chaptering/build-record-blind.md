@@ -1,0 +1,33 @@
+# T128 — Title-card chaptering · score-blind build record (attempt 2)
+
+## Technique facts
+- **Consumer:** DLC assembler / Academy tutorial surfaces — chaptering title cards.
+- **Mechanics:** inside the product's playback, a portrait exhibit card gives way to a map ground; a small tracked eyebrow line is typed, then struck through in red; a large white serif main line is typed and the full card holds — the thesis stated as a full-screen card the narration then unpacks.
+- **Schedule basis:** segment-anchored — segment 385–399 s of the archived source (14.000 s, ffprobe-verified); segment-relative time t = 0 at the segment's first frame.
+
+## Segment observations (frame-by-frame, with a 100 ms quantitative re-observation)
+- 0–4600 ms: exhibit card full.
+- 4600–4800 ms: the exhibit slides and shrinks toward the top-left, out of frame.
+- From 4800 ms: a period map ground alone (vignetted, progressively darkening), still faintly present under the later card beats.
+- 5450–6470 ms: the eyebrow "NOT JUST A MURDER." (final period) is typed letter-by-letter in white slab/typewriter caps.
+- 6470–7600 ms: the complete eyebrow dwells, no strike.
+- 7600–8000 ms: a red strike draws left→right through the eyebrow.
+- 8000–9250 ms: the struck eyebrow holds alone.
+- 9250–9740 ms: the main line "A SPARK." is typed letter-by-letter in large white serif; the final period is red (a partial state "A SP" is visible at 9500 ms).
+- From ~9740 ms: the full card holds; in the source the exit begins at ~13200 ms (the strike red fades first) and the card is fully out by ~13600 ms; the segment's remaining tail is the next scene.
+- Two earlier descriptions of this segment differ from the frame observation: one described a red-accent eyebrow with an ellipsis fading in near 8000 ms and a word-by-word main line near 10000/11100 ms with no map beat. The build follows the frame-by-frame observation (white typed eyebrow, red strike, map ground, letter-by-letter main, final period punctuation). A previously filed hold quantity of 4500 ms also exists in the item's records; the segment observation supports a 3400 ms full-opacity hold measured from the main line's completion — a 4500 ms hold from that completion would end after the segment itself ends — and the build uses 3400 ms.
+
+## Build
+- `recreation.html` — ONE self-contained file; CONFIG at top with every shaping value (exhibit geometry/exit motion, map label/contours/fade floor, eyebrow and main texts, all onsets and per-glyph intervals, hold and exit durations, type stacks/sizes/weights/line-heights/tracking/strike thickness, geometry, palette, stage 360×203); DOM construction; one pure stateAt() phase machine with 10 exclusive phases; exhibit is a code-drawn typographic card (no specimen imagery); the map ground is code-drawn abstract contour strokes plus a typographic label (no traced geography); no external assets; validated `?cfg=` overrides (invalid overrides rejected atomically and recorded).
+- Reveal convention: glyph k of a typed string first appears at onset + (k−1)×interval, so completions are derived: eyebrow 5450 + 17×60 = 6470; main 9250 + 7×70 = 9740. The cycle is derived, never a literal: 9740 + 3400 + 400 = 13540 ms; the displayed full-opacity hold is [9740, 13140) and the exit is [13140, 13540).
+- Colours, measured by the build's own WCAG luminance instrument: ink #e9ebe6 on the darkened field #0a1514 computes to 15.47:1; the strike/final-period red #cd6053 computes to 4.77:1 against #0a1514 and 4.62:1 against the displayed mixed background at the strike's onset (the specimen red sampled at (196,68,53) computes to 3.74:1 against #0a1514; the build's red is a minimal brightening inside the same hue family).
+- Text model (logic level; rendered values unverified — no rendered pixel verification was available in this seat): monospace stack advance 0.60 em/glyph with cap-height ratio 0.565 → eyebrow ink 270.00 × 11.30 px; serif advance classes (caps 0.62, other letters 0.52, space 0.30, punctuation 0.28) with cap-height ratio 0.72 → main ink 189.20 × 31.68 px; size hierarchy from those rows = 2.80:1. The strike is a bar whose width follows the full eyebrow ink width and whose vertical centre sits on the eyebrow ink mid.
+- `comparison.html` — ORIGINAL segment + live recreation, one synchronized control set (postMessage play/pause/restart), phone stacking; unchanged in this attempt (the recreation's interface did not change).
+
+## Own checks (recorded)
+1. **Full suite on the final build — 116/116 PASS** (deterministic node harness over the build's own stateAt/fitRows/validator): phase exclusivity on a 10 ms grid with all 10 phases reached; typed-character checkpoints; final-glyph absence/presence one millisecond either side of both completions (6469/6470, 9739/9740); exhibit exit window; map presence and darkening; displayed hold [9740, 13140) at full opacity with exit progress 0 before 13140; per-key consumed-effect mappings (24, none unconsumed); literal census (no subject-shaping literals outside CONFIG); self-start to HOLD under the build's own startup; syntax clean.
+2. **Wider swap test (logic level):** exhibit label/sub changed, eyebrow text changed, main text changed to a 16-glyph three-word line, palette changed, stage width 360→400, main per-glyph interval 70→120 — derived completion 11050 with the final glyph absent at 11049 and present at 11050, displayed hold [11050, 14450), derived cycle 14850, strike width following the new eyebrow ink width, all fit rows passing at the swapped stage, phases exclusive throughout. PASS.
+3. **Adversarial validation:** 15 malformed override cases (non-finite and infinite numbers, null/absent groups, empty texts, a single oversized token, unknown keys, malformed colours, negative sizes, out-of-range opacity, schedule-ordering violations, non-object overrides) — each rejected atomically with the timeline provably unchanged. PASS.
+4. **Purity:** grep for specimen-media patterns over recreation.html = 0 hits. Asset inventory: no external assets; exhibit, map ground, field and text are code/DOM only.
+5. **Measured-fit rows:** eyebrow (full and at 6/12 glyphs), main (full and at 1/4 glyphs), exhibit label/sub, map label, and the swap rows — every ink width inside its container, every ink height at or above the ~11 px legibility floor (smallest margins: exhibit sub 0.16 px, eyebrow 0.30 px, printed as watches). HIT list EMPTY.
+6. **Config census:** every CONFIG key resolved to an application site with a consumed effect; literals outside CONFIG classified (instrument coefficients and arithmetic identities only). HIT list EMPTY.

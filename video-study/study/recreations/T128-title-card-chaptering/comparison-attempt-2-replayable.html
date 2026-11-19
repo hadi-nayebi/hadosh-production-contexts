@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T128 comparison — title-card chaptering</title>
+<style>
+  body{margin:0;font-family:system-ui,sans-serif;background:#111;color:#eee;}
+  .wrap{display:flex;gap:12px;flex-wrap:wrap;padding:12px;}
+  figure{margin:0;flex:1 1 360px;max-width:560px;}
+  figcaption{font-size:14px;margin:0 0 6px;}
+  video,iframe{width:100%;max-width:560px;aspect-ratio:360/203;border:0;background:#000;display:block;}
+  .controls{padding:0 12px 16px;display:flex;gap:8px;}
+  button{min-height:48px;min-width:88px;font-size:16px;}
+  @media (max-width:560px){ .wrap{flex-direction:column;} figure{flex:none;width:100%;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <figure>
+    <figcaption>ORIGINAL — Grow With Kaz (product playback) @ 6:25–6:39</figcaption>
+    <video id="orig" src="segment.mp4" playsinline preload="auto"></video>
+  </figure>
+  <figure>
+    <figcaption>RECREATION — T128 title-card chaptering, parameterized</figcaption>
+    <iframe id="rec" src="recreation-attempt-2.html" title="T128 recreation"></iframe>
+  </figure>
+</div>
+<div class="controls">
+  <button id="playBtn">Play</button>
+  <button id="pauseBtn">Pause</button>
+  <button id="restartBtn">Restart</button>
+</div>
+<script>
+"use strict";
+const v = document.getElementById("orig");
+const f = document.getElementById("rec");
+function send(cmd){ if(f.contentWindow) f.contentWindow.postMessage({cmd:cmd}, "*"); }
+document.getElementById("playBtn").addEventListener("click", ()=>{ v.play(); send("play"); });
+document.getElementById("pauseBtn").addEventListener("click", ()=>{ v.pause(); send("pause"); });
+document.getElementById("restartBtn").addEventListener("click", ()=>{ v.currentTime = 0; v.play(); send("restart"); });
+v.addEventListener("pause", ()=>send("pause"));
+v.addEventListener("play", ()=>send("play"));
+</script>
+</body>
+</html>
