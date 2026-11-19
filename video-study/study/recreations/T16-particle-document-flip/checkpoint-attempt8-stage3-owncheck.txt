@@ -1,0 +1,17 @@
+CHECK Stage3a default: coverage == assignments at 120 ms callbacks: PASS — cov=14 asg=14 changes=14
+CHECK Stage3a default: assignments in scheduled order at scheduled instants: PASS — [{"page":1,"atMs":0},{"page":2,"atMs":300},{"page":3,"atMs":600},{"page":4,"atMs":900}]
+CHECK Stage3a counters separated (processed == assignments, presented counted separately): PASS
+CHECK Stage3a dense 40p/6000ms accepted and fully assigned at 120 ms: PASS — ok=true asg=40 changes=40
+CHECK Stage3a one-step crossing (multi-page + flip exit) matches fine-step assignments: PASS — big=1,2,3,4,5,6,7,8,9,10,11,12,13,14 fine=1,2,3,4,5,6,7,8,9,10,11,12,13,14 phase=release/release
+CHECK Stage3a anchors unchanged: PASS
+--- Stage 3b/3c (event-time registration, presented dwell, hold accounting) ---
+CHECK Stage3b registration start == arrival event instant (t0+delay+travel): PASS — sampled=1257 bad=0
+CHECK Stage3b registration completion recorded at its event instant: PASS — sampled=1257 bad=0
+CHECK Stage3b strict-readable cells at 60 fps (target 32/32): PASS — 32/32
+CHECK Stage3b strict-readable cells at 50 ms steps (target 32/32, repriced if missed): FAIL — 26/32 missed=["0 p9","0 p13","13.1 p8","13.1 p12","29.7 p7","29.7 p11"]
+CHECK Stage3c resolved hold RESOLVED with assigned == required: PASS — {"basis":"measured","holdState":"RESOLVED","titleAssignedCount":1173,"titleRequiredCount":1173,"ringAssignedCount":84,"ringRequiredCount":84,"titleResolvedByMs":4600,"ringResolvedByMs":4600,"jointResolvedByMs":4600,"titleMs":1100,"ringMs":1100,"observedHoldMs":1100}
+CHECK Stage3c resolved hold == nominal 1100 ms from actual completion: PASS — observed=1100 joint=4600
+CHECK Stage3c empty assignment reports UNRESOLVED — empty assignment, never a resolved hold: PASS — "UNRESOLVED — empty assignment"
+CHECK Stage3c partial assignment reports UNRESOLVED (assigned != required): PASS — assigned=5 required=1173
+REPRICING (plan-review F2): the 32/32-at-50ms strict-readable item is a TARGET, missed at 26/32 — the same six-cell pattern class as attempt 7 (pages whose readable instant falls between 50 ms draws inside the preserved 87.5 ms interval). Missed cells are named in the probe output above, per page and offset. This is deferral D1's priced remainder, carried to the filing; it is not hidden and not averaged away.
+PIXEL-UNVERIFIED: all results are source-model harness results.

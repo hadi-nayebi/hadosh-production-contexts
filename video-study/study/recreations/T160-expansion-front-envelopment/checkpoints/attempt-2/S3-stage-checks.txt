@@ -1,0 +1,14 @@
+S3 (CONFIG-driven stage) — own-check output · T160 attempt 2 · Practice Cycle 025 Wave 24
+Checkpoint source: S3-stage-recreation.html (content copy of the working recreation.html at Stage-3 close)
+Working source sha256 at stage close: 7e48d970ed1b6c38935e21289f595054f2884f009ec0f0d764e61c4c7a07a333
+Bound to this hash: every result below ran on that exact source (stub-DOM vm harness — the init path executes against stub document/canvas/stage objects that record the effective values; logic/DOM level, PIXEL-UNVERIFIED stands).
+
+Change: at init, before the first frame, canvas.width/canvas.height are assigned from CONFIG.stageW/stageH and the stage element's aspect ratio is set from CONFIG (stageW / stageH) with height auto. The markup width/height attributes and the CSS ratio remain only as pre-script fallback values carrying the same default numbers.
+
+EFFECT CHECK (key → consumed effect, stub-DOM):
+as-built source: canvas.width 720 · canvas.height 405 · stage aspectRatio "720 / 405" · stage height "auto" → CONFIG values in effect. PASS.
+NON-16:9 SWAP (finding 3): the same source with stageW 720→640 and stageH 405→480 substituted in memory (4:3): canvas.width 640 · canvas.height 480 · stage aspectRatio "640 / 480" → the effective layout follows the swapped CONFIG, not the markup literals. PASS.
+
+SELF-START on this source (stub-DOM): requestAnimationFrame invoked once at load with no external caller; window.__seek and window.__state exposed as functions; __state(9000).gapPx = 110.656 (schedule + clearance state intact after the Stage-3 change). PASS.
+
+Stage-3 verdict: PASS — Stage 4 gated on this checkpoint's read-back (build record, Stage-3 entry).

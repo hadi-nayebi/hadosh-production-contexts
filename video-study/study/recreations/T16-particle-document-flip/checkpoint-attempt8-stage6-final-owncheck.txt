@@ -1,0 +1,99 @@
+T16 attempt 8 — FINAL own-check suite on the final source (all stage checks rerun; a stage check that only passed on its checkpoint does not count)
+PIXEL-UNVERIFIED: every result is a source-model harness result (node, stubbed rasterizing canvas).
+--- probe-stage1 ---
+literal 0.7 in code (comments stripped): ["96: turnOnsetFraction: 0.7,"]
+CHECK literal 0.7 only at the single DEFAULTS definition: PASS
+CHECK onset swap 0.5 gate bound == shared value: PASS
+CHECK onset swap 0.85 gate bound == shared value: PASS
+CHECK onset direct-edit route revalidates on shared value: PASS
+CHECK palette swap recolours particles (RGB derived, not duplicated literals): PASS
+--- probe-stage2 ---
+CHECK gate refuses background=#f6f9fd with colorA=#f6f9fd at startup: PASS — ["final palette contrast below its floor: colorA against the resolved background","final palette contrast below its floor: haloColor against the resolved background","DOM colour contrast below its floor: counterColor against the resolved background","DOM colour contrast below its floor: counterLabelColor against the resolved background","DOM colour contrast below its floor: labelColor against the resolved background"]
+CHECK startup refusal restores the trusted defaults whole: PASS
+CHECK gate refuses the contrast-colliding candidate (not merely sanitised): PASS — ["final palette contrast below its floor: colorA against the resolved background","final palette contrast below its floor: haloColor against the resolved background","DOM colour contrast below its floor: counterColor against the resolved background","DOM colour contrast below its floor: counterLabelColor against the resolved background","DOM colour contrast below its floor: labelColor against the resolved background"]
+CHECK refused replacement preserves the live run (no rewind): PASS — simT=2000 phase=flip
+CHECK gate names DOM colour contrast (counter/label vs background): PASS — ["DOM colour contrast below its floor: counterColor against the resolved background","DOM colour contrast below its floor: counterLabelColor against the resolved background","DOM colour contrast below its floor: labelColor against the resolved background"]
+CHECK pool overlap branch fires when scatter outruns the release window: PASS — overlapNeed=904 pool=2771
+CHECK pool overlap branch silent at the default (scatter == window): PASS — overlapNeed=0
+CHECK overlap case sizes a larger pool: PASS — 2771 > 2226
+CHECK fallback reads the frozen trusted defaults, not the editable surface: PASS — colorA=#f6f9fd
+CHECK trusted defaults frozen and not exposed on the API surface: PASS
+CHECK gate bounds read schema constants, not editable CONFIG keys: PASS
+CHECK direct-edit corpus: numeric as string resets and revalidates: PASS
+CHECK direct-edit corpus: non-finite resets and revalidates: PASS
+CHECK direct-edit corpus: null group restored from trusted defaults: PASS
+--- probe-stage3a ---
+CHECK Stage3a default: coverage == assignments at 120 ms callbacks: PASS — cov=14 asg=14 changes=14
+CHECK Stage3a default: assignments in scheduled order at scheduled instants: PASS — [{"page":1,"atMs":0},{"page":2,"atMs":300},{"page":3,"atMs":600},{"page":4,"atMs":900}]
+CHECK Stage3a counters separated (processed == assignments, presented counted separately): PASS
+CHECK Stage3a dense 40p/6000ms accepted and fully assigned at 120 ms: PASS — ok=true asg=40 changes=40
+CHECK Stage3a one-step crossing (multi-page + flip exit) matches fine-step assignments: PASS — big=1,2,3,4,5,6,7,8,9,10,11,12,13,14 fine=1,2,3,4,5,6,7,8,9,10,11,12,13,14 phase=release/release
+CHECK Stage3a anchors unchanged: PASS
+--- probe-stage4-seam ---
+CHECK Stage4-seam restart equivalence: identical simT/phase/page progression after dirtying + resetRun: PASS — [[16.7,"flip",1],[66.7,"flip",1],[186.7,"flip",1]]
+CHECK Stage4-seam restart clears the frame accumulator and frame statistics: PASS — null
+CHECK Stage4-seam restart clears turn-factor outputs: PASS — out=1 in=1 exit=1
+CHECK Stage4-seam restart clears page counters and dropped time: PASS
+CHECK Stage4-seam first callbacks after restart advance identically to a fresh load: PASS — dirtyRestart simT=16.700000000000045 fresh simT=16.700000000000045
+--- probe-stage4b ---
+CHECK Stage4b gap 16.7 ms: per-callback advance <= bound 350: PASS — maxAdvance=16.7 droppedMs=0
+CHECK Stage4b gap 16.7 ms: no dropped time at ordinary cadences: PASS
+CHECK Stage4b gap 50 ms: per-callback advance <= bound 350: PASS — maxAdvance=50 droppedMs=0
+CHECK Stage4b gap 50 ms: no dropped time at ordinary cadences: PASS
+CHECK Stage4b gap 120 ms: per-callback advance <= bound 350: PASS — maxAdvance=120 droppedMs=0
+CHECK Stage4b gap 120 ms: no dropped time at ordinary cadences: PASS
+CHECK Stage4b gap 500 ms: per-callback advance <= bound 350: PASS — maxAdvance=350 droppedMs=1800
+CHECK Stage4b gap 500 ms: excess named as dropped time, reported identically in frameStats: PASS — dropped=1800
+CHECK Stage4b gap 2000 ms: per-callback advance <= bound 350: PASS — maxAdvance=350 droppedMs=19800
+CHECK Stage4b gap 2000 ms: excess named as dropped time, reported identically in frameStats: PASS — dropped=19800
+CHECK Stage4b post-stall assignments complete (coverage == assignments over the cycle): PASS — assigned=14 coverage=14
+CHECK Stage4b pacing regression: 100x120 ms callbacks advance 12000 ms with no residue and no drop: PASS — simT=12000 dropped=0
+CHECK Stage4b capture continuity: capture origin within 6 px of the boundary-evaluated position: PASS — tested=899 violations=0
+CHECK Stage4b capture records the boundary velocity snapshot: PASS — snapshots=899
+--- probe-stage5a ---
+CHECK Stage5a default: outgoing edge set present and spanning the page height: PASS — edge=243 span=176 pageH=178
+CHECK Stage5a default: incoming outline simultaneously present (both faces carry outline + texture): PASS — incoming=363
+CHECK Stage5a default: edge demand fully assigned, page demand unassigned == 0: PASS — {"edgeAssigned":243,"edgeUnassigned":0,"unassigned":0}
+CHECK Stage5a default: outgoing edge folds as one chain (positions follow the exit factor): PASS — exitFactor=0.10204081632653061
+CHECK Stage5a dense config accepted by the gate: PASS
+CHECK Stage5a dense: outgoing edge set present and spanning the page height: PASS — edge=243 span=175 pageH=178
+CHECK Stage5a dense: incoming outline simultaneously present (both faces carry outline + texture): PASS — incoming=363
+CHECK Stage5a dense: edge demand fully assigned, page demand unassigned == 0: PASS — {"edgeAssigned":243,"edgeUnassigned":0,"unassigned":0}
+CHECK Stage5a dense: outgoing edge folds as one chain (positions follow the exit factor): PASS — exitFactor=-0.1200000000000001
+--- probe-stage5b ---
+CHECK Stage5b released page particles hold page intensity early in the scatter window: PASS — early=529 atPageIntensity=529
+CHECK Stage5b intensity drops to surplus only after the clearance point: PASS — late=529 atSurplus=529
+CHECK Stage5b clearance metric still computed for the released set: PASS — null
+--- probe-stage6 ---
+CHECK Stage6 pageHeaderTopRatio=1 refused by the gate (placed box outside its region): PASS — ["header placed ink box outside the page region"]
+CHECK Stage6 long token: either gate-refused below the floor or sampled with coverage: PASS — ok=true targets=276 fit={"sx":0.3683872349539516,"condensed":true}
+CHECK Stage6 counter at 360px: group width carries the label letter spacing: PASS — groupW=104 spacing=6.3 mode=inline
+CHECK Stage6 counter at 360px: inline mode fits the available width: PASS — groupW=104 availW=107
+CHECK Stage6 counter at 412px: group width carries the label letter spacing: PASS — groupW=125 spacing=6.3 mode=inline
+CHECK Stage6 counter at 412px: inline mode fits the available width: PASS — groupW=125 availW=127
+CHECK Stage6 title-centre swap moves fit centre and sampled targets together: PASS — cx 160 -> 112, meanX 160 -> 112
+--- probe-final ---
+CHECK swap test resolves (DATA WIZARD, 9 pages, 1800 ms, #ffd75e): PASS
+CHECK swap test passes the feasibility gate: PASS — []
+CHECK swap test schedule + timing coherent (all pages covered, positive intervals): PASS — changes=9 minInterval=97
+CHECK swap test runs: assignments complete, no seam violations: PASS — assigned=9
+CHECK feasibility sweep (filed separately): 585 probes over 117 numeric fields x 5 adversarial values through the production validate+gate path, bad == 0: PASS — 585/585
+CHECK self-start: frame loop reaches hold, seam and the next cycle unaided: PASS — simT=6680 trace=flip,release,form,hold,resolved-hold,resolved-hold-final,seam,flip
+CHECK anchors preserved (1@0, 6@1500, 14@2200; interval 87.5): PASS
+CHECK seam clean over a full cycle: PASS
+CHECK presented counter fed by actual draws: PASS — presentedPages=0
+--- probe-dense ---
+badTransitions=0 of 56 pool=2226 hold={"state":"RESOLVED","hold":1100} seamViolations=0
+CHECK dense combined clean: PASS
+--- probe-stage3bc (event-time registration, presented dwell, hold) ---
+CHECK Stage3b registration start == arrival event instant (t0+delay+travel): PASS — sampled=1257 bad=0
+CHECK Stage3b registration completion recorded at its event instant: PASS — sampled=1257 bad=0
+CHECK Stage3b strict-readable cells at 60 fps (target 32/32): PASS — 32/32
+CHECK Stage3b strict-readable cells at 50 ms steps (target 32/32, repriced if missed): FAIL — 26/32 missed=["0 p9","0 p13","13.1 p8","13.1 p12","29.7 p7","29.7 p11"]
+CHECK Stage3c resolved hold RESOLVED with assigned == required: PASS — {"basis":"measured","holdState":"RESOLVED","titleAssignedCount":1173,"titleRequiredCount":1173,"ringAssignedCount":84,"ringRequiredCount":84,"titleResolvedByMs":4600,"ringResolvedByMs":4600,"jointResolvedByMs":4600,"titleMs":1100,"ringMs":1100,"observedHoldMs":1100}
+CHECK Stage3c resolved hold == nominal 1100 ms from actual completion: PASS — observed=1100 joint=4600
+CHECK Stage3c empty assignment reports UNRESOLVED — empty assignment, never a resolved hold: PASS — "UNRESOLVED — empty assignment"
+CHECK Stage3c partial assignment reports UNRESOLVED (assigned != required): PASS — assigned=5 required=1173
+REPRICING (plan-review F2): the 32/32-at-50ms strict-readable item is a TARGET, missed at 26/32 — missed cells named in the probe output per page and offset; this is deferral D1's priced remainder, carried to the filing, not averaged away.
+--- feasibility sweep (probe-sweep2/3/4) ---
+585 probes over 117 numeric fields x 5 adversarial values [0, -1, 1e12, Infinity, NaN] through the production validate+gate path (applyConfig): bad = 0 in all three chunks (195 + 195 + 195). The sweep ran on the pre-integration source; the integration edits touched no validation or gate path, and the stage-2 corpus above re-verifies the gate on the final source.

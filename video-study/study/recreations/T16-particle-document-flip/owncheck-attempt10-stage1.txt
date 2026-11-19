@@ -1,0 +1,84 @@
+T16 attempt 10 — Stage 1 own-check (R1 head cure: strict-readable gating + strict dwell)
+Checkpoint source: checkpoint-attempt10-stage1.html, sha256
+02c4f85b7522c8729d132f6f435c2135ee12f4a19c0f4988c5e5a2b8e79c4979
+(checkpoint inode 7290551 != candidate working inode 7276673 — content copy,
+independence asserted). PIXEL-UNVERIFIED over all of it.
+
+CONSTRUCTION (plan §3 Stage 1, Execute steps 6-8)
+- Gating: presentedPage/presentedCycle state; draw() renders the numeral
+  ONLY from presentedPage, which changes only at a draw where the strict
+  predicate holds for the named page; per-cycle reset at the loop seam
+  (a new cycle is un-presented until its own page 1 earns a strict draw);
+  initDom and resetRun re-derived to the un-presented state (initDom is
+  the Stage-0 census addition); counterPresentedValues records qualified
+  writes only, as {cycle, value} records (both definitions printed in
+  the filing per plan §5e: a9 = plain strings, a10 = cycle-tagged).
+- Dwell: strictDwellMs: 50 in DEFAULTS; minSettledHoldMs retired into the
+  frozen SCHEMA as retiredMinSettledHoldMs (grep: 0 live references);
+  both consumers (turn cap, budget need) and validation read the new
+  key; strictDwellMs joins the URL numeric route. Anchors untouched:
+  checkpoints 1@0 / 6@1500 / 14@2200, flipMs 2600, interval ladder
+  300 -> 87.5 ms — the dwell is bought entirely from the turn.
+
+FEASIBILITY LADDER (Execute step 7, A-C011-4; measured on the frame()
+clock, instrument = the actual frame loop, centered-metrics convention)
+reserve 20   (turnEff 67.5, window 20.0 ms): 60 fps 1 strict draw/page;
+             50 ms steps: 0 draws on 6 of 8 rapid pages — FAILS.
+reserve 37.5 (turnEff 50.0, window 37.5 ms): 60 fps 2-3/page;
+             50 ms steps: 0 draws on pages 9 and 13 — FAILS.
+reserve 50   (turnEff 37.5, window 50.0 ms): 60 fps 3/page;
+             50 ms steps: exactly 1/page on every rapid page — ADOPTED
+             (first rung meeting both cadences; the ladder is exhausted
+             upward no further: 50 ms is one full step of the coarsest
+             supported cadence, so a qualifying draw is guaranteed at
+             any phase — below it the guarantee is phase-dependent).
+Measured strict start (reserve 50): anchor + 37.5 ms on every rapid
+page — max(turn completion, last required registration) with the TURN
+binding; registration completes at anchor + ~37.4 ms (span floored at
+1 ms at the rapid cap). Effective window = 50.0 ms exactly.
+
+TRACE-BASED GATING ASSERTION (Execute step 9) — 12/12 grids PASS
+Cadences {60 fps, 50 ms} x offsets {0, 7.3, 13.1, 29.7} + boundary
+grids derived from the measured strict start of page 6 (1537.5 ms):
+60 fps offsets 4.07 (draw lands 0.1 ms BEFORE strict start) and 4.27
+(0.1 ms AFTER); 50 ms offsets 37.4 (draw at strict start - 0.1 and at
+the seam - 0.1) and 37.6 (strict start + 0.1). Every run: two full
+cycles + a resetRun() restart + a refused revalidate() (flipMs=50
+mutation), assertions (i)-(vi) of plan step 9 all hold:
+- the numeral changes ONLY at strict draws of the named page, same cycle;
+- at every draw the numeral equals the cycle's last strict-qualified
+  page (or the un-presented state before the first);
+- cycle 2 shows NO numeral before its own page 1 qualifies (no 14/14
+  leak); seam draws all at opacity 0;
+- strict draws per rapid page, cycles 1 and 2: exactly 3 at 60 fps,
+  exactly 1 at 50 ms, at EVERY offset incl. boundary grids;
+- page 1's numeral never precedes page 1's first strict draw;
+- the refused revalidation leaves text, opacity, simT and
+  presentedPage bit-identical at the refusal instant, and the restart
+  returns to the un-presented state.
+
+ATTRIBUTION PROBES (Execute step 9a; same-input scratch copies)
+variant        strict draws p6-13 (60fps/50ms)   visible stale ms (60/50)   qualified writes (60/50)
+P0 a9          8 / 2                             1367 / 1400                13 / 13 (ungated: every page)
+P1 gating only 8 / 2                             0 / 0                      14 / 8 (only qualified pages)
+P2 dwell only  24 / 8                            1100 / 1100                13 / 13 (ungated)
+P3 both        24 / 8                            0 / 0                      14 / 14 (every page qualified)
+Reading: the dwell owns the draw counts (8->24, 2->8), the gating owns
+the staleness (1367->0 even without the dwell), and only P3 presents
+every page at the coarse cadence. The two cures are separable on this
+evidence; lens attribution in the filing still prints BUNDLED where a
+return's own terms do not separate them (plan §1).
+
+FOLD OVERLAP (checkpoint value for the Stage-2 adjacent comparison)
+Instrument (this builder's, defined here): anchor-space bboxes —
+intersection of the outgoing (exiting) and incoming (borrowed page/
+line) anchor bounding boxes, divided by the incoming anchor-box area;
+frames classified by the source's own turnFactorExit (post-ramp:
+factor == foldMinFactor; pre-ramp: factor >= 0.5); 5 ms steps.
+a9: post 0.147 (176 frames), pre 0.717 (36). Stage 1: post 0.096
+(140 frames), pre 0.717 (32). (a9's filed 0.046/0.935 came from a
+different instrument definition in the a9 lane; the adjacent
+Stage1->Stage2 comparison under THIS definition is the priced one.)
+
+GATE (A-C012-4): checkpoint + this own-check filed create-once and read
+back before Stage 2 opens.

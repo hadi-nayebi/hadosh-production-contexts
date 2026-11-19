@@ -1,0 +1,36 @@
+T16 attempt 10 — Stage 5 own-check (R6 snapshot getters + committed restart)
+Checkpoint source: checkpoint-attempt10-stage5.html, sha256
+3454192ab88acb6b4b6d2a479e23138cfce5bd10ef5c6fc6268ec465283c6086
+(checkpoint inode 7309964 != candidate working inode 7276673).
+PIXEL-UNVERIFIED over all of it.
+
+CONSTRUCTION (plan §3 Stage 5, Execute step 12)
+- The checkpoints getter returns fresh {page, atMs} copies; the
+  appliedConfig getter returns snapshotConfig(APPLIED_CONFIG). The
+  remaining live getters (particles, trace, transitions, diagnostics,
+  REJECTED_CONFIGS, the fit records) are classified live-by-design in
+  the build record: they are observation surfaces whose consumers read
+  current state (draw/diagnostics) or append-only records, and no
+  consumer mutates them as configuration.
+- resetRun() first restores the COMMITTED configuration
+  (restoreConfig(APPLIED_CONFIG) + refreshColors + checkpoint
+  re-resolution) when one exists: a runtime edit that bypassed
+  revalidation is discarded at restart instead of leaking into the
+  restarted run. Lawful on every call path (revalidate commits before
+  resetRun; resize commits no config change).
+
+DISCRIMINATING CHECKS (suite s5)
+- Mutating the returned checkpoints (entry rewrite + push) changes
+  neither the live anchors (still 1@0 / 6@1500 / 14@2200) nor the
+  resolved schedule built from them (page 6 atMs 1500).
+- Mutating the returned appliedConfig changes no live value.
+- After an unvalidated runtime edit (titleText overwritten directly),
+  resetRun() restores the committed title, and the restarted run's
+  borrowed counts equal a fresh run's at the same instant exactly
+  ({stack 1208, page 676, line 332}).
+
+GATE (A-C012-4): checkpoint + this own-check filed create-once and read
+back before Stage 6 opens. Sequencing note: this stage's checkpoint
+was filed after the Stage-6 build began (see the Stage-4 note and the
+build record's deviation list); the stage's source bytes were frozen
+in scratch from its build, so no evidence was at risk.

@@ -1,0 +1,43 @@
+T16 attempt 10 — Stage 2 own-check (R2 handoff origin/commit, motion)
+Checkpoint source: checkpoint-attempt10-stage2.html, sha256
+1f13deee3429c95e1465abaa0ef4aafe27ef89aabd639e2b20d3cd6a919ed9ad
+(checkpoint inode 7305565 != candidate working inode 7276673).
+PIXEL-UNVERIFIED over all of it.
+
+CONSTRUCTION (plan §3 Stage 2, Execute step 10; priced in the a9 motion
+return's own terms: the incoming fold "scales the interpolated anchor,
+including its stream-side origin" and releaseParticle "reads p.x and
+p.y before the current folded position is committed")
+- R2a: the turning branch folds the DESTINATION — foldedTx =
+  pivotX + (tx - pivotX) * factor, with pivotX = pageXR * W — and the
+  interpolation still starts exactly at the captured origin ax0
+  (jitter term preserved verbatim). The capture origin is never scaled.
+- R2b: at eu >= 1 in the exit branch, the folded anchor position and
+  the anchor velocity (velX/velY := the offset derivatives, so the
+  release's anchor-velocity term velX - doxVelX is 0 — the fold profile
+  is flat past its ramp) are committed into p.x/p.y/p.velX/p.velY
+  BEFORE releaseParticle reads them. The same commit was added at the
+  second release site, retargetPage's release of an already-completed
+  exit, with the pivot in the source's own form (CONFIG.pageXR * W).
+
+DISCRIMINATING CHECKS (suite s2 on the Stage-2 source; Stage-1 source
+as the pre-cure control on the same instruments)
+- Capture origin preservation: 7,075 flip page/line captures (3
+  wrap-seam exclusions by the source's own rule); max displacement of
+  the anchor from its captured origin at the capture tick = 2.94 px
+  (first-tick eased progression + jitter). CONTROL (Stage-1 source):
+  max 159.98 px, up to 29x the travel length, 1,091 wrap exclusions —
+  the fold displacing origins, as charged.
+- Release-commit exactness: 14,426 exit releases checked; the scatter
+  origin (anchor-space: scatFrom = p.x - dox by construction) equals
+  pivotX + (exitFromX - pivotX) * foldMinFactor EXACTLY (1e-6) at every
+  release, scatFromY == exitFromY. Violations: 0. CONTROL (Stage-1
+  source): 14,426 / 14,426 violations — every origin stale by one
+  update tick (~0.12 px at 5 ms steps; callback-dependent, as charged).
+- Fold overlap, Stage-1 checkpoint instrument (anchor-space bboxes,
+  intersection over incoming area, turnFactorExit classification):
+  post-ramp max 0.0961 vs the Stage-1 checkpoint's 0.096 — adjacent,
+  no regression; pre-ramp control 0.315 (discriminating, > 0.10).
+
+GATE (A-C012-4): checkpoint + this own-check filed create-once and read
+back before Stage 3 opens.

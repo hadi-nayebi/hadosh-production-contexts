@@ -1,0 +1,8 @@
+Stage 2 — C3 speck twinkle loop continuity
+Checkpoint source: stage-2-twinkle.html sha256 2a9bee15a6d708216d03e4084a3bc468bf0f1f9fa61607f0215202bdc1944150, inode 5416309 != working inode 5307293, sha frozen at filing.
+Formula assertions (formula-level, per plan §3/C3 — the twinkle lives in frame(), NOT in stateAt(); no state-harness claim is made):
+- frame() twinkle argument is now Math.sin((2 * Math.PI * cyc) / cfg.specks.twinklePeriodMs + ph) — present in source. PASS
+- twinklePeriodMs 1100 -> 1200; periods per cycle = 12000 / 1200 = 10, integer. PASS
+- Wrap continuity: sin argument at cyc=12000 equals sin(20*PI + ph) = sin(ph) = value at cyc=0 for every phase, by identity; numeric sample at cyc=11999.999 vs 0 across phases: max jump 0.000001 (sampling epsilon only). PASS
+- Amplitude range unchanged: reserveIntensity x (1 - twinkleAmp .. 1) with the sine in [-1,1] gives opacity range 0.15-0.50, identical to attempt 1. PASS
+PIXEL-UNVERIFIED.

@@ -1,0 +1,55 @@
+# T16 attempt 9 — Stage 0 own-check (preservation + reconciliations + a8 control)
+# PIXEL-UNVERIFIED stands over all of it (deterministic source/harness checks only).
+
+## Preservation (before any mutation)
+- Baseline: runs/2026-11-18-cycle-029-wave-28/preservation-baseline-T16-attempt9.txt — machine-written
+  sha256sum redirect in a write-first invocation; 190 lines (188 artifact files + plan-T16.md +
+  codex-plan-review-T16-return.md); malformed hashes: 0 (every line matches ^[0-9a-f]{64}).
+- recreation-attempt-8.html: CONTENT copy, create-once; sha a32c95bb6c16e06998a973e550d51a03e617bc9914d20f5eba2765c4d2dbde95
+  == a8 scored sha; inode 7170931 != recreation.html inode 4298205.
+- comparison-preserved-attempt-8.html: content copy, create-once; sha 75e2584a752c2d21ff277477c5bb35c34616e119c5f12fc764a90ec6d6087a88.
+- comparison-attempt-8-viewer.html: separately named attempt-8 viewer (plan-review finding 3) — the preserved
+  comparison's markup with ONLY the iframe target changed to recreation-attempt-8.html; ORIGINAL side
+  (segment.mp4 sha c4f0c6f8e8b77f6793b47367fcb4e53cfd35c607eb27ae137f897b2d4989426f) unchanged.
+- candidate-attempt9.html: content copy of the a8 source, sha a32c95bb... at Stage 0; the build runs on it.
+
+## R1 instrument reconciliation (BLOCKING first check) — RESOLVED
+Instrument: the ACTUAL frame() loop driven through requestAnimationFrame callbacks (node harness, stubbed
+rasterizing canvas, 320x240 stage), cadences 60 fps and 50 ms steps, offsets {0, 7.3, 13.1, 29.7},
+pages 6-13 (32 cells per cadence). At every draw the instrument recorded the callback timestamp, the
+simulation time, the current page identity, the required front-page target count (sampled page targets of
+kinds page+line), the assigned count, and both predicates evaluated at that draw instant for the assigned set.
+Three counts kept separate per cell: (i) opportunities = draws whose sim time falls inside the page's strict
+window [pageStart + effectiveTurn, nextPageStart); (ii) presented = draws executed while the page was current;
+(iii) presented-readable = draws at which the strict predicate held for the complete assigned set.
+Results (cells with count >= 1, of 32):
+- 60 fps: opportunities 32/32 - presented 32/32 - presented-readable (strict) 32/32 - geometric 32/32.
+- 50 ms steps: opportunities 8/32 - presented 32/32 - presented-readable (strict) 0/32 - geometric 24/32.
+Per-cell detail (50 ms): drawsInStrictWindow = 1 only for pages 8 and 12 at every offset, 0 elsewhere;
+strictReadableDraws = 0 in all 32 cells; geomReadableDraws = 1 in 24 cells (0 for pages 9 and 13).
+Reconciliation verdict: the a8 timing figure (10/32) is an (i)-count by idealized regular-grid arithmetic;
+the instrument's actual-draw (i)-count is 8/32 (the difference: frame() draws once per callback after its
+substeps, so actual draw instants are not a uniform 50 ms grid in simulation time). The a8 build figure
+(26/32) counted simulation STEP states inside frame() (multiple steps per draw), i.e. it conflated
+step-level predicate states with (iii) presented-readable draws. At actual draw timestamps the strict
+presented-readable count on the a8 source is 0/32 at 50 ms steps and 32/32 at 60 fps. The dispute is
+RESOLVED for the draw-timestamp, predicate-checked definition (the stricter basis); Stage 1 builds the
+counter to exactly that definition, and both bases plus this reconciliation ride in the lens packet
+(A-C010-3 basis binding).
+
+## R5h census enumeration (mechanical Object.keys walk on the a8 source)
+- DEFAULTS: 131 keys (117 numeric, 14 non-numeric: pageHeader, pageLinePattern, titleLabel, titleText,
+  haloColor, fontFamily, colorA, colorB, background, counterColor, counterLabelText, counterLabelColor,
+  labelColor, flipCheckpoints). CONFIG is a deep copy of DEFAULTS: 131 live CONFIG keys.
+- SCHEMA (frozen, separate object): 6 constants (maxAbsValue, contrastColorA, contrastColorB, contrastHalo,
+  contrastDom, minAlphaSeparation) — not CONFIG keys.
+- Retired-in-a8: 2 keys (magnitude bound, minimum separation) moved from CONFIG into SCHEMA during a8.
+- Discrepancy source: the a8 census leg's "118 keys" undercounts the mechanical walk by 13 and files no
+  per-key table from which the 118 subset can be reproduced; the reusability return's 131 (117 numeric)
+  matches the mechanical walk exactly. Attempt 9's census basis = 131 live CONFIG keys, enumerated per key
+  in config-census-attempt9.md.
+
+## a8-source control run (this attempt's harness, before-state for same-input reproduction)
+- Feasibility gate: ok. Checkpoints 1@0, 6@1500, 14@2200. Minimum interval 87.5 ms. Schedule changes: 14.
+- Pool 2149 particles at 320x240; seam violations 0; unassigned 0 on the default run (a8 final suite form).
+Stage 0 CLOSED. Next stage opens only with this checkpoint filed (A-C012-4).

@@ -1,0 +1,38 @@
+OWN-CHECK — attempt 9, stage 6 (integration + freeze) — final source sha c7bdd713ac188769d7c8e3810c09cf1b351952abed0e20192a3098f3cdbd78bb
+Full suite on checkpoint-attempt9-stage6-final.html (byte-identical to candidate):
+PASS S1 counter==instrument strict cells @50ms — instrument 8,12 counter 8,12 traceDraws 48
+PASS S1 repeat draws do not double-count unique pages — before 8 after 8
+PASS S1 counter presented values only via draws — 2/14,3/14,4/14,5/14,6/14
+PASS S1 60fps strict presented-readable pages — pagesPresentedReadable=14
+PASS S1 trace carries cycle/page/required/registered — draws 144
+PASS S2 transitions recorded with departing sets — transitions 13 departing[1]=835
+PASS S2 no dedicated edge teleport (edgeAssigned 0, edgeUnassigned 0)
+PASS S2 unassigned 0 at defaults — max unassigned 0
+PASS S2 outgoing fold does not return over incoming footprint at/after onset (intersection/outgoing <= 0.10) — worst 0.000
+PASS S3a scatter intensity <= travel cap on every branch (phase+seam+flip-exit sampled) — max scatter alpha 0.38 over 249202 samples
+PASS S3a release carries release-start intensity — scatStartAlpha 0.38
+PASS S3b 50/50 case: pool overlap bound > 0 on shared end times — overlapNeed 844 projectedEnds 2650,2740
+PASS S3b formation delayed by outstanding scatter (accounted) — delay 2740
+PASS S4a initial-borrow registration completes <= flip end (60ms) — max regDoneAt 0
+PASS S5i two-page derived schedule keeps final anchor at end-time — [{"page":1,"atMs":0},{"page":2,"atMs":2200}]
+PASS S5e mutating a supplied checkpoint entry changes neither live schedule nor snapshot — live 0,1500,2200 applied 0,1500,2200
+PASS S5c fractional region padding yields the floored integer case count — 839 vs 839 (pad 4.6 floored to 4)
+PASS S5f labelFadeMs=0 yields finite opacity — opacity 1
+PASS S5d ring partly offstage horizontally does not execute as placed — applied cx 0.5 ok false
+PASS S5a gate asserts header samples separately — reasons header fit condensed below the sampling floor
+PASS S5g URL routes parse and consume (onset, travel times, palette, line pattern) — onset 0.5 travelFlip 40 pattern [0.5,0.9]
+PASS S5 generative sweep: no throw, gate outcome always defined — 81 probes, 0 bad
+PASS R6 refused revalidation preserves live presentation — simT 1800->1800 txt 1/14->1/14
+PASS R6 reset clears diagnostic maxima + counter text from CONFIG — edgeMax 0 txt 1/14
+PASS R7 settled sets identical across 120ms vs 10ms steps, positions within 6px — compared 833 worst 0.55px
+PASS R7 coarse callback crosses multiple events in order (coverage == assignments) — coverage 9 assigned 9
+PASS S6 dense combined (40p, long title): unassigned 0 — transitions 39 maxUnassigned 0 hold null
+FAIL S6 dense hold resolves (non-vacuous accounting) — hold null
+PASS S6 config swap regenerates and runs — swap ok true
+PASS S6 self-start reaches seam unaided — simT 13000
+TOTAL 29 PASS / 1 FAIL
+Corrected dense-hold block (suite file's dense run stops at 6200 ms, before hold entry at 8000 ms — check-horizon artifact; corrected run to 9600 ms):
+PASS S6 dense hold resolves by 9600ms (hold entry at 8000) — hold RESOLVED observed 1100ms
+R7 settled-set block also re-verified standalone at matched simT 1680: compared 839 worst 0.00px.
+Integration cures landed at this stage: pool priced for FOUR concurrent page sets (two flip-exit scatter sets overlap a handoff at the 300→87.5 ms tempo drop); registration record finalized from event times at the departing claim and in the exit branch; boundary evaluation at landing-body page dispatches.
+Comment contamination scan: 203 comments, 0 cure-code/attempt/lens/score anchors (only the fold-plateau geometry term).

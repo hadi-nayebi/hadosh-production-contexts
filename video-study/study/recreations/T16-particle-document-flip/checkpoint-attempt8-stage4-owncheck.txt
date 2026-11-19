@@ -1,0 +1,20 @@
+CHECK Stage4-seam restart equivalence: identical simT/phase/page progression after dirtying + resetRun: PASS — [[16.7,"flip",1],[66.7,"flip",1],[186.7,"flip",1]]
+CHECK Stage4-seam restart clears the frame accumulator and frame statistics: PASS — null
+CHECK Stage4-seam restart clears turn-factor outputs: PASS — out=1 in=1 exit=1
+CHECK Stage4-seam restart clears page counters and dropped time: PASS
+CHECK Stage4-seam first callbacks after restart advance identically to a fresh load: PASS — dirtyRestart simT=16.700000000000045 fresh simT=16.700000000000045
+--- Stage 4b (bounded catch-up, boundary anchoring) — restart seam above was captured BEFORE these edits ---
+CHECK Stage4b gap 16.7 ms: per-callback advance <= bound 350: PASS — maxAdvance=16.7 droppedMs=0
+CHECK Stage4b gap 16.7 ms: no dropped time at ordinary cadences: PASS
+CHECK Stage4b gap 50 ms: per-callback advance <= bound 350: PASS — maxAdvance=50 droppedMs=0
+CHECK Stage4b gap 50 ms: no dropped time at ordinary cadences: PASS
+CHECK Stage4b gap 120 ms: per-callback advance <= bound 350: PASS — maxAdvance=120 droppedMs=0
+CHECK Stage4b gap 120 ms: no dropped time at ordinary cadences: PASS
+CHECK Stage4b gap 500 ms: per-callback advance <= bound 350: PASS — maxAdvance=350 droppedMs=1800
+CHECK Stage4b gap 500 ms: excess named as dropped time, reported identically in frameStats: PASS — dropped=1800
+CHECK Stage4b gap 2000 ms: per-callback advance <= bound 350: PASS — maxAdvance=350 droppedMs=19800
+CHECK Stage4b gap 2000 ms: excess named as dropped time, reported identically in frameStats: PASS — dropped=19800
+CHECK Stage4b post-stall assignments complete (coverage == assignments over the cycle): PASS — assigned=14 coverage=14
+CHECK Stage4b pacing regression: 100x120 ms callbacks advance 12000 ms with no residue and no drop: PASS — simT=12000 dropped=0
+CHECK Stage4b capture continuity: capture origin within 6 px of the boundary-evaluated position: PASS — tested=899 violations=0
+CHECK Stage4b capture records the boundary velocity snapshot: PASS — snapshots=899

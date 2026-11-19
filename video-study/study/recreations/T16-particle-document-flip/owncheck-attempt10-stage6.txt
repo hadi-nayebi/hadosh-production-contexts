@@ -1,0 +1,27 @@
+T16 attempt 10 — Stage 6 own-check (R8 resolved-schedule cache, performance only)
+Checkpoint source: checkpoint-attempt10-stage6.html, sha256
+f9f9462a985c1e3f8cceb97eebeb6b26e9b3d594305951d8155f7490cfafc4e4
+(checkpoint inode 7310140 != candidate working inode 7276673).
+PIXEL-UNVERIFIED over all of it.
+
+CONSTRUCTION (plan §3 Stage 6, Execute step 13)
+computeSchedule() keeps its signature; the no-arg path serves a cache
+keyed by (the committed snapshot's identity, a fingerprint of every
+schedule-determining CONFIG value: pageCount, flipMs, travelFlipMs,
+staggerFlipFraction, registrationMs, turnOnsetFraction, turnMs,
+strictDwellMs, the three checkpoint fractions, the flipCheckpoints
+JSON). Candidate (cfg-arg) calls bypass the cache entirely, so a
+configuration under evaluation never reads the committed entry and
+never pollutes it. No behavior change: the cached object is the very
+object the uncached computation returns.
+
+DISCRIMINATING CHECKS (suite s6; Stage-5 source as control)
+- Two no-arg calls return the SAME object (control: different objects).
+- The identity survives 3000 ms of frames on an unchanged config.
+- After a commit (title change via applyConfig), the schedule is a
+  fresh object whose page-6 turnEff equals the manual
+  turnEffForInterval(87.5) = 37.5 exactly — the dwell table is
+  recomputed correctly, not served stale.
+
+GATE (A-C012-4): checkpoint + this own-check filed create-once and read
+back before Stage 7 opens.

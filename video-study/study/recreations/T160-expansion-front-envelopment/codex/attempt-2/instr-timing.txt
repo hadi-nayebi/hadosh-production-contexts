@@ -1,0 +1,147 @@
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream.
+
+CONSUMER: practice job INSTRUCTION §5 Verify (five-lens re-scoring wave). DECISION PRICED: whether this build meets the bar (average >=85 AND minimum >=70) and what limits this lens's score. WORKING RECORD: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T160-expansion-front-envelopment/codex/attempt-2/. BODY-WRITE: your return is filed verbatim as codex/attempt-2/lens-timing.md; your return MUST end with "SCORE: <integer>" on its own line and a "BODY-WRITE:" line naming what it filed.
+
+Scores are integers from 0 to 100.
+
+recreation.html SHA-256 (identical in all five lens payloads): e6676f689794bb4c2dd4661354efa9e774e0aab39e42aff78ab58a224ee766fd
+
+LENS: timing/tempo. Judge ONLY timing: front onsets, growth durations, completion and hold, against the specimen observations, time mapping and measurement limits in the neutral timing extract below.
+
+Neutral technique facts: Expansion-front envelopment, Packet #8 T16, segment 446–456 s of the Kurzgesagt aliens essay. Mechanics: a lone marked planet (magenta disc, green dashed ring, pin marker) centred in an empty purple starfield; coloured territory fronts grow continuously across the star map from the left (purple) and the right (gold), closing around the planet until a narrow gap remains between the frontiers; growth is continuous frontier advance. Build: one self-contained HTML file; CONFIG carries stage 720×405, cycle 10000 ms. Frontier form: each frontier point = origin edge + (its own seeded-wobble end point − origin edge) × growth progress; the draw path skips a front whose progress is 0.
+
+Neutral timing extract:
+Specimen observations. Source frames: five frames extracted from the specimen segment at one-second intervals, stored as census/f447.jpg, census/f449.jpg, census/f452.jpg, census/f453.jpg, census/f455.jpg in the recreation Cycle 025 (Wave 22) run directory (sha256 prefixes: f447 02aa08a8 · f449 93f84040 · f452 4b21b26d · f453 87ff2a99 · f455 fbf2a132). Segment: 446–456 s of the source video; the segment file is an 11.000 s cut spanning 445.5–456.5 s (1920×1080). Observed frame states (viewed directly; frontier positions measured by a colour-predicate pixel scan, gold territory R>150 G>100 B<120 at x>1300 frame px, purple territory B>170, 70<R<180, G<100 at x<600 frame px; frontier = per-row first matching pixel, averaged over rows):
+- 447 s frame: a lone marked planet (magenta disc, green dashed ring, pin marker) in a starfield; no territory colours detected anywhere in the scanned regions.
+- 449 s frame: same composition; no territory colours detected.
+- 452 s frame: gold territory present at the right frame edge across the full height, wavy frontier; measured mean frontier 1854.8 frame px (per-row range 1784–1912). No purple territory detected.
+- 453 s frame: gold territory advanced; measured mean frontier 1736.7 frame px (per-row range 1656–1824). No purple territory detected.
+- 455 s frame: both territories present (purple from frame left, gold from frame right), planet between them, with a wide unclaimed region between the frontiers; the planet renders smaller in this frame than in the 447–453 s frames (framing differs).
+Time mapping. Window start 446 s = 0 ms in the recreation's cycle; a frame at video second N maps to (N − 446) × 1000 ms: 447 s → 1000 ms · 449 s → 3000 ms · 452 s → 6000 ms · 453 s → 7000 ms · 455 s → 9000 ms. The recreation cycle is 10000 ms. (A separate page-sync mapping used by the side-by-side comparison page is not part of this schedule basis.)
+Measurement limits. Frames are one second apart: any onset is bracketed only to within the interval between the last absent frame and the first present frame. Frontier positions carry JPEG/predicate tolerance of roughly ±4 frame px. Frame-to-stage mapping (1920 frame px → 720 stage px, factor 0.375) is applicable only while framing is unchanged; the 455 s frame's framing differs (planet rendered smaller), so its pixel extents do not transfer to the recreation's fixed stage. That frame establishes presence of both territories, their left/right order around the planet, and a remaining gap — not a completion state or a gap size on the fixed stage. Between the 453 s and 455 s frames there is no observation of either front's position in unchanged framing; the purple front has no in-growth observation at all (absent at 453 s, present at 455 s in changed framing). The gold front's measured displacement between the 452 s and 453 s frames is 118.1 frame px in 1000 ms (= 44.2 stage px per 1000 ms at the 0.375 factor).
+Current-source observations. State-function probes of the recreation source in this packet (progress = growth progress of the named front; frontier = mean frontier position in stage px, stage 720 wide; the right front's end position is 415 and the left front's is 305 at full progress):
+- 1000 ms: left progress 0 · right progress 0.
+- 3000 ms: left progress 0 · right progress 0.
+- 6000 ms: left progress 0 · right progress 0.0801, mean frontier 695.600.
+- 7000 ms: left progress 0 · right progress 0.2725, mean frontier 636.978.
+- 9000 ms: left progress 1 · right progress 1 · distance between mean frontiers 110.656.
+- 9500 ms: identical frontier state to 9000 ms.
+- Schedule as built (also in the source): left front start 7000 ms, duration 2000 ms, linear progress; right front start 4816 ms, duration 4184 ms, progress exponent 2; both reach full progress at 9000 ms; cycle 10000 ms.
+
+Build record (construction and own-check results):
+Construction: canvas scene computed entirely from the CONFIG object at the top of the file: seeded starfield (200 stars), marked planet with rotating dashed ring and pin glyph, two frontier polygons computed per point from growth progress. At init, before the first frame, the canvas backing size and the stage aspect ratio are assigned from CONFIG stageW/stageH. Frontier endpoints whose along-coordinate lies inside the ring's vertical span are clamped so the frontier keeps a configured clearance (ringClearancePx 6) from the ring's outer edge. Frontier progress is computed from a hold-clamped time: once the cycle time reaches endHoldFromMs (9000), the time fed to frontier progress stops advancing; ambient ring rotation and star twinkle are not held. window.__seek/__config/__state are exposed; the state function is also exported for harness use.
+Own-check results (node harness over the source's own state function; logic level — PIXEL-UNVERIFIED, no rendered frames):
+- Zero-territory probes: progress of both fronts is 0 at 1000 ms and at 3000 ms; left-front progress is 0 at 6000 ms and at 7000 ms.
+- Anchor states: right-front progress 0.0801 (mean frontier 695.600) at 6000 ms; 0.2725 (636.978) at 7000 ms; both fronts at progress 1 at 9000 ms with measured distance between mean frontiers 110.656; the 9500 ms state is identical to the 9000 ms state.
+- Growth form: per-point interpolation check — for each front, every point's displacement between two in-growth instants equals (its own end point − origin) × the progress difference (max error 0); the 26 end points per front are pairwise distinct and the displacements are not all equal.
+- Local ring clearance: the frontier polyline sampled densely (231 samples per front inside the ring's vertical span, segments crossing the span included) at 9000 ms and 9500 ms: minimum distance from the ring's outer edge, left 6.713, right 11.233 (configured floor 6).
+- Swap check: fronts replaced by a single top front (#57d977, start 2000 ms, duration 6000 ms) and planet x set to 300 — the state function reports side set [top], planet x 300, progress 0.5 at 5000 ms, mean frontier 73.5 advancing to 147 at completion. Stage-size swap: CONFIG stage 640×480 yields canvas backing 640×480 and stage aspect 640/480 under a stub document.
+- Hold check: a probe front starting at 8000 ms with duration 4000 ms reports progress 0.2498 just before 9000 ms, 0.2500 at 9000 ms, and 0.2500 at every later probed instant (10000, 12000 ms).
+- CONFIG census: 38 of 38 CONFIG keys are consumed by an effect in the code; numeric literals outside CONFIG are the seeded PRNG constants, the mean-rounding precision, and small structural indices/fractions; the only colour literal outside CONFIG is the page background #000 in CSS; the canvas element's width/height attributes and the CSS stage ratio are pre-script fallback values carrying the default stage size.
+- Purity scan: no external references, no media elements, no URLs in the recreation source (0 matches); no Math.random or Date.now (seeded PRNG only).
+- Self-start: the file starts its own animation loop on load (one animation-frame request registered with no external caller in a stub document).
+
+=== FULL recreation.html ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T160 recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;height:56.25vw;max-height:100vh;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+</style></head><body>
+<div id="stage"><canvas id="scene" width="720" height="405"></canvas></div>
+<script>
+var CONFIG = {
+ "stageW": 720,
+ "stageH": 405,
+ "cycleMs": 10000,
+ "endHoldFromMs": 9000,
+ "palette": {"void": "#1a0b38"},
+ "stars": {"count": 200, "seed": 160, "reserveIntensity": 0.5, "colour": "#aebfff", "rMin": 0.8, "rMax": 2.0, "twinkleAmp": 0.3, "twinklePeriodMs": 1100},
+ "planet": {"x": 360, "y": 202, "discR": 26, "ringR": 44, "discColour": "#e0339b", "ringColour": "#57d977", "ringDash": [10, 7], "ringRotateMs": 24000, "ringW": 3},
+ "pin": {"h": 56, "headR": 15, "colour": "#c77dff", "gapPx": 6},
+ "fronts": [
+  {"side": "left", "colour": "#7a4fd0", "startMs": 7000, "growMs": 2000, "easePow": 1, "points": 26, "wobbleAmp": 14, "seed": 11},
+  {"side": "right", "colour": "#f2c230", "startMs": 4816, "growMs": 4184, "easePow": 2, "points": 26, "wobbleAmp": 14, "seed": 29}
+ ],
+ "trappedGapPx": 110,
+ "ringClearancePx": 6
+};
+function rng(seed){var a=seed>>>0;return function(){a|=0;a=(a+0x6D2B79F5)|0;var t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+function clamp01(v){return !(v>0)?0:(v>1?1:v);}
+function wobbles(front){var r=rng(front.seed),w=[],mean=0,i;for(i=0;i<front.points;i++){var v=(r()*2-1)*front.wobbleAmp;w.push(v);mean+=v;}mean/=front.points;for(i=0;i<front.points;i++)w[i]-=mean;return w;}
+function frontState(cfg,front,ms){
+ var effMs=ms>cfg.endHoldFromMs?cfg.endHoldFromMs:ms;
+ var p=clamp01(Math.pow(clamp01((effMs-front.startMs)/front.growMs),front.easePow));
+ var w=wobbles(front),pts=[],i,f,along,fc,endC,origin;
+ var isH=(front.side==="left"||front.side==="right");
+ if(front.side==="left"){origin=0;endC=cfg.planet.x-cfg.trappedGapPx/2;}
+ else if(front.side==="right"){origin=cfg.stageW;endC=cfg.planet.x+cfg.trappedGapPx/2;}
+ else if(front.side==="top"){origin=0;endC=cfg.planet.y-cfg.trappedGapPx/2;}
+ else {origin=cfg.stageH;endC=cfg.planet.y+cfg.trappedGapPx/2;}
+ for(i=0;i<front.points;i++){
+   f=front.points>1?i/(front.points-1):0;
+   along=f*(isH?cfg.stageH:cfg.stageW);
+   var endI=endC+w[i];
+   if(isH&&along>=cfg.planet.y-(cfg.planet.ringR+cfg.planet.ringW/2)&&along<=cfg.planet.y+(cfg.planet.ringR+cfg.planet.ringW/2)){
+     if(front.side==="left")endI=Math.min(endI,cfg.planet.x-(cfg.planet.ringR+cfg.planet.ringW/2)-cfg.ringClearancePx);
+     else if(front.side==="right")endI=Math.max(endI,cfg.planet.x+(cfg.planet.ringR+cfg.planet.ringW/2)+cfg.ringClearancePx);
+   }
+   fc=origin+(endI-origin)*p;
+   pts.push(isH?{"x":fc,"y":along}:{"x":along,"y":fc});
+ }
+ var mean=0;for(i=0;i<pts.length;i++)mean+=(isH?pts[i].x:pts[i].y);mean=Math.round((mean/pts.length)*1000)/1000;
+ return {"side":front.side,"colour":front.colour,"progress":p,"frontierPoints":pts,"frontier":mean,"frontierX":isH?mean:null,"frontierY":isH?null:mean,"started":ms>=front.startMs,"complete":p>=1};
+}
+function stateAt(cfg,ms){
+ var fronts=[],i;for(i=0;i<cfg.fronts.length;i++)fronts.push(frontState(cfg,cfg.fronts[i],ms));
+ var gap=null;
+ if(fronts.length===2&&fronts[0].frontierX!==null&&fronts[1].frontierX!==null){gap=Math.abs(fronts[1].frontierX-fronts[0].frontierX);}
+ return {"ms":ms,"planet":{"x":cfg.planet.x,"y":cfg.planet.y,"discR":cfg.planet.discR,"ringR":cfg.planet.ringR},"pin":{"h":cfg.pin.h,"headR":cfg.pin.headR},"fronts":fronts,"frontierSides":fronts.map(function(f){return f.side;}),"gapPx":gap,"frontCount":cfg.fronts.length,"holding":ms>=cfg.endHoldFromMs,"ringAngle":(ms/cfg.planet.ringRotateMs)*Math.PI*2};
+}
+function starField(cfg){var r=rng(cfg.stars.seed),out=[];for(var i=0;i<cfg.stars.count;i++){out.push({"x":r()*cfg.stageW,"y":r()*cfg.stageH,"r":cfg.stars.rMin+r()*(cfg.stars.rMax-cfg.stars.rMin),"phase":r()*Math.PI*2});}return out;}
+if(typeof document!=="undefined"){
+(function(){
+ var cfg=CONFIG,canvas=document.getElementById("scene"),ctx=canvas.getContext("2d"),stars=starField(cfg);
+ var stageEl=document.getElementById("stage");
+ canvas.width=cfg.stageW;canvas.height=cfg.stageH;
+ stageEl.style.aspectRatio=cfg.stageW+" / "+cfg.stageH;stageEl.style.height="auto";
+ var offset=0,start=performance.now();
+ function drawFront(st){
+   if(st.progress<=0)return;
+   var pts=st.frontierPoints,i;
+   ctx.beginPath();
+   if(st.side==="left"){ctx.moveTo(0,0);for(i=0;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.lineTo(0,cfg.stageH);}
+   else if(st.side==="right"){ctx.moveTo(cfg.stageW,0);for(i=0;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.lineTo(cfg.stageW,cfg.stageH);}
+   else if(st.side==="top"){ctx.moveTo(0,0);for(i=0;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.lineTo(cfg.stageW,0);}
+   else {ctx.moveTo(0,cfg.stageH);for(i=0;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.lineTo(cfg.stageW,cfg.stageH);}
+   ctx.closePath();ctx.fillStyle=st.colour;ctx.fill();
+ }
+ function frame(now){
+   var el=offset+(now-start),ms=((el%cfg.cycleMs)+cfg.cycleMs)%cfg.cycleMs,st=stateAt(cfg,ms),i;
+   ctx.fillStyle=cfg.palette.void;ctx.fillRect(0,0,cfg.stageW,cfg.stageH);
+   for(i=0;i<stars.length;i++){var s=stars[i];ctx.globalAlpha=cfg.stars.reserveIntensity*(1-cfg.stars.twinkleAmp+cfg.stars.twinkleAmp*Math.sin(ms/cfg.stars.twinklePeriodMs+s.phase));ctx.fillStyle=cfg.stars.colour;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();}
+   ctx.globalAlpha=1;
+   for(i=0;i<st.fronts.length;i++)drawFront(st.fronts[i]);
+   var px=cfg.planet.x,py=cfg.planet.y;
+   // pin glyph above planet
+   var tipY=py-cfg.planet.ringR-cfg.pin.gapPx,headCy=tipY-cfg.pin.h+cfg.pin.headR;
+   ctx.strokeStyle=cfg.pin.colour;ctx.fillStyle=cfg.pin.colour;ctx.lineWidth=cfg.planet.ringW;
+   ctx.beginPath();ctx.moveTo(px,headCy+cfg.pin.headR);ctx.lineTo(px,tipY);ctx.stroke();
+   ctx.beginPath();ctx.arc(px,headCy,cfg.pin.headR,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle=cfg.palette.void;ctx.beginPath();ctx.arc(px-cfg.pin.headR/3,headCy-cfg.pin.headR/7,cfg.pin.headR/6,0,Math.PI*2);ctx.arc(px+cfg.pin.headR/3,headCy-cfg.pin.headR/7,cfg.pin.headR/6,0,Math.PI*2);ctx.fill();
+   // planet disc
+   ctx.beginPath();ctx.arc(px,py,cfg.planet.discR,0,Math.PI*2);ctx.fillStyle=cfg.planet.discColour;ctx.fill();
+   // rotating dashed ring
+   ctx.save();ctx.translate(px,py);ctx.rotate(st.ringAngle);ctx.beginPath();ctx.arc(0,0,cfg.planet.ringR,0,Math.PI*2);ctx.strokeStyle=cfg.planet.ringColour;ctx.lineWidth=cfg.planet.ringW;ctx.setLineDash(cfg.planet.ringDash);ctx.stroke();ctx.restore();ctx.setLineDash([]);
+   requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+ window.__seek=function(ms){offset=ms;start=performance.now();};
+ window.__config=CONFIG;
+ window.__state=function(ms){return stateAt(CONFIG,ms);};
+})();
+}
+if(typeof module!=="undefined"){module.exports={CONFIG:CONFIG,stateAt:stateAt,frontState:frontState,starField:starField};}
+</script></body></html>

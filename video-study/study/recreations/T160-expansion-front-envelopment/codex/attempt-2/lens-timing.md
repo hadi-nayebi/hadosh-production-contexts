@@ -1,0 +1,12 @@
+**Verdict — Timing scores 82/100 and clears the 70-point lens minimum. The five-lens build verdict is NOT ASSESSED because the other four scores were not supplied.**
+
+**Findings**
+
+- **Onsets match the observed brackets.** The gold front starts advancing just after 4816 ms, between its last sampled absence at 3000 ms and first sampled presence at 6000 ms. The purple front starts advancing just after 7000 ms, consistent with its absence at 7000 ms and presence at 9000 ms. Both fronts are absent at the 1000 and 3000 ms probes. Evidence: timing extract, “Specimen observations” and “Time mapping,” and `recreation.html`, `CONFIG.fronts`, `frontState`, and `drawFront`.
+- **Gold advances too quickly across the measured interval.** At 6000 ms, the specimen mean maps to \(1854.8 \times 0.375 = 695.55\) stage px, close to the build’s 695.600. At 7000 ms, the specimen maps to \(1736.7 \times 0.375 = 651.26\) stage px, while the build reaches 636.978, about 14.3 stage px farther inward. The build advances 58.622 stage px against the specimen’s 44.29 stage px, roughly 32% more in that second. The discrepancy is larger than the stated pixel-scan tolerance of about 1.5 stage px per observation. Evidence: timing extract, 452 s and 453 s measurements and 6000 ms and 7000 ms probes, and `recreation.html`, `CONFIG.fronts` and `frontState`.
+- **Growth duration, completion, and hold are only partly assessable.** The build uses 4184 ms of quadratic growth for gold and 2000 ms of linear growth for purple. Both reach full progress at 9000 ms, then the frontiers hold for the final 1000 ms before the cycle wraps. The 455 s frame supports both fronts being present with a remaining gap at 9000 ms. Its changed framing leaves the completion point and gap size unverified, and the supplied sequence has no later observation to establish a hold. Purple’s growth rate is also unverified because it has no sampled in-growth position. Evidence: timing extract, “Measurement limits” and 9000/9500 ms probes, and `recreation.html`, `CONFIG`, `frontState`, and `frame`.
+
+**Limits —** This fed review used the supplied source and reported probes. Rendered onset and motion are PIXEL-UNVERIFIED. The extract describes one-second sampling, but the five supplied timestamps have gaps of 2, 3, 1, and 2 seconds. The onset judgments use the actual listed timestamps.
+
+BODY-WRITE: Timing verdict, findings, and limits for verbatim filing in `codex/attempt-2/lens-timing.md`.
+SCORE: 82

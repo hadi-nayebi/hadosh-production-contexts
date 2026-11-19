@@ -1,0 +1,88 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T162-galaxy-race-table/codex
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e756-97ae-71f3-9cb5-4fa4e373c4ad
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream. If a check needs material not in this stream, name it as a gap instead of fetching it.
+
+CONSUMER: recreation job INSTRUCTION §1 Observe (codex-observe) for Cycle 025 Wave 22 item T162. DECISION PRICED: whether the item's source record is complete and internally consistent enough to Observe from, and what named gaps Observe must close firsthand. WORKING RECORD: hidden_files/study/recreations/T162-galaxy-race-table/ + runs/2026-11-16-cycle-025-wave-22/RUN.md. BODY-WRITE: your return is filed verbatim as codex/codex-observe.md in the item's artifact directory; end with a BODY-WRITE: line.
+ITEM: T162 — queue #80 · P8 @ ~8:38-8:50 · segment 518-530s · OWED first attempt. No prior attempt exists for this technique. Family siblings (filed scores): T149 isometric PASS 92.8 (T156) · T11 fake-UI FAIL 80.4 a1 + T22 PASS 88.2 (T157) · T154 PASS 86.0 + T151 PASS 90.4 (T160/T162 galaxy-plate family). Packet #8 adopted WITH GAPS (G2 secondary sub-claims bound to contact-sheet tiles · G3 mechanics thinness).
+
+=== GUARD DEFINITION ===
+# Codex review — codex-observe (recreation)
+
+_Repeated Codex review type, defined in this job's own guards layer (phase-guard augmentation, 2026-11-14). Execution: Codex via the fleet feeding rule (one stream); the DEFINITION lives here._
+
+## Standing header (every run opens with it)
+1. **Consumer:** recreation's §1 Observe for the named wave item + the decision priced: whether the item's source record (packet section + prior attempt filings) is complete and internally consistent enough to Observe from, and what named gaps Observe must close firsthand.
+2. **Working record:** the item's artifact directory (`hidden_files/study/recreations/<technique-id>-<slug>/`) + the wave's RUN.md — the run builds from the packet section and prior filings, and writes its return to the wave record.
+3. **Body-write:** the return must end with a `BODY-WRITE:` line naming what it filed; a read-only run closes with "Body-write: none (read-only run)" and the consumer (the wave's Observe record) persists the return verbatim in RUN.md's Observe section.
+
+## The review
+An independent audit of the item's SOURCE RECORD before Observe prices it — the failure it exists against is Observe inheriting a packet gap or a stale prior-score claim as fact. The run checks:
+- **Packet-section completeness:** the digest.md technique section + TECHNIQUES.md entry agree on mechanics, timestamps/window, and evidence frames; disagreements named with both citations. (Packet #1's founding gaps G1–G3 are the calibration shape: a packet can be adopted with gaps — Observe must know which gaps touch THIS technique.)
+- **Prior-attempt record audit:** scores.md + codex/ returns + verdict-history.md for this technique and its named family siblings agree with each other (arithmetic recomputed, lens count printed — a four-lens 78.5 never silently read as a five-lens score); a scores.md claim with no filed return behind it is named as unbound.
+- **Segment facts:** the archived source's window for this technique (timestamps, duration) is checkable against the packet's claim before §3 cuts it (guards.md command 5's pre-build leg).
+The run does NOT judge the Observe working memory itself — that is jev-observe-exit's gate. This run audits the record Observe will read.
+
+## Feeding contract
+- ONE stream: this instruction + the technique's packet section + TECHNIQUES.md entry + prior scores.md/verdict-history lines for the technique and family siblings — never pipe + stdin together (fleet rule; a doubled stream voids the run).
+- Fires per item at §1 step 1, before the mechanics summary is written — every item, including items with no prior attempt (the audit then prices the packet section's internal consistency as its finding).
+- **Cycle-level form (amendment, 2026-11-14, Cycle 009 Condense — from that cycle's codex-observe set-aside):** in a wave with zero items the audit fires ONCE on the pool record (QUEUE section · TECHNIQUES register · INDEX state · verdict-history · artifact census). The packet fed to a cycle-level audit MUST carry the seat's binding census (per-directory codex/ return presence + the per-attempt binding basis) — an excerpts-only packet prices as an audit of excerpts, the feeder records the packet's limitation in the cycle record, and the auditor remains free to return NOT-CONFIRMED whenever the supplied evidence, census included, is insufficient (the requirement binds the feeder's packet, never the auditor's verdict). Every record line the census references without reproducing (no-verdict lines, status-lag rows, hand-off entries) is identified in the packet by subject + disposition — a referenced-but-unidentified line prices as a gap in the audit (amendment, 2026-11-15, Cycle 010: the fed census counted verdict-history's no-verdict line without identifying it; codex-observe's CONFIRMED-WITH-GAPS named the omission). First demonstration: Cycle 009 Wave 7 (return filed in that run directory; set-aside + miss recorded there).
+- **Sequencing rule (amendment, 2026-11-15, Cycle 011 Condense — from deviation D1, priced as an escape by that cycle's codex-condense REVISE):** in a cycle-level firing, the seat files this call's return in the run directory BEFORE the jev-observe-exit judge for the same cycle is started, and the filed return is provided to that judge as part of its record. If the return is unavailable when the judge must start, the missing receipt is recorded explicitly in the run record (never silently absent). Founding incident: Cycle 011 Wave 9 — the seat filed the return while the judge was already running; the judge priced the absence as its Gap G4 and Plan had to cure it by receipt (RUN.md §2 P4, that cycle).
+
+## Demonstration / firing state
+- **DEFINED** (2026-11-14). **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** No run has fired under this definition; T15 attempt 1 (2026-11-13) predates it and ran no Observe-phase Codex audit. First demonstration: the next recreation wave's first item with a prior family record (expected: a particle-family or typography-family item citing T15).
+- **Update (2026-11-14, Cycle 009):** under the owner's 20:55 ruling (arming = firing) the state language above is superseded. First firing landed at Cycle 009 Wave 7 in the cycle-level form (pool-record audit; return + set-aside in that run directory). The per-item form's first demonstration LANDED at Cycle 012 Wave 10 (2026-11-15): fired ×5 (T53/T54/T56/T57/T59, all CONFIRMED-WITH-GAPS, returns filed in each artifact's codex/codex-observe.md) — factual maintenance correction landed at that cycle's Condense on its codex-condense REVISE.
+
+
+=== PACKET SECTION (digest.md T18) ===
+### T18 — Galaxy race table (the crowd arriving on one shared board)
+- **Timestamps:** ~8:38–8:50 · **Mechanics:** the galaxy returns as a table/board populated by many civilisation markers at once — T07's empty field, now crowded. Every latecomer simultaneously sees the same empty-looking sky and draws the same conclusion (8:44).
+- **Why it works:** the bunching chart of T10 becomes a social scene: the deadline is no longer statistical, it is a room filling with competitors.
+- **Evidence:** ev/525-galaxy-race-table.jpg.
+
+
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+**CONFIRMED WITH GAPS — the supplied packet section is sufficient to orient Observe, but source-record completeness and sibling-score consistency are NOT CONFIRMED.**
+
+1. **Technique identity is unbound.** The item header names **T162**, while the supplied digest section names **T18 — Galaxy race table**. Their titles agree, but no TECHNIQUES.md entry establishes the ID mapping. Observe must confirm that T162 maps to packet-local T18.
+
+2. **The stated window is internally consistent but unverified against the source.** Digest T18 gives approximately **8:38–8:50**; converting those endpoints gives **518–530 seconds**, matching the item header, with a nominal span of **12 seconds**. The evidence filename `ev/525-galaxy-race-table.jpg` numerically falls within that interval, assuming its number denotes source seconds. Neither the image nor archived source metadata is supplied, so frame content, filename convention, source duration, and actual technique boundaries remain unchecked.
+
+3. **Mechanics need firsthand observation.** Digest T18 describes a shared galaxy board “populated by many civilisation markers at once” and an interpretive beat at **8:44**. It does not establish marker entry timing, simultaneous versus staggered population, board geometry, camera movement, layering, or the transition from the empty field. Observe must distinguish visible mechanics from the explanatory claim that every latecomer reaches the same conclusion. This directly touches the header’s **G3 mechanics thinness**; the underlying G3 finding is absent.
+
+4. **Evidence binding is incomplete.** Digest T18 names one evidence image, but its pixels and the contact-sheet tiles are absent. The header’s **G2 secondary sub-claims bound to contact-sheet tiles** cannot be checked for applicability to this technique. Observe must inspect the named frame and identify the source evidence supporting the crowd, shared-board, and 8:44 claims. References to **T07’s empty field** and **T10’s bunching chart** also lack their supporting sections.
+
+5. **Prior-attempt and family claims remain unbound.** The header states that T162 has no prior attempt and lists sibling scores: T149 **92.8**, T11 **80.4**, T22 **88.2**, T154 **86.0**, and T151 **90.4**. No scores.md rows, filed Codex returns, verdict-history lines, component scores, or binding census are supplied. These values and PASS/FAIL labels are **UNVERIFIED**; arithmetic cannot be recomputed. **Lens count: not supplied for any listed score.** The parenthetical family mappings likewise cannot be reconciled from this stream.
+
+**Limits:** This is an audit of supplied excerpts only. No tools or disk reads were used. Missing register entries, prior filings, packet gap findings, source media, and evidence images prevent a complete record audit; their absence from this stream does not establish their absence on disk.
+
+**BODY-WRITE: none (read-only run); consumer to persist this return verbatim as `hidden_files/study/recreations/T162-galaxy-race-table/codex/codex-observe.md` and carry its findings into the wave’s RUN.md Observe record.**
+tokens used
+14,876
+**CONFIRMED WITH GAPS — the supplied packet section is sufficient to orient Observe, but source-record completeness and sibling-score consistency are NOT CONFIRMED.**
+
+1. **Technique identity is unbound.** The item header names **T162**, while the supplied digest section names **T18 — Galaxy race table**. Their titles agree, but no TECHNIQUES.md entry establishes the ID mapping. Observe must confirm that T162 maps to packet-local T18.
+
+2. **The stated window is internally consistent but unverified against the source.** Digest T18 gives approximately **8:38–8:50**; converting those endpoints gives **518–530 seconds**, matching the item header, with a nominal span of **12 seconds**. The evidence filename `ev/525-galaxy-race-table.jpg` numerically falls within that interval, assuming its number denotes source seconds. Neither the image nor archived source metadata is supplied, so frame content, filename convention, source duration, and actual technique boundaries remain unchecked.
+
+3. **Mechanics need firsthand observation.** Digest T18 describes a shared galaxy board “populated by many civilisation markers at once” and an interpretive beat at **8:44**. It does not establish marker entry timing, simultaneous versus staggered population, board geometry, camera movement, layering, or the transition from the empty field. Observe must distinguish visible mechanics from the explanatory claim that every latecomer reaches the same conclusion. This directly touches the header’s **G3 mechanics thinness**; the underlying G3 finding is absent.
+
+4. **Evidence binding is incomplete.** Digest T18 names one evidence image, but its pixels and the contact-sheet tiles are absent. The header’s **G2 secondary sub-claims bound to contact-sheet tiles** cannot be checked for applicability to this technique. Observe must inspect the named frame and identify the source evidence supporting the crowd, shared-board, and 8:44 claims. References to **T07’s empty field** and **T10’s bunching chart** also lack their supporting sections.
+
+5. **Prior-attempt and family claims remain unbound.** The header states that T162 has no prior attempt and lists sibling scores: T149 **92.8**, T11 **80.4**, T22 **88.2**, T154 **86.0**, and T151 **90.4**. No scores.md rows, filed Codex returns, verdict-history lines, component scores, or binding census are supplied. These values and PASS/FAIL labels are **UNVERIFIED**; arithmetic cannot be recomputed. **Lens count: not supplied for any listed score.** The parenthetical family mappings likewise cannot be reconciled from this stream.
+
+**Limits:** This is an audit of supplied excerpts only. No tools or disk reads were used. Missing register entries, prior filings, packet gap findings, source media, and evidence images prevent a complete record audit; their absence from this stream does not establish their absence on disk.
+
+**BODY-WRITE: none (read-only run); consumer to persist this return verbatim as `hidden_files/study/recreations/T162-galaxy-race-table/codex/codex-observe.md` and carry its findings into the wave’s RUN.md Observe record.**

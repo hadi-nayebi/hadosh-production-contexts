@@ -1,0 +1,12 @@
+**Verdict** — Motion fidelity clears the 70-point minimum at 86/100. The overall build verdict is **NOT ASSESSED** because the other four lens scores are unavailable. They must each be at least 70 and sum to at least 339 for the five-lens average to reach 85.
+
+**Findings**
+
+- **The fronts grow continuously from their frame edges.** `recreation.html`, `frontState` and `drawFront`, keep each polygon anchored to its origin edge. The along-edge coordinate stays fixed, while each point advances toward its own endpoint. That produces unequal point displacements with no translation of the whole polygon or uniform scaling in both dimensions. The main fidelity limit is that all points on a front share one progress value. The final contour emerges proportionally from the edge, with fixed peaks and troughs along its length and no independently evolving local advance. The gap closes on the planet, but the motion supplies little evidence of the fronts bending around it during the approach.
+- **The timing follows the supplied census.** Taking 446 s as cycle zero, the 447 and 449 s observations fall before either front starts. From `CONFIG` and `frontState`, gold reaches about 8.0% at 452 s, calculated as \((1184/4184)^2\), and 27.2% at 453 s, calculated as \((2184/4184)^2\). Purple is still absent at the latter instant because its progress is zero at onset and `drawFront` skips it. By 455 s both fronts have reached their endpoints, with a nominal gap of 110/720, or about 15% of the stage width, before wobble and clearance adjustments. The census supports the sequence, but the pulled-back 455 s reference and the build’s fixed framing limit the comparison of apparent advance and final gap width.
+- **The territory holds for one second, then clears on the loop boundary.** `frontState` clamps effective time at 9000 ms, and `frame` wraps at 10000 ms, yielding a hold of \(10000-9000=1000\) ms. The territory geometry stays fixed while the ring and stars continue moving. The own-check’s claim that the 9500 ms state is identical to the 9000 ms state applies to the frontiers. `stateAt` also returns elapsed time and a changing ring angle, so the full states differ.
+
+**Limits** — Reviewed the supplied source and census only. No rendered frames or continuous reference playback were available to verify perceived smoothness, edge visibility, or how convincingly the motion reads as envelopment.
+
+SCORE: 86  
+BODY-WRITE: none (read-only run). Return for filing verbatim as `codex/attempt-2/lens-motion.md`.

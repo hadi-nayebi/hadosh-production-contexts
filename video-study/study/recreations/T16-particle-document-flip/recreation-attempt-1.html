@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T16 — Particle Document Flip (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+  #wrap{position:relative;width:100%;height:100%}
+  canvas{display:block;width:100%;height:100%}
+  .dom{position:absolute;font-family:Arial,Helvetica,sans-serif;color:#fff;pointer-events:none}
+  #counter{right:12%;top:34%;text-align:left;opacity:0}
+  #counter .lab{font-size:15px;letter-spacing:.14em;color:#a9c6de;font-family:"Courier New",monospace}
+  #counter .num{font-size:64px;font-weight:900;line-height:1.05}
+  #tlabel{left:13%;top:37%;font-family:"Courier New",monospace;font-size:22px;color:#a9c6de;opacity:0}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="stage"></canvas>
+  <div class="dom" id="counter"><div class="lab">page</div><div class="num">1/14</div></div>
+  <div class="dom" id="tlabel">title:</div>
+</div>
+<script>
+"use strict";
+/* ================================================================
+   T16 — PARTICLE DOCUMENT FLIP
+   Pages made of the same particle dust as the words (T15 family):
+   a stack of resume pages flips rapidly through its page counter,
+   then the dust condenses into a title line with a halo ring above.
+
+   PARAMETERIZED, NOT TRACED: every content / timing / palette value
+   is read from CONFIG below. Page and title targets are obtained by
+   RUNTIME SAMPLING of config-rendered content on offscreen canvases
+   (Amendment A1 precedent — the lawful letterform construction).
+
+   Motion model — ONE constant flow field (Amendment A5):
+   - Every particle always carries the stream's velocity.
+   - FORMING = BORROWING particles onto targets; on target they keep
+     low-amplitude jitter — velocity is never zero.
+   - A CONFIG reserve fraction is never borrowed and always streams.
+   - DISSOLVING = RELEASING borrowed particles back to full stream
+     velocity with continuity (no position/velocity reset).
+   - Intensity rides the borrow flag (Owner Cure 1): borrowed =
+     FOREGROUND intensity; reserve = BACKGROUND, dimmer.
+   - Strict sequencing (Owner Cure 2): phases run flip -> release ->
+     form -> hold; one lifecycle owns the stage at a time — the title
+     never starts forming until the page has fully released.
+   URL overrides (swap test): ?title=DATA+WIZARD&pageCount=9
+     &flipMs=1800&colorA=%23ffd75e&titleLabel=role:
+   ================================================================ */
+const CONFIG = {
+  pageCount: 14,                 // total pages in the stack
+  pageHeader: "RÉSUMÉ",          // header word rendered on each page
+  pageLinePattern: [0.55,0.92,0.85,0.60,0.30,0.88,0.79,0.95,0.70,0.28,0.90,0.82,0.66], // text-line widths (fraction of inner page width)
+  pageLinesTopRatio: 0.30,       // where text lines start on the page (fraction of page height)
+  pageLineGapRatio: 0.052,       // vertical spacing of text lines
+  pageXR: 0.17, pageYR: 0.13,    // page position (fraction of stage)
+  pageWR: 0.33, pageHR: 0.74,    // page size (fraction of stage)
+  stackCount: 2,                 // pages visible behind the front page
+  stackOffsetPx: 11,             // per-page stack offset
+  stackAlpha: 0.45,              // intensity of stack-outline particles
+  titleLabel: "title:",          // small solid label beside the title
+  titleText: "AI GURU",          // the condensing title words
+  titleFontPx: 150,              // shrunk to fit maxWidthRatio
+  maxWidthRatio: 0.86,
+  haloRxR: 0.17, haloRyR: 0.055, // halo ellipse radii (fractions of stage w/h)
+  haloCyR: 0.30,                 // halo centre height (fraction of stage h)
+  haloColor: "#ffd98a",          // halo particle colour (warm gold)
+  haloAlpha: 0.95,
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontWeight: 900,
+  sampleGap: 4,                  // px between sampled targets (lower = denser)
+  particleRadius: 1.6,
+  colorA: "#f6f9fd",             // particle colour range A (bright) ...
+  colorB: "#93a7bd",             // ... to B (dim silver-blue)
+  background: "#000000",
+  counterColor: "#ffffff",
+  labelColor: "#a9c6de",
+  /* Checkpoint-priced timing (measured anchors, not one cadence):
+     source window 6.0 s — counter caught at 1/14 (start), 6/14 at
+     ~1.5 s into the catalogue window, 14/14 at ~2.2 s; the title is
+     condensed with its halo by ~4.5-5.5 s into the window. */
+  flipCheckpoints: [ {page:1, atMs:0}, {page:6, atMs:1100}, {page:14, atMs:2200} ],
+  flipMs: 2600,                  // flipping phase total (last page holds briefly)
+  releaseMs: 500,                // page dissolves back into the stream
+  formMs: 1500,                  // title (+ halo) condenses out of the dust
+  haloDelayMs: 350,              // halo starts forming this long after the title
+  holdMs: 1400,                  // title + halo hold before the loop restarts
+  travelFlipMs: 230,             // particle travel time when a page flips
+  travelFormMs: 950,             // particle travel time when the title forms
+  windX: 26, windY: -9,          // constant stream velocity (px/s)
+  jitter: 0.35,                  // px of life while borrowed on target
+  reserveFraction: 0.22,         // pool share never borrowed
+  foregroundAlpha: 1.0,          // borrowed = FOREGROUND (Owner Cure 1)
+  reserveAlpha: 0.28,            // reserve = BACKGROUND (Owner Cure 1)
+  surplusAlpha: 0.16,
+  seed: 20261
+};
+/* ---------- URL overrides (the swap-test mechanism) ---------- */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("title")) CONFIG.titleText = q.get("title");
+  if (q.has("titleLabel")) CONFIG.titleLabel = q.get("titleLabel");
+  if (q.has("pageHeader")) CONFIG.pageHeader = q.get("pageHeader");
+  const num = ["pageCount","flipMs","releaseMs","formMs","holdMs","sampleGap","reserveFraction"];
+  for (const k of num) if (q.has(k)) { const v = parseFloat(q.get(k)); if (isFinite(v)) CONFIG[k] = v; }
+  const str = ["colorA","colorB","haloColor","background"];
+  for (const k of str) if (q.has(k)) CONFIG[k] = q.get(k);
+  if (q.has("flipCheckpoints")) { try { const c = JSON.parse(q.get("flipCheckpoints")); if (Array.isArray(c) && c.length) CONFIG.flipCheckpoints = c; } catch(e){} }
+})();
+/* Clamp/validate numerics (T15 priced cure carried into this family build). */
+CONFIG.pageCount = Math.max(1, Math.round(CONFIG.pageCount));
+CONFIG.sampleGap = Math.min(12, Math.max(2, CONFIG.sampleGap));
+CONFIG.reserveFraction = Math.min(0.6, Math.max(0.05, CONFIG.reserveFraction));
+for (const k of ["flipMs","releaseMs","formMs","holdMs"]) CONFIG[k] = Math.max(100, CONFIG[k]);
+
+/* ---------- deterministic RNG (restart determinism) ---------- */
+function mulberry32(a){ return function(){ a|=0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a>>>15, 1|a); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0)/4294967296; }; }
+
+/* ---------- offscreen sampling (A1: config-rendered content) ---------- */
+function makeCanvas(w,h){ const c = document.createElement("canvas"); c.width = w; c.height = h; return c; }
+function sampleDrawn(ctx, w, h, gap){
+  const img = ctx.getImageData(0,0,w,h).data, out = [];
+  for (let y = 0; y < h; y += gap) for (let x = 0; x < w; x += gap)
+    if (img[(y*w + x)*4 + 3] > 110) out.push({x:x, y:y});
+  return out;
+}
+/* Page targets: outline + stack outlines + header word + text lines,
+   all rendered from CONFIG onto an offscreen canvas, then sampled.
+   Per-page line jitter is seeded by the page number so pages differ. */
+function samplePageTargets(W, H, page){
+  const pw = CONFIG.pageWR*W, ph = CONFIG.pageHR*H, px = CONFIG.pageXR*W, py = CONFIG.pageYR*H;
+  const off = makeCanvas(W,H), ctx = off.getContext("2d");
+  ctx.clearRect(0,0,W,H); ctx.strokeStyle = "#fff"; ctx.fillStyle = "#fff"; ctx.lineWidth = 3;
+  const stackPts = [];
+  for (let s = CONFIG.stackCount; s >= 1; s--){
+    const ox = px + s*CONFIG.stackOffsetPx, oy = py - s*CONFIG.stackOffsetPx*0.6;
+    ctx.strokeRect(ox, oy, pw, ph);
+    const pts = sampleDrawnRegion(ctx, ox, oy, pw, ph, W, H);
+    for (const p of pts) stackPts.push(p);
+    ctx.clearRect(0,0,W,H);
+  }
+  ctx.strokeRect(px, py, pw, ph);
+  let fs = pw*0.21; ctx.font = CONFIG.fontWeight + " " + fs + "px " + CONFIG.fontFamily;
+  while (ctx.measureText(CONFIG.pageHeader).width > pw*0.84 && fs > 10){ fs *= 0.92; ctx.font = CONFIG.fontWeight + " " + fs + "px " + CONFIG.fontFamily; }
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  ctx.fillText(CONFIG.pageHeader, px + pw/2, py + ph*0.07);
+  const rng = mulberry32(CONFIG.seed + page*7919);
+  const innerX = px + pw*0.12, innerW = pw*0.76;
+  let ly = py + ph*CONFIG.pageLinesTopRatio;
+  for (const frac of CONFIG.pageLinePattern){
+    const jittered = Math.max(0.18, Math.min(1, frac + (rng()-0.5)*0.14));
+    ctx.fillRect(innerX, ly, innerW*jittered, Math.max(2, ph*0.016));
+    ly += ph*CONFIG.pageLineGapRatio;
+  }
+  const main = sampleDrawn(ctx, W, H, CONFIG.sampleGap);
+  const targets = [];
+  for (const p of main) targets.push({x:p.x, y:p.y, kind:"page"});
+  for (const p of stackPts) targets.push({x:p.x, y:p.y, kind:"stack"});
+  return targets;
+}
+function sampleDrawnRegion(ctx, rx, ry, rw, rh, W, H){
+  const x0 = Math.max(0, Math.floor(rx)-4), y0 = Math.max(0, Math.floor(ry)-4);
+  const x1 = Math.min(W, Math.ceil(rx+rw)+4), y1 = Math.min(H, Math.ceil(ry+rh)+4);
+  const img = ctx.getImageData(x0,y0,x1-x0,y1-y0).data, out = [], gap = CONFIG.sampleGap;
+  for (let y = y0; y < y1; y += gap) for (let x = x0; x < x1; x += gap)
+    if (img[((y-y0)*(x1-x0) + (x-x0))*4 + 3] > 110) out.push({x:x, y:y});
+  return out;
+}
+/* Title targets: the big words, sampled the same lawful way. */
+function sampleTitleTargets(W, H){
+  const off = makeCanvas(W,H), ctx = off.getContext("2d");
+  ctx.clearRect(0,0,W,H); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  let fs = CONFIG.titleFontPx; ctx.font = CONFIG.fontWeight + " " + fs + "px " + CONFIG.fontFamily;
+  while (ctx.measureText(CONFIG.titleText).width > W*CONFIG.maxWidthRatio && fs > 12){ fs *= 0.94; ctx.font = CONFIG.fontWeight + " " + fs + "px " + CONFIG.fontFamily; }
+  ctx.fillText(CONFIG.titleText, W/2, H*0.56);
+  return sampleDrawn(ctx, W, H, CONFIG.sampleGap).map(p => ({x:p.x, y:p.y, kind:"title"}));
+}
+/* Halo targets: an ellipse ring rendered on its own offscreen canvas. */
+function sampleHaloTargets(W, H){
+  const off = makeCanvas(W,H), ctx = off.getContext("2d");
+  ctx.clearRect(0,0,W,H); ctx.strokeStyle = "#fff"; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.ellipse(W/2, H*CONFIG.haloCyR, W*CONFIG.haloRxR, H*CONFIG.haloRyR, 0, 0, Math.PI*2); ctx.stroke();
+  return sampleDrawn(ctx, W, H, CONFIG.sampleGap).map(p => ({x:p.x, y:p.y, kind:"halo"}));
+}
+
+/* ---------- checkpoint model (page displayed at flip-time t) ---------- */
+function pageAtTime(t){
+  const cps = CONFIG.flipCheckpoints;
+  if (t <= cps[0].atMs) return cps[0].page;
+  for (let i = 1; i < cps.length; i++){
+    if (t <= cps[i].atMs){
+      const a = cps[i-1], b = cps[i];
+      const f = (t - a.atMs) / Math.max(1, b.atMs - a.atMs);
+      return Math.min(CONFIG.pageCount, Math.max(1, Math.floor(a.page + (b.page - a.page)*f)));
+    }
+  }
+  return CONFIG.pageCount;
+}
+
+/* ---------- particle pool: ONE constant flow field ---------- */
+const stage = document.getElementById("stage"), sctx = stage.getContext("2d");
+let W = 0, H = 0, particles = [], rng = mulberry32(CONFIG.seed);
+function hexRgb(h){ const n = parseInt(h.slice(1), 16); return [n>>16 & 255, n>>8 & 255, n & 255]; }
+const cA = hexRgb(CONFIG.colorA), cB = hexRgb(CONFIG.colorB), cHalo = hexRgb(CONFIG.haloColor);
+function newParticle(borrowable){
+  const mix = rng();
+  return { x: rng()*W, y: rng()*H, sx:0, sy:0, tx:0, ty:0, kind:"", borrowed:false, borrowable:borrowable,
+    dvx: (rng()-0.5)*7, dvy: (rng()-0.5)*5, delay:0, travel:600, t0:0, relX:0, relY:0, relT:1e9,
+    col: [Math.round(cA[0]+(cB[0]-cA[0])*mix), Math.round(cA[1]+(cB[1]-cA[1])*mix), Math.round(cA[2]+(cB[2]-cA[2])*mix)],
+    ph: rng()*Math.PI*2, renderAlpha: CONFIG.reserveAlpha };
+}
+function ensurePool(needTargets){
+  const needTotal = Math.ceil(needTargets / (1 - CONFIG.reserveFraction));
+  while (particles.length < needTotal) particles.push(newParticle(true));
+  const reserveNeed = Math.floor(particles.length * CONFIG.reserveFraction);
+  let reserveCount = particles.filter(p => !p.borrowable).length;
+  for (let i = 0; reserveCount < reserveNeed && i < particles.length; i++)
+    if (particles[i].borrowable && !particles[i].borrowed){ particles[i].borrowable = false; reserveCount++; }
+}
+function borrow(targets, now, travelMs){
+  ensurePool(targets.length);
+  const free = particles.filter(p => p.borrowable && !p.borrowed);
+  const shuffled = targets.slice();
+  for (let i = shuffled.length-1; i > 0; i--){ const j = Math.floor(rng()*(i+1)); const t = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = t; }
+  const n = Math.min(free.length, shuffled.length);
+  for (let i = 0; i < n; i++){
+    const p = free[i], t = shuffled[i];
+    p.sx = p.x; p.sy = p.y; p.tx = t.x; p.ty = t.y; p.kind = t.kind;
+    p.borrowed = true; p.t0 = now; p.delay = rng()*travelMs*0.45; p.travel = travelMs;
+  }
+  return n;
+}
+function releaseAll(now){
+  for (const p of particles) if (p.borrowed){
+    p.borrowed = false; p.relX = (rng()-0.5)*46; p.relY = (rng()-0.5)*30; p.relT = now;
+  }
+}
+
+/* ---------- scheduler: strict sequencing, one lifecycle at a time ---------- */
+const TOTAL = () => CONFIG.flipMs + CONFIG.releaseMs + CONFIG.formMs + CONFIG.holdMs;
+let simT = 0, phase = "", curPage = 0, trace = [], titleBorrowed = false, haloBorrowed = false;
+const counterEl = document.getElementById("counter"), counterNum = counterEl.querySelector(".num"), labelEl = document.getElementById("tlabel");
+counterEl.style.color = CONFIG.counterColor; labelEl.style.color = CONFIG.labelColor; labelEl.textContent = CONFIG.titleLabel;
+function setPhase(name, t){ phase = name; trace.push({event:name, t:Math.round(t)}); }
+function step(dtMs){
+  simT += dtMs; const t = simT % TOTAL();
+  const F = CONFIG.flipMs, R = F + CONFIG.releaseMs, Fo = R + CONFIG.formMs;
+  if (t < F){
+    if (phase !== "flip"){ setPhase("flip", simT); titleBorrowed = false; haloBorrowed = false; curPage = 0; }
+    const pg = pageAtTime(t);
+    if (pg !== curPage){ curPage = pg; releaseAll(simT); borrow(samplePageTargets(W,H,pg), simT, CONFIG.travelFlipMs); }
+    counterEl.style.opacity = 1; counterNum.textContent = pg + "/" + CONFIG.pageCount; labelEl.style.opacity = 0;
+  } else if (t < R){
+    if (phase !== "release"){ setPhase("release", simT); releaseAll(simT); }
+    counterEl.style.opacity = Math.max(0, 1 - (t-F)/CONFIG.releaseMs); labelEl.style.opacity = 0;
+  } else if (t < Fo){
+    if (phase !== "form"){ setPhase("form", simT); }
+    counterEl.style.opacity = 0; labelEl.style.opacity = Math.min(1, (t-R)/400);
+    if (!titleBorrowed){ titleBorrowed = true; borrow(sampleTitleTargets(W,H), simT, CONFIG.travelFormMs); }
+    if (!haloBorrowed && t - R >= CONFIG.haloDelayMs){ haloBorrowed = true; borrow(sampleHaloTargets(W,H), simT, CONFIG.travelFormMs*0.8); }
+  } else {
+    if (phase !== "hold"){ setPhase("hold", simT); }
+    if (!haloBorrowed){ haloBorrowed = true; borrow(sampleHaloTargets(W,H), simT, CONFIG.travelFormMs*0.8); }
+    labelEl.style.opacity = 1;
+  }
+  updateParticles(dtMs);
+}
+function updateParticles(dtMs){
+  const dt = dtMs/1000, now = simT;
+  for (const p of particles){
+    if (p.borrowed){
+      const el = now - p.t0 - p.delay;
+      if (el <= 0){ /* still streaming until its stagger starts */ p.x += (CONFIG.windX + p.dvx)*dt; p.y += (CONFIG.windY + p.dvy)*dt; }
+      else {
+        const f = Math.min(1, el / p.travel), e = 1 - Math.pow(1-f, 3);
+        if (f < 1){ p.x = p.sx + (p.tx - p.sx)*e; p.y = p.sy + (p.ty - p.sy)*e; }
+        else { p.x = p.tx + Math.sin(now/280 + p.ph)*CONFIG.jitter; p.y = p.ty + Math.cos(now/340 + p.ph)*CONFIG.jitter; }
+      }
+      p.renderAlpha = p.kind === "stack" ? CONFIG.stackAlpha : (p.kind === "halo" ? CONFIG.haloAlpha : CONFIG.foregroundAlpha);
+    } else {
+      const decay = Math.max(0, 1 - (now - p.relT)/900);
+      p.x += (CONFIG.windX + p.dvx + p.relX*decay)*dt; p.y += (CONFIG.windY + p.dvy + p.relY*decay)*dt;
+      p.renderAlpha = p.borrowable ? CONFIG.surplusAlpha : CONFIG.reserveAlpha;
+    }
+    if (p.x < -6) p.x = W + 5; if (p.x > W + 6) p.x = -5;
+    if (p.y < -6) p.y = H + 5; if (p.y > H + 6) p.y = -5;
+  }
+}
+function draw(){
+  sctx.fillStyle = CONFIG.background; sctx.fillRect(0,0,W,H);
+  const order = {reserve:0, surplus:1, borrowed:2};
+  const sorted = particles.slice().sort((a,b) => (a.borrowed?2:(a.borrowable?1:0)) - (b.borrowed?2:(b.borrowable?1:0)));
+  for (const p of sorted){
+    const c = (p.borrowed && p.kind === "halo") ? cHalo : p.col;
+    sctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + p.renderAlpha + ")";
+    sctx.beginPath(); sctx.arc(p.x, p.y, CONFIG.particleRadius, 0, Math.PI*2); sctx.fill();
+  }
+}
+/* ---------- sizing + main loop + comparison hooks ---------- */
+function resize(){
+  const r = stage.parentElement.getBoundingClientRect();
+  W = Math.max(320, Math.floor(r.width)); H = Math.max(240, Math.floor(r.height));
+  stage.width = W; stage.height = H;
+  particles = []; rng = mulberry32(CONFIG.seed); simT = 0; phase = ""; curPage = 0; titleBorrowed = false; haloBorrowed = false;
+  ensurePool(900);
+}
+let last = null, playing = true;
+function frame(ts){
+  if (last === null) last = ts;
+  const dt = Math.min(50, ts - last); last = ts;
+  if (playing) step(dt);
+  draw();
+  requestAnimationFrame(frame);
+}
+window.addEventListener("resize", resize);
+window.addEventListener("message", e => {
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") playing = true;
+  if (e.data.cmd === "pause") playing = false;
+  if (e.data.cmd === "restart"){ resize(); playing = true; }
+});
+window.T16_API = { CONFIG, samplePageTargets, sampleTitleTargets, sampleHaloTargets, pageAtTime,
+  get particles(){ return particles; }, get phase(){ return phase; }, get trace(){ return trace; },
+  step, resize };
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

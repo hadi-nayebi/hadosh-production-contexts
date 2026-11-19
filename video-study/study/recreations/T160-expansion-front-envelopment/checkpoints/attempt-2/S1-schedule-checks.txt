@@ -1,0 +1,30 @@
+S1 (schedule) — own-check output · T160 attempt 2 · Practice Cycle 025 Wave 24
+Checkpoint source: S1-schedule-recreation.html (content copy of the working recreation.html at Stage-1 close)
+Working source sha256 at stage close: b09de0cabb210f35766d586dd9fe059a2397671405616c3c1c046e8457052b83
+Bound to this hash: every result below ran on that exact source (node print-only harness over its inline script).
+
+BEFORE Stage 1 (prior source, sha 94c3e467…b791) — separate per-front deltas (finding 3):
+ms1000: left p=0 frontier 0 · right p=0 frontier 720
+ms3000: left p=0.0833 frontier 25.417 · right p=0 frontier 720
+ms6000: left p=0.5833 frontier 177.917 · right p=0.4545 frontier 581.364
+ms7000: left p=0.75 frontier 228.75 · right p=0.6364 frontier 525.909
+ms9000: left p=1 frontier 305 · right p=1 frontier 415
+
+AFTER Stage 1 (this checkpoint's source):
+ms1000: left p=0 frontier 0 · right p=0 frontier 720 · holding false
+ms3000: left p=0 frontier 0 · right p=0 frontier 720 · holding false   [zero-territory probe: PASS — both progress exactly 0]
+ms6000: left p=0 frontier 0 · right p=0.0801 frontier 695.576 · holding false   [frame f452 measured mean frontier 695.5 stage px — model 695.576, within JPEG tolerance]
+ms6001: left p=0 · right p=0.0802 frontier 695.535
+ms7000: left p=0 frontier 0 · right p=0.2725 frontier 636.896 · holding false   [frame f453 measured band: mean 651.3, per-row range 621–684 stage px — model inside band]
+ms9000: left p=1 frontier 305 · right p=1 frontier 415 · gapPx 110 · holding true
+ms9500: left p=1 frontier 305 · right p=1 frontier 415 · gapPx 110 · holding true
+
+Per-point interpolation invariant (finding 3) — displacement_i == (endpoint_i − origin) × Δprogress for every point; endpoints pairwise distinct; displacements NOT all equal (a translation would equalize them; a scale about the origin would not satisfy the endpoint form):
+yellow (right), t 6000→7000 (p 0.0801→0.2725): maxErr 0 · distinct endpoints 26/26 · allDisplacementsEqual false · invariantHolds TRUE
+purple (left), t 7500→8500 (p 0.25→0.75): maxErr 0 · distinct endpoints 26/26 · allDisplacementsEqual false · invariantHolds TRUE
+
+Non-finite probe (validation): probe CONFIG with purple growMs=0 evaluated at its startMs → progress 0, frontier finite (progress path cannot produce NaN geometry). PASS for the progress path; remaining non-finite limitations are named in the full-suite section of the build record.
+
+Preservation rehash immediately after the first working-file overwrite (finding 3): recreation-attempt-1.html sha256 94c3e4672c174d8347616dd08cf9b66dee527a7873e3e7dcba29a88c3cb8b791 = baseline · comparison-preserved-attempt-1.html sha256 ac96a08fa5b7247188674416db072ec05e644c5bb4cafc08d839ff096b564f86 = baseline. PASS.
+
+Stage-1 verdict: PASS — Stage 2 gated on this checkpoint's read-back (build record, Stage-1 entry).

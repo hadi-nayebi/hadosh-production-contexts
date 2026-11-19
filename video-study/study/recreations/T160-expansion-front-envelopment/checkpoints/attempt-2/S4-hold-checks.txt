@@ -1,0 +1,19 @@
+S4 (territory hold) — own-check output · T160 attempt 2 · Practice Cycle 025 Wave 24
+Checkpoint source: S4-hold-recreation.html (content copy of the working recreation.html at Stage-4 close = the final attempt-2 source)
+Working source sha256 at stage close: e6676f689794bb4c2dd4661354efa9e774e0aab39e42aff78ab58a224ee766fd
+Bound to this hash: every result below ran on that exact source.
+
+Change + hold definition (named): the hold is a TERRITORY hold — frontier progress is computed from a hold-clamped time (once ms ≥ endHoldFromMs, the time fed to frontier progress is clamped at endHoldFromMs), and the holding flag derives from that same boundary. Ambient life (ring rotation, star twinkle) is NOT held.
+
+HOLD-BOUNDARY PROBE with a STILL-GROWING front (finding 3): probe CONFIG with a single left front {startMs 8000, growMs 4000, easePow 1} that would complete at 12000 ms, endHoldFromMs 9000:
+ms8999 (just before): progress 0.2498 · frontier 76.085 · holding false
+ms9000 (at):          progress 0.2500 · frontier 76.162 · holding true
+ms9001 (just after):  progress 0.2500 · frontier 76.162 · holding true
+ms10000:              progress 0.2500 · frontier 76.162 · holding true
+ms12000:              progress 0.2500 · frontier 76.162 · holding true
+→ progress freezes at the boundary value (0.25) for every later instant while the flag reports the hold; before the boundary the front is still growing (0.2498 < 0.2500 and rising). PASS.
+
+RESOLVED-SCHEDULE ANCHORS re-run on this final source (both fronts complete exactly at the 9000 boundary, so the clamp changes no resolved-schedule frame):
+ms1000 both 0 · ms3000 both 0 · ms6000 purple 0, yellow 0.0801 frontier 695.600 · ms7000 purple 0, yellow 0.2725 frontier 636.978 · ms9000 both 1, gapPx 110.656, holding true · ms9500 identical to 9000. PASS.
+
+Stage-4 verdict: PASS — the full own-check suite (E6) runs on this source next; read-back of this checkpoint is recorded in the build record, Stage-4 entry.

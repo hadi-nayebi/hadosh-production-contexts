@@ -1,0 +1,17 @@
+S2 (ring clearance) — own-check output · T160 attempt 2 · Practice Cycle 025 Wave 24
+Checkpoint source: S2-clearance-recreation.html (content copy of the working recreation.html at Stage-2 close)
+Working source sha256 at stage close: 5d7368671f3dc735aacd8bf16c1e8710f82563a3969f66bb46964dd14a11b1e2
+Bound to this hash: every result below ran on that exact source.
+
+Change: CONFIG ringClearancePx=6 + endpoint clamp in frontState (frontier endpoints whose along-coordinate lies in the ring's vertical span are clamped to preserve the clearance against the ring's outer edge on that front's side; growth form unchanged).
+
+LOCAL CLEARANCE ASSERTION (local minimum, never the mean gap): the frontier polyline is sampled densely (every segment ×40 subdivisions, so segments CROSSING the span with endpoints outside it are sampled inside it — finding 3); samples with y in the ring's vertical span [156.5, 247.5] (231 samples per front per state); clearance measured two ways: (a) radial distance to the planet centre minus the ring outer radius (44 + 3/2 = 45.5) — the rendered-geometry form; (b) the plan's line model against the outer-edge lines x=314.5 / 405.5.
+At 9000 ms: left min radial clearance 6.713 · right 11.233 · line-model minima: left 6.000 · right 6.000 · required ≥6 → PASS both fronts.
+At 9500 ms: left min radial clearance 6.713 · right 11.233 · line-model minima 6.000 / 6.000 → PASS both fronts.
+(Prior build's line-model minima at the final hold were −0.20 left / −1.84 right — an actual overlap the mean gap masked; the clamp moves them to exactly the configured floor, and the radial form clears it with margin.)
+
+MEASURED MEAN GAP at 9000/9500 ms: 110.656 stage px (frontiers 304.646 / 415.302) — measured, not asserted; the clamp shifted it +0.656 from 110, inside the plan's 110 ± 2 tolerance. Reported separately; never used as the clearance evidence.
+
+SCHEDULE + GAP RE-CHECKS on this same checkpoint source (finding 3): ms3000 both progress 0 · ms6000 yellow 0.0801 frontier 695.600 (frame mean 695.5) · ms7000 yellow 0.2725 frontier 636.978 (band 621–684) · purple 0 at 6000 and 7000 · ms9000 both progress 1, holding true. All as at Stage 1 within the clamp's ≤0.1 px in-growth effect. PASS.
+
+Stage-2 verdict: PASS — Stage 3 gated on this checkpoint's read-back (build record, Stage-2 entry).
