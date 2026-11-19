@@ -1,0 +1,244 @@
+# Codex scoring wave — lens run (recreation §5)
+Standing header: (1) Consumer: recreation job's §5 Verify (tier recommendation: RECREATED requires five-lens average >=85 AND no lens <70) + the cycle's Condense cure list; the decision priced is whether this attempt is RECREATED-tier on THIS lens and what the next attempt must cure. (2) Working record: the artifact directory hidden_files/study/recreations/T101-timeline-dive/ (codex/ returns + scores.md). (3) Your return must end with `SCORE: <integer 0-100>` and a `BODY-WRITE:` line naming what it filed (read-only run: "BODY-WRITE: none (read-only run)").
+Binding: recreation.html SHA-256 = 1ebe868fe772244f7569e73bad0b3a52ba1113e3759381232a6783653f072cf7 (identical for all five lens runs).
+Score-blind packet: you see no prior score and no other lens's return.
+
+NEUTRAL TECHNIQUE FACTS (Packet #5, School of Motion, digest T03 + register T101): Timeline dive, 7-12 s in an 81 s film. Mechanics: the view pushes into a stylized editor timeline (colored clip blocks, easing-curve panels, "QUICK TIPS" title cards riding the timeline), travelling along it until one card fills the frame. Why it works: the tutorial's subject is editing craft, so the camera enters through the editor's own surface; the dive is itself a dynamic-zoom transition used before it is taught. Evidence frame shows: central red-to-purple gradient card "SCHOOL OF MOTION / QUICK TIPS" in white, flanked by colored clip blocks (green/red/cyan/yellow), easing-curve panel left (grid + white bezier), yellow toolbar strip top, blue graph-editor strip bottom with red playhead + red bezier curve.
+
+YOUR LENS: reusability/parameterization — could production drive this from CONFIG alone for a different piece? Price: every shaping decision CONFIG-bound, every key applied, the swap test evidence in the record, residual literals, whether a different card/clips/palette/timing set re-drives the whole piece without code edits.
+Score ONLY this lens, 0-100, with priced findings. Judge the recreation source + the score-blind build record below.
+
+===== recreation.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T101 — Timeline dive · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;font-family:Arial,sans-serif;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
+  .toolbar{position:absolute;left:0;top:0;display:flex;align-items:center;gap:6px;padding-left:10px;box-sizing:border-box;}
+  .tool{width:9px;height:9px;flex:0 0 auto;}
+  .panel{position:absolute;box-sizing:border-box;}
+  .clip{position:absolute;box-sizing:border-box;}
+  .card{position:absolute;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .brand{font-weight:700;letter-spacing:1px;}
+  .title{font-weight:900;line-height:1.05;}
+  .graph{position:absolute;left:0;box-sizing:border-box;}
+  .playhead{position:absolute;top:0;width:2px;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  clips: [
+    {color:"#22c55e", w:120, h:56},
+    {color:"#ef4444", w:90,  h:56},
+    {color:"#22d3ee", w:110, h:56},
+    {color:"#facc15", w:140, h:56}
+  ],
+  card: {brand:"SCHOOL OF MOTION", title:"QUICK TIPS", x:352, y:34, w:196, h:126},
+  curve: {show:true, points:[{x:0.02,y:0.92},{x:0.35,y:0.88},{x:0.55,y:0.18},{x:0.98,y:0.06}]},
+  panels: {curve:{x:16,y:34,w:88,h:104}, toolbar:{h:20}},
+  dive: {endScale:2.6, travelX:-38},
+  palette: {bg:"#2b3bbf", toolbar:"#facc15", cardFrom:"#e11d48", cardTo:"#6d28d9", ink:"#ffffff"},
+  layout: {worldW:920, clipsX:16, clipsY:150, gap:8, panelBg:"#3b2f7a", gridLine:"rgba(255,255,255,0.28)", curveStroke:"#ffffff", curveStrokeW:2, gridDiv:6, gradAngle:160, flankGap:24, flankTopGap:8, clipBorder:"rgba(10,10,40,0.45)", clipBorderW:2},
+  graph: {y:168, h:35, color:"#ef4444", bg:"#24309e", lineW:2, span:0.8},
+  type: {font:"Arial, Helvetica, sans-serif", brandSize:16, titleSize:30},
+  diveMs: 4200,
+  travelMs: 2600,
+  holdMs: 7200,
+  stage: {width:360, height:203}
+};
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+stage.style.background = CONFIG.palette.bg;
+document.body.style.fontFamily = CONFIG.type.font;
+
+const world = document.createElement("div");
+world.id = "world";
+world.style.width = CONFIG.layout.worldW + "px";
+world.style.height = CONFIG.stage.height + "px";
+stage.appendChild(world);
+
+function el(cls, parent){ const d=document.createElement("div"); d.className=cls; parent.appendChild(d); return d; }
+
+/* toolbar strip */
+const tb = el("toolbar", world);
+tb.style.width = CONFIG.layout.worldW + "px";
+tb.style.height = CONFIG.panels.toolbar.h + "px";
+tb.style.background = CONFIG.palette.toolbar;
+CONFIG.clips.forEach(c => { const t = el("tool", tb); t.style.background = c.color; });
+
+/* easing-curve panel */
+if (CONFIG.curve.show) {
+  const p = CONFIG.panels.curve;
+  const panel = el("panel", world);
+  panel.style.left=p.x+"px"; panel.style.top=p.y+"px"; panel.style.width=p.w+"px"; panel.style.height=p.h+"px";
+  panel.style.background = CONFIG.layout.panelBg;
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("width",p.w); svg.setAttribute("height",p.h);
+  svg.setAttribute("viewBox","0 0 "+p.w+" "+p.h);
+  for (let gx=1; gx<CONFIG.layout.gridDiv; gx++){ const l=document.createElementNS(NS,"line");
+    l.setAttribute("x1",p.w*gx/CONFIG.layout.gridDiv); l.setAttribute("x2",p.w*gx/CONFIG.layout.gridDiv); l.setAttribute("y1",0); l.setAttribute("y2",p.h);
+    l.setAttribute("stroke",CONFIG.layout.gridLine); l.setAttribute("stroke-width",1); svg.appendChild(l); }
+  for (let gy=1; gy<CONFIG.layout.gridDiv; gy++){ const l=document.createElementNS(NS,"line");
+    l.setAttribute("y1",p.h*gy/CONFIG.layout.gridDiv); l.setAttribute("y2",p.h*gy/CONFIG.layout.gridDiv); l.setAttribute("x1",0); l.setAttribute("x2",p.w);
+    l.setAttribute("stroke",CONFIG.layout.gridLine); l.setAttribute("stroke-width",1); svg.appendChild(l); }
+  const pts = CONFIG.curve.points;
+  const P = i => (pts[i].x*p.w)+","+(pts[i].y*p.h);
+  const path=document.createElementNS(NS,"path");
+  path.setAttribute("d","M "+P(0)+" C "+P(1)+", "+P(2)+", "+P(3));
+  path.setAttribute("fill","none"); path.setAttribute("stroke",CONFIG.layout.curveStroke);
+  path.setAttribute("stroke-width",CONFIG.layout.curveStrokeW);
+  svg.appendChild(path);
+  panel.appendChild(svg);
+}
+
+/* clip blocks row (before card, card, after card) */
+let cx = CONFIG.layout.clipsX;
+CONFIG.clips.forEach(c => {
+  const d = el("clip", world);
+  d.style.left=cx+"px"; d.style.top=CONFIG.layout.clipsY+"px";
+  d.style.width=c.w+"px"; d.style.height=c.h+"px"; d.style.background=c.color;
+  d.style.border=CONFIG.layout.clipBorderW+"px solid "+CONFIG.layout.clipBorder;
+  cx += c.w + CONFIG.layout.gap;
+});
+/* tall side clips flanking the card, reusing clip colors cyclically */
+const flankY = CONFIG.panels.toolbar.h + CONFIG.layout.flankTopGap;
+[0,1,2,3].forEach(i => {
+  const c = CONFIG.clips[i % CONFIG.clips.length];
+  const d = el("clip", world);
+  const fx = i<2 ? CONFIG.layout.clipsX + i*(c.w+CONFIG.layout.gap)
+                 : CONFIG.card.x + CONFIG.card.w + CONFIG.layout.flankGap + (i-2)*(c.w+CONFIG.layout.gap);
+  d.style.left=fx+"px"; d.style.top=flankY+"px";
+  d.style.width=c.w+"px"; d.style.height=c.h*2+"px"; d.style.background=c.color;
+  d.style.border=CONFIG.layout.clipBorderW+"px solid "+CONFIG.layout.clipBorder;
+});
+
+/* title card */
+const card = el("card", world);
+card.style.left=CONFIG.card.x+"px"; card.style.top=CONFIG.card.y+"px";
+card.style.width=CONFIG.card.w+"px"; card.style.height=CONFIG.card.h+"px";
+card.style.background="linear-gradient("+CONFIG.layout.gradAngle+"deg,"+CONFIG.palette.cardFrom+","+CONFIG.palette.cardTo+")";
+card.style.color=CONFIG.palette.ink;
+const brand = el("brand", card); brand.textContent = CONFIG.card.brand;
+brand.style.fontSize = CONFIG.type.brandSize+"px";
+const title = el("title", card); title.textContent = CONFIG.card.title;
+title.style.fontSize = CONFIG.type.titleSize+"px";
+
+/* graph-editor strip with playhead + bezier */
+const g = el("graph", world);
+g.style.top=CONFIG.graph.y+"px"; g.style.height=CONFIG.graph.h+"px";
+g.style.width=CONFIG.layout.worldW+"px"; g.style.background=CONFIG.graph.bg;
+const NS2="http://www.w3.org/2000/svg";
+const gsvg=document.createElementNS(NS2,"svg");
+gsvg.setAttribute("width",CONFIG.layout.worldW); gsvg.setAttribute("height",CONFIG.graph.h);
+gsvg.setAttribute("viewBox","0 0 "+CONFIG.layout.worldW+" "+CONFIG.graph.h);
+const gp=document.createElementNS(NS2,"path");
+const midY = CONFIG.graph.h/2;
+gp.setAttribute("d","M 0 "+midY+" C "+(CONFIG.layout.worldW*0.3)+" "+(CONFIG.graph.h*0.05)+", "+(CONFIG.layout.worldW*0.6)+" "+(CONFIG.graph.h*0.95)+", "+CONFIG.layout.worldW+" "+midY);
+gp.setAttribute("fill","none"); gp.setAttribute("stroke",CONFIG.graph.color); gp.setAttribute("stroke-width",CONFIG.graph.lineW);
+gsvg.appendChild(gp); g.appendChild(gsvg);
+const playhead = el("playhead", g);
+playhead.style.height=CONFIG.graph.h+"px"; playhead.style.background=CONFIG.graph.color;
+
+/* ---------- camera: one continuous pose function of t ---------- */
+const CYCLE = CONFIG.diveMs + CONFIG.travelMs + CONFIG.holdMs;
+const cardCx = CONFIG.card.x + CONFIG.card.w/2, cardCy = CONFIG.card.y + CONFIG.card.h/2;
+const stageCx = CONFIG.stage.width/2, stageCy = CONFIG.stage.height/2;
+const travelPx = CONFIG.dive.travelX/100 * CONFIG.stage.width;
+function ease(u){ return u<0.5 ? 2*u*u : 1-Math.pow(-2*u+2,2)/2; }
+function pose(t){
+  if (t < CONFIG.travelMs) {           /* TRAVEL: lateral move at scale 1 */
+    const u = ease(t / CONFIG.travelMs);
+    return {x: travelPx*u, y:0, s:1};
+  }
+  if (t < CONFIG.travelMs + CONFIG.diveMs) {  /* DIVE: push in until card fills frame */
+    const u = ease((t - CONFIG.travelMs) / CONFIG.diveMs);
+    const s = 1 + (CONFIG.dive.endScale - 1)*u;
+    const endX = stageCx - cardCx*CONFIG.dive.endScale;
+    const endY = stageCy - cardCy*CONFIG.dive.endScale;
+    return {x: travelPx + (endX - travelPx)*u, y: endY*u, s: s};
+  }
+  const s = CONFIG.dive.endScale;      /* HOLD: card fills frame */
+  return {x: stageCx - cardCx*s, y: stageCy - cardCy*s, s: s};
+}
+function render(tms){
+  const t = ((tms % CYCLE) + CYCLE) % CYCLE;
+  const p = pose(t);
+  world.style.transform = "translate("+p.x+"px,"+p.y+"px) scale("+p.s+")";
+  const prog = Math.min(t / (CONFIG.travelMs + CONFIG.diveMs), 1);
+  playhead.style.left = (prog * CONFIG.layout.worldW * CONFIG.graph.span) + "px";
+}
+window.__render = render;
+let start = null;
+function frame(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
+
+
+===== score-blind build record =====
+# T101 — Timeline dive · build record (attempt 1, recreation Cycle 016 Wave 14)
+
+Artifact dir: `hidden_files/study/recreations/T101-timeline-dive/` · Queue #48 · Packet #5 (School of Motion "Six Essential Motion Design Transitions", YxQ7JqVmqgY), technique P5-T03 @ 7–12 s · Segment 4–18 s.
+Consumer: **TRANSITION · OPENING** (timeline dive; the transition surface — itself a dynamic-zoom transition used before it is taught).
+Schedule basis (Amendment A7): **`t=0 allocation`** — the dive lifecycle is re-based to build zero inside the 14 s cycle (travel → dive → hold), named allocation, never presented as measured.
+Final build: recreation.html sha256 1ebe868fe772244f7569e73bad0b3a52ba1113e3759381232a6783653f072cf7 · PIXEL-UNVERIFIED (no browser binary in this seat; verification is logic-level via the node harness + the comparison page as render surface).
+
+## 1. Observe gate-out
+Mechanics: the view pushes into a stylized editor timeline (colored clip blocks, easing-curve panel, "QUICK TIPS" title card riding the timeline), travelling along it until one card fills the frame.
+Evidence viewed firsthand by the builder: ev/7.5 (via RUN §1) + the builder's own segment frames (§3).
+Variables (all CONFIG-bound): clips[{color,w,h}] · card{brand,title,x,y,w,h} · curve{show,points[{x,y}×4]} · panels{curve{x,y,w,h},toolbar{h}} · dive{endScale,travelX} · palette{bg,toolbar,cardFrom,cardTo,ink} · layout{worldW,clipsX,clipsY,gap,panelBg,gridLine,curveStroke,curveStrokeW,gridDiv,gradAngle,flankGap,flankTopGap,clipBorder,clipBorderW} · graph{y,h,color,bg,lineW,span} · type{font,brandSize,titleSize} · diveMs · travelMs · holdMs · stage{width,height}.
+
+## 2. Guard dispositions
+- **codex-observe** (fired FIRST, one stream): CONFIRMED-WITH-GAPS — verbatim at codex/codex-observe.md. Dispositions: G1 frame contents unverified by auditor → closed firsthand (segment frames extracted + viewed, §3) · G2 sibling scores summary-only → sibling filings read firsthand by builder; no sibling score is used in this record · G3 rebase explicit → schedule basis line above, t=0 allocation · G4 source duration → ffprobe 80.994 s firsthand (§3) · T10↔T108 mapping: digest T03 names the dive "itself a dynamic-zoom transition (T10)" in packet-local numbering; register T108 is dynamic/infinite zoom — consistent, priced as packet-local vs library numbering.
+- **codex-plan-review** (one stream): REVISE — verbatim at codex/codex-plan-review.md. All points APPLIED as construction requirements: (1) card-fill derived, not asserted — end pose computed from CONFIG card bounds + stage center; harness verifies card at endScale covers the stage (509.6×327.6 px ≥ 360×203) and phase-boundary pose jumps measure 0.000 · (2) contrast checked at the worst gradient point (u=0, cardFrom): white on #e11d48 = **4.70:1 ≥ 4.5:1** (full gradient sweep 4.70–7.10:1, §4) — Owner Cure 1 recorded · (3) all geometry bound in CONFIG (curve points concrete, panels concrete, card geometry, stage height, layout group) — residual literals found by the census cured (§5) · (4) swap diveMs semantics named: the scratch cycle becomes 12 800 ms (holdMs is a CONFIG duration, not a derived residual — the swap tests re-drive, not cycle preservation) · (5) scope held to the core mechanic: panels/clips are static spatial cues, no independent panel animation, one title card.
+
+## 3. Segment + measured frames
+Source: `hidden_files/study/video-digests/2026-11-14-som-six-transitions/source.mp4` — ffprobe: h264 1280×720, 30 fps, duration 80.994 s.
+Segment cut: ffmpeg `-ss 4 -t 14`, re-encoded libx264/yuv420p + aac → segment.mp4, ffprobe **duration 14.000 s**, size 1 147 604 bytes.
+Frames extracted at 0.5 s steps (28 frames, frames/f_00.0–f_13.5.jpg). Measured table (segment t = source t − 4 s):
+
+| Seg t | Source t | Measured state |
+|---|---|---|
+| 0.0 | 4.0 | Pencil sting tail (T100's device) — pre-dive handle |
+| 1.5 | 5.5 | Plain indigo field, white cursor only — the timeline has not entered |
+| 2.0–2.5 | 6.0–6.5 | Timeline present at close framing: yellow toolbar top, curve panel left (grid + white bezier), gradient card centre "SCHOOL OF MOTION / QUICK TIPS", clip blocks flanking, blue graph strip bottom with red playhead + red bezier |
+| 3.0 | 7.0 | Same framing, camera panned slightly along the timeline (clip positions shift) |
+| 5.0 | 9.0 | Card selected (dashed outline), graph-strip bezier animating — editor at work on the card |
+| 6.5 | 10.5 | Camera travelled right along the timeline (playhead advanced right); the card now reads "TRANSITIONS" — the dive has carried the view to the next card |
+| 7.5–13.5 | 11.5–17.5 | Definition card full-frame (T102's device) — post-dive handle |
+
+Settled mechanics: the timeline's layout (toolbar · curve panel · clips · graph strip with playhead + bezier) is MEASURED. The measured segment shows the timeline entering already close and travelling laterally; the Plan's wide → travel → card-fills-frame progression inside one 14 s cycle is the named **t=0 allocation** (schedule basis above) — the build implements the catalogue mechanic (travel + continuous push-in until the card fills the frame), it does not claim the segment's exact camera path. No element is unverifiable beyond this named allocation.
+
+## 4. Construction
+DOM/SVG, one self-contained file, CONFIG at top, logic reads only CONFIG. Camera = one continuous JS-clock pose function: TRAVEL (0–2600 ms, translateX 0→travelX at scale 1) → DIVE (2600–6800 ms, scale 1→endScale 2.6, translation interpolated to the derived card-centred end pose; pose at both phase boundaries identical — continuity measured 0.000) → HOLD (6800–14000 ms). Phase exclusivity by the pose function (one phase owns the stage at a time — Owner Cure 2). Playhead advances with camera progress across travel+dive. `window.__render(t)` exposes the clock for the comparison's synchronized control.
+Owner Cure 1 (contrast): white ink on the card gradient — worst point (u=0, #e11d48) **4.70:1**, midpoint 6.41:1, end (#6d28d9) 7.10:1 — all ≥ 4.5:1. Recorded.
+Card-fill derivation: end pose = stage centre − card centre × endScale; card rendered 196×126 → 509.6×327.6 px at endScale vs stage 360×203 — fills frame on both axes. ✓
+
+## 5. Own checks (recorded, not asserted)
+- **Swap test (EXACT RUN §2 values, scratch copy):** card.title "QUICK TIPS"→"DEEP DIVE" · clips[0].color #22c55e→#f97316 · diveMs 4200→3000. Result (node harness on the scratch script): title text node = "DEEP DIVE" ✓ · orange clip present ✓ · phase boundaries still continuous (jump 0.000) ✓ · card still fills frame ✓ · scratch cycle = 12 800 ms (named semantics, §2). Untouched groups (named per §2b A-9): palette{bg,toolbar} · panels — placement re-driven by the dive transform (panels ride the world transform; verified in the pose harness).
+- **Purity grep** over recreation.html, pattern `segment\.mp4|source\.mp4|video-digests|ev/|\.jpg|\.png|<video|<img`: **0 hits**. Asset inventory: recreation.html loads NO external assets — all elements are DOM/SVG generated from CONFIG in code. segment.mp4 appears only in comparison.html as the labeled ORIGINAL.
+- **node --check** on the extracted inline script: OK. Harness (default build): travel→dive jump 0.000 · dive→hold jump 0.000 · hold pose scale 2.6 · loop pose at 14 000 ms == pose at 0 ✓ · cycle = 4200+2600+7200 = **14 000 ms exactly**.
+- **Comparison check:** labels exact per charge · one control set drives both (video currentTime slaves the recreation via __render) · durations matched (segment 14.000 s; recreation cycle 14 000 ms) · phone stacking via flex-wrap with controls above the panels, reachable.
+
+## 6. A6 legs (final build)
+- guard-measured-fit → fit-table.md: **0 HITs** (brandSize raised 11→16 pre-wave to clear the ink floor in the wide state).
+- guard-config-census → config-census.md: **0 HITs** on the final build (5 first-pass literal hits cured pre-wave: gridDiv, gradAngle, flankGap/flankTopGap, clipBorder/clipBorderW, graph.span — all moved into CONFIG and re-verified).
+
+

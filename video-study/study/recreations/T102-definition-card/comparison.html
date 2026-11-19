@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T102 — Definition card · comparison</title>
+<style>
+  html,body{margin:0;padding:0;background:#14162e;color:#f2f2f2;font-family:Arial,Helvetica,sans-serif;}
+  #wrap{max-width:760px;margin:0 auto;padding:12px;}
+  #controls{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px;}
+  button{min-height:48px;min-width:88px;font-size:16px;padding:10px 16px;cursor:pointer;}
+  .row{display:flex;gap:14px;align-items:flex-start;}
+  .side{flex:1 1 0;min-width:0;}
+  .lab{font-size:13px;line-height:1.35;margin:0 0 6px;}
+  video{width:100%;background:#000;display:block;}
+  iframe{width:100%;border:0;display:block;background:#11142e;}
+  @media (max-width:560px){ .row{flex-direction:column;} .side{width:100%;} }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+  <div class="row">
+    <div class="side">
+      <div class="lab">ORIGINAL — School of Motion &#8216;Six Essential Motion Design Transitions&#8217; @ 7–21 s</div>
+      <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+    </div>
+    <div class="side">
+      <div class="lab">RECREATION — T102 definition card, parameterized</div>
+      <iframe id="rec" title="T102 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+/* One synchronized control set: the recreation iframe is loaded with a
+   start-offset parameter and its clock is driven from the same transport
+   actions as the video (play / pause / restart act on both). */
+const orig = document.getElementById("orig");
+const rec = document.getElementById("rec");
+const q = location.search || "";
+rec.src = "recreation.html" + q;
+/* Match the recreation stage height to the video's rendered height. */
+function fitRec(){
+  const w = rec.clientWidth;
+  rec.style.height = Math.round(w * 11 / 9) + "px";
+}
+window.addEventListener("resize", fitRec);
+rec.addEventListener("load", fitRec);
+fitRec();
+document.getElementById("btnPlay").addEventListener("click", function(){
+  orig.play();
+  const w = rec.contentWindow;
+  if (w) w.postMessage("play", "*");
+});
+document.getElementById("btnPause").addEventListener("click", function(){
+  orig.pause();
+  const w = rec.contentWindow;
+  if (w) w.postMessage("pause", "*");
+});
+document.getElementById("btnRestart").addEventListener("click", function(){
+  orig.currentTime = 0;
+  orig.play();
+  rec.src = "recreation.html" + q;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T100 — Pencil-check task sting (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="scene" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <rect id="fieldRect" x="0" y="0"></rect>
+    <g id="beatLayer"></g>
+    <rect id="checkboxRect" fill="none"></rect>
+    <path id="tickPath" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+    <g id="pencilGroup"><path id="pencilPath"></path></g>
+  </svg>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  field: {color: "#4148c0"},
+  stage: {width: 360, height: 360},
+  pencil: {
+    color: "#2b2b2b",
+    enterFrom: "top-left",
+    path: "M0 0 L-16 -4 L-104 -92 L-88 -108 L4 -20 L8 -6 Z",
+    enterDx: 150,
+    enterDy: 150
+  },
+  checkbox: {size: 64, stroke: 6, color: "#ffffff", cx: 180, cy: 196, exitAt: 1},
+  tick: {
+    color: "#3df063",
+    stroke: 7,
+    drawMs: 900,
+    start: {x: -20, y: 2},
+    ctrl1: {x: -12, y: 8},
+    ctrl2: {x: 8, y: -2},
+    end: {x: 25, y: -15}
+  },
+  burst: {count: 8, color: "#3df063", radius: 74, w: 16, h: 5, startScale: 0.3},
+  enterMs: 1400,
+  burstMs: 800,
+  cycleMs: 14000,
+  validation: {minResidualMs: 500},
+  geom: {easePow: 3, enterFadeGain: 1.5}
+};
+function applyOverride(base, over){
+  for (const k in over){
+    if (over[k] && typeof over[k] === "object" && !Array.isArray(over[k]) &&
+        base[k] && typeof base[k] === "object" && !Array.isArray(base[k])) applyOverride(base[k], over[k]);
+    else base[k] = over[k];
+  }
+  return base;
+}
+try {
+  const q = new URLSearchParams(location.search).get("cfg");
+  if (q) applyOverride(CONFIG, JSON.parse(q));
+} catch (e) { }
+const C = CONFIG, G = C.geom;
+function isNum(v){ return typeof v === "number" && Number.isFinite(v); }
+function validate(cfg){
+  const errs = [];
+  const nums = [
+    ["stage.width", cfg.stage && cfg.stage.width], ["stage.height", cfg.stage && cfg.stage.height],
+    ["pencil.enterDx", cfg.pencil && cfg.pencil.enterDx], ["pencil.enterDy", cfg.pencil && cfg.pencil.enterDy],
+    ["checkbox.size", cfg.checkbox && cfg.checkbox.size], ["checkbox.stroke", cfg.checkbox && cfg.checkbox.stroke],
+    ["checkbox.cx", cfg.checkbox && cfg.checkbox.cx], ["checkbox.cy", cfg.checkbox && cfg.checkbox.cy],
+    ["checkbox.exitAt", cfg.checkbox && cfg.checkbox.exitAt],
+    ["tick.stroke", cfg.tick && cfg.tick.stroke], ["tick.drawMs", cfg.tick && cfg.tick.drawMs],
+    ["burst.count", cfg.burst && cfg.burst.count], ["burst.radius", cfg.burst && cfg.burst.radius],
+    ["burst.w", cfg.burst && cfg.burst.w], ["burst.h", cfg.burst && cfg.burst.h],
+    ["burst.startScale", cfg.burst && cfg.burst.startScale],
+    ["enterMs", cfg.enterMs], ["burstMs", cfg.burstMs], ["cycleMs", cfg.cycleMs],
+    ["validation.minResidualMs", cfg.validation && cfg.validation.minResidualMs],
+    ["geom.easePow", cfg.geom && cfg.geom.easePow], ["geom.enterFadeGain", cfg.geom && cfg.geom.enterFadeGain]
+  ];
+  for (const pair of nums){ if (!isNum(pair[1])) errs.push(pair[0] + " not finite"); }
+  if (errs.length) return errs;
+  if (!(cfg.enterMs > 0) || !(cfg.tick.drawMs > 0) || !(cfg.burstMs > 0)) errs.push("active durations must be positive");
+  if (!Number.isInteger(cfg.burst.count) || cfg.burst.count < 0) errs.push("burst.count must be a non-negative integer");
+  if (!(cfg.checkbox.exitAt >= 0 && cfg.checkbox.exitAt <= 1)) errs.push("checkbox.exitAt outside 0..1");
+  const total = cfg.enterMs + cfg.tick.drawMs + cfg.burstMs;
+  const residual = cfg.cycleMs - total;
+  if (!(cfg.cycleMs > 0) || residual < cfg.validation.minResidualMs) errs.push("residual hold " + residual + "ms below minimum or cycle invalid");
+  const tp = [cfg.tick.start, cfg.tick.ctrl1, cfg.tick.ctrl2, cfg.tick.end];
+  for (const p of tp){ if (!p || !isNum(p.x) || !isNum(p.y)) errs.push("tick control point not finite"); }
+  return errs;
+}
+const validationErrors = validate(C);
+window.__validationErrors = validationErrors;
+const stage = document.getElementById("stage");
+stage.style.width = C.stage.width + "px";
+stage.style.height = C.stage.height + "px";
+stage.style.background = C.field.color;
+if (validationErrors.length){ stage.dataset.validation = "failed"; console.error("CONFIG validation failed: " + validationErrors.join("; ")); }
+else { stage.dataset.validation = "ok"; }
+const scene = document.getElementById("scene");
+scene.setAttribute("viewBox", "0 0 " + C.stage.width + " " + C.stage.height);
+const fieldRect = document.getElementById("fieldRect");
+fieldRect.setAttribute("fill", C.field.color);
+fieldRect.setAttribute("width", C.stage.width);
+fieldRect.setAttribute("height", C.stage.height);
+const box = document.getElementById("checkboxRect");
+box.setAttribute("x", C.checkbox.cx - C.checkbox.size / 2);
+box.setAttribute("y", C.checkbox.cy - C.checkbox.size / 2);
+box.setAttribute("width", C.checkbox.size);
+box.setAttribute("height", C.checkbox.size);
+box.setAttribute("stroke", C.checkbox.color);
+box.setAttribute("stroke-width", C.checkbox.stroke);
+function tickAbsPath(){
+  const cx = C.checkbox.cx, cy = C.checkbox.cy, t = C.tick;
+  return "M" + (cx + t.start.x) + " " + (cy + t.start.y) +
+    " C" + (cx + t.ctrl1.x) + " " + (cy + t.ctrl1.y) + " " +
+    (cx + t.ctrl2.x) + " " + (cy + t.ctrl2.y) + " " +
+    (cx + t.end.x) + " " + (cy + t.end.y);
+}
+const tick = document.getElementById("tickPath");
+tick.setAttribute("d", tickAbsPath());
+tick.setAttribute("stroke", C.tick.color);
+tick.setAttribute("stroke-width", C.tick.stroke);
+const tickLen = tick.getTotalLength();
+tick.style.strokeDasharray = tickLen;
+tick.style.strokeDashoffset = tickLen;
+const pencilPath = document.getElementById("pencilPath");
+pencilPath.setAttribute("d", C.pencil.path);
+pencilPath.setAttribute("fill", C.pencil.color);
+const pencil = document.getElementById("pencilGroup");
+const beatLayer = document.getElementById("beatLayer");
+let burstMarks = [];
+function buildBurst(){
+  beatLayer.innerHTML = "";
+  burstMarks = [];
+  for (let i = 0; i < C.burst.count; i++){
+    const a = (2 * Math.PI * i) / C.burst.count;
+    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("width", C.burst.w);
+    r.setAttribute("height", C.burst.h);
+    r.setAttribute("x", -C.burst.w / 2);
+    r.setAttribute("y", -C.burst.h / 2);
+    r.setAttribute("fill", C.burst.color);
+    const x = C.checkbox.cx + Math.cos(a) * C.burst.radius;
+    const y = C.checkbox.cy + Math.sin(a) * C.burst.radius;
+    r.dataset.x = x; r.dataset.y = y; r.dataset.deg = (a * 180 / Math.PI);
+    r.setAttribute("opacity", "0");
+    beatLayer.appendChild(r);
+    burstMarks.push(r);
+  }
+}
+buildBurst();
+function phases(){
+  const drawEnd = C.enterMs + C.tick.drawMs;
+  const burstEnd = drawEnd + C.burstMs;
+  return {drawEnd, burstEnd};
+}
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function easeOut(v){ return 1 - Math.pow(1 - v, G.easePow); }
+let base = performance.now(), acc = 0, paused = false;
+function elapsed(){ return paused ? acc : acc + (performance.now() - base); }
+window.addEventListener("message", function(ev){
+  const m = ev.data && ev.data.t100;
+  if (m === "pause" && !paused){ acc = elapsed(); paused = true; }
+  else if (m === "play" && paused){ base = performance.now(); paused = false; }
+  else if (m === "restart"){ acc = 0; base = performance.now(); lastCycle = -1; }
+});
+let lastCycle = -1;
+function setBurst(p){
+  const s = C.burst.startScale + (1 - C.burst.startScale) * easeOut(p);
+  const o = p <= 0 ? 0 : 1;
+  for (const r of burstMarks){
+    r.setAttribute("transform", "translate(" + r.dataset.x + " " + r.dataset.y + ") rotate(" + r.dataset.deg + ") scale(" + s + ")");
+    r.setAttribute("opacity", String(o));
+  }
+}
+function frame(){
+  const el = elapsed();
+  const t = el % C.cycleMs;
+  const cyc = Math.floor(el / C.cycleMs);
+  if (cyc !== lastCycle){ lastCycle = cyc; buildBurst(); }
+  const P = phases();
+  const startPt = tick.getPointAtLength(0);
+  if (t < C.enterMs){
+    const sx = C.pencil.enterFrom.indexOf("right") >= 0 ? 1 : -1;
+    const sy = C.pencil.enterFrom.indexOf("bottom") >= 0 ? 1 : -1;
+    const p = easeOut(clamp01(t / C.enterMs));
+    const dx = sx * Math.abs(C.pencil.enterDx) * (1 - p), dy = sy * Math.abs(C.pencil.enterDy) * (1 - p);
+    pencil.setAttribute("transform", "translate(" + (startPt.x + dx) + " " + (startPt.y + dy) + ")");
+    pencil.setAttribute("opacity", String(clamp01(p * G.enterFadeGain)));
+    tick.style.strokeDashoffset = tickLen;
+    box.setAttribute("opacity", "1");
+    setBurst(0);
+  } else if (t < P.drawEnd){
+    const p = clamp01((t - C.enterMs) / C.tick.drawMs);
+    const pt = tick.getPointAtLength(p * tickLen);
+    pencil.setAttribute("transform", "translate(" + pt.x + " " + pt.y + ")");
+    pencil.setAttribute("opacity", "1");
+    tick.style.strokeDashoffset = tickLen * (1 - p);
+    box.setAttribute("opacity", p < C.checkbox.exitAt ? "1" : "0");
+    setBurst(0);
+  } else if (t < P.burstEnd){
+    const p = clamp01((t - P.drawEnd) / C.burstMs);
+    pencil.setAttribute("opacity", "0");
+    tick.style.strokeDashoffset = 0;
+    box.setAttribute("opacity", "0");
+    setBurst(p);
+  } else {
+    pencil.setAttribute("opacity", "0");
+    tick.style.strokeDashoffset = 0;
+    box.setAttribute("opacity", "0");
+    setBurst(0);
+  }
+  requestAnimationFrame(frame);
+}
+if (!validationErrors.length) requestAnimationFrame(frame);
+</script>
+</body>
+</html>

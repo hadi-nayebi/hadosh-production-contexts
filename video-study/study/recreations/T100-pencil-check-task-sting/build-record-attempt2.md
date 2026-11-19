@@ -1,0 +1,63 @@
+# T100 — Pencil-check task sting · build record (attempt 2, practice Cycle 024 Wave 23)
+
+Bound build: recreation.html sha256 `3b13704132f220b8252974b75e67729ddbf58c53e2ab0c6af55738d5dc95be27` — identical in all five lens payloads (each instr-<lens>.txt preserved create-once in `codex/attempt-2/` before firing).
+Plan: `study-jobs/practice/runs/2026-11-17-cycle-024-wave-23/plan-T100.md` incl. both Cycle-024 addenda (Observe correction 4 + plan-review consumption, 6 findings all accepted). Skeleton gate A-C012-4 was satisfied by the seat in RUN.md §2a before Execute opened (entry `lane-2026-11-17-cycle024-skeleton`, heartbeat beat 106, read back).
+**PIXEL-UNVERIFIED** (A-C002-2) — no browser binary; verification is logic level (node harness).
+
+## Preservation (before any mutation, §5 / A-C010-1b / A-C003-2 / A-C004-1 / A-C005-1)
+- Complete inventory: 57 files listed in the run directory (`inventory-T100-attempt2.txt`); machine-written baseline `preservation-baseline-T100-attempt2.txt` in the run directory — 57 hashes, every hash validated exactly 64 hex chars, count matched.
+- Content copies (create-once, inode-independent, asserted): `recreation-attempt-1.html` (sha a8c80b2a… = attempt-1 bound build) · `comparison-attempt-1.html` · `fit-table-attempt-1.md` · `config-census-attempt-1.md`.
+- Preservation census re-verified AFTER the working file's first overwrite: `recreation-attempt-1.html` still a8c80b2a…, inode distinct from the working file. Re-verified again at close: unchanged.
+
+## Finer re-observation + premise refinement (Execute step 3; A-C008-1 filing)
+Frames extracted at 3.25 / 3.75 / 4.25 / 4.75 / 5.25 s and viewed firsthand:
+- 3.25 s: pencil already present, tip in box, NO tick yet → pencil onset is at or before 3.25 s.
+- 3.75 s: box STILL present with the cyan curved tick nearly complete → the box exit is LATE in the draw, not mid-draw.
+- 4.25 s: red beat shows a curved arrow WITH radiating marks around it. 4.75 s: red arrow alone. 5.25 s: green arrow alone.
+**Premise refinement (not a contradiction of event order):** the plan left the box-exit fraction as ALLOCATION; the finer evidence prices it late, so Stage 2 binds `checkbox.exitAt = 0.85`. The arrow-only tail inside each punctuation beat (4.75 / 5.25 s) was NOT built — each beat's confetti persists for the whole beat; motion and timing both priced this (see scores filing). Filed here as the attempt's named residual, with the 4.25 s radiating-marks frame supporting the built arrow+marks grouping at beat start.
+**Tick-clear timing specification (plan-review finding 2, binding):** tick visible during ENTER (undrawn) and DRAW (revealing); opacity set to 0 in every phase after DRAW — the tick CLEARS at the end of DRAW, after the box exit at draw-progress 0.85, and is absent during both punctuation beats and the hold (frames f-4.5/f-5.0 show no tick). HOLD's displayed state is therefore the empty indigo field for the full 3,200 ms residual, verified including the wrap (own-check: hold presented at cycle end −1 ms; next cycle's ENTER rebuilds cleanly). No synthetic tick return was built.
+
+## Cures landed, stage by stage (attribution BUNDLED per stage — A-C010-1a; checkpoints isolate stage construction, lens movement is read per lens at close)
+- **Stage 1 — C3a/C3c/C3d:** ENTER landing derived from the tick path (`getPointAtLength(0)` at run time; `geom.pencilTipX/Y` deleted); tick geometry anchored to the checkbox (cubic control points are offsets from `checkbox.cx/cy`, absolute path derived at build); viewBox + field rect derived from CONFIG stage dimensions; `endHoldMs` REMOVED; startup validation added (finite/numeric, positive active durations, integer confetti count, exit-fraction range, residual ≥ configured minimum, zero residual rejected). Stage checks 7/7.
+- **Stage 2 — C1a/C1b/C1d:** entry corner top-right; tick becomes a curved cubic (chord deviation 17.4 px measured); pencil silhouette mirrored to extend up-right; box exits at draw-progress 0.85 (refined above); tick clears at DRAW end. Stage checks 7/7 (continuity gap 0.071 px sampled; tip-on-path at 5 progresses, worst 0.071 px).
+- **Stage 3 — C1c/C1e/C1f/C1g:** single radial burst retired; two successive beats (red family, then green family), each a curved arrow revealing by stroke draw-on + confetti rectangles displacing outward (travel 0.35→1.0 of CONFIG offsets, sampled displacement 58.6 px in beat 1); pencil beat shortened to ENTER 800 + DRAW 700 = 1,500 ms; cycle shortened to 6,000 ms authored, residual hold 3,200 ms = 53.3%. Stage checks 10/10 (exclusivity, beat-1 cleared before beat-2 opens, hold cleared, wrap replays).
+- **Stage 4 — C2a/C2b + tick colour:** pencil #ffd94d = 5.25:1 on the default field, 8.50:1 on the swap field; tick cyan #00e5ff = 4.69:1 / 7.59:1 (passes the ≥4.5:1 gate on both fields, so the cyan binds — deferral D5 does not fire); confetti onset scale 0.65 → first-frame marks ≈13.5×4.05 px (priced failure was 4.8×1.5 px; both dimensions exceed it by ≥1.5× margin); arrow stroke 7 px. Stage checks 14/14.
+- **Red-beat contrast, named before reliance (finding 5):** candidate `#ffc2c2` measured 4.72:1 on the default field #4148c0 and 7.64:1 on the swap field #173f35 — passing on BOTH fields before the cure relied on it. The review's illustrative pair was confirmed non-passing (#ff0000 = 1.80:1; #ffb3b3 = 4.24:1 on the default field). Cost priced: lightening moves beat 1 toward a pale pink-red; the red–green distinction now rests on hue (red family R255/G194/B194 vs green #3df063) at similar lightness — accepted and printed; the readability return recomputed all pairs and matched them to two decimals. Effective contrast is claimed at full opacity: confetti is opaque from its first frame; the pencil reaches opacity 1 within ENTER (asserted), and its fade interval is not a claimed-readable frame.
+- **Verify-stage defect found and cured before scoring (not a stage):** the first full-suite run crashed the build on a confetti-count swap of 12 against an 8-entry offsets array. Cure: offsets cycle modulo the array length (rotation step differentiates repeats) and validation gains a `maxConfetti: 96` ceiling so an impractically large count is rejected instead of crashing. This cure post-dates checkpoint 4; the final source differs from checkpoint 4 by exactly this cure plus nothing else knowingly. A second suite defect (census scanning HTML/CSS numbers; a fill check reading a JS stub instead of the markup) was a harness-scope error, corrected in the suite with the scope printed; the source was not changed for it.
+- **Fallback decision point (finding 3):** the 14,000 ms fallback (residual 11,200 ms = 80.0%, worse than the original 77.9%) fires ONLY if the 6,000 ms basis is itself invalidated — never as a tempo cure. It did not fire: no evidence invalidated the authored-cycle basis, and the timing return itself judged Basis B "the closer tempo choice for the scoped sting".
+
+## Checkpoints (create-once content copies, inode ≠ working inode asserted, sha frozen at filing — A-C010-1a + gate A-C012-4; each filed BEFORE the next stage began)
+| Checkpoint | Source sha256 | Own-check output |
+|---|---|---|
+| checkpoint-attempt2-stage1.html | 3e1f1972197dc1f8cc941a5080ae496756b238dcdef0af8476dee2cad924f81a | checkpoint-attempt2-stage1-checks.txt — 7 pass, 0 fail |
+| checkpoint-attempt2-stage2.html | 897f4202dcebb5e67e496e1a0586a37ed0a3c19bf78017836c8ecdca71ae10e9 | checkpoint-attempt2-stage2-checks.txt — 7 pass, 0 fail |
+| checkpoint-attempt2-stage3.html | fbfedfcfd16dd75cb7f2732e381d29e0567c4be0bfb3e5eb24052dbdab0d7328 | checkpoint-attempt2-stage3-checks.txt — 10 pass, 0 fail |
+| checkpoint-attempt2-stage4.html | b3ef91dcf4fb299c2a87e698134b87ad30b95380d09ed673f755a3ab4004bbf7 | checkpoint-attempt2-stage4-checks.txt — 14 pass, 0 fail |
+No checkpoint is reconstructed; each is the working source copied at its stage's close.
+
+## Own checks on the final source (full suite 32 pass, 0 fail; stage suites re-run green: 7/7 · 7/7 · 10/10 · 14/14)
+- Effect mappings + CONFIG consumption census (A-C002-1/A-C006-2): 55 leaf keys walked, 0 unconsumed; `endHoldMs` asserted absent.
+- Literal census (A-C008-3): no colour literals outside CONFIG; numeric literals outside CONFIG (script scope) = {-1, 0, 1, 2} only, classified per-literal as structural (-1 cycle sentinel · 0/1 clamp/opacity/origin/bounds · 2 halving identity); no content literal classified structural (A-C009-4).
+- Displayed state + occlusion (A-C006-3/A-C019-1): TEXTLESS — no wrap states exist (ruled out with that reason). Complete ordered pair set among co-present elements: pencil-over-tick (polygon model: tick 100% visible at draw p=0.5 and p=0.99) · pencil-over-checkbox (pencil body crosses the box's top rail at draw start — priced by the readability return; the box outline remains legible) · checkbox-over-tick-start (box is stroke-only, fill none) · arrow-over-field and confetti-over-field (contrast pairs, both fields) · tick-over-field (4.69:1). No unscoped visibility claim is made.
+- Presented endpoint (A-C020-2): hold state presented at cycle end −1 ms; hold is 3,200 ms, far above one frame interval.
+- Window accounting (A-C007-1), three clocks printed: source technique window 3–7 s · comparison cut 0–14 s · recreation clock 0–6000 ms (800+700+650+650+3200 = 6000, 0 unallocated). Deferred cursor/transition beats = OMITTED COVERAGE (deferral D1, priced in the plan under every lens).
+- Self-start (A-C010-2): rAF loop schedules itself with no external caller and reaches HOLD unaided — no limitation.
+- CSS-parse leg (A-C012-3): 8 declarations, all parse.
+- Jump guard retained: ENTER→DRAW gap 0.091 px (default path) and 0.107 px (combined swapped path) — the interim ≈48.1 px defect is mechanically excluded on both.
+- C1c movement sampling: confetti displacement 58.6 px sampled inside beat 1; arrow dashoffset falls 101.0→7.7 across the same window. C2b onset-dimension margins: 13.5 px wide (2.8× the 4.8 px failure) × 4.05 px high (2.7× the 1.5 px failure) at the first visible frame.
+- Swaps: field colour · confetti count · draw duration · combined tick-path + entry-corner + pencil-shape + checkbox-layout with continuity · non-square stage 480×300 (viewBox + field coverage derived).
+
+## Pre-scoring legs (A-C008, non-skippable, on the NEW source)
+- guard-measured-fit → `fit-table-attempt2.md` — TEXTLESS, HIT list EMPTY by scope. (Attempt-tagged name used because the plain `fit-table.md` still holds attempt 1's leg; attempt 1's leg is also preserved as `fit-table-attempt-1.md`.)
+- guard-config-census → `config-census-attempt2.md` — HIT list EMPTY (55 leaf keys resolved; literal scan as above). (Same naming note for `config-census.md`.)
+
+## Payload manifest + firing record
+Manifest: `codex/attempt-2/payload-manifest.md` (allowlist, exclusions, anchor scan, and the required both-bases neutral entry — filed before any firing). Anchor scan on every assembled payload: "84.0" 0 hits · no cure codes · no deduction language · source comments: the source carries NO comments (grep-verified; only the SVG namespace URI matched a comment-like pattern). Payloads preserved create-once: `codex/attempt-2/instr-{motion,timing,purity,reusability,readability}.txt` before any re-fire; no re-fire was needed.
+Firing form: per-lens dedicated scratch cwd (/tmp/t100-lens-<lens>/) containing ONLY content copies of recreation.html + neutral-packet-attempt2.md · local Codex, read-only, git-repo check skipped · ONE stream per lens · `-o` to a /tmp path first, then content-copied to `codex/attempt-2/lens-<lens>.md` with sha256 verified identical for all five.
+**Session read scopes (A-C019-2):** every session read only its own scratch copies — motion, timing, purity, reusability and readability returns all cite paths inside their own /tmp/t100-lens-<lens>/ directory and nothing outside it. No session reported a lost, contaminated, or not-assessed firing.
+
+## Comparison page
+Re-pointed AFTER the new attempt passed its own checks, because the interface changed (authored cycle 14,000 → 6,000 ms): the RECREATION label now reads "attempt 2: authored 6.0 s cycle; original cut is 14 s". Exactly that label line changed; the ORIGINAL side (segment.mp4 video element, its label, controls) is untouched. Prior page preserved as `comparison-attempt-1.html`.
+
+## Scores (filed in scores.md as Attempt 2)
+motion 82 · timing 82 · purity 100 · reusability 82 · readability 87 → average 86.6, min 82, delta +2.6 vs 84.0 — PASS. WHY not owed (beating attempt). Attempt-3 priced cures from these returns are filed in scores.md with the attempt.

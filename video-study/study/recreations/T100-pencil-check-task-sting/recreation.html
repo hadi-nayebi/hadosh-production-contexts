@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T100 — Pencil-check task sting (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="scene" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <rect id="fieldRect" x="0" y="0"></rect>
+    <g id="beatLayer"></g>
+    <rect id="checkboxRect" fill="none"></rect>
+    <path id="tickPath" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+    <g id="pencilGroup"><path id="pencilPath"></path></g>
+  </svg>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  field: {color: "#4148c0"},
+  stage: {width: 360, height: 360},
+  pencil: {
+    color: "#ffd94d",
+    enterFrom: "top-right",
+    path: "M0 0 L16 -4 L104 -92 L88 -108 L4 -20 L8 -6 Z",
+    enterDx: 150,
+    enterDy: 150
+  },
+  checkbox: {size: 64, stroke: 6, color: "#ffffff", cx: 180, cy: 196, exitAt: 0.85},
+  tick: {
+    color: "#00e5ff",
+    stroke: 7,
+    drawMs: 700,
+    start: {x: -20, y: 2},
+    ctrl1: {x: -10, y: 20},
+    ctrl2: {x: 0, y: 22},
+    end: {x: 25, y: -15}
+  },
+  punct1: {
+    color: "#ffc2c2", durationMs: 650, arrowStroke: 7,
+    arrowPath: "M-52 40 C-28 -8 8 -36 54 -22",
+    arrowHead: "54,-22 31,-31 39,-3",
+    confettiCount: 8, confettiW: 20, confettiH: 6, confettiStartScale: 0.65,
+    confettiFrom: 0.35,
+    confettiOffsets: [[-110, -70], [95, -85], [-130, 15], [120, 40], [-70, 95], [80, 100], [-15, -115], [30, 120]]
+  },
+  punct2: {
+    color: "#3df063", durationMs: 650, arrowStroke: 7,
+    arrowPath: "M-54 -30 C-20 6 16 30 56 12",
+    arrowHead: "56,12 32,4 40,28",
+    confettiCount: 8, confettiW: 20, confettiH: 6, confettiStartScale: 0.65,
+    confettiFrom: 0.35,
+    confettiOffsets: [[105, -75], [-95, -90], [125, -10], [-125, 45], [65, 105], [-80, 90], [10, -120], [-35, 118]]
+  },
+  enterMs: 800,
+  cycleMs: 6000,
+  validation: {minResidualMs: 500, maxConfetti: 96},
+  geom: {easePow: 3, enterFadeGain: 1.5, confettiRotStep: 47, headAt: 0.85}
+};
+function applyOverride(base, over){
+  for (const k in over){
+    if (over[k] && typeof over[k] === "object" && !Array.isArray(over[k]) &&
+        base[k] && typeof base[k] === "object" && !Array.isArray(base[k])) applyOverride(base[k], over[k]);
+    else base[k] = over[k];
+  }
+  return base;
+}
+try {
+  const q = new URLSearchParams(location.search).get("cfg");
+  if (q) applyOverride(CONFIG, JSON.parse(q));
+} catch (e) { }
+const C = CONFIG, G = C.geom;
+function isNum(v){ return typeof v === "number" && Number.isFinite(v); }
+function validate(cfg){
+  const errs = [];
+  const nums = [
+    ["stage.width", cfg.stage && cfg.stage.width], ["stage.height", cfg.stage && cfg.stage.height],
+    ["pencil.enterDx", cfg.pencil && cfg.pencil.enterDx], ["pencil.enterDy", cfg.pencil && cfg.pencil.enterDy],
+    ["checkbox.size", cfg.checkbox && cfg.checkbox.size], ["checkbox.stroke", cfg.checkbox && cfg.checkbox.stroke],
+    ["checkbox.cx", cfg.checkbox && cfg.checkbox.cx], ["checkbox.cy", cfg.checkbox && cfg.checkbox.cy],
+    ["checkbox.exitAt", cfg.checkbox && cfg.checkbox.exitAt],
+    ["tick.stroke", cfg.tick && cfg.tick.stroke], ["tick.drawMs", cfg.tick && cfg.tick.drawMs],
+    ["enterMs", cfg.enterMs], ["cycleMs", cfg.cycleMs],
+    ["validation.minResidualMs", cfg.validation && cfg.validation.minResidualMs],
+    ["validation.maxConfetti", cfg.validation && cfg.validation.maxConfetti],
+    ["geom.easePow", cfg.geom && cfg.geom.easePow], ["geom.enterFadeGain", cfg.geom && cfg.geom.enterFadeGain],
+    ["geom.confettiRotStep", cfg.geom && cfg.geom.confettiRotStep], ["geom.headAt", cfg.geom && cfg.geom.headAt]
+  ];
+  for (const b of ["punct1", "punct2"]){
+    const p = cfg[b] || {};
+    nums.push([b + ".durationMs", p.durationMs], [b + ".arrowStroke", p.arrowStroke],
+      [b + ".confettiCount", p.confettiCount], [b + ".confettiW", p.confettiW], [b + ".confettiH", p.confettiH],
+      [b + ".confettiStartScale", p.confettiStartScale], [b + ".confettiFrom", p.confettiFrom]);
+  }
+  for (const pair of nums){ if (!isNum(pair[1])) errs.push(pair[0] + " not finite"); }
+  if (errs.length) return errs;
+  if (!(cfg.enterMs > 0) || !(cfg.tick.drawMs > 0)) errs.push("active durations must be positive");
+  for (const b of ["punct1", "punct2"]){
+    const p = cfg[b];
+    if (!(p.durationMs > 0)) errs.push(b + ".durationMs must be positive");
+    if (!Number.isInteger(p.confettiCount) || p.confettiCount < 0 || p.confettiCount > cfg.validation.maxConfetti) errs.push(b + ".confettiCount outside 0..maxConfetti");
+    if (!Array.isArray(p.confettiOffsets) || p.confettiOffsets.length < 1) errs.push(b + ".confettiOffsets empty");
+    else for (const o of p.confettiOffsets){ if (!Array.isArray(o) || !isNum(o[0]) || !isNum(o[1])) errs.push(b + ".confettiOffsets entry not finite"); }
+    if (!(p.confettiStartScale > 0 && p.confettiStartScale <= 1)) errs.push(b + ".confettiStartScale outside 0..1");
+  }
+  if (!(cfg.checkbox.exitAt >= 0 && cfg.checkbox.exitAt <= 1)) errs.push("checkbox.exitAt outside 0..1");
+  const total = cfg.enterMs + cfg.tick.drawMs + cfg.punct1.durationMs + cfg.punct2.durationMs;
+  const residual = cfg.cycleMs - total;
+  if (!(cfg.cycleMs > 0) || residual < cfg.validation.minResidualMs) errs.push("residual hold " + residual + "ms below minimum or cycle invalid");
+  const tp = [cfg.tick.start, cfg.tick.ctrl1, cfg.tick.ctrl2, cfg.tick.end];
+  for (const p of tp){ if (!p || !isNum(p.x) || !isNum(p.y)) errs.push("tick control point not finite"); }
+  return errs;
+}
+const validationErrors = validate(C);
+window.__validationErrors = validationErrors;
+const stage = document.getElementById("stage");
+stage.style.width = C.stage.width + "px";
+stage.style.height = C.stage.height + "px";
+stage.style.background = C.field.color;
+if (validationErrors.length){ stage.dataset.validation = "failed"; console.error("CONFIG validation failed: " + validationErrors.join("; ")); }
+else { stage.dataset.validation = "ok"; }
+const scene = document.getElementById("scene");
+scene.setAttribute("viewBox", "0 0 " + C.stage.width + " " + C.stage.height);
+const fieldRect = document.getElementById("fieldRect");
+fieldRect.setAttribute("fill", C.field.color);
+fieldRect.setAttribute("width", C.stage.width);
+fieldRect.setAttribute("height", C.stage.height);
+const box = document.getElementById("checkboxRect");
+box.setAttribute("x", C.checkbox.cx - C.checkbox.size / 2);
+box.setAttribute("y", C.checkbox.cy - C.checkbox.size / 2);
+box.setAttribute("width", C.checkbox.size);
+box.setAttribute("height", C.checkbox.size);
+box.setAttribute("stroke", C.checkbox.color);
+box.setAttribute("stroke-width", C.checkbox.stroke);
+function tickAbsPath(){
+  const cx = C.checkbox.cx, cy = C.checkbox.cy, t = C.tick;
+  return "M" + (cx + t.start.x) + " " + (cy + t.start.y) +
+    " C" + (cx + t.ctrl1.x) + " " + (cy + t.ctrl1.y) + " " +
+    (cx + t.ctrl2.x) + " " + (cy + t.ctrl2.y) + " " +
+    (cx + t.end.x) + " " + (cy + t.end.y);
+}
+const tick = document.getElementById("tickPath");
+tick.setAttribute("d", tickAbsPath());
+tick.setAttribute("stroke", C.tick.color);
+tick.setAttribute("stroke-width", C.tick.stroke);
+const tickLen = tick.getTotalLength();
+tick.style.strokeDasharray = tickLen;
+tick.style.strokeDashoffset = tickLen;
+const pencilPath = document.getElementById("pencilPath");
+pencilPath.setAttribute("d", C.pencil.path);
+pencilPath.setAttribute("fill", C.pencil.color);
+const pencil = document.getElementById("pencilGroup");
+const beatLayer = document.getElementById("beatLayer");
+function beatEls(cfg){
+  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  const cx = C.checkbox.cx, cy = C.checkbox.cy;
+  const arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  const abs = cfg.arrowPath.replace(/(-?\d+\.?\d*)\s+(-?\d+\.?\d*)/g, function(m, x, y){ return (parseFloat(x) + cx) + " " + (parseFloat(y) + cy); });
+  arrow.setAttribute("d", abs);
+  arrow.setAttribute("fill", "none");
+  arrow.setAttribute("stroke", cfg.color);
+  arrow.setAttribute("stroke-width", cfg.arrowStroke);
+  arrow.setAttribute("stroke-linecap", "round");
+  const alen = arrow.getTotalLength();
+  arrow.style.strokeDasharray = alen;
+  arrow.style.strokeDashoffset = alen;
+  const head = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+  head.setAttribute("points", cfg.arrowHead.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, function(m, x, y){ return (parseFloat(x) + cx) + "," + (parseFloat(y) + cy); }));
+  head.setAttribute("fill", cfg.color);
+  head.setAttribute("opacity", "0");
+  g.appendChild(arrow); g.appendChild(head);
+  const confetti = [];
+  for (let i = 0; i < cfg.confettiCount; i++){
+    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("width", cfg.confettiW);
+    r.setAttribute("height", cfg.confettiH);
+    r.setAttribute("x", -cfg.confettiW / 2);
+    r.setAttribute("y", -cfg.confettiH / 2);
+    r.setAttribute("fill", cfg.color);
+    r.setAttribute("opacity", "0");
+    const off = cfg.confettiOffsets[i % cfg.confettiOffsets.length];
+    r.dataset.dx = off[0];
+    r.dataset.dy = off[1];
+    r.dataset.deg = i * G.confettiRotStep;
+    g.appendChild(r);
+    confetti.push(r);
+  }
+  g.setAttribute("opacity", "0");
+  beatLayer.appendChild(g);
+  return {group: g, arrow, arrowLen: alen, head, confetti, cfg};
+}
+let beats = [];
+function buildBeats(){
+  beatLayer.innerHTML = "";
+  beats = [beatEls(C.punct1), beatEls(C.punct2)];
+}
+buildBeats();
+function phases(){
+  const drawEnd = C.enterMs + C.tick.drawMs;
+  const p1End = drawEnd + C.punct1.durationMs;
+  const p2End = p1End + C.punct2.durationMs;
+  return {drawEnd, p1End, p2End};
+}
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function easeOut(v){ return 1 - Math.pow(1 - v, G.easePow); }
+let base = performance.now(), acc = 0, paused = false;
+function elapsed(){ return paused ? acc : acc + (performance.now() - base); }
+window.addEventListener("message", function(ev){
+  const m = ev.data && ev.data.t100;
+  if (m === "pause" && !paused){ acc = elapsed(); paused = true; }
+  else if (m === "play" && paused){ base = performance.now(); paused = false; }
+  else if (m === "restart"){ acc = 0; base = performance.now(); lastCycle = -1; }
+});
+let lastCycle = -1;
+function setBeat(b, p){
+  if (p <= 0){ b.group.setAttribute("opacity", "0"); return; }
+  b.group.setAttribute("opacity", "1");
+  const e = easeOut(clamp01(p));
+  b.arrow.style.strokeDashoffset = b.arrowLen * (1 - e);
+  b.head.setAttribute("opacity", e > G.headAt ? "1" : "0");
+  const s = b.cfg.confettiStartScale + (1 - b.cfg.confettiStartScale) * e;
+  const travel = b.cfg.confettiFrom + (1 - b.cfg.confettiFrom) * e;
+  for (const r of b.confetti){
+    const x = C.checkbox.cx + parseFloat(r.dataset.dx) * travel;
+    const y = C.checkbox.cy + parseFloat(r.dataset.dy) * travel;
+    r.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + r.dataset.deg + ") scale(" + s + ")");
+    r.setAttribute("opacity", "1");
+  }
+}
+function frame(){
+  const el = elapsed();
+  const t = el % C.cycleMs;
+  const cyc = Math.floor(el / C.cycleMs);
+  if (cyc !== lastCycle){ lastCycle = cyc; buildBeats(); }
+  const P = phases();
+  const startPt = tick.getPointAtLength(0);
+  if (t < C.enterMs){
+    const sx = C.pencil.enterFrom.indexOf("right") >= 0 ? 1 : -1;
+    const sy = C.pencil.enterFrom.indexOf("bottom") >= 0 ? 1 : -1;
+    const p = easeOut(clamp01(t / C.enterMs));
+    const dx = sx * Math.abs(C.pencil.enterDx) * (1 - p), dy = sy * Math.abs(C.pencil.enterDy) * (1 - p);
+    pencil.setAttribute("transform", "translate(" + (startPt.x + dx) + " " + (startPt.y + dy) + ")");
+    pencil.setAttribute("opacity", String(clamp01(p * G.enterFadeGain)));
+    tick.style.strokeDashoffset = tickLen;
+    tick.setAttribute("opacity", "1");
+    box.setAttribute("opacity", "1");
+    setBeat(beats[0], 0); setBeat(beats[1], 0);
+  } else if (t < P.drawEnd){
+    const p = clamp01((t - C.enterMs) / C.tick.drawMs);
+    const pt = tick.getPointAtLength(p * tickLen);
+    pencil.setAttribute("transform", "translate(" + pt.x + " " + pt.y + ")");
+    pencil.setAttribute("opacity", "1");
+    tick.style.strokeDashoffset = tickLen * (1 - p);
+    tick.setAttribute("opacity", "1");
+    box.setAttribute("opacity", p < C.checkbox.exitAt ? "1" : "0");
+    setBeat(beats[0], 0); setBeat(beats[1], 0);
+  } else if (t < P.p1End){
+    const p = clamp01((t - P.drawEnd) / C.punct1.durationMs);
+    pencil.setAttribute("opacity", "0");
+    tick.style.strokeDashoffset = 0;
+    tick.setAttribute("opacity", "0");
+    box.setAttribute("opacity", "0");
+    setBeat(beats[0], p); setBeat(beats[1], 0);
+  } else if (t < P.p2End){
+    const p = clamp01((t - P.p1End) / C.punct2.durationMs);
+    pencil.setAttribute("opacity", "0");
+    tick.style.strokeDashoffset = 0;
+    tick.setAttribute("opacity", "0");
+    box.setAttribute("opacity", "0");
+    setBeat(beats[0], 0); setBeat(beats[1], p);
+  } else {
+    pencil.setAttribute("opacity", "0");
+    tick.style.strokeDashoffset = 0;
+    tick.setAttribute("opacity", "0");
+    box.setAttribute("opacity", "0");
+    setBeat(beats[0], 0); setBeat(beats[1], 0);
+  }
+  requestAnimationFrame(frame);
+}
+if (!validationErrors.length) requestAnimationFrame(frame);
+</script>
+</body>
+</html>

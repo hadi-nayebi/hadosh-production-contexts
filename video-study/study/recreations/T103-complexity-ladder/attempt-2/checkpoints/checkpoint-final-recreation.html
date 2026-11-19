@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T103 — Complexity ladder (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#10131f;font-family:Arial,Helvetica,sans-serif;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #card{position:absolute;inset:0;}
+  .row{position:absolute;left:0;right:0;}
+  .rname{white-space:nowrap;}
+  .items{margin:0;padding:0;list-style:none;}
+  .items li{white-space:nowrap;}
+  .items li::before{color:var(--acc);}
+  #marker{position:absolute;}
+  .tri{width:0;height:0;border-top-style:solid;border-bottom-style:solid;border-left-style:solid;border-top-color:transparent;border-bottom-color:transparent;}
+</style>
+</head>
+<body>
+<div id="stage"><div id="card"></div><div id="marker"></div></div>
+<script>
+"use strict";
+/* CONFIG: every content, timing, palette and geometry value lives here.
+   Logic below reads only this object (plus a JSON deep-merge override). */
+const CONFIG = {
+  rows: [
+    { name: "Easy",         items: ["Hard cut", "Dissolve"] },
+    { name: "Intermediate", items: ["Cut on action", "Match cut"] },
+    { name: "Difficult",    items: ["Dynamic zoom", "Element morph"] }
+  ],
+  marker: { color: "#f28c28", shape: "triangle", startRow: 0 },
+  palette: { card: "#1e2a78", ink: "#ffffff", inkDim: "#9aa6d8", accent: "#f28c28" },
+  act: "segment",
+  seg: { totalMs: 14000, assemblyStartMs: 9000, namesAtMs: 10000, itemsAtMs: 10250, departAtMs: 12250 },
+  stepMs: 2000,
+  holdMs: 1000,
+  allocNamesMs: 500,
+  allocReturnMs: 600,
+  stage: { width: 360 },
+  type: { font: "Arial, Helvetica, sans-serif", namePx: 30, itemPx: 17, nameWeight: 700, itemStyle: "italic", lineScale: 1.2 },
+  style: { bullet: "• " },
+  geom: { padX: 84, rowTop: 44, rowPad: 14, markerX: 48, markerSize: 22, markerRadius: 2, itemGap: 4, nameItemGap: 6, entryDy: 56 }
+};
+function rowHeight(c, i){
+  const nameLine = Math.ceil(c.type.namePx * c.type.lineScale);
+  const itemLine = Math.ceil(c.type.itemPx * c.type.lineScale);
+  return nameLine + c.geom.nameItemGap + c.rows[i].items.length * (itemLine + c.geom.itemGap) + c.geom.rowPad;
+}
+function rowTops(c){
+  const tops = []; let acc = c.geom.rowTop;
+  for (let i = 0; i < c.rows.length; i++){ tops.push(acc); acc += rowHeight(c, i); }
+  return tops;
+}
+function stageHeight(c){
+  const tops = rowTops(c);
+  return tops[tops.length - 1] + rowHeight(c, c.rows.length - 1) + c.geom.rowTop;
+}
+function totalMs(c){
+  if (c.act === "stepping"){
+    const per = c.allocNamesMs + c.stepMs + c.allocReturnMs;
+    return c.rows.length * per - c.allocReturnMs + c.holdMs;
+  }
+  return c.seg.totalMs;
+}
+function stateAt(c, t){
+  const total = totalMs(c);
+  const tt = ((t % total) + total) % total;
+  if (c.act === "stepping"){
+    const n = c.rows.length;
+    const per = c.allocNamesMs + c.stepMs + c.allocReturnMs;
+    for (let k = 0; k < n; k++){
+      const rowIndex = (c.marker.startRow + k) % n;
+      const base = k * per;
+      const last = k === n - 1;
+      const markedEnd = base + c.allocNamesMs + c.stepMs + (last ? c.holdMs : 0);
+      if (tt < base + c.allocNamesMs) return { t: tt, totalMs: total, act: c.act, phase: "names", rowIndex: rowIndex, itemsVisible: false, present: true, settle: 1 };
+      if (tt < markedEnd) return { t: tt, totalMs: total, act: c.act, phase: "marked", rowIndex: rowIndex, itemsVisible: true, present: true, settle: 1 };
+      if (!last && tt < base + per) return { t: tt, totalMs: total, act: c.act, phase: "return", rowIndex: rowIndex, itemsVisible: false, present: false, settle: 1 };
+    }
+    return { t: tt, totalMs: total, act: c.act, phase: "marked", rowIndex: (c.marker.startRow + n - 1) % n, itemsVisible: true, present: true, settle: 1 };
+  }
+  const s = c.seg;
+  const startRow = ((c.marker.startRow % c.rows.length) + c.rows.length) % c.rows.length;
+  if (tt < s.assemblyStartMs) return { t: tt, totalMs: total, act: c.act, phase: "absent", rowIndex: startRow, itemsVisible: false, present: false, settle: 0 };
+  if (tt < s.namesAtMs) return { t: tt, totalMs: total, act: c.act, phase: "assembly", rowIndex: startRow, itemsVisible: false, present: true, settle: (tt - s.assemblyStartMs) / (s.namesAtMs - s.assemblyStartMs) };
+  if (tt < s.itemsAtMs) return { t: tt, totalMs: total, act: c.act, phase: "names", rowIndex: startRow, itemsVisible: false, present: true, settle: 1 };
+  if (tt < s.departAtMs) return { t: tt, totalMs: total, act: c.act, phase: "marked", rowIndex: startRow, itemsVisible: true, present: true, settle: 1 };
+  return { t: tt, totalMs: total, act: c.act, phase: "departed", rowIndex: startRow, itemsVisible: false, present: false, settle: 1 };
+}
+function validateConfig(c){
+  const errs = [];
+  if (!c || typeof c !== "object") return ["config not an object"];
+  if (!Array.isArray(c.rows) || c.rows.length === 0) errs.push("rows must be a non-empty array");
+  else c.rows.forEach(function(r, i){
+    if (!r || typeof r.name !== "string" || r.name.length === 0) errs.push("rows[" + i + "].name must be a non-empty string");
+    if (!r || !Array.isArray(r.items)) errs.push("rows[" + i + "].items must be an array");
+  });
+  if (!c.marker || typeof c.marker !== "object") errs.push("marker group missing");
+  else {
+    if (!Number.isInteger(c.marker.startRow)) errs.push("marker.startRow must be an integer");
+    else if (Array.isArray(c.rows) && c.rows.length && (c.marker.startRow < 0 || c.marker.startRow >= c.rows.length)) errs.push("marker.startRow out of range");
+  }
+  if (!c.seg || typeof c.seg !== "object") errs.push("seg group missing");
+  else {
+    const keys = ["totalMs", "assemblyStartMs", "namesAtMs", "itemsAtMs", "departAtMs"];
+    keys.forEach(function(k){ if (!Number.isFinite(c.seg[k]) || c.seg[k] < 0) errs.push("seg." + k + " must be finite and >= 0"); });
+    if (errs.length === 0 && !(c.seg.assemblyStartMs < c.seg.namesAtMs && c.seg.namesAtMs < c.seg.itemsAtMs && c.seg.itemsAtMs < c.seg.departAtMs && c.seg.departAtMs <= c.seg.totalMs)) errs.push("seg ordering violated");
+  }
+  [["stepMs", 1], ["holdMs", 0], ["allocNamesMs", 0], ["allocReturnMs", 0]].forEach(function(pair){
+    if (!Number.isFinite(c[pair[0]]) || c[pair[0]] < pair[1]) errs.push(pair[0] + " out of range");
+  });
+  return errs;
+}
+function merge(base, over){
+  if (Array.isArray(over)) return over.slice();
+  if (over && typeof over === "object"){
+    const out = {};
+    for (const k in base) out[k] = merge(base[k], over[k]);
+    for (const k in over) if (!(k in base)) out[k] = over[k];
+    return out;
+  }
+  return over === undefined ? base : over;
+}
+const rejected = [];
+let CFG = CONFIG;
+try {
+  const q = new URLSearchParams(location.search).get("cfg");
+  if (q) {
+    const merged = merge(CONFIG, JSON.parse(q));
+    const errs = validateConfig(merged);
+    if (errs.length === 0) CFG = merged;
+    else rejected.push({ source: "cfg-override", errors: errs });
+  }
+} catch (e) { rejected.push({ source: "cfg-override", errors: ["unparseable override"] }); CFG = CONFIG; }
+
+const stage = document.getElementById("stage");
+const card = document.getElementById("card");
+const markerEl = document.getElementById("marker");
+let rowEls = [];
+function build(c){
+  const W = c.stage.width, H = stageHeight(c);
+  const tops = rowTops(c);
+  stage.style.width = W + "px"; stage.style.height = H + "px";
+  stage.style.fontFamily = c.type.font;
+  card.style.background = c.palette.card;
+  card.style.setProperty("--acc", c.palette.accent);
+  card.innerHTML = ""; rowEls = [];
+  c.rows.forEach(function(r, i){
+    const row = document.createElement("div"); row.className = "row";
+    row.style.top = tops[i] + "px";
+    row.style.paddingLeft = c.geom.padX + "px";
+    const nm = document.createElement("div"); nm.className = "rname";
+    nm.textContent = r.name; nm.style.fontSize = c.type.namePx + "px";
+    nm.style.fontWeight = c.type.nameWeight; nm.style.lineHeight = c.type.lineScale;
+    const ul = document.createElement("ul"); ul.className = "items";
+    ul.style.marginTop = c.geom.nameItemGap + "px";
+    r.items.forEach(function(it){
+      const li = document.createElement("li"); li.textContent = it;
+      li.style.fontSize = c.type.itemPx + "px"; li.style.marginTop = c.geom.itemGap + "px";
+      li.style.fontStyle = c.type.itemStyle; li.style.lineHeight = c.type.lineScale;
+      li.style.color = c.palette.ink;
+      ul.appendChild(li);
+    });
+    row.appendChild(nm); row.appendChild(ul); card.appendChild(row);
+    rowEls.push({ row: row, name: nm, items: ul });
+  });
+  const s = c.geom.markerSize;
+  markerEl.className = c.marker.shape === "triangle" ? "tri" : (c.marker.shape === "circle" ? "ci" : "sq");
+  markerEl.style.left = c.geom.markerX + "px";
+  markerEl.style.width = c.marker.shape === "triangle" ? "0px" : s + "px";
+  markerEl.style.height = c.marker.shape === "triangle" ? "0px" : s + "px";
+  markerEl.style.borderRadius = c.marker.shape === "circle" ? "50%" : (c.marker.shape === "square" ? c.geom.markerRadius + "px" : "0px");
+  if (c.marker.shape === "triangle"){
+    markerEl.style.borderTopWidth = (s/2) + "px"; markerEl.style.borderBottomWidth = (s/2) + "px";
+    markerEl.style.borderLeftWidth = s + "px"; markerEl.style.borderLeftColor = c.marker.color;
+    markerEl.style.background = "transparent";
+  } else {
+    markerEl.style.borderWidth = "0px"; markerEl.style.background = c.marker.color;
+  }
+  const styleEl = document.createElement("style");
+  styleEl.textContent = ".items li::before{content:" + JSON.stringify(c.style.bullet) + ";}";
+  card.appendChild(styleEl);
+}
+function render(t){
+  const c = CFG, st = stateAt(c, t);
+  const tops = rowTops(c);
+  card.style.display = st.present ? "block" : "none";
+  markerEl.style.display = st.present ? "block" : "none";
+  const dy = (1 - st.settle) * c.geom.entryDy;
+  rowEls.forEach(function(r, i){
+    const active = st.present && st.itemsVisible && i === st.rowIndex;
+    r.row.style.top = (tops[i] + dy) + "px";
+    r.name.style.color = (st.itemsVisible && i === st.rowIndex) ? c.palette.ink : c.palette.inkDim;
+    r.items.style.display = active ? "block" : "none";
+  });
+  const settledTop = tops[st.rowIndex] + (c.type.namePx - c.geom.markerSize) / 2;
+  const entryTop = -c.geom.markerSize;
+  markerEl.style.top = (entryTop + (settledTop - entryTop) * st.settle) + "px";
+  return st;
+}
+build(CFG);
+window.__render = render;
+window.__stateAt = function(t){ return stateAt(CFG, t); };
+window.__totalMs = function(){ return totalMs(CFG); };
+window.__config = CFG;
+window.__rejected = rejected;
+window.__rowTops = function(){ return rowTops(CFG); };
+window.__rowHeight = function(i){ return rowHeight(CFG, i); };
+window.__stageHeight = function(){ return stageHeight(CFG); };
+let start = null;
+function loop(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

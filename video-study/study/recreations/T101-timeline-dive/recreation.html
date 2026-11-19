@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T101 — Timeline dive · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;font-family:Arial,sans-serif;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
+  .toolbar{position:absolute;left:0;top:0;display:flex;align-items:center;box-sizing:border-box;}
+  .tool{flex:0 0 auto;}
+  .panel{position:absolute;box-sizing:border-box;}
+  .clip{position:absolute;box-sizing:border-box;}
+  .card{position:absolute;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .brand{}
+  .title{}
+  .graph{position:absolute;left:0;box-sizing:border-box;}
+  .playhead{position:absolute;top:0;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  clips: [
+    {color:"#22c55e", w:120, h:56},
+    {color:"#ef4444", w:90,  h:56},
+    {color:"#22d3ee", w:110, h:56},
+    {color:"#facc15", w:140, h:56}
+  ],
+  card: {brand:"SCHOOL OF MOTION", title:"QUICK TIPS", x:352, y:34, w:196, h:126},
+  curve: {show:true, points:[{x:0.02,y:0.92},{x:0.35,y:0.88},{x:0.55,y:0.18},{x:0.98,y:0.06}]},
+  panels: {curve:{x:16,y:34,w:88,h:104}, toolbar:{h:20}},
+  dive: {endScale:2.6, travelX:-38},
+  palette: {bg:"#2b3bbf", toolbar:"#facc15", cardFrom:"#e11d48", cardTo:"#6d28d9", ink:"#ffffff"},
+  layout: {worldW:920, clipsX:16, clipsY:150, gap:8, panelBg:"#3b2f7a", gridLine:"rgba(255,255,255,0.28)", curveStroke:"#ffffff", curveStrokeW:2, gridDiv:6, gridStrokeW:1, gradAngle:160, flankGap:24, flankTopGap:8, clipBorder:"rgba(10,10,40,0.45)", clipBorderW:2, toolSize:9, toolGap:6, toolPad:10, flankCount:4, flankHFactor:2, loopFadeMs:200},
+  graph: {y:168, h:35, color:"#ef4444", bg:"#24309e", lineW:2, span:0.8, playheadW:2, bezier:{x1:0.3,y1:0.05,x2:0.6,y2:0.95}},
+  type: {font:"Arial, Helvetica, sans-serif", brandSize:12, titleSize:22, brandWeight:700, titleWeight:900, brandSpacing:0, titleLineHeight:1.05},
+  diveMs: 4200,
+  travelMs: 2600,
+  holdMs: 7200,
+  stage: {width:360, height:203}
+};
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+stage.style.background = CONFIG.palette.bg;
+document.body.style.fontFamily = CONFIG.type.font;
+
+const world = document.createElement("div");
+world.id = "world";
+world.style.width = CONFIG.layout.worldW + "px";
+world.style.height = CONFIG.stage.height + "px";
+stage.appendChild(world);
+
+function el(cls, parent){ const d=document.createElement("div"); d.className=cls; parent.appendChild(d); return d; }
+
+/* toolbar strip */
+const tb = el("toolbar", world);
+tb.style.width = CONFIG.layout.worldW + "px";
+tb.style.height = CONFIG.panels.toolbar.h + "px";
+tb.style.background = CONFIG.palette.toolbar;
+tb.style.gap = CONFIG.layout.toolGap+"px";
+tb.style.paddingLeft = CONFIG.layout.toolPad+"px";
+CONFIG.clips.forEach(c => { const t = el("tool", tb); t.style.background = c.color; t.style.width = CONFIG.layout.toolSize+"px"; t.style.height = CONFIG.layout.toolSize+"px"; });
+
+/* easing-curve panel */
+if (CONFIG.curve.show) {
+  const p = CONFIG.panels.curve;
+  const panel = el("panel", world);
+  panel.style.left=p.x+"px"; panel.style.top=p.y+"px"; panel.style.width=p.w+"px"; panel.style.height=p.h+"px";
+  panel.style.background = CONFIG.layout.panelBg;
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("width",p.w); svg.setAttribute("height",p.h);
+  svg.setAttribute("viewBox","0 0 "+p.w+" "+p.h);
+  for (let gx=1; gx<CONFIG.layout.gridDiv; gx++){ const l=document.createElementNS(NS,"line");
+    l.setAttribute("x1",p.w*gx/CONFIG.layout.gridDiv); l.setAttribute("x2",p.w*gx/CONFIG.layout.gridDiv); l.setAttribute("y1",0); l.setAttribute("y2",p.h);
+    l.setAttribute("stroke",CONFIG.layout.gridLine); l.setAttribute("stroke-width",CONFIG.layout.gridStrokeW); svg.appendChild(l); }
+  for (let gy=1; gy<CONFIG.layout.gridDiv; gy++){ const l=document.createElementNS(NS,"line");
+    l.setAttribute("y1",p.h*gy/CONFIG.layout.gridDiv); l.setAttribute("y2",p.h*gy/CONFIG.layout.gridDiv); l.setAttribute("x1",0); l.setAttribute("x2",p.w);
+    l.setAttribute("stroke",CONFIG.layout.gridLine); l.setAttribute("stroke-width",CONFIG.layout.gridStrokeW); svg.appendChild(l); }
+  const pts = CONFIG.curve.points;
+  const P = i => (pts[i].x*p.w)+","+(pts[i].y*p.h);
+  const path=document.createElementNS(NS,"path");
+  path.setAttribute("d","M "+P(0)+" C "+P(1)+", "+P(2)+", "+P(3));
+  path.setAttribute("fill","none"); path.setAttribute("stroke",CONFIG.layout.curveStroke);
+  path.setAttribute("stroke-width",CONFIG.layout.curveStrokeW);
+  svg.appendChild(path);
+  panel.appendChild(svg);
+}
+
+/* clip blocks row (before card, card, after card) */
+let cx = CONFIG.layout.clipsX;
+CONFIG.clips.forEach(c => {
+  const d = el("clip", world);
+  d.style.left=cx+"px"; d.style.top=CONFIG.layout.clipsY+"px";
+  d.style.width=c.w+"px"; d.style.height=c.h+"px"; d.style.background=c.color;
+  d.style.border=CONFIG.layout.clipBorderW+"px solid "+CONFIG.layout.clipBorder;
+  cx += c.w + CONFIG.layout.gap;
+});
+/* tall side clips flanking the card, reusing clip colors cyclically */
+if (CONFIG.clips.length > 0) {
+const flankY = CONFIG.panels.toolbar.h + CONFIG.layout.flankTopGap;
+Array.from({length: CONFIG.layout.flankCount}, (_,i) => i).forEach(i => {
+  const c = CONFIG.clips[i % CONFIG.clips.length];
+  const d = el("clip", world);
+  const fx = i<2 ? CONFIG.layout.clipsX + i*(c.w+CONFIG.layout.gap)
+                 : CONFIG.card.x + CONFIG.card.w + CONFIG.layout.flankGap + (i-2)*(c.w+CONFIG.layout.gap);
+  d.style.left=fx+"px"; d.style.top=flankY+"px";
+  d.style.width=c.w+"px"; d.style.height=c.h*CONFIG.layout.flankHFactor+"px"; d.style.background=c.color;
+  d.style.border=CONFIG.layout.clipBorderW+"px solid "+CONFIG.layout.clipBorder;
+});
+
+}
+/* title card */
+const card = el("card", world);
+card.style.left=CONFIG.card.x+"px"; card.style.top=CONFIG.card.y+"px";
+card.style.width=CONFIG.card.w+"px"; card.style.height=CONFIG.card.h+"px";
+card.style.background="linear-gradient("+CONFIG.layout.gradAngle+"deg,"+CONFIG.palette.cardFrom+","+CONFIG.palette.cardTo+")";
+card.style.color=CONFIG.palette.ink;
+const brand = el("brand", card); brand.textContent = CONFIG.card.brand;
+brand.style.fontSize = CONFIG.type.brandSize+"px";
+brand.style.fontWeight = CONFIG.type.brandWeight;
+brand.style.letterSpacing = CONFIG.type.brandSpacing+"px";
+const title = el("title", card); title.textContent = CONFIG.card.title;
+title.style.fontSize = CONFIG.type.titleSize+"px";
+title.style.fontWeight = CONFIG.type.titleWeight;
+title.style.lineHeight = CONFIG.type.titleLineHeight;
+
+/* graph-editor strip with playhead + bezier */
+const g = el("graph", world);
+g.style.top=CONFIG.graph.y+"px"; g.style.height=CONFIG.graph.h+"px";
+g.style.width=CONFIG.layout.worldW+"px"; g.style.background=CONFIG.graph.bg;
+const NS2="http://www.w3.org/2000/svg";
+const gsvg=document.createElementNS(NS2,"svg");
+gsvg.setAttribute("width",CONFIG.layout.worldW); gsvg.setAttribute("height",CONFIG.graph.h);
+gsvg.setAttribute("viewBox","0 0 "+CONFIG.layout.worldW+" "+CONFIG.graph.h);
+const gp=document.createElementNS(NS2,"path");
+const midY = CONFIG.graph.h/2;
+gp.setAttribute("d","M 0 "+midY+" C "+(CONFIG.layout.worldW*CONFIG.graph.bezier.x1)+" "+(CONFIG.graph.h*CONFIG.graph.bezier.y1)+", "+(CONFIG.layout.worldW*CONFIG.graph.bezier.x2)+" "+(CONFIG.graph.h*CONFIG.graph.bezier.y2)+", "+CONFIG.layout.worldW+" "+midY);
+gp.setAttribute("fill","none"); gp.setAttribute("stroke",CONFIG.graph.color); gp.setAttribute("stroke-width",CONFIG.graph.lineW);
+gsvg.appendChild(gp); g.appendChild(gsvg);
+const playhead = el("playhead", g);
+playhead.style.height=CONFIG.graph.h+"px"; playhead.style.background=CONFIG.graph.color;
+playhead.style.width=CONFIG.graph.playheadW+"px";
+
+/* ---------- camera: one continuous pose function of t ---------- */
+const CYCLE = CONFIG.diveMs + CONFIG.travelMs + CONFIG.holdMs;
+const cardCx = CONFIG.card.x + CONFIG.card.w/2, cardCy = CONFIG.card.y + CONFIG.card.h/2;
+const stageCx = CONFIG.stage.width/2, stageCy = CONFIG.stage.height/2;
+const travelPx = CONFIG.dive.travelX/100 * CONFIG.stage.width;
+function ease(u){ return u<0.5 ? 2*u*u : 1-Math.pow(-2*u+2,2)/2; }
+/* Keyframe poses: start -> travel end -> dive end (card fills frame). One eased
+   global progress drives all three, so camera velocity never falls to zero at
+   the travel/dive boundary — the mechanism accumulates in one continuous move. */
+const POSE_TRAVEL_END = {x: travelPx, y: 0, s: 1};
+const POSE_END = {x: stageCx - cardCx*CONFIG.dive.endScale, y: stageCy - cardCy*CONFIG.dive.endScale, s: CONFIG.dive.endScale};
+function lerpPose(a, b, u){ return {x: a.x+(b.x-a.x)*u, y: a.y+(b.y-a.y)*u, s: a.s+(b.s-a.s)*u}; }
+function pose(t){
+  const active = CONFIG.travelMs + CONFIG.diveMs;
+  if (t >= active) return POSE_END;                       /* HOLD */
+  const u = ease(t / active);                             /* one continuous ease */
+  const split = ease(CONFIG.travelMs / active);           /* travel pose completes exactly at travelMs, velocity nonzero */
+  if (u < split) return lerpPose({x:0,y:0,s:1}, POSE_TRAVEL_END, u/split);
+  return lerpPose(POSE_TRAVEL_END, POSE_END, (u-split)/(1-split));
+}
+function render(tms){
+  const t = ((tms % CYCLE) + CYCLE) % CYCLE;
+  const p = pose(t);
+  world.style.transform = "translate("+p.x+"px,"+p.y+"px) scale("+p.s+")";
+  /* designed loop reset: fade out/in across the seam (CONFIG loopFadeMs) */
+  const fade = CONFIG.layout.loopFadeMs;
+  const edge = Math.min(t, CYCLE - t);
+  world.style.opacity = edge < fade ? String(0.15 + 0.85*(edge/fade)) : "1";
+  const prog = Math.min(t / (CONFIG.travelMs + CONFIG.diveMs), 1);
+  playhead.style.left = (prog * CONFIG.layout.worldW * CONFIG.graph.span) + "px";
+}
+window.__render = render;
+let start = null;
+function frame(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

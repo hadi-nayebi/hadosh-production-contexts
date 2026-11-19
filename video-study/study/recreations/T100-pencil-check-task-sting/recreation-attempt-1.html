@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T100 — Pencil-check task sting (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="scene" viewBox="0 0 360 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <rect id="fieldRect" x="0" y="0" width="360" height="360"></rect>
+    <g id="burstLayer"></g>
+    <rect id="checkboxRect" fill="none"></rect>
+    <path id="tickPath" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+    <g id="pencilGroup"><path id="pencilPath"></path></g>
+  </svg>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / geometry value lives here ============ */
+const CONFIG = {
+  field: {color: "#4148c0"},
+  pencil: {
+    color: "#2b2b2b",
+    enterFrom: "top-left",
+    path: "M0 0 L-16 -4 L-104 -92 L-88 -108 L4 -20 L8 -6 Z"
+  },
+  checkbox: {size: 64, stroke: 6, color: "#ffffff"},
+  tick: {
+    color: "#3df063",
+    drawMs: 900,
+    path: "M160 198 L175 213 L205 181",
+    stroke: 7
+  },
+  burst: {count: 8, color: "#3df063"},
+  enterMs: 1400,
+  burstMs: 800,
+  endHoldMs: 10900,
+  cycleMs: 14000,
+  stage: {width: 360},
+  geom: {
+    stageH: 360,
+    checkboxCx: 180,
+    checkboxCy: 196,
+    pencilTipX: 160,
+    pencilTipY: 198,
+    pencilEnterDx: -150,
+    pencilEnterDy: -150,
+    burstRadius: 74,
+    burstW: 16,
+    burstH: 5,
+    burstStartScale: 0.3,
+    easePow: 3,
+    enterFadeGain: 1.5
+  }
+};
+/* Deep-merge override via ?cfg=<JSON> (swap-test / reuse surface). */
+function applyOverride(base, over){
+  for (const k in over){
+    if (over[k] && typeof over[k] === "object" && !Array.isArray(over[k]) &&
+        base[k] && typeof base[k] === "object" && !Array.isArray(base[k])) applyOverride(base[k], over[k]);
+    else base[k] = over[k];
+  }
+  return base;
+}
+try {
+  const q = new URLSearchParams(location.search).get("cfg");
+  if (q) applyOverride(CONFIG, JSON.parse(q));
+} catch (e) { /* malformed override: keep defaults */ }
+
+const C = CONFIG, G = C.geom;
+const stage = document.getElementById("stage");
+stage.style.width = C.stage.width + "px";
+stage.style.height = G.stageH + "px";
+stage.style.background = C.field.color;
+
+const fieldRect = document.getElementById("fieldRect");
+fieldRect.setAttribute("fill", C.field.color);
+
+const box = document.getElementById("checkboxRect");
+box.setAttribute("x", G.checkboxCx - C.checkbox.size / 2);
+box.setAttribute("y", G.checkboxCy - C.checkbox.size / 2);
+box.setAttribute("width", C.checkbox.size);
+box.setAttribute("height", C.checkbox.size);
+box.setAttribute("stroke", C.checkbox.color);
+box.setAttribute("stroke-width", C.checkbox.stroke);
+
+const tick = document.getElementById("tickPath");
+tick.setAttribute("d", C.tick.path);
+tick.setAttribute("stroke", C.tick.color);
+tick.setAttribute("stroke-width", C.tick.stroke);
+const tickLen = tick.getTotalLength();
+tick.style.strokeDasharray = tickLen;
+tick.style.strokeDashoffset = tickLen;
+
+const pencilPath = document.getElementById("pencilPath");
+pencilPath.setAttribute("d", C.pencil.path);
+pencilPath.setAttribute("fill", C.pencil.color);
+const pencil = document.getElementById("pencilGroup");
+
+/* Burst marks: independently allocated per cycle; rebuilt each loop so a
+   changed burst.count can never leave frozen remnants in hold or across
+   cycle boundaries. Lifetime = the burst phase only. */
+const burstLayer = document.getElementById("burstLayer");
+let burstMarks = [];
+function buildBurst(){
+  burstLayer.innerHTML = "";
+  burstMarks = [];
+  for (let i = 0; i < C.burst.count; i++){
+    const a = (2 * Math.PI * i) / C.burst.count;
+    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("width", G.burstW);
+    r.setAttribute("height", G.burstH);
+    r.setAttribute("x", -G.burstW / 2);
+    r.setAttribute("y", -G.burstH / 2);
+    r.setAttribute("fill", C.burst.color);
+    const x = G.checkboxCx + Math.cos(a) * G.burstRadius;
+    const y = G.checkboxCy + Math.sin(a) * G.burstRadius;
+    r.dataset.x = x; r.dataset.y = y; r.dataset.deg = (a * 180 / Math.PI);
+    r.setAttribute("opacity", "0");
+    burstLayer.appendChild(r);
+    burstMarks.push(r);
+  }
+}
+buildBurst();
+
+/* Phase machine — phase exclusivity (Owner Cure 2): enter, then draw, then
+   burst, then hold. Fixed-total invariant: cycle is exactly cycleMs; the
+   hold is the residual (cycleMs - enter - draw - burst), so a changed
+   tick.drawMs re-derives the hold and never stretches the cycle. */
+function phases(){
+  const drawEnd = C.enterMs + C.tick.drawMs;
+  const burstEnd = drawEnd + C.burstMs;
+  return {drawEnd, burstEnd};
+}
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function easeOut(v){ return 1 - Math.pow(1 - v, G.easePow); }
+
+/* Clock with comparison-page sync control (play / pause / restart). */
+let base = performance.now(), acc = 0, paused = false;
+function elapsed(){ return paused ? acc : acc + (performance.now() - base); }
+window.addEventListener("message", function(ev){
+  const m = ev.data && ev.data.t100;
+  if (m === "pause" && !paused){ acc = elapsed(); paused = true; }
+  else if (m === "play" && paused){ base = performance.now(); paused = false; }
+  else if (m === "restart"){ acc = 0; base = performance.now(); lastCycle = -1; }
+});
+let lastCycle = -1;
+function frame(){
+  const el = elapsed();
+  const t = el % C.cycleMs;
+  const cyc = Math.floor(el / C.cycleMs);
+  if (cyc !== lastCycle){ lastCycle = cyc; buildBurst(); }
+  const P = phases();
+  if (t < C.enterMs){
+    /* ENTER: pencil slides in from its CONFIG enter corner to the tick end.
+       The corner is read from pencil.enterFrom; geom offsets give magnitude. */
+    const sx = C.pencil.enterFrom.indexOf("right") >= 0 ? 1 : -1;
+    const sy = C.pencil.enterFrom.indexOf("bottom") >= 0 ? 1 : -1;
+    const p = easeOut(clamp01(t / C.enterMs));
+    const dx = sx * Math.abs(G.pencilEnterDx) * (1 - p), dy = sy * Math.abs(G.pencilEnterDy) * (1 - p);
+    pencil.setAttribute("transform", "translate(" + (G.pencilTipX + dx) + " " + (G.pencilTipY + dy) + ")");
+    pencil.setAttribute("opacity", String(clamp01(p * G.enterFadeGain)));
+    tick.style.strokeDashoffset = tickLen;
+    setBurst(0);
+  } else if (t < P.drawEnd){
+    /* DRAW: the pencil tip travels the tick path as the tick draws on. */
+    const p = clamp01((t - C.enterMs) / C.tick.drawMs);
+    const pt = tick.getPointAtLength(p * tickLen);
+    pencil.setAttribute("transform", "translate(" + pt.x + " " + pt.y + ")");
+    pencil.setAttribute("opacity", "1");
+    tick.style.strokeDashoffset = tickLen * (1 - p);
+    setBurst(0);
+  } else if (t < P.burstEnd){
+    /* BURST: pencil gone; burst marks punctuate around the checked box. */
+    const p = clamp01((t - P.drawEnd) / C.burstMs);
+    pencil.setAttribute("opacity", "0");
+    tick.style.strokeDashoffset = 0;
+    setBurst(p);
+  } else {
+    /* HOLD: checked state only — box + full tick, no transient marks. */
+    pencil.setAttribute("opacity", "0");
+    tick.style.strokeDashoffset = 0;
+    setBurst(0);
+  }
+  requestAnimationFrame(frame);
+}
+function setBurst(p){
+  const s = G.burstStartScale + (1 - G.burstStartScale) * easeOut(p);
+  const o = p <= 0 ? 0 : 1;
+  for (const r of burstMarks){
+    r.setAttribute("transform", "translate(" + r.dataset.x + " " + r.dataset.y + ") rotate(" + r.dataset.deg + ") scale(" + s + ")");
+    r.setAttribute("opacity", String(o));
+  }
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
