@@ -1,0 +1,15 @@
+CHECKPOINT STAGE 3 — C4 remainder (C4a grid loops · C4b-hold · C4d rocket geometry) + regression of C4c/C4b-fill · T156 attempt 2
+Source copy: checkpoint-stage3-config.html — sha256 2852f051bde3979dea540f0a96380e577cf52b01f2c38d9092e8e0ba17f5901f = working file sha at filing · inode 5424354 ≠ working inode 5307275 (content copy, independent).
+Harness: node check.js stage 3 (Stages 1–2 regression included — ALL PASS). PIXEL-UNVERIFIED — source-model values.
+PASS C4a literal 6.5 absent
+PASS C4a dead corner vars c60/c66/c06 absent (unused corner calculations removed)
+PASS C4b-hold derived holding (stateAt false@19999, true@20000 via riseStartMs + riseMs) · no hardcoded ms>=20000
+PASS C4c regression: easeOut(p,cfg) signature + 3 easeOut( occurrences (definition + elementState + rocketState)
+PASS C4b-fill regression: fillComplete derivation present, no 13600
+PASS swap 4x7: column-line endpoint follows rows (y 193.5 vs 172.5 at rows 6), row-line endpoint follows cols (x 549 vs 633 at cols 6); loops bounded separately (ci<=cfg.tile.cols · ri<=cfg.tile.rows) with cross-derived endpoints gp(ci, rows+0.5) / gp(cols+0.5, ri)
+C4d GEOMETRY RECORD: derived construction — tip half-width = r.w/2, tip height = r.h × tipHRatio (0.35 → 11.9), flame base = centre + r.h/2, flame length = r.h × flameLenRatio (25/34) × (0.68 + 0.32 × riseP).
+Recomputed lowest displayed rocket point from the actual derived geometry at full flame: centre + 42.000 px — EQUALS the 42 px extent C1 assumed. travelPx re-derivation NOT triggered; travelPx stays 195.
+Repeated C1 probes on the Stage-3 source (from this same run): centre@17500 = 43.5 (±1.0 PASS) · tip@19000 = 25.4 > 0 visible · tip@19690 = -0.41 (exit ≈19690) · tip@20000 = -12.0 exited.
+PASS C4d drawRocket fixed offsets (st.y+18 / st.y+34 / st.x-5 / st.x-8) absent
+SUITE RESULT: ALL PASS
+GATE (A-C012-4): Stage 4 may begin only with this checkpoint filed. FILED.

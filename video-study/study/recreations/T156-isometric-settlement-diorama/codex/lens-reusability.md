@@ -1,0 +1,208 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T156-isometric-settlement-diorama/codex
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e76c-bd08-7f73-9880-dcf7cb54c65c
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream.
+
+CONSUMER: recreation job §5 Verify (five-lens scoring wave, lens=reusability). DECISION PRICED: tier RECREATED vs IN PROGRESS at bar avg >=85 AND min >=70, plus cure list. WORKING RECORD: hidden_files/study/recreations/T156-isometric-settlement-diorama/codex/ + scores.md. Your return must end with "SCORE: <integer>" and a "BODY-WRITE:" line naming what it filed.
+recreation.html SHA-256 (identical in all five lens payloads): 031cd2269e636fc471317ce441d084d28d1e4900207b8c498c4fdecca37d697d
+
+LENS INSTRUCTION: Judge REUSABILITY: could production drive this from CONFIG alone for a different settlement (different elements/order/palette/tile/rocket/clouds)? The swap test result in the facts is evidence. Glyph local geometry classification is in the census inside the build record.
+
+NEUTRAL TECHNIQUE FACTS (no scores): Packet #8 T12 isometric settlement diorama, window 330-355s. Mechanics: isometric village diorama (huts, fields, paths) fills its tile, followed by a rocket rising through cloud layers. Seat census: camp clearing 332s, settled village 335s, escalation city 340s and Dyson 350s are named deferrals (separate scenes). Schedule basis: two-act - Act 1 segment-anchored fill, Act 2 allocation-model rise (packet names rise after fill; exact onset not census-resolved). Build: stage 720x405, cycle 25000ms, tile origin 360,36 tileW84 tileH42 6x6, elements 21 entries in CONFIG with kind/gx/gy/onsetMs, enterMs 400 decelerate, glyph per kind is a parameterized code-drawn SVG function, rocket pad 4,1 rise 15000+5000ms through 7-blob CONFIG cloud band offsetY 0->+130, hold to 25000. Count assertion 21 vs 21 MATCH. Swap test PASS (10-element table + hut palette change in effect). Purity grep 0 hits. A6 fit HITs 0 (no subject text), census HITs 0.
+
+=== FULL recreation.html ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T156 recreation</title>
+<style>html,body{margin:0;padding:0;background:#000;overflow:hidden}#stage{position:relative;width:100vw;height:56.25vw;max-height:100vh;overflow:hidden}#scene{position:absolute;inset:0}</style></head><body>
+<div id="stage"><svg id="scene" viewBox="0 0 720 405" preserveAspectRatio="none" width="100%" height="100%">
+<rect id="bg" x="0" y="0"/>
+<g id="cloudsBack"></g><g id="tileG"></g><g id="els"></g><g id="rocketG"></g><g id="cloudsFront"></g>
+</svg></div>
+<script>
+var CONFIG = {
+ "stageW": 720, "stageH": 405, "cycleMs": 25000, "enterMs": 400, "easePow": 3,
+ "bg": "#87c5e8",
+ "tile": {"originX": 360, "originY": 36, "tileW": 84, "tileH": 42, "cols": 6, "rows": 6},
+ "palette": {"grass": "#79c25f", "grassDark": "#5da34a", "grassEdge": "#5da34a", "hutWall": "#4a90d9", "hutRoof": "#f2b13c", "field": "#8a6d3b", "fieldRow": "#8a6d3b", "path": "#e8dcc0", "pen": "#a05a2c", "tree": "#3e8e4f", "teepee": "#e8dcc0", "fire": "#f26d3c", "sheep": "#ffffff", "figure": "#333333", "cloud": "#ffffff", "trunk": "#6b4423", "fieldLine": "#c9a86a", "fireCore": "#ffd75e", "rocketTip": "#e0339b", "rocketStroke": "#999999", "generic": "#999999"},
+ "elements": [
+  {"kind": "tree", "gx": 0, "gy": 1, "onsetMs": 0},
+  {"kind": "tree", "gx": 1, "gy": 0, "onsetMs": 500},
+  {"kind": "tree", "gx": 5, "gy": 2, "onsetMs": 1000},
+  {"kind": "tree", "gx": 2, "gy": 5, "onsetMs": 1500},
+  {"kind": "teepee", "gx": 1, "gy": 1, "onsetMs": 1800},
+  {"kind": "fire", "gx": 2, "gy": 1, "onsetMs": 2400},
+  {"kind": "hut", "gx": 1, "gy": 2, "onsetMs": 3200},
+  {"kind": "hut", "gx": 2, "gy": 2, "onsetMs": 4200},
+  {"kind": "hut", "gx": 3, "gy": 1, "onsetMs": 5200},
+  {"kind": "hut", "gx": 2, "gy": 3, "onsetMs": 6200},
+  {"kind": "hut", "gx": 4, "gy": 2, "onsetMs": 7200},
+  {"kind": "field", "gx": 1, "gy": 3, "onsetMs": 7800},
+  {"kind": "field", "gx": 3, "gy": 3, "onsetMs": 8600},
+  {"kind": "field", "gx": 4, "gy": 3, "onsetMs": 9400},
+  {"kind": "path", "gx": 3, "gy": 2, "onsetMs": 10200},
+  {"kind": "pen", "gx": 4, "gy": 4, "onsetMs": 11000},
+  {"kind": "sheep", "gx": 4, "gy": 4, "onsetMs": 11400},
+  {"kind": "sheep", "gx": 5, "gy": 4, "onsetMs": 11800},
+  {"kind": "sheep", "gx": 4, "gy": 5, "onsetMs": 12200},
+  {"kind": "figure", "gx": 2, "gy": 4, "onsetMs": 12600},
+  {"kind": "figure", "gx": 3, "gy": 4, "onsetMs": 13200}
+ ],
+ "rocket": {"padGx": 4, "padGy": 1, "riseStartMs": 15000, "riseMs": 5000, "w": 16, "h": 34, "flame": "#f26d3c", "body": "#e8e8e8", "travelPx": 300},
+ "clouds": [
+  {"x": 60, "y": 52, "r": 40}, {"x": 160, "y": 38, "r": 52}, {"x": 265, "y": 58, "r": 44},
+  {"x": 360, "y": 34, "r": 58}, {"x": 460, "y": 54, "r": 42}, {"x": 560, "y": 40, "r": 50}, {"x": 655, "y": 56, "r": 38}
+ ],
+ "cloudTravelPx": 130
+};
+function clamp01(v){return v<0?0:(v>1?1:v);}
+function easeOut(p){return 1-Math.pow(1-p, CONFIG.easePow);}
+function gridToScreen(cfg,gx,gy){var t=cfg.tile;return {x:t.originX+(gx-gy)*t.tileW/2, y:t.originY+(gx+gy)*t.tileH/2};}
+function elementState(cfg,e,ms){var p=clamp01((ms-e.onsetMs)/cfg.enterMs);var pos=gridToScreen(cfg,e.gx,e.gy);return {kind:e.kind,gx:e.gx,gy:e.gy,onsetMs:e.onsetMs,enterP:p,scale:easeOut(p),visible:ms>=e.onsetMs,x:pos.x,y:pos.y};}
+function rocketState(cfg,ms){var r=cfg.rocket;var p=clamp01((ms-r.riseStartMs)/r.riseMs);var e=easeOut(p);var pad=gridToScreen(cfg,r.padGx,r.padGy);return {riseP:p,eased:e,padX:pad.x,padY:pad.y,x:pad.x,y:pad.y-e*r.travelPx,visible:ms>=r.riseStartMs,exited:p>=1,flame:ms>=r.riseStartMs&&p<1};}
+function stateAt(cfg,ms){
+ var els=[];for(var i=0;i<cfg.elements.length;i++)els.push(elementState(cfg,cfg.elements[i],ms));
+ var rk=rocketState(cfg,ms);
+ var cloudOff=rk.eased*cfg.cloudTravelPx;
+ return {ms:ms,elements:els,elementCount:cfg.elements.length,visibleCount:els.filter(function(e){return e.visible;}).length,rocket:rk,cloudOffsetY:cloudOff,cloudCount:cfg.clouds.length,hutWall:cfg.palette.hutWall,holding:ms>=20000,fillComplete:ms>=13600};
+}
+function glyphPath(kind,cfg){
+ // parameterized glyphs drawn in a -20..20 x, -30..0 y local box; returns SVG inner markup string built from palette (no per-element literals)
+ var p=cfg.palette;
+ if(kind==="tree")return '<circle cx="0" cy="-22" r="11" fill="'+p.tree+'"/><rect x="-2" y="-12" width="4" height="10" fill="'+p.trunk+'"/>';
+ if(kind==="teepee")return '<polygon points="0,-28 -13,0 13,0" fill="'+p.teepee+'" stroke="'+p.field+'"/><polygon points="0,-28 -3,0 3,0" fill="'+p.field+'"/>';
+ if(kind==="fire")return '<circle cx="0" cy="-4" r="7" fill="'+p.fire+'"/><circle cx="0" cy="-2" r="3.5" fill="'+p.fireCore+'"/>';
+ if(kind==="hut")return '<rect x="-13" y="-14" width="26" height="14" fill="'+p.hutWall+'"/><polygon points="-16,-14 16,-14 0,-28" fill="'+p.hutRoof+'"/>';
+ if(kind==="field")return '<polygon points="0,-10 -20,0 0,10 20,0" fill="'+p.field+'"/><line x1="-14" y1="-1" x2="14" y2="-1" stroke="'+p.fieldRow+'" stroke-width="2"/><line x1="-10" y1="3" x2="10" y2="3" stroke="'+p.fieldLine+'" stroke-width="2"/>';
+ if(kind==="path")return '<polygon points="0,-10 -20,0 0,10 20,0" fill="'+p.path+'"/>';
+ if(kind==="pen")return '<polygon points="0,-10 -20,0 0,10 20,0" fill="none" stroke="'+p.pen+'" stroke-width="3"/>';
+ if(kind==="sheep")return '<ellipse cx="0" cy="-7" rx="8" ry="5.5" fill="'+p.sheep+'"/><circle cx="7" cy="-8" r="3" fill="'+p.figure+'"/>';
+ if(kind==="figure")return '<circle cx="0" cy="-16" r="4" fill="'+p.figure+'"/><line x1="0" y1="-12" x2="0" y2="-2" stroke="'+p.figure+'" stroke-width="3"/>';
+ return '<circle cx="0" cy="-8" r="6" fill="'+p.generic+'"/>';
+}
+if(typeof document!=="undefined"){
+(function(){
+ var cfg=CONFIG, SVGNS="http://www.w3.org/2000/svg";
+ function el(n,a){var nd=document.createElementNS(SVGNS,n);for(var k in a)nd.setAttribute(k,a[k]);return nd;}
+ var scene=document.getElementById("scene"); scene.setAttribute("viewBox","0 0 "+cfg.stageW+" "+cfg.stageH);
+ var bg=document.getElementById("bg"); bg.setAttribute("width",cfg.stageW); bg.setAttribute("height",cfg.stageH); bg.setAttribute("fill",cfg.bg);
+ // tile diamond: corners from grid
+ var c00=gridToScreen(cfg,0,0),c60=gridToScreen(cfg,6,0),c66=gridToScreen(cfg,6,6),c06=gridToScreen(cfg,0,6);
+ // offset corners by half tile: use grid points at -0.5
+ function gp(gx,gy){return gridToScreen(cfg,gx,gy);}
+ var pts=[gp(-0.5,-0.5),gp(cfg.tile.cols+0.5,-0.5),gp(cfg.tile.cols+0.5,cfg.tile.rows+0.5),gp(-0.5,cfg.tile.rows+0.5)];
+ var tileG=document.getElementById("tileG");
+ var poly=el("polygon",{points:pts.map(function(q){return q.x+","+q.y;}).join(" "),fill:cfg.palette.grass,stroke:cfg.palette.grassEdge,"stroke-width":3});
+ tileG.appendChild(poly);
+ // grid lines
+ for(var gi=0;gi<=cfg.tile.cols;gi++){var a1=gp(gi,-0.5),a2=gp(gi,6.5);tileG.appendChild(el("line",{x1:a1.x,y1:a1.y,x2:a2.x,y2:a2.y,stroke:cfg.palette.grassDark,"stroke-width":0.7,opacity:0.5}));var b1=gp(-0.5,gi),b2=gp(6.5,gi);tileG.appendChild(el("line",{x1:b1.x,y1:b1.y,x2:b2.x,y2:b2.y,stroke:cfg.palette.grassEdge,"stroke-width":0.7,opacity:0.5}));}
+ var elsG=document.getElementById("els");
+ var sorted=cfg.elements.slice().sort(function(a,b){return (a.gx+a.gy)-(b.gx+b.gy);});
+ var built=[];
+ sorted.forEach(function(e0){var g=el("g",{});g.innerHTML=glyphPath(e0.kind,cfg);elsG.appendChild(g);built.push({g:g,e:e0});});
+ var rocketG=document.getElementById("rocketG");
+ var rg=el("g",{});rocketG.appendChild(rg);
+ function drawRocket(st){
+   rg.innerHTML='';
+   if(!st.visible)return;
+   var r=cfg.rocket;
+   var flame=el("polygon",{points:(st.x-5)+","+(st.y+18)+" "+(st.x+5)+","+(st.y+18)+" "+st.x+","+(st.y+34+8*st.riseP),fill:r.flame});
+   var body=el("rect",{x:st.x-r.w/2,y:st.y-r.h/2,width:r.w,height:r.h,rx:7,fill:r.body,stroke:cfg.palette.rocketStroke});
+   var tip=el("polygon",{points:(st.x-8)+","+(st.y-r.h/2)+" "+(st.x+8)+","+(st.y-r.h/2)+" "+st.x+","+(st.y-r.h/2-12),fill:cfg.palette.rocketTip});
+   if(st.flame)rg.appendChild(flame); rg.appendChild(body); rg.appendChild(tip);
+ }
+ function drawClouds(off){
+   ["cloudsBack","cloudsFront"].forEach(function(id,idx){
+     var g=document.getElementById(id); while(g.firstChild)g.removeChild(g.firstChild);
+     if(idx===0){cfg.clouds.forEach(function(c){var gr=el("g",{opacity:0.85});gr.appendChild(el("ellipse",{cx:c.x,cy:c.y+off,rx:c.r,ry:c.r*0.45,fill:cfg.palette.cloud}));g.appendChild(gr);});}
+   });
+ }
+ var offset=0,start=performance.now();
+ function frame(now){var elMs=offset+(now-start);var cyc=((elMs%cfg.cycleMs)+cfg.cycleMs)%cfg.cycleMs;var st=stateAt(cfg,cyc);
+   built.forEach(function(b){var s=st.elements[cfg.elements.indexOf(b.e)]; if(!s.visible){b.g.setAttribute("display","none");}else{b.g.removeAttribute("display");b.g.setAttribute("transform","translate("+s.x+" "+s.y+") scale("+Math.max(0.01,s.scale)+")");}});
+   drawRocket(st.rocket); drawClouds(st.cloudOffsetY);
+   requestAnimationFrame(frame);}
+ requestAnimationFrame(frame);
+ window.__seek=function(ms){offset=ms;start=performance.now();};
+ window.__config=CONFIG; window.__state=function(ms){return stateAt(CONFIG,ms);};
+})();
+}
+if(typeof module!=="undefined"){module.exports={CONFIG:CONFIG,stateAt:stateAt,elementState:elementState,rocketState:rocketState,gridToScreen:gridToScreen,glyphPath:glyphPath};}
+</script></body></html>
+
+
+=== SCORE-BLIND BUILD RECORD ===
+# build-record — T156 Isometric settlement diorama · Cycle 025 Wave 22 · attempt 1
+Artifact: hidden_files/study/recreations/T156-isometric-settlement-diorama/
+Technique: Packet #8 T12 — Isometric settlement diorama. Window: 330.00–355.00 s (segment cut 329.5–355.5 with ±0.5 s handles; segment.mp4 26.000 s expected, h264/aac re-encoded, ffprobe-verified — see raw output below). Schedule basis: two-act (Act 1 segment-anchored fill, Act 2 allocation-model rise) — Act 1: camp clearing at ~2 s / settled village at ~5 s per seat census, fill onsets 0–13200 ms; Act 2: rocket rise 15000–20000 ms allocated (packet names the rise after the fill; exact onset not census-resolved), hold 20000–25000.
+Mechanics implemented: an isometric tile (CONFIG tile originX 360 originY 36 tileW 84 tileH 42 cols 6 rows 6; grid→screen x = originX + (gx−gy)×tileW/2, y = originY + (gx+gy)×tileH/2) fills element by element from the CONFIG elements table (ENTER, enterMs 400, decelerate easeOut pow 3): trees ring the clearing, teepee + fire (camp), huts ×5, fields ×3, path, pen, sheep ×3, figures ×2. Each kind is a parameterized code-drawn SVG glyph function (glyphPath(kind, cfg), colours from CONFIG palette) — no per-element literal markup. Act 2: the rocket (CONFIG rocket padGx 4 padGy 1, riseStartMs 15000, riseMs 5000, w 16 h 34, flame #f26d3c) rises from its pad with flame + decelerating ease through the CONFIG cloud band (7 blobs per §2c; cloud layer offsetY 0→+130 across the rise, state cloudOffsetY = eased × cloudTravelPx), exits the top by 20000 ms; hold to cycleMs 25000 on the filled tile.
+Construction: one self-contained HTML file; CONFIG at top; SVG construction below; ONE JS clock; window.__seek/__config/__state + module.exports state function (T154 pattern). No external assets; no captions/subtitles; no text elements in the recreation.
+Count assertion (A9.3): source-count 21 (§2c table: trees 4 · teepee 1 · fire 1 · huts 5 · fields 3 · path 1 · pen 1 · sheep 3 · figures 2 = 21) vs built-count 21 (harness counts below) — MATCH. Clouds source 7 vs built 7 — MATCH.
+Fidelity plan — named deferral: the post-launch escalation (futuristic city at 340 s, Dyson-swarm stellar scene at 350 s) is NOT built — separate scenes, not the diorama mechanic (RUN §1b). The fidelity claim is the fill + the rise only.
+Asset inventory: segment.mp4 (evidence only, ORIGINAL side of comparison.html) · recreation.html (all code-generated) · comparison.html · codex/ returns.
+Own checks (raw harness output below, A9.4):
+- Swap test (EXACT §2c/§2b): elements replaced by 10-element table (tree ×2 · hut ×3 · field ×2 · path · pen · sheep ×1, onsets stepped 900) + hut palette #4a90d9→#d94a90 via node harness over stateAt/glyphPath with swapped CONFIG — no exception, elementCount 10, hutWall #d94a90 in state, hut glyph contains #d94a90: swapPass true.
+- Purity grep (segment\.mp4|source\.mp4|<video|<img|url\(|GDSf2h9|gdsf2h9) over recreation.html: 0 hits.
+- Syntax: node --check on extracted inline script: SYNTAX_OK.
+- Comparison: shared control drives both; recreation slaved via __seek with handle mapping recreationMs = videoMs − 500; labels "ORIGINAL — Kurzgesagt aliens essay @ 5:30–5:55" / "RECREATION — T156 Isometric settlement diorama, parameterized"; phone stacking via max-width wrap + media query, 44px-min buttons.
+- A6 legs (pre-wave, final build): fit-table.md HITs 0 · config-census.md HITs 0.
+PIXEL-UNVERIFIED: no browser binary in this seat; verification is LOGIC-level, comparison.html is the render surface.
+recreation.html SHA-256: 031cd2269e636fc471317ce441d084d28d1e4900207b8c498c4fdecca37d697d
+
+## Raw harness output (final build, verbatim, condensed state0 element array elided in print only — counts/probes verbatim)
+```
+counts: {"elements": 21, "clouds": 7} assertCounts: true
+visibleAt5000: 8 visibleAt14000: 21
+rocketAt17500: {"riseP": 0.5, "eased": 0.875, "padX": 486, "padY": 141, "x": 486, "y": -121.5, "visible": true, "exited": false, "flame": true}
+rocketAt20000: {"riseP": 1, "eased": 1, "padX": 486, "padY": 141, "x": 486, "y": -159, "visible": true, "exited": true, "flame": false}
+cloudAt17500: 113.75 holding20000: true
+swap: {"error": null, "elementCount": 10, "visibleAt5000": 6, "hutWall": "#d94a90", "glyphHut": true} swapPass: true
+SYNTAX_OK ; purity grep count: 0
+```
+Segment ffprobe (raw): codec_name=h264 width=1920 height=1080 · codec_name=aac · duration=26.000000 — segment.mp4 26.000 s, cut 329.5–355.5, MATCHES the expected 26.000 s.
+Determinism census (guards command 3 second leg): grep Math.random|Date.now over recreation.html = 0 hits (grep exit 1); no RNG is used at all — glyphs are deterministic functions of CONFIG, schedule is a pure function of CONFIG + ms (stateAt), seeking is deterministic.
+jev-prewave interim1: HOLD (ASSERTED-CHECKS, own-checks 0.35) — charges: (1) segment ffprobe claimed but not yet recorded (encode was still running at firing) — CURED above with the raw ffprobe output; (2) determinism census missing — CURED above. Re-fired as the final jev-prewave.md; interim preserved as jev-prewave-interim1.md.
+
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+Verdict: Reusability score **82/100**. This lens clears the minimum of 70 but falls below 85. Overall tier remains NOT ASSESSED without the other four scores.
+
+Findings:
+
+- **Settlement swaps work within the existing glyph vocabulary.** `CONFIG.elements` controls kind, placement, and onset; `glyphPath` reads palette values. The supplied swap evidence confirms a 10-element replacement and changed hut colour. Fixed local glyph coordinates are reusable shape definitions, not per-settlement literals.
+- **Tile resizing is incomplete.** The grid-construction loop uses `cfg.tile.cols` for both axes and literal `6.5` endpoints despite configurable rows and columns. Rectangular or differently sized tiles produce incorrect grid lines. Cure: use independent column and row loops with endpoints derived from `cfg.tile.rows` and `cfg.tile.cols`.
+- **Timing metadata does not follow configuration changes.** `stateAt` hardcodes `holding: ms>=20000` and `fillComplete: ms>=13600`. Cure: derive holding from rocket start plus duration, and fill completion from the latest element onset plus entry duration.
+- **State evaluation leaks global configuration.** `easeOut` reads `CONFIG.easePow` rather than the supplied `cfg`. Passing another configuration to `stateAt` therefore ignores its easing exponent. Cure: pass the exponent or configuration explicitly.
+- **Rocket dimensions only partially control its geometry.** Body width and height are configurable, but tip width and flame placement retain fixed offsets in `drawRocket`. Cure: derive these dimensions from rocket width/height or expose their proportions in CONFIG.
+
+Limits: Text-only review; no tools used. The reported swap establishes element-table and hut-palette substitution only. Rendered tile, rocket, cloud, and stage variants remain unverified; the supplied SHA was not independently checked.
+
+SCORE: 82
+BODY-WRITE: none (read-only fed review; nothing filed).
+tokens used
+16,015
+Verdict: Reusability score **82/100**. This lens clears the minimum of 70 but falls below 85. Overall tier remains NOT ASSESSED without the other four scores.
+
+Findings:
+
+- **Settlement swaps work within the existing glyph vocabulary.** `CONFIG.elements` controls kind, placement, and onset; `glyphPath` reads palette values. The supplied swap evidence confirms a 10-element replacement and changed hut colour. Fixed local glyph coordinates are reusable shape definitions, not per-settlement literals.
+- **Tile resizing is incomplete.** The grid-construction loop uses `cfg.tile.cols` for both axes and literal `6.5` endpoints despite configurable rows and columns. Rectangular or differently sized tiles produce incorrect grid lines. Cure: use independent column and row loops with endpoints derived from `cfg.tile.rows` and `cfg.tile.cols`.
+- **Timing metadata does not follow configuration changes.** `stateAt` hardcodes `holding: ms>=20000` and `fillComplete: ms>=13600`. Cure: derive holding from rocket start plus duration, and fill completion from the latest element onset plus entry duration.
+- **State evaluation leaks global configuration.** `easeOut` reads `CONFIG.easePow` rather than the supplied `cfg`. Passing another configuration to `stateAt` therefore ignores its easing exponent. Cure: pass the exponent or configuration explicitly.
+- **Rocket dimensions only partially control its geometry.** Body width and height are configurable, but tip width and flame placement retain fixed offsets in `drawRocket`. Cure: derive these dimensions from rocket width/height or expose their proportions in CONFIG.
+
+Limits: Text-only review; no tools used. The reported swap establishes element-table and hut-palette substitution only. Rendered tile, rocket, cloud, and stage variants remain unverified; the supplied SHA was not independently checked.
+
+SCORE: 82
+BODY-WRITE: none (read-only fed review; nothing filed).

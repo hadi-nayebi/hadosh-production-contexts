@@ -1,0 +1,21 @@
+PASS banner.scale field removed
+PASS banner.offsetX field present
+PASS travelPx >= banner.w (enters from off its final footprint) :: 520 vs 470
+PASS offsetX at 9500 == -travelPx (full travel) :: o9500=-520
+PASS offsetX travelling inward at 9600 (-travel < o < overshoot) :: o9600=-140.8
+PASS offsetX overshoots past 0 mid-window (at 9715, near split) :: o9715=18.2
+PASS offsetX settling back at 9800 (0 <= o < overshoot) :: o9800=35.9
+PASS offsetX at 9950 == 0 (settled) :: o9950=0
+PASS offsetX at 14500 == 0 (hold)
+PASS banner w/h constant at every probe :: 470x66
+PASS bannerPoints deterministic + scale-free (identical across calls)
+PASS banner points span == banner.w :: span=470
+PASS DOM bannerG transform is translate(offsetX,0) at 9715 :: translate(18.2 0)
+PASS DOM offset matches stateAt at 9715 :: 18.2 vs 18.2
+PASS DOM banner font-size constant == cfg.banner.fontPx
+PASS DOM bannerG transform at 14500 == translate(0.0 0) :: translate(0.0 0)
+PASS serial order intact: region complete 6500 < badge 6800 < banner 9500
+PASS no scale semantics left for banner (no banner overshoot key)
+S4 RESULT: ALL PASS
+Stage-4 source SHA-256: 8c0b0b8dde7535263f18db9543b3068be2329c410518c4e02eff9844d170ceb3 (checkpoint copy hash == working hash at filing; checkpoint inode 5424861 != working inode 5307217)
+K4 interpretation (plan section 0 premise): horizontal travel, entering from the LEFT (offsetX starts -travelPx), overshoot +overshootPx past final position, settle to 0. Overshoot mapping: former scale keys banner.overshoot/overshootSplit replaced by distance keys banner.travelPx (520) + banner.overshootPx (36); overshootSplit retained as the window split fraction.

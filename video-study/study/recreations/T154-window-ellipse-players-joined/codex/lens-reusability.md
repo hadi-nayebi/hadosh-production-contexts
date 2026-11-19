@@ -1,0 +1,342 @@
+OpenAI Codex v0.164.0-alpha.9
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T154-window-ellipse-players-joined/codex
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e6d0-e25f-7830-9c38-329a3c65b9ae
+--------
+user
+Consumer: recreation job INSTRUCTION §5 Verify (five-lens scoring wave) for T154 attempt 1. Decision priced: tier movement RECREATED vs IN PROGRESS (bar: five-lens average >=85 AND minimum lens >=70) and the cure list for attempt 2 / practice.
+Working record: artifact codex/ directory + scores.md in the artifact dir (hidden_files/study/recreations/T154-window-ellipse-players-joined/).
+BODY-WRITE: your return is filed verbatim as codex/lens-reusability.md and its SCORE line is extracted into scores.md; your return MUST end with a line 'SCORE: <integer>' and a line beginning 'BODY-WRITE:'.
+
+recreation.html SHA-256: 6b9cabfb00636b4fc380401e6f73148872b3e578cbd80a1d053eeb01e3ff4522
+
+LENS INSTRUCTION: Judge ONLY the reusability/parameterization lens: could production drive this machinery from CONFIG alone for a different piece (different entrants, labels, colours, join times, ellipse geometry, feed)? Price the CONFIG completeness (every subject-shaping value, including easing, territory growth coefficients, feed typography/dimming, stage dimensions driving the viewBox), the key-to-application-site resolution, and the filed swap evidence (3-entrant table + regenerated feed + changed growMs and stroke still filling the window). Score 0-100 for this lens only. Bar context: wave PASS requires five-lens average >=85 AND minimum lens >=70. Return priced findings, then the SCORE and BODY-WRITE lines.
+
+NEUTRAL TECHNIQUE FACTS (Packet #8, Kurzgesagt "Why Aliens Might Already Be On Their Way To Us" GDSf2h9_39I, segment 270.00-291.00 s, segment-anchored): a Time-axis ellipse (the trillion-year window) starts near-empty with two small seed dots (blue, magenta) low inside it and a starfield; entrants join as columns rising inside the ellipse, then swell into coloured territories until the window fills; a game-lobby-style join/left feed runs at the frame's right-bottom edge; the bunching conclusion (almost nobody early, a crowd arriving together) is drawn as the chart's shape. Build facts: stage 720x405, cycle 21000 ms, end hold 19000-21000. Entrants (CONFIG table, 6): Humans joinMs 1200 colour #57d977; P2 3400 #2b9be0; P3 5600 #e0339b; P4 7800 #ffd75e; P5 10000 #c77dff; P6 11800 #ff8c42. Per entrant: rise 1200 ms, then swell growMs 2500 begins ONLY after that entrant's rise completes (per-entrant phase machine). Feed events (CONFIG table, 11): joined/left for players 1-2, joined 3-9 through 16500 ms; feed text is GENERATED in code from event kind + player number (no literal line strings in logic); feed shows at most 6 lines, older lines dim by 0.12 per step. Territory fill measured as grid-sampled point-in-polygon occupancy against the actual generated blob polygons: 0.906 at 20000 ms. Swap evidence (exact, RUN-bound): entrants replaced by 3 {Civ A/B/C, joinMs 1500/4500/7500, colours #ffffff/#57d977/#e0339b} with feed events regenerated from the swapped table, growMs 2500->1200, ellipse stroke #2a7fd4->#d42a7f: chart still fills (polygon occupancy 0.940), feed follows the swapped table, phases stay serial. Purity grep over recreation.html: 0 hits. A6 legs: fit-table HITs 0, config-census HITs 0 (every CONFIG key resolved to value-flow application sites). PIXEL-UNVERIFIED: no browser binary in this seat; judge at source/logic level; comparison.html is the render surface.
+
+=== recreation.html FULL SOURCE ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T154 recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;height:56.25vw;max-height:100vh;overflow:hidden}
+#scene{position:absolute;inset:0}
+#feed{position:absolute;text-align:right;white-space:nowrap;font-weight:600}
+</style></head><body>
+<div id="stage"><svg id="scene" viewBox="0 0 720 405" preserveAspectRatio="none" width="100%" height="100%">
+<rect id="bg" x="0" y="0"/>
+<g id="stars"></g>
+<ellipse id="win" fill="none"/>
+<g id="axisG"><line id="axisLine"/><text id="axisLabel"></text></g>
+<g id="seeds"></g>
+<g id="ents"></g>
+</svg><div id="feed"></div></div>
+<script>
+var CONFIG = {
+ "stageW": 720,
+ "renderScale": 0.5,
+ "occupancyGrid": 24,
+ "stageH": 405,
+ "cycleMs": 21000,
+ "endHoldFromMs": 19000,
+ "bg": "#0b1030",
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "starSeed": 15427,
+ "starCount": 90,
+ "starColor": "#aebfff",
+ "starRMin": 0.8,
+ "starRMax": 2.0,
+ "twinkleAmp": 0.25,
+ "starOpacity": 0.7,
+ "twinklePeriodMs": 900,
+ "window": {"cx": 380, "cy": 200, "rx": 265, "ry": 118, "stroke": "#2a7fd4", "strokeW": 3, "fill": "#101a3d", "fillOpacity": 0.55},
+ "axis": {"x": 78, "label": "Time", "colour": "#57c7a3", "fontPx": 32, "fontWeight": 700, "lineW": 3, "labelDy": 0, "labelDx": -10},
+ "seeds": [
+  {"x": 300, "y": 268, "color": "#2b9be0", "r": 6},
+  {"x": 415, "y": 292, "color": "#e0339b", "r": 6}
+ ],
+ "riseMs": 1200,
+ "easePow": 3,
+ "labelFontWeight": 700,
+ "territory": {"growMs": 2500, "swellScale": 3.8, "blobPoints": 12, "blobWobble": 0.35, "capFrac": 0.6, "centreFrac": 0.5, "wideFrac": 1.5},
+ "entrants": [
+  {"label": "Humans", "joinMs": 1200, "colour": "#57d977", "x": 505, "colW": 34, "topR": 30, "colTopY": 150, "seed": 11, "labelDx": -10, "labelDy": -46, "labelFontPx": 32},
+  {"label": "", "joinMs": 3400, "colour": "#2b9be0", "x": 300, "colW": 26, "topR": 22, "colTopY": 170, "seed": 23, "labelDx": 0, "labelDy": -40, "labelFontPx": 32},
+  {"label": "", "joinMs": 5600, "colour": "#e0339b", "x": 445, "colW": 28, "topR": 24, "colTopY": 160, "seed": 37, "labelDx": 0, "labelDy": -42, "labelFontPx": 32},
+  {"label": "", "joinMs": 7800, "colour": "#ffd75e", "x": 380, "colW": 40, "topR": 36, "colTopY": 120, "seed": 41, "labelDx": 0, "labelDy": -52, "labelFontPx": 32},
+  {"label": "", "joinMs": 10000, "colour": "#c77dff", "x": 255, "colW": 24, "topR": 20, "colTopY": 185, "seed": 53, "labelDx": 0, "labelDy": -36, "labelFontPx": 32},
+  {"label": "", "joinMs": 11800, "colour": "#ff8c42", "x": 350, "colW": 30, "topR": 26, "colTopY": 140, "seed": 67, "labelDx": 0, "labelDy": -44, "labelFontPx": 32}
+ ],
+ "feedEvents": [
+  {"atMs": 1200, "kind": "joined", "n": 1},
+  {"atMs": 2600, "kind": "left", "n": 1},
+  {"atMs": 3400, "kind": "joined", "n": 2},
+  {"atMs": 4900, "kind": "left", "n": 2},
+  {"atMs": 5600, "kind": "joined", "n": 3},
+  {"atMs": 7800, "kind": "joined", "n": 4},
+  {"atMs": 10000, "kind": "joined", "n": 5},
+  {"atMs": 11800, "kind": "joined", "n": 6},
+  {"atMs": 13500, "kind": "joined", "n": 7},
+  {"atMs": 15000, "kind": "joined", "n": 8},
+  {"atMs": 16500, "kind": "joined", "n": 9}
+ ],
+ "feed": {"rightPx": 14, "bottomPx": 12, "maxLines": 6, "fontPx": 26, "lineH": 32, "dimStep": 0.12, "color": "#ffffff", "fontWeight": 600, "boxW": 320}
+};
+
+function rng(seed){
+  var a = seed >>> 0;
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    var t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function clamp01(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); }
+function easeOut(p){ return 1 - Math.pow(1 - p, CONFIG.easePow); }
+function baseYAt(cfg, x){
+  var w = cfg.window, dx = (x - w.cx) / w.rx;
+  var inside = 1 - dx * dx; if (inside < 0) inside = 0;
+  return w.cy + w.ry * Math.sqrt(inside);
+}
+function feedText(ev){ return "Player " + ev.n + " " + ev.kind; }
+function entrantState(cfg, e, ms){
+  var riseP = clamp01((ms - e.joinMs) / cfg.riseMs);
+  var swellStart = e.joinMs + cfg.riseMs;
+  var swellP = clamp01((ms - swellStart) / cfg.territory.growMs);
+  var phase = ms < e.joinMs ? "pending" : (riseP < 1 ? "rising" : (swellP < 1 ? "swelling" : "filled"));
+  var capR = e.topR * cfg.territory.capFrac;
+  var baseY = baseYAt(cfg, e.x);
+  var endR = Math.max(e.topR * cfg.territory.swellScale, (baseY - e.colTopY) * cfg.territory.centreFrac + e.topR);
+  var r = phase === "pending" ? 0 : (swellP > 0 ? capR + (endR - capR) * easeOut(swellP) : capR);
+  var discY = e.colTopY + (baseY - e.colTopY) * cfg.territory.centreFrac * swellP;
+  return {"phase": phase, "riseP": riseP, "swellP": swellP, "radius": r, "baseY": baseY, "topY": e.colTopY, "discY": discY};
+}
+function feedState(cfg, ms){
+  var vis = [];
+  for (var i = 0; i < cfg.feedEvents.length; i++){
+    if (cfg.feedEvents[i].atMs <= ms) vis.push(cfg.feedEvents[i]);
+  }
+  if (vis.length > cfg.feed.maxLines) vis = vis.slice(vis.length - cfg.feed.maxLines);
+  var out = [];
+  for (var j = 0; j < vis.length; j++){
+    var age = vis.length - 1 - j;
+    out.push({"text": feedText(vis[j]), "opacity": 1 - cfg.feed.dimStep * age, "atMs": vis[j].atMs, "kind": vis[j].kind, "n": vis[j].n});
+  }
+  return out;
+}
+function stateAt(cfg, ms){
+  var ents = [];
+  var area = 0;
+  for (var i = 0; i < cfg.entrants.length; i++){
+    var s = entrantState(cfg, cfg.entrants[i], ms);
+    ents.push(s);
+    area += Math.PI * s.radius * s.radius;
+  }
+  var ellipseArea = Math.PI * cfg.window.rx * cfg.window.ry;
+  var w = cfg.window, gn = cfg.occupancyGrid, inside = 0, covered = 0;
+  for (var gy = 0; gy < gn; gy++){
+    for (var gx = 0; gx < gn; gx++){
+      var px = w.cx - w.rx + (gx + 0.5) * (2 * w.rx / gn);
+      var py = w.cy - w.ry + (gy + 0.5) * (2 * w.ry / gn);
+      var ex = (px - w.cx) / w.rx, ey = (py - w.cy) / w.ry;
+      if (ex * ex + ey * ey > 1) continue;
+      inside++;
+      for (var q2 = 0; q2 < cfg.entrants.length; q2++){
+        if (ents[q2].radius <= 0) continue;
+        var verts = blobVertices(cfg, cfg.entrants[q2], {radius: ents[q2].radius, topY: ents[q2].discY});
+        if (pointInPoly(px, py, verts)){ covered++; break; }
+      }
+    }
+  }
+  return {"ms": ms, "entrants": ents, "feed": feedState(cfg, ms), "coverage": area / ellipseArea, "occupancy": inside ? covered / inside : 0, "entrantCount": cfg.entrants.length, "feedEventCount": cfg.feedEvents.length, "holding": ms >= cfg.endHoldFromMs};
+}
+function blobVertices(cfg, e, s){
+  var n = cfg.territory.blobPoints, r = rng(e.seed), verts = [];
+  for (var k = 0; k < n; k++){
+    var wob = 1 + (r() - 0.5) * 2 * cfg.territory.blobWobble;
+    var a = (k / n) * Math.PI * 2;
+    var rr = s.radius * wob;
+    verts.push([e.x + rr * cfg.territory.wideFrac * Math.cos(a), s.topY + rr * Math.sin(a)]);
+  }
+  return verts;
+}
+function pointInPoly(x, y, v){
+  var insideP = false;
+  for (var i = 0, j = v.length - 1; i < v.length; j = i++){
+    var xi = v[i][0], yi = v[i][1], xj = v[j][0], yj = v[j][1];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) insideP = !insideP;
+  }
+  return insideP;
+}
+function blobPath(cfg, e, s){
+  var verts = blobVertices(cfg, e, s), pts = [];
+  for (var k = 0; k < verts.length; k++){
+    pts.push((k === 0 ? "M" : "L") + verts[k][0].toFixed(1) + " " + verts[k][1].toFixed(1));
+  }
+  return pts.join(" ") + " Z";
+}
+
+if (typeof document !== "undefined"){
+(function(){
+  var cfg = CONFIG;
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function el(name, attrs){ var nd = document.createElementNS(SVGNS, name); for (var k in attrs) nd.setAttribute(k, attrs[k]); return nd; }
+  document.getElementById("scene").setAttribute("viewBox", "0 0 " + cfg.stageW + " " + cfg.stageH);
+  var bgEl = document.getElementById("bg");
+  bgEl.setAttribute("width", cfg.stageW); bgEl.setAttribute("height", cfg.stageH);
+  bgEl.setAttribute("fill", cfg.bg);
+  var win = document.getElementById("win");
+  win.setAttribute("cx", cfg.window.cx); win.setAttribute("cy", cfg.window.cy);
+  win.setAttribute("rx", cfg.window.rx); win.setAttribute("ry", cfg.window.ry);
+  win.setAttribute("stroke", cfg.window.stroke); win.setAttribute("stroke-width", cfg.window.strokeW);
+  win.setAttribute("fill", cfg.window.fill); win.setAttribute("fill-opacity", cfg.window.fillOpacity);
+  var sr = rng(cfg.starSeed), stars = document.getElementById("stars"), starEls = [];
+  for (var i = 0; i < cfg.starCount; i++){
+    var sx = sr() * cfg.stageW, sy = sr() * cfg.stageH;
+    var srad = cfg.starRMin + sr() * (cfg.starRMax - cfg.starRMin);
+    var sc = el("circle", {cx: sx.toFixed(1), cy: sy.toFixed(1), r: srad.toFixed(2), fill: cfg.starColor, opacity: cfg.starOpacity});
+    sc.dataset.phase = (sr() * Math.PI * 2).toFixed(3);
+    stars.appendChild(sc); starEls.push(sc);
+  }
+  var ax = document.getElementById("axisLine");
+  ax.setAttribute("x1", cfg.axis.x); ax.setAttribute("x2", cfg.axis.x);
+  ax.setAttribute("y1", cfg.window.cy - cfg.window.ry); ax.setAttribute("y2", cfg.window.cy + cfg.window.ry);
+  ax.setAttribute("stroke", cfg.axis.colour); ax.setAttribute("stroke-width", cfg.axis.lineW);
+  var al = document.getElementById("axisLabel");
+  al.setAttribute("x", cfg.axis.x + cfg.axis.labelDx); al.setAttribute("y", cfg.window.cy + cfg.axis.labelDy);
+  al.setAttribute("fill", cfg.axis.colour); al.setAttribute("font-size", cfg.axis.fontPx);
+  al.setAttribute("font-weight", cfg.axis.fontWeight); al.setAttribute("font-family", cfg.fontFamily);
+  al.setAttribute("text-anchor", "middle");
+  al.setAttribute("transform", "rotate(-90 " + (cfg.axis.x + cfg.axis.labelDx) + " " + cfg.window.cy + ")");
+  al.textContent = cfg.axis.label;
+  var sg = document.getElementById("seeds");
+  for (var d = 0; d < cfg.seeds.length; d++){
+    sg.appendChild(el("circle", {cx: cfg.seeds[d].x, cy: cfg.seeds[d].y, r: cfg.seeds[d].r, fill: cfg.seeds[d].color}));
+  }
+  var eg = document.getElementById("ents"), built = [];
+  for (var b = 0; b < cfg.entrants.length; b++){
+    var e0 = cfg.entrants[b];
+    var col = el("rect", {fill: e0.colour, x: e0.x - e0.colW / 2, width: e0.colW});
+    var top = el("path", {fill: e0.colour});
+    eg.appendChild(col); eg.appendChild(top);
+    var lab = null;
+    if (e0.label){
+      lab = el("text", {fill: e0.colour, "font-size": e0.labelFontPx, "font-weight": cfg.labelFontWeight, "font-family": cfg.fontFamily, "text-anchor": "middle"});
+      lab.textContent = e0.label;
+      eg.appendChild(lab);
+    }
+    built.push({col: col, top: top, lab: lab, e: e0});
+  }
+  var feed = document.getElementById("feed");
+  feed.style.right = (cfg.feed.rightPx * cfg.renderScale) + "px";
+  feed.style.bottom = (cfg.feed.bottomPx * cfg.renderScale) + "px";
+  feed.style.fontFamily = cfg.fontFamily;
+  feed.style.fontSize = (cfg.feed.fontPx * cfg.renderScale) + "px";
+  feed.style.lineHeight = (cfg.feed.lineH * cfg.renderScale) + "px";
+  feed.style.color = cfg.feed.color;
+  feed.style.fontWeight = cfg.feed.fontWeight;
+  feed.style.width = (cfg.feed.boxW * cfg.renderScale) + "px";
+  var offset = 0, start = performance.now(), lastFeedKey = "";
+  function frame(now){
+    var elMs = offset + (now - start);
+    var cyc = ((elMs % cfg.cycleMs) + cfg.cycleMs) % cfg.cycleMs;
+    var st = stateAt(cfg, cyc);
+    for (var s2 = 0; s2 < starEls.length; s2++){
+      var ph = parseFloat(starEls[s2].dataset.phase);
+      starEls[s2].setAttribute("opacity", (cfg.starOpacity * (1 - cfg.twinkleAmp + cfg.twinkleAmp * Math.sin(cyc / cfg.twinklePeriodMs + ph))).toFixed(3));
+    }
+    for (var q = 0; q < built.length; q++){
+      var bs = st.entrants[q], be = built[q].e;
+      if (bs.phase === "pending"){
+        built[q].col.setAttribute("display", "none");
+        built[q].top.setAttribute("display", "none");
+        if (built[q].lab) built[q].lab.setAttribute("display", "none");
+      } else {
+        var topNow = bs.baseY - (bs.baseY - bs.topY) * easeOut(bs.riseP);
+        built[q].col.removeAttribute("display");
+        built[q].col.setAttribute("y", topNow.toFixed(1));
+        built[q].col.setAttribute("height", (bs.baseY - topNow).toFixed(1));
+        built[q].top.removeAttribute("display");
+        built[q].top.setAttribute("d", blobPath(cfg, be, {radius: bs.radius, topY: topNow + (bs.baseY - topNow) * cfg.territory.centreFrac * bs.swellP}));
+        if (built[q].lab){
+          built[q].lab.removeAttribute("display");
+          built[q].lab.setAttribute("x", be.x + be.labelDx);
+          built[q].lab.setAttribute("y", topNow + be.labelDy);
+        }
+      }
+    }
+    var fk = st.feed.map(function(f){ return f.text; }).join("|");
+    if (fk !== lastFeedKey){
+      lastFeedKey = fk;
+      while (feed.firstChild) feed.removeChild(feed.firstChild);
+      for (var f2 = 0; f2 < st.feed.length; f2++){
+        var div = document.createElement("div");
+        div.textContent = st.feed[f2].text;
+        div.style.opacity = st.feed[f2].opacity.toFixed(2);
+        feed.appendChild(div);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__seek = function(ms){ offset = ms; start = performance.now(); };
+  window.__config = CONFIG;
+  window.__state = function(ms){ return stateAt(CONFIG, ms); };
+})();
+}
+if (typeof module !== "undefined"){ module.exports = {CONFIG: CONFIG, stateAt: stateAt, feedText: feedText, entrantState: entrantState, feedState: feedState, blobPath: blobPath}; }
+</script></body></html>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Code Mode is unavailable because failed to spawn code-mode host /opt/hatch-image/bin/codex-code-mode-host: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.
+codex
+Verdict: **84/100 for reusability/parameterization.** CONFIG supports substantial reuse, with remaining gaps in stage layout, hold behavior, and configuration isolation. Overall tier movement is NOT ASSESSED without the other four lens scores.
+
+Findings:
+
+- **Strong subject controls.** The fed source exposes entrant labels, colours, join times, geometry, seeds, and typography; ellipse geometry and styling; easing; territory growth coefficients; and feed timing, typography, placement, and dimming. Entrant rendering loops over `cfg.entrants`, and `entrantState()` starts swelling at `e.joinMs + cfg.riseMs`, preserving serial phases when timing changes.
+
+- **Stage dimensions only partially govern presentation.** `stageW` and `stageH` reach the SVG `viewBox`, background, and star distribution. However, `#stage` retains hardcoded `height:56.25vw`, while feed sizing uses a separate fixed `renderScale`. Changing stage aspect ratio or viewport size can distort the chart and change feed proportions. **Cure:** derive stage aspect ratio from CONFIG dimensions and calculate the feed’s display scale from the rendered stage.
+
+- **Easing resolves to the global configuration.** `easeOut()` reads `CONFIG.easePow`, including when called by `entrantState(cfg, ...)`. Editing the global CONFIG works, but passing a distinct configuration to `stateAt(cfg, ...)` does not fully isolate that piece. **Cure:** pass the easing exponent or configuration explicitly through both state and rendering calls.
+
+- **The hold key has no behavioral application.** `endHoldFromMs` sets `stateAt().holding`, but `frame()` never consumes that flag or clamps animation time. Current entrants finish before the specified hold, masking the gap; later join times or longer growth can continue through it. **Cure:** define and implement the hold policy, then verify it with an entrant whose growth crosses the hold boundary.
+
+- **Feed content has one fixed subject term.** Event timing, kind, and number are configurable, but `feedText()` hardcodes `"Player "`. **Cure:** expose the participant noun or message templates in CONFIG to support different feed language without logic edits.
+
+- **Swap evidence supports reuse within its tested scope.** The supplied RUN-bound account reports three replacement entrants, regenerated feed events, changed `growMs`, changed ellipse stroke, and polygon occupancy of 0.940. This addresses the requested swap dimensions. The supplied census reports zero unresolved keys, but a resolved key does not establish effective behavior, as `endHoldFromMs` demonstrates.
+
+Limits: Source-level review only. Swap measurements and census results are supplied evidence, not independently verified here. No browser rendering, SHA verification, or changed-aspect-ratio evidence was assessed.
+
+SCORE: 84
+BODY-WRITE: none (read-only run); consumer files this return verbatim as codex/lens-reusability.md and extracts SCORE into scores.md.
+tokens used
+17,009
+Verdict: **84/100 for reusability/parameterization.** CONFIG supports substantial reuse, with remaining gaps in stage layout, hold behavior, and configuration isolation. Overall tier movement is NOT ASSESSED without the other four lens scores.
+
+Findings:
+
+- **Strong subject controls.** The fed source exposes entrant labels, colours, join times, geometry, seeds, and typography; ellipse geometry and styling; easing; territory growth coefficients; and feed timing, typography, placement, and dimming. Entrant rendering loops over `cfg.entrants`, and `entrantState()` starts swelling at `e.joinMs + cfg.riseMs`, preserving serial phases when timing changes.
+
+- **Stage dimensions only partially govern presentation.** `stageW` and `stageH` reach the SVG `viewBox`, background, and star distribution. However, `#stage` retains hardcoded `height:56.25vw`, while feed sizing uses a separate fixed `renderScale`. Changing stage aspect ratio or viewport size can distort the chart and change feed proportions. **Cure:** derive stage aspect ratio from CONFIG dimensions and calculate the feed’s display scale from the rendered stage.
+
+- **Easing resolves to the global configuration.** `easeOut()` reads `CONFIG.easePow`, including when called by `entrantState(cfg, ...)`. Editing the global CONFIG works, but passing a distinct configuration to `stateAt(cfg, ...)` does not fully isolate that piece. **Cure:** pass the easing exponent or configuration explicitly through both state and rendering calls.
+
+- **The hold key has no behavioral application.** `endHoldFromMs` sets `stateAt().holding`, but `frame()` never consumes that flag or clamps animation time. Current entrants finish before the specified hold, masking the gap; later join times or longer growth can continue through it. **Cure:** define and implement the hold policy, then verify it with an entrant whose growth crosses the hold boundary.
+
+- **Feed content has one fixed subject term.** Event timing, kind, and number are configurable, but `feedText()` hardcodes `"Player "`. **Cure:** expose the participant noun or message templates in CONFIG to support different feed language without logic edits.
+
+- **Swap evidence supports reuse within its tested scope.** The supplied RUN-bound account reports three replacement entrants, regenerated feed events, changed `growMs`, changed ellipse stroke, and polygon occupancy of 0.940. This addresses the requested swap dimensions. The supplied census reports zero unresolved keys, but a resolved key does not establish effective behavior, as `endHoldFromMs` demonstrates.
+
+Limits: Source-level review only. Swap measurements and census results are supplied evidence, not independently verified here. No browser rendering, SHA verification, or changed-aspect-ratio evidence was assessed.
+
+SCORE: 84
+BODY-WRITE: none (read-only run); consumer files this return verbatim as codex/lens-reusability.md and extracts SCORE into scores.md.

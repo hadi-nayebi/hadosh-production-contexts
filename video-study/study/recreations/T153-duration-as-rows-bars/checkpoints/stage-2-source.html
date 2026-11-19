@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T153 recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;max-height:100vh;overflow:hidden}
+#stars{position:absolute;inset:0}
+.speck{position:absolute;border-radius:50%}
+#header{position:absolute;font-weight:700;white-space:nowrap}
+.row{position:absolute;display:flex;align-items:center}
+.rlab{flex:none;white-space:nowrap;font-weight:700}
+.track{flex:1;position:relative}
+.bar{position:absolute;left:0;top:0;height:100%}
+</style></head><body>
+<div id="stage"><div id="stars"></div><div id="header"></div><div id="rows"></div></div>
+<script>
+var CONFIG = {
+ "cycleMs": 15000,
+ "stageW": 720,
+ "stageH": 405,
+ "void": "#0d0630",
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "header": {"sun": "Lifespan of", "dwarf": "Lifespan of a Red Dwarf", "swapMs": 11000, "fontPx": 20, "fontWeight": 700, "color": "#ffffff", "xPx": 24, "yPx": 22},
+ "row": {"heightPx": 14, "gapPx": 10, "labelW": 92, "labelFontPx": 16, "labelWeight": 700, "labelColor": "#ffffff", "firstRowYPx": 84, "xPx": 24},
+ "sun": {"label": "Sun", "colour": "#f2c230", "fraction": 0.42, "onsetMs": 800, "sweepMs": 2200},
+ "dwarf": {"label": "Red Dwarf", "colour": "#e0332b", "rows": 8, "fraction": 1.0, "startMs": 9800, "firstSweepMs": 2000, "secondSweepMs": 800, "restSweepMs": 250},
+ "stars": {"count": 90, "seed": 15324, "colour": "#cfd8ff", "opacity": 0.35, "sizePx": 2, "lcgA": 1103515245, "lcgC": 12345, "lcgM": 2147483648}
+};
+function buildRows(cfg){
+  var rows=[];
+  rows.push({label:cfg.sun.label, colour:cfg.sun.colour, fraction:cfg.sun.fraction, onsetMs:cfg.sun.onsetMs, sweepMs:cfg.sun.sweepMs, kind:"sun", idx:0});
+  var onset=cfg.dwarf.startMs;
+  for(var i=0;i<cfg.dwarf.rows;i++){
+    // Overflow progression: row i is the SAME dwarf bar continuing; each row's
+    // onset is derived cumulatively from the previous row's onset plus its
+    // sweep, so row i+1 begins exactly as row i completes by construction.
+    var sweep=(i===0?cfg.dwarf.firstSweepMs:(i===1?cfg.dwarf.secondSweepMs:cfg.dwarf.restSweepMs));
+    rows.push({label:(i===0?cfg.dwarf.label:""), colour:cfg.dwarf.colour, fraction:cfg.dwarf.fraction, onsetMs:onset, sweepMs:sweep, kind:"dwarf", idx:i});
+    onset+=sweep;
+  }
+  return rows;
+}
+function rowFill(row, ms){
+  if(ms<=row.onsetMs) return 0;
+  var p=(ms-row.onsetMs)/row.sweepMs; if(p>1)p=1;
+  return row.fraction*p;
+}
+function headerAt(cfg, ms){ return ms>=cfg.header.swapMs ? cfg.header.dwarf : cfg.header.sun; }
+function stateAt(cfg, ms){
+  var cyc=((ms%cfg.cycleMs)+cfg.cycleMs)%cfg.cycleMs;
+  var rows=buildRows(cfg);
+  var fills=rows.map(function(r){return rowFill(r,cyc);});
+  var completeMs=0; rows.forEach(function(r){ if(r.kind==="dwarf"){ var e=r.onsetMs+r.sweepMs; if(e>completeMs)completeMs=e; } });
+  return {ms:cyc, header:headerAt(cfg,cyc), rows:rows, fills:fills, builtCount:rows.length, expectedCount:1+cfg.dwarf.rows, completeMs:completeMs};
+}
+if(typeof document!=="undefined"){
+(function(){
+  var cfg=CONFIG;
+  var stage=document.getElementById('stage'), stars=document.getElementById('stars'), header=document.getElementById('header'), rowsEl=document.getElementById('rows');
+  stage.style.background=cfg.void;
+  stage.style.aspectRatio=cfg.stageW+'/'+cfg.stageH;
+  stage.style.minHeight=(cfg.row.firstRowYPx + (1+cfg.dwarf.rows)*(cfg.row.heightPx+cfg.row.gapPx))+'px';
+  // deterministic starfield specks (dim background)
+  var s=cfg.stars.seed;
+  function rnd(){ s=(s*cfg.stars.lcgA+cfg.stars.lcgC)%cfg.stars.lcgM; return s/cfg.stars.lcgM; }
+  for(var i=0;i<cfg.stars.count;i++){
+    var d=document.createElement('div'); d.className='speck';
+    d.style.left=(rnd()*100)+'%'; d.style.top=(rnd()*100)+'%';
+    d.style.width=cfg.stars.sizePx+'px'; d.style.height=cfg.stars.sizePx+'px';
+    d.style.background=cfg.stars.colour; d.style.opacity=cfg.stars.opacity;
+    stars.appendChild(d);
+  }
+  header.textContent=cfg.header.sun;
+  header.style.left=cfg.header.xPx+'px'; header.style.top=cfg.header.yPx+'px';
+  header.style.fontFamily=cfg.fontFamily; header.style.fontSize=cfg.header.fontPx+'px';
+  header.style.fontWeight=cfg.header.fontWeight; header.style.color=cfg.header.color;
+  var rows=buildRows(cfg), barEls=[];
+  rows.forEach(function(r,i){
+    var row=document.createElement('div'); row.className='row';
+    row.style.left=cfg.row.xPx+'px'; row.style.right=cfg.row.xPx+'px';
+    row.style.top=(cfg.row.firstRowYPx + i*(cfg.row.heightPx+cfg.row.gapPx))+'px';
+    row.style.height=cfg.row.heightPx+'px';
+    var lab=document.createElement('div'); lab.className='rlab'; lab.textContent=r.label;
+    lab.style.width=cfg.row.labelW+'px'; lab.style.fontFamily=cfg.fontFamily;
+    lab.style.fontSize=cfg.row.labelFontPx+'px'; lab.style.fontWeight=cfg.row.labelWeight; lab.style.color=cfg.row.labelColor;
+    var track=document.createElement('div'); track.className='track'; track.style.height=cfg.row.heightPx+'px';
+    var bar=document.createElement('div'); bar.className='bar'; bar.style.background=r.colour; bar.style.width='0%';
+    track.appendChild(bar); row.appendChild(lab); row.appendChild(track);
+    rowsEl.appendChild(row); barEls.push(bar);
+  });
+  var offset=0, start=performance.now();
+  function frame(now){
+    var elMs=offset+(now-start);
+    var st=stateAt(cfg, elMs);
+    header.textContent=st.header;
+    for(var i=0;i<barEls.length;i++){ barEls[i].style.width=(st.fills[i]*100)+'%'; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__seek=function(ms){ offset=ms; start=performance.now(); };
+  window.__config=CONFIG;
+  window.__state=function(ms){ return stateAt(CONFIG, ms); };
+})();
+}
+if(typeof module!=="undefined"){ module.exports={buildRows:buildRows, rowFill:rowFill, headerAt:headerAt, stateAt:stateAt, CONFIG:CONFIG}; }
+</script></body></html>
