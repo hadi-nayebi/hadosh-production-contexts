@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T243 — Calendar-of-days panel, parameterized</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #wrap{max-width:680px;margin:0 auto;padding:10px;box-sizing:border-box;}
+  svg{display:block;width:100%;height:auto;background:#000;}
+  #bar{display:flex;gap:8px;justify-content:center;padding:8px 0;}
+  button{font:14px Verdana,sans-serif;padding:8px 16px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage"></div>
+  <div id="bar"><button id="btnPlay" type="button">Pause</button><button id="btnRestart" type="button">Restart</button></div>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  stageW: 480, stageH: 520,
+  cols: 7, rows: 5, firstDay: 1, readingDir: "rtl",
+  panelW: 215, panelH: 200, panelY: 55, panelR: 10,
+  calShiftPx: 100, tasksGapPx: 17,
+  numeralFontPx: 21, titleFontPx: 21, labelFontPx: 21,
+  fontFamily: "Verdana, Geneva, sans-serif",
+  daysTitle: "DAYS", tasksTitle: "TASKS",
+  timelineLabelA: "THAT DATE", timelineLabelB: "THIS TIME",
+  ringEarlyIdx: 15, ringLateIdx: 33, ringRPx: 13,
+  ringFormFraction: 0.25, ringLateFormFraction: 0.20,
+  strikeStrokePx: 2, labelStrikeStrokePx: 2, dropDash: "5 5",
+  timelineY: 460, timelineTicks: 15, timelineMarginPx: 40, tickLenPx: 6,
+  labelDyPx: 24, labelWidthFrac: 0.62, numeralBaselineFrac: 0.36,
+  strikeExtentXFrac: 0.32, strikeExtentYFrac: 0.28, ringCrossFrac: 0.72,
+  tabW: 80, tabH: 26, tabR: 4, tasksBoxR: 3, tasksDash: "6 5", labelStrikeDyPx: 3, labelStrikeTopFrac: 0.8, titleBaselineDy: 4, figureHeadGap: 7,
+  panelStrokePx: 1.6, timelineStrokePx: 1.5, tickStrokePx: 1, dropStrokePx: 1.2,
+  ringStrokePx: 1.6, figureStrokePx: 2, tasksLineStrokePx: 1.3, tasksBoxStrokePx: 1.4, tabStrokePx: 1.2,
+  figureCx: 300, figureScale: 1, figureHeadR: 13, figureBodyW: 20, figureBodyTop: 76, figureShoulderY: 52, figureLegY: 34,
+  figureStarPts: [[0,-62],[3,-55],[10,-55],[4,-50],[6.4,-43],[0,-47],[-6.4,-43],[-4,-50],[-10,-55],[-3,-55]],
+  arcCtrlDx: 60, arcCtrlDy: 110, arcEndDx: 26, arcEndDy: 66,
+  tasksRowsJoin: 3, tasksRowsTotal: 5, tasksLineStyle: "dashed", tasksTravelRatio: 0.4,
+  tasksRowFirstDy: 44, tasksRowStepPx: 30, tasksLineInsetL: 26, tasksLineInsetR: 52, tasksBoxSize: 18, tasksBoxInsetR: 40,
+  strikes1Target: 20, strikes2Target: 26, strikes3Target: 32, strikesFinalTarget: 35,
+  gridDurMs: 1200, strikes1DurMs: 2000, dropDurMs: 600, labelsDurMs: 600,
+  hold1DurMs: 1000, tasksDurMs: 1000, sweep3DurMs: 2000, finalDurMs: 2000, holdMs: 2000,
+  easeGrid: "linear", easeStrikes: "linear", easeDrop: "linear",
+  easeLabels: "linear", easeTasks: "linear", easeFinal: "linear",
+  palette: { bg: "#000000", ink: "#f4f4f4", faint: "#7d7d7d", panel: "#f4f4f4", strike: "#f4f4f4" }
+};
+function ease(name, x){ x = Math.min(1, Math.max(0, x)); return name === "easeInOut" ? x*x*(3-2*x) : x; }
+function clamp01(x){ return Math.min(1, Math.max(0, x)); }
+function schedule(cfg){
+  const gridStart = 0;
+  const strikes1Start = gridStart + cfg.gridDurMs;
+  const dropStart = strikes1Start + cfg.strikes1DurMs;
+  const labelsStart = dropStart + cfg.dropDurMs;
+  const hold1End = labelsStart + cfg.labelsDurMs;
+  const tasksStart = hold1End + cfg.hold1DurMs;
+  const sweep3Start = tasksStart + cfg.tasksDurMs;
+  const finalStart = sweep3Start + cfg.sweep3DurMs;
+  const completeAtMs = finalStart + cfg.finalDurMs;
+  const durationMs = completeAtMs + cfg.holdMs;
+  return { gridStart, strikes1Start, dropStart, labelsStart, hold1End, tasksStart, sweep3Start, finalStart, completeAtMs, durationMs };
+}
+function validateConfig(cfg){
+  const nums = ["stageW","stageH","panelW","panelH","panelY","timelineY","gridDurMs","strikes1DurMs","dropDurMs","labelsDurMs","hold1DurMs","tasksDurMs","sweep3DurMs","finalDurMs","holdMs"];
+  for (const k of nums){ if (!(cfg[k] > 0) || !isFinite(cfg[k])) return "bad number " + k; }
+  if (!Number.isInteger(cfg.cols) || !Number.isInteger(cfg.rows) || cfg.cols < 1 || cfg.rows < 1 || cfg.cols > 10 || cfg.rows > 8) return "bad grid dims";
+  const dc = cfg.cols * cfg.rows;
+  const tg = [cfg.strikes1Target, cfg.strikes2Target, cfg.strikes3Target, cfg.strikesFinalTarget];
+  for (let i = 0; i < tg.length; i++){ if (!(tg[i] > 0) || tg[i] > dc) return "bad strike target"; if (i && !(tg[i] > tg[i-1])) return "targets not increasing"; }
+  if (cfg.strikesFinalTarget !== dc) return "final target must equal dayCount";
+  if (cfg.ringEarlyIdx === cfg.ringLateIdx) return "ring indices equal";
+  if (cfg.ringEarlyIdx < 0 || cfg.ringLateIdx < 0 || cfg.ringEarlyIdx >= dc || cfg.ringLateIdx >= dc) return "ring index out of range";
+  if (!(cfg.ringEarlyIdx < cfg.strikes1Target)) return "ringEarlyIdx must fall below strikes1Target";
+  if (!(cfg.ringLateIdx >= cfg.strikes3Target && cfg.ringLateIdx < cfg.strikesFinalTarget)) return "ringLateIdx outside its sweep band";
+  if (cfg.tasksRowsJoin > cfg.tasksRowsTotal) return "tasks rows join exceeds total";
+  if (!(cfg.ringFormFraction > 0 && cfg.ringFormFraction < 1)) return "bad ringFormFraction";
+  if (!(cfg.ringLateFormFraction > 0 && cfg.ringLateFormFraction < 1)) return "bad ringLateFormFraction";
+  if (!(cfg.tasksTravelRatio > 0 && cfg.tasksTravelRatio < 1)) return "bad tasksTravelRatio";
+  if (2 * cfg.panelW + cfg.tasksGapPx > cfg.stageW) return "panels overflow stage";
+  if (cfg.panelY + cfg.panelH >= cfg.timelineY) return "panel reaches timeline";
+  const cellW = cfg.panelW / cfg.cols, cellH = cfg.panelH / cfg.rows;
+  if (cfg.ringRPx > cellW) return "ring radius exceeds cell width";
+  if (Math.min(cellW, cellH) <= 0) return "bad cell geometry";
+  return null;
+}
+function stateAt(cfg, t){
+  const S = schedule(cfg);
+  const dayCount = cfg.cols * cfg.rows;
+  const ph = (start, dur) => clamp01((t - start) / dur);
+  const gridRaw = ph(S.gridStart, cfg.gridDurMs);
+  const strikes1Raw = ph(S.strikes1Start, cfg.strikes1DurMs);
+  const dropRaw = ph(S.dropStart, cfg.dropDurMs);
+  const labelsRaw = ph(S.labelsStart, cfg.labelsDurMs);
+  const tasksRaw = ph(S.tasksStart, cfg.tasksDurMs);
+  const sweep3Raw = ph(S.sweep3Start, cfg.sweep3DurMs);
+  const finalRaw = ph(S.finalStart, cfg.finalDurMs);
+  const gridP = ease(cfg.easeGrid, gridRaw);
+  const strikes1P = ease(cfg.easeStrikes, strikes1Raw);
+  const dropP = ease(cfg.easeDrop, dropRaw);
+  const labelsP = ease(cfg.easeLabels, labelsRaw);
+  const tasksP = ease(cfg.easeTasks, tasksRaw);
+  const sweep3P = ease(cfg.easeStrikes, sweep3Raw);
+  const finalP = ease(cfg.easeFinal, finalRaw);
+  let strikeFloat = 0;
+  if (t >= S.strikes1Start) strikeFloat = cfg.strikes1Target * strikes1P;
+  if (t >= S.tasksStart) strikeFloat = cfg.strikes1Target + (cfg.strikes2Target - cfg.strikes1Target) * tasksP;
+  if (t >= S.sweep3Start) strikeFloat = cfg.strikes2Target + (cfg.strikes3Target - cfg.strikes2Target) * sweep3P;
+  if (t >= S.finalStart) strikeFloat = cfg.strikes3Target + (cfg.strikesFinalTarget - cfg.strikes3Target) * finalP;
+  const cells = [];
+  let strikesFull = 0;
+  for (let i = 0; i < dayCount; i++){
+    const sp = clamp01(strikeFloat - i);
+    if (sp >= 1) strikesFull++;
+    cells.push({ i, label: String(cfg.firstDay + i), strikeP: sp });
+  }
+  const ringEarlyO = clamp01((gridP - (1 - cfg.ringFormFraction)) / cfg.ringFormFraction);
+  const ringLateO = clamp01((strikes1P - (1 - cfg.ringLateFormFraction)) / cfg.ringLateFormFraction);
+  const tasksRowsFloat = tasksP * cfg.tasksRowsJoin + sweep3P * (cfg.tasksRowsTotal - cfg.tasksRowsJoin);
+  let tasksRowsVisible = 0;
+  for (let r = 0; r < cfg.tasksRowsTotal; r++){ if (clamp01(tasksRowsFloat - r) >= 1) tasksRowsVisible++; }
+  return {
+    gridRaw, strikes1Raw, dropRaw, labelsRaw, tasksRaw, sweep3Raw, finalRaw,
+    gridP, strikes1P, dropP, labelsP, tasksP, sweep3P, finalP,
+    strikeFloat, strikesFull, cells,
+    ringEarlyO, ringEarlyCrossP: cells[cfg.ringEarlyIdx].strikeP,
+    ringLateO, ringLateCrossP: cells[cfg.ringLateIdx].strikeP,
+    drop1P: gridP, drop2P: dropP,
+    labelAO: gridP, labelAStrikeP: labelsP,
+    labelBO: labelsP, labelBStrikeP: finalP,
+    tasksRowsFloat, tasksRowsVisible,
+    calShiftPxNow: cfg.calShiftPx * tasksP,
+    arcOpacity: gridP * (1 - finalP),
+    schedule: S, durationMs: S.durationMs
+  };
+}
+function labelLayout(cfg, cEx, cLx){
+  // Both timeline labels sit on one baseline under their drop feet; if their CONFIG-box widths
+  // would overlap, they shift apart symmetrically (clamped to the stage) — diagram collision
+  // resolution driven only by CONFIG text + font keys.
+  const wA = cfg.timelineLabelA.length * cfg.labelFontPx * cfg.labelWidthFrac;
+  const wB = cfg.timelineLabelB.length * cfg.labelFontPx * cfg.labelWidthFrac;
+  let ax = cEx, bx = cLx;
+  const sep = () => (ax - wA / 2) - (bx + wB / 2);
+  if (sep() < 0){
+    const ov = -sep();
+    ax = Math.min(ax + ov / 2, cfg.stageW - wA / 2 - 4);
+    bx = Math.max(bx - ov / 2, wB / 2 + 4);
+    if (sep() < 0){ ax = Math.min(ax - sep(), cfg.stageW - wA / 2 - 4); }
+    if (sep() < 0){ bx = Math.max(bx + sep(), wB / 2 + 4); }
+  }
+  return { ax, bx, wA, wB };
+}
+function cellCenter(cfg, i, shift){
+  const cellW = cfg.panelW / cfg.cols, cellH = cfg.panelH / cfg.rows;
+  const row = Math.floor(i / cfg.cols), r = i % cfg.cols;
+  const calX0 = (cfg.stageW - cfg.panelW) / 2;
+  const cx = cfg.readingDir === "rtl"
+    ? calX0 - shift + cfg.panelW - (r + 0.5) * cellW
+    : calX0 - shift + (r + 0.5) * cellW;
+  return { x: cx, y: cfg.panelY + (row + 0.5) * cellH, cellW, cellH };
+}
+function renderSVG(cfg, t){
+  const st = stateAt(cfg, t);
+  const P = cfg.palette;
+  const cellW = cfg.panelW / cfg.cols, cellH = cfg.panelH / cfg.rows;
+  const calX0 = (cfg.stageW - cfg.panelW) / 2;
+  const shift = st.calShiftPxNow;
+  const calX = calX0 - shift;
+  const tasksX = calX + cfg.panelW + cfg.tasksGapPx + (1 - st.tasksP) * cfg.panelW * cfg.tasksTravelRatio;
+  const panelBot = cfg.panelY + cfg.panelH;
+  let s = "";
+  s += `<svg viewBox="0 0 ${cfg.stageW} ${cfg.stageH}" xmlns="http://www.w3.org/2000/svg" font-family="${cfg.fontFamily}">`;
+  s += `<rect x="0" y="0" width="${cfg.stageW}" height="${cfg.stageH}" fill="${P.bg}"/>`;
+  s += `<g opacity="${st.gridP}">`;
+  s += `<line x1="${cfg.timelineMarginPx}" y1="${cfg.timelineY}" x2="${cfg.stageW - cfg.timelineMarginPx}" y2="${cfg.timelineY}" stroke="${P.ink}" stroke-width="${cfg.timelineStrokePx}"/>`;
+  for (let k = 0; k < cfg.timelineTicks; k++){
+    const tx = cfg.timelineMarginPx + (cfg.stageW - 2 * cfg.timelineMarginPx) * (k / (cfg.timelineTicks - 1));
+    s += `<line x1="${tx}" y1="${cfg.timelineY}" x2="${tx}" y2="${cfg.timelineY + cfg.tickLenPx}" stroke="${P.ink}" stroke-width="${cfg.tickStrokePx}"/>`;
+  }
+  s += `</g>`;
+  const cE = cellCenter(cfg, cfg.ringEarlyIdx, shift), cL = cellCenter(cfg, cfg.ringLateIdx, shift);
+  const dropLine = (c, p) => p <= 0 ? "" :
+    `<line x1="${c.x}" y1="${panelBot}" x2="${c.x}" y2="${panelBot + (cfg.timelineY - panelBot) * p}" stroke="${P.ink}" stroke-width="${cfg.dropStrokePx}" stroke-dasharray="${cfg.dropDash}"/>`;
+  s += dropLine(cE, st.drop1P) + dropLine(cL, st.drop2P);
+  if (st.arcOpacity > 0){
+    s += `<path d="M ${cL.x} ${cfg.timelineY} Q ${cL.x + cfg.arcCtrlDx} ${cfg.timelineY - cfg.arcCtrlDy} ${cfg.figureCx - cfg.arcEndDx} ${cfg.timelineY - cfg.arcEndDy}" fill="none" stroke="${P.ink}" stroke-width="${cfg.dropStrokePx}" stroke-dasharray="${cfg.dropDash}" opacity="${st.arcOpacity}"/>`;
+  }
+  const fx = cfg.figureCx, fs = cfg.figureScale, fy = cfg.timelineY;
+  const starPts = cfg.figureStarPts.map(pt => (fx + pt[0] * fs) + "," + (fy + pt[1] * fs)).join(" ");
+  s += `<g opacity="${st.gridP}" stroke="${P.ink}" fill="none" stroke-width="${cfg.figureStrokePx}">`;
+  s += `<circle cx="${fx}" cy="${fy - (cfg.figureBodyTop + cfg.figureHeadR + cfg.figureHeadGap) * fs}" r="${cfg.figureHeadR * fs}"/>`;
+  s += `<path d="M ${fx - cfg.figureBodyW * fs} ${fy} L ${fx - cfg.figureBodyW * fs} ${fy - cfg.figureShoulderY * fs} Q ${fx - cfg.figureBodyW * fs} ${fy - cfg.figureBodyTop * fs} ${fx} ${fy - cfg.figureBodyTop * fs} Q ${fx + cfg.figureBodyW * fs} ${fy - cfg.figureBodyTop * fs} ${fx + cfg.figureBodyW * fs} ${fy - cfg.figureShoulderY * fs} L ${fx + cfg.figureBodyW * fs} ${fy} M ${fx} ${fy - cfg.figureLegY * fs} L ${fx} ${fy}"/>`;
+  s += `<polygon points="${starPts}" fill="${P.ink}" stroke="none"/>`;
+  s += `</g>`;
+  const labelWithStrike = (txt, cx, strikeP) => {
+    const w = txt.length * cfg.labelFontPx * cfg.labelWidthFrac, y = cfg.timelineY + cfg.labelDyPx;
+    let g = `<text x="${cx}" y="${y}" font-size="${cfg.labelFontPx}" fill="${P.ink}" text-anchor="middle">${txt}</text>`;
+    if (strikeP > 0){
+      const x1 = cx - w / 2;
+      const ex = cx - w / 2 + w * strikeP;
+      g += `<line x1="${x1}" y1="${y - cfg.labelFontPx * cfg.labelStrikeTopFrac}" x2="${ex}" y2="${y + cfg.labelStrikeDyPx}" stroke="${P.strike}" stroke-width="${cfg.labelStrikeStrokePx}"/>`;
+      g += `<line x1="${x1}" y1="${y + cfg.labelStrikeDyPx}" x2="${ex}" y2="${y - cfg.labelFontPx * cfg.labelStrikeTopFrac}" stroke="${P.strike}" stroke-width="${cfg.labelStrikeStrokePx}"/>`;
+    }
+    return g;
+  };
+  const lay = labelLayout(cfg, cE.x, cL.x);
+  s += `<g opacity="${st.labelAO}">${labelWithStrike(cfg.timelineLabelA, lay.ax, st.labelAStrikeP)}</g>`;
+  s += `<g opacity="${st.labelBO}">${labelWithStrike(cfg.timelineLabelB, lay.bx, st.labelBStrikeP)}</g>`;
+  s += `<g opacity="${st.gridP}">`;
+  s += `<rect x="${calX}" y="${cfg.panelY}" width="${cfg.panelW}" height="${cfg.panelH}" rx="${cfg.panelR}" fill="none" stroke="${P.panel}" stroke-width="${cfg.panelStrokePx}"/>`;
+  s += `<rect x="${calX + cfg.panelW / 2 - cfg.tabW / 2}" y="${cfg.panelY - cfg.tabH / 2}" width="${cfg.tabW}" height="${cfg.tabH}" rx="${cfg.tabR}" fill="${P.bg}" stroke="${P.panel}" stroke-width="${cfg.tabStrokePx}"/>`;
+  s += `<text x="${calX + cfg.panelW / 2}" y="${cfg.panelY + cfg.titleBaselineDy}" font-size="${cfg.titleFontPx}" fill="${P.ink}" text-anchor="middle">${cfg.daysTitle}</text>`;
+  for (const cell of st.cells){
+    const c = cellCenter(cfg, cell.i, shift);
+    const isEarly = cell.i === cfg.ringEarlyIdx, isLate = cell.i === cfg.ringLateIdx;
+    const fill = cell.strikeP >= 1 ? P.faint : P.ink;
+    s += `<text x="${c.x}" y="${c.y + cfg.numeralFontPx * cfg.numeralBaselineFrac}" font-size="${cfg.numeralFontPx}" fill="${fill}" text-anchor="middle">${cell.label}</text>`;
+    if (isEarly || isLate){
+      const ro = isEarly ? st.ringEarlyO : st.ringLateO;
+      const cp = isEarly ? st.ringEarlyCrossP : st.ringLateCrossP;
+      if (ro > 0){
+        s += `<circle cx="${c.x}" cy="${c.y}" r="${cfg.ringRPx}" fill="none" stroke="${P.strike}" stroke-width="${cfg.ringStrokePx}" opacity="${ro}"/>`;
+        if (cp > 0){
+          const d = cfg.ringRPx * cfg.ringCrossFrac * cp;
+          s += `<g stroke="${P.strike}" stroke-width="${cfg.ringStrokePx}" opacity="${ro}"><line x1="${c.x - d}" y1="${c.y - d}" x2="${c.x + d}" y2="${c.y + d}"/><line x1="${c.x - d}" y1="${c.y + d}" x2="${c.x + d}" y2="${c.y - d}"/></g>`;
+        }
+      }
+    } else if (cell.strikeP > 0){
+      const x1 = c.x - cellW * cfg.strikeExtentXFrac, y1 = c.y + cellH * cfg.strikeExtentYFrac;
+      const ex = x1 + (c.x + cellW * cfg.strikeExtentXFrac - x1) * cell.strikeP;
+      const ey = y1 + (c.y - cellH * cfg.strikeExtentYFrac - y1) * cell.strikeP;
+      s += `<line x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="${P.strike}" stroke-width="${cfg.strikeStrokePx}"/>`;
+    }
+  }
+  s += `</g>`;
+  if (st.tasksP > 0){
+    s += `<g opacity="${st.tasksP}">`;
+    s += `<rect x="${tasksX}" y="${cfg.panelY}" width="${cfg.panelW}" height="${cfg.panelH}" rx="${cfg.panelR}" fill="none" stroke="${P.panel}" stroke-width="${cfg.panelStrokePx}"/>`;
+    s += `<rect x="${tasksX + cfg.panelW / 2 - cfg.tabW / 2}" y="${cfg.panelY - cfg.tabH / 2}" width="${cfg.tabW}" height="${cfg.tabH}" rx="${cfg.tabR}" fill="${P.bg}" stroke="${P.panel}" stroke-width="${cfg.tabStrokePx}"/>`;
+    s += `<text x="${tasksX + cfg.panelW / 2}" y="${cfg.panelY + cfg.titleBaselineDy}" font-size="${cfg.titleFontPx}" fill="${P.ink}" text-anchor="middle">${cfg.tasksTitle}</text>`;
+    for (let r = 0; r < cfg.tasksRowsTotal; r++){
+      const ro = clamp01(st.tasksRowsFloat - r);
+      if (ro <= 0) continue;
+      const ry = cfg.panelY + cfg.tasksRowFirstDy + r * cfg.tasksRowStepPx;
+      const dash = (st.sweep3P > 0 && cfg.tasksLineStyle === "dashed") ? ` stroke-dasharray="${cfg.tasksDash}"` : "";
+      s += `<g opacity="${ro}"><line x1="${tasksX + cfg.tasksLineInsetL}" y1="${ry}" x2="${tasksX + cfg.panelW - cfg.tasksLineInsetR}" y2="${ry}" stroke="${P.ink}" stroke-width="${cfg.tasksLineStrokePx}"${dash}/><rect x="${tasksX + cfg.panelW - cfg.tasksBoxInsetR}" y="${ry - cfg.tasksBoxSize / 2}" width="${cfg.tasksBoxSize}" height="${cfg.tasksBoxSize}" rx="${cfg.tasksBoxR}" fill="none" stroke="${P.ink}" stroke-width="${cfg.tasksBoxStrokePx}"/></g>`;
+    }
+    s += `</g>`;
+  }
+  s += `</svg>`;
+  return s;
+}
+window.__T243 = { CONFIG, stateAt, renderSVG, validateConfig, schedule, labelLayout, cellCenter };
+if (typeof document !== "undefined" && document.getElementById("stage")){
+  const stage = document.getElementById("stage");
+  const btnPlay = document.getElementById("btnPlay");
+  const btnRestart = document.getElementById("btnRestart");
+  let startStamp = performance.now(), pausedAt = null;
+  function frame(now){
+    const elapsed = pausedAt !== null ? pausedAt : (now - startStamp) % (schedule(CONFIG).durationMs + 800);
+    const tt = Math.min(elapsed, schedule(CONFIG).durationMs);
+    stage.innerHTML = renderSVG(CONFIG, tt);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  btnPlay.addEventListener("click", () => {
+    if (pausedAt === null){ pausedAt = (performance.now() - startStamp) % (schedule(CONFIG).durationMs + 800); btnPlay.textContent = "Play"; }
+    else { startStamp = performance.now() - pausedAt; pausedAt = null; btnPlay.textContent = "Pause"; }
+  });
+  btnRestart.addEventListener("click", () => { startStamp = performance.now(); pausedAt = null; btnPlay.textContent = "Pause"; });
+}
+</script>
+</body>
+</html>

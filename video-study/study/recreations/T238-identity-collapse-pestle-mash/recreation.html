@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T238 — Identity collapse: pestle mash, parameterized</title>
+<style>
+  html,body{margin:0;padding:0;background:#241a10}
+  #stage{width:min(96vw,640px);margin:12px auto}
+  #stage svg{width:100%;height:auto;display:block}
+</style></head><body>
+<div id="stage"></div>
+<script id="t238-config">
+"use strict";
+const CONFIG = {
+  stageW: 640, stageH: 400,
+  bowlCx: 320, bowlCy: 208, bowlRx: 218, bowlRy: 104, bowlWallPx: 14, pasteInsetF: 0.92,
+  pestleRx: 64, pestleRy: 42, pestleRestDx: 196, pestleRestDy: -64,
+  pestleDipPx: 34, pestleLiftPx: 26, pestleHandleLenPx: 74, pestleHandleRxPx: 17, pestleSweepPx: 118,
+  stepMs: 100, pressSteps: 4, pressLossShare: 0.7, readableThresh: 0.5, marksCutF: 0.35,
+  slabBaseScale: 0.55, slabGrowScale: 0.75, labelSwitchF: 0.5,
+  pasteStart: 0.34, fleckPx: 7, sinkPx: 10, deformShrink: 0.55, deformRound: 0.9, rngSeed: 238,
+  cornerBaseF: 0.08, pipRadiusF: 0.09, blendMaxF: 0.75, objStrokePx: 1.5, pestleTiltDeg: -18,
+  boardBandPx: 46, slabStrokePx: 3, labelHaloPx: 4, unionBaseF: 0.30, unionGrowF: 0.70,
+  blobCount: 12, blobBaseF: 0.10, blobSpanF: 0.16, blobExtentF: 0.8, blobOpacityF: 0.35,
+  houseBodyYF: 0.4, houseBodyHF: 0.9, houseRoofOverF: 1.05, houseRoofApexF: 1.15,
+  labelFontPx: 30, toolLabelFontPx: 28, inputLabelDy: 128, toolLabelDy: -146, outputLabelDy: 128,
+  fontFamily: "Verdana, Geneva, sans-serif",
+  inputLabel: "DICE · HOUSES · CUBES", toolLabel: "PESTLE MASH", outputLabel: "GUACAMOLE",
+  tSetupMs: 0, setupDurMs: 1500, strokeCount: 5, strokeDurMs: 900, holdMs: 0,
+  easeStroke: "easeInOut", easeSetup: "linear",
+  palette: {
+    board: "#8a6844", boardDark: "#6f5233", bowl: "#4a4a48", bowlDark: "#33322f",
+    paste: "#79c142", pasteDark: "#5da334", die: "#d8262c", dieEdge: "#8f1218", pip: "#ffffff",
+    house: "#159a8c", houseRoof: "#0d6e64", minidie: "#f2f2f2", minipip: "#222222", cube: "#17b3a6",
+    pestle: "#55534e", pestleDark: "#3c3a36", labelInk: "#ffffff", labelHalo: "#3a2a18"
+  },
+  slabs: [
+    {x: -0.52, y: 0.05, rx: 0.52, ry: 0.78},
+    {x: 0.05, y: -0.28, rx: 0.55, ry: 0.72},
+    {x: 0.55, y: 0.12, rx: 0.50, ry: 0.80}
+  ],
+  objects: [
+    {kind: "die", x: -0.55, y: -0.30, s: 34, rot: -12, pips: 5, cs: 0},
+    {kind: "die", x: 0.10, y: -0.45, s: 36, rot: 8, pips: 4, cs: 0},
+    {kind: "house", x: -0.15, y: -0.05, s: 30, rot: 0, pips: 0, cs: 0},
+    {kind: "minidie", x: 0.45, y: -0.20, s: 18, rot: 20, pips: 3, cs: 0},
+    {kind: "cube", x: -0.70, y: 0.25, s: 26, rot: -8, pips: 0, cs: 0},
+    {kind: "die", x: 0.62, y: 0.30, s: 33, rot: 14, pips: 3, cs: 1},
+    {kind: "house", x: 0.30, y: 0.05, s: 29, rot: -6, pips: 0, cs: 1},
+    {kind: "minidie", x: -0.35, y: 0.42, s: 17, rot: -18, pips: 5, cs: 1},
+    {kind: "die", x: -0.05, y: 0.28, s: 35, rot: 5, pips: 6, cs: 1},
+    {kind: "cube", x: 0.05, y: -0.70, s: 25, rot: 10, pips: 0, cs: 1},
+    {kind: "house", x: -0.62, y: -0.62, s: 28, rot: 12, pips: 0, cs: 2},
+    {kind: "die", x: 0.48, y: -0.58, s: 32, rot: -16, pips: 2, cs: 2},
+    {kind: "minidie", x: 0.72, y: -0.02, s: 18, rot: 7, pips: 4, cs: 2},
+    {kind: "cube", x: -0.28, y: -0.48, s: 24, rot: -4, pips: 0, cs: 2},
+    {kind: "die", x: -0.48, y: 0.58, s: 31, rot: 18, pips: 4, cs: 2},
+    {kind: "house", x: 0.18, y: 0.52, s: 30, rot: -10, pips: 0, cs: 3},
+    {kind: "die", x: 0.68, y: 0.58, s: 34, rot: -7, pips: 5, cs: 3},
+    {kind: "minidie", x: -0.08, y: -0.22, s: 17, rot: 24, pips: 2, cs: 3},
+    {kind: "cube", x: 0.38, y: 0.68, s: 26, rot: 3, pips: 0, cs: 3},
+    {kind: "house", x: -0.72, y: -0.05, s: 30, rot: 9, pips: 0, cs: 3},
+    {kind: "house", x: 0.55, y: -0.38, s: 27, rot: 16, pips: 0, cs: 4},
+    {kind: "minidie", x: -0.18, y: 0.68, s: 18, rot: -22, pips: 6, cs: 4},
+    {kind: "die", x: 0.02, y: 0.02, s: 33, rot: -3, pips: 4, cs: 4},
+    {kind: "minidie", x: 0.80, y: 0.38, s: 16, rot: 11, pips: 3, cs: 4}
+  ]
+};
+</script>
+<script id="t238-logic">
+"use strict";
+const EASE = {
+  linear: p => p,
+  easeInOut: p => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2)
+};
+function clamp01(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); }
+function mulberry32(seed){
+  let a = seed >>> 0;
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function schedule(cfg){
+  const setupEnd = cfg.tSetupMs + cfg.setupDurMs;
+  const stepsPerStroke = cfg.strokeDurMs / cfg.stepMs;
+  const strokeStarts = [], pressPeaks = [];
+  for (let k = 0; k < cfg.strokeCount; k++){
+    strokeStarts.push(setupEnd + k * cfg.strokeDurMs);
+    pressPeaks.push(setupEnd + k * cfg.strokeDurMs + cfg.pressSteps * cfg.stepMs);
+  }
+  const mashEnd = setupEnd + cfg.strokeCount * cfg.strokeDurMs;
+  return {
+    setupEnd, stepsPerStroke, pressFrac: cfg.pressSteps / stepsPerStroke,
+    strokeStarts, pressPeaks, mashEnd,
+    completeAtMs: mashEnd, durationMs: mashEnd + cfg.holdMs
+  };
+}
+function validateConfig(cfg){
+  const errors = [];
+  if (!(cfg.setupDurMs > 0)) errors.push("setupDurMs must be > 0");
+  if (!(cfg.strokeDurMs > 0)) errors.push("strokeDurMs must be > 0");
+  if (!(cfg.stepMs > 0)) errors.push("stepMs must be > 0");
+  if (!(cfg.holdMs >= 0)) errors.push("holdMs must be >= 0");
+  if (cfg.strokeDurMs % cfg.stepMs !== 0) errors.push("strokeDurMs must be divisible by stepMs");
+  const sps = cfg.strokeDurMs / cfg.stepMs;
+  if (!(cfg.pressSteps >= 1 && cfg.pressSteps < sps)) errors.push("pressSteps must be in [1, stepsPerStroke)");
+  if (!Number.isInteger(cfg.strokeCount) || cfg.strokeCount < 1) errors.push("strokeCount must be a positive integer");
+  if (!(cfg.pressLossShare > 0 && cfg.pressLossShare < 1)) errors.push("pressLossShare must be in (0,1)");
+  if (!(cfg.readableThresh > 0 && cfg.readableThresh < 1)) errors.push("readableThresh must be in (0,1)");
+  if (!(cfg.pasteStart >= 0 && cfg.pasteStart < 1)) errors.push("pasteStart must be in [0,1)");
+  if (!Array.isArray(cfg.objects) || cfg.objects.length === 0) errors.push("objects must be a nonempty array");
+  (cfg.objects || []).forEach((o, i) => {
+    if (!(o.cs >= 0 && o.cs < cfg.strokeCount)) errors.push("objects[" + i + "].cs out of range");
+    if (Math.abs(o.x) > 0.92 || Math.abs(o.y) > 0.92) errors.push("objects[" + i + "] outside bowl");
+  });
+  return { ok: errors.length === 0, errors };
+}
+function lossAtStep(cfg, step){
+  const sps = cfg.strokeDurMs / cfg.stepMs;
+  if (step <= cfg.pressSteps) return cfg.pressLossShare * step / cfg.pressSteps;
+  return cfg.pressLossShare + (1 - cfg.pressLossShare) * (step - cfg.pressSteps) / (sps - cfg.pressSteps);
+}
+function pressRawAtStep(cfg, step){
+  const sps = cfg.strokeDurMs / cfg.stepMs;
+  if (step <= cfg.pressSteps) return step / cfg.pressSteps;
+  return (sps - step) / (sps - cfg.pressSteps);
+}
+function stateAt(cfg, tIn){
+  const sch = schedule(cfg);
+  const t = Math.max(0, Math.min(sch.durationMs, tIn));
+  const easeStrokeFn = EASE[cfg.easeStroke] || EASE.linear;
+  const easeSetupFn = EASE[cfg.easeSetup] || EASE.linear;
+  let strokeIdx = -1, step = 0, pressRaw = 0, q = t;
+  let pestleX, pestleY, liftP = 0;
+  const raisedX = cfg.bowlCx - cfg.pestleSweepPx;
+  const raisedY = cfg.bowlCy - cfg.pestleLiftPx;
+  if (t < sch.setupEnd){
+    const liftRaw = clamp01((t - (cfg.tSetupMs + cfg.setupDurMs / 2)) / (cfg.setupDurMs / 2));
+    liftP = easeSetupFn(liftRaw);
+    pestleX = (cfg.bowlCx + cfg.pestleRestDx) + (raisedX - (cfg.bowlCx + cfg.pestleRestDx)) * liftP;
+    pestleY = (cfg.bowlCy + cfg.pestleRestDy) + (raisedY - (cfg.bowlCy + cfg.pestleRestDy)) * liftP;
+  } else if (t < sch.mashEnd){
+    strokeIdx = Math.floor((t - sch.setupEnd) / cfg.strokeDurMs);
+    q = sch.setupEnd + Math.floor((t - sch.setupEnd) / cfg.stepMs) * cfg.stepMs;
+    step = Math.round((q - sch.strokeStarts[strokeIdx]) / cfg.stepMs);
+    pressRaw = pressRawAtStep(cfg, step);
+    const sweepFrac = cfg.strokeCount > 1 ? strokeIdx / (cfg.strokeCount - 1) : 0.5;
+    const prevFrac = cfg.strokeCount > 1 ? Math.max(0, strokeIdx - 1) / (cfg.strokeCount - 1) : 0.5;
+    const xFrom = strokeIdx === 0 ? raisedX : cfg.bowlCx - cfg.pestleSweepPx + 2 * cfg.pestleSweepPx * prevFrac;
+    const xTo = cfg.bowlCx - cfg.pestleSweepPx + 2 * cfg.pestleSweepPx * sweepFrac;
+    const travelE = easeStrokeFn(step / sch.stepsPerStroke);
+    pestleX = xFrom + (xTo - xFrom) * travelE;
+    pestleY = raisedY + cfg.pestleDipPx * easeStrokeFn(pressRaw);
+    liftP = 1;
+  } else {
+    strokeIdx = cfg.strokeCount; step = sch.stepsPerStroke; pressRaw = 1; q = sch.mashEnd;
+    pestleX = cfg.bowlCx;
+    pestleY = raisedY + cfg.pestleDipPx * easeStrokeFn(1);
+    liftP = 1;
+  }
+  const pressE = easeStrokeFn(pressRaw);
+  const objects = cfg.objects.map(o => {
+    let integrity;
+    if (strokeIdx < 0) integrity = 1;
+    else if (t >= sch.mashEnd) integrity = 0;
+    else if (o.cs < strokeIdx) integrity = 0;
+    else if (o.cs > strokeIdx) integrity = 1;
+    else integrity = 1 - lossAtStep(cfg, step);
+    const marksO = clamp01((integrity - cfg.marksCutF) / (1 - cfg.marksCutF));
+    return {
+      kind: o.kind, cs: o.cs, x: o.x, y: o.y, s: o.s, rot: o.rot, pips: o.pips,
+      integrity, marksO,
+      scaleF: integrity <= 0 ? cfg.fleckPx / o.s : cfg.deformShrink + (1 - cfg.deformShrink) * integrity,
+      cornerF: cfg.cornerBaseF + (cfg.deformRound - cfg.cornerBaseF) * (1 - integrity),
+      blendF: 1 - integrity,
+      sinkPx: cfg.sinkPx * (1 - integrity),
+      readable: integrity > cfg.readableThresh ? 1 : 0,
+      fleck: integrity <= 0 ? 1 : 0
+    };
+  });
+  const collapsedFraction = objects.reduce((acc, o) => acc + (1 - o.integrity), 0) / objects.length;
+  const pasteP = cfg.pasteStart + (1 - cfg.pasteStart) * collapsedFraction;
+  const readableCount = objects.reduce((acc, o) => acc + o.readable, 0);
+  const fleckCount = objects.reduce((acc, o) => acc + o.fleck, 0);
+  const kindCounts = {}, cohortCounts = {};
+  objects.forEach(o => {
+    kindCounts[o.kind] = (kindCounts[o.kind] || 0) + 1;
+    cohortCounts[o.cs] = (cohortCounts[o.cs] || 0) + 1;
+  });
+  const inputO = collapsedFraction < cfg.labelSwitchF ? 1 : 0;
+  return {
+    t, q, strokeIdx, step, pressRaw, pressE, liftP,
+    pestle: { x: pestleX, y: pestleY },
+    objects, collapsedFraction, pasteP,
+    slabScale: cfg.slabBaseScale + cfg.slabGrowScale * pasteP,
+    unionOpacity: pasteP, slabBoundary: 1 - pasteP,
+    readableCount, fleckCount, kindCounts, cohortCounts,
+    inputO, outputO: 1 - inputO,
+    completeAtMs: sch.completeAtMs, durationMs: sch.durationMs
+  };
+}
+function blobs(cfg){
+  const rnd = mulberry32(cfg.rngSeed);
+  const out = [];
+  for (let i = 0; i < cfg.blobCount; i++) out.push({ bx: rnd() * 2 - 1, by: rnd() * 2 - 1, br: cfg.blobBaseF + rnd() * cfg.blobSpanF });
+  return out;
+}
+window.__T238 = { CONFIG, schedule, validateConfig, stateAt, blobs, EASE };
+</script>
+<script id="t238-render">
+"use strict";
+function hexMix(a, b, f){
+  const pa = [1, 3, 5].map(i => parseInt(a.substr(i, 2), 16));
+  const pb = [1, 3, 5].map(i => parseInt(b.substr(i, 2), 16));
+  return "#" + pa.map((v, i) => Math.round(v + (pb[i] - v) * f).toString(16).padStart(2, "0")).join("");
+}
+const PIP_LAYOUTS = {
+  1: [[0, 0]], 2: [[-0.25, -0.25], [0.25, 0.25]], 3: [[-0.25, -0.25], [0, 0], [0.25, 0.25]],
+  4: [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]],
+  5: [[-0.25, -0.25], [0.25, -0.25], [0, 0], [-0.25, 0.25], [0.25, 0.25]],
+  6: [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0], [0.25, 0], [-0.25, 0.25], [0.25, 0.25]]
+};
+function kindFill(cfg, kind){
+  const P = cfg.palette;
+  return kind === "die" ? P.die : kind === "house" ? P.house : kind === "minidie" ? P.minidie : P.cube;
+}
+function render(cfg, t){
+  const st = stateAt(cfg, t);
+  const P = cfg.palette;
+  const innerRx = cfg.bowlRx * cfg.pasteInsetF, innerRy = cfg.bowlRy * cfg.pasteInsetF;
+  let s = "";
+  s += '<svg viewBox="0 0 ' + cfg.stageW + " " + cfg.stageH + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="T238 pestle mash recreation">';
+  s += '<rect x="0" y="0" width="' + cfg.stageW + '" height="' + cfg.stageH + '" fill="' + P.board + '"/>';
+  s += '<rect x="0" y="' + (cfg.stageH - cfg.boardBandPx) + '" width="' + cfg.stageW + '" height="' + cfg.boardBandPx + '" fill="' + P.boardDark + '"/>';
+  s += '<ellipse cx="' + cfg.bowlCx + '" cy="' + cfg.bowlCy + '" rx="' + cfg.bowlRx + '" ry="' + cfg.bowlRy + '" fill="' + P.bowl + '"/>';
+  s += '<ellipse cx="' + cfg.bowlCx + '" cy="' + cfg.bowlCy + '" rx="' + innerRx + '" ry="' + innerRy + '" fill="' + P.bowlDark + '"/>';
+  cfg.slabs.forEach(sl => {
+    s += '<ellipse cx="' + (cfg.bowlCx + sl.x * innerRx) + '" cy="' + (cfg.bowlCy + sl.y * innerRy) +
+      '" rx="' + (sl.rx * innerRx * st.slabScale) + '" ry="' + (sl.ry * innerRy * st.slabScale) +
+      '" fill="' + P.paste + '" stroke="' + P.pasteDark + '" stroke-width="3" stroke-opacity="' + st.slabBoundary.toFixed(3) + '"/>';
+  });
+  s += '<ellipse cx="' + cfg.bowlCx + '" cy="' + cfg.bowlCy + '" rx="' + (innerRx * (cfg.unionBaseF + cfg.unionGrowF * st.pasteP)) +
+    '" ry="' + (innerRy * (cfg.unionBaseF + cfg.unionGrowF * st.pasteP)) + '" fill="' + P.paste + '" opacity="' + st.unionOpacity.toFixed(3) + '"/>';
+  blobs(cfg).forEach(b => {
+    s += '<ellipse cx="' + (cfg.bowlCx + b.bx * innerRx * cfg.blobExtentF) + '" cy="' + (cfg.bowlCy + b.by * innerRy * cfg.blobExtentF) +
+      '" rx="' + (b.br * innerRx) + '" ry="' + (b.br * innerRy) + '" fill="' + P.pasteDark + '" opacity="' + (cfg.blobOpacityF * st.pasteP).toFixed(3) + '"/>';
+  });
+  st.objects.forEach(o => {
+    const cx = cfg.bowlCx + o.x * innerRx, cy = cfg.bowlCy + o.y * innerRy + o.sinkPx;
+    const fill = hexMix(kindFill(cfg, o.kind), P.paste, o.blendF * cfg.blendMaxF);
+    if (o.fleck){
+      s += '<rect x="' + (cx - cfg.fleckPx / 2) + '" y="' + (cy - cfg.fleckPx / 2) + '" width="' + cfg.fleckPx + '" height="' + cfg.fleckPx +
+        '" rx="2" fill="' + kindFill(cfg, o.kind) + '" transform="rotate(' + o.rot + " " + cx + " " + cy + ')"/>';
+      return;
+    }
+    const half = o.s / 2;
+    s += '<g transform="translate(' + cx + " " + cy + ") rotate(" + (o.rot * o.integrity) + ") scale(" + o.scaleF.toFixed(4) + ')">';
+    if (o.kind === "house"){
+      s += '<rect x="' + (-half) + '" y="' + (-half * cfg.houseBodyYF) + '" width="' + o.s + '" height="' + (o.s * cfg.houseBodyHF) +
+        '" rx="' + (o.s * o.cornerF * 0.5) + '" fill="' + fill + '"/>';
+      s += '<polygon points="' + (-half * cfg.houseRoofOverF) + "," + (-half * cfg.houseBodyYF) + " 0," + (-half * cfg.houseRoofApexF) + " " + (half * cfg.houseRoofOverF) + "," + (-half * cfg.houseBodyYF) +
+        '" fill="' + hexMix(P.houseRoof, P.paste, o.blendF * cfg.blendMaxF) + '" opacity="' + o.marksO.toFixed(3) + '"/>';
+    } else {
+      s += '<rect x="' + (-half) + '" y="' + (-half) + '" width="' + o.s + '" height="' + o.s +
+        '" rx="' + (o.s * o.cornerF * 0.5) + '" fill="' + fill + '" stroke="' + (o.kind === "die" ? P.dieEdge : P.bowlDark) + '" stroke-width="' + cfg.objStrokePx + '"/>';
+      (PIP_LAYOUTS[o.pips] || []).forEach(pt => {
+        s += '<circle cx="' + (pt[0] * o.s) + '" cy="' + (pt[1] * o.s) + '" r="' + (o.s * cfg.pipRadiusF) +
+          '" fill="' + (o.kind === "minidie" ? P.minipip : P.pip) + '" opacity="' + o.marksO.toFixed(3) + '"/>';
+      });
+    }
+    s += "</g>";
+  });
+  s += '<ellipse cx="' + cfg.bowlCx + '" cy="' + cfg.bowlCy + '" rx="' + cfg.bowlRx + '" ry="' + cfg.bowlRy +
+    '" fill="none" stroke="' + P.bowl + '" stroke-width="' + cfg.bowlWallPx + '"/>';
+  s += '<g transform="translate(' + st.pestle.x.toFixed(1) + " " + st.pestle.y.toFixed(1) + ') rotate(" + cfg.pestleTiltDeg + ")">';
+  s += '<rect x="' + (-cfg.pestleHandleRxPx) + '" y="' + (-cfg.pestleHandleLenPx - cfg.pestleRy) + '" width="' + (2 * cfg.pestleHandleRxPx) +
+    '" height="' + cfg.pestleHandleLenPx + '" rx="' + cfg.pestleHandleRxPx + '" fill="' + P.pestleDark + '"/>';
+  s += '<ellipse cx="0" cy="0" rx="' + cfg.pestleRx + '" ry="' + cfg.pestleRy + '" fill="' + P.pestle + '"/>';
+  s += "</g>";
+  const labelAttrs = ' text-anchor="middle" font-family="' + cfg.fontFamily + '" fill="' + P.labelInk +
+    '" stroke="' + P.labelHalo + '" stroke-width="' + cfg.labelHaloPx + ' paint-order="stroke"';
+  s += '<text x="' + cfg.bowlCx + '" y="' + (cfg.bowlCy + cfg.toolLabelDy) + '" font-size="' + cfg.toolLabelFontPx + '"' + labelAttrs + ">" + cfg.toolLabel + "</text>";
+  s += '<text x="' + cfg.bowlCx + '" y="' + (cfg.bowlCy + cfg.inputLabelDy) + '" font-size="' + cfg.labelFontPx + '" opacity="' + st.inputO + '"' + labelAttrs + ">" + cfg.inputLabel + "</text>";
+  s += '<text x="' + cfg.bowlCx + '" y="' + (cfg.bowlCy + cfg.outputLabelDy) + '" font-size="' + cfg.labelFontPx + '" opacity="' + st.outputO + '"' + labelAttrs + ">" + cfg.outputLabel + "</text>";
+  s += "</svg>";
+  return s;
+}
+window.__T238.render = render;
+const stageEl = document.getElementById("stage");
+let startTs = null;
+function frame(ts){
+  if (startTs === null) startTs = ts;
+  const el = Math.min(schedule(CONFIG).durationMs, ts - startTs);
+  stageEl.innerHTML = render(CONFIG, el);
+  if (el < schedule(CONFIG).durationMs) requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body></html>

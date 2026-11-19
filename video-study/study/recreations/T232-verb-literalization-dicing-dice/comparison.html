@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T232 — Comparison: ORIGINAL vs RECREATION</title>
+<style>
+  body{margin:0;font-family:Georgia,'Times New Roman',serif;background:#17110b;color:#f2ede2;}
+  .wrap{display:flex;gap:12px;padding:12px;box-sizing:border-box;}
+  .side{flex:1;min-width:0;}
+  .side h2{font-size:13px;margin:0 0 8px;}
+  video{width:100%;display:block;background:#000;}
+  iframe{width:100%;aspect-ratio:640/400;border:0;display:block;background:#17110b;}
+  .controls{position:sticky;bottom:0;display:flex;gap:8px;padding:10px 12px;background:#241a10;}
+  .controls button{font:14px Georgia,serif;padding:10px 16px;border:1px solid #8a6844;background:#17110b;color:#f2ede2;border-radius:6px;cursor:pointer;}
+  @media (max-width:560px){ .wrap{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="side">
+    <h2>ORIGINAL — PES Fresh Guacamole @ 29–36 s</h2>
+    <video id="orig" src="segment.mp4" playsinline preload="auto"></video>
+  </div>
+  <div class="side">
+    <h2>RECREATION — T232 verb literalization: dicing produces dice, parameterized</h2>
+    <iframe id="rec" src="recreation.html" title="T232 recreation"></iframe>
+  </div>
+</div>
+<div class="controls">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnRestart" type="button">Restart</button>
+</div>
+<script id="t232-comparison">
+"use strict";
+const HANDLE_OFFSET_S = 0.5;
+const BUILD_DURATION_MS = 7400;
+const video = document.getElementById("orig");
+const rec = document.getElementById("rec");
+let playing = false;
+function buildMs(){
+  const ms = (video.currentTime - HANDLE_OFFSET_S) * 1000;
+  return Math.max(0, Math.min(BUILD_DURATION_MS, ms));
+}
+function sync(){
+  const w = rec.contentWindow;
+  if (w && w.__T232) w.__T232.render(w.__T232.CONFIG, buildMs());
+}
+video.addEventListener("timeupdate", sync);
+video.addEventListener("seeked", sync);
+rec.addEventListener("load", sync);
+document.getElementById("btnPlay").addEventListener("click", function(){
+  if (playing){ video.pause(); playing = false; this.textContent = "Play"; }
+  else { video.play(); playing = true; this.textContent = "Pause"; }
+});
+document.getElementById("btnRestart").addEventListener("click", function(){
+  video.currentTime = 0; sync();
+});
+setInterval(sync, 100);
+</script>
+</body>
+</html>

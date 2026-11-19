@@ -1,0 +1,9 @@
+T241 attempt 1 clears the readability floor on the supplied proxy evidence. The formula has a clear size and contrast advantage, while the expansion and callout have little margin at phone size.
+
+- **Formula and hierarchy.** The Wave 39 build record’s A6 fit receipt reports 23 px of formula ink and approximately 11 px for the expansion at a 360 px stage, a height ratio of 23 ÷ 11 ≈ 2.09. In `recreation.html`, `CONFIG.palette` and `render()` put the white formula on black, with the array in `#9a9a9a` and the expansion in `#8a8a8a`. The expansion also occupies its own band below the rule. Those choices give the main claim priority over the supporting notation.
+- **Supporting text.** The A6 receipt reports the expansion and callout at the approximately 11 px floor, with zero fit hits. That floor is adequate on the proxy evidence for the expansion’s supporting role, given the specimen’s below-floor expansion recorded in digest gap B-a. The callout has an additional crowding risk. In `render()` it shares the magnifier’s right edge with the white circle outline. At the first callout baseline (`y=398`), the circle’s right edge is about `x=476` in SVG coordinates, while the label starts at `x=404`. A 360 px hold-frame check should confirm whether the outline crosses lettering. If it does, give the callout a black backing or interrupt the outline behind the text.
+
+**Limits.** The run-specific fed-review instruction governs over the general disk-read instruction. The fit evidence uses a PIL/DejaVu Serif proxy, while the SVG requests Georgia with fallbacks. Actual glyph fit, legibility, and callout clearance during the hold remain pixel-unverified. The score applies to the build identified in the packet by SHA-256 `2c4b4e15e25a06994e9c7208a387e13e536c5f30ccc9572ccd6b93e1190b5aca`.
+
+SCORE: 84  
+BODY-WRITE: None (read-only run). This return supplies the readability finding for the consumer to file verbatim in `codex/lens-readability.md`.

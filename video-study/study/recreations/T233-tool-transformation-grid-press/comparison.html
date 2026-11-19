@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T233 comparison — grid press</title>
+<style>
+  html,body{margin:0;padding:0;background:#241a10;font-family:Verdana,Geneva,sans-serif;color:#fff}
+  #wrap{display:flex;gap:10px;width:min(98vw,1100px);margin:10px auto;align-items:flex-start}
+  .side{flex:1;min-width:0}
+  .side h2{font-size:15px;margin:4px 0 8px;text-align:center}
+  video{width:100%;height:auto;display:block;background:#000}
+  #rec{width:100%}
+  #rec svg{width:100%;height:auto;display:block}
+  #ctl{width:min(96vw,640px);margin:8px auto 16px;display:flex;gap:8px;justify-content:center}
+  button{font-size:16px;padding:10px 18px;border-radius:8px;border:2px solid #b08d5f;background:#3a2a18;color:#fff;cursor:pointer;min-height:44px}
+  @media (max-width:560px){ #wrap{flex-direction:column} .side{width:100%} }
+</style></head><body>
+<div id="wrap">
+  <div class="side"><h2>ORIGINAL — PES "Fresh Guacamole" @ 39–46 s</h2><video id="vid" src="segment.mp4" playsinline preload="auto"></video></div>
+  <div class="side"><h2>RECREATION — T233 Tool transformation: grid press, parameterized</h2><div id="rec"></div></div>
+</div>
+<div id="ctl"><button id="playBtn" type="button">Play</button><button id="restartBtn" type="button">Restart</button></div>
+<script>
+"use strict";
+// durationMs + render are DERIVED from recreation.html's own CONFIG at runtime (never a hardcoded cap).
+let T233 = null, durationMs = 7000;
+fetch("recreation.html").then(r => r.text()).then(txt => {
+  const m = txt.match(/<script>([\s\S]*?)<\/script>/);
+  // The recreation script touches DOM at its tail; evaluate only up to its export line.
+  const cut = m[1].split("const stageEl")[0];
+  const f2 = new Function(cut.replace("window.__T233", "window.__T233CMP") + "; return window.__T233CMP;");
+  T233 = f2();
+  durationMs = T233.schedule(T233.CONFIG).durationMs;
+  document.getElementById("rec").innerHTML = T233.render(T233.CONFIG, 0);
+});
+const vid = document.getElementById("vid");
+const recEl = document.getElementById("rec");
+let startTs = null, playing = false;
+function buildMsAt(wallMs){ return Math.max(0, Math.min(durationMs, wallMs - 1500)); }
+function frame(ts){
+  if (!playing) return;
+  if (startTs === null){ startTs = ts; }
+  const wall = ts - startTs;
+  if (T233) recEl.innerHTML = T233.render(T233.CONFIG, buildMsAt(wall));
+  // video is 8.0 s; after it ends it holds its last frame while the shared clock completes the build's tail (build 6500->7000).
+  if (wall > 8500){ playing = false; document.getElementById("playBtn").textContent = "Play"; return; }
+  requestAnimationFrame(frame);
+}
+document.getElementById("playBtn").addEventListener("click", function(){
+  if (playing){ playing = false; vid.pause(); this.textContent = "Play"; return; }
+  playing = true; this.textContent = "Pause";
+  if (startTs === null || vid.ended){ vid.currentTime = 0; }
+  vid.play(); requestAnimationFrame(frame);
+});
+document.getElementById("restartBtn").addEventListener("click", function(){
+  startTs = null; playing = true; vid.currentTime = 0; vid.play();
+  document.getElementById("playBtn").textContent = "Pause"; requestAnimationFrame(frame);
+});
+</script></body></html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T23 — Comic chapter-map motif · parameterized recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#20201c}
+  #stage{position:relative;width:100%;max-width:960px;margin:0 auto;overflow:hidden;
+         font-family:"Arial Narrow",Arial,Helvetica,sans-serif;user-select:none}
+  #zoomwrap{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
+  #header{white-space:nowrap;overflow:hidden;font-weight:700;letter-spacing:.04em}
+  #grid{display:grid}
+  .panel{position:relative;overflow:hidden}
+  .tab{position:absolute;top:0;left:0;font-weight:900;letter-spacing:.02em;
+       white-space:nowrap;overflow:hidden;z-index:3;line-height:1.25}
+  .art{position:absolute;inset:0}
+  .art svg{display:block;width:100%;height:100%}
+  .ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+         font-weight:900;opacity:.16}
+</style>
+</head>
+<body>
+<div id="stage"><div id="zoomwrap"><div id="header"></div><div id="grid"></div></div></div>
+<script>
+"use strict";
+/* ================= CONFIG — every variable of the technique lives here.
+   Specimen values are the defaults; URL parameters override them. ====== */
+const CONFIG = {
+  headerText: "ADITAZZZ — A COMIC OF EVERYTHING WE MADE — ISSUE #1",
+  panels: [
+    { n: "01", title: "THE TERMINAL",     art: "terminal" },
+    { n: "02", title: "THE WALL",         art: "tiles"    },
+    { n: "03", title: "SHIP IT",          art: "ship"     },
+    { n: "04", title: "THE COMMENTS",     art: "comments" },
+    { n: "05", title: "IN THE WALLS",     art: "walls"    },
+    { n: "06", title: "THE SWARM",        art: "swarm"    },
+    { n: "07", title: "THE DAILY STANDUP",art: "paper"    },
+    { n: "08", title: "THE KEYNOTE",      art: "keynote"  },
+    { n: "09", title: "THE SEERESS",      art: "seeress"  },
+    { n: "10", title: "I KNEW IT",        art: "slam"     },
+    { n: "11", title: "PLEASE HOLD",      art: "tower"    },
+    { n: "12", title: "USAGE LIMIT",      art: "receipt"  }
+  ],
+  /* Appearance N fills panels up to `filled`; the camera then dives into
+     panel index `dive` (0-based) — the chapter that is about to play. */
+  appearances: [
+    { filled: 4,  dive: 4  },
+    { filled: 8,  dive: 8  },
+    { filled: 12, dive: 11 }
+  ],
+  dwellMs: 1500,        /* grid hold after the flash cut-in */
+  diveMs: 650,          /* zoom-dive into the dive panel */
+  holdZoomMs: 350,      /* hold at full zoom before the hard cut out */
+  loopPauseMs: 400,     /* dark beat between appearances */
+  diveScale: 3.1,       /* zoom factor of the dive */
+  colsWide: 4,          /* grid columns at/above the breakpoint */
+  colsNarrow: 3,        /* grid columns below it (phone readability) */
+  narrowBreakpointPx: 520,
+  panelAspect: 1.55,    /* panel width / height */
+  gapPx: 10,
+  borderPx: 4,
+  palette: {
+    paper: "#e9e5d6",   /* cream comic page */
+    ink:   "#141414",   /* borders, tab text */
+    tab:   "#ffd21f",   /* yellow chapter tab */
+    tabDim:"#b9b091",   /* unfilled panel tab */
+    empty: "#d9d3bf",   /* unfilled panel face */
+    accent:"#e2483d",
+    dark:  "#20201c"    /* stage surround / loop-pause beat */
+  },
+  fontFamily: "\"Arial Narrow\", Arial, Helvetica, sans-serif",
+  labelFontPx: 15,      /* tab label size at 960 px stage, scaled by stage width */
+  minLabelFontPx: 9     /* floor of the measured label fit — never clip instead */
+};
+
+/* ================= pure helpers (also exercised by the node swap test) == */
+function resolveConfig(search) {
+  const cfg = JSON.parse(JSON.stringify(CONFIG));
+  if (!search) return cfg;
+  const q = new URLSearchParams(search);
+  if (q.get("panels")) {
+    q.get("panels").split("|").forEach(function (t, i) {
+      if (cfg.panels[i] && t.trim()) cfg.panels[i].title = t.trim().toUpperCase();
+    });
+  }
+  if (q.get("header")) cfg.headerText = q.get("header");
+  if (q.get("filled")) {
+    const f = parseInt(q.get("filled"), 10);
+    if (!isNaN(f)) cfg.appearances = [{ filled: Math.max(0, Math.min(cfg.panels.length, f)),
+                                        dive: Math.min(cfg.panels.length - 1, f) }];
+  }
+  if (q.get("dwellMs")) { const v = parseInt(q.get("dwellMs"), 10); if (!isNaN(v) && v >= 100) cfg.dwellMs = v; }
+  if (q.get("diveMs"))  { const v = parseInt(q.get("diveMs"), 10);  if (!isNaN(v) && v >= 0)   cfg.diveMs = v; }
+  ["tab", "paper", "ink", "empty", "accent"].forEach(function (k) {
+    if (q.get(k)) cfg.palette[k] = q.get(k);
+  });
+  return cfg;
+}
+function panelState(cfg, appearanceIdx, panelIdx) {
+  const a = cfg.appearances[appearanceIdx % cfg.appearances.length];
+  return { filled: panelIdx < a.filled, isDive: panelIdx === a.dive, filledCount: a.filled };
+}
+function buildTimeline(cfg) {
+  const steps = [];
+  cfg.appearances.forEach(function (a, i) {
+    steps.push({ phase: "dwell", appearance: i, dur: cfg.dwellMs });
+    steps.push({ phase: "dive",  appearance: i, dur: cfg.diveMs, dive: a.dive });
+    steps.push({ phase: "hold",  appearance: i, dur: cfg.holdZoomMs });
+    steps.push({ phase: "pause", appearance: i, dur: cfg.loopPauseMs });
+  });
+  return { steps: steps, totalMs: steps.reduce(function (s, x) { return s + x.dur; }, 0) };
+}
+/* Measured-fit approximation for the tab label: condensed capitals run
+   ≈0.52 em per glyph. The DOM pass refines this with real measurement. */
+function labelFitPx(text, availPx, basePx, minPx) {
+  let px = basePx;
+  const est = function (p) { return text.length * 0.52 * p + 14; };
+  while (px > minPx && est(px) > availPx) px -= 0.5;
+  return { px: px, fits: est(px) <= availPx };
+}
+/* Code-drawn panel miniatures: simple shapes + typography only.
+   No specimen imagery, no traced frames — generic scene glyphs per kind. */
+function panelArtSVG(panel, palette, filled) {
+  if (!filled) return "";
+  const ink = palette.ink, acc = palette.accent;
+  const kinds = {
+    terminal: '<rect width="160" height="100" fill="#101418"/><rect x="10" y="10" width="86" height="6" fill="#57e389"/><rect x="10" y="24" width="120" height="6" fill="#3f7d55"/><rect x="10" y="38" width="64" height="6" fill="#57e389"/><rect x="10" y="56" width="14" height="10" fill="#57e389"/>',
+    tiles: '<rect width="160" height="100" fill="#1b2030"/>' + (function(){let s="";for(let r=0;r<4;r++)for(let c=0;c<6;c++)s+='<rect x="'+(8+c*25)+'" y="'+(8+r*22)+'" width="20" height="17" fill="'+( (r+c)%3? "#31405e":"#6fb7ff")+'"/>';return s;})(),
+    ship: '<rect width="160" height="100" fill="#12160f"/><path d="M45 88 L45 45 A35 30 0 0 1 115 45 L115 88 Z" fill="#233118" stroke="#7ac74f" stroke-width="2"/>' + (function(){let s="";for(let i=0;i<6;i++)s+='<circle cx="'+(30+i*20)+'" cy="93" r="4" fill="#9fb0c3"/>';return s;})() + '<rect x="58" y="8" width="44" height="12" fill="#7ac74f"/><text x="80" y="18" font-size="9" text-anchor="middle" fill="#101408" font-weight="bold">SHIPPED</text>',
+    comments: '<rect width="160" height="100" fill="#171a21"/><rect x="14" y="12" width="132" height="76" rx="6" fill="#f2f2ee"/><rect x="24" y="24" width="90" height="7" fill="#222"/><rect x="24" y="38" width="112" height="7" fill="#c9a227"/><rect x="24" y="52" width="70" height="7" fill="#555"/><path d="M34 78 c-6-8 6-14 10-6 c4-8 16-2 10 6 l-10 8 z" fill="'+acc+'"/>',
+    walls: '<rect width="160" height="100" fill="#232a26"/><rect x="42" y="24" width="76" height="50" fill="#0d0f0e" stroke="#4a554e" stroke-width="2"/><rect x="52" y="36" width="56" height="6" fill="#e8b23a"/><rect x="52" y="48" width="42" height="6" fill="#e8b23a"/><rect x="70" y="74" width="20" height="8" fill="#4a554e"/>',
+    swarm: '<rect width="160" height="100" fill="#0e1420"/>' + (function(){const pts=[[80,16],[44,44],[116,44],[24,78],[64,78],[96,78],[136,78]];let s="";[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]].forEach(function(e){s+='<line x1="'+pts[e[0]][0]+'" y1="'+pts[e[0]][1]+'" x2="'+pts[e[1]][0]+'" y2="'+pts[e[1]][1]+'" stroke="#5f7fa6" stroke-width="1.5"/>';});pts.forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" fill="#cfe4ff"/>';});return s;})(),
+    paper: '<rect width="160" height="100" fill="#efe9dc"/><rect x="14" y="10" width="132" height="5" fill="'+ink+'"/><text x="16" y="42" font-size="21" font-weight="900" fill="'+ink+'">$0 ×3 = <tspan fill="'+acc+'">$0</tspan></text><rect x="98" y="56" width="48" height="32" fill="#5b2a86"/><circle cx="110" cy="82" r="6" fill="#222"/><circle cx="134" cy="82" r="6" fill="#222"/>',
+    keynote: '<rect width="160" height="100" fill="#191410"/><polygon points="66,8 94,8 118,88 42,88" fill="#e8b23a" opacity="0.85"/><circle cx="80" cy="34" r="7" fill="#14100c"/><rect x="76" y="41" width="8" height="24" fill="#14100c"/><rect x="60" y="48" width="16" height="5" fill="#14100c" transform="rotate(-24 68 50)"/>',
+    seeress: '<rect width="160" height="100" fill="#26232b"/><circle cx="112" cy="42" r="19" fill="#e8ddc8" stroke="'+ink+'" stroke-width="2"/><circle cx="105" cy="40" r="3" fill="'+ink+'"/><circle cx="119" cy="40" r="3" fill="'+ink+'"/><path d="M103 52 q9 6 18 0" stroke="'+ink+'" fill="none" stroke-width="2"/><rect x="30" y="52" width="5" height="26" fill="#e8ddc8"/><rect x="46" y="58" width="5" height="20" fill="#e8ddc8"/><circle cx="32" cy="49" r="3" fill="#ffb84d"/><circle cx="48" cy="55" r="3" fill="#ffb84d"/>',
+    slam: '<rect width="160" height="100" fill="#2b2b2b"/><text x="80" y="62" font-size="24" font-weight="900" text-anchor="middle" fill="#f2f2ee">I KNEW IT!</text><rect x="18" y="14" width="70" height="5" fill="#8a8f98"/><rect x="18" y="25" width="52" height="5" fill="#8a8f98"/>',
+    tower: '<rect width="160" height="100" fill="#2a1440"/><rect x="58" y="10" width="44" height="84" fill="#101018" stroke="#5ee7e0" stroke-width="2"/>' + (function(){let s="";for(let r=0;r<5;r++)for(let c=0;c<3;c++)s+='<rect x="'+(66+c*11)+'" y="'+(18+r*15)+'" width="7" height="9" fill="'+((r*3+c)%2?"#ffe9a3":"#5ee7e0")+'"/>';return s;})() + '<rect x="14" y="52" width="26" height="42" fill="#17122b"/><rect x="120" y="44" width="28" height="50" fill="#17122b"/>',
+    receipt: '<rect width="160" height="100" fill="#3c3c3c"/><polygon points="48,6 118,6 112,94 54,94" fill="#f4f1e8"/><rect x="62" y="46" width="42" height="34" rx="4" fill="#26282e"/><rect x="60" y="16" width="46" height="5" fill="'+ink+'"/><rect x="60" y="27" width="34" height="5" fill="#777"/>'
+  };
+  return '<svg viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true">' +
+         (kinds[panel.art] || kinds.tiles) + "</svg>";
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, resolveConfig: resolveConfig, panelState: panelState,
+                     buildTimeline: buildTimeline, labelFitPx: labelFitPx, panelArtSVG: panelArtSVG };
+}
+
+/* ================= DOM build + sequence engine (browser only) ========= */
+if (typeof document !== "undefined") {
+  const cfg = resolveConfig(window.location.search);
+  const stage = document.getElementById("stage");
+  const zoomwrap = document.getElementById("zoomwrap");
+  const headerEl = document.getElementById("header");
+  const gridEl = document.getElementById("grid");
+  stage.style.background = cfg.palette.dark;
+  stage.style.fontFamily = cfg.fontFamily;
+  let appIdx = 0, timer = null, playing = false, generation = 0;
+
+  function layout() {
+    const w = stage.clientWidth || 360;
+    const cols = w < cfg.narrowBreakpointPx ? cfg.colsNarrow : cfg.colsWide;
+    const rows = Math.ceil(cfg.panels.length / cols);
+    const headerH = Math.max(18, w * 0.034);
+    const gridH = (w - cfg.gapPx * (cols + 1)) / cols / cfg.panelAspect * rows + cfg.gapPx * (rows + 1);
+    stage.style.height = (headerH + gridH + 6) + "px";
+    headerEl.style.height = headerH + "px";
+    headerEl.style.lineHeight = headerH + "px";
+    headerEl.style.fontSize = Math.max(10, w * 0.021) + "px";
+    headerEl.style.background = cfg.palette.paper;
+    headerEl.style.color = cfg.palette.ink;
+    headerEl.style.padding = "0 8px";
+    headerEl.textContent = cfg.headerText;
+    gridEl.style.background = cfg.palette.paper;
+    gridEl.style.gridTemplateColumns = "repeat(" + cols + ", 1fr)";
+    gridEl.style.gap = cfg.gapPx + "px";
+    gridEl.style.padding = cfg.gapPx + "px";
+    return { w: w, cols: cols };
+  }
+  function render() {
+    const lay = layout();
+    gridEl.innerHTML = "";
+    cfg.panels.forEach(function (p, i) {
+      const st = panelState(cfg, appIdx, i);
+      const d = document.createElement("div");
+      d.className = "panel";
+      d.style.aspectRatio = String(cfg.panelAspect);
+      d.style.border = cfg.borderPx + "px solid " + cfg.palette.ink;
+      d.style.background = st.filled ? "#fff" : cfg.palette.empty;
+      const art = document.createElement("div");
+      art.className = "art";
+      art.innerHTML = panelArtSVG(p, cfg.palette, st.filled);
+      d.appendChild(art);
+      if (!st.filled) {
+        const g = document.createElement("div");
+        g.className = "ghost"; g.textContent = p.n;
+        g.style.color = cfg.palette.ink; g.style.fontSize = (lay.w / lay.cols * 0.3) + "px";
+        d.appendChild(g);
+      }
+      const tab = document.createElement("div");
+      tab.className = "tab";
+      tab.textContent = p.n + " · " + p.title;
+      tab.style.background = st.filled ? cfg.palette.tab : cfg.palette.tabDim;
+      tab.style.color = cfg.palette.ink;
+      tab.style.borderRight = "3px solid " + cfg.palette.ink;
+      tab.style.borderBottom = "3px solid " + cfg.palette.ink;
+      tab.style.padding = "1px 6px 1px 5px";
+      tab.style.maxWidth = "96%";
+      const base = cfg.labelFontPx * (lay.w / 960) * (lay.cols === cfg.colsNarrow ? 1.25 : 1);
+      tab.style.fontSize = Math.max(cfg.minLabelFontPx, base) + "px";
+      tab.dataset.fitBase = tab.style.fontSize;
+      d.appendChild(tab);
+      gridEl.appendChild(d);
+    });
+    /* measured label fit: shrink (never clip) until the tab text fits */
+    gridEl.querySelectorAll(".tab").forEach(function (tab) {
+      let px = parseFloat(tab.style.fontSize);
+      while (px > cfg.minLabelFontPx && tab.scrollWidth > tab.clientWidth) {
+        px -= 0.5; tab.style.fontSize = px + "px";
+      }
+    });
+  }
+  function setZoom(panelIdx, scale) {
+    const panels = gridEl.children;
+    if (!panels[panelIdx]) return;
+    const sr = stage.getBoundingClientRect(), pr = panels[panelIdx].getBoundingClientRect();
+    const ox = ((pr.left - sr.left + pr.width / 2) / sr.width) * 100;
+    const oy = ((pr.top - sr.top + pr.height / 2) / sr.height) * 100;
+    zoomwrap.style.transformOrigin = ox + "% " + oy + "%";
+    zoomwrap.style.transition = scale > 1 ? ("transform " + cfg.diveMs + "ms cubic-bezier(.55,0,.85,.4)") : "none";
+    zoomwrap.style.transform = "scale(" + scale + ")";
+  }
+  function step(gen) {
+    if (!playing || gen !== generation) return;
+    const tl = buildTimeline(cfg);
+    let idx = step.idx || 0;
+    const s = tl.steps[idx % tl.steps.length];
+    step.idx = idx + 1;
+    if (s.phase === "dwell") {
+      appIdx = s.appearance; render(); setZoom(0, 1);
+    } else if (s.phase === "dive") {
+      setZoom(s.dive, cfg.diveScale);
+    } else if (s.phase === "pause") {
+      zoomwrap.style.transition = "none"; zoomwrap.style.transform = "scale(1)";
+      zoomwrap.style.opacity = "0";
+    }
+    if (s.phase === "dwell") zoomwrap.style.opacity = "1";
+    timer = setTimeout(function () { step(gen); }, Math.max(30, s.dur));
+  }
+  function play() { if (playing) return; playing = true; generation++; step.idx = 0; step(generation); }
+  function pause() { playing = false; generation++; if (timer) clearTimeout(timer); }
+  function restart() { pause(); appIdx = 0; render(); setZoom(0, 1); play(); }
+  window.addEventListener("resize", function () { render(); });
+  window.addEventListener("message", function (e) {
+    if (!e.data || !e.data.cmd) return;
+    if (e.data.cmd === "play") play();
+    if (e.data.cmd === "pause") pause();
+    if (e.data.cmd === "restart") restart();
+  });
+  render();
+  play();
+}
+</script>
+</body>
+</html>

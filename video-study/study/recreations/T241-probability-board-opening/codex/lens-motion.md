@@ -1,0 +1,11 @@
+**T241 attempt 1 · Motion fidelity · 80/100.** The source implements the sequential type-on, bracket fade, slot fill, full-board hold, and board dissolve. The selected ring fades out with the board, changing the technique’s final image.
+
+- **Opening draw-on.** `CONFIG.timing` stages the reticle, then the magnifier, star figure and callout, then the staggered 4 × 10 array, then the formula. The layers overlap during their entrances. In `render()` → `reticle`, the filled center dot bypasses the stroke reveal and appears immediately. `observe-plan` §2.2 D-a records the staged opening as an intentional departure from the specimen’s already-standing first frame.
+- **Expansion and full-board hold.** `expandStartOf()` spaces successive starts by one line duration plus a gap, and `render()` → `expansion lines` reveals each line by slicing its text to a progressively increasing character count. `derive()` places the slot fill after the final line completes and reserves a full-board hold before the dissolve. The completion record’s CP5 and CP6 support that sequence. `stateAt()` also pulses and dims the reticle during the hold.
+- **Star brackets.** `render()` → `magnifier + figure + brackets + callout` fades the brackets in during the final line’s type-on, as CP4 and CP4b show. The bracket center sits at y=424 (`422 + 2`), while the star glyph’s center sits at y=458.8 (`422 − 92 + 4.6 × (15 + 13)`). Centering the brackets on the transformed glyph would make the fade frame the star.
+- **Array-only ending.** `render()` → `selected ring` multiplies `ringRaw` by `Math.max(S.boardOpacity, 1 - S.dissolveRaw)`. The two terms in `Math.max` are equal, so the ring fades in lockstep with the board and is invisible for the final hold. CP7’s `ringRaw=1` and CP8m/CP8’s state equality leave that SVG opacity untested. The primary cure is to drive ring opacity from `S.ringRaw` with the persistent array and check the emitted ring opacity at dissolve end, mid-hold, and duration end.
+
+**Limits** — Source-level review of the supplied HTML and receipts for the declared hash. Browser playback and the specimen frames remain pixel-unverified in this run.
+
+SCORE: 80  
+BODY-WRITE: none (read-only run). Motion verdict and cure list returned for verbatim filing in `codex/lens-motion.md`.

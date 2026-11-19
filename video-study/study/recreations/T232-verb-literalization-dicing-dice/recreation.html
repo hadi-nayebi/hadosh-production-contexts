@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T232 — Verb literalization: dicing produces dice</title>
+<style>
+  html,body{margin:0;padding:0;background:#17110b;}
+  #stage{display:block;width:100%;height:auto;}
+  .controls{display:flex;gap:8px;padding:8px;background:#17110b;}
+  .controls button{font:14px Georgia,serif;padding:8px 14px;border:1px solid #8a6844;background:#241a10;color:#f2ede2;border-radius:6px;cursor:pointer;}
+</style>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 640 400" role="img" aria-label="Dicing produces dice recreation"></svg>
+<div class="controls">
+  <button id="btnPlay" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+</div>
+
+<script id="t232-config">
+"use strict";
+const CONFIG = {
+  stageW: 640, stageH: 400,
+  boardX: 40, boardY: 96, boardW: 560, boardH: 264, boardRadiusPx: 26,
+  domeCx: 320, domeCy: 302, domeR: 92, stripCount: 3, stripGapPx: 10,
+  sliceDurMs: 1000, sawAmpPx: 7, sawCycles: 3,
+  knifeRestX: 96, knifeRestY: 64, knifeBladeLenPx: 300, knifeBladeHPx: 64,
+  knifeHandleLenPx: 74, knifeHandleHPx: 20, knifeAngleDeg: -4,
+  chopLeadMs: 500, chopTravelPx: 118,
+  settleFrac: 0.12, settleDurMs: 400, holdMs: 500, seed: 23209,
+  productKind: "dice", pipStyle: "dots", scatterYFrac: 0.32,
+  dieBasePx: 37, dieRadiusPx: 6, pipRadiusFrac: 0.11,
+  stackColGapPx: 3, stackRowGapPx: 3, stackLayerDyFrac: 0.62, stackRowPitchFrac: 0.92,
+  pileCenterDyPx: -6, pipOffsetFrac: 0.26, stitchRxFrac: 0.72, stitchYFrac: 0.42,
+  passes: [
+    { tMs: 2500, count: 9,  sizeFactor: 1.00, layout: "stack", scatterRadiusPx: 0 },
+    { tMs: 3500, count: 15, sizeFactor: 1.00, layout: "stack", scatterRadiusPx: 0 },
+    { tMs: 4500, count: 18, sizeFactor: 0.94, layout: "stack", scatterRadiusPx: 0 },
+    { tMs: 5600, count: 56, sizeFactor: 0.60, layout: "pile",  scatterRadiusPx: 128 },
+    { tMs: 6500, count: 84, sizeFactor: 0.38, layout: "pile",  scatterRadiusPx: 168 }
+  ],
+  palette: {
+    ground: "#17110b", board: "#8a6844", boardEdge: "#5d4126", boardGrain: "#77572f",
+    leather: "#f2ede2", stitch: "#b3392f", yarn: "#6e6259",
+    dice: "#ffffff", diceEdge: "#c9c9c9", pip: "#1c1c1c",
+    steel: "#c8ccd2", steelDark: "#9aa0a8", handle: "#4a3220"
+  },
+  easeSaw: "easeInOut", easeChop: "easeIn", easeSettle: "easeInOut"
+};
+</script>
+
+<script id="t232-logic">
+"use strict";
+const EASE = {
+  linear: x => x,
+  easeIn: x => x * x,
+  easeOut: x => 1 - (1 - x) * (1 - x),
+  easeInOut: x => x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2
+};
+function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+function mulberry32(seed){
+  let a = seed >>> 0;
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function derive(cfg){
+  const last = cfg.passes[cfg.passes.length - 1];
+  const completeAtMs = last.tMs + cfg.settleDurMs;
+  return { completeAtMs, durationMs: completeAtMs + cfg.holdMs, maxCount: last.count };
+}
+function validateConfig(cfg){
+  const errors = [];
+  if (!(cfg.sliceDurMs <= cfg.passes[0].tMs - cfg.chopLeadMs)) errors.push("phase order: slicing ends after first chop starts");
+  let minGap = Infinity;
+  for (let i = 0; i < cfg.passes.length; i++){
+    const p = cfg.passes[i];
+    if (!(p.sizeFactor > 0 && p.sizeFactor <= 1)) errors.push("pass " + i + " sizeFactor out of (0,1]");
+    if (i > 0){
+      if (!(p.tMs > cfg.passes[i-1].tMs)) errors.push("phase order: pass " + i + " tMs not increasing");
+      if (!(p.count > cfg.passes[i-1].count)) errors.push("pass " + i + " count not increasing");
+      minGap = Math.min(minGap, p.tMs - cfg.passes[i-1].tMs);
+    }
+  }
+  if (!(cfg.chopLeadMs < minGap)) errors.push("phase order: chopLeadMs not below smallest inter-pass gap");
+  if (!(cfg.dieBasePx > 0)) errors.push("dieBasePx must be positive");
+  return { ok: errors.length === 0, errors };
+}
+/* Per-die static data, generated in index order from the CONFIG seed:
+   stream A: scatter unit coords · stream B: pip faces. */
+function dieData(cfg, idx){
+  const rngA = mulberry32(cfg.seed);
+  let ux = 0, uy = 0;
+  for (let i = 0; i <= idx; i++){ ux = rngA() * 2 - 1; uy = rngA() * 2 - 1; }
+  const rngB = mulberry32(cfg.seed + 777);
+  let face = 1;
+  for (let i = 0; i <= idx; i++){ face = 1 + Math.floor(rngB() * 6); }
+  let addedPass = cfg.passes.length - 1;
+  for (let i = 0; i < cfg.passes.length; i++){ if (idx < cfg.passes[i].count){ addedPass = i; break; } }
+  return { ux, uy, face, addedPass, size: cfg.dieBasePx * cfg.passes[addedPass].sizeFactor };
+}
+function stackPos(cfg, idx, count){
+  const cols = Math.ceil(Math.sqrt(count));
+  const perLayer = cols * 2;
+  const layer = Math.floor(idx / perLayer);
+  const within = idx % perLayer;
+  const col = within % cols, row = Math.floor(within / cols);
+  const cell = cfg.dieBasePx + cfg.stackColGapPx;
+  const x = cfg.domeCx + (col - (cols - 1) / 2) * cell;
+  const y = cfg.domeCy - row * (cfg.dieBasePx * cfg.stackRowPitchFrac) - layer * (cfg.dieBasePx * cfg.stackLayerDyFrac);
+  return { x, y };
+}
+function stateAt(cfg, t){
+  const d = derive(cfg);
+  const tc = Math.max(0, Math.min(t, d.durationMs));
+  /* strips + slicing */
+  const sliceP = clamp01(tc / cfg.sliceDurMs);
+  const stripGapPx = cfg.stripGapPx * EASE[cfg.easeSaw](sliceP);
+  const stripsVisible = tc < cfg.passes[0].tMs;
+  /* knife ownership: saw · chop windows · rest */
+  let knife = { mode: "rest", x: cfg.knifeRestX, y: cfg.knifeRestY, progress: 0 };
+  if (tc < cfg.sliceDurMs){
+    const sawX = Math.sin(cfg.sawCycles * 2 * Math.PI * (tc / cfg.sliceDurMs)) * cfg.sawAmpPx;
+    knife = { mode: "saw", x: cfg.domeCx - cfg.knifeBladeLenPx / 2 + sawX, y: cfg.domeCy - cfg.domeR - 10, progress: sliceP };
+  } else {
+    for (const p of cfg.passes){
+      if (tc >= p.tMs - cfg.chopLeadMs && tc <= p.tMs){
+        const q = clamp01((tc - (p.tMs - cfg.chopLeadMs)) / cfg.chopLeadMs);
+        knife = { mode: "chop", x: cfg.domeCx - cfg.knifeBladeLenPx / 2, y: cfg.knifeRestY + EASE[cfg.easeChop](q) * cfg.chopTravelPx, progress: q };
+        break;
+      }
+    }
+  }
+  /* dice: active pass = latest pass whose tMs has landed */
+  let active = -1;
+  for (let i = 0; i < cfg.passes.length; i++){ if (tc >= cfg.passes[i].tMs) active = i; }
+  const dice = [];
+  if (active >= 0){
+    const pass = cfg.passes[active];
+    const settleP = active === cfg.passes.length - 1 ? clamp01((tc - pass.tMs) / cfg.settleDurMs) : 0;
+    const settleK = cfg.settleFrac * EASE[cfg.easeSettle](settleP);
+    for (let i = 0; i < pass.count; i++){
+      const dd = dieData(cfg, i);
+      let pos;
+      if (pass.layout === "stack"){
+        pos = stackPos(cfg, i, pass.count);
+      } else {
+        pos = { x: cfg.domeCx + dd.ux * pass.scatterRadiusPx, y: cfg.domeCy + cfg.pileCenterDyPx + dd.uy * pass.scatterRadiusPx * cfg.scatterYFrac };
+        pos.x += (cfg.domeCx - pos.x) * settleK;
+        pos.y += (cfg.domeCy + cfg.pileCenterDyPx - pos.y) * settleK;
+      }
+      dice.push({ i, x: pos.x, y: pos.y, size: dd.size, face: dd.face, addedPass: dd.addedPass });
+    }
+  }
+  return {
+    t: tc, durationMs: d.durationMs, completeAtMs: d.completeAtMs,
+    strips: { visible: stripsVisible, gapPx: stripGapPx, count: cfg.stripCount },
+    knife,
+    dice, diceCount: dice.length, activePass: active,
+    productKind: cfg.productKind
+  };
+}
+</script>
+
+<script id="t232-render">
+"use strict";
+const SVGNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("stage");
+function el(name, attrs, parent){
+  const n = document.createElementNS(SVGNS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  (parent || svg).appendChild(n);
+  return n;
+}
+const PIP_LAYOUT = { 1:[[0,0]], 2:[[-1,-1],[1,1]], 3:[[-1,-1],[0,0],[1,1]], 4:[[-1,-1],[1,-1],[-1,1],[1,1]], 5:[[-1,-1],[1,-1],[0,0],[-1,1],[1,1]], 6:[[-1,-1],[1,-1],[-1,0],[1,0],[-1,1],[1,1]] };
+let built = null;
+function buildScene(cfg){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const P = cfg.palette;
+  el("rect", { x:0, y:0, width:cfg.stageW, height:cfg.stageH, fill:P.ground });
+  el("rect", { x:cfg.boardX, y:cfg.boardY, width:cfg.boardW, height:cfg.boardH, rx:cfg.boardRadiusPx, fill:P.board, stroke:P.boardEdge, "stroke-width":6 });
+  for (let i = 0; i < 5; i++){
+    el("line", { x1:cfg.boardX + 30, y1:cfg.boardY + 40 + i * 46, x2:cfg.boardX + cfg.boardW - 30, y2:cfg.boardY + 34 + i * 46, stroke:P.boardGrain, "stroke-width":2, opacity:0.55 });
+  }
+  const stripsG = el("g", {});
+  const stripPaths = [];
+  const n = cfg.stripCount, R = cfg.domeR;
+  for (let k = 0; k < n; k++){
+    const x0 = cfg.domeCx - R + (2 * R * k) / n, x1 = cfg.domeCx - R + (2 * R * (k + 1)) / n;
+    const yTop = cfg.domeCy - Math.sqrt(Math.max(0, R * R - Math.pow((x0 + x1) / 2 - cfg.domeCx, 2)));
+    const g = el("g", {}, stripsG);
+    const path = el("path", { d:"M " + x0 + " " + cfg.domeCy + " L " + x0 + " " + (yTop + 8) + " A " + R + " " + R + " 0 0 1 " + x1 + " " + (yTop + 8) + " L " + x1 + " " + cfg.domeCy + " Z", fill:P.leather, stroke:P.yarn, "stroke-width":2 }, g);
+    el("path", { d:"M " + (x0 + 6) + " " + (cfg.domeCy - R * cfg.stitchYFrac) + " A " + (R * cfg.stitchRxFrac) + " " + (R * cfg.stitchRxFrac) + " 0 0 1 " + (x1 - 6) + " " + (cfg.domeCy - R * cfg.stitchYFrac), fill:"none", stroke:P.stitch, "stroke-width":3, "stroke-dasharray":"5 4" }, g);
+    stripPaths.push(g);
+    void path;
+  }
+  const diceG = el("g", {});
+  const knifeG = el("g", {});
+  const blade = el("path", { d:"M 0 0 L " + cfg.knifeBladeLenPx + " 0 L " + (cfg.knifeBladeLenPx - 26) + " " + cfg.knifeBladeHPx + " L 6 " + cfg.knifeBladeHPx + " Z", fill:P.steel, stroke:P.steelDark, "stroke-width":2 }, knifeG);
+  void blade;
+  el("rect", { x:-cfg.knifeHandleLenPx, y:cfg.knifeBladeHPx / 2 - cfg.knifeHandleHPx / 2, width:cfg.knifeHandleLenPx, height:cfg.knifeHandleHPx, rx:6, fill:P.handle }, knifeG);
+  built = { stripsG, stripPaths, diceG, knifeG };
+}
+function render(cfg, t){
+  if (!built) buildScene(cfg);
+  const s = stateAt(cfg, t);
+  const P = cfg.palette;
+  built.stripsG.style.display = s.strips.visible ? "" : "none";
+  if (s.strips.visible){
+    const n = cfg.stripCount;
+    built.stripPaths.forEach((g, k) => {
+      const dx = (k - (n - 1) / 2) * s.strips.gapPx;
+      g.setAttribute("transform", "translate(" + dx + " 0)");
+    });
+  }
+  while (built.diceG.firstChild) built.diceG.removeChild(built.diceG.firstChild);
+  for (const die of s.dice){
+    const g = el("g", {}, built.diceG);
+    const half = die.size / 2;
+    el("rect", { x:die.x - half, y:die.y - half, width:die.size, height:die.size, rx:cfg.dieRadiusPx, fill:P.dice, stroke:P.diceEdge, "stroke-width":1.5 }, g);
+    const pr = Math.max(1.2, die.size * cfg.pipRadiusFrac);
+    for (const [px, py] of PIP_LAYOUT[die.face]){
+      const cx = die.x + px * die.size * cfg.pipOffsetFrac, cy = die.y + py * die.size * cfg.pipOffsetFrac;
+      if (cfg.pipStyle === "squares"){
+        el("rect", { x:cx - pr, y:cy - pr, width:2 * pr, height:2 * pr, fill:P.pip }, g);
+      } else if (cfg.pipStyle === "diamonds"){
+        el("rect", { x:cx - pr, y:cy - pr, width:2 * pr, height:2 * pr, fill:P.pip, transform:"rotate(45 " + cx + " " + cy + ")" }, g);
+      } else {
+        el("circle", { cx:cx, cy:cy, r:pr, fill:P.pip }, g);
+      }
+    }
+  }
+  built.knifeG.setAttribute("transform", "translate(" + s.knife.x + " " + s.knife.y + ") rotate(" + cfg.knifeAngleDeg + ")");
+  return s;
+}
+let playing = true, startStamp = null, pausedAt = 0;
+function frame(now){
+  if (startStamp === null) startStamp = now;
+  const t = playing ? (now - startStamp + pausedAt) % (derive(CONFIG).durationMs + 400) : pausedAt;
+  render(CONFIG, Math.min(t, derive(CONFIG).durationMs));
+  requestAnimationFrame(frame);
+}
+document.getElementById("btnPlay").addEventListener("click", function(){
+  playing = !playing;
+  this.textContent = playing ? "Pause" : "Play";
+  if (!playing){ pausedAt = Math.min(pausedAt, derive(CONFIG).durationMs); }
+  startStamp = null;
+});
+document.getElementById("btnRestart").addEventListener("click", function(){ pausedAt = 0; startStamp = null; playing = true; document.getElementById("btnPlay").textContent = "Pause"; });
+window.__T232 = { CONFIG, stateAt, validateConfig, derive, render };
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

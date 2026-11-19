@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T233 — Tool transformation: grid press (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#241a10;font-family:Verdana,Geneva,sans-serif}
+  #stage{width:min(96vw,640px);margin:10px auto;display:block}
+  svg{width:100%;height:auto;display:block}
+  #ctl{width:min(96vw,640px);margin:6px auto 14px;display:flex;gap:8px;justify-content:center}
+  button{font-size:16px;padding:10px 18px;border-radius:8px;border:2px solid #b08d5f;background:#3a2a18;color:#fff;cursor:pointer;min-height:44px}
+</style></head><body>
+<div id="stage"></div>
+<div id="ctl"><button id="playBtn" type="button">Play</button><button id="restartBtn" type="button">Restart</button></div>
+<script>
+"use strict";
+const CONFIG = {
+  stageW: 640, stageH: 400,
+  subjectCx: 300, subjectCy: 188, subjectR: 80,
+  seamCount: 6, pinRadiusPx: 6, stemScale: 1,
+  gridCols: 7, gridRows: 6, cellPx: 36, handleW: 56, handleHPx: 22,
+  pressTravelPx: 170, pressSquash: 0.38, occluderMax: 1.0,
+  cubeCols: 3, cubeRows: 3, cubeLayers: 2, cubeGapPx: 2, layerOffsetPx: 6,
+  revealStaggerFraction: 0.6, pipStyle: "dice", pipRadiusPx: 4.5, rngSeed: 233,
+  stemTravelX: 90, stemTravelY: 70, stemAnchorF: 0.55, liftTravelFraction: 0.45, occluderRampStart: 0.55,
+  bowlRyF: 0.62, bowlInnerRxF: 0.82, bowlInnerRyF: 0.48, bowlInnerDyPx: 6, priorRingF: 0.45, priorCubePx: 18, priorYF: 0.5, priorAngOff: 0.4,
+  slotBaseF: 0.55, slotVarF: 0.45, slotYF: 0.55, pipSpreadF: 0.28, boardBandPx: 46,
+  seamStrokePx: 2.5, seamAngOff: 0.3, cushionStrokePx: 3, gridStrokePx: 4, gridFrameStrokePx: 7, cubeStrokePx: 2, cubeRxPx: 5, handleRxPx: 8, toolLabelDyPx: 12, toolHaloPx: 3, labelHaloPx: 4,
+  bowlCx: 472, bowlCy: 296, bowlR: 96, bowlSlotInset: 0.62, priorCubes: 7,
+  labelFontPx: 30, toolLabelFontPx: 28, inputLabelDy: 118, outputLabelDy: 118,
+  fontFamily: "Verdana, Geneva, sans-serif",
+  inputLabel: "TOMATO PINCUSHION", toolLabel: "GRID PRESS", outputLabel: "DICED TOMATO",
+  tStemOffMs: 0, stemOffDurMs: 1000, settleDurMs: 1000,
+  pressDurMs: 1000, pressHoldMs: 250, liftDurMs: 250, slabHoldMs: 750, gatherDurMs: 1750, holdMs: 1000,
+  easeStem: "easeInOut", easeSettle: "linear", easePress: "easeInOut", easeLift: "easeInOut", easeGather: "easeInOut",
+  palette: { board:"#8a6844", boardDark:"#6f5233", cushion:"#d8262c", cushionDark:"#a8161c",
+    seam:"#2e5d3a", stem:"#2e7d46", pinColors:["#f5eeda","#e8a0a8","#c1272d","#f2c14e"],
+    grid:"#5a6068", gridDark:"#363b42", handle:"#b08d5f", cube:"#e0232e", cubeEdge:"#8f1218",
+    pip:"#ffffff", bowl:"#4a4a48", bowlInner:"#79c142", priorCube:"#f2f2f2",
+    labelInk:"#ffffff", labelHalo:"#3a2a18" },
+  pins: [
+    {dx:-0.55,dy:-0.42,ci:0},{dx:-0.28,dy:-0.62,ci:1},{dx:0.02,dy:-0.70,ci:2},{dx:0.34,dy:-0.58,ci:3},
+    {dx:0.58,dy:-0.30,ci:0},{dx:-0.62,dy:-0.02,ci:1},{dx:-0.30,dy:-0.18,ci:3},{dx:0.05,dy:-0.28,ci:0},
+    {dx:0.38,dy:-0.08,ci:1},{dx:-0.48,dy:0.28,ci:2},{dx:-0.12,dy:0.10,ci:3},{dx:0.30,dy:0.30,ci:0}
+  ],
+  stemStar: [[0,-0.62],[0.16,-0.20],[0.58,-0.30],[0.28,0.06],[0.44,0.48],[0,0.26],[-0.44,0.48],[-0.28,0.06],[-0.58,-0.30],[-0.16,-0.20]]
+};
+const EASE = {
+  linear: p => p,
+  easeInOut: p => p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2,
+  easeOut: p => 1 - Math.pow(1 - p, 3),
+  easeIn: p => p*p*p
+};
+function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+function phase(t, start, dur){ return clamp01((t - start)/dur); }
+function mulberry32(seed){ let a = seed >>> 0; return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0)/4294967296; }; }
+function schedule(cfg){
+  const stemStart = cfg.tStemOffMs;
+  const stemEnd = stemStart + cfg.stemOffDurMs;
+  const pressStart = stemEnd + cfg.settleDurMs;
+  const pressEnd = pressStart + cfg.pressDurMs;
+  const holdEnd = pressEnd + cfg.pressHoldMs;
+  const liftEnd = holdEnd + cfg.liftDurMs;
+  const gatherStart = liftEnd + cfg.slabHoldMs;
+  const completeAt = gatherStart + cfg.gatherDurMs;
+  return { stemStart, stemEnd, pressStart, pressEnd, holdEnd, liftEnd, gatherStart,
+    completeAt, durationMs: completeAt + cfg.holdMs, swapAt: pressEnd + cfg.pressHoldMs/2 };
+}
+function validateConfig(cfg){
+  const durs = ["stemOffDurMs","settleDurMs","pressDurMs","pressHoldMs","liftDurMs","slabHoldMs","gatherDurMs","holdMs"];
+  for (const k of durs){ if (!(cfg[k] > 0) || !isFinite(cfg[k])) return "bad duration " + k; }
+  if (!(cfg.tStemOffMs >= 0)) return "bad tStemOffMs";
+  if (!(cfg.pressSquash > 0 && cfg.pressSquash < 1)) return "bad pressSquash";
+  if (cfg.occluderMax !== 1) return "occluderMax must equal 1";
+  if (!(cfg.revealStaggerFraction >= 0 && cfg.revealStaggerFraction < 1)) return "bad revealStaggerFraction";
+  for (const k of ["cubeCols","cubeRows","cubeLayers","gridCols","gridRows","seamCount","priorCubes"]){
+    if (!Number.isInteger(cfg[k]) || cfg[k] < 0) return "bad count " + k; }
+  if (cfg.pipStyle !== "dice" && cfg.pipStyle !== "plain") return "bad pipStyle";
+  for (const k of ["easeStem","easeSettle","easePress","easeLift","easeGather"]){
+    if (!EASE[cfg[k]]) return "bad easing " + k; }
+  return null;
+}
+const PIP_LAYOUTS = { 1:[[0,0]], 2:[[-1,-1],[1,1]], 3:[[-1,-1],[0,0],[1,1]],
+  4:[[-1,-1],[1,-1],[-1,1],[1,1]], 5:[[-1,-1],[1,-1],[0,0],[-1,1],[1,1]],
+  6:[[-1,-1],[1,-1],[-1,0],[1,0],[-1,1],[1,1]] };
+function cubeData(cfg){
+  const total = cfg.cubeCols * cfg.cubeRows * cfg.cubeLayers;
+  const cubePx = cfg.cellPx - cfg.cubeGapPx;
+  const rng = mulberry32(cfg.rngSeed);
+  const out = [];
+  for (let i = 0; i < total; i++){
+    const col = i % cfg.cubeCols;
+    const row = Math.floor(i / cfg.cubeCols) % cfg.cubeRows;
+    const layer = Math.floor(i / (cfg.cubeCols * cfg.cubeRows));
+    const sx = cfg.subjectCx + (col - (cfg.cubeCols - 1)/2) * (cubePx + cfg.cubeGapPx) + layer * cfg.layerOffsetPx;
+    const sy = cfg.subjectCy + (row - (cfg.cubeRows - 1)/2) * (cubePx + cfg.cubeGapPx) - layer * cfg.layerOffsetPx;
+    const ang = (i / total) * Math.PI * 2;
+    const slotR = cfg.bowlR * cfg.bowlSlotInset * (cfg.slotBaseF + cfg.slotVarF * ((i % 3)/2));
+    const bx = cfg.bowlCx + Math.cos(ang) * slotR;
+    const by = cfg.bowlCy + Math.sin(ang) * slotR * cfg.slotYF;
+    const pips = (cfg.pipStyle === "dice" && layer === cfg.cubeLayers - 1) ? 1 + Math.floor(rng() * 6) : 0;
+    out.push({ i, col, row, layer, sx, sy, bx, by, pips });
+  }
+  return { total, cubePx, cubes: out };
+}
+function stateAt(cfg, t){
+  const sch = schedule(cfg);
+  const stemRaw = phase(t, sch.stemStart, cfg.stemOffDurMs), stemE = EASE[cfg.easeStem](stemRaw);
+  const settleRaw = phase(t, sch.stemEnd, cfg.settleDurMs), settleE = EASE[cfg.easeSettle](settleRaw);
+  const pressRaw = phase(t, sch.pressStart, cfg.pressDurMs), pressE = EASE[cfg.easePress](pressRaw);
+  const liftRaw = phase(t, sch.holdEnd, cfg.liftDurMs), liftE = EASE[cfg.easeLift](liftRaw);
+  const gatherRaw = phase(t, sch.gatherStart, cfg.gatherDurMs), gatherE = EASE[cfg.easeGather](gatherRaw);
+  const stemOpacity = 1 - stemE;
+  const gridOffsetY = -cfg.pressTravelPx * (1 - pressE) - liftE * cfg.pressTravelPx * cfg.liftTravelFraction;
+  const occRamp = pressRaw <= cfg.occluderRampStart ? 0 : pressRaw >= 1 ? 1 : (pressRaw - cfg.occluderRampStart)/(1 - cfg.occluderRampStart);
+  const occluderOpacity = cfg.occluderMax * occRamp * (1 - liftE);
+  const cover = { x: cfg.subjectCx - cfg.gridCols * cfg.cellPx / 2, y: cfg.subjectCy - cfg.gridRows * cfg.cellPx / 2 + gridOffsetY,
+    w: cfg.gridCols * cfg.cellPx, h: cfg.gridRows * cfg.cellPx };
+  const subject = { x: cfg.subjectCx - cfg.subjectR, y: cfg.subjectCy - cfg.subjectR, w: cfg.subjectR * 2, h: cfg.subjectR * 2 };
+  const coverCoversSubject = cover.x <= subject.x && cover.y <= subject.y &&
+    cover.x + cover.w >= subject.x + subject.w && cover.y + cover.h >= subject.y + subject.h;
+  const inputOpacity = t < sch.swapAt ? 1 : 0;
+  const cubesArmed = t >= sch.swapAt ? 1 : 0;
+  const squash = 1 - cfg.pressSquash * pressE;
+  const cd = cubeData(cfg);
+  let cubeVisible = 0;
+  const cubes = cd.cubes.map(c => {
+    const stagger = cd.total > 1 ? (c.i / (cd.total - 1)) * cfg.revealStaggerFraction * cfg.liftDurMs : 0;
+    const rStart = sch.holdEnd + stagger;
+    const rDur = Math.max(1, sch.liftEnd - rStart);
+    const rRaw = cubesArmed ? phase(t, rStart, rDur) : 0;
+    const rE = EASE[cfg.easeLift](rRaw);
+    if (rRaw > 0) cubeVisible++;
+    const x = c.sx + (c.bx - c.sx) * gatherE;
+    const y = c.sy + (c.by - c.sy) * gatherE;
+    return { i: c.i, layer: c.layer, pips: c.pips, revealRaw: rRaw, revealE: rE, scale: rE, x, y, sx: c.sx, sy: c.sy, bx: c.bx, by: c.by };
+  });
+  const pins = cfg.pins.map(p => ({ x: cfg.subjectCx + p.dx * cfg.subjectR, y: cfg.subjectCy + p.dy * cfg.subjectR, ci: p.ci }));
+  return { t, stemRaw, stemE, settleRaw, settleE, stemOpacity, stemDx: stemE * cfg.stemTravelX, stemDy: -stemE * cfg.stemTravelY,
+    pressRaw, pressE, liftRaw, liftE, gatherRaw, gatherE,
+    gridOffsetY, occluderOpacity, cover, subject, coverCoversSubject,
+    inputOpacity, cubesArmed, squash, cubeVisible, cubeTotal: cd.total, cubePx: cd.cubePx, cubes, pins,
+    bowlOpacity: gatherE, inputLabelOpacity: 1 - pressE, outputLabelOpacity: liftE,
+    schedule: sch, durationMs: sch.durationMs };
+}
+function render(cfg, t){
+  const s = stateAt(cfg, t);
+  const P = cfg.palette;
+  const gridW = cfg.gridCols * cfg.cellPx, gridH = cfg.gridRows * cfg.cellPx;
+  const gx = cfg.subjectCx - gridW / 2, gy = cfg.subjectCy - gridH / 2 + s.gridOffsetY;
+  let h = "";
+  h += '<svg viewBox="0 0 ' + cfg.stageW + ' ' + cfg.stageH + '" xmlns="http://www.w3.org/2000/svg" role="img">';
+  h += '<rect x="0" y="0" width="' + cfg.stageW + '" height="' + cfg.stageH + '" fill="' + P.board + '"/>';
+  h += '<rect x="0" y="' + (cfg.stageH - cfg.boardBandPx) + '" width="' + cfg.stageW + '" height="' + cfg.boardBandPx + '" fill="' + P.boardDark + '"/>';
+  // bowl (final act, behind cubes)
+  h += '<g opacity="' + s.bowlOpacity.toFixed(3) + '">';
+  h += '<ellipse cx="' + cfg.bowlCx + '" cy="' + cfg.bowlCy + '" rx="' + cfg.bowlR + '" ry="' + (cfg.bowlR * cfg.bowlRyF) + '" fill="' + P.bowl + '"/>';
+  h += '<ellipse cx="' + cfg.bowlCx + '" cy="' + (cfg.bowlCy - cfg.bowlInnerDyPx) + '" rx="' + (cfg.bowlR * cfg.bowlInnerRxF) + '" ry="' + (cfg.bowlR * cfg.bowlInnerRyF) + '" fill="' + P.bowlInner + '"/>';
+  const prng = mulberry32(cfg.rngSeed + 7);
+  for (let i = 0; i < cfg.priorCubes; i++){
+    const ang = (i / Math.max(1, cfg.priorCubes)) * Math.PI * 2 + cfg.priorAngOff;
+    const rr = cfg.bowlR * cfg.priorRingF;
+    const px = cfg.bowlCx + Math.cos(ang) * rr, py = cfg.bowlCy - cfg.bowlInnerDyPx + Math.sin(ang) * rr * cfg.priorYF;
+    h += '<rect x="' + (px - cfg.priorCubePx/2) + '" y="' + (py - cfg.priorCubePx/2) + '" width="' + cfg.priorCubePx + '" height="' + cfg.priorCubePx + '" rx="3" fill="' + P.priorCube + '" stroke="' + P.gridDark + '"/>';
+  }
+  h += '</g>';
+  // input subject (under grid group)
+  h += '<g opacity="' + s.inputOpacity + '">';
+  h += '<g transform="translate(' + cfg.subjectCx + ' ' + (cfg.subjectCy + cfg.subjectR) + ') scale(1 ' + s.squash.toFixed(4) + ') translate(' + (-cfg.subjectCx) + ' ' + (-(cfg.subjectCy + cfg.subjectR)) + ')">';
+  h += '<circle cx="' + cfg.subjectCx + '" cy="' + cfg.subjectCy + '" r="' + cfg.subjectR + '" fill="' + P.cushion + '" stroke="' + P.cushionDark + '" stroke-width="' + cfg.cushionStrokePx + '"/>';
+  for (let k = 0; k < cfg.seamCount; k++){
+    const a = (k / cfg.seamCount) * Math.PI * 2 + cfg.seamAngOff;
+    h += '<line x1="' + cfg.subjectCx + '" y1="' + cfg.subjectCy + '" x2="' + (cfg.subjectCx + Math.cos(a) * cfg.subjectR) + '" y2="' + (cfg.subjectCy + Math.sin(a) * cfg.subjectR) + '" stroke="' + P.seam + '" stroke-width="' + cfg.seamStrokePx + '"/>';
+  }
+  for (const pn of s.pins){
+    h += '<circle cx="' + pn.x + '" cy="' + pn.y + '" r="' + cfg.pinRadiusPx + '" fill="' + P.pinColors[pn.ci % P.pinColors.length] + '" stroke="' + P.gridDark + '" stroke-width="1"/>';
+  }
+  h += '</g>';
+  // stem star (lifts away, not squashed)
+  const starPts = cfg.stemStar.map(pt => (cfg.subjectCx + pt[0] * cfg.subjectR * cfg.stemScale + s.stemDx) + "," + (cfg.subjectCy - cfg.subjectR * cfg.stemAnchorF + pt[1] * cfg.subjectR * cfg.stemScale + s.stemDy)).join(" ");
+  h += '<polygon points="' + starPts + '" fill="' + P.stem + '" opacity="' + s.stemOpacity.toFixed(3) + '"/>';
+  h += '</g>';
+  // grid tool group (frame + cells + handles + occluder cover + tool label)
+  h += '<g>';
+  h += '<rect x="' + (gx - cfg.handleW) + '" y="' + (gy + gridH / 2 - cfg.handleHPx / 2) + '" width="' + cfg.handleW + '" height="' + cfg.handleHPx + '" rx="' + cfg.handleRxPx + '" fill="' + P.handle + '"/>';
+  h += '<rect x="' + (gx + gridW) + '" y="' + (gy + gridH / 2 - cfg.handleHPx / 2) + '" width="' + cfg.handleW + '" height="' + cfg.handleHPx + '" rx="' + cfg.handleRxPx + '" fill="' + P.handle + '"/>';
+  h += '<rect x="' + s.cover.x + '" y="' + s.cover.y + '" width="' + s.cover.w + '" height="' + s.cover.h + '" fill="' + P.gridDark + '" opacity="' + s.occluderOpacity.toFixed(3) + '"/>';
+  for (let cix = 0; cix <= cfg.gridCols; cix++){
+    h += '<line x1="' + (gx + cix * cfg.cellPx) + '" y1="' + gy + '" x2="' + (gx + cix * cfg.cellPx) + '" y2="' + (gy + gridH) + '" stroke="' + P.grid + '" stroke-width="' + cfg.gridStrokePx + '"/>';
+  }
+  for (let rix = 0; rix <= cfg.gridRows; rix++){
+    h += '<line x1="' + gx + '" y1="' + (gy + rix * cfg.cellPx) + '" x2="' + (gx + gridW) + '" y2="' + (gy + rix * cfg.cellPx) + '" stroke="' + P.grid + '" stroke-width="' + cfg.gridStrokePx + '"/>';
+  }
+  h += '<rect x="' + gx + '" y="' + gy + '" width="' + gridW + '" height="' + gridH + '" fill="none" stroke="' + P.gridDark + '" stroke-width="' + cfg.gridFrameStrokePx + '"/>';
+  h += '<text x="' + cfg.subjectCx + '" y="' + (gy - cfg.toolLabelDyPx) + '" font-family="' + cfg.fontFamily + '" font-size="' + cfg.toolLabelFontPx + '" fill="' + P.labelInk + '" stroke="' + P.labelHalo + '" stroke-width="' + cfg.toolHaloPx + '" paint-order="stroke" text-anchor="middle" font-weight="bold">' + cfg.toolLabel + '</text>';
+  h += '</g>';
+  // output cubes (over grid)
+  for (const c of s.cubes){
+    if (c.revealRaw <= 0) continue;
+    const sz = s.cubePx * c.scale;
+    h += '<g opacity="' + c.revealE.toFixed(3) + '">';
+    h += '<rect x="' + (c.x - sz / 2) + '" y="' + (c.y - sz / 2) + '" width="' + sz + '" height="' + sz + '" rx="' + cfg.cubeRxPx + '" fill="' + P.cube + '" stroke="' + P.cubeEdge + '" stroke-width="' + cfg.cubeStrokePx + '"/>';
+    if (c.pips > 0){
+      const lay = PIP_LAYOUTS[c.pips] || [];
+      for (const lp of lay){
+        h += '<circle cx="' + (c.x + lp[0] * sz * cfg.pipSpreadF) + '" cy="' + (c.y + lp[1] * sz * cfg.pipSpreadF) + '" r="' + (cfg.pipRadiusPx * c.scale) + '" fill="' + P.pip + '"/>';
+      }
+    }
+    h += '</g>';
+  }
+  // labels
+  h += '<text x="' + cfg.subjectCx + '" y="' + (cfg.subjectCy + cfg.inputLabelDy) + '" font-family="' + cfg.fontFamily + '" font-size="' + cfg.labelFontPx + '" fill="' + P.labelInk + '" stroke="' + P.labelHalo + '" stroke-width="' + cfg.labelHaloPx + '" paint-order="stroke" text-anchor="middle" font-weight="bold" opacity="' + s.inputLabelOpacity.toFixed(3) + '">' + cfg.inputLabel + '</text>';
+  h += '<text x="' + cfg.subjectCx + '" y="' + (cfg.subjectCy + cfg.outputLabelDy) + '" font-family="' + cfg.fontFamily + '" font-size="' + cfg.labelFontPx + '" fill="' + P.labelInk + '" stroke="' + P.labelHalo + '" stroke-width="' + cfg.labelHaloPx + '" paint-order="stroke" text-anchor="middle" font-weight="bold" opacity="' + s.outputLabelOpacity.toFixed(3) + '">' + cfg.outputLabel + '</text>';
+  h += '</svg>';
+  return h;
+}
+window.__T233 = { CONFIG, stateAt, schedule, validateConfig, cubeData, render };
+const stageEl = document.getElementById("stage");
+let startTs = null, playing = false;
+function frame(ts){
+  if (!playing) return;
+  if (startTs === null) startTs = ts;
+  let t = ts - startTs;
+  const dur = schedule(CONFIG).durationMs;
+  if (t > dur){ t = dur; playing = false; document.getElementById("playBtn").textContent = "Play"; }
+  stageEl.innerHTML = render(CONFIG, t);
+  if (playing) requestAnimationFrame(frame);
+}
+document.getElementById("playBtn").addEventListener("click", function(){
+  if (playing){ playing = false; this.textContent = "Play"; return; }
+  playing = true; this.textContent = "Pause"; requestAnimationFrame(frame);
+});
+document.getElementById("restartBtn").addEventListener("click", function(){
+  startTs = null; playing = true; document.getElementById("playBtn").textContent = "Pause"; requestAnimationFrame(frame);
+});
+stageEl.innerHTML = render(CONFIG, 0);
+</script></body></html>

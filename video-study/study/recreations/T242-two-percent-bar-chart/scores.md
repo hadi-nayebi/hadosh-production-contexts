@@ -1,0 +1,37 @@
+# T242 — scores · Wave 38 · Cycle 041 · attempt 1
+
+- **Item:** T242 — The 2% bar chart (a number drawn as a height insult) · queue #107 · FIRST ATTEMPT · Packet #14 (@ensan.besham "Hope = Failure (?)") @ ≈6–18 s.
+- **Final build:** `recreation.html` sha256 **c93bc67ecfae8cd6d574773ae692dfdeac42e041450c5996bd9d605b23f2870e**, 10,614 B · segment.mp4 sha256 7784442c9e1dd7e12ec8e0f426a20e23f7b89e2bf417338404ab0b577b43ccf3 (13.000 s, h264+AAC).
+- **Phase A gates:** codex-observe CONFIRMED-WITH-GAPS · jev-observe-exit RETURN-TO-OBSERVE/GUIDANCE-DROPPED (cured in §2b) · codex-plan-review REVISE (cured) · jev-plan-exit REVISE/UNBOUND-SCHEDULE (cured). Returns in the wave run dir.
+- **Own checks:** harness `node harness-t242.js` **26 PASS / 0 FAIL** on the final build (raw output in build-record.md) · purity grep 0 specimen hits · syntax OK ×2 · A6 legs: fit-table.md 0 HITs · config-census.md 0 HITs (builder-filed; prewave #2 priced stale margins in two fit rows — see cures below).
+
+## Pre-wave line (jev-prewave)
+- **Firing 1** (first-draft build b460a8fb…): **HOLD — ASSERTED-CHECKS** (parameterization 0.85 · purity 1.00 · own-checks 0.25). Cures applied (schedule rebind stub1Gap 300/stubGap 1900 · harness extended to 26 assertions · fit axis cure · starPoints cfg) → cured build c93bc67e….
+- **Firing 2** (authorized re-fire, cured build): **HOLD — ASSERTED-CHECKS** (parameterization 0.90 · purity 1.00 · own-checks 0.35 · fidelity-plan honesty 0.90). Findings: CP2/CP9 probes run at literal instants instead of CONFIG-derived expressions · CP1 zero-state at 500 ms unprobed · P3 predicate not run at both instants · C@5500/C@8500/P8 PASS lines print no observed values · cmd 8 index cross-reference points at C@3500 instead of C@2500 · fit-table two margins computed from stale (pre-cure) geometry.
+- **Two-HOLD stop (INSTRUCTION A12.3 + task charge): the five-lens scoring wave was NOT fired on this build.**
+
+## Verdict: **NO VERDICT**
+- Lens scores: none fired — motion · timing · purity · reusability · readability all **NOT FIRED**. Average: n/a. Minimum: n/a. Bar (avg ≥85 AND min ≥70) not evaluated.
+- Tier: **IN PROGRESS** (attempt filed, unscored).
+- **Cures priced for the completion (next recreation cycle's first charge, A12.3 completion form):** (1) express CP2/CP9 probes via CONFIG expressions (`schedule(CONFIG).exitEnd` for CP9) with evaluated instants printed; (2) add CP1 zero-state probe at 500 ms; (3) run the complete P3 predicate at both default and swapped instants with observed values printed; (4) print observed predicate values on every harness PASS line (C@5500, C@8500, P8 included); (5) correct the A13 cmd-8 cross-reference to the C@2500 receipt; (6) recompute fit-table margins from the cured CONFIG (axisX 110; axis-mid margin 29 px; full-label centre 500) and refile. Then fresh own-checks + A6 legs on the (unchanged or minimally cured) build, ONE jev-prewave completion re-fire, and on FIRE-WAVE the five-lens wave bound to that build. A further re-fire beyond that requires HQ authorization.
+- **Render-proof limitation:** no browser binary in this seat — pixel rendering is UNVERIFIED; the comparison page is the render surface; Node/PIL evidence is scoped to logic and proxy fit.
+
+---
+
+# T242 — Cycle 042 · Wave 39 · A12.3 COMPLETION
+
+- **Build:** `recreation.html` sha256 **c93bc67ecfae8cd6d574773ae692dfdeac42e041450c5996bd9d605b23f2870e**, 10,614 B — **UNCHANGED** (verified firsthand; no cure required a build change; all six cures are harness/receipt/fit-table form).
+- **The six Wave-38 cures, applied in substance:** (1) CP2 CONFIG-expression companion (`riseStartMs+(barCount−1)×riseStaggerMs+riseDurMs/9` → evaluated instant 1500 printed, full drawP) + CP9 via `schedule(CONFIG).exitEnd` (→ 10500 printed, chartOp + exitP); fixed census probes retained beside them. (2) CP1 zero-state probe at 500 ms added (drawP/stubP/fullP/figureP all 0). (3) Complete P3 predicate (stubP0=1 AND stubH = stubPercent/100×axisHeightPx, expectedH printed) at BOTH instants — default 3000 (stubH 6.8) and swapped 3600 (stubH 6.8). (4) Observed predicate values printed on the harness PASS lines (C@5500 stubP+fullP · C@8500 fullP+stubP+fillOp+fullH · P8 groupP1@start/@end — and P0/SWAP lines completed). (5) A13 cmd-8 cross-reference corrected to the C@2500 receipt. (6) fit-table.md refiled with margins recomputed from the cured CONFIG (axisX 110 · axis-mid margin 29 px · full-label centre 500, span 456.5–543.5) and PIL ink widths re-measured fresh (identical).
+- **Fresh own-checks:** harness `node harness-t242.js` **28 PASS / 0 FAIL** (raw output in build-record.md) · purity grep 0 specimen hits · syntax OK ×2 · A6 legs fresh: fit-table.md 0 HITs · config-census.md 0 HITs. A13 RECEIPT INDEX reconciled whole in build-record.md (8 guard commands + whole inherited assertion set + all 11 census rows CP0–CP10, CP7 reconciliation stated explicitly).
+
+## Pre-wave line (jev-prewave completion re-fire)
+- **Completion re-fire** (the single A12.3-authorized re-fire; payload `payload-T242-jev-prewave-completion.txt`, run dir, 39,230 B; return `item-T242-jev-prewave-completion-return.md` in the run dir + `codex/jev-prewave-completion.md` in the artifact dir): **HOLD — ASSERTED-CHECKS** (parameterization 0.90 · purity 1.00 · own-checks completeness 0.35 · fidelity-plan honesty 0.90).
+- **Cleared by this firing:** fit-table geometry corrections verified by recompute (29 px · 500 px) with PIL provenance accepted; parameterization/purity/fidelity clear their floors; CP7 reconciliation accepted as disclosed.
+- **Remaining findings:** (1) seven census checkpoints (CP1, CP3–CP8) still carry literal-time probes only — the judge requires executable CONFIG-derived companion receipts (CONFIG expression + evaluated instant + observed result) for each mapped predicate, CP7's combined literal-6500 predicate included (P8's derived label leg at 6400 noted); fixed probes may remain as additional evidence. (2) Three receipts omit predicate-required observations: P5's raw line prints only fullP=0 (stubP[2]=1 not printed) · C@2500 omits the completed-outlines observation (drawP all 1) named in census CP3 · C@8500 omits the 100% full-label observation named in census CP8.
+
+## Verdict: **NO VERDICT**
+- The five-lens scoring wave was **NOT fired** (HOLD applied). Lens scores: motion · timing · purity · reusability · readability all **NOT FIRED**. Average: n/a. Minimum: n/a. Bar not evaluated.
+- Tier: **IN PROGRESS** (attempt filed, unscored).
+- **New cures priced (in substance, for a future authorized completion):** (1) add CONFIG-derived companion probes for CP1 and CP3–CP8 — each printing its CONFIG expression, evaluated instant, and the full mapped predicate's observed values (CP1 zero-state at a CONFIG-derived pre-rise instant · CP3 rise-complete+no-stub · CP4 stub-1 · CP5 stub-1-only · CP6 stub-2 · CP7 combined stub/label at a CONFIG-derived instant inside the stub-3 window · CP8 settled+full-label), fixed census probes retained as additional evidence; (2) print stubP on the P5 raw line; (3) print drawP (completed outlines) on the C@2500 raw line; (4) print the full-label observation (render/state evidence for the 100% label) on the C@8500 raw line. Then fresh own-checks + A6 legs and ONE jev-prewave re-fire.
+- **Next re-fire: PENDING AUTHORIZATION (consumer HQ)** — no further re-fire was attempted in this cycle.
+- **Render-proof limitation:** unchanged — no browser binary in this seat; pixel rendering UNVERIFIED; the comparison page is the render surface.

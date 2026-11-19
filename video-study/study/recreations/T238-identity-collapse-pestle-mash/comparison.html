@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T238 comparison — pestle mash</title>
+<style>
+  html,body{margin:0;padding:0;background:#241a10;font-family:Verdana,Geneva,sans-serif;color:#fff}
+  #wrap{display:flex;gap:10px;width:min(98vw,1100px);margin:10px auto;align-items:flex-start}
+  .side{flex:1;min-width:0}
+  .side h2{font-size:15px;margin:4px 0 8px;text-align:center}
+  video{width:100%;height:auto;display:block;background:#000}
+  #rec{width:100%}
+  #rec svg{width:100%;height:auto;display:block}
+  #ctl{width:min(96vw,640px);margin:8px auto 16px;display:flex;gap:8px;justify-content:center}
+  button{font-size:16px;padding:10px 18px;border-radius:8px;border:2px solid #b08d5f;background:#3a2a18;color:#fff;cursor:pointer;min-height:44px}
+  @media (max-width:560px){ #wrap{flex-direction:column} .side{width:100%} }
+</style></head><body>
+<div id="wrap">
+  <div class="side"><h2>ORIGINAL — PES "Fresh Guacamole" @ 75–81 s</h2><video id="vid" src="segment.mp4" playsinline preload="auto"></video></div>
+  <div class="side"><h2>RECREATION — T238 Identity collapse: pestle mash, parameterized</h2><div id="rec"></div></div>
+</div>
+<div id="ctl"><button id="playBtn" type="button">Play</button><button id="restartBtn" type="button">Restart</button></div>
+<script>
+"use strict";
+// durationMs + render are DERIVED from recreation.html's own CONFIG at runtime (never a hardcoded cap).
+const HANDLE_OFFSET_S = 0.5;
+let T238 = null, durationMs = 6000;
+fetch("recreation.html").then(r => r.text()).then(txt => {
+  const parts = [...txt.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  const cut = parts.join("\n").split("const stageEl")[0];
+  const f2 = new Function(cut + "; return window.__T238;");
+  T238 = f2();
+  durationMs = T238.schedule(T238.CONFIG).durationMs;
+  document.getElementById("rec").innerHTML = T238.render(T238.CONFIG, 0);
+});
+const vid = document.getElementById("vid");
+const recEl = document.getElementById("rec");
+let startTs = null, playing = false;
+function buildMsAt(wallMs){ return Math.max(0, Math.min(durationMs, wallMs - HANDLE_OFFSET_S * 1000)); }
+function frame(ts){
+  if (!playing) return;
+  if (startTs === null){ startTs = ts; }
+  const wall = ts - startTs;
+  if (T238) recEl.innerHTML = T238.render(T238.CONFIG, buildMsAt(wall));
+  // video is 7.0 s; the build completes at wall 6.5 s and holds its completed state while the video plays its last 0.5 s handle.
+  if (wall > 7500){ playing = false; document.getElementById("playBtn").textContent = "Play"; return; }
+  requestAnimationFrame(frame);
+}
+document.getElementById("playBtn").addEventListener("click", function(){
+  if (playing){ playing = false; vid.pause(); this.textContent = "Play"; return; }
+  playing = true; this.textContent = "Pause";
+  if (startTs === null || vid.ended){ vid.currentTime = 0; }
+  vid.play(); requestAnimationFrame(frame);
+});
+document.getElementById("restartBtn").addEventListener("click", function(){
+  startTs = null; playing = true; vid.currentTime = 0; vid.play();
+  document.getElementById("playBtn").textContent = "Pause"; requestAnimationFrame(frame);
+});
+</script></body></html>

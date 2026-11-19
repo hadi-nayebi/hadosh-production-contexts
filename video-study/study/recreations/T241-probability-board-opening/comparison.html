@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T241 — comparison</title>
+<style>
+  html,body{margin:0;padding:0;background:#181818;color:#eee;font-family:Georgia,serif;}
+  .wrap{display:flex;gap:12px;justify-content:center;align-items:flex-start;padding:10px;flex-wrap:wrap;}
+  figure{margin:0;width:min(46vw,360px);}
+  figcaption{font-size:13px;text-align:center;padding:6px 2px;}
+  video,iframe{width:100%;aspect-ratio:720/1280;border:1px solid #444;background:#000;display:block;}
+  .controls{display:flex;gap:10px;justify-content:center;padding:12px;position:sticky;bottom:0;background:#181818;}
+  button{font-size:16px;padding:10px 18px;min-height:44px;}
+  @media (max-width:560px){ figure{width:94vw;} .wrap{flex-direction:column;align-items:center;} }
+</style></head><body>
+<div class="controls">
+  <button id="playBtn" type="button">Play</button>
+  <button id="restartBtn" type="button">Restart</button>
+</div>
+<div class="wrap">
+  <figure>
+    <video id="orig" src="segment.mp4" playsinline muted></video>
+    <figcaption>ORIGINAL — ensan.besham Hope = Failure (?) @ 0–13 s</figcaption>
+  </figure>
+  <figure>
+    <iframe id="rec" src="recreation.html" title="recreation"></iframe>
+    <figcaption>RECREATION — T241, parameterized</figcaption>
+  </figure>
+</div>
+<script>
+"use strict";
+/* One synchronized control set: the shared clock drives the video and the recreation.
+   Duration policy: recreation CONFIG durationMs is 13000; the segment cut is 13.5 s
+   (0.5 s evidence handle) — the recreation holds its final state for the handle tail. */
+var vid = document.getElementById("orig");
+var rec = document.getElementById("rec");
+var playing = false, startStamp = null, rafId = null;
+function recWindow(){ try { return rec.contentWindow; } catch (e) { return null; } }
+function durationMs(){
+  var w = recWindow();
+  if (w && w.__T241) return w.__T241.CONFIG.timing.durationMs;
+  return 13000;
+}
+function tick(ts){
+  if (!playing) return;
+  if (startStamp === null) startStamp = ts;
+  var t = ts - startStamp;
+  var w = recWindow();
+  if (w && w.__setTime) w.__setTime(Math.min(t, durationMs()));
+  if (vid.duration && t / 1000 >= vid.duration){ pauseAll(); return; }
+  rafId = requestAnimationFrame(tick);
+}
+function playAll(){
+  playing = true; startStamp = null;
+  vid.currentTime = 0; vid.play();
+  rafId = requestAnimationFrame(tick);
+  document.getElementById("playBtn").textContent = "Pause";
+}
+function pauseAll(){
+  playing = false; vid.pause();
+  if (rafId) cancelAnimationFrame(rafId);
+  document.getElementById("playBtn").textContent = "Play";
+}
+document.getElementById("playBtn").addEventListener("click", function(){ playing ? pauseAll() : playAll(); });
+document.getElementById("restartBtn").addEventListener("click", function(){ pauseAll(); playAll(); });
+</script>
+</body></html>

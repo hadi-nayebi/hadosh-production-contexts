@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T243 comparison — calendar-of-days panel</title>
+<style>
+  html,body{margin:0;padding:0;background:#181818;font-family:Verdana,Geneva,sans-serif;color:#fff}
+  #wrap{display:flex;gap:10px;width:min(98vw,1100px);margin:10px auto;align-items:flex-start}
+  .side{flex:1;min-width:0}
+  .side h2{font-size:15px;margin:4px 0 8px;text-align:center}
+  video{width:100%;height:auto;display:block;background:#000}
+  #rec{width:100%}
+  #rec svg{width:100%;height:auto;display:block}
+  #ctl{width:min(96vw,640px);margin:8px auto 16px;display:flex;gap:8px;justify-content:center}
+  button{font-size:16px;padding:10px 18px;border-radius:8px;border:2px solid #888;background:#2a2a2a;color:#fff;cursor:pointer;min-height:44px}
+  @media (max-width:560px){ #wrap{flex-direction:column} .side{width:100%} }
+</style></head><body>
+<div id="wrap">
+  <div class="side"><h2>ORIGINAL — ensan.besham Hope = Failure (?) @ 13–27 s</h2><video id="vid" src="segment.mp4" playsinline preload="auto"></video></div>
+  <div class="side"><h2>RECREATION — T243 Calendar-of-days panel, parameterized</h2><div id="rec"></div></div>
+</div>
+<div id="ctl"><button id="playBtn" type="button">Play</button><button id="restartBtn" type="button">Restart</button></div>
+<script>
+"use strict";
+// Anchor map: cut-relative video seconds -> build ms. Build knots are DERIVED from recreation.html's CONFIG at runtime.
+let T243 = null, KNOTS = [[0,0],[15,12400]];
+fetch("recreation.html").then(r => r.text()).then(txt => {
+  const m = txt.match(/<script>([\s\S]*?)<\/script>/);
+  const cut = m[1].split("if (typeof document")[0];
+  const f2 = new Function(cut.replace("window.__T243", "window.__T243CMP") + "; return window.__T243CMP;");
+  T243 = f2();
+  const S = T243.schedule(T243.CONFIG);
+  KNOTS = [[0,0],[4.5,S.gridStart + T243.CONFIG.gridDurMs],[6.5,S.labelsStart + T243.CONFIG.labelsDurMs],[8.5,S.tasksStart + T243.CONFIG.tasksDurMs],[10.5,S.sweep3Start + T243.CONFIG.sweep3DurMs],[12.5,S.finalStart + T243.CONFIG.finalDurMs],[15,S.durationMs]];
+  document.getElementById("rec").innerHTML = T243.renderSVG(T243.CONFIG, 0);
+});
+function buildMsAt(videoSec){
+  for (let k = 0; k < KNOTS.length - 1; k++){
+    const a = KNOTS[k], b = KNOTS[k+1];
+    if (videoSec <= b[0]){ return a[1] + (b[1]-a[1]) * ((videoSec - a[0]) / (b[0] - a[0])); }
+  }
+  return KNOTS[KNOTS.length-1][1];
+}
+const vid = document.getElementById("vid");
+const recEl = document.getElementById("rec");
+let playing = false, frozenSec = 0;
+function frame(){
+  if (!playing) return;
+  const sec = vid.ended ? 15 : vid.currentTime;
+  if (T243) recEl.innerHTML = T243.renderSVG(T243.CONFIG, buildMsAt(sec));
+  if (vid.ended){ playing = false; document.getElementById("playBtn").textContent = "Play"; return; }
+  requestAnimationFrame(frame);
+}
+document.getElementById("playBtn").addEventListener("click", function(){
+  if (playing){ playing = false; frozenSec = vid.currentTime; vid.pause(); this.textContent = "Play"; return; }
+  playing = true; this.textContent = "Pause";
+  if (vid.ended){ vid.currentTime = 0; }
+  vid.play(); requestAnimationFrame(frame);
+});
+document.getElementById("restartBtn").addEventListener("click", function(){
+  playing = true; vid.currentTime = 0; vid.play();
+  document.getElementById("playBtn").textContent = "Pause"; requestAnimationFrame(frame);
+});
+</script></body></html>

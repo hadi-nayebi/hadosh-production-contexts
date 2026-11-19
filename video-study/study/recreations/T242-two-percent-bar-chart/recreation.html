@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T242 — The 2% bar chart, parameterized</title>
+<style>html,body{margin:0;background:#000}svg{display:block;width:100%;height:auto}</style></head>
+<body>
+<div id="stage"></div>
+<script>
+const CONFIG = {
+  stageW: 640, stageH: 800,
+  axisX: 110, baselineY: 560, axisHeightPx: 340,
+  barW: 56, barGap: 40, groupGap: 88, barCount: 4,
+  barHeightsPct: [100, 100, 100, 100],
+  stubPercent: 2, stubBarIndices: [0, 1, 2], fullBarIndex: 3,
+  stubInsetPx: 4,
+  figureX: 545, figureH: 96, figureW: 48, baselineOverPx: 22, headRPx: 13, starRPx: 9, starInnerF: 0.38, tickHalfPx: 8, barAxisGapPx: 26, axisLabelGapPx: 14, stubLabelGapPx: 10, fullLabelDyPx: 12, barLabelDyPx: 30, groupLineDyPx: 44, groupLabelDyPx: 76, figureStartMs: 1000, figureDurMs: 600,
+  strokePx: 2,
+  axisTopLabel: "100%", axisMidLabel: "50%", stubLabel: "2%", fullLabel: "100%",
+  barLabels: ["Chance", "Wait", "Chance", "Wait"],
+  groupLabels: ["ME", "YOU"],
+  axisFontPx: 28, stubFontPx: 28, barLabelFontPx: 26, groupFontPx: 30,
+  fontFamily: "Arial, sans-serif",
+  palette: { bg: "#000000", line: "#ffffff", fill: "#ffffff", label: "#ffffff" },
+  riseStartMs: 800, riseStaggerMs: 200, riseDurMs: 900,
+  stub1GapMs: 300, stubGapMs: 1900, stubDurMs: 400,
+  fullStartOffsetMs: 400, fullDurMs: 900,
+  groupLabelDurMs: 300,
+  fillClearStartMs: 9500, fillClearDurMs: 500,
+  exitStartMs: 10000, exitDurMs: 500,
+  durationMs: 13000
+};
+function clamp01(v){ return v<0?0:(v>1?1:v); }
+function schedule(cfg){
+  const riseEnd = cfg.riseStartMs + (cfg.barCount-1)*cfg.riseStaggerMs + cfg.riseDurMs;
+  const stubStarts = cfg.stubBarIndices.map((b,k)=> riseEnd + cfg.stub1GapMs + k*cfg.stubGapMs);
+  const stubCompletes = stubStarts.map(s=> s + cfg.stubDurMs);
+  const fullStart = stubCompletes[stubCompletes.length-1] + cfg.fullStartOffsetMs;
+  return { riseEnd, stubStarts, stubCompletes, fullStart, fullComplete: fullStart + cfg.fullDurMs,
+           exitEnd: cfg.exitStartMs + cfg.exitDurMs, durationMs: cfg.durationMs };
+}
+function barX(cfg,i){ return cfg.axisX + cfg.barAxisGapPx + i*(cfg.barW+cfg.barGap) + (i>=2 ? cfg.groupGap-cfg.barGap : 0); }
+function validate(cfg){
+  if(!(cfg.barCount>=1)) return "bad barCount";
+  if(cfg.barHeightsPct.length!==cfg.barCount) return "barHeightsPct length != barCount";
+  if(cfg.barLabels.length!==cfg.barCount) return "barLabels length != barCount";
+  for(const b of cfg.stubBarIndices){ if(b<0||b>=cfg.barCount) return "stub index out of range"; }
+  if(cfg.fullBarIndex<0||cfg.fullBarIndex>=cfg.barCount) return "fullBarIndex out of range";
+  if(!(cfg.stubPercent>0&&cfg.stubPercent<100)) return "bad stubPercent";
+  for(const k of ["riseDurMs","stubDurMs","fullDurMs","figureDurMs","fillClearDurMs","exitDurMs"]){ if(!(cfg[k]>0)) return "bad duration "+k; }
+  return null;
+}
+function stateAt(cfg,t){
+  const S = schedule(cfg);
+  const drawP = []; for(let i=0;i<cfg.barCount;i++){ drawP.push(clamp01((t-(cfg.riseStartMs+i*cfg.riseStaggerMs))/cfg.riseDurMs)); }
+  const stubP = S.stubStarts.map(s=> clamp01((t-s)/cfg.stubDurMs));
+  const fullP = clamp01((t-S.fullStart)/cfg.fullDurMs);
+  const figureP = clamp01((t-cfg.figureStartMs)/cfg.figureDurMs);
+  const groupP = [ clamp01((t-S.stubStarts[0])/cfg.groupLabelDurMs), clamp01((t-S.stubStarts[S.stubStarts.length-1])/cfg.groupLabelDurMs) ];
+  const fillClearP = clamp01((t-cfg.fillClearStartMs)/cfg.fillClearDurMs);
+  const exitP = clamp01((t-cfg.exitStartMs)/cfg.exitDurMs);
+  const riseActive = drawP.some(p=>p>0&&p<1)?1:0;
+  const stubActive = stubP.some(p=>p>0&&p<1)?1:0;
+  const fullActive = (fullP>0&&fullP<1)?1:0;
+  const stubHeightsPx = stubP.map(p=> p * (cfg.stubPercent/100) * cfg.axisHeightPx);
+  return { t, drawP, stubP, fullP, figureP, groupP, fillClearP, exitP,
+           fillOpacity: 1-fillClearP, chartOpacity: 1-exitP,
+           activeGrowth: riseActive+stubActive+fullActive,
+           stubHeightsPx, fullHeightPx: fullP * cfg.axisHeightPx * (cfg.barHeightsPct[cfg.fullBarIndex]/100) };
+}
+function starPoints(cfg,cx,cy,r){
+  const pts=[]; for(let i=0;i<8;i++){ const ang=Math.PI/2 + i*Math.PI/4; const rad=(i%2===0)?r:r*cfg.starInnerF; pts.push((cx+rad*Math.cos(ang)).toFixed(1)+","+(cy-rad*Math.sin(ang)).toFixed(1)); } return pts.join(" ");
+}
+function render(cfg,t){
+  const st = stateAt(cfg,t), P = cfg.palette, base = cfg.baselineY, top = base - cfg.axisHeightPx;
+  let s = '<svg viewBox="0 0 '+cfg.stageW+' '+cfg.stageH+'" xmlns="http://www.w3.org/2000/svg" role="img">';
+  s += '<rect x="0" y="0" width="'+cfg.stageW+'" height="'+cfg.stageH+'" fill="'+P.bg+'"/>';
+  s += '<g opacity="'+st.chartOpacity.toFixed(3)+'" font-family="'+cfg.fontFamily+'">';
+  // axis
+  s += '<line x1="'+cfg.axisX+'" y1="'+top+'" x2="'+cfg.axisX+'" y2="'+base+'" stroke="'+P.line+'" stroke-width="'+cfg.strokePx+'"/>';
+  s += '<line x1="'+(cfg.axisX-cfg.tickHalfPx)+'" y1="'+top+'" x2="'+(cfg.axisX+cfg.tickHalfPx)+'" y2="'+top+'" stroke="'+P.line+'" stroke-width="'+cfg.strokePx+'"/>';
+  s += '<line x1="'+(cfg.axisX-cfg.tickHalfPx)+'" y1="'+(top+cfg.axisHeightPx/2)+'" x2="'+(cfg.axisX+cfg.tickHalfPx)+'" y2="'+(top+cfg.axisHeightPx/2)+'" stroke="'+P.line+'" stroke-width="'+cfg.strokePx+'"/>';
+  s += '<line x1="'+(cfg.axisX-cfg.tickHalfPx)+'" y1="'+base+'" x2="'+(cfg.figureX+cfg.figureW+cfg.baselineOverPx)+'" y2="'+base+'" stroke="'+P.line+'" stroke-width="'+cfg.strokePx+'"/>';
+  s += '<text x="'+(cfg.axisX-cfg.axisLabelGapPx)+'" y="'+(top+6)+'" fill="'+P.label+'" font-size="'+cfg.axisFontPx+'" text-anchor="end">'+cfg.axisTopLabel+'</text>';
+  s += '<text x="'+(cfg.axisX-cfg.axisLabelGapPx)+'" y="'+(top+cfg.axisHeightPx/2+6)+'" fill="'+P.label+'" font-size="'+cfg.axisFontPx+'" text-anchor="end">'+cfg.axisMidLabel+'</text>';
+  // bars: perimeter draw-on outlines
+  for(let i=0;i<cfg.barCount;i++){
+    const h = cfg.axisHeightPx * cfg.barHeightsPct[i]/100, x = barX(cfg,i), y = base-h, per = 2*(cfg.barW+h);
+    s += '<rect x="'+x+'" y="'+y+'" width="'+cfg.barW+'" height="'+h+'" fill="none" stroke="'+P.line+'" stroke-width="'+cfg.strokePx+'" pathLength="'+per.toFixed(1)+'" stroke-dasharray="'+per.toFixed(1)+'" stroke-dashoffset="'+(per*(1-st.drawP[i])).toFixed(1)+'"/>';
+  }
+  // stubs (fill clears at fillClear)
+  cfg.stubBarIndices.forEach((b,k)=>{
+    const x = barX(cfg,b)+cfg.stubInsetPx, w = cfg.barW-2*cfg.stubInsetPx, hh = st.stubHeightsPx[k];
+    if(hh>0){ s += '<rect x="'+x+'" y="'+(base-hh)+'" width="'+w+'" height="'+hh+'" fill="'+P.fill+'" opacity="'+st.fillOpacity.toFixed(3)+'"/>'; }
+    if(st.stubP[k]>0){ s += '<text x="'+(barX(cfg,b)+cfg.barW/2)+'" y="'+(base-(cfg.stubPercent/100)*cfg.axisHeightPx-cfg.stubLabelGapPx)+'" fill="'+P.label+'" font-size="'+cfg.stubFontPx+'" text-anchor="middle" opacity="'+(st.stubP[k]*st.fillOpacity).toFixed(3)+'">'+cfg.stubLabel+'</text>'; }
+  });
+  // full fill
+  if(st.fullHeightPx>0){ const x = barX(cfg,cfg.fullBarIndex)+cfg.stubInsetPx; s += '<rect x="'+x+'" y="'+(base-st.fullHeightPx)+'" width="'+(cfg.barW-2*cfg.stubInsetPx)+'" height="'+st.fullHeightPx+'" fill="'+P.fill+'" opacity="'+st.fillOpacity.toFixed(3)+'"/>'; }
+  if(st.fullP>=1){ s += '<text x="'+(barX(cfg,cfg.fullBarIndex)+cfg.barW/2)+'" y="'+(top-cfg.fullLabelDyPx)+'" fill="'+P.label+'" font-size="'+cfg.stubFontPx+'" text-anchor="middle" opacity="'+st.fillOpacity.toFixed(3)+'">'+cfg.fullLabel+'</text>'; }
+  // bar labels + group labels
+  for(let i=0;i<cfg.barCount;i++){ s += '<text x="'+(barX(cfg,i)+cfg.barW/2)+'" y="'+(base+cfg.barLabelDyPx)+'" fill="'+P.label+'" font-size="'+cfg.barLabelFontPx+'" text-anchor="middle">'+cfg.barLabels[i]+'</text>'; }
+  const g0x = barX(cfg,0), g1x = barX(cfg,2), gW = 2*cfg.barW+cfg.barGap;
+  s += '<g opacity="'+st.groupP[0].toFixed(3)+'"><line x1="'+g0x+'" y1="'+(base+cfg.groupLineDyPx)+'" x2="'+(g0x+gW)+'" y2="'+(base+cfg.groupLineDyPx)+'" stroke="'+P.line+'" stroke-width="1"/><text x="'+(g0x+gW/2)+'" y="'+(base+cfg.groupLabelDyPx)+'" fill="'+P.label+'" font-size="'+cfg.groupFontPx+'" text-anchor="middle" font-weight="bold">'+cfg.groupLabels[0]+'</text></g>';
+  s += '<g opacity="'+st.groupP[1].toFixed(3)+'"><line x1="'+g1x+'" y1="'+(base+cfg.groupLineDyPx)+'" x2="'+(g1x+gW)+'" y2="'+(base+cfg.groupLineDyPx)+'" stroke="'+P.line+'" stroke-width="1"/><text x="'+(g1x+gW/2)+'" y="'+(base+cfg.groupLabelDyPx)+'" fill="'+P.label+'" font-size="'+cfg.groupFontPx+'" text-anchor="middle" font-weight="bold">'+cfg.groupLabels[1]+'</text></g>';
+  // star figure at right, standing on baseline
+  const fx = cfg.figureX, fh = cfg.figureH, fw = cfg.figureW, fy = base, cx = fx + fw/2;
+  s += '<g opacity="'+st.figureP.toFixed(3)+'" stroke="'+P.line+'" stroke-width="'+cfg.strokePx+'" fill="none">';
+  s += '<circle cx="'+cx+'" cy="'+(fy-fh+cfg.headRPx+1)+'" r="'+cfg.headRPx+'"/>';
+  s += '<path d="M '+fx+' '+(fy-fh*0.35)+' L '+fx+' '+(fy-fh*0.27)+' M '+(fx+fw)+' '+(fy-fh*0.35)+' L '+(fx+fw)+' '+(fy-fh*0.27)+' M '+fx+' '+(fy-fh*0.35)+' Q '+cx+' '+(fy-fh*0.48)+' '+(fx+fw)+' '+(fy-fh*0.35)+' L '+(fx+fw*0.79)+' '+fy+' L '+(fx+fw*0.56)+' '+fy+' L '+(fx+fw*0.56)+' '+(fy-fh*0.31)+' L '+(fx+fw*0.44)+' '+(fy-fh*0.31)+' L '+(fx+fw*0.44)+' '+fy+' L '+(fx+fw*0.21)+' '+fy+' Z"/></g>';
+  s += '<polygon points="'+starPoints(cfg, cx, fy-fh*0.4, cfg.starRPx)+'" fill="'+P.fill+'" opacity="'+st.figureP.toFixed(3)+'"/>';
+  s += '</g></svg>';
+  return s;
+}
+if (typeof document !== "undefined"){
+  const el = document.getElementById("stage");
+  const qs = new URLSearchParams(location.search);
+  let override = {}; try{ override = JSON.parse(qs.get("config")||"{}"); }catch(e){}
+  const cfg = Object.assign({}, CONFIG, override);
+  if (override.palette) cfg.palette = Object.assign({}, CONFIG.palette, override.palette);
+  let start = null, paused = false, pauseT = 0, seekBase = 0;
+  function frame(ts){ if(start===null) start=ts; if(!paused){ pauseT = seekBase + (ts-start); } el.innerHTML = render(cfg, pauseT % cfg.durationMs); requestAnimationFrame(frame); }
+  requestAnimationFrame(frame);
+  window.addEventListener("message", (ev)=>{
+    const d = ev.data||{}; if(d.t242==="pause"){ paused = true; if(typeof d.t==="number") pauseT = d.t; }
+    else if(d.t242==="play"){ paused = false; start = performance.now() - (pauseT - seekBase); }
+    else if(d.t242==="seek"){ seekBase = d.t||0; pauseT = seekBase; start = performance.now(); }
+  });
+  window.__T242 = { CONFIG: cfg, stateAt, schedule, render, validate };
+} else if (typeof window !== "undefined"){ window.__T242 = { CONFIG, stateAt, schedule, render, validate }; }
+</script>
+</body></html>

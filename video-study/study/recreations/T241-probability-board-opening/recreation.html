@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T241 — Probability board opening, parameterized recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{width:min(100vw,360px);margin:0 auto;display:block;}
+  svg{display:block;width:100%;height:auto;}
+</style></head><body>
+<div id="stage"></div>
+<script>
+"use strict";
+/* T241 — probability board as the opening shot. CONFIG drives ALL content/timing/palette. */
+const CONFIG = {
+  stage: { w: 720, h: 1280 },
+  palette: { bg: "#000000", ink: "#ffffff", dim: "#9a9a9a", faint: "#8a8a8a", slot: "#cfcfcf" },
+  texts: {
+    callout: ["cause of failure no. 1", "failure"],
+    formula: "P(F|H) ≈ 0.98",
+    slotWord: "hope",
+    expansion: [
+      "P(F|H) = P(H|F)·P(F) / Σᵢ P(H|Aᵢ)·P(Aᵢ) = (0.97 × 0.612) / 0.6051",
+      "Σₖ C(n, k)·pᵏ(1 − p)ⁿ⁻ᵏ · Πₜ (1 − e^(−λt)) ,  λ = 0.02 ,  n = 8·10⁹",
+      "⇒ P(F | H) = 0.9811 ± 0.004   (p < 0.001)"
+    ]
+  },
+  array: { cols: 10, rows: 4, selected: 5, iconW: 34, iconH: 46, gapX: 26.6, gapY: 26, originX: 40, originY: 548 },
+  geom: {
+    reticleCx: 360, reticleCy: 196, reticleR: 44, reticleInnerR: 26, reticleDotR: 11, tick: 16, tickGap: 8,
+    magCx: 360, magCy: 422, magR: 118, figureScale: 4.6, starR: 15,
+    iconHeadR: 7, iconBodyW: 22, iconBodyTop: 15, iconBodyH: 29, iconGlyphR: 4,
+    formulaY: 906, ruleY: 926, ruleHalfW: 238, expansionY: [958, 990, 1022],
+    calloutX: 404, calloutY: 398, calloutDy: 34, bracketLen: 14, bracketGap: 6, slotW: 110, slotH: 34, slotDx: 176,
+    iconLegX: 3, iconLegLen: 12, starBez: 0.14, starBigFactor: 2.2, connFx: 0.32, connFy: 0.94,
+    leaderFx: 0.55, leaderDy: 6, leaderDotR: 3.5, leaderGap: 14, bracketCyDy: 2, ringRFactor: 0.62, figureDy: -92, iconGlyphDy: 13
+  },
+  type: { family: "Georgia, 'Times New Roman', serif", formulaPx: 46, expansionPx: 22, calloutPx: 29 },
+  stroke: { figure: 3, circle: 3, reticle: 3, connector: 2, bracket: 3, rule: 1.5, slotDash: "5 4" },
+  timing: {
+    tReticleMs: 0, reticleDurMs: 300, tMagMs: 250, magDurMs: 500,
+    tArrayMs: 600, iconDurMs: 160, arrayStaggerMs: 10,
+    tFormulaMs: 1000, formulaDurMs: 400,
+    tExpandMs: 1400, expandLineDurMs: 550, expandGapMs: 50,
+    tBracketsMs: 2900, bracketsDurMs: 300,
+    tPulseMs: 4800, pulseDurMs: 400, pulseScale: 1.12,
+    tDimMs: 5000, reticleDimOpacity: 0.45,
+    tSlotMs: 3500, slotDurMs: 400, slotGapMs: 350,
+    tDissolveMs: 5300, dissolveDurMs: 700, holdMs: 1400, loopTailMs: 400,
+    durationMs: 13000
+  }
+};
+function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+function easeOutCubic(x){ return 1 - Math.pow(1 - x, 3); }
+function validate(cfg){
+  const T = cfg.timing;
+  for (const k of ["reticleDurMs","magDurMs","iconDurMs","formulaDurMs","expandLineDurMs","bracketsDurMs","pulseDurMs","slotDurMs","dissolveDurMs"]){
+    if (!(T[k] > 0)) return "bad duration " + k;
+  }
+  if (cfg.array.cols < 1 || cfg.array.rows < 1) return "bad array dims";
+  if (cfg.array.selected < 0 || cfg.array.selected >= cfg.array.cols * cfg.array.rows) return "selected out of range";
+  if (!cfg.texts.expansion.length) return "no expansion lines";
+  return null;
+}
+function derive(cfg){
+  const T = cfg.timing, A = cfg.array;
+  const count = A.cols * A.rows;
+  const arrayEndMs = T.tArrayMs + (count - 1) * T.arrayStaggerMs + T.iconDurMs;
+  const expandStart = cfg.texts.expansion.map((_, i) => T.tExpandMs + i * (T.expandLineDurMs + T.expandGapMs));
+  const expandEndMs = expandStart.length ? expandStart[expandStart.length - 1] + T.expandLineDurMs : T.tExpandMs;
+  const slotStartMs = Math.max(T.tSlotMs, expandEndMs + T.slotGapMs);
+  const completeAtMs = slotStartMs + T.slotDurMs;
+  const dissolveStartMs = Math.max(T.tDissolveMs, completeAtMs + T.holdMs);
+  const dissolveEndMs = dissolveStartMs + T.dissolveDurMs;
+  const selRow = Math.floor(A.selected / A.cols), selCol = A.selected % A.cols;
+  const selectedCenter = {
+    x: A.originX + selCol * (A.iconW + A.gapX) + A.iconW / 2,
+    y: A.originY + selRow * (A.iconH + A.gapY) + A.iconH / 2
+  };
+  return { count, arrayEndMs, expandStart, expandEndMs, slotStartMs, completeAtMs, dissolveStartMs, dissolveEndMs, selectedCenter, selRow, selCol };
+}
+function iconOrigin(cfg, i){
+  const A = cfg.array;
+  const r = Math.floor(i / A.cols), c = i % A.cols;
+  return { x: A.originX + c * (A.iconW + A.gapX), y: A.originY + r * (A.iconH + A.gapY) };
+}
+function stateAt(cfg, t){
+  const T = cfg.timing, D = derive(cfg);
+  const raw = (start, dur) => clamp01((t - start) / dur);
+  const reticleRaw = raw(T.tReticleMs, T.reticleDurMs);
+  const magRaw = raw(T.tMagMs, T.magDurMs);
+  let iconsComplete = 0, iconsStarted = 0;
+  for (let i = 0; i < D.count; i++){
+    const s = T.tArrayMs + i * T.arrayStaggerMs;
+    if (t >= s + T.iconDurMs) iconsComplete++;
+    if (t >= s) iconsStarted++;
+  }
+  const formulaRaw = raw(T.tFormulaMs, T.formulaDurMs);
+  const expandChars = cfg.texts.expansion.map((line, i) => Math.floor(raw(expandStartOf(cfg, i), T.expandLineDurMs) * line.length));
+  const bracketsRaw = raw(T.tBracketsMs, T.bracketsDurMs);
+  const slotRaw = raw(D.slotStartMs, T.slotDurMs);
+  const dissolveRaw = raw(D.dissolveStartMs, T.dissolveDurMs);
+  const pulseRaw = raw(T.tPulseMs, T.pulseDurMs);
+  const pulse = 1 + (T.pulseScale - 1) * Math.sin(Math.PI * pulseRaw);
+  const reticleOpacity = (t >= T.tDimMs ? T.reticleDimOpacity : 1) * (1 - dissolveRaw);
+  return {
+    reticleRaw, reticleOpacity, pulse,
+    magRaw, calloutRaw: magRaw,
+    iconsComplete, iconsStarted, arrayCount: D.count,
+    formulaRaw, expandChars, bracketsRaw, slotRaw,
+    boardOpacity: 1 - dissolveRaw, arrayOpacity: 1, ringRaw: raw(T.tArrayMs + cfg.array.selected * T.arrayStaggerMs, T.iconDurMs),
+    dissolveRaw, slotStartMs: D.slotStartMs, completeAtMs: D.completeAtMs,
+    dissolveStartMs: D.dissolveStartMs, dissolveEndMs: D.dissolveEndMs, expandEndMs: D.expandEndMs
+  };
+}
+function expandStartOf(cfg, i){ return cfg.timing.tExpandMs + i * (cfg.timing.expandLineDurMs + cfg.timing.expandGapMs); }
+function starPath(cx, cy, r, bez){
+  const b1 = bez, b2 = 2 * bez;
+  return "M " + cx + " " + (cy - r) + " C " + (cx + r * b1) + " " + (cy - r * b2) + " " + (cx + r * b2) + " " + (cy - r * b1) + " " + (cx + r) + " " + cy +
+         " C " + (cx + r * b2) + " " + (cy + r * b1) + " " + (cx + r * b1) + " " + (cy + r * b2) + " " + cx + " " + (cy + r) +
+         " C " + (cx - r * b1) + " " + (cy + r * b2) + " " + (cx - r * b2) + " " + (cy + r * b1) + " " + (cx - r) + " " + cy +
+         " C " + (cx - r * b2) + " " + (cy - r * b1) + " " + (cx - r * b1) + " " + (cy - r * b2) + " " + cx + " " + (cy - r) + " Z";
+}
+function figureGroup(cfg, cx, cy, scale, glyph, color, opacity){
+  const G = cfg.geom;
+  const hr = G.iconHeadR, bw = G.iconBodyW, bt = G.iconBodyTop, bh = G.iconBodyH;
+  const head = '<circle cx="0" cy="' + hr + '" r="' + hr + '" fill="none" stroke="' + color + '" stroke-width="' + (cfg.stroke.figure / scale) + '"/>';
+  const body = '<path d="M ' + (-bw / 2) + ' ' + (bt + bh) + " L " + (-bw / 2) + " " + (bt + 6) + " Q " + (-bw / 2) + " " + bt + " 0 " + bt +
+               " Q " + (bw / 2) + " " + bt + " " + (bw / 2) + " " + (bt + 6) + " L " + (bw / 2) + " " + (bt + bh) +
+               " M " + (-G.iconLegX) + " " + (bt + bh) + " L " + (-G.iconLegX) + " " + (bt + bh - G.iconLegLen) + " M " + G.iconLegX + " " + (bt + bh) + " L " + G.iconLegX + " " + (bt + bh - G.iconLegLen) + '" fill="none" stroke="' + color + '" stroke-width="' + (cfg.stroke.figure / scale) + '"/>';
+  const gl = glyph === "star"
+    ? '<path d="' + starPath(0, bt + G.iconGlyphDy, G.starR / scale * G.starBigFactor, G.starBez) + '" fill="' + color + '"/>'
+    : '<path d="' + starPath(0, bt + G.iconGlyphDy, G.iconGlyphR, G.starBez) + '" fill="' + color + '"/>';
+  return '<g transform="translate(' + cx + " " + cy + ") scale(" + scale + ')" opacity="' + opacity + '">' + head + body + gl + "</g>";
+}
+function render(cfg, t){
+  const P = cfg.palette, G = cfg.geom, TY = cfg.type, S = stateAt(cfg, t), D = derive(cfg);
+  const parts = [];
+  parts.push('<svg viewBox="0 0 ' + cfg.stage.w + " " + cfg.stage.h + '" xmlns="http://www.w3.org/2000/svg" role="img">');
+  parts.push('<rect x="0" y="0" width="' + cfg.stage.w + '" height="' + cfg.stage.h + '" fill="' + P.bg + '"/>');
+  /* connectors (board group) */
+  const sc = D.selectedCenter;
+  const bx = G.magCx - G.magR * G.connFx, bx2 = G.magCx + G.magR * G.connFx, by = G.magCy + G.magR * G.connFy;
+  parts.push('<g opacity="' + (S.boardOpacity * S.magRaw) + '" stroke="' + P.dim + '" stroke-width="' + cfg.stroke.connector + '">'
+    + '<line x1="' + bx + '" y1="' + by + '" x2="' + sc.x + '" y2="' + sc.y + '"/>'
+    + '<line x1="' + bx2 + '" y1="' + by + '" x2="' + sc.x + '" y2="' + sc.y + '"/></g>');
+  /* array */
+  let icons = "";
+  for (let i = 0; i < D.count; i++){
+    const o = iconOrigin(cfg, i);
+    const s = cfg.timing.tArrayMs + i * cfg.timing.arrayStaggerMs;
+    const r = clamp01((t - s) / cfg.timing.iconDurMs);
+    if (r <= 0) continue;
+    icons += figureGroup(cfg, o.x + cfg.array.iconW / 2, o.y, 1, "plus", P.dim, r);
+  }
+  parts.push('<g opacity="' + S.arrayOpacity + '">' + icons + "</g>");
+  /* selected ring */
+  parts.push('<circle cx="' + sc.x + '" cy="' + sc.y + '" r="' + (cfg.array.iconH * G.ringRFactor) + '" fill="none" stroke="' + P.ink + '" stroke-width="' + cfg.stroke.circle + '" opacity="' + (S.ringRaw * Math.max(S.boardOpacity, 1 - S.dissolveRaw)) + '"/>');
+  /* reticle */
+  const rp = S.reticleRaw, rc = G.reticleCx, ry = G.reticleCy, rr = G.reticleR * S.pulse;
+  const tick = (x1, y1, x2, y2) => '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"/>';
+  const corner = (x, y, dx, dy) => '<path d="M ' + (x + dx * G.tick) + " " + y + " L " + x + " " + y + " L " + x + " " + (y + dy * G.tick) + '" fill="none"/>';
+  const ext = rr + G.tickGap;
+  parts.push('<g opacity="' + S.reticleOpacity + '" stroke="' + P.ink + '" stroke-width="' + cfg.stroke.reticle + '" stroke-dasharray="1000" stroke-dashoffset="' + (1000 * (1 - easeOutCubic(rp))) + '">'
+    + '<circle cx="' + rc + '" cy="' + ry + '" r="' + rr + '" fill="none"/>'
+    + '<circle cx="' + rc + '" cy="' + ry + '" r="' + G.reticleInnerR * S.pulse + '" fill="none"/>'
+    + '<circle cx="' + rc + '" cy="' + ry + '" r="' + G.reticleDotR + '" fill="' + P.ink + '" stroke="none"/>'
+    + tick(rc - ext - G.tick, ry, rc - ext, ry) + tick(rc + ext, ry, rc + ext + G.tick, ry)
+    + tick(rc, ry - ext - G.tick, rc, ry - ext) + tick(rc, ry + ext, rc, ry + ext + G.tick)
+    + corner(rc - ext - G.tick, ry - ext - G.tick, 1, 1) + corner(rc + ext + G.tick, ry - ext - G.tick, -1, 1)
+    + corner(rc - ext - G.tick, ry + ext + G.tick, 1, -1) + corner(rc + ext + G.tick, ry + ext + G.tick, -1, -1)
+    + "</g>");
+  /* magnifier + figure + brackets + callout */
+  const figCx = G.magCx, figCy = G.magCy + G.figureDy;
+  let mag = '<g opacity="' + (S.boardOpacity * S.magRaw) + '">'
+    + '<circle cx="' + G.magCx + '" cy="' + G.magCy + '" r="' + G.magR + '" fill="none" stroke="' + P.ink + '" stroke-width="' + cfg.stroke.circle + '" stroke-dasharray="1000" stroke-dashoffset="' + (1000 * (1 - easeOutCubic(S.magRaw))) + '"/>'
+    + figureGroup(cfg, figCx, figCy, G.figureScale, "star", P.ink, S.magRaw);
+  if (S.bracketsRaw > 0){
+    const bcx = G.magCx, bcy = G.magCy + G.bracketCyDy, bl = G.bracketLen, bg2 = G.starR * G.starBigFactor + G.bracketGap;
+    const one = (x, y, dx, dy) => '<path d="M ' + (x + dx * bl) + " " + y + " L " + x + " " + y + " L " + x + " " + (y + dy * bl) + '" fill="none" stroke="' + P.ink + '" stroke-width="' + cfg.stroke.bracket + '"/>';
+    mag += '<g opacity="' + (S.bracketsRaw * S.boardOpacity) + '">'
+      + one(bcx - bg2, bcy - bg2, 1, 1) + one(bcx + bg2, bcy - bg2, -1, 1) + one(bcx - bg2, bcy + bg2, 1, -1) + one(bcx + bg2, bcy + bg2, -1, -1) + "</g>";
+  }
+  mag += '<line x1="' + (G.magCx + G.magR * G.leaderFx) + '" y1="' + (G.magCy + G.leaderDy) + '" x2="' + (G.calloutX - G.leaderGap) + '" y2="' + (G.calloutY + G.leaderDy) + '" stroke="' + P.ink + '" stroke-width="' + cfg.stroke.connector + '"/>'
+    + '<circle cx="' + (G.calloutX - G.leaderGap) + '" cy="' + (G.calloutY + G.leaderDy) + '" r="' + G.leaderDotR + '" fill="' + P.ink + '"/>'
+    + '<text x="' + G.calloutX + '" y="' + G.calloutY + '" font-family="' + TY.family + '" font-size="' + TY.calloutPx + '" fill="' + P.ink + '">' + cfg.texts.callout[0] + "</text>"
+    + '<text x="' + G.calloutX + '" y="' + (G.calloutY + G.calloutDy) + '" font-family="' + TY.family + '" font-size="' + TY.calloutPx + '" fill="' + P.ink + '">' + cfg.texts.callout[1] + "</text>"
+    + "</g>";
+  parts.push(mag);
+  /* formula + slot + rule */
+  const fOp = S.boardOpacity * S.formulaRaw;
+  parts.push('<g opacity="' + fOp + '" font-family="' + TY.family + '">'
+    + '<text x="' + G.magCx + '" y="' + G.formulaY + '" text-anchor="middle" font-size="' + TY.formulaPx + '" font-style="italic" fill="' + P.ink + '">' + cfg.texts.formula + "</text>"
+    + '<rect x="' + (G.magCx + G.slotDx) + '" y="' + (G.formulaY - G.slotH + 8) + '" width="' + G.slotW + '" height="' + G.slotH + '" fill="none" stroke="' + P.slot + '" stroke-dasharray="' + cfg.stroke.slotDash + '" opacity="' + (1 - S.slotRaw) + '"/>'
+    + '<text x="' + (G.magCx + G.slotDx + G.slotW / 2) + '" y="' + (G.formulaY - 4) + '" text-anchor="middle" font-size="' + (TY.formulaPx - 12) + '" font-style="italic" fill="' + P.ink + '" opacity="' + S.slotRaw + '">' + cfg.texts.slotWord + "</text>"
+    + '<line x1="' + (G.magCx - G.ruleHalfW) + '" y1="' + G.ruleY + '" x2="' + (G.magCx + G.ruleHalfW) + '" y2="' + G.ruleY + '" stroke="' + P.dim + '" stroke-width="' + cfg.stroke.rule + '"/></g>');
+  /* expansion lines (type-on) */
+  let ex = "";
+  cfg.texts.expansion.forEach((line, i) => {
+    const shown = line.slice(0, S.expandChars[i]);
+    if (shown) ex += '<text x="' + G.magCx + '" y="' + G.expansionY[i] + '" text-anchor="middle" font-family="' + TY.family + '" font-size="' + TY.expansionPx + '" fill="' + P.faint + '">' + shown + "</text>";
+  });
+  parts.push('<g opacity="' + (S.boardOpacity * S.formulaRaw) + '">' + ex + "</g>");
+  parts.push("</svg>");
+  return parts.join("");
+}
+const __T241 = { CONFIG, derive, stateAt, render, validate };
+if (typeof window !== "undefined") window.__T241 = __T241;
+if (typeof document !== "undefined" && document.getElementById("stage")){
+  const stage = document.getElementById("stage");
+  const params = new URLSearchParams(location.search);
+  let cfg = CONFIG;
+  if (params.get("cfg")){ try { cfg = Object.assign({}, CONFIG, JSON.parse(params.get("cfg"))); } catch (e) {} }
+  const D0 = derive(cfg);
+  let start = null;
+  function frame(ts){
+    if (start === null) start = ts;
+    const t = (ts - start) % (cfg.timing.durationMs + cfg.timing.loopTailMs);
+    stage.innerHTML = render(cfg, Math.min(t, cfg.timing.durationMs));
+    requestAnimationFrame(frame);
+  }
+  window.__setTime = function (ms){ stage.innerHTML = render(cfg, ms); };
+  requestAnimationFrame(frame);
+}
+</script>
+</body></html>

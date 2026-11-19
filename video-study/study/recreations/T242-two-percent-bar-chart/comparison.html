@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T242 comparison</title>
+<style>
+body{margin:0;background:#111;color:#fff;font-family:Arial,sans-serif}
+.wrap{display:flex;gap:12px;padding:12px;box-sizing:border-box}
+.col{flex:1;min-width:0}.col h3{font-size:14px;margin:0 0 8px}
+video{width:100%;background:#000}
+iframe{width:100%;height:520px;border:0;background:#000}
+.controls{padding:12px;display:flex;gap:10px}
+button{font-size:16px;padding:12px 18px;min-height:48px}
+@media (max-width:560px){.wrap{flex-direction:column}iframe{height:460px}}
+</style></head>
+<body>
+<div class="controls"><button id="playBtn">Play / Pause</button><button id="restartBtn">Restart</button></div>
+<div class="wrap">
+  <div class="col"><h3>ORIGINAL — ensan.besham Hope = Failure (?) @ 6–18 s</h3><video id="orig" src="segment.mp4" playsinline></video></div>
+  <div class="col"><h3>RECREATION — T242, parameterized</h3><iframe id="rec" src="recreation.html" title="recreation"></iframe></div>
+</div>
+<script>
+const v = document.getElementById("orig");
+const rec = document.getElementById("rec");
+function send(msg){ rec.contentWindow && rec.contentWindow.postMessage(msg, "*"); }
+document.getElementById("playBtn").addEventListener("click", ()=>{ if(v.paused){ v.play(); send({t242:"play"}); } else { v.pause(); send({t242:"pause", t: v.currentTime*1000}); } });
+document.getElementById("restartBtn").addEventListener("click", ()=>{ v.currentTime = 0; v.play(); send({t242:"seek", t:0}); send({t242:"play"}); });
+v.addEventListener("seeked", ()=> send({t242:"seek", t: v.currentTime*1000}));
+// ONE synchronized control set: play/pause/restart drive both sides; recreation clock slaved via seek/play/pause messages keyed to the video's currentTime.
+</script>
+</body></html>
