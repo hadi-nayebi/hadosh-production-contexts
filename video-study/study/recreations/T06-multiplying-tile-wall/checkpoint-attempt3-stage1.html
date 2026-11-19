@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T06 — Multiplying tile wall (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;height:100%;}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,Consolas,monospace;color:#eee;min-height:100vh;}
+  #stage{position:relative;width:960px;max-width:96vw;aspect-ratio:16/9;overflow:hidden;border-radius:6px;container-type:inline-size;}
+  #badge1{position:absolute;z-index:5;pointer-events:none;}
+  #badge1 .num{font-weight:800;line-height:.9;font-family:Arial,Helvetica,sans-serif;}
+  #badge1 .lbl{color:#f2f2f2;}
+  #wall1{position:absolute;}
+  #badge2{position:absolute;z-index:6;text-align:center;pointer-events:none;}
+  #badge2 .num{font-weight:800;font-family:Arial,Helvetica,sans-serif;line-height:1;}
+  #badge2 .lbl{letter-spacing:2px;color:#fff;}
+  #wall2{position:absolute;display:none;}
+  .tile{position:absolute;border-radius:5px;overflow:hidden;}
+  .tile .tag{position:absolute;left:5px;top:4px;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;max-width:92%;}
+  .tile .motif{position:absolute;inset:0;}
+  .tile .ini{position:absolute;right:6px;bottom:4px;font-weight:700;color:rgba(255,255,255,.9);font-family:Arial,sans-serif;}
+  #heroes{position:absolute;z-index:7;display:none;}
+  .hero{position:absolute;border-radius:8px;overflow:hidden;}
+  .hero .fig{position:absolute;left:50%;top:16%;transform:translateX(-50%);width:34%;aspect-ratio:1;border-radius:50%;}
+  .hero .body{position:absolute;left:50%;bottom:-6%;transform:translateX(-50%);width:56%;height:46%;border-radius:40% 40% 0 0;}
+  .hero .nm{position:absolute;left:7px;bottom:5px;color:#fff;font-family:Arial,sans-serif;}
+  #controls{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;justify-content:center;}
+  #controls button{font-family:ui-monospace,monospace;border-radius:6px;border:1px solid #555;background:#222;color:#eee;cursor:pointer;min-height:44px;}
+  #clock{font-size:13px;color:#aaa;align-self:center;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="badge1"><div class="num" id="num1"></div><div class="lbl" id="lbl1"></div></div>
+  <div id="wall1"></div>
+  <div id="badge2"><div class="num" id="num2"></div><div class="lbl" id="lbl2"></div></div>
+  <div id="wall2"></div>
+  <div id="heroes"></div>
+</div>
+<div id="controls">
+  <button id="btnPlay" type="button">Play / Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+  <span id="clock">0.0s</span>
+</div>
+<script>
+"use strict";
+/* ================= CONFIG — every production-facing variable ================= */
+const CONFIG = {
+  durationMs: 23000,
+  /* Derived value: normalized at validation to the schedule's first phase-2 wave time; a disagreeing value warns and the schedule is unchanged. */
+  phase2StartMs: 13500,
+  counterLabel1: "things last night",
+  counterLabel2: "IN THIS MEETING",
+  /* Wave schedule. Two anchor times carry measured values (counter 1 at
+     500ms, counter 24 at 16500ms); the remaining rounds sit between them.
+     tileCount and counterValue are independent keys: the counter counts
+     things/participants, the wall shows tiles. */
+  waves: [
+    { timeMs: 500,   phase: 1, tileCount: 8,  counterValue: 1  },
+    { timeMs: 3000,  phase: 1, tileCount: 12, counterValue: 5  },
+    { timeMs: 5500,  phase: 1, tileCount: 18, counterValue: 11 },
+    { timeMs: 8000,  phase: 1, tileCount: 24, counterValue: 16 },
+    { timeMs: 10500, phase: 1, tileCount: 32, counterValue: 21 },
+    { timeMs: 13500, phase: 2, tileCount: 12, counterValue: 12 },
+    { timeMs: 15000, phase: 2, tileCount: 18, counterValue: 18 },
+    { timeMs: 16500, phase: 2, tileCount: 24, counterValue: 24 }
+  ],
+  waveEntranceMs: 380,
+  tileStaggerMs: 45,
+  entranceStartScale: 0.6,
+  heroTileCount: 4,
+  heroAppearMs: 16500,
+  heroEntranceMs: 420,
+  heroStaggerMs: 90,
+  tileSeed: 1234,
+  palette: ["#3a6ea5","#7a4a8c","#2e7d6b","#a5543a","#546e2e","#8c2e4f","#2e5a8c","#6b6b2e","#4a3a8c","#8c6a2e"],
+  tileNames: ["agent-1 song","agent-2 beat","agent-1.1 sketch","agent-1.2 walls","agent-2.2 reach","agent-1.1.1 hold","agent-3 site","agent-4 bot","agent-5 ghost","agent-6 witch","agent-7 mars","agent-8 pitch"],
+  heroNames: ["GT3 RS","Tom","You","Claude"],
+  bg: "#05070a",
+  counterColor: "#e8a33d",
+  counterColor2: "#ffd34d",
+  /* Badge 1 geometry and type (sizes in container-relative units, cqw) */
+  badge1LeftPct: 4, badge1TopPct: 16, badge1NumCqw: 11.5, badge1LabelCqw: 2.0, badge1LabelMaxWidthPx: 260, badge1LabelMarginTopPx: 6, badge1LabelMinPx: 11,
+  /* Badge 2 geometry, type, and backing */
+  badge2RightPct: 3, badge2TopPct: 4, badge2NumCqw: 4.6, badge2LabelCqw: 1.25, badge2LabelMinPx: 11, badge2NumMinPx: 17, badgeSmallWidthPx: 480, badge2LabelTrackingSmallPx: 0.5, wall2TopPctSmall: 30, wall2HeightPctSmall: 66,
+  badge2Bg: "rgba(0,0,0,0.55)", badge2PaddingPx: 8, badge2RadiusPx: 6,
+  /* Wall geometry (percent of stage) and grid */
+  wall1RightPct: 2.5, wall1TopPct: 9, wall1WidthPct: 56, wall1HeightPct: 82, wall1GapPct: 1.2, gridAspect1: 1.05,
+  wall2LeftPct: 3, wall2TopPct: 4, wall2WidthPct: 94, wall2HeightPct: 90, wall2GapPct: 1.6, gridAspect2: 1.9,
+  /* Tile text */
+  tileTagCqw: 0.95, tileInitialsCqw: 1.35,
+  /* Motif parameters */
+  motifBarMin: 9, motifBarExtra: 8, motifBarBottomPct: 18, motifBarWidthPx: 3, motifBarMinHeightPct: 15, motifBarHeightSpanPct: 65,
+  motifBlockCount: 6, motifOrbitWidthPct: 44, motifOrbitCorePct: 14,
+  /* Foreground panel geometry and separation */
+  heroRightPct: 3, heroBottomPct: 5, heroWidthPct: 44, heroHeightPct: 52, heroGapPct: 2.0, heroCols: 2,
+  heroBorder: "2px solid rgba(255,255,255,0.65)", heroShadow: "0 6px 18px rgba(0,0,0,0.65)", heroNameCqw: 1.15, heroNameMinPx: 10,
+  /* Controls */
+  controlFontPx: 14, controlPadding: "10px 18px"
+};
+const WARNINGS = [];
+function warn(msg){ WARNINGS.push(msg); }
+function isColor(v){ return typeof v === "string" && /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(v.trim()); }
+function strictNumber(v){
+  if (typeof v !== "string" || !/^-?\d+(\.\d+)?$/.test(v.trim())) return undefined;
+  const n = Number(v); return Number.isFinite(n) ? n : undefined;
+}
+/* URL overrides, validated and normalized at load. An invalid value keeps
+   its default and records a warning. */
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  const str = (key, field, maxLen) => {
+    if (!q.has(key)) return;
+    const v = q.get(key).trim();
+    if (v.length >= 1 && v.length <= (maxLen || 80)) CONFIG[field] = v;
+    else warn("override " + key + " rejected: empty or over length limit");
+  };
+  const num = (key, field, min, max) => {
+    if (!q.has(key)) return;
+    const n = strictNumber(q.get(key));
+    if (n !== undefined && n >= min && n <= max) CONFIG[field] = n;
+    else warn("override " + key + " rejected: not a number in range " + min + ".." + max);
+  };
+  const col = (key, apply) => {
+    if (!q.has(key)) return;
+    const v = q.get(key).trim();
+    if (isColor(v)) apply(v); else warn("override " + key + " rejected: not a hex color");
+  };
+  str("counterLabel1", "counterLabel1"); str("counterLabel2", "counterLabel2");
+  col("palette0", v => { CONFIG.palette[0] = v; });
+  col("bg", v => { CONFIG.bg = v; });
+  col("counterColor", v => { CONFIG.counterColor = v; });
+  num("phase2StartMs", "phase2StartMs", 0, 600000);
+  num("waveEntranceMs", "waveEntranceMs", 0, 60000);
+  num("tileStaggerMs", "tileStaggerMs", 0, 10000);
+  num("heroAppearMs", "heroAppearMs", 0, 600000);
+  num("heroEntranceMs", "heroEntranceMs", 0, 60000);
+  num("durationMs", "durationMs", 1, 3600000);
+  num("tileSeed", "tileSeed", 0, 1000000000);
+  q.forEach((v,k)=>{
+    const m = k.match(/^wave(\d+)Counter$/);
+    if (m && CONFIG.waves[+m[1]]){
+      const n = strictNumber(v);
+      if (n !== undefined && Number.isInteger(n) && n >= 0 && n <= 1000000) CONFIG.waves[+m[1]].counterValue = n;
+      else warn("override " + k + " rejected: not a non-negative integer");
+    }
+    const t = k.match(/^wave(\d+)Tiles$/);
+    if (t && CONFIG.waves[+t[1]]){
+      const n = strictNumber(v);
+      if (n !== undefined && Number.isInteger(n) && n >= 0 && n <= 512) CONFIG.waves[+t[1]].tileCount = n;
+      else warn("override " + k + " rejected: not an integer in range 0..512");
+    }
+  });
+})();
+/* Configuration validation and normalization. */
+(function validate(){
+  if (!Number.isFinite(CONFIG.durationMs) || CONFIG.durationMs <= 0){ CONFIG.durationMs = 23000; warn("durationMs normalized to 23000"); }
+  if (!Array.isArray(CONFIG.palette) || CONFIG.palette.length === 0){ CONFIG.palette = ["#3a6ea5"]; warn("palette normalized to a single entry"); }
+  CONFIG.palette = CONFIG.palette.map(c => isColor(c) ? c : "#3a6ea5");
+  if (!Array.isArray(CONFIG.tileNames) || CONFIG.tileNames.length === 0){ CONFIG.tileNames = ["tile"]; warn("tileNames normalized"); }
+  if (!Array.isArray(CONFIG.heroNames) || CONFIG.heroNames.length === 0){ CONFIG.heroNames = ["panel"]; warn("heroNames normalized"); }
+  if (!isColor(CONFIG.bg)){ CONFIG.bg = "#05070a"; warn("bg normalized"); }
+  if (!isColor(CONFIG.counterColor)){ CONFIG.counterColor = "#e8a33d"; warn("counterColor normalized"); }
+  if (!isColor(CONFIG.counterColor2)){ CONFIG.counterColor2 = "#ffd34d"; warn("counterColor2 normalized"); }
+  CONFIG.waves = CONFIG.waves.filter(w => Number.isFinite(w.timeMs) && w.timeMs >= 0 && (w.phase === 1 || w.phase === 2) && Number.isInteger(w.tileCount) && w.tileCount >= 0 && Number.isInteger(w.counterValue) && w.counterValue >= 0);
+  CONFIG.waves.sort((a,b) => a.timeMs - b.timeMs);
+  const firstP2 = CONFIG.waves.find(w => w.phase === 2);
+  if (firstP2 && CONFIG.phase2StartMs !== firstP2.timeMs){ CONFIG.phase2StartMs = firstP2.timeMs; warn("phase2StartMs normalized to the first phase-2 wave time"); }
+  if (!(CONFIG.waveEntranceMs >= 0)){ CONFIG.waveEntranceMs = 380; warn("waveEntranceMs normalized"); }
+  if (!(CONFIG.tileStaggerMs >= 0)){ CONFIG.tileStaggerMs = 45; warn("tileStaggerMs normalized"); }
+  if (!(CONFIG.heroEntranceMs >= 0)){ CONFIG.heroEntranceMs = 420; warn("heroEntranceMs normalized"); }
+  if (!(CONFIG.heroStaggerMs >= 0)){ CONFIG.heroStaggerMs = 90; warn("heroStaggerMs normalized"); }
+  if (!Number.isInteger(CONFIG.heroTileCount) || CONFIG.heroTileCount < 0){ CONFIG.heroTileCount = 4; warn("heroTileCount normalized"); }
+})();
+
+/* Deterministic PRNG (mulberry32) — tile content is generated from the seed. */
+function rng(seed){ let a = seed >>> 0; return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const stageEl = document.getElementById("stage");
+const wall1 = document.getElementById("wall1"), wall2 = document.getElementById("wall2");
+const heroesEl = document.getElementById("heroes");
+const badge1El = document.getElementById("badge1"), badge2El = document.getElementById("badge2");
+function setVar(el, name, value){ if (el.style.setProperty) el.style.setProperty(name, value); }
+/* Apply geometry and type configuration to the stage elements. */
+(function applyLayoutConfig(){
+  stageEl.style.background = CONFIG.bg;
+  badge1El.style.left = CONFIG.badge1LeftPct + "%"; badge1El.style.top = CONFIG.badge1TopPct + "%";
+  const num1 = document.getElementById("num1"), lbl1 = document.getElementById("lbl1");
+  num1.style.fontSize = CONFIG.badge1NumCqw + "cqw"; num1.style.color = CONFIG.counterColor;
+  lbl1.style.fontSize = "max(" + CONFIG.badge1LabelCqw + "cqw," + CONFIG.badge1LabelMinPx + "px)"; lbl1.style.maxWidth = CONFIG.badge1LabelMaxWidthPx + "px"; lbl1.style.marginTop = CONFIG.badge1LabelMarginTopPx + "px";
+  badge2El.style.right = CONFIG.badge2RightPct + "%"; badge2El.style.top = CONFIG.badge2TopPct + "%";
+  badge2El.style.background = CONFIG.badge2Bg; badge2El.style.padding = CONFIG.badge2PaddingPx + "px"; badge2El.style.borderRadius = CONFIG.badge2RadiusPx + "px";
+  const num2 = document.getElementById("num2"), lbl2 = document.getElementById("lbl2");
+  num2.style.fontSize = "max(" + CONFIG.badge2NumCqw + "cqw," + CONFIG.badge2NumMinPx + "px)"; num2.style.color = CONFIG.counterColor2;
+  lbl2.style.fontSize = "max(" + CONFIG.badge2LabelCqw + "cqw," + CONFIG.badge2LabelMinPx + "px)";
+  wall1.style.right = CONFIG.wall1RightPct + "%"; wall1.style.top = CONFIG.wall1TopPct + "%";
+  wall1.style.width = CONFIG.wall1WidthPct + "%"; wall1.style.height = CONFIG.wall1HeightPct + "%";
+  wall2.style.left = CONFIG.wall2LeftPct + "%"; wall2.style.top = CONFIG.wall2TopPct + "%";
+  wall2.style.width = CONFIG.wall2WidthPct + "%"; wall2.style.height = CONFIG.wall2HeightPct + "%";
+  if (stageEl.clientWidth > 0 && stageEl.clientWidth <= CONFIG.badgeSmallWidthPx){ lbl2.style.letterSpacing = CONFIG.badge2LabelTrackingSmallPx + "px"; wall2.style.top = CONFIG.wall2TopPctSmall + "%"; wall2.style.height = CONFIG.wall2HeightPctSmall + "%"; }
+  heroesEl.style.right = CONFIG.heroRightPct + "%"; heroesEl.style.bottom = CONFIG.heroBottomPct + "%";
+  heroesEl.style.width = CONFIG.heroWidthPct + "%"; heroesEl.style.height = CONFIG.heroHeightPct + "%";
+  document.getElementById("btnPlay").style.fontSize = CONFIG.controlFontPx + "px";
+  document.getElementById("btnPlay").style.padding = CONFIG.controlPadding;
+  document.getElementById("btnRestart").style.fontSize = CONFIG.controlFontPx + "px";
+  document.getElementById("btnRestart").style.padding = CONFIG.controlPadding;
+})();
+
+function spanWith(styleText){
+  const s = document.createElement("span");
+  s.style.cssText = styleText;
+  return s;
+}
+function makeTile(i, hero){
+  const r = rng(CONFIG.tileSeed + i * 97);
+  const c1 = CONFIG.palette[Math.floor(r() * CONFIG.palette.length)];
+  const c2 = CONFIG.palette[Math.floor(r() * CONFIG.palette.length)];
+  const d = document.createElement("div");
+  d.className = hero ? "hero" : "tile";
+  const angle = Math.floor(r() * 360);
+  d.style.background = "linear-gradient(" + angle + "deg," + c1 + "," + c2 + ")";
+  if (hero){
+    d.style.border = CONFIG.heroBorder; d.style.boxShadow = CONFIG.heroShadow;
+    const skin = CONFIG.palette[Math.floor(r()*CONFIG.palette.length)];
+    const fig = document.createElement("div"); fig.className = "fig"; fig.style.background = skin;
+    const body = document.createElement("div"); body.className = "body"; body.style.background = c1;
+    const nm = document.createElement("div"); nm.className = "nm"; nm.style.fontSize = "max(" + CONFIG.heroNameCqw + "cqw," + CONFIG.heroNameMinPx + "px)";
+    nm.textContent = CONFIG.heroNames[i % CONFIG.heroNames.length];
+    d.appendChild(fig); d.appendChild(body); d.appendChild(nm);
+    return d;
+  }
+  const kind = Math.floor(r() * 3);
+  const motif = document.createElement("div"); motif.className = "motif";
+  if (kind === 0){
+    const n = CONFIG.motifBarMin + Math.floor(r()*CONFIG.motifBarExtra);
+    for (let b=0;b<n;b++){
+      const h = CONFIG.motifBarMinHeightPct + Math.floor(r()*CONFIG.motifBarHeightSpanPct);
+      motif.appendChild(spanWith("position:absolute;bottom:" + CONFIG.motifBarBottomPct + "%;left:" + (6+b*(88/n)) + "%;width:" + CONFIG.motifBarWidthPx + "px;height:" + h + "%;background:rgba(255,255,255,.55)"));
+    }
+  } else if (kind === 1){
+    for (let b=0;b<CONFIG.motifBlockCount;b++){
+      motif.appendChild(spanWith("position:absolute;left:" + Math.floor(r()*75) + "%;top:" + Math.floor(r()*70) + "%;width:" + (8+Math.floor(r()*14)) + "%;aspect-ratio:1;background:rgba(255,255,255," + (0.2+r()*0.4).toFixed(2) + ");border-radius:2px"));
+    }
+  } else {
+    motif.appendChild(spanWith("position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:" + CONFIG.motifOrbitWidthPct + "%;aspect-ratio:1;border-radius:50%;border:3px solid rgba(255,255,255,.5)"));
+    motif.appendChild(spanWith("position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:" + CONFIG.motifOrbitCorePct + "%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.75)"));
+  }
+  const tag = document.createElement("div"); tag.className = "tag"; tag.style.fontSize = CONFIG.tileTagCqw + "cqw";
+  tag.textContent = CONFIG.tileNames[i % CONFIG.tileNames.length];
+  const ini = document.createElement("div"); ini.className = "ini"; ini.style.fontSize = CONFIG.tileInitialsCqw + "cqw";
+  ini.textContent = String.fromCharCode(65 + (i % 26)) + String.fromCharCode(65 + ((i*7) % 26));
+  d.appendChild(motif); d.appendChild(tag); d.appendChild(ini);
+  return d;
+}
+function maxCount(phase){ let m = 0; for (const w of CONFIG.waves){ if (w.phase === phase && w.tileCount > m) m = w.tileCount; } return m; }
+const maxP1 = maxCount(1), maxP2 = maxCount(2);
+const tiles1 = [], tiles2 = [], heroes = [];
+for (let i=0;i<maxP1;i++){ const t = makeTile(i,false); wall1.appendChild(t); tiles1.push(t); }
+for (let i=0;i<maxP2;i++){ const t = makeTile(100+i,false); wall2.appendChild(t); tiles2.push(t); }
+for (let i=0;i<CONFIG.heroTileCount;i++){ const h = makeTile(200+i,true); heroesEl.appendChild(h); heroes.push(h); }
+
+/* Fixed-cell layout: a tile's cell is priced from its phase's maximum count
+   and its index, so the cell is the same at every wave. */
+function gridColsFor(maxTiles, wide){
+  let best = 1, bestScore = 1e18;
+  for (let c=1;c<=Math.max(1,maxTiles);c++){ const rows = Math.ceil(maxTiles/c); const score = Math.abs(c/rows - wide); if (score < bestScore){ bestScore = score; best = c; } }
+  return best;
+}
+function cellRect(phase, i){
+  const maxTiles = phase === 2 ? maxP2 : maxP1;
+  const wide = phase === 2 ? CONFIG.gridAspect2 : CONFIG.gridAspect1;
+  const gap = phase === 2 ? CONFIG.wall2GapPct : CONFIG.wall1GapPct;
+  const cols = gridColsFor(maxTiles, wide), rows = Math.ceil(maxTiles/cols);
+  const cw = 100/cols, ch = 100/rows, col = i % cols, row = Math.floor(i/cols);
+  return { x: col*cw + gap/2, y: row*ch + gap/2, w: cw - gap, h: ch - gap, cols, rows };
+}
+function heroRect(i){
+  const cols = Math.max(1, CONFIG.heroCols), rows = Math.ceil(Math.max(1,CONFIG.heroTileCount)/cols);
+  const gap = CONFIG.heroGapPct, cw = 100/cols, ch = 100/rows, col = i % cols, row = Math.floor(i/cols);
+  return { x: col*cw + gap/2, y: row*ch + gap/2, w: cw - gap, h: ch - gap, cols, rows };
+}
+function place(el, rect){
+  el.style.left = rect.x + "%"; el.style.top = rect.y + "%";
+  el.style.width = rect.w + "%"; el.style.height = rect.h + "%";
+}
+tiles1.forEach((el,i)=> place(el, cellRect(1,i)));
+tiles2.forEach((el,i)=> place(el, cellRect(2,i)));
+heroes.forEach((el,i)=> place(el, heroRect(i)));
+/* Source-bound geometry model: mirrors the displayed-size functions above
+   (container-relative sizes floored in px) and prices containment and
+   legibility at a given stage width. */
+function modelledGeometry(W){
+  const H = W * 9 / 16, cqw = W / 100, small = W <= CONFIG.badgeSmallWidthPx;
+  const num1Px = CONFIG.badge1NumCqw * cqw;
+  const lbl1Px = Math.max(CONFIG.badge1LabelCqw * cqw, CONFIG.badge1LabelMinPx);
+  const num2Px = Math.max(CONFIG.badge2NumCqw * cqw, CONFIG.badge2NumMinPx);
+  const lbl2Px = Math.max(CONFIG.badge2LabelCqw * cqw, CONFIG.badge2LabelMinPx);
+  const lbl1Width = CONFIG.counterLabel1.length * lbl1Px * 0.52;
+  const lbl2Width = CONFIG.counterLabel2.length * (lbl2Px * 0.52 + (small ? CONFIG.badge2LabelTrackingSmallPx : 2));
+  const badge1Zone = (100 - CONFIG.wall1RightPct - CONFIG.wall1WidthPct - CONFIG.badge1LeftPct) * W / 100;
+  const badge2Bottom = CONFIG.badge2TopPct * H / 100 + num2Px + lbl2Px * 1.2 + CONFIG.badge2PaddingPx * 2;
+  const wall2Top = (small ? CONFIG.wall2TopPctSmall : CONFIG.wall2TopPct) * H / 100;
+  const heroesTop = H * (100 - CONFIG.heroBottomPct - CONFIG.heroHeightPct) / 100;
+  const r1 = cellRect(1, 0), r2 = cellRect(2, 0), rh = heroRect(0);
+  const cell1 = { w: W * CONFIG.wall1WidthPct / 100 * r1.w / 100, h: H * CONFIG.wall1HeightPct / 100 * r1.h / 100 };
+  const cell2 = { w: W * CONFIG.wall2WidthPct / 100 * r2.w / 100, h: H * (small ? CONFIG.wall2HeightPctSmall : CONFIG.wall2HeightPct) / 100 * r2.h / 100 };
+  const heroCell = { w: W * CONFIG.heroWidthPct / 100 * rh.w / 100, h: H * CONFIG.heroHeightPct / 100 * rh.h / 100 };
+  return { W, H, small, num1Px, lbl1Px, num2Px, lbl2Px, lbl1Width, lbl2Width, badge1Zone,
+    lbl1FitsOneLine: lbl1Width <= badge1Zone, badge2Bottom, wall2Top, heroesTop,
+    separation: badge2Bottom < wall2Top && badge2Bottom < heroesTop,
+    cell1, cell2, heroCell, heroAreaRatio: (heroCell.w * heroCell.h) / (cell2.w * cell2.h), heroHeightRatio: heroCell.h / cell2.h };
+}
+
+/* Birth cohorts: a tile's birth wave is the first wave of its phase whose
+   tile count includes it; its cohort position counts from that wave's
+   starting count. */
+function birthInfo(phase, i){
+  let prev = 0;
+  for (let wi=0; wi<CONFIG.waves.length; wi++){
+    const w = CONFIG.waves[wi];
+    if (w.phase !== phase) continue;
+    if (i < w.tileCount) return { waveIndex: wi, timeMs: w.timeMs, cohortPos: i - prev };
+    prev = w.tileCount;
+  }
+  return null;
+}
+function clamp01(v){ return Math.min(1, Math.max(0, v)); }
+function entranceProgress(birth, t){
+  if (!birth) return 0;
+  if (CONFIG.waveEntranceMs === 0) return t >= birth.timeMs ? 1 : 0;
+  return clamp01((t - birth.timeMs - birth.cohortPos * CONFIG.tileStaggerMs) / CONFIG.waveEntranceMs);
+}
+function waveAt(t){ let cur = null, idx = -1; CONFIG.waves.forEach((w,i)=>{ if (t >= w.timeMs){ cur = w; idx = i; } }); return cur ? { wave: cur, index: idx } : null; }
+
+/* One shared state calculation. The renderer and the time-query API both
+   read screen state from this function. */
+function computeState(t){
+  const found = waveAt(t);
+  const phase = found ? found.wave.phase : 1;
+  const count = found ? found.wave.tileCount : 0;
+  const counter = found ? found.wave.counterValue : null;
+  const tileStates = (phase === 2 ? tiles2 : tiles1).map((el,i)=>{
+    const birth = birthInfo(phase, i);
+    const active = i < count;
+    const p = active ? entranceProgress(birth, t) : 0;
+    return { index: i, display: active ? "block" : "none", opacity: active ? p : 0,
+      scale: CONFIG.entranceStartScale + (1 - CONFIG.entranceStartScale) * (active ? p : 0),
+      progress: p, rect: cellRect(phase, i), birthWaveIndex: birth ? birth.waveIndex : -1 };
+  });
+  const heroesActive = phase === 2 && t >= CONFIG.heroAppearMs;
+  const heroStates = heroes.map((el,i)=>{
+    let p = 0;
+    if (heroesActive){
+      p = CONFIG.heroEntranceMs === 0 ? 1 : clamp01((t - CONFIG.heroAppearMs - i * CONFIG.heroStaggerMs) / CONFIG.heroEntranceMs);
+    }
+    return { index: i, display: heroesActive ? "block" : "none", opacity: p,
+      scale: CONFIG.entranceStartScale + (1 - CONFIG.entranceStartScale) * p, progress: p, rect: heroRect(i) };
+  });
+  return { phase, tiles: count, counter, waveIndex: found ? found.index : -1, tileStates, heroStates, heroesActive };
+}
+function render(t){
+  const s = computeState(t);
+  const phase2 = s.phase === 2;
+  badge1El.style.display = phase2 ? "none" : "block";
+  wall1.style.display = phase2 ? "none" : "block";
+  badge2El.style.display = phase2 ? "block" : "none";
+  wall2.style.display = phase2 ? "block" : "none";
+  heroesEl.style.display = s.heroesActive ? "block" : "none";
+  const tiles = phase2 ? tiles2 : tiles1, other = phase2 ? tiles1 : tiles2;
+  other.forEach(el => { el.style.display = "none"; });
+  s.tileStates.forEach((ts,i)=>{
+    const el = tiles[i];
+    el.style.display = ts.display; el.style.opacity = ts.opacity;
+    el.style.transform = "scale(" + ts.scale + ")";
+  });
+  heroes.forEach((el,i)=>{
+    const hs = s.heroStates[i];
+    el.style.display = hs.display; el.style.opacity = hs.opacity;
+    el.style.transform = "scale(" + hs.scale + ")";
+  });
+  if (phase2){
+    document.getElementById("num2").textContent = s.counter === null ? "" : String(s.counter);
+    document.getElementById("lbl2").textContent = CONFIG.counterLabel2;
+  } else {
+    document.getElementById("num1").textContent = s.counter === null ? "" : String(s.counter);
+    document.getElementById("lbl1").textContent = CONFIG.counterLabel1;
+  }
+  return { phase: s.phase, tiles: s.tiles, counter: s.counter, waveIndex: s.waveIndex };
+}
+
+/* Clock: rAF-driven, scrubbable via RECREATION.setTime (comparison sync). */
+let playing = false, startStamp = 0, baseMs = 0, curMs = 0;
+const clockEl = document.getElementById("clock");
+function frame(now){
+  if (playing){
+    curMs = baseMs + (now - startStamp);
+    if (curMs >= CONFIG.durationMs){ curMs = CONFIG.durationMs; playing = false; }
+    render(curMs); clockEl.textContent = (curMs/1000).toFixed(1) + "s";
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame); render(0);
+function play(){ if (curMs >= CONFIG.durationMs) curMs = 0; baseMs = curMs; startStamp = performance.now(); playing = true; }
+function pause(){ playing = false; }
+function restart(){ curMs = 0; baseMs = 0; startStamp = performance.now(); playing = true; render(0); }
+document.getElementById("btnPlay").addEventListener("click", ()=> playing ? pause() : play());
+document.getElementById("btnRestart").addEventListener("click", restart);
+window.RECREATION = {
+  config: CONFIG,
+  warnings: WARNINGS,
+  play, pause, restart,
+  setTime(ms){ curMs = Math.max(0, Math.min(CONFIG.durationMs, ms)); baseMs = curMs; startStamp = performance.now(); render(curMs); clockEl.textContent = (curMs/1000).toFixed(1)+"s"; },
+  getTime(){ return curMs; },
+  stateAt(ms){ const s = computeState(ms); return { phase: s.phase, tiles: s.tiles, counter: s.counter, waveIndex: s.waveIndex, heroesActive: s.heroesActive }; },
+  tileStateAt(ms){ return computeState(ms).tileStates; },
+  heroStateAt(ms){ return computeState(ms).heroStates; },
+  tileRectAt(phase, i){ return cellRect(phase, i); },
+  geometryAt(W){ return modelledGeometry(W); },
+  tileCounts(){ return { phase1Built: tiles1.length, phase2Built: tiles2.length, heroesBuilt: heroes.length }; }
+};
+</script>
+</body>
+</html>

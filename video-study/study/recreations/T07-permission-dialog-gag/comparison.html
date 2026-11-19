@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T07 — Permission-dialog gag · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T07 — Permission-dialog gag</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 0:35–0:43.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation (attempt 3) — a permission modal sits still centre-left while
+each modal's final selection lands directly (finals 0, 0, 2) across three escalating requests.
+One control set drives both.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — different requests</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — “Look What I Can Do” (P1) @ 0:35–0:43<small>segment.mp4 · specimen window 0:34.5–0:43.5 · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T07 Permission-dialog gag, parameterized<small>recreation.html · grouped CONFIG: content, timing, layout, type, palette, tiles, behavior, container · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T07 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click, so both start together. The recreation cycles its three modals on an
+absolute event table (modal windows 1700/1830/2500 ms, final selections landing directly at
+930/1000/1370 ms; default cycle ≈ 6.03 s, the measured modal span inside the segment's 9 s loop).
+Pause preserves position and remaining dwell; Play resumes. The Swap test button reloads the recreation with
+<code>?requests=Allow Mina to review?|Allow Mina to approve?|Allow Mina to publish?|Allow Mina to win?&amp;options=Yes|Yes, and don't ask again|No, let's not get ahead—|Ask again later&amp;finals=0|0|2|3</code> —
+a count-changing swap (4 requests × 4 options): if the new requests still fit the modal under the
+bounded fit policy and the final selections land at 0, 0, 2, 3, the build is the technique, not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+function cmd(c){ rec.contentWindow && rec.contentWindow.postMessage({namespace:"t07",version:1,cmd:c,payload:{}}, "*"); }
+document.getElementById("btnPlay").addEventListener("click", function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ vid.currentTime = 0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click", function(){
+  rec.src = "recreation.html?requests=Allow Mina to review?|Allow Mina to approve?|Allow Mina to publish?|Allow Mina to win?&options=Yes|Yes, and don't ask again|No, let's not get ahead\u2014|Ask again later&finals=0|0|2|3";
+  vid.currentTime = 0; vid.play();
+});
+</script>
+</body>
+</html>

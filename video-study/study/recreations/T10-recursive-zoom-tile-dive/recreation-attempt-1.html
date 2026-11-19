@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T10 — Recursive zoom / tile dive · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden}
+  body{font-family:Arial,Helvetica,sans-serif}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  .cloud{position:absolute;border-radius:50%;opacity:.55}
+  #skyline{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end}
+  .bldg{flex:1 1 0;position:relative}
+  .win{position:absolute;border-radius:50%}
+  #wallWrap{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  #wall{display:grid;will-change:transform}
+  .tile{position:relative;overflow:hidden;border-style:solid}
+  .tileLabel{position:absolute;left:4%;bottom:3%;font-weight:700}
+  .tileArt{position:absolute;inset:0}
+  .shape{position:absolute}
+  #pill{position:absolute;display:flex;align-items:center;white-space:nowrap;font-weight:700;will-change:opacity,transform}
+  #pillDot{border-radius:50%;flex:0 0 auto}
+  #statusPill{position:absolute;display:none;align-items:center;white-space:nowrap;font-weight:700}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="skyline"></div>
+  <div id="wallWrap"><div id="wall"></div></div>
+  <div id="pill"><span id="pillDot"></span><span id="pillText"></span></div>
+  <div id="statusPill"><span id="statusText"></span></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; logic reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: phases are decided by the checkpoints table
+   (wallHold -> diveStart -> pillAt -> statusAt -> diveEnd), never by one global cadence. */
+const CONFIG = {
+  durationMs: 3000,
+  checkpoints: { wallHold: 0, diveStart: 650, pillAt: 1750, statusAt: 2150, diveEnd: 2450 },
+  pillFadeMs: 350,
+  statusFadeMs: 300,
+  gridCols: 1,
+  gridRows: 3,
+  targetIndex: 1,                    /* the middle tile: one desk, one avatar */
+  wallWidthPct: 26,                  /* wall width as % of frame width (evidence: stack ~1/4 frame) */
+  tileGapPct: 1.2,
+  tileBorderPx: 2,
+  highlightBorderPx: 4,
+  zoomScale: 3.4,                    /* at full dive the target tile fills the frame height */
+  skyTop: "#2b3a6e",
+  skyMid: "#7a5f8e",
+  skyLow: "#d99a8a",
+  cloudColor: "#aab4d8",
+  skylineColor: "#141c33",
+  windowColor: "#cfd8ee",
+  highlightColor: "#7fe3c3",         /* mint border on the target tile */
+  tileBorderColor: "#0e1424",
+  pillBg: "#171a21",
+  pillTextColor: "#ffffff",
+  pillDotColor: "#ff6fa5",
+  statusBg: "#171a21",
+  statusTextColor: "#ffffff",
+  checkColor: "#7dff9a",
+  pillText: "you are here",
+  statusText: "laptop: brought",
+  checkMark: "✓",
+  pillFontPx: 15,
+  pillPadYPx: 8,
+  pillPadXPx: 14,
+  pillRadiusPx: 20,
+  pillDotPx: 11,
+  pillGapPx: 8,
+  pillOffsetXPct: 4,                 /* pill sits right of the highlighted tile */
+  statusFontPx: 12,
+  tileLabelFontPx: 9,
+  robotFaceColor: "#101216",
+  laptopColor: "#9aa3ad",
+  orbColor: "#b78ae0",
+  plantColor: "#d99a4c",
+  wheelColor: "#101216",
+  labelColor: "#ffffff",
+  labelShadowColor: "#000000",
+  tiles: [
+    { kind: "robot", label: "Claude",  bg: "#3a3f45", accent: "#e8762c", detail: "#dfe6ee" },
+    { kind: "desk",  label: "You",     bg: "#cfe8dd", accent: "#e75480", detail: "#8a5a2b" },
+    { kind: "car",   label: "GT3 RS",  bg: "#5a6650", accent: "#6a2fa0", detail: "#f5d13c" }
+  ],
+  skylineHeightsPct: [22,34,26,42,30,48,36,24,40,28,44,32,22,38,27,46,31,25,41,29],
+  cloudSpecs: [ {x:6,y:38,w:16}, {x:56,y:12,w:18}, {x:72,y:34,w:15}, {x:38,y:20,w:11} ]
+};
+
+/* URL overrides (swap test / reuse):
+   ?pill=FOUND%20YOU&status=keys%3A%20brought&zoom=2.6&diveStartMs=300&pillAtMs=1400
+   ?skyTop=%23331144&highlight=%23ffd75e&target=2&cols=1&rows=3&durationMs=3600&tile2=ROBOT%20BAY */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (num("durationMs") !== null) CONFIG.durationMs = Math.max(800, num("durationMs"));
+  if (num("diveStartMs") !== null) CONFIG.checkpoints.diveStart = num("diveStartMs");
+  if (num("pillAtMs") !== null) CONFIG.checkpoints.pillAt = num("pillAtMs");
+  if (num("statusAtMs") !== null) CONFIG.checkpoints.statusAt = num("statusAtMs");
+  if (num("diveEndMs") !== null) CONFIG.checkpoints.diveEnd = num("diveEndMs");
+  if (num("zoom") !== null) CONFIG.zoomScale = Math.max(1.2, num("zoom"));
+  if (num("cols") !== null) CONFIG.gridCols = Math.max(1, Math.floor(num("cols")));
+  if (num("rows") !== null) CONFIG.gridRows = Math.max(1, Math.floor(num("rows")));
+  if (num("target") !== null) CONFIG.targetIndex = Math.floor(num("target"));
+  if (q.get("pill")) CONFIG.pillText = q.get("pill");
+  if (q.get("status")) CONFIG.statusText = q.get("status");
+  if (q.get("skyTop")) CONFIG.skyTop = q.get("skyTop");
+  if (q.get("highlight")) CONFIG.highlightColor = q.get("highlight");
+  if (q.get("pillDot")) CONFIG.pillDotColor = q.get("pillDot");
+  for (let i = 0; i < CONFIG.tiles.length; i++)
+    if (q.get("tile" + i)) CONFIG.tiles[i].label = q.get("tile" + i);
+})();
+
+function easeInOutCubic(x){ return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; }
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+/* Pure state from time — the checkpoint table decides every phase. */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  const diveRaw = clamp01((t - cp.diveStart) / Math.max(1, cp.diveEnd - cp.diveStart));
+  const dive = easeInOutCubic(diveRaw);
+  const scale = 1 + (cfg.zoomScale - 1) * dive;
+  const pill = clamp01((t - cp.pillAt) / cfg.pillFadeMs);
+  const status = clamp01((t - cp.statusAt) / cfg.statusFadeMs);
+  const col = cfg.targetIndex % cfg.gridCols;
+  const row = Math.floor(cfg.targetIndex / cfg.gridCols);
+  const originX = (col + 0.5) / cfg.gridCols * 100;
+  const originY = (row + 0.5) / cfg.gridRows * 100;
+  return { t: t, diveRaw: diveRaw, dive: dive, scale: scale, pill: pill, status: status,
+           originX: originX, originY: originY, targetCol: col, targetRow: row };
+}
+
+/* ---- Build the scene from CONFIG ---- */
+const stage = document.getElementById("stage");
+stage.style.background = "linear-gradient(" + CONFIG.skyTop + ", " + CONFIG.skyMid + " 62%, " + CONFIG.skyLow + ")";
+for (const c of CONFIG.cloudSpecs){
+  const cl = document.createElement("div");
+  cl.className = "cloud";
+  cl.style.left = c.x + "%"; cl.style.top = c.y + "%";
+  cl.style.width = c.w + "%"; cl.style.height = (c.w * 0.36) + "%";
+  cl.style.background = CONFIG.cloudColor;
+  stage.appendChild(cl);
+}
+const skyline = document.getElementById("skyline");
+skyline.style.height = "46%";
+for (let i = 0; i < CONFIG.skylineHeightsPct.length; i++){
+  const b = document.createElement("div");
+  b.className = "bldg";
+  b.style.height = CONFIG.skylineHeightsPct[i] + "%";
+  b.style.background = CONFIG.skylineColor;
+  for (let wI = 0; wI < 3; wI++){
+    const wn = document.createElement("div");
+    wn.className = "win";
+    wn.style.left = (18 + wI * 28) + "%"; wn.style.top = (14 + ((i + wI) % 4) * 22) + "%";
+    wn.style.width = "9%"; wn.style.height = "5%";
+    wn.style.background = CONFIG.windowColor; wn.style.opacity = "0.75";
+    b.appendChild(wn);
+  }
+  skyline.appendChild(b);
+}
+
+const wall = document.getElementById("wall");
+wall.style.width = CONFIG.wallWidthPct + "%";
+wall.style.gridTemplateColumns = "repeat(" + CONFIG.gridCols + ", 1fr)";
+wall.style.gridTemplateRows = "repeat(" + CONFIG.gridRows + ", 1fr)";
+wall.style.gap = CONFIG.tileGapPct + "%";
+wall.style.aspectRatio = (CONFIG.gridCols * 16) + " / " + (CONFIG.gridRows * 10);
+
+function addShape(parent, css){
+  const s = document.createElement("div");
+  s.className = "shape";
+  for (const k in css) s.style[k] = css[k];
+  parent.appendChild(s); return s;
+}
+function drawTileArt(art, tile){
+  if (tile.kind === "robot"){
+    addShape(art, { left:"22%", top:"10%", width:"56%", height:"62%", borderRadius:"18%", background: tile.accent });
+    addShape(art, { left:"30%", top:"30%", width:"40%", height:"30%", borderRadius:"40%", background: CONFIG.robotFaceColor });
+    addShape(art, { left:"34%", top:"36%", width:"11%", height:"18%", borderRadius:"50%", background: tile.detail });
+    addShape(art, { left:"55%", top:"36%", width:"11%", height:"18%", borderRadius:"50%", background: tile.detail });
+    addShape(art, { left:"38%", top:"74%", width:"24%", height:"14%", borderRadius:"30%", background: tile.accent });
+  } else if (tile.kind === "desk"){
+    addShape(art, { left:"8%", top:"58%", width:"84%", height:"5%", background: tile.detail });
+    addShape(art, { left:"12%", top:"63%", width:"4%", height:"30%", background: tile.detail });
+    addShape(art, { left:"84%", top:"63%", width:"4%", height:"30%", background: tile.detail });
+    addShape(art, { left:"44%", top:"22%", width:"12%", height:"16%", borderRadius:"50%", background: tile.accent });
+    addShape(art, { left:"40%", top:"38%", width:"20%", height:"24%", borderRadius:"20%", background: tile.accent });
+    addShape(art, { left:"41%", top:"44%", width:"18%", height:"13%", background: CONFIG.laptopColor });
+    addShape(art, { left:"70%", top:"26%", width:"16%", height:"22%", borderRadius:"50%", background: CONFIG.orbColor });
+    addShape(art, { left:"6%", top:"62%", width:"10%", height:"31%", borderRadius:"30%", background: CONFIG.plantColor });
+  } else { /* car */
+    addShape(art, { left:"10%", top:"52%", width:"80%", height:"20%", borderRadius:"40%", background: tile.accent });
+    addShape(art, { left:"28%", top:"38%", width:"38%", height:"18%", borderRadius:"50%", background: tile.accent });
+    addShape(art, { left:"16%", top:"66%", width:"15%", height:"24%", borderRadius:"50%", background: CONFIG.wheelColor });
+    addShape(art, { left:"68%", top:"66%", width:"15%", height:"24%", borderRadius:"50%", background: CONFIG.wheelColor });
+    addShape(art, { left:"10%", top:"80%", width:"80%", height:"4%", background: tile.detail });
+  }
+}
+const tileEls = [];
+for (let i = 0; i < CONFIG.tiles.length; i++){
+  const tile = CONFIG.tiles[i];
+  const d = document.createElement("div");
+  d.className = "tile";
+  d.style.background = tile.bg;
+  d.style.borderColor = (i === CONFIG.targetIndex) ? CONFIG.highlightColor : CONFIG.tileBorderColor;
+  d.style.borderWidth = ((i === CONFIG.targetIndex) ? CONFIG.highlightBorderPx : CONFIG.tileBorderPx) + "px";
+  const art = document.createElement("div");
+  art.className = "tileArt";
+  drawTileArt(art, tile);
+  d.appendChild(art);
+  const lab = document.createElement("div");
+  lab.className = "tileLabel";
+  lab.textContent = tile.label;
+  lab.style.fontSize = CONFIG.tileLabelFontPx + "px";
+  lab.style.color = CONFIG.labelColor;
+  lab.style.textShadow = "0 1px 2px " + CONFIG.labelShadowColor;
+  d.appendChild(lab);
+  wall.appendChild(d); tileEls.push(d);
+}
+
+const pill = document.getElementById("pill");
+pill.style.background = CONFIG.pillBg;
+pill.style.color = CONFIG.pillTextColor;
+pill.style.fontSize = CONFIG.pillFontPx + "px";
+pill.style.padding = CONFIG.pillPadYPx + "px " + CONFIG.pillPadXPx + "px";
+pill.style.borderRadius = CONFIG.pillRadiusPx + "px";
+pill.style.gap = CONFIG.pillGapPx + "px";
+pill.style.left = (50 + CONFIG.wallWidthPct / 2 + CONFIG.pillOffsetXPct) + "%";
+pill.style.top = "44%";
+const pillDot = document.getElementById("pillDot");
+pillDot.style.background = CONFIG.pillDotColor;
+pillDot.style.width = CONFIG.pillDotPx + "px";
+pillDot.style.height = CONFIG.pillDotPx + "px";
+document.getElementById("pillText").textContent = CONFIG.pillText;
+
+const statusPill = document.getElementById("statusPill");
+statusPill.style.background = CONFIG.statusBg;
+statusPill.style.color = CONFIG.statusTextColor;
+statusPill.style.fontSize = CONFIG.statusFontPx + "px";
+statusPill.style.padding = CONFIG.pillPadYPx + "px " + CONFIG.pillPadXPx + "px";
+statusPill.style.borderRadius = CONFIG.pillRadiusPx + "px";
+statusPill.style.left = "4%";
+statusPill.style.bottom = "5%";
+document.getElementById("statusText").textContent = CONFIG.statusText + " ";
+const check = document.createElement("span");
+check.textContent = CONFIG.checkMark;
+check.style.color = CONFIG.checkColor;
+statusPill.appendChild(check);
+
+function render(tMs){
+  const s = computeState(tMs, CONFIG);
+  wall.style.transformOrigin = s.originX + "% " + s.originY + "%";
+  wall.style.transform = "scale(" + s.scale.toFixed(4) + ")";
+  pill.style.opacity = s.pill.toFixed(3);
+  pill.style.transform = "translateX(" + ((1 - s.pill) * 12).toFixed(2) + "%)";
+  /* phone-fit clamp: the pill never crosses the frame's right edge */
+  const sw = stage.clientWidth || 0, pw = pill.offsetWidth || 0;
+  if (sw && pw){
+    const desired = sw * (50 + CONFIG.wallWidthPct / 2 + CONFIG.pillOffsetXPct) / 100;
+    pill.style.left = Math.min(desired, Math.max(0, sw - pw - sw * 0.02)).toFixed(1) + "px";
+  }
+  statusPill.style.display = s.status > 0 ? "flex" : "none";
+  statusPill.style.opacity = s.status.toFixed(3);
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>

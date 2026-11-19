@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T07 — Permission-dialog gag · recreation</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#050807}
+  #stage{position:relative;width:100%;height:100%;min-height:200px;overflow:hidden}
+  #tiles{position:absolute;inset:0}
+  .tile{position:absolute;border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.03);border-radius:3px}
+  #scrim{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+  #modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+         border:2px solid #e8912d;border-radius:10px;background:#0a0c0a;
+         box-sizing:border-box;font-family:ui-monospace,Menlo,Consolas,monospace}
+  #req{font-weight:700;color:#f2f2f2;line-height:1.25;margin:0 0 .55em;white-space:nowrap}
+  .opt{color:#c9c9c9;line-height:1.3;white-space:nowrap;border-radius:4px;box-sizing:border-box}
+  .opt.sel{color:#f5a83d;background:rgba(232,145,45,.28);font-weight:700}
+  .opt .mark{display:inline-block;width:1.1em;color:transparent}
+  .opt.sel .mark{color:#f5a83d}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="tiles"></div>
+  <div id="scrim"></div>
+  <div id="modal"><div id="req"></div><div id="opts"></div></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every variable of the technique lives here; the logic below reads only CONFIG ===== */
+const CONFIG = {
+  requests: [
+    "Allow Adita to direct?",
+    "Allow Adita to produce?",
+    "Allow Adita to win an Oscar?"
+  ],
+  options: [
+    "Yes",
+    "Yes, and don't ask again",
+    "No, let's not get ahead\u2014"
+  ],
+  /* final highlighted option index per modal: the highlight steps DOWN across the cycle 0 -> 1 -> 2 */
+  finalSelections: [0, 1, 2],
+  stepMs: 650,          /* dwell on each highlight position before it steps down */
+  holdAfterMs: 1100,    /* still hold on the final selection before the next modal replaces this one */
+  modalInMs: 250,       /* brief still beat after a modal appears, before stepping starts */
+  bg: "#050807",
+  modalBg: "#0a0c0a",
+  border: "#e8912d",
+  fg: "#f2f2f2",
+  optFg: "#c9c9c9",
+  highlightFg: "#f5a83d",
+  highlightBg: "rgba(232,145,45,0.28)",
+  modalWidthRatio: 0.62,  /* modal width as a fraction of stage width (specimen) */
+  modalScale: 1,          /* overall modal scale multiplier */
+  fontFamily: "ui-monospace, Menlo, Consolas, monospace",
+  tileCount: 8,           /* faint code-drawn background tiles (set dressing, dimmed behind scrim) */
+  tileOpacity: 0.5
+};
+
+/* URL overrides (swap test / reuse):
+   ?requests=A?|B?|C?&options=X|Y|Z&finals=0|1|2&stepMs=400&holdAfterMs=700&border=%2300ccff&highlightFg=%2300ccff&bg=%23111111 */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  if (q.get("requests")) CONFIG.requests = q.get("requests").split("|").filter(s => s.length);
+  if (q.get("options")) CONFIG.options = q.get("options").split("|").filter(s => s.length);
+  if (q.get("finals")) CONFIG.finalSelections = q.get("finals").split("|").map(s => parseInt(s, 10) || 0);
+  if (q.get("stepMs")) CONFIG.stepMs = Math.max(50, parseInt(q.get("stepMs"), 10) || CONFIG.stepMs);
+  if (q.get("holdAfterMs")) CONFIG.holdAfterMs = Math.max(0, parseInt(q.get("holdAfterMs"), 10) || 0);
+  if (q.get("modalInMs")) CONFIG.modalInMs = Math.max(0, parseInt(q.get("modalInMs"), 10) || 0);
+  if (q.get("bg")) CONFIG.bg = q.get("bg");
+  if (q.get("modalBg")) CONFIG.modalBg = q.get("modalBg");
+  if (q.get("border")) CONFIG.border = q.get("border");
+  if (q.get("fg")) CONFIG.fg = q.get("fg");
+  if (q.get("highlightFg")) CONFIG.highlightFg = q.get("highlightFg");
+  if (q.get("highlightBg")) CONFIG.highlightBg = q.get("highlightBg");
+  if (q.get("modalScale")) CONFIG.modalScale = parseFloat(q.get("modalScale")) || CONFIG.modalScale;
+  if (!CONFIG.requests.length) CONFIG.requests = ["Allow?"];
+  if (!CONFIG.options.length) CONFIG.options = ["Yes", "No"];
+})();
+
+const stage = document.getElementById("stage");
+const modal = document.getElementById("modal");
+const reqEl = document.getElementById("req");
+const optsEl = document.getElementById("opts");
+const tilesEl = document.getElementById("tiles");
+const measureCtx = document.createElement("canvas").getContext("2d");
+
+/* Faint background tiles: pure code-drawn rectangles, deterministic layout (no specimen media). */
+(function buildTiles(){
+  for (let i = 0; i < CONFIG.tileCount; i++){
+    const t = document.createElement("div");
+    t.className = "tile";
+    const col = i % 4, row = Math.floor(i / 4);
+    t.style.left = (54 + col * 11.5) + "%";
+    t.style.top = (18 + row * 34) + "%";
+    t.style.width = "10%"; t.style.height = "26%";
+    t.style.opacity = String(CONFIG.tileOpacity * (0.5 + (i % 3) * 0.25));
+    tilesEl.appendChild(t);
+  }
+})();
+
+/* Measured fit: the modal and its type are sized from the stage and the longest line's
+   real measured width, so no line can clip at any stage size — phone-first by construction. */
+function layout(){
+  const w = stage.clientWidth || 960, h = stage.clientHeight || 540;
+  const modalW = Math.min(w * CONFIG.modalWidthRatio * CONFIG.modalScale, w * 0.94);
+  const pad = Math.max(10, modalW * 0.045);
+  const REF = 100;
+  let longest = 0, kind = "";
+  measureCtx.font = "700 " + REF + "px " + CONFIG.fontFamily;
+  CONFIG.requests.forEach(r => { const m = measureCtx.measureText(r).width; if (m > longest){ longest = m; kind = "req"; } });
+  measureCtx.font = REF + "px " + CONFIG.fontFamily;
+  CONFIG.options.forEach((o, i) => {
+    const m = measureCtx.measureText("\u276F " + (i + 1) + ". " + o).width;
+    if (m > longest){ longest = m; kind = "opt"; }
+  });
+  const avail = modalW - 2 * pad;
+  let reqPx = REF * (avail / (longest || REF));
+  reqPx = Math.min(reqPx, h * 0.085 * CONFIG.modalScale + 14);
+  reqPx = Math.max(11, Math.floor(reqPx));
+  const optPx = Math.max(10, Math.floor(reqPx * 0.88));
+  modal.style.width = modalW + "px";
+  modal.style.padding = pad + "px " + pad + "px " + (pad * 0.8) + "px";
+  modal.style.background = CONFIG.modalBg;
+  modal.style.borderColor = CONFIG.border;
+  modal.style.fontFamily = CONFIG.fontFamily;
+  reqEl.style.fontSize = reqPx + "px";
+  reqEl.style.color = CONFIG.fg;
+  optsEl.querySelectorAll(".opt").forEach(el => {
+    el.style.fontSize = optPx + "px";
+    el.style.padding = Math.max(2, optPx * 0.18) + "px " + Math.max(4, optPx * 0.3) + "px";
+  });
+  stage.style.background = CONFIG.bg;
+  document.body.style.background = CONFIG.bg;
+  return { reqPx, optPx, modalW };
+}
+
+let modalIdx = 0, selIdx = 0, timer = null, playing = false;
+
+function renderModal(){
+  reqEl.textContent = CONFIG.requests[modalIdx];
+  optsEl.innerHTML = "";
+  CONFIG.options.forEach((o, i) => {
+    const d = document.createElement("div");
+    d.className = "opt" + (i === selIdx ? " sel" : "");
+    d.style.color = i === selIdx ? CONFIG.highlightFg : CONFIG.optFg;
+    d.style.background = i === selIdx ? CONFIG.highlightBg : "transparent";
+    const mark = document.createElement("span");
+    mark.className = "mark"; mark.textContent = "\u276F";
+    mark.style.color = i === selIdx ? CONFIG.highlightFg : "transparent";
+    d.appendChild(mark);
+    d.appendChild(document.createTextNode((i + 1) + ". " + o));
+    optsEl.appendChild(d);
+  });
+  layout();
+}
+
+/* Strict sequencing (Owner Cure 2 analog): ONE modal owns the stage at a time.
+   Its highlight steps 0 -> final one position per stepMs, holds, and only then
+   is the modal replaced — instantly, no fade — by the next request. No overlap. */
+function finalFor(i){
+  const f = CONFIG.finalSelections[i];
+  return Math.max(0, Math.min(CONFIG.options.length - 1, (typeof f === "number" ? f : i)));
+}
+function schedule(fn, ms){ timer = setTimeout(fn, ms); }
+function runModal(){
+  selIdx = 0;
+  renderModal();
+  schedule(stepDown, CONFIG.modalInMs + CONFIG.stepMs);
+}
+function stepDown(){
+  if (selIdx < finalFor(modalIdx)){ selIdx++; renderModal(); schedule(stepDown, CONFIG.stepMs); }
+  else schedule(nextModal, CONFIG.holdAfterMs);
+}
+function nextModal(){
+  modalIdx = (modalIdx + 1) % CONFIG.requests.length;
+  runModal();
+}
+function play(){ if (playing) return; playing = true; runModal(); }
+function pause(){ playing = false; if (timer) clearTimeout(timer); timer = null; }
+function restart(){ pause(); modalIdx = 0; play(); }
+
+window.addEventListener("resize", renderModal);
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+play();
+</script>
+</body>
+</html>

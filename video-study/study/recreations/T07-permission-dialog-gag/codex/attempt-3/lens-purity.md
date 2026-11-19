@@ -1,0 +1,11 @@
+**Construction purity passes.** The recreation builds the modal and tile field from code. No specimen media, traced artwork, external assets, or copied material beyond the permitted request and option text appears in its source. The deduction is for presentation defaults that still live outside `CONFIG`.
+
+- **Tile construction and text.** In `packet.txt` → Recreation Source → `bootstrap`, each tile is a `div` positioned by row and column arithmetic, with dimensions, fill, border, radius, and opacity drawn from configuration. There are no per-tile traced contours or image inputs. The canvas measures text only. In `render()`, the request, options, numbering, and marker come from `cfg.content`.
+- **Palette and timing.** `render()` and `selectionStyleFor()` obtain the visible colors from `cfg.palette`, and `buildTimeline()` reads the configured windows, landing delays, and flash duration. One appearance literal remains in `render()`: the non-flash modal opacity is hard-coded as `"1"`.
+- **Fallbacks.** In `normalizeConfig()`, an invalid `flashModalIndices` becomes `[0]`, independently specifying which modal flashes. The same function duplicates the modal-scale and behavior-policy defaults. In `render()`, zero stage dimensions trigger literal `960` and `540` fallbacks. These branches qualify the Build Record’s claim that every technique value lives in `CONFIG`. A consumption census can pass even when a fallback duplicates a configured value.
+
+**Limits.** The packet includes the recreation source and own-check results. Placement of the specimen on the labeled ORIGINAL side is supported by the Build Record’s `comparison.html` entry only. The comparison source and rendered pixels were unavailable for independent verification.
+
+BODY-WRITE: None (read-only run). For a next attempt, source resting opacity and fallback stage dimensions from CONFIG, restore invalid flash, scale, and policy settings from their CONFIG defaults, and exercise those branches with changed defaults.
+
+SCORE: 95

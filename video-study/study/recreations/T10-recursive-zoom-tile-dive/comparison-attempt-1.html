@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T10 — Recursive zoom / tile dive · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.08em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;
+         padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+</style>
+</head>
+<body>
+<h1>T10 — Recursive zoom / tile dive</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 0:54–0:56.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation — a tile wall over a dusk city; the camera dives back
+into the single highlighted desk tile while the locator pill (“you are here”) and the status
+pill (“laptop: brought ✓”) appear. One control set drives both.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — new pills, timing, palette</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — Look What I Can Do (P1) @ 0:54–0:56<small>segment.mp4 · specimen window 53.5–56.5 s (±0.5 handles) · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T10 Recursive zoom / tile dive, parameterized<small>recreation.html · CONFIG: tiles, target, checkpoints, zoom, pills, palette · no specimen media inside</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T10 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click, so both start together. The recreation runs a 3 s loop
+(<code>durationMs</code> 3000) matched to the segment; its phases are decided by the CONFIG checkpoint
+table (<code>wallHold 0 · diveStart 650 · pillAt 1750 · statusAt 2150 · diveEnd 2450</code> ms), not by a
+global cadence. The Swap test button reloads the recreation with
+<code>?pill=FOUND%20YOU&amp;status=keys%3A%20brought&amp;diveStartMs=300&amp;pillAtMs=1400&amp;skyTop=%23331144&amp;highlight=%23ffd75e&amp;tile1=MY%20DESK</code> —
+new locator/status text, an earlier dive and pill, a violet sky, a gold highlight and a renamed target
+tile; if the dive, the pills and the palette all follow the new values, the build is the technique,
+not a copy of the specimen.</p>
+
+<script>
+const vid = document.getElementById("vid");
+const rec = document.getElementById("rec");
+function cmd(c){ rec.contentWindow && rec.contentWindow.postMessage({cmd:c}, "*"); }
+document.getElementById("btnPlay").addEventListener("click", function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ vid.currentTime = 0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click", function(){
+  rec.src = "recreation.html?pill=FOUND%20YOU&status=keys%3A%20brought&diveStartMs=300&pillAtMs=1400&skyTop=%23331144&highlight=%23ffd75e&tile1=MY%20DESK";
+  vid.currentTime = 0; vid.play();
+});
+</script>
+</body>
+</html>

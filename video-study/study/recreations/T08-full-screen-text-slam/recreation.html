@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T08 — Full-Screen Text Slam · recreation</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#060606}
+  #stage{position:relative;width:100%;height:100%;min-height:200px;overflow:hidden;
+         display:flex;align-items:center;justify-content:center}
+  #phrase{white-space:nowrap;line-height:1;text-align:center;letter-spacing:0.01em}
+</style>
+</head>
+<body>
+<div id="stage"><div id="phrase"></div></div>
+<script>
+"use strict";
+/* ===== CONFIG — every variable of the technique lives here; the logic below reads only CONFIG ===== */
+const CONFIG = {
+  phrases: ["TOO LATE!", "I KNEW IT!"],
+  phraseColors: ["#ff4040", "#ffffff"],
+  holdMs: 1400,
+  bg: "#060606",
+  fg: "#ff4040",
+  fontWeight: 900,
+  fontFamily: "'Arial Black', Impact, Arial, sans-serif",
+  maxFontPx: 260,
+  marginRatio: 0.06,
+  tiltDeg: 0
+};
+
+/* URL overrides (swap test / reuse): ?phrases=A|B&holdMs=900&bg=%23000000&fg=%23ffd75e&fontWeight=800&tiltDeg=-4 */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  if (q.get("phrases")) CONFIG.phrases = q.get("phrases").split("|").filter(s => s.length);
+  if (q.get("colors")) CONFIG.phraseColors = q.get("colors").split("|").filter(s => s.length);
+  if (q.get("holdMs")) CONFIG.holdMs = Math.max(100, parseInt(q.get("holdMs"), 10) || CONFIG.holdMs);
+  if (q.get("bg")) CONFIG.bg = q.get("bg");
+  if (q.get("fg")) { CONFIG.fg = q.get("fg"); if (!q.get("colors")) CONFIG.phraseColors = []; }
+  if (q.get("fontWeight")) CONFIG.fontWeight = parseInt(q.get("fontWeight"), 10) || CONFIG.fontWeight;
+  if (q.get("tiltDeg")) CONFIG.tiltDeg = parseFloat(q.get("tiltDeg")) || 0;
+  if (!CONFIG.phrases.length) CONFIG.phrases = ["SLAM!"];
+})();
+
+const stage = document.getElementById("stage");
+const phraseEl = document.getElementById("phrase");
+const measureCtx = document.createElement("canvas").getContext("2d");
+
+/* Measured shrink-to-fit: size is computed from the phrase's real measured width,
+   so the phrase can never overflow the frame — no hand-picked sizes. */
+function fitFontPx(text, stageW, stageH){
+  const REF = 100;
+  measureCtx.font = CONFIG.fontWeight + " " + REF + "px " + CONFIG.fontFamily;
+  const wAtRef = measureCtx.measureText(text).width || (text.length * REF * 0.6);
+  const availW = stageW * (1 - 2 * CONFIG.marginRatio);
+  let px = REF * (availW / wAtRef);              /* fill the width, inside the margin */
+  px = Math.min(px, stageH * 0.62);              /* height bound: one line, clear of edges */
+  px = Math.min(px, CONFIG.maxFontPx * (stageW / 960)); /* specimen cap, stage-scaled */
+  return Math.max(16, Math.floor(px));
+}
+
+let idx = 0, timer = null, playing = false;
+
+function showPhrase(i){
+  const text = CONFIG.phrases[i];
+  const w = stage.clientWidth || 960, h = stage.clientHeight || 540;
+  phraseEl.textContent = text;                                   /* HARD CUT: instant swap, */
+  phraseEl.style.color = CONFIG.phraseColors[i] || CONFIG.fg;    /* no fade, no scale, no slide */
+  phraseEl.style.font = CONFIG.fontWeight + " " + fitFontPx(text, w, h) + "px " + CONFIG.fontFamily;
+  phraseEl.style.transform = CONFIG.tiltDeg ? ("rotate(" + CONFIG.tiltDeg + "deg)") : "";
+  stage.style.background = CONFIG.bg;
+  document.body.style.background = CONFIG.bg;
+}
+function step(){
+  showPhrase(idx);
+  idx = (idx + 1) % CONFIG.phrases.length;
+  timer = setTimeout(step, CONFIG.holdMs);
+}
+function play(){ if (playing) return; playing = true; step(); }
+function pause(){ playing = false; if (timer) clearTimeout(timer); timer = null; }
+function restart(){ pause(); idx = 0; play(); }
+
+window.addEventListener("resize", function(){ showPhrase((idx + CONFIG.phrases.length - 1) % CONFIG.phrases.length); });
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+play();
+</script>
+</body>
+</html>

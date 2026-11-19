@@ -1,0 +1,530 @@
+CONSUMER + DECISION PRICED: the recreation job (Video Study lane), practice Cycle 007 Wave 6 — your score is one of five lens scores whose average and floor decide whether technique T10 consolidates in the style library as RECREATED (pass bar: average >=85 AND no lens under 70), and name what the next attempt must carry if it fails.
+WORKING RECORD: you build from the technique facts + recreation source + build record below; your return is filed verbatim under the artifact's codex/attempt-2/ directory and quoted into the artifact's scores.md; the working record you write to is the artifact's build records + scores.md.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the recreation job's instruction or this build. End your return with exactly one line: SCORE: <integer 0-100>. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: MOTION FIDELITY only. Score 0-100 how faithfully the recreation's motion reproduces the technique's motion. Other lenses own timing totals, purity, reuse, readability.
+Judge: does the camera dive read as one continuous scale push into the single highlighted tile (transform scale on the wall, transform-origin at the target tile's center, eased over the dive interval) until that tile nearly fills the frame height (the build record's displayed-state model prices ~95.9% of frame height at zoomScale 3.4)? Does the wall hold still before the dive (no drift/pulse)? Do the locator and status pills behave as screen-space UI (fade/slide, exiting/entering per the frame-measured anchors, not scaling with the wall)? Is there any motion the specimen does not have (bounces, rotations, parallax inventions)? Does the 3s loop restart read as the same wall->dive move (the build record names the seam an excerpt reset)?
+
+TECHNIQUE FACTS (packet P1, frame-evidenced; frame measurements from the build record §1): T10 Recursive zoom / tile dive @ 0:54-0:56. Immediately after a mosaic overview, the camera pushes back down into a single cell of a tile wall — one desk, one avatar — while locator UI appears: a dark pill with a pink dot reading "you are here" and a status pill "laptop: brought" with a check mark. Frame measurements on the segment (local ms; source 0:55 = local 1500): the locator pill is fully visible by local 1000 ms, well before the dive (dive runs 2000->2450 ms); the locator pill exits during the dive (present at 2200, absent at 2300); the status pill — a LIGHT pill with green text, anchored right of the enlarged tile — is fully visible at 2450 ms as the dive completes. Evidence frame at 0:55: dusk sky/city skyline; a vertical stack of three tiles center frame (top: orange robot head tile; middle: person at desk with laptop, mint-highlight border; bottom: purple car tile); the "you are here" pill sits to the right of the highlighted middle tile. Why it works: scale whiplash city->one desk; every tile reads as a visitable place.
+
+===== BUILD RECORD (attempt 2, score-blind) =====
+# T10 — Recursive Zoom / Tile Dive · BUILD RECORD · Attempt 2
+
+Technique: T10 (packet P1, "Look What I Can Do" @ 0:54–0:56) · Practice Cycle 007 Wave 6 · 2026-11-15
+Artifact dir: `hidden_files/study/recreations/T10-recursive-zoom-tile-dive/`
+Consumer: transitions — production containers that dive from an overview (mosaic / tile wall / dashboard) into one detail cell; the locator + status pills are the reusable "where am I / what state is it in" overlay pair.
+This record contains construction facts, observed anchors, limitations, and own-check evidence only.
+
+## §1 Observed anchors — segment frame measurements (this attempt, firsthand)
+
+Frames extracted from the local `segment.mp4` (960×540, 30 fps, 3.000 s; local ms = (source s − 53.5) × 1000, so source 0:55 ≡ local 1500 ms) with ffmpeg into the run directory `frames-T10/` (f500, f650, f800, f1000, f1250, f1400, f1500, f1600, f1750, f1900, f2000, f2150, f2200, f2300, f2450, f2500 .png) and read firsthand:
+
+| Local ms | Observation |
+|---|---|
+| 500, 650 | Mosaic overview in motion over the dusk sky/skyline; no tile stack, no locator pill |
+| 800 | The 3-tile stack is arriving (motion blur, off-center); locator pill absent |
+| 1000 | Stack settled and centered; locator pill "you are here" FULLY visible (complete text, full opacity, pink dot) |
+| 1250–1900 | Settled hold: stack at scale 1, locator pill present, no dive motion |
+| 2000–2200 | Dive underway (stack enlarging around the middle tile); locator pill still present at 2200 |
+| 2300 | Dive advanced; locator pill ABSENT; status pill absent |
+| 2450 | Dive complete; status pill "laptop: brought ✓" FULLY visible — a LIGHT pill with green text, anchored right of the enlarged tile at mid-height |
+| 2500 | Settled full-dive state; status pill present |
+
+Resolved anchors (frame-measured, binding):
+- **Locator onset ∈ (800, 1000] ms; full-visibility ≤ 1000 ms.** Bound: `pillAt = 850`, span-derived fade 149 ms → fully visible at 999 ms, and therefore fully present at local 1500 ms.
+- **Locator exit ∈ (2200, 2300] ms** (present at 2200, absent at 2300, during the dive). Bound: `pillOutAt = 2200`, span-derived out-fade 100 ms → absent at 2300 ms.
+- **Dive:** not started at 1900, underway at 2150, complete at 2450. Bound: `diveStart = 2000`, `diveEnd = 2450`.
+- **Status onset ∈ (2300, 2450] ms; full-visibility ≤ 2450 ms.** Bound: `statusAt = 2325`, span-derived fade 125 ms → fully visible at 2450 ms (= diveEnd).
+- **Evidence-conflict resolution:** the measured order is locator BEFORE dive (`pillAt` 850 < `diveStart` 2000) — the checkpoint order was revised to the frame-observed order before construction, and each fade endpoint was derived from its own measured span, independently observed (locator fade from its onset/full-visibility frames; status fade from its own onset/full-visibility frames). The status pill's construction also follows the frames: light background, green text/check, right-side mid-height anchor (`statusLeftPct 58`, `statusTopPct 44`) — not a dark bottom-left pill.
+
+## §2 Construction (what was built)
+
+- **Configuration-normalization stage** (`normalizeConfig`): runs after CONFIG + URL overrides and before any scene construction; `computeState` and all builders consume only the normalized effective table. Candidate-based and ATOMIC: overrides apply to a clone; on any validation failure the whole candidate is discarded, the pre-override configuration stands, and the rejection is recorded in the observable `window.__T10_NORMALIZATION` (also `window.__T10`). A `durationMs`-only change RESCALES all checkpoints proportionally (factor = duration / baseline) and the rescaled timeline completes before wrap; incoherent EXPLICIT checkpoint overrides (e.g. duration 800 + explicit diveEnd 2450) are rejected atomically. Minimum separation is `max(1 ms, durationMs × 4/3000)` — a proportion of the effective duration, coherent under rescaling. Fade durations left null are DERIVED from checkpoint spans inside normalization (locator fade = 11% of the pill-visible span; exit fade = 40% of pillOut→diveEnd; status fade = the statusAt→diveEnd span); no independent fade literal stands outside derivation or explicit validated override.
+- **Checkpoints (effective, frame-bound):** `pillAt 850 · diveStart 2000 · pillOutAt 2200 · statusAt 2325 · diveEnd 2450`, duration 3000. The `wallHold` key is REMOVED from the artifact and the comparison face: the hold is inherently the interval before `diveStart` at scale 1, and no distinct constructed effect could be bound to a separate hold key.
+- **Locator pill in time and space:** fade-in completes at 999 ms (fully present at local 1500 ms); it exits during the dive (absent from 2300 ms), so at full dive it cannot occlude the enlarged target. The render-time clamp prices the pill's TRANSFORMED bounds: `left + slideOffset + width`, with the slide distance a CONFIG key (`pillSlidePct 12`), clamped against a CONFIG edge margin (`pillEdgeMarginPct 2`).
+- **Tile content as CONFIG data:** the per-kind drawing switch is replaced by ONE generic descriptor renderer. Each tile carries an `art` array of shape descriptors ({left, top, width, height, borderRadius?, color}) in CONFIG; the robot/desk/car scenes ship as default descriptor sets with their geometry as data. A descriptor with a missing numeric field or an unknown color role throws the named error `T10DescriptorError` (surfaced as an on-screen error state + `window.__T10_ERROR`); there is no silent fallback scene. A fourth tile scene is suppliable entirely as CONFIG data.
+- **Override surface:** tile aspect (`tileAspectW/H`), gradient stop, cloud geometry (height ratio, opacity, specs), skyline geometry (height, windows per building, window left/top bases and steps, window size, opacity), pill slide distance, pill/status positions, label insets, easing choice (named set: easeInOutCubic / easeOutQuad / linear; unknown rejected), z-order keys, and the full palette are CONFIG keys reachable via URL overrides. An explicitly supplied empty string is a parsed decision: applied to text keys, explicitly rejected-and-recorded for color keys — never a silent truthiness no-op. Grid/tile/target consistency is validated in normalization (tile count = cols × rows; target index range-checked).
+- **Stacking:** explicit CONFIG-priced z-order — sky (gradient) < clouds (zClouds 1) < skyline (zSkyline 2) < wall (zWall 3) < pills (zPills 4) — assigned at construction regardless of append order.
+
+## §3 Claims corrections (record honesty, this attempt's record and face)
+
+1. Zoom coverage: at zoomScale 3.4 the target tile's displayed height is **≈95.9% of frame height** (displayed-state model, §4), not ~98% (98% would need zoom ≈3.477). The record prints 95.9%.
+2. Loop seam: the loop is an **excerpt reset** — a hard cut from scale 3.4 back to 1 at durationMs replaying an excerpt. No specimen loop point is claimed.
+3. Swap test: the swap proves **configurable behavior only**. Construction purity rests on the executed grep + asset inventory (§4), not on the swap.
+4. "Every shaping variable lives in CONFIG" is replaced by the actual surface: all shaping variables are CONFIG keys (§2), and tile-scene geometry lives in CONFIG as descriptor data. Remaining structural constants, named as structural: descriptor fields are interpreted as percentages by the renderer; the skyline window row phase uses a modulo-4 pattern; the easing set is three named functions in code.
+5. No-clipping: the claim is **source-bound and scoped to the modeled states** (pill at entrance / mid-fade / full dive; status at its fade endpoints; target at full dive) at 360 / 390 / 1916 px widths, and is printed **PIXEL-UNVERIFIED** (§5).
+6. Swap attribution: `pillAt` affects pill opacity only — not scale. The own-check suite asserts each timing override independently (diveStart→scale only; pillAt→opacity only; statusAt→status only).
+7. The comparison face's checkpoint table no longer prints a `wallHold` phase; the key is removed from both artifact and face.
+
+## §4 Own checks (executed this attempt; suite at the run directory `own-checks-T10.js`)
+
+- `node --check` on the extracted inline script: **PASS**.
+- **Logic suite: 140 PASS / 0 FAIL**, comprising:
+  - *Effect mappings:* scale 1 before the dive, 2.2 at mid-dive (2225 ms), 3.4 at diveEnd; pill opacity 0 at 500 ms, 1 at 1000 ms and at local 1500 ms, 1 at 2200 ms, 0 at 2300 ms (exit); status 0 at 2300 ms, 1 at 2450 ms; transform-origin [50, 50] for the middle target and moving with target overrides; loop wrap at durationMs.
+  - *Independent overrides:* diveStart moves scale only; pillAt moves opacity only; statusAt moves status only; duration-only (800 ms) proportionally rescales (factor 0.2667; checkpoints 227/533/587/620/653) and completes before wrap.
+  - *Normalization suite:* explicit diveEnd beyond duration, diveEnd ≤ diveStart, pillOut before full visibility (explicit fade), pill fade beyond duration, target out of range, tile count ≠ cols×rows, unknown easing — each rejected atomically with a recorded rejection; URL-level incoherent combinations fall back atomically with the rejection observable.
+  - *Descriptor tests:* a fourth tile scene supplied entirely through CONFIG descriptors renders; unknown color role and malformed descriptor each throw `T10DescriptorError`.
+  - *Consumed-effect census (every CONFIG key):* **79 census rows, 0 unconsumed** — each key (checkpoints, derived fades, grid, geometry, palette, texts, descriptor data, easing, z-order) was mutated and its named constructed/computed effect observed.
+  - *Swap test:* the recorded swap (new pill/status texts, diveStart 300, pillAt 100, violet sky, gold highlight, renamed target tile) plus aspect and easing swaps — all asserted per-state/per-element; swap PASS before any scoring run.
+- **Displayed-state model** (source-bound; displayed rects, border-inclusive, transformed endpoints): at 360 px (frame 360×202.5): wall 93.6×175.5 px; target at full dive spans x 20.9–339.1, y 4.2–198.3 → displayed height **95.86%** of frame height, fully contained; locator pill transformed right edge = **352.8 px ≤ 360** at entrance (pill=0, slide 17.5 px), mid-fade (0.5) and full visibility; status pill right edge 351.8 ≤ 360. At 390 and 1916 px the same containments hold (suite-asserted). Pill/status texts are `nowrap` by construction (single-line heights = font + padding at every reachable text, swap texts included); tile labels measured at 1-line and 2-line states inside their tiles at 360 px — contained in both. Occlusion at the diveEnd hold: target tile visible fraction **94%** (the status pill, on the top layer, overlaps 6.0% of the target's area); status pill visible 100% (top layer); locator pill visible 0% — exited by construction per the frame evidence (absent from 2300 ms in the specimen). Z-order census: no cloud paints above wall/pill layers (z values assigned at construction).
+- **Purity grep, executed:** `segment\.mp4|source\.mp4|<video|<img|http://|https://|url\(|\.jpg|\.png` on recreation.html → **0 hits**. Asset inventory: recreation.html loads nothing external — sky is a CONFIG gradient; skyline, clouds, and tiles are code-drawn DOM shapes; fonts are the system sans stack. The original appears only as the labeled ORIGINAL side of comparison.html.
+- **Comparison check:** labels verbatim, both sides present, controls wired, swap values = the recorded swap, checkpoint text = the new effective table; the ORIGINAL side is byte-unchanged (its attempt-1 snapshot hash stands, §6).
+
+## §5 Limitations
+
+- **PIXEL-UNVERIFIED:** no render route exists in this seat; every rendered conclusion above rests on the source-bound displayed-state model and the logic suite, not on a rendered frame of the recreation. The frame extractions in §1 are specimen evidence (the original segment), not renders of the recreation.
+- Pill/status widths in the model are glyph estimates (0.55 em average advance + CONFIG padding/dot/check), not measured rendered widths.
+- The specimen's pre-stack mosaic flight (frames at 500–800 ms) is outside this technique's construction: the recreation opens on the settled wall; the mosaic belongs to the preceding technique.
+
+## §6 Preservation record
+
+- `recreation-attempt-1.html`: content copy taken in the Plan phase, sha256 966f96397e5a2e1e5cc0e55fc85b434c2f321a9e7516cf5ec5a377dd7f6bf5e9, inode 4612829 ≠ working file inode 4387182; re-verified immediately after this attempt's first overwrite of `recreation.html` and again at close — unchanged.
+- Create-once snapshots taken this attempt BEFORE any edit: `build-record-attempt-1.md` (sha256 4808154809d51a7a6e7ddb2404a5798a19c11d90705cb9796b29a280728114b0, inode 4618063) and `comparison-attempt-1.html` (sha256 49e93649f5b333ed5960906632bc38b4e9fb821444d550e53be6e5ef9ad2a03c, inode 4618064).
+- Preservation census immediately after the first overwrite of `recreation.html`: all protected components match the run's preservation baseline — the attempt-1 recreation copy, the attempt-1 build record and its snapshot, comparison.html (pre-correction state at census time), the five prior scoring returns under `codex/`, and `scores.md` (append-only; its prior sections are unchanged by this attempt).
+
+## §7 Freeze
+
+Final `recreation.html` sha256: **4b3058c2185ed10740c6de10dccf122e9301789cefa3a6e75eab7fb647defc70**. A frozen content copy stands in the run directory (`frozen-recreation-T10-attempt2.html`, sha256 verified identical at freeze time). All scoring payloads for this attempt bind to this sha; any later source change invalidates them.
+
+===== recreation.html (bound sha256 4b3058c2185ed10740c6de10dccf122e9301789cefa3a6e75eab7fb647defc70) =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T10 — Recursive zoom / tile dive · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden}
+  body{font-family:Arial,Helvetica,sans-serif}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  .cloud{position:absolute;border-radius:50%}
+  #skyline{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end}
+  .bldg{flex:1 1 0;position:relative}
+  .win{position:absolute;border-radius:50%}
+  #wallWrap{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  #wall{display:grid;will-change:transform}
+  .tile{position:relative;overflow:hidden;border-style:solid}
+  .tileLabel{position:absolute;font-weight:700}
+  .tileArt{position:absolute;inset:0}
+  .shape{position:absolute}
+  #pill{position:absolute;display:flex;align-items:center;white-space:nowrap;font-weight:700;will-change:opacity,transform}
+  #pillDot{border-radius:50%;flex:0 0 auto}
+  #statusPill{position:absolute;display:none;align-items:center;white-space:nowrap;font-weight:700}
+  #errBox{position:absolute;inset:auto 4% 4% 4%;display:none;font-weight:700}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="skyline"></div>
+  <div id="wallWrap"><div id="wall"></div></div>
+  <div id="pill"><span id="pillDot"></span><span id="pillText"></span></div>
+  <div id="statusPill"><span id="statusText"></span></div>
+  <div id="errBox"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; logic reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED. Checkpoint values are bound from segment frame
+   measurements (see the build record): the locator pill is fully visible well
+   before the dive begins, exits during the dive, and the status pill completes
+   its fade as the dive ends. Fade durations are NOT independent literals:
+   normalizeConfig derives any fade left null from its checkpoint span. */
+const CONFIG = {
+  durationMs: 3000,
+  checkpoints: { pillAt: 850, diveStart: 2000, pillOutAt: 2200, statusAt: 2325, diveEnd: 2450 },
+  pillFadeMs: null,
+  pillOutFadeMs: null,
+  statusFadeMs: null,
+  gridCols: 1,
+  gridRows: 3,
+  targetIndex: 1,
+  wallWidthPct: 26,
+  tileGapPct: 1.2,
+  tileBorderPx: 2,
+  highlightBorderPx: 4,
+  zoomScale: 3.4,
+  tileAspectW: 16,
+  tileAspectH: 10,
+  gradientStopPct: 62,
+  cloudHeightRatio: 0.36,
+  cloudOpacity: 0.55,
+  skylineHeightPct: 46,
+  skylineWindowsPerBldg: 3,
+  skylineWinLeftBasePct: 18,
+  skylineWinLeftStepPct: 28,
+  skylineWinTopBasePct: 14,
+  skylineWinTopStepPct: 22,
+  skylineWinWidthPct: 9,
+  skylineWinHeightPct: 5,
+  skylineWinOpacity: 0.75,
+  pillSlidePct: 12,
+  pillTopPct: 44,
+  pillOffsetXPct: 4,
+  pillEdgeMarginPct: 2,
+  statusLeftPct: 58,
+  statusTopPct: 44,
+  labelLeftPct: 4,
+  labelBottomPct: 3,
+  zClouds: 1,
+  zSkyline: 2,
+  zWall: 3,
+  zPills: 4,
+  easing: "easeInOutCubic",
+  skyTop: "#2b3a6e",
+  skyMid: "#7a5f8e",
+  skyLow: "#d99a8a",
+  cloudColor: "#aab4d8",
+  skylineColor: "#141c33",
+  windowColor: "#cfd8ee",
+  highlightColor: "#7fe3c3",
+  tileBorderColor: "#0e1424",
+  pillBg: "#171a21",
+  pillTextColor: "#ffffff",
+  pillDotColor: "#ff6fa5",
+  statusBg: "#f2f4f6",
+  statusTextColor: "#1d7a4f",
+  checkColor: "#1d7a4f",
+  pillText: "you are here",
+  statusText: "laptop: brought",
+  checkMark: "✓",
+  pillFontPx: 15,
+  pillPadYPx: 8,
+  pillPadXPx: 14,
+  pillRadiusPx: 20,
+  pillDotPx: 11,
+  pillGapPx: 8,
+  statusFontPx: 12,
+  tileLabelFontPx: 9,
+  robotFaceColor: "#101216",
+  laptopColor: "#9aa3ad",
+  orbColor: "#b78ae0",
+  plantColor: "#d99a4c",
+  wheelColor: "#101216",
+  labelColor: "#ffffff",
+  labelShadowColor: "#000000",
+  tiles: [
+    { label: "Claude", bg: "#3a3f45", accent: "#e8762c", detail: "#dfe6ee", art: [
+      { left:22, top:10, width:56, height:62, borderRadius:18, color:"accent" },
+      { left:30, top:30, width:40, height:30, borderRadius:40, color:"robotFaceColor" },
+      { left:34, top:36, width:11, height:18, borderRadius:50, color:"detail" },
+      { left:55, top:36, width:11, height:18, borderRadius:50, color:"detail" },
+      { left:38, top:74, width:24, height:14, borderRadius:30, color:"accent" } ] },
+    { label: "You", bg: "#cfe8dd", accent: "#e75480", detail: "#8a5a2b", art: [
+      { left:8, top:58, width:84, height:5, color:"detail" },
+      { left:12, top:63, width:4, height:30, color:"detail" },
+      { left:84, top:63, width:4, height:30, color:"detail" },
+      { left:44, top:22, width:12, height:16, borderRadius:50, color:"accent" },
+      { left:40, top:38, width:20, height:24, borderRadius:20, color:"accent" },
+      { left:41, top:44, width:18, height:13, color:"laptopColor" },
+      { left:70, top:26, width:16, height:22, borderRadius:50, color:"orbColor" },
+      { left:6, top:62, width:10, height:31, borderRadius:30, color:"plantColor" } ] },
+    { label: "GT3 RS", bg: "#5a6650", accent: "#6a2fa0", detail: "#f5d13c", art: [
+      { left:10, top:52, width:80, height:20, borderRadius:40, color:"accent" },
+      { left:28, top:38, width:38, height:18, borderRadius:50, color:"accent" },
+      { left:16, top:66, width:15, height:24, borderRadius:50, color:"wheelColor" },
+      { left:68, top:66, width:15, height:24, borderRadius:50, color:"wheelColor" },
+      { left:10, top:80, width:80, height:4, color:"detail" } ] }
+  ],
+  skylineHeightsPct: [22,34,26,42,30,48,36,24,40,28,44,32,22,38,27,46,31,25,41,29],
+  cloudSpecs: [ {x:6,y:38,w:16}, {x:56,y:12,w:18}, {x:72,y:34,w:15}, {x:38,y:20,w:11} ]
+};
+const BASELINE = JSON.parse(JSON.stringify(CONFIG));
+const EASINGS = {
+  easeInOutCubic: function(x){ return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; },
+  easeOutQuad: function(x){ return 1 - (1 - x) * (1 - x); },
+  linear: function(x){ return x; }
+};
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+function namedError(name, msg){ const e = new Error(msg); e.name = name; return e; }
+
+/* ===== Configuration normalization (runs after CONFIG + URL overrides, before any scene use) =====
+   Candidate-based and ATOMIC: overrides are applied to a clone; if validation
+   fails, the whole candidate is discarded, the rejection is recorded, and the
+   pre-override configuration stands. A durationMs-only change RESCALES every
+   checkpoint and fade proportionally. Minimum separation is a proportion of
+   the effective duration, so it stays coherent under rescaling. */
+function normalizeConfig(candidate, explicit){
+  const rejected = [];
+  const eff = JSON.parse(JSON.stringify(candidate));
+  const base = BASELINE;
+  let scaleFactor = 1;
+  const cpKeys = ["pillAt","diveStart","pillOutAt","statusAt","diveEnd"];
+  const fadeKeys = ["pillFadeMs","pillOutFadeMs","statusFadeMs"];
+  const anyCpExplicit = cpKeys.some(function(k){ return explicit.has("cp." + k); });
+  const anyFadeExplicit = fadeKeys.some(function(k){ return explicit.has(k); });
+  if (explicit.has("durationMs") && !anyCpExplicit && !anyFadeExplicit && eff.durationMs !== base.durationMs){
+    scaleFactor = eff.durationMs / base.durationMs;
+    for (const k of cpKeys) eff.checkpoints[k] = Math.round(base.checkpoints[k] * scaleFactor);
+  }
+  /* span-derived fades for any fade left null (derived, never independent literals) */
+  const cp = eff.checkpoints;
+  if (eff.pillFadeMs === null || eff.pillFadeMs === undefined)
+    eff.pillFadeMs = Math.max(1, Math.round((cp.pillOutAt - cp.pillAt) * 0.11));
+  if (eff.pillOutFadeMs === null || eff.pillOutFadeMs === undefined)
+    eff.pillOutFadeMs = Math.max(1, Math.round((cp.diveEnd - cp.pillOutAt) * 0.4));
+  if (eff.statusFadeMs === null || eff.statusFadeMs === undefined)
+    eff.statusFadeMs = Math.max(1, Math.round(cp.diveEnd - cp.statusAt));
+  if (scaleFactor !== 1){
+    if (!explicit.has("pillFadeMs")) eff.pillFadeMs = Math.max(1, Math.round(eff.pillFadeMs));
+  }
+  const minSep = Math.max(1, Math.round(eff.durationMs * 4 / 3000));
+  function fail(reason){ return { effective: null, rejected: [{ reason: reason }], scaleFactor: 1, minSepMs: minSep }; }
+  if (!(eff.durationMs > 0)) return fail("durationMs must be positive");
+  if (!(cp.diveStart >= 0 && cp.diveEnd > cp.diveStart)) return fail("diveStart < diveEnd required");
+  if (cp.diveEnd - cp.diveStart < minSep) return fail("dive span below minimum separation " + minSep + "ms");
+  if (cp.diveEnd > eff.durationMs) return fail("diveEnd beyond durationMs");
+  if (!(cp.pillAt >= 0 && cp.pillAt + eff.pillFadeMs <= eff.durationMs)) return fail("pill fade ends beyond durationMs");
+  if (!(cp.pillOutAt >= cp.pillAt + eff.pillFadeMs)) return fail("pillOutAt before pill fully visible");
+  if (cp.pillOutAt + eff.pillOutFadeMs > eff.durationMs) return fail("pill exit ends beyond durationMs");
+  if (!(cp.statusAt >= 0 && cp.statusAt + eff.statusFadeMs <= eff.durationMs)) return fail("status fade ends beyond durationMs");
+  if (!(eff.zoomScale >= 1)) return fail("zoomScale below 1");
+  if (!EASINGS[eff.easing]) return fail("unknown easing: " + eff.easing);
+  if (eff.tiles.length !== eff.gridCols * eff.gridRows) return fail("tiles.length != gridCols*gridRows");
+  if (!(eff.targetIndex >= 0 && eff.targetIndex < eff.tiles.length)) return fail("targetIndex out of range");
+  return { effective: eff, rejected: rejected, scaleFactor: scaleFactor, minSepMs: minSep };
+}
+
+/* URL overrides (swap test / reuse). Generic surface: any CONFIG key may be
+   overridden by its own name; checkpoint keys as <name>Ms; aliases pill /
+   status / zoom / cols / rows / target / highlight / tileN keep the recorded
+   swap working. An explicitly supplied empty string IS a parsed value: it is
+   applied to text keys and rejected (recorded) for color keys — never a
+   silent truthiness no-op. */
+const EXPLICIT = new Set();
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  function setNum(path, v){ if (isFinite(v)){ path(v); } }
+  const num = function(k){ const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (q.has("durationMs") && num("durationMs") !== null){ CONFIG.durationMs = num("durationMs"); EXPLICIT.add("durationMs"); }
+  const cpMap = { diveStartMs:"diveStart", pillAtMs:"pillAt", pillOutAtMs:"pillOutAt", statusAtMs:"statusAt", diveEndMs:"diveEnd" };
+  for (const k in cpMap){ if (q.has(k) && num(k) !== null){ CONFIG.checkpoints[cpMap[k]] = num(k); EXPLICIT.add("cp." + cpMap[k]); } }
+  const fadeMap = { pillFadeMs:"pillFadeMs", pillOutFadeMs:"pillOutFadeMs", statusFadeMs:"statusFadeMs" };
+  for (const k in fadeMap){ if (q.has(k) && num(k) !== null){ CONFIG[k] = num(k); EXPLICIT.add(k); } }
+  const numKeys = ["gridCols","gridRows","targetIndex","wallWidthPct","tileGapPct","tileBorderPx","highlightBorderPx","zoomScale","tileAspectW","tileAspectH","gradientStopPct","cloudHeightRatio","cloudOpacity","skylineHeightPct","skylineWindowsPerBldg","skylineWinLeftBasePct","skylineWinLeftStepPct","skylineWinTopBasePct","skylineWinTopStepPct","skylineWinWidthPct","skylineWinHeightPct","skylineWinOpacity","pillSlidePct","pillTopPct","pillOffsetXPct","pillEdgeMarginPct","statusLeftPct","statusTopPct","labelLeftPct","labelBottomPct","zClouds","zSkyline","zWall","zPills","pillFontPx","pillPadYPx","pillPadXPx","pillRadiusPx","pillDotPx","pillGapPx","statusFontPx","tileLabelFontPx"];
+  for (const k of numKeys){ if (q.has(k) && num(k) !== null){ CONFIG[k] = num(k); EXPLICIT.add(k); } }
+  if (q.has("cols") && num("cols") !== null){ CONFIG.gridCols = Math.max(1, Math.floor(num("cols"))); EXPLICIT.add("gridCols"); }
+  if (q.has("rows") && num("rows") !== null){ CONFIG.gridRows = Math.max(1, Math.floor(num("rows"))); EXPLICIT.add("gridRows"); }
+  if (q.has("target") && num("target") !== null){ CONFIG.targetIndex = Math.floor(num("target")); EXPLICIT.add("targetIndex"); }
+  if (q.has("zoom") && num("zoom") !== null){ CONFIG.zoomScale = num("zoom"); EXPLICIT.add("zoomScale"); }
+  if (q.has("easing")){ CONFIG.easing = q.get("easing"); EXPLICIT.add("easing"); }
+  const colorKeys = ["skyTop","skyMid","skyLow","cloudColor","skylineColor","windowColor","highlightColor","tileBorderColor","pillBg","pillTextColor","pillDotColor","statusBg","statusTextColor","checkColor","robotFaceColor","laptopColor","orbColor","plantColor","wheelColor","labelColor","labelShadowColor"];
+  for (const k of colorKeys){ if (q.has(k)){ const v = q.get(k); if (v === ""){ EXPLICIT.add("rejectedEmpty:" + k); } else { CONFIG[k] = v; EXPLICIT.add(k); } } }
+  if (q.has("highlight")){ CONFIG.highlightColor = q.get("highlight"); EXPLICIT.add("highlightColor"); }
+  if (q.has("pillDot")){ CONFIG.pillDotColor = q.get("pillDot"); EXPLICIT.add("pillDotColor"); }
+  if (q.has("pill")){ CONFIG.pillText = q.get("pill"); EXPLICIT.add("pillText"); }
+  if (q.has("status")){ CONFIG.statusText = q.get("status"); EXPLICIT.add("statusText"); }
+  if (q.has("checkMark")){ CONFIG.checkMark = q.get("checkMark"); EXPLICIT.add("checkMark"); }
+  for (let i = 0; i < CONFIG.tiles.length; i++)
+    if (q.has("tile" + i)){ CONFIG.tiles[i].label = q.get("tile" + i); EXPLICIT.add("tile" + i + ".label"); }
+})();
+
+const NORM = (function(){
+  const r = normalizeConfig(CONFIG, EXPLICIT);
+  const extraRej = [];
+  for (const k of EXPLICIT){ if (k.indexOf("rejectedEmpty:") === 0) extraRej.push({ reason: "empty string rejected for color key " + k.slice(14) }); }
+  if (!r.effective){
+    const fb = normalizeConfig(JSON.parse(JSON.stringify(BASELINE)), new Set());
+    return { effective: fb.effective, rejected: r.rejected.concat(extraRej), scaleFactor: 1, minSepMs: fb.minSepMs, fellBack: true };
+  }
+  return { effective: r.effective, rejected: r.rejected.concat(extraRej), scaleFactor: r.scaleFactor, minSepMs: r.minSepMs, fellBack: false };
+})();
+const EFF = NORM.effective;
+window.__T10_NORMALIZATION = NORM;
+
+/* Pure state from time — the normalized checkpoint table decides every phase. */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  const ease = EASINGS[cfg.easing] || EASINGS.easeInOutCubic;
+  const diveRaw = clamp01((t - cp.diveStart) / Math.max(1, cp.diveEnd - cp.diveStart));
+  const dive = ease(diveRaw);
+  const scale = 1 + (cfg.zoomScale - 1) * dive;
+  let pill = clamp01((t - cp.pillAt) / cfg.pillFadeMs);
+  if (t >= cp.pillOutAt) pill = pill * (1 - clamp01((t - cp.pillOutAt) / cfg.pillOutFadeMs));
+  const status = clamp01((t - cp.statusAt) / cfg.statusFadeMs);
+  const col = cfg.targetIndex % cfg.gridCols;
+  const row = Math.floor(cfg.targetIndex / cfg.gridCols);
+  const originX = (col + 0.5) / cfg.gridCols * 100;
+  const originY = (row + 0.5) / cfg.gridRows * 100;
+  return { t: t, diveRaw: diveRaw, dive: dive, scale: scale, pill: pill, status: status,
+           originX: originX, originY: originY, targetCol: col, targetRow: row };
+}
+
+/* ---- Tile art: ONE generic descriptor renderer; scenes are CONFIG data ---- */
+function resolveColor(role, tile, cfg){
+  if (role === "accent") return tile.accent;
+  if (role === "detail") return tile.detail;
+  if (role === "bg") return tile.bg;
+  if (typeof role === "string" && role.charAt(0) === "#") return role;
+  if (typeof role === "string" && typeof cfg[role] === "string") return cfg[role];
+  throw namedError("T10DescriptorError", "unknown descriptor color role: " + role);
+}
+function renderDescriptor(parent, d, tile, cfg){
+  const nums = ["left","top","width","height"];
+  for (const k of nums){ if (typeof d[k] !== "number" || !isFinite(d[k])) throw namedError("T10DescriptorError", "descriptor missing numeric " + k); }
+  const s = document.createElement("div");
+  s.className = "shape";
+  s.style.left = d.left + "%"; s.style.top = d.top + "%";
+  s.style.width = d.width + "%"; s.style.height = d.height + "%";
+  if (typeof d.borderRadius === "number") s.style.borderRadius = d.borderRadius + "%";
+  s.style.background = resolveColor(d.color, tile, cfg);
+  parent.appendChild(s); return s;
+}
+function buildTiles(wallEl, cfg){
+  wallEl.innerHTML = "";
+  const tileEls = [];
+  for (let i = 0; i < cfg.tiles.length; i++){
+    const tile = cfg.tiles[i];
+    if (!tile || !Array.isArray(tile.art)) throw namedError("T10DescriptorError", "tile " + i + " has no art descriptor array");
+    const d = document.createElement("div");
+    d.className = "tile";
+    d.style.background = tile.bg;
+    d.style.borderColor = (i === cfg.targetIndex) ? cfg.highlightColor : cfg.tileBorderColor;
+    d.style.borderWidth = ((i === cfg.targetIndex) ? cfg.highlightBorderPx : cfg.tileBorderPx) + "px";
+    const art = document.createElement("div");
+    art.className = "tileArt";
+    for (const desc of tile.art) renderDescriptor(art, desc, tile, cfg);
+    d.appendChild(art);
+    const lab = document.createElement("div");
+    lab.className = "tileLabel";
+    lab.textContent = tile.label;
+    lab.style.left = cfg.labelLeftPct + "%";
+    lab.style.bottom = cfg.labelBottomPct + "%";
+    lab.style.fontSize = cfg.tileLabelFontPx + "px";
+    lab.style.color = cfg.labelColor;
+    lab.style.textShadow = "0 1px 2px " + cfg.labelShadowColor;
+    d.appendChild(lab);
+    wallEl.appendChild(d); tileEls.push(d);
+  }
+  return tileEls;
+}
+
+/* ---- Build the scene from the normalized CONFIG ---- */
+const stage = document.getElementById("stage");
+function buildBackdrop(cfg, stageEl, skylineEl){
+  stageEl.style.background = "linear-gradient(" + cfg.skyTop + ", " + cfg.skyMid + " " + cfg.gradientStopPct + "%, " + cfg.skyLow + ")";
+  const cloudEls = [];
+  for (const c of cfg.cloudSpecs){
+    const cl = document.createElement("div");
+    cl.className = "cloud";
+    cl.style.left = c.x + "%"; cl.style.top = c.y + "%";
+    cl.style.width = c.w + "%"; cl.style.height = (c.w * cfg.cloudHeightRatio) + "%";
+    cl.style.background = cfg.cloudColor;
+    cl.style.opacity = String(cfg.cloudOpacity);
+    cl.style.zIndex = String(cfg.zClouds);
+    stageEl.appendChild(cl); cloudEls.push(cl);
+  }
+  skylineEl.style.height = cfg.skylineHeightPct + "%";
+  skylineEl.style.zIndex = String(cfg.zSkyline);
+  const bldgs = [];
+  for (let i = 0; i < cfg.skylineHeightsPct.length; i++){
+    const b = document.createElement("div");
+    b.className = "bldg";
+    b.style.height = cfg.skylineHeightsPct[i] + "%";
+    b.style.background = cfg.skylineColor;
+    for (let wI = 0; wI < cfg.skylineWindowsPerBldg; wI++){
+      const wn = document.createElement("div");
+      wn.className = "win";
+      wn.style.left = (cfg.skylineWinLeftBasePct + wI * cfg.skylineWinLeftStepPct) + "%";
+      wn.style.top = (cfg.skylineWinTopBasePct + ((i + wI) % 4) * cfg.skylineWinTopStepPct) + "%";
+      wn.style.width = cfg.skylineWinWidthPct + "%"; wn.style.height = cfg.skylineWinHeightPct + "%";
+      wn.style.background = cfg.windowColor; wn.style.opacity = String(cfg.skylineWinOpacity);
+      b.appendChild(wn);
+    }
+    skylineEl.appendChild(b); bldgs.push(b);
+  }
+  return { clouds: cloudEls, buildings: bldgs };
+}
+const skyline = document.getElementById("skyline");
+const BACKDROP = buildBackdrop(EFF, stage, skyline);
+const wallWrap = document.getElementById("wallWrap");
+wallWrap.style.zIndex = String(EFF.zWall);
+const wall = document.getElementById("wall");
+wall.style.width = EFF.wallWidthPct + "%";
+wall.style.gridTemplateColumns = "repeat(" + EFF.gridCols + ", 1fr)";
+wall.style.gridTemplateRows = "repeat(" + EFF.gridRows + ", 1fr)";
+wall.style.gap = EFF.tileGapPct + "%";
+wall.style.aspectRatio = (EFF.gridCols * EFF.tileAspectW) + " / " + (EFF.gridRows * EFF.tileAspectH);
+let tileEls = [];
+const errBox = document.getElementById("errBox");
+try { tileEls = buildTiles(wall, EFF); }
+catch (e){
+  errBox.style.display = "block";
+  errBox.style.background = EFF.pillBg; errBox.style.color = EFF.pillTextColor;
+  errBox.textContent = e.name + ": " + e.message;
+  window.__T10_ERROR = e.name + ": " + e.message;
+}
+
+const pill = document.getElementById("pill");
+pill.style.background = EFF.pillBg;
+pill.style.color = EFF.pillTextColor;
+pill.style.fontSize = EFF.pillFontPx + "px";
+pill.style.padding = EFF.pillPadYPx + "px " + EFF.pillPadXPx + "px";
+pill.style.borderRadius = EFF.pillRadiusPx + "px";
+pill.style.gap = EFF.pillGapPx + "px";
+pill.style.top = EFF.pillTopPct + "%";
+pill.style.zIndex = String(EFF.zPills);
+const pillDot = document.getElementById("pillDot");
+pillDot.style.background = EFF.pillDotColor;
+pillDot.style.width = EFF.pillDotPx + "px";
+pillDot.style.height = EFF.pillDotPx + "px";
+document.getElementById("pillText").textContent = EFF.pillText;
+
+const statusPill = document.getElementById("statusPill");
+statusPill.style.background = EFF.statusBg;
+statusPill.style.color = EFF.statusTextColor;
+statusPill.style.fontSize = EFF.statusFontPx + "px";
+statusPill.style.padding = EFF.pillPadYPx + "px " + EFF.pillPadXPx + "px";
+statusPill.style.borderRadius = EFF.pillRadiusPx + "px";
+statusPill.style.left = EFF.statusLeftPct + "%";
+statusPill.style.top = EFF.statusTopPct + "%";
+statusPill.style.zIndex = String(EFF.zPills);
+document.getElementById("statusText").textContent = EFF.statusText + " ";
+const check = document.createElement("span");
+check.textContent = EFF.checkMark;
+check.style.color = EFF.checkColor;
+statusPill.appendChild(check);
+
+function render(tMs){
+  const s = computeState(tMs, EFF);
+  wall.style.transformOrigin = s.originX + "% " + s.originY + "%";
+  wall.style.transform = "scale(" + s.scale.toFixed(4) + ")";
+  pill.style.opacity = s.pill.toFixed(3);
+  /* transformed-bounds clamp: price the pill's DISPLAYED rect, slide offset included */
+  const sw = stage.clientWidth || 0, pw = pill.offsetWidth || 0;
+  const slidePx = (1 - s.pill) * (EFF.pillSlidePct / 100) * pw;
+  pill.style.transform = "translateX(" + slidePx.toFixed(2) + "px)";
+  if (sw && pw){
+    const desired = sw * (50 + EFF.wallWidthPct / 2 + EFF.pillOffsetXPct) / 100;
+    const maxLeft = Math.max(0, sw - pw - slidePx - sw * EFF.pillEdgeMarginPct / 100);
+    pill.style.left = Math.min(desired, maxLeft).toFixed(1) + "px";
+  } else {
+    pill.style.left = (50 + EFF.wallWidthPct / 2 + EFF.pillOffsetXPct) + "%";
+  }
+  statusPill.style.display = s.status > 0 ? "flex" : "none";
+  statusPill.style.opacity = s.status.toFixed(3);
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+window.__T10 = { CONFIG: CONFIG, EFF: EFF, NORM: NORM, computeState: computeState,
+                 normalizeConfig: normalizeConfig, buildTiles: buildTiles, buildBackdrop: buildBackdrop, render: render, EASINGS: EASINGS };
+render(0);
+play();
+</script>
+</body>
+</html>
+

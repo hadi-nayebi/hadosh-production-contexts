@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T09 — Photo-mosaic typography · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden}
+  body{display:flex;align-items:center;justify-content:center}
+  #stage{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable lives here; logic reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED: phase boundaries come from CONFIG.checkpoints
+   (burstAt / riseStart / assemblyComplete / holdEnd), never from a cadence
+   formula inside the animation logic. Letterforms are sampled at runtime
+   from CONFIG-rendered text (offscreen canvas) — Amendment A1 precedent. */
+const CONFIG = {
+  titleText: "LOOK",
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontWeight: 900,
+  maxWidthRatio: 0.88,
+  maxFontPx: 170,
+  titleCenterYRatio: 0.34,
+  sampleGap: 13,
+  tileSize: 11,
+  tileGap: 2,
+  seed: 20261113,
+  durationMs: 4000,
+  checkpoints: { burstAt: 0, riseStart: 150, assemblyComplete: 3000, holdEnd: 4000 },
+  riseDurationMs: 2100,
+  staggerMs: 900,
+  holdGlowPulse: 0.18,
+  jitterPx: 0.5,
+  ambientTileCount: 46,
+  ambientAlpha: 0.5,
+  skyTop: "#141d3d",
+  skyMid: "#3d4d85",
+  skyHorizon: "#c98ba0",
+  skylineColor: "#0a0f22",
+  skylineLitColor: "#ffd98a",
+  cloudColor: "#7d89b8",
+  cloudAlpha: 0.55,
+  glowColor: "#7fe7ff",
+  glowAlpha: 0.55,
+  tilePalette: ["#e8b04b","#d96c4f","#7fb069","#5aa9e6","#c77fb8","#e6e1d3","#8ecae6","#f4a261"],
+  tileInnerColor: "#10131f",
+  probeColor: "#ffffff",
+  skylineHeightRatio: 0.22,
+  cloudCount: 6,
+  cloudSpeedPxS: 3.5
+};
+/* URL overrides (swap test / reuse): ?title=HELLO&durationMs=5000&glow=%23ffd75e&skyTop=%23220000&tileSize=9 */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  const num = (k) => { const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (q.get("title")) CONFIG.titleText = q.get("title");
+  if (num("durationMs") !== null) CONFIG.durationMs = Math.max(800, num("durationMs"));
+  if (num("tileSize") !== null) CONFIG.tileSize = Math.max(4, num("tileSize"));
+  if (num("sampleGap") !== null) CONFIG.sampleGap = Math.max(6, num("sampleGap"));
+  if (num("seed") !== null) CONFIG.seed = Math.floor(num("seed"));
+  if (num("riseDurationMs") !== null) CONFIG.riseDurationMs = Math.max(200, num("riseDurationMs"));
+  if (num("staggerMs") !== null) CONFIG.staggerMs = Math.max(0, num("staggerMs"));
+  if (q.get("glow")) CONFIG.glowColor = q.get("glow");
+  if (q.get("skyTop")) CONFIG.skyTop = q.get("skyTop");
+  if (q.get("skyMid")) CONFIG.skyMid = q.get("skyMid");
+  if (q.get("skyHorizon")) CONFIG.skyHorizon = q.get("skyHorizon");
+  if (q.get("skyline")) CONFIG.skylineColor = q.get("skyline");
+  if (num("assemblyComplete") !== null) {
+    CONFIG.checkpoints.assemblyComplete = num("assemblyComplete");
+  }
+  CONFIG.checkpoints.holdEnd = CONFIG.durationMs;
+})();
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+function hexRgb(h){ const n = parseInt(h.slice(1),16); return [n>>16&255, n>>8&255, n&255]; }
+
+/* Computed fit: font size derived from stage width and text length so the
+   title fits and reads at 360px. Start from maxFontPx, shrink until the
+   measured width fits maxWidthRatio of the stage. */
+function computeFit(text, W, cfg, measure){
+  let px = cfg.maxFontPx;
+  while (px > 12 && measure(text, px) > W * cfg.maxWidthRatio) px -= 4;
+  return px;
+}
+
+/* Pure phase from time — decided only by the checkpoint table. */
+function computePhase(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  let phase = "hold";
+  if (t < cp.riseStart) phase = "burst";
+  else if (t < cp.assemblyComplete) phase = "assemble";
+  else phase = "hold";
+  const local = phase === "assemble"
+    ? Math.min(1, Math.max(0, (t - cp.riseStart) / Math.max(1, cp.assemblyComplete - cp.riseStart)))
+    : (phase === "hold" ? 1 : 0);
+  return { t: t, phase: phase, local: local };
+}
+
+/* Runtime letterform sampling (A1): render CONFIG text offscreen, sample alpha. */
+const probe = document.createElement("canvas");
+function sampleTargets(text, W, H, cfg){
+  const pctx = probe.getContext("2d", { willReadFrequently: true });
+  probe.width = W; probe.height = H;
+  pctx.clearRect(0, 0, W, H);
+  const measure = (s, px) => { pctx.font = cfg.fontWeight + " " + px + "px " + cfg.fontFamily; return pctx.measureText(s).width; };
+  const fontPx = computeFit(text, W, cfg, measure);
+  pctx.font = cfg.fontWeight + " " + fontPx + "px " + cfg.fontFamily;
+  pctx.textAlign = "center"; pctx.textBaseline = "middle"; pctx.fillStyle = cfg.probeColor;
+  pctx.fillText(text, W / 2, H * cfg.titleCenterYRatio);
+  const img = pctx.getImageData(0, 0, W, H).data;
+  const pts = [];
+  for (let y = 0; y < H; y += cfg.sampleGap)
+    for (let x = 0; x < W; x += cfg.sampleGap)
+      if (img[(y * W + x) * 4 + 3] > 128) pts.push({ x: x, y: y });
+  return { points: pts, fontPx: fontPx };
+}
+
+/* Build deterministic tiles for a target set: each tile starts on the
+   skyline (burst origin), flies to its target with a seeded stagger. */
+function buildTiles(points, W, H, cfg){
+  const rnd = mulberry32(cfg.seed);
+  const horizonY = H * (1 - cfg.skylineHeightRatio);
+  return points.map(function(p, i){
+    const spread = (rnd() - 0.5) * W * 0.22;
+    return {
+      tx: p.x, ty: p.y,
+      sx: Math.max(2, Math.min(W - 2, p.x + spread)),
+      sy: horizonY + rnd() * H * cfg.skylineHeightRatio * 0.7,
+      delay: rnd(),
+      color: cfg.tilePalette[Math.floor(rnd() * cfg.tilePalette.length)],
+      inner: rnd(),
+      phase: rnd() * Math.PI * 2
+    };
+  });
+}
+function tileProgress(tile, state, cfg){
+  if (state.phase === "burst") return 0;
+  if (state.phase === "hold") return 1;
+  const span = Math.max(1, cfg.riseDurationMs);
+  const start = tile.delay * cfg.staggerMs;
+  const elapsed = state.t - cfg.checkpoints.riseStart - start;
+  return easeOutCubic(Math.min(1, Math.max(0, elapsed / span)));
+}
+
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+let W = 0, H = 0, tiles = [], ambient = [], buildings = [], clouds = [], fontPxUsed = 0;
+function buildScene(){
+  W = canvas.width = canvas.clientWidth || 960;
+  H = canvas.height = canvas.clientHeight || 540;
+  const sampled = sampleTargets(CONFIG.titleText, W, H, CONFIG);
+  fontPxUsed = sampled.fontPx;
+  tiles = buildTiles(sampled.points, W, H, CONFIG);
+  const rnd = mulberry32(CONFIG.seed + 77);
+  ambient = [];
+  for (let i = 0; i < CONFIG.ambientTileCount; i++)
+    ambient.push({ x: rnd() * W, off: rnd(), speed: 0.05 + rnd() * 0.1,
+      color: CONFIG.tilePalette[Math.floor(rnd() * CONFIG.tilePalette.length)], size: 0.55 + rnd() * 0.5 });
+  buildings = [];
+  let bx = 0;
+  while (bx < W){
+    const bw = 14 + rnd() * 30, bh = H * CONFIG.skylineHeightRatio * (0.45 + rnd() * 0.55);
+    const wins = [];
+    for (let wy = 0; wy < 6; wy++) for (let wx = 0; wx < 3; wx++) if (rnd() > 0.62) wins.push([wx, wy]);
+    buildings.push({ x: bx, w: bw, h: bh, wins: wins }); bx += bw + 1 + rnd() * 3;
+  }
+  clouds = [];
+  for (let i = 0; i < CONFIG.cloudCount; i++)
+    clouds.push({ x: rnd() * W, y: H * (0.3 + rnd() * 0.3), s: 0.6 + rnd() * 1.1 });
+}
+function drawTile(x, y, size, color, inner, alpha){
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.fillRect(x - size / 2, y - size / 2, size, size);
+  ctx.fillStyle = CONFIG.tileInnerColor;
+  ctx.globalAlpha = alpha * 0.55;
+  const inset = size * 0.22;
+  ctx.fillRect(x - size / 2 + inset, y - size / 2 + inset, size - inset * 2, size * (0.25 + inner * 0.3));
+  ctx.globalAlpha = alpha;
+}
+function render(tMs){
+  const state = computePhase(tMs, CONFIG);
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, CONFIG.skyTop); grad.addColorStop(0.62, CONFIG.skyMid); grad.addColorStop(1, CONFIG.skyHorizon);
+  ctx.globalAlpha = 1; ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+  /* clouds */
+  ctx.fillStyle = CONFIG.cloudColor;
+  for (const c of clouds){
+    const cx = ((c.x + tMs / 1000 * CONFIG.cloudSpeedPxS) % (W + 120)) - 60;
+    ctx.globalAlpha = CONFIG.cloudAlpha;
+    ctx.beginPath();
+    ctx.ellipse(cx, c.y, 34 * c.s, 11 * c.s, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx + 20 * c.s, c.y + 3, 24 * c.s, 9 * c.s, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  /* ambient rising tiles (background stream, dimmer — never at letter intensity) */
+  const horizonY = H * (1 - CONFIG.skylineHeightRatio);
+  for (const a of ambient){
+    const ay = horizonY - ((state.t / 1000 * a.speed + a.off) % 1) * horizonY;
+    drawTile(a.x, ay, CONFIG.tileSize * a.size, a.color, a.off, CONFIG.ambientAlpha);
+  }
+  /* letterform tiles: glow pass once assembled, then tiles */
+  const assembled = tiles.filter(function(tl){ return tileProgress(tl, state, CONFIG) >= 1; }).length;
+  if (state.phase === "hold" || assembled > tiles.length * 0.6){
+    const pulse = 1 + Math.sin(state.t / 300) * CONFIG.holdGlowPulse;
+    ctx.save();
+    ctx.shadowColor = CONFIG.glowColor;
+    ctx.shadowBlur = 14 * pulse;
+    ctx.globalAlpha = CONFIG.glowAlpha * 0.5;
+    ctx.fillStyle = CONFIG.glowColor;
+    for (const tl of tiles){
+      const p = tileProgress(tl, state, CONFIG);
+      if (p < 1) continue;
+      ctx.fillRect(tl.tx - CONFIG.tileSize / 2, tl.ty - CONFIG.tileSize / 2, CONFIG.tileSize, CONFIG.tileSize);
+    }
+    ctx.restore();
+  }
+  for (const tl of tiles){
+    const p = tileProgress(tl, state, CONFIG);
+    const x = tl.sx + (tl.tx - tl.sx) * p;
+    let y = tl.sy + (tl.ty - tl.sy) * p;
+    if (p >= 1) y += Math.sin(state.t * 0.004 + tl.phase) * CONFIG.jitterPx;
+    drawTile(x, y, CONFIG.tileSize, tl.color, tl.inner, 1);
+  }
+  /* skyline */
+  ctx.globalAlpha = 1; ctx.fillStyle = CONFIG.skylineColor;
+  ctx.fillRect(0, horizonY, W, H - horizonY);
+  for (const b of buildings){
+    ctx.fillRect(b.x, H - b.h, b.w, b.h);
+    ctx.fillStyle = CONFIG.skylineLitColor;
+    for (const wn of b.wins){
+      ctx.globalAlpha = 0.75;
+      ctx.fillRect(b.x + 3 + wn[0] * (b.w / 3), H - b.h + 4 + wn[1] * 5, 2, 2.4);
+    }
+    ctx.globalAlpha = 1; ctx.fillStyle = CONFIG.skylineColor;
+  }
+  ctx.globalAlpha = 1;
+  return state;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+window.addEventListener("resize", buildScene);
+buildScene();
+render(0);
+play();
+
+window.T09_API = { CONFIG: CONFIG, computePhase: computePhase, computeFit: computeFit,
+  sampleTargets: sampleTargets, buildTiles: buildTiles, tileProgress: tileProgress,
+  mulberry32: mulberry32, getFontPx: function(){ return fontPxUsed; },
+  getTileCount: function(){ return tiles.length; } };
+</script>
+</body>
+</html>

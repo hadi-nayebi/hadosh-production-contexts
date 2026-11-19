@@ -1,0 +1,10 @@
+**Motion fidelity passes.** Each request arrives unselected and lands directly on its final row. The two green approvals establish the pattern, and the longer orange refusal delivers the Oscar punchline. [Technique facts](/tmp/t07-a3-motion/packet.txt:8)
+
+- **Selection.** `buildTimeline()` starts each request with `sel: -1`, assigns its final row once, and retains that row through the end event. The renderer reserves space for the marker even while it is invisible. The direct and produce requests land on green row 1, and the Oscar request lands directly on orange row 3 without stepping, resetting, or descending again. Its hold is 1,130 ms (2,500 − 1,370), longer than the preceding 770 ms (1,700 − 930) and 830 ms (1,830 − 1,000). [Requests and timing](/tmp/t07-a3-motion/packet.txt:41) · [Row colors](/tmp/t07-a3-motion/packet.txt:80) · [Timeline](/tmp/t07-a3-motion/packet.txt:204) · [Marker rendering](/tmp/t07-a3-motion/packet.txt:440)
+- **Flash and stillness.** Only the first arrival switches the whole modal to orange for 120 ms. Opacity switches discretely with the flash. At a fixed stage size, every phase uses the same left, top, and width, and the stylesheet defines no drift, scale, fade, or entrance animation. [Flash settings](/tmp/t07-a3-motion/packet.txt:52) · [Stylesheet](/tmp/t07-a3-motion/packet.txt:18) · [Modal geometry](/tmp/t07-a3-motion/packet.txt:418) · [Flash rendering](/tmp/t07-a3-motion/packet.txt:446)
+
+**Limit.** The box height follows its content. The packet supplies no rendered frames to confirm that its bottom edge stays fixed through title changes and bold selections. This is the sole reservation on full credit. [Render path](/tmp/t07-a3-motion/packet.txt:420) · [Build-record limitation](/tmp/t07-a3-motion/packet.txt:525)
+
+BODY-WRITE: None (read-only run). If T07 returns to practice, preserve the direct landings and first-arrival flash, and carry a fixed-viewport frame strip showing all four modal edges through each request change and landing.
+
+SCORE: 98

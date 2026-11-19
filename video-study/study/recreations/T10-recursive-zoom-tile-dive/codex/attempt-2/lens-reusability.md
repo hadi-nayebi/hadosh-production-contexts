@@ -1,0 +1,13 @@
+Score: **74/100 for reusability / parameterization.** The descriptor renderer and normalized effective configuration make this substantially reusable, but production overrides remain incomplete and insufficiently validated.
+
+- **CONFIG-driven scenes work:** a fourth tile can be added through descriptor data alongside matching grid dimensions. Tile contents, palette, target, geometry, easing selection, and z-order are largely configurable. Missing required descriptor numbers and unknown color roles produce `T10DescriptorError`.
+- **URL coverage is incomplete:** there is no parser for `tiles`, descriptor arrays, `cloudSpecs`, or `skylineHeightsPct`. Direct `pillText` and `statusText` keys are ignored; only their aliases work. Therefore a different tile scene or sky layout cannot be supplied entirely through URL overrides.
+- **Rejection is not consistently atomic:** `?pill=new&skyTop=` applies the new text while recording the rejected color. Empty `highlight` and `pillDot` aliases bypass even that rejection. Invalid numeric strings are silently ignored, and `parseFloat("800junk")` accepts 800.
+- **Normalization permits broken configurations:** zero/fractional grid dimensions, fractional target indices, negative fades, and invalid geometry lack adequate checks. Checkpoints can move the locator exit or status appearance outside their intended dive phases while still passing validation. Duration-only proportional checkpoint scaling is correctly implemented for the default null fades.
+- **Descriptor validation is partial:** unknown descriptor fields are ignored; invalid optional `borderRadius` values silently disappear. `null` descriptors produce a generic `TypeError`. Color-role resolution accepts any string-valued CONFIG property, including text fields.
+- **Shaping literals remain outside CONFIG:** label shadow offsets/blur (`0 1px 2px`), font family/weight, circular cloud/window geometry, locator placement’s fixed center reference, and fade proportions (`0.11`, `0.4`) remain coded choices. The build record’s structural-constant inventory is incomplete.
+
+The next attempt should carry a strict override schema covering nested scene/backdrop data, one atomic rejection path with offending keys and values, finite/integer/range validation, explicit checkpoint-phase constraints, and complete descriptor validation. Move remaining shaping choices into CONFIG or accurately document their fixed contract.
+
+BODY-WRITE: Replace the build record’s complete-override and atomic-rejection claims with the demonstrated limits; require schema-driven parsing and validation of every production-facing override before this machinery is consolidated.
+SCORE: 74

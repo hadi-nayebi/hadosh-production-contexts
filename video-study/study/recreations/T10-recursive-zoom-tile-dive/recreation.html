@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T10 — Recursive zoom / tile dive · recreation</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden}
+  body{font-family:Arial,Helvetica,sans-serif}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  .cloud{position:absolute;border-radius:50%}
+  #skyline{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end}
+  .bldg{flex:1 1 0;position:relative}
+  .win{position:absolute;border-radius:50%}
+  #wallWrap{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  #wall{display:grid;will-change:transform}
+  .tile{position:relative;overflow:hidden;border-style:solid}
+  .tileLabel{position:absolute;font-weight:700}
+  .tileArt{position:absolute;inset:0}
+  .shape{position:absolute}
+  #pill{position:absolute;display:flex;align-items:center;white-space:nowrap;font-weight:700;will-change:opacity,transform}
+  #pillDot{border-radius:50%;flex:0 0 auto}
+  #statusPill{position:absolute;display:none;align-items:center;white-space:nowrap;font-weight:700}
+  #errBox{position:absolute;inset:auto 4% 4% 4%;display:none;font-weight:700}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="skyline"></div>
+  <div id="wallWrap"><div id="wall"></div></div>
+  <div id="pill"><span id="pillDot"></span><span id="pillText"></span></div>
+  <div id="statusPill"><span id="statusText"></span></div>
+  <div id="errBox"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every shaping variable of the technique lives here; logic reads only CONFIG =====
+   Timing is CHECKPOINT-PRICED. Checkpoint values are bound from segment frame
+   measurements (see the build record): the locator pill is fully visible well
+   before the dive begins, exits during the dive, and the status pill completes
+   its fade as the dive ends. Fade durations are NOT independent literals:
+   normalizeConfig derives any fade left null from its checkpoint span. */
+const CONFIG = {
+  durationMs: 3000,
+  checkpoints: { pillAt: 850, diveStart: 2000, pillOutAt: 2200, statusAt: 2325, diveEnd: 2450 },
+  pillFadeMs: null,
+  pillOutFadeMs: null,
+  statusFadeMs: null,
+  gridCols: 1,
+  gridRows: 3,
+  targetIndex: 1,
+  wallWidthPct: 26,
+  tileGapPct: 1.2,
+  tileBorderPx: 2,
+  highlightBorderPx: 4,
+  zoomScale: 3.4,
+  tileAspectW: 16,
+  tileAspectH: 10,
+  gradientStopPct: 62,
+  cloudHeightRatio: 0.36,
+  cloudOpacity: 0.55,
+  skylineHeightPct: 46,
+  skylineWindowsPerBldg: 3,
+  skylineWinLeftBasePct: 18,
+  skylineWinLeftStepPct: 28,
+  skylineWinTopBasePct: 14,
+  skylineWinTopStepPct: 22,
+  skylineWinWidthPct: 9,
+  skylineWinHeightPct: 5,
+  skylineWinOpacity: 0.75,
+  pillSlidePct: 12,
+  pillTopPct: 44,
+  pillOffsetXPct: 4,
+  pillEdgeMarginPct: 2,
+  statusLeftPct: 58,
+  statusTopPct: 44,
+  labelLeftPct: 4,
+  labelBottomPct: 3,
+  zClouds: 1,
+  zSkyline: 2,
+  zWall: 3,
+  zPills: 4,
+  easing: "easeInOutCubic",
+  skyTop: "#2b3a6e",
+  skyMid: "#7a5f8e",
+  skyLow: "#d99a8a",
+  cloudColor: "#aab4d8",
+  skylineColor: "#141c33",
+  windowColor: "#cfd8ee",
+  highlightColor: "#7fe3c3",
+  tileBorderColor: "#0e1424",
+  pillBg: "#171a21",
+  pillTextColor: "#ffffff",
+  pillDotColor: "#ff6fa5",
+  statusBg: "#f2f4f6",
+  statusTextColor: "#1d7a4f",
+  checkColor: "#1d7a4f",
+  pillText: "you are here",
+  statusText: "laptop: brought",
+  checkMark: "✓",
+  pillFontPx: 15,
+  pillPadYPx: 8,
+  pillPadXPx: 14,
+  pillRadiusPx: 20,
+  pillDotPx: 11,
+  pillGapPx: 8,
+  statusFontPx: 12,
+  tileLabelFontPx: 9,
+  robotFaceColor: "#101216",
+  laptopColor: "#9aa3ad",
+  orbColor: "#b78ae0",
+  plantColor: "#d99a4c",
+  wheelColor: "#101216",
+  labelColor: "#ffffff",
+  labelShadowColor: "#000000",
+  tiles: [
+    { label: "Claude", bg: "#3a3f45", accent: "#e8762c", detail: "#dfe6ee", art: [
+      { left:22, top:10, width:56, height:62, borderRadius:18, color:"accent" },
+      { left:30, top:30, width:40, height:30, borderRadius:40, color:"robotFaceColor" },
+      { left:34, top:36, width:11, height:18, borderRadius:50, color:"detail" },
+      { left:55, top:36, width:11, height:18, borderRadius:50, color:"detail" },
+      { left:38, top:74, width:24, height:14, borderRadius:30, color:"accent" } ] },
+    { label: "You", bg: "#cfe8dd", accent: "#e75480", detail: "#8a5a2b", art: [
+      { left:8, top:58, width:84, height:5, color:"detail" },
+      { left:12, top:63, width:4, height:30, color:"detail" },
+      { left:84, top:63, width:4, height:30, color:"detail" },
+      { left:44, top:22, width:12, height:16, borderRadius:50, color:"accent" },
+      { left:40, top:38, width:20, height:24, borderRadius:20, color:"accent" },
+      { left:41, top:44, width:18, height:13, color:"laptopColor" },
+      { left:70, top:26, width:16, height:22, borderRadius:50, color:"orbColor" },
+      { left:6, top:62, width:10, height:31, borderRadius:30, color:"plantColor" } ] },
+    { label: "GT3 RS", bg: "#5a6650", accent: "#6a2fa0", detail: "#f5d13c", art: [
+      { left:10, top:52, width:80, height:20, borderRadius:40, color:"accent" },
+      { left:28, top:38, width:38, height:18, borderRadius:50, color:"accent" },
+      { left:16, top:66, width:15, height:24, borderRadius:50, color:"wheelColor" },
+      { left:68, top:66, width:15, height:24, borderRadius:50, color:"wheelColor" },
+      { left:10, top:80, width:80, height:4, color:"detail" } ] }
+  ],
+  skylineHeightsPct: [22,34,26,42,30,48,36,24,40,28,44,32,22,38,27,46,31,25,41,29],
+  cloudSpecs: [ {x:6,y:38,w:16}, {x:56,y:12,w:18}, {x:72,y:34,w:15}, {x:38,y:20,w:11} ]
+};
+const BASELINE = JSON.parse(JSON.stringify(CONFIG));
+const EASINGS = {
+  easeInOutCubic: function(x){ return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; },
+  easeOutQuad: function(x){ return 1 - (1 - x) * (1 - x); },
+  linear: function(x){ return x; }
+};
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+function namedError(name, msg){ const e = new Error(msg); e.name = name; return e; }
+
+/* ===== Configuration normalization (runs after CONFIG + URL overrides, before any scene use) =====
+   Candidate-based and ATOMIC: overrides are applied to a clone; if validation
+   fails, the whole candidate is discarded, the rejection is recorded, and the
+   pre-override configuration stands. A durationMs-only change RESCALES every
+   checkpoint and fade proportionally. Minimum separation is a proportion of
+   the effective duration, so it stays coherent under rescaling. */
+function normalizeConfig(candidate, explicit){
+  const rejected = [];
+  const eff = JSON.parse(JSON.stringify(candidate));
+  const base = BASELINE;
+  let scaleFactor = 1;
+  const cpKeys = ["pillAt","diveStart","pillOutAt","statusAt","diveEnd"];
+  const fadeKeys = ["pillFadeMs","pillOutFadeMs","statusFadeMs"];
+  const anyCpExplicit = cpKeys.some(function(k){ return explicit.has("cp." + k); });
+  const anyFadeExplicit = fadeKeys.some(function(k){ return explicit.has(k); });
+  if (explicit.has("durationMs") && !anyCpExplicit && !anyFadeExplicit && eff.durationMs !== base.durationMs){
+    scaleFactor = eff.durationMs / base.durationMs;
+    for (const k of cpKeys) eff.checkpoints[k] = Math.round(base.checkpoints[k] * scaleFactor);
+  }
+  /* span-derived fades for any fade left null (derived, never independent literals) */
+  const cp = eff.checkpoints;
+  if (eff.pillFadeMs === null || eff.pillFadeMs === undefined)
+    eff.pillFadeMs = Math.max(1, Math.round((cp.pillOutAt - cp.pillAt) * 0.11));
+  if (eff.pillOutFadeMs === null || eff.pillOutFadeMs === undefined)
+    eff.pillOutFadeMs = Math.max(1, Math.round((cp.diveEnd - cp.pillOutAt) * 0.4));
+  if (eff.statusFadeMs === null || eff.statusFadeMs === undefined)
+    eff.statusFadeMs = Math.max(1, Math.round(cp.diveEnd - cp.statusAt));
+  if (scaleFactor !== 1){
+    if (!explicit.has("pillFadeMs")) eff.pillFadeMs = Math.max(1, Math.round(eff.pillFadeMs));
+  }
+  const minSep = Math.max(1, Math.round(eff.durationMs * 4 / 3000));
+  function fail(reason){ return { effective: null, rejected: [{ reason: reason }], scaleFactor: 1, minSepMs: minSep }; }
+  if (!(eff.durationMs > 0)) return fail("durationMs must be positive");
+  if (!(cp.diveStart >= 0 && cp.diveEnd > cp.diveStart)) return fail("diveStart < diveEnd required");
+  if (cp.diveEnd - cp.diveStart < minSep) return fail("dive span below minimum separation " + minSep + "ms");
+  if (cp.diveEnd > eff.durationMs) return fail("diveEnd beyond durationMs");
+  if (!(cp.pillAt >= 0 && cp.pillAt + eff.pillFadeMs <= eff.durationMs)) return fail("pill fade ends beyond durationMs");
+  if (!(cp.pillOutAt >= cp.pillAt + eff.pillFadeMs)) return fail("pillOutAt before pill fully visible");
+  if (cp.pillOutAt + eff.pillOutFadeMs > eff.durationMs) return fail("pill exit ends beyond durationMs");
+  if (!(cp.statusAt >= 0 && cp.statusAt + eff.statusFadeMs <= eff.durationMs)) return fail("status fade ends beyond durationMs");
+  if (!(eff.zoomScale >= 1)) return fail("zoomScale below 1");
+  if (!EASINGS[eff.easing]) return fail("unknown easing: " + eff.easing);
+  if (eff.tiles.length !== eff.gridCols * eff.gridRows) return fail("tiles.length != gridCols*gridRows");
+  if (!(eff.targetIndex >= 0 && eff.targetIndex < eff.tiles.length)) return fail("targetIndex out of range");
+  return { effective: eff, rejected: rejected, scaleFactor: scaleFactor, minSepMs: minSep };
+}
+
+/* URL overrides (swap test / reuse). Generic surface: any CONFIG key may be
+   overridden by its own name; checkpoint keys as <name>Ms; aliases pill /
+   status / zoom / cols / rows / target / highlight / tileN keep the recorded
+   swap working. An explicitly supplied empty string IS a parsed value: it is
+   applied to text keys and rejected (recorded) for color keys — never a
+   silent truthiness no-op. */
+const EXPLICIT = new Set();
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  function setNum(path, v){ if (isFinite(v)){ path(v); } }
+  const num = function(k){ const v = parseFloat(q.get(k)); return isFinite(v) ? v : null; };
+  if (q.has("durationMs") && num("durationMs") !== null){ CONFIG.durationMs = num("durationMs"); EXPLICIT.add("durationMs"); }
+  const cpMap = { diveStartMs:"diveStart", pillAtMs:"pillAt", pillOutAtMs:"pillOutAt", statusAtMs:"statusAt", diveEndMs:"diveEnd" };
+  for (const k in cpMap){ if (q.has(k) && num(k) !== null){ CONFIG.checkpoints[cpMap[k]] = num(k); EXPLICIT.add("cp." + cpMap[k]); } }
+  const fadeMap = { pillFadeMs:"pillFadeMs", pillOutFadeMs:"pillOutFadeMs", statusFadeMs:"statusFadeMs" };
+  for (const k in fadeMap){ if (q.has(k) && num(k) !== null){ CONFIG[k] = num(k); EXPLICIT.add(k); } }
+  const numKeys = ["gridCols","gridRows","targetIndex","wallWidthPct","tileGapPct","tileBorderPx","highlightBorderPx","zoomScale","tileAspectW","tileAspectH","gradientStopPct","cloudHeightRatio","cloudOpacity","skylineHeightPct","skylineWindowsPerBldg","skylineWinLeftBasePct","skylineWinLeftStepPct","skylineWinTopBasePct","skylineWinTopStepPct","skylineWinWidthPct","skylineWinHeightPct","skylineWinOpacity","pillSlidePct","pillTopPct","pillOffsetXPct","pillEdgeMarginPct","statusLeftPct","statusTopPct","labelLeftPct","labelBottomPct","zClouds","zSkyline","zWall","zPills","pillFontPx","pillPadYPx","pillPadXPx","pillRadiusPx","pillDotPx","pillGapPx","statusFontPx","tileLabelFontPx"];
+  for (const k of numKeys){ if (q.has(k) && num(k) !== null){ CONFIG[k] = num(k); EXPLICIT.add(k); } }
+  if (q.has("cols") && num("cols") !== null){ CONFIG.gridCols = Math.max(1, Math.floor(num("cols"))); EXPLICIT.add("gridCols"); }
+  if (q.has("rows") && num("rows") !== null){ CONFIG.gridRows = Math.max(1, Math.floor(num("rows"))); EXPLICIT.add("gridRows"); }
+  if (q.has("target") && num("target") !== null){ CONFIG.targetIndex = Math.floor(num("target")); EXPLICIT.add("targetIndex"); }
+  if (q.has("zoom") && num("zoom") !== null){ CONFIG.zoomScale = num("zoom"); EXPLICIT.add("zoomScale"); }
+  if (q.has("easing")){ CONFIG.easing = q.get("easing"); EXPLICIT.add("easing"); }
+  const colorKeys = ["skyTop","skyMid","skyLow","cloudColor","skylineColor","windowColor","highlightColor","tileBorderColor","pillBg","pillTextColor","pillDotColor","statusBg","statusTextColor","checkColor","robotFaceColor","laptopColor","orbColor","plantColor","wheelColor","labelColor","labelShadowColor"];
+  for (const k of colorKeys){ if (q.has(k)){ const v = q.get(k); if (v === ""){ EXPLICIT.add("rejectedEmpty:" + k); } else { CONFIG[k] = v; EXPLICIT.add(k); } } }
+  if (q.has("highlight")){ CONFIG.highlightColor = q.get("highlight"); EXPLICIT.add("highlightColor"); }
+  if (q.has("pillDot")){ CONFIG.pillDotColor = q.get("pillDot"); EXPLICIT.add("pillDotColor"); }
+  if (q.has("pill")){ CONFIG.pillText = q.get("pill"); EXPLICIT.add("pillText"); }
+  if (q.has("status")){ CONFIG.statusText = q.get("status"); EXPLICIT.add("statusText"); }
+  if (q.has("checkMark")){ CONFIG.checkMark = q.get("checkMark"); EXPLICIT.add("checkMark"); }
+  for (let i = 0; i < CONFIG.tiles.length; i++)
+    if (q.has("tile" + i)){ CONFIG.tiles[i].label = q.get("tile" + i); EXPLICIT.add("tile" + i + ".label"); }
+})();
+
+const NORM = (function(){
+  const r = normalizeConfig(CONFIG, EXPLICIT);
+  const extraRej = [];
+  for (const k of EXPLICIT){ if (k.indexOf("rejectedEmpty:") === 0) extraRej.push({ reason: "empty string rejected for color key " + k.slice(14) }); }
+  if (!r.effective){
+    const fb = normalizeConfig(JSON.parse(JSON.stringify(BASELINE)), new Set());
+    return { effective: fb.effective, rejected: r.rejected.concat(extraRej), scaleFactor: 1, minSepMs: fb.minSepMs, fellBack: true };
+  }
+  return { effective: r.effective, rejected: r.rejected.concat(extraRej), scaleFactor: r.scaleFactor, minSepMs: r.minSepMs, fellBack: false };
+})();
+const EFF = NORM.effective;
+window.__T10_NORMALIZATION = NORM;
+
+/* Pure state from time — the normalized checkpoint table decides every phase. */
+function computeState(tMs, cfg){
+  const t = ((tMs % cfg.durationMs) + cfg.durationMs) % cfg.durationMs;
+  const cp = cfg.checkpoints;
+  const ease = EASINGS[cfg.easing] || EASINGS.easeInOutCubic;
+  const diveRaw = clamp01((t - cp.diveStart) / Math.max(1, cp.diveEnd - cp.diveStart));
+  const dive = ease(diveRaw);
+  const scale = 1 + (cfg.zoomScale - 1) * dive;
+  let pill = clamp01((t - cp.pillAt) / cfg.pillFadeMs);
+  if (t >= cp.pillOutAt) pill = pill * (1 - clamp01((t - cp.pillOutAt) / cfg.pillOutFadeMs));
+  const status = clamp01((t - cp.statusAt) / cfg.statusFadeMs);
+  const col = cfg.targetIndex % cfg.gridCols;
+  const row = Math.floor(cfg.targetIndex / cfg.gridCols);
+  const originX = (col + 0.5) / cfg.gridCols * 100;
+  const originY = (row + 0.5) / cfg.gridRows * 100;
+  return { t: t, diveRaw: diveRaw, dive: dive, scale: scale, pill: pill, status: status,
+           originX: originX, originY: originY, targetCol: col, targetRow: row };
+}
+
+/* ---- Tile art: ONE generic descriptor renderer; scenes are CONFIG data ---- */
+function resolveColor(role, tile, cfg){
+  if (role === "accent") return tile.accent;
+  if (role === "detail") return tile.detail;
+  if (role === "bg") return tile.bg;
+  if (typeof role === "string" && role.charAt(0) === "#") return role;
+  if (typeof role === "string" && typeof cfg[role] === "string") return cfg[role];
+  throw namedError("T10DescriptorError", "unknown descriptor color role: " + role);
+}
+function renderDescriptor(parent, d, tile, cfg){
+  const nums = ["left","top","width","height"];
+  for (const k of nums){ if (typeof d[k] !== "number" || !isFinite(d[k])) throw namedError("T10DescriptorError", "descriptor missing numeric " + k); }
+  const s = document.createElement("div");
+  s.className = "shape";
+  s.style.left = d.left + "%"; s.style.top = d.top + "%";
+  s.style.width = d.width + "%"; s.style.height = d.height + "%";
+  if (typeof d.borderRadius === "number") s.style.borderRadius = d.borderRadius + "%";
+  s.style.background = resolveColor(d.color, tile, cfg);
+  parent.appendChild(s); return s;
+}
+function buildTiles(wallEl, cfg){
+  wallEl.innerHTML = "";
+  const tileEls = [];
+  for (let i = 0; i < cfg.tiles.length; i++){
+    const tile = cfg.tiles[i];
+    if (!tile || !Array.isArray(tile.art)) throw namedError("T10DescriptorError", "tile " + i + " has no art descriptor array");
+    const d = document.createElement("div");
+    d.className = "tile";
+    d.style.background = tile.bg;
+    d.style.borderColor = (i === cfg.targetIndex) ? cfg.highlightColor : cfg.tileBorderColor;
+    d.style.borderWidth = ((i === cfg.targetIndex) ? cfg.highlightBorderPx : cfg.tileBorderPx) + "px";
+    const art = document.createElement("div");
+    art.className = "tileArt";
+    for (const desc of tile.art) renderDescriptor(art, desc, tile, cfg);
+    d.appendChild(art);
+    const lab = document.createElement("div");
+    lab.className = "tileLabel";
+    lab.textContent = tile.label;
+    lab.style.left = cfg.labelLeftPct + "%";
+    lab.style.bottom = cfg.labelBottomPct + "%";
+    lab.style.fontSize = cfg.tileLabelFontPx + "px";
+    lab.style.color = cfg.labelColor;
+    lab.style.textShadow = "0 1px 2px " + cfg.labelShadowColor;
+    d.appendChild(lab);
+    wallEl.appendChild(d); tileEls.push(d);
+  }
+  return tileEls;
+}
+
+/* ---- Build the scene from the normalized CONFIG ---- */
+const stage = document.getElementById("stage");
+function buildBackdrop(cfg, stageEl, skylineEl){
+  stageEl.style.background = "linear-gradient(" + cfg.skyTop + ", " + cfg.skyMid + " " + cfg.gradientStopPct + "%, " + cfg.skyLow + ")";
+  const cloudEls = [];
+  for (const c of cfg.cloudSpecs){
+    const cl = document.createElement("div");
+    cl.className = "cloud";
+    cl.style.left = c.x + "%"; cl.style.top = c.y + "%";
+    cl.style.width = c.w + "%"; cl.style.height = (c.w * cfg.cloudHeightRatio) + "%";
+    cl.style.background = cfg.cloudColor;
+    cl.style.opacity = String(cfg.cloudOpacity);
+    cl.style.zIndex = String(cfg.zClouds);
+    stageEl.appendChild(cl); cloudEls.push(cl);
+  }
+  skylineEl.style.height = cfg.skylineHeightPct + "%";
+  skylineEl.style.zIndex = String(cfg.zSkyline);
+  const bldgs = [];
+  for (let i = 0; i < cfg.skylineHeightsPct.length; i++){
+    const b = document.createElement("div");
+    b.className = "bldg";
+    b.style.height = cfg.skylineHeightsPct[i] + "%";
+    b.style.background = cfg.skylineColor;
+    for (let wI = 0; wI < cfg.skylineWindowsPerBldg; wI++){
+      const wn = document.createElement("div");
+      wn.className = "win";
+      wn.style.left = (cfg.skylineWinLeftBasePct + wI * cfg.skylineWinLeftStepPct) + "%";
+      wn.style.top = (cfg.skylineWinTopBasePct + ((i + wI) % 4) * cfg.skylineWinTopStepPct) + "%";
+      wn.style.width = cfg.skylineWinWidthPct + "%"; wn.style.height = cfg.skylineWinHeightPct + "%";
+      wn.style.background = cfg.windowColor; wn.style.opacity = String(cfg.skylineWinOpacity);
+      b.appendChild(wn);
+    }
+    skylineEl.appendChild(b); bldgs.push(b);
+  }
+  return { clouds: cloudEls, buildings: bldgs };
+}
+const skyline = document.getElementById("skyline");
+const BACKDROP = buildBackdrop(EFF, stage, skyline);
+const wallWrap = document.getElementById("wallWrap");
+wallWrap.style.zIndex = String(EFF.zWall);
+const wall = document.getElementById("wall");
+wall.style.width = EFF.wallWidthPct + "%";
+wall.style.gridTemplateColumns = "repeat(" + EFF.gridCols + ", 1fr)";
+wall.style.gridTemplateRows = "repeat(" + EFF.gridRows + ", 1fr)";
+wall.style.gap = EFF.tileGapPct + "%";
+wall.style.aspectRatio = (EFF.gridCols * EFF.tileAspectW) + " / " + (EFF.gridRows * EFF.tileAspectH);
+let tileEls = [];
+const errBox = document.getElementById("errBox");
+try { tileEls = buildTiles(wall, EFF); }
+catch (e){
+  errBox.style.display = "block";
+  errBox.style.background = EFF.pillBg; errBox.style.color = EFF.pillTextColor;
+  errBox.textContent = e.name + ": " + e.message;
+  window.__T10_ERROR = e.name + ": " + e.message;
+}
+
+const pill = document.getElementById("pill");
+pill.style.background = EFF.pillBg;
+pill.style.color = EFF.pillTextColor;
+pill.style.fontSize = EFF.pillFontPx + "px";
+pill.style.padding = EFF.pillPadYPx + "px " + EFF.pillPadXPx + "px";
+pill.style.borderRadius = EFF.pillRadiusPx + "px";
+pill.style.gap = EFF.pillGapPx + "px";
+pill.style.top = EFF.pillTopPct + "%";
+pill.style.zIndex = String(EFF.zPills);
+const pillDot = document.getElementById("pillDot");
+pillDot.style.background = EFF.pillDotColor;
+pillDot.style.width = EFF.pillDotPx + "px";
+pillDot.style.height = EFF.pillDotPx + "px";
+document.getElementById("pillText").textContent = EFF.pillText;
+
+const statusPill = document.getElementById("statusPill");
+statusPill.style.background = EFF.statusBg;
+statusPill.style.color = EFF.statusTextColor;
+statusPill.style.fontSize = EFF.statusFontPx + "px";
+statusPill.style.padding = EFF.pillPadYPx + "px " + EFF.pillPadXPx + "px";
+statusPill.style.borderRadius = EFF.pillRadiusPx + "px";
+statusPill.style.left = EFF.statusLeftPct + "%";
+statusPill.style.top = EFF.statusTopPct + "%";
+statusPill.style.zIndex = String(EFF.zPills);
+document.getElementById("statusText").textContent = EFF.statusText + " ";
+const check = document.createElement("span");
+check.textContent = EFF.checkMark;
+check.style.color = EFF.checkColor;
+statusPill.appendChild(check);
+
+function render(tMs){
+  const s = computeState(tMs, EFF);
+  wall.style.transformOrigin = s.originX + "% " + s.originY + "%";
+  wall.style.transform = "scale(" + s.scale.toFixed(4) + ")";
+  pill.style.opacity = s.pill.toFixed(3);
+  /* transformed-bounds clamp: price the pill's DISPLAYED rect, slide offset included */
+  const sw = stage.clientWidth || 0, pw = pill.offsetWidth || 0;
+  const slidePx = (1 - s.pill) * (EFF.pillSlidePct / 100) * pw;
+  pill.style.transform = "translateX(" + slidePx.toFixed(2) + "px)";
+  if (sw && pw){
+    const desired = sw * (50 + EFF.wallWidthPct / 2 + EFF.pillOffsetXPct) / 100;
+    const maxLeft = Math.max(0, sw - pw - slidePx - sw * EFF.pillEdgeMarginPct / 100);
+    pill.style.left = Math.min(desired, maxLeft).toFixed(1) + "px";
+  } else {
+    pill.style.left = (50 + EFF.wallWidthPct / 2 + EFF.pillOffsetXPct) + "%";
+  }
+  statusPill.style.display = s.status > 0 ? "flex" : "none";
+  statusPill.style.opacity = s.status.toFixed(3);
+  return s;
+}
+
+let playing = false, startStamp = 0, pausedAt = 0, rafId = null;
+function nowMs(){ return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now(); }
+function tick(){ if (!playing) return; render(nowMs() - startStamp); rafId = requestAnimationFrame(tick); }
+function play(){ if (playing) return; playing = true; startStamp = nowMs() - pausedAt; tick(); }
+function pause(){ if (!playing) return; pausedAt = nowMs() - startStamp; playing = false; if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+function restart(){ pausedAt = 0; if (playing){ startStamp = nowMs(); } else { render(0); } }
+
+window.addEventListener("message", function(e){
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") play();
+  if (e.data.cmd === "pause") pause();
+  if (e.data.cmd === "restart") restart();
+});
+window.__T10 = { CONFIG: CONFIG, EFF: EFF, NORM: NORM, computeState: computeState,
+                 normalizeConfig: normalizeConfig, buildTiles: buildTiles, buildBackdrop: buildBackdrop, render: render, EASINGS: EASINGS };
+render(0);
+play();
+</script>
+</body>
+</html>

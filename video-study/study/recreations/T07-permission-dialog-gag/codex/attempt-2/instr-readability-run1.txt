@@ -1,0 +1,435 @@
+CONSUMER + DECISION PRICED: the practice job (Video Study lane), Cycle 008 Wave 7, §5 Verify — your score is one of five lens scores whose average and floor decide whether technique T07 leaves the practice pool as RECREATED (pass bar: average >=85 AND no lens under 70), and name the cures the next attempt must carry if it fails.
+WORKING RECORD: you build from the technique facts + recreation source + neutral build record below; your return is filed verbatim under the artifact's codex/attempt-2/ directory and quoted into the artifact's scores.md; the working record you write to is the artifact's build-record-attempt2.md + scores.md.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. End your return with exactly one line: SCORE: <integer 0-100>. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: READABILITY only. Score 0-100 whether a first-time viewer at PHONE SIZE (360px-wide stage) can read the modal effortlessly and follow the gag. Other lenses own motion, timing, purity, reuse.
+Judge from the source-bound fit model in the build record (no rendered pixel proof exists — price that limitation as you see fit): type floors at phone width, title/option hierarchy, whether fit is measured in actual rendered weight (bold title and selected rows, marker box, numbering prefix, border, padding), how wrapped states are modelled, and whether the fit claim is bounded by an explicit long-text policy rather than unconditional.
+
+TECHNIQUE FACTS (packet P1, frame-evidenced; segment window source 0:34.5–0:43.5, modal span measured on the segment): a Claude-Code-style permission modal sits centre-left and STILL over a dim tile field while the song moves around it. Three modals cycle escalating requests ('Allow Adita to direct?' -> 'Allow Adita to produce?' -> 'Allow Adita to win an Oscar?'), each with options '1. Yes / 2. Yes, and don't ask again / 3. No, let's not get ahead—'. Frame-stepped measurement of the segment: modal 1 arrives ≈1.20s into the segment with a brief full-modal orange flash; its final selection lands on row 1 in GREEN ≈2.13s; modal 2 arrives ≈2.90s unselected, final lands row 1 GREEN ≈3.90s; modal 3 arrives ≈4.73s unselected, final lands row 3 in ORANGE ≈6.10s and holds longest; the modal span ends ≈7.2–7.4s. No within-modal stepping is observed at 30 fps — each modal arrives unselected and its final selection appears directly. Modal box ≈ x 5%–61% of stage width, y ≈28%–57% of stage height. The modal itself never moves, scales, or fades; its stillness against the song is part of the gag.
+
+===== RECREATION SOURCE =====
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T07 — Permission-dialog gag · recreation (attempt 2)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  #tiles{position:absolute;inset:0}
+  .tile{position:absolute;box-sizing:border-box}
+  #scrim{position:absolute;inset:0}
+  #modal{position:absolute;box-sizing:border-box}
+  #req{font-weight:700;line-height:1.25;margin:0}
+  .opt{line-height:1.3;box-sizing:border-box}
+  .opt .mark{display:inline-block}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="tiles"></div>
+  <div id="scrim"></div>
+  <div id="modal"><div id="req"></div><div id="opts"></div></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — grouped; every variable of the technique lives here ===== */
+const CONFIG = {
+  content: {
+    requests: ["Allow Adita to direct?", "Allow Adita to produce?", "Allow Adita to win an Oscar?"],
+    options: ["Yes", "Yes, and don't ask again", "No, let's not get ahead\u2014"],
+    finalSelections: [0, 0, 2]
+  },
+  timing: {
+    /* AUTHORITATIVE fields: modalWindowsMs + landDelaysMs (segment-measured, attempt-2 plan).
+       Holds are DERIVED: hold[i] = window[i] - landDelay[i]. Cycle is DERIVED: sum(windows).
+       arrivalFlashMs is the first slice of the land delay (flash subset of dwell, not additive). */
+    modalWindowsMs: [1700, 1830, 2500],
+    landDelaysMs: [930, 1000, 1370],
+    arrivalFlashMs: 120,
+    flashModalIndices: [0]
+  },
+  layout: {
+    leftRatio: 0.05, topRatio: 0.28, widthRatio: 0.56,
+    phoneBreakpointPx: 480, phoneWidthRatio: 0.94, maxWidthRatio: 0.94,
+    stageMinHeightPx: 200, paddingRatio: 0.045, borderWidthPx: 2, radiusPx: 10,
+    markerEm: 1.1, markerGapEm: 0.25, reqMarginBottomEm: 0.55,
+    optPadYRatio: 0.18, optPadXRatio: 0.3, optRadiusPx: 4
+  },
+  type: {
+    family: "ui-monospace, Menlo, Consolas, monospace",
+    optFloorPhonePx: 14, titleMinGapPx: 3, titleRatioMin: 1.25,
+    refPx: 100, reqLineHeight: 1.25, optLineHeight: 1.3, heightCapRatio: 0.085
+  },
+  palette: {
+    bg: "#050807", modalBg: "#0a0c0a", border: "#e8912d",
+    fg: "#f2f2f2", optFg: "#c9c9c9",
+    scrim: "rgba(0,0,0,0.55)",
+    tileBorder: "rgba(255,255,255,0.05)", tileBg: "rgba(255,255,255,0.03)",
+    flashBg: "#e8912d",
+    selectionStyles: [
+      { fg: "#4ade80", bg: "rgba(74,222,128,0.22)" },
+      { fg: "#4ade80", bg: "rgba(74,222,128,0.22)" },
+      { fg: "#f5a83d", bg: "rgba(232,145,45,0.28)" },
+      { fg: "#7dd3fc", bg: "rgba(125,211,252,0.22)" }
+    ],
+    selectionFallback: { fg: "#f5a83d", bg: "rgba(232,145,45,0.28)" }
+  },
+  tiles: { count: 8, opacity: 0.5, cols: 4, leftStartPct: 54, colStepPct: 11.5, topStartPct: 18, rowStepPct: 34, widthPct: 10, heightPct: 26, radiusPx: 3 },
+  behavior: { longTextPolicy: "expand-wrap", missingFinals: "previous", maxWrapLines: 2 },
+  container: { runs: Infinity, allowedOrigins: ["file:", "null", ""], signalName: "t07" },
+  modalScale: 1
+};
+
+/* ===== validation record (observable) ===== */
+const VALIDATION = [];
+function record(kind, detail){ VALIDATION.push({ kind: kind, detail: String(detail) }); }
+
+/* ===== strict parsing + normalization ===== */
+const NUM_RE = /^-?\d+(\.\d+)?$/;
+const COLOR_RE = /^(#[0-9a-fA-F]{3,8}|rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*(0|1|0?\.\d+)\s*)?\))$/;
+function strictNum(raw, fallback, label){
+  if (raw === null || raw === undefined) return fallback;
+  const s = String(raw).trim();
+  if (!NUM_RE.test(s)){ record("reject-number", label + "=" + s); return fallback; }
+  const v = Number(s);
+  if (!isFinite(v)){ record("reject-number", label + "=" + s); return fallback; }
+  return v;
+}
+function validColor(raw, fallback, label){
+  if (raw === null || raw === undefined) return fallback;
+  const s = String(raw).trim();
+  if (!COLOR_RE.test(s)){ record("reject-color", label + "=" + s); return fallback; }
+  return s;
+}
+function normalizeConfig(cfg){
+  const c = JSON.parse(JSON.stringify(cfg, function(k, v){ return v === Infinity ? "Infinity" : v; }));
+  if (c.container && c.container.runs === "Infinity") c.container.runs = Infinity;
+  if (!Array.isArray(c.content.requests) || !c.content.requests.length){ c.content.requests = ["Allow?"]; record("default", "requests empty -> default"); }
+  if (!Array.isArray(c.content.options) || !c.content.options.length){ c.content.options = ["Yes", "No"]; record("default", "options empty -> default"); }
+  /* finals: fractional -> rounded, NaN -> previous-policy, clamp to option range; missing -> previous */
+  const nOpt = c.content.options.length, finals = [];
+  let prev = 0;
+  for (let i = 0; i < c.content.requests.length; i++){
+    let f = Array.isArray(c.content.finalSelections) ? c.content.finalSelections[i] : undefined;
+    if (f === undefined || f === null || (typeof f === "number" && isNaN(f))){
+      f = (c.behavior.missingFinals === "previous") ? prev : 0;
+      record("default-final", "modal " + i + " -> " + f);
+    } else {
+      if (!Number.isInteger(f)){ const r = Math.round(f); record("normalize-final", "modal " + i + " " + f + " -> " + r); f = r; }
+      if (f < 0 || f > nOpt - 1){ const cl = Math.max(0, Math.min(nOpt - 1, f)); record("clamp-final", "modal " + i + " " + f + " -> " + cl); f = cl; }
+    }
+    finals.push(f); prev = f;
+  }
+  c.content.finalSelections = finals;
+  /* timing arrays: extend by repeating last entry (recorded) when shorter than requests */
+  ["modalWindowsMs", "landDelaysMs"].forEach(function(key){
+    const arr = c.timing[key];
+    if (!Array.isArray(arr) || !arr.length){ c.timing[key] = [1000]; record("default", key + " empty -> [1000]"); }
+    while (c.timing[key].length < c.content.requests.length){ c.timing[key].push(c.timing[key][c.timing[key].length - 1]); record("extend-timing", key + " extended to modal " + (c.timing[key].length - 1)); }
+    c.timing[key] = c.timing[key].map(function(v, i){ const n = strictNum(v, 1000, key + "[" + i + "]"); return Math.max(0, n); });
+  });
+  /* timing consistency: landDelay must be < window; inconsistent pair rejected atomically to defaults */
+  for (let i = 0; i < c.content.requests.length; i++){
+    if (!(c.timing.landDelaysMs[i] < c.timing.modalWindowsMs[i])){
+      record("reject-timing-pair", "modal " + i + " landDelay>=window -> defaults 930/1700");
+      c.timing.landDelaysMs[i] = 930; c.timing.modalWindowsMs[i] = 1700;
+    }
+  }
+  if (!(c.timing.arrivalFlashMs >= 0)) { c.timing.arrivalFlashMs = 120; record("default", "arrivalFlashMs"); }
+  c.modalScale = strictNum(c.modalScale, 1, "modalScale");
+  if (!(c.modalScale > 0) || !isFinite(c.modalScale)){ c.modalScale = 1; record("reject-scale", "modalScale -> 1"); }
+  /* palette colors validated */
+  ["bg","modalBg","border","fg","optFg","scrim","tileBorder","tileBg","flashBg"].forEach(function(k){ c.palette[k] = validColor(c.palette[k], CONFIG.palette[k], "palette." + k); });
+  c.palette.selectionStyles = (c.palette.selectionStyles || []).map(function(s, i){
+    return { fg: validColor(s && s.fg, CONFIG.palette.selectionFallback.fg, "sel" + i + ".fg"), bg: validColor(s && s.bg, CONFIG.palette.selectionFallback.bg, "sel" + i + ".bg") };
+  });
+  if (c.behavior.longTextPolicy !== "expand-wrap" && c.behavior.longTextPolicy !== "reject"){ record("reject-policy", c.behavior.longTextPolicy); c.behavior.longTextPolicy = "expand-wrap"; }
+  return c;
+}
+function selectionStyleFor(cfg, idx){
+  const s = cfg.palette.selectionStyles[idx];
+  if (s) return s;
+  record("fallback-selection-style", "option " + idx);
+  return cfg.palette.selectionFallback;
+}
+
+/* ===== derived timeline (absolute event table) ===== */
+function buildTimeline(cfg){
+  const events = []; let t = 0;
+  for (let i = 0; i < cfg.content.requests.length; i++){
+    const w = cfg.timing.modalWindowsMs[i], land = cfg.timing.landDelaysMs[i];
+    const flash = cfg.timing.flashModalIndices.indexOf(i) >= 0 ? cfg.timing.arrivalFlashMs : 0;
+    events.push({ at: t, modal: i, phase: flash > 0 ? "flash" : "unselected", sel: -1 });
+    if (flash > 0) events.push({ at: t + flash, modal: i, phase: "unselected", sel: -1 });
+    events.push({ at: t + land, modal: i, phase: "selected", sel: cfg.content.finalSelections[i] });
+    events.push({ at: t + w, modal: i, phase: "end", sel: cfg.content.finalSelections[i], holdMs: w - land });
+    t += w;
+  }
+  return { events: events, cycleMs: t, holdsMs: cfg.content.requests.map(function(_, i){ return cfg.timing.modalWindowsMs[i] - cfg.timing.landDelaysMs[i]; }) };
+}
+
+/* ===== displayed-state fit model (source-bound; measure injected) ===== */
+function computeLayout(cfg, stageW, stageH, measure){
+  const L = cfg.layout, T = cfg.type;
+  stageH = Math.max(stageH, L.stageMinHeightPx);
+  const phone = stageW <= L.phoneBreakpointPx;
+  let ratio = phone ? L.phoneWidthRatio : L.widthRatio;
+  let modalW = Math.min(stageW * ratio * cfg.modalScale, stageW * L.maxWidthRatio);
+  const pad = Math.max(10, modalW * L.paddingRatio);
+  const borderTotal = 2 * L.borderWidthPx;
+  function lineWidth(text, px, bold){ return measure(text, px, bold, T.family); }
+  function evaluate(width){
+    const inner = width - 2 * pad - borderTotal;
+    let reqPx = T.refPx, optPx = T.refPx;
+    /* shrink-to-fit from measured widths at ref size (bold title; bold selected rows incl marker+prefix) */
+    let longestReq = 0, longestOpt = 0;
+    cfg.content.requests.forEach(function(r){ longestReq = Math.max(longestReq, lineWidth(r, T.refPx, true)); });
+    cfg.content.options.forEach(function(o, i){
+      const prefix = "\u276F " + (i + 1) + ". ";
+      longestOpt = Math.max(longestOpt, lineWidth(prefix + o, T.refPx, true) + (L.markerEm + L.markerGapEm) * T.refPx * 0.5);
+    });
+    reqPx = Math.floor(T.refPx * (inner / Math.max(1, longestReq)));
+    optPx = Math.floor(T.refPx * (inner / Math.max(1, longestOpt)));
+    if (phone) optPx = Math.max(optPx, L.phoneBreakpointPx ? T.optFloorPhonePx : optPx);
+    reqPx = Math.max(reqPx, Math.ceil(optPx * T.titleRatioMin), optPx + T.titleMinGapPx);
+    reqPx = Math.min(reqPx, Math.floor(stageH * T.heightCapRatio * cfg.modalScale) + 14);
+    const lines = [];
+    let overflow = false;
+    cfg.content.requests.forEach(function(r){
+      const wdt = lineWidth(r, reqPx, true);
+      const wrapped = Math.max(1, Math.ceil(wdt / Math.max(1, inner)));
+      if (wrapped > cfg.behavior.maxWrapLines) overflow = true;
+      lines.push({ kind: "req", text: r, px: reqPx, width: wdt, inner: inner, wrappedLines: wrapped, outcome: wrapped > 1 ? "wrapped" : "fits" });
+    });
+    cfg.content.options.forEach(function(o, i){
+      const full = "\u276F " + (i + 1) + ". " + o;
+      const wdt = lineWidth(full, optPx, true) + (L.markerEm + L.markerGapEm) * optPx * 0.5;
+      const wrapped = Math.max(1, Math.ceil(wdt / Math.max(1, inner)));
+      if (wrapped > cfg.behavior.maxWrapLines) overflow = true;
+      lines.push({ kind: "opt", text: o, px: optPx, width: wdt, inner: inner, wrappedLines: wrapped, outcome: wrapped > 1 ? "wrapped" : "fits" });
+    });
+    lines.refLongestReq = longestReq; lines.refLongestOpt = longestOpt;
+    const reqLines = Math.max.apply(null, lines.filter(function(l){ return l.kind === "req"; }).map(function(l){ return l.wrappedLines; }));
+    let optLinesTotal = 0;
+    lines.filter(function(l){ return l.kind === "opt"; }).forEach(function(l){ optLinesTotal += l.wrappedLines; });
+    const modalH = borderTotal + 2 * pad * 0.9 + reqLines * reqPx * T.reqLineHeight + reqPx * L.reqMarginBottomEm
+      + optLinesTotal * (optPx * T.optLineHeight + 2 * Math.max(2, optPx * L.optPadYRatio));
+    return { reqPx: reqPx, optPx: optPx, lines: lines, modalH: modalH, overflow: overflow, inner: inner, refLongestReq: longestReq, refLongestOpt: longestOpt };
+  }
+  let ev = evaluate(modalW);
+  let policyOutcome = "fits";
+  if (ev.overflow || ev.lines.some(function(l){ return l.outcome === "wrapped"; })){
+    if (cfg.behavior.longTextPolicy === "reject" && (ev.overflow || ev.lines.some(function(l){ return l.wrappedLines > 1; }))){
+      ev.lines.forEach(function(l){ if (l.wrappedLines > 1){ l.outcome = "rejected"; record("reject-line", l.kind + ":" + l.text.slice(0, 24)); } });
+      policyOutcome = "rejected";
+    } else {
+      /* expand to cap then wrap */
+      modalW = Math.min(stageW * L.maxWidthRatio, stageW * ratio * cfg.modalScale * 1.2);
+      ev = evaluate(modalW);
+      policyOutcome = ev.overflow ? "rejected" : "wrapped";
+      if (ev.overflow) ev.lines.forEach(function(l){ if (l.wrappedLines > cfg.behavior.maxWrapLines){ l.outcome = "rejected"; record("reject-line", l.kind + ":" + l.text.slice(0, 24)); } });
+    }
+  }
+  return {
+    modalW: modalW, left: stageW * L.leftRatio, top: stageH * L.topRatio, pad: pad,
+    reqPx: ev.reqPx, optPx: ev.optPx, lines: ev.lines, modalH: ev.modalH,
+    fitsHeight: ev.modalH <= stageH, policyOutcome: policyOutcome, phone: phone, fontFamily: T.family,
+    refLongestReq: ev.refLongestReq, refLongestOpt: ev.refLongestOpt
+  };
+}
+
+/* ===== message validation: source relationship AND origin AND schema ===== */
+function validateMessage(cfg, msg){
+  if (!msg || typeof msg !== "object") return { ok: false, reason: "shape" };
+  if (msg.sourceIsParent !== true) return { ok: false, reason: "source" };
+  const origins = cfg.container.allowedOrigins;
+  if (origins.indexOf(msg.origin) < 0 && origins.indexOf("*") < 0) return { ok: false, reason: "origin" };
+  if (["play", "pause", "restart"].indexOf(msg.cmd) < 0) return { ok: false, reason: "schema" };
+  return { ok: true, reason: "ok" };
+}
+
+/* ===== URL overrides (strict) ===== */
+function applyOverrides(cfg, search){
+  const q = new URLSearchParams(search || "");
+  const rec0 = VALIDATION.length;
+  if (q.get("requests")) cfg.content.requests = q.get("requests").split("|").filter(function(s){ return s.length; });
+  if (q.get("options")) cfg.content.options = q.get("options").split("|").filter(function(s){ return s.length; });
+  if (q.get("finals")) cfg.content.finalSelections = q.get("finals").split("|").map(function(s){ return strictNum(s, NaN, "finals"); });
+  if (q.get("windows")) cfg.timing.modalWindowsMs = q.get("windows").split("|").map(function(s){ return strictNum(s, 1700, "windows"); });
+  if (q.get("landDelays")) cfg.timing.landDelaysMs = q.get("landDelays").split("|").map(function(s){ return strictNum(s, 930, "landDelays"); });
+  if (q.get("flashMs")) cfg.timing.arrivalFlashMs = strictNum(q.get("flashMs"), cfg.timing.arrivalFlashMs, "flashMs");
+  if (q.get("border")) cfg.palette.border = validColor(q.get("border"), cfg.palette.border, "border");
+  if (q.get("bg")) cfg.palette.bg = validColor(q.get("bg"), cfg.palette.bg, "bg");
+  if (q.get("modalScale")) cfg.modalScale = strictNum(q.get("modalScale"), cfg.modalScale, "modalScale");
+  if (q.get("runs")) { const r = strictNum(q.get("runs"), Infinity, "runs"); cfg.container.runs = r; }
+  return VALIDATION.slice(rec0);
+}
+
+/* core export for own-checks / containers */
+const T07CORE = { CONFIG: CONFIG, VALIDATION: VALIDATION, normalizeConfig: normalizeConfig, buildTimeline: buildTimeline, computeLayout: computeLayout, validateMessage: validateMessage, applyOverrides: applyOverrides, selectionStyleFor: selectionStyleFor, strictNum: strictNum };
+if (typeof window !== "undefined") window.__T07 = T07CORE;
+if (typeof globalThis !== "undefined") globalThis.__T07 = T07CORE;
+
+/* ===== DOM bootstrap (browser only) ===== */
+(function bootstrap(){
+  if (typeof document === "undefined" || !document.getElementById) return;
+  const stage = document.getElementById("stage");
+  if (!stage) return;
+  const modal = document.getElementById("modal"), reqEl = document.getElementById("req"),
+        optsEl = document.getElementById("opts"), tilesEl = document.getElementById("tiles"),
+        scrimEl = document.getElementById("scrim");
+  const ctx = document.createElement("canvas").getContext("2d");
+  function measure(text, px, bold, family){ ctx.font = (bold ? "700 " : "") + px + "px " + family; return ctx.measureText(text).width; }
+  let cfg = normalizeConfig(CONFIG);
+  applyOverrides(cfg, (typeof window !== "undefined" && window.location) ? window.location.search : "");
+  cfg = normalizeConfig(cfg);
+  document.documentElement.dataset.t07Validation = String(VALIDATION.length);
+  /* tiles from CONFIG */
+  tilesEl.innerHTML = "";
+  for (let i = 0; i < cfg.tiles.count; i++){
+    const t = document.createElement("div"); t.className = "tile";
+    const col = i % cfg.tiles.cols, row = Math.floor(i / cfg.tiles.cols);
+    t.style.left = (cfg.tiles.leftStartPct + col * cfg.tiles.colStepPct) + "%";
+    t.style.top = (cfg.tiles.topStartPct + row * cfg.tiles.rowStepPct) + "%";
+    t.style.width = cfg.tiles.widthPct + "%"; t.style.height = cfg.tiles.heightPct + "%";
+    t.style.border = "1px solid " + cfg.palette.tileBorder; t.style.background = cfg.palette.tileBg;
+    t.style.borderRadius = cfg.tiles.radiusPx + "px";
+    t.style.opacity = String(cfg.tiles.opacity * (0.5 + (i % 3) * 0.25));
+    tilesEl.appendChild(t);
+  }
+  scrimEl.style.background = cfg.palette.scrim;
+  stage.style.background = cfg.palette.bg; document.body.style.background = cfg.palette.bg;
+  modal.style.border = cfg.layout.borderWidthPx + "px solid " + cfg.palette.border;
+  modal.style.borderRadius = cfg.layout.radiusPx + "px"; modal.style.background = cfg.palette.modalBg;
+  modal.style.fontFamily = cfg.type.family;
+
+  const timeline = buildTimeline(cfg);
+  let origin = null, timer = null, evIdx = 0, cycles = 0, playing = false, pausedAt = null, current = { modal: 0, phase: "unselected", sel: -1 };
+  function emit(name, payload){
+    const msg = { type: cfg.container.signalName + ":" + name, payload: payload };
+    try { if (window.parent && window.parent !== window) window.parent.postMessage(msg, "*"); } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent(msg.type, { detail: payload })); } catch (e) {}
+  }
+  function render(){
+    const lay = computeLayout(cfg, stage.clientWidth || 960, stage.clientHeight || 540, measure);
+    modal.style.width = lay.modalW + "px"; modal.style.left = lay.left + "px"; modal.style.top = lay.top + "px";
+    modal.style.padding = lay.pad + "px " + lay.pad + "px " + (lay.pad * 0.8) + "px";
+    reqEl.textContent = cfg.content.requests[current.modal];
+    reqEl.style.fontSize = lay.reqPx + "px"; reqEl.style.color = cfg.palette.fg;
+    reqEl.style.marginBottom = (lay.reqPx * cfg.layout.reqMarginBottomEm) + "px";
+    reqEl.style.whiteSpace = lay.policyOutcome === "wrapped" ? "normal" : "nowrap";
+    optsEl.innerHTML = "";
+    cfg.content.options.forEach(function(o, i){
+      const d = document.createElement("div"); d.className = "opt" + (i === current.sel ? " sel" : "");
+      const st = i === current.sel ? selectionStyleFor(cfg, i) : null;
+      d.style.fontSize = lay.optPx + "px";
+      d.style.color = st ? st.fg : cfg.palette.optFg; d.style.background = st ? st.bg : "transparent";
+      d.style.fontWeight = st ? "700" : "400"; d.style.borderRadius = cfg.layout.optRadiusPx + "px";
+      d.style.whiteSpace = lay.policyOutcome === "wrapped" ? "normal" : "nowrap";
+      d.style.padding = Math.max(2, lay.optPx * cfg.layout.optPadYRatio) + "px " + Math.max(4, lay.optPx * cfg.layout.optPadXRatio) + "px";
+      const mark = document.createElement("span"); mark.className = "mark"; mark.textContent = "\u276F";
+      mark.style.width = cfg.layout.markerEm + "em"; mark.style.marginRight = cfg.layout.markerGapEm + "em";
+      mark.style.color = st ? st.fg : "transparent";
+      d.appendChild(mark); d.appendChild(document.createTextNode((i + 1) + ". " + o));
+      optsEl.appendChild(d);
+    });
+    modal.style.background = current.phase === "flash" ? cfg.palette.flashBg : cfg.palette.modalBg;
+    modal.style.opacity = current.phase === "flash" ? "0.92" : "1";
+  }
+  function applyEvent(ev){ current = { modal: ev.modal, phase: ev.phase, sel: ev.sel }; render(); emit("state", { modal: ev.modal, phase: ev.phase, sel: ev.sel }); }
+  function scheduleNext(){
+    if (!playing) return;
+    if (evIdx >= timeline.events.length){
+      cycles++; emit("complete", { cycles: cycles });
+      if (isFinite(cfg.container.runs) && cycles >= cfg.container.runs){ playing = false; current.phase = "finished"; render(); emit("state", { phase: "finished", cycles: cycles }); return; }
+      evIdx = 0; origin = performance.now();
+    }
+    const target = origin + timeline.events[evIdx].at;
+    const delay = Math.max(0, target - performance.now());
+    timer = setTimeout(function(){
+      /* catch-up: apply every event whose scheduled boundary has passed, in order */
+      const nowAbs = performance.now() - origin;
+      while (evIdx < timeline.events.length && timeline.events[evIdx].at <= nowAbs){ applyEvent(timeline.events[evIdx]); evIdx++; }
+      scheduleNext();
+    }, delay);
+  }
+  function play(){
+    if (playing) return; playing = true;
+    if (pausedAt !== null && origin !== null){ origin += performance.now() - pausedAt; pausedAt = null; }
+    else if (origin === null){ origin = performance.now(); evIdx = 0; }
+    scheduleNext();
+  }
+  function pause(){ if (!playing) return; playing = false; pausedAt = performance.now(); if (timer) clearTimeout(timer); timer = null; }
+  function restart(){ pause(); origin = null; evIdx = 0; cycles = 0; pausedAt = null; current = { modal: 0, phase: "unselected", sel: -1 }; play(); }
+  window.addEventListener("resize", render);
+  window.addEventListener("message", function(e){
+    const verdict = validateMessage(cfg, { sourceIsParent: e.source === window.parent, origin: e.origin, cmd: e.data && e.data.cmd, data: e.data });
+    if (!verdict.ok){ record("reject-message", verdict.reason); document.documentElement.dataset.t07Validation = String(VALIDATION.length); return; }
+    if (e.data.cmd === "play") play(); else if (e.data.cmd === "pause") pause(); else if (e.data.cmd === "restart") restart();
+  });
+  render(); emit("ready", { cycleMs: timeline.cycleMs }); play();
+})();
+</script>
+</body>
+</html>
+
+
+===== NEUTRAL BUILD RECORD (score-blind) =====
+
+# T07 — Permission-dialog gag · BUILD RECORD · Attempt 2
+
+Practice Cycle 008 Wave 7 · 2026-11-15 · Artifact dir: `hidden_files/study/recreations/T07-permission-dialog-gag/`
+This record is score-blind and neutral: construction facts, check names/results, and the final source hash only.
+
+## Final source
+
+- `recreation.html` sha256: `6a2146e2979a793b80f4129455663c4dcfc115f59df8200e25b575a6f26abdfc`
+- Preserved prior attempt: `recreation-attempt-1.html` sha256 `8f3143da574862b954a4b6e7c8c1d2e61b64439507197f8d937a5d9c26103933` — re-verified unchanged after the working file's overwrite.
+- Segment evidence file: `segment.mp4` sha256 `2ca2a09d848d9fb00965c0900ad0fb7548821b18bdb93bb2f097ad69075cfb43` (960×540, 9.000 s).
+
+## Anchor re-derivation (segment-time origin, this cycle)
+
+Spot re-derivation by frame extraction from `segment.mp4` at 30 fps (frames n75 ≈ t2.5 s, n165 ≈ t5.5 s, n195 ≈ t6.5 s; modal-region pixel classification): green selection pixels present at t2.5 s (19 px in the modal crop), no green/orange selection pixels at t5.5 s, orange selection pixels present at t6.5 s (108 px). Consistent with the plan's measured table (finals land ≈2.13 s green / modal 3 unselected at 5.5 s / final lands ≈6.10 s orange) within the plan's ±100 ms binding tolerance. Bound anchors: modal windows 1700 / 1830 / 2500 ms; land delays 930 / 1000 / 1370 ms; derived holds 770 / 830 / 1130 ms; cycle 6030 ms.
+
+## Construction facts
+
+- Single self-contained HTML file; no external references (no `src=`/`href=` asset loads; system monospace stack only); background tiles are code-drawn divs.
+- CONFIG is grouped: content · timing · layout · type · palette · tiles · behavior · container · modalScale. Timing holds two authoritative arrays (modalWindowsMs, landDelaysMs); holds and cycle duration are derived (hold = window − landDelay; cycle = Σ windows). An override pair with landDelay ≥ window is rejected atomically to defaults and written to the validation record.
+- State sequence per modal: arrival (flash state only for modal index 0, 120 ms, no selection shown) → unselected dwell → final selection lands directly → hold → instant replacement. No code path renders a non-final selection. Default finalSelections [0, 0, 2].
+- Selection styling is per-option-index from CONFIG palette.selectionStyles (index 0 green pair, index 1 green pair, index 2 orange pair, index 3 blue pair), with a named fallback style recorded in the validation record when an index has no entry.
+- Scheduling is an absolute event table from a single origin; a late callback applies every event whose scheduled boundary has passed, in order (catch-up), and later scheduled boundaries do not move. Pause records the pause instant; resume shifts the origin by the pause duration.
+- Layout: modal left-anchored at 5% of stage width, width ratio 0.56 at segment scale; at stage widths ≤480 px the width ratio is 0.94 (stage cap). Fit is computed from canvas-measured text at bold weight for the title and for option rows including the marker box and numbering prefix, plus border (2×2 px) and padding. Long-text policy is a CONFIG value: "expand-wrap" (expand to cap, wrap to at most 2 lines, then reject with a validation-record entry) or "reject" (any line needing wrap is rejected with a validation-record entry).
+- Normalization runs before first render: strict full-string numeric parsing, colour grammar validation, fractional finals rounded then clamped, missing finals resolved by the "previous" policy, timing arrays extended by repeating the last entry; every rejection/default/clamp is appended to an observable validation record (in-page array, mirrored as a count in the root element's dataset).
+- Container surface: emits ready / state / complete signals (postMessage to parent + DOM CustomEvent); CONFIG container.runs bounds the number of cycles (default unbounded); the message handler accepts a command only when the event source is the parent window, the origin is in the CONFIG allowlist, and the command is one of play/pause/restart.
+- `comparison.html`: recreation side re-pointed (grouped-CONFIG description, ≈6.03 s cycle, count-changing swap URL with 4 requests × 4 options and finals 0|0|2|3). The ORIGINAL side (labels, segment, windowing) is unchanged.
+
+## Own checks (run dir `own-checks-T07.js`, node, all against the final source above)
+
+Result: **19 pass, 0 fail.**
+
+- Timeline sequence mapping: landed finals [0,0,2]; no non-final state carries a selection; land instants [930, 2700, 4900] ms.
+- Derived timing: cycle 6030 ms; holds [770, 830, 1130] ms; window shares ≈28/31/41%; scheduled event offsets equal the table values.
+- Timing-pair rejection: landDelay ≥ window override rejected atomically, validation entry recorded.
+- Flash: exactly one flash state (modal 0), 120 ms, no selection during it.
+- Per-row selection styles: index 0 green, index 2 orange, index 3 distinct configured value; mutating the index-3 entry changes the resolved style.
+- Displayed-state fit at 360×640 and 960×540 (defaults): option size ≥14 px at 360 px stage, title−option gap ≥3 px, modal height ≤ stage height, modal width ≤ 94% cap; long-request fixture resolves under the wrap policy; reject-policy fixture records rejected lines.
+- Validation effects: malformed numeric suffix rejected; fractional final rounded/clamped; invalid colour defaulted; negative scale rejected.
+- Missing-finals mapping: 4-request fixture with finals [0,0] lands [0,0,0,0] with two recorded defaults.
+- Pause/resume arithmetic: origin shift preserves the remaining dwell (200 ms) to the next event across an arbitrary wall-clock gap.
+- Message validation: parent source + allowlisted origin + known command accepted; same-origin different sender rejected (reason "source"); foreign origin rejected; unknown command rejected.
+- Finite run: `runs=1` parses; the stop condition derives from the 6030 ms cycle.
+- Count-changing swap: 4 requests × 4 options, finals [0,0,2,3] land in order; timing arrays extended to 4 entries with recorded entries; 4th-row style resolved; fit holds at 360 px.
+- Interaction fixture: long 4-option fixture at 360 px — wrapped states enumerated per line (≤2 lines or rejected), modal height fits.
+- Purity grep on the final source: zero hits for specimen-media/caption/external patterns; no palette literals in the stylesheet block; no specimen chrome text. Asset inventory: the recreation loads nothing external.
+- CONFIG consumption census: 79 leaf keys walked; every key's mutation changed a computed or rendered effect in the census snapshot (timeline, layouts at two widths plus a long-text fixture, missing-finals resolution, fallback style, tile geometry, signal names, message validation) — 79 consumed, 0 unconsumed.
+
+PIXEL-UNVERIFIED: all geometry/readability statements above rest on the source-bound displayed-state model; no rendered-pixel verification was performed.
+
+## Printed deviations
+
+- CA-1 (flash evidence): flashes are restricted to the one arrival with frame evidence in the record (modal index 0). No flash is rendered at the other arrivals.
+- No other CA deviation: CA-2 (single timing source of truth, atomic rejection, scheduled-boundary vs catch-up asserted separately), CA-3 (per-option selection-style mapping incl. the 4th-option fixture), CA-4 (source-relationship + origin + schema validation, different-sender test), CA-5 (interaction fixtures: finite-run/pause arithmetic, count-change × timing arrays, wrapping × phone geometry) are each exercised by the named checks above.
+
