@@ -1,0 +1,7 @@
+# Naive-use test — cold reader report, T45 (Cycle 008, filed verbatim in substance)
+
+Result: SUCCESS — all 5 items located following only pointers printed on the library surface.
+Timing: total wall 80 s (start 1794715751 → end 1794715831); of that, ~38 s was the library-surface search itself (to the recreation directory listing); the remainder was runtime-mandated AGENTS.md house-rule reads that interrupted the path, not library navigation.
+Path: INDEX.md → TECHNIQUES.md (T45 tier register line + full entry: mechanics, packet P2/T20, frames ev/t1052.jpg, ev/t722.jpg, ev/t662.jpg, Feeds: diagram, tier RECREATED, recreation pointer) → VIEWS.md (Diagrams view corroborates RECREATED, 88.2 PASS) → ASSETS.md (no T45 entry needed) → recreations/T45-number-anchored-beats/ listing (recreation.html 13,142 B + scores.md 3,700 B present) → scores.md read directly (motion 88 · timing 84 · purity 97 · reusability 78 · readability 94 = 88.2 avg, min 78, VERDICT: PASS — tier RECREATED).
+Answers: (1) mechanics "every major beat carries one concrete, checkable quantity, usually drawn as the section's hero object — counters as arguments." (2) P2, throughout, frames above. (3) Feeds diagram only. (4) RECREATED. (5) recreation.html + scores.md at the printed pointer, PASS 88.2/78.
+Friction noted: T45's timestamp is the vague "throughout" (accurate for this technique); specimen title requires resolving the P2 key in the TECHNIQUES header / INDEX — both printed on the surface.

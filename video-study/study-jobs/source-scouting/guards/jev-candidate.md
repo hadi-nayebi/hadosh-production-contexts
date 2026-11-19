@@ -1,0 +1,40 @@
+# Jev call — jev-candidate (source-scouting)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14 under the owner's 100% judgment-layer order; definitions are this job's own, from its own deliverable (queue entries)._
+
+## 1. What it judges
+- Deliverable: a scouting sweep's candidate entries (link · source · reason · tier guess) BEFORE they enter QUEUE.md. **Tier-guess field form (established Cycle-010 Condense, 2026-11-18, on codex-condense's REVISE — the field stood required but no entry visibly carried it):** the tier guess is carried as the candidate's intake-class + scope pricing in its run-record entry — its Amendment A1 class (raw specimen · resource class) printed in the entry's Specimen/Source cells, plus the run record's explicit pricing of whether the specimen class is one the lane can digest/recreate or one it has priced out of scope. A candidate whose run-record entry carries no class + scope pricing has NO tier guess and fails the format census; the judge prices the guess's honesty under the novelty/existence dimensions and names a missing guess as a defect on the face of the return.
+- Call point: source-scouting INSTRUCTION §3 Plan→Execute gate of a sweep cycle. Owner sends are exempt by rank (they enter at top; the call never judges the owner's own picks).
+
+## 2. Instruction (the model's charge)
+Judge each candidate as the production seat that will one day spend a digestion cycle on it. Price: (1) Does the stated reason name a PRODUCTION USE — a container, a job, a named gap in the current catalogue — or is it appreciation prose ("great video", "interesting style")? (2) Is the specimen verifiably what the entry claims (a real, reachable piece of the stated kind)? (3) Is it NOVEL against the current library — a mechanic or lesson class the catalogue does not already carry — or a duplicate wearing new clothes? (4) Is the tier guess honest (motion graphics the lane can actually digest/recreate vs a specimen class the lane has priced as out of scope)? Score 0–1 per dimension, classify defects, and compose the verdict by the floors. You judge the entry's paperwork and the catalogue's technique names — never the specimen's craft quality; that is digestion's work after admission.
+
+## 3. Context contract (masked view)
+- FED: the sweep's candidate entries · TECHNIQUES.md technique names + Feeds fields (novelty check) · the current queue (duplication/ordering check) · the lane's intake classes (Amendment A1).
+- NEVER FED: the scout's enthusiasm prose beyond the entry's reason field · prior sweeps' verdicts on other candidates.
+- Ceiling: ≤32k tokens; candidates judged in sweep order; overflow = judge in two calls split at sweep midpoint, never trim a candidate silently.
+
+## 4. Output space
+- Verdict classes (per candidate): **ADMIT · ADMIT-LOW (admitted, ordered last) · REJECT**.
+- Dimensions (0–1; 0 = absent/false, 0.5 = partial, 1 = fully usable): production adjacency · existence verifiability · novelty vs catalogue · reason specificity.
+- **Territory compliance (added Cycle-006 Condense, 2026-11-16, on codex-condense's REVISE — the Cycle-006 Territory B drift, where coupled-axis motion was admitted under a semantic-axis-motion territory):** judge territory compliance SEPARATELY from novelty and craft value — for each candidate, state whether its demonstrated mechanic satisfies its territory's target shape AS WRITTEN in the cycle's approved Plan, citing the Plan phrase and the mechanic. A candidate that is novel and useful but does not meet its territory's stated shape is flagged TERRITORY-DRIFT in the verdict (it may still be admitted on its merits, but the run record must price it as a drift, never as the territory met).
+- **Condition-by-condition evidence (added Cycle-009 Condense, 2026-11-17, on codex-condense's REVISE — the Cycle-009 Territory B evidence drift, where this call priced a tangent-rotation condition MET on a rotation control's existence):** territory compliance is judged CONDITION BY CONDITION against the territory's binding conditions, each with its own evidence finding. A named control or feature establishes only that the control EXISTS; a required mechanic is established only by an implementation passage or a demonstration showing how the control produces that mechanic. A condition whose evidence is missing or existence-only prints **UNVERIFIED**, and a territory with any binding condition UNVERIFIED does not print MET — it prints TERRITORY-DRIFT (evidence form) with the unverified conditions named. **Causal-mechanism conditions (added Cycle-011 Condense, 2026-11-18, on codex-condense's REVISE — the Cycle-011 Territory C pass, where this call priced a causal-turn condition MET from elements):** where a binding condition is CAUSAL (one element must be shown to PRODUCE another — e.g. an artifact's content turning a persona's conclusion), the establishing evidence is a source passage or timestamped demonstration that LINKS the cause to the effect. The elements established individually — a source list, a learning statement, and a later chapter title naming the conclusion — do NOT establish the link; their presence alone leaves the causal condition UNVERIFIED and the territory at TERRITORY-DRIFT (evidence form), however strong the elements are.
+- Rejection taxonomy (one primary): NO-CONSUMER (no production use named) · DUPLICATE (mechanic already catalogued) · UNVERIFIED-EXISTENCE (cannot be confirmed as claimed) · VAGUE-REASON (appreciation, not use) · OUT-OF-SCOPE (specimen class the lane does not digest).
+- Accepted profiles travel: an ADMIT-LOW ordering is visible in QUEUE.md's entry (the tier guess + profile ride the entry).
+
+## 5. Floors and disposition
+- production adjacency < 0.5 or reason specificity < 0.5 → REJECT · novelty < 0.3 → REJECT unless adjacency = 1.0 (a priced exception, recorded) · UNVERIFIED-EXISTENCE at any score → REJECT (existence is not scorable-around).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. Rejected candidates + classes print in the sweep's RUN either way — a silent drop is a deviation.
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: packet #1's specimen as the ADMIT anchor (production-adjacent by construction: word animation + transition study) · a constructed appreciation-only entry (must REJECT as VAGUE-REASON) · a constructed duplicate of T15 (must REJECT as DUPLICATE) · a dead-link entry (UNVERIFIED-EXISTENCE).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.

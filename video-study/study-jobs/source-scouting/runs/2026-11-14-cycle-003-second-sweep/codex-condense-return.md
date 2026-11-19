@@ -1,0 +1,25 @@
+# Codex return — codex-condense (source-scouting Cycle-003) · fired 2026-11-14 ~23:20 EST
+
+_Fed (single stream): guards/codex-condense.md + this cycle's RUN.md (through §9 draft + §10) + verdict-history.md + INSTRUCTION.md. Source-level review; no files written by the reviewer. Verbatim return below (exec output carried it twice; filed once)._
+
+**Verdict: REVISE before Condense closes.** Source-level review only, based on the embedded stream. No files written. The consumer must persist this return verbatim and apply or explicitly disposition the amendments below.
+
+1. **Lesson → amendment faithfulness: FAIL.** §9 says to promote demonstrated **and candidate** lessons; this Condense invents a second-sweep requirement and promotes none. The full-register gap already affected a fired verdict and required corrective work. Amend **INSTRUCTION.md §1's prior-art step** to require the complete current technique register before territories are finalized, recording its count and relevant collisions. Avoid hard-coding "48," which will become stale. Preserve the distinction between category similarity and novelty of the proposed learning contribution.
+
+   The destination-page requirement also remains confined to this RUN. Amend **§5.4**, reflected in **§2's Verify checklist**, to require an opened destination or identified archived copy with specimen identity matched; search-result-only evidence does not clear admission.
+
+2. **Four-layer escape: incomplete review.**
+   - **Instruction steps:** the NO-DEFECT finding conflicts with the prior-art gap and the durable link-check correction. Amend **§1 and §5.4** as above. Also reconcile **§1/§2's conditional Codex wording** with the unconditional ruling; the superseding addendum exists, but the point-of-use instructions still invite skipping.
+   - **Mechanical guard commands:** the whole-file census overcount is an instrument defect, even though corrected during this cycle. Amend the hosted census command to count only the digestion queue, or name its exact file and carry the repair explicitly. No command was supplied, so its implementation cannot be cleared here.
+   - **Jev definitions:** no demonstrated misclassification or reversed verdict appears in the supplied record. **No amendment earned on that evidence.** However, the definitions and raw returns were not embedded; "profiles track the floors" cannot independently establish their correctness.
+   - **Codex instructions:** the feeding limitation remains uncured. Amend **guards/codex-observe.md's feeding contract** to include the relevant adjacency and owner-send board excerpts, with evidence boundaries stated. Citations alone cannot support independent clearance of their contents.
+
+3. **Source-yield accounting: conditionally supported.** Source 2 produced two admissions. That supports its use for this sweep, **not yet useful-packet yield**: neither new candidate has a supplied digestion outcome. Source 3 has two *recorded* consecutive zeros, so demotion is not yet due. The record does not show a fresh creator search this cycle; distinguish **record reviewed, no queueable candidate** from **search attempted, zero yield** and state which counts toward the three-zero rule. Source 4 was a discovery mechanism, not an independently tested source; no zero belongs to it.
+
+4. **Guard growth and record integrity: revise the claims.** Fired Observe and Plan reviews produced useful corrections; this is evidence for step and feeding amendments, not proof that all judges are sound. The supplied verdict history ends at Cycle-002, so Cycle-003's firings and source-yield line still need persistence there. "All calls fired, raw returns filed" also anticipates this Condense return; confirm it only after this return is saved and dispositioned. The supplied RUN lacks the required §7 closing trace fields, so whole-cycle faithfulness remains unverified.
+
+**Required body-write by the consumer:** amend **INSTRUCTION.md §§1, 2, 5.4**; amend **guards/codex-observe.md's feeding contract**; repair or explicitly carry the scoped census command; append Cycle-003 evidence to **verdict-history.md**; and persist this review plus each disposition in **RUN.md §9**. Retain **JUDGMENT LAYER: INCOMPLETE** until outstanding defects are resolved or accurately carried. This reviewer confirmed no on-disk amendments.
+
+_Tokens used (per exec output): 22,289._
+
+_Disposition (executing agent, recorded in RUN.md §9 addendum): findings 1, 2 (all four layers), and 4's persistence items APPLIED — INSTRUCTION §§1/§5.4 + call-point wording amended, codex-observe feeding contract amended, census guard scoped in guards.md, verdict-history appended, §7 trace closed. Finding 3 APPLIED as a clarification: source 3's Cycle-002/003 state is "record reviewed, no queueable candidate," and the §9 accounting now states that this state counts as a zero-yield sweep for that source (it is the only way source 3 can yield in a sweep whose territories it cannot fill). JUDGMENT LAYER remains INCOMPLETE on the named residuals in RUN.md §9._

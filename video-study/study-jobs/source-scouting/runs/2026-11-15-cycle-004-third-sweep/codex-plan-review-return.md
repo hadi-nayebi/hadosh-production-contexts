@@ -1,0 +1,13 @@
+# Codex return — codex-plan-review (source-scouting Cycle-004) · fired 2026-11-15
+
+_Fed (single stream): guards/codex-plan-review.md + this cycle's RUN.md (Observe+Plan incl. consumed codex-observe + jev-observe-exit dispositions) + OBJECTIVE.md + verdict-history.md. Verbatim return:_
+
+**Verdict: REVISE before Execute.** The territories have an adjacency rationale, but queue placement, partial yield, source attribution, and novelty verification need amendments.
+
+1. **Trend-chasing drift — none established.** A/B follow the assembler's container needs; C follows owner send #3's category duty. Search-found work is a discovery mechanism, not the stated selection reason. However, C's "new creator" does not establish source 3 attribution: that source concerns creators already in the owner's record. Attribute the eventual candidate by its actual provenance; an A2 category match alone must not reset source 3's zero streak.
+2. **Refill honesty — revise two lines.** Queue = 5 at entry, so the below-3 condition is not currently triggered; targeting three candidates provides a reasonable prospective buffer. "Admits 2" leaves the one-admission outcome unpriced — replace with: "Admit 0–3 verified, novel candidates; record each territory's actual yield without padding." Execute item 6's overflow wording: specify which admissions enter live versus backlog, preserve owner-send priority, and report both counts separately; backlog additions must not be reported as live refill. Preserve the promised dated zero-admission finding, while distinguishing zero sweep yield from an empty queue.
+3. **Territory collision — exclusions useful, coverage conditional.** Known risks: A with School of Motion and T06/T10; B with Honda and T01/T03/T08/T09/T14/T15/T20/T22/T38; C with the listed counting/verdict techniques. Require a candidate-level comparison against the complete register, naming its distinct learning contribution.
+4. **Demotion debt — none overdue on the supplied history.** Source 3 has two consecutive zeros; its third zero must trigger the stated demotion. A candidate from a newly discovered creator cannot erase that debt merely because it resembles send #3.
+5. **Checklist teeth — strengthen §5.3.** URL/creator/ID string checks detect identity duplication, not technique duplication. Add a semantic comparison against the complete technique register, recording the nearest existing technique and the specific additional decision taught. The section-scoped queue census, cold reason read, and destination-open identity check already name usable instruments.
+
+Verification scope: reasoning-only review of the supplied stream; no independent verification. Body-write: none performed, as required; the consumer persists the amendments in RUN.md.
