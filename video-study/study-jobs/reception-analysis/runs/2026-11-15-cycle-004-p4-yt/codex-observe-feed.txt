@@ -1,0 +1,97 @@
+# Codex review — codex-observe (reception-analysis)
+
+_Built 2026-11-14 (phase-guard augmentation pass 1). **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**_
+
+## Standing header
+- **Consumer:** this job's Plan step (§2) of the same cycle — the signal set is chosen from what this review confirms or corrects in the Observe inventory.
+- **Decision priced:** whether the Observe inventory is complete and truthful enough to choose signals from — specifically whether its ABSENCE claims are true for this platform/specimen and whether any existing reception data class was missed.
+- **Working record:** the cycle's RUN.md (Observe section) + the specimen's packet directory state.
+- **Body-write:** the return is persisted verbatim in the cycle RUN.md; any inventory correction it forces is written into the Observe section before Plan opens, and the correction is named in the run's choice log. A return naming no body-write is incomplete.
+
+## Instruction (the attack)
+You are attacking a reception-analysis Observe record before it is allowed to feed a Plan. The specimen's packet and platform are named in the fed record. Hunt, in order:
+1. FALSE ABSENCES — data classes declared absent that this platform actually exposes for this specimen type (e.g. share counts, comment counts vs accessible comment text, a second capture enabling velocity, creator-base figures at a second source). A false absence silently amputates the signal set.
+2. MISSED CLASSES — reception evidence the inventory never considered: comment time-references to late moments as retention proxies, repost/quote surfaces, the creator's adjacent posts as base context.
+3. PACKET-STATE MISREADS — the inventory's claim about the packet (landed / in-flight / §8 slot state) checked against the packet directory's actual state as fed; a reception plan built against a craft record that is not in the state claimed is void.
+4. BASE STALENESS — the follower/subscriber base figure's capture date vs the specimen's posting date; spread priced against a base captured far from posting is a named distortion.
+Return: findings by number, each with the evidence in the fed material that proves it, or the explicit line "no finding" per hunt. Do not propose craft judgments; this job never prices craft.
+
+## Feeding contract
+One stream only: this instruction + the RUN.md Observe section + the packet directory listing/state lines + post.json (or the own-work data-source state record). Text only. The return is consumed by the named consumer above in the same cycle or the run did not happen.
+
+
+--- RUN.md Observe section ---
+# RUN — reception-analysis Cycle 004 (specimen P4) · 2026-11-15
+
+Specimen: P4 — YouTube video jkDBk8QFcyY, "A Day in 2037 With Superintelligence", The Good Takeoff
+Packet: `hidden_files/study/video-digests/2026-11-15-yt-jkdbk8qfcyY/` (digest.md + digest.pdf)
+Charge: cron `study-reception-analysis` queue head — newest landed digest packet lacking a `reception.md`. Packet #3 (2026-11-14-yt-o1fsb1nyewi, Epochs in Ink) is built but its adoption is still pending per QUEUE.md (head row 0b, adoption is the next digestion act), so it is not yet landed/adopted; Packet #4 was adopted with gaps by video-digestion Cycle-009 on 2026-11-15 (HQ.json lane-2026-11-15-002). P1 and P2 reception.md already filed (Cycles 002–003). P4's packet §9 Reception link reads "Not yet run" and charges this specimen.
+Governing instruction: reception-analysis INSTRUCTION.md §§0–10 (read in full this cycle). Firing form: owner's 2026-11-14 ~20:55 ruling — arming = firing; every prescribed Jev/Codex call fires unconditionally, verdicts advisory.
+
+## §1 — Observe
+
+### Packet state (read this cycle, 2026-11-15)
+- Packet LANDED + ADOPTED: digest.md and digest.pdf present in the packet directory (verified by directory listing this cycle); adoption recorded in video-digestion HQ.json lane-2026-11-15-002 (Cycle-009, adopted with gaps).
+- Craft record cited by pointer only (INSTRUCTION §1.1, §6.1): the packet's craft verdict / technique catalogue / goods-and-bads live in the packet's digest.md (sections: 1 Specimen identity · 1b Category brief · 2 Consumer + production surface · 3 Technique catalogue · 4 Transcript · 5 Visual components & tempo map · 6 Goods and bads · 7 Lessons · 8 Idea bank · 9 Reception link · 10 What could NOT be evidenced). No craft prose is restated or re-judged in this record.
+- §9 reception slot state (this packet's reception section is §9, not §8): digest.md §9 reads "Not yet run — charged to reception-analysis" and hands over three specific questions (see below); NO reception.md exists beside the packet (verified by listing this cycle). Reception slot = EMPTY / prior state = none. The §3 gate-out hand-off to video-digestion is therefore a NEW pointer entry, not an update.
+- Specific questions handed over by the packet (§9): (a) §6c B1's retention risk — does the audience hold across the 247-second dinner chapter (the 19:00 chapter, 305 s into the film per post.json chapters, running to the 22:30 chapter at 552 s), and do timestamped comments cluster before or after it? (b) the description invites error reports with pinned corrections — do commenters bring seeds, corrections, or counterfactuals (i.e., did the audience adopt the film's evidence game)? (c) which artifact do commenters repeat — the three questions, the thesis line, or a scene — i.e., what did they take home? These are reception questions the Plan may price ONLY through comment evidence actually returned — they are not themes pre-committed before sampling (founding risk, §2.4).
+- Prior reception.md for this specimen/creator: none. No delta baseline from a prior reception record; the baseline is the post.json capture below. This is the first specimen from this creator in the lane record (per packet §1).
+
+### Reception data inventory (from captured sources read this cycle)
+| Data class | State | Source |
+|---|---|---|
+| Views count | EXISTS — 18,750 | post.json in packet dir, owner capture 2026-11-15T00:42:00-05:00; builder re-read 2026-11-15T00:50:00-05:00 identical |
+| Likes count | EXISTS — 469 | post.json, same captures |
+| Comments count | EXISTS — 72 (displayed) | post.json, same captures |
+| Subscriber base at capture | EXISTS — 3,190 subscribers | meta.json `channel_follower_count` in packet dir, yt-dlp capture 2026-11-15 (~00:50) |
+| Upload date | EXISTS — 2026-11-11 | post.json `upload_date` 2026-11-11; meta.json 20261111 |
+| Duration | EXISTS — 620 s (10:20) | post.json / meta.json |
+| Comment text access | NOT IN PACKET — post.json carries counts only, no comment text. Access route to test in Execute: yt-dlp comment extraction for the same video id (the packet's own capture instrument per its production-record.md; read-only; §6.5 no engagement). Result recorded in Execute before any theme is claimed. | post.json (absence verified by field read this cycle) + packet production-record.md |
+| Second capture (velocity) | TO TEST in Execute: yt-dlp `--dump-single-json` re-read of the same video on 2026-11-15 (daytime, ~10 h after the 00:42/00:50 captures). If it returns fresh counts, velocity = capture-2 minus capture-1; if it fails, velocity prints ABSENT. | — |
+| Shares count | ABSENT — YouTube does not publicly display a share count for a video; no share figure will be claimed. | platform fact, named |
+| Retention data | ABSENT — no public retention / average-view-duration data for YouTube videos (creator-private analytics); no retention curve exists publicly for this specimen. Retention-shaped proxies (comment time-references / timestamped comments, esp. relative to the 247 s dinner chapter) are testable ONLY if comment text access succeeds in Execute. | named absence |
+| Subscriber base at posting (2026-11-11) | NOT ON FILE — the only base on file is at capture (2026-11-15, 4 days after upload); spread pricing must name this distortion. | post.json/meta.json stamps |
+| Repost/quote surfaces | UNTESTED — not inventoried in the packet; YouTube exposes no public repost count for a video, and off-platform quoting is not measurable from captured sources. | named, this cycle |
+| Creator's adjacent posts (channel base context) | NOT IN PACKET — no adjacent-video counts were captured by digestion; named as missing base context, not planned around. | packet listing |
+| Dislikes | ABSENT — YouTube does not publicly display dislike counts. | platform fact, named |
+
+### Absences named (main body, per §6.4)
+Shares ABSENT · public retention data ABSENT · subscriber base at posting NOT ON FILE · dislikes ABSENT · comment text NOT IN PACKET (route to test in Execute) · velocity PENDING the Execute second capture · repost/quote surfaces UNTESTED · adjacent posts NOT IN PACKET.
+
+### Owner-only data routing (§1)
+None. Third-party public specimen; the only private data class (retention) is creator-private, not owner data, and is printed ABSENT rather than planned around. No owner-only data need is routed to HQ this cycle.
+
+### Spread shape visible at Observe (raw, unpriced — pricing is Execute's)
+Views stand ABOVE the base — 18,750 views on a 3,190-subscriber base (≈5.88 views per subscriber) — while interaction counts are a small fraction of views: 469 likes (≈2.50% of views) and 72 displayed comments (≈0.38% of views). Whether that shape is weak or normal for a 4-day-old 10-minute essay is NOT judged here — Observe inventories; Plan chooses signals; Execute prices.
+
+
+--- post.json ---
+{"channel":"The Good Takeoff","counts_at_builder_reread":{"captured_at":"2026-11-15T00:50:00-05:00","comments":72,"likes":469,"note":"identical to the owner capture — no discrepancy to name","source":"yt-dlp --dump-single-json (meta.json)","views":18750},"counts_at_owner_capture":{"captured_at":"2026-11-15T00:42:00-05:00","comments":72,"likes":469,"source":"owner send in the Video Study chat (seat capture)","views":18750},"creator_declarations_in_description":["Every animation in this film was built from scratch for it, in code: no stock footage, no AI-generated images or video.","The narration uses a synthetic voice.","Quotes are read by the narrator; the original recordings are linked below.","Sources are listed below, grouped by scene (Health / Science overnight / Learning / Agents and loyalty / Testing before trust / Hearing and translation)."],"description_chapters_creator_supplied":[{"diegetic_clock":"06:15","start_s":0,"title":"A message from your clinic"},{"diegetic_clock":"07:30","start_s":80,"title":"A tutor that won't give answers"},{"diegetic_clock":"09:00","start_s":126,"title":"Science works the night shift"},{"diegetic_clock":"12:00","start_s":189,"title":"An agent nobody can buy"},{"diegetic_clock":"16:00","start_s":238,"title":"Your dad hears again"},{"diegetic_clock":"19:00","start_s":305,"title":"Why did it go well?"},{"diegetic_clock":"22:30","start_s":552,"title":"Your 2037 has already started"}],"duration_s":620,"note":"Counts are reception raw material, copied without interpretation (INSTRUCTION §3.1). Interpretation belongs to reception-analysis — see digest §9.","quoted_recordings_linked":["Bruce Schneier, Harvard Kennedy School, talk at Chicago Public Library (Feb 2026)","Tim Berners-Lee, WeAreDevelopers World Congress (2023)","Sal Khan, 'Math problems with GPT-4o' (OpenAI, May 2024)"],"support_links_in_description":["buymeacoffee.com/thegoodtakeoff","aistronauts.at/film-course"],"title":"A Day in 2037 With Superintelligence","upload_date":"2026-11-11","url":"https://youtu.be/jkDBk8QFcyY","video_id":"jkDBk8QFcyY"}
+
+--- packet listing ---
+AGENTS.md
+audio_rms_10s.json
+caps.en-orig.json3
+clips
+digest.html
+digest.md
+digest.pdf
+ev
+frames
+gaps.json
+grid2_census.json
+grid_change_census.json
+meta.json
+post.json
+probe.json
+production-record.md
+source.mp4
+transcript.txt
+view-sheet1.jpg
+view-sheet2.jpg
+view-sheet3.jpg
+words.json
+words_spoken.json
+
+--- meta counts ---
+view 18750 like 469 comment 72 channel_follower_count 3190 upload 20261111

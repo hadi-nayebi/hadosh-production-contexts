@@ -1,0 +1,11 @@
+**Verdict — Cycle 009 can proceed to Plan after Observe adds the timestamped-comment candidate and clarifies the scope of its retention absence.**
+
+1. **False absences — no finding.** `RUN.md` §1 leaves external availability open for shares, comment text, and a second capture. `post.json` supplies a comment count of 15,000 and contains no comment text or share figure. In §1, absence 5, use **“True retention data — NOT ON FILE”** to match the evidence cited there. Keep the heatmap available as a replay-intensity proxy.
+2. **Missed classes — timestamped comments.** `RUN.md` §1 inventories comment text and the heatmap, but omits time references in comments as a candidate signal. Add **“Comment references to specific moments, including late moments — unassessed pending comment retrieval.”** If retrieved, those references can show which moments commenters mention. The inventory already considers repost and adjacent-post surfaces in absence 6.
+3. **Packet-state misreads — no finding.** The packet listing shows `digest.md` and `digest.pdf` and has no `reception.md` entry, supporting the reported landing and reception-file state. The §8 slot text and footer are supplied through `RUN.md` §1 quotations. The claim that no prior Vox reception record exists is **NOT ASSESSED** from this specimen’s listing.
+4. **Base staleness — no finding.** `post.json` gives the upload date as 2020-10-31. The extraction epoch reported in `RUN.md` §1 converts to 2026-11-17 21:59:44 UTC, a gap of **2,208 calendar days** using UTC dates. Observe already identifies 12,700,000 as a capture-time denominator and records the posting-time base as unavailable in the captured sources.
+
+**Limits —** The guard’s one-stream feeding contract takes precedence over the general disk-read instruction for this review. The supplied stream contains the listing and `post.json`, with `source.info.json` fields and `digest.md` contents reported through Observe. Those underlying contents, external YouTube availability, and the lane-wide history were not independently checked.
+
+**Body-write: none (read-only run)**  
+For Cycle 009 `RUN.md`, the record change is to persist this return, add the timestamped-comment candidate and retention wording to Observe, and name both corrections in the choice log before Plan opens.

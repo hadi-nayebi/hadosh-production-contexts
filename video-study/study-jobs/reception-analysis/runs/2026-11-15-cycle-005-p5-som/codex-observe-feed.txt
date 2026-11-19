@@ -1,0 +1,83 @@
+# Codex review — codex-observe (reception-analysis)
+
+_Built 2026-11-14 (phase-guard augmentation pass 1). **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**_
+
+## Standing header
+- **Consumer:** this job's Plan step (§2) of the same cycle — the signal set is chosen from what this review confirms or corrects in the Observe inventory.
+- **Decision priced:** whether the Observe inventory is complete and truthful enough to choose signals from — specifically whether its ABSENCE claims are true for this platform/specimen and whether any existing reception data class was missed.
+- **Working record:** the cycle's RUN.md (Observe section) + the specimen's packet directory state.
+- **Body-write:** the return is persisted verbatim in the cycle RUN.md; any inventory correction it forces is written into the Observe section before Plan opens, and the correction is named in the run's choice log. A return naming no body-write is incomplete.
+
+## Instruction (the attack)
+You are attacking a reception-analysis Observe record before it is allowed to feed a Plan. The specimen's packet and platform are named in the fed record. Hunt, in order:
+1. FALSE ABSENCES — data classes declared absent that this platform actually exposes for this specimen type (e.g. share counts, comment counts vs accessible comment text, a second capture enabling velocity, creator-base figures at a second source). A false absence silently amputates the signal set.
+2. MISSED CLASSES — reception evidence the inventory never considered: comment time-references to late moments as retention proxies, repost/quote surfaces, the creator's adjacent posts as base context.
+3. PACKET-STATE MISREADS — the inventory's claim about the packet (landed / in-flight / §8 slot state) checked against the packet directory's actual state as fed; a reception plan built against a craft record that is not in the state claimed is void.
+4. BASE STALENESS — the follower/subscriber base figure's capture date vs the specimen's posting date; spread priced against a base captured far from posting is a named distortion.
+Return: findings by number, each with the evidence in the fed material that proves it, or the explicit line "no finding" per hunt. Do not propose craft judgments; this job never prices craft.
+
+## Feeding contract
+One stream only: this instruction + the RUN.md Observe section + the packet directory listing/state lines + post.json (or the own-work data-source state record). Text only. The return is consumed by the named consumer above in the same cycle or the run did not happen.
+
+
+---
+
+# FED: RUN.md Observe section (Cycle 005)
+
+# RUN — reception-analysis Cycle 005 (specimen P5) · 2026-11-15
+
+Specimen: P5 — YouTube video YxQ7JqVmqgY, "Six Essential Motion Design Transitions", School of Motion (tutorial creator Jacob Richardson)
+Packet: `hidden_files/study/video-digests/2026-11-14-som-six-transitions/` (digest.md + digest.pdf)
+Charge: cron `study-reception-analysis` queue head — newest landed digest packet lacking a `reception.md`. Packet #5 was ADOPTED CLEAN by video-digestion Cycle-011 on 2026-11-15 (lane entry lane-2026-11-15-006, 17:15 EST), after Packet #3's adoption (Cycle-010, 10:56 EST) — so P5 is newer-landed than P3, which also lacks a reception.md and becomes the next queue head after this cycle. P1, P2 and P4 reception.md already filed (Cycles 002–004). P5's packet §8 Reception link reads "Not yet run" and charges this specimen.
+Governing instruction: reception-analysis INSTRUCTION.md §§0–10 (read in full this cycle). Firing form: owner's 2026-11-14 ~20:55 ruling — arming = firing; every prescribed Jev/Codex call fires unconditionally, verdicts advisory.
+
+## §1 — Observe
+
+### Packet state (read this cycle, 2026-11-15)
+- Packet LANDED + ADOPTED CLEAN: digest.md (23,594 B, sha256 7b41878a590c…) and digest.pdf (196,573 B, sha256 6d3a532e7413…) present in the packet directory (verified by directory listing this cycle); adoption recorded in video-digestion HQ.json lane-2026-11-15-006 (Cycle-011, ADOPTED CLEAN, 2026-11-15T17:15-05:00).
+- Craft record cited by pointer only (INSTRUCTION §1.1, §6.1): the packet's craft verdict / technique catalogue / goods-and-bads live in the packet's digest.md (sections: 1 Specimen identity + technical facts · 2 Consumer + production surface · 3 Technique catalogue · 4 Tempo map · 5 Goods and bads · 6 Lessons mapped to our containers · 7 Idea bank · 8 Reception link). No craft prose is restated or re-judged in this record.
+- §8 reception slot state (this packet's reception section is §8, the P1-form numbering): digest.md §8 reads "Reception: not yet run — charged to reception-analysis. Baseline counts as displayed at capture (2026-11-14, post.json): 315,901 views · 10,419 likes · 81 comments. No reception verdict is stated or implied by this packet."; NO reception.md exists beside the packet (verified by listing this cycle). Reception slot = EMPTY / prior state = none. The §3 gate-out hand-off to video-digestion is therefore a NEW pointer entry, not an update.
+- Specific questions handed over by the packet: none beyond the §8 charge itself — §8 names no specimen-specific reception question (contrast P2's §9 and P4's §9 hand-overs). Any reception question this cycle prices must come from the data classes that exist, not from a packet hand-over.
+- Prior reception.md for this specimen/creator: none. No delta baseline from a prior reception record; the baseline is the post.json / source.info.json capture below. This is the first specimen from this creator in the lane record (per packet §1).
+
+### Reception data inventory (from captured sources read this cycle)
+| Data class | State | Source |
+|---|---|---|
+| Views count | EXISTS — 315,901 | post.json in packet dir, counts_as_displayed, captured 2026-11-14 via yt-dlp info.json at archive time (date only, no time-of-day stamp in post.json) |
+| Likes count | EXISTS — 10,419 | post.json, same capture |
+| Comments count | EXISTS — 81 (displayed) | post.json, same capture |
+| Subscriber base at capture | EXISTS — 502,000 subscribers | source.info.json `channel_follower_count` in packet dir, same 2026-11-14 yt-dlp capture (post.json carries no base figure; the base lives in the info.json) |
+| Capture stamps present (per §1 capture-stamp completeness, Cycle-004 amendment) | ONE capture event on file: the 2026-11-14 yt-dlp archive capture, recorded in BOTH post.json (counts) and source.info.json (identical counts: 315,901 / 10,419 / 81) — the two files are two records of the SAME capture, not two captures; no second stamp, no short-window observation exists on file for this specimen | post.json + source.info.json field read this cycle |
+| Upload date | EXISTS — 2019-09-09 | post.json video.upload_date / source.info.json upload_date 20190909 |
+| Duration | EXISTS — 81 s (80.99 s) | post.json / probe record in packet |
+| Comment text access | NOT IN PACKET — post.json carries counts only, no comment text; source.info.json carries no comments field (verified by field read this cycle). Access route to test in Execute: yt-dlp comment extraction for the same video id (the packet's own capture instrument per its production-record.md; read-only; §6.5 no engagement). Result recorded in Execute before any theme is claimed. | post.json + source.info.json (absence verified by field read) + packet production-record.md |
+| Second capture (velocity) | TO TEST in Execute: yt-dlp `--dump-single-json` re-read of the same video on 2026-11-15 (evening, ~1 day after the 2026-11-14 capture — post.json carries no time-of-day, so the interval can only be stated as ~1 day, date-to-date). If it returns fresh counts, velocity = capture-2 minus capture-1; if it fails, velocity prints ABSENT. | — |
+| Retention-shaped evidence — heatmap | EXISTS — YouTube "most replayed" heatmap in source.info.json (`heatmap`, ~100 segments of 0.81 s covering the full 81 s, values 0–1 relative replay intensity), same 2026-11-14 capture. This is a public retention-shaped proxy, NOT a retention curve: values are relative, carry no viewer counts, and are labeled inference wherever used. | source.info.json field read this cycle |
+| Retention data (true) | ABSENT — no public retention / average-view-duration data for YouTube videos (creator-private analytics); no retention curve exists publicly for this specimen. The heatmap above is the only retention-shaped proxy on file, plus comment time-references IF comment access succeeds in Execute. | named absence |
+| Shares count | ABSENT — YouTube does not publicly display a share count for a video; no share figure will be claimed. | platform fact, named |
+| Subscriber base at posting (2019-09-09) | NOT ON FILE — the only base on file is at capture (2026-11-14, more than six years after upload); spread pricing must name this distortion in its strongest form yet in this job's record: a 2019 video's lifetime views priced against a 2026 base. | post.json / source.info.json stamps |
+| Repost/quote surfaces | UNTESTED — not inventoried in the packet; YouTube exposes no public repost count for a video, and off-platform quoting is not measurable from captured sources. The companion article on schoolofmotion.com embeds this video, but the packet prices the article as companion text, not a repost surface with counts on file. | named, this cycle |
+| Creator's adjacent posts (channel base context) | NOT IN PACKET — no adjacent-video counts were captured by digestion; the article's secondary embeds are named in post.json as not digested and carry no counts. Named as missing base context, not planned around. | packet listing + post.json |
+| Dislikes | ABSENT — YouTube does not publicly display dislike counts. | platform fact, named |
+
+### Absences named (main body, per §6.4)
+Shares ABSENT · true public retention data ABSENT (heatmap proxy EXISTS, separately) · subscriber base at posting NOT ON FILE · dislikes ABSENT · comment text NOT IN PACKET (route to test in Execute) · velocity PENDING the Execute second capture (no second stamp on file — the post.json / source.info.json pair is one capture, per the completeness check above) · repost/quote surfaces UNTESTED · adjacent posts NOT IN PACKET.
+
+### Owner-only data routing (§1)
+None. Third-party public specimen; the only private data class (true retention) is creator-private, not owner data, and is printed ABSENT rather than planned around. No owner-only data need is routed to HQ this cycle.
+
+### Spread shape visible at Observe (raw, unpriced — pricing is Execute's)
+Views stand BELOW the current base — 315,901 lifetime views on a 502,000-subscriber base at capture (≈0.63 views per subscriber) — while interaction counts are a small fraction of views: 10,419 likes (≈3.30% of views) and 81 displayed comments (≈0.026% of views). The base distortion is maximal here (2019 upload, 2026 base), so the views-per-subscriber figure cannot be read as the video failing to spread beyond its base at posting — the base at posting is NOT ON FILE. Whether the shape is weak or normal for a six-year-old 81-second tutorial is NOT judged here — Observe inventories; Plan chooses signals; Execute prices.
+
+
+---
+
+# FED: post.json
+
+{"article":{"authors":"Jacob Richardson and Ryan Plummer","platform":"School of Motion (schoolofmotion.com)","published":"2019-09-09","read_time":"6 min read","title":"Six Essential Motion Design Transitions","url":"https://schoolofmotion.com/blog/six-essential-motion-design-transitions-tutorial"},"counts_as_displayed":{"comments":81,"likes":10419,"views":315901},"counts_captured":"2026-11-14 via yt-dlp info.json at archive time — reception raw material; interpretation is reception-analysis's, not this packet's","secondary_embeds_on_page_not_digested":["YouTube p-RrCTPCVYo — Jacob Richardson match-cut deep-dive (named in article §4)","Vimeo 81097964 — Psyop 'Endless Perfection' for Toshiba (article §5 example)","YouTube dkDAd1MoZME — Animation Bootcamp promo (article footer)"],"specimen_form":"blog/resource article carrying an embedded YouTube tutorial video; the video is the digested specimen, the article is its companion text","video":{"creator":"Jacob Richardson (tutorial creator; School of Motion alum)","description":"Stuck on your latest project? Don't know how to get from one scene to the next? Today's quick tip aims to equip you with a focus on creative transitions! If you want to dig deeper into each one of the transitions, check out the full article on School of Motion.","duration_s":81,"id":"YxQ7JqVmqgY","platform":"YouTube","title":"Six Essential Motion Design Transitions","upload_date":"2019-09-09","uploader":"School of Motion","url":"https://www.youtube.com/watch?v=YxQ7JqVmqgY"}}
+
+---
+
+# FED: packet directory listing / state lines
+
+digest.md present 23594 B · digest.pdf present 196573 B · reception.md ABSENT (verified by listing) · digest.md §8 reads 'Reception: not yet run — charged to reception-analysis.' · adoption: video-digestion Cycle-011 ADOPTED CLEAN 2026-11-15T17:15-05:00 (HQ lane-2026-11-15-006) · source.info.json present: view_count 315901, like_count 10419, comment_count 81, channel_follower_count 502000, upload_date 20190909, heatmap present (~100 segments), no comments field.

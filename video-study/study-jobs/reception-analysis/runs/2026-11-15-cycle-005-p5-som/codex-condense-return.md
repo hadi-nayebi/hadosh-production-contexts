@@ -1,0 +1,13 @@
+1. **Lesson→amendment drift: no finding.** A1 encodes the heatmap inventory lesson; A2 encodes the outcome-neutral pointer lesson. Both installed wordings directly address their cited forcing events.
+
+2. **Escaped layers: finding — heatmap claim binding needs review.** E4 moves from relative values to “viewers re-watch the middle-to-late demonstration stretch and effectively do not replay the closing ~20 s.” Yet Observe states that the heatmap values are “relative, carry no viewer counts.” Relative intensity supports a comparison within the profile; it does not establish negligible absolute replay. Condense nevertheless declares Jev definitions “NO-DEFECT — all three fired, verdicts earned.”
+
+   **Required charge:** scope the conclusion to substantially lower **relative replay intensity** in the closing segments. Reassess jev-reception’s claim-binding coverage and the Codex prompts’ inference checks against this missed overstatement; record amendments or specific NO-DEFECT reasoning. Successful firing and exemplar scores alone do not resolve it.
+
+3. **Separation erosion: no finding in the supplied amendments.** A1 explicitly preserves proxy labeling and distinguishes true retention data; A2 strengthens outcome honesty. The overstatement identified above concerns application and judge coverage.
+
+4. **Signal demotion ledger: current-cycle reset supported; historical reconciliation unverified.** “Retention-shaped proxies … produced a usable lesson … streak = 0” is supported by C005’s heatmap profile. However, the claimed historical usable-lesson streaks cannot be independently reconstructed from verdict-history alone, and the installed §2 demotion state was not supplied. Record this check as **not fully verified**, or supply the cited prior-cycle ledger evidence and current §2 state before declaring reconciliation complete.
+
+5. **Candidate inflation: finding — firing-model conclusion precedes its evidence.** Lesson 6 says “All six prescribed calls fired firsthand this cycle,” and the deviation register says “6/6 fired, raw returns on file,” while the same record describes codex-condense as “firing below.” At the fed snapshot, five completed calls are evidenced; the sixth is pending this return. Finalize those claims only after consumption, persistence, and the C005 codex-condense verdict-history row are recorded. Lessons 1–3 explicitly qualify their single-cycle basis; no recurrence inflation finding there.
+
+**Body-write for the named consumer:** persist this return verbatim in the closing RUN.md; record disposition of findings 2, 4, and 5 in its closing addendum. No filesystem write was performed by this text-only review.

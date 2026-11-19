@@ -1,0 +1,112 @@
+# Codex review — codex-observe (reception-analysis)
+
+_Built 2026-11-14 (phase-guard augmentation pass 1). **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**_
+
+## Standing header
+- **Consumer:** this job's Plan step (§2) of the same cycle — the signal set is chosen from what this review confirms or corrects in the Observe inventory.
+- **Decision priced:** whether the Observe inventory is complete and truthful enough to choose signals from — specifically whether its ABSENCE claims are true for this platform/specimen and whether any existing reception data class was missed.
+- **Working record:** the cycle's RUN.md (Observe section) + the specimen's packet directory state.
+- **Body-write:** the return is persisted verbatim in the cycle RUN.md; any inventory correction it forces is written into the Observe section before Plan opens, and the correction is named in the run's choice log. A return naming no body-write is incomplete.
+
+## Instruction (the attack)
+You are attacking a reception-analysis Observe record before it is allowed to feed a Plan. The specimen's packet and platform are named in the fed record. Hunt, in order:
+1. FALSE ABSENCES — data classes declared absent that this platform actually exposes for this specimen type (e.g. share counts, comment counts vs accessible comment text, a second capture enabling velocity, creator-base figures at a second source). A false absence silently amputates the signal set.
+2. MISSED CLASSES — reception evidence the inventory never considered: comment time-references to late moments as retention proxies, repost/quote surfaces, the creator's adjacent posts as base context.
+3. PACKET-STATE MISREADS — the inventory's claim about the packet (landed / in-flight / §8 slot state) checked against the packet directory's actual state as fed; a reception plan built against a craft record that is not in the state claimed is void.
+4. BASE STALENESS — the follower/subscriber base figure's capture date vs the specimen's posting date; spread priced against a base captured far from posting is a named distortion.
+Return: findings by number, each with the evidence in the fed material that proves it, or the explicit line "no finding" per hunt. Do not propose craft judgments; this job never prices craft.
+
+## Feeding contract
+One stream only: this instruction + the RUN.md Observe section + the packet directory listing/state lines + post.json (or the own-work data-source state record). Text only. FEED COMPLETENESS (amendment 2026-11-16, Cycle-006 deviation D1 — a first firing was fed through relative paths one level short and its source sections arrived empty): before firing, the assembled feed is checked section by section — every named source section present and non-empty; an empty section voids the firing before it is spent, and a firing discovered empty afterward is re-fired with the complete feed, both returns filed. The return is consumed by the named consumer above in the same cycle or the run did not happen.
+
+
+===== RUN.md (Observe section, Cycle 010) =====
+# RUN — reception-analysis Cycle 010 (specimen P13) · 2026-11-18
+
+_Run opened 2026-11-18 ~10:56 EST (cron study-reception-analysis firing). Governing instruction: this job's INSTRUCTION.md in full. Queue rule (cron body + Cycles 006–009 precedent): the newest landed digest packet lacking a reception.md is the queue head._
+
+**Queue census (this cycle, bounded probe of `hidden_files/study/video-digests/`):** packets lacking a `reception.md` at run open: Packet #3 `2026-11-14-yt-o1fsb1nyewi` (Epochs in Ink) · Packet #6 `2026-11-15-yt-l2pkb1ebmq` (Grow With Kaz) · Packet #8 `2026-11-16-yt-gdsf2h9-39i` (Kurzgesagt) · Packet #9 `2026-11-16-vimeo-sixmap` (nez&pez — Cycle-007 INCOMPLETE, reception still owed) · Packet #11 `2026-11-17-lia-caption-with-intention` (FCB Chicago) · Packet #13 `2026-11-17-yt-dnjdjiwcfy` (PES). One further directory, `2026-11-18-ig-dffiipmmac3`, lacks a reception.md but carries NO digest.md — its packet has not landed, so it is not a landed packet and is not queue-eligible this cycle. Newest landed = **Packet #13** (video-digestion Cycle-020, 2026-11-17), so P13 is this cycle's specimen. The others remain queued after it, newest-first: P11, then P9, then P8, then P6, then P3.
+
+## §1 — Observe
+
+### Packet state (read this cycle, 2026-11-18)
+- Specimen: **Packet #13 — "Fresh Guacamole" by PES** (digest.md title line, verbatim form: Packet #13 — "Fresh Guacamole" by PES; platform title in post.json: "Fresh Guacamole by PES | Oscar Nominated Short"), packet directory `hidden_files/study/video-digests/2026-11-17-yt-dnjdjiwcfy/`.
+- Creator: PES. Platform: **YouTube**, video id **dNJdJIwCF_Y**. URL verbatim from post.json: https://www.youtube.com/watch?v=dNJdJIwCF_Y
+- Duration 100.894 s · 1920×1080 @ 24 fps (digest.md §1, cited from the packet, not a craft finding).
+- Packet completeness: LANDED. digest.md (25,339 B, sha256 d54b53c2cf6db5e5…) + digest.pdf (48,146 B) stand in the packet directory; production-record.md records "Built by video-digestion Cycle-020".
+- Craft record: the packet's craft verdict, technique catalogue, and goods/bads live in digest.md §§1–7 and are **cited by pointer only** in this job's records — never restated, never re-judged (§6.1). The reception slot is digest.md **§8 "Reception link"** (this packet's own numbering): it reads verbatim "Reception: not yet run — charged to reception-analysis. (Displayed counts stand in §1 as raw material, copied from post.json, not interpreted here.)"
+- Reception state at Observe: **no reception.md** stands beside the packet (directory listing verified this cycle); no prior reception.md for this specimen or this creator exists in the lane record (first PES specimen in the packet census above).
+
+### Reception data inventory (from captured sources read this cycle)
+Capture stamps inventoried — EVERY stamp present in the captured sources (§1, capture-stamp completeness amendment):
+- **Capture 1 (counts): 2026-11-18T03:59:07+00:00 (2026-11-17 22:59:07 EST)** — the packet's `source.info.json` carries an extraction `epoch` field = 1794974347 = that stamp, which is the precise capture stamp for the info-json figures. post.json and source.info.json agree exactly on views, likes, and comment count (cross-checked this cycle). post.json itself carries no separate capture-stamp field; its counts are the same figures, printed in digest.md §1 as "Displayed counts at capture (post.json)".
+  - Views: **495,478,875** (post.json `view_count`; source.info.json `view_count` agrees).
+  - Likes: **3,119,792** (post.json `like_count`; source.info.json agrees).
+  - Comment count: **80,000** (post.json `comment_count`; source.info.json agrees) — printed as displayed; the round figure is the platform extractor's displayed value, not a count this job performed.
+  - Upload date: **2013-03-07** (post.json `upload_date` 20130307; source.info.json agrees; its `timestamp` field = 1362644143 = 2013-03-07T08:15:43+00:00).
+  - **Subscriber base at capture 1: 4,450,000** (source.info.json `channel_follower_count`, capture 1 stamp above). No base figure stands in post.json itself; the base is an info-json figure. Base at posting (2013-03-07): NOT ON FILE — no figure in any captured source records the channel's base at posting.
+  - **Heatmap PRESENT** (§1 heatmap check, run this cycle on source.info.json): a `heatmap` field with 100 segments of ~1.01 s each stands on file. It is inventoried as a retention-shaped proxy in its own right (relative replay-intensity values, labeled inference wherever used), distinct from true retention data, which remains ABSENT. Headline shape (values read this cycle): segment 0.0–1.01 s = 1.0 (the maximum, by the field's normalization); a sustained high plateau follows through ~45 s (every segment 0–45.45 s above 0.5, peaking in the 8–18 s span at ~0.80–0.82); first-10-segment mean 0.770 vs last-10 mean 0.137; the segment 97.97–98.98 s reads 0.0. Full segment values stand in source.info.json and are priced in Execute only as labeled inference.
+- Comment text access: none on file. No comments file and no comment text stand in the packet; source.info.json carries **no `comments` field** (checked this cycle). Whether comment text is retrievable is an Execute-gated test, not an Observe claim.
+- No second count capture stands on file. Whether a second capture is obtainable is an Execute-gated test; capture 1 is dated 2026-11-17 22:59:07 EST, so any capture 2 this cycle is a next-day, ~12 h window observation — a small delta in that window is an existing observation form, not a pending velocity (capture-stamp completeness amendment).
+- Prior-platform note standing in post.json's caption field (copied, not interpreted): the film first appeared on Showtime's YouTube channel 2012-03-07 to 2013-03-07 and tallied 7,842,373 views there; the PES upload started again at zero on 2013-03-07. That earlier channel's counts are NOT this specimen's counts and no figure from them enters any signal.
+
+### Absences named (main body, per §6.4)
+Each absence names the route tested and its result (§1, absence-characterization amendment); none characterizes the data's nature beyond what the tested route proves.
+1. **Shares — NOT ON FILE:** no share figure stands in post.json or source.info.json (both read this cycle); availability by other routes is unverified at Observe.
+2. **Comment text — NONE ON FILE:** no comments field in source.info.json and no comments file in the packet; extraction not yet attempted by this job (Execute-gated test).
+3. **Subscriber base at posting — NOT ON FILE:** no captured source records PES's base at 2013-03-07; the capture-1 base (4,450,000, 2026-11-17) postdates posting by ~13 years, so any spread ratio is a capture-time ratio, named as such wherever used (base-staleness distortion, named in advance).
+4. **Velocity — NO SECOND CAPTURE ON FILE:** capture 1 stands alone at Observe; a capture-2 test is Plan's to set, and its window would be ~12 h (2026-11-17 22:59 EST → 2026-11-18 morning EST).
+5. **True retention data — NOT ON FILE:** no platform retention data stands in any captured source read this cycle; the heatmap (above) is a replay-intensity proxy, not retention data, and is never printed as retention.
+6. **Repost/adjacent surfaces — NONE ON FILE:** no repost surface, adjacent-post, or distribution-surface counts stand in the packet. The trilogy companion uploads named in the caption are adjacent works, not repost surfaces, and no counts for them stand on file.
+- **Comment time-references candidate class:** comment references to specific moments, including late moments — **UNASSESSED pending comment retrieval**. No comment text stands on file, so no such reference can be inventoried this cycle; naming the class is not evidence any such comment exists.
+- Owner-only data needs: NONE identified — no private analytics are planned around; YouTube Studio analytics for this third-party specimen are the creator's, not the owner's, and are simply not this job's data. Routing: none required.
+
+### Separation at the source
+Craft enters this record only as the pointer above (digest.md §§1–7, cited, not restated). No craft verdict, technique description, or goods/bads content is priced, paraphrased as a finding, or used as reception evidence anywhere in §1.
+
+
+
+===== PACKET DIRECTORY LISTING =====
+AGENTS.md 1315
+asr-segments.json 90
+audio.wav 3228654
+clips dir
+digest.md 25339
+digest.pdf 48146
+ev dir
+frames dir
+post.json 1504
+probe-raw.json 655
+probe.json 415
+production-record.md 5759
+source.info.json 127670
+source.mp4 37333954
+
+===== post.json =====
+{
+ "platform": "YouTube",
+ "id": "dNJdJIwCF_Y",
+ "title": "Fresh Guacamole by PES | Oscar Nominated Short",
+ "author": "PES",
+ "channel": "PES",
+ "upload_date": "20130307",
+ "url": "https://www.youtube.com/watch?v=dNJdJIwCF_Y",
+ "duration_s_displayed": 101,
+ "view_count": 495478875,
+ "like_count": 3119792,
+ "comment_count": 80000,
+ "caption": "The 2013 Academy Award Nominated film by PES.  'Fresh Guacamole' is the shortest film ever nominated for an Oscar. It's also now the most-viewed Oscar short in history. \n\n\"Fresh Guacamole\" is the 2nd in PES's Food Film *Trilogy*.\nView \"Western Spaghetti\", the 1st Film, the one that started the whole stop-motion cooking genre, here:  https://youtu.be/qBjLW5_dGAM\nView the 3rd Film, \"Submarine Sandwich\" here: https://youtu.be/EWEl8-PHhMI\n\nCREDITS: \"Fresh Guacamole\" | 2013 Academy Award\u00ae Nomination | Written and Directed by PES | Animated by PES and Dillon Markey | Produced by PES and Sarah Phelps | Sound Design by PES | Final Audio Mix: Matt Hauser | Filmed in Torrance, California\n\nFresh Guacamole was originally commissioned by Showtime as part of its \"Short Stories\" series and first appeared on Showtime's YouTube channel for a period of 1 year (March 7, 2012 - March 7, 2013). In that time the film tallied 7,842,373 total views. Since YouTube does not allow view counts on a film to be transferred between channels, the upload here on PESfilm started again at zero on March 7, 2013.\n\n#PES #stopmotion #stopmotioncooking"
+}
+===== source.info.json (selected fields) =====
+id: dNJdJIwCF_Y
+title: Fresh Guacamole by PES | Oscar Nominated Short
+uploader: PES
+channel_follower_count: 4450000
+view_count: 495478875
+like_count: 3119792
+comment_count: 80000
+upload_date: 20130307
+epoch: 1794974347
+duration: 101
+heatmap present: True, segments: 100
+comments field present: False

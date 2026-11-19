@@ -1,0 +1,208 @@
+# RUN — reception-analysis Cycle 004 (specimen P4) · 2026-11-15
+
+Specimen: P4 — YouTube video jkDBk8QFcyY, "A Day in 2037 With Superintelligence", The Good Takeoff
+Packet: `hidden_files/study/video-digests/2026-11-15-yt-jkdbk8qfcyY/` (digest.md + digest.pdf)
+Charge: cron `study-reception-analysis` queue head — newest landed digest packet lacking a `reception.md`. Packet #3 (2026-11-14-yt-o1fsb1nyewi, Epochs in Ink) is built but its adoption is still pending per QUEUE.md (head row 0b, adoption is the next digestion act), so it is not yet landed/adopted; Packet #4 was adopted with gaps by video-digestion Cycle-009 on 2026-11-15 (HQ.json lane-2026-11-15-002). P1 and P2 reception.md already filed (Cycles 002–003). P4's packet §9 Reception link reads "Not yet run" and charges this specimen.
+Governing instruction: reception-analysis INSTRUCTION.md §§0–10 (read in full this cycle). Firing form: owner's 2026-11-14 ~20:55 ruling — arming = firing; every prescribed Jev/Codex call fires unconditionally, verdicts advisory.
+
+## §1 — Observe
+
+### Packet state (read this cycle, 2026-11-15)
+- Packet LANDED + ADOPTED: digest.md and digest.pdf present in the packet directory (verified by directory listing this cycle); adoption recorded in video-digestion HQ.json lane-2026-11-15-002 (Cycle-009, adopted with gaps).
+- Craft record cited by pointer only (INSTRUCTION §1.1, §6.1): the packet's craft verdict / technique catalogue / goods-and-bads live in the packet's digest.md (sections: 1 Specimen identity · 1b Category brief · 2 Consumer + production surface · 3 Technique catalogue · 4 Transcript · 5 Visual components & tempo map · 6 Goods and bads · 7 Lessons · 8 Idea bank · 9 Reception link · 10 What could NOT be evidenced). No craft prose is restated or re-judged in this record.
+- §9 reception slot state (this packet's reception section is §9, not §8): digest.md §9 reads "Not yet run — charged to reception-analysis" and hands over three specific questions (see below); NO reception.md exists beside the packet (verified by listing this cycle). Reception slot = EMPTY / prior state = none. The §3 gate-out hand-off to video-digestion is therefore a NEW pointer entry, not an update.
+- Specific questions handed over by the packet (§9): (a) §6c B1's retention risk — does the audience hold across the 247-second dinner chapter (the 19:00 chapter, 305 s into the film per post.json chapters, running to the 22:30 chapter at 552 s), and do timestamped comments cluster before or after it? (b) the description invites error reports with pinned corrections — do commenters bring seeds, corrections, or counterfactuals (i.e., did the audience adopt the film's evidence game)? (c) which artifact do commenters repeat — the three questions, the thesis line, or a scene — i.e., what did they take home? These are reception questions the Plan may price ONLY through comment evidence actually returned — they are not themes pre-committed before sampling (founding risk, §2.4).
+- Prior reception.md for this specimen/creator: none. No delta baseline from a prior reception record; the baseline is the post.json capture below. This is the first specimen from this creator in the lane record (per packet §1).
+
+### Reception data inventory (from captured sources read this cycle)
+| Data class | State | Source |
+|---|---|---|
+| Views count | EXISTS — 18,750 | post.json in packet dir, owner capture 2026-11-15T00:42:00-05:00; builder re-read 2026-11-15T00:50:00-05:00 identical |
+| Likes count | EXISTS — 469 | post.json, same captures |
+| Comments count | EXISTS — 72 (displayed) | post.json, same captures |
+| Subscriber base at capture | EXISTS — 3,190 subscribers | meta.json `channel_follower_count` in packet dir, yt-dlp capture 2026-11-15 (~00:50) |
+| Upload date | EXISTS — 2026-11-11 | post.json `upload_date` 2026-11-11; meta.json 20261111 |
+| Duration | EXISTS — 620 s (10:20) | post.json / meta.json |
+| Comment text access | NOT IN PACKET — post.json carries counts only, no comment text. Access route to test in Execute: yt-dlp comment extraction for the same video id (the packet's own capture instrument per its production-record.md; read-only; §6.5 no engagement). Result recorded in Execute before any theme is claimed. | post.json (absence verified by field read this cycle) + packet production-record.md |
+| Second capture (velocity) | TO TEST in Execute: yt-dlp `--dump-single-json` re-read of the same video on 2026-11-15 (daytime, ~10 h after the 00:42/00:50 captures). If it returns fresh counts, velocity = capture-2 minus capture-1; if it fails, velocity prints ABSENT. | — |
+| Shares count | ABSENT — YouTube does not publicly display a share count for a video; no share figure will be claimed. | platform fact, named |
+| Retention data | ABSENT — no public retention / average-view-duration data for YouTube videos (creator-private analytics); no retention curve exists publicly for this specimen. Retention-shaped proxies (comment time-references / timestamped comments, esp. relative to the 247 s dinner chapter) are testable ONLY if comment text access succeeds in Execute. | named absence |
+| Subscriber base at posting (2026-11-11) | NOT ON FILE — the only base on file is at capture (2026-11-15, 4 days after upload); spread pricing must name this distortion. | post.json/meta.json stamps |
+| Repost/quote surfaces | UNTESTED — not inventoried in the packet; YouTube exposes no public repost count for a video, and off-platform quoting is not measurable from captured sources. | named, this cycle |
+| Creator's adjacent posts (channel base context) | NOT IN PACKET — no adjacent-video counts were captured by digestion; named as missing base context, not planned around. | packet listing |
+| Dislikes | ABSENT — YouTube does not publicly display dislike counts. | platform fact, named |
+
+### Absences named (main body, per §6.4)
+Shares ABSENT · public retention data ABSENT · subscriber base at posting NOT ON FILE · dislikes ABSENT · comment text NOT IN PACKET (route to test in Execute) · velocity PENDING the Execute second capture · repost/quote surfaces UNTESTED · adjacent posts NOT IN PACKET.
+
+### Owner-only data routing (§1)
+None. Third-party public specimen; the only private data class (retention) is creator-private, not owner data, and is printed ABSENT rather than planned around. No owner-only data need is routed to HQ this cycle.
+
+### Spread shape visible at Observe (raw, unpriced — pricing is Execute's)
+Views stand ABOVE the base — 18,750 views on a 3,190-subscriber base (≈5.88 views per subscriber) — while interaction counts are a small fraction of views: 469 likes (≈2.50% of views) and 72 displayed comments (≈0.38% of views). Whether that shape is weak or normal for a 4-day-old 10-minute essay is NOT judged here — Observe inventories; Plan chooses signals; Execute prices.
+
+### Correction applied per codex-observe finding 1
+The inventory above originally printed velocity as simply PENDING. Corrected: post.json already contains TWO captures — owner capture 2026-11-15T00:42 and builder re-read 2026-11-15T00:50 — with identical counts (18,750 views · 469 likes · 72 comments), i.e. an observed zero change over 8 minutes. That is a short-window baseline, not a usable velocity interval; the Execute second capture (daytime, ~10 h later) remains the gated velocity test. The absence summary is corrected accordingly: velocity over a meaningful interval PENDING the Execute capture; 8-minute zero-delta observation EXISTS on file.
+
+### Codex-observe call point (§1.5) — FIRED
+`guards/codex-observe.md` fired this cycle via `codex exec -` (one stream: guard file + this Observe section + post.json + packet listing; no stdin field). Raw return persisted verbatim at `codex-observe-return.md` in this run directory. Disposition: APPLIED — finding 1 (existing 8-minute second observation) written into the inventory above as the correction paragraph; hunts 2–4: no finding. Finding 3's feed limit is accepted as in Cycle-003: packet state stands on this cycle's own directory listing + §9 text read + video-digestion HQ.json read, all firsthand this cycle; the Codex feed carried text state lines only per its feeding contract.
+
+### Observe-exit gate (§1 gate out) — FIRED
+jev-observe-exit fired this cycle through a fresh judge agent executing the call file's §2+§3 on the fed Observe record (lane firing form). Raw return persisted verbatim at `jev-observe-exit-return.md` in this run directory. **Verdict: ADVANCE-WITH-GAPS** — packet-state certainty 0.90 · source coverage 0.85 · absence completeness 0.95 · separation-at-source 1.00 · freshness 0.95. All four §6 exemplars classified correctly (4/4). Disposition: APPLIED — the six named gaps bind the Plan below: (1) comment themes / timestamp proxies / §9 questions (a)–(c) enter ONLY as Execute-gated tests, never pre-committed themes; (2) velocity is not a signal, only a gated test (the 8-minute zero-delta is not a velocity interval); (3) spread pricing carries the capture-time-base distortion by name (base 2026-11-15, 4 days after upload); (4) retention itself ABSENT — timestamp proxy only, labeled; (5) adjacent posts + repost surfaces not planned around; (6) shares/dislikes absent in any form.
+Gate out (§1): craft citation + data inventory with absences named — DONE above.
+
+## §2 — Plan
+_(opens on the jev-observe-exit profile cited above: ADVANCE-WITH-GAPS, gaps 1–6 binding)_
+
+### Signal set (only signals whose data exists, plus named Execute-gated tests)
+1. **Spread-vs-base** (data EXISTS): views per subscriber, likes per view, likes per subscriber, comments per view — priced against the 3,190-subscriber base at capture 2026-11-15 (~00:50), with the capture-time-vs-posting distortion named in every derived figure (gap 3).
+2. **Interaction ratios** (data EXISTS): likes/views and comments/views at capture 1 — interaction ratios only; no depth, viewing-duration, or craft inference; no cross-specimen merged comparison (P2/P3 forms and platforms differ in age/form; any comparison is printed as separate figures, not a merged claim).
+3. **Velocity** — GATED TEST ONLY (gap 2): Execute attempts a second yt-dlp capture ~10 h after capture 1; if it succeeds, velocity = capture-2 − capture-1 over the named interval; if it fails, velocity prints ABSENT in reception.md. The 8-minute zero-delta observation in post.json is recorded as a baseline note, not velocity.
+4. **Comment themes** — GATED TEST ONLY (gap 1): Execute attempts yt-dlp comment extraction; themes are claimed ONLY over comments actually returned. The packet's §9 hand-over questions (a) dinner-chapter timestamp clustering, (b) seeds/corrections/counterfactuals uptake, (c) repeated artifact (three questions / thesis line / a scene) may be priced ONLY if returned comments speak to them; they are not pre-set theme categories — themes are coded from the returned text, and any question the sample does not address prints UNANSWERED-BY-SAMPLE.
+5. **Retention-shaped evidence** — GATED on the same comment test: timestamped comments / comment time-references in the returned sample only, coded relative to the dinner chapter (305–552 s) vs before/after, labeled inference. Public retention data itself prints ABSENT regardless (gap 4).
+
+### Comment-sampling rule (set BEFORE reading any comment text, per §2.2)
+Attempt ALL displayed comments (displayed count = 72 at capture 1, per post.json). Whatever the extraction returns is the sample; themes are claimed only over the returned N, and any shortfall vs the displayed count at the Execute capture prints in the record. Creator's own comments, if returned, are coded as their own theme and excluded from audience-response claims (Cycle-002 precedent). No cherry-picking is possible under attempt-all at this scale, and none will be introduced.
+
+### Separation / write plan (§2.3)
+- `reception.md` is written beside the packet at `hidden_files/study/video-digests/2026-11-15-yt-jkdbk8qfcyY/reception.md` with: dated counts table · spread pricing · comment themes · retention evidence/absences · the reception lesson (one paragraph; the packet's craft lesson cited by pointer only, never merged).
+- The packet's §9 pointer is updated ONLY by a hand-off entry to video-digestion recorded in this RUN (§3 gate out) — this job does not edit the packet's digest.md (§6.1). Prescribed pointer text (Cycle-003 precedent form): "Reception record: [reception.md](reception.md). Dated public counts and returned-comment sample; coverage limits and unavailable data are stated in the record." Headline findings may be added to the hand-off entry only after Verify (§5) passes.
+
+### Execute checklist
+- E1: Capture counts raw into this record first: re-read capture 1 from post.json/meta.json; attempt capture 2 via yt-dlp `--dump-single-json` (same instrument as the packet's capture); record success/failure with stamp.
+- E2: Attempt comment extraction via yt-dlp for video jkDBk8QFcyY; save returned comments as evidence in this run directory; record returned N vs displayed count.
+- E3: Spread arithmetic with all steps shown; every derived figure carries the capture-time-base distortion note.
+- E4: Code themes from the returned sample only (one primary theme per comment; counts must re-add to N); price the §9 hand-over questions (a)–(c) only from returned evidence or print UNANSWERED-BY-SAMPLE for each unaddressed question; code timestamped comments relative to the dinner chapter for question (a).
+- E5: Write reception.md per the write plan; record the §9 hand-off entry for video-digestion in this RUN.
+
+### Verify checklist (instruments named, per §2.4)
+- V1 Separation audit: grep reception.md for craft-verdict language; packet craft cited by pointer only (mechanical guard 2, guards/guards.md).
+- V2 Date audit: every count in reception.md carries capture date + source (mechanical guard 1).
+- V3 Sample audit: theme counts re-add to the declared returned N; sampling rule in reception.md matches this §2 rule (mechanical guard 3).
+- V4 Absence honesty: every §1 absence appears in reception.md as an absence.
+- V5 jev-reception fires on the finished reception.md before filing; verdict + disposition recorded here and in verdict-history.md.
+
+### Failure-point evaluation (§2.4)
+Headed by the founding risk — **craft-pricing leaking into a reception claim**: (a) through signal choice — the §9 hand-over questions are the leak vector this cycle: they originate in craft findings (the packet's §6c B1 retention risk; its evidence-game design); mitigation: each is priced only from returned comment evidence, coded after themes, and prints UNANSWERED-BY-SAMPLE if the sample is silent; (b) through theme coding — no theme category is pre-named after the packet's craft sections; categories are induced from returned text; question (c)'s three candidate artifacts are checked as *repetition in comment text*, not assumed as themes; (c) through a pre-drafted headline — no headline figure is drafted in this Plan; the §10 headline is re-read from reception.md at report time.
+Then: **single-capture/no-velocity** — capture 2 is a gated test ~10 h after capture 1 on a 4-day-old video; the delta is reported as measured, not dressed as a trend. **Partial comment access** — displayed count is 72; extraction may return fewer (deleted/held comments, or only top-level threads); themes are reported with N printed beside every theme, and no audience-wide language is permitted beyond the sample. **Missing base** — base at posting NOT ON FILE; spread uses capture-time base with the distortion named. **§9 hand-off path** — this packet's reception slot is §9, not §8; the hand-off entry must name §9 explicitly so video-digestion updates the right section.
+
+### Plan-exit gate (§2 gate out) — FIRED (both calls)
+- **codex-plan-review** fired via `codex exec -` (one stream: guard file + RUN Observe/Plan). Raw return persisted verbatim at `codex-plan-review-return.md`. Findings: no finding on all five hunts (craft-price leak · sampling gaming · unpriceable arithmetic · inference dressed as data · hand-off break). Disposition: APPLIED — no amendment required; the return is consumed beside jev-plan-exit below.
+- **jev-plan-exit** fired through a fresh judge agent on the Plan. Raw return persisted verbatim at `jev-plan-exit-return.md`. **Verdict: EXECUTE** — separation-plan integrity 1.00 · signal traceability 1.00 · sampling-rule precedence 1.00 · baseline reality 1.00 · checklist completeness 1.00 · failure-point pricing 1.00. All four §6 exemplars classified correctly. Disposition: APPLIED — Execute opens under this profile.
+Gate out (§2): signal set + sampling rule + write plan — DONE above.
+
+## §3 — Execute
+_(opens under the jev-plan-exit profile cited above: EXECUTE, all dimensions 1.00)_
+
+### E1 — Counts captured raw (checklist E1)
+- Capture 1 (baseline, re-read from the packet this cycle): **views 18,750 · likes 469 · comments (displayed) 72 · subscribers 3,190**, captured 2026-11-15T00:42:00-05:00 (counts, post.json owner capture; builder re-read 00:50 identical) / base ~00:50 (meta.json, yt-dlp). Uploaded 2026-11-11. The post.json pair also gives an 8-minute zero-delta observation (codex-observe finding 1) — recorded as a baseline note, not velocity.
+- Capture 2 (this cycle): yt-dlp `--dump-single-json` re-read of the same video id, retrieved 2026-11-15T11:11-05:00: **views 21,308 · likes 508 · comments (displayed) 79 · subscribers 3,290**. Same video id jkDBk8QFcyY — same specimen confirmed.
+- Velocity (capture 2 − capture 1, ~10.4 h apart): views **+2,558** (+13.6%) · likes **+39** (+8.3%) · displayed comments **+7** · subscribers **+100** (+3.1%). Measured over a ~10-hour daytime interval on a 4-day-old video; reported as measured, not as a trend (Plan failure-point pricing).
+
+### E2 — Comment access test + sample (checklist E2)
+- Access test SUCCEEDED: yt-dlp comment extraction for jkDBk8QFcyY returned comment text (read-only; no engagement, §6.5).
+- Sample under the §2 rule (attempt ALL displayed; displayed = 79 at capture 2): extraction returned **70 of 79 — shortfall of 9**, printed per the rule. The extraction log shows incomplete-data retries on some reply threads, consistent with partial reply-thread retrieval; no theme claims the missing 9. Sample saved as evidence at `comments-sample.json` in this run directory (14,102 bytes, 70 entries, sha256 13a52d559c3690b5a4d19f3f954609eb661e6d42638d96f3e3c62632b17463db).
+- Creator's own comments in sample: **4 of 70** (@thegoodtakeoff: 1 pinned support/course post + 3 replies, two answering the whispering feedback). Coded as their own class and excluded from audience-response claims (Cycle-002 precedent). Audience sample = 66.
+
+### E3 — Spread arithmetic (checklist E3, arithmetic shown; base = subscribers at capture, distortion named)
+Distortion carried on every figure: the base is priced at capture (2026-11-15), four days after upload (2026-11-11); base at posting is NOT ON FILE.
+- Capture 1: views per subscriber = 18,750 / 3,190 = **5.88** · likes per view = 469 / 18,750 = **2.50%** · likes per subscriber = **0.147** · comments per view = 72 / 18,750 = **0.38%**.
+- Capture 2: views per subscriber = 21,308 / 3,290 = **6.48** · likes per view = 508 / 21,308 = **2.38%** · comments per view = 79 / 21,308 = **0.37%**.
+- Reading (reception only): the video reaches well beyond its subscriber base in views (5.88× at capture 1, 6.48× at capture 2, base +100 in the interval) while converting views to visible interaction at low rates (~2.4–2.5% likes, ~0.4% comments).
+- Shares: ABSENT (not publicly displayed). Dislikes: ABSENT. No figure claimed for either.
+
+### E4 — Comment themes (checklist E4; coded from the E2 sample only)
+Coding method: every returned comment assigned ONE primary theme; counts re-add to the sample (Verify V3). Audience N = 66, creator N = 4, total 70.
+| # | Theme | Count | Notes |
+|---|---|---|---|
+| 1 | Voice complaints — whispering, volume variation, shifting accent | 16 of 66 | Most-liked audience comment in the sample (63 likes) is in this theme. |
+| 2 | World-logic pushback & distribution skepticism | 19 of 66 | Institutions persist · benefits not shared · vision unambitious · propaganda/delusion dismissals · expectation mismatch. |
+| 3 | Scene-specific engagement & extensions | 10 of 66 | Tutor hour · 12:00 loyal agent · translation moment · school/socialization · relative-utopia extension. |
+| 4 | Peer-to-peer debate & short reactions | 14 of 66 | IQ chain · rebuttals · short agreements · peer support. |
+| 5 | Praise & endorsement | 6 of 66 | Channel potential · relaxing · hope/longing · dream endorsement. |
+| 6 | Empty / no codable text | 1 of 66 | One returned comment carries no text; counted, no claim made. |
+Creator's own comments: 4 of 70 (own class).
+- **§9 hand-over question (a)** (dinner chapter 305–552 s): **PARTIALLY ANSWERED** — 3 timestamped comments in the sample: 1:40 (100 s, before), 4:45 (285 s, before), 7:30 (450 s, inside the chapter, negative). None after 552 s. No holding-across claim is made.
+- **§9 hand-over question (b)** (evidence-game uptake): **PARTIALLY ANSWERED** — counterfactuals/extensions YES (brain-interface alternative, agent-law proposal, relative-utopia reframing); error reports / seed corrections NONE FOUND; no pinned correction among returned creator comments.
+- **§9 hand-over question (c)** (repeated artifact): **ANSWERED for this sample — scenes.** No returned comment repeats the three questions or the thesis line; repeated artifacts are individual scenes/hours.
+- Retention-shaped evidence: 3 timestamped comments (above), labeled inference only; public retention data ABSENT (named, §1).
+
+### E5 — reception.md written + §9 hand-off (checklist E5)
+reception.md written beside the packet (9672 bytes at draft, sha256 b8e8fc110d9a3806ce9448c8d9836ed52d0ab88874d09a6bdf84960991f863c5). Hand-off entry for video-digestion stands at the close of this RUN (§3 gate out, after Verify).
+
+## §5 — Verify
+
+- **V1 Separation audit (mechanical guard 2):** grep of reception.md for craft-verdict language — only hit is the opening pointer citation (craft cited by pointer, explicitly not restated/re-judged). Themes report commenters' own complaints as reception evidence, priced as reception liabilities, not analyst craft verdicts. PASS.
+- **V2 Date audit (mechanical guard 1):** every count in reception.md carries capture date + source (capture 1: 2026-11-15T00:42-05:00, post.json/meta.json; the 00:50 re-read; capture 2: 2026-11-15T11:11-05:00, yt-dlp re-read). All counts re-read from captured sources this cycle. PASS.
+- **V3 Sample audit (mechanical guard 3):** theme counts re-add — 16 + 19 + 10 + 14 + 6 + 1 = 66 audience + 4 creator = 70 = returned sample N; sampling rule in reception.md ("attempt ALL displayed comments") matches §2's rule set before any comment was read. The 70-of-79 shortfall is printed in reception.md. PASS.
+- **V4 Absence honesty:** every §1 absence appears in reception.md as an absence — shares ABSENT · public retention ABSENT · dislikes ABSENT · base at posting NOT ON FILE · repost/quote surfaces UNTESTED · adjacent posts NOT IN PACKET · retention proxies = the 3 timestamped comments, labeled inference · §9 questions (a) PARTIALLY ANSWERED · (b) PARTIALLY ANSWERED (corrections NONE FOUND) · (c) ANSWERED for this sample. PASS.
+- **V5 jev-reception:** FIRED on the finished reception.md via a fresh judge agent. Raw return persisted verbatim at `jev-reception-return.md`. **Verdict: FILE** — separation 1.00 · sampling honesty 1.00 · count integrity 1.00 · claim binding 1.00; all three §6 exemplars classified correctly. Disposition: APPLIED — FILE. No advisory correction was required (contrast Cycle-003, where one lesson sentence was cured).
+- **Manual separation panel + mechanical guards:** guards 1–3 demonstrated this cycle (see V1–V3); guard 2's quarantine grep clean per V1.
+Gate out (§5): four audits recorded + jev-reception FILE → reception.md stands filed beside the packet (9672 bytes, sha256 b8e8fc110d9a3806ce9448c8d9836ed52d0ab88874d09a6bdf84960991f863c5). verdict-history.md updated with this cycle's guard firings.
+
+### §3 gate out — §9 hand-off entry to video-digestion
+**To video-digestion (packet 2026-11-15-yt-jkdbk8qfcyY, §9 Reception link):** reception-analysis Cycle 004 is closed. Reception record: [reception.md](reception.md). Dated public counts and returned-comment sample; coverage limits and unavailable data are stated in the record. Headline figures (re-read from reception.md at report time): 21,308 views at capture 2 (2026-11-15 11:11 EST), 6.48 views per subscriber on a 3,290-subscriber base (5.88 at capture 1); velocity +2,558 views / +100 subscribers in ~10.4 h; comment sample 70 of 79 displayed returned (shortfall 9, printed); themes 6 over audience N=66 — voice complaints 16 · world-logic pushback 19 · scene-specific engagement 10 · peer debate 14 · praise 6 · empty 1; creator comments 4; §9 questions: (a) PARTIALLY ANSWERED (3 timestamped comments: 2 before the dinner chapter, 1 inside it, none after), (b) PARTIALLY ANSWERED (counterfactuals yes, corrections NONE FOUND), (c) ANSWERED — scenes, not the three questions or thesis line; public retention data ABSENT. This job did NOT edit digest.md.
+**Next queue note:** Packet #3 (2026-11-14-yt-o1fsb1nyewi, Epochs in Ink) still lacks a reception.md; it becomes this job's queue head once its adoption lands (per QUEUE.md its adoption is the next digestion act).
+
+## §9 — Condense
+
+### Candidate lessons (labeled)
+1. **DEMONSTRATED (single-cycle) — a packet's own post.json can already contain a second capture.** codex-observe finding 1: the owner capture + builder re-read pair (8 minutes apart, identical) was inventoried by the analyst as no second capture at all. Lesson: the Observe inventory must check captured sources for *multiple* capture stamps before printing velocity PENDING. Promoted to INSTRUCTION §1 this Condense (amendment A1 below) in general form: inventory every capture stamp present in the captured sources, not only the headline one.
+2. **DEMONSTRATED (single-cycle) — attempt-all extraction can return a partial sample on YouTube reply threads.** Extraction returned 70 of 79 displayed, with incomplete-data retries on reply threads in the log. The sampling rule absorbed it lawfully (shortfall printed, no theme claimed the missing 9), and jev-reception scored sampling honesty 1.00 on that basis. No instruction change needed — §2.2's attempt-all + shortfall-print form is now proven on a partial return (C002: 233 of 250 on Instagram; C004: 70 of 79 on YouTube). NO-DEFECT for the step text.
+3. **CANDIDATE — theme citations gain claim binding from per-comment pointers** (carried from Cycle-003 lesson 4). This cycle jev-reception scored claim binding 1.00 with the standing §3.3 form (count + paraphrased evidence) and raised no per-comment-pointer deduction. The candidate therefore does NOT advance: two consecutive cycles now split (C003 deduction 0.95 · C004 no deduction). Carried once more; if the deduction returns, §3.3's form gains "author handle as pointer" by amendment.
+4. **Signal demotion ledger (§9 rule):** spread-vs-base — usable lesson C002 + C003 + C004 (3 consecutive). Comment themes — usable C002 + C003 + C004 (3). Velocity — usable C002 + C003 + C004 (3). Interaction ratios — usable C003 + C004 (2 consecutive under this name). Retention-shaped proxies (comment time-references) — proxies FOUND in C002 and C004 (3 timestamped comments this cycle, priced as labeled inference), NONE FOUND in C003 — the consecutive-empty streak is therefore 0 (broke at C004). No demotion this cycle.
+5. **DEMONSTRATED — the firing model holds for a second consecutive fully-fired cycle (C003 + C004; corrected per codex-condense finding 5 — C002's Jev layer was UNARMED, so no longer streak is claimed).** All six prescribed calls fired firsthand this cycle (3 Codex via `codex exec -` one-stream, incl. codex-condense below · 3 Jevs via fresh judge agents), every exemplar set classified correctly (jev-observe-exit 4/4 · jev-plan-exit 4/4 · jev-reception 3/3), and the advisory model produced real movement: codex-observe corrected the inventory's velocity claim, jev-observe-exit bound six gaps into the Plan, jev-reception filed the record at 1.00 across all dimensions with no cure required.
+
+### Amendments promoted (diffs)
+- **A1 — INSTRUCTION §1** (lesson 1): inventory line added — every capture stamp present in the captured sources is inventoried (a packet's post.json may carry an owner capture + a builder re-read); velocity wording distinguishes an existing short-window observation from a pending meaningful-interval capture.
+
+### Four-layer iteration (§9 standing)
+1. **Instruction steps:** amended (A1 above).
+2. **Mechanical guard commands:** NO-DEFECT — all three demonstrated this cycle (V2 date audit · V1 quarantine grep · V3 sampling re-add, this time on a partial return) with no silent failure; no command change.
+3. **Jev definitions (jev-reception · jev-observe-exit · jev-plan-exit):** NO-DEFECT — all three fired, verdicts earned, exemplar sets 4/4, 4/4, 3/3 correct; no definition change this cycle.
+4. **Codex prompts (codex-observe · codex-plan-review · codex-condense):** NO-DEFECT — codex-observe produced an applied correction, codex-plan-review returned no finding on a Plan that then scored 1.00 at jev-plan-exit, codex-condense's return is consumed in the closing addendum below.
+
+### Judgment-layer presence evaluation (standing section, INSTRUCTION foot)
+All judges this cycle's deliverable demanded are hosted in this job's own `guards/` and fired this cycle: jev-observe-exit · jev-plan-exit · jev-reception · codex-observe · codex-plan-review · codex-condense (firing below) · mechanical guards 1–3 (all demonstrated). Currency: amendment A1 landed this Condense; Jev/Codex definition layers carry NO-DEFECT lines with evidence above. No demanded judge is missing or stale. Final verdict printed after codex-condense consumption in the closing addendum.
+
+## §7 — Faithfulness trace
+
+### Trace table
+| § | Product | State |
+|---|---|---|
+| §1 Observe | craft citation (pointer) + inventory with absences named; codex-observe FIRED (1 finding applied); jev-observe-exit FIRED → ADVANCE-WITH-GAPS, applied | ACCOUNTED |
+| §2 Plan | signal set (2 existing + 3 gated tests) + attempt-all sampling rule + write plan + Execute/Verify checklists + failure-point evaluation; codex-plan-review FIRED (no finding); jev-plan-exit FIRED → EXECUTE (all 1.00) | ACCOUNTED |
+| §3 Execute | E1 two captures raw (+ the 8-minute baseline observation) · E2 extraction 70/79, shortfall printed · E3 arithmetic shown · E4 themes re-adding to 70, §9 questions (a) PARTIALLY · (b) PARTIALLY · (c) ANSWERED · E5 reception.md + hand-off entry in this RUN | ACCOUNTED |
+| §5 Verify | V1–V4 audits PASS + jev-reception FIRED → FILE (all dimensions 1.00, no cure required) | ACCOUNTED |
+| §9 Condense | lessons labeled, A1 promoted, four-layer review, judgment-layer verdict finalized in the closing addendum; codex-condense fired below | ACCOUNTED |
+
+### Choice log (≥2 alternatives)
+1. **Queue head:** Packet #4 (newest landed + adopted, lacking reception.md) CHOSEN over Packet #3 (built 2026-11-14, adoption still pending per QUEUE.md — not yet landed) and over the School of Motion packet (no digest.md — in flight, not a landed packet). The body charge names the newest landed packet; P4's §9 charges this job explicitly.
+2. **Second-capture instrument:** yt-dlp `--dump-single-json` (the packet's own capture instrument, per its production-record) CHOSEN over (a) a live browser page read — YouTube pages do not reliably expose exact counts/subscriber base as text, and (b) no second capture — would have forfeited velocity.
+3. **Jev firing form:** fresh judge agents executing each call file's §2+§3 on the masked FED set (lane form, bound in Cycle-003 Condense A4) — standing form, no alternative priced this cycle.
+4. **codex-observe correction:** applied (existing 8-minute second observation inventoried) vs set aside — applied; the correction is written into §1 and this log.
+
+### Deviation register
+EMPTY-BY-CHECK — checks run: phase order (no Execute step precedes its gate verdict in this record's order) · sampling-rule precedence (rule stands in §2, written before E2's extraction) · prescribed firings (6/6 fired, raw returns on file) · write locations (reception.md beside the packet; digest.md untouched — verified: no edit call touched it this cycle) · no engagement (§6.5: read-only extraction only).
+
+### Evidence binding
+- reception.md — packet dir, 9672 B at filing, sha256 b8e8fc110d9a3806ce9448c8d9836ed52d0ab88874d09a6bdf84960991f863c5.
+- comments-sample.json — this run dir, 14,102 B, 70 entries, sha256 13a52d559c3690b5a4d19f3f954609eb661e6d42638d96f3e3c62632b17463db.
+- codex-observe-return.md · codex-plan-review-return.md · jev-observe-exit-return.md · jev-plan-exit-return.md · jev-reception-return.md — this run dir, verbatim returns.
+- Capture 2 figures — yt-dlp output read in this cycle's Execute (2026-11-15T11:11-05:00 stamp recorded in E1).
+
+### Git corroboration
+Corroboration for this lane runs through the departments-repo JOB-14 sync route (lane AGENTS.md: Cycle 277 was the first sync carrying lane files); this cycle's files stand staged-in-place for that route, and this record prints them NOT-YET-SYNCED, never as synced.
+
+### Size discipline (§8)
+One specimen, one cycle — norm held. No sweep attempted.
+
+### Closing addendum — codex-condense consumption (finalizes §9)
+codex-condense FIRED on this closing record + the A1 diff summary + verdict-history. Raw return persisted verbatim at `codex-condense-return.md`. Dispositions:
+- Finding 1 (literal-diff verification gap) — APPLIED as a verification charge and CLOSED here: the feed carried a summary, so the installed wording is quoted literally for the record: INSTRUCTION §1 item 2 now ends "CAPTURE-STAMP COMPLETENESS (amendment 2026-11-15, Cycle-004 specimen P4 — codex-observe caught the analyst inventorying only the headline capture while post.json carried an owner capture + a builder re-read 8 minutes apart): inventory EVERY capture stamp present in the captured sources, not only the headline one; velocity wording distinguishes an existing short-window observation (which may show a zero delta) from a pending meaningful-interval capture — "velocity PENDING" alone, when a second stamp stands on file, is a false absence." The wording was installed by the runner's own edit this Condense and matches lesson 1's intent (stamp completeness + false-absence wording).
+- Finding 2 (premature clearance) — APPLIED: the Codex-layer NO-DEFECT line and the judgment-layer verdict in §9 above stand as pre-consumption prints; the FINAL verdict is printed only here, after this consumption (the Cycle-003 pattern).
+- Finding 3 — no finding (separation erosion: none).
+- Finding 4 (demotion-ledger criterion) — APPLIED, ledger recomputed on the governing criterion (no *usable lesson* in three consecutive cycles): retention-shaped proxies — C002: proxies found AND produced a usable lesson (timestamp references priced as labeled inference of late-moment reach; RUN C002 E5) · C003: none found, no lesson (streak 1) · C004: proxies found AND produced a usable lesson (the §9(a) partial answer on the dinner chapter, priced in reception.md) → no-usable-lesson streak = 0 on the correct criterion as well. The other signals' lines in §9 lesson 4 already stand in usable-lesson terms. No demotion.
+- Finding 5 — APPLIED in full: (a) lesson 5's recurrence claim corrected in the §9 body above to the second consecutive fully-fired cycle (C002's UNARMED state is the bound); (b) verdict-history.md updated this Condense with all six C004 firing rows, this codex-condense row appended after consumption (the §5 gate-out line anticipated the update before it landed; the rows now stand).
+**JUDGMENT LAYER: COMPLETE** — finalized after codex-condense consumption: every judge demanded this cycle is hosted in guards/, current (A1 landed; NO-DEFECT lines evidenced), and fired with raw returns on file (6/6).
+Cycle 004 CLOSED.

@@ -1,0 +1,15 @@
+**Verdict: FILE**
+
+**Dimension scores**
+- Craft/reception separation: **1.00** — No sentence prices craft from engagement or engagement from craft. The craft-adjacent themes (AI-era framing 21, how-made 4, ASMR/sound 3) are phrased strictly as commenter reactions; the only craft contact is the header pointer to digest.md §§1–7. The packet §8 line ("Reception: not yet run — charged to reception-analysis") is honoured — nothing is claimed about craft.
+- Sampling honesty: **1.00** — Rule stated in the RUN §2.2 Plan before any text was read: cap 400 pre-registered (displayed 80,000 > ~1,000 trigger), first successful route only, returned 400 capped. E5 freeze record: metadata-only selection before any text opened, top-100 by like_count (1,700 → 1) + 50 most recent, 14 in both slices, sample N=136. Draft restates this rule verbatim in scope and prices themes as "this frozen sample of the returned 400 only — never the displayed population."
+- Count integrity: **1.00** — Every figure sourced and stamped. Capture 1 (epoch 1794974347, 2026-11-18T03:59:07+00:00): 495,478,875 views · 3,119,792 likes · 80,000 displayed comments · 4,450,000 base — post.json and source.info.json agree. Capture 2 (epoch 1795018299): 495,490,491 views · 3,119,890 likes, 12.21 h window (43,952 s, recomputed). Deltas recompute exactly: views +11,616, likes +98. Displayed 80,000 is printed as displayed/round throughout, never as an exact count; the Showtime 7,842,373 figure is attributed to its different upload, marked unverified, and used in no signal.
+- Claim binding: **0.95** — Every theme carries a count in the frozen sample plus paraphrased evidence (nostalgia 52 · AI-era 21 · praise 14 · check-in 14 · algorithm 10 · object/moment 7 · food 6 · how-made 4 · ASMR 3 · Oscar 1 · time-references 4), backed by coded ID lists in comments-theme-coding.json, distinct coded 118 ≤ N=136. RELATIVE-PROXY SCOPE passes: the heatmap is used comparatively only — the 0.0 segment (97.97–98.98 s) is printed as "near-zero relative intensity, a comparative statement only," with an explicit inference label barring retention/completion readings. RATIO SCOPE passes: 111.34 views/subscriber and 0.7011 likes/subscriber are printed as "count-scale comparisons at capture time only: views are not unique viewers," base-at-posting NOT ON FILE, no reach, spread-beyond-base, or posting-era claim. The 0.05 deduction is for the Reception lesson's synthesis ("a return audience, not a discovery audience"), the record's broadest sentence — it is, however, anchored in the same paragraph to the frozen-sample counts (52/136 nostalgia, 10 algorithm-resurfacing) and the capture-time-qualified ratio, so it is earned and requires no correction.
+
+**Primary rejection taxonomy:** none (not a REFUSE).
+**Corrections required:** none.
+
+**Exemplar classifications: 3/3 correct**
+1. Founding baseline record (Cycle-001, counts-only, no themes) → **FILE** ✓
+2. Constructed reception claiming "the mosaic title drove the likes" → **REFUSE — CRAFT-CONTAMINATION** ✓
+3. Constructed theme drawn from 5 comments presented as audience-wide → **REFUSE — UNSAMPLED-CLAIM** ✓
