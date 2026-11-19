@@ -1,0 +1,84 @@
+# Item T242 — Phase A (Observe + Plan) · Wave 38 · Cycle 041
+
+- **Item:** T242 — The 2% bar chart (a number drawn as a height insult) · queue #107 · FIRST ATTEMPT · Packet #14 (@ensan.besham "Hope = Failure (?)", IG DffiIpmMAC3, 155.617 s, 720×1280), packet-local T03 @ ≈6–18 s.
+- **Artifact directory:** `hidden_files/study/recreations/T242-two-percent-bar-chart/`
+- **Segment window (source):** technique ≈6–18 s per digest §T03 + style-library techniques-diagrams.md §T242. Cut at Execute: 5.5–18.5 s (±0.5 handles) → 13.0 s segment.
+- **Schedule basis (A7):** **segment-anchored** — build t=0 = segment start = source 5.5 s; every phase sits at its measured segment-relative time (census table below). No re-basing.
+- **Bar (standing §2.3):** five-lens average ≥85 AND min ≥70 → PASS else FAIL; two jev-prewave HOLDs = NO VERDICT.
+- **Consumer:** DLC assembler diagram containers (task charge; digest §2 diagram container surface).
+
+## §1 — OBSERVE
+
+- **Queue state:** QUEUE.md Wave-37 update + RUN.md §0b/§1: T242 OWED #107, DESCRIBED, first attempt owned by recreation (A3 §3). No prior attempt, no scores.md, no family sibling scored for this exact technique (T241/T243 are same-packet neighbours, unscored).
+- **Catalogue mechanics (read firsthand):** digest §T03 + register §T242 agree: four tall empty bar outlines rise to a 100% axis; a tiny filled stub labelled 2% appears at the base of the first bar while the star figure stands at the right at full height; height ratio felt before statistic understood. Evidence ev/010-two-percent-bars.jpg viewed firsthand (sha f1dd07ae…): black field, white linework, 4 empty outlines, axis ticks 100%/50%, stub+2% label in bar 1, star figure at right standing on the baseline, figure height ≈28% of bar height (NOT bar height — "full height" in the prose = the figure's own full standing height; priced here from the frame).
+- **Firsthand census corrections/extensions to the digest prose (binding):** (1) The bar scene is preceded at 5–6 s by the T241 board/array — not part of T242. (2) Bars DRAW ON at ≈7 s (fine-7000: outlines incomplete, 4th bar partial) and are complete empty by 8 s with NO stub yet. (3) Stub 1 lands between 8–9 s. (4) A SECOND identical 2% stub lands in bar 2 between 10–11 s (the "I wait for the 2%" pair). (5) By 14 s stubs stand in bars 1–3 AND bar 4 is FILLED SOLID to 100% with a 100% label above it (the "you wait for 100%" payoff) — the digest's single-stub description is the opening state, not the settled state; the build implements the full measured sequence: empty rise → stub1 → stub2 → stub3 + full-fill bar 4. (6) Bars exit by ≈16 s (next scene); settled bar state holds ≈14–15.5 s.
+
+### Motion census (A10.3 — frames in artifact census/, from source.mp4, viewed firsthand)
+Seg-rel = source − 5.5 s.
+
+| CP | File | Seg-rel ms | Source s | SHA-256 (full) | State |
+|---|---|---|---|---|---|
+| CP0 | fine-5000.jpg | −500* | 5.0 | 14cfe429d842379c2b4e7a161ce2cd20b28e0e809f9022c03c90fb3dc2390cd3 | Prior board (T241) — NOT T242 (*pre-window fine frame, context only) |
+| CP1 | census-6000.jpg | 500 | 6.0 | c4214a947e634943674befcafbf46ecada5b2f33f5a2cfa249bfbff3bc8630fd | Population array transition — bars not yet present |
+| CP2 | fine-7000.jpg | 1500 | 7.0 | 6da3425805a15c8ce5215f7b7727d878094f5d88d4e60aa86314029425a01ef1 | Bars DRAWING: bars 1–3 outlines near-complete, bar 4 partial (right edge descending) |
+| CP3 | census-8000.jpg | 2500 | 8.0 | 5e43425d065b941e18eb30113edee5fe14bd0460f51158b190264b8d83e35730 | All 4 empty outlines complete; axis 100%/50%; figure at right; NO stub |
+| CP4 | fine-9000.jpg | 3500 | 9.0 | 54b926218278a25e14027748a39e6eec3dee99f7fee7fbc0b28bef3365942065 | Stub 1 present in bar 1 with 2% label above it (= ev/010 state) |
+| CP5 | census-10000.jpg | 4500 | 10.0 | 62ce5c8ee2b8c35d3073b84392cffd9dddd0074813d0eb49fc9f834821a2a8bc | Hold: stub 1 only |
+| CP6 | fine-11000.jpg | 5500 | 11.0 | baa5b80864e6b0eadbdeda91af404f736541f12895c009d5b7a5056c421d26ea | Stub 2 present in bar 2 (2% label) |
+| CP7 | census-12000.jpg | 6500 | 12.0 | edd3e2bcd49a72439dd6ac92fb9c4809e12bd6e55df70ccf115a98d0dffb23bd | Hold: stubs 1–2; second group label appears under bars 3–4 |
+| CP8 | census-14000.jpg | 8500 | 14.0 | 7e855695c4744734eab67da2f2c30d4340a20864c3a8699fa0a698a4d48962c9 | Stub 3 in bar 3; bar 4 FILLED SOLID full height, 100% label above bar 4 |
+| CP9 | census-16000.jpg | 10500 | 16.0 | 4c67eea847616a8bf737cf73fcbeaed1633ff1b0544d03c55ec3683e035c3ddd | Bars GONE — next scene (ramp) — bar scene has exited |
+| CP10 | census-18000.jpg | 12500 | 18.0 | 6151aa38842060f12bbd2db61541cd2e9df2c9be39809b35d044432b09b40e5f | Calendar scene (T243) — post-window context |
+
+**Motion findings:** motion instants — bar draw-on ≈1000–2500 · stub1 ≈2500–3500 · stub2 ≈4500–5500 · stub3+full-fill ≈6500–8500 · exit ≈9500–10500. Holds — empty bars 2500 (instant) · stub1 state 3500–4500 · stubs1–2 5500–6500 · settled full state 8500–9500. Changes: outlines grow from baseline · stub is a filled rect of height = percent × axis height (2% ≈ 7px on a 340px axis — the insult is literal) · full fill grows to 100% inside bar 4's outline.
+
+### Variables (§1.3 — every one becomes a CONFIG key)
+barCount, barHeightsPct[] (per-bar axis %), stubPercent, stubBarIndices[] (which bars get stubs), fullBarIndex, axisMaxLabel/axisMidLabel, stubLabel, fullLabel, barLabels[], groupLabels[], riseStartMs/riseDurMs/riseStaggerMs, stubDurMs, stubGapMs, fullStartOffsetMs/fullDurMs, figureStartMs/figureDurMs, holdMs, fadeDurMs, palette {bg, line, fill, label}, geometry {stageW/H, axisX, axisTopY, axisHeightPx, barW, barGap, groupGap, figureX, figureH}, type {axisFontPx, stubFontPx, barLabelFontPx, groupFontPx, fontFamily}, strokePx, rngSeed (deterministic, no RNG motion — present for census form).
+
+## §2 — PLAN
+
+### Parameter table (CONFIG defaults = specimen values)
+stage 640×800 (phone-proportioned crop of the diagram zone); axisHeightPx 340; barCount 4; barHeightsPct [100,100,100,100]; stubPercent 2; stubBarIndices [0,1,2]; fullBarIndex 3; labels: axis "100%"/"50%", stub "2%", full "100%", barLabels ["Chance","Waiting","Chance","Waiting"], groupLabels ["ME","YOU"]; palette bg #000000, line #ffffff, fill #ffffff, label #ffffff; timings per schedule table below.
+
+### Census-anchor mapping (A10.2) — segment-anchored, offset 0 (build t = seg-rel)
+| Build phase | CONFIG expression | Instant (ms) | Census anchor |
+|---|---|---|---|
+| rise start (bar i) | riseStartMs + i×riseStaggerMs | 1000 + i×300 | CP2 drawing @1500 |
+| rise complete (last bar) | riseStartMs + 3×riseStaggerMs + riseDurMs | 2800 | CP3 complete @2500 (build 2800, +300 departure — inside draw-on measurement tolerance ±0.5 s, printed) |
+| stub k lands | stub1StartMs + k×stubGapMs (+stubDurMs) | 2900/4900/6900 +400 → completes 3300/5300/7300 | CP4 @3500 · CP6 @5500 · codex-observe frame @ source 13 s (seg-rel 7500): stub 3 visible, bar 4 still empty |
+| full fill complete | fullStartMs + fullDurMs (fullStartMs = stub3Complete + 400) | 7700+900=8600 | CP8 @8500 (+100, within tolerance) |
+| settled hold end | holdEndMs = fullComplete + holdMs | 10200 | codex-observe: fill clears source 15–15.5 s (seg-rel 9500–10000), outlines remain, chart exits 15.5–16 s; build fades 10200–11200 |
+| duration | durationMs | 13000 | segment length 13.0 s |
+
+### Construction
+SVG/DOM single stage, pure `stateAt(cfg,t)`, CONFIG at top, `window.__T242` exposed. Bars = SVG rect outlines whose height grows from baseline (clip via height), stubs = filled rects height = stubPercent/100 × axisHeightPx, full fill = filled rect growing inside bar 4, figure = SVG line-icon (circle head, body path, 4-point star) fading in. Rejected: canvas particle system (no particles in specimen — wrong machinery); CSS keyframes (not scrubbable/state-pure for harness + comparison slave clock); traced frame sequence (refusal class §6.1).
+
+### Swap values
+Content: stubPercent 2→7, stubLabel "2%"→"7%", groupLabels ["ME","YOU"]→["US","THEM"], barLabels changed. Timing: riseDurMs 900→1500 (moves rise-complete instant + A11 instant). Palette: palette.fill #ffffff→#ffb02e, palette.line #ffffff→#7fd4ff.
+
+### Failure points (priced)
+Stub height 2% of 340px = 6.8px — sub-legible as a *bar* by design; its LABEL carries readability (fit leg prices the label, not the stub). Full-fill timing grouped with stub3 risks muddying order (mitigation: stub3 lands 400ms before fill starts). Persian labels in specimen are specimen text — recreation uses parameterized Latin labels (production consumer is English DLC); priced as content parameterization, not a defect. Exit fade is an allocation (census shows a cut to next scene, not a fade) — named departure: build fades because the comparison loops; the fade sits after holdEnd.
+
+### Execute checklist
+1. Cut segment.mp4 5.5–18.5 s h264+AAC, ffprobe+sha. 2. Build recreation.html (CONFIG-driven, no specimen assets, no captions). 3. Build comparison.html (labels verbatim per task, one sync control set, phone stacking). 4. Harness node harness-t242.js: A11 assertions + swaps + purity + syntax.
+### Verify checklist
+Swap test (values above, exact) · purity grep (segment.mp4|source.mp4|<video|<img|DffiIpmMAC3) 0 hits in recreation · A6 fit-table (PIL DejaVu Sans Bold PROXY) + config-census · A11 receipts + A13 RECEIPT INDEX in build-record.md · jev-prewave (HOLD→cure once→re-fire once; 2nd HOLD = NO VERDICT) · five-lens Codex wave on FIRE-WAVE · scores.md arithmetic shown.
+
+## §2b — Gate dispositions (Phase A)
+
+- **codex-observe: CONFIRMED-WITH-GAPS** (return filed `item-T242-codex-observe-return.md`). Applied: (1) stub 3 is visible at source 13 s BEFORE the full fill — schedule separates stub 3 (completes 7300) from full fill (starts 7700, the 400 ms gap the failure-point note claimed — the mapping inconsistency the jev-observe-exit gate caught is cured in the table above); (2) fill clears at source 15–15.5 s while outlines remain, chart exits 15.5–16 s — hold/fade re-anchored (holdEnd 10200, fade to 11200); (3) first-attempt status and cut feasibility confirmed.
+- **jev-observe-exit: RETURN-TO-OBSERVE, primary GUIDANCE-DROPPED (guidance-carried 0.0).** Cure applied inline here per A9.5: **Construction-guidance applicability for T242** — T242 animates chart geometry (SVG rect outlines/fills) and uses text only as configurable labels; it is NOT a typography-formation technique, so Amendment A1 §2's runtime text-sampling precedent does NOT apply (no letterforms are formed by particles/sampling). It has NO particle field and NO phrase lifecycle, so Amendment A5's flow-field model and Owner Cures 1 (foreground/background intensity separation) and 2 (strict phrase sequencing) do NOT apply as particle/phase law; the analogous discipline carried is phase exclusivity in time: only one growth event (rise, one stub, or the full fill) animates at any instant — events are strictly sequenced, never overlapping. All other dimensions scored 1.0; consumer-named 1.0 (DLC assembler diagram containers).
+- codex-plan-review + jev-plan-exit: fired after these cures; dispositions recorded below before any build (A9.2).
+
+- **codex-plan-review: REVISE** (return filed `item-T242-codex-plan-review-return.md`). All cures applied to the Plan/build contract:
+  1. **Sequential phase derivation (no overlaps, swap-safe):** phases derive from previous phase end — `riseEnd = riseStartMs + (barCount−1)×riseStaggerMs + riseDurMs`; `stubStart(k) = riseEnd + stub1GapMs + k×stubGapMs`; `fullStartMs = lastStubComplete + fullStartOffsetMs (400)`; indices derived from `barCount`/`stubBarIndices.length`, never literal 3. Under the riseDurMs 900→1500 swap every later phase shifts with it; harness asserts ≤1 active growth phase under both configs.
+  2. **Exit split into two CONFIG boundaries:** `fillClearStartMs 9500, fillClearDurMs 500` (solid fill + stubs clear while outlines remain — the codex-observe state) then `exitStartMs 10000, exitDurMs 500` (outlines+figure fade; chart absent by 10500 = CP9). No single-fade departure remains.
+  3. **Departures priced (A10.2):** bar-4 rise start 1900 vs CP2 drawing sampled @1500 — the frame is a mid-draw sample, start bounded 1000–1900, kept; rise complete 2800 vs CP3 complete @2500: +300 departure, kept (sampling tolerance, printed); full complete 8600 vs CP8 @8500: +100, kept.
+  4. **CONFIG completeness:** all layout/type values bound as keys in the build (stage, axis, bar geometry, figure geometry/timing `figureStartMs/figureDurMs`, `strokePx`, font sizes/family); `rngSeed` DROPPED (no RNG in this build — inert key removed rather than carried); swap barLabels exact: ["Odds","Wait","Odds","Wait"]; barCount change behaviour: bars lay out from axisX with barW/barGap/groupGap per index, stubs/full indices are list/index keys validated against barCount.
+  5. **Plateau/minimum prediction (A2):** no prior attempt; predicted minimum lens = timing (fleet analogue T162 timing 64 on census-contradicting schedules) — mitigated by the segment-anchored schedule + priced departures above; hypothesis: if timing still fails it will be on the draw-on sampling bounds, not phase order.
+
+- **jev-plan-exit: REVISE, primary UNBOUND-SCHEDULE** (return filed `item-T242-jev-plan-exit-return.md`). Cures applied — the Plan's schedule is REBOUND to satisfy the census states, superseding the §2 mapping table where they differ:
+  **Folded CONFIG table (all defaults, one place):** stageW 640, stageH 800, axisX 92, baselineY 560, axisHeightPx 340, barW 56, barGap 28, groupGap 84, barCount 4, barHeightsPct [100,100,100,100], stubPercent 2, stubBarIndices [0,1,2], fullBarIndex 3, figureX 520, figureH 96, figureStartMs 1000, figureDurMs 600, strokePx 2, axisFontPx 20, stubFontPx 22, barLabelFontPx 20, groupFontPx 26, fontFamily "Arial, sans-serif", palette {bg #000000, line #ffffff, fill #ffffff, label #ffffff}, riseStartMs 800, riseStaggerMs 200, riseDurMs 900, stub1GapMs 100, stubGapMs 2000, stubDurMs 400, fullStartOffsetMs 400, fullDurMs 900, fillClearStartMs 9500, fillClearDurMs 500, exitStartMs 10000, exitDurMs 500, durationMs 13000. Superseded keys: holdMs/holdEndMs/fadeDurMs (replaced by fillClear*/exit*).
+  **Derived schedule (default):** bar i draw start 800+i×200 (bar 4 @1400 — drawing at CP2 @1500 ✓); riseEnd 2300 (complete before CP3 @2500 ✓); stub k start 2400+k×2000, complete 2800/4800/6800 (CP4 @3500 ✓ · CP6 @5500 ✓ · stub 3 visible by source-13 s frame @7500 ✓); fullStart 7200, complete 8100 (CP8 @8500 ✓, −400 departure priced: fill completes inside the 6500–8500 bracket); group label 0 reveals at stub1 start 2400, group label 1 at stub3 start 6400 (CP7 @6500 ✓); fillClear 9500–10000; exit 10000–10500 (CP9 @10500 ✓).
+  **Construction cure:** bar outlines are PERIMETER DRAW-ON (SVG rect stroke with pathLength dash animation — the source draws the outline, right edge descending at CP2), not height growth; stubs and full fill grow from the baseline as filled rects. Perimeter-motion simplification beyond that: none.
+  **Verify additions:** fixed source-time C-probes at census instants (1500 bar4 drawing · 2500 rise complete · 3500 stub1 · 5500 stub2 · 8500 settled · 10000 fill cleared/outlines remain · 10500 chart absent) filed beside the movable CONFIG-derived A11 probes; asset inventory = recreation.html alone (explicit, empty of external assets); comparison procedure = shared play/pause/restart, video currentTime slaving recreation clock, duration 13.0 s both sides, labels verbatim, @media stacking check; jev-prewave fires after own checks + A6 legs, before the five-lens wave (motion · timing · purity · reusability · readability). Long-label behaviour: barLabels/groupLabels validated ≤12 chars, single-line, overflow hidden — fit leg measures the actual strings. No-browser limit prints in scores.md; comparison page is the render surface.
