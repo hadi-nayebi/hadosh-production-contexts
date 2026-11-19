@@ -1,0 +1,174 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1efbd-3863-7de3-a8cb-b056384e1678
+--------
+user
+TASK: You are the jev-observe-exit judge for the recreation job. Judge ONLY item T212's Observe record below, per the call definition that follows. Return ONE verdict per item (ADVANCE / ADVANCE-WITH-GAPS / RETURN-TO-OBSERVE) with the six dimension scores (0-1), the primary classification if returned, and named gaps. End with a BODY-WRITE: line.
+STANDING HEADER: (1) Consumer: recreation Cycle 038 Wave 35 §1 gate out for T212; decision priced: whether Observe can support a Plan. (2) Working record: runs/2026-11-18-cycle-038-wave-35/item-T212-observe-plan.md. (3) BODY-WRITE: return must end with a BODY-WRITE: line; read-only closes 'Body-write: none (read-only run)'.
+=== GUARD: jev-observe-exit ===
+# Jev call — jev-observe-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: a recreation wave may not enter Plan on a catalogue summary alone — Observe must have priced the queue, read the prior scores where they exist, seen the evidence frames, and carried the standing construction guidance into working memory._
+
+## 1. What it judges
+- Deliverable: the wave's Observe working memory — RUN.md gate-out block (§1: mechanics summary + sub-beat timings + variable list + named consumer) for each item in the wave (up to 5 owed items).
+- Call point: recreation INSTRUCTION §1, at the gate out of Observe, before §2 Plan opens for any item in the wave. The verdict is advisory per item: applied, a RETURN-TO-OBSERVE item is held out of the wave's Plan (the wave proceeds with its advancing items; a held item never holds the wave hostage — same rule as jev-prewave §5); set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Observe record can support a Plan for THIS recreation wave, item by item. Price, in order:
+(1) QUEUE STATE PRICED — does the record state the recreation queue's current position (../QUEUE.md read this cycle), each item's queue number and OWED status, and the ownership split (Amendment A3 §3: this job owns FIRST attempts; an already-scored technique belongs to practice — a wave item that is a re-attempt is a routing defect, named)? T15 is the standing example: attempt 1 scored FAIL 78.5 on 2026-11-13, so T15 attempt 2 is practice's charge, never this job's wave item.
+(2) PRIOR SCORES READ — for any item whose technique already has a scores.md or a verdict-history line (a techniques' family sibling counts: e.g. T16 shares T15's particle machinery), does the record cite the actual filed scores and cure list, or does it plan from the catalogue description alone? Planning that ignores a filed failure is the defect this leg exists to catch.
+(3) MECHANICS SEEN, NOT SUMMARIZED — does the record carry the packet section's mechanics + sub-beat timings from firsthand viewing of the evidence frames and the source segment in motion (§1.1–1.2), with timings in seconds — or only a restatement of the TECHNIQUES.md one-liner? A mechanic the builder has not seen is a guess (§1.1).
+(4) VARIABLES EXTRACTED — is the §1.3 variable list complete for this technique (text content, phrase count, timing/durations, palette, scale, direction, density — plus technique-specific variables), so Plan's parameter table has something to bind? A variable missing here becomes a hardcoded accident in Execute (§1.3).
+(5) CONSTRUCTION GUIDANCE CARRIED — where the technique's family has standing guidance, is it IN the working memory, named? For particle-field techniques: the flow-field model (Amendment A5 §4: one constant flow field, borrowing with low-amplitude jitter, never-borrowed reserve fraction, release with velocity continuity) AND Owner Cure 1 (foreground/background intensity separation riding the borrow flag) AND Owner Cure 2 (strict phrase sequencing / phase exclusivity). For typography techniques: the typography construction precedent (Amendment A1 §2: runtime sampling of config-rendered text). Guidance that exists in INSTRUCTION but is absent from the wave's working memory is scored as absent.
+(6) CONSUMER NAMED — §1.4: which production surface lifts this machinery (container type + owning lane), named per item, not "production generally."
+(7) CODEX/OWNER INPUTS — were any Codex calls fired in this Observe (e.g. a record audit of a prior attempt's codex/ returns) with receipts filed, or is the absence printed? Does the wave need owner-only information (it almost never does — recreation prices from packets and filed scores); if claimed, is it routed as a named gap rather than silently assumed?
+Score 0–1 per dimension (§4), classify defects from the taxonomy, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Observe gate-out blocks · ../QUEUE.md recreation-queue section (current) · each item's packet digest.md technique section + TECHNIQUES.md entry · prior scores.md + verdict-history.md lines for the item and its named family siblings · INSTRUCTION Amendments A1/A3/A5 guidance lines relevant to the item's family · any Observe-phase Codex receipts filed this cycle.
+- NEVER FED: the builder's confidence prose · HQ's supervision faces · scores from attempts not yet filed (unfiled scores do not exist).
+- Ceiling: ≤32k tokens; packet sections enter as the technique's section only, never the whole digest; evidence frames are referenced by path/timestamp, never fed as images (text-only judge).
+
+## 4. Output space
+- Verdict classes (per item): **ADVANCE · ADVANCE-WITH-GAPS · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): queue-state-priced · prior-scores-read · mechanics-seen · variables-extracted · guidance-carried · consumer-named. (1.0 = evidenced in the record with citations; 0.5 = asserted without citation; 0.0 = absent.)
+- Rejection taxonomy (one primary per returned item): QUEUE-STALE (queue position/status not read this cycle) · REATTEMPT-MISROUTED (scored technique in a first-attempt wave) · SCORES-UNREAD (prior scores/cures exist, uncited) · MECHANICS-UNSEEN (no firsthand sub-beat record) · VARIABLES-THIN (variable list cannot bind a parameter table) · GUIDANCE-DROPPED (standing family guidance absent from working memory) · CONSUMER-VAGUE.
+- Accepted profiles travel: cited in RUN.md at the Plan gate; ADVANCE-WITH-GAPS items carry their gap list into §2 as named Plan charges.
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → RETURN-TO-OBSERVE for that item. GUIDANCE-DROPPED on a particle-field or typography item → RETURN-TO-OBSERVE at any other score (T15 attempt 1's founding lesson: the frozen-flow defect and both owner catches were guidance-shaped failures discovered only after the wave was spent).
+- ADVANCE-WITH-GAPS requires every gap named with its Plan-phase cure; an unnamed gap is a RETURN.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + primary classification + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. Binding the exact runner command here is the first firing's own first step. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 Cycle-002's Observe record reconstructed from its RUN.md (must ADVANCE — mechanics, timings and consumer were recorded before building). (b) A constructed record proposing T15 as a wave item for attempt 2 (must RETURN-TO-OBSERVE as REATTEMPT-MISROUTED). (c) A constructed particle-technique record with no flow-field / Owner Cure 1 / Owner Cure 2 lines (must RETURN as GUIDANCE-DROPPED). (d) A constructed record whose variable list names only "text and color" for a timed multi-phrase technique (must RETURN as VARIABLES-THIN).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. First expected amendment pressure: whether family-sibling scores (leg 2) should be mandatory for all items or only same-machinery families — priced from the first waves' returns.
+=== QUEUE FACT: T212 queue #99, OWED, FIRST ATTEMPT (this job owns first attempts, A3.3); no prior scores.md or verdict-history line for T212. Family siblings T208/T210 (Packet #12 diagram family) are mid-attempt completions this same wave, not T212 priors. ===
+=== CODEX-OBSERVE RETURN (filed) ===
+**CONFIRMED-WITH-GAPS.** Packet 12 and the library entry give Cycle 038 Wave 35 §1 Observe a usable starting point for T212. The archive contains the stated window. The cited still shows an earlier phase, the cited clip ends before the dotted phase, and the dots’ quantitative meaning remains unverified.
+
+Consumer and working record — T212 §1 Observe, `runs/2026-11-18-cycle-038-wave-35/item-T212-observe-plan.md`, the wave’s `RUN.md`, and `study/recreations/T212-margin-bar-field/`.
+
+1. **The catalogue entries agree with each other, but their evidence covers different phases.** Packet 12 `digest.md` lines 85–89 and `techniques-diagrams.md` lines 381–384 agree on the 2:37–2:52 window, the winner-colour bars with dotted extensions, and both evidence paths. I opened `ev/t162-margin-bars.jpg`. It shows stacked red, grey, and blue shares, rotated state labels, a black line, and a yellow arc. The digest’s description of that still as a field with dotted extensions is incorrect. I also opened `census/census-14000.jpg`, which shows the completed winner-colour strip and dotted columns at the recorded source time of 171 s. Observe has a usable late anchor. The source record would be complete enough to describe the lifecycle once it pairs the early and late frames and binds the flatten, shrink, and dot-growth transitions to archive timestamps. Opening growth remains unresolved in `item-T212-observe-plan.md` §1.3. The packet’s G3 explains the `t10-` filename, and G4 lists packet-local T05, T06, T02, and T10, so it does not cover T11. [Packet gap disposition](</home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/video-digestion/verdict-history.md:66>)
+
+2. **The dotted phase needs its own data and narration bindings.** Both catalogue entries use “losing side’s share.” The late frame shows that California’s column is taller than Texas’s, consistent with the vote-volume reading in `item-T212-observe-plan.md` §1.3. That comparison and T214’s California figure do not establish the chart’s scaling rule or the per-state `loserUnits` values. Observe can bind the rule with measured dot counts for several states against a named source for vote shares and vote totals, or carry the values as visual estimates. The claim that the dotted margin appears before any allocation discussion also needs narrowing. `digest.md` §T13 places the allocation narration at 163–172 s, and the item’s §1.1 records its onset around 163.33 s, before the recorded dotted phase at 169–171 s. The stacked shares are visible before that narration. The late hold also needs a clean endpoint or an explicit overlap, because §1.3 puts T213’s Minnesota overlay at about 171.5 s, inside the T212 window. [Digest T11–T13](</home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/video-digests/2026-11-17-yt-ajavsmbcapy/digest.md:85>) · [T212 item record](</home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/runs/2026-11-18-cycle-038-wave-35/item-T212-observe-plan.md:16>)
+
+3. **The archive passes the pre-cut check.** `ffprobe` measured `source.webm` at 488.301 s with start time 0. The nominal window is `172 − 157 = 15.000 s`. The planned half-second handles yield `172.5 − 156.5 = 16.000 s`, and that interval decoded without errors. `ffprobe` measured the cited clip at 9.966832 s. Its documented 156–166 s placement ends six seconds before the technique window ends and before the dotted phase recorded in §1.3. The cut receipt under command 5 still needs the actual `segment.mp4` probe and its binding to the archive in/out points. [Command 5](</home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/guards/guards.md:16>)
+
+4. **There is no prior T212 score to inherit.** The T212 directory contains census files, an empty `codex/` directory, and no `scores.md`. Its ID has no row in recreation `verdict-history.md`. **Lens count: 0.** For T208, `scores.md` lines 18–30, the two filed `jev-prewave` returns, and history line 125 agree on two HOLDs, with own-checks completeness 0.40 → 0.48. **Lens count: 0.** For T210, the Wave 34 score sheet, the two filed returns, and history line 126 agree on two HOLDs, 0.35 → 0.45. **Wave 34 lens count: 0.** Both siblings’ current build hashes match their score sheets. T210’s Cycle 038 completion return subsequently records FIRE-WAVE on that same build, and `codex/lens-motion-cycle038.raw` repeats one hash-bound motion return scoring 72. **Cycle 038 lens count found: 1.** The score sheet and history still show the Wave 34 state, so the newer result is only a partial score. No five-lens average can be computed for either sibling. [Recreation verdict history](</home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/verdict-history.md:125>) · [T210 completion return](</home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T210-threshold-grid-map/codex/jev-prewave-completion-cycle038.md:372>) · [T210 motion return](</home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T210-threshold-grid-map/codex/lens-motion-cycle038.raw:458>)
+
+**Limits** — I viewed the cited still and the filed late census frame and decoded the handled source interval. Exact transition instants, the Minnesota overlay onset, the clip’s source offset, and the dot-to-vote mapping remain unverified firsthand. The T212 build and Observe exit judgment are outside this audit.
+
+**Body-write: none (read-only run)
+=== ITEM RECORD §1 + §1.5 ===
+## §1 — OBSERVE
+
+### 1.1 Catalogue mechanics (read firsthand)
+- Digest §T11: "All states become vertical bars in winner colour; above each solid bar, a dotted column extension shows the losing side's share — 'no state is actually all-red or all-blue' (transcript 2:36). Operation: bar growth + dotted extension; input margin is drawn, per state, before any allocation is discussed (the P-A2 triple: margin → allocation → tally)." Why it works: the film's honesty device — the margin is made visible as physical stuff first, so its erasure is something the viewer has seen. Evidence: ev/t162-margin-bars.jpg · clips/t10-margin-bars.mp4 (156–166 s).
+- Style-library techniques-diagrams.md §T212: agrees verbatim (mechanics, window P12 @ 2:37–2:52, evidence, consumer). Tier DESCRIBED — OWED #99. No digest↔register disagreement.
+- Transcript anchors (words.json, deduped): 156.75 "But this chart tells a different story / You can see that no state is actually all-red or all-blue." · 163.33 "But almost every state awards its electoral votes the same way…" · 171.78 "If they win the state by 1%, they win 100% of the electoral votes." (the last is T214's rule, spoken over this field's tail).
+- Packet gaps: Packet #12 adopted WITH GAPS — G3 (clip-filename offset) touches this item only through the clip name `t10-` serving packet-local T11; the digest entry's explicit citation resolves it. G4 (mechanics thinness on T05/T06/T02/T10 packet-local) does not attach to T11/T212. The census below cures the thinness for this item firsthand.
+
+### 1.2 Evidence frame viewed firsthand
+ev/t162-margin-bars.jpg (162 s, sha256 5e5e1fad…22b): the stacked share field — 50 vertical bars, alphabetical Alabama→Wyoming, each bar a 100% stack: dark blue (Dem share) at the bottom, light grey (other) in the middle, red (Rep share) filling to the top; a heavy black horizontal line crosses the field at ≈55% of field height; a yellow hand-drawn arc sweeps under the blue region; state names in rotated serif labels beneath each bar. NOTE: at this instant the field is the STACKED form, not yet the winner-solid + dotted form — the dotted form arrives later in the window (census CP7–CP8). The digest's one-line mechanics compresses two forms of one lifecycle; the recreation implements the full lifecycle the census shows.
+
+### 1.3 Motion census (A10.3 — firsthand, this run)
+Frames extracted with ffmpeg from source.webm into the artifact dir `census/` at 2 s spacing (seg-rel ms = source − 157 s), each viewed firsthand (extraction set at 640 px + a 1 fps fine set 155–175 s viewed for sub-beats):
+
+| CP | File | Seg-rel | Source | SHA-256 (full) | State viewed |
+|---|---|---|---|---|---|
+| CP0 | census-0.jpg | 0 ms | 157.0 | d8056c22efbf13faffa22cf11b89def1399f3ce0cbfd2f83eb653e2b27af5b32 | Stacked share field present (cut in from the T211 map): blue bottom / grey mid / red top per bar, black line, rotated state labels. Zero-motion anchor for the field's *content* (shares at final values within 1 s sampling). |
+| CP1 | census-2000.jpg | 2000 ms | 159.0 | 6a1c0d3b55707a1d5006a79b3bd74ca05c06b88776b2a379eaf627257235130c | Stacked field holding, no annotation yet. |
+| CP2 | census-4000.jpg | 4000 ms | 161.0 | 2f902bd4deff4a9bb4a323522e4e1b7b58d2c4b780fc7cbecb57ff5a72b53154 | Stacked field holding (matches ev/t162 within sampling). |
+| CP3 | census-6000.jpg | 6000 ms | 163.0 | 26f78bd65325e4268ec0f8627230cb1a04db5f23a8aaafb852c1cc39d5c6ed15 | Yellow annotation arcs present (under-blue arc complete; over-red arc drawing). |
+| CP4 | census-8000.jpg | 8000 ms | 165.0 | 806995e06160f4c6c9db0ca3561d8de6734d0b93d2897d8cc7430e680df40b2e | Annotation complete; stacked shares beginning to morph (blue heights rescaling toward winner-take-all values — fine set f-11/f-12). |
+| CP5 | census-10000.jpg | 10000 ms | 167.0 | 848eee21eee5b8db37fd13d8e469aa519fee6f612f1c11a25f50ea4b568df139 | FLATTENED field: every bar a single winner colour at full field height; labels and black line gone. One blue bar mid-flatten at the left-centre (stagger tail). |
+| CP6 | census-12000.jpg | 12000 ms | 169.0 | 4921bcddb548c238545944f6ba6dbcb2b7d65763ee7bfb2f189c08920d5ebf98 | Field shrunk to an equal-height solid winner-colour strip at the bottom; dotted columns GROWING above it (partial heights). |
+| CP7 | census-14000.jpg | 14000 ms | 171.0 | e346fad240a71c07348afaedc16e2558db6b3cfcf73ff6a0d4f28341b20947c0 | Dotted field COMPLETE: solid winner strip + dotted extension per state, dots in the winner's colour, heights varying widely (tallest over California). Hold begins. (Minnesota card overlay at ~171.5 s+ is T213, outside this technique.) |
+
+**Motion findings:** motion instants — sub-second stacked growth at the cut (unresolved at 1 s sampling; allocated, see schedule basis) · annotation draw ≈5000–8000 ms · flatten morph ≈8000–10300 ms · shrink ≈10600–11500 ms · dotted growth ≈11800–14000 ms. Holds — stacked field ≈1000–5000 ms · dotted field 14000 ms→window end. No dissolve anywhere; transitions are morphs/draws.
+**Dotted-height finding (census-priced, departs from the digest's word "share"):** dotted column heights track the losing side's vote VOLUME, not its percentage share — California's dotted column (loser ≈4.48M votes, T214's priced number) towers over Texas's (loser share higher, volume lower). CONFIG therefore carries a per-state `loserUnits` (relative volume, CA=100) alongside the shares; the technique — losing side drawn as dotted matter above the winner's solid bar — is unchanged.
+**Sub-beats:** SB-A stacked growth (allocated 0–~1500 ms) · SB-B stacked hold + black line + labels · SB-C yellow annotation arcs · SB-D flatten to winner colour (labels/line removed) · SB-E shrink to solid strip · SB-F dotted extension growth · SB-G completed hold.
+
+### 1.4 Variables (§1.3 extraction)
+1. State set + order (50 states, alphabetical in the specimen) — labels, per-state Dem/Rep shares (grey = remainder), winner side derived (larger share), per-state loserUnits.
+2. Bar geometry — count, pitch, gap ratio, field position/size, baseline.
+3. Stacked scale — shares map linearly to field height (100% = full height).
+4. Majority line — presence, height fraction (≈0.55 of field height from baseline), colour/width, removal at flatten.
+5. Annotation — arc count (2), colour (yellow), width, draw durations/order, arc paths (under-blue sweep, over-red sweep).
+6. Timing — growth duration + per-bar stagger, hold, annotation start/duration, flatten start/duration + stagger, shrink start/duration, dots start/duration + stagger, final hold, total duration.
+7. Palette — paper ground, Dem blue, Rep red, other grey, line ink, annotation yellow.
+8. Flatten rule — segments morph so the winner's colour takes the full bar (loser+grey erased by growth of the winner segment).
+9. Strip — final solid strip height fraction of field height.
+10. Dotted extension — dot radius, dot pitch, dots-per-unit scale (count = round(loserUnits × scale)), dot colour rule (winner's colour, per census), growth easing.
+11. Labels — state-name text, font family/size, rotation angle, fade at flatten.
+12. Easing — growth/flatten/shrink easing names.
+
+### 1.5 Guidance dispositions (inline, A9.5)
+- A1 §2 typography precedent (runtime sampling of config-rendered text): NOT APPLICABLE — no particle typography; labels are DOM/SVG text rendered from CONFIG `states[].label`, which is the same config-driven principle in its DOM form. Reason stated here per A9.5.
+- A5 Owner Cures 1–2 (intensity separation · phrase exclusivity): NOT APPLICABLE as particle/sequence cures — no particle field, no phrase lifecycle. The analogous separation here is construction-level: solid (winner, full opacity) vs dotted (loser, discrete dots) are different *kinds* of mark, never the same mark at two intensities — priced in Plan.
+- A5 §4 flow-field model: NOT APPLICABLE — no particle pool exists in this technique.
+- Family: diagram/bar-field siblings in Packet #12 (T210 grid-map, T208 dot counts) — bar/field geometry from CONFIG arrays is the family's demonstrated construction; T210's filed lesson (receipt-form discipline, A12/A13) is carried into §5 planning.
+
+## §2 — PLAN
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 99110 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**T212 — RETURN-TO-OBSERVE. Primary classification: CONSUMER-VAGUE.** §1.1 says the catalogue entries agree on the consumer, but the gate-out record never names the production container type or its owning lane. The filed Codex return names the Observe record and recreation directory as recipients of the audit.
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Queue state priced | 0.5 | The supplied queue fact and §1.1 establish #99, OWED, and first-attempt ownership under A3 §3. The record does not cite a current-cycle `../QUEUE.md` read or give the wave’s position in that queue. |
+| Prior scores read | 1.0 | Filed Codex return §4 verifies the absence of a T212 score sheet and history entry, and cites the filed T208 and T210 results. T210’s Cycle 038 motion score is identified as partial. |
+| Mechanics seen | 1.0 | §§1.2–1.3 cite firsthand frame observations and source times for the stacked field, annotation, flattening, shrink, and dotted growth. The opening growth is allocated, and the record does not establish continuous playback of the full interval. |
+| Variables extracted | 1.0 | §1.4 supplies bindable variables for state data, geometry, timing, palette, labels, annotation, and dot construction. The source of `loserUnits` remains unresolved. |
+| Guidance carried | 1.0 | §1.5 explicitly dispositions A1 and A5 for this diagram and records config-driven geometry and labels. |
+| Consumer named | 0.0 | §1.1 refers to catalogue agreement without naming the destination. The Codex audit’s consumer line names working records and the recreation directory. |
+
+**Named gaps**
+
+- **Production consumer and queue evidence.** Record the production container and owning lane in the gate-out block. Cite the current-cycle queue position and T212’s row in `../QUEUE.md`.
+- **Motion and segment binding.** Use full-window playback to resolve or explicitly allocate the opening beat, tighten the transition times, and mark the final hold’s endpoint or overlap with T213. Bind the actual `segment.mp4` probe to its archive in/out points. [Item record §§1.2–1.3 and filed Codex return §§1–3]
+- **Dot data and narration.** Substantiate the dot-to-vote mapping with multi-state measurements and named vote data, or carry `loserUnits` as visual estimates. Correct the sequence claim using the record’s 163.33 s allocation narration onset and 169–171 s dotted phase. [Item record §§1.1, 1.3 and filed Codex return §2]
+
+**Limits.** Text-only judgment of the supplied T212 record. The filed Codex audit provides the Observe receipt. No owner-only input is identified.
+
+**Body-write: none (read-only run)**
+tokens used
+15,640
+**T212 — RETURN-TO-OBSERVE. Primary classification: CONSUMER-VAGUE.** §1.1 says the catalogue entries agree on the consumer, but the gate-out record never names the production container type or its owning lane. The filed Codex return names the Observe record and recreation directory as recipients of the audit.
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Queue state priced | 0.5 | The supplied queue fact and §1.1 establish #99, OWED, and first-attempt ownership under A3 §3. The record does not cite a current-cycle `../QUEUE.md` read or give the wave’s position in that queue. |
+| Prior scores read | 1.0 | Filed Codex return §4 verifies the absence of a T212 score sheet and history entry, and cites the filed T208 and T210 results. T210’s Cycle 038 motion score is identified as partial. |
+| Mechanics seen | 1.0 | §§1.2–1.3 cite firsthand frame observations and source times for the stacked field, annotation, flattening, shrink, and dotted growth. The opening growth is allocated, and the record does not establish continuous playback of the full interval. |
+| Variables extracted | 1.0 | §1.4 supplies bindable variables for state data, geometry, timing, palette, labels, annotation, and dot construction. The source of `loserUnits` remains unresolved. |
+| Guidance carried | 1.0 | §1.5 explicitly dispositions A1 and A5 for this diagram and records config-driven geometry and labels. |
+| Consumer named | 0.0 | §1.1 refers to catalogue agreement without naming the destination. The Codex audit’s consumer line names working records and the recreation directory. |
+
+**Named gaps**
+
+- **Production consumer and queue evidence.** Record the production container and owning lane in the gate-out block. Cite the current-cycle queue position and T212’s row in `../QUEUE.md`.
+- **Motion and segment binding.** Use full-window playback to resolve or explicitly allocate the opening beat, tighten the transition times, and mark the final hold’s endpoint or overlap with T213. Bind the actual `segment.mp4` probe to its archive in/out points. [Item record §§1.2–1.3 and filed Codex return §§1–3]
+- **Dot data and narration.** Substantiate the dot-to-vote mapping with multi-state measurements and named vote data, or carry `loserUnits` as visual estimates. Correct the sequence claim using the record’s 163.33 s allocation narration onset and 169–171 s dotted phase. [Item record §§1.1, 1.3 and filed Codex return §2]
+
+**Limits.** Text-only judgment of the supplied T212 record. The filed Codex audit provides the Observe receipt. No owner-only input is identified.
+
+**Body-write: none (read-only run)**

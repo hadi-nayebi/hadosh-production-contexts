@@ -1,0 +1,805 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/runs/2026-11-18-cycle-037-wave-34
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1ef2c-b9df-74b1-9f04-1d66357958da
+--------
+user
+TASK: You are the jev-plan-exit judge for the recreation job, Wave 34. Judge ONLY item T204 from the record below, per the call definition that follows. Return ONE verdict for T204 (EXECUTE, REVISE, or RETURN-TO-OBSERVE) with the six dimension scores (0-1), the primary classification if revised/returned, and named charges. End with a BODY-WRITE: line naming what your return files.
+
+# Jev call — jev-plan-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: Execute is spent only on a Plan that already contains its checklists, its failure points, and its plateau exposure — priced in Plan, never discovered at close._
+
+## 1. What it judges
+- Deliverable: per-item Plan product in RUN.md (§2 gate out: parameter table + construction choice + verification plan) plus the wave manifest's per-item summaries.
+- Call point: recreation INSTRUCTION §2, at the gate out of Plan, before §3 Execute opens for an item. The verdict is advisory per item — applied, or set aside with the miss recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Plan can be executed and verified without improvisation, item by item. Price, in order:
+(1) PARAMETER TABLE COMPLETE — every variable from the Observe gate-out (§1.3 list, as passed by jev-observe-exit) is a named config key with the specimen's value as default (§2.1). A variable with no key, or animation logic the Plan already describes with literals, is a Plan failure named here — not an Execute surprise.
+(2) CONSTRUCTION CHOICE PRICED — the HTML-native construction is chosen for the technique's mechanics (canvas particle system · CSS keyframes · SVG draw-on · DOM animation · generated imagery + overlays) with rejected alternatives named in one line each (§2.2). For particle-field items the choice must instantiate the flow-field model (Amendment A5 §4); for typography items it must start from runtime text sampling (Amendment A1 §2) or name why not. Owner Cure 1 (intensity separation) and Owner Cure 2 (phase exclusivity) appear as construction requirements where the technique is a particle field or a sequenced-phrase piece — absent cures in a particle/sequence Plan = the T15 attempt-1 failure re-planned.
+(3) EXECUTE CHECKLIST EXISTS — a step list for §3 (segment cut with timestamps ±0.5 s handles · recreation.html build · comparison.html build with synchronized controls + phone stacking · self-verify legs) concrete enough that a builder who did not write the Plan could execute it.
+(4) VERIFY CHECKLIST EXISTS, AS INSTRUMENTS — §2.4's verification plan names: the swap test's exact altered values (words minimum + one timing + one palette value, §5.1) · the purity greps + asset inventory (§5.2/§6.1) · the comparison check (§5.3) · jev-prewave's call point (§5, between own checks and the wave) · the five-lens Codex wave composition (§5.4: motion fidelity · timing/tempo · construction purity · reusability · readability). A checklist item stated as an intention ("check purity") without its instrument (the grep patterns / harness) fails this leg.
+(5) FAILURE POINTS EVALUATED — the Plan names what breaks it, per item: at minimum priced from this job's record — surplus-particle freeze (T15: motion 68 + reuse 64 convergent defect) · word-vs-reserve intensity collapse (owner catch 1, readability) · phrase-lifecycle overlap (owner catch 2) · fitting/wrapping limits for long words (reuse 64: fitting stops ~14 px, no multiline) · pool/density guards · the render-proof limitation (no browser binary in this seat — the comparison page is the render surface; the Plan must state how its absence is carried, as attempt 1's scores.md did). Technique-specific failure points beyond this floor are expected; a Plan whose failure list is only this floor, copied, is scored down on specificity.
+(6) PLATEAU FLOOR PRICED IN PLAN — the floor rule (Amendment A2, practice §floor as close-out gate) is priced HERE: the Plan states the item's prior average where one exists in its family line or states FIRST-ATTEMPT (no prior), and names in advance what a non-beating result would mean (which lens is expected to be stuck, the hypothesized cause, the WHY the scores.md entry will carry). A re-attempt-shaped build (same machinery family, e.g. T16 on T15's pool) that reaches close-out and discovers its plateau there has failed this leg retroactively — the Condense record says so.
+(7) REDUCTIONS NAMED — anything the Plan quietly drops from the packet's mechanics (a sub-beat deferred, a phase simplified) is named as a deferral with its reason (§2/jev-prewave fidelity-plan honesty); a silent deferral found here is classified, not absorbed.
+Score 0–1 per dimension (§4), classify, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Plan gate-out blocks + wave manifest · the Observe gate-out blocks with jev-observe-exit's filed verdicts · the item's scores.md / family scores.md cure lists where they exist · INSTRUCTION §2, §5, §6 + Amendments A1/A2/A5 · guards.md command list.
+- NEVER FED: builder rationale prose about expected scores · prior waves' verdicts for unrelated techniques · any lens return not yet filed.
+- Ceiling: ≤32k tokens; recreation.html does not exist yet at this gate and is never fed.
+
+## 4. Output space
+- Verdict classes (per item): **EXECUTE · REVISE · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): parameter-table-complete · construction-priced · execute-checklist-ready · verify-checklist-instrumented · failure-points-priced · plateau-priced.
+- Rejection taxonomy (one primary): UNBOUND-VARIABLE · LITERAL-IN-LOGIC · CURE-ABSENT (Owner Cure 1/2 or family guidance missing from construction) · CHECKLIST-INTENTION (Verify item without instrument) · FAILURE-POINTS-GENERIC · PLATEAU-UNPRICED · SILENT-DEFERRAL · RETURN-TO-OBSERVE-ROOT (the Plan's defect is an Observe defect — mechanics/variables missing upstream).
+- Accepted profiles travel: cited in RUN.md at the Execute gate; REVISE items carry their classified defect as the Plan amendment charge.
+
+## 5. Floors and disposition
+- verify-checklist-instrumented < 0.5 → REVISE (a Plan that cannot say how it will check itself does not execute). CURE-ABSENT on a particle-field or sequenced item → REVISE at any other score. PLATEAU-UNPRICED on a family re-use build → REVISE.
+- RETURN-TO-OBSERVE is reserved for defects whose cure is upstream (missing mechanics/variables), and names the jev-observe-exit dimension that passed it — that citation is the observe-exit's firing-record evidence.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 attempt 1's Plan reconstructed from Cycle-002 RUN.md (must EXECUTE or REVISE only on named legs — it did carry a verification plan and a named interlude deferral). (b) A constructed particle Plan with no intensity-separation requirement (must REVISE as CURE-ABSENT). (c) A constructed Plan whose Verify checklist reads "run swap test, check purity, fire wave" with no altered values or grep patterns (must REVISE as CHECKLIST-INTENTION). (d) A constructed T16 Plan silent on T15's 78.5 and its stuck lenses (must REVISE as PLATEAU-UNPRICED).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. Standing watch: whether the §2.4 "four lenses" wording anywhere still survives against the five-lens form — any Plan citing four lenses is a FAILURE-POINTS-GENERIC signal, not a typo.
+
+## Amendment — allocation/count consistency leg (2026-11-16, recreation Cycle 025 Condense, pattern promotion)
+**The leg:** for every item whose Plan carries a schedule or allocation table, this gate prices the table's **census-anchor mapping** before Execute: each prescribed onset/duration is mapped into segment-relative time (window-start offset applied) and cross-checked against every census state the wave record names for that item. A prescribed value that contradicts a named census state at its instant (e.g. a front prescribed 8% grown at the census instant whose state reads "no territory"; arrivals prescribed complete at 11300 ms against a census anchor "crowded by ~7000 ms") is a REVISE charge, primary class **UNBOUND-SCHEDULE**. A Plan whose schedule table prints no census-anchor mapping is priced as carrying an unmapped schedule — the mapping's absence is itself the charge (the table cannot be checked, which is the defect's hiding place). Count assertions ride the same leg: a summary count in the Plan that disagrees with the table it summarizes is UNBOUND-SCHEDULE's count form (A9.3's gate side).
+**Forcing evidence (three instances, one class):** T153 Wave 21 (timing 45 — §2b allocation contradicted the §1c census checkpoints it claimed to rest on) · T160 Wave 22 (timing 68 — prescribed onsets 2500/3500 ms already 8.33%/45.45% grown at the 449 s/452 s census instants) · T162 Wave 22 (timing 64 — even-stepped allocation completing at 11300 ms against census anchors at ~2000/~7000 ms). For T160 and T162 the build implemented the prescribed schedule exactly (verified from this cycle's filed returns, bound in Cycle 025 RUN §9b item 2); for T153 the same compliance is attributed to the seat's Wave-21 cycle record (Cycle 024 RUN §5) and is unverified in the Wave-22 stream. In all three the defect was the Plan's, discovered by the timing lens at the cost of the item's verdict.
+**Before/after:** before — this gate priced parameter tables for completeness and checklists for instruments, but no leg owned schedule-vs-census consistency, so three instances across Waves 21–22 shipped census-contradicting schedules through a fired gate. After — the mapping is a named Plan product and this leg prices it at the gate, where the cure costs a table edit instead of a verdict.
+# Item T204 — Phase A record (Observe + Plan ONLY) · Wave 34 · Cycle 037 · 2026-11-18
+
+**Item:** T204 — dot-grid identity system + withheld title · queue #95 · Packet #12 (Vox, "The Electoral College, explained", YouTube ajavsMbCapY, 488.301 s) · packet-local T03.
+**Phase:** A only — no build script written, no artifact directory created (A9.2 gate order: the wave's exit gates fire on this record before Execute).
+**Artifact directory (at Plan, for Execute):** `hidden_files/study/recreations/T204-dot-grid-identity-withheld-title/`
+**Governing:** recreation INSTRUCTION.md §1/§2 + Amendments A1/A2/A3/A5/A6/A7/A9/A10/A11/A12/A13 · RUN.md §§0b/1/2 (Wave 34).
+
+---
+
+## §1 — OBSERVE
+
+### 1.1 Catalogue mechanics (cited)
+
+- **Digest §T03** (`hidden_files/study/video-digests/2026-11-17-yt-ajavsmbcapy/digest.md`, lines 37–41): timestamps 0:28–0:37; "A field of black dots on a newsprint-textured ground assembles; the words 'Electoral College' land across it as red/blue split lettering. The same dot field is the substrate for the title, the threshold map (T07), and the outro. The title is withheld until 0:28 — after the misconception (T01) and the normal-system diagram (T02) are installed." Evidence: `ev/t32-title-dotgrid.jpg` · clip `clips/t03-grid-build.mp4` (28–36 s, "the assembly order is the claim").
+- **Style-library entry** (`techniques-openings.md`, "### T204 — Dot-grid identity system + withheld title (P12 T03) ◆ — OWED #95"): repeats the digest mechanics and window; feeds opening · diagram · ending.
+- **Register** (`TECHNIQUES.md` line 143): "the dot field assembles and the title lands across it — the assembly order is the claim (clip-cited)" · DESCRIBED — OWED #95.
+- **Narration anchors** (`sentences.json`): 28.270 s "But in America we do it a little differently." · 31.369 s "The US is the only country that picks its president using something called the Electoral College." · 37.047 s "It's made up of delegates from each US state."
+
+### 1.2 Motion census (A10.3) — firsthand, this run
+
+29 frames extracted by the seat into this run's `census/` dir (17 from `clips/t03-grid-build.mp4` at 0.5 s spacing + 6 fine frames at the two transitions + 6 from `source.webm` bounding the window), **every frame viewed firsthand by the seat**. Clip↔source mapping: clip t = source t − 28.0 (production-record: clip = source 28–36 s; clip ffprobe: h264 1920×1080, 7.965 s). Cell counts measured by projection analysis of the viewed frames (threshold <200–210, per-row blob runs).
+
+| # | Frame | Source t | SHA-256 (full) | State viewed |
+|---|---|---|---|---|
+| 1 | T204-census-src27.0s.jpg | 27.0 | fe6ce1ab5017877064b76e3f5e060b4fd0ba92fe8e527835ff5e394893936177 | Pre-state: T203 popular-vote scene full (ballot disc + split bar + winner figure). No grid. |
+| 2 | T204-census-c0.0s.jpg | 28.0 | 0a531d1739db591e07e859641ea5748a58bc18c69c6595812779417718382c2b | T203 scene exiting left (disc half off-frame); balloons over figure. No grid. |
+| 3 | T204-census-c0.5s.jpg | 28.5 | d2b26a17cc4f8b779c64f114fd502bea9c741e139ca475444396fbe5caa43bc9 | Exit continues; balloons dropping. No grid. |
+| 4 | T204-census-c1.0s.jpg | 29.0 | ecef2a6c69e96106557653b0e93ea4d039c1a22b1b4fac7021960a7eb75d9686 | CNBC broadcast insert (KEY STATES board, presenter). Borrowed footage — not the technique. |
+| 5 | T204-census-c1.5s.jpg | 29.5 | ae39bafdac61719e6f6bc61f16a02ae79fe799553f27a0a9332af5a7afcc019e | Broadcast insert holds. |
+| 6 | T204-census-c2.0s.jpg | 30.0 | 6b236b7ec851e7de9e14866eb4b08c8416a7fd58075393c055d98f747d28923b | Broadcast insert holds (presenter pointing). |
+| 7 | T204-census-c2.5s.jpg | 30.5 | 2e8222f0b7bd2c7c5df319380287d2e20754c264e7061c9a94a6230510424a93 | Broadcast insert holds. |
+| 8 | T204-census-c3.0s.jpg | 31.0 | 3b46679e530b2c8bb92fc457a264b7707d56b2a67d38fe87226ad6b09cf6e4a1 | Broadcast insert, last census state before the cut. **Zero grid cells — zero-state anchor.** |
+| 9 | T204-census-c3.2s.jpg | 31.2 | 6e9ca6277fdfdd931d583f3eedf8d5a8e791cd5af873fc4b0e3e161db4241796 | Still broadcast insert. Zero cells. |
+| 10 | T204-census-c3.3s.jpg | 31.3 | 62466bed0a5867cb1d0f03b4c0f8d2eb22f55132e5b9d8a625d87df7464c83c7 | **ASSEMBLY ONSET:** cut to newsprint ground; 2 cols × 2 rows of square cells at the field's top-left origin, fading in (1 black, rest gray shades). |
+| 11 | T204-census-c3.4s.jpg | 31.4 | 18613993e5b925acbd7202e4e2fceb971cf540830e1d69cca67cd60acffe3449 | 4 cols × 3 rows; fade front at right column (mid-gray) + bottom row (light gray). |
+| 12 | T204-census-c3.5s.jpg | 31.5 | 412c6ca3e657c9b42723a6d15c5f7364f730e7e74b3f5ae6a21c729d4878cb64 | 5 cols × 3 rows = **15 cells** (measured); front still at right + bottom edges. |
+| 13 | T204-census-c4.0s.jpg | 32.0 | 1f3d2a2a054848efc4d74e2d7281d52b3b8ca074e5e53ad37d3627f96a8d5ee7 | 17 cols × 8 rows = **136 cells** (measured); rightmost column gray. (Matches ev/t32's state — that still is this instant, an assembly still, not a title still.) |
+| 14 | T204-census-c4.5s.jpg | 32.5 | 33a0c27db76037d7a63b8ff9aeaafc638a731317ce8527d1d7d3298751db499e | ≈25 cols × 12 rows; right column + bottom row gray (front chasing both leading edges). |
+| 15 | T204-census-c5.0s.jpg | 33.0 | a75e48818083a56cd18abaa80c8791577ce87dfb7e5dd5da06235fb7d8007e61 | ≈31 cols × 15 rows; right column light-gray, bottom row mid-gray. |
+| 16 | T204-census-c5.5s.jpg | 33.5 | 865d6d03bf74092a1b246a6174f3aca6da150e899722d7a707308d2145306c17 | **32 cols × 16 rows = 512 cells** (measured exactly); only the last column still gray. |
+| 17 | T204-census-c6.0s.jpg | 34.0 | bd62426ba08c0f54962fcfc229c9717020497711faa9241095cb31918b3bc7f1 | Main field black + final partial row (row 17) mid-fade: 26 cells, offset right by ~3 columns. **Total 538 cells** (measured 539 with one fade-front split artifact — count stands 538 ±1, see §1.4 G3 disposition). No title band yet. |
+| 18 | T204-census-c6.5s.jpg | 34.5 | 4d14a6f6ae7e450a21453a7dfaf2cdf20847cd245ba5448df7785762ed5d1d6d | **TITLE BAND LANDED** across the field's middle rows; white serif text revealed up to "Electoral" only; band's right portion still empty red. |
+| 19 | T204-census-c6.6s.jpg | 34.6 | fbf886785aaed420e852f0943e6fe511566fd6591fb6f8582cb2b52bccbd9e58 | Reveal progressed: "Electoral Col". |
+| 20 | T204-census-c6.7s.jpg | 34.7 | b363180a1bb6a4e4fdb5827b7c3c265ce65af92f622f55111bf0befb0b7b8886 | Reveal progressed: "Electoral Colleg". |
+| 21 | T204-census-c6.8s.jpg | 34.8 | 7502ab84bf6dcb73fe24d992faba5dfa48f1d7ba99587a569d56ce34bedfddf9 | **Full title "Electoral College" revealed.** |
+| 22 | T204-census-c6.9s.jpg | 34.9 | 70e7b33c56cd99565638bd2bdc8794f2356dc468047d32a736bcf20516a80f2f | Lockup hold (identical state). |
+| 23 | T204-census-c7.0s.jpg | 35.0 | b25f0dea24874a46b8f8faf0bc52ef87c128f1adf73cbb98d0fa019a6c6d5b40 | Lockup hold. |
+| 24 | T204-census-c7.5s.jpg | 35.5 | eea774cff1988daba2382e8d902908efa01d86f3c3e6efa975bd198ac0d986a2 | Lockup hold. |
+| 25 | T204-census-c7.9s.jpg | 35.9 | 4e5f21640f3c60fb85bc5b0b3bb81319e36a6c1afae12364994d9b0cd1cf41c7 | Lockup hold (clip end). |
+| 26 | T204-census-src36.0s.jpg | 36.0 | be85076fa06821fa0b369c87cb3046b72d64d2059bb2ee88ff4958e13f6c6ff3 | Lockup hold continues past the clip's end. |
+| 27 | T204-census-src36.2s.jpg | 36.2 | be85076fa06821fa0b369c87cb3046b72d64d2059bb2ee88ff4958e13f6c6ff3 | Byte-identical frame to 36.0 — the hold is fully static ≥0.2 s here. |
+| 28 | T204-census-src36.5s.jpg | 36.5 | de03f7faa169e2c8d8d1f498af0336964cfe8ce41dbb3fe65356f61ff50ce4c0 | Title still up; dark state-outline strokes BEGIN drawing over the field — the next technique's onset (T210 handoff). **T204 window closes.** |
+| 29 | T204-census-src37.5s.jpg | 37.5 | 7ebb81280758a20634e40758cd60f252ac1d1ab47a92263e02f9a0b5879517d6 | Title gone; state outlines complete over the field (T210's state — outside this item). |
+
+**Motion findings (A10.3 form):**
+- **What forms when:** (i) 31.30 ±0.05 s — the square-cell field begins at a fixed top-left origin on the bare newsprint ground, growing as an expanding rectangle (rightward + downward fronts) whose newest cells fade gray→black, the fade front riding the leading right column and bottom row; (ii) 34.0 s — the field completes at 538 cells (32×16 + a 26-cell partial last row offset ~3 cols right — one cell per electoral vote); (iii) ~34.3 s — the title band lands across the field's middle (rows 8–9 zone) as flat color blocks (teal head block · red main block · steel-blue bottom strip · pale bottom-right block · dark top strip), fully occluding the cells behind it; (iv) 34.3–34.8 s — the white serif title reveals left-to-right inside the band at letter pace ("Electoral" by 34.5 · "Col" 34.6 · "Colleg" 34.7 · full 34.8).
+- **Holds how long:** completed field alone ≈0.3 s (34.0→34.3); full lockup static from 34.8 to ≥36.2 (≥1.4 s, hash-identical frames at 36.0/36.2), ending when the outline handoff begins ~36.3–36.5.
+- **Dissolves how:** it does not dissolve inside its window — the title exits by being replaced under the next technique (state outlines draw over the field from ~36.3; title gone by 37.5). The exit belongs to T210's transition, not to T204.
+- **Sub-beats:** the assembly is one continuous growth, not per-row steps (counts 4 → 15 → 136 → ~300 → ~465 → 512 → 538 across 31.3→34.0 — decelerating fronts, fast first second); the last row is a separate late beat (births 33.5–34.0, after the 16-row body completes); the band precedes its text (band full-width while text still revealing); the sponsor watermark ("Presented by ABSOLUT", top-right, visible in source frames) is specimen branding, NOT part of the technique — excluded.
+- **Corrections to the catalogue prose (priced from the census, not the digest):** (1) the "dots" are **square cells**; (2) the lettering is **white**, not "red/blue split" — the red/blue split lives in the **band blocks behind** the white serif text; (3) the digest window 0:28–0:37 conflates setup with technique: 28.0–31.2 inside it is the prior scene's exit + a CNBC broadcast insert (borrowed footage, not recreatable, not this technique); the technique proper is **31.3–36.5**; (4) the digest's "threshold map (T07)" cross-reference is wrong — packet T07 is the TX/VT House-stage count; the threshold grid-map is packet T09 = library T210 (see codex-observe finding 4).
+
+### 1.3 Variables (§1.3 — every property that could change without changing the technique)
+
+Content: title text (and its word split) · cell total / cols / rows / last-row cells / last-row offset. Geometry: field position + extent (fractions of stage) · cell size-to-pitch ratio · origin corner. Timing: withhold/pre-roll duration · assembly duration · per-cell fade duration · growth-front shape (keyframe table) · last-row lag · band-in duration · text-reveal duration · hold duration. Palette: cell ink · ground color · ground-texture intensity · band block colors + their span fractions · title color. Type: title font family · title size relative to band. Direction: growth direction (origin corner + front axes) · reveal direction. Density: pitch (cells per stage width) at fixed extent.
+
+### 1.4 Prior / family scores read (§1 resource 3)
+
+No prior attempt for T204 (no artifact directory, no verdict-history line — confirmed by census + codex-observe's audit). Closest scored siblings, read firsthand from their `scores.md`:
+
+| Sibling | Why closest | Lens line (motion · timing · purity · reusability · readability) | Avg | What it prices for T204 |
+|---|---|---|---|---|
+| T53 ballot-arc count board | grid/count board, same packet family of count surfaces | 92 · 88 · 94 · **74** · 80 | 85.6 PASS | Reusability is the family floor: value-dispatched scheduling + renderer literals outside CONFIG were its convergent defect — T204's schedule must dispatch on CONFIG keyframes/IDs, never on content values. |
+| T82 countable multitude | cell-grid multitude assembling in place | 80 · 89 · 100 · 80 · 87 | 87.2 PASS | Its convergent defect was the reveal SHAPE (row-major order vs the measured oval front) — T204's growth fronts must follow the measured keyframes, not an assumed order; canvas geometry literals were its reusability leak. |
+| T99 logo-mark assembly opening | opening/identity assembly (the other consumer surface) | 80 · 100 · 100 · 80 · 90 | 90.0 PASS | Assembly openings score high on timing/purity when the lifecycle is CONFIG-driven; its cures were CONFIG completeness + fitted wordmark — T204's band + title fit must be CONFIG + measured. |
+
+Family average (A2 basis): (85.6 + 87.2 + 90.0) / 3 = **87.6**. Every sibling's minimum is reusability (74/80/80) or motion (80/80).
+
+### 1.5 Consumer (§1 gate)
+
+**Primary: the opening-identity surface** (explainer cold-open / DLC opener title landing). Reason: the technique's payload is a *title* whose landing is withheld until its substrate assembles — the act is an identity reveal, and RUN.md §1 names T204 "additionally the opening/identity surface" beyond the wave's diagram default. **Secondary: diagram containers** (the DLC assembler's count-board surfaces) — the identical field component is the tally substrate the sibling items consume (T210's outlines draw on this field; T205/T208 reuse the grid module). The build therefore ships two liftable modules: the field (diagram) and the band+reveal (opening-identity).
+
+### 1.6 Standing-guidance dispositions — WITH REASONING INLINE (A9.5)
+
+- **A1.2 runtime text sampling — NOT-BINDING.** That precedent licenses letterforms *sampled from config-rendered text* (particle typography, T15 family). T204's title is typeset serif text sitting on an opaque band; no letterform is sampled, formed, or particle-built, and the census shows the glyphs arriving by a left-to-right reveal of finished type. Sampling would add a construction the specimen does not contain.
+- **A5 flow-field model — NOT-BINDING as construction.** There is no particle field: the census shows discrete square cells that fade in place on a fixed lattice — nothing flows, borrows, or releases. **Owner Cure 1 (intensity separation) — BINDS in analogue:** the specimen's own separation is occlusion — the band is fully opaque and the cells behind it never compete with the title; the Plan carries band opacity 1.0 and cells under the band not rendered. **Owner Cure 2 (strict phase exclusivity) — BINDS:** the census shows the title reveal beginning only after the field completes (band onset ~34.3 > last cell 34.0); the Plan enforces it by phase machine + a pre-band zero-title assertion (CP6), not by hopeful timing arithmetic.
+- **A9.1 plate construction — STILL PLATE priced.** The newsprint ground never moves in any census frame (identical texture position across 31.3–37.5); a moving plate would exceed the technique. The ground is therefore a still, procedurally generated texture (code-generated, never the specimen's newsprint image — purity §6.1); no pan, no tiling requirement arises.
+- **Reserved-band badge note (HQ board `practice-2026-11-18-t06-construction-note`) — BINDS.** T204's title is exactly a container-scaled label: the Plan gives it a reserved band (fixed CONFIG geometry across the field's middle; the cells behind it are occluded by design, not competing) with legibility floors — title cap-height measured at the 360 px stage against the ~11 px floor in the A6 measured-fit leg, and band geometry in CONFIG so the band scales with the container without re-layout.
+- **A9.6 parameterization depth — BINDS.** Band block spans, growth keyframes, and ground coefficients are subject-shaping values → all CONFIG data (§2.1).
+- **A11 census checkpoints — BINDS** (§2.4 assertion table). **A13 receipt index — BINDS** at the build-record stage (Verify checklist).
+
+### 1.7 codex-observe — fired at §1 step 1 · return filed · dispositions
+
+Return: `item-T204-codex-observe-return.md` (this run dir) — **Verdict: CONFIRMED-WITH-GAPS**, 4 findings. Dispositions (applied into this record before Plan):
+- **F1 (core assembly agrees across digest/library/register) — CONFIRMED, no act.**
+- **F2 (published window conflates setup with animation) — APPLIED:** §1.2's census boundaries govern; the Plan's segment (§2.3) is cut 30.8–37.0 so the comparison carries the setup tail + handoff onset as labeled context while the build window is the measured technique (31.3–36.5).
+- **F3 (ev/t32 miscaptioned; "red/blue split lettering" wrong; count provisional) — APPLIED:** §1.2 cites ev/t32 as the 32.0 s assembly state only; the title evidence is census frame c6.8s; mechanics corrected to white serif on a color-block band (§1.2 corrections 1–2). Count: no settled un-occluded full-field frame exists after 34.0 (the title band occludes rows 8–9 from 34.3), so the count stands **538 ±1 as measured** (512 exact at 33.5 + 26 in the final row at 34.0, one fade-front split artifact); the Plan's exact assertions bind the *measured checkpoints* (15 · 136 · 512) and treat 538 as the A9.3 source-count the build must reproduce by construction (cols×rows + lastRowCells), not as a census-proven constant.
+- **F4 (digest's T07 cross-reference wrong; threshold map = packet T09 = T210) — APPLIED:** §1.2 correction 4; T204's window closes at the outline onset (~36.5) and the handoff is named as T210's, distinct from T210's later 2:19 sequence.
+
+**Observe gate-out:** mechanics + sub-beats (§1.2) · variables (§1.3) · consumer (§1.5) · dispositions (§1.6–1.7) — complete.
+
+---
+
+## §2 — PLAN
+
+### 2.1 Parameter table (every §1.3 variable a named CONFIG key; specimen value = default)
+
+Stage: logical 960×540 (fleet stage; renders at 360 px phone width by scale).
+
+| CONFIG key | Specimen default | Source / note |
+|---|---|---|
+| `titleText` | `"Electoral College"` | census frames 21–28 |
+| `cols` / `rows` | 32 / 16 | measured exact at 33.5 s (512 cells) |
+| `lastRowCells` / `lastRowOffsetCols` | 26 / 3 | measured at 34.0 s; total cells = cols×rows + lastRowCells = **538** (A9.3 source-count) |
+| `fieldLeftFrac` / `fieldTopFrac` / `fieldWidthFrac` / `fieldHeightFrac` | 0.090 / 0.114 / 0.821 / 0.719 | measured field extent (x 173–1750, y 123–900 of 1920×1080) |
+| `cellFillFrac` | 0.56 | measured: 28 px cell on 50 px pitch |
+| `cellColor` | `#111111` | cells read near-black in every census frame (JPEG sampling limit noted) |
+| `groundColor` | `#ececec` | sampled (960,980) on c7.9 |
+| `groundTextureOpacity` | 0.05 | faint newsprint show-through; procedural texture, seeded |
+| `assembleStartMs` | 500 | segment-relative (see §2.3) |
+| `assembleMs` | 2700 | onset 31.3 → complete 34.0, segment-relative span |
+| `growthKeyframes` | `[{f:0.000,cols:2,rows:2},{f:0.074,cols:5,rows:3},{f:0.259,cols:17,rows:8},{f:0.444,cols:25,rows:12},{f:0.630,cols:31,rows:15},{f:0.815,cols:32,rows:16},{f:1.000,cols:32,rows:16,lastRow:1}]` | the measured census states as data (f = fraction of assembleMs); fronts interpolate linearly between keyframes — the schedule dispatches on this table, never on content values (T53 cure) |
+| `cellFadeMs` | 350 | gray→black per cell after its birth (front width ≈1 column/row in census) |
+| `bandBlocks` | `[{c:"#157180",x:0.000,y:0.00,w:0.118,h:1.00},{c:"#ba3844",x:0.118,y:0.00,w:0.882,h:1.00},{c:"#396b84",x:0.000,y:0.78,w:0.470,h:0.22},{c:"#b1cdce",x:0.745,y:0.78,w:0.105,h:0.22},{c:"#43031b",x:0.155,y:0.00,w:0.475,h:0.07}]` | colors sampled on c7.9 (teal head · red main · steel bottom strip · pale bottom-right block · dark top strip); spans are fractions of band width/height — subject-shaping → CONFIG (A9.6) |
+| `bandLeftFrac` / `bandTopFrac` / `bandWidthFrac` / `bandHeightFrac` | 0.220 / 0.426 / 0.565 / 0.130 | measured on c7.9 (band x 420–1505, y 460–605 of 1920×1080); reserved band per §1.6 |
+| `bandInMs` | 200 | band reaches full width before text reveal completes (census frame 18: band full, text partial) |
+| `bandInStartMs` | 3450 | segment-relative (source ≈34.25, between census 3200 no-band and 3700 band-full); strictly after field completion at 3200 (phase exclusivity); governed by CP6 |
+| `titleColor` | `#ffffff` | census |
+| `titleFontFamily` | `"Georgia, 'Times New Roman', serif"` | white serif, census |
+| `titleSizeFrac` | 0.125 | font-size as fraction of stage height (cap height ≈0.088 measured) |
+| `revealStartMs` | 3500 | segment-relative (source 34.3); strictly after assembly completes at 3200 (phase exclusivity) |
+| `revealMs` | 500 | full text by 4000 segment-relative (source 34.8) |
+| `holdEndMs` | 5400 | lockup static to source 36.2; segment tail beyond is handoff context |
+| `buildMs` | 6200 | = segment duration (§2.3) |
+| `seed` | 204 | deterministic texture/RNG seed (guards cmd 3) |
+
+### 2.2 Construction choice
+
+**Chosen: DOM grid + JS state function.** A JS `stateAt(buildMs)` computes, purely from CONFIG: per-cell birth/fade (from `growthKeyframes`), band geometry, and the revealed title prefix; the renderer paints a CSS-grid of divs (538) + an absolutely-positioned band div (block divs from `bandBlocks` + one clipped text span whose clip width follows the reveal). One state function serves the animation, the comparison sync, and the A11 harness probes identically.
+Rejected alternatives, one line each:
+- **Canvas 2D** — viable (T82 precedent) but the band's typeset text + measured-fit leg are direct in DOM and indirect on canvas; cell-state probes would duplicate the draw logic.
+- **SVG** — 538 rects + text is lawful, but CSS-grid layout + frac geometry is simpler in DOM and the fit leg measures DOM ink natively.
+- **CSS-keyframes-only** — per-cell stagger would need 538 generated delays and offers no probeable state function; A11 assertions could not evaluate it.
+- **Generated imagery / newsprint asset** — refused: the ground texture is procedural (seeded SVG feTurbulence or CSS gradients generated in code); using the specimen's newsprint is a purity defect (§6.1).
+
+### 2.3 Schedule basis + census-anchor mapping (A7 / A10.2)
+
+**Window-scope line: schedule basis = `segment-anchored`.** Segment cut at §3: **source 30.8–37.0 s (6.2 s)** from `source.webm` into the artifact dir as `segment.mp4` (±0.5 s handles around the measured technique window 31.3–36.5). Window-start offset = **30.8 s**; segment-relative ms = (source t − 30.8) × 1000. The build's phases sit at their measured segment times.
+
+| Governed instant (segment-rel) | Source t | Census state (measured) | Prescribed build state (CONFIG expression) |
+|---|---|---|---|
+| 0 ms | 30.8 | broadcast insert tail (context only) | empty newsprint ground, 0 cells (departure D1) |
+| 450 ms | 31.25 | no cells yet (onset ∈ (31.2, 31.3]) | `visibleCells == 0` — zero-state anchor (guards cmd 8) |
+| 500 ms | 31.3 | onset: 2×2 fading | assembly begins (`assembleStartMs`) |
+| 700 ms | 31.5 | 15 cells (5×3) | keyframe f=0.074 → 15 ±6 cells, top-left region only |
+| 1200 ms | 32.0 | 136 cells (17×8) | keyframe f=0.259 → 136 ±20 cells |
+| 2200 ms | 33.0 | ≈465 cells (31×15) | keyframe f=0.630 → 465 ±30 cells |
+| 2700 ms | 33.5 | 512 cells (32×16) | keyframe f=0.815 → 512 cells, ≥95% blackened |
+| 3200 ms | 34.0 | **538 cells**, no band | f=1.000 → exactly 538 (A9.3); band absent |
+| 3450 ms | 34.25 | band not yet / landing | band opacity/width in flight; title prefix == "" |
+| 3700 ms | 34.5 | band full; text = "Electoral" | reveal prefix == first word |
+| 4000 ms | 34.8 | full title | reveal prefix == `titleText` |
+| 5400 ms | 36.2 | lockup static (hash-identical frames) | state identical to 4000 ms state (hold integrity) |
+| 5700–6200 ms | 36.5–37.0 | outline strokes begin (T210) | lockup held static (departure D2) |
+
+**Departure table (beside the mapping, per A10.2):**
+- **D1 — setup replaced:** census 0–500 ms shows the prior scene's exit + CNBC broadcast insert; the build shows the empty ground. Reason: borrowed broadcast footage is not recreatable content (purity §6.1) and is not the technique; the withholding structure is preserved as ground-only pre-roll, and the comparison's ORIGINAL side carries the real setup.
+- **D2 — handoff not built:** census 5700–6200 ms shows state outlines drawing over the field (T210's technique, this wave's queue #98); the build holds the lockup. Reason: §8 size discipline — the item is the identity assembly + title landing; the outline draw is a separate owed item.
+
+### 2.4 A11 census-checkpoint assertions (each: checkpoint · assertion · CONFIG expression · swap behaviour)
+
+| CP | Instant (CONFIG expression) | Assertion on `stateAt(instant)` | Timing-swap behaviour |
+|---|---|---|---|
+| CP1 | `assembleStartMs − 50` = 450 | visibleCells == 0 (zero-state anchor probe, guards cmd 8) | instant recomputes from CONFIG |
+| CP2 | `assembleStartMs + 0.074×assembleMs` = 700 | 9 ≤ visibleCells ≤ 21; all cells within cols≤5, rows≤3 | keyframe fraction fixed; instant moves with assembleMs |
+| CP3 | `assembleStartMs + 0.259×assembleMs` = 1200 | 116 ≤ visibleCells ≤ 156 | as CP2 |
+| CP4 | `assembleStartMs + 0.815×assembleMs` = 2700 | visibleCells == 512; blackened ≥ 0.95 | as CP2 |
+| CP5 | `assembleStartMs + assembleMs` = 3200 | visibleCells == cols×rows + lastRowCells == 538; bandVisible == false | as CP2 |
+| CP6 | `revealStartMs − 100` = 3400 | titlePrefix == "" AND band not yet full-width (phase exclusivity, Owner Cure 2) | instant recomputes |
+| CP7 | census instant 3700 (expression: `revealStartMs + 0.40×revealMs`) | revealed fraction ∈ [0.40, 0.55]; titlePrefix == "Electoral" (±1 char tolerance) | under the timing swap the receipt shows the recomputed instant for the same CONFIG fraction |
+| CP8 | `revealStartMs + revealMs` = 4000 | titlePrefix == titleText; bandBlocks rendered == CONFIG bandBlocks.length | instant recomputes |
+| CP9 | `holdEndMs` = 5400 | state hash == state hash at CP8 instant (hold integrity) | instant recomputes |
+
+Every assertion files an A12 executable receipt in the build-record (harness command · CONFIG expression · raw result); the A13 RECEIPT INDEX reconciles guards commands 1–8 + CP1–CP9 before the prewave payload is assembled.
+
+### 2.5 Swap design (§5.1 — exact altered values)
+
+- **Words:** `titleText`: `"Electoral College"` → `"HADOSH ACADEMY"` (different content; shorter — the band fit is re-measured, not assumed).
+- **One timing:** `assembleMs`: 2700 → **2100** (all keyframe/CP instants must move proportionally; CP receipts show the moved instants).
+- **One palette:** `bandBlocks[1].c` (main block): `#ba3844` → **`#1d4e89`**.
+Untouched and named: cellColor, ground, band geometry, reveal/hold timings.
+
+### 2.6 Purity checks (§5.2 / §6.1)
+
+Grep `recreation.html` for `segment.mp4|source.webm|t03-grid-build|ajavsMbCapY|<video|<img` → 0 hits required (in-file `url(#id)` fragments classified per guards cmd 1 precision note). Asset inventory: recreation loads **zero** external assets — ground texture is code-generated; no specimen media, no traced frame, no newsprint image. No captions/subtitles anywhere (§6.5) — the title text IS the technique's subject.
+
+### 2.7 Execute checklist (itemized instrument)
+
+1. Cut segment: source 30.8–37.0 s → `segment.mp4` (re-encoded, browser-playable); ffprobe facts filed (guards cmd 5) against §2.3's window.
+2. Create artifact dir `T204-dot-grid-identity-withheld-title/`; write `recreation.html` — CONFIG object first (every §2.1 key), state function + DOM renderer below; no literals of §2.1 classes in the logic (A9.6).
+3. Write `comparison.html` — ORIGINAL (segment) + RECREATION side by side, one synchronized control set, labels `ORIGINAL — Vox "The Electoral College, explained" @ 30.8–37.0 s` · `RECREATION — T204 dot-grid identity + withheld title, parameterized`; phone-width stacking with reachable controls.
+4. Own-checks with RAW output filed in `build-record.md` from the first draft (A9.4): swap test (§2.5 values) · purity grep (§2.6) · `node --check` + seeded-RNG census (guards cmd 3) · CP1–CP9 harness probes with A12 receipts · A9.3 count print (source 538 vs built 538, halt on mismatch).
+5. A6 legs on the final build: `guard-measured-fit` → `fit-table.md` (title + band rows at 360 px stage; legibility floor ~11 px) · `guard-config-census` → `config-census.md` (all-literal scan; keyframe/band/geometry keys resolved to application sites).
+6. A13 RECEIPT INDEX in the build-record, reconciled (guards cmds 1–8 + CP1–CP9 + expected CONFIG keys incl. `bandBlocks[]` and `growthKeyframes[]` nested entries) before any payload is assembled.
+
+### 2.8 Verify checklist (itemized instrument)
+
+1. Swap test result recorded with the exact §2.5 values + moved CP instants (receipts).
+2. Purity grep output + asset inventory (zero external assets) filed.
+3. Comparison check: both sides play from the shared control; durations matched (6.2 s); labels correct; phone stacking holds.
+4. **jev-prewave call point:** after legs 1–3 + A6 outputs, payload carries build-record + CONFIG + packet §T03 + guards list + **both A6 leg outputs verbatim** (A10.1) + the §2.3 census-anchor mapping; FIRE-WAVE spends the wave, HOLD returns to Execute (A12.3 two-HOLD stop applies).
+5. **Five-lens Codex scoring wave** (motion · timing · purity · reusability · readability) on the identical-hash build; each payload carries the catalogue mechanics + the §2.3 mapping (timing lens) + full recreation source; returns filed verbatim under `codex/`.
+6. Consolidation (mechanical, guards cmd 4): average ≥85 AND min ≥70 → PASS; arithmetic shown in `scores.md`; tier hand-off filed to the style-library board.
+
+### 2.9 Failure-point evaluation (priced from this job's record)
+
+- **Convergent freeze (T15 form):** no particle pool exists, so the literal defect cannot occur; its analogue — a growth front stalling mid-field — is excluded by construction (fronts are a pure function of CONFIG keyframes + clock; CP2–CP4 probe three mid-states). Residual risk: LOW.
+- **Intensity collapse (Owner Cure 1 class):** the title could fight its substrate if the band were translucent or cells showed through; excluded by construction (band opacity 1.0, occluded cells not rendered). The readability lens still prices the white-on-red/teal contrast at phone size. Residual: LOW–MEDIUM (serif at 360 px).
+- **Overlap (Owner Cure 2 class):** title reveal overlapping assembly would break the specimen's strict sequence; excluded by the phase machine (`revealStartMs` > assembly completion) + CP6's pre-reveal empty-prefix probe. Residual: LOW.
+- **Fitting limits:** at the 360 px stage the band is ≈203 px wide for 17 characters — title ≈24 px font, above the ~11 px floor; the swap title is shorter (fits by measurement, fit-table row required). A future longer title is the known envelope edge — the fit leg, not hope, prices it. Residual: MEDIUM (this is the item's honest weak surface).
+- **Render-proof limitation:** this seat has no browser binary — verification is LOGIC level (node harness over the state function + DOM structure), and `comparison.html` is the render surface (standing limitation, T82/T99 form, printed in scores.md). Residual: standing, disclosed.
+
+### 2.10 Plateau priced in Plan (A2)
+
+Family average **87.6** (T53 85.6 · T82 87.2 · T99 90.0). **Predicted minimum lens: reusability** — it is the minimum or co-minimum in all three siblings (74/80/80), and T204's reusability surface is exactly the class that priced them down: subject-shaping tables (growth keyframes, band block spans) that a builder is tempted to hardcode. The Plan's counter is A9.6 CONFIG completeness + the config-census leg before the wave. **Co-risk: motion** (80 in both T82 and T99) — if the keyframe interpolation reads as mechanical stepping rather than the specimen's smooth decelerating growth, motion lands ~80. **Pass condition, stated exactly (corrected under codex-plan-review R4):** if motion and reusability both land at 80, PASS requires timing + purity + readability ≥ 265 in total (average 88⅓) with each ≥70 — no assurance beyond that arithmetic is claimed. **A2 trigger, corrected:** the A2 WHY is owed by a *re-attempt* that fails to beat T204's *own* prior attempt average; 87.6 is this first attempt's family benchmark, not a trigger.
+
+**Plan gate-out:** parameter table (§2.1) · construction + rejected alternatives (§2.2) · schedule basis + census-anchor mapping + departures (§2.3) · A11 assertions (§2.4) · swap (§2.5) · purity (§2.6) · Execute + Verify checklists (§2.7–2.8) · failure points (§2.9) · plateau (§2.10) — complete.
+
+### 2.11 Plan amendments under codex-plan-review (REVISE — all applied; return: `item-T204-codex-plan-review-return.md`)
+
+- **R1 — Front + fade semantics (supersedes the CP4/CP5 readings in §2.4).** `stateAt` carries continuous fronts: `colFront(t)`/`rowFront(t)` interpolate the §2.1 keyframes (stored as fractions — see R3). Cell (c, r) is **born** at the first instant `colFront ≥ c+1 AND rowFront ≥ r+1`; its opacity is `clamp((t − birth)/cellFadeMs)`; states: unborn · fading (0 < opacity < 0.98) · black (≥ 0.98). The partial row has its own 1-D front over the final keyframe interval (f 0.815→1.000), cells born left-to-right, same fade. **CP4 (2700 ms) revised:** born == 512 AND gray (fading) cells ⊆ the leading column (≤16 cells → black ≥ 0.95 of born) — matching the census (last column gray at 33.5). **CP5 (3200 ms) revised:** born == `cols×rows + lastRowCells` (538 at defaults) AND gray cells ⊆ last column ∪ partial row. **CP5b added (3550 ms):** every non-occluded cell black (≥0.98) — the fade fully settled before the reveal completes. Probe instants derive from the CONFIG entries (assembleStartMs + f×assembleMs), never from literals.
+- **R2 — Phase transitions as predicates + one shared mask (supersedes §2.9's "phase machine" wording).** The state function gates on predicates, not constants: (i) `bandStart_effective = max(bandInStartMs, first instant born == total)` — the band cannot enter before the field completes under ANY CONFIG, including an extended assembly; (ii) text at horizontal position x is revealed only where the band's *current* footprint is opaque at x — one state-derived footprint mask governs band paint, title clipping, and cell occlusion together, so no cell hole can open ahead of the growing band. **CP6b added (predicate proof):** a test-only evaluation with `assembleMs` extended +800 ms must show band entry deferred to the extended completion (the shortening swap alone cannot expose this class; the extension probe can) — filed as an own-check with its receipt, and the same predicates hold on seek (stateAt is a pure function of t + CONFIG). Fit-table gains a contrast row: title ink vs band measured at 360 px for BOTH the specimen palette and the §2.5 swap palette.
+- **R3 — CONFIG completion (extends §2.1).** New keys: `originCorner: "top-left"` · `growthAxes: "right-down"` · `revealDirection: "left-to-right"` · `groundTextureScale: 1.0` · `groundTextureContrast: 1.0` (procedural texture coefficients, A9.6). **Derived, not configured (stated):** the title word split (first space in `titleText`) and the last-row lag (the final keyframe interval). **One geometry rule:** pitchX = fieldW/`cols`, pitchY = fieldH/`rows`; cell side = min(pitchX, pitchY) × `cellFillFrac`, each cell centered in its pitch box — squares survive count changes. **Keyframes re-based to fractions:** `growthKeyframes` entries carry `{f, colFrac, rowFrac, lastRowFrac}` (defaults: f 0.000→{0.063, 0.125, 0} · 0.074→{0.156, 0.188, 0} · 0.259→{0.531, 0.500, 0} · 0.444→{0.781, 0.750, 0} · 0.630→{0.969, 0.938, 0} · 0.815→{1.000, 1.000, 0} · 1.000→{1.000, 1.000, 1.000}) so fronts scale with effective `cols`/`rows` and never go stale; node count is derived (`cols×rows + lastRowCells`), never a literal. **Title sizing:** `titleSizeFrac` is stage-relative with the fit rule printed — the fit leg measures the built span's ink against the band's inner width and the 11 px floor; a title that fails either is a build defect, not a shrug. **CP7 generalized:** the expected prefix is derived from the *configured* `titleText` and measured glyph boundaries (same stand-in font as the fit leg); "Electoral" stands as the default-CONFIG anchor only. **Geometry probe added to own-checks:** a scratch evaluation at `cols` 32→28 asserting derived node count (28×16+26 = 474) and square cells (side equal on both axes) — catches CSS/renderer literals the three scored swaps leave untouched.
+- **R4 — Bar arithmetic + A2 trigger:** applied at §2.10 (pass condition 265 printed; A2 trigger corrected to the re-attempt form).
+- **R5 — Size discipline:** CONFIRMED by the review; no act.
+
+**codex-plan-review disposition summary:** REVISE received → R1–R4 applied as §2.11 + §2.10 corrections above; R5 confirmed. No finding set aside. The Plan that Execute follows is §2.1–§2.10 **as amended by §2.11**.
+
+---
+
+## §3 — Phase A close
+
+- **Calls fired:** codex-observe (CONFIRMED-WITH-GAPS, 4 findings, all disposed §1.7) · codex-plan-review (REVISE, 5 findings, all disposed §2.11/§2.10). Returns filed verbatim as sibling files in this run directory.
+- **Not fired here (by form):** jev-observe-exit + jev-plan-exit are wave-level gates — the seat fires them on the four Phase A records in RUN.md §2b before any build (A9.2). jev-prewave + the five-lens wave belong to Execute/Verify.
+- **Gaps stated plainly:** (1) the completed-field count is 538 ±1 (no settled un-occluded frame exists; §1.7 F3) — the build reproduces 538 by CONFIG construction and the A9.3 print tests it; (2) cell ink + band spans are JPEG-sampled measurements with the sampling limits noted in §2.1; (3) verification at Execute is LOGIC-level (no browser binary in this seat) — the comparison page is the render surface, the standing disclosed limitation.
+- **Phase A outcome:** Observe + Plan complete with both Codex dispositions consumed. The item is ready for the wave's §2b exit gates; no build script exists yet, by design.
+# RUN — recreation Cycle 037 · Wave 34 · 2026-11-18 (T199 completion under A12.3 + first attempts queue #95–#98: T204 · T205 · T208 · T210, Packet #12)
+
+Opened BEFORE any building (INSTRUCTION §0). Trigger: cron `study-recreation` 2026-11-18 09:20 EST.
+Governing: recreation INSTRUCTION.md (§0 wave form incl. completion-wave form Amendment A8 + skeleton-record step · §1–§9 · Amendments A1/A2/A3/A5/A6/A7/A9/A10/A11/A12/A13 + 2026-11-14 ruling: arming=firing, verdicts advisory), bounded_probe_discipline (probes named in advance, capped in code ≤6,000 chars: QUEUE recreation section in capped slices · TECHNIQUES.md OWED lines · Cycle-036 RUN.md in capped slices · per-item scores.md tails · artifact census · HQ.json tail entries · heartbeat tail; breaches: 0).
+Pre-action judgment: (1) objective — carry T199 shout scaling (queue #94, Packet #11) to its scored verdict via its authorized A12.3 completion re-fire (cures filed in its scores.md at Wave 33 close), and carry the next four owed first attempts in queue order — #95 T204 dot-grid identity system + withheld title · #96 T205 vote-to-grid conversion diagram · #97 T208 paired dot counts, House stage · #98 T210 threshold grid-map (all Packet #12, Vox "The Electoral College, explained") — each to a scored verdict; 5 items, the §0 cap. (2) Forward movement — the NO-VERDICT pool drops from 4 toward 3 (T199 scored; T190/T196/T197 stay parked, see §0b.1) and the DESCRIBED-OWED pool drops from 11 toward 7. (3) Cost to owner — none; no ask, no schedule change; the T190/T196/T197 authorization ask stands with HQ (consumer named, §0b.1) and is NOT re-asked here. (4) Why now — scheduled firing; A12.3 makes T199's completion the next cycle's first charge, and queue order is the only triage (A3). (5) Body-write — this RUN.md, per-item records + builds under `hidden_files/study/recreations/`, HQ.json skeleton→closed entry (same id `rec-2026-11-18-wave34`), heartbeat skeleton→closed beat 117, verdict-history lines, QUEUE.md rows #95–#98 (+ #94 status update). (6) Order check — this record's §1 prices T199's on-disk state BEFORE any firing (A8) and the fresh pool census before any build; each new item's Phase A record (Observe+Plan + codex-observe + codex-plan-review) is filed and the wave-level exit gates are fired and consumed in §2b BEFORE its build script is written (A9.2); T199's build is a cure of its already-gated plan (Cycles 034–036 §2b stand consumed), so its Execute opens on the filed cure list. Skeleton board/heartbeat entries are written at Plan close (§0 skeleton rule) — this cycle complies, no D-SKELETON.
+
+## §0b — Replan items carried
+1. **T199 completion (Cycle 036 §9/§0b.1, first charge, AUTHORIZED under A12.3):** T199's second HOLD landed in Cycle 036, so its first completion re-fire in THIS cycle is authorized by A12.3 as written. Cure list = the four items in its scores.md (census-twin CONFIG-derived receipts · hail-prescription reconciliation printed in the payload mapping section · overlap intersections from positioned bounds · CP11 joined receipt), rebuilt under Amendment A13 (receipt index + reconciliation against guards.md commands 1–8 + the item's whole inherited assertion set + expected CONFIG keys; every line carries its executable receipt or a NOT-DEMANDED line with a governing citation).
+2. **T190/T196/T197 — PENDING AUTHORIZATION (consumer: HQ), NOT taken this wave:** each spent its A12.3 completion re-fire in Cycle 036 and that re-fire HOLDed; A12.3 does not expressly renew a re-fire after a completion HOLD (Cycle 036 codex-condense firing 3). No HQ authorization entry stands on this job's board after `rec-2026-11-18-wave33` (board re-read this run: 49 entries, last = wave33). Their slots therefore fill from queue #95 onward, exactly as Cycle 036 §0b.1 prescribed. They remain mid-attempt HERE (A3 §3) and do NOT route to practice.
+3. **Practice census-guard proposal** (carried Cycles 034–036): consumer = the next Condense with ≥3 scored items. Price at §9 if ≥3 verdicts land this wave.
+4. **Feed standard (Cycle 035 §9.1, followed since):** payload size+tail-verified → one-stream `cat payload | codex exec` (local binary `~/workspace/codex-local/node_modules/.bin/codex`, per TOOLS.md working route; instructions + artifact in ONE stream, never pipe + stdin field together) with redirect → return size+tail-verified → on empty/truncated, ONE re-fire via stdout capture + file-tool filing; a second failure files honestly and stops.
+5. **Practice construction note** (HQ board `practice-2026-11-18-t06-construction-note`, sent): reserved-band badge treatment for container-scaled labels — consumer is recreation's next first attempt whose labels scale with a container. Priced for this wave at §2 per item; Packet #12's grid/diagram items carry tally labels — the item whose labels scale with its container prices it in its Phase A record, the others print NOT-BINDING with reason.
+6. Standing forms (A10/A11/A12/A13): every new item's schedule table prints its census-anchor mapping (A10.2); §1 files a frame census at ≤2 s spacing with full SHA-256 per item (A10.3); jev-prewave payloads carry both A6 leg outputs verbatim (A10.1); every build-record carries the A13 RECEIPT INDEX reconciled before payload assembly; fit evidence is (i) harness post-fit ink measurement or (ii) rendered measurement with a named stand-in font, never a character-width model (A12.2).
+
+## §1 — Observe (completion form for T199 per A8; first-attempt form for T204/T205/T208/T210 — per-item detail in each item's Phase A record in this run directory)
+
+**Wave manifest: 5 items** — 1 completion (queue #94 T199, Packet #11) + 4 new first attempts (queue #95–#98, all Packet #12: Vox "The Electoral College, explained", YouTube ajavsMbCapY, 488.301 s; digest at `hidden_files/study/video-digests/2026-11-17-yt-ajavsmbcapy/`; adopted WITH GAPS by video-digestion Cycle-019; registered by style-library Cycle-019).
+Consumer (T199): word-animation containers. Consumer (Packet #12 items): diagram containers (the DLC assembler's diagram/count-board surfaces) — T204 additionally the opening/identity surface. In every build the technique's text/marks ARE the subject, not captions (INSTRUCTION §3.2/§6.5).
+
+### Pool census (fresh this run, 2026-11-18 09:20 EST)
+1. QUEUE.md RECREATION QUEUE: rows #1–#94 filed. #94 T199 IN PROGRESS NO VERDICT (completion authorized, this wave). Rows #95+ do not yet exist as rows — entered by recreation at this wave's close from the style-library register (standing precedent).
+2. Catalogue register (style-library TECHNIQUES.md, read this run; Cycle-020 state): 239 techniques · DESCRIBED-OWED 12 at Cycle-036 read (queue #94 T199 · #95 T204 · #96 T205 · #97 T208 · #98 T210 · #99 T212 · #100 T218 · #101 T219 · #102 T227 · #103 T232 · #104 T233 · #105 T238); style-library Cycle-020 (closed after Wave 33) registered Packet #13 and prints catalogue 239 (DESCRIBED 146 · IN PROGRESS 15 · RECREATED 78 on its accounting, which includes practice re-attempt moves). This wave takes #94 (completion) + #95–#98; #99–#105 (7 items) stand for later waves.
+3. Artifact census (binding): 94 directories under `hidden_files/study/recreations/` (directory listing this run) — 90 with verdicts + 4 NO VERDICT (T190 · T196 · T197 · T199). The four new items' directories do not yet exist; created at their Plans.
+4. Ownership split (A3 §3): all five items are first attempts / a mid-attempt completion → this job. All other IN PROGRESS techniques are practice's re-attempt pool. T190/T196/T197 stay parked PENDING AUTHORIZATION (§0b.2) — printed, not silently skipped.
+
+### Per-item state (A8 pricing for the completion item; catalogue lines for the new items)
+- **T199 — shout scaling inside a real scene** (`T199-shout-scaling-in-real-scene/`): build on disk recreation.html sha256 `edad0b81…` (14,730 B at Wave 33), UNCHANGED across both Wave-33 prewave firings (its cure round touched records only). Filed: segment.mp4 (9.000 s, source 66.5–75.5 s) · comparison.html · build-record.md · fit-table.md · config-census.md · plan-amendment-cycle036.md · jev-prewave ×2 HOLD (both bind this build). NOT present: lens returns · verdict. Completion charge (scores.md cure list, verbatim pricing in §0b.1): restructure the harness so every census twin is a CONFIG expression with CONFIG-derived receipts incl. a timing swap that moves a twin · print the hail-prescription reconciliation in the payload mapping section (amendment governs over the census-anchor table wording) · overlap rows as intersections from positioned peak + neighbour ink bounds · CP11 as ONE joined receipt (CONFIG expression + band sample together). Then: fresh own-checks + A6 legs on the (record-cured; build changes only if a cure requires it — any build change re-binds all payloads to the new hash) + A13 receipt index reconciled + ONE jev-prewave re-fire (authorized, A12.3) → five-lens wave on FIRE-WAVE only.
+- **T204 — dot-grid identity system + withheld title** (P12; TECHNIQUES.md: "the dot field assembles and the title lands across it — the assembly order is the claim (clip-cited)"; container: openings + diagrams): no directory, no prior calls. Mechanics/timestamps/evidence frames priced in its Phase A record from the Packet #12 digest section + firsthand frame census (A10.3) before Plan.
+- **T205 — vote-to-grid conversion diagram** (P12; "a grid fills in blocks, left to right, as conversion"; container: diagrams): same Phase A charge.
+- **T208 — paired dot counts, House stage** (P12; "dots land in grids timed to the spoken count (clip-cited)"; container: diagrams): same Phase A charge.
+- **T210 — threshold grid-map (the road to 270)** (P12; "state outlines draw themselves over the tally grid and regions accumulate toward the 270 post (clip-cited)"; container: diagrams): same Phase A charge.
+
+### Standing guidance dispositions (restated for this cycle, per A8)
+A13 receipt index + reconciliation binds every item (see §0b.6). A1.2 runtime text sampling binds typography constructions that sample config-rendered text; the Packet #12 items are grid/diagram constructions — each Phase A record prices its applicability with reasoning in its Observe gate-out (A9.5). A5 flow-field + Owner Cures bind particle fields only; no item this wave is a particle field unless its Phase A census shows one (priced per item there). A9.1: any moving background plate is priced in the item's parameter table (seamless tiled pan where a plate IS the technique; a still plate where motion exceeds the technique). A9.6: every subject-shaping value is CONFIG data in all five items. A11: every census checkpoint maps to an executable assertion with a CONFIG-derived instant + an A12 receipt.
+
+## §2 — Plan (summary; per-item authority = each item's Phase A record in this run directory)
+- **T199 (completion):** parameter table, construction, verification plan and checklists stand as filed in Cycles 034–036 (item record + `plan-amendment-cycle036.md`) AS AMENDED by the scores.md cure list — consumed, not re-authored (A8). Execute checklist = the four cures (§0b.1) + fresh own-checks (swap · purity · syntax, raw output filed) + A6 legs re-filed + A13 receipt index reconciled + ONE jev-prewave re-fire (payload carries build-record + CONFIG + packet section + guards list + both A6 outputs verbatim + the binding census-anchor mapping, A10.1) + five-lens wave on FIRE-WAVE only (identical-hash binding; timing payload carries the census-anchor mapping). Bar (standing §2.3): five-lens average ≥85 AND no lens <70. Schedule basis stands: segment-anchored (segment = source 66.5–75.5 s; buildMs = segmentTimeMs − 500).
+- **T204/T205/T208/T210 (new):** each item's Phase A record is its Plan authority: parameter table (every §1 variable a named CONFIG key, specimen values as defaults) · construction choice with rejected alternatives · schedule basis + census-anchor mapping (A7/A10.2 — segment-anchored, t=0 allocation, or two-act, named on the window-scope line) · swap design (different content + one timing + one palette value, exact values) · purity checks · Execute + Verify checklists as instruments · failure-point evaluation (priced from this job's record: convergent freeze · intensity collapse · phrase/state overlap · fitting limits · render-proof limitation) · plateau priced in Plan (A2: family/prior average + stuck-lens hypothesis stated before Execute). Per-item codex-observe + codex-plan-review fire in Phase A; the wave-level jev-observe-exit + jev-plan-exit fire on the four Phase A records before any build script is written (§2b).
+- **Wave gate form for this cycle:** jev-observe-exit + jev-plan-exit fire for the four new items; for T199 they print NOT-DEMANDED-BY-FORM — its Observe/Plan gates fired and were consumed in Cycles 034–036, and A8 consumes filed gate returns, never re-fires them; T199's demanded gate is the A12.3 prewave re-fire. codex-observe + codex-plan-review fire per item for the four new items in Phase A; for T199, NOT-DEMANDED-BY-FORM (consumed Cycles 034/036, returns on file). codex-condense fires at this cycle's Condense, unconditionally.
+
+## §2b — Wave gate dispositions
+_(Filled after the four Phase A records land and both gates fire; Execute for new items opens only on this section standing consumed. T199 proceeds in parallel on Cycle 036's consumed §2b.)_
+
+## §3 — Execute
+_(Per item, on landing.)_
+
+## §5 — Verify
+_(Seat-verified at close.)_
+
+## §9 — Condense
+_(At close.)_
+
+## §7 — Faithfulness trace
+_(At close.)_
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 99110 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Skipped project instructions in environment `local` starting at `/home/hatch/workspace/AGENTS.md` because the 32768-byte budget was exhausted. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+I’ll check the amended T204 Plan against its census, focusing on whether the prescribed schedule can pass its own probes.
+exec
+/bin/bash -lc "rg --files -g '*.md' | head -45" in /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/runs/2026-11-18-cycle-037-wave-34
+ succeeded in 593ms:
+item-T204-codex-plan-review-return.md
+item-T205-codex-plan-review-return.md
+item-T210-codex-plan-review-return.md
+item-T204-observe-plan.md
+item-T205-codex-observe-return.md
+item-T204-codex-observe-return.md
+item-T208-codex-plan-review-return.md
+item-T210-codex-observe-return.md
+item-T208-codex-observe-return.md
+item-T208-observe-plan.md
+item-T210-observe-plan.md
+item-T205-observe-plan.md
+AGENTS.md
+RUN.md
+census/AGENTS.md
+
+exec
+/bin/bash -lc 'cat item-T204-observe-plan.md RUN.md item-T204-codex-observe-return.md item-T204-codex-plan-review-return.md' in /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study-jobs/recreation/runs/2026-11-18-cycle-037-wave-34
+ succeeded in 518ms:
+# Item T204 — Phase A record (Observe + Plan ONLY) · Wave 34 · Cycle 037 · 2026-11-18
+
+**Item:** T204 — dot-grid identity system + withheld title · queue #95 · Packet #12 (Vox, "The Electoral College, explained", YouTube ajavsMbCapY, 488.301 s) · packet-local T03.
+**Phase:** A only — no build script written, no artifact directory created (A9.2 gate order: the wave's exit gates fire on this record before Execute).
+**Artifact directory (at Plan, for Execute):** `hidden_files/study/recreations/T204-dot-grid-identity-withheld-title/`
+**Governing:** recreation INSTRUCTION.md §1/§2 + Amendments A1/A2/A3/A5/A6/A7/A9/A10/A11/A12/A13 · RUN.md §§0b/1/2 (Wave 34).
+
+---
+
+## §1 — OBSERVE
+
+### 1.1 Catalogue mechanics (cited)
+
+- **Digest §T03** (`hidden_files/study/video-digests/2026-11-17-yt-ajavsmbcapy/digest.md`, lines 37–41): timestamps 0:28–0:37; "A field of black dots on a newsprint-textured ground assembles; the words 'Electoral College' land across it as red/blue split lettering. The same dot field is the substrate for the title, the threshold map (T07), and the outro. The title is withheld until 0:28 — after the misconception (T01) and the normal-system diagram (T02) are installed." Evidence: `ev/t32-title-dotgrid.jpg` · clip `clips/t03-grid-build.mp4` (28–36 s, "the assembly order is the claim").
+- **Style-library entry** (`techniques-openings.md`, "### T204 — Dot-grid identity system + withheld title (P12 T03) ◆ — OWED #95"): repeats the digest mechanics and window; feeds opening · diagram · ending.
+- **Register** (`TECHNIQUES.md` line 143): "the dot field assembles and the title lands across it — the assembly order is the claim (clip-cited)" · DESCRIBED — OWED #95.
+- **Narration anchors** (`sentences.json`): 28.270 s "But in America we do it a little differently." · 31.369 s "The US is the only country that picks its president using something called the Electoral College." · 37.047 s "It's made up of delegates from each US state."
+
+### 1.2 Motion census (A10.3) — firsthand, this run
+
+29 frames extracted by the seat into this run's `census/` dir (17 from `clips/t03-grid-build.mp4` at 0.5 s spacing + 6 fine frames at the two transitions + 6 from `source.webm` bounding the window), **every frame viewed firsthand by the seat**. Clip↔source mapping: clip t = source t − 28.0 (production-record: clip = source 28–36 s; clip ffprobe: h264 1920×1080, 7.965 s). Cell counts measured by projection analysis of the viewed frames (threshold <200–210, per-row blob runs).
+
+| # | Frame | Source t | SHA-256 (full) | State viewed |
+|---|---|---|---|---|
+| 1 | T204-census-src27.0s.jpg | 27.0 | fe6ce1ab5017877064b76e3f5e060b4fd0ba92fe8e527835ff5e394893936177 | Pre-state: T203 popular-vote scene full (ballot disc + split bar + winner figure). No grid. |
+| 2 | T204-census-c0.0s.jpg | 28.0 | 0a531d1739db591e07e859641ea5748a58bc18c69c6595812779417718382c2b | T203 scene exiting left (disc half off-frame); balloons over figure. No grid. |
+| 3 | T204-census-c0.5s.jpg | 28.5 | d2b26a17cc4f8b779c64f114fd502bea9c741e139ca475444396fbe5caa43bc9 | Exit continues; balloons dropping. No grid. |
+| 4 | T204-census-c1.0s.jpg | 29.0 | ecef2a6c69e96106557653b0e93ea4d039c1a22b1b4fac7021960a7eb75d9686 | CNBC broadcast insert (KEY STATES board, presenter). Borrowed footage — not the technique. |
+| 5 | T204-census-c1.5s.jpg | 29.5 | ae39bafdac61719e6f6bc61f16a02ae79fe799553f27a0a9332af5a7afcc019e | Broadcast insert holds. |
+| 6 | T204-census-c2.0s.jpg | 30.0 | 6b236b7ec851e7de9e14866eb4b08c8416a7fd58075393c055d98f747d28923b | Broadcast insert holds (presenter pointing). |
+| 7 | T204-census-c2.5s.jpg | 30.5 | 2e8222f0b7bd2c7c5df319380287d2e20754c264e7061c9a94a6230510424a93 | Broadcast insert holds. |
+| 8 | T204-census-c3.0s.jpg | 31.0 | 3b46679e530b2c8bb92fc457a264b7707d56b2a67d38fe87226ad6b09cf6e4a1 | Broadcast insert, last census state before the cut. **Zero grid cells — zero-state anchor.** |
+| 9 | T204-census-c3.2s.jpg | 31.2 | 6e9ca6277fdfdd931d583f3eedf8d5a8e791cd5af873fc4b0e3e161db4241796 | Still broadcast insert. Zero cells. |
+| 10 | T204-census-c3.3s.jpg | 31.3 | 62466bed0a5867cb1d0f03b4c0f8d2eb22f55132e5b9d8a625d87df7464c83c7 | **ASSEMBLY ONSET:** cut to newsprint ground; 2 cols × 2 rows of square cells at the field's top-left origin, fading in (1 black, rest gray shades). |
+| 11 | T204-census-c3.4s.jpg | 31.4 | 18613993e5b925acbd7202e4e2fceb971cf540830e1d69cca67cd60acffe3449 | 4 cols × 3 rows; fade front at right column (mid-gray) + bottom row (light gray). |
+| 12 | T204-census-c3.5s.jpg | 31.5 | 412c6ca3e657c9b42723a6d15c5f7364f730e7e74b3f5ae6a21c729d4878cb64 | 5 cols × 3 rows = **15 cells** (measured); front still at right + bottom edges. |
+| 13 | T204-census-c4.0s.jpg | 32.0 | 1f3d2a2a054848efc4d74e2d7281d52b3b8ca074e5e53ad37d3627f96a8d5ee7 | 17 cols × 8 rows = **136 cells** (measured); rightmost column gray. (Matches ev/t32's state — that still is this instant, an assembly still, not a title still.) |
+| 14 | T204-census-c4.5s.jpg | 32.5 | 33a0c27db76037d7a63b8ff9aeaafc638a731317ce8527d1d7d3298751db499e | ≈25 cols × 12 rows; right column + bottom row gray (front chasing both leading edges). |
+| 15 | T204-census-c5.0s.jpg | 33.0 | a75e48818083a56cd18abaa80c8791577ce87dfb7e5dd5da06235fb7d8007e61 | ≈31 cols × 15 rows; right column light-gray, bottom row mid-gray. |
+| 16 | T204-census-c5.5s.jpg | 33.5 | 865d6d03bf74092a1b246a6174f3aca6da150e899722d7a707308d2145306c17 | **32 cols × 16 rows = 512 cells** (measured exactly); only the last column still gray. |
+| 17 | T204-census-c6.0s.jpg | 34.0 | bd62426ba08c0f54962fcfc229c9717020497711faa9241095cb31918b3bc7f1 | Main field black + final partial row (row 17) mid-fade: 26 cells, offset right by ~3 columns. **Total 538 cells** (measured 539 with one fade-front split artifact — count stands 538 ±1, see §1.4 G3 disposition). No title band yet. |
+| 18 | T204-census-c6.5s.jpg | 34.5 | 4d14a6f6ae7e450a21453a7dfaf2cdf20847cd245ba5448df7785762ed5d1d6d | **TITLE BAND LANDED** across the field's middle rows; white serif text revealed up to "Electoral" only; band's right portion still empty red. |
+| 19 | T204-census-c6.6s.jpg | 34.6 | fbf886785aaed420e852f0943e6fe511566fd6591fb6f8582cb2b52bccbd9e58 | Reveal progressed: "Electoral Col". |
+| 20 | T204-census-c6.7s.jpg | 34.7 | b363180a1bb6a4e4fdb5827b7c3c265ce65af92f622f55111bf0befb0b7b8886 | Reveal progressed: "Electoral Colleg". |
+| 21 | T204-census-c6.8s.jpg | 34.8 | 7502ab84bf6dcb73fe24d992faba5dfa48f1d7ba99587a569d56ce34bedfddf9 | **Full title "Electoral College" revealed.** |
+| 22 | T204-census-c6.9s.jpg | 34.9 | 70e7b33c56cd99565638bd2bdc8794f2356dc468047d32a736bcf20516a80f2f | Lockup hold (identical state). |
+| 23 | T204-census-c7.0s.jpg | 35.0 | b25f0dea24874a46b8f8faf0bc52ef87c128f1adf73cbb98d0fa019a6c6d5b40 | Lockup hold. |
+| 24 | T204-census-c7.5s.jpg | 35.5 | eea774cff1988daba2382e8d902908efa01d86f3c3e6efa975bd198ac0d986a2 | Lockup hold. |
+| 25 | T204-census-c7.9s.jpg | 35.9 | 4e5f21640f3c60fb85bc5b0b3bb81319e36a6c1afae12364994d9b0cd1cf41c7 | Lockup hold (clip end). |
+| 26 | T204-census-src36.0s.jpg | 36.0 | be85076fa06821fa0b369c87cb3046b72d64d2059bb2ee88ff4958e13f6c6ff3 | Lockup hold continues past the clip's end. |
+| 27 | T204-census-src36.2s.jpg | 36.2 | be85076fa06821fa0b369c87cb3046b72d64d2059bb2ee88ff4958e13f6c6ff3 | Byte-identical frame to 36.0 — the hold is fully static ≥0.2 s here. |
+| 28 | T204-census-src36.5s.jpg | 36.5 | de03f7faa169e2c8d8d1f498af0336964cfe8ce41dbb3fe65356f61ff50ce4c0 | Title still up; dark state-outline strokes BEGIN drawing over the field — the next technique's onset (T210 handoff). **T204 window closes.** |
+| 29 | T204-census-src37.5s.jpg | 37.5 | 7ebb81280758a20634e40758cd60f252ac1d1ab47a92263e02f9a0b5879517d6 | Title gone; state outlines complete over the field (T210's state — outside this item). |
+
+**Motion findings (A10.3 form):**
+- **What forms when:** (i) 31.30 ±0.05 s — the square-cell field begins at a fixed top-left origin on the bare newsprint ground, growing as an expanding rectangle (rightward + downward fronts) whose newest cells fade gray→black, the fade front riding the leading right column and bottom row; (ii) 34.0 s — the field completes at 538 cells (32×16 + a 26-cell partial last row offset ~3 cols right — one cell per electoral vote); (iii) ~34.3 s — the title band lands across the field's middle (rows 8–9 zone) as flat color blocks (teal head block · red main block · steel-blue bottom strip · pale bottom-right block · dark top strip), fully occluding the cells behind it; (iv) 34.3–34.8 s — the white serif title reveals left-to-right inside the band at letter pace ("Electoral" by 34.5 · "Col" 34.6 · "Colleg" 34.7 · full 34.8).
+- **Holds how long:** completed field alone ≈0.3 s (34.0→34.3); full lockup static from 34.8 to ≥36.2 (≥1.4 s, hash-identical frames at 36.0/36.2), ending when the outline handoff begins ~36.3–36.5.
+- **Dissolves how:** it does not dissolve inside its window — the title exits by being replaced under the next technique (state outlines draw over the field from ~36.3; title gone by 37.5). The exit belongs to T210's transition, not to T204.
+- **Sub-beats:** the assembly is one continuous growth, not per-row steps (counts 4 → 15 → 136 → ~300 → ~465 → 512 → 538 across 31.3→34.0 — decelerating fronts, fast first second); the last row is a separate late beat (births 33.5–34.0, after the 16-row body completes); the band precedes its text (band full-width while text still revealing); the sponsor watermark ("Presented by ABSOLUT", top-right, visible in source frames) is specimen branding, NOT part of the technique — excluded.
+- **Corrections to the catalogue prose (priced from the census, not the digest):** (1) the "dots" are **square cells**; (2) the lettering is **white**, not "red/blue split" — the red/blue split lives in the **band blocks behind** the white serif text; (3) the digest window 0:28–0:37 conflates setup with technique: 28.0–31.2 inside it is the prior scene's exit + a CNBC broadcast insert (borrowed footage, not recreatable, not this technique); the technique proper is **31.3–36.5**; (4) the digest's "threshold map (T07)" cross-reference is wrong — packet T07 is the TX/VT House-stage count; the threshold grid-map is packet T09 = library T210 (see codex-observe finding 4).
+
+### 1.3 Variables (§1.3 — every property that could change without changing the technique)
+
+Content: title text (and its word split) · cell total / cols / rows / last-row cells / last-row offset. Geometry: field position + extent (fractions of stage) · cell size-to-pitch ratio · origin corner. Timing: withhold/pre-roll duration · assembly duration · per-cell fade duration · growth-front shape (keyframe table) · last-row lag · band-in duration · text-reveal duration · hold duration. Palette: cell ink · ground color · ground-texture intensity · band block colors + their span fractions · title color. Type: title font family · title size relative to band. Direction: growth direction (origin corner + front axes) · reveal direction. Density: pitch (cells per stage width) at fixed extent.
+
+### 1.4 Prior / family scores read (§1 resource 3)
+
+No prior attempt for T204 (no artifact directory, no verdict-history line — confirmed by census + codex-observe's audit). Closest scored siblings, read firsthand from their `scores.md`:
+
+| Sibling | Why closest | Lens line (motion · timing · purity · reusability · readability) | Avg | What it prices for T204 |
+|---|---|---|---|---|
+| T53 ballot-arc count board | grid/count board, same packet family of count surfaces | 92 · 88 · 94 · **74** · 80 | 85.6 PASS | Reusability is the family floor: value-dispatched scheduling + renderer literals outside CONFIG were its convergent defect — T204's schedule must dispatch on CONFIG keyframes/IDs, never on content values. |
+| T82 countable multitude | cell-grid multitude assembling in place | 80 · 89 · 100 · 80 · 87 | 87.2 PASS | Its convergent defect was the reveal SHAPE (row-major order vs the measured oval front) — T204's growth fronts must follow the measured keyframes, not an assumed order; canvas geometry literals were its reusability leak. |
+| T99 logo-mark assembly opening | opening/identity assembly (the other consumer surface) | 80 · 100 · 100 · 80 · 90 | 90.0 PASS | Assembly openings score high on timing/purity when the lifecycle is CONFIG-driven; its cures were CONFIG completeness + fitted wordmark — T204's band + title fit must be CONFIG + measured. |
+
+Family average (A2 basis): (85.6 + 87.2 + 90.0) / 3 = **87.6**. Every sibling's minimum is reusability (74/80/80) or motion (80/80).
+
+### 1.5 Consumer (§1 gate)
+
+**Primary: the opening-identity surface** (explainer cold-open / DLC opener title landing). Reason: the technique's payload is a *title* whose landing is withheld until its substrate assembles — the act is an identity reveal, and RUN.md §1 names T204 "additionally the opening/identity surface" beyond the wave's diagram default. **Secondary: diagram containers** (the DLC assembler's count-board surfaces) — the identical field component is the tally substrate the sibling items consume (T210's outlines draw on this field; T205/T208 reuse the grid module). The build therefore ships two liftable modules: the field (diagram) and the band+reveal (opening-identity).
+
+### 1.6 Standing-guidance dispositions — WITH REASONING INLINE (A9.5)
+
+- **A1.2 runtime text sampling — NOT-BINDING.** That precedent licenses letterforms *sampled from config-rendered text* (particle typography, T15 family). T204's title is typeset serif text sitting on an opaque band; no letterform is sampled, formed, or particle-built, and the census shows the glyphs arriving by a left-to-right reveal of finished type. Sampling would add a construction the specimen does not contain.
+- **A5 flow-field model — NOT-BINDING as construction.** There is no particle field: the census shows discrete square cells that fade in place on a fixed lattice — nothing flows, borrows, or releases. **Owner Cure 1 (intensity separation) — BINDS in analogue:** the specimen's own separation is occlusion — the band is fully opaque and the cells behind it never compete with the title; the Plan carries band opacity 1.0 and cells under the band not rendered. **Owner Cure 2 (strict phase exclusivity) — BINDS:** the census shows the title reveal beginning only after the field completes (band onset ~34.3 > last cell 34.0); the Plan enforces it by phase machine + a pre-band zero-title assertion (CP6), not by hopeful timing arithmetic.
+- **A9.1 plate construction — STILL PLATE priced.** The newsprint ground never moves in any census frame (identical texture position across 31.3–37.5); a moving plate would exceed the technique. The ground is therefore a still, procedurally generated texture (code-generated, never the specimen's newsprint image — purity §6.1); no pan, no tiling requirement arises.
+- **Reserved-band badge note (HQ board `practice-2026-11-18-t06-construction-note`) — BINDS.** T204's title is exactly a container-scaled label: the Plan gives it a reserved band (fixed CONFIG geometry across the field's middle; the cells behind it are occluded by design, not competing) with legibility floors — title cap-height measured at the 360 px stage against the ~11 px floor in the A6 measured-fit leg, and band geometry in CONFIG so the band scales with the container without re-layout.
+- **A9.6 parameterization depth — BINDS.** Band block spans, growth keyframes, and ground coefficients are subject-shaping values → all CONFIG data (§2.1).
+- **A11 census checkpoints — BINDS** (§2.4 assertion table). **A13 receipt index — BINDS** at the build-record stage (Verify checklist).
+
+### 1.7 codex-observe — fired at §1 step 1 · return filed · dispositions
+
+Return: `item-T204-codex-observe-return.md` (this run dir) — **Verdict: CONFIRMED-WITH-GAPS**, 4 findings. Dispositions (applied into this record before Plan):
+- **F1 (core assembly agrees across digest/library/register) — CONFIRMED, no act.**
+- **F2 (published window conflates setup with animation) — APPLIED:** §1.2's census boundaries govern; the Plan's segment (§2.3) is cut 30.8–37.0 so the comparison carries the setup tail + handoff onset as labeled context while the build window is the measured technique (31.3–36.5).
+- **F3 (ev/t32 miscaptioned; "red/blue split lettering" wrong; count provisional) — APPLIED:** §1.2 cites ev/t32 as the 32.0 s assembly state only; the title evidence is census frame c6.8s; mechanics corrected to white serif on a color-block band (§1.2 corrections 1–2). Count: no settled un-occluded full-field frame exists after 34.0 (the title band occludes rows 8–9 from 34.3), so the count stands **538 ±1 as measured** (512 exact at 33.5 + 26 in the final row at 34.0, one fade-front split artifact); the Plan's exact assertions bind the *measured checkpoints* (15 · 136 · 512) and treat 538 as the A9.3 source-count the build must reproduce by construction (cols×rows + lastRowCells), not as a census-proven constant.
+- **F4 (digest's T07 cross-reference wrong; threshold map = packet T09 = T210) — APPLIED:** §1.2 correction 4; T204's window closes at the outline onset (~36.5) and the handoff is named as T210's, distinct from T210's later 2:19 sequence.
+
+**Observe gate-out:** mechanics + sub-beats (§1.2) · variables (§1.3) · consumer (§1.5) · dispositions (§1.6–1.7) — complete.
+
+---
+
+## §2 — PLAN
+
+### 2.1 Parameter table (every §1.3 variable a named CONFIG key; specimen value = default)
+
+Stage: logical 960×540 (fleet stage; renders at 360 px phone width by scale).
+
+| CONFIG key | Specimen default | Source / note |
+|---|---|---|
+| `titleText` | `"Electoral College"` | census frames 21–28 |
+| `cols` / `rows` | 32 / 16 | measured exact at 33.5 s (512 cells) |
+| `lastRowCells` / `lastRowOffsetCols` | 26 / 3 | measured at 34.0 s; total cells = cols×rows + lastRowCells = **538** (A9.3 source-count) |
+| `fieldLeftFrac` / `fieldTopFrac` / `fieldWidthFrac` / `fieldHeightFrac` | 0.090 / 0.114 / 0.821 / 0.719 | measured field extent (x 173–1750, y 123–900 of 1920×1080) |
+| `cellFillFrac` | 0.56 | measured: 28 px cell on 50 px pitch |
+| `cellColor` | `#111111` | cells read near-black in every census frame (JPEG sampling limit noted) |
+| `groundColor` | `#ececec` | sampled (960,980) on c7.9 |
+| `groundTextureOpacity` | 0.05 | faint newsprint show-through; procedural texture, seeded |
+| `assembleStartMs` | 500 | segment-relative (see §2.3) |
+| `assembleMs` | 2700 | onset 31.3 → complete 34.0, segment-relative span |
+| `growthKeyframes` | `[{f:0.000,cols:2,rows:2},{f:0.074,cols:5,rows:3},{f:0.259,cols:17,rows:8},{f:0.444,cols:25,rows:12},{f:0.630,cols:31,rows:15},{f:0.815,cols:32,rows:16},{f:1.000,cols:32,rows:16,lastRow:1}]` | the measured census states as data (f = fraction of assembleMs); fronts interpolate linearly between keyframes — the schedule dispatches on this table, never on content values (T53 cure) |
+| `cellFadeMs` | 350 | gray→black per cell after its birth (front width ≈1 column/row in census) |
+| `bandBlocks` | `[{c:"#157180",x:0.000,y:0.00,w:0.118,h:1.00},{c:"#ba3844",x:0.118,y:0.00,w:0.882,h:1.00},{c:"#396b84",x:0.000,y:0.78,w:0.470,h:0.22},{c:"#b1cdce",x:0.745,y:0.78,w:0.105,h:0.22},{c:"#43031b",x:0.155,y:0.00,w:0.475,h:0.07}]` | colors sampled on c7.9 (teal head · red main · steel bottom strip · pale bottom-right block · dark top strip); spans are fractions of band width/height — subject-shaping → CONFIG (A9.6) |
+| `bandLeftFrac` / `bandTopFrac` / `bandWidthFrac` / `bandHeightFrac` | 0.220 / 0.426 / 0.565 / 0.130 | measured on c7.9 (band x 420–1505, y 460–605 of 1920×1080); reserved band per §1.6 |
+| `bandInMs` | 200 | band reaches full width before text reveal completes (census frame 18: band full, text partial) |
+| `bandInStartMs` | 3450 | segment-relative (source ≈34.25, between census 3200 no-band and 3700 band-full); strictly after field completion at 3200 (phase exclusivity); governed by CP6 |
+| `titleColor` | `#ffffff` | census |
+| `titleFontFamily` | `"Georgia, 'Times New Roman', serif"` | white serif, census |
+| `titleSizeFrac` | 0.125 | font-size as fraction of stage height (cap height ≈0.088 measured) |
+| `revealStartMs` | 3500 | segment-relative (source 34.3); strictly after assembly completes at 3200 (phase exclusivity) |
+| `revealMs` | 500 | full text by 4000 segment-relative (source 34.8) |
+| `holdEndMs` | 5400 | lockup static to source 36.2; segment tail beyond is handoff context |
+| `buildMs` | 6200 | = segment duration (§2.3) |
+| `seed` | 204 | deterministic texture/RNG seed (guards cmd 3) |
+
+### 2.2 Construction choice
+
+**Chosen: DOM grid + JS state function.** A JS `stateAt(buildMs)` computes, purely from CONFIG: per-cell birth/fade (from `growthKeyframes`), band geometry, and the revealed title prefix; the renderer paints a CSS-grid of divs (538) + an absolutely-positioned band div (block divs from `bandBlocks` + one clipped text span whose clip width follows the reveal). One state function serves the animation, the comparison sync, and the A11 harness probes identically.
+Rejected alternatives, one line each:
+- **Canvas 2D** — viable (T82 precedent) but the band's typeset text + measured-fit leg are direct in DOM and indirect on canvas; cell-state probes would duplicate the draw logic.
+- **SVG** — 538 rects + text is lawful, but CSS-grid layout + frac geometry is simpler in DOM and the fit leg measures DOM ink natively.
+- **CSS-keyframes-only** — per-cell stagger would need 538 generated delays and offers no probeable state function; A11 assertions could not evaluate it.
+- **Generated imagery / newsprint asset** — refused: the ground texture is procedural (seeded SVG feTurbulence or CSS gradients generated in code); using the specimen's newsprint is a purity defect (§6.1).
+
+### 2.3 Schedule basis + census-anchor mapping (A7 / A10.2)
+
+**Window-scope line: schedule basis = `segment-anchored`.** Segment cut at §3: **source 30.8–37.0 s (6.2 s)** from `source.webm` into the artifact dir as `segment.mp4` (±0.5 s handles around the measured technique window 31.3–36.5). Window-start offset = **30.8 s**; segment-relative ms = (source t − 30.8) × 1000. The build's phases sit at their measured segment times.
+
+| Governed instant (segment-rel) | Source t | Census state (measured) | Prescribed build state (CONFIG expression) |
+|---|---|---|---|
+| 0 ms | 30.8 | broadcast insert tail (context only) | empty newsprint ground, 0 cells (departure D1) |
+| 450 ms | 31.25 | no cells yet (onset ∈ (31.2, 31.3]) | `visibleCells == 0` — zero-state anchor (guards cmd 8) |
+| 500 ms | 31.3 | onset: 2×2 fading | assembly begins (`assembleStartMs`) |
+| 700 ms | 31.5 | 15 cells (5×3) | keyframe f=0.074 → 15 ±6 cells, top-left region only |
+| 1200 ms | 32.0 | 136 cells (17×8) | keyframe f=0.259 → 136 ±20 cells |
+| 2200 ms | 33.0 | ≈465 cells (31×15) | keyframe f=0.630 → 465 ±30 cells |
+| 2700 ms | 33.5 | 512 cells (32×16) | keyframe f=0.815 → 512 cells, ≥95% blackened |
+| 3200 ms | 34.0 | **538 cells**, no band | f=1.000 → exactly 538 (A9.3); band absent |
+| 3450 ms | 34.25 | band not yet / landing | band opacity/width in flight; title prefix == "" |
+| 3700 ms | 34.5 | band full; text = "Electoral" | reveal prefix == first word |
+| 4000 ms | 34.8 | full title | reveal prefix == `titleText` |
+| 5400 ms | 36.2 | lockup static (hash-identical frames) | state identical to 4000 ms state (hold integrity) |
+| 5700–6200 ms | 36.5–37.0 | outline strokes begin (T210) | lockup held static (departure D2) |
+
+**Departure table (beside the mapping, per A10.2):**
+- **D1 — setup replaced:** census 0–500 ms shows the prior scene's exit + CNBC broadcast insert; the build shows the empty ground. Reason: borrowed broadcast footage is not recreatable content (purity §6.1) and is not the technique; the withholding structure is preserved as ground-only pre-roll, and the comparison's ORIGINAL side carries the real setup.
+- **D2 — handoff not built:** census 5700–6200 ms shows state outlines drawing over the field (T210's technique, this wave's queue #98); the build holds the lockup. Reason: §8 size discipline — the item is the identity assembly + title landing; the outline draw is a separate owed item.
+
+### 2.4 A11 census-checkpoint assertions (each: checkpoint · assertion · CONFIG expression · swap behaviour)
+
+| CP | Instant (CONFIG expression) | Assertion on `stateAt(instant)` | Timing-swap behaviour |
+|---|---|---|---|
+| CP1 | `assembleStartMs − 50` = 450 | visibleCells == 0 (zero-state anchor probe, guards cmd 8) | instant recomputes from CONFIG |
+| CP2 | `assembleStartMs + 0.074×assembleMs` = 700 | 9 ≤ visibleCells ≤ 21; all cells within cols≤5, rows≤3 | keyframe fraction fixed; instant moves with assembleMs |
+| CP3 | `assembleStartMs + 0.259×assembleMs` = 1200 | 116 ≤ visibleCells ≤ 156 | as CP2 |
+| CP4 | `assembleStartMs + 0.815×assembleMs` = 2700 | visibleCells == 512; blackened ≥ 0.95 | as CP2 |
+| CP5 | `assembleStartMs + assembleMs` = 3200 | visibleCells == cols×rows + lastRowCells == 538; bandVisible == false | as CP2 |
+| CP6 | `revealStartMs − 100` = 3400 | titlePrefix == "" AND band not yet full-width (phase exclusivity, Owner Cure 2) | instant recomputes |
+| CP7 | census instant 3700 (expression: `revealStartMs + 0.40×revealMs`) | revealed fraction ∈ [0.40, 0.55]; titlePrefix == "Electoral" (±1 char tolerance) | under the timing swap the receipt shows the recomputed instant for the same CONFIG fraction |
+| CP8 | `revealStartMs + revealMs` = 4000 | titlePrefix == titleText; bandBlocks rendered == CONFIG bandBlocks.length | instant recomputes |
+| CP9 | `holdEndMs` = 5400 | state hash == state hash at CP8 instant (hold integrity) | instant recomputes |
+
+Every assertion files an A12 executable receipt in the build-record (harness command · CONFIG expression · raw result); the A13 RECEIPT INDEX reconciles guards commands 1–8 + CP1–CP9 before the prewave payload is assembled.
+
+### 2.5 Swap design (§5.1 — exact altered values)
+
+- **Words:** `titleText`: `"Electoral College"` → `"HADOSH ACADEMY"` (different content; shorter — the band fit is re-measured, not assumed).
+- **One timing:** `assembleMs`: 2700 → **2100** (all keyframe/CP instants must move proportionally; CP receipts show the moved instants).
+- **One palette:** `bandBlocks[1].c` (main block): `#ba3844` → **`#1d4e89`**.
+Untouched and named: cellColor, ground, band geometry, reveal/hold timings.
+
+### 2.6 Purity checks (§5.2 / §6.1)
+
+Grep `recreation.html` for `segment.mp4|source.webm|t03-grid-build|ajavsMbCapY|<video|<img` → 0 hits required (in-file `url(#id)` fragments classified per guards cmd 1 precision note). Asset inventory: recreation loads **zero** external assets — ground texture is code-generated; no specimen media, no traced frame, no newsprint image. No captions/subtitles anywhere (§6.5) — the title text IS the technique's subject.
+
+### 2.7 Execute checklist (itemized instrument)
+
+1. Cut segment: source 30.8–37.0 s → `segment.mp4` (re-encoded, browser-playable); ffprobe facts filed (guards cmd 5) against §2.3's window.
+2. Create artifact dir `T204-dot-grid-identity-withheld-title/`; write `recreation.html` — CONFIG object first (every §2.1 key), state function + DOM renderer below; no literals of §2.1 classes in the logic (A9.6).
+3. Write `comparison.html` — ORIGINAL (segment) + RECREATION side by side, one synchronized control set, labels `ORIGINAL — Vox "The Electoral College, explained" @ 30.8–37.0 s` · `RECREATION — T204 dot-grid identity + withheld title, parameterized`; phone-width stacking with reachable controls.
+4. Own-checks with RAW output filed in `build-record.md` from the first draft (A9.4): swap test (§2.5 values) · purity grep (§2.6) · `node --check` + seeded-RNG census (guards cmd 3) · CP1–CP9 harness probes with A12 receipts · A9.3 count print (source 538 vs built 538, halt on mismatch).
+5. A6 legs on the final build: `guard-measured-fit` → `fit-table.md` (title + band rows at 360 px stage; legibility floor ~11 px) · `guard-config-census` → `config-census.md` (all-literal scan; keyframe/band/geometry keys resolved to application sites).
+6. A13 RECEIPT INDEX in the build-record, reconciled (guards cmds 1–8 + CP1–CP9 + expected CONFIG keys incl. `bandBlocks[]` and `growthKeyframes[]` nested entries) before any payload is assembled.
+
+### 2.8 Verify checklist (itemized instrument)
+
+1. Swap test result recorded with the exact §2.5 values + moved CP instants (receipts).
+2. Purity grep output + asset inventory (zero external assets) filed.
+3. Comparison check: both sides play from the shared control; durations matched (6.2 s); labels correct; phone stacking holds.
+4. **jev-prewave call point:** after legs 1–3 + A6 outputs, payload carries build-record + CONFIG + packet §T03 + guards list + **both A6 leg outputs verbatim** (A10.1) + the §2.3 census-anchor mapping; FIRE-WAVE spends the wave, HOLD returns to Execute (A12.3 two-HOLD stop applies).
+5. **Five-lens Codex scoring wave** (motion · timing · purity · reusability · readability) on the identical-hash build; each payload carries the catalogue mechanics + the §2.3 mapping (timing lens) + full recreation source; returns filed verbatim under `codex/`.
+6. Consolidation (mechanical, guards cmd 4): average ≥85 AND min ≥70 → PASS; arithmetic shown in `scores.md`; tier hand-off filed to the style-library board.
+
+### 2.9 Failure-point evaluation (priced from this job's record)
+
+- **Convergent freeze (T15 form):** no particle pool exists, so the literal defect cannot occur; its analogue — a growth front stalling mid-field — is excluded by construction (fronts are a pure function of CONFIG keyframes + clock; CP2–CP4 probe three mid-states). Residual risk: LOW.
+- **Intensity collapse (Owner Cure 1 class):** the title could fight its substrate if the band were translucent or cells showed through; excluded by construction (band opacity 1.0, occluded cells not rendered). The readability lens still prices the white-on-red/teal contrast at phone size. Residual: LOW–MEDIUM (serif at 360 px).
+- **Overlap (Owner Cure 2 class):** title reveal overlapping assembly would break the specimen's strict sequence; excluded by the phase machine (`revealStartMs` > assembly completion) + CP6's pre-reveal empty-prefix probe. Residual: LOW.
+- **Fitting limits:** at the 360 px stage the band is ≈203 px wide for 17 characters — title ≈24 px font, above the ~11 px floor; the swap title is shorter (fits by measurement, fit-table row required). A future longer title is the known envelope edge — the fit leg, not hope, prices it. Residual: MEDIUM (this is the item's honest weak surface).
+- **Render-proof limitation:** this seat has no browser binary — verification is LOGIC level (node harness over the state function + DOM structure), and `comparison.html` is the render surface (standing limitation, T82/T99 form, printed in scores.md). Residual: standing, disclosed.
+
+### 2.10 Plateau priced in Plan (A2)
+
+Family average **87.6** (T53 85.6 · T82 87.2 · T99 90.0). **Predicted minimum lens: reusability** — it is the minimum or co-minimum in all three siblings (74/80/80), and T204's reusability surface is exactly the class that priced them down: subject-shaping tables (growth keyframes, band block spans) that a builder is tempted to hardcode. The Plan's counter is A9.6 CONFIG completeness + the config-census leg before the wave. **Co-risk: motion** (80 in both T82 and T99) — if the keyframe interpolation reads as mechanical stepping rather than the specimen's smooth decelerating growth, motion lands ~80. **Pass condition, stated exactly (corrected under codex-plan-review R4):** if motion and reusability both land at 80, PASS requires timing + purity + readability ≥ 265 in total (average 88⅓) with each ≥70 — no assurance beyond that arithmetic is claimed. **A2 trigger, corrected:** the A2 WHY is owed by a *re-attempt* that fails to beat T204's *own* prior attempt average; 87.6 is this first attempt's family benchmark, not a trigger.
+
+**Plan gate-out:** parameter table (§2.1) · construction + rejected alternatives (§2.2) · schedule basis + census-anchor mapping + departures (§2.3) · A11 assertions (§2.4) · swap (§2.5) · purity (§2.6) · Execute + Verify checklists (§2.7–2.8) · failure points (§2.9) · plateau (§2.10) — complete.
+
+### 2.11 Plan amendments under codex-plan-review (REVISE — all applied; return: `item-T204-codex-plan-review-return.md`)
+
+- **R1 — Front + fade semantics (supersedes the CP4/CP5 readings in §2.4).** `stateAt` carries continuous fronts: `colFront(t)`/`rowFront(t)` interpolate the §2.1 keyframes (stored as fractions — see R3). Cell (c, r) is **born** at the first instant `colFront ≥ c+1 AND rowFront ≥ r+1`; its opacity is `clamp((t − birth)/cellFadeMs)`; states: unborn · fading (0 < opacity < 0.98) · black (≥ 0.98). The partial row has its own 1-D front over the final keyframe interval (f 0.815→1.000), cells born left-to-right, same fade. **CP4 (2700 ms) revised:** born == 512 AND gray (fading) cells ⊆ the leading column (≤16 cells → black ≥ 0.95 of born) — matching the census (last column gray at 33.5). **CP5 (3200 ms) revised:** born == `cols×rows + lastRowCells` (538 at defaults) AND gray cells ⊆ last column ∪ partial row. **CP5b added (3550 ms):** every non-occluded cell black (≥0.98) — the fade fully settled before the reveal completes. Probe instants derive from the CONFIG entries (assembleStartMs + f×assembleMs), never from literals.
+- **R2 — Phase transitions as predicates + one shared mask (supersedes §2.9's "phase machine" wording).** The state function gates on predicates, not constants: (i) `bandStart_effective = max(bandInStartMs, first instant born == total)` — the band cannot enter before the field completes under ANY CONFIG, including an extended assembly; (ii) text at horizontal position x is revealed only where the band's *current* footprint is opaque at x — one state-derived footprint mask governs band paint, title clipping, and cell occlusion together, so no cell hole can open ahead of the growing band. **CP6b added (predicate proof):** a test-only evaluation with `assembleMs` extended +800 ms must show band entry deferred to the extended completion (the shortening swap alone cannot expose this class; the extension probe can) — filed as an own-check with its receipt, and the same predicates hold on seek (stateAt is a pure function of t + CONFIG). Fit-table gains a contrast row: title ink vs band measured at 360 px for BOTH the specimen palette and the §2.5 swap palette.
+- **R3 — CONFIG completion (extends §2.1).** New keys: `originCorner: "top-left"` · `growthAxes: "right-down"` · `revealDirection: "left-to-right"` · `groundTextureScale: 1.0` · `groundTextureContrast: 1.0` (procedural texture coefficients, A9.6). **Derived, not configured (stated):** the title word split (first space in `titleText`) and the last-row lag (the final keyframe interval). **One geometry rule:** pitchX = fieldW/`cols`, pitchY = fieldH/`rows`; cell side = min(pitchX, pitchY) × `cellFillFrac`, each cell centered in its pitch box — squares survive count changes. **Keyframes re-based to fractions:** `growthKeyframes` entries carry `{f, colFrac, rowFrac, lastRowFrac}` (defaults: f 0.000→{0.063, 0.125, 0} · 0.074→{0.156, 0.188, 0} · 0.259→{0.531, 0.500, 0} · 0.444→{0.781, 0.750, 0} · 0.630→{0.969, 0.938, 0} · 0.815→{1.000, 1.000, 0} · 1.000→{1.000, 1.000, 1.000}) so fronts scale with effective `cols`/`rows` and never go stale; node count is derived (`cols×rows + lastRowCells`), never a literal. **Title sizing:** `titleSizeFrac` is stage-relative with the fit rule printed — the fit leg measures the built span's ink against the band's inner width and the 11 px floor; a title that fails either is a build defect, not a shrug. **CP7 generalized:** the expected prefix is derived from the *configured* `titleText` and measured glyph boundaries (same stand-in font as the fit leg); "Electoral" stands as the default-CONFIG anchor only. **Geometry probe added to own-checks:** a scratch evaluation at `cols` 32→28 asserting derived node count (28×16+26 = 474) and square cells (side equal on both axes) — catches CSS/renderer literals the three scored swaps leave untouched.
+- **R4 — Bar arithmetic + A2 trigger:** applied at §2.10 (pass condition 265 printed; A2 trigger corrected to the re-attempt form).
+- **R5 — Size discipline:** CONFIRMED by the review; no act.
+
+**codex-plan-review disposition summary:** REVISE received → R1–R4 applied as §2.11 + §2.10 corrections above; R5 confirmed. No finding set aside. The Plan that Execute follows is §2.1–§2.10 **as amended by §2.11**.
+
+---
+
+## §3 — Phase A close
+
+- **Calls fired:** codex-observe (CONFIRMED-WITH-GAPS, 4 findings, all disposed §1.7) · codex-plan-review (REVISE, 5 findings, all disposed §2.11/§2.10). Returns filed verbatim as sibling files in this run directory.
+- **Not fired here (by form):** jev-observe-exit + jev-plan-exit are wave-level gates — the seat fires them on the four Phase A records in RUN.md §2b before any build (A9.2). jev-prewave + the five-lens wave belong to Execute/Verify.
+- **Gaps stated plainly:** (1) the completed-field count is 538 ±1 (no settled un-occluded frame exists; §1.7 F3) — the build reproduces 538 by CONFIG construction and the A9.3 print tests it; (2) cell ink + band spans are JPEG-sampled measurements with the sampling limits noted in §2.1; (3) verification at Execute is LOGIC-level (no browser binary in this seat) — the comparison page is the render surface, the standing disclosed limitation.
+- **Phase A outcome:** Observe + Plan complete with both Codex dispositions consumed. The item is ready for the wave's §2b exit gates; no build script exists yet, by design.
+# RUN — recreation Cycle 037 · Wave 34 · 2026-11-18 (T199 completion under A12.3 + first attempts queue #95–#98: T204 · T205 · T208 · T210, Packet #12)
+
+Opened BEFORE any building (INSTRUCTION §0). Trigger: cron `study-recreation` 2026-11-18 09:20 EST.
+Governing: recreation INSTRUCTION.md (§0 wave form incl. completion-wave form Amendment A8 + skeleton-record step · §1–§9 · Amendments A1/A2/A3/A5/A6/A7/A9/A10/A11/A12/A13 + 2026-11-14 ruling: arming=firing, verdicts advisory), bounded_probe_discipline (probes named in advance, capped in code ≤6,000 chars: QUEUE recreation section in capped slices · TECHNIQUES.md OWED lines · Cycle-036 RUN.md in capped slices · per-item scores.md tails · artifact census · HQ.json tail entries · heartbeat tail; breaches: 0).
+Pre-action judgment: (1) objective — carry T199 shout scaling (queue #94, Packet #11) to its scored verdict via its authorized A12.3 completion re-fire (cures filed in its scores.md at Wave 33 close), and carry the next four owed first attempts in queue order — #95 T204 dot-grid identity system + withheld title · #96 T205 vote-to-grid conversion diagram · #97 T208 paired dot counts, House stage · #98 T210 threshold grid-map (all Packet #12, Vox "The Electoral College, explained") — each to a scored verdict; 5 items, the §0 cap. (2) Forward movement — the NO-VERDICT pool drops from 4 toward 3 (T199 scored; T190/T196/T197 stay parked, see §0b.1) and the DESCRIBED-OWED pool drops from 11 toward 7. (3) Cost to owner — none; no ask, no schedule change; the T190/T196/T197 authorization ask stands with HQ (consumer named, §0b.1) and is NOT re-asked here. (4) Why now — scheduled firing; A12.3 makes T199's completion the next cycle's first charge, and queue order is the only triage (A3). (5) Body-write — this RUN.md, per-item records + builds under `hidden_files/study/recreations/`, HQ.json skeleton→closed entry (same id `rec-2026-11-18-wave34`), heartbeat skeleton→closed beat 117, verdict-history lines, QUEUE.md rows #95–#98 (+ #94 status update). (6) Order check — this record's §1 prices T199's on-disk state BEFORE any firing (A8) and the fresh pool census before any build; each new item's Phase A record (Observe+Plan + codex-observe + codex-plan-review) is filed and the wave-level exit gates are fired and consumed in §2b BEFORE its build script is written (A9.2); T199's build is a cure of its already-gated plan (Cycles 034–036 §2b stand consumed), so its Execute opens on the filed cure list. Skeleton board/heartbeat entries are written at Plan close (§0 skeleton rule) — this cycle complies, no D-SKELETON.
+
+## §0b — Replan items carried
+1. **T199 completion (Cycle 036 §9/§0b.1, first charge, AUTHORIZED under A12.3):** T199's second HOLD landed in Cycle 036, so its first completion re-fire in THIS cycle is authorized by A12.3 as written. Cure list = the four items in its scores.md (census-twin CONFIG-derived receipts · hail-prescription reconciliation printed in the payload mapping section · overlap intersections from positioned bounds · CP11 joined receipt), rebuilt under Amendment A13 (receipt index + reconciliation against guards.md commands 1–8 + the item's whole inherited assertion set + expected CONFIG keys; every line carries its executable receipt or a NOT-DEMANDED line with a governing citation).
+2. **T190/T196/T197 — PENDING AUTHORIZATION (consumer: HQ), NOT taken this wave:** each spent its A12.3 completion re-fire in Cycle 036 and that re-fire HOLDed; A12.3 does not expressly renew a re-fire after a completion HOLD (Cycle 036 codex-condense firing 3). No HQ authorization entry stands on this job's board after `rec-2026-11-18-wave33` (board re-read this run: 49 entries, last = wave33). Their slots therefore fill from queue #95 onward, exactly as Cycle 036 §0b.1 prescribed. They remain mid-attempt HERE (A3 §3) and do NOT route to practice.
+3. **Practice census-guard proposal** (carried Cycles 034–036): consumer = the next Condense with ≥3 scored items. Price at §9 if ≥3 verdicts land this wave.
+4. **Feed standard (Cycle 035 §9.1, followed since):** payload size+tail-verified → one-stream `cat payload | codex exec` (local binary `~/workspace/codex-local/node_modules/.bin/codex`, per TOOLS.md working route; instructions + artifact in ONE stream, never pipe + stdin field together) with redirect → return size+tail-verified → on empty/truncated, ONE re-fire via stdout capture + file-tool filing; a second failure files honestly and stops.
+5. **Practice construction note** (HQ board `practice-2026-11-18-t06-construction-note`, sent): reserved-band badge treatment for container-scaled labels — consumer is recreation's next first attempt whose labels scale with a container. Priced for this wave at §2 per item; Packet #12's grid/diagram items carry tally labels — the item whose labels scale with its container prices it in its Phase A record, the others print NOT-BINDING with reason.
+6. Standing forms (A10/A11/A12/A13): every new item's schedule table prints its census-anchor mapping (A10.2); §1 files a frame census at ≤2 s spacing with full SHA-256 per item (A10.3); jev-prewave payloads carry both A6 leg outputs verbatim (A10.1); every build-record carries the A13 RECEIPT INDEX reconciled before payload assembly; fit evidence is (i) harness post-fit ink measurement or (ii) rendered measurement with a named stand-in font, never a character-width model (A12.2).
+
+## §1 — Observe (completion form for T199 per A8; first-attempt form for T204/T205/T208/T210 — per-item detail in each item's Phase A record in this run directory)
+
+**Wave manifest: 5 items** — 1 completion (queue #94 T199, Packet #11) + 4 new first attempts (queue #95–#98, all Packet #12: Vox "The Electoral College, explained", YouTube ajavsMbCapY, 488.301 s; digest at `hidden_files/study/video-digests/2026-11-17-yt-ajavsmbcapy/`; adopted WITH GAPS by video-digestion Cycle-019; registered by style-library Cycle-019).
+Consumer (T199): word-animation containers. Consumer (Packet #12 items): diagram containers (the DLC assembler's diagram/count-board surfaces) — T204 additionally the opening/identity surface. In every build the technique's text/marks ARE the subject, not captions (INSTRUCTION §3.2/§6.5).
+
+### Pool census (fresh this run, 2026-11-18 09:20 EST)
+1. QUEUE.md RECREATION QUEUE: rows #1–#94 filed. #94 T199 IN PROGRESS NO VERDICT (completion authorized, this wave). Rows #95+ do not yet exist as rows — entered by recreation at this wave's close from the style-library register (standing precedent).
+2. Catalogue register (style-library TECHNIQUES.md, read this run; Cycle-020 state): 239 techniques · DESCRIBED-OWED 12 at Cycle-036 read (queue #94 T199 · #95 T204 · #96 T205 · #97 T208 · #98 T210 · #99 T212 · #100 T218 · #101 T219 · #102 T227 · #103 T232 · #104 T233 · #105 T238); style-library Cycle-020 (closed after Wave 33) registered Packet #13 and prints catalogue 239 (DESCRIBED 146 · IN PROGRESS 15 · RECREATED 78 on its accounting, which includes practice re-attempt moves). This wave takes #94 (completion) + #95–#98; #99–#105 (7 items) stand for later waves.
+3. Artifact census (binding): 94 directories under `hidden_files/study/recreations/` (directory listing this run) — 90 with verdicts + 4 NO VERDICT (T190 · T196 · T197 · T199). The four new items' directories do not yet exist; created at their Plans.
+4. Ownership split (A3 §3): all five items are first attempts / a mid-attempt completion → this job. All other IN PROGRESS techniques are practice's re-attempt pool. T190/T196/T197 stay parked PENDING AUTHORIZATION (§0b.2) — printed, not silently skipped.
+
+### Per-item state (A8 pricing for the completion item; catalogue lines for the new items)
+- **T199 — shout scaling inside a real scene** (`T199-shout-scaling-in-real-scene/`): build on disk recreation.html sha256 `edad0b81…` (14,730 B at Wave 33), UNCHANGED across both Wave-33 prewave firings (its cure round touched records only). Filed: segment.mp4 (9.000 s, source 66.5–75.5 s) · comparison.html · build-record.md · fit-table.md · config-census.md · plan-amendment-cycle036.md · jev-prewave ×2 HOLD (both bind this build). NOT present: lens returns · verdict. Completion charge (scores.md cure list, verbatim pricing in §0b.1): restructure the harness so every census twin is a CONFIG expression with CONFIG-derived receipts incl. a timing swap that moves a twin · print the hail-prescription reconciliation in the payload mapping section (amendment governs over the census-anchor table wording) · overlap rows as intersections from positioned peak + neighbour ink bounds · CP11 as ONE joined receipt (CONFIG expression + band sample together). Then: fresh own-checks + A6 legs on the (record-cured; build changes only if a cure requires it — any build change re-binds all payloads to the new hash) + A13 receipt index reconciled + ONE jev-prewave re-fire (authorized, A12.3) → five-lens wave on FIRE-WAVE only.
+- **T204 — dot-grid identity system + withheld title** (P12; TECHNIQUES.md: "the dot field assembles and the title lands across it — the assembly order is the claim (clip-cited)"; container: openings + diagrams): no directory, no prior calls. Mechanics/timestamps/evidence frames priced in its Phase A record from the Packet #12 digest section + firsthand frame census (A10.3) before Plan.
+- **T205 — vote-to-grid conversion diagram** (P12; "a grid fills in blocks, left to right, as conversion"; container: diagrams): same Phase A charge.
+- **T208 — paired dot counts, House stage** (P12; "dots land in grids timed to the spoken count (clip-cited)"; container: diagrams): same Phase A charge.
+- **T210 — threshold grid-map (the road to 270)** (P12; "state outlines draw themselves over the tally grid and regions accumulate toward the 270 post (clip-cited)"; container: diagrams): same Phase A charge.
+
+### Standing guidance dispositions (restated for this cycle, per A8)
+A13 receipt index + reconciliation binds every item (see §0b.6). A1.2 runtime text sampling binds typography constructions that sample config-rendered text; the Packet #12 items are grid/diagram constructions — each Phase A record prices its applicability with reasoning in its Observe gate-out (A9.5). A5 flow-field + Owner Cures bind particle fields only; no item this wave is a particle field unless its Phase A census shows one (priced per item there). A9.1: any moving background plate is priced in the item's parameter table (seamless tiled pan where a plate IS the technique; a still plate where motion exceeds the technique). A9.6: every subject-shaping value is CONFIG data in all five items. A11: every census checkpoint maps to an executable assertion with a CONFIG-derived instant + an A12 receipt.
+
+## §2 — Plan (summary; per-item authority = each item's Phase A record in this run directory)
+- **T199 (completion):** parameter table, construction, verification plan and checklists stand as filed in Cycles 034–036 (item record + `plan-amendment-cycle036.md`) AS AMENDED by the scores.md cure list — consumed, not re-authored (A8). Execute checklist = the four cures (§0b.1) + fresh own-checks (swap · purity · syntax, raw output filed) + A6 legs re-filed + A13 receipt index reconciled + ONE jev-prewave re-fire (payload carries build-record + CONFIG + packet section + guards list + both A6 outputs verbatim + the binding census-anchor mapping, A10.1) + five-lens wave on FIRE-WAVE only (identical-hash binding; timing payload carries the census-anchor mapping). Bar (standing §2.3): five-lens average ≥85 AND no lens <70. Schedule basis stands: segment-anchored (segment = source 66.5–75.5 s; buildMs = segmentTimeMs − 500).
+- **T204/T205/T208/T210 (new):** each item's Phase A record is its Plan authority: parameter table (every §1 variable a named CONFIG key, specimen values as defaults) · construction choice with rejected alternatives · schedule basis + census-anchor mapping (A7/A10.2 — segment-anchored, t=0 allocation, or two-act, named on the window-scope line) · swap design (different content + one timing + one palette value, exact values) · purity checks · Execute + Verify checklists as instruments · failure-point evaluation (priced from this job's record: convergent freeze · intensity collapse · phrase/state overlap · fitting limits · render-proof limitation) · plateau priced in Plan (A2: family/prior average + stuck-lens hypothesis stated before Execute). Per-item codex-observe + codex-plan-review fire in Phase A; the wave-level jev-observe-exit + jev-plan-exit fire on the four Phase A records before any build script is written (§2b).
+- **Wave gate form for this cycle:** jev-observe-exit + jev-plan-exit fire for the four new items; for T199 they print NOT-DEMANDED-BY-FORM — its Observe/Plan gates fired and were consumed in Cycles 034–036, and A8 consumes filed gate returns, never re-fires them; T199's demanded gate is the A12.3 prewave re-fire. codex-observe + codex-plan-review fire per item for the four new items in Phase A; for T199, NOT-DEMANDED-BY-FORM (consumed Cycles 034/036, returns on file). codex-condense fires at this cycle's Condense, unconditionally.
+
+## §2b — Wave gate dispositions
+_(Filled after the four Phase A records land and both gates fire; Execute for new items opens only on this section standing consumed. T199 proceeds in parallel on Cycle 036's consumed §2b.)_
+
+## §3 — Execute
+_(Per item, on landing.)_
+
+## §5 — Verify
+_(Seat-verified at close.)_
+
+## §9 — Condense
+_(At close.)_
+
+## §7 — Faithfulness trace
+_(At close.)_
+# item-T204-codex-observe-return — verbatim return, codex-observe firing, Wave 34 Phase A (2026-11-18)
+
+Firing: payload = `guards/codex-observe.md` + fed elements (digest §1 + §T03 · techniques-openings.md T204 entry · TECHNIQUES.md register line · verdict-history lines · family scores lines · seat segment facts), 12,370 B, one stream: `cat payload | ~/workspace/codex-local/node_modules/.bin/codex exec -` → raw session output 106,391 B (the local binary also read the workspace itself; the final answer below is reproduced verbatim, filed once — the raw session repeated it twice).
+
+---
+
+**Consumer** — Recreation Cycle 037, Wave 34, §1 Observe for T204. The source record is sufficient to start Observe. The timing, evidence captions, and map references need firsthand reconciliation before the comparison cut.
+
+**Working record** — Packet #12, the T204 library entry, the recreation verdict history and sibling score returns, and Cycle 037 Wave 34 `RUN.md` §1 and its T204 frame census.
+
+### Packet and segment findings
+
+1. **The core assembly agrees across the records.** Packet #12 `digest.md` §T03, `techniques-openings.md` lines 212–215, and `TECHNIQUES.md` line 143 all describe the grid assembling before the title lands. The detailed library entry repeats the packet’s 0:28–0:37 window and both evidence filenames. The register row confirms the sequence and cites the clip generically.
+
+2. **The published window conflates the setup with the animation.** The archived `source.webm` probes at 488.301 s and `clips/t03-grid-build.mp4` at 7.965 s. That clip duration fits the packet’s approximate 28–36 s export, while the wave census places the grid onset near 31.3 s, after the prior diagram exits and the CNBC insert plays. The census places grid completion near 34.0 s, the left-to-right title reveal at 34.3–34.9 s, and the first state outlines near 36.3–36.5 s. The title is gone by the 37.5 s sample. `sentences.json` anchors the setup at 28.270 s and the start of the sentence that names the Electoral College at 31.369 s. Observe should establish the source-frame boundaries for the setup, assembly, reveal, hold, and handoff, then record the exact in/out points for the comparison. The existing clip covers the build and reveal. The handoff requires later source frames.
+
+3. **The title still is miscaptioned, and the color description needs correction.** The filed `ev/t32-title-dotgrid.jpg` shows a partially assembled grid of square marks on newsprint, with no title. The wave’s `census/T204-census-c6.8s.jpg` shows white serif lettering over a red-and-blue band. Both `digest.md` §T03 and the T204 library entry place the colors on the lettering. Observe should cite the 32 s still for assembly, select a source frame for the revealed title, and use the moving clip to establish the grid’s growth order and the band’s reveal. The seat’s completed-grid count is provisional at 538 cells (`32 × 16 + 26`), with a reported ±1 at the fade front. Observe should confirm the count on a settled frame.
+
+4. **The threshold-map cross-reference is wrong in the digest.** `digest.md` §T03 points to packet T07, which is the Texas–Vermont House-stage dot count at 1:24–1:51. The threshold grid-map is packet T09 at 2:19–2:27, corresponding to library T210 (`TECHNIQUES.md`, line 146). The outro reference is consistent as packet T22 / library T223. Observe should confirm which grid properties carry into the early state-outline handoff, the later threshold map, and the outro. The early outlines around 36.3–36.5 s are distinct from the later threshold-map sequence.
+
+### Prior-attempt audit
+
+T204 has no matching `verdict-history.md` entry or prior artifact directory. Wave 34 `RUN.md` §1 also records it as a first attempt. Each sibling’s final Codex lens returns match its `scores.md` table and recreation `verdict-history.md` row. The recomputed averages and minima clear the filed PASS thresholds in all three cases.
+
+| Sibling | Verdict-history line | Lenses | Recomputed average | Minimum | Disposition |
+|---|---:|---:|---:|---:|---|
+| T53 | 41 | 5 | (92 + 88 + 94 + 74 + 80) / 5 = **85.6** | 74 | PASS → RECREATED |
+| T82 | 53 | 5 | (80 + 89 + 100 + 80 + 87) / 5 = **87.2** | 80 | PASS → RECREATED |
+| T99 | 60 | 5 | (80 + 100 + 100 + 80 + 90) / 5 = **90.0** | 80 | PASS → RECREATED |
+
+All 15 cited sibling lens scores have filed returns. No unbound score claims surfaced.
+
+**Limits** — I probed both media files and inspected the packet still and the 6.8 s census frame. The fine-grained transition timings and provisional cell count come from the seat’s census. I did not independently match the clip’s endpoint frames to the archive, reproduce the full census, or verify its hashes.
+
+**Verdict: CONFIRMED-WITH-GAPS**  
+**Body-write: none (read-only run)**
+# item-T204-codex-plan-review-return — verbatim return, codex-plan-review firing, Wave 34 Phase A (2026-11-18)
+
+Firing: payload = `guards/codex-plan-review.md` + the item's Phase A record (Observe + Plan gate-outs) + family scores.md cure lists (T53/T82/T99) + INSTRUCTION Amendments A1/A2/A5, 49,439 B, one stream: `cat payload | ~/workspace/codex-local/node_modules/.bin/codex exec -` → raw session output 182,383 B (the local binary also read the workspace itself; the final answer below is reproduced verbatim, filed once — the raw session repeated it twice).
+
+---
+
+**Consumer** — Wave 34’s recreation Plan for T204. The decision is whether the DOM-grid construction is ready for Execute.
+
+**Working record** — `item-T204-observe-plan.md` supplies the Observe and Plan gate-outs. Wave 34’s `RUN.md` §2b is the destination for this advisory return. The sibling `scores.md` files supply the failure evidence.
+
+1. **Convergent defect — the fixed lattice eliminates T15’s pool freeze. The growth front still needs an explicit construction.** A1/A5’s reserve and velocity rules concern moving particles. T204’s cells stay in place and fade, and the static lockup is observed behavior. The relevant family defect is T82’s wrong reveal shape. A pure clock function can still yield visible plateaus or count invisible births as visible cells. CP4 asks for 512 visible cells at the keyframe where the front first reaches 32×16. CP5 asks for 538 visible cells where the last-row value first reaches `1`. With a fade starting at zero opacity on birth, neither count follows from the table. Specify how continuous front coordinates determine cell birth, how the partial row gains opacity, and what qualifies as visible or blackened. Preserve the observed gray edge and late partial-row fade. Derive probe instants from the actual CONFIG entries and check the edge shape and opacity as well as the counts.
+
+2. **Owner catches — opaque coverage is structural once the renderer shares one mask. Phase exclusivity is still arithmetic.** The band can guarantee separation if the same state-derived footprint governs opaque paint, title clipping, and cell occlusion throughout entry. Hiding cells under the final band rectangle while the band is still growing would expose holes ahead of it. Check the entry footprint and measure title ink and contrast at 360 px for both palettes. Separately, §2.9 calls `revealStartMs > assembly completion` a phase machine. The defaults illustrate the gap: CP6 samples 3400 ms, before band entry at 3450 ms, while text begins at 3500 ms and the band reaches full width at 3650 ms. A longer assembly can also cross both absolute starts. Specify transition predicates that gate the band on field readiness and the text on opaque coverage of its glyphs. That preserves any deliberate band-entry/text overlap supported by the census. Test both boundaries and an assembly extension that crosses the current band start, including on seek. The shortening swap alone cannot expose this failure.
+
+3. **Parameterization — the DOM choice stands, but §2.1 leaves several §1.3 variables implicit.** Bind origin and growth axes, reveal direction, and procedural texture coefficients. State whether the word split and last-row lag are derived or configured. Define square-cell pitch from density, counts, and extent using one geometry rule. Independent CSS row and column sizing can distort squares, and absolute front counts can go stale when `cols` or `rows` change. Derive or validate the keyframes against the effective grid dimensions and derive the node count from CONFIG. Define title sizing against the band or document the stage-relative conversion and fit rule. CP7’s literal `Electoral` cannot test `HADOSH ACADEMY`. Keep the specimen word as a default-only anchor and derive the swap expectation from the configured text and measured glyph boundaries. Likewise, keep 538 as the specimen baseline and use the CONFIG count formula for alternate grids. Only assembly-relative checkpoints move under the current timing swap. A geometry or direction probe would catch CSS and renderer literals that the current three swaps leave untouched.
+
+4. **Bar arithmetic — reusability is the credible predicted minimum. Passing remains conditional.** The filed five-lens totals are 428, 436, and 450, giving averages of 85.6, 87.2, and 90.0 and a family mean of 87.6. Reusability is the sole minimum at 74 for T53 and ties motion at 80 for T82 and T99. T15’s 64 is the precedent for the freeze, outside this sibling baseline. If motion and reusability both score 80, timing, purity, and readability must total at least 265, averaging 88⅓, with each lens at least 70. Replace §2.10’s assurance with that condition. A2’s WHY is due when a re-attempt fails to beat T204’s own prior attempt. The family mean is a first-attempt benchmark.
+
+5. **Size discipline — confirmed.** The expanding square-cell field, late partial row, opaque band, title reveal, and static hold form one mechanic with two reusable parts. The broadcast tail stays on the original side of the comparison, the watermark is excluded, and the outline handoff remains T210. The still ground and band blocks serve the lockup within this scope.
+
+**Limits** — This review uses the filed census observations. The specimen frames, browser rendering, and phone-size fit were not independently checked. Build behavior is **NOT ASSESSED** because T204’s `build-record.md` is absent at the Phase A path.
+
+**Verdict — REVISE.** Keep the DOM grid and current scope. Specify front and fade semantics with executable checkpoints, enforce phase transitions and opaque coverage in shared state, finish the CONFIG and swap bindings, and correct the scoring condition and A2 trigger.
+
+**Body-write: none (read-only run)**
+
+codex
+**T204 — REVISE**  
+**Primary classification — UNBOUND-SCHEDULE**
+
+| Dimension | Score |
+|---|---:|
+| parameter-table-complete | 0.85 |
+| construction-priced | 0.85 |
+| execute-checklist-ready | 0.80 |
+| verify-checklist-instrumented | 0.75 |
+| failure-points-priced | 0.75 |
+| plateau-priced | 1.00 |
+
+**Plan amendment charges**
+
+1. **Reconcile cell births and opacity with the census.** With the 30.8 s segment offset, the 31.3 s onset maps to 500 ms. R1 gives every cell born at that instant zero opacity, while the census already shows a 2×2 group with one black cell. At CP4, row 16 and column 32 first reach their birth thresholds at `500 + 0.815 × 2700 = 2700.5 ms`. Their union contains `32 + 16 − 1 = 47` cells at zero opacity, so at most `465/512 = 90.8%` can be black. CP4 requires at least 95%, and the census shows only the last column gray. At CP5, the last partial-row cell likewise has zero opacity at birth, so 538 births do not establish 538 visible cells. Amend the arrival and fade schedule, then probe visible count, blackened count, and edge location separately. Use exact fractions or an explicit threshold rule. For example, R3’s `0.156 × 32 = 4.992` leaves column 5 unborn at its own keyframe. (`item-T204-observe-plan.md` §§1.2, 2.3–2.4, 2.11 R1/R3)
+
+2. **Complete the census mapping and bind the title reveal.** Add the omitted assembly anchors at 600 and 1700 ms (31.4 and 32.5 s) and the title anchors at 3800 and 3900 ms (34.6 and 34.7 s). With `revealStartMs = 3500` and `revealMs = 500`, those title samples fall at 60% and 80% of the reveal clock. Specify how that clock maps to the observed `Electoral Col` and `Electoral Colleg` under the shared mask, and give both checkpoints executable assertions. Treat 450 ms as a model probe. The last observed zero-cell sample is 31.2 s, or 400 ms. (`item-T204-observe-plan.md` §§1.2, 2.3–2.4, 2.11 R2–R3)
+
+3. **Bind the density envelope and reconcile the receipts.** The `cols = 28` scratch probe expects `28 × 16 + 26 = 474` nodes, but a 26-cell row offset by three columns occupies 29 column slots. Specify whether the partial row may extend beyond the field or how CONFIG keeps it within bounds, and assert that behavior along with the count and square geometry. Add CP5b and CP6b explicitly to the receipt index and spell out CP5b’s CONFIG-derived instant. The current checklists still enumerate CP1–CP9. (`item-T204-observe-plan.md` §§2.4, 2.7–2.9, 2.11 R1–R3)
+
+The DOM construction prices both owner cures through the opaque shared mask and the field-completion predicate. Verification specifies the exact swaps, purity grep, asset inventory, comparison checks, prewave call point, and five lenses. Departures D1 and D2 are explicit. Plateau pricing is complete for a first attempt. The sibling benchmark is `(85.6 + 87.2 + 90.0) / 3 = 87.6`, with reusability and motion named as the likely limiting lenses. (`item-T204-observe-plan.md` §§1.4, 2.2–2.3, 2.5–2.11)
+
+**Limits** — The verdict uses the filed census and prescribed logic. The source count remains 538 ±1, and browser playback and phone fit are unverified at this gate. `RUN.md` §2b contains no filed jev-observe-exit disposition at the supplied snapshot. The cited census already contains the states needed to amend the Plan. (`item-T204-observe-plan.md` §§1.7, 2.9, 3, `RUN.md` §2b)
+
+**BODY-WRITE: none (read-only run). This return supplies T204’s verdict, six scores, and Plan amendment charges for `RUN.md` §2b.**
+tokens used
+42,204
+**T204 — REVISE**  
+**Primary classification — UNBOUND-SCHEDULE**
+
+| Dimension | Score |
+|---|---:|
+| parameter-table-complete | 0.85 |
+| construction-priced | 0.85 |
+| execute-checklist-ready | 0.80 |
+| verify-checklist-instrumented | 0.75 |
+| failure-points-priced | 0.75 |
+| plateau-priced | 1.00 |
+
+**Plan amendment charges**
+
+1. **Reconcile cell births and opacity with the census.** With the 30.8 s segment offset, the 31.3 s onset maps to 500 ms. R1 gives every cell born at that instant zero opacity, while the census already shows a 2×2 group with one black cell. At CP4, row 16 and column 32 first reach their birth thresholds at `500 + 0.815 × 2700 = 2700.5 ms`. Their union contains `32 + 16 − 1 = 47` cells at zero opacity, so at most `465/512 = 90.8%` can be black. CP4 requires at least 95%, and the census shows only the last column gray. At CP5, the last partial-row cell likewise has zero opacity at birth, so 538 births do not establish 538 visible cells. Amend the arrival and fade schedule, then probe visible count, blackened count, and edge location separately. Use exact fractions or an explicit threshold rule. For example, R3’s `0.156 × 32 = 4.992` leaves column 5 unborn at its own keyframe. (`item-T204-observe-plan.md` §§1.2, 2.3–2.4, 2.11 R1/R3)
+
+2. **Complete the census mapping and bind the title reveal.** Add the omitted assembly anchors at 600 and 1700 ms (31.4 and 32.5 s) and the title anchors at 3800 and 3900 ms (34.6 and 34.7 s). With `revealStartMs = 3500` and `revealMs = 500`, those title samples fall at 60% and 80% of the reveal clock. Specify how that clock maps to the observed `Electoral Col` and `Electoral Colleg` under the shared mask, and give both checkpoints executable assertions. Treat 450 ms as a model probe. The last observed zero-cell sample is 31.2 s, or 400 ms. (`item-T204-observe-plan.md` §§1.2, 2.3–2.4, 2.11 R2–R3)
+
+3. **Bind the density envelope and reconcile the receipts.** The `cols = 28` scratch probe expects `28 × 16 + 26 = 474` nodes, but a 26-cell row offset by three columns occupies 29 column slots. Specify whether the partial row may extend beyond the field or how CONFIG keeps it within bounds, and assert that behavior along with the count and square geometry. Add CP5b and CP6b explicitly to the receipt index and spell out CP5b’s CONFIG-derived instant. The current checklists still enumerate CP1–CP9. (`item-T204-observe-plan.md` §§2.4, 2.7–2.9, 2.11 R1–R3)
+
+The DOM construction prices both owner cures through the opaque shared mask and the field-completion predicate. Verification specifies the exact swaps, purity grep, asset inventory, comparison checks, prewave call point, and five lenses. Departures D1 and D2 are explicit. Plateau pricing is complete for a first attempt. The sibling benchmark is `(85.6 + 87.2 + 90.0) / 3 = 87.6`, with reusability and motion named as the likely limiting lenses. (`item-T204-observe-plan.md` §§1.4, 2.2–2.3, 2.5–2.11)
+
+**Limits** — The verdict uses the filed census and prescribed logic. The source count remains 538 ±1, and browser playback and phone fit are unverified at this gate. `RUN.md` §2b contains no filed jev-observe-exit disposition at the supplied snapshot. The cited census already contains the states needed to amend the Plan. (`item-T204-observe-plan.md` §§1.7, 2.9, 3, `RUN.md` §2b)
+
+**BODY-WRITE: none (read-only run). This return supplies T204’s verdict, six scores, and Plan amendment charges for `RUN.md` §2b.**

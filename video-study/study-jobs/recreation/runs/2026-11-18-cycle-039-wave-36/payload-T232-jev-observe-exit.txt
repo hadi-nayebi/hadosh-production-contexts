@@ -1,0 +1,125 @@
+TASK: You are the jev-observe-exit judge for the recreation job. Judge ONLY item T232's Observe record below, per the call definition that follows. Return ONE verdict (ADVANCE / ADVANCE-WITH-GAPS / RETURN-TO-OBSERVE) with the six dimension scores (0-1), the primary classification if returned, and named gaps. End with a BODY-WRITE: line.
+STANDING HEADER: (1) Consumer: recreation Cycle 039 Wave 36 §1 gate out for T232; decision priced: whether Observe can support a Plan. (2) Working record: runs/2026-11-18-cycle-039-wave-36/item-T232-observe-plan.md. (3) BODY-WRITE: return must end with a BODY-WRITE: line; read-only closes 'Body-write: none (read-only run)'.
+
+=== GUARD: jev-observe-exit ===
+# Jev call — jev-observe-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: a recreation wave may not enter Plan on a catalogue summary alone — Observe must have priced the queue, read the prior scores where they exist, seen the evidence frames, and carried the standing construction guidance into working memory._
+
+## 1. What it judges
+- Deliverable: the wave's Observe working memory — RUN.md gate-out block (§1: mechanics summary + sub-beat timings + variable list + named consumer) for each item in the wave (up to 5 owed items).
+- Call point: recreation INSTRUCTION §1, at the gate out of Observe, before §2 Plan opens for any item in the wave. The verdict is advisory per item: applied, a RETURN-TO-OBSERVE item is held out of the wave's Plan (the wave proceeds with its advancing items; a held item never holds the wave hostage — same rule as jev-prewave §5); set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Observe record can support a Plan for THIS recreation wave, item by item. Price, in order:
+(1) QUEUE STATE PRICED — does the record state the recreation queue's current position (../QUEUE.md read this cycle), each item's queue number and OWED status, and the ownership split (Amendment A3 §3: this job owns FIRST attempts; an already-scored technique belongs to practice — a wave item that is a re-attempt is a routing defect, named)? T15 is the standing example: attempt 1 scored FAIL 78.5 on 2026-11-13, so T15 attempt 2 is practice's charge, never this job's wave item.
+(2) PRIOR SCORES READ — for any item whose technique already has a scores.md or a verdict-history line (a techniques' family sibling counts: e.g. T16 shares T15's particle machinery), does the record cite the actual filed scores and cure list, or does it plan from the catalogue description alone? Planning that ignores a filed failure is the defect this leg exists to catch.
+(3) MECHANICS SEEN, NOT SUMMARIZED — does the record carry the packet section's mechanics + sub-beat timings from firsthand viewing of the evidence frames and the source segment in motion (§1.1–1.2), with timings in seconds — or only a restatement of the TECHNIQUES.md one-liner? A mechanic the builder has not seen is a guess (§1.1).
+(4) VARIABLES EXTRACTED — is the §1.3 variable list complete for this technique (text content, phrase count, timing/durations, palette, scale, direction, density — plus technique-specific variables), so Plan's parameter table has something to bind? A variable missing here becomes a hardcoded accident in Execute (§1.3).
+(5) CONSTRUCTION GUIDANCE CARRIED — where the technique's family has standing guidance, is it IN the working memory, named? For particle-field techniques: the flow-field model (Amendment A5 §4: one constant flow field, borrowing with low-amplitude jitter, never-borrowed reserve fraction, release with velocity continuity) AND Owner Cure 1 (foreground/background intensity separation riding the borrow flag) AND Owner Cure 2 (strict phrase sequencing / phase exclusivity). For typography techniques: the typography construction precedent (Amendment A1 §2: runtime sampling of config-rendered text). Guidance that exists in INSTRUCTION but is absent from the wave's working memory is scored as absent.
+(6) CONSUMER NAMED — §1.4: which production surface lifts this machinery (container type + owning lane), named per item, not "production generally."
+(7) CODEX/OWNER INPUTS — were any Codex calls fired in this Observe (e.g. a record audit of a prior attempt's codex/ returns) with receipts filed, or is the absence printed? Does the wave need owner-only information (it almost never does — recreation prices from packets and filed scores); if claimed, is it routed as a named gap rather than silently assumed?
+Score 0–1 per dimension (§4), classify defects from the taxonomy, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Observe gate-out blocks · ../QUEUE.md recreation-queue section (current) · each item's packet digest.md technique section + TECHNIQUES.md entry · prior scores.md + verdict-history.md lines for the item and its named family siblings · INSTRUCTION Amendments A1/A3/A5 guidance lines relevant to the item's family · any Observe-phase Codex receipts filed this cycle.
+- NEVER FED: the builder's confidence prose · HQ's supervision faces · scores from attempts not yet filed (unfiled scores do not exist).
+- Ceiling: ≤32k tokens; packet sections enter as the technique's section only, never the whole digest; evidence frames are referenced by path/timestamp, never fed as images (text-only judge).
+
+## 4. Output space
+- Verdict classes (per item): **ADVANCE · ADVANCE-WITH-GAPS · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): queue-state-priced · prior-scores-read · mechanics-seen · variables-extracted · guidance-carried · consumer-named. (1.0 = evidenced in the record with citations; 0.5 = asserted without citation; 0.0 = absent.)
+- Rejection taxonomy (one primary per returned item): QUEUE-STALE (queue position/status not read this cycle) · REATTEMPT-MISROUTED (scored technique in a first-attempt wave) · SCORES-UNREAD (prior scores/cures exist, uncited) · MECHANICS-UNSEEN (no firsthand sub-beat record) · VARIABLES-THIN (variable list cannot bind a parameter table) · GUIDANCE-DROPPED (standing family guidance absent from working memory) · CONSUMER-VAGUE.
+- Accepted profiles travel: cited in RUN.md at the Plan gate; ADVANCE-WITH-GAPS items carry their gap list into §2 as named Plan charges.
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → RETURN-TO-OBSERVE for that item. GUIDANCE-DROPPED on a particle-field or typography item → RETURN-TO-OBSERVE at any other score (T15 attempt 1's founding lesson: the frozen-flow defect and both owner catches were guidance-shaped failures discovered only after the wave was spent).
+- ADVANCE-WITH-GAPS requires every gap named with its Plan-phase cure; an unnamed gap is a RETURN.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + primary classification + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. Binding the exact runner command here is the first firing's own first step. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 Cycle-002's Observe record reconstructed from its RUN.md (must ADVANCE — mechanics, timings and consumer were recorded before building). (b) A constructed record proposing T15 as a wave item for attempt 2 (must RETURN-TO-OBSERVE as REATTEMPT-MISROUTED). (c) A constructed particle-technique record with no flow-field / Owner Cure 1 / Owner Cure 2 lines (must RETURN as GUIDANCE-DROPPED). (d) A constructed record whose variable list names only "text and color" for a timed multi-phrase technique (must RETURN as VARIABLES-THIN).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. First expected amendment pressure: whether family-sibling scores (leg 2) should be mandatory for all items or only same-machinery families — priced from the first waves' returns.
+
+=== ITEM RECORD: OBSERVE (header + §1) ===
+# Item T232 — Phase A (Observe + Plan) · Wave 36 · Cycle 039
+
+- **Item:** T232 — Verb literalization: dicing produces dice · queue #103 · FIRST ATTEMPT · Packet #13 (PES "Fresh Guacamole", YouTube dNJdJIwCF_Y, 100.894 s), packet-local T09.
+- **Artifact directory:** `hidden_files/study/recreations/T232-verb-literalization-dicing-dice/`
+- **Segment window (source):** 29–36 s per digest §T09 + style-library techniques-transitions.md §T232. Segment duration 7.0 s (±0.5 s handles at Execute → cut 28.5–36.5 s).
+- **Schedule basis (A7):** **segment-anchored** — build t=0 = source 29.0 s; every phase instant below is segment-relative ms derived from the census. ONE named allocation inside the anchored frame: the literalization swap instant (census brackets it between 2000 ms still-baseball and 3000 ms dice; the swap is placed at 2500 ms, the bracket midpoint — see §2.3 departure table).
+- **Bar (standing §2.3):** five-lens average ≥85 AND no lens <70.
+- **Consumer:** DLC assembler transition containers + word-animation containers (packet §2 secondary consumer: object-metaphor substitution / verb literalization for explainer word-animation surfaces; style-library §T232 "Feeds: transition · word animation").
+
+## §1 — OBSERVE
+
+- **Queue state (read this cycle):** `hidden_files/study-jobs/QUEUE.md` RECREATION QUEUE — T232 stands at row #103 (Packet #13), status OWED/DESCRIBED, first attempt owned by this job (A3 §3). The wave RUN.md §0b census (seat, firsthand) concurs: DESCRIBED-OWED #100–#105, this wave takes #100–#103.
+- **Consumer (named, §1.4):** the **DLC assembler transition container** (the substitution-at-action transition surface owned by the Daily Language Challenge assembler lane — packet §2 primary consumer) and the **word-animation container** (packet §2 secondary consumer + lesson L3: a word-animation literalization beat — the word's action produces its literal object on its onset). The machinery lifts as a parameterized intra-shot identity swap: an object under a verb becomes the verb's homonym product, then multiplies under repeated action.
+
+### 1.1 Catalogue mechanics (read firsthand)
+- Digest §T09: "The slices are gathered and — at the moment the knife begins to dice them — they are a small stack of white dice. Successive chops multiply the dice: each pass lands more, smaller dice, until the board carries a pile of tiny dice, which the hands gather like chopped onion. Two mechanisms are coded separately: the initial CASTING (baseball as onion, T07–T08) and the LITERALIZATION — the verb 'to dice' made visible as its homonym. The multiplication is an intra-shot change: visible object-state changes with no shot boundary claimed." Evidence: ev/t032-dice-stack.jpg · ev/t035-tiny-dice.jpg · ev/t038-dice-sprinkle.jpg · clips/baseball-dicing.mp4 (28–36 s).
+- Style-library techniques-transitions.md §T232: agrees verbatim (mechanics, window P13 @ 29–36 s, evidence, consumer). Tier DESCRIBED — OWED #103. No digest↔register disagreement.
+- Packet gaps: Packet #13 adopted CLEAN (video-digestion Cycle-020) — no packet gaps attach to T09. The packet's scene census (31 @0.35 / 83 @0.20) is threshold-sensitive and the true shot count UNVERIFIED — this item claims NO shot boundary (intra-shot change), consistent with the packet.
+- Family siblings: T227 (queue #102, this wave — substitution-at-action halving, same packet) shares the substitution family but a different mechanism (reveal-at-cut vs literalization-under-verb); T236 (de-seeding + chop-to-houses) rides T232's literalization mechanism and is not owed separately. No prior attempt exists for T232 or for the literalization mechanism — no filed scores to read; the family's receipt discipline (A12/A13, demonstrated across Waves 35–36) is carried into §5 planning.
+
+### 1.2 Evidence frames viewed firsthand
+- ev/t027-baseball-slice.jpg (T08, the slicing beat before the window): halved baseball, cut faces showing grey yarn + red ring + cork core; the slices the window opens on are strips of this dome.
+- ev/t032-dice-stack.jpg (= census CP3, 32 s): a neat stack of ~9 LARGE white dice (two layers) on the wooden block, the chef's knife horizontal behind it mid-dicing, hands at the blade.
+- ev/t035-tiny-dice.jpg (= census CP6, 35 s): a pile of ~55 dice — large dice at the back, medium and small in front, a few tiny at the edges; knife chopping at the pile's left; the halved baseball shell rests at back-left.
+- ev/t038-dice-sprinkle.jpg (38 s, AFTER the window): the board mostly swept — ~9 dice remain scattered; the pile has been gathered/sprinkled into the molcajete. The gather therefore completes after 36 s; inside the window the pile only completes and holds (see §1.3).
+
+### 1.3 Motion census (A10.3 — firsthand, this run)
+Frames extracted with ffmpeg from the packet's `source.mp4` into the artifact dir `census/` at 1 s spacing across the 7 s window (seg-rel ms = source − 29 s), each viewed firsthand:
+
+| CP | File | Seg-rel | Source | SHA-256 (full) | State viewed |
+|---|---|---|---|---|---|
+| CP0 | census-0.jpg | 0 ms | 29.0 | 76fc8be6bd2225b5445324bcea40d77569c493fa00d2e0584dbd445370cd2fc1 | Knife mid-slice through a baseball dome half on the block; two slices separating, red stitching arcs on white leather. Zero-dice anchor. |
+| CP1 | census-1000.jpg | 1000 ms | 30.0 | f4e01a276cb3d1b179590a12dd86b2c213aed6c1595feaac332af7c25f186e65 | Dome sliced into 3 strips, held together by fingers; knife withdrawn (blade sliver at top). Still baseball. |
+| CP2 | census-2000.jpg | 2000 ms | 31.0 | 0506dbf9b8aa737ecac8607b3c76abb27411d756c456f8d0590bf44c7c6e172b | The 3 strips held under fingers, knife descending above them — the cross-cut (dicing) is beginning. Still baseball — the swap has NOT yet landed. |
+| CP3 | census-3000.jpg | 3000 ms | 32.0 | b90fb88a0a03d746292ba62885d15f309ad44751162ea2a57617db6e59700241 | The strips ARE a stack of ~9 large white dice (two layers), knife horizontal behind the stack mid-dicing. The literalization has landed. |
+| CP4 | census-4000.jpg | 4000 ms | 33.0 | c472c3d741c86c45c0a268e8adb59be96a992773aeac9f8f9f8ac0b82a2419a8 | Stack grown to ~15 large dice (three layers); knife withdrawn up-left. |
+| CP5 | census-5000.jpg | 5000 ms | 34.0 | 4196da6402d22b30db9facf32cdab4af7521288e47c9165e8af7f9ac6098bcf0 | Stack ~17–18 large dice, knife raised at left — the stack holds at large size between growth passes. |
+| CP6 | census-6000.jpg | 6000 ms | 35.0 | 1ca818a625719a07470df20df3c606d41d5d510585d55c1f0bdaa8a3b32da69e | A pile of ~55 mixed dice: large at back, medium/small in front, tiny at edges; knife chopping at the pile's left edge. |
+| CP7 | census-7000.jpg | 7000 ms | 36.0 | 55636a5bf3e02913a72eceb528c7c5b2c404754c8570f2b723538f6df04d6858 | Pile spread wider, ~85 mixed dice across the block; knife gone. Pile complete — the gather/sprinkle (ev/t038, 38 s) is after the window. |
+
+**Motion findings:** motion instants — slicing tail 0–~1200 ms (knife sawing, strips separating) · strip hold ≈1200–2000 ms · **literalization swap ∈ (2000, 3000) ms** (bracketed by CP2/CP3; stop-motion step, no intermediate state exists at 1 s sampling) · stack growth passes ≈3000–5000 ms (two landings: ~15 by 4000, ~18 by 5000) · multiplication chop ≈5000–6000 ms (count jumps to ~55, sizes mix) · final spread ≈6000–7000 ms (count ~85, pile widens). Holds — strip hold ≈1200–2000 ms · stack hold between passes · completed pile 7000 ms→window end. No dissolve, no shot boundary claimed anywhere in the window (intra-shot change, per the packet).
+**Count basis (priced):** dice counts per census state are VISUAL ESTIMATES counted from the census frames (visible dice; occluded dice inside the stack/pile are not countable). CONFIG's per-pass counts are the builder's table fitted to those estimates (9 · 15 · 18 · 56 · 84); the count assertion (§2.3) binds the BUILT count to the CONFIG table exactly — it does not claim the film held exactly those totals.
+**Sub-beats:** SB-A slicing tail + strips held (0–2000 ms) · SB-B literalization swap (allocated 2500 ms) · SB-C stack growth (passes at 3500, 4500 ms) · SB-D multiplication chop (pass at 5600 ms, sizes mix) · SB-E final spread (pass at 6500 ms) · SB-F completed-pile hold (7000 ms→end).
+
+### 1.4 Variables (§1.3 extraction)
+1. Source object identity — the cast object (baseball dome + strips in the specimen): dome geometry (radius, strip count), strip gap, dome palette (leather, stitching, cut-face yarn/ring/core colours).
+2. Dice table — per-pass landing instant, cumulative count after the pass, and the size factor for the dice that pass adds (object identity of the product is CONFIG data: product kind "dice", pip style).
+3. Die geometry — base die size px, corner radius, pip radius fraction, pip face values (seeded), layout: stack grid for the stack passes, seeded scatter (radius per pass) for the pile passes.
+4. Knife — blade/handle geometry, saw amplitude/duration (SB-A), chop lead time + travel (each pass), rest position.
+5. Board/stage — stage size, board geometry + palette (wood, dark edge, grain), background palette.
+6. Timing — slicing duration, strip-hold, swap instant, per-pass instants, chop lead, final hold, total duration.
+7. Gather — the post-window gather is NOT in the window; inside the window only a small pile-settle at the hold is modelled (settle fraction + duration) — the full gather/sprinkle is a named deferral (§2.4 fidelity).
+8. Easing — saw/chop/settle easing names; layout seed (deterministic RNG seed).
+
+### 1.5 Guidance dispositions (inline, A9.5)
+- A1 §2 typography precedent (runtime sampling of config-rendered text): NOT APPLICABLE — no typography in this technique; the recreation carries no subject text at all. Reason stated here per A9.5.
+- A5 Owner Cures 1–2 (intensity separation · phrase exclusivity): NOT APPLICABLE as particle/sequence cures — no particle field, no phrase lifecycle. The analogous separation here is construction-level: baseball strips vs dice are different object kinds, never the same mark at two intensities; phases are strictly sequential by the phase-order invariant (§2.1).
+- A5 §4 flow-field model: NOT APPLICABLE — no particle pool exists in this technique.
+- Purity (§6.1): the build is code/generated construction only — drawn dome strips, knife, and dice as SVG shapes from CONFIG; never original footage, frames, or traced redraws. The census frames and evidence stills are Observe evidence only and are never loaded by the build.
+- Family: substitution-at-action siblings in Packet #13 (T227 halving) — the swap-in-action construction (before state · spanning action · after state, no boundary claimed) is the family's demonstrated form; T227's filings are this wave's parallel item, not a scored prior.
+
+
+=== CODEX-OBSERVE RETURN (filed this cycle) ===
+**CONFIRMED-WITH-GAPS** — T232’s source record is sufficient for Recreation Cycle 039, Wave 36 §1 Observe. The packet and register agree on the core action and evidence. The end of the action needs firsthand timing, and the queue citation needs correction.
+
+**Findings**
+
+1. **Mechanics agree.** The baseball slices become white dice as chopping begins. Later chops yield more, smaller dice, which the hands gather. Both records describe the multiplication as an intra-shot change and claim no shot boundary. The packet separately assigns the baseball-as-onion setup to T07–T08. The two gaps closed at Packet #13 adoption concerned T01 and T06. [digest.md §T09](../../../../study/video-digests/2026-11-17-yt-dnjdjiwcfy/digest.md#L66) · [techniques-transitions.md §T232](../../../../study/style-library/techniques-transitions.md#L321) · [Cycle 020 adoption return](../../../../study-jobs/video-digestion/runs/2026-11-17-cycle-020-pes-fresh-guacamole/jev-packet-return-2.md#L14)
+2. **Gap — the final evidence frame falls outside both windows.** The digest and register both give the technique as 29–36 s and cite `t038-dice-sprinkle.jpg`. The digest identifies that frame as the later deposit into the molcajete and gives the clip as 28–36 s. I probed the archive at 100.894 s and the clip at 8.000 s, consistent with `36 − 28 = 8` s and a nominal technique span of `36 − 29 = 7` s. Sampled archive frames show the dice multiplying and the hands gathering them after the nominal endpoint. Observe should frame-step the archive around 36–38 s, record the gather and sprinkle boundaries, and specify which action the cut must contain before binding the segment under command 5. [digest.md §T09](../../../../study/video-digests/2026-11-17-yt-dnjdjiwcfy/digest.md#L66) · [techniques-transitions.md §T232](../../../../study/style-library/techniques-transitions.md#L321) · [guards.md command 5](../../../../study-jobs/recreation/guards/guards.md#L16)
+3. **Gap — queue citation.** The supplied record cites a standalone `QUEUE.md` row #103. On disk the table ends at #99. The Wave 35 update names T232 in the #100–#105 backlog, and the register and Wave 36 census explicitly bind T232 to #103. The first-attempt disposition is supported by those entries. [QUEUE.md table end](../../../../study-jobs/QUEUE.md#L202) · [Wave 35 update](../../../../study-jobs/QUEUE.md#L206) · [TECHNIQUES.md tier register](../../../../study/style-library/TECHNIQUES.md#L152) · [Wave 36 RUN.md §0b](RUN.md#L11)
+4. **Prior filings support first-attempt status.** The current T232 and T227 directories contain census material and no `scores.md` or filed scoring returns. I found no T236 artifact directory and no matching verdict-history entries in recreation or practice for the three IDs. T227 is the same-wave related technique, and T236 is the non-owed sibling explicitly tied to T232’s literalization mechanism. Scored attempts found across those IDs: **0**. Lens count and score arithmetic are inapplicable. [T232 artifact directory](../../../../study/recreations/T232-verb-literalization-dicing-dice/) · [T227 and T236 register entries](../../../../study/style-library/techniques-transitions.md#L306) · [recreation verdict history](../../../../study-jobs/recreation/verdict-history.md) · [practice verdict history](../../../../study-jobs/practice/verdict-history.md)
+
+**Limits** — I checked archived metadata and sampled frames. Exact action boundaries and production edit continuity remain unverified. The current filesystem establishes filing presence for this audit. The feeder’s claim about directory absence before the cycle remains unverified.
+
+Body-write: none (read-only run)

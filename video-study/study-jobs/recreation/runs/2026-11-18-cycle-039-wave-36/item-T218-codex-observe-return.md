@@ -1,0 +1,20 @@
+**CONFIRMED-WITH-GAPS — T218’s source record is sufficient for Wave 36 §1 Observe. The archive confirms the packet window, but the catalogue wording compresses two distinct visual operations and the window includes adjacent scenes.**
+
+**Consumer:** Recreation’s §1 Observe for T218, queue #100.  
+**Working record:** `hidden_files/study/recreations/T218-north-south-population-tiles/` and Wave 36 `RUN.md` §1.
+
+### Findings
+
+1. **The packet and register agree.** Packet #12 `digest.md` §T17 and `techniques-diagrams.md` §T218 give the same 4:31–5:05 window, two labelled camps, arrow wording, and `ev/t282-north-south-tiles.jpg` citation. `TECHNIQUES.md:148` confirms DESCRIBED — OWED #100. The 282 s still shows the free-population state. The later motion is the gap Observe needs to close firsthand. In the sampled archive, the tiles grow in place for the free-population count, then rust-coloured frames appear around Southern tiles for the enslaved-population count. The arrows point to the marks and the tiles stay in their camps. Packet #12’s `jev-packet-receipt-amendment-2.md:3–6` identifies G3 as clip-filename offset and G4 as thin mechanics on T02/T05/T06/T10. Neither standing adoption gap specifically attaches to T17.
+
+2. **The archive covers the catalogue window and supports a narrower tile interval.** A fresh `ffprobe` on `source.webm` returned 488.301 s, VP9 at 1920×1080, with Opus audio, agreeing with `probe.json`. The published window is 271–305 s, so its duration is 305 − 271 = **34.0 s**. A fresh one-second contact sheet shows the colonial-map lead-in, the tile sequence around 277–298 s, and the transition into T219’s banner and figure before the catalogue window ends. All **18 of 18** filed census image hashes match the rows in `item-T218-observe-plan.md` §1.3. The catalogue window and the approximate tile-only interval should both remain visible in Observe’s source record. The source check covers the pre-cut leg of `guards.md` command 5.
+
+3. **T218 is a first attempt with zero scored lenses.** The artifact directory has a `codex/` directory containing only `AGENTS.md`, no `scores.md`, and no T218 entry in recreation’s `verdict-history.md`. This agrees with `TECHNIQUES.md:148` and `QUEUE.md`’s Wave 35 update. The feeder’s “no codex/ returns” is accurate. There is no T218 prior score to inherit.
+
+4. **T210’s Wave 35 PASS is bound to five filed lens returns.** The five `codex/lens-*-cycle038.md` files give motion 72, timing 90, purity 98, reusability 78, and readability 88. They bind through the filed payloads to build `254add09…`, which matches the current `recreation.html` hash. The sum is **426**, the mean is **426 ÷ 5 = 85.2**, and the minimum is **72**. These agree with `scores.md`’s completion section, `verdict-history.md:127`, and `QUEUE.md` row #98. The two Wave 34 HOLDs and zero scored lenses belong to the earlier stage of the same attempt, recorded at `verdict-history.md:126`. The catalogue still shows the registration tier at `TECHNIQUES.md:146`.
+
+5. **T212’s Wave 35 NO VERDICT is supported by two gate returns and zero scored lenses.** `codex/jev-prewave.md` and `codex/jev-prewave-refire.md` both return HOLD for ASSERTED-CHECKS, with own-check completeness **0.35 → 0.40**. `scores.md` binds the attempt to build `05cf7ad7…`, which matches the current HTML hash. The disposition agrees with `verdict-history.md:131`, `QUEUE.md` row #99, and Wave 36 `RUN.md` §1’s completion charge. There is no lens average or minimum to compute. The catalogue still shows the registration tier at `TECHNIQUES.md:147`. No unbound score claim surfaced for either sibling.
+
+**Limits:** The fresh archive sampling establishes the sequence and approximate boundaries. Exact transition frames, quantitative population-to-geometry scaling, and the eventual `segment.mp4` receipt remain unverified. The sibling audit establishes filing consistency and score arithmetic. The supplied packet already contains an Observe and Plan record, so this return establishes source-record sufficiency only. It cannot certify that the audit fired before mechanics were written.
+
+**Body-write: none (read-only run)**

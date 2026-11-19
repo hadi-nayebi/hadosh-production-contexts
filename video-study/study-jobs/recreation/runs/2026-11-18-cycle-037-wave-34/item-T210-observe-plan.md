@@ -1,0 +1,271 @@
+# Item T210 — Phase A (Observe + Plan) · Wave 34 · Cycle 037
+
+- **Item:** T210 — threshold grid-map (the road to 270) · queue #98 · Packet #12 (Vox "The Electoral College, explained", YouTube ajavsMbCapY, 488.301 s)
+- **Phase:** A ONLY (Observe + Plan). No building, no artifact directory in this record (A9.2 gate-order: the wave's exit gates fire on this record before any build script is written).
+- **Artifact directory (created at Plan close by the seat, not by this record):** `hidden_files/study/recreations/T210-threshold-grid-map/`
+- **Segment window (source timestamps):** **139–147 s (2:19–2:27)** per digest §3 T09 + TECHNIQUES entry. **Segment duration to cut: 8.0 s** (±0.5 s handles at Execute per INSTRUCTION §3.1). Clip evidence `clips/t08-gridmap-formation.mp4` spans 139–148 s (9.008 s, ffprobe this run) and brackets the window with ~1 s of lead-in (T08 tail) and the next beat's entry — see census.
+- **Bar (standing §2.3):** five-lens average ≥85 AND no lens <70.
+
+---
+
+## §1 — OBSERVE
+
+### 1.1 Catalogue mechanics (cited)
+
+- **Digest §3, entry T09 — Threshold grid-map (the road to 270), timestamps 2:19–2:27:** "State outlines draw themselves over the full dot field (T03's substrate); red and blue regions accumulate from opposite sides toward a heavy black marker post labelled 270 at the field's centre. Operation: map highlight over a tally grid — the map and the count are the same object. The counted entity is the state block, the increment is its whole dot region, the result is which side of the post the accumulation reaches." Why it works: "The threshold is a place, not a number in a sentence: the viewer watches territory become a tally and can see the finish line before any state is coloured by a result." Evidence cited there: `ev/t142-threshold-270.jpg` (142 s) · `ev/t144-gridmap-mid.jpg` (144 s) · clip `clips/t08-gridmap-formation.mp4` (139–148 s — "draw order and the post's arrival are the claim").
+- **TECHNIQUES entry** (`techniques-diagrams.md`, T210 — Threshold grid-map (P12 T09), Tier DESCRIBED — OWED #98): agrees verbatim on mechanics, window (P12 @ 2:19–2:27), evidence frames and clip. No disagreement between digest and register on this item.
+- **Packet open gaps G3/G4 (priced by codex-observe finding 1, applied):** Packet #12's open gap G3 touches this item only through the clip's name (`t08-` clip serving packet-local T09); the explicit citation in the digest entry + this record resolves it. Gap G4 names T05/T06/T02/T10 and does NOT attach to T09/T210.
+- **Digest claim NOT borne out by the census (codex-observe finding 2, applied):** the digest's "Why it works" says the viewer "can see the finish line before any state is coloured." The census contradicts the visual half of that claim: fills are established by seg-rel 2000 ms (CP4) while the post + label only emerge at ~3000 ms (CP5) and stand legible at 4000 ms (CP6). What precedes the colouring is the SPOKEN threshold (narration at 139.19 s), not the visual post. The recreation follows the census, not the digest sentence: post arrival is SB-D, after fills begin.
+- **Narration anchor:** transcript line at 139.19 s — "The winner of the presidential election is the candidate who gets 270 or more of these Electoral College votes." The threshold numeral is spoken at the window's opening; the post visualises it.
+- **Packet gaps touching this item (priced, not inherited silently):** digest §5 **B3** — "The threshold grid-map is hard to parse mid-formation (2:19–2:27)… the 270 marker is partly covered by the accumulating regions — the film's most important diagram is least legible at the moment it forms (it resolves as the draw completes)." **B4** — "The total is never given (2:19)… neither the narration nor any frame states the 538 total." Both gaps are specimen facts the recreation must handle by design (see Plan: post renders ABOVE fills; total is a CONFIG value the build may surface in its tally readouts without inventing specimen content — the specimen itself does not show 538, so the default build does not display it either; it stays a data value, not a displayed claim).
+- **Substrate identity:** the grid is T03/T204's dot field — in this specimen rendered as black SQUARES on the newsprint ground (census t0.5, viewed firsthand). The recreation's grid cells are squares, not circles, at this window.
+
+### 1.2 Motion census (A10.3 — firsthand, this run)
+
+Source: `clips/t08-gridmap-formation.mp4` (139–148 s of source; 1920×1080). Frames extracted by this agent with ffmpeg into this run's `census/` directory as `T210-census-t<clip-s>.jpg`, spacing ≤2 s (0.5 s spacing across the formation transitions), **12 frames**, each viewed firsthand. Clip time t maps to source time 139 + t; segment-relative time (segment start = source 139) equals clip time.
+
+| # | File | Clip / seg-rel (ms) | Source (s) | SHA-256 (full) | State viewed firsthand |
+|---|---|---|---|---|---|
+| CP0 | T210-census-t0.0.jpg | 0 | 139.0 | d24f2d96e37b26e42ddc7754bf2f3a27542e1a77144752b698faf160c6d7c021 | LEAD-IN, not the technique: tail of T08 — Wyoming/California squares over a partial grid, "One electoral vote represents: 189,000 / 679,000" captions. Zero-state anchor for T210: no outlines, no post, no fills. |
+| CP1 | T210-census-t0.5.jpg | 500 | 139.5 | 73d4eb3e76da9b09dd3619edbdb52199f9f9327e368aefd7922ecdf4f933add6 | Bare substrate: full black-square grid on newsprint, no outlines, no fills, no post. The grid reveal/settling is complete by here. |
+| CP2 | T210-census-t1.0.jpg | 1000 | 140.0 | 389956c6bf4be828cb09af2ec8b3b12875417c775652c0d3781e4a0cbebdd78b | SUB-BEAT 1 (outline draw-on) in progress: red outline strokes top-left + top-centre, blue outline strokes right + bottom-centre, all partial/unclosed; a short red tick at field centre (post not yet standing); NO fills yet. |
+| CP3 | T210-census-t1.5.jpg | 1500 | 140.5 | 743def952300c3953d4bdba4d89e43405ea3a034e22caca05feffb0199f7f3af | Draw-on continuing; first fills beginning inside the earliest-closed outlines (intermediate state between t1.0 and t2.0, viewed in the extraction set). |
+| CP4 | T210-census-t2.0.jpg | 2000 | 141.0 | d826c0cbad0ef1de91e31175d51a2ad5aac2fc66f03b732ac099ade18df2d48a | SUB-BEAT 2 (region fill) established: red fills top-centre + centre + bottom-left, blue fills right column + bottom-right, each fill a translucent wash BEHIND the black squares (squares stay black on top of the wash); several outlines still open (top-left red, centre blue). Post still not standing. |
+| CP5 | T210-census-t3.0.jpg | 3000 | 142.0 | 23977f66b9adc6490103f51deea26cb06450a9a57e637e85471bbc815c94fcf8 | Formation mid-state (matches ev/t142: post's top segment descending at centre, "270" label emerging at centre and PARTLY COVERED by the red fill — the B3 defect, seen firsthand in ev/t142-threshold-270.jpg). |
+| CP6 | T210-census-t4.0.jpg | 4000 | 143.0 | bad25c0abd63d06652a9f4593926fd806ccffedf75dfbb2afcf79b6efef4a6c1 | SUB-BEAT 3 complete: heavy black vertical POST stands full-height at field centre; white label plate "270" sits ON the post at mid-height, legible; red accumulation fills the left up to the post, blue fills the right; white unclaimed pockets remain inside both halves. |
+| CP7 | T210-census-t5.0.jpg | 5000 | 144.0 | 65f179a5f4672599302bd76f290945a86978854c53e29f768d7181a7443c9e2a | Near-complete: red region now covers most of the left half, blue most of the right; small white pockets STILL unclaimed (pockets visible here are filled by CP8 — completion brackets between 5000 and 6000 ms, per codex-observe finding 2, applied); post + 270 plate unchanged and legible (plate renders above fills in the completed state). |
+| CP8 | T210-census-t6.0.jpg | 6000 | 145.0 | cabd0f3ba897d3cadadc0755512f92d2fb450541fa3b8addc3f2c18b95f307d0 | Completed state: pockets from CP7 now filled; the accumulation is complete by here and holds. |
+| CP9 | T210-census-t7.0.jpg | 7000 | 146.0 | a9c59814a277b5692d39f9e40d632fe01ebaf94f2664f268b13a8ff7f60caedf | Completed state still holding — the hold extends to at least seg-rel 7000 ms. |
+| CP10 | T210-census-t8.0.jpg | 8000 | 147.0 | 54b1b8bd95305a473ee9c1057d4f0bdb271141829e49e26624ec08e775a68cfa | LEAD-OUT, not the technique: the NEXT beat has replaced the stage — grey vertical bar field titled "2016 election results by state" (T211/T212 transition). The grid-map is gone by seg-rel 8000 ms. |
+| CP11 | T210-census-t8.9.jpg | 8900 | 147.9 | da10c8173ecadcaa95b7227552586301c60195d3b704c3eec544800b38234e2c | Clip tail (next beat continuing) — outside the segment; extracted to prove the clip overhangs the window and must not be read as technique duration. |
+
+**Motion findings per instant (A10.3 form):**
+- **Motion instants:** seg-rel ~500–3000 ms (grid settle → outline draw-on → fills spreading → post descending). The draw-on and the fill are CONCURRENT, staggered per region — not two clean sequential phases: outlines start ~≤1000 ms, fills start inside early-closed outlines by ~1500–2000 ms while other outlines are still drawing.
+- **Hold instants:** seg-rel ~6000–7000 ms (completed two-sided accumulation + post + legible 270 plate, static within sampling; completion itself brackets 5000–6000 ms — CP7's last pockets fill by CP8). A shorter substrate-only hold stands at ~500 ms (bare grid before any outline).
+- **Dissolve/exit:** NONE inside the window — the completed map does not dissolve; it is REPLACED by a hard transition to the next beat between seg-rel 7000 and 8000 ms. The recreation must not invent a fade-out.
+- **What forms when:** (i) grid substrate first, complete by 500 ms; (ii) state outlines draw on 1000–3000 ms, red (left/centre) and blue (right) interleaved, not side-by-side sequential; (iii) region fills accumulate behind the squares from ~1500 ms, growing region-by-region toward the centre; (iv) the post + 270 plate arrive LAST of the formation elements (~3000–4000 ms), descending/standing at the centre — the threshold is revealed after territory exists, then both sides visibly press against it.
+- **Sub-beats priced separately (per the charge):** SB-A grid settle (0–500 ms) · SB-B outline draw-on (1000–3000 ms, per-region stagger) · SB-C region fill accumulation (1500–6000 ms, concurrent tail with SB-B; last pockets fill 5000–6000 ms) · SB-D post + label arrival (3000–4000 ms) · SB-E completed hold (6000–7000+ ms). SB-B and SB-C overlap by design in the specimen; a Plan that serialises them strictly would mis-time the specimen (see Plan schedule + the exclusivity disposition in §1.5).
+
+### 1.3 Variables (every property that could change without changing the technique)
+
+1. **State/region set** — which regions exist, their names, their cell footprints on the grid, their side assignment.
+2. **Per-region weight (tally)** — each region's vote weight; the two running tallies derived from them.
+3. **Threshold value** — 270 in the specimen; the post's position derives from it (threshold ÷ total × field width).
+4. **Total** — 538 in the specimen's world (never displayed in the specimen — B4); still a data value the post position and tallies derive from.
+5. **Grid geometry** — columns × rows, cell size, gap, field position/scale on the stage.
+6. **Timing/durations** — grid settle, per-region draw duration, per-region fill delay/duration, post arrival time/duration, hold length, total duration.
+7. **Palette** — side-A colour, side-B colour, outline vs fill opacity, grid-cell colour, post colour, label ink/paper, newsprint ground.
+8. **Direction/order** — accumulation fronts (left→centre / right→centre in the specimen), per-region reveal order.
+9. **Density** — cells per region (footprint sizes), number of regions.
+10. **Label content** — the threshold label text ("270"), optional region labels (the specimen shows NO state names on this map — identity is carried by outline shape + position only).
+11. **Post geometry** — post width, height overhang beyond the field, label plate size/position.
+
+### 1.4 State geometry as CONFIG (A9.6)
+
+State outlines are SUBJECT-SHAPING geometry: they are CONFIG data, never code literals. Priced representation: each region is one CONFIG object `{ id, side, weight, cells: [[col,row],…] }` — the region's footprint is its list of grid cells. The outline path is DERIVED from the cell list at build time (the boundary of the union of the region's cells, traced as one SVG path), so (a) no hand-traced specimen outline exists anywhere in the build (purity), (b) a swap that changes a footprint changes the drawn outline mechanically, and (c) the fill is the same cell union rendered as a wash under the grid squares — one data object drives outline, fill, and tally (weight), which is exactly the specimen's claim that map and count are the same object. Simplified schematic footprints (a stylised US-like arrangement of ~14–20 regions) carry the technique; a 51-state geographically faithful map is a whole-scene balloon (§8) and is explicitly NOT the item — see Plan size discipline. The specimen's own regions are already schematic blocks on a square grid, which is what licenses the schematic footprint set.
+
+### 1.5 Consumer
+
+**Diagram containers — the DLC assembler's roster-map / threshold surface.** Reasoning: the technique's product is a counting surface where weighted blocks accumulate against a drawn threshold — the same consumer class the packet names for the whole Packet #12 family (digest §2: "Primary consumer: Hadosh Academy explainer production + the DLC assembler — diagram container… can show… running total-as-result" and §6 L1 "Block-weighted count board. Container: diagram. Consumer: DLC assembler"). For T210 specifically the liftable machinery is: (1) a threshold-as-place tally (any "first to N" count in a DLC piece — votes, points, days, signatures — rendered as two fronts pressing on a post), and (2) the map↔tally identity (L12: a state keeps its outline identity as the map becomes the count). The RUN.md wave manifest prices the same consumer ("diagram containers (the DLC assembler's diagram/count-board surfaces)"). NOT a word-animation or opening container: no title lands and no words form in this window.
+
+### 1.6 Prior / family scores read (filed scores.md lens lines)
+
+| Sibling | Filed scores (5-lens) | Verdict | What it prices for T210 |
+|---|---|---|---|
+| **T54 — map-as-table roster** (`T54-map-as-table-roster/scores.md`, attempts 1–4 in one file) | A1: motion 73 · timing 57 · purity 100 · reusability 76 · readability 55 → **avg 72.2, min 55, FAIL** · A2: 76.0, min 64, FAIL · A3: 75.2, min 58, FAIL · A4: motion 88 · timing 84 · purity 100 · reusability 78 · readability 82 → **avg 86.4, min 78, PASS** (tier RECREATED via practice; arithmetic recomputed by codex-observe finding 4 from the filed returns) | **FAIL (A1) → PASS (A4)** | The direct map-build evidence. Its convergent defect: the completed-state arrival was broken as a beat (camera snap at the full moment, zero scheduled hold on the completed map) — T210's Plan therefore carries an explicit completed-hold CONFIG duration and derives total duration FROM hold end, never the reverse. Its readability failures: identities hidden at the completed state + overlapping marks painting over each other — T210 answers by construction (no per-state name plates exist in the specimen at all; the only label is the post plate, rendered topmost). Its timing failure: an inferred lifecycle displacing the segment's measured state sequence — T210 answers with the segment-anchored census mapping in §2. Its reusability hits: presentation literals outside CONFIG (label metrics, easing, stage aspect, palette bypasses) — T210's parameter table binds all of those classes by name. |
+| **T53 — ballot-arc count board** (`T53-ballot-arc-count-board/scores.md`) | motion 92 · timing 88 · purity 94 · reusability 74 · readability 80 → **avg 85.6, min 74** | **PASS** | The count-board sibling that passed: a threshold tally CAN clear the bar in this family. Its priced cures still bind T210: dispatch on stable IDs, never on VALUES (its bracket-value dispatch silently re-timed under swap) — T210's regions dispatch on `id` + explicit `side`, and the threshold post position DERIVES from threshold÷total rather than being placed by the label value; legend/readouts must not announce a state before it exists (its Act-1 legend announced "19 still needs" early) — T210's tally readouts, if shown, update only from accumulated weights at their own instants. Its minimum lens was reusability (74) — the family's weak lens, priced in the plateau. |
+| **T68 — threshold-interpretation ladder** (`T68-threshold-interpretation-ladder/scores.md`) | motion 92 · timing 87 · purity 100 · reusability 75 · readability 88 → **avg 88.4, min 75** | **PASS** | The threshold sibling: threshold semantics survive scoring when the threshold element's arrival is anchored to the formation it interprets. Its convergent cure (a default omitting an evidenced beat) warns T210 not to drop SB-D (post arrival) or merge it into the fill — the post is a separate priced beat. Its minimum was also reusability (75). |
+
+Family read across the three (selection basis NAMED, per codex-observe finding 4): on a FIRST-attempt basis the averages are 72.2 / 85.6 / 88.4 — the basis this record prices, because a first attempt is what T210 is, and T54 A1's completion/readability failures are the first-attempt evidence. On a LATEST-attempt basis (T54 A4 86.4 substituted) the family average is 86.8 — printed so the baseline choice is visible, not hidden. Reusability is the minimum or near-minimum in every filed attempt of the family (T54: 76/70/70/78 · T53: 74 · T68: 75) — the family's stuck lens is reusability, priced in §2.8. T54's own arc (72.2 → 86.4 across four attempts) also prices the cure path if T210's first attempt lands in the 70s: the defects were curable in practice without changing the technique.
+
+### 1.7 Standing-guidance dispositions — WITH REASONING INLINE (A9.5)
+
+- **A1.2 runtime text sampling — NOT-BINDING.** A1.2 makes runtime sampling of config-rendered text the lawful letterform construction for TYPOGRAPHY recreations (the words ARE the formed subject, sampled to place particles). T210 forms no letterforms: its only text is the post's label plate ("270"), a typeset label rendered as ordinary DOM/SVG text whose content is a CONFIG string. No sampling machinery is needed to construct it, and importing a text-sampling pipeline would be inheritance without a priced reason. The label's FIT is still a measured obligation — it is discharged by the A6 measured-fit leg at Verify (label plate vs post width at the 360 px stage), not by A1.2.
+- **A5 flow-field model + Owner Cures 1–2 — NOT-BINDING as construction; Cure 2's principle BINDS in translated form.** A5's flow-field (one constant particle stream, borrowing/reserve, velocity continuity) prices PARTICLE fields; T210 has no particles — its substrate is a static square grid and its movers are SVG outline strokes and fill washes, so the model has nothing to bind to. Owner Cure 1 (foreground/background intensity separation) binds only in its general form, which the construction already carries structurally: fills render as translucent washes UNDER the black grid squares and UNDER the post plate, so figure (post + label + outlines) and ground (wash) can never reach the same intensity — and the specimen's B3 failure (270 covered mid-formation) is cured by layer order, priced in §2. Owner Cure 2 (strict phase exclusivity) does NOT bind literally: the census proves the specimen itself overlaps SB-B (draw-on) and SB-C (fill) per region — serialising them would falsify the specimen. What binds is the translated principle: no two REGIONS' lifecycles are left to timing arithmetic that can collide arbitrarily — each region carries explicit CONFIG start instants for its draw and its fill, so the overlap is the specimen's measured overlap, not an accident.
+- **A9.1 plate construction — BINDS in its still-plate branch.** T210 has a background plate: the newsprint-textured ground. It does not move in the specimen (the ground is static in every census frame; only grid/fills/post move). A9.1's moving-plate branch (seamless tiled pan, endpoint-periodic tiles) therefore does NOT apply; the binding branch is the priced still plate — the Plan's parameter table carries the ground as a CONFIG still plate (colour/texture choice), and any background motion in the build would exceed the technique and price as a defect. The dot/square grid itself is not a "plate" under A9.1 — it is the subject substrate, priced in the parameter table on its own keys.
+- **Practice reserved-band badge note (HQ board `practice-2026-11-18-t06-construction-note`) — BINDS for the 270 label plate.** The note: labels that scale with a container get a reserved band with legibility floors. T210's "270" plate sits on the post INSIDE the scaling field — when the field scales to phone width, the plate scales with it, which is exactly the note's case (and exactly the specimen's B3 legibility failure). The Plan therefore reserves the plate's band: the plate is rendered in a top layer with its own CONFIG minimum font size and a reserved clear zone that fills may not paint over (layer order + a fit-leg row at 360 px with the ~11 px legibility floor). The region set carries no other labels, so the note binds this one label only; for the wave's other items the binding is theirs to price.
+
+### 1.8 Observe gate-out
+
+Mechanics summary + sub-beat timings (§1.1–1.2, SB-A…SB-E) · variable list (§1.3, 11 variables) · state geometry priced as CONFIG (§1.4) · consumer named with reason (§1.5) · family scores read (§1.6) · guidance dispositions with reasoning inline (§1.7). Codex-observe return: filed as sibling `item-T210-codex-observe-return.md`; disposition in §1.9 (completed after firing).
+
+### 1.9 Codex-observe disposition
+
+**Fired:** one stream (`cat payload | ~/workspace/codex-local/node_modules/.bin/codex exec -`), payload = `guards/codex-observe.md` + digest T09 section + TECHNIQUES entry + filed sibling scores + the §1 summary (10,869 B, size + tail verified). **Return:** 220,777 B raw, filed verbatim as sibling `item-T210-codex-observe-return.md`. **Verdict: CONFIRMED-WITH-GAPS. Findings: 4 numbered findings + a Limits paragraph.**
+- **Finding 1 (packet/register agree; G3/G4 priced) — APPLIED:** §1.1 now carries the G3/G4 disposition (G3 resolves by citation; G4 does not attach).
+- **Finding 2 (fills precede the visible post; completion brackets 5000–6000 ms) — APPLIED:** §1.1 prints the digest's "finish line before colouring" sentence as NOT borne out visually (the spoken threshold precedes; the post follows the first fills); §1.2 CP7/CP8 rows, the hold-instants line, and the SB-C/SB-E timings are corrected to the 5000–6000 ms completion bracket; §2.3's CP7/CP8 mapping rows are aligned in the same pass.
+- **Finding 3 (window checkable; nominal window vs clip coverage vs handles distinguished; outgoing scene change ≈147.022 s) — APPLIED:** the distinction already stood in §1.2/CP11 and the header (clip 139–148 ≠ window 139–147 ≠ cut handles); the 147.022 s scene-change measurement is adopted as corroboration of the window's end and cited here.
+- **Finding 4 (fed scores bound; T54's 72.2 is attempt 1 of four) — APPLIED:** §1.6's T54 row now files all four attempts (72.2 FAIL · 76.0 FAIL · 75.2 FAIL · 86.4 PASS, RECREATED) and the family read names its selection basis (first-attempt 82.1 priced; latest-attempt 86.8 printed); §2.8's plateau is restated on the named basis.
+- **Limits (accepted as printed gaps, not cured):** the exact last fill frame remains unmeasured (completion is bracketed, not pinpointed — the §2.3 mapping governs CP7/CP8 as states, not a single completion instant); B4's film-wide "no frame states 538" remains unverified beyond the checked narration anchor (the Plan already treats 538 as a non-displayed data value, so the gap cannot enter the build as a claim); `segment.mp4` binding is NOT ASSESSED because no artifact directory exists yet — correct at Phase A; it binds at Execute via guards.md command 5.
+
+---
+
+## §2 — PLAN
+
+### 2.1 Parameter table (every §1.3 variable a named CONFIG key; specimen value = default)
+
+| CONFIG key | Specimen default | Prices variable |
+|---|---|---|
+| `total` | 538 | total the threshold is a majority of (data value; not displayed by default — B4) |
+| `threshold` | 270 | threshold value; post position derives as threshold/total across the field |
+| `thresholdLabel` | DERIVED: `String(threshold)` — not independently editable (codex-plan-review finding 3, applied: an independently editable label could disagree with the post's derived position) | label content on the post plate |
+| `regions` | schematic set, ~16 regions (see §1.4): each `{id, side: "A"\|"B", weight, cells: [[c,r],…]}`; weights sum per side toward the threshold race; source-count vs built-count printed at Execute (A9.3) | state set, footprints, sides, tallies, density |
+| `gridCols` / `gridRows` | 28 / 13 (census-priced schematic; builder confirms against segment at Execute and files the count) | grid geometry, density |
+| `cellPx` / `gapPx` | derived from stage width ÷ gridCols (single geometry source; no second literal) | scale |
+| `stageW` / `stageH` | 640 / 360 (16:9 stage, phone-checkable) | scale |
+| `palette.ground` | newsprint off-white `#f4f1ea` (still plate, A9.1) | palette — ground |
+| `palette.cell` | `#111111` | palette — grid squares |
+| `palette.sideA` | red `#d94f5c` (fill wash at `fillOpacity`) | palette — side A |
+| `palette.sideB` | blue `#5b84ae` (fill wash at `fillOpacity`) | palette — side B |
+| `fillOpacity` | 0.85 wash over ground, under cells (layer order fixed: ground → fills → cells → outlines → post → plate) | intensity separation (Cure 1 translated) |
+| `outlineWidthPx` | 3 | outline rendering |
+| `outlineOpacity` | 1.0 | outline rendering (named per plan-review finding 3) |
+| `easing` | "easeInOut" (named function from a CONFIG-keyed map; no anonymous easing literal in the renderer) | motion shaping |
+| `marginPx` | 24 (field placement derives: fieldX = marginPx, fieldY = marginPx, fieldW = stageW − 2·marginPx) | field placement |
+| `gapRatio` | 0.45 (gapPx DERIVES: gapPx = cellPx × gapRatio; cellPx derives from fieldW ÷ gridCols) | grid geometry derivation |
+| `palette.post` | `#1a1a1a` | post colour (named per finding 3) |
+| `palette.plate` | `#ffffff` — the plate is OPAQUE (plan-review finding 2, applied: layer order alone does not cure B3 if the plate is translucent) | plate paper |
+| `palette.plateInk` | `#111111` (plate ink vs plate paper contrast checked by the fit leg at 360 px, finding 2) | plate ink |
+| `platePadPx` | 8 (plate W/H DERIVE from the label's measured ink + 2×platePadPx at build time) | plate geometry derivation |
+| `postWidthPx` | 10 | post geometry |
+| `postOverhangPx` | 24 (post extends beyond field top/bottom, per census t4.0) | post geometry |
+| `labelMinPx` | 20 at 640 px stage; fit leg enforces ≥11 px effective at 360 px stage (reserved band, §1.7) | label legibility floor |
+| `fillDelayMs` | 200 (per-region fill start DERIVES: `fillStart = drawStart + drawDurMs + fillDelayMs`; a CONFIG override that would start a fill before its own region's draw ends is REJECTED at validation — plan-review finding 2, applied: the specimen's prerequisite is that a region's outline closes before its fill begins, CP3–CP5) | region lifecycle rule |
+| `regionLabels` | DEFERRED — the specimen carries no region labels on this map (§1.3 variable 10); region naming is a later attempt, not this build (finding 3) | scope |
+| `tGridSettleMs` | 500 | timing — SB-A end / zero-state anchor |
+| `drawDurMs` (per region, overridable per region as `regions[].drawMs`) | 700 | timing — SB-B |
+| `fillDurMs` (per region, overridable as `regions[].fillMs`) | 900 | timing — SB-C |
+| `regions[].startMs` / `regions[].fillStartMs` | staggered per census mapping (§2.3): draws start 1000–2300 ms, fills start 1500–4100 ms | timing/order — explicit per-region instants (no arithmetic collision) |
+| `tPostMs` | 3000 (post arrival start) | timing — SB-D |
+| `postDurMs` | 600 (post stands by ~3600 ms) | timing — SB-D |
+| `holdMs` | 2000 (completed-state hold, explicit CONFIG — the T54 cure) | timing — SB-E |
+| `completeAtMs` | DERIVED: `max(gridEnd, latest drawEnd, latest fillEnd, postEnd)` (plan-review finding 1, applied — the post's completion at 3600 ms does NOT control the clock; the last fill does) | timing — completion |
+| `durationMs` | DERIVED: `completeAtMs + holdMs` = 6000 + 2000 = **8000** with defaults; printed as a derivation, never a bare literal | timing — total |
+| `accumulationDirection` | "inward" — its defined effect: it ORDERS the §2.1b stagger (side A draws ascend from the left, side B from the right, both toward the post); flipping it reverses the stagger order (finding 3: the key now has a stated effect on the schedule) | direction |
+
+#### 2.1b Region schedule (exact defaults — plan-review finding 1: the schedule is filed, not implied)
+
+16 schematic regions. Draw starts interleave A/B from the field edges inward; `drawDurMs` = 700 for all; `fillStart` derives per the `fillDelayMs` rule (= drawStart + 900); `fillEnd` is each region's CONFIG `regions[].fillEndMs` (fill duration derives: fillEnd − fillStart). Tally credit: a region's weight is credited to its side's tally ONLY at its fillEnd (finding 2 — a readout can never announce weight ahead of its visual state; fill PROGRESS is a separate probed quantity from credited weight, finding 3).
+
+| Region | Side | Weight | drawStart | fillStart (derived) | fillEnd |
+|---|---|---|---|---|---|
+| R01 | A | 34 | 1000 | 1900 | 3400 |
+| R02 | B | 31 | 1075 | 1975 | 3550 |
+| R03 | A | 29 | 1150 | 2050 | 3700 |
+| R04 | B | 27 | 1225 | 2125 | 3900 |
+| R05 | A | 21 | 1300 | 2200 | 4100 |
+| R06 | B | 19 | 1375 | 2275 | 4300 |
+| R07 | A | 38 | 1450 | 2350 | 4550 |
+| R08 | B | 36 | 1525 | 2425 | 4800 |
+| R09 | A | 17 | 1600 | 2500 | 5000 |
+| R10 | B | 23 | 1675 | 2575 | 5200 |
+| R11 | A | 25 | 1750 | 2650 | 5400 |
+| R12 | B | 28 | 1825 | 2725 | 5550 |
+| R13 | A | 42 | 1900 | 2800 | 5700 |
+| R14 | B | 47 | 1975 | 2875 | 5850 |
+| R15 | A | 52 | 2050 | 2950 | 5950 |
+| R16 | B | 53 | 2125 | 3025 | **6000** |
+
+Count check (A9.3, split per plan-review finding 5): weights A = 34+29+21+38+17+25+42+52 = **258**; B = 31+27+19+36+23+28+47+53 = **264**; credited total 522 of `total` 538 — the remaining **16 weight units are the unclaimed remainder**: cells belonging to NO region (the specimen's white pockets at completion are exactly this — the map never claims the whole field). Cell coverage and credited weight are SEPARATE quantities with separate probes (finding 3): CP7/CP8 assert unclaimed CELLS > 0 from the cell census and credited WEIGHT against the `total` denominator, never one as a proxy for the other. Post: tPostMs 3000 + postDurMs 600 → postEnd 3600 < completeAt 6000 ✓. Latest drawEnd = 2125 + 700 = 2825 ✓ < 6000.
+
+### 2.2 Construction choice
+
+**Chosen: single SVG scene** — grid cells as SVG rects, region fills as derived cell-union paths (wash layer), region outlines as derived boundary paths animated with `stroke-dasharray`/`stroke-dashoffset` draw-on, post as a rect + label plate as SVG text on a reserved plate rect, all driven by one `stateAt(t)` function over CONFIG (the fleet's harness-checkable form). SVG is the natural construction because the technique's two priced motions ARE SVG's native ones: stroke draw-on for outlines, and path fill for region accumulation; geometry derives from the same `regions[].cells` data for both, keeping map and tally one object.
+
+Rejected alternatives, one line each:
+- **Canvas 2D raster** — rejected: outline draw-on and per-region boundary derivation become manual path rasterisation, and the harness cannot census SVG-style geometry from a bitmap; no priced gain.
+- **DOM/CSS keyframes (divs + CSS animations)** — rejected: per-region staggered draw/fill timing becomes dozens of keyframe rules whose instants the harness cannot evaluate as CONFIG expressions (A11 assertions need a `stateAt(t)` function, not a stylesheet).
+- **Generated imagery / traced outlines** — rejected: refusal-class under §6.1 (a traced redraw of a frame is not a recreation) and unswappable by construction.
+- **Canvas particle/dot field (T204-style substrate machinery)** — rejected: the specimen's substrate at this window is static squares, not moving particles; importing flow machinery is inheritance without a priced reason (cf. §1.7 A5 disposition).
+
+### 2.3 Schedule basis + census-anchor mapping (A7 / A10.2)
+
+**Window-scope line: schedule basis = `segment-anchored`.** The build's clock IS the segment clock: buildMs = segment-relative ms (segment = source 139–147 s, cut ±0.5 s handles at Execute; the handles sit outside the governed instants). No re-basing: the formation the viewer sees at segment second 3 is the build's state at 3000 ms.
+
+Census-anchor mapping (window-start offset = source 139.0 s = segment 0 ms = clip 0 ms). **Onset semantics (plan-review finding 3, applied):** a phase is "in progress" at instant t iff start < t < end (half-open, continuous interpolation); governed checkpoints are therefore probed at defined INTERIOR instants, never at an onset instant itself — the probe instant is printed in each row. **Non-governed anchors:** CP0 (lead-in), CP10/CP11 (lead-out/clip tail) are bracket locators, not checkpoints; CP3 (t1.5) is an interpolation midpoint between CP2 and CP4 — governing it would double-bind the same draw-on transition, so it stands as census evidence only, with this reason printed (finding 3's reconciliation).
+
+| Checkpoint | Census state (seg-rel ms) | Prescribed build state at that instant |
+|---|---|---|
+| CP0 | 0 — T08 tail still on stage (lead-in) | Build opens on the bare-grid settle (SB-A): the lead-in belongs to the previous technique and is NOT recreated; prescribed state at 0 ms = grid settling, zero regions drawn, zero filled, tallies 0/0, no post. DEPARTURE (printed, priced): the build does not reproduce the T08 lead-in frame; the segment cut's −0.5 s handle covers the transition, and the governed formation anchors (CP1 onward) all sit inside the window. |
+| CP1 | 500 — bare grid complete, nothing else | Grid fully settled; drawnRegions = 0, filledWeight A = 0, B = 0, post absent. **Zero-state anchor** (guards.md command 8 probe applies). |
+| CP2 | 1000 — outlines drawing, no fills, no post | Probe at interior instant **1100 ms**: ≥2 regions in draw progress (dashoffset strictly between 0 and full), fill progress = 0 on both sides, credited weight 0/0, post absent. |
+| CP4 | 2000 — fills established both sides, some outlines still open, no post | Probe at **2000 ms**: ≥1 region per side with fill progress strictly between 0 and 1 (progress, NOT credited weight — no region completes before 3400 ms, so credited weight is still 0/0 and any readout must show 0/0); ≥1 region still drawing; post absent. |
+| CP5 | 3000 — post descending, 270 emerging (partly covered in the specimen — B3) | Probe at interior instant **3300 ms**: post arrival in progress (post height fraction strictly between 0 and 1); label plate present in the TOP layer and OPAQUE (the build cures B3 by layer order + opacity — departure from the specimen's defect, printed here: the specimen's covered label is a priced BAD, digest §5 B3, not a mechanic to reproduce). |
+| CP6 | 4000 — post standing, 270 legible, both sides accumulated, pockets remain | Post complete; label legible (fit leg); ≥1 region per side fill-complete (credited weight A > 0, B > 0 — first credits land at 3400/3550 ms); unclaimed cells > 0 (accumulation not yet total). |
+| CP7 | 5000 — near-complete, small pockets still unfilled | Two separate probes (finding 3): unclaimed CELLS > 0 (cell census) AND credited weight < 522 final (weight probe, denominator `total` = 538); post + label unchanged; ≥1 region still filling (completion must NOT be prescribed complete here). |
+| CP8 | 6000 — completed state, pockets filled | filledWeight final (all prescribed regions filled); tallies final; post + label unchanged. |
+| CP9 | 7000 — completed hold | Completed state identical to CP8's end-state; state holds (no dissolve, no fade). |
+| CP10 | 8000 — next beat has replaced the stage (lead-out) | Outside the build: the recreation ENDS on the held completed state at durationMs; it does not recreate the next beat. DEPARTURE printed: segment window ends at 8000 ms; the build's durationMs derivation (§2.1) lands its hold end at the window's end so the comparison's two sides stay in sync. |
+
+Departure table (summary): (1) CP0 lead-in not recreated — previous technique's tail, outside T210's mechanics. (2) CP5 label legibility — the build renders the plate above fills at all instants, curing the specimen's B3 defect rather than reproducing it. (3) CP10 lead-out not recreated — next technique's entry. No other departures: every governed formation instant maps to the census state at the same segment-relative ms.
+
+### 2.4 Swap design (exact altered values)
+
+Applied to a scratch copy / URL override of the build; the technique must still read correctly:
+- **Content (tallies + threshold):** `threshold: 270 → 80`, `total: 538 → 200` — a MATERIALLY off-centre ratio (plan-review finding 3, applied: the earlier 100/200 draft moved the post only ~0.05 cells from the 270/538 position, so a hardcoded centre would have passed; 80/200 = 0.400 vs the default 270/538 ≈ 0.502 — a ~2.9-cell displacement on the 28-column grid), plus two region weights changed (`R07.weight: 38 → 12`, `R16.weight: 53 → 20`) with sides unchanged. Pass assertions are NUMERIC: the post's derived logical x-fraction equals 80/200 = 0.400 exactly as a CONFIG evaluation (not a pixel tolerance), tallies re-derive (credited totals drop by exactly 26 and 33), and no region dispatches on its weight value (T53 cure: dispatch on `id`/`side` only). The label must read "80" (derived label, §2.1).
+- **Timing (two probes, separated per finding 1):** (i) `tPostMs: 3000 → 1800` — the post is NOT the controlling element, so `durationMs` must NOT move (still 8000); the post assertion re-probes at the interior instant 1950 ms with the post in progress, and the default CP4 post-absent assertion does NOT apply to the swapped schedule (default checkpoints and swapped-schedule assertions are separate sets, finding 3). (ii) `holdMs: 2000 → 1200` — `durationMs` must move to exactly 7200 (= completeAt 6000 + 1200), proving the derivation is live.
+- **One palette:** `palette.sideA: #d94f5c → #2e9e6b` (green) — outlines, fills, and any side-A readout must all follow from the one key (a second hardcoded red anywhere is a census HIT).
+- Pass condition: stateAt probes under the swapped CONFIG return the same KINDS of state at the SWAPPED schedule's own anchors (zero-state, draw/fill ordering, per-region fill-after-draw prerequisite), plus the two numeric assertions above (post fraction, duration derivation).
+
+### 2.5 Purity checks
+
+- Guards.md command 1 grep over recreation.html for specimen media (`segment.mp4|source.webm|<video|<img|ajavsMbCapY`-form ids + frame-sequence patterns): zero hits required; in-file SVG fragment references `url(#id)` are classified, not counted (2026-11-17 precision note).
+- Asset inventory: the build loads ZERO external assets — ground texture is a CSS/SVG pattern or flat colour from CONFIG, never the specimen's newsprint image; region geometry derives from `regions[].cells`, never from a traced path literal (config-census leg prices any path-data literal as a subject-shaping HIT under A9.6).
+- The original appears ONLY as the labeled ORIGINAL side of comparison.html (§3.1/§6.1).
+
+### 2.6 Execute + Verify checklists (itemized instruments)
+
+**Execute checklist:**
+1. Cut segment: source 139–147 s ±0.5 s handles → `segment.mp4` in the artifact directory, re-encoded for browser playback; ffprobe facts filed against the packet window (guards.md command 5, pre-build leg).
+2. Author `recreation.html`: CONFIG block first (every §2.1 key), one SVG scene, one `stateAt(t)` evaluator exposed for the harness (`window.__T210` or the fleet's standing equivalent), seeded determinism (no RNG is needed — any jitter is forbidden; census command 3 prints RNG-absent as its result).
+3. Count checks (A9.3, split per plan-review finding 5): SOURCE-FIDELITY counts — grid geometry bracket and window timing — are checked against the census (gridCols × gridRows cells built vs the CONFIG product; governed instants vs §2.3). SCHEMATIC counts — the 16 regions and their per-region cell counts — are checked against the DECLARED build targets in §2.1b (there is no source region count to match; the specimen's regions are schematic), including: region count = 16, weight sums A = 258 / B = 264, UNIQUE cell ownership (no cell in two regions — finding 2 validation), and unclaimed cells > 0. Halt on any mismatch.
+3b. CONFIG validation at init (T68 cures 2–4, plan-review finding 3): finite-range checks on every numeric key; cross-field constraints (threshold < total · weight sums ≤ total · fillStart ≥ drawEnd per region · durations ≥ 0 with zero-duration = instant transition, never a division); an invalid override is refused loudly with a diagnostics object exposed on the harness surface (rejected keys + reasons), never a silent fallback.
+4. Author `comparison.html`: ORIGINAL (segment) + RECREATION side by side, one synchronized control set, labels with timestamps, vertical stacking at phone width with controls reachable.
+5. File build-record.md from the first draft WITH raw harness output (A9.4) and the A13 RECEIPT INDEX (below).
+
+**Verify checklist:**
+1. Swap test (guards.md command 2) with the exact §2.4 altered values; raw output filed; break = FAIL, return to Execute, no wave spent.
+2. Purity grep (command 1) + asset inventory (§2.5); raw output filed.
+3. Syntax + determinism check (command 3): `node --check` on inline scripts; RNG census.
+4. A11 census-checkpoint assertions — one per §2.3 checkpoint (CP1, CP2, CP4, CP5, CP6, CP7, CP8, CP9), each with its CONFIG expression and CONFIG-derived evaluation instant (e.g. CP5's instant derives from `tPostMs`, so the §2.4 timing swap MOVES it — receipt must show the changed instant, A12.1). Zero-state anchor CP1 probed explicitly (command 8): stateAt(500) must return zero drawn/filled/post.
+5. A6 legs on the final build, outputs filed in the artifact directory: measured-fit leg (`fit-table.md` — the 270 plate row: instrument = harness post-fit ink measurement or PIL rendered measurement with a named stand-in font, A12.2; never a character-width model; the row ALSO checks the plate ink/paper effective contrast at the 360 px stage, plan-review finding 2) + config-census leg (`config-census.md` — every §2.1 key resolved to its application site, nested `regions[]` keys included; unapplied key = HIT).
+6. A13 RECEIPT INDEX reconciled in the build-record BEFORE the prewave payload is assembled: lines for guards.md commands 1, 2, 3, 5, 6, 7, 8 + every A11 assertion in step 4; each line carries its executable receipt (harness command, CONFIG expression + evaluated value, raw result) or a NOT-DEMANDED line with a governing citation. Command 4 (scores arithmetic) is seat-side at consolidation — its index line prints NOT-DEMANDED-BY-FORM for the builder record with that citation.
+7. **jev-prewave call point:** after legs 1–6, payload carries build-record + CONFIG + packet section + guards list + BOTH A6 leg outputs verbatim (A10.1) + the §2.3 census-anchor mapping. FIRE-WAVE spends the wave; HOLD returns the build to Execute.
+8. **Five-lens scoring wave:** motion · timing · purity · reusability · readability — five separate Codex runs, each fed the catalogue mechanics + the full recreation source, returns filed verbatim under the artifact's `codex/`; timing payload carries the §2.3 mapping.
+9. Consolidation (seat-side, command 4): average ≥85 AND min ≥70 → PASS; arithmetic shown in scores.md, no rounding up.
+
+### 2.7 Failure-point evaluation (priced from this job's record)
+
+- **Convergent freeze** (T15 form: formed state static, surplus frozen): translated risk — the completed map holds ~2 s; a hold that reads as a frozen page rather than a held result. Mitigation by construction: the hold is an explicit CONFIG `holdMs` on a COMPLETED tally (both tallies final, post standing) — the specimen itself holds this state (CP7–CP9), so the hold is fidelity, not freeze; the risk is priced LOW but the timing lens will judge the hold's length against the census, which is why the mapping prints it.
+- **Intensity collapse** (Owner Cure 1 class): fills washing up to the same intensity as outlines/post would drown the figure — the specimen's B3 is this defect at the label. Mitigation: fixed layer order (washes under cells under outlines under post under plate) + `fillOpacity` as a single CONFIG key; priced MEDIUM (it is the specimen's own known defect).
+- **Overlap** (T54 readability class: marks painting over each other): regions share borders by construction (cell unions tile the field), so region-on-region paint-over cannot occur if fills render as cell unions; the one true overlap risk is fills vs the 270 plate — cured by the reserved band (§1.7). Priced MEDIUM-LOW, with the fit leg + a plate-occlusion probe in the A11 set (CP5 assertion checks plate layer order at the post-arrival instant).
+- **Fitting limits:** the only text is "270" — fit risk is minimal in count but total in kind (if the one label fails, the technique's claim fails). Fit leg carries the plate row at the 360 px stage with the legibility floor; post width and plate size are CONFIG so a fit HIT is curable without geometry surgery. Priced LOW.
+- **Render-proof limitation:** this seat has no browser binary — pixel-level render proof is NOT exercisable (guards.md command 2's printed limitation, carried into scores.md). All lens verdicts will be source-based; fit evidence is harness/PIL measurement per A12.2; the comparison page is the render surface. Priced as a standing limitation, not an item defect.
+
+### 2.8 Plateau priced (A2 — before Execute)
+
+Family average (the three filed siblings, §1.6; selection basis named per codex-observe finding 4): on the FIRST-attempt basis, (72.2 + 85.6 + 88.4) / 3 = **82.1** — the priced basis, since T210 is a first attempt; on the latest-attempt basis (T54 A4 = 86.4) it is 86.8, printed for visibility. No prior attempt exists for T210 itself, and A2's floor rule binds RE-attempts against their OWN prior average — it imposes no WHY obligation on a first attempt (corrected per plan-review finding 4; the earlier draft misstated A2). The family mean stands as CONTEXT only: a first attempt landing well under 82.1 is evidence about the build, priced at Condense, not a floor-rule event. Bar arithmetic at the predicted minimum (finding 4): if reusability lands at 78, the other four lenses must average 86.75 (347 points) to reach 425/500 — the PASS is therefore not carried by any single strong lens, and every lens still needs ≥70. **Stuck-lens hypothesis (stated before Execute): REUSABILITY** — it is the minimum lens in T53 (74) and T68 (75), second-weakest in T54 A1 (76), and still T54 A4's minimum (78) after three cure rounds; the mechanism is consistent across the family: subject-shaping values (geometry, label metrics, easing, stage constants) leak out of CONFIG into renderer literals. T210's specific exposure: the derived boundary-path geometry and the per-region stagger table are exactly the places a builder hardcodes. The Plan's counters: `regions[].cells` as the single geometry source, the config-census leg pricing path literals as HITs, and the §2.4 swap asserting the post position re-derives. Predicted minimum lens: reusability, ~78–84 if the census leg is clean; the honest failure candidate is readability via the mid-formation plate (B3 class) if the reserved band is under-sized.
+
+### 2.9 Plan gate-out
+
+Parameter table (§2.1) · construction choice with rejected alternatives (§2.2) · schedule basis + census-anchor mapping with departures (§2.3) · swap design with exact values (§2.4) · purity checks (§2.5) · Execute + Verify checklists as instruments (§2.6) · failure points (§2.7) · plateau + stuck lens (§2.8). Codex-plan-review return: filed as sibling `item-T210-codex-plan-review-return.md`; disposition in §2.10 (completed after firing).
+
+### 2.10 Codex-plan-review disposition
+
+**Fired:** one stream, payload = `guards/codex-plan-review.md` + this record (Observe + Plan + §1.9 dispositions) + INSTRUCTION A1/A2/A5 excerpts + family cure lists (48,946 B, size + tail verified). **Return:** 116,689 B raw, filed verbatim as sibling `item-T210-codex-plan-review-return.md`. **Verdict: REVISE. Findings: 5.** The single-SVG construction stands (the return keeps it explicitly); all five findings are applied into the Plan above — none set aside:
+- **Finding 1 (completion clock) — APPLIED:** §2.1 gains `completeAtMs` = max(gridEnd, latest drawEnd, latest fillEnd, postEnd); `durationMs` = completeAt + holdMs = 8000 with defaults; §2.1b files the exact 16-region schedule whose last fill ends at 6000 ms (the draft's implied 5000 ms last-fill end contradicted CP7's unclaimed pocket — cured). The §2.4 timing swap now separates a non-controlling post move (duration must NOT move) from a hold move (duration must move to exactly 7200).
+- **Finding 2 (owner catches: intensity + sequencing) — APPLIED:** the plate is OPAQUE with CONFIG ink/paper keys and a fit-leg contrast check at 360 px (§2.1, §2.6 step 5); each region's fill start DERIVES from its own draw end + `fillDelayMs`, with early starts rejected at validation (the specimen's per-region prerequisite); unique cell ownership is a named count check; tally credit lands only at a region's fillEnd, with fill progress and credited weight as separate probed quantities (T53's early-announcement cure).
+- **Finding 3 (parameterization + proof) — APPLIED:** remaining renderer decisions are named or derived (`outlineOpacity`, `easing`, `marginPx`, `gapRatio`, `palette.post/plate/plateInk`, `platePadPx`); `thresholdLabel` derives from `threshold`; `accumulationDirection` has a stated schedule effect; region labels are explicitly DEFERRED; CP7's cell/weight probes are separated with the weight denominator named; CONFIG validation + loud diagnostics enter the Execute checklist (§2.6 step 3b, T68 cures); the swap threshold is now materially off-centre (80/200) with a NUMERIC post-fraction assertion; default and swapped assertion sets are separated; onset semantics are defined (start < t < end) with interior probe instants printed in §2.3; CP3 is reconciled as a non-governed interpolation anchor with its reason, alongside CP0/CP10/CP11.
+- **Finding 4 (bar arithmetic) — APPLIED:** §2.8 corrects the A2 misstatement (the floor rule binds re-attempts against their own prior average; the family mean is context, not a first-attempt obligation) and prints the bar arithmetic at the predicted minimum (reusability 78 ⇒ the other four lenses must average 86.75). One correction in the other direction is recorded for accuracy: in T54 A1, reusability (76) was the THIRD-lowest lens (readability 55, timing 57 below it) — §1.6/§2.8's "minimum or near-minimum in every attempt" phrasing stands on the full attempt set (T54 A2/A3 minima are reusability 70/70; A4's minimum is reusability 78), so the stuck-lens hypothesis is unchanged.
+- **Finding 5 (size discipline / count split) — APPLIED:** §2.6 step 3 splits the count check into source-fidelity counts (checked against the census) and schematic counts (checked against the declared §2.1b targets); geographic ornament and region labels stay out of this attempt.
+- **Limits (accepted):** build-record and render NOT ASSESSED — correct at Phase A (Phase B products, absent as expected); frame appearance/rendered legibility remain for the Verify legs.
+
+---
+
+## §3 — Filing index
+
+- This record: `item-T210-observe-plan.md` (this file).
+- Census frames: `census/T210-census-t{0.0,0.5,1.0,1.5,2.0,3.0,4.0,5.0,6.0,7.0,8.0,8.9}.jpg` — 12 frames, SHA-256 in §1.2.
+- Codex-observe return (verbatim): `item-T210-codex-observe-return.md` (sibling).
+- Codex-plan-review return (verbatim): `item-T210-codex-plan-review-return.md` (sibling).
+- NOT filed by this record (by design, Phase A): artifact directory, segment cut, recreation.html, comparison.html, scores.md — all Execute/Verify products gated behind the wave's §2b.

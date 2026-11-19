@@ -1,0 +1,215 @@
+TASK: You are the jev-observe-exit judge for the recreation job. Judge ONLY item T219's Observe record below, per the call definition that follows. Return ONE verdict (ADVANCE / ADVANCE-WITH-GAPS / RETURN-TO-OBSERVE) with the six dimension scores (0-1), the primary classification if returned, and named gaps. End with a BODY-WRITE: line.
+STANDING HEADER: (1) Consumer: recreation Cycle 039 Wave 36 §1 gate out for T219; decision priced in the TASK line. (2) Working record: runs/2026-11-18-cycle-039-wave-36/item-T219-observe-plan.md. (3) BODY-WRITE: return must end with a BODY-WRITE: line; read-only closes 'Body-write: none (read-only run)'.
+=== GUARD: jev-observe-exit ===
+# Jev call — jev-observe-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: a recreation wave may not enter Plan on a catalogue summary alone — Observe must have priced the queue, read the prior scores where they exist, seen the evidence frames, and carried the standing construction guidance into working memory._
+
+## 1. What it judges
+- Deliverable: the wave's Observe working memory — RUN.md gate-out block (§1: mechanics summary + sub-beat timings + variable list + named consumer) for each item in the wave (up to 5 owed items).
+- Call point: recreation INSTRUCTION §1, at the gate out of Observe, before §2 Plan opens for any item in the wave. The verdict is advisory per item: applied, a RETURN-TO-OBSERVE item is held out of the wave's Plan (the wave proceeds with its advancing items; a held item never holds the wave hostage — same rule as jev-prewave §5); set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Observe record can support a Plan for THIS recreation wave, item by item. Price, in order:
+(1) QUEUE STATE PRICED — does the record state the recreation queue's current position (../QUEUE.md read this cycle), each item's queue number and OWED status, and the ownership split (Amendment A3 §3: this job owns FIRST attempts; an already-scored technique belongs to practice — a wave item that is a re-attempt is a routing defect, named)? T15 is the standing example: attempt 1 scored FAIL 78.5 on 2026-11-13, so T15 attempt 2 is practice's charge, never this job's wave item.
+(2) PRIOR SCORES READ — for any item whose technique already has a scores.md or a verdict-history line (a techniques' family sibling counts: e.g. T16 shares T15's particle machinery), does the record cite the actual filed scores and cure list, or does it plan from the catalogue description alone? Planning that ignores a filed failure is the defect this leg exists to catch.
+(3) MECHANICS SEEN, NOT SUMMARIZED — does the record carry the packet section's mechanics + sub-beat timings from firsthand viewing of the evidence frames and the source segment in motion (§1.1–1.2), with timings in seconds — or only a restatement of the TECHNIQUES.md one-liner? A mechanic the builder has not seen is a guess (§1.1).
+(4) VARIABLES EXTRACTED — is the §1.3 variable list complete for this technique (text content, phrase count, timing/durations, palette, scale, direction, density — plus technique-specific variables), so Plan's parameter table has something to bind? A variable missing here becomes a hardcoded accident in Execute (§1.3).
+(5) CONSTRUCTION GUIDANCE CARRIED — where the technique's family has standing guidance, is it IN the working memory, named? For particle-field techniques: the flow-field model (Amendment A5 §4: one constant flow field, borrowing with low-amplitude jitter, never-borrowed reserve fraction, release with velocity continuity) AND Owner Cure 1 (foreground/background intensity separation riding the borrow flag) AND Owner Cure 2 (strict phrase sequencing / phase exclusivity). For typography techniques: the typography construction precedent (Amendment A1 §2: runtime sampling of config-rendered text). Guidance that exists in INSTRUCTION but is absent from the wave's working memory is scored as absent.
+(6) CONSUMER NAMED — §1.4: which production surface lifts this machinery (container type + owning lane), named per item, not "production generally."
+(7) CODEX/OWNER INPUTS — were any Codex calls fired in this Observe (e.g. a record audit of a prior attempt's codex/ returns) with receipts filed, or is the absence printed? Does the wave need owner-only information (it almost never does — recreation prices from packets and filed scores); if claimed, is it routed as a named gap rather than silently assumed?
+Score 0–1 per dimension (§4), classify defects from the taxonomy, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Observe gate-out blocks · ../QUEUE.md recreation-queue section (current) · each item's packet digest.md technique section + TECHNIQUES.md entry · prior scores.md + verdict-history.md lines for the item and its named family siblings · INSTRUCTION Amendments A1/A3/A5 guidance lines relevant to the item's family · any Observe-phase Codex receipts filed this cycle.
+- NEVER FED: the builder's confidence prose · HQ's supervision faces · scores from attempts not yet filed (unfiled scores do not exist).
+- Ceiling: ≤32k tokens; packet sections enter as the technique's section only, never the whole digest; evidence frames are referenced by path/timestamp, never fed as images (text-only judge).
+
+## 4. Output space
+- Verdict classes (per item): **ADVANCE · ADVANCE-WITH-GAPS · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): queue-state-priced · prior-scores-read · mechanics-seen · variables-extracted · guidance-carried · consumer-named. (1.0 = evidenced in the record with citations; 0.5 = asserted without citation; 0.0 = absent.)
+- Rejection taxonomy (one primary per returned item): QUEUE-STALE (queue position/status not read this cycle) · REATTEMPT-MISROUTED (scored technique in a first-attempt wave) · SCORES-UNREAD (prior scores/cures exist, uncited) · MECHANICS-UNSEEN (no firsthand sub-beat record) · VARIABLES-THIN (variable list cannot bind a parameter table) · GUIDANCE-DROPPED (standing family guidance absent from working memory) · CONSUMER-VAGUE.
+- Accepted profiles travel: cited in RUN.md at the Plan gate; ADVANCE-WITH-GAPS items carry their gap list into §2 as named Plan charges.
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → RETURN-TO-OBSERVE for that item. GUIDANCE-DROPPED on a particle-field or typography item → RETURN-TO-OBSERVE at any other score (T15 attempt 1's founding lesson: the frozen-flow defect and both owner catches were guidance-shaped failures discovered only after the wave was spent).
+- ADVANCE-WITH-GAPS requires every gap named with its Plan-phase cure; an unnamed gap is a RETURN.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + primary classification + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. Binding the exact runner command here is the first firing's own first step. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 Cycle-002's Observe record reconstructed from its RUN.md (must ADVANCE — mechanics, timings and consumer were recorded before building). (b) A constructed record proposing T15 as a wave item for attempt 2 (must RETURN-TO-OBSERVE as REATTEMPT-MISROUTED). (c) A constructed particle-technique record with no flow-field / Owner Cure 1 / Owner Cure 2 lines (must RETURN as GUIDANCE-DROPPED). (d) A constructed record whose variable list names only "text and color" for a timed multi-phrase technique (must RETURN as VARIABLES-THIN).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. First expected amendment pressure: whether family-sibling scores (leg 2) should be mandatory for all items or only same-machinery families — priced from the first waves' returns.
+
+=== CODEX-OBSERVE RETURN (filed this cycle) ===
+**CONFIRMED-WITH-GAPS** — T219’s source record supports Observe for Cycle 039, Wave 36. The first-attempt status, queue position, and archived window are confirmed. The remaining gaps concern evidence captions and the recorded order of the animation.
+
+**Packet section and Observe §1**
+
+- **Mechanics and evidence agree at catalogue level.** Packet #12 `digest.md:127–131` and `techniques-diagrams.md:416–419` identify the same technique, window, three stills, and clip. The 322 s still shows Virginia’s 21 squares and Pennsylvania’s 15, alongside the recorded population figures. `transcript.txt:63–66` confirms the narration anchors, including the election-payoff line at 324.17 s.
+- **Evidence timing and captions need qualification.** The 302 s still is a lead-in, 3 s before the window. The 320 s still shows the population figures and Virginia’s clause tag, with the elector grids still absent. The digest’s “counts landing” caption leaves that distinction ambiguous. Observe §1.2 supplies the distinction. Packet gap G3 remains a filename convention issue. Both catalogue entries explicitly cite the existing `clips/t19-elector-dots.mp4` for packet-local T18. The final Packet #12 receipt amendment names T05, T06, T02, and T10 under G4, so Observe §1.1’s claim that G4 was cured for T219 misstates the adopted gap.
+- **Two visual claims need correction or qualification.** Observe §1’s opening “numerals last” claim is unsupported for T219. At CP8, both numerals are already visible while the squares are still fading in. `ASSETS.md:428–430` binds AS-98 to T209 and T214. Also, the viewed 305 s CP0 still shows orange on the head and shoulders, with most of the figure dark. The transcript establishes the three-fifths fraction, while the still does not substantiate §1.2–1.3’s claim that the upper approximately three-fifths of the figure is orange.
+
+**Prior-attempt record**
+
+| Item | Lens count | Audited disposition |
+|---|---:|---|
+| T219 | 0 | **First attempt, queue #101.** The Wave 35 update in `QUEUE.md:206`, Wave 36 `RUN.md` §0b, and the style-library entry agree. The artifact has no `scores.md` or prior scoring return, and neither recreation nor practice verdict history has a T219 entry. |
+| T208 | 0 | **No verdict, attempt 1.** `scores.md`, the filed `codex/jev-prewave*` returns, and recreation `verdict-history.md:125,130` agree on the two initial HOLDs and the completion HOLD. The completion return records own-checks 0.94 and the missing `fillOrder` census entry. |
+| T210 | 5 | **Pass, attempt 1 after completion.** `scores.md` §§ Pre-wave gate and Five-lens scoring wave, the five filed `codex/lens-*-cycle038.md` returns, and `verdict-history.md:126–127` agree. The returns bind to the same build, whose hash matches the on-disk HTML. Recomputed: `(72 + 90 + 98 + 78 + 88) / 5 = 85.2`, minimum 72. |
+| T212 | 0 | **No verdict, attempt 1.** `scores.md:5–9`, both filed `codex/jev-prewave*` returns, and `verdict-history.md:131` agree on two HOLDs, with own-checks 0.35 → 0.40. The receipt-form lesson cited in Observe §1.5 comes from those HOLDs. |
+
+No unbound lens score surfaced in these records.
+
+**Segment facts**
+
+`ffprobe` measured Packet #12’s archived `source.webm` at **488.301 s**. The catalogue window **305–331 s** is **26.000 s** by subtraction. The source decoded at both endpoints and at the proposed handle points, 304.5 s and 331.5 s. All 14 filed CP0–CP13 JPEG hashes match Observe §1.3. The viewed stills show the portrait entering at 327 s, continuing at 329 s, and the next technique already on screen at 331 s. The 331 s mark is the catalogue boundary.
+
+**Limits** — The exact frame of the transition into the next technique and the exact fraction of the icon colored orange were not measured. Plan, Execute, and recreation fidelity were outside this audit.
+
+Body-write: none (read-only run)
+tokens used
+60,555
+**CONFIRMED-WITH-GAPS** — T219’s source record supports Observe for Cycle 039, Wave 36. The first-attempt status, queue position, and archived window are confirmed. The remaining gaps concern evidence captions and the recorded order of the animation.
+
+**Packet section and Observe §1**
+
+- **Mechanics and evidence agree at catalogue level.** Packet #12 `digest.md:127–131` and `techniques-diagrams.md:416–419` identify the same technique, window, three stills, and clip. The 322 s still shows Virginia’s 21 squares and Pennsylvania’s 15, alongside the recorded population figures. `transcript.txt:63–66` confirms the narration anchors, including the election-payoff line at 324.17 s.
+- **Evidence timing and captions need qualification.** The 302 s still is a lead-in, 3 s before the window. The 320 s still shows the population figures and Virginia’s clause tag, with the elector grids still absent. The digest’s “counts landing” caption leaves that distinction ambiguous. Observe §1.2 supplies the distinction. Packet gap G3 remains a filename convention issue. Both catalogue entries explicitly cite the existing `clips/t19-elector-dots.mp4` for packet-local T18. The final Packet #12 receipt amendment names T05, T06, T02, and T10 under G4, so Observe §1.1’s claim that G4 was cured for T219 misstates the adopted gap.
+- **Two visual claims need correction or qualification.** Observe §1’s opening “numerals last” claim is unsupported for T219. At CP8, both numerals are already visible while the squares are still fading in. `ASSETS.md:428–430` binds AS-98 to T209 and T214. Also, the viewed 305 s CP0 still shows orange on the head and shoulders, with most of the figure dark. The transcript establishes the three-fifths fraction, while the still does not substantiate §1.2–1.3’s claim that the upper approximately three-fifths of the figure is orange.
+
+**Prior-attempt record**
+
+| Item | Lens count | Audited disposition |
+|---|---:|---|
+| T219 | 0 | **First attempt, queue #101.** The Wave 35 update in `QUEUE.md:206`, Wave 36 `RUN.md` §0b, and the style-library entry agree. The artifact has no `scores.md` or prior scoring return, and neither recreation nor practice verdict history has a T219 entry. |
+| T208 | 0 | **No verdict, attempt 1.** `scores.md`, the filed `codex/jev-prewave*` returns, and recreation `verdict-history.md:125,130` agree on the two initial HOLDs and the completion HOLD. The completion return records own-checks 0.94 and the missing `fillOrder` census entry. |
+| T210 | 5 | **Pass, attempt 1 after completion.** `scores.md` §§ Pre-wave gate and Five-lens scoring wave, the five filed `codex/lens-*-cycle038.md` returns, and `verdict-history.md:126–127` agree. The returns bind to the same build, whose hash matches the on-disk HTML. Recomputed: `(72 + 90 + 98 + 78 + 88) / 5 = 85.2`, minimum 72. |
+| T212 | 0 | **No verdict, attempt 1.** `scores.md:5–9`, both filed `codex/jev-prewave*` returns, and `verdict-history.md:131` agree on two HOLDs, with own-checks 0.35 → 0.40. The receipt-form lesson cited in Observe §1.5 comes from those HOLDs. |
+
+No unbound lens score surfaced in these records.
+
+**Segment facts**
+
+`ffprobe` measured Packet #12’s archived `source.webm` at **488.301 s**. The catalogue window **305–331 s** is **26.000 s** by subtraction. The source decoded at both endpoints and at the proposed handle points, 304.5 s and 331.5 s. All 14 filed CP0–CP13 JPEG hashes match Observe §1.3. The viewed stills show the portrait entering at 327 s, continuing at 329 s, and the next technique already on screen at 331 s. The 331 s mark is the catalogue boundary.
+
+
+=== ITEM OBSERVE+PLAN RECORD ===
+# Item T219 — Phase A (Observe + Plan) · Wave 36 · Cycle 039
+
+- **Item:** T219 — Three-fifths payoff counts (Virginia 21 vs Pennsylvania 15) · queue #101 · FIRST ATTEMPT · Packet #12 (Vox "The Electoral College, explained", YouTube ajavsMbCapY, 488.301 s), packet-local T18.
+- **Artifact directory:** `hidden_files/study/recreations/T219-three-fifths-payoff-counts/`
+- **Segment window (source):** 305–331 s (5:05–5:31) per digest §T18 + style-library §T219. Segment duration 26.0 s (±0.5 s handles at Execute).
+- **Schedule basis (A7):** **segment-anchored** — build t=0 = source 305.0 s; every phase instant below is segment-relative ms derived from the census. ONE named departure: the photographic portrait coda (census 22000–24000 ms) is DEFERRED (see §2.3 departure table); the build holds the completed scoreboard through the window end.
+- **Bar (standing §2.3):** five-lens average ≥85 AND no lens <70.
+- **Consumer:** DLC assembler diagram / count-board containers (wave RUN §1 + style-library §T219 "Feeds: diagram").
+
+## §1 — OBSERVE
+
+- **Queue state (read this cycle):** `hidden_files/study-jobs/QUEUE.md` RECREATION QUEUE — T219 stands at queue #101 (Packet #12), status DESCRIBED-OWED, first attempt owned by this job (A3 §3). The wave RUN.md §0b census concurs (DESCRIBED-OWED #100–#105; #101 is this item).
+- **Consumer (named, §1.4):** the **DLC assembler diagram / count-board container** — the block-weighted counting surface owned by the Daily Language Challenge assembler lane (packet §1 consumer text: a count whose unit is a weighted block, state-as-entity, electoral-vote weight-as-increment, running total-as-result; style-library §T219: "Feeds: diagram"). The machinery lifts as a two-tile population board whose payoff is a per-tile square count landing beside each tile, its numeral landing with the squares phase (census CP8: numerals already present while squares still fade in — the AS-98 "numerals last" form does NOT hold for this item, per codex-observe gap, applied in §2b).
+
+### 1.1 Catalogue mechanics (read firsthand)
+- Digest §T18: "A person icon carries the 'Three-fifths clause' label; then the payoff is counted: Virginia tile (flagged with the clause tag) beside Pennsylvania — enslaved people 347,000 vs 1,700, free people 539,000 vs 601,000 — and square counts land: Virginia 21, Pennsylvania 15. 'Those extra electoral votes gave the candidate from Virginia just enough to win' (transcript 5:24, on the 1800 election)." Why it works: a clause taught as a fraction is taught as a scoreboard. Evidence: ev/t302-three-fifths.jpg · ev/t320-va-pa-mid.jpg · ev/t322-va-pa-electors.jpg · Clip: clips/t19-elector-dots.mp4 (315–325 s).
+- Style-library techniques-diagrams.md §T219: agrees verbatim (mechanics, window P12 @ 5:05–5:31, evidence, consumer). Tier DESCRIBED — OWED #101. No digest↔register disagreement.
+- Transcript anchors (transcript.txt, sentence-timed): 295.59–305.78 the clause is named ("settled on something called the 'three-fifths clause'… count as 3/5 of a person") — the icon beat is the clause's tail, carried into this window. 305.78 "In 1800, Pennsylvania, a northern state, and Virginia, a southern one, had about the same number of free people living there." 312.96 "But Virginia was also home to hundreds of thousands of enslaved people… and ended up with more votes in the Electoral College than Pennsylvania." 324.17 "That year, those extra electoral votes gave the candidate from Virginia just enough to win."
+- Packet gaps: Packet #12 adopted WITH GAPS — G3 (clip-filename offset) touches this item only through the clip name `t19-` serving packet-local T18; the digest entry's explicit citation resolves it. G4 (mechanics thinness) names packet-local T05/T06/T02/T10 in the packet's final receipt amendment and does not attach to T18/T219 (wording corrected per codex-observe, §2b); this item's mechanics thinness is in any case cured firsthand by the census below.
+
+### 1.2 Evidence frames viewed firsthand
+- ev/t302-three-fifths.jpg (302 s): orange person icon, full-height, over the newsprint ground; below it a red/teal segmented banner reading "Three-fifths clause" in white serif. (At 305 s, census CP0, the icon's head + shoulders/upper torso are orange above a diagonal boundary and most of the figure is dark — the three-fifths fraction is established by the transcript (295.59–305.78 s); the still does NOT measure the coloured proportion, per codex-observe, §2b. CONFIG's iconFraction governs where the drawn split sits, as a construction parameter, not a measured claim.)
+- ev/t320-va-pa-mid.jpg (320 s): two dark slate state tiles (state silhouette + name in pale serif); Virginia's tile carries an orange frame and the small tilted "Three-fifths clause" tag at its top-left corner; below each tile "Enslaved people:" (orange numerals 347,000 / 1,700) and "Free people:" (dark numerals 539,000 / 601,000).
+- ev/t322-va-pa-electors.jpg (322 s): the completed scoreboard — black square grids flank the tiles (Virginia 21 squares in 5 columns at left, numeral "21" above; Pennsylvania 15 squares in 5 columns at right, numeral "15" above), population figures unchanged below.
+
+### 1.3 Motion census (A10.3 — firsthand, this run)
+Frames extracted with ffmpeg from source.webm into the artifact dir `census/` at 2 s spacing (seg-rel ms = source − 305 s), each viewed firsthand, plus a fine set (305/308/311/314/317/320/322/325/328/331 s) for sub-beats:
+
+| CP | File | Seg-rel | Source | SHA-256 (full) | State viewed |
+|---|---|---|---|---|---|
+| CP0 | census-0.jpg | 0 ms | 305.0 | b832e5fd0da399f1864e94c91e49be93b150c7d228fdf43bd58bca412b493674 | Person icon centre: head + shoulders/upper torso orange above a diagonal boundary, most of the figure dark slate; "Three-fifths clause" banner below the figure. No tiles, no squares. |
+| CP1 | census-2000.jpg | 2000 ms | 307.0 | 8fb43ed246b602da3157542c47b24703601e6a4751fe05191565107bf904eee1 | Icon gone. Pennsylvania tile ALONE, small (~40% final size), at its final right-hand position. Virginia tile absent. |
+| CP2 | census-4000.jpg | 4000 ms | 309.0 | a0e956bc714b398cbce797f58ff202ee5f78ec047b4f1c4b874d9365324b4f66 | Both tiles present; Virginia tile still growing (smaller), Pennsylvania at full size. No numbers yet. |
+| CP3 | census-6000.jpg | 6000 ms | 311.0 | 4da1e9775feb3449da95458f591e735a15092158c71ad1d3a00b7ca17f1ba583 | Both tiles full size; "Free people:" lines landed under both (539,000 / 601,000). No enslaved lines, no frame, no tag, no squares. |
+| CP4 | census-8000.jpg | 8000 ms | 313.0 | 336298a0ffecffe6583add5e1598ebd1dfd183c79a545d19400dd4d426637cbc | Identical composition to CP3 (free-count hold). |
+| CP5 | census-10000.jpg | 10000 ms | 315.0 | fa5036318204b53268dcf032f3de92177cc0a9523d4559f6c8f66be951e59529 | Virginia tile now carries the full orange frame; "Enslaved people:" lines landed under both tiles (347,000 / 1,700). No tag, no squares. |
+| CP6 | census-12000.jpg | 12000 ms | 317.0 | 7425792fcee4120847606a161f42070fd9cc0be960f53d859eddd4a6ed7e45e4 | Identical composition to CP5 (frame + both population lines hold). Tag still absent; squares still absent. |
+| CP7 | census-14000.jpg | 14000 ms | 319.0 | 77e2ebe28b9f92c781e0e80334a6bd2344fe262359db57a6b5f5aaa7f56fbd4a | The small tilted "Three-fifths clause" tag now sits on Virginia's frame top-left corner. Squares still absent. |
+| CP8 | census-16000.jpg | 16000 ms | 321.0 | c322f2546823ed7bddbd627f971bc5f93bb0741377704881735ba55b0b0d9e07 | Square grids LANDING on both flanks, mid-fade (squares grey→black in a staggered fill); numerals "21" / "15" already present above the grids. |
+| CP9 | census-18000.jpg | 18000 ms | 323.0 | 8e33edf922de0f15a1be160091d2aea15846b8b2ce66d826350115cabc3fa5a4 | Scoreboard COMPLETE: Virginia 21 black squares (5 cols × 4 rows + 1), Pennsylvania 15 (5 × 3), numerals above, all figures below. Hold begins. |
+| CP10 | census-20000.jpg | 20000 ms | 325.0 | d5dfd2ee42349c88277ac5263af27eee98da7c6a298e805537c3d627a9a9d54b | Completed scoreboard holding (hash equals fine-325). |
+| CP11 | census-22000.jpg | 22000 ms | 327.0 | 1649e10494f0de97552093f878adac6747609e8ff3879f4d12fa571da48e423d | A photographic portrait painting slides up from the bottom, covering the board (the "candidate from Virginia" payoff image). Photographic content — NOT part of the count-board technique (see departure table). |
+| CP12 | census-24000.jpg | 24000 ms | 329.0 | bbb3efafe0efb085b1e4d6bbb1ad60a61dc113bcff7c0844ba9f65422c0c67b7 | Portrait phase continues (board covered). |
+| CP13 | census-26000.jpg | 26000 ms | 331.0 | b189c4ed5a53b952dd60d17ddf558e9f6e3703a6b08229a41477dd7590ae4324 | Window end: the NEXT technique (T220 reform timeline, "1870 / 15th Amendment" card) already on screen — T219's lifecycle ended before this instant. |
+
+**Motion findings:** motion instants — icon exit + tile entry ≈1200–5500 ms (Pennsylvania first, small→full; Virginia staggered behind it) · free lines land ≈5000–6000 ms · frame + enslaved lines ≈8500–10000 ms · clause tag lands ≈12500–14000 ms · squares + numerals land ≈15000–17500 ms (staggered fade grey→black). Holds — icon 0–~1200 ms · free-count board ≈6000–8500 ms · framed board ≈10000–12500 ms · tagged board ≈14000–15000 ms · completed scoreboard ≈17500–20500 ms. No dissolves between beats; each element lands and persists (accumulation grammar).
+**Sub-beats:** SB-A clause icon + banner hold, icon exits · SB-B tiles scale in (PA first, VA staggered) · SB-C free-people lines land · SB-D Virginia frame draws on + enslaved-people lines land · SB-E clause tag lands on the frame · SB-F square grids + verdict numerals land on both flanks · SB-G completed scoreboard hold. (Portrait coda SB-H is DEFERRED — §2.3.)
+
+### 1.4 Variables (§1.3 extraction)
+1. State set + order (2 states in the specimen) — per state: label, enslaved count, free count, elector count, tagged flag (which tile carries the clause frame + tag).
+2. Icon — presence, fraction split (3/5), icon colours, banner text, banner colours.
+3. Tile geometry — tile size, positions/gap, silhouette presence (generic silhouette path per state is data, drawn from CONFIG points — NOT a traced frame: silhouettes are simplified polygons named in CONFIG).
+4. Frame — tagged tile's frame width/colour, draw duration.
+5. Tag — text, tilt angle, colours, position on the frame corner.
+6. Population lines — row labels ("Enslaved people:" / "Free people:"), number formatting (comma-grouped), label/number font sizes, row colours (enslaved numerals in frame orange, free numerals in ink).
+7. Squares — per-state elector count, grid columns, square size/pitch, fill colour, per-square stagger + fade duration, numeral text/size (numeral = the count itself, derived).
+8. Timing — icon hold/exit, tile start/duration/stagger, free start/duration, frame start/duration, tag start/duration, squares start/stagger/fade, final hold, total duration.
+9. Palette — paper ground, tile slate, tile-name pale, frame/tag orange, banner red/teal, icon orange/dark, square black, ink, muted label grey.
+10. Easing — per-phase easing names.
+
+### 1.5 Guidance dispositions (inline, A9.5)
+- A1 §2 typography precedent (runtime sampling of config-rendered text): NOT APPLICABLE — no particle typography; all text is SVG text rendered from CONFIG strings/numbers, the same config-driven principle in its DOM/SVG form. Reason stated here per A9.5.
+- A5 Owner Cures 1–2 (intensity separation · phrase exclusivity): NOT APPLICABLE as particle/sequence cures — no particle field, no phrase lifecycle. The analogous separation here is construction-level: the tagged tile is separated by a *frame + tag* (a different kind of mark), never by intensity alone — priced in Plan. Phase exclusivity DOES apply in its sequencing form: each sub-beat's landing completes before the next begins (phase-order invariant, §2.1).
+- A5 §4 flow-field model: NOT APPLICABLE — no particle pool exists in this technique.
+- Family: Packet #12 counting siblings (T208 paired dot counts · T210 threshold grid map · T212 margin bar field) — count-board geometry from CONFIG arrays is the family's demonstrated construction; T212's filed lesson (receipt-form discipline, A12/A13) is carried into §2.4 planning.
+
+## §2 — PLAN
+
+### 2.1 Parameter table (every variable → CONFIG key; specimen value = default)
+Top-level: `stageW 640 · stageH 440 · tileW 118 · tileH 118 · tileY 92 · tileGapPx 150 (centre-to-centre offset from stage centre ±) · frameWidthPx 13 · tagAngleDeg -4 · tagFontPx 11 · nameFontPx 19 · rowLabelFontPx 15 · rowNumFontPx 27 · numeralFontPx 30 · squareSizePx 13 · squarePitchPx 19 · gridCols 5 · iconFraction 0.6 · tIconMs 0 · iconHoldMs 1200 · iconOutDurMs 600 · tTilesMs 1800 · tileDurMs 2200 · tileStaggerMs 500 · tFreeMs 5000 · freeDurMs 600 · tFrameMs 8500 · frameDurMs 1000 · tTagMs 12500 · tagDurMs 500 · tSquaresMs 15000 · squareFadeMs 400 · squareStaggerMs 55 · holdMs 9500 · easeIcon/easeTile/easeFade/easeFrame/easeSquares all "easeInOut" · palette {ground #f4f1ea, tile #46585c, tileName #dfe9e6, silhouette #3a4c50, frame #c96f4a, tagBg #c4453c, tagAlt #2f6f79, bannerBg #c4453c, bannerAlt #2f6f79, iconTop #d2691e, iconBottom #33484d, square #141414, ink #2b2b2b, muted #6d6d6d, enslavedNum #c96f4a} · fontFamily "Georgia, 'Times New Roman', serif" · clauseText "Three-fifths clause" · enslavedLabel "Enslaved people:" · freeLabel "Free people:"`.
+Nested: `states[2]` — `{label, enslaved, free, electors, tagged, silhouette}`: Virginia {347000, 539000, 21, true, simplified polygon points} · Pennsylvania {1700, 601000, 15, false, simplified polygon points}. Silhouette polygons are coarse CONFIG point lists (a generic state-ish outline per tile), priced as decoration-level geometry — the technique is the count board, not cartography.
+Derived (named, not stored): tile x positions (stage centre ∓ tileGapPx, order = states order BUT entry order is entryOrder per state — see below) · entry order: Pennsylvania enters first, Virginia second — carried as `states[].enterIdx` (PA 0, VA 1) so the stagger binds to data, not position · square positions (gridCols columns, rows = ceil(electors/gridCols), flanking outward from each tile) · numeral text = String(electors) · formatted counts = comma-grouping of the CONFIG numbers · **phase-order invariant (validation-enforced):** tTiles ≥ icon exit end · tFree ≥ last tile end · tFrame ≥ free end · tTag ≥ frame end · tSquares ≥ tag end — a CONFIG violating the order is rejected by validateConfig, never rendered overlapped. **Count assertion (A9.3):** source counts — states 2, electors 21 + 15 = 36 — vs built counts printed by the harness; mismatch halts.
+Complete-at: squares last = tSquaresMs + (maxElectors−1)·squareStaggerMs + squareFadeMs = 15000 + 20·55 + 400 = 16500… — NOTE: census CP8 (16000 ms) shows squares mid-landing and CP9 (18000) complete; 16500 complete is inside that bracket ✓. durationMs = completeAt + holdMs = 16500 + 9500 = 26000 (window length; holdMs set 9500 so the board holds to the window end under the departure in §2.3).
+
+### 2.2 Construction choice
+**DOM/SVG tiles + square grids (chosen):** one SVG scene; a person-icon group (circle + body path split at the CONFIG fraction into two fills), banner rect + text, per-state tile group (rect + silhouette polygon + name), frame rect (tagged state only), tag group (rotated rect + text), two population text rows per state, per-state square grid of rects + numeral text — all geometry/opacity from `stateAt(cfg,t)`, a pure function evaluable in node.
+Rejected: Canvas 2D — loses per-element ink measurement the A6 fit leg needs. CSS keyframes — phase state not evaluable as a pure function (A11 receipts impossible). HTML divs — SVG gives exact geometry for harness receipts at less code.
+
+### 2.3 Census-anchor mapping (A10.2) + A11 assertions
+Window-start offset: segment-anchored, build 0 ms = source 305000 ms. **Departure table:** ONE departure — SB-H portrait coda (census CP11–CP12, 22000–24000 ms): a photographic painting slides up and covers the board. DEFERRED with reason: photographic content cannot be recreated by code/generated construction without specimen media or tracing (§6.1 refusal class), and it is not the count-board technique — it is the narration's payoff image. The build instead HOLDS the completed scoreboard from completeAt (16500 ms) to durationMs (26000 ms); CP13 (26000 ms) is the next technique (T220) and asserts nothing about T219. All other checkpoints map 1:1.
+Assertions (each: CONFIG expression → evaluated instant):
+- CP0 zero/icon: `stateAt(CONFIG, CONFIG.tIconMs)` → 0 ms: iconP=1, banner present, tiles scale 0, squares 0. (Zero-state anchor for tiles/squares, guards cmd 8.)
+- P1 icon exit: `stateAt(CONFIG, CONFIG.iconHoldMs + CONFIG.iconOutDurMs)` → 1800 ms: iconP=0.
+- C@2000: `stateAt(CONFIG, 2000)`: PA (enterIdx 0) tileP = easeTile(clamp01((2000−tTilesMs)/tileDurMs)) > 0; VA (enterIdx 1) tileP = 0 (its staggered start = tTilesMs + tileStaggerMs = 2300 > 2000). Order receipt.
+- P2 tiles complete: `stateAt(CONFIG, CONFIG.tTilesMs + CONFIG.tileStaggerMs + CONFIG.tileDurMs)` → 4500 ms: both tileP=1, freeP=0.
+- C@6000: `stateAt(CONFIG, 6000)`: freeP=1 both states, enslavedP=0, frameP=0, squares 0.
+- C@8000: `stateAt(CONFIG, 8000)`: state identical in the priced fields to C@6000 (hold).
+- P3 frame mid: `stateAt(CONFIG, CONFIG.tFrameMs + CONFIG.frameDurMs/2)` → 9000 ms: frameP=0.5, enslavedP=0.5.
+- C@10000: `stateAt(CONFIG, 10000)`: frameP=1, enslavedP=1, tagP=0, squares 0.
+- C@12000: `stateAt(CONFIG, 12000)`: tagP=0 (zero-state anchor for the tag), squares 0, frameP=1.
+- C@14000: `stateAt(CONFIG, 14000)`: tagP=1, squares 0 (zero-state anchor for squares).
+- P4 squares mid: `stateAt(CONFIG, CONFIG.tSquaresMs + 1000)` → 16000 ms: 0 < VA squaresVisible < 21 and 0 < PA squaresVisible < 15 (fractional visibility sum), numerals opacity > 0.
+- C@18000: `stateAt(CONFIG, 18000)`: VA squares = 21 exactly, PA squares = 15 exactly (full-opacity count), numerals = "21"/"15".
+- P5 hold identity: `stateAt(CONFIG, completeAtMs + 500)` fully equal to `stateAt(CONFIG, completeAtMs)`. durationMs = 26000 ✓ = window.
+
+### 2.4 Verification plan (instruments named)
+- Execute checklist: (1) cut segment.mp4 from source.webm at 304.5–331.5 s (window ±0.5 handles), libx264/yuv420p+AAC faststart, ffprobe filed; (2) build recreation.html (CONFIG at top, pure stateAt, window.__T219 exposed); (3) build comparison.html (shared controls, video.currentTime − 0.5 s handle offset → build ms, labels as charged, phone stacking @media ≤560px); (4) own checks §5 legs 1–3.
+- Swap test: content — states replaced by {Alpha 120000/300000/9 tagged} + {Beta 5000/280000/7 untagged} (labels/counts/electors/tag all change; formatted numbers, square counts 9/7, frame+tag must move to Alpha); timing — `tSquaresMs 15000→16500` (P4 probe instant 16000→17500 by its CONFIG expression; completeAt 16500→18000); phase-order negative test — `tSquaresMs→9000` must be REJECTED by validateConfig (squares before tag end); palette — `palette.frame #c96f4a→#2e9e6b` (observed frame fill + enslaved numeral fill in stateAt output + renderer binding).
+- Purity: guards cmd1 grep `segment\.mp4|source\.webm|source\.mp4|<video|<img|ajavsMbCapY` → 0 hits; external-reference scan (`src=|href=|@import|url(` → none); asset inventory = recreation.html alone. Comparison check pass conditions: both labels present verbatim · handle-offset mapping evaluates (video 3.0 s → build 2500 ms) · `@media (max-width:560px)` stacking rule present · comparison script `node --check` rc=0.
+- A6 legs: fit-table.md (harness post-fit ink measurement of the built SVG text spans — instrument named in the table) + config-census.md (all literals classified; every CONFIG key incl. `states[]` nested keys resolved to value-flowing sites; CSS-variable check — none used).
+- jev-prewave after legs 1–3 + A6, payload per its contract (A6 outputs verbatim, A10.1); five-lens wave only on FIRE-WAVE; bar avg ≥85, min ≥70.
+
+### 2.5 Failure points (priced)
+- Fitting limits: "Pennsylvania" name + the 6-digit numerals at phone width — ink height at 360 px stage must stay ≥11 px (nameFontPx 19 at 640 stage → 10.7 px at 360 — RISK: name size may need raising at the fit leg, priced there, not asserted here); longest formatted count "347,000" must fit its row — measured in the fit leg.
+- Tile-entry order: the census shows Pennsylvania entering FIRST although Virginia is the left/first-listed tile — a builder who staggers by list order reverses the specimen's order; enterIdx in CONFIG is the cure, C@2000 is its receipt.
+- Square-density readability: 21 squares at pitch 19 px (640 stage) = 10.7 px pitch at 360 — squares must stay discrete (size 13 → 7.3 px at 360); denser would merge the grid into a block and destroy the countability that IS the technique.
+- Fraction icon: the split must read as 3/5 (iconFraction 0.6 from the top of the body incl. head zone as drawn) — a 50/50 split would misstate the clause.
+- Portrait deferral: if a lens prices the missing coda against motion fidelity, the departure table (§2.3) is the priced answer, filed before the wave.
+- Render-proof limitation: no browser binary in this seat — PIXEL-UNVERIFIED carried to scores.md; comparison page is the render surface.
+- Plateau (A2): FIRST ATTEMPT — no prior average; a FAIL files its WHY in scores.md and routes attempt 2 to practice. **Predicted minimum lens: motion fidelity** — hypothesis: the deferred photographic coda and the coarse CONFIG silhouettes are the two places the build departs from the specimen's surface, and both price on motion/readability; if the wave's minimum is elsewhere, the WHY names the actual stuck lens.
+
+## §2b — Gate dispositions
+_(Filled after the four Phase A calls fire — BEFORE any build script, A9.2.)_

@@ -1,0 +1,217 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1f060-c45b-71a2-b577-852bed6fc116
+--------
+user
+TASK: You are the jev-observe-exit judge for the recreation job. Judge ONLY item T227s Observe record below, per the call definition that follows. Return ONE verdict (ADVANCE / ADVANCE-WITH-GAPS / RETURN-TO-OBSERVE) with the six dimension scores (0-1), the primary classification if returned, and named gaps. End with a BODY-WRITE: line.
+STANDING HEADER: (1) Consumer: recreation Cycle 039 Wave 36 section 1 gate out for T227; decision priced: whether Observe can support a Plan. (2) Working record: runs/2026-11-18-cycle-039-wave-36/item-T227-observe-plan.md. (3) BODY-WRITE: return must end with a BODY-WRITE: line; read-only closes Body-write: none (read-only run).
+=== GUARD: jev-observe-exit ===
+# Jev call — jev-observe-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: a recreation wave may not enter Plan on a catalogue summary alone — Observe must have priced the queue, read the prior scores where they exist, seen the evidence frames, and carried the standing construction guidance into working memory._
+
+## 1. What it judges
+- Deliverable: the wave's Observe working memory — RUN.md gate-out block (§1: mechanics summary + sub-beat timings + variable list + named consumer) for each item in the wave (up to 5 owed items).
+- Call point: recreation INSTRUCTION §1, at the gate out of Observe, before §2 Plan opens for any item in the wave. The verdict is advisory per item: applied, a RETURN-TO-OBSERVE item is held out of the wave's Plan (the wave proceeds with its advancing items; a held item never holds the wave hostage — same rule as jev-prewave §5); set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Observe record can support a Plan for THIS recreation wave, item by item. Price, in order:
+(1) QUEUE STATE PRICED — does the record state the recreation queue's current position (../QUEUE.md read this cycle), each item's queue number and OWED status, and the ownership split (Amendment A3 §3: this job owns FIRST attempts; an already-scored technique belongs to practice — a wave item that is a re-attempt is a routing defect, named)? T15 is the standing example: attempt 1 scored FAIL 78.5 on 2026-11-13, so T15 attempt 2 is practice's charge, never this job's wave item.
+(2) PRIOR SCORES READ — for any item whose technique already has a scores.md or a verdict-history line (a techniques' family sibling counts: e.g. T16 shares T15's particle machinery), does the record cite the actual filed scores and cure list, or does it plan from the catalogue description alone? Planning that ignores a filed failure is the defect this leg exists to catch.
+(3) MECHANICS SEEN, NOT SUMMARIZED — does the record carry the packet section's mechanics + sub-beat timings from firsthand viewing of the evidence frames and the source segment in motion (§1.1–1.2), with timings in seconds — or only a restatement of the TECHNIQUES.md one-liner? A mechanic the builder has not seen is a guess (§1.1).
+(4) VARIABLES EXTRACTED — is the §1.3 variable list complete for this technique (text content, phrase count, timing/durations, palette, scale, direction, density — plus technique-specific variables), so Plan's parameter table has something to bind? A variable missing here becomes a hardcoded accident in Execute (§1.3).
+(5) CONSTRUCTION GUIDANCE CARRIED — where the technique's family has standing guidance, is it IN the working memory, named? For particle-field techniques: the flow-field model (Amendment A5 §4: one constant flow field, borrowing with low-amplitude jitter, never-borrowed reserve fraction, release with velocity continuity) AND Owner Cure 1 (foreground/background intensity separation riding the borrow flag) AND Owner Cure 2 (strict phrase sequencing / phase exclusivity). For typography techniques: the typography construction precedent (Amendment A1 §2: runtime sampling of config-rendered text). Guidance that exists in INSTRUCTION but is absent from the wave's working memory is scored as absent.
+(6) CONSUMER NAMED — §1.4: which production surface lifts this machinery (container type + owning lane), named per item, not "production generally."
+(7) CODEX/OWNER INPUTS — were any Codex calls fired in this Observe (e.g. a record audit of a prior attempt's codex/ returns) with receipts filed, or is the absence printed? Does the wave need owner-only information (it almost never does — recreation prices from packets and filed scores); if claimed, is it routed as a named gap rather than silently assumed?
+Score 0–1 per dimension (§4), classify defects from the taxonomy, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Observe gate-out blocks · ../QUEUE.md recreation-queue section (current) · each item's packet digest.md technique section + TECHNIQUES.md entry · prior scores.md + verdict-history.md lines for the item and its named family siblings · INSTRUCTION Amendments A1/A3/A5 guidance lines relevant to the item's family · any Observe-phase Codex receipts filed this cycle.
+- NEVER FED: the builder's confidence prose · HQ's supervision faces · scores from attempts not yet filed (unfiled scores do not exist).
+- Ceiling: ≤32k tokens; packet sections enter as the technique's section only, never the whole digest; evidence frames are referenced by path/timestamp, never fed as images (text-only judge).
+
+## 4. Output space
+- Verdict classes (per item): **ADVANCE · ADVANCE-WITH-GAPS · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): queue-state-priced · prior-scores-read · mechanics-seen · variables-extracted · guidance-carried · consumer-named. (1.0 = evidenced in the record with citations; 0.5 = asserted without citation; 0.0 = absent.)
+- Rejection taxonomy (one primary per returned item): QUEUE-STALE (queue position/status not read this cycle) · REATTEMPT-MISROUTED (scored technique in a first-attempt wave) · SCORES-UNREAD (prior scores/cures exist, uncited) · MECHANICS-UNSEEN (no firsthand sub-beat record) · VARIABLES-THIN (variable list cannot bind a parameter table) · GUIDANCE-DROPPED (standing family guidance absent from working memory) · CONSUMER-VAGUE.
+- Accepted profiles travel: cited in RUN.md at the Plan gate; ADVANCE-WITH-GAPS items carry their gap list into §2 as named Plan charges.
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → RETURN-TO-OBSERVE for that item. GUIDANCE-DROPPED on a particle-field or typography item → RETURN-TO-OBSERVE at any other score (T15 attempt 1's founding lesson: the frozen-flow defect and both owner catches were guidance-shaped failures discovered only after the wave was spent).
+- ADVANCE-WITH-GAPS requires every gap named with its Plan-phase cure; an unnamed gap is a RETURN.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + primary classification + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. Binding the exact runner command here is the first firing's own first step. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 Cycle-002's Observe record reconstructed from its RUN.md (must ADVANCE — mechanics, timings and consumer were recorded before building). (b) A constructed record proposing T15 as a wave item for attempt 2 (must RETURN-TO-OBSERVE as REATTEMPT-MISROUTED). (c) A constructed particle-technique record with no flow-field / Owner Cure 1 / Owner Cure 2 lines (must RETURN as GUIDANCE-DROPPED). (d) A constructed record whose variable list names only "text and color" for a timed multi-phrase technique (must RETURN as VARIABLES-THIN).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. First expected amendment pressure: whether family-sibling scores (leg 2) should be mandatory for all items or only same-machinery families — priced from the first waves' returns.
+=== QUEUE FACTS (read this cycle) ===
+QUEUE.md RECREATION QUEUE: T227 row #102, Packet #13, DESCRIBED-OWED, first attempt owned by recreation (A3 section 3). Wave 36 items: #99 T212 completion, #100 T218, #101 T219, #102 T227, #103 T232.
+=== CODEX-OBSERVE RETURN (filed this cycle) ===
+**CONFIRMED-WITH-GAPS** — T227’s packet and register agree on the core mechanic, the 9–14 s technique window, and the named evidence. The reveal timing and archived-media checks remain open for Cycle 039 Wave 36 §1 Observe.
+
+1. **Flesh onset needs firsthand confirmation.** Both catalogue entries describe green flesh as the blade completes its pass. The supplied Observe record §1.2 and §1.3 CP2–CP4 instead reports flesh absent at source 11 s, visible at 12 s while the blade is still cutting, and established by 13 s. The catalogue wording supports the state at completion but leaves onset unspecified. The reported frames bracket onset to **(11, 12] s**. The evidence JPEG and census frames were unavailable for independent inspection. The underlying edit type remains unresolved in both catalogue entries. [Packet #13 digest §T04](/home/hatch/workspace/jobs/sync-staging/study/video-digests/2026-11-17-yt-dnjdjiwcfy/digest.md:36) · [Style-library §T227](/home/hatch/workspace/jobs/sync-staging/study/style-library/techniques-transitions.md:306)
+2. **Technique window and reference clip have different bounds.** The digest and register agree on **9–14 s**, which gives **5.000 s** by subtraction. The digest separately lists the reference clip at **9–16 s**, a nominal **7.000 s** that overlaps the start of T05 at 14 s. The archived probe record lists a total duration of 100.894 s, which places the technique window within the recorded runtime. The archived `source.mp4` and reference clip were unavailable, so the endpoint frames and reported measured clip duration are **NOT ASSESSED**. [Digest §§T04–T05](/home/hatch/workspace/jobs/sync-staging/study/video-digests/2026-11-17-yt-dnjdjiwcfy/digest.md:36) · [Style-library §T227](/home/hatch/workspace/jobs/sync-staging/study/style-library/techniques-transitions.md:306) · [Archived probe record](/home/hatch/workspace/jobs/sync-staging/study/video-digests/2026-11-17-yt-dnjdjiwcfy/probe.json:2)
+3. **Prior-attempt findings are limited to the staged record.** The staged recreation verdict history has zero matches for the three named IDs, T227, T232, and T234. The register lists T227 as owed #102, T232 as owed #103 with its own dicing mechanic, and T234 as an episode that reuses T227’s mechanism without a separate obligation. The supplied §1.5 describes T234 as sharing the wave’s first-attempt status, while the register establishes only its mechanism and obligation. A separate T234 attempt is unverified. No score claim surfaced for arithmetic or return binding. **Lens count assessed: 0.** [Recreation verdict history](/home/hatch/workspace/jobs/sync-staging/study-jobs/recreation/verdict-history.md) · [Technique register](/home/hatch/workspace/jobs/sync-staging/study/style-library/TECHNIQUES.md:151) · [Style-library §T234](/home/hatch/workspace/jobs/sync-staging/study/style-library/techniques-transitions.md:331)
+4. **Packet adoption gaps do not attach to T04.** Cycle-020 records that G1 concerned uncited PES cards and G2 concerned the T06 bowl state. Both were cured before the packet was adopted clean. [Digestion verdict history](/home/hatch/workspace/jobs/sync-staging/study-jobs/video-digestion/verdict-history.md:72)
+
+**Limits** — The named Cycle 039 item file and T227 artifact directory returned `No such file or directory` at the supplied paths. The timing comparison uses the supplied Observe text. The live attempt directories and their `scores.md` and `codex/` inventories are **NOT ASSESSED**.
+
+Body-write: none (read-only run)
+2026-11-18T20:33:58.263658Z ERROR codex_core::session: failed to record rollout items: thread 01a1f05c-5c33-7c32-b761-d0434865df65 not found
+tokens used
+=== ITEM OBSERVE-PLAN RECORD (section 1 = the Observe under judgment) ===
+# Item T227 — Phase A (Observe + Plan) · Wave 36 · Cycle 039
+
+- **Item:** T227 — Substitution-at-action: the halving that reveals flesh · queue #102 · FIRST ATTEMPT · Packet #13 (PES "Fresh Guacamole", YouTube dNJdJIwCF_Y, 100.894 s), packet-local T04.
+- **Artifact directory:** `hidden_files/study/recreations/T227-substitution-at-action-halving/`
+- **Segment window (source):** 9–14 s per digest §T04 + style-library techniques-transitions.md §T227. Segment duration 5.0 s (±0.5 s handles at Execute → cut 8.5–14.5 s).
+- **Schedule basis (A7):** **segment-anchored** — build t=0 = source 9.0 s; every phase instant below is segment-relative ms derived from the census. No allocation: the census at 1 s spacing resolves every phase boundary this build claims (flesh onset is bracketed, not pinpointed — see §1.3).
+- **Bar (standing §2.3):** five-lens average ≥85 AND no lens <70.
+- **Consumer:** DLC assembler transition containers (packet §2 primary consumer + style-library §T227 "Feeds: transition").
+
+## §1 — OBSERVE
+
+- **Queue state (read this cycle):** `hidden_files/study-jobs/QUEUE.md` RECREATION QUEUE + wave RUN.md §0b census — T227 stands at row #102 (Packet #13), status DESCRIBED-OWED, first attempt owned by this job (A3 §3). No prior T227 scores.md, codex/ returns, or verdict-history line exists (first attempt; verified by directory + history grep this cycle).
+- **Consumer (named, §1.4):** the **DLC assembler transition container** — the substitution-at-action boundary surface owned by the Daily Language Challenge assembler lane (packet §2: "Primary consumer: the DLC assembler — transition containers"; style-library §T227: "Feeds: transition"). The machinery lifts as a transition container that swaps an object's identity inside a spanning performed action, the swap covered by the action's own tool.
+
+### 1.1 Catalogue mechanics (read firsthand)
+- Digest §T04: "The knife saws through the grenade's equator in stop-motion steps; as the blade completes the pass, the cut face is no longer metal — it is bright green avocado flesh, with the shell's segmentation now reading as skin. Visible substitution: metal shell + blade pass → green flesh face. Inferred edit: the swap is covered by the blade and the hands; whether it is a frame-step replacement inside a continuous shot or a cut is NOT resolved by the evidence and is not claimed. The spanning action (sawing) is what licenses the change: cutting an avocado in half is exactly when flesh should appear." Evidence: ev/t012-grenade-halving.jpg · clips/grenade-halving.mp4 (9–16 s, measured 7.000 s on disk).
+- Style-library techniques-transitions.md §T227: agrees verbatim (mechanics, window P13 @ 9–14 s, evidence, consumer). Tier DESCRIBED — OWED #102. No digest↔register disagreement.
+- Packet gaps: Packet #13 adopted CLEAN (video-digestion Cycle-020); the jev-packet gaps G1 (PES cards uncited) / G2 (T06 bowl state) do not attach to T04/T227.
+- **Unresolved-by-evidence, carried unresolved:** whether the swap is a frame-step replacement or a cut is NOT claimed anywhere in this record or the build. The recreation implements the *visible* mechanics only: a spanning saw action during which flesh progressively appears at the cut, covered by blade + holding shape.
+
+### 1.2 Evidence frame viewed firsthand
+ev/t012-grenade-halving.jpg (sha256 591ccf7e…f45): the object held horizontally in the left hand-shape's grip, the large knife blade vertical through its equator, bright green flesh extruding along BOTH sides of the blade at the cut — flesh is already visible mid-pass, before the blade completes. The grenade's segmented dark-green shell reads as avocado skin around the extrusion. Two further grenades rest on a wooden plate at right (context, not part of this technique's core mechanic — priced as background dressing, deferred in §2).
+
+### 1.3 Motion census (A10.3 — firsthand, this run)
+Frames extracted with ffmpeg from source.mp4 into the artifact dir `census/` at 1 s spacing (seg-rel ms = source − 9 s), each viewed firsthand:
+
+| CP | File | Seg-rel | Source | SHA-256 (full) | State viewed |
+|---|---|---|---|---|---|
+| CP0 | census-0.jpg | 0 ms | 9.0 | 96d6f92eaa819f705cac34d5c389ae7a1343497e2b7cd24ee7d2d6f534f3c046 | Object held upright in palm, whole segmented shell, pin/lever head up; knife blade large at right, NOT yet in contact. Zero-flesh anchor. |
+| CP1 | census-1000.jpg | 1000 ms | 10.0 | dc9cb43608172082e61f5e171f4892f58cf9393754fa0b18c9edee42ce85f972 | Blade vertical, edge in contact with the shell's right side; object still upright, grip tightened; NO flesh visible. |
+| CP2 | census-2000.jpg | 2000 ms | 11.0 | 62030c52552ce016d2308a35a54c99a6285c690d1a32783ce11e327cc911d150 | Object rotated horizontal ON the blade; sawing underway (blade through the upper shell region); NO flesh visible yet at this instant. |
+| CP3 | census-3000.jpg | 3000 ms | 12.0 | 891976828438a686495dcad4ad1833a78a21200f3cbf9a62ef82d040b1ef51d9 | Blade deep through the equator; bright green flesh EXTRUDING along the cut on both sides of the blade — flesh reveal in progress, pass not yet complete. |
+| CP4 | census-4000.jpg | 4000 ms | 13.0 | ffa7e992805123b23a87fdd79270a1c92c6734077ec19530a90e49689783d970 | Pass essentially complete; green flesh smearing down the blade below the object; cut face established. |
+| CP5 | census-5000.jpg | 5000 ms | 14.0 | 67b3820ded09573ac93933c11a8a763d66e18e33149b80b0a8b4df1b21113b51 | Knife GONE; two hand-shapes hold the closed halved object; a thin bright-green seam line at the equator — halves still closed (the twist-apart is T05/T228, the NEXT technique, outside this window). Hold state. |
+
+**Motion findings:** motion instants — blade approach/contact ≈0–1000 ms · sawing (stop-motion steps, object rotating to horizontal) ≈1000–4000 ms · flesh extrusion onset bracketed between 2000 ms (absent) and 3000 ms (present) — i.e. flesh appears during the LATE saw, progressively, NOT only at completion · blade exit + closed-seam hold ≈4000–5000 ms. Holds — none long inside the window; the closing state (closed halves, green seam) holds at CP5 into the next technique. No dissolve; the substitution is covered by blade + hands throughout.
+**Sub-beats:** SB-A present + blade approach (0–~1000 ms) · SB-B saw steps, shell only (≈1000–~2500 ms, flesh onset bracketed 2000–3000) · SB-C saw completion with progressive flesh extrusion (≈2500–4000 ms) · SB-D blade gone, closed halves with green seam, held (≈4000–5000 ms).
+
+### 1.4 Variables (§1.3 extraction)
+1. Outer-object identity (CONFIG data): name, shell fill/highlight/shadow, segmentation columns × rows, body width/height, head (lever/pin) presence + colours — the thing being halved.
+2. Inner-flesh identity (CONFIG data): name, flesh fill, flesh-light fill, skin-rim colour/width — what the cut reveals.
+3. Blade: length, width, fill, edge colour, angle, travel distance, saw-step count, stroke amplitude (the back-and-forth inside each step).
+4. Hands-as-shapes: grip shape fill (skin tone), size, positions (holder + guider), presence per phase.
+5. Timing: present duration, saw start/duration, flesh-onset fraction of the saw, part/seam phase start/duration, hold, total duration.
+6. Flesh geometry: extrusion width growth, seam-line width at close, flesh-face reveal fraction at part.
+7. Ground/board: board fill, plank line colour/count, plate dressing presence (deferred — see §2.5).
+8. Scale/position: object centre, object rotation (upright → horizontal tilt during saw), stage size.
+9. Easing/step form: saw progress is STEPPED (stop-motion quantization), part phase eased.
+
+### 1.5 Guidance dispositions (inline, A9.5)
+- A1 §2 typography precedent: NOT APPLICABLE — no typography/particle text; the build carries no subject text at all.
+- A5 Owner Cures 1–2: NOT APPLICABLE as particle/phrase cures — no particle field, no phrase lifecycle. The analogous separation here is identity-level: shell (dark, segmented) vs flesh (bright, smooth) are different kinds of mark by construction, never the same mark at two intensities.
+- A5 §4 flow-field model: NOT APPLICABLE — no particle pool.
+- A9.1 plate construction: the board is a STILL plate (flat ground + plank lines, no motion) — any background motion would exceed the technique; priced here so Plan-exit need not ask.
+- Family: substitution-at-action siblings in Packet #13 — T232 (queue #103, this same wave) shares the spanning-action swap form; T234 (golf-ball lime) rides this same mechanism and is not owed separately (register-priced). No sibling scores exist yet (both first attempts this wave).
+
+## §2 — PLAN
+
+### 2.1 Parameter table (every variable → CONFIG key; specimen value = default)
+`stageW 640 · stageH 400 · objCX 300 · objCY 205 · objW 190 · objH 230 · objTiltDeg -78 (saw-phase tilt; present phase 0) · segCols 4 · segRows 5 · segGroovePx 5 · headH 52 · bladeLen 300 · bladeW 64 · bladeAngleDeg -90 (edge vertical at contact, rotating with tilt) · bladeTravelPx 150 · sawSteps 5 · strokeAmpPx 14 · handW 150 · handH 110 · tPresentMs 0 · presentDurMs 900 · tSawMs 900 · sawDurMs 2600 · fleshOnsetFrac 0.62 · tPartMs 3500 · partDurMs 700 · partGapPx 10 · seamWPx 7 · holdMs 800 · palette {board #8a5a33, plank #6e4525, shell #44543c, shellLight #5c7050, shellDark #2e3a28, head #6b6f66, blade #b9bcbe, bladeEdge #e8eaea, hand #d9a184, flesh #7ec850, fleshLight #a8e063, skin #3d5a2a} · outer {name "grenade", shellKey "shell"} · inner {name "avocado", fleshKey "flesh"}` — identities are CONFIG DATA: `outer`/`inner` carry the names + which palette roles they bind; the swap test replaces the pair wholesale (see §2.4).
+Derived (named, not stored): sawEndMs = tSawMs + sawDurMs · fleshOnsetMs = tSawMs + fleshOnsetFrac × sawDurMs (= 900 + 1612 = 2512 ms, inside the census bracket 2000–3000 ✓) · completeAtMs = tPartMs + partDurMs = 4200 · durationMs = completeAtMs + holdMs = 5000 = window ✓ · stepped saw progress = floor(sawP × sawSteps)/sawSteps with a within-step stroke oscillation of ±strokeAmpPx · flesh extrusion fraction = clamp01((sawP − fleshOnsetFrac)/(1 − fleshOnsetFrac)) during saw, then the part phase opens the seam to seamWPx and the flesh face shows between the halves. **Phase-order invariant (validation-enforced):** tSaw ≥ present end · fleshOnsetFrac ∈ (0,1) · tPart ≥ sawEnd · part end + hold = durationMs ≤ 5000 + handles.
+
+### 2.2 Construction choice
+**SVG scene, generated shapes only (chosen):** board rect + plank lines; the outer object as an SVG group — body ellipse clipped segmentation grid (segCols × segRows rounded cells drawn from CONFIG), head/lever shapes on top; the blade as a polygon; two hand shapes (rounded mitten paths) gripping object + guiding blade; the flesh as an extrusion blob path along the cut line (scaling with flesh fraction) + a seam ellipse revealed at part. All geometry from `stateAt(cfg,t)`, a pure function evaluable in node (A11 receipts). The object group rotates from upright (present) to horizontal (saw) per CONFIG tilt.
+Rejected: Canvas 2D — loses per-element measurement + DOM receipts. CSS keyframes — phase state not evaluable as a pure function. Traced/photo assets — refusal class (§6.1), never considered as construction. HTML divs — SVG gives exact path geometry for harness receipts at less code.
+
+### 2.3 Census-anchor mapping (A10.2) + A11 assertions
+Window-start offset: segment-anchored, build 0 ms = source 9000 ms. NO departures: every census state maps to a CONFIG-expression probe at the same segment-relative instant.
+Assertions (each: CONFIG expression → evaluated instant; all instants CONFIG-derived so a timing swap moves them — the T212 lesson applied at Plan, not discovered at prewave):
+- CP0 zero: `stateAt(CONFIG, CONFIG.tPresentMs)` → 0 ms: fleshFraction = 0, blade contact = 0, tilt = 0. (Zero-state anchor, guards cmd 8.)
+- P1 contact: `stateAt(CONFIG, CONFIG.tSawMs)` → 900 ms: blade at contact (travelP = 0), flesh = 0, sawStep = 0.
+- P2 mid-saw shell-only: `stateAt(CONFIG, CONFIG.tSawMs + CONFIG.sawDurMs/2)` → 2200 ms: sawP = 0.5 < fleshOnsetFrac → fleshFraction = 0; sawStep = floor(0.5 × sawSteps) = 2. (Census CP2 at 2000 ms is shell-only ✓ — probe sits inside the same census bracket.)
+- P3 flesh onset: `stateAt(CONFIG, CONFIG.tSawMs + CONFIG.fleshOnsetFrac * CONFIG.sawDurMs)` → 2512 ms: fleshFraction = 0 at the onset boundary, > 0 immediately after (probe at +1 ms step in harness).
+- P4 saw complete: `stateAt(CONFIG, CONFIG.tSawMs + CONFIG.sawDurMs)` → 3500 ms: sawP = 1, fleshFraction = 1 (extrusion full), blade travel complete.
+- P5 part complete: `stateAt(CONFIG, CONFIG.tPartMs + CONFIG.partDurMs)` → 4200 ms: seamGap = partGapPx, flesh face visible fraction = 1, blade withdrawn (bladeP = 0).
+- P6 hold identity: `stateAt(CONFIG, completeAtMs + 400)` state fully equal to P5 state.
+- **Fixed census-instant probes (C*, alongside — never the sole census assertions):** C@1000 — contact begun, flesh 0 (CP1). C@3000 — 0 < fleshFraction < 1 (CP3 extrusion in progress: at 3000, sawP = (3000−900)/2600 = 0.8077, flesh = (0.8077−0.62)/0.38 = 0.494). C@4000 — saw complete, part in progress (CP4). C@5000 — duration end state = P5 (CP5 closed seam hold).
+
+### 2.4 Verification plan (instruments named)
+- Execute checklist: (1) cut segment.mp4 from source.mp4 at 8.5–14.5 s (window ±0.5 handles), libx264/yuv420p + AAC faststart, ffprobe filed; (2) build recreation.html (CONFIG at top, pure stateAt, window.__T227 exposed); (3) build comparison.html (shared controls, video.currentTime − 0.5 s handle offset → build ms, labels as charged, phone stacking @media ≤560px); (4) own checks §5 legs 1–3.
+- Swap test: content/identities — outer pair replaced: outer {name "melon"} with palette shell #7a9a3d / shellLight #97bc55 / shellDark #55702a, segCols 3, segRows 4; inner {name "tomato"} with flesh #e2483d / fleshLight #f2796b / skin #b03028 — stateAt must report the swapped names and the renderer must bind the swapped fills (stub-DOM capture); timing — `tSawMs 900→1400` (P1 900→1400, P3 2512→3012, completeAt 4200→4700 via derived expressions; C@3000 flesh value changes accordingly); palette — `palette.flesh #7ec850→#e8b13a` (observed fill in stateAt output + renderer binding); phase-order negative test — `tPartMs→2000` (before saw end 3500) must be REJECTED by validateConfig.
+- Purity: guards cmd1 grep `segment\.mp4|source\.mp4|<video|<img|dNJdJIwCF_Y` → 0 hits in recreation.html; external-reference scan (`src=|href=|@import|url(`) → none (SVG namespace identifier excepted, classified); asset inventory = recreation.html alone.
+- Comparison check pass conditions: both labels present verbatim · handle-offset mapping evaluates (video 3.0 s → build 2500 ms) · `@media (max-width:560px)` stacking present · comparison script `node --check` rc=0.
+- A6 legs: fit-table.md — the recreation carries NO subject text (verified by grep); the fit leg therefore files zero subject-text rows with that verification as its evidence, plus PIL rendered measurement (stand-in DejaVu Sans) of the comparison page's two labels at 360 px as the only text the deliverable shows. config-census.md — all literals classified; every CONFIG key incl. nested `outer`/`inner`/`palette` keys resolved to value-flowing sites; CSS-variable check (none used).
+- jev-prewave after legs 1–3 + A6, payload per its contract (A6 outputs verbatim, A10.1); five-lens wave only on FIRE-WAVE; bar avg ≥85, min ≥70.
+
+### 2.5 Failure points (priced)
+- Stepped-vs-smooth saw: if the saw renders smooth, the stop-motion character (the packet's named mechanic) is lost — the step quantization is in stateAt itself, asserted by P2's sawStep value.
+- Flesh timing: flesh before the onset fraction, or only at completion, both falsify the census (extrusion is progressive in the late saw) — P2/P3/C@3000 price exactly this.
+- Identity legibility: generated shapes are schematic — if the shell segmentation or the bright flesh does not read at phone size, readability/motion lenses will price it; the construction's defence is the strong dark-shell vs bright-flesh contrast + the seam hold.
+- Deferred (named, lawful): the two background grenades + plate dressing, the bowl at top, photoreal hand anatomy (hands are shapes by the purity charge — generated construction, never traced), the twist-apart + pit (T228, next technique, outside the window).
+- Render-proof limitation: no browser binary in this seat — PIXEL-UNVERIFIED carried to scores.md; comparison page is the render surface.
+- Plateau (A2): FIRST ATTEMPT — no prior average. **Predicted minimum lens: motion fidelity** — hypothesis: schematic generated shapes vs photographic stop-motion is the largest fidelity gap; timing is census-anchored and purity is construction-guaranteed, so motion (shape fidelity) is where the score concentrates its loss. If the wave's minimum is elsewhere, scores.md's WHY names the actual stuck lens.
+
+## §2b — Gate dispositions
+_To be completed after the four Phase A calls fire (codex-observe · jev-observe-exit · codex-plan-review · jev-plan-exit) — no build script before this section is filed (A9.2)._
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+2026-11-18T20:37:19.670363Z ERROR codex_models_manager::manager: failed to refresh available models: request timed out
+warning: Loaded only 32768 of 103144 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**ADVANCE-WITH-GAPS — T227, Cycle 039 Wave 36**
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| queue-state-priced | 1.0 | This cycle’s `QUEUE.md` recreation section and `RUN.md` §0b place T227 at #102, DESCRIBED-OWED, with the first attempt owned by recreation under A3 §3. |
+| prior-scores-read | 0.5 | Observe §1 and §1.5 report no prior scores. The filed Codex return §3 found zero matches for T227, T232, and T234 in the staged verdict history. Its limits leave the live score inventory unverified. |
+| mechanics-seen | 0.5 | Observe §1.2 and §1.3 cite a firsthand JPEG inspection and six timestamped frames. CP2–CP4 bracket flesh onset to source **(11, 12] s** and show flesh established by 13 s. The record does not document firsthand playback of the source segment. |
+| variables-extracted | 1.0 | Observe §1.4 gives Plan the identities, palette, geometry, blade travel and saw steps, grip, rotation, phase timing, extrusion, and seam variables. §1.5 establishes that subject text and phrase count are inapplicable. |
+| guidance-carried | 1.0 | Observe §1.5 carries A9.1’s still-plate guidance and explains why A1 typography and A5 particle guidance do not apply. |
+| consumer-named | 1.0 | Observe §1 names the Daily Language Challenge assembler lane’s transition container, citing Packet #13 §2 and the style-library T227 entry. |
+
+**Plan charges**
+
+- **Source playback and clip bounds.** Play the source through 9–14 s and confirm the contact, stepped saw, mid-pass reveal, and closed-seam hold against §1.3. Keep the 2.0–3.0 s segment-relative onset bracket unless finer evidence narrows it. Verify the 9–16 s reference clip separately from the technique window.
+- **Live score inventory and sibling status.** Record the live score and verdict-history checks for T227 and the named siblings. Replace §1.5’s claim that T234 is a first attempt in this wave with the register-supported status that it reuses the mechanism and is not separately owed.
+
+The supplied record includes a filed Codex Observe return. No owner-only input is identified. This judgment uses §1 and the supplied receipts. Source playback, archived media, and live attempt inventories were not independently checked.
+
+Body-write: none (read-only run)
+tokens used
+21,649
+**ADVANCE-WITH-GAPS — T227, Cycle 039 Wave 36**
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| queue-state-priced | 1.0 | This cycle’s `QUEUE.md` recreation section and `RUN.md` §0b place T227 at #102, DESCRIBED-OWED, with the first attempt owned by recreation under A3 §3. |
+| prior-scores-read | 0.5 | Observe §1 and §1.5 report no prior scores. The filed Codex return §3 found zero matches for T227, T232, and T234 in the staged verdict history. Its limits leave the live score inventory unverified. |
+| mechanics-seen | 0.5 | Observe §1.2 and §1.3 cite a firsthand JPEG inspection and six timestamped frames. CP2–CP4 bracket flesh onset to source **(11, 12] s** and show flesh established by 13 s. The record does not document firsthand playback of the source segment. |
+| variables-extracted | 1.0 | Observe §1.4 gives Plan the identities, palette, geometry, blade travel and saw steps, grip, rotation, phase timing, extrusion, and seam variables. §1.5 establishes that subject text and phrase count are inapplicable. |
+| guidance-carried | 1.0 | Observe §1.5 carries A9.1’s still-plate guidance and explains why A1 typography and A5 particle guidance do not apply. |
+| consumer-named | 1.0 | Observe §1 names the Daily Language Challenge assembler lane’s transition container, citing Packet #13 §2 and the style-library T227 entry. |
+
+**Plan charges**
+
+- **Source playback and clip bounds.** Play the source through 9–14 s and confirm the contact, stepped saw, mid-pass reveal, and closed-seam hold against §1.3. Keep the 2.0–3.0 s segment-relative onset bracket unless finer evidence narrows it. Verify the 9–16 s reference clip separately from the technique window.
+- **Live score inventory and sibling status.** Record the live score and verdict-history checks for T227 and the named siblings. Replace §1.5’s claim that T234 is a first attempt in this wave with the register-supported status that it reuses the mechanism and is not separately owed.
+
+The supplied record includes a filed Codex Observe return. No owner-only input is identified. This judgment uses §1 and the supplied receipts. Source playback, archived media, and live attempt inventories were not independently checked.
+
+Body-write: none (read-only run)
