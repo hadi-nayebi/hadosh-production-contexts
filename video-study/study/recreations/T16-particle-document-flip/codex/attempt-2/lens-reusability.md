@@ -1,0 +1,19 @@
+CONFIG exposes most major controls, and URL overrides genuinely feed content sampling, phase boundaries, pool sizing, and initial palette construction. However, the machinery is not yet safe to lift across the requested edge cases.
+
+**High cost — checkpoint validation accepts malformed values.** `validCheckpoints()` uses coercive `isFinite()`: `{page:null,atMs:null}` and numeric strings pass. String page values can concatenate in `a.page + (b.page-a.page)*f`, producing incorrect page jumps. Unsorted times, duplicate times, fractional pages, and out-of-range pages also pass. Cure: require finite numbers, integer pages, strictly increasing times, and an explicit policy for schedule endpoints.
+
+**High cost — pageCount and timing swaps do not adapt the schedule.** With `pageCount:40`, default checkpoints progress only through page 14, then jump directly to 40 after 2200 ms; pages 15–39 never appear. With `flipMs:1800`, the flip phase ends before reaching the default final checkpoint. `computeSchedule().budgetOk` reports a problem but never constrains execution. PageCount 1 clamps successfully. Cure: derive compatible checkpoints or reject incompatible combinations, and enforce travel/dwell budgets.
+
+**High cost — validation covers only a small subset of CONFIG.** Geometry, line patterns, travel times, jitter periods, alpha values, seed, and typography remain unchecked. A zero sampling gap supplied directly can hang sampling; negative halo radii can throw; invalid line-pattern shapes break `.forEach()`. URL numeric parsing also accepts partial values such as `"40junk"`. Invalid palette strings silently become unintended colors through `hexRgb()`. Cure: validate the complete configuration before sampling, including types, bounds, arrays, and supported color syntax.
+
+**Medium cost — text fitting does not guarantee bounds.** Header fitting checks width only and stops shrinking near 10 px even if overflow remains. It never checks height against the page or line field. Title fitting similarly stops near 12 px without guaranteeing width, and has no height constraint. Very long strings can clip; narrow pages can place headers across content. Cure: fit against explicit width and height boxes with a defined overflow policy.
+
+**Medium cost — simultaneous title/ring capacity is sound, but page capacity is underestimated.** `buildPool()` correctly budgets `title + halo` together and preserves an unborrowable reserve. However, page capacity samples only page 1, while seeded line widths vary across pages. Later pages can demand more particles; `retargetPage()` silently drops targets when no free particle exists. Cure: size against maximum page demand or a conservative bound, and assert assignment completeness.
+
+**Medium cost — restart determinism is conditional.** `resize()` reseeds particles and resets simulation time, so identical subsequent step sequences should reproduce particle motion. It leaves `trace`, diagnostics, and animation timestamp `last` unchanged, however. Restarted records retain prior-run evidence, and the first animation delta depends on restart timing. Cure: reset all run state and verify equality under a controlled timestep sequence.
+
+**Medium cost — technique literals remain outside CONFIG.** Examples include stack vertical offset `0.6`, line-width floor `0.18`, minimum line thickness `2`, text-fit floors and shrink rates, cubic easing exponent `3`, wrap margins `5/6`, and minimum stage dimensions `320/240`. These prescribe reusable behavior. `dispersalFactor` is exposed but never enforces its promised spread. Cure: expose meaningful technique controls and distinguish diagnostics from enforced guarantees.
+
+Body-write status: filesystem tooling failed before access, so I could not write `lens-reusability.md` or update `scores.md`. This return supplies the score and proposed inherited cure list; neither is confirmed filed.
+
+SCORE: 62

@@ -1,0 +1,1673 @@
+CONSUMER + DECISION PRICED: practice Verify step (Video Study seat, practice job, Cycle 028 Wave 27) — your score decides, with four other lenses, whether this attempt of the T16 particle document flip recreation is accepted or carried forward with your priced findings as its next cure list.
+WORKING RECORD: build-record-blind-attempt8.md — you build from the recreation source and the score-blind build record appended below; your return is filed at hidden_files/study/recreations/T16-particle-document-flip/codex/attempt-8/lens-timing.md.
+BODY-WRITE REQUIREMENT: your return must name what it wrote into the body (the score + findings filed in the attempt record and, if the attempt is carried forward, the cure list the next attempt inherits). A return naming no body-write is incomplete. End with a final line exactly: SCORE: <integer>
+
+Scores are integers from 0 to 100. Price the build's stated limitations (in the build record below) under your lens.
+
+You are ONE reviewer with ONE lens: TIMING / TEMPO MATCH. Score 0-100 how faithfully the recreation's timing reproduces the technique's measured tempo. Do not score other lenses.
+
+CATALOGUE MECHANICS + MEASURED CHECKPOINTS (T16, source window 6.0 s, catalogue 1:35-1:40): pages flip rapidly — page counter caught at 1/14 at the window start, 6/14 at ~1.5 s into the catalogue window (frame t=1:36), 14/14 by ~2.2 s; the sequence then resolves: title 'title: AI GURU' condensed with halo formed by ~4.5-5.5 s into the cut window, with a resolved hold after it.
+
+Judge specifically: are the checkpoint proportions right (counter accelerating through 1 -> 6 -> 14 inside ~2.2 s, not a linear crawl)? Is the flip fast enough to read as flipping yet slow enough that checkpoints land? Can particle motion complete inside the page intervals the schedule creates, so pages settle before they are replaced? Does the title condensation complete inside the window with a real hold after it? Are the phase proportions true to the original's beats, and does the cycle loop cleanly at 6000 ms? Name priced findings (defect -> evidence in the code -> cost).
+
+Return format: prose findings, then a final line exactly: SCORE: <n>
+The recreation source follows.
+=====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T16 — Particle Document Flip (recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+  #wrap{position:relative;width:100%;height:100%}
+  canvas{display:block;width:100%;height:100%}
+  .dom{position:absolute;font-family:Arial,Helvetica,sans-serif;color:#fff;pointer-events:none}
+  #counter{right:12%;top:34%;text-align:left;opacity:0}
+  #counter .lab{font-size:15px;color:#a9c6de;font-family:"Courier New",monospace}
+  #counter .num{font-size:64px;font-weight:900;line-height:1.05}
+  #tlabel{left:13%;top:37%;font-family:"Courier New",monospace;font-size:22px;color:#a9c6de;opacity:0}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="stage"></canvas>
+  <div class="dom" id="counter"><div class="lab"></div><div class="num"></div></div>
+  <div class="dom" id="tlabel"></div>
+</div>
+<script>
+"use strict";
+/* ================================================================
+   T16 — PARTICLE DOCUMENT FLIP
+   A stack of pages rendered in particles flips through its page
+   counter, the page disperses into the stream, and a title line
+   condenses out of the stream with a ring above it. The cycle then
+   holds, disperses the title and ring during a dedicated seam
+   interval, and begins again with no borrowed particles carried
+   across the seam.
+
+   PARAMETERIZED, NOT TRACED: every content / timing / palette value
+   is read from CONFIG below, and CONFIG itself is built from ONE
+   shared DEFAULTS object — validation fallbacks read DEFAULTS, so
+   no content default stands anywhere else. Page, title and ring
+   targets are obtained by RUNTIME SAMPLING of config-rendered
+   content on offscreen canvases. The counter and label elements
+   start empty and are filled from CONFIG at initialization
+   (including the counter label's letter spacing), and the
+   checkpoint schedule is derived from the resolved page count and
+   flip duration unless an explicitly supplied, strictly validated
+   checkpoint list replaces it.
+
+   Motion model — ONE constant flow field, with a reference frame:
+   - Every particle carries a stream velocity (vx, vy) assigned at
+     creation, and a stream OFFSET that accumulates that velocity
+     every frame, in every state, without exception. The RENDERED
+     position is anchor + DISPLAYED offset, where the displayed
+     offset is (stream offset − reference offset). The reference
+     offset is the particle's registration frame:
+       · free / travelling: the reference is constant, so the
+         displayed offset accumulates the full stream contribution
+         and the trajectory velocity (anchor velocity + stream
+         velocity) is continuous — the anchor moves only through
+         profiles whose derivative is zero at both ends, and
+         capture in the same update that first moves the particle
+         (no capture/update lag).
+       · settled: over the registration window the reference eases
+         (zero-end-derivative profile) from its capture value to
+         the live stream offset, so the displayed offset decays
+         smoothly to zero and the settled structure REGISTERS on
+         its fitted target — displayed position = target + jitter —
+         and holds there. Velocity is continuous across the
+         settlement instant because the easing's derivative is zero
+         where the fade starts.
+       · released: over the release window the displayed offset
+         re-emerges from its release value back to the full stream
+         contribution through the same zero-end-derivative profile,
+         while the anchor SCATTERS: it travels (same profile family)
+         from the settled anchor to a seeded dispersed anchor — a
+         coherent stream-direction component (every released anchor
+         travels at least the configured bias) plus a seeded random
+         component inside the configured scatter range — then
+         freezes. The
+         silhouette therefore clears by construction, priced by a
+         clearance metric (released-set overlap with the title
+         region and with its own release-instant bounding box),
+         not by brightness.
+   - FORMING = BORROWING particles onto targets. A borrowed particle
+     first streams for its stagger delay (anchor held, displayed
+     offset accumulating); its travel anchor origin is captured at
+     the moment the delay elapses, from the rendered position it
+     actually occupies then, and travel progresses in that same
+     update.
+   - Page flips RETARGET rather than re-borrow: a particle whose
+     target exists on the next page keeps that assignment (outline
+     and header targets are identical on every page and form a
+     persistent set); changed line targets are filled by
+     nearest-target reassignment; only genuinely new targets borrow
+     from the free pool, and only vanished targets release.
+   - PAGE TURN: the turn has its OWN duration parameter, decoupled
+     from travel time. EVERY page change starts its own turn: the
+     effective turn duration for a change is derived from that
+     change's own page interval - the configured turn duration,
+     capped so the turn leaves the reserved settled hold inside
+     the interval - and the turn runs concurrently with particle
+     arrival from the change instant, never serially after it.
+     During the turn window the turn is a two-face gesture: the
+     persistent face (outline + header) folds toward the page's
+     left edge and past it (its horizontal factor runs below zero
+     at mid-window, so the far edge crosses the pivot line), while
+     the incoming face (the line texture that changes between
+     pages) unfolds from the pivot from the configured minimum
+     factor to full width; both profiles complete by a fixed
+     onset fraction of the window. The backing stack's anchors
+     never take part, the turn changes no assignment, and the
+     stack stays distinguishable throughout. A page counts as
+     READABLE only when it is settled, its turn is complete, and
+     its registration is complete; page registration is capped so
+     capture, travel and registration complete by the turn's
+     readable onset.
+   - DISSOLVING = RELEASING: the borrowed flag clears and the
+     release construction above runs (offset re-emergence + anchor
+     scatter). Release adds no velocity discontinuity: anchor and
+     displayed-offset velocities are zero at both ends of the
+     release profile.
+   - Intensity rides state, with named distinct values: a settled
+     particle's intensity interpolates from the travelling intensity
+     to its settled intensity across its registration window, so
+     full intensity coincides with completed registration, never
+     with mere travel completion. Page registration is derived from
+     the page's own interval: capture, travel and registration
+     complete inside the turn window, leaving the reserved tail of
+     the interval readable at full intensity. Travelling
+     (stagger pending, travelling, or turning) renders at the
+     travelling intensity; a settled backing-stack particle renders
+     at the settled stack intensity, which is a different value;
+     settled page/title particles render at foreground intensity
+     and the ring at its own intensity. Unborrowed particles render
+     at surplus or reserve intensity; a CONFIG reserve fraction is
+     never borrowed.
+   - Phases run sequentially — flip, release, form, hold, seam —
+     one lifecycle owns the stage at a time. The seam interval sits
+     at the end of the cycle: the title and ring release there, and
+     no page target is borrowed until the seam has completed.
+   - Text fitting prices BOTH dimensions: header and title are
+     fitted against a width box AND a height box. If the text still
+     exceeds a box at the named minimum font size, the named
+     no-fit policy applies: CONDENSE-AT-FLOOR — the text is drawn
+     with a horizontal (and, if needed, vertical) condensation
+     transform that brings its rendered bounds inside the box.
+     Overflow is never silent.
+   - Configuration validation runs before any sampling: checkpoint
+     lists must carry finite number types, integer pages within
+     range, strictly increasing pages and times, AND endpoint
+     completeness (first entry is page 1 at time 0; last entry is
+     the final page), or the derived schedule is used with a
+     recorded warning; sampling gaps are rounded to integers;
+     shrink factors are bounded away from 1 so fitting always
+     terminates; numeric, array and colour values are type- and
+     range-checked with recorded warnings; the schedule budget
+     (travel + maximum stagger + reserved settled hold against the
+     minimum page interval) is enforced by reducing flip travel in
+     steps — and if it cannot hold at the travel floor, the
+     infeasible pageCount/flipMs combination is REFUSED (reset to
+     the shared defaults with a warning) rather than run; the
+     formation budget (title travel + maximum stagger within the
+     form phase; ring delay + travel within form + hold) is
+     enforced the same way, refusing an infeasible formMs.
+     Runtime mutation of CONFIG is revalidated through the exposed
+     revalidate() entry, which re-runs validation, colours,
+     checkpoints, the feasibility gate, DOM initialization and the run reset.
+   URL overrides (swap test): ?title=DATA+WIZARD&pageCount=9
+     &flipMs=1800&colorA=%23ffd75e&titleLabel=role:
+   ================================================================ */
+const DEFAULTS = {
+  pageCount: 14,                 // total pages in the stack
+  pageHeader: "RÉSUMÉ",          // header word rendered on each page
+  pageLinePattern: [0.55,0.92,0.85,0.60,0.30,0.88,0.79,0.95,0.70,0.28,0.90,0.82,0.66], // text-line widths (fraction of inner page width)
+  pageLinesTopRatio: 0.30,       // where text lines start on the page (fraction of page height)
+  pageLineGapRatio: 0.052,       // vertical spacing of text lines
+  pageXR: 0.17, pageYR: 0.13,    // page position (fraction of stage)
+  pageWR: 0.33, pageHR: 0.74,    // page size (fraction of stage)
+  pageHeaderTopRatio: 0.07,      // header offset from page top
+  pageHeaderWidthRatio: 0.84,    // header fitted within this fraction of page width
+  pageHeaderHeightRatio: 0.17,   // header fitted within this fraction of page height
+  pageHeaderFontRatio: 0.21,     // header font size as a fraction of page width
+  headerMinFontPx: 10,           // header fit floor
+  headerShrink: 0.92,            // header fit shrink step (validated < 1, bounded away from 1)
+  pageInnerXRatio: 0.12,         // text lines start this far into the page
+  pageInnerWRatio: 0.76,         // text-line field width (fraction of page width)
+  pageLineThicknessRatio: 0.016, // text-line thickness (fraction of page height)
+  lineMinThicknessPx: 2,         // text-line thickness floor
+  pageLineJitter: 0.14,          // per-page seeded variation of line widths
+  lineMinFraction: 0.18,         // jittered line-width floor (fraction)
+  pageStrokePx: 3,               // page outline stroke width
+  stackCount: 2,                 // pages visible behind the front page
+  stackOffsetPx: 11,             // per-page stack offset
+  stackOffsetYFactor: 0.6,       // stack vertical offset as a fraction of the horizontal offset
+  stackAlpha: 0.60,              // settled intensity of stack-outline particles
+  titleLabel: "title:",          // small solid label beside the title
+  titleText: "AI GURU",          // the condensing title words
+  titleFontPx: 150,              // shrunk to fit the title box
+  titleCyRatio: 0.56,            // title vertical centre (fraction of stage height)
+  titleCxRatio: 0.5,             // title horizontal centre (fraction of stage width), consumed by sampling and fit alike
+  maxWidthRatio: 0.86,           // title box width (fraction of stage width)
+  titleMaxHeightRatio: 0.30,     // title box height (fraction of stage height)
+  titleMinFontPx: 14,            // title fit floor
+  titleShrink: 0.94,             // title fit shrink step (validated < 1, bounded away from 1)
+  haloRxR: 0.17, haloRyR: 0.055, // ring ellipse radii (fractions of stage w/h)
+  haloCyR: 0.30,                 // ring centre height (fraction of stage h)
+  haloStrokePx: 7,               // ring stroke width
+  haloColor: "#ffd98a",          // ring particle colour (warm gold)
+  haloAlpha: 0.95,
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontWeight: 900,
+  sampleGap: 4,                  // px between sampled targets for filled content (integer; lower = denser)
+  outlineGap: 3,                 // px between sampled targets for outline / stack strokes (integer, denser)
+  sampleAlphaThreshold: 110,     // alpha above which a sampled pixel becomes a target
+  regionPaddingPx: 4,            // padding when sampling a stage region
+  particleRadius: 1.6,
+  colorA: "#f6f9fd",             // particle colour range A (bright) ...
+  colorB: "#93a7bd",             // ... to B (dim silver-blue)
+  background: "#000000",
+  counterColor: "#ffffff",
+  counterLabelText: "page",
+  counterLabelColor: "#a9c6de",
+  counterRightRatio: 0.12, counterTopRatio: 0.34,
+  counterLabelPx: 15, counterNumPx: 64,
+  counterLabelLetterSpacingEm: 0.14, // counter label letter spacing (em), applied from CONFIG
+  counterRegionMarginPx: 8,      // gap kept between the counter group and the page/stack region
+  counterNumMinPx: 24,           // counter numeral size floor: below this the counter repositions above the stack region instead of shrinking further
+  counterFallbackTopRatio: 0.02, // counter group top (fraction of stage height) in the repositioned mode
+  labelColor: "#a9c6de",
+  labelLeftRatio: 0.13, labelTopRatio: 0.37, labelPx: 22,
+  labelFadeMs: 400,              // title label fade-in window during form
+  /* Checkpoint schedule: derived from the resolved pageCount and
+     flipMs through these anchor fractions unless an explicitly
+     supplied checkpoint list passes strict validation (including
+     endpoint completeness). */
+  flipCheckpoints: null,         // null = derive from the anchors below
+  checkpointMidPageFraction: 5/13,
+  checkpointMidTimeFraction: 1500/2600,
+  checkpointEndTimeFraction: 2200/2600,
+  flipMs: 2600,                  // flipping phase total (last page holds briefly)
+  releaseMs: 500,                // page disperses back into the stream
+  formMs: 1500,                  // title (+ ring) condenses out of the stream
+  haloDelayMs: 350,              // ring starts forming this long after the title
+  holdMs: 1100,                  // title + ring hold
+  seamReleaseMs: 300,            // dedicated interval at cycle end: title + ring release before any page borrowing
+  travelFlipMs: 28,              // particle travel time when a page flips
+  staggerFlipFraction: 0.30,     // max stagger delay as a fraction of flip travel
+  travelFormMs: 950,             // particle travel time when the title forms
+  staggerFormFraction: 0.45,     // max stagger delay as a fraction of form travel
+  haloTravelMultiplier: 0.8,     // ring travel time relative to title travel
+  formationMinTravelMs: 50,      // formation travel floor (distinct from the flip travel floor: the two floors are separate policies)
+  sampleGapMin: 2, sampleGapMax: 12, // sampling gap clamp bounds
+  fitFallbackAscentRatio: 0.8, fitFallbackDescentRatio: 0.2, // text-fit fallback height proportions when the rasterizer reports no ink metrics
+  fitIterationCap: 500,          // text-fit iteration cap
+  wrapJumpInsetPx: 1,            // rendered-position wrap jump inset
+  maxPageCount: 64,              // page count resource bound (counts above are clamped to the bound, with a warning)
+  maxStackCount: 8,              // stack count resource bound (clamped likewise)
+  minSettledHoldMs: 20,          // settled dwell reserved inside every page interval
+  minTravelMs: 5,                // travel floor for budget enforcement
+  turnMs: 140,                   // page-turn duration — its OWN parameter, decoupled from travel time
+  turnCosMin: 0.15,              // minimum horizontal factor of the front page at mid-turn (pivot: page left edge)
+  foldMinFactor: -0.12,          // minimum horizontal factor of the outgoing persistent face at the fold's deepest point (negative: the far edge crosses the pivot)
+  registrationMs: 300,           // settled registration window: displayed offset eases to zero over this window
+  registrationFloorMs: 15,       // registration positivity floor inside the span-derived registration clamp
+  turnRampFraction: 0.3,         // turn profile ramp fraction (the fold deepens over this fraction of the window)
+  turnOnsetFraction: 0.7,        // readable onset of the turn window as a fraction of the effective turn window — the ONE resolved value the registration cap and both face profiles read
+  foldPlateauFraction: 0.1,      // plateau fraction of the fold profile (shared resolved value)
+  readableGeomFactor: 0.98,      // face factor at which a face counts as geometrically reopened (shared resolved value)
+  haloCxRatio: 0.5,              // ring centre as a fraction of stage width (shared resolved value)
+  tickLagMs: 50,                 // supported tick-lag allowance priced into the feasibility pre-commit bound
+  releaseBlendFraction: 0.25,    // release derivative-blend window as a fraction of the release duration
+  frameCapMs: 50,                // per-frame simulated-time cap in the main loop (a load guard)
+  catchUpIntervalMultiple: 4,    // one callback may advance at most this multiple of the smallest schedule interval; excess is named dropped time
+  fitMinScaleRatio: 0.25,        // fitted-text condensation floor: below this scale the fit is refused by the gate instead of silently thinning
+  releaseClearanceHoldU: 0.5,    // released page particles hold page intensity until this fraction of the scatter window (the silhouette-clearance point)
+  releaseScatterPx: 130,         // release scatter random component range (px, added on top of the bias)
+  releaseScatterBiasX: 240,      // release scatter coherent component (px): every released particle's anchor travels at least this far in the stream's dispersal direction
+  releaseScatterBiasY: -200,     // coherent vertical component (px, negative = upward, with the stream)
+  releaseScatterYFactor: 0.9,    // vertical random component as a fraction of the horizontal range
+  releaseScatterMs: 500,         // release window over which scatter + offset re-emergence run
+  easingExponent: 3,             // exponent of the zero-end-derivative travel profile
+  windX: 26, windY: -9,          // constant stream velocity (px/s)
+  driftX: 7, driftY: 5,          // per-particle velocity variation range (px/s)
+  jitter: 0.35,                  // px of life while borrowed on target
+  jitterPeriodXMs: 280, jitterPeriodYMs: 340,
+  reserveFraction: 0.22,         // pool share never borrowed
+  foregroundAlpha: 1.0,          // settled borrowed intensity (page / title)
+  travelAlpha: 0.38,             // borrowed intensity while staggering / travelling / turning
+  reserveAlpha: 0.28,            // reserve intensity
+  surplusAlpha: 0.16,
+  wrapMarginPx: 6,               // rendered-position wrap margin around the stage
+  minStageW: 320, minStageH: 240,
+  seed: 20261
+};
+const CONFIG = JSON.parse(JSON.stringify(DEFAULTS));
+const TRUSTED_DEFAULTS = (() => { const o = JSON.parse(JSON.stringify(DEFAULTS)); for (const k of Object.keys(o)) if (Array.isArray(o[k])) Object.freeze(o[k]); return Object.freeze(o); })();
+const SCHEMA = Object.freeze({ maxAbsValue: 1000000, contrastColorA: 4, contrastColorB: 2, contrastHalo: 2, contrastDom: 2, minAlphaSeparation: 0.02 });
+/* ---------- validation warnings (recorded, exposed for checks) ---------- */
+const WARNINGS = [];
+function warn(msg){ WARNINGS.push(msg); }
+/* ---------- URL overrides (the swap-test mechanism) ----------
+   Numeric overrides are parsed STRICTLY: a value that is not
+   entirely a number is ignored with a recorded warning. */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.has("title")) CONFIG.titleText = q.get("title");
+  if (q.has("titleLabel")) CONFIG.titleLabel = q.get("titleLabel");
+  if (q.has("pageHeader")) CONFIG.pageHeader = q.get("pageHeader");
+  const num = ["pageCount","flipMs","releaseMs","formMs","holdMs","seamReleaseMs","sampleGap","outlineGap","reserveFraction"];
+  for (const k of num) if (q.has(k)) {
+    const raw = q.get(k);
+    if (/^[+-]?(\d+\.?\d*|\.\d+)$/.test(raw.trim())) CONFIG[k] = parseFloat(raw);
+    else warn("url override " + k + " rejected: not a strict number");
+  }
+  const str = ["colorA","colorB","haloColor","background"];
+  for (const k of str) if (q.has(k)) CONFIG[k] = q.get(k);
+  if (q.has("flipCheckpoints")) { try { const c = JSON.parse(q.get("flipCheckpoints")); if (Array.isArray(c)) CONFIG.flipCheckpoints = c; else warn("url flipCheckpoints rejected: not an array"); } catch(e){ warn("url flipCheckpoints rejected: unparseable"); } }
+})();
+/* ---------- configuration validation (runs before any sampling) ----------
+   Every fallback reads the shared DEFAULTS object. */
+function isNum(v){ return typeof v === "number" && isFinite(v); }
+function validColor(v){ return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v); }
+function rangeCheck(k, lo, hi){ // numeric key must be a finite number inside [lo, hi], else reset to DEFAULTS
+  if (!isNum(CONFIG[k]) || CONFIG[k] < lo || CONFIG[k] > hi) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default (invalid or out of range)"); }
+}
+function validateConfig(){
+  rangeCheck("formationMinTravelMs", 1, 10000);
+  rangeCheck("sampleAlphaThreshold", 0, 254);
+  rangeCheck("windX", -2000, 2000); rangeCheck("windY", -2000, 2000); rangeCheck("driftX", 0, 2000); rangeCheck("driftY", 0, 2000);
+  rangeCheck("turnOnsetFraction", 0.05, 0.95); rangeCheck("foldPlateauFraction", 0, 0.5); rangeCheck("readableGeomFactor", 0.5, 1); rangeCheck("haloCxRatio", 0, 1); rangeCheck("tickLagMs", 0, 1000);
+  rangeCheck("sampleGapMin", 1, 100); rangeCheck("sampleGapMax", 1, 200);
+  if (CONFIG.sampleGapMin > CONFIG.sampleGapMax) { CONFIG.sampleGapMin = TRUSTED_DEFAULTS.sampleGapMin; CONFIG.sampleGapMax = TRUSTED_DEFAULTS.sampleGapMax; warn("sampleGapMin/sampleGapMax reset to defaults (min above max)"); }
+  rangeCheck("fitFallbackAscentRatio", 0.0001, 2); rangeCheck("fitFallbackDescentRatio", 0, 2);
+  if (!isNum(CONFIG.fitIterationCap) || CONFIG.fitIterationCap < 1) { CONFIG.fitIterationCap = TRUSTED_DEFAULTS.fitIterationCap; warn("fitIterationCap reset to default"); }
+  CONFIG.fitIterationCap = Math.round(Math.min(100000, CONFIG.fitIterationCap));
+  rangeCheck("wrapJumpInsetPx", 0, 100);
+  if (!isNum(CONFIG.maxPageCount) || CONFIG.maxPageCount < 1) { CONFIG.maxPageCount = TRUSTED_DEFAULTS.maxPageCount; warn("maxPageCount reset to default"); }
+  CONFIG.maxPageCount = Math.round(Math.min(10000, CONFIG.maxPageCount));
+  if (!isNum(CONFIG.maxStackCount) || CONFIG.maxStackCount < 0) { CONFIG.maxStackCount = TRUSTED_DEFAULTS.maxStackCount; warn("maxStackCount reset to default"); }
+  CONFIG.maxStackCount = Math.round(Math.min(1000, CONFIG.maxStackCount));
+  for (const k of ["titleText","pageHeader","titleLabel","counterLabelText"]) {
+    if (typeof CONFIG[k] !== "string" || !CONFIG[k].trim().length) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default (text must be a non-empty string)"); }
+  }
+  if (typeof CONFIG.fontFamily !== "string" || !CONFIG.fontFamily.trim().length) { CONFIG.fontFamily = TRUSTED_DEFAULTS.fontFamily; warn("fontFamily reset to default"); }
+  if (isNum(CONFIG.fontWeight)) rangeCheck("fontWeight", 100, 900);
+  else if (!(typeof CONFIG.fontWeight === "string" && ["normal","bold","bolder","lighter"].includes(CONFIG.fontWeight))) { CONFIG.fontWeight = TRUSTED_DEFAULTS.fontWeight; warn("fontWeight reset to default"); }
+  if (!isNum(CONFIG.pageCount) || CONFIG.pageCount < 1) { CONFIG.pageCount = TRUSTED_DEFAULTS.pageCount; warn("pageCount reset to default"); }
+  CONFIG.pageCount = Math.round(CONFIG.pageCount);
+  if (CONFIG.pageCount > CONFIG.maxPageCount) { CONFIG.pageCount = CONFIG.maxPageCount; warn("pageCount clamped to maxPageCount"); }
+  for (const k of ["sampleGap","outlineGap"]) {
+    if (!isNum(CONFIG[k]) || CONFIG[k] < 1) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default (invalid sampling gap)"); }
+    CONFIG[k] = Math.round(Math.min(CONFIG.sampleGapMax, Math.max(CONFIG.sampleGapMin, CONFIG[k]))); // integer gaps only: sampling indices stay integral
+  }
+  rangeCheck("reserveFraction", 0.05, 0.6);
+  for (const k of ["flipMs","releaseMs","formMs","holdMs","seamReleaseMs"]) {
+    if (!isNum(CONFIG[k])) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset (not a number)"); }
+    if (CONFIG[k] > 600000) { CONFIG[k] = 600000; warn(k + " clamped to 600000 (phase duration bound: the schedule scan is proportional to the flip window)"); }
+    CONFIG[k] = Math.max(50, CONFIG[k]);
+  }
+  for (const k of ["travelFlipMs","travelFormMs"]) {
+    if (!isNum(CONFIG[k]) || CONFIG[k] < CONFIG.minTravelMs) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default"); }
+  }
+  for (const k of ["staggerFlipFraction","staggerFormFraction"]) {
+    if (!isNum(CONFIG[k]) || CONFIG[k] < 0 || CONFIG[k] > 1) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default"); }
+  }
+  for (const k of ["headerShrink","titleShrink"]) { // bounded away from 1: the fit loop must terminate
+    if (!isNum(CONFIG[k]) || CONFIG[k] <= 0 || CONFIG[k] > 0.98) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default (shrink factor must lie in (0, 0.98])"); }
+  }
+  rangeCheck("haloRxR", 0.001, 1); rangeCheck("haloRyR", 0.001, 1); rangeCheck("haloCyR", 0, 1);
+  rangeCheck("haloDelayMs", 0, 100000); rangeCheck("haloTravelMultiplier", 0.001, 3);
+  rangeCheck("turnMs", 1, 100000); rangeCheck("registrationMs", 1, 100000);
+  rangeCheck("registrationFloorMs", 1, 100000); rangeCheck("frameCapMs", 1, 250);
+  rangeCheck("catchUpIntervalMultiple", 1, 100); rangeCheck("fitMinScaleRatio", 0.01, 1); rangeCheck("releaseClearanceHoldU", 0, 1); rangeCheck("titleCxRatio", 0, 1);
+  if (!isNum(CONFIG.turnRampFraction) || CONFIG.turnRampFraction <= 0 || CONFIG.turnRampFraction > 0.5) { CONFIG.turnRampFraction = TRUSTED_DEFAULTS.turnRampFraction; warn("turnRampFraction reset to default (must lie in (0, 0.5])"); }
+  if (!isNum(CONFIG.releaseBlendFraction) || CONFIG.releaseBlendFraction <= 0 || CONFIG.releaseBlendFraction > 1) { CONFIG.releaseBlendFraction = TRUSTED_DEFAULTS.releaseBlendFraction; warn("releaseBlendFraction reset to default (must lie in (0, 1])"); }
+  if (CONFIG.registrationFloorMs > CONFIG.registrationMs) { CONFIG.registrationFloorMs = TRUSTED_DEFAULTS.registrationFloorMs; warn("registrationFloorMs reset to default (must not exceed registrationMs)"); }
+  rangeCheck("releaseScatterPx", 0, 10000); rangeCheck("releaseScatterMs", 1, 100000);
+  rangeCheck("releaseScatterBiasX", -10000, 10000); rangeCheck("releaseScatterBiasY", -10000, 10000);
+  rangeCheck("minTravelMs", 0.001, 1000);
+  rangeCheck("minSettledHoldMs", 0, 100000); rangeCheck("regionPaddingPx", 0, 100);
+  rangeCheck("particleRadius", 0.001, 100); rangeCheck("sampleAlphaThreshold", 0, 255);
+  rangeCheck("wrapMarginPx", 0, 1000); rangeCheck("labelFadeMs", 0, 100000);
+  rangeCheck("jitter", 0, 100); rangeCheck("pageLineJitter", 0, 1); rangeCheck("lineMinFraction", 0, 1);
+  rangeCheck("pageXR", 0, 1); rangeCheck("pageYR", 0, 1); rangeCheck("pageWR", 0.001, 1); rangeCheck("pageHR", 0.001, 1);
+  rangeCheck("titleFontPx", 1, 10000); rangeCheck("headerMinFontPx", 1, 1000); rangeCheck("titleMinFontPx", 1, 1000);
+  rangeCheck("pageStrokePx", 0.001, 100); rangeCheck("haloStrokePx", 0.001, 100);
+  rangeCheck("stackOffsetPx", 0, 1000); rangeCheck("stackOffsetYFactor", 0, 10);
+  rangeCheck("counterLabelLetterSpacingEm", 0, 2); rangeCheck("releaseScatterYFactor", 0, 10);
+  rangeCheck("maxWidthRatio", 0.0001, 1); rangeCheck("titleMaxHeightRatio", 0.0001, 1); rangeCheck("titleCyRatio", 0, 1);
+  rangeCheck("pageHeaderWidthRatio", 0.0001, 1); rangeCheck("pageHeaderHeightRatio", 0.0001, 1); rangeCheck("pageHeaderFontRatio", 0.0001, 2); rangeCheck("pageHeaderTopRatio", 0, 1);
+  rangeCheck("pageLinesTopRatio", 0, 1); rangeCheck("pageLineGapRatio", 0, 1); rangeCheck("pageInnerXRatio", 0, 1); rangeCheck("pageInnerWRatio", 0.0001, 1);
+  rangeCheck("pageLineThicknessRatio", 0, 1); rangeCheck("lineMinThicknessPx", 0.1, 100);
+  rangeCheck("counterRightRatio", 0, 1); rangeCheck("counterTopRatio", 0, 1);
+  rangeCheck("counterLabelPx", 4, 400); rangeCheck("counterNumPx", 4, 400);
+  rangeCheck("counterRegionMarginPx", 0, 100); rangeCheck("counterNumMinPx", 4, 400); rangeCheck("counterFallbackTopRatio", 0, 1);
+  rangeCheck("labelLeftRatio", 0, 1); rangeCheck("labelTopRatio", 0, 1); rangeCheck("labelPx", 4, 400);
+  rangeCheck("minStageW", 50, 4000); rangeCheck("minStageH", 50, 4000);
+  if (!isNum(CONFIG.stackCount) || CONFIG.stackCount < 0) { CONFIG.stackCount = TRUSTED_DEFAULTS.stackCount; warn("stackCount reset to default"); }
+  CONFIG.stackCount = Math.round(CONFIG.stackCount);
+  if (CONFIG.stackCount > CONFIG.maxStackCount) { CONFIG.stackCount = CONFIG.maxStackCount; warn("stackCount clamped to maxStackCount"); }
+  if (!isNum(CONFIG.seed) || !Number.isInteger(CONFIG.seed)) { CONFIG.seed = TRUSTED_DEFAULTS.seed; warn("seed reset to default"); }
+  for (const k of ["windX","windY","driftX","driftY"]) if (!isNum(CONFIG[k])) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default"); }
+  for (const k of ["checkpointMidPageFraction","checkpointMidTimeFraction","checkpointEndTimeFraction"]) rangeCheck(k, 0.001, 0.999);
+  if (!Array.isArray(CONFIG.pageLinePattern) || !CONFIG.pageLinePattern.length ||
+      !CONFIG.pageLinePattern.every(v => isNum(v) && v > 0 && v <= 1)) {
+    CONFIG.pageLinePattern = TRUSTED_DEFAULTS.pageLinePattern.slice();
+    warn("pageLinePattern reset to default (malformed entries)");
+  }
+  for (const k of ["colorA","colorB","haloColor","background","counterColor","counterLabelColor","labelColor"]) {
+    if (!validColor(CONFIG[k])) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn("colour " + k + " invalid, reset to default"); }
+  }
+  for (const k of ["jitterPeriodXMs","jitterPeriodYMs"]) {
+    if (!isNum(CONFIG[k]) || CONFIG[k] <= 0) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default"); }
+  }
+  for (const k of ["foregroundAlpha","travelAlpha","stackAlpha","haloAlpha","reserveAlpha","surplusAlpha"]) {
+    if (!isNum(CONFIG[k])) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset (not a number)"); }
+    CONFIG[k] = Math.min(1, Math.max(0, CONFIG[k]));
+  }
+  /* palette contrast (joint relationship): each particle colour
+     must keep its contrast floor against the configured background,
+     so a legal colour swap cannot collapse the settled/stream
+     separation the intensity hierarchy prices */
+  const lumOf = (hex) => { const n = parseInt(hex.slice(1), 16); const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(n >> 16 & 255) + 0.7152 * f(n >> 8 & 255) + 0.0722 * f(n & 255); };
+  const contrastOf = (a, b) => { const la = lumOf(a), lb = lumOf(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
+  for (const pair of [["colorA", 4], ["colorB", 2], ["haloColor", 2]]) {
+    const k = pair[0], floor = pair[1];
+    if (validColor(CONFIG[k]) && validColor(CONFIG.background) && contrastOf(CONFIG[k], CONFIG.background) < floor) { CONFIG[k] = TRUSTED_DEFAULTS[k]; warn(k + " reset to default (palette contrast against the background below its floor)"); }
+  }
+  /* intensity hierarchy (joint relationship): the settled intensity
+     ordering is part of the construction, not an accident of the
+     defaults — a configuration that equalises or inverts it is
+     corrected field by field, and a set that still violates after
+     correction is refused wholesale */
+  const alphaOrder = () => CONFIG.surplusAlpha < CONFIG.reserveAlpha && CONFIG.reserveAlpha < CONFIG.travelAlpha && CONFIG.travelAlpha < CONFIG.stackAlpha && CONFIG.stackAlpha < CONFIG.foregroundAlpha && CONFIG.haloAlpha <= CONFIG.foregroundAlpha;
+  if (!alphaOrder()) {
+    const chain = [["surplusAlpha","reserveAlpha"],["reserveAlpha","travelAlpha"],["travelAlpha","stackAlpha"],["stackAlpha","foregroundAlpha"]];
+    for (const [lo, hi] of chain) {
+      if (!(CONFIG[lo] < CONFIG[hi])) { CONFIG[lo] = TRUSTED_DEFAULTS[lo]; warn(lo + " reset to default (intensity hierarchy: " + lo + " must stay below " + hi + ")"); }
+      if (!(CONFIG[lo] < CONFIG[hi])) { CONFIG[hi] = TRUSTED_DEFAULTS[hi]; warn(hi + " reset to default (intensity hierarchy: " + lo + " must stay below " + hi + ")"); }
+    }
+    if (CONFIG.haloAlpha > CONFIG.foregroundAlpha) { CONFIG.haloAlpha = TRUSTED_DEFAULTS.haloAlpha; warn("haloAlpha reset to default (intensity hierarchy: halo must not exceed foreground)"); }
+    if (CONFIG.haloAlpha > CONFIG.foregroundAlpha) { CONFIG.foregroundAlpha = TRUSTED_DEFAULTS.foregroundAlpha; warn("foregroundAlpha reset to default (intensity hierarchy: halo must not exceed foreground)"); }
+  }
+  if (!alphaOrder()) {
+    for (const k of Object.keys(TRUSTED_DEFAULTS)) CONFIG[k] = Array.isArray(TRUSTED_DEFAULTS[k]) ? TRUSTED_DEFAULTS[k].slice() : TRUSTED_DEFAULTS[k];
+    warn("configuration refused: intensity hierarchy still violated after normalization; reset to defaults");
+  }
+  if (!isNum(CONFIG.easingExponent) || CONFIG.easingExponent <= 1) { CONFIG.easingExponent = TRUSTED_DEFAULTS.easingExponent; warn("easingExponent reset to default"); }
+  if (!isNum(CONFIG.turnCosMin) || CONFIG.turnCosMin < 0 || CONFIG.turnCosMin >= 1) { CONFIG.turnCosMin = TRUSTED_DEFAULTS.turnCosMin; warn("turnCosMin reset to default"); }
+  if (!isNum(CONFIG.foldMinFactor) || CONFIG.foldMinFactor < -1 || CONFIG.foldMinFactor >= 1) { CONFIG.foldMinFactor = TRUSTED_DEFAULTS.foldMinFactor; warn("foldMinFactor reset to default"); }
+  /* joint relationships: per-field-valid values can still violate a
+     relationship; the offending field resets to its default, the
+     relationship is re-checked, and a configuration that still
+     violates after the joint pass is refused wholesale */
+  if (!(CONFIG.checkpointMidTimeFraction < CONFIG.checkpointEndTimeFraction)) {
+    CONFIG.checkpointMidTimeFraction = TRUSTED_DEFAULTS.checkpointMidTimeFraction; CONFIG.checkpointEndTimeFraction = TRUSTED_DEFAULTS.checkpointEndTimeFraction;
+    warn("checkpoint time fractions reset to defaults (mid-time must precede end-time)");
+  }
+  const jointFix = () => {
+    let bad = 0;
+    if (CONFIG.pageXR + CONFIG.pageWR > 1) { CONFIG.pageWR = TRUSTED_DEFAULTS.pageWR; warn("pageWR reset to default (pageXR + pageWR must not exceed 1)"); bad++; }
+    if (CONFIG.pageXR + CONFIG.pageWR > 1) { CONFIG.pageXR = TRUSTED_DEFAULTS.pageXR; bad++; }
+    if (CONFIG.pageYR + CONFIG.pageHR > 1) { CONFIG.pageHR = TRUSTED_DEFAULTS.pageHR; warn("pageHR reset to default (pageYR + pageHR must not exceed 1)"); bad++; }
+    if (CONFIG.pageYR + CONFIG.pageHR > 1) { CONFIG.pageYR = TRUSTED_DEFAULTS.pageYR; bad++; }
+    if (CONFIG.pageInnerXRatio + CONFIG.pageInnerWRatio > 1) { CONFIG.pageInnerWRatio = TRUSTED_DEFAULTS.pageInnerWRatio; warn("pageInnerWRatio reset to default (inner field must stay on the page)"); bad++; }
+    if (CONFIG.pageInnerXRatio + CONFIG.pageInnerWRatio > 1) { CONFIG.pageInnerXRatio = TRUSTED_DEFAULTS.pageInnerXRatio; bad++; }
+    if (CONFIG.haloCyR - CONFIG.haloRyR < 0 || CONFIG.haloCyR + CONFIG.haloRyR > 1) { CONFIG.haloRyR = TRUSTED_DEFAULTS.haloRyR; warn("haloRyR reset to default (ring ellipse must stay inside the stage)"); bad++; }
+    if (CONFIG.haloCyR - CONFIG.haloRyR < 0 || CONFIG.haloCyR + CONFIG.haloRyR > 1) { CONFIG.haloCyR = TRUSTED_DEFAULTS.haloCyR; bad++; }
+    if (Array.isArray(CONFIG.pageLinePattern) && CONFIG.pageLinesTopRatio + CONFIG.pageLinePattern.length * CONFIG.pageLineGapRatio > 1.05) { CONFIG.pageLineGapRatio = TRUSTED_DEFAULTS.pageLineGapRatio; warn("pageLineGapRatio reset to default (text lines must stay on the page)"); bad++; }
+    if (Array.isArray(CONFIG.pageLinePattern) && CONFIG.pageLinesTopRatio + CONFIG.pageLinePattern.length * CONFIG.pageLineGapRatio > 1.05) { CONFIG.pageLinesTopRatio = TRUSTED_DEFAULTS.pageLinesTopRatio; bad++; }
+    return bad;
+  };
+  jointFix();
+  const jointViolations = () =>
+    (CONFIG.pageXR + CONFIG.pageWR > 1) + (CONFIG.pageYR + CONFIG.pageHR > 1) +
+    (CONFIG.pageInnerXRatio + CONFIG.pageInnerWRatio > 1) +
+    ((CONFIG.haloCyR - CONFIG.haloRyR < 0 || CONFIG.haloCyR + CONFIG.haloRyR > 1) ? 1 : 0) +
+    ((Array.isArray(CONFIG.pageLinePattern) && CONFIG.pageLinesTopRatio + CONFIG.pageLinePattern.length * CONFIG.pageLineGapRatio > 1.05) ? 1 : 0);
+  if (jointViolations() > 0) {
+    for (const k of Object.keys(TRUSTED_DEFAULTS)) CONFIG[k] = Array.isArray(TRUSTED_DEFAULTS[k]) ? TRUSTED_DEFAULTS[k].slice() : TRUSTED_DEFAULTS[k];
+    warn("configuration refused: joint relationships still violated after normalization; reset to defaults");
+  }
+}
+/* ---------- checkpoint model ----------
+   Derivation: three anchors — first page at 0, a middle page at
+   the configured page/time fractions, the last page at the
+   configured end-time fraction — so any resolved pageCount /
+   flipMs pair produces a coherent schedule whose last page is
+   reached before the flip phase ends. An explicitly supplied list
+   is used only if EVERY entry is strictly valid AND the list is
+   endpoint-complete: object with number-typed finite fields,
+   integer page within range, pages and times strictly increasing,
+   first entry = page 1 at time 0, last entry = the final page
+   (a singleton list is complete only for a one-page stack).
+   Any violation derives the schedule instead, with a warning. */
+function deriveCheckpoints(){
+  const pc = CONFIG.pageCount, fm = CONFIG.flipMs;
+  const midPage = Math.min(pc, Math.max(2, 1 + Math.round((pc - 1) * CONFIG.checkpointMidPageFraction)));
+  const cps = [ {page:1, atMs:0},
+                {page:midPage, atMs: Math.round(fm * CONFIG.checkpointMidTimeFraction)},
+                {page:pc, atMs: Math.round(fm * CONFIG.checkpointEndTimeFraction)} ];
+  return cps.filter((c, i) => i === 0 || (c.page > cps[i-1].page && c.atMs > cps[i-1].atMs));
+}
+function strictCheckpoints(cps){
+  if (!Array.isArray(cps) || cps.length < 1) return null;
+  for (const c of cps) {
+    if (!c || typeof c !== "object") return null;
+    if (!isNum(c.page) || !isNum(c.atMs)) return null;
+    if (!Number.isInteger(c.page) || c.page < 1 || c.page > CONFIG.pageCount) return null;
+    if (c.atMs < 0) return null;
+  }
+  if (cps[0].atMs !== 0) return null;
+  if (cps[0].page !== 1) return null;                                   // endpoint completeness: starts at page 1
+  if (cps[cps.length-1].page !== CONFIG.pageCount) return null;        // endpoint completeness: ends at the final page
+  for (let i = 1; i < cps.length; i++) {
+    if (!(cps[i].atMs > cps[i-1].atMs) || !(cps[i].page > cps[i-1].page)) return null;
+  }
+  if (cps[cps.length-1].atMs >= CONFIG.flipMs) return null;
+  return cps;
+}
+let RESOLVED_CHECKPOINTS = null;
+function resolveCheckpoints(){
+  if (CONFIG.flipCheckpoints === null || CONFIG.flipCheckpoints === undefined) {
+    RESOLVED_CHECKPOINTS = deriveCheckpoints();
+  } else {
+    const ok = strictCheckpoints(CONFIG.flipCheckpoints);
+    if (ok) RESOLVED_CHECKPOINTS = ok;
+    else { RESOLVED_CHECKPOINTS = deriveCheckpoints(); warn("supplied checkpoint list failed strict validation; derived schedule used"); }
+  }
+  return RESOLVED_CHECKPOINTS;
+}
+function pageAtTime(t){
+  const cps = RESOLVED_CHECKPOINTS || resolveCheckpoints();
+  if (t <= cps[0].atMs) return Math.min(CONFIG.pageCount, Math.max(1, cps[0].page));
+  for (let i = 1; i < cps.length; i++){
+    if (t <= cps[i].atMs){
+      const a = cps[i-1], b = cps[i];
+      const f = (t - a.atMs) / Math.max(1, b.atMs - a.atMs);
+      return Math.min(CONFIG.pageCount, Math.max(1, Math.floor(a.page + (b.page - a.page)*f)));
+    }
+  }
+  return CONFIG.pageCount;
+}
+/* Schedule derivation: page-change instants, per-page intervals,
+   the minimum interval, and the settled dwell of each page (its
+   interval minus flip travel and maximum stagger). */
+function turnEffForInterval(intervalMs, c){
+  const cc = c || CONFIG;
+  return Math.max(1, Math.min(cc.turnMs, intervalMs - cc.minSettledHoldMs));
+}
+function computeSchedule(cfg){
+  const saveCps = CONFIG.flipCheckpoints, savePc = CONFIG.pageCount, saveFm = CONFIG.flipMs, saveRes = RESOLVED_CHECKPOINTS;
+  if (cfg) { if (cfg.flipCheckpoints !== undefined) CONFIG.flipCheckpoints = cfg.flipCheckpoints; if (cfg.pageCount) CONFIG.pageCount = cfg.pageCount; if (cfg.flipMs) CONFIG.flipMs = cfg.flipMs; }
+  RESOLVED_CHECKPOINTS = null; resolveCheckpoints();
+  const changes = [{page: pageAtTime(0), atMs: 0}];
+  let prev = changes[0].page;
+  const fm = cfg && cfg.flipMs ? cfg.flipMs : CONFIG.flipMs;
+  for (let t = 0.5; t <= fm; t += 0.5){
+    const pg = pageAtTime(t);
+    if (pg !== prev){ changes.push({page: pg, atMs: t}); prev = pg; }
+  }
+  const c = cfg || CONFIG;
+  const maxStagger = c.travelFlipMs * c.staggerFlipFraction;
+  const regMsC = isNum(c.registrationMs) ? c.registrationMs : CONFIG.registrationMs;
+  const dwellTable = changes.map((ch, i) => {
+    const end = (i + 1 < changes.length) ? changes[i+1].atMs : fm;
+    const intervalMs = end - ch.atMs;
+    const turnEffMs = turnEffForInterval(intervalMs, c);
+    /* complete-lifecycle term for this interval: arrival plus the
+       span-derived page registration the runtime applies (capped
+       against the turn's readable onset), so a budget that passes
+       also completes the lifecycle */
+    const regPageMs = Math.max(1, Math.min(regMsC, turnEffMs * c.turnOnsetFraction - (c.travelFlipMs + c.travelFlipMs * c.staggerFlipFraction)));
+    const lifecycleMs = c.travelFlipMs + maxStagger + regPageMs;
+    return { page: ch.page, atMs: ch.atMs, intervalMs: intervalMs,
+             turnEffMs: turnEffMs, regPageMs: regPageMs, lifecycleMs: lifecycleMs,
+             dwellMs: Math.max(0, intervalMs - c.travelFlipMs - maxStagger),
+             readableMs: Math.max(0, intervalMs - turnEffMs) };
+  });
+  let minInterval = Infinity;
+  for (const d of dwellTable) if (d.intervalMs > 0 && d.intervalMs < minInterval) minInterval = d.intervalMs;
+  const arrivalMs = c.travelFlipMs + maxStagger;
+  let budgetMs = 0, budgetOk = true;
+  for (const d of dwellTable) {
+    const need = Math.max(arrivalMs + d.regPageMs, d.turnEffMs) + c.minSettledHoldMs;
+    if (need > budgetMs) budgetMs = need;
+    if (d.intervalMs > 0 && need > d.intervalMs) budgetOk = false;
+  }
+  const out = { changes: changes, dwellTable: dwellTable, minIntervalMs: minInterval,
+           maxStaggerMs: maxStagger, arrivalMs: arrivalMs,
+           budgetMs: budgetMs,
+           budgetOk: budgetOk,
+           checkpoints: (RESOLVED_CHECKPOINTS || []).map(x => ({page:x.page, atMs:x.atMs})) };
+  CONFIG.flipCheckpoints = saveCps; CONFIG.pageCount = savePc; CONFIG.flipMs = saveFm; RESOLVED_CHECKPOINTS = saveRes;
+  return out;
+}
+/* Budget enforcement: travel is reduced in steps until the budget
+   holds against the resolved schedule's minimum interval. If it
+   cannot hold at the travel floor, the pageCount/flipMs
+   combination is REFUSED — reset to the shared defaults with a
+   warning — instead of running on a schedule whose own budget
+   reports failure. */
+const diagnostics = { seamViolations: 0, seamChecks: 0, lastSpread: null, pageNeed: 0, formNeed: 0, titleShortfall: 0, haloShortfall: 0, titleShortfallMax: 0, haloShortfallMax: 0, resolvedHold: null, holdEvents: null, pagesProcessed: 0, pagesCoverage: 0, pagesAssigned: 0, pagesPresented: 0, pagePresented: {}, pageAssignments: [], droppedMs: 0, overlapNeed: 0, effectiveScatterMs: 0, frameStats: null, feasibility: null };
+/* ---------- feasibility gate (the ONLY feasibility construction) ----------
+   Validation produces exactly one of two outcomes for a candidate
+   configuration: FEASIBLE — the resolved configuration is applied
+   whole and execution starts from it; or REFUSED ATOMICALLY — the
+   candidate is rejected as a unit, the previously applied (feasible)
+   configuration remains in force untouched, execution does not
+   proceed on the candidate, and the refusal is written to the
+   observable REJECTED_CONFIGS record with its reasons. There is no
+   state in which an infeasible resolved configuration executes.
+   The gate decides on a conservative PRE-COMMIT lifecycle bound,
+   computed before any execution: per-interval schedule lifecycle
+   (travel + stagger + span-derived registration + the reserved
+   hold), formation lifecycle (delay + travel + stagger + full
+   registration + a detection allowance + the supported tick lag),
+   complete page coverage of the executed schedule, positive
+   intervals, the intensity hierarchy WITH its minimum separation,
+   palette contrast floors, magnitude bounds on every numeric value,
+   and non-empty target sets for every required form. A schedule
+   fallback result is itself a candidate: it passes through this
+   same gate, and a fallback that remains infeasible is a refusal,
+   not a proceed. At a cold start there is no prior configuration:
+   the shipped defaults are the standing prior, a refused startup
+   candidate is recorded, and the defaults are restored whole. */
+const REJECTED_CONFIGS = [];
+let APPLIED_CONFIG = null;
+function snapshotConfig(srcObj){ const o = {}; for (const k of Object.keys(srcObj)) o[k] = Array.isArray(srcObj[k]) ? srcObj[k].slice() : srcObj[k]; return o; }
+function restoreConfig(snap){ for (const k of Object.keys(CONFIG)) delete CONFIG[k]; for (const k of Object.keys(snap)) CONFIG[k] = Array.isArray(snap[k]) ? snap[k].slice() : snap[k]; }
+function assessFeasibility(){
+  const reasons = [];
+  for (const k of Object.keys(CONFIG)) { const v = CONFIG[k]; if (typeof v === "number" && (!isFinite(v) || Math.abs(v) > SCHEMA.maxAbsValue)) reasons.push(k + " outside the magnitude bound"); }
+  const sched = computeSchedule();
+  if (!sched.budgetOk) reasons.push("schedule lifecycle exceeds a page interval (pre-commit bound: travel + stagger + registration + reserved hold)");
+  const seen = new Set(sched.changes.map(c => c.page));
+  for (let pg = 1; pg <= CONFIG.pageCount; pg++) if (!seen.has(pg)) reasons.push("page " + pg + " absent from the executed schedule");
+  for (const d of sched.dwellTable) if (!(d.intervalMs > 0)) reasons.push("non-positive interval at page " + d.page);
+  const titleNeed = CONFIG.travelFormMs * (1 + CONFIG.staggerFormFraction);
+  const haloNeed = CONFIG.haloDelayMs + CONFIG.travelFormMs * CONFIG.haloTravelMultiplier * (1 + CONFIG.staggerFormFraction) + CONFIG.registrationMs + CONFIG.frameCapMs + CONFIG.tickLagMs;
+  if (CONFIG.travelFormMs < CONFIG.formationMinTravelMs) reasons.push("formation travel below the formation travel floor");
+  if (titleNeed > CONFIG.formMs) reasons.push("formation lifecycle exceeds the form phase");
+  if (haloNeed > CONFIG.formMs + CONFIG.holdMs) reasons.push("ring lifecycle exceeds form + hold (pre-commit bound incl. registration, detection and tick lag)");
+  const chain = [["surplusAlpha","reserveAlpha"],["reserveAlpha","travelAlpha"],["travelAlpha","stackAlpha"],["stackAlpha","foregroundAlpha"]];
+  for (const pair of chain) { const lo = pair[0], hi = pair[1]; if (!(CONFIG[hi] - CONFIG[lo] >= SCHEMA.minAlphaSeparation)) reasons.push("intensity separation below the minimum between " + lo + " and " + hi); }
+  /* final-palette contrast, re-evaluated here on the resolved palette:
+     the exact pairs sanitisation applies, plus the DOM colours, each
+     against the resolved background */
+  const lumOfRgb = (rgb) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); };
+  const contrastVsBg = (hex) => { if (!validColor(hex) || !validColor(CONFIG.background)) return 0; const la = lumOfRgb(hexRgb(hex)), lb = lumOfRgb(hexRgb(CONFIG.background)); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
+  if (contrastVsBg(CONFIG.colorA) < SCHEMA.contrastColorA) reasons.push("final palette contrast below its floor: colorA against the resolved background");
+  if (contrastVsBg(CONFIG.colorB) < SCHEMA.contrastColorB) reasons.push("final palette contrast below its floor: colorB against the resolved background");
+  if (contrastVsBg(CONFIG.haloColor) < SCHEMA.contrastHalo) reasons.push("final palette contrast below its floor: haloColor against the resolved background");
+  for (const dk of ["counterColor", "counterLabelColor", "labelColor"]) if (contrastVsBg(CONFIG[dk]) < SCHEMA.contrastDom) reasons.push("DOM colour contrast below its floor: " + dk + " against the resolved background");
+  if (W > 0 && H > 0) {
+    if (sampleTitleTargets(W, H).length === 0) reasons.push("empty title target set");
+    if (sampleHaloTargets(W, H).length === 0) reasons.push("empty ring target set");
+    if (samplePageTargets(W, H, 1).length === 0) reasons.push("empty page target set");
+    /* fit and placement are one construction: the placed ink box the
+       fit produces must lie inside its region, and a fit condensed
+       below the sampling floor is refused, never silently thinned */
+    if (lastHeaderFit && lastHeaderFit.box) { const b = lastHeaderFit.box, r = lastHeaderFit.region; if (b.x0 < r.x0 - 0.01 || b.x1 > r.x1 + 0.01 || b.y0 < r.y0 - 0.01 || b.y1 > r.y1 + 0.01) reasons.push("header placed ink box outside the page region"); if (lastHeaderFit.condensed && Math.min(lastHeaderFit.sx, lastHeaderFit.sy) < CONFIG.fitMinScaleRatio) reasons.push("header fit condensed below the sampling floor"); }
+    if (lastTitleFit && lastTitleFit.box) { const b = lastTitleFit.box; if (b.x0 < -0.01 || b.x1 > W + 0.01 || b.y0 < -0.01 || b.y1 > H + 0.01) reasons.push("title placed ink box outside the stage"); if (lastTitleFit.condensed && Math.min(lastTitleFit.sx, lastTitleFit.sy) < CONFIG.fitMinScaleRatio) reasons.push("title fit condensed below the sampling floor"); }
+  }
+  return { ok: reasons.length === 0, reasons: reasons, budgetMs: Math.round(sched.budgetMs), titleNeedMs: Math.round(titleNeed), haloNeedMs: Math.round(haloNeed) };
+}
+function applyConfig(candidate){
+  if (candidate) restoreConfig(JSON.parse(JSON.stringify(candidate)));
+  return revalidate();
+}
+
+/* ---------- deterministic RNG (restart determinism) ---------- */
+function mulberry32(a){ return function(){ a|=0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a>>>15, 1|a); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0)/4294967296; }; }
+
+/* ---------- offscreen sampling (config-rendered content) ---------- */
+function makeCanvas(w,h){ const c = document.createElement("canvas"); c.width = w; c.height = h; return c; }
+function sampleDrawn(ctx, w, h, gap){
+  const img = ctx.getImageData(0,0,w,h).data, out = [];
+  for (let y = 0; y < h; y += gap) for (let x = 0; x < w; x += gap)
+    if (img[(y*w + x)*4 + 3] > CONFIG.sampleAlphaThreshold) out.push({x:x, y:y});
+  return out;
+}
+function sampleDrawnRegion(ctx, rx, ry, rw, rh, W, H, gap){
+  const pad = CONFIG.regionPaddingPx;
+  const x0 = Math.max(0, Math.floor(rx)-pad), y0 = Math.max(0, Math.floor(ry)-pad);
+  const x1 = Math.min(W, Math.ceil(rx+rw)+pad), y1 = Math.min(H, Math.ceil(ry+rh)+pad);
+  const img = ctx.getImageData(x0,y0,x1-x0,y1-y0).data, out = [];
+  for (let y = y0; y < y1; y += gap) for (let x = x0; x < x1; x += gap)
+    if (img[((y-y0)*(x1-x0) + (x-x0))*4 + 3] > CONFIG.sampleAlphaThreshold) out.push({x:x, y:y});
+  return out;
+}
+/* Text fitting against a width box AND a height box. Returns the
+   fitted font size plus the condensation factors the no-fit policy
+   (CONDENSE-AT-FLOOR) applies when the floor size still exceeds a
+   box: sx brings the rendered width inside the box, sy the height.
+   Termination is guaranteed by validation (shrink in (0, 0.98])
+   and by an explicit iteration cap. */
+function fitText(ctx, text, startFs, minFs, shrink, boxW, boxH){
+  let fs = startFs;
+  const setF = () => { ctx.font = CONFIG.fontWeight + " " + fs + "px " + CONFIG.fontFamily; };
+  const measure = () => { const m = ctx.measureText(text);
+    const inkW = (typeof m.actualBoundingBoxLeft === "number" && typeof m.actualBoundingBoxRight === "number") ? (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) : m.width;
+    const hgt = ((m.actualBoundingBoxAscent || fs*CONFIG.fitFallbackAscentRatio) + (m.actualBoundingBoxDescent || fs*CONFIG.fitFallbackDescentRatio));
+    return { w: inkW, h: hgt }; };
+  setF();
+  let d = measure(), guard = 0;
+  while ((d.w > boxW || d.h > boxH) && fs > minFs && guard < CONFIG.fitIterationCap){ fs = Math.max(minFs, fs * shrink); setF(); d = measure(); guard++; }
+  const sx = d.w > boxW ? boxW / d.w : 1;
+  const sy = d.h > boxH ? boxH / d.h : 1;
+  return { fs: fs, sx: sx, sy: sy, w: d.w, h: d.h, condensed: (sx < 1 || sy < 1) };
+}
+function drawFittedText(ctx, text, cx, cy, fit, baseline){
+  ctx.save();
+  ctx.translate(cx, cy);
+  if (fit.sx !== 1 || fit.sy !== 1) ctx.transform(fit.sx, 0, 0, fit.sy, 0, 0);
+  ctx.textAlign = "center"; ctx.textBaseline = baseline;
+  ctx.fillText(text, 0, 0);
+  ctx.restore();
+}
+/* Page targets are sampled element by element so every target
+   carries a stable identity key: outline, stack and header targets
+   are identical on every page (the persistent set); line targets
+   are keyed by line index, column and row, so a line point that survives
+   a page change keeps its key while a point past a shortened line
+   end vanishes. Outline and stack strokes are sampled at the
+   denser outline gap. */
+function samplePageTargets(W, H, page){
+  const pw = CONFIG.pageWR*W, ph = CONFIG.pageHR*H, px = CONFIG.pageXR*W, py = CONFIG.pageYR*H;
+  const off = makeCanvas(W,H), ctx = off.getContext("2d");
+  ctx.clearRect(0,0,W,H); ctx.strokeStyle = "#fff"; ctx.fillStyle = "#fff"; ctx.lineWidth = CONFIG.pageStrokePx;
+  const targets = [];
+  for (let s = CONFIG.stackCount; s >= 1; s--){
+    const ox = px + s*CONFIG.stackOffsetPx, oy = py - s*CONFIG.stackOffsetPx*CONFIG.stackOffsetYFactor;
+    ctx.strokeRect(ox, oy, pw, ph);
+    const pts = sampleDrawnRegion(ctx, ox, oy, pw, ph, W, H, CONFIG.outlineGap);
+    for (const p of pts) targets.push({x:p.x, y:p.y, kind:"stack", key:"stack:" + p.x + ":" + p.y, persistent:true});
+    ctx.clearRect(0,0,W,H);
+  }
+  ctx.strokeRect(px, py, pw, ph);
+  const outline = sampleDrawn(ctx, W, H, CONFIG.outlineGap);
+  for (const p of outline) targets.push({x:p.x, y:p.y, kind:"page", key:"outline:" + p.x + ":" + p.y, persistent:true});
+  ctx.clearRect(0,0,W,H);
+  const hFit = fitText(ctx, CONFIG.pageHeader, pw*CONFIG.pageHeaderFontRatio, CONFIG.headerMinFontPx, CONFIG.headerShrink, pw*CONFIG.pageHeaderWidthRatio, ph*CONFIG.pageHeaderHeightRatio);
+  drawFittedText(ctx, CONFIG.pageHeader, px + pw/2, py + ph*CONFIG.pageHeaderTopRatio, hFit, "top");
+  lastHeaderFit = { fs: hFit.fs, sx: hFit.sx, sy: hFit.sy, w: hFit.w * hFit.sx, h: hFit.h * hFit.sy,
+                    boxW: pw*CONFIG.pageHeaderWidthRatio, boxH: ph*CONFIG.pageHeaderHeightRatio, condensed: hFit.condensed,
+                    box: { x0: px + pw/2 - (hFit.w * hFit.sx)/2, x1: px + pw/2 + (hFit.w * hFit.sx)/2, y0: py + ph*CONFIG.pageHeaderTopRatio, y1: py + ph*CONFIG.pageHeaderTopRatio + hFit.h * hFit.sy },
+                    region: { x0: px, y0: py, x1: px + pw, y1: py + ph } };
+  const header = sampleDrawn(ctx, W, H, CONFIG.sampleGap);
+  for (const p of header) targets.push({x:p.x, y:p.y, kind:"page", key:"header:" + p.x + ":" + p.y, persistent:true});
+  ctx.clearRect(0,0,W,H);
+  const rngL = mulberry32(CONFIG.seed + page*7919);
+  const innerX = px + pw*CONFIG.pageInnerXRatio, innerW = pw*CONFIG.pageInnerWRatio;
+  let ly = py + ph*CONFIG.pageLinesTopRatio;
+  CONFIG.pageLinePattern.forEach((frac, li) => {
+    const jittered = Math.max(CONFIG.lineMinFraction, Math.min(1, frac + (rngL()-0.5)*CONFIG.pageLineJitter));
+    ctx.clearRect(0,0,W,H);
+    ctx.fillRect(innerX, ly, innerW*jittered, Math.max(CONFIG.lineMinThicknessPx, ph*CONFIG.pageLineThicknessRatio));
+    const pts = sampleDrawn(ctx, W, H, CONFIG.sampleGap);
+    for (const p of pts) targets.push({x:p.x, y:p.y, kind:"line", key:"line:" + li + ":" + p.x + ":" + p.y, persistent:false});
+    ly += ph*CONFIG.pageLineGapRatio;
+  });
+  return targets;
+}
+/* Title targets: the big words, fitted in width AND height against
+   the title box, sampled the same way. The fitted result is exposed
+   so checks can assert the rendered bounds. */
+let lastTitleFit = null, lastHeaderFit = null;
+function sampleTitleTargets(W, H){
+  const off = makeCanvas(W,H), ctx = off.getContext("2d");
+  ctx.clearRect(0,0,W,H); ctx.fillStyle = "#fff";
+  const fit = fitText(ctx, CONFIG.titleText, CONFIG.titleFontPx, CONFIG.titleMinFontPx, CONFIG.titleShrink, W*CONFIG.maxWidthRatio, H*CONFIG.titleMaxHeightRatio);
+  drawFittedText(ctx, CONFIG.titleText, W*CONFIG.titleCxRatio, H*CONFIG.titleCyRatio, fit, "middle");
+  lastTitleFit = { fs: fit.fs, sx: fit.sx, sy: fit.sy, w: fit.w * fit.sx, h: fit.h * fit.sy,
+                   boxW: W*CONFIG.maxWidthRatio, boxH: H*CONFIG.titleMaxHeightRatio, condensed: fit.condensed,
+                   cx: W*CONFIG.titleCxRatio, cy: H*CONFIG.titleCyRatio,
+                   box: { x0: W*CONFIG.titleCxRatio - (fit.w * fit.sx)/2, x1: W*CONFIG.titleCxRatio + (fit.w * fit.sx)/2, y0: H*CONFIG.titleCyRatio - (fit.h * fit.sy)/2, y1: H*CONFIG.titleCyRatio + (fit.h * fit.sy)/2 } };
+  return sampleDrawn(ctx, W, H, CONFIG.sampleGap).map(p => ({x:p.x, y:p.y, kind:"title", key:"title:" + p.x + ":" + p.y, persistent:false}));
+}
+/* Ring targets: an ellipse rendered on its own offscreen canvas. */
+function sampleHaloTargets(W, H){
+  const off = makeCanvas(W,H), ctx = off.getContext("2d");
+  ctx.clearRect(0,0,W,H); ctx.strokeStyle = "#fff"; ctx.lineWidth = CONFIG.haloStrokePx;
+  ctx.beginPath(); ctx.ellipse(W*CONFIG.haloCxRatio, H*CONFIG.haloCyR, W*CONFIG.haloRxR, H*CONFIG.haloRyR, 0, 0, Math.PI*2); ctx.stroke();
+  return sampleDrawn(ctx, W, H, CONFIG.sampleGap).map(p => ({x:p.x, y:p.y, kind:"halo", key:"halo:" + p.x + ":" + p.y, persistent:false}));
+}
+
+/* ---------- particle pool: ONE constant flow field, registered ----------
+   Particle state: anchor (ax, ay) + stream offset (ox, oy) +
+   reference offset (refx, refy). Rendered position = anchor +
+   (offset − reference). The reference is constant while free or
+   travelling, eases to the live offset across the registration
+   window once settled, and is re-based across the release window
+   so the displayed offset re-emerges smoothly. Wrapping adjusts
+   the anchor so the rendered position stays continuous apart from
+   the wrap jump itself. */
+const stage = document.getElementById("stage"), sctx = stage.getContext("2d");
+let W = 0, H = 0, particles = [], rng = mulberry32(CONFIG.seed);
+function hexRgb(h){ const n = parseInt(h.slice(1), 16); return [n>>16 & 255, n>>8 & 255, n & 255]; }
+let cA = hexRgb(DEFAULTS.colorA), cB = hexRgb(DEFAULTS.colorB), cHalo = hexRgb(DEFAULTS.haloColor);
+function refreshColors(){ cA = hexRgb(CONFIG.colorA); cB = hexRgb(CONFIG.colorB); cHalo = hexRgb(CONFIG.haloColor); }
+function newParticle(borrowable){
+  const mix = rng();
+  const ax = rng()*W, ay = rng()*H;
+  return { ax: ax, ay: ay, ox: 0, oy: 0, refx: 0, refy: 0, dox: 0, doy: 0, x: ax, y: ay,
+    ax0: ax, ay0: ay, tx: 0, ty: 0, kind:"", key:"", persistent:false,
+    borrowed:false, borrowable:borrowable,
+    vx: CONFIG.windX + (rng()-0.5)*CONFIG.driftX, vy: CONFIG.windY + (rng()-0.5)*CONFIG.driftY,
+    delay:0, travel:600, t0:0, captured:false, lastCapture:null,
+    regT0:-1, regFromX:0, regFromY:0, regDur:300, regDoneAt:-1, px:0, py:0, hasPrev:false,
+    relT:-1e9, relDispX:0, relDispY:0, relOx:0, relOy:0,
+    scatActive:false, scatFromX:0, scatFromY:0, scatToX:0, scatToY:0,
+    relDur:500, relDerivX:0, relDerivY:0, relAnchorVelX:0, relAnchorVelY:0,
+    exiting:false, exitT0:0, exitDur:1, exitFromX:0, exitFromY:0, exitRelDur:500,
+    velX:0, velY:0, doxVelX:0, doxVelY:0,
+    cueT0:-1e9, jitAmp: 0,
+    col: [Math.round(cA[0]+(cB[0]-cA[0])*mix), Math.round(cA[1]+(cB[1]-cA[1])*mix), Math.round(cA[2]+(cB[2]-cA[2])*mix)],
+    ph: rng()*Math.PI*2, renderAlpha: CONFIG.reserveAlpha };
+}
+/* The pool is sized once, at build: the largest simultaneous demand
+   — the MAXIMUM over every page's target count, or title + ring
+   together — grossed up by the reserve fraction. The pool never
+   grows afterwards, and assignment completeness is asserted
+   against this sizing. */
+function buildPool(){
+  particles = [];
+  let pageNeed = 0;
+  let lineMax = 0;
+  let edgeNeed = 0;
+  for (let pg = 1; pg <= CONFIG.pageCount; pg++) { const ts = samplePageTargets(W, H, pg); pageNeed = Math.max(pageNeed, ts.length); let lc = 0, ec = 0; for (const t of ts) { if (t.kind === "line") lc++; if (t.key.indexOf("outline:") === 0) ec++; } if (lc > lineMax) lineMax = lc; if (ec > edgeNeed) edgeNeed = ec; }
+  diagnostics.edgeNeed = edgeNeed;
+  const formNeed = sampleTitleTargets(W, H).length + sampleHaloTargets(W, H).length;
+  /* concurrent demand is priced, not assumed: if the effective
+     release scatter (capped at the release window by the release
+     site) could still be running when formation starts, the page
+     set overlaps formation demand and the pool sizes for both */
+  const effectiveScatterMs = CONFIG.releaseScatterMs;
+  const overlapNeed = effectiveScatterMs > CONFIG.releaseMs ? pageNeed : 0;
+  diagnostics.overlapNeed = overlapNeed; diagnostics.effectiveScatterMs = effectiveScatterMs;
+  /* the outgoing edge set is concurrent demand at every handoff —
+     priced here, not borrowed as an afterthought: at a rapid
+     handoff the previous edge set is still exiting while the new
+     one is borrowed, so two edge sets plus the exiting line set
+     stand against the incoming page */
+  /* scatter concurrency is priced too: a vanished set released at
+     one change is still scattering when the next changes demand
+     particles, so one full line set of scatter stands in the base */
+  const scatterNeed = lineMax;
+  diagnostics.scatterNeed = scatterNeed;
+  const needTotal = Math.ceil(Math.max(pageNeed + lineMax + 2 * edgeNeed + scatterNeed, formNeed + overlapNeed) / (1 - CONFIG.reserveFraction));
+  for (let i = 0; i < needTotal; i++) particles.push(newParticle(true));
+  const reserveNeed = Math.floor(particles.length * CONFIG.reserveFraction);
+  for (let i = 0; i < reserveNeed; i++) particles[i].borrowable = false;
+  diagnostics.pageNeed = pageNeed; diagnostics.formNeed = formNeed;
+}
+function startTravel(p, t, now, travelMs, maxDelayMs){
+  p.tx = t.x; p.ty = t.y; p.kind = t.kind; p.key = t.key; p.persistent = !!t.persistent;
+  p.borrowed = true; p.t0 = now; p.delay = rng()*maxDelayMs; p.travel = travelMs;
+  p.captured = false; p.cueT0 = -1e9; p.regT0 = -1; p.scatActive = false; p.exiting = false; p.regDoneAt = -1;
+  /* registration duration for THIS borrow: a page borrow registers
+     inside its own turn window (the duration is capped so capture
+     + travel + registration completes with the turn, leaving the
+     reserved tail readable); a form/hold borrow uses the full
+     configured registration window */
+  if (isFinite(borrowTurnEffMs)) {
+    /* page borrow: registration is capped against the turn's
+       readable onset (a fixed fraction of the effective turn
+       window), so capture + travel + registration complete by the
+       onset and the remainder of the window is readable geometry;
+       the configured floor governs whenever the span allows it */
+    const onsetMs = borrowTurnEffMs * CONFIG.turnOnsetFraction;
+    const spanMs = onsetMs - (p.delay + p.travel);
+    p.regDur = spanMs >= CONFIG.registrationFloorMs
+      ? Math.max(CONFIG.registrationFloorMs, Math.min(CONFIG.registrationMs, spanMs))
+      : Math.max(1, spanMs);
+  } else if (isFinite(formRegDeadlineMs) && (t.kind === "title" || t.kind === "halo")) {
+    /* formation borrow: registration is span-derived per particle
+       against the hold entry — delay + travel + registration
+       completes by the hold entry for every particle whose travel
+       completes before it, so the hold is genuinely resolved */
+    const spanMs = formRegDeadlineMs - (now + p.delay + p.travel);
+    p.regDur = spanMs >= CONFIG.registrationFloorMs
+      ? Math.max(CONFIG.registrationFloorMs, Math.min(CONFIG.registrationMs, spanMs))
+      : Math.max(1, spanMs);
+  } else {
+    p.regDur = Math.max(CONFIG.registrationFloorMs, Math.min(CONFIG.registrationMs, borrowTurnEffMs - (p.delay + p.travel)));
+  }
+}
+function releaseParticle(p, now, durMs){
+  p.borrowed = false; p.captured = false; p.cueT0 = -1e9; p.regT0 = -1; p.regDoneAt = -1; p.relT = now;
+  p.relDur = durMs || CONFIG.releaseScatterMs;
+  /* release state: constructed from the ACTUAL RENDERED state - the
+     scatter starts at the rendered position (anchor set so anchor +
+     displayed offset equals it exactly, so no position jump), the
+     displayed offset re-emerges from its current value, and both
+     the anchor and the offset carry a derivative blend that starts
+     at the captured rendered derivative and settles to the release
+     profile's own slope over the first quarter of the window */
+  p.relDispX = p.dox; p.relDispY = p.doy; p.relOx = p.ox; p.relOy = p.oy;
+  p.relDerivX = p.doxVelX; p.relDerivY = p.doxVelY;
+  p.relAnchorVelX = p.velX - p.doxVelX; p.relAnchorVelY = p.velY - p.doxVelY;
+  p.scatActive = true; p.scatFromX = p.x - p.dox; p.scatFromY = p.y - p.doy;
+  /* per-release randomness, stated exactly as constructed: TWO
+     seeded rng() draws per release — the first displaces the scatter
+     target's x (the +240 px coherent bias plus draw x the configured
+     range), the second its y (the -200 px coherent bias minus draw
+     x the range x the y-factor). The seed source is CONFIG.seed,
+     through the run's mulberry32 stream. */
+  p.scatToX = p.scatFromX + CONFIG.releaseScatterBiasX + rng() * CONFIG.releaseScatterPx;
+  p.scatToY = p.scatFromY + CONFIG.releaseScatterBiasY - rng() * CONFIG.releaseScatterPx * CONFIG.releaseScatterYFactor;
+}
+function releaseAll(now, durMs){
+  /* a phase release with no explicit duration runs on the phase's
+     own window: the scatter duration is capped at the release
+     window it must complete inside, so no released particle is
+     still unavailable when the next phase borrows */
+  const dur = durMs != null ? durMs : Math.min(CONFIG.releaseScatterMs, CONFIG.releaseMs);
+  for (const p of particles) if (p.borrowed) releaseParticle(p, now, dur);
+}
+/* Endpoint commitment: a release whose scheduled end has passed is
+   evaluated to its endpoint — scatter anchor, displayed offset and
+   reference offset all committed — BEFORE any borrow decision may
+   select the particle, so travel never begins from a stale sampled
+   release position. */
+function commitRelease(p){
+  if (!p.scatActive) return;
+  const se = easeProfile(1);
+  const w = Math.min(1, 1 / CONFIG.releaseBlendFraction);
+  const hb = w - w*w*w + 0.5*w*w*w*w;
+  const corr = CONFIG.releaseBlendFraction * (p.relDur / 1000) * hb;
+  p.ax = p.scatFromX + (p.scatToX - p.scatFromX) * se + p.relAnchorVelX * corr;
+  p.ay = p.scatFromY + (p.scatToY - p.scatFromY) * se + p.relAnchorVelY * corr;
+  p.dox = p.relDispX + (p.ox - p.relOx) * se + p.relDerivX * corr;
+  p.doy = p.relDispY + (p.oy - p.relOy) * se + p.relDerivY * corr;
+  p.x = p.ax + p.dox; p.y = p.ay + p.doy;
+  p.scatActive = false; p.jitAmp = 0; p.refx = p.ox - p.dox; p.refy = p.oy - p.doy;
+}
+function borrowFresh(targets, now, travelMs, staggerFraction){
+  /* a particle whose release is still in flight is never borrowed;
+     a release complete at its SCHEDULED end is committed to its
+     endpoint first (commitRelease), then becomes borrowable */
+  const free = [];
+  for (const p of particles){
+    if (!p.borrowable || p.borrowed) continue;
+    if (p.scatActive && now - p.relT >= p.relDur) commitRelease(p);
+    if (!p.scatActive) free.push(p);
+  }
+  const n = Math.min(free.length, targets.length);
+  for (let i = 0; i < n; i++) startTravel(free[i], targets[i], now, travelMs, travelMs*staggerFraction);
+  return n;
+}
+/* Retarget the borrowed set onto a new page's targets; also starts
+   the page-turn window (its own duration parameter).
+   Returns the transition record, including any target that could
+   not be assigned (unassigned must be zero under the pool sizing). */
+const transitions = [];
+let turnT0 = -1e9, turnEffCur = CONFIG.turnMs, lastTurnFactor = 1, borrowTurnEffMs = Infinity;
+let turnFactorOut = 1, turnFactorIn = 1, turnFactorExit = 1;
+let formRegDeadlineMs = Infinity; // absolute time by which formation registration completes (the hold entry), set by the scheduler
+function retargetPage(targets, now, page, turnStartMs){
+  /* EVERY page change starts its own turn: the turn window opens
+     at the change's SCHEDULED instant (a stepped simulation may
+     detect the change up to one step late; the turn belongs to
+     the schedule, not to the detection) and its effective
+     duration is derived from this change's own page interval */
+  turnT0 = (turnStartMs != null ? turnStartMs : now);
+  const anchor = turnT0; // travel and release start at the scheduled instant, not the detection tick
+  const sched = computeSchedule();
+  const entry = sched.dwellTable.find(d => d.page === page);
+  turnEffCur = entry ? entry.turnEffMs : turnEffForInterval(CONFIG.flipMs, CONFIG);
+  borrowTurnEffMs = turnEffCur;
+  const current = particles.filter(p => p.borrowed);
+  const byKey = new Map();
+  for (const p of current) if (!byKey.has(p.key)) byKey.set(p.key, p);
+  const used = new Set(), unmatched = [];
+  let persisted = 0, reassigned = 0, fresh = 0, released = 0, unassigned = 0;
+  for (const t of targets){
+    const p = byKey.get(t.key);
+    if (p && !used.has(p)){
+      used.add(p); persisted++;
+      if (p.tx === t.x && p.ty === t.y){ p.cueT0 = anchor; }
+      else startTravel(p, t, anchor, CONFIG.travelFlipMs, CONFIG.travelFlipMs*CONFIG.staggerFlipFraction);
+    } else unmatched.push(t);
+  }
+  const spare = current.filter(p => !used.has(p));
+  for (const t of unmatched){
+    let best = null, bestD = Infinity;
+    for (const p of spare){
+      if (used.has(p) || p.persistent) continue;
+      const d = (p.tx - t.x)*(p.tx - t.x) + (p.ty - t.y)*(p.ty - t.y);
+      if (d < bestD){ bestD = d; best = p; }
+    }
+    if (best){ used.add(best); reassigned++; startTravel(best, t, anchor, CONFIG.travelFlipMs, CONFIG.travelFlipMs*CONFIG.staggerFlipFraction); }
+    else {
+      let freeP = null;
+      for (const cand of particles){ if (!cand.borrowable || cand.borrowed || used.has(cand)) continue; if (cand.scatActive && anchor - cand.relT >= cand.relDur) commitRelease(cand); if (!cand.scatActive){ freeP = cand; break; } }
+      if (freeP){ used.add(freeP); fresh++; startTravel(freeP, t, anchor, CONFIG.travelFlipMs, CONFIG.travelFlipMs*CONFIG.staggerFlipFraction); }
+      else unassigned++;
+    }
+  }
+  /* vanished targets release on the interval of the page they
+     leave: a mid-flip release disperses inside the flip tempo, so
+     the in-flight release set stays within the pool margin */
+  const relDur = entry ? entry.intervalMs : CONFIG.releaseScatterMs;
+  let exitingN = 0;
+  for (const p of current) if (!used.has(p)){
+    if (!p.persistent) { /* the leaving page's own texture is the outgoing face: it stays borrowed on the fold path for the turn window, then releases */
+      if (p.exiting && anchor - p.exitT0 >= p.exitDur) { /* its exit window has completed by this scheduled instant: release it, never re-exit it */
+        p.exiting = false; releaseParticle(p, anchor, p.exitRelDur); released++; }
+      else if (p.exiting) { exitingN++; released++; } /* already on its way out: its exit stands, its clock is not reset */
+      else { p.exiting = true; p.exitT0 = anchor; p.exitDur = Math.max(1, turnEffCur); p.exitFromX = p.tx; p.exitFromY = p.ty; p.exitRelDur = relDur; exitingN++; released++; } }
+    else { releaseParticle(p, anchor, relDur); released++; }
+  }
+  /* outgoing edge set: the leaving page's outline is borrowed as a
+     dedicated exiting set, so through the handoff the outgoing face
+     carries a coherent edge (outline + its line texture) while the
+     incoming face carries its own outline + texture — neither face
+     is texture-only or outline-only at any point in the turn */
+  let edgeAssigned = 0, edgeUnassigned = 0;
+  const edgeTargets = targets.filter(tg => tg.persistent && tg.key.indexOf("outline:") === 0);
+  for (const tg of edgeTargets){
+    let fp = null;
+    for (const cand of particles){ if (!cand.borrowable || cand.borrowed || used.has(cand)) continue; if (cand.scatActive && anchor - cand.relT >= cand.relDur) commitRelease(cand); if (!cand.scatActive){ fp = cand; break; } }
+    if (fp){
+      used.add(fp);
+      fp.borrowed = true; fp.kind = "edge"; fp.key = "edge:" + tg.key; fp.persistent = false;
+      fp.tx = tg.x; fp.ty = tg.y; fp.captured = true; fp.ax0 = tg.x; fp.ay0 = tg.y; fp.ax = tg.x; fp.ay = tg.y;
+      fp.t0 = anchor; fp.delay = 0; fp.travel = 1; fp.regT0 = anchor; fp.regDur = 1; fp.regDoneAt = anchor + 1;
+      fp.exiting = true; fp.exitT0 = anchor; fp.exitDur = Math.max(1, turnEffCur); fp.exitFromX = tg.x; fp.exitFromY = tg.y; fp.exitRelDur = relDur;
+      fp.renderAlpha = CONFIG.foregroundAlpha;
+      edgeAssigned++;
+    } else edgeUnassigned++;
+  }
+  if (edgeUnassigned > (diagnostics.edgeUnassignedMax || 0)) diagnostics.edgeUnassignedMax = edgeUnassigned;
+  const rec = { page: page, atMs: Math.round(now), targets: targets.length,
+    persisted: persisted, reassigned: reassigned, fresh: fresh, released: released, exiting: exitingN,
+    edgeAssigned: edgeAssigned, edgeUnassigned: edgeUnassigned,
+    unassigned: unassigned, churn: reassigned + released };
+  transitions.push(rec);
+  return rec;
+}
+
+/* ---------- scheduler: sequential phases, one lifecycle at a time ----------
+   Cycle: flip [0, flipMs) · release · form · hold · seam. The seam is
+   the final seamReleaseMs of the cycle, immediately after the
+   hold window; the title and ring release at the seam's start and no
+   page target is borrowed until the next cycle begins. */
+const TOTAL = () => CONFIG.flipMs + CONFIG.releaseMs + CONFIG.formMs + CONFIG.holdMs + CONFIG.seamReleaseMs;
+let simT = 0, phase = "", curPage = 0, trace = [], titleBorrowed = false, haloBorrowed = false;
+let formTargets = null, titleAssigned = 0, haloAssigned = 0;
+const counterEl = document.getElementById("counter"), counterNum = counterEl.querySelector(".num"),
+      counterLab = counterEl.querySelector(".lab"), labelEl = document.getElementById("tlabel");
+let lastCounterFit = null, counterMeasureCtx = null;
+function fitCounter(){
+  if (!counterMeasureCtx) counterMeasureCtx = makeCanvas(8, 8).getContext("2d");
+  const ctx = counterMeasureCtx;
+  const worst = CONFIG.pageCount + "/" + CONFIG.pageCount;
+  const widthAt = (text, fs) => { ctx.font = CONFIG.fontWeight + " " + fs + "px " + CONFIG.fontFamily; return ctx.measureText(text).width; };
+  const labelW = () => widthAt(CONFIG.counterLabelText, CONFIG.counterLabelPx) + Math.max(0, CONFIG.counterLabelText.length - 1) * CONFIG.counterLabelPx * CONFIG.counterLabelLetterSpacingEm;
+  const groupW = (fs) => Math.max(labelW(), widthAt(worst, fs));
+  const groupH = (fs) => CONFIG.counterLabelPx * 1.2 + fs * 1.05 + 4;
+  const x1 = (1 - CONFIG.counterRightRatio) * W;
+  const regionRight = (CONFIG.pageXR + CONFIG.pageWR) * W + CONFIG.stackCount * CONFIG.stackOffsetPx;
+  const availW = x1 - regionRight - CONFIG.counterRegionMarginPx;
+  let fs = Math.floor(CONFIG.counterNumPx);
+  while (fs > CONFIG.counterNumMinPx && groupW(fs) > availW) fs--;
+  if (groupW(fs) <= availW) {
+    const y0 = CONFIG.counterTopRatio * H;
+    lastCounterFit = { numPx: fs, mode: "inline", worst: worst, availW: availW,
+      box: { x0: x1 - groupW(fs), x1: x1, y0: y0, y1: y0 + groupH(fs) }, groupW: groupW(fs) };
+  } else {
+    fs = Math.floor(CONFIG.counterNumMinPx);
+    const y0 = CONFIG.counterFallbackTopRatio * H;
+    const stackTop = CONFIG.pageYR * H - CONFIG.stackCount * CONFIG.stackOffsetPx * CONFIG.stackOffsetYFactor;
+    lastCounterFit = { numPx: fs, mode: "above", worst: worst, availW: availW, clearancePx: Math.round((stackTop - (y0 + groupH(fs))) * 100) / 100,
+      box: { x0: x1 - groupW(fs), x1: x1, y0: y0, y1: y0 + groupH(fs) }, groupW: groupW(fs) };
+  }
+  return lastCounterFit;
+}
+function applyCounterFit(){
+  if (W <= 0 || H <= 0) return;
+  const fit = fitCounter();
+  counterNum.style.fontSize = fit.numPx + "px";
+  counterEl.style.top = ((fit.mode === "above" ? CONFIG.counterFallbackTopRatio : CONFIG.counterTopRatio) * 100) + "%";
+}
+function initDom(){
+  counterEl.style.color = CONFIG.counterColor; counterEl.style.right = (CONFIG.counterRightRatio*100) + "%";
+  counterEl.style.top = (CONFIG.counterTopRatio*100) + "%";
+  counterLab.textContent = CONFIG.counterLabelText; counterLab.style.color = CONFIG.counterLabelColor;
+  counterLab.style.fontSize = CONFIG.counterLabelPx + "px"; counterLab.style.letterSpacing = CONFIG.counterLabelLetterSpacingEm + "em";
+  counterNum.style.fontSize = CONFIG.counterNumPx + "px";
+  counterNum.textContent = "1/" + CONFIG.pageCount;
+  applyCounterFit();
+  labelEl.style.color = CONFIG.labelColor; labelEl.style.left = (CONFIG.labelLeftRatio*100) + "%";
+  labelEl.style.top = (CONFIG.labelTopRatio*100) + "%"; labelEl.style.fontSize = CONFIG.labelPx + "px";
+  labelEl.textContent = CONFIG.titleLabel;
+}
+function setPhase(name, t){ phase = name; trace.push({event:name, t:Math.round(t)}); }
+function spreadOfBorrowed(){
+  let x0=Infinity, y0=Infinity, x1=-Infinity, y1=-Infinity, n=0;
+  for (const p of particles) if (p.borrowed){ n++; if (p.x<x0)x0=p.x; if (p.x>x1)x1=p.x; if (p.y<y0)y0=p.y; if (p.y>y1)y1=p.y; }
+  return n ? {w: x1-x0, h: y1-y0} : null;
+}
+let lastStepAbs = 0;
+function segStarts(){ const F = CONFIG.flipMs, R = F + CONFIG.releaseMs, Fo = R + CONFIG.formMs, Ho = Fo + CONFIG.holdMs; return [0, F, R, Fo, Ho]; }
+function segNameAt(tt){ const ss = segStarts(); const names = ["flip","release","form","hold","seam"]; for (let i = ss.length - 1; i >= 0; i--) if (tt >= ss[i]) return names[i]; return "flip"; }
+function runSegmentEntry(name, segStartAbs, tt){
+  const F = CONFIG.flipMs, R = F + CONFIG.releaseMs, Fo = R + CONFIG.formMs, Ho = Fo + CONFIG.holdMs;
+  if (name === "flip"){ setPhase("flip", segStartAbs); diagnostics.seamChecks++; if (particles.some(p => p.borrowed && (p.kind === "title" || p.kind === "halo"))) diagnostics.seamViolations++; titleBorrowed = false; haloBorrowed = false; formTargets = null; curPage = 0; titleAssigned = 0; haloAssigned = 0; diagnostics.pagesCoverage = 0; diagnostics.pagesAssigned = 0; diagnostics.pageAssignments = []; diagnostics.pagePresented = {}; diagnostics.pagesPresented = 0; }
+  else if (name === "release"){ setPhase("release", segStartAbs); diagnostics.lastSpread = spreadOfBorrowed(); releaseAll(segStartAbs); }
+  else if (name === "form"){ setPhase("form", segStartAbs); formTargets = { title: sampleTitleTargets(W, H), halo: sampleHaloTargets(W, H) }; formRegDeadlineMs = segStartAbs + (Fo - R); }
+  else if (name === "hold"){ setPhase("hold", segStartAbs); }
+  else if (name === "seam"){ setPhase("seam", segStartAbs); diagnostics.lastSpread = spreadOfBorrowed(); releaseAll(segStartAbs, CONFIG.seamReleaseMs); titleBorrowed = false; haloBorrowed = false; titleAssigned = 0; haloAssigned = 0; }
+}
+function step(dtMs){
+  const prevAbs = simT;
+  simT += dtMs; const t = simT % TOTAL();
+  /* crossed-boundary dispatch: every segment entered since the last
+     step — including any segment this step crosses entirely — runs
+     its entry in chronological order before the landing body */
+  {
+    const ss = segStarts(), names = ["flip","release","form","hold","seam"], TOT = TOTAL();
+    /* one chronological event order across segment entries and page
+       changes (ties: segment entry before page change before the
+       particle updates of the landing body) */
+    const events = [];
+    const base0 = Math.floor(prevAbs / TOT) * TOT;
+    for (let cyc = 0; cyc <= 1; cyc++) for (let i = 0; i < ss.length; i++) {
+      const at = base0 + cyc * TOT + ss[i];
+      if (at > prevAbs && at <= simT) events.push({ type: "seg", name: names[i], at: at });
+    }
+    const finalCycStart = Math.floor(simT / TOT) * TOT;
+    const chsAll = computeSchedule().changes;
+    for (let k = Math.floor(prevAbs / TOT); k <= Math.floor(simT / TOT); k++){
+      const ws = k * TOT;
+      if (ws === finalCycStart && t < CONFIG.flipMs) continue; // the landing flip window dispatches in its own body below
+      for (const ch of chsAll){
+        const at = ws + ch.atMs;
+        if ((at > prevAbs && at <= simT) || (at === prevAbs && curPage === 0 && at === ws)){
+          events.push({ type: "page", page: ch.page, atMs: ch.atMs, at: at, ws: ws });
+        }
+      }
+    }
+    events.sort((a, b) => (a.at - b.at) || ((a.type === "seg" ? 0 : 1) - (b.type === "seg" ? 0 : 1)));
+    const landing = segNameAt(t);
+    for (const e of events){
+      if (e.type === "seg"){ if (phase !== e.name && e.name !== landing) runSegmentEntry(e.name, e.at, e.at % TOT); }
+      else {
+        const targets = samplePageTargets(W, H, e.page);
+        if (curPage === 0) { turnT0 = -1e9; turnEffCur = CONFIG.turnMs; borrowTurnEffMs = CONFIG.turnMs; borrowFresh(targets, e.ws, CONFIG.travelFlipMs, CONFIG.staggerFlipFraction); }
+        else retargetPage(targets, e.at, e.page, e.at);
+        diagnostics.pagesAssigned++;
+        diagnostics.pageAssignments.push({ page: e.page, atMs: e.atMs });
+        let cov = 0; for (const c of chsAll) if (c.atMs <= e.atMs) cov++;
+        if (cov > diagnostics.pagesCoverage) diagnostics.pagesCoverage = cov;
+        diagnostics.pagesProcessed = diagnostics.pagesAssigned;
+        curPage = e.page;
+      }
+    }
+  }
+  const F = CONFIG.flipMs, R = F + CONFIG.releaseMs, Fo = R + CONFIG.formMs, Ho = Fo + CONFIG.holdMs;
+  if (t < F){
+    if (phase !== "flip"){
+      setPhase("flip", simT);
+      diagnostics.seamChecks++;
+      if (particles.some(p => p.borrowed && (p.kind === "title" || p.kind === "halo"))) diagnostics.seamViolations++;
+      titleBorrowed = false; haloBorrowed = false; formTargets = null; curPage = 0; titleAssigned = 0; haloAssigned = 0; diagnostics.pagesCoverage = 0; diagnostics.pagesAssigned = 0; diagnostics.pageAssignments = []; diagnostics.pagePresented = {}; diagnostics.pagesPresented = 0;
+    }
+    const pg = pageAtTime(t);
+    /* page-level dispatch: every page change crossed by this step is
+       dispatched in chronological order at its scheduled instant —
+       coverage (entries crossed), assignments (pages actually
+       retargeted) and presented (pages drawn in the registered
+       state) are separate counters and are never conflated */
+    {
+      const TOTd = TOTAL();
+      const sameCycle = Math.floor(prevAbs / TOTd) === Math.floor(simT / TOTd);
+      const fromT = sameCycle ? (prevAbs % TOTd) : -1;
+      const chs = computeSchedule().changes;
+      let cov = 0; for (const c of chs) if (c.atMs <= t) cov++;
+      if (cov > diagnostics.pagesCoverage) diagnostics.pagesCoverage = cov;
+      const crossed = chs.filter(c => c.atMs > fromT && c.atMs <= t);
+      if (curPage === 0 && chs.length && chs[0].atMs <= t && !crossed.includes(chs[0])) crossed.unshift(chs[0]);
+      for (const ch of crossed){
+        const targets = samplePageTargets(W, H, ch.page);
+        if (curPage === 0) { turnT0 = -1e9; turnEffCur = CONFIG.turnMs; borrowTurnEffMs = CONFIG.turnMs; borrowFresh(targets, simT - t, CONFIG.travelFlipMs, CONFIG.staggerFlipFraction); }
+        else retargetPage(targets, simT, ch.page, simT - (t - ch.atMs));
+        diagnostics.pagesAssigned++;
+        diagnostics.pageAssignments.push({ page: ch.page, atMs: ch.atMs });
+        curPage = ch.page;
+      }
+      if (pg !== curPage){
+        const targets = samplePageTargets(W, H, pg);
+        if (curPage === 0) { turnT0 = -1e9; turnEffCur = CONFIG.turnMs; borrowTurnEffMs = CONFIG.turnMs; borrowFresh(targets, simT - t, CONFIG.travelFlipMs, CONFIG.staggerFlipFraction); }
+        else { const chEntry = computeSchedule().changes.find(c => c.page === pg); retargetPage(targets, simT, pg, chEntry ? simT - (t - chEntry.atMs) : simT); }
+        diagnostics.pagesAssigned++;
+        diagnostics.pageAssignments.push({ page: pg, atMs: Math.round(t) });
+        curPage = pg;
+      }
+      diagnostics.pagesProcessed = diagnostics.pagesAssigned;
+    }
+    counterEl.style.opacity = 1; counterNum.textContent = curPage + "/" + CONFIG.pageCount; labelEl.style.opacity = 0;
+  } else if (t < R){
+    if (phase !== "release"){ setPhase("release", simT); diagnostics.lastSpread = spreadOfBorrowed(); releaseAll(simT - (t - F)); }
+    counterEl.style.opacity = Math.max(0, 1 - (t-F)/CONFIG.releaseMs); labelEl.style.opacity = 0;
+  } else if (t < Fo){
+    if (phase !== "form"){
+      setPhase("form", simT);
+      formTargets = { title: sampleTitleTargets(W, H), halo: sampleHaloTargets(W, H) };
+      formRegDeadlineMs = simT + (Fo - t); // the hold entry, in absolute time
+    }
+    counterEl.style.opacity = 0; labelEl.style.opacity = Math.min(1, (t-R)/CONFIG.labelFadeMs);
+    /* formation flags are assignment-truthful: a flag is set only
+       when its borrow assigned EVERY target; a short borrow records
+       its shortfall and retries on later ticks while its phase
+       window remains */
+    if (!titleBorrowed){ borrowTurnEffMs = Infinity; titleAssigned += borrowFresh(formTargets.title.slice(titleAssigned), simT - (t - R), CONFIG.travelFormMs, CONFIG.staggerFormFraction); if (titleAssigned >= formTargets.title.length) { titleBorrowed = true; diagnostics.titleShortfall = 0; } else { diagnostics.titleShortfall = formTargets.title.length - titleAssigned; if (diagnostics.titleShortfall > diagnostics.titleShortfallMax) diagnostics.titleShortfallMax = diagnostics.titleShortfall; } }
+    if (!haloBorrowed && t - R >= CONFIG.haloDelayMs){ borrowTurnEffMs = Infinity; haloAssigned += borrowFresh(formTargets.halo.slice(haloAssigned), simT - (t - R) + CONFIG.haloDelayMs, CONFIG.travelFormMs*CONFIG.haloTravelMultiplier, CONFIG.staggerFormFraction); if (haloAssigned >= formTargets.halo.length) { haloBorrowed = true; diagnostics.haloShortfall = 0; } else { diagnostics.haloShortfall = formTargets.halo.length - haloAssigned; if (diagnostics.haloShortfall > diagnostics.haloShortfallMax) diagnostics.haloShortfallMax = diagnostics.haloShortfall; } }
+  } else if (t < Ho){
+    if (phase !== "hold"){
+      setPhase("hold", simT);
+      /* resolved-hold accounting: the hold is measured from actual
+         registration completion (per particle: start + delay +
+         travel + registration), separately for title and ring; the
+         trace distinguishes nominal hold entry from resolved hold */
+      /* completion accounting: the resolved hold derives from the
+         MEASURED registration-completion instant of every assigned
+         particle (recorded by the runtime when its registration
+         completed), never from scheduled instants. A set with any
+         particle not yet complete at hold entry reports null for
+         its completion — the hold is not resolved until it is. */
+      const cycleStart = simT - t;
+      let tBy = 0, hBy = 0, tAll = true, hAll = true, tCount = 0, hCount = 0;
+      for (const p of particles) if (p.borrowed) {
+        if (p.kind === "title") { tCount++; if (p.regDoneAt >= 0) tBy = Math.max(tBy, p.regDoneAt - cycleStart); else tAll = false; }
+        if (p.kind === "halo") { hCount++; if (p.regDoneAt >= 0) hBy = Math.max(hBy, p.regDoneAt - cycleStart); else hAll = false; }
+      }
+      /* completion is reportable only when the assigned set equals the
+         required set and every assigned particle has registered; an
+         empty or partial assignment reports UNRESOLVED, never a hold */
+      const tReq = formTargets ? formTargets.title.length : 0, hReq = formTargets ? formTargets.halo.length : 0;
+      if (tCount !== tReq) tAll = false;
+      if (hCount !== hReq) hAll = false;
+      const jointBy = (tAll && hAll) ? Math.max(tBy, hBy) : null;
+      diagnostics._holdCycleStart = cycleStart; diagnostics._holdHo = Ho; diagnostics._holdFo = Fo;
+      diagnostics.resolvedHold = { basis: "measured", holdState: (tAll && hAll) ? "RESOLVED" : ("UNRESOLVED — " + ((tCount === 0 && hCount === 0) ? "empty assignment" : "partial or unregistered assignment")), titleAssignedCount: tCount, titleRequiredCount: tReq, ringAssignedCount: hCount, ringRequiredCount: hReq, titleResolvedByMs: tAll ? Math.round(tBy) : null, ringResolvedByMs: hAll ? Math.round(hBy) : null,
+        jointResolvedByMs: jointBy === null ? null : Math.round(jointBy),
+        titleMs: Math.round(Math.max(0, Ho - Math.max(Fo, tAll ? tBy : Ho))), ringMs: Math.round(Math.max(0, Ho - Math.max(Fo, hAll ? hBy : Ho))),
+        observedHoldMs: jointBy === null ? null : Math.round(Math.max(0, Ho - Math.max(Fo, jointBy))) };
+      trace.push({event:"resolved-hold", t:Math.round(simT), titleMs: diagnostics.resolvedHold.titleMs, ringMs: diagnostics.resolvedHold.ringMs});
+    }
+    if (!titleBorrowed && formTargets){ borrowTurnEffMs = Infinity; titleAssigned += borrowFresh(formTargets.title.slice(titleAssigned), simT - (t - R), CONFIG.travelFormMs, CONFIG.staggerFormFraction); if (titleAssigned >= formTargets.title.length) { titleBorrowed = true; diagnostics.titleShortfall = 0; } else { diagnostics.titleShortfall = formTargets.title.length - titleAssigned; if (diagnostics.titleShortfall > diagnostics.titleShortfallMax) diagnostics.titleShortfallMax = diagnostics.titleShortfall; } }
+    if (!haloBorrowed && formTargets && t - R >= CONFIG.haloDelayMs){ borrowTurnEffMs = Infinity; haloAssigned += borrowFresh(formTargets.halo.slice(haloAssigned), simT - (t - R) + CONFIG.haloDelayMs, CONFIG.travelFormMs*CONFIG.haloTravelMultiplier, CONFIG.staggerFormFraction); if (haloAssigned >= formTargets.halo.length) { haloBorrowed = true; diagnostics.haloShortfall = 0; } else { diagnostics.haloShortfall = formTargets.halo.length - haloAssigned; if (diagnostics.haloShortfall > diagnostics.haloShortfallMax) diagnostics.haloShortfallMax = diagnostics.haloShortfall; } }
+    if (diagnostics.resolvedHold && (diagnostics.resolvedHold.titleResolvedByMs === null || diagnostics.resolvedHold.ringResolvedByMs === null)) {
+      /* finalize the entry snapshot from measured completions */
+      const cs = diagnostics._holdCycleStart, Ho2 = diagnostics._holdHo, Fo2 = diagnostics._holdFo;
+      let tBy2 = 0, hBy2 = 0, tAll2 = true, hAll2 = true, tCount2 = 0, hCount2 = 0;
+      for (const p of particles) if (p.borrowed) {
+        if (p.kind === "title") { tCount2++; if (p.regDoneAt >= 0) tBy2 = Math.max(tBy2, p.regDoneAt - cs); else tAll2 = false; }
+        if (p.kind === "halo") { hCount2++; if (p.regDoneAt >= 0) hBy2 = Math.max(hBy2, p.regDoneAt - cs); else hAll2 = false; }
+      }
+      const tReq2 = formTargets ? formTargets.title.length : 0, hReq2 = formTargets ? formTargets.halo.length : 0;
+      if (tCount2 !== tReq2) tAll2 = false;
+      if (hCount2 !== hReq2) hAll2 = false;
+      const joint2 = (tAll2 && hAll2) ? Math.max(tBy2, hBy2) : null;
+      diagnostics.resolvedHold = { basis: "measured", holdState: (tAll2 && hAll2) ? "RESOLVED" : ("UNRESOLVED — " + ((tCount2 === 0 && hCount2 === 0) ? "empty assignment" : "partial or unregistered assignment")), titleAssignedCount: tCount2, titleRequiredCount: tReq2, ringAssignedCount: hCount2, ringRequiredCount: hReq2, titleResolvedByMs: tAll2 ? Math.round(tBy2) : null, ringResolvedByMs: hAll2 ? Math.round(hBy2) : null,
+        jointResolvedByMs: joint2 === null ? null : Math.round(joint2),
+        titleMs: Math.round(Math.max(0, Ho2 - Math.max(Fo2, tAll2 ? tBy2 : Ho2))), ringMs: Math.round(Math.max(0, Ho2 - Math.max(Fo2, hAll2 ? hBy2 : Ho2))),
+        observedHoldMs: joint2 === null ? null : Math.round(Math.max(0, Ho2 - Math.max(Fo2, joint2))) };
+      if (joint2 !== null) trace.push({event:"resolved-hold-final", t:Math.round(simT), observedHoldMs: diagnostics.resolvedHold.observedHoldMs});
+    }
+    labelEl.style.opacity = 1;
+  } else {
+    if (phase !== "seam"){ setPhase("seam", simT); diagnostics.lastSpread = spreadOfBorrowed(); releaseAll(simT - (t - Ho), CONFIG.seamReleaseMs); titleBorrowed = false; haloBorrowed = false; titleAssigned = 0; haloAssigned = 0; }
+    counterEl.style.opacity = 0; labelEl.style.opacity = Math.max(0, 1 - (t-Ho)/CONFIG.seamReleaseMs);
+  }
+  updateParticles(dtMs);
+}
+/* Clearance measurement for the most recently released set: the
+   fraction of released particles inside the fitted title box, and
+   the released silhouette's bounding-box overlap with its own
+   bounding box at the release instant. The metric prices geometric
+   clearance only; whether the silhouette still READS as a page is
+   a perceptual claim that stays unverified without rendering. */
+let lastReleaseSnapshot = null;
+function snapshotRelease(){
+  const set = [];
+  let x0=Infinity, y0=Infinity, x1=-Infinity, y1=-Infinity;
+  for (let i = 0; i < particles.length; i++){ const p = particles[i];
+    if (p.relT > 0 && simT - p.relT <= 1) { set.push(i); if (p.x<x0)x0=p.x; if (p.x>x1)x1=p.x; if (p.y<y0)y0=p.y; if (p.y>y1)y1=p.y; } }
+  lastReleaseSnapshot = set.length ? { set: set, bbox: {x0:x0, y0:y0, x1:x1, y1:y1} } : null;
+  return lastReleaseSnapshot;
+}
+function releaseClearance(){
+  if (!lastReleaseSnapshot || !lastTitleFit) return null;
+  const snap = lastReleaseSnapshot;
+  const tb = { x0: lastTitleFit.cx - lastTitleFit.w/2, x1: lastTitleFit.cx + lastTitleFit.w/2,
+               y0: lastTitleFit.cy - lastTitleFit.h/2, y1: lastTitleFit.cy + lastTitleFit.h/2 };
+  let inside = 0, x0=Infinity, y0=Infinity, x1=-Infinity, y1=-Infinity;
+  for (const i of snap.set){ const p = particles[i];
+    if (p.x >= tb.x0 && p.x <= tb.x1 && p.y >= tb.y0 && p.y <= tb.y1) inside++;
+    if (p.x<x0)x0=p.x; if (p.x>x1)x1=p.x; if (p.y<y0)y0=p.y; if (p.y>y1)y1=p.y; }
+  const iw = Math.max(0, Math.min(x1, snap.bbox.x1) - Math.max(x0, snap.bbox.x0));
+  const ih = Math.max(0, Math.min(y1, snap.bbox.y1) - Math.max(y0, snap.bbox.y0));
+  const area0 = Math.max(1, (snap.bbox.x1-snap.bbox.x0) * (snap.bbox.y1-snap.bbox.y0));
+  return { titleFraction: inside / snap.set.length, bboxOverlap: (iw*ih) / area0, n: snap.set.length };
+}
+function isSettled(p, now){
+  if (!p.borrowed) return false;
+  if (!p.captured) return false;
+  return (now - p.t0 - p.delay) >= p.travel;
+}
+function isReadable(p, now){
+  if (!isSettled(p, now)) return false;
+  if (turnT0 > -1e8 && now - turnT0 < turnEffCur) return false;
+  if (p.regT0 < 0) return false;
+  return (now - p.regT0) >= p.regDur;
+}
+/* Geometric readability: settled and registered, with the turn's
+   face factor for this particle's face at near-full width (the
+   incoming face has unfolded, the persistent face has returned).
+   This predicate prices geometry only; the strict predicate above
+   additionally requires the turn window to be complete. */
+function isReadableGeom(p, now){
+  if (!isSettled(p, now)) return false;
+  if (p.regT0 < 0) return false;
+  if ((now - p.regT0) < p.regDur) return false;
+  if (turnT0 > -1e8 && now - turnT0 < turnEffCur) {
+    const f = (p.kind === "line") ? turnFactorIn : turnFactorOut;
+    if (f < CONFIG.readableGeomFactor) return false;
+  }
+  return true;
+}
+/* Zero-end-derivative travel profile: s(f) with s(0)=0, s(1)=1 and
+   s'(0)=s'(1)=0, so anchor velocity starts and ends at zero and the
+   trajectory velocity (anchor + stream) is continuous at capture
+   and settlement. */
+function easeProfile(f){
+  const e = CONFIG.easingExponent;
+  const a = Math.pow(f, e), b = Math.pow(1-f, e);
+  return a / (a + b || 1);
+}
+function updateParticles(dtMs){
+  const dt = dtMs/1000, now = simT;
+  const pivotX = CONFIG.pageXR*W;
+  const turnActive = (now - turnT0 >= 0 && now - turnT0 < turnEffCur);
+  const turnU = turnActive ? (now - turnT0) / turnEffCur : 0;
+  lastTurnFactor = 1;
+  for (const p of particles){
+    const prevX = p.x, prevY = p.y, prevDox = p.dox, prevDoy = p.doy;
+    /* the stream offset accumulates in EVERY state, every frame */
+    p.ox += p.vx*dt; p.oy += p.vy*dt;
+    if (p.borrowed){
+      if (p.exiting){
+        /* outgoing face: fold toward the pivot and past it on the
+           fold profile (deepen over the ramp fraction, plateau,
+           return by the readable onset), then release */
+        const eu = Math.min(1, Math.max(0, (now - p.exitT0) / p.exitDur));
+        const rampF2 = CONFIG.turnRampFraction;
+        let efp;
+        if (eu < rampF2) { const q = eu / rampF2; efp = q * q * (3 - 2 * q); }
+        else if (eu < rampF2 + CONFIG.foldPlateauFraction) efp = 1;
+        else if (eu < CONFIG.turnOnsetFraction) { const q = (eu - rampF2 - CONFIG.foldPlateauFraction) / (CONFIG.turnOnsetFraction - rampF2 - CONFIG.foldPlateauFraction); efp = 1 - q * q * (3 - 2 * q); }
+        else efp = 0;
+        const efactor = 1 - (1 - CONFIG.foldMinFactor) * efp;
+        turnFactorExit = efactor;
+        p.ax = pivotX + (p.exitFromX - pivotX) * efactor; p.ay = p.exitFromY;
+        p.dox = p.ox - p.refx; p.doy = p.oy - p.refy;
+        p.renderAlpha = CONFIG.travelAlpha;
+        if (eu >= 1) { p.exiting = false; releaseParticle(p, now, p.exitRelDur); }
+      }
+      else if (!p.captured && now - p.t0 >= p.delay){
+        /* capture: the travel anchor origin is taken from the
+           rendered position actually occupied now, and travel
+           progresses in THIS SAME update (no capture/update lag) */
+        /* capture origin: the position occupied at THIS instant,
+           including this tick's stream advance (anchor + the newly
+           advanced offset), so the tick's displacement is carried
+           into the travel curve instead of being cancelled by it */
+        const capX = p.ax + (p.ox - p.refx), capY = p.ay + (p.oy - p.refy);
+        p.dox = p.ox - p.refx; p.doy = p.oy - p.refy;
+        p.ax0 = capX - p.dox; p.ay0 = capY - p.doy; p.captured = true;
+        p.lastCapture = { t: now, x: capX, y: capY, vx: p.velX, vy: p.velY };
+      }
+      if (p.exiting){
+        /* position set by the exit branch above */
+      } else if (!p.captured){
+        /* stagger window: the anchor holds; the displayed offset
+           keeps accumulating the stream contribution */
+        p.dox = p.ox - p.refx; p.doy = p.oy - p.refy;
+        p.renderAlpha = CONFIG.travelAlpha;
+      } else {
+        const el = now - p.t0 - p.delay;
+        const f = Math.min(1, Math.max(0, el / p.travel));
+        const s = easeProfile(f);
+        p.jitAmp = s;
+        let ax = p.ax0 + (p.tx - p.ax0)*s + Math.sin(now/CONFIG.jitterPeriodXMs + p.ph)*CONFIG.jitter*p.jitAmp;
+        let ay = p.ay0 + (p.ty - p.ay0)*s + Math.cos(now/CONFIG.jitterPeriodYMs + p.ph)*CONFIG.jitter*p.jitAmp;
+        /* registration: once settled, the reference eases to the
+           live stream offset, so the displayed offset decays to
+           zero and the structure registers on its target */
+        if (f >= 1) {
+          /* registration starts at the arrival event instant (borrow
+             start + delay + travel), not at the detecting tick; its
+             completion is likewise recorded at its event instant */
+          if (p.regT0 < 0) { p.regT0 = p.t0 + p.delay + p.travel; p.regFromX = p.refx; p.regFromY = p.refy; }
+          const u = Math.min(1, Math.max(0, (now - p.regT0) / p.regDur));
+          if (u >= 1 && p.regDoneAt < 0) p.regDoneAt = p.regT0 + p.regDur;
+          if (u >= 1) { p.refx = p.ox; p.refy = p.oy; }
+          else { const se = easeProfile(u); p.refx = p.regFromX + (p.ox - p.regFromX)*se; p.refy = p.regFromY + (p.oy - p.regFromY)*se; }
+        }
+        p.dox = p.ox - p.refx; p.doy = p.oy - p.refy;
+        /* page turn: the turn is a two-face gesture inside its own
+           window. The persistent face (page outline + header, the
+           leaving page's surface) folds toward the pivot and past
+           it — its horizontal factor runs below zero at mid-window,
+           so the face's far edge crosses the pivot line as a page
+           edge passing — while the incoming face (the line texture
+           that actually changes between pages) unfolds FROM the
+           pivot: its factor starts at the configured minimum and
+           opens to full width by the window's readable onset. Both
+           profiles have zero end derivatives and complete by the
+           onset fraction of the window; backing stack anchors
+           never turn */
+        const turning = turnActive && (p.kind === "page" || p.kind === "line");
+        if (turning){
+          /* the incoming face — the new page's outline, header and
+             line texture, sampled as its own target set — unfolds
+             FROM the pivot: its factor starts at the configured
+             minimum and opens to full width by the readable onset.
+             The outgoing face is a different particle set entirely
+             (the leaving page's texture, handled in the exit branch
+             above), folding past the pivot on its own profile */
+          const ou = Math.min(1, Math.max(0, turnU / CONFIG.turnOnsetFraction));
+          const os = ou * ou * (3 - 2 * ou);
+          const factor = CONFIG.turnCosMin + (1 - CONFIG.turnCosMin) * os;
+          turnFactorIn = factor; turnFactorOut = factor;
+          lastTurnFactor = factor;
+          ax = pivotX + (ax - pivotX) * factor;
+          /* intensity binds to this particle's own registration, not
+             to the turn window's end: a particle that has arrived and
+             registered renders at its settled intensity from that
+             instant, even while the window is still running */
+          if (f >= 1) {
+            const regU2 = p.regT0 < 0 ? 0 : Math.min(1, Math.max(0, (now - p.regT0) / p.regDur));
+            const settledA2 = p.kind === "stack" ? CONFIG.stackAlpha : CONFIG.foregroundAlpha;
+            p.renderAlpha = CONFIG.travelAlpha + (settledA2 - CONFIG.travelAlpha) * easeProfile(regU2);
+          } else p.renderAlpha = CONFIG.travelAlpha;
+        } else if (f < 1) {
+          p.renderAlpha = CONFIG.travelAlpha;
+        } else {
+          /* settled intensity is reached THROUGH registration: the
+             intensity interpolates from the travelling intensity to
+             the settled intensity by registration progress, so newly
+             settled content is never at full intensity while still
+             spatially displaced */
+          const regU = p.regT0 < 0 ? 0 : Math.min(1, Math.max(0, (now - p.regT0) / p.regDur));
+          const settledAlpha = p.kind === "stack" ? CONFIG.stackAlpha : (p.kind === "halo" ? CONFIG.haloAlpha : CONFIG.foregroundAlpha);
+          p.renderAlpha = CONFIG.travelAlpha + (settledAlpha - CONFIG.travelAlpha) * easeProfile(regU);
+        }
+        p.ax = ax; p.ay = ay;
+      }
+    } else {
+      if (p.scatActive){
+        /* release window: the anchor scatters to its dispersed anchor
+           over the release's OWN duration while the displayed offset
+           re-emerges to the full stream contribution; the scatter
+           profile has zero end derivatives, and a derivative blend
+           over the first quarter of the window carries the captured
+           rendered derivative into the profile's own slope. No
+           positional jitter term is added in this branch: whatever
+           jitter the rendered position held at release is already
+           inside the captured start position. */
+        const u = Math.min(1, Math.max(0, (now - p.relT) / p.relDur));
+        const se = easeProfile(u);
+        const w = Math.min(1, u / CONFIG.releaseBlendFraction);
+        const hb = w - w*w*w + 0.5*w*w*w*w;
+        const corr = CONFIG.releaseBlendFraction * (p.relDur / 1000) * hb;
+        p.ax = p.scatFromX + (p.scatToX - p.scatFromX)*se + p.relAnchorVelX * corr;
+        p.ay = p.scatFromY + (p.scatToY - p.scatFromY)*se + p.relAnchorVelY * corr;
+        p.dox = p.relDispX + (p.ox - p.relOx)*se + p.relDerivX * corr;
+        p.doy = p.relDispY + (p.oy - p.relOy)*se + p.relDerivY * corr;
+        if (u >= 1) { p.scatActive = false; p.jitAmp = 0; p.refx = p.ox - p.dox; p.refy = p.oy - p.doy; }
+      } else {
+        p.dox = p.ox - p.refx; p.doy = p.oy - p.refy;
+      }
+      /* a released page/title particle holds its settled intensity
+         until the clearance point of its scatter window — the old
+         page silhouette clears geometrically before its intensity
+         drops to surplus, never at release start */
+      if (p.scatActive && (p.kind === "page" || p.kind === "line" || p.kind === "title" || p.kind === "halo" || p.kind === "stack") && ((now - p.relT) / Math.max(1, p.relDur)) < CONFIG.releaseClearanceHoldU) {
+        p.renderAlpha = p.kind === "stack" ? CONFIG.stackAlpha : (p.kind === "halo" ? CONFIG.haloAlpha : CONFIG.foregroundAlpha);
+      } else {
+        p.renderAlpha = p.borrowable ? CONFIG.surplusAlpha : CONFIG.reserveAlpha;
+      }
+    }
+    p.x = p.ax + p.dox; p.y = p.ay + p.doy;
+    const m = CONFIG.wrapMarginPx;
+    if (p.x < -m) p.ax += W + 2*m - CONFIG.wrapJumpInsetPx; if (p.x > W + m) p.ax -= W + 2*m - CONFIG.wrapJumpInsetPx;
+    if (p.y < -m) p.ay += H + 2*m - CONFIG.wrapJumpInsetPx; if (p.y > H + m) p.ay -= H + 2*m - CONFIG.wrapJumpInsetPx;
+    p.x = p.ax + p.dox; p.y = p.ay + p.doy;
+    if (dt > 0) {
+      const wrapped = Math.abs(p.x - prevX) > W / 2 || Math.abs(p.y - prevY) > H / 2;
+      if (!wrapped) { p.velX = (p.x - prevX) / dt; p.velY = (p.y - prevY) / dt; p.doxVelX = (p.dox - prevDox) / dt; p.doxVelY = (p.doy - prevDoy) / dt; }
+    }
+  }
+}
+function draw(){
+  if (phase === "flip" && curPage > 0) { diagnostics.pagePresented[curPage] = (diagnostics.pagePresented[curPage] || 0) + 1; diagnostics.pagesPresented = Object.keys(diagnostics.pagePresented).length; }
+  sctx.fillStyle = CONFIG.background; sctx.fillRect(0,0,W,H);
+  const sorted = particles.slice().sort((a,b) => (a.borrowed?2:(a.borrowable?1:0)) - (b.borrowed?2:(b.borrowable?1:0)));
+  for (const p of sorted){
+    const c = (p.borrowed && p.kind === "halo") ? cHalo : p.col;
+    sctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + p.renderAlpha + ")";
+    sctx.beginPath(); sctx.arc(p.x, p.y, CONFIG.particleRadius, 0, Math.PI*2); sctx.fill();
+  }
+}
+/* ---------- sizing + restart + revalidation + main loop ----------
+   Restart resets ALL run state: simulation time, phase, current
+   page, trace, transition records, diagnostics, scheduler flags,
+   the animation timestamp, and the particle pool (re-seeded), so a
+   restarted run stepped with a controlled timestep sequence equals
+   a fresh load stepped with the same sequence.
+   revalidate() is the runtime-mutation entry: after CONFIG is
+   mutated at runtime it re-runs validation, colours, checkpoint
+   resolution, both budget enforcements, DOM initialization and
+   the run reset, so the mutated values take effect coherently. */
+let last = null, playing = true;
+function resetRun(){
+  rng = mulberry32(CONFIG.seed); simT = 0; phase = ""; curPage = 0; trace = []; titleBorrowed = false; haloBorrowed = false;
+  formTargets = null; titleAssigned = 0; haloAssigned = 0; formRegDeadlineMs = Infinity; transitions.length = 0; lastStepAbs = 0; turnT0 = -1e9; turnEffCur = CONFIG.turnMs; lastTurnFactor = 1; lastReleaseSnapshot = null;
+  diagnostics.seamViolations = 0; diagnostics.seamChecks = 0; diagnostics.lastSpread = null; diagnostics.titleShortfall = 0; diagnostics.haloShortfall = 0; diagnostics.titleShortfallMax = 0; diagnostics.haloShortfallMax = 0; diagnostics.resolvedHold = null;
+  diagnostics.holdEvents = { nominalHoldEndMs: CONFIG.flipMs + CONFIG.releaseMs + CONFIG.formMs + CONFIG.holdMs, rolloverMs: TOTAL() }; diagnostics.pagesProcessed = 0;
+  diagnostics.pagesCoverage = 0; diagnostics.pagesAssigned = 0; diagnostics.pagesPresented = 0; diagnostics.pagePresented = {}; diagnostics.pageAssignments = []; diagnostics.droppedMs = 0; diagnostics.frameStats = null;
+  frameAccMs = 0; turnFactorOut = 1; turnFactorIn = 1; turnFactorExit = 1; borrowTurnEffMs = Infinity;
+  counterEl.style.opacity = 0; labelEl.style.opacity = 0;
+  last = null;
+  buildPool();
+}
+function revalidate(){
+  validateConfig(); refreshColors();
+  RESOLVED_CHECKPOINTS = null; resolveCheckpoints();
+  const verdict = assessFeasibility();
+  if (!verdict.ok) {
+    REJECTED_CONFIGS.push({ context: "revalidate", reasons: verdict.reasons.slice(), atMs: Math.round(simT) });
+    warn("configuration refused atomically: " + verdict.reasons.join("; ") + " — the previously applied configuration remains in force");
+    if (APPLIED_CONFIG) restoreConfig(APPLIED_CONFIG);
+    refreshColors(); RESOLVED_CHECKPOINTS = null; resolveCheckpoints();
+    diagnostics.feasibility = assessFeasibility();
+    initDom();
+    return false;
+  }
+  diagnostics.feasibility = verdict;
+  APPLIED_CONFIG = snapshotConfig(CONFIG);
+  initDom(); resetRun();
+  return true;
+}
+function resize(){
+  const r = stage.parentElement.getBoundingClientRect();
+  W = Math.max(CONFIG.minStageW, Math.floor(r.width)); H = Math.max(CONFIG.minStageH, Math.floor(r.height));
+  stage.width = W; stage.height = H;
+  applyCounterFit();
+  const verdict = assessFeasibility();
+  if (!verdict.ok) {
+    REJECTED_CONFIGS.push({ context: "resize", reasons: verdict.reasons.slice(), atMs: Math.round(simT) });
+    warn("configuration refused at resize recompute: " + verdict.reasons.join("; ") + " — the previously applied configuration remains in force");
+    if (APPLIED_CONFIG) restoreConfig(APPLIED_CONFIG);
+    diagnostics.feasibility = assessFeasibility();
+  } else diagnostics.feasibility = verdict;
+  resetRun();
+}
+let frameAccMs = 0;
+function frame(ts){
+  if (last === null) last = ts;
+  frameAccMs += Math.max(0, ts - last); last = ts;
+  if (playing) {
+    /* bounded catch-up: one callback may advance at most the named
+       multiple of the smallest schedule interval; any excess is
+       carried as named dropped time in diagnostics — reported,
+       never silently simulated in one draw or silently discarded */
+    const boundMs = CONFIG.catchUpIntervalMultiple * computeSchedule().minIntervalMs;
+    if (frameAccMs > boundMs) { diagnostics.droppedMs += frameAccMs - boundMs; frameAccMs = boundMs; }
+    let steps = 0;
+    while (frameAccMs >= 1 && steps < 40) { const h = Math.min(CONFIG.frameCapMs, frameAccMs); step(h); frameAccMs -= h; steps++; }
+    diagnostics.frameStats = { steps: steps, residueMs: Math.round(frameAccMs * 1000) / 1000, maxSteps: 40, boundMs: Math.round(boundMs), droppedMs: Math.round(diagnostics.droppedMs * 1000) / 1000 };
+  }
+  draw();
+  requestAnimationFrame(frame);
+}
+window.addEventListener("resize", resize);
+window.addEventListener("message", e => {
+  if (!e.data || typeof e.data !== "object") return;
+  if (e.data.cmd === "play") playing = true;
+  if (e.data.cmd === "pause") playing = false;
+  if (e.data.cmd === "restart"){ resetRun(); playing = true; }
+});
+window.T16_API = { CONFIG, DEFAULTS, WARNINGS, samplePageTargets, sampleTitleTargets, sampleHaloTargets, pageAtTime,
+  computeSchedule, deriveCheckpoints, strictCheckpoints, resolveCheckpoints,
+  releaseClearance, snapshotRelease, isSettled, isReadable, isReadableGeom, fitText, revalidate, turnEffForInterval, releaseParticle, borrowFresh,
+  get lastTitleFit(){ return lastTitleFit; },
+  get lastHeaderFit(){ return lastHeaderFit; },
+  get lastCounterFit(){ return lastCounterFit; }, fitCounter,
+  get checkpoints(){ return RESOLVED_CHECKPOINTS; },
+  get particles(){ return particles; }, get phase(){ return phase; }, get trace(){ return trace; },
+  get transitions(){ return transitions; }, get diagnostics(){ return diagnostics; },
+  get simT(){ return simT; }, get curPage(){ return curPage; }, get turnT0(){ return turnT0; }, applyConfig, assessFeasibility, get REJECTED_CONFIGS(){ return REJECTED_CONFIGS; }, get appliedConfig(){ return APPLIED_CONFIG; },
+  get turnEffCur(){ return turnEffCur; }, get lastTurnFactor(){ return lastTurnFactor; },
+  get turnFactorOut(){ return turnFactorOut; }, get turnFactorIn(){ return turnFactorIn; }, get turnFactorExit(){ return turnFactorExit; },
+  step, draw, resize, resetRun, frame };
+validateConfig();
+refreshColors();
+resolveCheckpoints();
+{
+  let verdict = assessFeasibility();
+  if (!verdict.ok) {
+    REJECTED_CONFIGS.push({ context: "startup", reasons: verdict.reasons.slice(), atMs: 0 });
+    warn("configuration refused at startup: " + verdict.reasons.join("; ") + " — the shipped defaults remain in force");
+    restoreConfig(snapshotConfig(TRUSTED_DEFAULTS));
+    validateConfig(); refreshColors();
+    RESOLVED_CHECKPOINTS = null; resolveCheckpoints();
+    verdict = assessFeasibility();
+  }
+  diagnostics.feasibility = verdict;
+  APPLIED_CONFIG = snapshotConfig(CONFIG);
+}
+initDom();
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
+
+=====
+SCORE-BLIND BUILD RECORD — T16 particle document flip, current build
+(Construction facts and the build's own deterministic check results. No scores, no history.)
+
+WHAT THE BUILD IS
+A single self-contained HTML file. A stack of document pages, rendered as particles sampled from config-rendered text and shapes, flips through its page counter (pages 1 to 14 at counter checkpoints 1, 6 and 14, at 0 ms, 1500 ms and 2200 ms of a 6000 ms cycle); the finished stack disperses, a title condenses out of the particle stream with a ring above it, the title holds, then disperses inside a dedicated seam interval (5700–6000 ms) and the cycle restarts with no borrowed particles carried across the seam. Phases: flip [0,2600), release [2600,3100), form [3100,4600), hold [4600,5700), seam [5700,6000). The nominal hold ends at 5700 ms; the cycle rolls over at 6000 ms. Page intervals: 300 ms early, 87.5 ms rapid, and a 400 ms final-page interval. The build starts its own animation loop on load.
+
+CONSTRUCTION FACTS
+- Two distinct faces per page turn, on separate particle sets. The OUTGOING face is the leaving page's own line texture PLUS a dedicated edge set: the leaving page's outline targets are borrowed as first-class exiting targets, so the outgoing face carries outline + texture through the whole handoff. Both faces fold around the page's left-edge pivot on the turn profiles (outgoing factor crosses below zero at mid-window; incoming factor rises from the configured minimum to 1.0 by the window's readable onset, 70% of the effective turn window). The INCOMING face is the new page's own sampled target set (outline + header + line texture) unfolding from the pivot. The pool is sized for the concurrent demand the handoff actually creates: the incoming page, the exiting line set, two edge sets (the previous handoff's edge may still be exiting), and one vanished set still scattering, grossed up by the reserve fraction.
+- Page dispatch: every page change crossed by a simulation step is dispatched in chronological order at its scheduled instant (one event order across segment entries and page changes; ties resolve segment entry first). Diagnostics keep three separate counters that cannot be conflated: schedule coverage (entries crossed), assignments (pages whose targets were actually assigned), and presented (pages that reached a drawn frame). At 120 ms callbacks, coverage equals assignments for every page of the default schedule (14/14) and of a 40-page / 6000 ms schedule (40/40); a single step crossing many pages and the flip exit assigns the identical page sequence as fine-step execution.
+- Turn and registration: every page change starts its own turn window at the change's SCHEDULED instant; the effective duration derives from the interval it must fit. Registration starts at the particle's actual arrival instant (borrow start + delay + travel, evaluated at event time inside the step, not at the detecting tick), and registration completion is recorded at its event instant. A turning particle's intensity binds to its OWN registration, not to the window's end.
+- Readability predicates (two, both per-particle): strict = settled, registered, and the turn window complete; geometric = settled and registered with the particle's face factor at least the configured geometric factor. The build's dwell measurements count strict-readable frames only at presentation boundaries (drawn frames). Measured on the build's own instrument (offsets 0 / 7.3 / 13.1 / 29.7 ms × pages 6–13): strict-readable presented cells 32/32 at 60 fps and 26/32 at 50 ms steps — at 50 ms steps, six named cells (offset 0 pages 9 and 13; offset 13.1 pages 8 and 12; offset 29.7 pages 7 and 11) have no presented frame inside their readable window, because the preserved rapid interval is 87.5 ms and a 50 ms draw grid can fall entirely outside a page's readable span.
+- Hold accounting is measured, not scheduled, and is non-vacuous: a form's completion is reported only when its assigned target set equals its required target set AND every assigned particle has registered; an empty assignment reports UNRESOLVED — empty assignment, and a partial assignment reports UNRESOLVED, never a resolved hold. At the defaults, joint title-and-ring registration completes at the 4600 ms hold entry on the event-time basis, and the observed resolved hold is the full nominal 1100 ms. Both hold events are named in diagnostics: nominal hold end 5700 ms, cycle rollover 6000 ms.
+- Feasibility is a single gate with exactly two outcomes: FEASIBLE (the resolved configuration applies whole) or REFUSED ATOMICALLY (the candidate is rejected as a unit, the refusal with its reasons is written to an observable rejected-configurations record, the previously applied configuration remains in force, and a refused mid-run replacement preserves the live run — no restart rewind). The gate decides on a conservative PRE-COMMIT lifecycle bound computed before any execution: per-interval schedule lifecycle, formation lifecycle, complete page coverage, positive intervals, the intensity hierarchy with its minimum separation, non-empty target sets, magnitude bounds, placed-box containment (below), the fit condensation floor (below), and the FINAL-PALETTE contrast condition: after sanitisation resolves the candidate, the gate re-evaluates the exact contrast pairs and floors sanitisation applies (bright colour ≥ 4, dim colour ≥ 2, ring colour ≥ 2 against the resolved background) PLUS the DOM colours (counter, counter label, title label against the resolved background), and refuses on any failure. A candidate background that collides with the default foreground (contrast 1:1) is refused by the gate.
+- Validation trust: the validation schema and the trusted defaults live in frozen structures outside the editable configuration object; fallbacks read the frozen copy, so editing the exposed defaults object cannot rewrite a fallback, and the gate's magnitude bound, contrast floors, and separation minimum are schema constants, not configuration keys. The direct-edit corpus (each field class corrupted in source: numeric → string / non-finite / oversized; a colour → a contrast-colliding value; a group → null; the trusted defaults themselves → mutation attempt) asserts the independent fallback or the gate refusal fires on both the direct-edit and the URL-override paths.
+- Shared values are single-sourced: one resolved onset fraction of the turn window is read by the schedule's lifecycle bound, by the registration cap, and by both face profiles — an onset swap (0.5, 0.85) moves all four together on both input routes. Initial particle colours derive from the resolved palette. The fitted title's horizontal centre is a resolved configuration value consumed by both sampling and fit.
+- Fit and placement are one construction: fitting returns the placed ink box (the extents as drawn, with the fit's own alignment and baseline); the gate constrains the placed box to its region (a header offset that places the ink at the page's bottom edge is refused) and refuses a fit condensed below the sampling floor instead of silently thinning. The counter group is measured with the label's own font settings including its letter spacing, and the above-stack fallback records its actual clearance against the stack's placed box.
+- Pacing: the main loop accumulates elapsed time and advances in bounded sub-steps; one callback may advance at most a configured multiple (4×) of the smallest schedule interval, and any excess is carried as named dropped time in diagnostics — reported, never silently simulated in one draw or silently discarded. 100 callbacks of 120 ms advance exactly 12000 ms of simulation with no residue and no dropped time. Capture and release evaluate position and velocity at the actual boundary instant: a capture's origin and velocity snapshot are taken at the boundary, and a release's scatter is constructed from the rendered state at its boundary.
+- Restart: a restart resets the complete run state — simulation time, phase, page, trace, transitions, diagnostics (including frame statistics, the page counters, and dropped time), the frame-time accumulator, turn-factor outputs, DOM opacity, and the particle pool (re-seeded). A deliberately dirtied run (queued frame time, mid-turn factors, faded DOM) restarted and then driven with an identical timestamp sequence matches a fresh load exactly, including its first callback's advance. An exit that has completed by a later change's scheduled instant is released at that instant, never re-exited; an in-flight exit's clock is never reset.
+- Release: a released page set holds its settled intensity until the clearance point of its scatter window, then drops to surplus intensity — the silhouette clears geometrically before its intensity falls.
+
+OWN-CHECK RESULTS (deterministic harness, modelled — see limitations)
+Anchors preserved (checkpoints 1@0, 6@1500, 14@2200; minimum interval 87.5 ms): PASS. Seam violations over full cycles: 0. Unassigned page or edge demand over a dense combined exercise (40 pages, a long title, outgoing edge + outstanding scatter + title/ring borrowing together, 56 transitions): 0, with the hold RESOLVED at 1100 ms. Documented swap (title DATA WIZARD, nine pages, 1800 ms flip, bright colour #ffd75e): resolves, passes the gate, assignments complete. Feasibility sweep (117 numeric fields × five adversarial values — 0, −1, 1e12, infinity, NaN — through the production validation + gate path): 585 probes, every one yields a gate verdict, none throws. Gate-refusal cases asserted: contrast-colliding background (1:1) refused at startup and mid-run; DOM-colour collision named; header placed at the page's bottom edge refused; a refused candidate leaves prior values and the live run intact. Hold cases asserted: full assignment RESOLVED at the nominal 1100 ms; empty assignment UNRESOLVED; partial assignment UNRESOLVED. Registration event-time assertions on 1,257 sampled particles: start and completion at their event instants, 0 violations. Capture continuity at sampled boundaries: 899/899 within 6 px of the boundary-evaluated position. Fit measurements at 960×540, 390×844 and 360×640: title, header and counter ink measured post-fit inside their boxes at every size, all ink heights above the ~11 px legibility floor. Configuration census: 118 keys, every key traced to a consumed effect, 0 unconsumed.
+
+STATED LIMITATIONS
+- PIXEL-UNVERIFIED: no rendered-pixel verification route exists for this build; every measurement above is a deterministic source-model measurement (a stubbed rasterizer and the build's own predicates), not a rendered frame.
+- Rapid-page dwell: the preserved catalogue anchors (87.5 ms rapid intervals; checkpoints at 0 / 1500 / 2200 ms) cap each rapid page's presented dwell; no construction inside those anchors gives every rapid page a long strict dwell, and the build does not claim one — it measures and reports presented dwell per page instead.
+- The fold's depth character beyond the preserved interval structure is as built; the build makes no claim about rendered perception of the turn.

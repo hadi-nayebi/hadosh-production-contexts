@@ -1,0 +1,18 @@
+T16 attempt 6 — Stage 3 own-check output (policy literals -> validated CONFIG)
+Harness: node, stubbed canvas rasterizer, 960x540. PIXEL-UNVERIFIED.
+Checkpoint copy: checkpoint-attempt6-stage3.html (content copy, sha-verified at filing; inode != working inode).
+
+NEW KEYS (all in DEFAULTS + CONFIG, all validated)
+- registrationFloorMs = 15, range [1, 100000] + joint rule registrationFloorMs <= registrationMs (injected 99999 -> reset to 15 with warning). PASS
+- turnRampFraction = 0.3, range (0, 0.5]. PASS
+- releaseBlendFraction = 0.25, range (0, 1]. PASS
+- frameCapMs = 50, range [1, 250]; also feeds the formation detection allowance and the wall-clock accounting. PASS
+
+CONSUMED-EFFECT MAPPINGS (A-C006-2)
+- registrationFloorMs -> startTravel registration clamp: governs the floor branch whenever the span allows it (validation + joint rule verified above).
+- turnRampFraction -> turn fold profile: at turn phase u=0.37 of a rapid turn, outgoing factor = -0.120 with ramp 0.3 (fold complete) vs +0.067 with ramp 0.5 (still deepening). The key changes the computed geometry. PASS
+- releaseBlendFraction -> release derivative-blend window (u / fraction) and its time-scale correction (fraction * relDur): both former literal sites read the key (source-verified); retention after validation verified.
+- frameCapMs -> main-loop per-frame simulated-time cap Math.min(CONFIG.frameCapMs, ts - last): site reads the key (source-verified); retention after validation verified.
+
+LITERAL CENSUS DELTA: grep for the four bare policy sites (Math.max(15, | / 0.3) in the turn profile | u / 0.25 | Math.min(50, ts) -> 0 hits. PASS
+SECTION keys total: 16/16 PASS + ramp probe PASS.

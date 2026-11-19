@@ -1,0 +1,18 @@
+T16 attempt 6 — Stage 4 own-check output (budget / formation / compatibility complex)
+Harness: node, stubbed canvas rasterizer, 960x540. PIXEL-UNVERIFIED.
+Checkpoint copy: checkpoint-attempt6-stage4.html (content copy, sha-verified at filing; inode != working inode).
+SECTION budget: 8/8 PASS, plus the formation probe below.
+
+TARGETED NEGATIVE CONTROLS (one per sub-cure)
+- Compatibility: releaseMs=50 (legal short release) full-cycle run completes without throw; formation at hold is COMPLETE (below). PASS
+- Lifecycle budget: the schedule's per-interval lifecycle term (arrival + span-derived page registration) is filed per page (rapid lifecycle 47.25 ms = 36.4 arrival + 10.85 registration; budget need = max(arrival + registration, turn) + reserved hold = 87.5 <= 87.5 ms rapid interval). A budget that passed an incomplete lifecycle would show need < lifecycle; here need prices the full lifecycle. PASS
+- Fallback: the named case (minSettledHoldMs=100000 + pageCount=30 + flipMs=900) ends budgetFeasible=true on the restored default schedule (pageCount 14, flipMs 2600, minSettledHoldMs 20) with warnings recorded at BOTH restoration steps (partial restore re-checked, then all schedule dependencies restored). Post-restore schedule budgetOk=true. PASS
+
+FORMATION PROBE (defaults and the short-release swap)
+- releaseMs=500: at hold, borrowed title 6194/6194, ring 289/289; current shortfalls 0/0.
+- releaseMs=50: at hold, borrowed title 6194/6194, ring 289/289; current shortfalls 0/0.
+- First-tick borrows can be short (pool still completing its release bookkeeping); the scheduler retries the unassigned remainder on later ticks inside the phase window and the flags set only on complete assignment. Maximum transient shortfall is recorded in diagnostics (titleShortfallMax / haloShortfallMax). PASS
+
+SAME-TICK RELEASE/BORROW CASE: a single 6000 ms step across the seam boundary followed by normal stepping produces transitions with unassigned=0 (no double-assignment, no skipped target at rollover). PASS
+HALO FEASIBILITY: an injected haloDelayMs=1100 (equality-class case under the prior formula) reaches formationFeasible=true after enforcement, with the registration + frame-cap terms inside the need. PASS
+POOL SIZING: concurrent demand priced in buildPool (effective scatter capped at the release window; overlap term computed, 0 under the cap at defaults) — sizing assertion is the formation probe's completeness at both release settings. PASS

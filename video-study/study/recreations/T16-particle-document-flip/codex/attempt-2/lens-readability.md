@@ -1,0 +1,15 @@
+Readability is substantially supported by construction, with page dwell the main remaining defect. Phone-size legibility remains unverified because the supplied build record contains no rendered pixel evidence.
+
+Settled page/title particles receive `foregroundAlpha: 1.0`; unborrowed reserve and surplus particles receive `0.28` and `0.16`. `updateParticles()` reapplies these states each step, including immediately after release. `draw()` paints borrowed particles last. Individual background particles therefore never receive formed-content intensity. Overlapping translucent background particles can still accumulate brightness; the construction guarantees per-particle separation, rather than a maximum background luminance.
+
+Borrowed particles waiting through stagger, travelling, or executing the compression cue consistently render at `travelAlpha: 0.45`. They cannot become full-intensity foreground before settling. This limits interference with settled content, although their intensity equals the settled stack’s `stackAlpha: 0.45`. **Priced finding:** stack outlines have weaker separation from moving particles than the front page does; evidence is the shared `0.45` alpha, versus reserve `0.28`. Cost: the stack can become harder to distinguish during transitions.
+
+The ring settles at `0.95` in warm gold, while the title remains silver-blue at `1.0`. Its centre at `0.30H`, versus the title at `0.56H`, provides spatial separation on a portrait phone. Its colour and placement should distinguish it without obscuring the title; perceptual balance still needs a rendered check.
+
+“AI GURU” is fitted within `0.86W`, with bold lettering, a four-pixel sampling grid and particle diameter `3.2px`. Those choices plausibly preserve readable letter shapes at phone width. The solid `#a9c6de` title label contrasts clearly with black. The title’s maximum travel-plus-stagger duration is `1377.5ms`, within the `1500ms` formation phase, leaving the `1100ms` hold settled under normal frame progression.
+
+The page has recognizable document cues: outline, header, horizontal lines and offset stack. The DOM counter uses white `64px` numerals and a contrasting `15px` label, independently of particle sampling. **Priced finding:** pages 6–13 receive only `23.66ms` worst-case settled dwell, as derived in the build record. That is roughly one to two frames at 60Hz, and frame quantization can reduce the visible settled interval further. Cost: these pages communicate rapid flipping, not individually readable settled content. The `20ms` minimum is a scheduling allowance, not a reading allowance. Page 14’s `336.16ms` dwell provides a more useful recognition window.
+
+Body-write: this return supplies the readability score and findings for `lens-readability.md`, for the consumer to incorporate into `scores.md`. If carried forward, the inherited cure list is: increase intermediate-page readable dwell, strengthen stack separation, and verify title, page and counter readability on rendered phone-size frames.
+
+SCORE: 82

@@ -1,0 +1,19 @@
+STAGE 6 OWN-CHECK (R9 + full regression + adversarial + legs + freeze) — frozen source sha 8455d83217bbba1938ab53f68cbe5313f6f70ccbccc4123a5d7f462ca13e93a7 (86,723 bytes)
+Date: 2026-11-18 (Cycle 025, Wave 24). Harness: node, stubbed canvas.
+
+R9 SCHEDULED-INSTANT ANCHORING: retargetPage travel/release start at the turn's scheduled instant (turnStartMs), first-page borrow at the cycle start, release phase at its scheduled start, formation borrows at the scheduled formation start (ring at formation start + ring delay), seam release at its scheduled start. frame() is exported for wall-clock accounting.
+
+REGRESSION (all sections re-run on the final source): keys 16/16 PASS · budget 8/8 PASS · fit 9/9 PASS · full 8/8 PASS (two cycles: seam violations 0, unassigned 0, restart determinism exact, displayed bounds out=0 at 960x540 and 390x844, purity grep clean). No regression — the pre-written Stage-6 rollback branch was NOT invoked.
+
+ROLLOVER ASSERTION: 4 phase offsets (0, 0.25, 0.5, 0.75) x 2 cadences (16.7 ms, 50 ms): unassigned=0 and seamViolations=0 in all 8 — PASS.
+
+ABOVE-CAP CADENCE (Finding 2): frame() driven with 120 ms wall steps against the 50 ms frame cap: 100 wall steps = 12000 ms wall advance the simulation 5000 ms; residue 7000 ms filed as ACCOUNTING-ONLY with its lens cost under timing (also stated in the score-blind build record).
+
+ADVERSARIAL (A-C011-2 + A-C021-3 + A-C022-1): direct-edit cases 9/9 PASS (string-typed registrationFloorMs, deleted key, null pattern, malformed checkpoints, 60-char tokens at 390 px, malformed colours, zero/negative durations, resize recompute, post-enforcement flags). Non-finite + magnitude sweep over every numeric key: 109 keys x 5 values (NaN, +Infinity, -Infinity, 9.99e300, 400-digit) = 545 cases, run in per-case child processes with hard timeouts after the unsliced sweep exceeded the process cap twice (no output lost from the record: the sliced driver is the filed instrument). ONE hang found: flipMs = 9.99e300 looped the schedule scan (proportional to the flip window) because phase durations were floored but uncapped. CURE: phase durations clamp at 600000 ms with a warning in validation; the cured cases re-verified individually (9.99e300 -> 600000, Infinity and 400-digit -> default). Sweep result after cure: 545/545 clean. The fold-depth key added later in this stage was swept separately: 5/5 clean.
+
+DWELL COMPARISON AFTER R9 (Finding 1; page-level every-particle instrument, recreated after the /tmp loss and run identically on three sources): rapid pages 6-13 at 60 fps — attempt-5 source: strict 0.0 ms; pre-R9 stage-5 source: strict 16.7 ms, geometric 16.7-33.3 ms; final source: strict 16.7 ms, geometric 16.7-33.3 ms. R9 is dwell-neutral on rapid pages and slightly positive on early pages (page 1 strict 166.7 -> 183.3). At 50 ms steps rapid pages read 0.0 under the page-level criterion on all three sources. D1 (80 ms dwell) remains DEFERRED per plan — not attempted, not dropped.
+FACE GEOMETRY on the final source: outgoing minimum factor -0.120, incoming factor >= 0.98 across the turn's final part (late minimum 0.998), 13 transitions, unassigned 0 — PASS.
+
+LEGS (A-C008) on the frozen source: fit-table-attempt6.md — 0 hits (title ink 291.2x67.1 in a 309.6x192 box; header ink 92.8x24.9, positioned assertions PASS). config-census-attempt6.md — 0 hits (123 keys, all consumed, one parameter-mediated; CSS leg PASS: 8 rules, balanced, no external refs). The census caught one literal of the class this attempt exists to remove — the fold depth -0.12 as a bare literal — cured before freezing as the CONFIG key foldMinFactor (validated [-1, 1)); the frozen scan shows no -0.12 occurrence and the face measurement still reads -0.120, now from CONFIG.
+
+FREEZE: source frozen at sha256 8455d83217bbba1938ab53f68cbe5313f6f70ccbccc4123a5d7f462ca13e93a7, 86,723 bytes. Checkpoint 6 = checkpoint-attempt6-stage6.html (content copy) + this file.

@@ -1,0 +1,81 @@
+T16 attempt 10 — Stage 0 own-check (preservation + census + instrument baseline)
+Cycle 030 Wave 29 · plan-T16.md as amended · PIXEL-UNVERIFIED over all of it.
+
+PRESERVATION (plan §2, Execute steps 1-3)
+- Baseline: runs/2026-11-18-cycle-030-wave-29/preservation-baseline-T16-attempt10.txt
+  machine-written sha256sum in a write-first invocation; 229 entries
+  (227 artifact files + plan-T16.md + codex-plan-review-T16-return.md);
+  validation at capture: every hash exactly 64 hex chars (0 malformed),
+  file count == inventoried path list (227 + 2 = 229).
+- recreation-attempt-9.html: CONTENT copy, create-once, sha256
+  c7bdd713ac188769d7c8e3810c09cf1b351952abed0e20192a3098f3cdbd78bb == a9 scored sha.
+  INODE INDEPENDENCE ASSERTED MECHANICALLY: copy inode 7276671 != working
+  recreation.html inode 4298205 (not a hardlink). Re-verification after the
+  working file's first overwrite is owed at promotion (Execute step 16).
+- comparison-preserved-attempt-9.html: create-once content copy, sha
+  75e2584a752c2d21ff277477c5bb35c34616e119c5f12fc764a90ec6d6087a88 == baseline.
+- candidate-attempt10.html: content copy of the a9 source (sha c7bdd713...,
+  inode 7276673); all building happens on the candidate.
+
+A-C012-2 CONSUMER CENSUS (Execute step 4 — walked on the a9 source, reconciled
+against plan §1's enumeration by name; no consumer missed, one addition)
+- M2 / minSettledHoldMs: exactly TWO consumers — turnEffForInterval (turn cap)
+  and computeSchedule's budget need — plus its DEFAULTS entry and its
+  rangeCheck. NO third consumer exists, so the Stage-1 retirement into the
+  frozen schema is lawful as planned.
+- M2 other readers verified: turnEffForPage -> dwellTable; step()'s three
+  borrowTurnEffMs dispatch sites; borrowFresh via startTravel's span cap;
+  retargetPage (turnEffCur + exitDur); updateParticles (turnActive/turnU,
+  isReadable, isReadableGeom); assessFeasibility (budget need via schedule);
+  frame() catch-up bound (minIntervalMs — interval ladder, unaffected).
+- M1 / curPage->DOM: draw()'s counter write (the cure site);
+  diagnostics.counterPresentedValues (draw-bound writes only);
+  resetRun()'s re-seed; step() flip-entry opacity line; revalidate() refusal
+  snapshot (implicit — refusal touches no DOM state); fitCounter/applyCounterFit
+  (value domain only, unaffected with reason, re-asserted in the fit leg).
+- CENSUS ADDITION (plan step 4 provides for it): initDom() also seeds
+  counterNum.textContent = "1/" + pageCount at load and on every successful
+  revalidate — a fourth M1 writer in the same class as resetRun's re-seed.
+  Stage 1 re-derives it with the reset seed (un-presented initial state).
+
+INSTRUMENT BASELINE — a9 source as control (Execute step 5)
+Instrument: the actual frame() loop driven over a stubbed rasterizing canvas
+(this builder's harness, ~/workspace/.scratch/cycle-030/T16-build/), per-draw
+trace from the source's own diagnostics.drawTrace; stage 320x240.
+METRICS CONVENTION: canvas text metrics modeled alignment-centered — the
+convention under which attempts 5-9 were instrumented (their fit legs passed
+under it). See FINDING F0 for why the faithful convention cannot host the a9
+control.
+- Schedule (defaults): anchors 1@0 · 6@1500 · 14@2200; rapid pages 6-13
+  interval 87.5 ms; turnEff 67.5 ms; arrival (travel 28 + stagger 8.4) 36.4 ms.
+- Measured strict start per rapid page (frame()-clock observation, 60 fps,
+  offset 0): strictStart = max(turn completion, last required registration)
+  = anchor + 67.5 ms on EVERY rapid page — the TURN binds; registration
+  completes at anchor + 47.25 ms. Effective strict window = 87.5 - 67.5
+  = 20.0 ms (the a9 nominal figure, now measured on the frame clock).
+- Strict draws, cycle 1, pages 6-13:
+  60 fps (~16.7 ms steps): 1-2 strict draws per page at every offset
+  {0, 7.3, 13.1, 29.7}; strict-presented cells 8/8 pages at every offset
+  (== a9 filing's 32/32 cells on the page x offset basis).
+  50 ms steps: strict-presented cells 2/8 (offset 0), 4/8 (7.3), 2/8 (13.1),
+  2/8 (29.7) — most rapid pages get NO strict draw at the coarse cadence.
+- Counter (ungated control): initDom seeds "1/14" before any draw; draw()
+  then presents every page's numeral at its first draw regardless of the
+  strict predicate (recorded values 2/14 ... 14/14 in order). This is the
+  defect the Stage-1 gating construction cures.
+
+FINDING F0 (Stage-0, priced into Stage 4): under ALIGNMENT-FAITHFUL canvas
+metrics (extents relative to the context's current textAlign, as a real
+canvas reports), the a9 source REFUSES its startup resize at every stage
+size tested (320x240, 960x540, 360x640): gate reasons "header placed ink
+box outside the page region; title placed ink box outside the stage" —
+fitText() measures before the draw alignment/baseline are set (the R5b
+defect), so the placed boxes are computed from start-aligned extents and
+overflow; the pool never builds. Attempts 5-9's instruments modeled
+centered metrics, under which the same source loads. The a10 source will
+be instrumented under BOTH conventions; after R5b lands (Stage 4) the two
+must agree. PIXEL-UNVERIFIED stands: no real-browser render route exists
+to arbitrate the conventions in this seat.
+
+GATE (A-C012-4): this checkpoint is filed create-once and read back before
+Stage 1 opens.

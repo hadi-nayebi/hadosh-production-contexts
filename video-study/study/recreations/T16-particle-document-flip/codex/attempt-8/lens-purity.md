@@ -1,0 +1,15 @@
+**Verdict. Pass on construction purity under Amendment A1.** The recreation uses self-contained HTML, CSS, and JavaScript. The markup and rendering path contain no original video, frame sequence, traced redraw, external asset, or specimen filename reference. [instr.txt:14](/tmp/t16/c028-T16-purity/instr.txt:14) · [instr.txt:1519](/tmp/t16/c028-T16-purity/instr.txt:1519)
+
+The page outline and backing stack come from rectangles sized and positioned by `CONFIG`. The header and title are fitted and drawn from configured strings. Page lines come from configured width fractions with seeded variation, and the halo comes from a configured ellipse. The code samples the alpha of those offscreen drawings at runtime, so the coordinate keys identify generated targets. [instr.txt:686](/tmp/t16/c028-T16-purity/instr.txt:686) · [instr.txt:738](/tmp/t16/c028-T16-purity/instr.txt:738) · [instr.txt:780](/tmp/t16/c028-T16-purity/instr.txt:780)
+
+The 14-page count, `AI GURU`, and the checkpoint fractions live in the shared defaults. The URL path accepts a replacement count, title, flip duration, and explicit checkpoint list. Applying the source formula gives default checkpoints `1@0`, `6@1500`, `14@2200`. With nine pages and a 1,800 ms flip, the same formula gives `1@0`, `4@1038`, `9@1523`. The title sampler reads the replacement string directly. The build record reports complete assignments for the documented swap in its model harness. [instr.txt:182](/tmp/t16/c028-T16-purity/instr.txt:182) · [instr.txt:247](/tmp/t16/c028-T16-purity/instr.txt:247) · [instr.txt:315](/tmp/t16/c028-T16-purity/instr.txt:315) · [instr.txt:507](/tmp/t16/c028-T16-purity/instr.txt:507) · [instr.txt:1665](/tmp/t16/c028-T16-purity/instr.txt:1665)
+
+The deduction is for checkpoint override isolation. `snapshotConfig` copies the checkpoint array but shares its entry objects, and `strictCheckpoints` returns the supplied list directly. Editing a checkpoint entry in place can therefore alter both the live schedule and the saved rollback state before revalidation. If carried forward, the purity cure is to copy each checkpoint entry when resolving a schedule and when saving or restoring applied configuration, and to return a detached copy from the public `appliedConfig` getter. [instr.txt:515](/tmp/t16/c028-T16-purity/instr.txt:515) · [instr.txt:640](/tmp/t16/c028-T16-purity/instr.txt:640) · [instr.txt:1551](/tmp/t16/c028-T16-purity/instr.txt:1551) · [instr.txt:1617](/tmp/t16/c028-T16-purity/instr.txt:1617)
+
+**Limits.** The recreation and build record were read from the on-disk `instr.txt`. Browser-rendered pixels and swap assignments were unverified in this review. The reported rapid-page dwell and the unverified perception of fold depth concern presentation. Neither changes how the targets are generated, so they carry no purity deduction. [instr.txt:1668](/tmp/t16/c028-T16-purity/instr.txt:1668)
+
+The score, findings, and conditional checkpoint cure are supplied for filing in `hidden_files/study/recreations/T16-particle-document-flip/codex/attempt-8/lens-purity.md`.
+
+**Body-write: none (read-only run)**
+
+SCORE: 98
