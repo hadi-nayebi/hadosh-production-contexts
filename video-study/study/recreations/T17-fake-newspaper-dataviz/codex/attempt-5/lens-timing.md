@@ -1,0 +1,19 @@
+**Verdict — 82/100 for timing and tempo.** The build matches the labeled 22.5s allocation and gives each reveal a hold. The near-blank figure handoffs and the short hold on FIG.24’s final “1” keep this lens below 85. The five-lens consolidation decision remains open.
+
+| Figure and scene window | Within-window pacing and payoff |
+|---|---|
+| FIG.20 · 0.0–3.3s | The line draws at a constant rate along the path and completes on the rebound at 2.484s. The finished chart gets 0.591s at full opacity before the exit fade. [Line draw](/tmp/t17a5-timing/recreation.html:93) |
+| FIG.21 · 3.3–7.8s | A dot fills every 80ms, with the blue “you” dot appearing at 0.640s. Typing starts at 0.700s, overlaps the fill for 0.500s, and finishes the punchline at 2.740s. Its 1.535s fully opaque hold clears the configured 1.360s reading floor by 0.175s. The first two dot arrivals occur during the entrance fade. [Waffle and typing states](/tmp/t17a5-timing/recreation.html:94) |
+| FIG.22 · 7.8–11.4s | Ten units settle from 0.432s to 2.700s at 0.252s intervals, with the counter advancing on each settle. The bars and donut finish at 2.550s, leaving the tenth unit and count as the last beat, with 0.675s at full opacity. [Stack state](/tmp/t17a5-timing/recreation.html:103) |
+| FIG.23 · 11.4–15.0s | The CEO appears at 0.150s during the entrance fade. The four reports arrive about 0.428s apart, with VP of Vibes arriving at 2.160s. The badge starts 0.240s later, settles at 2.850s, and gets 0.525s at full opacity. [Org chart state](/tmp/t17a5-timing/recreation.html:111) |
+| FIG.24 · 15.0–18.7s | The counter ticks down slowly until 2.516s, then the number and graph share a 0.584s accelerating collapse. The dashed marker appears about 0.97s before the cliff. The synchronized finish gives “1” a clear landing in the logic, but only 0.375s at full opacity to register. [Collapse function](/tmp/t17a5-timing/recreation.html:78) · [Graph renderer](/tmp/t17a5-timing/recreation.html:445) |
+| FIG.25 · 18.7–22.5s | The correction appears at 0.256s. The stamp appears at 1.120s and settles at 1.504s, before either note starts. The final note finishes at 2.720s, leaving 1.080s fully opaque within the scene. Standalone playback stops on that completed frame. [Correction state](/tmp/t17a5-timing/recreation.html:120) · [Playback endpoint](/tmp/t17a5-timing/recreation.html:539) |
+
+Across the five 0.45s handoffs, the masthead stays fixed and both figure layers are at roughly 2.3% opacity at the boundary. The logic checks establish continuity, but that opacity dip could read as a brief blank in the figure area at speed. The holds above subtract the 0.225s outgoing fade for FIG.20–24. FIG.25 has no outgoing fade. [Transition function](/tmp/t17a5-timing/recreation.html:138) · [Own-check packet](/tmp/t17a5-timing/own-check-packet.md:15)
+
+**Limits — PIXEL-UNVERIFIED.** The six windows sum to 22.5s and match P1’s labels. No measured specimen checkpoints or normal-speed rendered comparisons establish beat-level fidelity. Chromium startup failed with “Hatch WebGL domain policy is required for browser startup,” so the score credits the programmed rhythm and leaves the perceived handoffs and joke landings unverified. [Specimen basis and verification limits](/tmp/t17a5-timing/neutral-technique-facts.md:2)
+
+BODY-WRITE: If attempt 5 misses the bar, carry frame-timed specimen and recreation checkpoints for all six figures plus normal-speed playback at 360px and 390px. Use them to adjust the near-blank handoffs and FIG.24’s 0.375s fully opaque hold, then verify FIG.25’s stamp-to-note sequence and final hold.
+
+**Body-write: none (read-only run)**
+SCORE: 82

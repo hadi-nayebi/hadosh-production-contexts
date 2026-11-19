@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T17 — Fake-newspaper animated dataviz — Recreation</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#222}
+#stage{position:relative;width:960px;max-width:100vw;aspect-ratio:16/9;margin:0 auto;overflow:hidden;font-family:Georgia,'Times New Roman',serif}
+.mast{ text-align:center;padding:14px 28px 0}.mast h1{margin:0;font-size:42px;letter-spacing:.06em;font-weight:500}
+.rule{border-top:3px solid currentColor;border-bottom:1px solid currentColor;height:5px;margin:8px 28px 0}
+.meta{display:flex;justify-content:space-between;padding:5px 28px;font-size:12px;letter-spacing:.08em;border-bottom:2px solid currentColor;margin:0 0 4px}
+.fig{position:absolute;left:0;right:0;top:118px;bottom:0;padding:10px 44px;opacity:0;pointer-events:none}
+.fig.on{opacity:1}
+.fignum{font-family:Arial,sans-serif;font-size:14px;letter-spacing:.12em}
+.fig h2{margin:3px 0 8px;font-size:30px;font-weight:500}
+.src{position:absolute;bottom:10px;left:44px;font-size:12px;opacity:.65;font-family:Arial,sans-serif}
+.hand{font-family:'Comic Sans MS','Segoe Print',cursive}
+.card{border:1.5px solid currentColor;border-radius:8px;padding:12px;background:rgba(255,255,255,.35)}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid currentColor;display:inline-block;margin:4px}
+.stamp{display:inline-block;border:4px solid currentColor;border-radius:6px;padding:8px 14px;font-family:Arial,sans-serif;font-weight:900;letter-spacing:.08em;transform:rotate(-8deg)}
+#controls{width:960px;max-width:100vw;margin:6px auto;text-align:center}button{font-size:16px;padding:8px 16px;margin:0 4px}
+</style></head><body>
+<div id="stage"></div>
+<div id="controls"><button id="play">Play / Pause</button><button id="restart">Restart</button><span id="clock" style="color:#fff;font-family:monospace"></span></div>
+<script>
+"use strict";
+/* ============ CONFIG — every variable of the technique ============ */
+const CONFIG = {
+  duration: 22.5,
+  masthead: "THE DAILY STANDUP",
+  dateLine: "THURSDAY, OCT. 30",
+  clockStart: "4:01 P.M.",
+  price: "PRICE: 1 SUBSCRIPTION",
+  palette: { paper:"#e9e4d8", ink:"#1c1a17", red:"#c1271f", blue:"#2456c8", accent:"#e8a13a", muted:"#77705f" },
+  scale: 1,
+  figures: [
+    { id:"fig20", start:0.0, dur:3.6, num:"FIG. 20", title:"Humanity's outlook, according to my last two posts", source:"Source: @adita_zzz on X",
+      chartTitle:"OUTLOOK", yLabels:["so back","meh","doomed"], xLabels:["post 1","post 2"],
+      points:[[0.55,0.78],[0.82,0.18],[0.97,0.30]], cardText:"when the robots do it all, we're finally free to grow our tomatoes. voluntarily." },
+    { id:"fig21", start:3.6, dur:3.9, num:"FIG. 21", title:"Are people panicking?", source:"Source: everyone, apparently",
+      waffleTotal:15, waffleCols:5, youIndex:7, waffleLabel:"panicking", summaryText:"Summary: everyone is panicking. One person — you — is oddly calm, and possibly the cause." },
+    { id:"fig22", start:7.5, dur:3.6, num:"FIG. 22", title:"Compute, stacked", source:"Source: the desk",
+      stackCount:10, stackLabel:"Mac minis", bars:[0.35,0.55,0.8,1.0], barLabels:["a","b","c","d"], donutFraction:0.72, donutLabel:"72% slop" },
+    { id:"fig23", start:11.1, dur:3.6, num:"FIG. 23", title:"Org chart: Agents, Inc. (founded today)", source:"Source: the agents",
+      ceo:"CEO", ceoSub:"an agent", nodes:["CFO","CTO","Head of HR","VP of Vibes"], badge:"EMPLOYEE OF THE YEAR", badgeName:"Adita", onlyNote:"(only employee)" },
+    { id:"fig24", start:14.7, dur:4.0, num:"FIG. 24", title:"Jobs on Earth, before and after my song", source:"Source: my song",
+      counterStart:3412083117, counterEnd:1, cliffAt:0.68, counterLabel:"JOBS ON EARTH", counterSub:"and counting" },
+    { id:"fig25", start:18.7, dur:3.8, num:"FIG. 25", title:"Correction", source:"Source: the editor",
+      correction:"CORRECTION: the author was not hired by a company. The author was —", stamp:"HIRED BY MYSELF", notes:["checks out","(Not mine. Rendered.)"] }
+  ]
+};
+/* URL overrides for the swap test: ?masthead=X&palette.red=%2300aa00&figures.0.start=... (top-level strings/numbers + palette keys) */
+(function(){ const q=new URLSearchParams(location.search); q.forEach((v,k)=>{ if(k.startsWith("palette.")){CONFIG.palette[k.slice(8)]=v;} else if(k in CONFIG && typeof CONFIG[k]!=="object"){ const n=Number(v); CONFIG[k]=isNaN(n)||v.trim()===""?v:n; } }); })();
+
+const stage=document.getElementById('stage');
+stage.style.background=CONFIG.palette.paper; stage.style.color=CONFIG.palette.ink;
+const P=CONFIG.palette;
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+const mast=el('div','mast'); mast.appendChild(el('h1','',CONFIG.masthead)); stage.appendChild(mast);
+stage.appendChild(el('div','rule'));
+const meta=el('div','meta'); meta.append(el('span','',CONFIG.dateLine), (()=>{const s=el('span','',CONFIG.clockStart);s.style.color=P.red;return s})(), el('span','',CONFIG.price)); stage.appendChild(meta);
+
+/* Build one DOM/SVG module per figure type — content entirely from CONFIG.figures */
+const figEls={};
+CONFIG.figures.forEach(f=>{
+  const root=el('section','fig'); root.id=f.id;
+  const num=el('div','fignum',f.num); num.style.color=P.red; root.appendChild(num);
+  root.appendChild(el('h2','',f.title));
+  const body=el('div'); body.style.position='relative'; root.appendChild(body);
+  root.appendChild(el('div','src',f.source));
+  stage.appendChild(root); figEls[f.id]={root,body,f};
+});
+function svg(w,h){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox',`0 0 ${w} ${h}`);s.setAttribute('width',w);s.setAttribute('height',h);return s;}
+function line(s,x1,y1,x2,y2,col,w){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',col);l.setAttribute('stroke-width',w||2);s.appendChild(l);return l;}
+
+/* FIG20 line chart draw-on */
+(function(){const {body,f}=figEls.fig20; const wrap=el('div');wrap.style.display='flex';wrap.style.gap='18px';
+ const card=el('div','card',f.cardText);card.style.cssText='width:46%;font-family:Arial;font-size:19px;line-height:1.35';wrap.appendChild(card);
+ const s=svg(380,240); line(s,50,10,50,210,P.ink,2);
+ f.yLabels.forEach((lab,i)=>{const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',58);t.setAttribute('y',35+i*80);t.setAttribute('font-size','18');t.setAttribute('fill',lab==='doomed'?P.red:P.ink);t.textContent=lab;s.appendChild(t);});
+ const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+ const d=f.points.map((pt,i)=>(i?'L':'M')+(50+pt[0]*300)+' '+(210-pt[1]*190)).join(' ');
+ path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke',P.ink);path.setAttribute('stroke-width','4');
+ const len=520; path.style.strokeDasharray=len; path.style.strokeDashoffset=len; s.appendChild(path);
+ wrap.appendChild(s); body.appendChild(wrap); figEls.fig20.draw=p=>{path.style.strokeDashoffset=len*(1-Math.min(1,p*1.4));};
+})();
+/* FIG21 waffle dot-by-dot + typed summary */
+(function(){const {body,f}=figEls.fig21; const grid=el('div'); grid.style.width=(f.waffleCols*38)+'px';
+ const dots=[]; for(let i=0;i<f.waffleTotal;i++){const d=el('span','dot');d.style.opacity=.18;grid.appendChild(d);dots.push(d);}
+ const cnt=el('div','', ''); cnt.style.cssText='font-family:Arial;font-size:22px;margin:8px 0';
+ const you=el('div','hand','you →'); you.style.color=P.blue;
+ const sum=el('div','card',''); sum.style.cssText='font-family:Arial;font-size:19px;min-height:56px;margin-top:10px';
+ body.append(grid,cnt,you,sum);
+ figEls.fig21.draw=p=>{ const filled=Math.floor(Math.min(1,p*1.3)*f.waffleTotal);
+   dots.forEach((d,i)=>{ if(i<filled){d.style.opacity=1; d.style.background=(i===f.youIndex?P.blue:P.red);} else d.style.opacity=.18; });
+   you.style.opacity=(filled>f.youIndex)?1:0;
+   cnt.textContent=`${f.waffleLabel} ${filled} of ${f.waffleTotal}`;
+   const chars=Math.floor(Math.max(0,p-0.45)*2*f.summaryText.length); sum.textContent=f.summaryText.slice(0,chars); };
+})();
+/* FIG22 stack + counter + bars + donut */
+(function(){const {body,f}=figEls.fig22; const wrap=el('div');wrap.style.display='flex';wrap.style.gap='26px';
+ const stack=el('div'); stack.style.cssText='width:150px;display:flex;flex-direction:column-reverse;gap:4px;min-height:190px';
+ const units=[]; for(let i=0;i<f.stackCount;i++){const u=el('div','','▭');u.style.cssText='border:2px solid '+P.ink+';border-radius:5px;text-align:center;font-size:15px;padding:3px;opacity:0';stack.appendChild(u);units.push(u);}
+ const cnt=el('div');cnt.style.cssText='font-family:Arial;font-size:34px;font-weight:700';
+ const left=el('div');left.append(stack,cnt); wrap.appendChild(left);
+ const s=svg(360,220); const bars=[];
+ f.bars.forEach((v,i)=>{const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',20+i*55);r.setAttribute('width',36);r.setAttribute('fill',P.accent);s.appendChild(r);bars.push([r,v]);});
+ const circ=document.createElementNS('http://www.w3.org/2000/svg','circle');circ.setAttribute('cx',290);circ.setAttribute('cy',90);circ.setAttribute('r',52);circ.setAttribute('fill','none');circ.setAttribute('stroke',P.red);circ.setAttribute('stroke-width','16');
+ const C=2*Math.PI*52; circ.style.strokeDasharray=C; circ.style.strokeDashoffset=C; circ.setAttribute('transform','rotate(-90 290 90)'); s.appendChild(circ);
+ const dl=document.createElementNS('http://www.w3.org/2000/svg','text');dl.setAttribute('x',258);dl.setAttribute('y',96);dl.setAttribute('font-size','17');dl.textContent=f.donutLabel;s.appendChild(dl);
+ wrap.appendChild(s); body.appendChild(wrap);
+ figEls.fig22.draw=p=>{ const n=Math.floor(Math.min(1,p*1.25)*f.stackCount); units.forEach((u,i)=>u.style.opacity=i<n?1:0);
+   cnt.textContent=n+' '+f.stackLabel;
+   bars.forEach(([r,v])=>{const h=v*180*Math.min(1,p*1.5);r.setAttribute('y',200-h);r.setAttribute('height',h);});
+   circ.style.strokeDashoffset=C*(1-f.donutFraction*Math.min(1,p*1.5)); };
+})();
+/* FIG23 org chart node-by-node */
+(function(){const {body,f}=figEls.fig23;
+ const ceo=el('div','card',f.ceo+' — '+f.ceoSub); ceo.style.cssText='width:280px;margin:0 auto;text-align:center;font-family:Arial;font-weight:700;font-size:22px;opacity:0';
+ body.appendChild(ceo);
+ const row=el('div'); row.style.cssText='display:flex;justify-content:space-around;margin-top:34px';
+ const nodes=f.nodes.map(n=>{const d=el('div','','⬛ '+n);d.style.cssText='font-family:Arial;font-size:19px;opacity:0';row.appendChild(d);return d;});
+ body.appendChild(row);
+ const badge=el('div'); badge.style.cssText='text-align:center;margin-top:26px;opacity:0';
+ badge.append(el('span','hand',f.onlyNote+'  '), (()=>{const s=el('span','', '★ '+f.badgeName+' — '+f.badge);s.style.cssText='font-family:Arial;font-weight:700;color:'+P.red;return s})());
+ body.appendChild(badge);
+ figEls.fig23.draw=p=>{ ceo.style.opacity=p>0.05?1:0; nodes.forEach((d,i)=>d.style.opacity=p>0.25+i*0.15?1:0); badge.style.opacity=p>0.88?1:0; badge.style.transform=`scale(${p>0.88?1:1.6})`; };
+})();
+/* FIG24 giant counter: tick down, then cliff-dive, graph drops with it */
+(function(){const {body,f}=figEls.fig24; const wrap=el('div');wrap.style.display='flex';wrap.style.gap='24px';
+ const s=svg(420,220); const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+ path.setAttribute('fill','none');path.setAttribute('stroke',P.ink);path.setAttribute('stroke-width','3'); s.appendChild(path);
+ const dash=document.createElementNS('http://www.w3.org/2000/svg','line');dash.setAttribute('stroke',P.red);dash.setAttribute('stroke-dasharray','5 5');s.appendChild(dash);
+ wrap.appendChild(s);
+ const card=el('div','card'); card.style.cssText='width:320px;font-family:Arial';
+ const lab=el('div','',f.counterLabel);lab.style.cssText='letter-spacing:.1em;font-size:14px;opacity:.6';
+ const big=el('div');big.style.cssText='font-size:34px;font-weight:900;margin:10px 0'; const sub=el('div','',f.counterSub);sub.style.fontStyle='italic';sub.style.fontFamily='Georgia';
+ card.append(lab,big,sub); wrap.appendChild(card); body.appendChild(wrap);
+ figEls.fig24.draw=p=>{ let v;
+   if(p<f.cliffAt){ v=f.counterStart - (p/f.cliffAt)*1800000; }
+   else { const q=(p-f.cliffAt)/(1-f.cliffAt); v=Math.max(f.counterEnd, (f.counterStart-1800000)*Math.pow(1-q,4)); }
+   big.textContent=Math.round(v).toLocaleString('en-US');
+   const cliffX=40+ (380*f.cliffAt); const yAt= q=> q<f.cliffAt? 30+q*8 : 38+Math.pow((q-f.cliffAt)/(1-f.cliffAt),1.6)*160;
+   let d='M40 '+yAt(0); for(let q=0.05;q<=Math.max(0.05,p);q+=0.05) d+=' L'+(40+380*q)+' '+yAt(q);
+   path.setAttribute('d',d); dash.setAttribute('x1',cliffX);dash.setAttribute('x2',cliffX);dash.setAttribute('y1',20);dash.setAttribute('y2',200); dash.style.opacity=p>0.5?1:0; };
+})();
+/* FIG25 correction + stamp slam + margin notes */
+(function(){const {body,f}=figEls.fig25;
+ const corr=el('div','card',f.correction); corr.style.cssText='border-color:'+P.red+';color:'+P.red+';font-family:Arial;font-size:21px;max-width:640px;opacity:0'; body.appendChild(corr);
+ const stamp=el('span','stamp',f.stamp); stamp.style.color=P.red; stamp.style.opacity=0; stamp.style.marginTop='28px'; body.appendChild(stamp);
+ const notes=el('div'); notes.style.marginTop='22px'; f.notes.forEach(n=>{const s=el('div','hand',n);s.style.cssText='font-size:24px;color:'+P.blue+';opacity:0';notes.appendChild(s);}); body.appendChild(notes);
+ figEls.fig25.draw=p=>{ corr.style.opacity=p>0.08?1:0;
+   if(p>0.42){stamp.style.opacity=1; const q=Math.min(1,(p-0.42)/0.08); stamp.style.transform=`rotate(-8deg) scale(${2.4-1.4*q})`;} else stamp.style.opacity=0;
+   [...notes.children].forEach((s,i)=>s.style.opacity=p>0.62+i*0.15? Math.min(1,(p-0.62-i*0.15)*4):0); };
+})();
+
+/* Clock: figures replace each other inside the static broadsheet (zero hard cuts = masthead never leaves; figure crossfade is opacity via .on) */
+let playing=false, startStamp=0, offset=0, raf=0;
+function render(t){ window.__lastT=t; document.getElementById('clock').textContent=t.toFixed(2)+'s / '+CONFIG.duration+'s';
+  CONFIG.figures.forEach(f=>{ const o=figEls[f.id]; const local=(t-f.start)/f.dur; const active=t>=f.start && t<f.start+f.dur;
+    o.root.classList.toggle('on',active); if(active&&o.draw)o.draw(Math.max(0,Math.min(1,local))); }); }
+function tick(now){ if(!playing)return; const t=offset+(now-startStamp)/1000; if(t>=CONFIG.duration){render(CONFIG.duration);playing=false;return;} render(t); raf=requestAnimationFrame(tick); }
+window.T17={ config:CONFIG, render, setTime:t=>{offset=t;render(t);}, get time(){return offset;},
+  play(){ if(!playing){playing=true;startStamp=performance.now();raf=requestAnimationFrame(tick);} },
+  pause(){ playing=false; offset=window.__lastT||offset; cancelAnimationFrame(raf); },
+  restart(){ offset=0; playing=true; startStamp=performance.now(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick); } };
+document.getElementById('play').onclick=()=>{ playing?window.T17.pause():window.T17.play(); };
+document.getElementById('restart').onclick=()=>window.T17.restart();
+render(0);
+</script></body></html>

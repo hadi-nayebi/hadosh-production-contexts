@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T17 — Fake-newspaper animated dataviz — Recreation</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#222}
+#stage{position:relative;width:960px;max-width:100vw;aspect-ratio:16/9;margin:0 auto;overflow:hidden;font-family:Georgia,'Times New Roman',serif}
+#stage.phone{aspect-ratio:auto}
+.mast{text-align:center;padding:var(--padtop,14px) 28px 0}.mast h1{margin:0;font-size:var(--mast,42px);letter-spacing:.06em;font-weight:500;line-height:1.15}
+.rule{border-top:3px solid currentColor;border-bottom:1px solid currentColor;height:5px;margin:8px 28px 0}
+.meta{display:flex;justify-content:space-between;padding:5px 28px;font-size:var(--label,12px);letter-spacing:.08em;border-bottom:2px solid currentColor;margin:0 0 4px}
+.fig{position:absolute;left:0;right:0;top:var(--figtop,118px);bottom:0;padding:6px var(--padx,44px);opacity:0;pointer-events:none}
+.fig.on{opacity:1}
+.fignum{font-family:Arial,sans-serif;font-size:var(--label,14px);letter-spacing:.12em}
+.fig h2{margin:3px 0 8px;font-size:var(--title,30px);font-weight:500;line-height:1.2}
+.src{font-size:var(--label,12px);opacity:.8;font-family:Arial,sans-serif;margin-top:6px}
+.hand{font-family:'Comic Sans MS','Segoe Print',cursive}
+.card{border:1.5px solid currentColor;border-radius:8px;padding:12px;background:rgba(255,255,255,.35)}
+.dot{border-radius:50%;border:2px solid currentColor;display:inline-block}
+.stamp{display:inline-block;border:4px solid currentColor;border-radius:6px;padding:8px 14px;font-family:Arial,sans-serif;font-weight:900;letter-spacing:.08em}
+.warn{font-family:Arial,sans-serif;color:#c1271f;border:1.5px dashed currentColor;padding:10px}
+#controls{width:960px;max-width:100vw;margin:6px auto;text-align:center}button{font-size:16px;padding:8px 16px;margin:0 4px;min-height:44px}
+</style></head><body>
+<div id="stage"></div>
+<div id="controls"><button id="play">Play / Pause</button><button id="restart">Restart</button><span id="clock" style="color:#fff;font-family:monospace"></span></div>
+<script>
+"use strict";
+/* === PURE LOGIC (DOM-free): data, timing states, layout model, validation === */
+const CONFIG = {
+  duration: 22.5,
+  masthead: "THE DAILY STANDUP",
+  dateLine: "THURSDAY, OCT. 30",
+  clockStart: "4:01 P.M.",
+  price: "PRICE: 1 SUBSCRIPTION",
+  palette: { paper:"#e9e4d8", ink:"#1c1a17", red:"#c1271f", blue:"#2456c8", accent:"#e8a13a", muted:"#77705f" },
+  timing: { minHoldSec:0.6, drawEnd:0.92, waffleFillEnd:0.55, summaryStart:0.50, summaryEnd:0.95,
+            stackEnd:0.90, barsEnd:0.85, ceoAt:0.05, nodeStart:0.15, nodeEnd:0.72, badgeAt:0.80,
+            corrAt:0.08, stampAt:0.35, stampDur:0.12, stampFrom:2.4, noteStart:0.55, noteGap:0.18, noteFade:0.15 },
+  bounds: { maxFigures:8, maxWaffle:60, maxBars:8, maxStack:14, maxNodes:8, maxNotes:4, maxPoints:8 },
+  typeFloors: { masthead:20, figureTitle:17, body:12, label:11, bigCounter:20, hand:14 },
+  figures: [
+    { id:"fig20", type:"lineChart", start:0.0, dur:3.6, num:"FIG. 20", title:"Humanity's outlook, according to my last two posts", source:"Source: @adita_zzz on X",
+      chartTitle:"OUTLOOK", yLabels:[{text:"so back",y:0.78},{text:"meh",y:0.45},{text:"doomed",y:0.15,emphasis:true}], xLabels:["post 1","post 2"],
+      points:[[0.55,0.78],[0.82,0.18],[0.97,0.30]], cardText:"when the robots do it all, we're finally free to grow our tomatoes. voluntarily." },
+    { id:"fig21", type:"waffle", start:3.6, dur:3.9, num:"FIG. 21", title:"Are people panicking?", source:"Source: everyone, apparently",
+      waffleTotal:15, waffleCols:5, youIndex:7, youLabel:"you →", waffleLabel:"panicking", summaryText:"Summary: everyone is panicking. One person — you — is oddly calm, and possibly the cause." },
+    { id:"fig22", type:"stackBars", start:7.5, dur:3.6, num:"FIG. 22", title:"Compute, stacked", source:"Source: the desk",
+      stackCount:10, stackLabel:"Mac minis", bars:[0.35,0.55,0.8,1.0], barLabels:["a","b","c","d"], donutFraction:0.72, donutLabel:"72% slop" },
+    { id:"fig23", type:"orgChart", start:11.1, dur:3.6, num:"FIG. 23", title:"Org chart: Agents, Inc. (founded today)", source:"Source: the agents",
+      ceo:"CEO", ceoSub:"an agent", nodes:["CFO","CTO","Head of HR","VP of Vibes"], badge:"EMPLOYEE OF THE YEAR", badgeName:"Adita", onlyNote:"(only employee)" },
+    { id:"fig24", type:"counterGraph", start:14.7, dur:4.0, num:"FIG. 24", title:"Jobs on Earth, before and after my song", source:"Source: my song",
+      counterStart:3412083117, counterEnd:1, preCliffDrop:1800000, cliffAt:0.68, cliffExponent:1.8, counterLabel:"JOBS ON EARTH", counterSub:"and counting" },
+    { id:"fig25", type:"correction", start:18.7, dur:3.8, num:"FIG. 25", title:"Correction", source:"Source: the editor",
+      correction:"CORRECTION: the author was not hired by a company. The author was —", stamp:"HIRED BY MYSELF", notes:["checks out","(Not mine. Rendered.)"] }
+  ]
+};
+function clamp01(v){return v<0?0:v>1?1:v;}
+function lerp(a,b,q){return a+(b-a)*q;}
+function animFraction(fig){return Math.max(0.05,(fig.dur-CONFIG.timing.minHoldSec)/fig.dur);}
+function animQ(p,fig){return clamp01(p/animFraction(fig));}
+/* One normalized collapse: 0 at window start, 1 at the end of the animation portion.
+   Pre-cliff portion loses exactly preCliffDrop of the counter range by cliffAt. */
+function collapseN(p,fig){
+  const range=fig.counterStart-fig.counterEnd; if(range<=0) return clamp01(p);
+  const a=fig.preCliffDrop/range, end=animFraction(fig), cliff=fig.cliffAt;
+  if(p<=0) return 0; if(p>=end) return 1;
+  if(p<cliff) return a*(p/cliff);
+  const q=(p-cliff)/(end-cliff); return a+(1-a)*Math.pow(q,fig.cliffExponent);
+}
+function counterValueAt(p,fig){return fig.counterStart + collapseN(p,fig)*(fig.counterEnd-fig.counterStart);}
+function counterTextAt(p,fig){return Math.round(counterValueAt(p,fig)).toLocaleString('en-US');}
+function graphYAt(p,fig,geom){return geom.y0 + collapseN(p,fig)*(geom.y1-geom.y0);}
+function polylineLength(points,geom){
+  let len=0,px=null,py=null;
+  for(const pt of points){const x=geom.x0+pt[0]*geom.w, y=geom.yBase-pt[1]*geom.h; if(px!==null) len+=Math.hypot(x-px,y-py); px=x; py=y;}
+  return len;
+}
+function lineChartState(fig,q){const T=CONFIG.timing; return {drawQ:clamp01(q/T.drawEnd)};}
+function waffleState(fig,q){const T=CONFIG.timing;
+  const filled=Math.floor(clamp01(q/T.waffleFillEnd)*fig.waffleTotal);
+  const sq=clamp01((q-T.summaryStart)/(T.summaryEnd-T.summaryStart));
+  return {filled:Math.min(fig.waffleTotal,filled), youVisible:filled>fig.youIndex, summaryChars:Math.floor(sq*fig.summaryText.length)};}
+function stackState(fig,q){const T=CONFIG.timing;
+  return {units:Math.min(fig.stackCount,Math.floor(clamp01(q/T.stackEnd)*fig.stackCount)), barQ:clamp01(q/T.barsEnd), donutQ:clamp01(q/T.barsEnd)};}
+function nodeThresholds(fig){const T=CONFIG.timing; const out=[]; for(let i=0;i<fig.nodes.length;i++) out.push(T.nodeStart+(i+1)*((T.nodeEnd-T.nodeStart)/fig.nodes.length)); return out;}
+function orgState(fig,q){const T=CONFIG.timing; const th=nodeThresholds(fig);
+  return {ceo:q>=T.ceoAt, nodes:th.map(t=>q>=t), badge:q>=T.badgeAt};}
+function correctionState(fig,q){const T=CONFIG.timing;
+  const sq=clamp01((q-T.stampAt)/T.stampDur);
+  return {corr:q>=T.corrAt, stampVisible:q>=T.stampAt, stampScale:q<T.stampAt?T.stampFrom:lerp(T.stampFrom,1,sq),
+          notes:fig.notes.map((n,i)=>clamp01((q-(T.noteStart+i*T.noteGap))/T.noteFade))};}
+function barRects(fig,geom,q){
+  const n=fig.bars.length, slot=(geom.w*0.58)/n, bw=slot*0.6, base=geom.h-18, maxH=geom.h-40;
+  return fig.bars.map((v,i)=>{const h=v*maxH*q; return {x:8+i*slot+(slot-bw)/2, y:base-h, w:bw, h, labelX:8+i*slot+slot/2};});
+}
+function stateAt(t,figures,duration){
+  const tt=Math.max(0,Math.min(duration,t));
+  for(let i=0;i<figures.length;i++){const f=figures[i]; const last=i===figures.length-1;
+    if(tt>=f.start && (tt<f.start+f.dur || (last && tt<=duration))) return {index:i, p:clamp01((tt-f.start)/f.dur)};}
+  let idx=0; figures.forEach((f,i)=>{if(tt>=f.start) idx=i;});
+  return {index:idx, p:clamp01((tt-figures[idx].start)/figures[idx].dur)};
+}
+/* Layout model: stage-relative type with named floors; phone mode stacks blocks. */
+function computeLayout(w){
+  const F=CONFIG.typeFloors, phone=w<=520;
+  const mastPx=Math.max(F.masthead, Math.min(42, w*0.04375));
+  const titlePx=Math.max(F.figureTitle, Math.min(30, w*0.03125));
+  const bodyPx=Math.max(F.body, Math.min(19, w*0.0198));
+  const labelPx=Math.max(F.label, Math.min(14, w*0.0146));
+  const bigPx=Math.max(F.bigCounter, Math.min(34, w*0.0354));
+  const handPx=Math.max(F.hand, Math.min(24, w*0.025));
+  const padX=phone?16:44, padTop=phone?6:14;
+  const headerH=padTop + mastPx*1.15 + 13 + (labelPx*1.3+10) + 4;
+  const contentW=w-2*padX, stageH=phone?null:w*9/16;
+  const contentH=phone?null:stageH-headerH;
+  return {w, phone, mastPx, titlePx, bodyPx, labelPx, bigPx, handPx, padX, padTop, headerH, contentW, stageH, contentH};
+}
+function charsPerLine(widthPx,fontPx){return Math.max(1,Math.floor(widthPx/(fontPx*0.52)));}
+function textLines(text,widthPx,fontPx){return Math.max(1,Math.ceil(text.length/charsPerLine(widthPx,fontPx)));}
+function headingLines(title,L){return textLines(title, L.contentW, L.titlePx);}
+function figureGeom(fig,L){
+  const cw=L.contentW;
+  if(fig.type==="lineChart"){const chartW=L.phone?cw:Math.min(430,cw*0.50), chartH=L.phone?120:240;
+    const cardW=L.phone?cw:cw-chartW-18, cardH=textLines(fig.cardText,cardW-24,L.bodyPx)*L.bodyPx*1.35+24;
+    const titleH=L.labelPx*1.3+4;
+    return {chartW,chartH,cardW,cardH,titleH, blockH:L.phone?cardH+8+titleH+chartH:Math.max(cardH,titleH+chartH), maxW:cw};}
+  if(fig.type==="waffle"){const gap=8, dot=Math.max(12,Math.min(26,Math.floor((cw*0.5)/fig.waffleCols)-gap));
+    const rows=Math.ceil(fig.waffleTotal/fig.waffleCols), gridW=fig.waffleCols*(dot+gap)-gap, gridH=rows*(dot+gap)-gap;
+    const sumH=textLines(fig.summaryText,cw-24,L.bodyPx)*L.bodyPx*1.35+24;
+    return {dot,gap,rows,gridW,gridH,sumH, blockH:gridH+6+L.bodyPx*1.4+8+sumH, maxW:cw};}
+  if(fig.type==="stackBars"){const chartW=L.phone?cw:Math.min(430,cw*0.52), chartH=L.phone?130:220;
+    const unitH=L.phone?13:15, stackH=fig.stackCount*(unitH+4), counterH=L.bodyPx*1.6;
+    return {chartW,chartH,unitH,stackH,counterH, blockH:L.phone?counterH+stackH+8+chartH:Math.max(stackH+counterH,chartH), maxW:cw};}
+  if(fig.type==="orgChart"){const longest=Math.max.apply(null,fig.nodes.map(n=>n.length));
+    const nodeW=longest*L.labelPx*0.62+34, perRow=Math.max(1,Math.floor(cw/nodeW)), rows=Math.ceil(fig.nodes.length/perRow);
+    const ceoH=L.bodyPx*1.35+24, nodesH=rows*(L.bodyPx*1.35+10);
+    const badgeText=fig.onlyNote+"  ★ "+fig.badgeName+" — "+fig.badge;
+    const badgeH=textLines(badgeText,cw,L.bodyPx)*L.bodyPx*1.35+8;
+    return {nodeW,perRow,rows,ceoH,nodesH,badgeH, blockH:ceoH+18+nodesH+10+badgeH, maxW:cw};}
+  if(fig.type==="counterGraph"){const chartW=L.phone?cw:Math.min(430,cw*0.50), chartH=L.phone?120:220;
+    const cardW=L.phone?cw:cw-chartW-24;
+    const cardH=L.labelPx*1.3 + L.bigPx*1.2 + L.bodyPx*1.35 + 24;
+    return {chartW,chartH,cardW,cardH, blockH:L.phone?chartH+8+cardH:Math.max(chartH,cardH), maxW:cw};}
+  if(fig.type==="correction"){const corrW=Math.min(680,cw);
+    const corrH=textLines(fig.correction,corrW-24,L.bodyPx)*L.bodyPx*1.35+24;
+    const stampH=L.bodyPx*1.6+20, notesH=fig.notes.length*(L.handPx*1.3+4);
+    return {corrW,corrH,stampH,notesH, blockH:corrH+16+stampH+12+notesH, maxW:corrW};}
+  return {blockH:0,maxW:0};
+}
+function figureRequired(fig,L){
+  const g=figureGeom(fig,L);
+  const headH=L.labelPx*1.3 + headingLines(fig.title,L)*L.titlePx*1.2 + 6;
+  const srcH=L.labelPx*1.3+6;
+  return {id:fig.id, required:headH+g.blockH+srcH, blockH:g.blockH, maxW:g.maxW, geom:g};
+}
+function fitReport(w,figures){
+  const L=computeLayout(w), figs=figures.map(f=>figureRequired(f,L));
+  const maxReq=Math.max.apply(null,figs.map(f=>f.required));
+  const allocated=L.phone?maxReq:L.contentH;
+  const stageH=L.phone?L.headerH+maxReq:L.stageH;
+  const fontsOk=L.mastPx>=CONFIG.typeFloors.masthead && L.titlePx>=CONFIG.typeFloors.figureTitle &&
+                L.bodyPx>=CONFIG.typeFloors.body && L.labelPx>=CONFIG.typeFloors.label && L.bigPx>=CONFIG.typeFloors.bigCounter;
+  const rows=figs.map(f=>({id:f.id, required:Math.round(f.required*10)/10, allocated:Math.round(allocated*10)/10,
+    fits:f.required<=allocated+0.001, widthOk:f.maxW<=L.contentW+0.001,
+    headingReserve:Math.round(headingLines(figures.find(x=>x.id===f.id).title,L)*L.titlePx*1.2*10)/10}));
+  return {width:w, phone:L.phone, stageH:Math.round(stageH*10)/10, headerH:Math.round(L.headerH*10)/10,
+    contentW:L.contentW, fonts:{masthead:L.mastPx, figureTitle:L.titlePx, body:L.bodyPx, label:L.labelPx, bigCounter:L.bigPx, hand:L.handPx},
+    fontsOk, figures:rows, ok:fontsOk && rows.every(r=>r.fits&&r.widthOk)};
+}
+function validateConfig(cfg){
+  const B=cfg.bounds, errs=[];
+  if(!Array.isArray(cfg.figures)||cfg.figures.length<1||cfg.figures.length>B.maxFigures) errs.push("figures count outside supported boundary 1.."+B.maxFigures);
+  cfg.figures.forEach(f=>{
+    if(!(f.dur>cfg.timing.minHoldSec)) errs.push(f.id+": window must exceed the minimum hold");
+    if(f.type==="waffle"&&f.waffleTotal>B.maxWaffle) errs.push(f.id+": waffleTotal "+f.waffleTotal+" exceeds supported boundary "+B.maxWaffle);
+    if(f.type==="stackBars"){ if(f.bars.length>B.maxBars) errs.push(f.id+": bars "+f.bars.length+" exceeds supported boundary "+B.maxBars);
+      if(f.stackCount>B.maxStack) errs.push(f.id+": stackCount "+f.stackCount+" exceeds supported boundary "+B.maxStack);
+      if(f.bars.length!==f.barLabels.length) errs.push(f.id+": barLabels length must match bars length"); }
+    if(f.type==="orgChart"&&f.nodes.length>B.maxNodes) errs.push(f.id+": nodes "+f.nodes.length+" exceeds supported boundary "+B.maxNodes);
+    if(f.type==="correction"&&f.notes.length>B.maxNotes) errs.push(f.id+": notes "+f.notes.length+" exceeds supported boundary "+B.maxNotes);
+    if(f.type==="lineChart"&&f.points.length>B.maxPoints) errs.push(f.id+": points "+f.points.length+" exceeds supported boundary "+B.maxPoints);
+    if(f.type==="counterGraph"){ if(!(f.counterStart>f.counterEnd)) errs.push(f.id+": counterStart must exceed counterEnd");
+      if(!(f.cliffAt>0.1&&f.cliffAt<0.95)) errs.push(f.id+": cliffAt outside supported boundary 0.1..0.95");
+      if(!(f.preCliffDrop>0&&f.preCliffDrop<(f.counterStart-f.counterEnd)*0.05)) errs.push(f.id+": preCliffDrop outside supported boundary (0, 5% of counter range)"); }
+  });
+  return errs;
+}
+/* === END PURE === */
+
+/* URL overrides for swap testing: ?masthead=X&palette.red=%23aa0000 (top-level scalars + palette keys) */
+(function(){ const q=new URLSearchParams(location.search); q.forEach((v,k)=>{ if(k.startsWith("palette.")){CONFIG.palette[k.slice(8)]=v;} else if(k in CONFIG && typeof CONFIG[k]!=="object"){ const n=Number(v); CONFIG[k]=isNaN(n)||v.trim()===""?v:n; } }); })();
+
+const stage=document.getElementById('stage');
+stage.style.background=CONFIG.palette.paper; stage.style.color=CONFIG.palette.ink;
+const P=CONFIG.palette;
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+function svgEl(w,h){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 '+w+' '+h);s.setAttribute('width',w);s.setAttribute('height',h);s.style.maxWidth='100%';return s;}
+function svgNode(tag,attrs){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in attrs)n.setAttribute(k,attrs[k]);return n;}
+
+const mast=el('div','mast'); mast.appendChild(el('h1','',CONFIG.masthead)); stage.appendChild(mast);
+stage.appendChild(el('div','rule'));
+const meta=el('div','meta'); meta.append(el('span','',CONFIG.dateLine), (()=>{const s=el('span','',CONFIG.clockStart);s.style.color=P.red;return s})(), el('span','',CONFIG.price)); stage.appendChild(meta);
+
+/* Figure builders: each takes a mount point, its figure data and the palette,
+   builds DOM/SVG sized from the layout model, and returns a progress renderer. */
+const BUILDERS = {
+  lineChart(mount,fig,L){
+    const g=figureGeom(fig,L);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap='18px';
+    const card=el('div','card',fig.cardText); card.style.cssText='width:'+g.cardW+'px;font-family:Arial;font-size:'+L.bodyPx+'px;line-height:1.35';
+    const chartBlock=el('div');
+    const ct=el('div','',fig.chartTitle); ct.style.cssText='font-family:Arial;font-size:'+L.labelPx+'px;letter-spacing:.1em;margin-bottom:4px';
+    chartBlock.appendChild(ct);
+    const s=svgEl(g.chartW,g.chartH);
+    const geom={x0:48, w:g.chartW-58, yBase:g.chartH-22, h:g.chartH-40};
+    s.appendChild(svgNode('line',{x1:geom.x0,y1:8,x2:geom.x0,y2:geom.yBase,stroke:P.ink,'stroke-width':2}));
+    s.appendChild(svgNode('line',{x1:geom.x0,y1:geom.yBase,x2:geom.x0+geom.w,y2:geom.yBase,stroke:P.ink,'stroke-width':2}));
+    fig.yLabels.forEach(lab=>{const t=svgNode('text',{x:geom.x0-6,y:geom.yBase-lab.y*geom.h+4,'text-anchor':'end','font-size':L.labelPx,fill:lab.emphasis?P.red:P.ink});t.textContent=lab.text;s.appendChild(t);});
+    fig.xLabels.forEach((lab,i)=>{const t=svgNode('text',{x:geom.x0+geom.w*(i/(Math.max(1,fig.xLabels.length-1)||1)),y:g.chartH-4,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink});t.textContent=lab;s.appendChild(t);});
+    const d=fig.points.map((pt,i)=>(i?'L':'M')+(geom.x0+pt[0]*geom.w)+' '+(geom.yBase-pt[1]*geom.h)).join(' ');
+    const path=svgNode('path',{d:d,fill:'none',stroke:P.ink,'stroke-width':4});
+    s.appendChild(path); chartBlock.appendChild(s);
+    if(L.phone){wrap.append(chartBlock,card);} else {wrap.append(card,chartBlock);}
+    mount.body.appendChild(wrap);
+    let len=null;
+    return function(p){ const q=animQ(p,fig); const st=lineChartState(fig,q);
+      if(len===null){ len=(typeof path.getTotalLength==='function'&&path.getTotalLength()>0)?path.getTotalLength():polylineLength(fig.points,geom);
+        path.style.strokeDasharray=len; }
+      path.style.strokeDashoffset=len*(1-st.drawQ); };
+  },
+  waffle(mount,fig,L){
+    const g=figureGeom(fig,L);
+    const grid=el('div'); grid.style.width=g.gridW+'px';
+    const dots=[]; for(let i=0;i<fig.waffleTotal;i++){const d=el('span','dot');d.style.cssText='width:'+g.dot+'px;height:'+g.dot+'px;margin:0 '+(g.gap/2)+'px '+(g.gap/2)+'px 0;opacity:.18';grid.appendChild(d);dots.push(d);}
+    const cntRow=el('div'); cntRow.style.cssText='font-family:Arial;font-size:'+L.bodyPx+'px;margin:6px 0';
+    const cnt=el('span'); const you=el('span','hand',' '+fig.youLabel); you.style.color=P.blue; you.style.fontSize=L.handPx+'px'; you.style.opacity=0;
+    cntRow.append(cnt,you);
+    const sum=el('div','card',''); sum.style.cssText='font-family:Arial;font-size:'+L.bodyPx+'px;line-height:1.35;min-height:'+(L.bodyPx*1.35+24)+'px;margin-top:8px';
+    mount.body.append(grid,cntRow,sum);
+    return function(p){ const st=waffleState(fig,animQ(p,fig));
+      dots.forEach((d,i)=>{ if(i<st.filled){d.style.opacity=1; d.style.background=(i===fig.youIndex?P.blue:P.red);} else {d.style.opacity=.18; d.style.background='transparent';} });
+      you.style.opacity=st.youVisible?1:0;
+      cnt.textContent=fig.waffleLabel+' '+st.filled+' of '+fig.waffleTotal;
+      sum.textContent=fig.summaryText.slice(0,st.summaryChars); };
+  },
+  stackBars(mount,fig,L){
+    const g=figureGeom(fig,L);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap='26px';
+    const cnt=el('div'); cnt.style.cssText='font-family:Arial;font-size:'+L.bodyPx+'px;font-weight:700;height:'+g.counterH+'px';
+    const stack=el('div'); stack.style.cssText='width:'+(L.phone?g.chartW:150)+'px;display:flex;flex-direction:column-reverse;gap:4px';
+    const units=[]; for(let i=0;i<fig.stackCount;i++){const u=el('div','','▭');u.style.cssText='border:2px solid '+P.ink+';border-radius:5px;text-align:center;font-size:'+L.labelPx+'px;height:'+g.unitH+'px;opacity:0';stack.appendChild(u);units.push(u);}
+    const left=el('div'); left.append(cnt,stack);
+    const s=svgEl(g.chartW,g.chartH);
+    const rects=barRects(fig,{w:g.chartW,h:g.chartH},1);
+    const barEls=rects.map((r,i)=>{const rect=svgNode('rect',{x:r.x,width:r.w,fill:P.accent});s.appendChild(rect);
+      const t=svgNode('text',{x:r.labelX,y:g.chartH-2,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink});t.textContent=fig.barLabels[i];s.appendChild(t);return rect;});
+    const circ=svgNode('circle',{cx:g.chartW*0.82,cy:g.chartH/2,r:Math.min(52,g.chartH*0.24),fill:'none',stroke:P.red,'stroke-width':16,transform:'rotate(-90 '+(g.chartW*0.82)+' '+(g.chartH/2)+')'});
+    const C=2*Math.PI*parseFloat(circ.getAttribute('r')); circ.style.strokeDasharray=C; circ.style.strokeDashoffset=C; s.appendChild(circ);
+    const dl=svgNode('text',{x:g.chartW*0.82,y:g.chartH/2+6,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink}); dl.textContent=fig.donutLabel; s.appendChild(dl);
+    if(L.phone){wrap.append(left,s);} else {wrap.append(left,s);}
+    mount.body.appendChild(wrap);
+    return function(p){ const st=stackState(fig,animQ(p,fig));
+      units.forEach((u,i)=>u.style.opacity=i<st.units?1:0);
+      cnt.textContent=st.units+' '+fig.stackLabel;
+      const rr=barRects(fig,{w:g.chartW,h:g.chartH},st.barQ);
+      barEls.forEach((rect,i)=>{rect.setAttribute('y',rr[i].y);rect.setAttribute('height',rr[i].h);});
+      circ.style.strokeDashoffset=C*(1-fig.donutFraction*st.donutQ); };
+  },
+  orgChart(mount,fig,L){
+    const g=figureGeom(fig,L);
+    const ceo=el('div','card',fig.ceo+' — '+fig.ceoSub); ceo.style.cssText='width:'+Math.min(320,L.contentW)+'px;margin:0 auto;text-align:center;font-family:Arial;font-weight:700;font-size:'+L.bodyPx+'px;opacity:0';
+    mount.body.appendChild(ceo);
+    const row=el('div'); row.style.cssText='display:flex;flex-wrap:wrap;gap:10px;justify-content:space-around;margin-top:18px';
+    const nodes=fig.nodes.map(n=>{const d=el('div','','⬛ '+n);d.style.cssText='font-family:Arial;font-size:'+L.labelPx+'px;opacity:0;width:'+g.nodeW+'px;text-align:center';row.appendChild(d);return d;});
+    mount.body.appendChild(row);
+    const badge=el('div'); badge.style.cssText='text-align:center;margin-top:10px;opacity:0;font-size:'+L.bodyPx+'px';
+    badge.append(el('span','hand',fig.onlyNote+'  '), (()=>{const s=el('span','','★ '+fig.badgeName+' — '+fig.badge);s.style.cssText='font-family:Arial;font-weight:700;color:'+P.red;return s})());
+    mount.body.appendChild(badge);
+    return function(p){ const st=orgState(fig,animQ(p,fig));
+      ceo.style.opacity=st.ceo?1:0; nodes.forEach((d,i)=>d.style.opacity=st.nodes[i]?1:0);
+      badge.style.opacity=st.badge?1:0; badge.style.transform='scale('+(st.badge?1:1.6)+')'; };
+  },
+  counterGraph(mount,fig,L){
+    const g=figureGeom(fig,L);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap='24px';
+    const s=svgEl(g.chartW,g.chartH);
+    const geom={x0:30, x1:g.chartW-10, y0:18, y1:g.chartH-26};
+    const path=svgNode('path',{fill:'none',stroke:P.ink,'stroke-width':3}); s.appendChild(path);
+    const cliffX=geom.x0+(geom.x1-geom.x0)*fig.cliffAt;
+    const dash=svgNode('line',{x1:cliffX,x2:cliffX,y1:10,y2:g.chartH-16,stroke:P.red,'stroke-dasharray':'5 5'}); s.appendChild(dash);
+    const card=el('div','card'); card.style.cssText='width:'+g.cardW+'px;font-family:Arial';
+    const lab=el('div','',fig.counterLabel); lab.style.cssText='letter-spacing:.1em;font-size:'+L.labelPx+'px;opacity:.85';
+    const big=el('div'); big.style.cssText='font-size:'+L.bigPx+'px;font-weight:900;margin:8px 0';
+    const sub=el('div','',fig.counterSub); sub.style.cssText='font-style:italic;font-family:Georgia;font-size:'+L.bodyPx+'px';
+    card.append(lab,big,sub);
+    wrap.append(s,card); mount.body.appendChild(wrap);
+    return function(p){ const q=animQ(p,fig);
+      big.textContent=counterTextAt(p,fig);
+      let d='M'+geom.x0+' '+graphYAt(0,fig,geom);
+      const upto=Math.max(0.02,p);
+      for(let qq=0.02;qq<=upto;qq+=0.02) d+=' L'+(geom.x0+(geom.x1-geom.x0)*qq)+' '+graphYAt(qq,fig,geom);
+      d+=' L'+(geom.x0+(geom.x1-geom.x0)*upto)+' '+graphYAt(upto,fig,geom);
+      path.setAttribute('d',d); dash.style.opacity=p>0.5?1:0; };
+  },
+  correction(mount,fig,L){
+    const g=figureGeom(fig,L);
+    const corr=el('div','card',fig.correction); corr.style.cssText='border-color:'+P.red+';color:'+P.red+';font-family:Arial;font-size:'+L.bodyPx+'px;line-height:1.35;max-width:'+g.corrW+'px;opacity:0'; mount.body.appendChild(corr);
+    const stampWrap=el('div'); stampWrap.style.cssText='margin-top:16px;min-height:'+g.stampH+'px';
+    const stamp=el('span','stamp',fig.stamp); stamp.style.color=P.red; stamp.style.opacity=0; stamp.style.fontSize=L.bodyPx+'px'; stampWrap.appendChild(stamp);
+    mount.body.appendChild(stampWrap);
+    const notes=el('div'); notes.style.marginTop='12px'; const noteEls=fig.notes.map(n=>{const s=el('div','hand',n);s.style.cssText='font-size:'+L.handPx+'px;color:'+P.blue+';opacity:0';notes.appendChild(s);return s;}); mount.body.appendChild(notes);
+    return function(p){ const st=correctionState(fig,animQ(p,fig));
+      corr.style.opacity=st.corr?1:0;
+      stamp.style.opacity=st.stampVisible?1:0;
+      stamp.style.transform='rotate(-8deg) scale('+st.stampScale+')';
+      noteEls.forEach((s,i)=>s.style.opacity=st.notes[i]); };
+  }
+};
+
+let mounted=[], lastT=0;
+function buildAll(){
+  mounted.forEach(m=>m.root.remove()); mounted=[];
+  const w=stage.clientWidth||960, L=computeLayout(w);
+  stage.classList.toggle('phone',L.phone);
+  stage.style.setProperty('--mast',L.mastPx+'px'); stage.style.setProperty('--title',L.titlePx+'px');
+  stage.style.setProperty('--label',L.labelPx+'px'); stage.style.setProperty('--padx',L.padX+'px');
+  stage.style.setProperty('--padtop',L.padTop+'px'); stage.style.setProperty('--figtop',Math.round(L.headerH)+'px');
+  if(L.phone) stage.style.height=Math.round(L.headerH+Math.max.apply(null,CONFIG.figures.map(f=>figureRequired(f,L).required)))+'px';
+  else stage.style.height='';
+  const problems=validateConfig(CONFIG);
+  CONFIG.figures.forEach(f=>{
+    const root=el('section','fig'); root.id=f.id;
+    const num=el('div','fignum',f.num); num.style.color=P.red; root.appendChild(num);
+    const h=el('h2','',f.title); h.style.minHeight=(headingLines(f.title,L)*L.titlePx*1.2)+'px'; root.appendChild(h);
+    const body=el('div'); root.appendChild(body);
+    root.appendChild(el('div','src',f.source));
+    stage.appendChild(root);
+    const figProblems=problems.filter(x=>x.indexOf(f.id+':')===0);
+    let draw=null;
+    if(figProblems.length){ const warn=el('div','warn','Unsupported data — '+figProblems.join('; ')); body.appendChild(warn); if(window.console) console.warn('T17 validation: '+figProblems.join('; ')); }
+    else if(BUILDERS[f.type]) draw=BUILDERS[f.type]({root,body},f,L);
+    mounted.push({fig:f,root,draw});
+  });
+  render(lastT);
+}
+function render(t){
+  lastT=Math.max(0,Math.min(CONFIG.duration,t)); window.__lastT=lastT;
+  document.getElementById('clock').textContent=lastT.toFixed(2)+'s / '+CONFIG.duration+'s';
+  const st=stateAt(lastT,CONFIG.figures,CONFIG.duration);
+  mounted.forEach((m,i)=>{ const active=i===st.index; m.root.classList.toggle('on',active); if(active&&m.draw) m.draw(st.p); });
+}
+let playing=false, startStamp=0, offset=0, raf=0;
+function tick(now){ if(!playing)return; const t=offset+(now-startStamp)/1000; if(t>=CONFIG.duration){render(CONFIG.duration);playing=false;return;} render(t); raf=requestAnimationFrame(tick); }
+window.T17={ config:CONFIG, render, fitReport:function(w){return fitReport(w||stage.clientWidth||960, CONFIG.figures);},
+  validate:function(){return validateConfig(CONFIG);},
+  setTime:t=>{offset=t;render(t);}, get time(){return offset;},
+  play(){ if(!playing){playing=true;startStamp=performance.now();raf=requestAnimationFrame(tick);} },
+  pause(){ playing=false; offset=window.__lastT||offset; cancelAnimationFrame(raf); },
+  restart(){ offset=0; playing=true; startStamp=performance.now(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick); } };
+document.getElementById('play').onclick=()=>{ playing?window.T17.pause():window.T17.play(); };
+document.getElementById('restart').onclick=()=>window.T17.restart();
+window.addEventListener('resize',buildAll);
+buildAll();
+</script></body></html>

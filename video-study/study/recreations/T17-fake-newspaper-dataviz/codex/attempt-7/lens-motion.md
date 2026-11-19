@@ -1,0 +1,17 @@
+**Motion fidelity — 84/100.** T17 attempt 7 clears the 70-point lens floor. The five-lens consolidation decision remains open.
+
+- **Broadsheet and figure sequence.** `createScene` mounts one masthead and stage. `transitionState` and `render` sequence FIG.20–25 across 22.5 seconds using 0.45-second fades and vertical shifts within that stage. A source probe at the first handoff boundary returned outgoing opacity `0.350` and incoming opacity `0.023`. The own-check packet’s continuity probe supports a smooth opacity release, while the visible dip and overlap remain unassessed in playback. [Scene and playback source](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:579) · [Handoff function](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:201)
+
+- **FIG.20–23.** The source implements SVG dash-offset draw-on for the outlook line, stepped waffle fill from 0 to 15 with the blue “you” dot, character-by-character summary typing, ten staggered stack arrivals with a running count, growing SVG bars, and a drawing donut arc. The org chart reveals the CEO, then the four reports in order, then scales and fades in the badge. Its connectors fade in as full-length strokes, giving the links a different motion from the chart draw-on. [Figure builders](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:442)
+
+- **FIG.24.** The displayed integer and SVG trace tip share `collapseN`, so the countdown and graph drop are synchronized by construction. Evaluating the configured state puts the cliff at 17.516 seconds and the arrival at `1` at 17.850 seconds. The own-check packet reports a 0.625-second final-value hold. [Counter state](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:140) · [Counter renderer](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:536) · [Own-check packet](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:29)
+
+- **FIG.25.** The red correction appears before the stamp, and the two margin notes fade in at staggered times. The stamp appears at an enlarged scale, then contracts, compresses, and settles over 0.384 seconds, computed as `(3.8 − 0.6) × 0.12`. Its transform uses fixed rotation and changing scale. That provides a scale-based impact cue, while the strength of the slam at phone size remains unverified. [Stamp and note states](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:177) · [Correction renderer](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:560)
+
+**Limits — PIXEL-UNVERIFIED.** Chromium failed at startup with “Hatch WebGL domain policy is required for browser startup.” The score rests on source, state probes, and the reported stub-DOM checks. Normal-speed playback, the handoff overlap, and the stamp and badge entrances at 360 and 390 px remain unassessed. The P1 figure windows are allocations, so exact specimen beat timing also remains unassessed. [Specimen basis and verification limits](/home/hatch/workspace/.scratch/c027-T17-motion/payload-motion.txt:6)
+
+**Body-write: none (read-only run)**
+
+BODY-WRITE: If the attempt misses the aggregate bar, carry forward the shared counter-and-graph timing and capture normal-speed playback at 360 and 390 px with specimen-aligned frames for the handoffs, badge entrance, cliff, and stamp impact. Use those frames to tune any handoff dip or weak stamp impact and to check whether the org-chart links need a growing stroke.
+
+SCORE: 84

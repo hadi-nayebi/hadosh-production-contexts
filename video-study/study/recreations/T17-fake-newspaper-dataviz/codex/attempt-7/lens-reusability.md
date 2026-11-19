@@ -1,0 +1,17 @@
+**Verdict — Reusability fails the 70-point lens floor.** This score prevents T17 attempt 7 from consolidating as RECREATED, regardless of the five-lens average.
+
+**Findings**
+
+1. **The construction is substantially parameterized.** `createScene` injects configuration into all six figure factories, and `BUILDERS.waffle` uses the supplied count, grid dimensions, callout index, and summary for both structure and playback. The own-check packet also records a successful palette swap on the new meta row. I did not independently reproduce the packet’s configuration census.
+
+2. **Validation can throw or accept unusable configurations.** In `validateConfig`, `figures: {}` produces a count error and then reaches `.forEach`, which throws. A null first or last figure reaches an unguarded schedule dereference. Both exceptions escape `T17.rebuild` because it calls validation before entering its `try`. An empty `palette` passes the palette member check, which iterates only supplied keys. `timing.sampleStep` accepts arbitrarily small positive values, while `BUILDERS.counterGraph` advances a per-frame loop by that value. The next attempt needs shape checks before traversal, explicit required members and types, and a sample-count bound that guarantees the renderer can finish its work.
+
+3. **The public remount works for the tested palette swap and has state gaps.** `buildAll` reads `stage.clientWidth` before setting the new `--stagew`, so a width-changing swap can mount geometry sized for the previous stage. `pageBg` and `controlInk` are applied only at startup. `T17.rebuild` copies incoming nested objects by reference and attempts recovery by rebuilding the previous scene, suppressing any recovery error. The next attempt needs to build and size a candidate from an independent configuration, keep the live scene in place until construction succeeds, and verify width, page colors, and figure data through the public interface.
+
+4. **Fit reporting can return a false pass for changed content.** At 360 px, `computeLayout` gives 328 px of content width (`360 − 2 × 16`). A title made of 40 consecutive `W` characters is within `bounds.maxTitleChars` and measures 598.4 px in the build’s own model (`40 × 0.88 × 17`). `wordWrapLines` keeps it on one line, `.titleline` prevents wrapping, and the line-chart `figureGeom` reports `maxW` as the available width. `fitReport` can therefore mark that row width-ok. It also associates figure errors only with IDs matching `fig` followed by digits and omits global validation errors from its overall `ok`. The next attempt needs to report the widest occupied element, retain errors for every supported figure ID, and include global validation failures in the result.
+
+**Limits** — I reviewed the supplied source and check packet. Chromium startup failed with “Hatch WebGL domain policy is required for browser startup.” Rendered swaps and browser-measured fit remain unverified, and the source-level counterexamples above were traced without executing them. The working record’s final-line requirement takes precedence over the standing body-write closing position.
+
+BODY-WRITE: none (read-only run). Attempt 8 should require named rejection of malformed inputs, a remount that preserves the live scene on failure, and truthful fit results for changed stage widths and long content, with browser evidence at 360 and 390 px plus a desktop width swap.
+
+SCORE: 64

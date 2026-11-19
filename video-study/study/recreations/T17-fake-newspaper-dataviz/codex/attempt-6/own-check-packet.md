@@ -1,0 +1,23 @@
+OWN-CHECK PACKET (final frozen source; logic-level suite, node harness over the pure-logic section + source-text checks):
+- defaults validate with zero errors
+- figure-handoff combined displayed opacity at every sampled boundary point >= the configured visibility floor (measured minimum equals the floor)
+- org-chart connector fractions equal the per-node threshold formula for every node
+- counter trace origin: collapse at progress 0 is 0; counter text at progress 0 equals the start value; counter is monotone non-increasing across the window
+- counter cliff position remains below the animation-fraction limit under the current hold mapping
+- final counter value fully-opaque hold: programmed 0.850s; displayed after handoff overlap 0.625s
+- stamp box model (width incl. letter-spacing and both border widths; height incl. both border widths) matches the closed-form expectation at 360/390/960
+- stamp upward-extension reserve is positive at 360/390/960 (22.2 / 24.2 / 35.5 px) and the correction figure still fits at all three widths
+- badge entrance AABB lies inside the cleared width (content width minus the configured clearance) at 360/390/960
+- wide-grid swap (60 dots, 20 columns) is rejected by validation with a named width error; its reported actual width is 392px against 328px phone content width
+- over-length summary text is rejected by name; a 400-digit counter start is rejected (finite / safe-integer)
+- direct-edit validation path: string-typed duration rejected by name; null group member rejected; absent config group rejected
+- public rebuild entry point exists and validates before remounting
+- muted palette entry has a rendered reader (header meta line color)
+- waffle 'you' dot coordinates are (column 2, row 1) for the configured index/columns; the label element records the same coordinates
+- y-axis pad meets or exceeds the measured widest y-label width plus gap at 360 and 960
+- bar-label baseline leaves at least the configured descender clearance above the SVG bottom edge
+- fit report ok at 360, 390 and 960 (every figure fits, every width ok, fonts ok, phone budget ok)
+- self-start form: top-level auto-start only when the page is the top window
+- purity: no external assets, no specimen media, no video or image elements (only inline SVG namespace identifiers match a generic URL pattern)
+- literal scan: the transition overlap values and the pre-cliff percentage bound appear only as named configuration keys, not as literals in the transition/validation code
+- swap tests: stack counts 10, 14, 1 and 2 each reach exactly their configured unit count at full progress

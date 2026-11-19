@@ -1,0 +1,16 @@
+Verdict: Strong reusable structure, but parameterization is incomplete and changed-data output remains pixel-unverified. This lens scores below 85; the five-lens consolidation result cannot be determined here.
+
+1. **Content and motion are substantially configurable.** `recreation.html`, `CONFIG`, `BUILDERS`, and `createScene` separate figure records from six injected factories and progress renderers. Counts drive waffle construction, bar geometry, node thresholds, stack arrivals, and note timing. The supplied mutation census reports every CONFIG leaf consumed; I have not independently verified that census.
+
+2. **Some presentation variables remain embedded.** `BUILDERS.stackBars` hardcodes the unit symbol `'▭'`; `BUILDERS.waffle` hardcodes inactive opacity `.18`; CSS and builders embed borders, padding, radii, and spacing. For example, `figureGeom` assumes card padding through `24`, while `.card` separately specifies `padding:12px`. These are coupled implementation literals rather than a single configurable contract. **Cure:** expose the unit symbol, inactive opacity, and shared component geometry in CONFIG, and consume the same values in builders, CSS, and fit calculations.
+
+3. **Text-length adaptation is incomplete.** `computeLayout` calculates masthead height from one line without inspecting `cfg.masthead`; metadata supports only a one/two-row prediction. `figureRequired` reserves one source line regardless of source length. `figureGeom` sizes org nodes from label text but excludes `formatting.nodeSymbol`. Thus the packet’s “longer masthead priced” claim is not supported by the supplied implementation. **Cure:** measure or explicitly bound wrapping for these strings, include formatting glyphs in node sizing, and test accepted long-content configurations.
+
+4. **Validation does not fully guard the advertised parameter surface.** `validateConfig` checks adjacent schedule continuity and final coverage but never requires the first figure to start at zero. It also lacks positive-integer checks for waffle columns/counts and stack counts, and permits empty org-node arrays that break meaningful geometry. **Cure:** validate these boundaries before layout or mounting, with named errors and rejection probes.
+
+5. **Swap evidence establishes generated changes, not visible success.** The own-check packet shows changed geometry, text, element counts, and timing for larger datasets. That is useful evidence beyond computation merely surviving. However, stub-DOM traces cannot establish readable, contained rendered output. **Cure:** render default and changed-size configurations at phone widths, checking actual wrapping, clipping, and completed animation states.
+
+Limits: No local Markdown, HTML, or JSON files were found by the workspace scan. Assessment uses the supplied single-stream source and packet; no source hash, reported check total, browser output, or leaf census was independently verified.
+
+BODY-WRITE: none (read-only run); this build’s next-attempt instruction should require shared configurable component geometry, complete content-boundary validation, and rendered changed-data verification before claiming diagram-container reuse.
+SCORE: 82

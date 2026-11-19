@@ -1,0 +1,744 @@
+CONSUMER + DECISION PRICED: the practice job (Video Study lane), Cycle 012 Wave 11, §5 Verify for technique T17 attempt 3 — your score is one of five lens scores whose average and floor decide whether technique T17 consolidates in the style library as RECREATED, for its consumer: the diagram container (DLC sentence diagrams). Name the cures the next attempt must carry if it fails.
+WORKING RECORD: you build from the technique facts + recreation source + build record below; your return is filed verbatim at hidden_files/study/recreations/T17-fake-newspaper-dataviz/codex/attempt-3/lens-timing.md and quoted into the artifact's scores.md; the working record you write to is the artifact's build-record-attempt2.md + scores.md.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. End your return with exactly one line: SCORE: <integer 0-100>. A return with no SCORE or no BODY-WRITE line is incomplete. Scores are integers from 0 to 100.
+
+YOUR LENS: TIMING / TEMPO only. Score 0-100 the phase allocation across 22.5s (figure windows above), within-figure pacing (draw/fill/type/counter rates, cliff position), and whether jokes land when their animation completes, including the completion-and-hold rhythm inside each window and at the end of the scene. Note the allocation is labeled, not measured from per-figure checkpoints — price that honestly.
+
+TECHNIQUE FACTS (packet P1, frame-evidenced): T17 Fake-newspaper animated dataviz — one static broadsheet (masthead THE DAILY STANDUP) fills the frame for 22.5s with ZERO hard cuts; inside it numbered figures FIG.20-25 arrive in order. FIG.20 line chart draws itself (outlook: so back / meh / doomed, then spikes). FIG.21 waffle grid fills red dot by dot (panicking 0 of 15 -> 15 of 15, one blue dot labeled 'you'); a summary box types out. FIG.22 a stack of Mac minis piles up beside a counter of 10 while a bar chart and donut draw in. FIG.23 org chart assembles node by node (CEO -> CFO, CTO, Head of HR, VP of Vibes + EMPLOYEE OF THE YEAR badge). FIG.24 giant counter starts at 3,412,083,117 and ticks down live, then cliff-dives to 1 as its line graph drops with it. FIG.25 a red CORRECTION box appears and a 'HIRED BY MYSELF' stamp slams in; handwritten margin notes fade in ('checks out', '(Not mine. Rendered.)').
+PHASE TIMINGS (labeled allocation across 22.5s, not measured checkpoints): FIG.20 0.0-3.6s, FIG.21 3.6-7.5s, FIG.22 7.5-11.1s, FIG.23 11.1-14.7s, FIG.24 14.7-18.7s (cliff at 68% of its window), FIG.25 18.7-22.5s. In the recreation the masthead persists and one figure module occupies the content area at a time, matching evidence frames where each figure fills the page.
+§8 SPLIT: core mechanic = static frame + sequential figure arrival with draw-on/fill/type/counter animations; per-figure content is CONFIG data. Judge the core mechanic, not a whole-scene recreation.
+
+===== RECREATION SOURCE =====
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T17 — Fake-newspaper animated dataviz — Recreation</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0}
+#stage{position:relative;width:960px;max-width:100vw;aspect-ratio:16/9;margin:0 auto;overflow:hidden;font-family:var(--font-serif)}
+#stage.phone{aspect-ratio:auto}
+.mast{text-align:center;padding:var(--padtop,14px) var(--metapad) 0}.mast h1{margin:0;font-size:var(--mast,42px);letter-spacing:.06em;font-weight:var(--fw-normal);line-height:var(--lh-mast)}
+.rule{border-top:3px solid currentColor;border-bottom:1px solid currentColor;height:5px;margin:8px var(--metapad) 0}
+.meta{display:flex;flex-wrap:wrap;justify-content:space-between;padding:5px var(--metapad);font-size:var(--label,12px);letter-spacing:.08em;border-bottom:2px solid currentColor;margin:0 0 4px}
+.fig{position:absolute;left:0;right:0;top:var(--figtop,118px);bottom:0;padding:6px var(--padx,44px);opacity:0;pointer-events:none}
+.fig.on{opacity:1}
+.fignum{font-family:var(--font-sans);font-size:var(--label,14px);letter-spacing:.12em}
+.fig h2{margin:3px 0 8px;font-size:var(--title,30px);font-weight:var(--fw-normal);line-height:var(--lh-title)}
+.src{font-size:var(--label,12px);opacity:.8;font-family:var(--font-sans);margin-top:6px;color:var(--muted)}
+.hand{font-family:var(--font-hand)}
+.card{border:1.5px solid currentColor;border-radius:8px;padding:12px;background:var(--card-tint)}
+.dot{border-radius:50%;border:2px solid currentColor;display:inline-block}
+.stamp{display:inline-block;border:4px solid currentColor;border-radius:6px;padding:8px 14px;font-family:var(--font-sans);font-weight:var(--fw-black);letter-spacing:.08em}
+.warn{font-family:var(--font-sans);color:var(--warn);border:1.5px dashed currentColor;padding:10px}
+#controls{width:960px;max-width:100vw;margin:6px auto;text-align:center}button{font-size:16px;padding:8px 16px;margin:0 4px;min-height:44px}
+</style></head><body>
+<div id="stage"></div>
+<div id="controls"><button id="play">Play / Pause</button><button id="restart">Restart</button><span id="clock" style="font-family:monospace"></span></div>
+<script>
+"use strict";
+/* Pure logic: data, timing states, layout model, validation. No DOM access in this section. */
+const CONFIG = {
+  duration: 22.5,
+  masthead: "THE DAILY STANDUP",
+  dateLine: "THURSDAY, OCT. 30",
+  clockStart: "4:01 P.M.",
+  price: "PRICE: 1 SUBSCRIPTION",
+  palette: { paper:"#e9e4d8", ink:"#1c1a17", red:"#c1271f", blue:"#2456c8", accent:"#e8a13a", muted:"#77705f", pageBg:"#202020", cardTint:"rgba(255,255,255,0.35)", controlInk:"#ffffff" },
+  fonts: { serif:"Georgia,'Times New Roman',serif", sans:"Arial,sans-serif", hand:"'Comic Sans MS','Segoe Print',cursive" },
+  timing: { minHoldSec:0.6, drawEnd:0.92, stackEnd:0.90, barsEnd:0.85, ceoAt:0.05, nodeStart:0.15, nodeEnd:0.72, badgeAt:0.80, badgeFrom:1.6,
+            corrAt:0.08, stampAt:0.35, stampDur:0.12, stampFrom:2.4, stampRotationDeg:-8, stampApproach:0.5, stampReboundEnd:0.75, stampOvershoot:1.1, stampCompress:0.93,
+            noteStart:0.55, noteFade:0.15, readMsPerChar:12, minTypeSec:0.8, minFillSec:0.6, fillSec:1.2, typeStartSec:1.0,
+            sampleStep:0.02, cliffMarkerAt:0.5, cliffBudgetMargin:0.05, stackArrivalSpan:1.6 },
+  layout: { fig22GapPx:8, stackUnitGapPx:4, stackArrivalOffsetPx:14, stackUnitMaxH:16, phoneStageBudgetPx:640, metaPadX:28, metaMinGapPx:12,
+            charWidthBody:0.52, charWidthLabel:0.62, stampCharWidth:0.78, stampPadX:36, stampPadY:24, stampAreaBudgetPx:150,
+            lineHeights:{ mast:1.15, label:1.3, body:1.35, title:1.2, stackCounter:1.6 },
+            barGeom:{ slotFrac:0.58, barFrac:0.6, basePad:18, topPad:40, xPad:8 },
+            donut:{ cxFrac:0.82, rFrac:0.24, rMax:52, strokeW:16 },
+            waffleGapPx:8, rowGapPx:18, counterGapPx:24, orgRowGapPx:10, orgRowMarginTop:18, badgeMarginTop:10,
+            corrStampMarginTop:16, corrNotesMarginTop:12, chartPadLeft:48, chartPadRight:10, chartPadBottom:22, chartPadTop:18,
+            typeScale:{ mast:0.04375, title:0.03125, body:0.0198, label:0.0146, big:0.0354, hand:0.025 },
+            typeCaps:{ mast:42, title:30, body:19, label:14, big:34, hand:24 },
+            chartHeights:{ linePhone:120, lineDesktop:240, stackPhone:130, stackDesktop:220, counterPhone:120, counterDesktop:220 },
+            chartWidthFrac:{ line:0.50, stack:0.52, counter:0.50 }, chartMaxW:430, waffleGridFrac:0.5, waffleLabelH:1.4,
+            waffleDotMin:12, waffleDotMax:26, nodePadX:34, stackColWidthPx:150, phoneProbeWidth:360,
+            padXPhone:16, padXDesktop:44, padTopPhone:6, padTopDesktop:14,
+            fontWeights:{ normal:500, bold:700, black:900 },
+            counterGeom:{ x0:30, x1Pad:10, y0:18, y1Pad:26 }, corrMaxW:680, ceoMaxW:320, phoneBreakpoint:520, bigLineH:1.2 },
+  bounds: { maxFigures:8, maxWaffle:60, maxBars:8, maxStack:14, maxNodes:8, maxNotes:4, maxPoints:8, cliffMin:0.1 },
+  typeFloors: { masthead:20, figureTitle:17, body:12, label:11, bigCounter:20, hand:14 },
+  figures: [
+    { id:"fig20", type:"lineChart", start:0.0, dur:3.6, num:"FIG. 20", title:"Humanity's outlook, according to my last two posts", source:"Source: @adita_zzz on X",
+      chartTitle:"OUTLOOK", yLabels:[{text:"so back",y:0.78},{text:"meh",y:0.45},{text:"doomed",y:0.15,emphasis:true}], xLabels:["post 1","post 2"],
+      points:[[0.55,0.78],[0.82,0.18],[0.97,0.30]], cardText:"when the robots do it all, we're finally free to grow our tomatoes. voluntarily." },
+    { id:"fig21", type:"waffle", start:3.6, dur:3.9, num:"FIG. 21", title:"Are people panicking?", source:"Source: everyone, apparently",
+      waffleTotal:15, waffleCols:5, youIndex:7, youLabel:"you →", waffleLabel:"panicking", summaryText:"Summary: everyone is panicking. One person — you — is oddly calm, and possibly the cause." },
+    { id:"fig22", type:"stackBars", start:7.5, dur:3.6, num:"FIG. 22", title:"Compute, stacked", source:"Source: the desk",
+      stackCount:10, stackLabel:"Mac minis", bars:[0.35,0.55,0.8,1.0], barLabels:["a","b","c","d"], donutFraction:0.72, donutLabel:"72% slop" },
+    { id:"fig23", type:"orgChart", start:11.1, dur:3.6, num:"FIG. 23", title:"Org chart: Agents, Inc. (founded today)", source:"Source: the agents",
+      ceo:"CEO", ceoSub:"an agent", nodes:["CFO","CTO","Head of HR","VP of Vibes"], badge:"EMPLOYEE OF THE YEAR", badgeName:"Adita", onlyNote:"(only employee)" },
+    { id:"fig24", type:"counterGraph", start:14.7, dur:4.0, num:"FIG. 24", title:"Jobs on Earth, before and after my song", source:"Source: my song",
+      counterStart:3412083117, counterEnd:1, preCliffDrop:1800000, cliffAt:0.68, cliffExponent:1.8, counterLabel:"JOBS ON EARTH", counterSub:"and counting" },
+    { id:"fig25", type:"correction", start:18.7, dur:3.8, num:"FIG. 25", title:"Correction", source:"Source: the editor",
+      correction:"CORRECTION: the author was not hired by a company. The author was —", stamp:"HIRED BY MYSELF", notes:["checks out","(Not mine. Rendered.)"] }
+  ]
+};
+function clamp01(v){return v<0?0:v>1?1:v;}
+function lerp(a,b,q){return a+(b-a)*q;}
+function animFraction(fig,cfg){const c=cfg||CONFIG; return Math.max(0.05,(fig.dur-c.timing.minHoldSec)/fig.dur);}
+function animQ(p,fig,cfg){return clamp01(p/animFraction(fig,cfg));}
+function collapseN(p,fig,cfg){
+  const range=fig.counterStart-fig.counterEnd; if(range<=0) return clamp01(p);
+  const a=fig.preCliffDrop/range, end=animFraction(fig,cfg), cliff=fig.cliffAt;
+  if(p<=0) return 0; if(p>=end) return 1;
+  if(p<cliff) return a*(p/cliff);
+  const q=(p-cliff)/(end-cliff); return a+(1-a)*Math.pow(q,fig.cliffExponent);
+}
+function counterValueAt(p,fig,cfg){return fig.counterStart + collapseN(p,fig,cfg)*(fig.counterEnd-fig.counterStart);}
+function counterTextAt(p,fig,cfg){return Math.round(counterValueAt(p,fig,cfg)).toLocaleString('en-US');}
+function graphYAt(p,fig,geom,cfg){return geom.y0 + collapseN(p,fig,cfg)*(geom.y1-geom.y0);}
+function polylineLength(points,geom){
+  let len=0,px=null,py=null;
+  for(const pt of points){const x=geom.x0+pt[0]*geom.w, y=geom.yBase-pt[1]*geom.h; if(px!==null) len+=Math.hypot(x-px,y-py); px=x; py=y;}
+  return len;
+}
+function lineChartState(fig,q,cfg){const T=(cfg||CONFIG).timing; return {drawQ:clamp01(q/T.drawEnd)};}
+function summaryTiming(fig,cfg){const T=(cfg||CONFIG).timing;
+  const holdSec=Math.max(T.minHoldSec, fig.summaryText.length*T.readMsPerChar/1000);
+  return { holdSec:holdSec, readSec:fig.summaryText.length*T.readMsPerChar/1000, typeStartSec:T.typeStartSec,
+           typeDurSec:fig.dur-T.typeStartSec-holdSec, fillSec:T.fillSec, completionSec:T.typeStartSec+(fig.dur-T.typeStartSec-holdSec) };}
+function waffleState(fig,p,cfg){const st=summaryTiming(fig,cfg); const tSec=clamp01(p)*fig.dur;
+  const filled=Math.floor(clamp01(tSec/st.fillSec)*fig.waffleTotal);
+  const sq=clamp01((tSec-st.typeStartSec)/st.typeDurSec);
+  return {filled:Math.min(fig.waffleTotal,filled), youVisible:filled>fig.youIndex, summaryChars:Math.floor(sq*fig.summaryText.length), holdSec:st.holdSec};}
+function stackState(fig,q,cfg){const T=(cfg||CONFIG).timing;
+  const perUnit=T.stackEnd/fig.stackCount, arrivalDur=perUnit*T.stackArrivalSpan;
+  const arrivals=[]; let units=0;
+  for(let i=0;i<fig.stackCount;i++){ const start=(i+1)*perUnit-arrivalDur; const ai=clamp01((q-start)/arrivalDur);
+    const e=1-Math.pow(1-ai,2); if(ai>0) units++;
+    arrivals.push({visible:ai>0, arrival:ai, ty:-( (cfg||CONFIG).layout.stackArrivalOffsetPx )*(1-e), opacity:ai>0?1:0}); }
+  return {units:units, arrivals:arrivals, barQ:clamp01(q/T.barsEnd), donutQ:clamp01(q/T.barsEnd)};}
+function nodeThresholds(fig,cfg){const T=(cfg||CONFIG).timing; const out=[]; for(let i=0;i<fig.nodes.length;i++) out.push(T.nodeStart+(i+1)*((T.nodeEnd-T.nodeStart)/fig.nodes.length)); return out;}
+function orgState(fig,q,cfg){const T=(cfg||CONFIG).timing; const th=nodeThresholds(fig,cfg);
+  return {ceo:q>=T.ceoAt, nodes:th.map(t=>q>=t), badge:q>=T.badgeAt};}
+function stampScaleAt(sq,T){
+  if(sq<=0) return T.stampFrom;
+  if(sq<T.stampApproach){ const u=sq/T.stampApproach; const e=1-Math.pow(1-u,3); return lerp(T.stampFrom,T.stampOvershoot,e); }
+  if(sq<T.stampReboundEnd){ const u=(sq-T.stampApproach)/(T.stampReboundEnd-T.stampApproach); return lerp(T.stampOvershoot,T.stampCompress,u); }
+  const u=(sq-T.stampReboundEnd)/(1-T.stampReboundEnd); return lerp(T.stampCompress,1,1-Math.pow(1-u,2));
+}
+function noteStarts(fig,cfg){const T=(cfg||CONFIG).timing; const n=fig.notes.length; if(!n) return [];
+  const step=(1-T.noteStart-T.noteFade)/n; const out=[]; for(let i=0;i<n;i++) out.push(T.noteStart+i*step); return out;}
+function correctionState(fig,q,cfg){const T=(cfg||CONFIG).timing;
+  const sq=clamp01((q-T.stampAt)/T.stampDur); const starts=noteStarts(fig,cfg);
+  return {corr:q>=T.corrAt, stampVisible:q>=T.stampAt, stampScale:stampScaleAt(sq,T), stampSq:sq,
+          notes:fig.notes.map((n,i)=>clamp01((q-starts[i])/T.noteFade)), noteStarts:starts};}
+function barRects(fig,geom,q,cfg){const B=(cfg||CONFIG).layout.barGeom;
+  const n=fig.bars.length, slot=(geom.w*B.slotFrac)/n, bw=slot*B.barFrac, base=geom.h-B.basePad, maxH=geom.h-B.topPad;
+  return fig.bars.map((v,i)=>{const h=v*maxH*q; return {x:B.xPad+i*slot+(slot-bw)/2, y:base-h, w:bw, h, labelX:B.xPad+i*slot+slot/2};});
+}
+function stateAt(t,figures,duration){
+  const tt=Math.max(0,Math.min(duration,t));
+  for(let i=0;i<figures.length;i++){const f=figures[i]; const last=i===figures.length-1;
+    if(tt>=f.start && (tt<f.start+f.dur || (last && tt<=duration))) return {index:i, p:clamp01((tt-f.start)/f.dur)};}
+  let idx=0; figures.forEach((f,i)=>{if(tt>=f.start) idx=i;});
+  return {index:idx, p:clamp01((tt-figures[idx].start)/figures[idx].dur)};
+}
+function computeLayout(w,cfg){const c=cfg||CONFIG; const F=c.typeFloors, LH=c.layout.lineHeights, TS=c.layout.typeScale, TC=c.layout.typeCaps, phone=w<=c.layout.phoneBreakpoint;
+  const mastPx=Math.max(F.masthead, Math.min(TC.mast, w*TS.mast));
+  const titlePx=Math.max(F.figureTitle, Math.min(TC.title, w*TS.title));
+  const bodyPx=Math.max(F.body, Math.min(TC.body, w*TS.body));
+  const labelPx=Math.max(F.label, Math.min(TC.label, w*TS.label));
+  const bigPx=Math.max(F.bigCounter, Math.min(TC.big, w*TS.big));
+  const handPx=Math.max(F.hand, Math.min(TC.hand, w*TS.hand));
+  const padX=phone?c.layout.padXPhone:c.layout.padXDesktop, padTop=phone?c.layout.padTopPhone:c.layout.padTopDesktop;
+  const metaTexts=[c.dateLine,c.clockStart,c.price];
+  const metaWidths=metaTexts.map(t=>t.length*labelPx*c.layout.charWidthLabel);
+  const metaAvail=w-2*c.layout.metaPadX;
+  const metaRows=(metaWidths.reduce((a,b)=>a+b,0)+2*c.layout.metaMinGapPx<=metaAvail)?1:2;
+  const metaH=metaRows*(labelPx*LH.label+10)+(metaRows-1)*2;
+  const headerH=padTop + mastPx*LH.mast + 13 + metaH + 4;
+  const contentW=w-2*padX, stageH=phone?null:w*9/16;
+  const contentH=phone?null:stageH-headerH;
+  const headSrcReserve=labelPx*LH.label + 2*titlePx*LH.title + 6 + (labelPx*LH.label+6);
+  const availBlockH=phone?(c.layout.phoneStageBudgetPx-headerH):contentH;
+  return {w, phone, mastPx, titlePx, bodyPx, labelPx, bigPx, handPx, padX, padTop, headerH, contentW, stageH, contentH, metaRows, metaWidths, metaAvail, headSrcReserve, availBlockH};
+}
+function charsPerLine(widthPx,fontPx,cfg){const c=cfg||CONFIG; return Math.max(1,Math.floor(widthPx/(fontPx*c.layout.charWidthBody)));}
+function textLines(text,widthPx,fontPx,cfg){return Math.max(1,Math.ceil(text.length/charsPerLine(widthPx,fontPx,cfg)));}
+function headingLines(title,L,cfg){return textLines(title, L.contentW, L.titlePx, cfg);}
+function stampMetrics(fig,L,cfg){const c=cfg||CONFIG; const T=c.timing, lay=c.layout;
+  const w=fig.stamp.length*L.bodyPx*lay.stampCharWidth + lay.stampPadX;
+  const h=L.bodyPx + lay.stampPadY;
+  const rad=Math.abs(T.stampRotationDeg)*Math.PI/180, cos=Math.cos(rad), sin=Math.sin(rad);
+  const aabbW1=w*cos+h*sin, aabbH1=w*sin+h*cos;
+  return {w:w, h:h, aabbW1:aabbW1, aabbH1:aabbH1};
+}
+function stampCap(fig,L,cfg){const c=cfg||CONFIG; const m=stampMetrics(fig,L,c);
+  const corrW=Math.min(c.layout.corrMaxW,L.contentW);
+  return Math.min(c.timing.stampFrom, corrW/m.aabbW1, c.layout.stampAreaBudgetPx/m.aabbH1);
+}
+function lineLabelBounds(fig,L,cfg){const c=cfg||CONFIG; const g=figureGeom(fig,L,c);
+  const geom={x0:c.layout.chartPadLeft, w:g.chartW-c.layout.chartPadLeft-c.layout.chartPadRight};
+  const n=fig.xLabels.length;
+  return fig.xLabels.map((lab,i)=>{ const halfW=lab.length*L.labelPx*c.layout.charWidthLabel/2;
+    const cx=geom.x0+geom.w*(n>1?i/(n-1):0);
+    const anchor=i===0?'start':(i===n-1?'end':'middle');
+    const left=anchor==='start'?cx:(anchor==='end'?cx-2*halfW:cx-halfW);
+    const right=anchor==='start'?cx+2*halfW:(anchor==='end'?cx:cx+halfW);
+    return {text:lab, anchor:anchor, cx:cx, halfW:halfW, left:left, right:right, chartW:g.chartW}; });
+}
+function figureGeom(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeights; const cw=L.contentW;
+  if(fig.type==="lineChart"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.line), chartH=L.phone?c.layout.chartHeights.linePhone:c.layout.chartHeights.lineDesktop;
+    const cardW=L.phone?cw:cw-chartW-c.layout.rowGapPx, cardH=textLines(fig.cardText,cardW-24,L.bodyPx,c)*L.bodyPx*LH.body+24;
+    const titleH=L.labelPx*LH.label+4;
+    return {chartW,chartH,cardW,cardH,titleH, blockH:L.phone?cardH+8+titleH+chartH:Math.max(cardH,titleH+chartH), maxW:cw};}
+  if(fig.type==="waffle"){const gap=c.layout.waffleGapPx, dot=Math.max(c.layout.waffleDotMin,Math.min(c.layout.waffleDotMax,Math.floor((cw*c.layout.waffleGridFrac)/fig.waffleCols)-gap));
+    const rows=Math.ceil(fig.waffleTotal/fig.waffleCols), gridW=fig.waffleCols*(dot+gap)-gap, gridH=rows*(dot+gap)-gap;
+    const sumH=textLines(fig.summaryText,cw-24,L.bodyPx,c)*L.bodyPx*LH.body+24;
+    return {dot,gap,rows,gridW,gridH,sumH, blockH:gridH+6+L.bodyPx*c.layout.waffleLabelH+8+sumH, maxW:cw};}
+  if(fig.type==="stackBars"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.stack), chartH=L.phone?c.layout.chartHeights.stackPhone:c.layout.chartHeights.stackDesktop;
+    const gap=c.layout.fig22GapPx, unitGap=c.layout.stackUnitGapPx, arrival=c.layout.stackArrivalOffsetPx;
+    const counterH=L.bodyPx*LH.stackCounter;
+    const stackBudget=L.phone ? (L.availBlockH - L.headSrcReserve) - counterH - gap - chartH - arrival
+                              : (L.availBlockH - L.headSrcReserve) - counterH - arrival;
+    const unitFloor=L.labelPx+2;
+    const unitHRaw=Math.floor(stackBudget/fig.stackCount)-unitGap;
+    const unitH=Math.min(c.layout.stackUnitMaxH, Math.max(unitFloor, unitHRaw));
+    const stackH=fig.stackCount*(unitH+unitGap)+arrival;
+    return {chartW,chartH,unitH,unitHRaw,unitFloor,unitHOver:unitHRaw<unitFloor,stackH,counterH,stackBudget,arrivalReserve:arrival, blockH:L.phone?counterH+stackH+gap+chartH:Math.max(stackH+counterH,chartH), maxW:cw};}
+  if(fig.type==="orgChart"){const longest=Math.max.apply(null,fig.nodes.map(n=>n.length));
+    const nodeW=longest*L.labelPx*c.layout.charWidthLabel+c.layout.nodePadX, perRow=Math.max(1,Math.floor(cw/nodeW)), rows=Math.ceil(fig.nodes.length/perRow);
+    const ceoH=L.bodyPx*LH.body+24, nodesH=rows*(L.bodyPx*LH.body+10);
+    const badgeText=fig.onlyNote+"  ★ "+fig.badgeName+" — "+fig.badge;
+    const badgeH=textLines(badgeText,cw,L.bodyPx,c)*L.bodyPx*LH.body+8;
+    return {nodeW,perRow,rows,ceoH,nodesH,badgeH, blockH:ceoH+c.layout.orgRowMarginTop+nodesH+c.layout.badgeMarginTop+badgeH, maxW:cw};}
+  if(fig.type==="counterGraph"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.counter), chartH=L.phone?c.layout.chartHeights.counterPhone:c.layout.chartHeights.counterDesktop;
+    const cardW=L.phone?cw:cw-chartW-c.layout.counterGapPx;
+    const cardH=L.labelPx*LH.label + L.bigPx*c.layout.bigLineH + L.bodyPx*LH.body + 24;
+    return {chartW,chartH,cardW,cardH, blockH:L.phone?chartH+8+cardH:Math.max(chartH,cardH), maxW:cw};}
+  if(fig.type==="correction"){const corrW=Math.min(c.layout.corrMaxW,cw);
+    const corrH=textLines(fig.correction,corrW-24,L.bodyPx,c)*L.bodyPx*LH.body+24;
+    const cap=stampCap(fig,L,c), m=stampMetrics(fig,L,c);
+    const stampH=m.aabbH1*cap, notesH=fig.notes.length*(L.handPx*LH.label+4);
+    return {corrW,corrH,stampH,stampCap:cap,stampAabbW:m.aabbW1*cap,notesH, blockH:corrH+c.layout.corrStampMarginTop+stampH+c.layout.corrNotesMarginTop+notesH, maxW:corrW};}
+  return {blockH:0,maxW:0};
+}
+function figureRequired(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeights;
+  const g=figureGeom(fig,L,c);
+  const headH=L.labelPx*LH.label + headingLines(fig.title,L,c)*L.titlePx*LH.title + 6;
+  const srcH=L.labelPx*LH.label+6;
+  return {id:fig.id, required:headH+g.blockH+srcH, blockH:g.blockH, maxW:g.maxW, geom:g};
+}
+function fitReport(w,figures,cfg){const c=cfg||CONFIG;
+  const L=computeLayout(w,c), figs=figures.map(f=>figureRequired(f,L,c));
+  const maxReq=Math.max.apply(null,figs.map(f=>f.required));
+  const allocated=L.phone?maxReq:L.contentH;
+  const stageH=L.phone?L.headerH+maxReq:L.stageH;
+  const budgetOk=!L.phone || stageH<=c.layout.phoneStageBudgetPx+0.001;
+  const fontsOk=L.mastPx>=c.typeFloors.masthead && L.titlePx>=c.typeFloors.figureTitle &&
+                L.bodyPx>=c.typeFloors.body && L.labelPx>=c.typeFloors.label && L.bigPx>=c.typeFloors.bigCounter;
+  const rows=figs.map(f=>({id:f.id, required:Math.round(f.required*10)/10, allocated:Math.round(allocated*10)/10,
+    fits:f.required<=allocated+0.001, widthOk:f.maxW<=L.contentW+0.001,
+    headingReserve:Math.round(headingLines(figures.find(x=>x.id===f.id).title,L,c)*L.titlePx*c.layout.lineHeights.title*10)/10}));
+  return {width:w, phone:L.phone, stageH:Math.round(stageH*10)/10, headerH:Math.round(L.headerH*10)/10, metaRows:L.metaRows, budgetOk:budgetOk,
+    contentW:L.contentW, fonts:{masthead:L.mastPx, figureTitle:L.titlePx, body:L.bodyPx, label:L.labelPx, bigCounter:L.bigPx, hand:L.handPx},
+    fontsOk, figures:rows, ok:fontsOk && budgetOk && rows.every(r=>r.fits&&r.widthOk)};
+}
+function validateConfig(cfg){
+  const errs=[]; if(!cfg||typeof cfg!=="object"){errs.push("config absent"); return errs;}
+  const B=cfg.bounds, T=cfg.timing;
+  if(!isFinite(cfg.duration)||cfg.duration<=0) errs.push("duration must be a positive finite number");
+  if(!T||!isFinite(T.minHoldSec)||!isFinite(T.readMsPerChar)||T.readMsPerChar<=0) errs.push("timing values must be finite with a positive reading rate");
+  if(T&&(T.fillSec<T.minFillSec)) errs.push("timing: fill duration below its named minimum");
+  if(!Array.isArray(cfg.figures)||cfg.figures.length<1||cfg.figures.length>B.maxFigures) errs.push("figures count outside supported boundary 1.."+B.maxFigures);
+  (cfg.figures||[]).forEach(f=>{
+    if(!f||typeof f!=="object"){errs.push("figure record absent"); return;}
+    if(!isFinite(f.start)||!isFinite(f.dur)) errs.push(f.id+": figure window values must be finite");
+    if(!(f.dur>cfg.timing.minHoldSec)) errs.push(f.id+": window must exceed the minimum hold");
+    if(f.type==="waffle"){ if(f.waffleTotal>B.maxWaffle) errs.push(f.id+": waffleTotal "+f.waffleTotal+" exceeds supported boundary "+B.maxWaffle);
+      if(typeof f.summaryText!=="string"||!f.summaryText.length) errs.push(f.id+": summary text absent");
+      else { const st=summaryTiming(f,cfg); if(st.typeDurSec<T.minTypeSec) errs.push(f.id+": summary of "+f.summaryText.length+" chars cannot type in at least "+T.minTypeSec+"s and still hold for reading inside its window"); } }
+    if(f.type==="stackBars"){ if(f.bars.length>B.maxBars) errs.push(f.id+": bars "+f.bars.length+" exceeds supported boundary "+B.maxBars);
+      if(f.stackCount>B.maxStack) errs.push(f.id+": stackCount "+f.stackCount+" exceeds supported boundary "+B.maxStack);
+      if(f.bars.length!==f.barLabels.length) errs.push(f.id+": barLabels length must match bars length");
+      if(f.bars.some(v=>!isFinite(v))) errs.push(f.id+": bar values must be finite");
+      const L360=computeLayout(cfg.layout.phoneProbeWidth,cfg); const g360=figureGeom(f,L360,cfg);
+      if(g360.unitHOver) errs.push(f.id+": stackCount "+f.stackCount+" cannot hold the unit legibility floor at phone width"); }
+    if(f.type==="orgChart"&&f.nodes.length>B.maxNodes) errs.push(f.id+": nodes "+f.nodes.length+" exceeds supported boundary "+B.maxNodes);
+    if(f.type==="correction"&&f.notes.length>B.maxNotes) errs.push(f.id+": notes "+f.notes.length+" exceeds supported boundary "+B.maxNotes);
+    if(f.type==="lineChart"){ if(f.points.length>B.maxPoints) errs.push(f.id+": points "+f.points.length+" exceeds supported boundary "+B.maxPoints);
+      if(f.points.some(pt=>!pt||!isFinite(pt[0])||!isFinite(pt[1]))) errs.push(f.id+": point coordinates must be finite"); }
+    if(f.type==="counterGraph"){ if(!(f.counterStart>f.counterEnd)) errs.push(f.id+": counterStart must exceed counterEnd");
+      if(!isFinite(f.counterStart)||!isFinite(f.counterEnd)||!isFinite(f.cliffAt)) errs.push(f.id+": counter values must be finite");
+      if(!(f.cliffAt>B.cliffMin)) errs.push(f.id+": cliffAt outside supported boundary "+B.cliffMin+"..animation fraction");
+      else { const lim=animFraction(f,cfg)-T.cliffBudgetMargin; if(!(f.cliffAt<lim)) errs.push(f.id+": cliffAt "+f.cliffAt+" must sit below the animation fraction minus the named margin ("+lim.toFixed(3)+")"); }
+      if(!(f.preCliffDrop>0&&f.preCliffDrop<(f.counterStart-f.counterEnd)*0.05)) errs.push(f.id+": preCliffDrop outside supported boundary (0, 5% of counter range)"); }
+  });
+  return errs;
+}
+/* End of the pure-logic section. */
+
+/* URL overrides for swap testing: top-level scalars and palette keys. */
+(function(){ const q=new URLSearchParams(location.search); q.forEach((v,k)=>{ if(k.startsWith("palette.")){CONFIG.palette[k.slice(8)]=v;} else if(k in CONFIG && typeof CONFIG[k]!=="object"){ const n=Number(v); CONFIG[k]=isNaN(n)||v.trim()===""?v:n; } }); })();
+
+function browserDom(){
+  function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+  function svgEl(w,h){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 '+w+' '+h);s.setAttribute('width',w);s.setAttribute('height',h);s.style.maxWidth='100%';return s;}
+  function svgNode(tag,attrs){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in attrs)n.setAttribute(k,attrs[k]);return n;}
+  return {el:el, svgEl:svgEl, svgNode:svgNode};
+}
+
+/* Figure factories. Each factory takes a mount point, its figure data record and an
+   injected dependency set { palette, timing, layout, dom, fonts, config } and returns a
+   progress renderer. No factory reads scene-level state. */
+const BUILDERS = {
+  lineChart(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.rowGapPx+'px';
+    const card=el('div','card',fig.cardText); card.style.cssText='width:'+g.cardW+'px;font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body;
+    const chartBlock=el('div');
+    const ct=el('div','',fig.chartTitle); ct.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.labelPx+'px;letter-spacing:.1em;margin-bottom:4px';
+    chartBlock.appendChild(ct);
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const geom={x0:cfg.layout.chartPadLeft, w:g.chartW-cfg.layout.chartPadLeft-cfg.layout.chartPadRight, yBase:g.chartH-cfg.layout.chartPadBottom, h:g.chartH-cfg.layout.chartPadBottom-cfg.layout.chartPadTop};
+    s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:8,x2:geom.x0,y2:geom.yBase,stroke:P.ink,'stroke-width':2}));
+    s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:geom.yBase,x2:geom.x0+geom.w,y2:geom.yBase,stroke:P.ink,'stroke-width':2}));
+    fig.yLabels.forEach(lab=>{const t=dom.svgNode('text',{x:geom.x0-6,y:geom.yBase-lab.y*geom.h+4,'text-anchor':'end','font-size':L.labelPx,fill:lab.emphasis?P.red:P.ink});t.textContent=lab.text;s.appendChild(t);});
+    const bounds=lineLabelBounds(fig,L,cfg);
+    fig.xLabels.forEach((lab,i)=>{const b=bounds[i];const t=dom.svgNode('text',{x:b.cx,y:g.chartH-4,'text-anchor':b.anchor,'font-size':L.labelPx,fill:P.ink});t.textContent=lab;s.appendChild(t);});
+    const d=fig.points.map((pt,i)=>(i?'L':'M')+(geom.x0+pt[0]*geom.w)+' '+(geom.yBase-pt[1]*geom.h)).join(' ');
+    const path=dom.svgNode('path',{d:d,fill:'none',stroke:P.ink,'stroke-width':4});
+    s.appendChild(path); chartBlock.appendChild(s);
+    if(L.phone){wrap.append(chartBlock,card);} else {wrap.append(card,chartBlock);}
+    mount.body.appendChild(wrap);
+    let len=null;
+    return function(p){ const q=animQ(p,fig,cfg); const st=lineChartState(fig,q,cfg);
+      if(len===null){ len=(typeof path.getTotalLength==='function'&&path.getTotalLength()>0)?path.getTotalLength():polylineLength(fig.points,geom);
+        path.style.strokeDasharray=len; }
+      path.style.strokeDashoffset=len*(1-st.drawQ); };
+  },
+  waffle(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const grid=el('div'); grid.style.width=g.gridW+'px';
+    const dots=[]; for(let i=0;i<fig.waffleTotal;i++){const d=el('span','dot');d.style.cssText='width:'+g.dot+'px;height:'+g.dot+'px;margin:0 '+(g.gap/2)+'px '+(g.gap/2)+'px 0;opacity:.18';grid.appendChild(d);dots.push(d);}
+    const cntRow=el('div'); cntRow.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;margin:6px 0';
+    const cnt=el('span'); const you=el('span','hand',' '+fig.youLabel); you.style.color=P.blue; you.style.fontSize=L.handPx+'px'; you.style.opacity=0;
+    cntRow.append(cnt,you);
+    const sum=el('div','card',''); sum.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body+';min-height:'+(L.bodyPx*cfg.layout.lineHeights.body+24)+'px;margin-top:8px';
+    mount.body.append(grid,cntRow,sum);
+    return function(p){ const st=waffleState(fig,p,cfg);
+      dots.forEach((d,i)=>{ if(i<st.filled){d.style.opacity=1; d.style.background=(i===fig.youIndex?P.blue:P.red);} else {d.style.opacity=.18; d.style.background='transparent';} });
+      you.style.opacity=st.youVisible?1:0;
+      cnt.textContent=fig.waffleLabel+' '+st.filled+' of '+fig.waffleTotal;
+      sum.textContent=fig.summaryText.slice(0,st.summaryChars); };
+  },
+  stackBars(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.fig22GapPx+'px';
+    const cnt=el('div'); cnt.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;font-weight:'+cfg.layout.fontWeights.bold+';height:'+g.counterH+'px';
+    const stack=el('div'); stack.style.cssText='width:'+(L.phone?g.chartW:cfg.layout.stackColWidthPx)+'px;display:flex;flex-direction:column-reverse;gap:'+cfg.layout.stackUnitGapPx+'px;padding-top:'+g.arrivalReserve+'px';
+    const units=[]; for(let i=0;i<fig.stackCount;i++){const u=el('div','','▭');u.style.cssText='border:2px solid '+P.ink+';border-radius:5px;text-align:center;font-size:'+L.labelPx+'px;height:'+g.unitH+'px;opacity:0';stack.appendChild(u);units.push(u);}
+    const left=el('div'); left.append(cnt,stack);
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const rects=barRects(fig,{w:g.chartW,h:g.chartH},1,cfg);
+    const barEls=rects.map((r,i)=>{const rect=dom.svgNode('rect',{x:r.x,width:r.w,fill:P.accent});s.appendChild(rect);
+      const t=dom.svgNode('text',{x:r.labelX,y:g.chartH-2,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink});t.textContent=fig.barLabels[i];s.appendChild(t);return rect;});
+    const dn=cfg.layout.donut;
+    const circ=dom.svgNode('circle',{cx:g.chartW*dn.cxFrac,cy:g.chartH/2,r:Math.min(dn.rMax,g.chartH*dn.rFrac),fill:'none',stroke:P.red,'stroke-width':dn.strokeW,transform:'rotate(-90 '+(g.chartW*dn.cxFrac)+' '+(g.chartH/2)+')'});
+    const C=2*Math.PI*parseFloat(circ.getAttribute('r')); circ.style.strokeDasharray=C; circ.style.strokeDashoffset=C; s.appendChild(circ);
+    const dl=dom.svgNode('text',{x:g.chartW*dn.cxFrac,y:g.chartH/2+6,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink}); dl.textContent=fig.donutLabel; s.appendChild(dl);
+    wrap.append(left,s);
+    mount.body.appendChild(wrap);
+    return function(p){ const st=stackState(fig,animQ(p,fig,cfg),cfg);
+      units.forEach((u,i)=>{const a=st.arrivals[i]; u.style.opacity=a.opacity; u.style.transform='translateY('+a.ty+'px)';});
+      cnt.textContent=st.units+' '+fig.stackLabel;
+      const rr=barRects(fig,{w:g.chartW,h:g.chartH},st.barQ,cfg);
+      barEls.forEach((rect,i)=>{rect.setAttribute('y',rr[i].y);rect.setAttribute('height',rr[i].h);});
+      circ.style.strokeDashoffset=C*(1-fig.donutFraction*st.donutQ); };
+  },
+  orgChart(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const ceo=el('div','card',fig.ceo+' — '+fig.ceoSub); ceo.style.cssText='width:'+Math.min(cfg.layout.ceoMaxW,L.contentW)+'px;margin:0 auto;text-align:center;font-family:'+deps.fonts.sans+';font-weight:'+cfg.layout.fontWeights.bold+';font-size:'+L.bodyPx+'px;opacity:0';
+    mount.body.appendChild(ceo);
+    const row=el('div'); row.style.cssText='display:flex;flex-wrap:wrap;gap:'+cfg.layout.orgRowGapPx+'px;justify-content:space-around;margin-top:'+cfg.layout.orgRowMarginTop+'px';
+    const nodes=fig.nodes.map(n=>{const d=el('div','','⬛ '+n);d.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.labelPx+'px;opacity:0;width:'+g.nodeW+'px;text-align:center';row.appendChild(d);return d;});
+    mount.body.appendChild(row);
+    const badge=el('div'); badge.style.cssText='text-align:center;margin-top:'+cfg.layout.badgeMarginTop+'px;opacity:0;font-size:'+L.bodyPx+'px';
+    badge.append(el('span','hand',fig.onlyNote+'  '), (()=>{const s=el('span','','★ '+fig.badgeName+' — '+fig.badge);s.style.cssText='font-family:'+deps.fonts.sans+';font-weight:'+deps.config.layout.fontWeights.bold+';color:'+P.red;return s})());
+    mount.body.appendChild(badge);
+    return function(p){ const st=orgState(fig,animQ(p,fig,cfg),cfg);
+      ceo.style.opacity=st.ceo?1:0; nodes.forEach((d,i)=>d.style.opacity=st.nodes[i]?1:0);
+      badge.style.opacity=st.badge?1:0; badge.style.transform='scale('+(st.badge?1:cfg.timing.badgeFrom)+')'; };
+  },
+  counterGraph(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.counterGapPx+'px';
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const geom={x0:cfg.layout.counterGeom.x0, x1:g.chartW-cfg.layout.counterGeom.x1Pad, y0:cfg.layout.counterGeom.y0, y1:g.chartH-cfg.layout.counterGeom.y1Pad};
+    const path=dom.svgNode('path',{fill:'none',stroke:P.ink,'stroke-width':3}); s.appendChild(path);
+    const cliffX=geom.x0+(geom.x1-geom.x0)*fig.cliffAt;
+    const dash=dom.svgNode('line',{x1:cliffX,x2:cliffX,y1:10,y2:g.chartH-16,stroke:P.red,'stroke-dasharray':'5 5'}); s.appendChild(dash);
+    const card=el('div','card'); card.style.cssText='width:'+g.cardW+'px;font-family:'+deps.fonts.sans;
+    const lab=el('div','',fig.counterLabel); lab.style.cssText='letter-spacing:.1em;font-size:'+L.labelPx+'px;opacity:.85';
+    const big=el('div'); big.style.cssText='font-size:'+L.bigPx+'px;font-weight:'+cfg.layout.fontWeights.black+';margin:8px 0';
+    const sub=el('div','',fig.counterSub); sub.style.cssText='font-style:italic;font-family:'+deps.fonts.serif+';font-size:'+L.bodyPx+'px;color:'+P.muted;
+    card.append(lab,big,sub);
+    wrap.append(s,card); mount.body.appendChild(wrap);
+    return function(p){ const aq=animQ(p,fig,cfg); const af=animFraction(fig,cfg); const T=cfg.timing;
+      big.textContent=counterTextAt(p,fig,cfg);
+      let d='M'+geom.x0+' '+graphYAt(0,fig,geom,cfg);
+      const upto=Math.max(T.sampleStep,aq);
+      for(let u=T.sampleStep;u<=upto;u+=T.sampleStep) d+=' L'+(geom.x0+(geom.x1-geom.x0)*u)+' '+graphYAt(u*af,fig,geom,cfg);
+      d+=' L'+(geom.x0+(geom.x1-geom.x0)*upto)+' '+graphYAt(upto*af,fig,geom,cfg);
+      path.setAttribute('d',d); dash.style.opacity=aq>T.cliffMarkerAt?1:0;
+      return d; };
+  },
+  correction(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const corr=el('div','card',fig.correction); corr.style.cssText='border-color:'+P.red+';color:'+P.red+';font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body+';max-width:'+g.corrW+'px;opacity:0'; mount.body.appendChild(corr);
+    const stampWrap=el('div'); stampWrap.style.cssText='margin-top:'+cfg.layout.corrStampMarginTop+'px;min-height:'+g.stampH+'px';
+    const stamp=el('span','stamp',fig.stamp); stamp.style.color=P.red; stamp.style.opacity=0; stamp.style.fontSize=L.bodyPx+'px'; stampWrap.appendChild(stamp);
+    mount.body.appendChild(stampWrap);
+    const notes=el('div'); notes.style.marginTop=cfg.layout.corrNotesMarginTop+'px'; const noteEls=fig.notes.map(n=>{const s=el('div','hand',n);s.style.cssText='font-size:'+L.handPx+'px;color:'+P.blue+';opacity:0';notes.appendChild(s);return s;}); mount.body.appendChild(notes);
+    return function(p){ const st=correctionState(fig,animQ(p,fig,cfg),cfg);
+      corr.style.opacity=st.corr?1:0;
+      stamp.style.opacity=st.stampVisible?1:0;
+      const scale=Math.min(st.stampScale, g.stampCap);
+      stamp.style.transform='rotate('+cfg.timing.stampRotationDeg+'deg) scale('+scale+')';
+      noteEls.forEach((s,i)=>s.style.opacity=st.notes[i]); };
+  }
+};
+
+/* Scene assembly: builds the broadsheet frame and mounts every figure factory with
+   the injected dependency set. Returns the mounted renderers. */
+function createScene(deps){
+  const cfg=deps.config, P=deps.palette, dom=deps.dom, el=dom.el, stageEl=deps.stageEl;
+  const L=deps.layout;
+  stageEl.style.background=P.paper; stageEl.style.color=P.ink;
+  stageEl.style.setProperty('--warn',P.red); stageEl.style.setProperty('--muted',P.muted);
+  stageEl.style.setProperty('--card-tint',P.cardTint);
+  stageEl.style.setProperty('--font-serif',deps.fonts.serif); stageEl.style.setProperty('--font-sans',deps.fonts.sans); stageEl.style.setProperty('--font-hand',deps.fonts.hand);
+  stageEl.style.setProperty('--metapad',cfg.layout.metaPadX+'px');
+  stageEl.style.setProperty('--lh-mast',cfg.layout.lineHeights.mast); stageEl.style.setProperty('--lh-title',cfg.layout.lineHeights.title);
+  stageEl.style.setProperty('--fw-normal',cfg.layout.fontWeights.normal); stageEl.style.setProperty('--fw-black',cfg.layout.fontWeights.black);
+  const mast=el('div','mast'); mast.appendChild(el('h1','',cfg.masthead)); stageEl.appendChild(mast);
+  stageEl.appendChild(el('div','rule'));
+  const meta=el('div','meta');
+  const dateS=el('span','',cfg.dateLine);
+  const clockS=el('span','',cfg.clockStart); clockS.style.color=P.red;
+  const priceS=el('span','',cfg.price);
+  if(L.metaRows===2){ priceS.style.flexBasis='100%'; priceS.style.textAlign='right'; }
+  meta.append(dateS, clockS, priceS); stageEl.appendChild(meta);
+  const problems=validateConfig(cfg);
+  const mounted=[];
+  cfg.figures.forEach(f=>{
+    const root=el('section','fig'); root.id=f.id;
+    const num=el('div','fignum',f.num); num.style.color=P.red; root.appendChild(num);
+    const h=el('h2','',f.title); h.style.minHeight=(headingLines(f.title,L,cfg)*L.titlePx*cfg.layout.lineHeights.title)+'px'; root.appendChild(h);
+    const body=el('div'); root.appendChild(body);
+    root.appendChild(el('div','src',f.source));
+    stageEl.appendChild(root);
+    const figProblems=problems.filter(x=>x.indexOf(f.id+':')===0);
+    let draw=null;
+    if(figProblems.length){ const warn=el('div','warn','Unsupported data — '+figProblems.join('; ')); body.appendChild(warn); if(window.console) console.warn('T17 validation: '+figProblems.join('; ')); }
+    else if(BUILDERS[f.type]) draw=BUILDERS[f.type]({root:root,body:body},f,deps);
+    mounted.push({fig:f,root:root,draw:draw});
+  });
+  return mounted;
+}
+
+const stage=document.getElementById('stage');
+document.body.style.background=CONFIG.palette.pageBg;
+document.getElementById('clock').style.color=CONFIG.palette.controlInk;
+let mounted=[], lastT=0;
+function buildAll(){
+  mounted.forEach(m=>m.root.remove()); mounted=[];
+  const mastOld=stage.querySelectorAll('.mast,.rule,.meta'); mastOld.forEach(n=>n.remove());
+  const w=stage.clientWidth||960, L=computeLayout(w,CONFIG);
+  stage.classList.toggle('phone',L.phone);
+  stage.style.setProperty('--mast',L.mastPx+'px'); stage.style.setProperty('--title',L.titlePx+'px');
+  stage.style.setProperty('--label',L.labelPx+'px'); stage.style.setProperty('--padx',L.padX+'px');
+  stage.style.setProperty('--padtop',L.padTop+'px'); stage.style.setProperty('--figtop',Math.round(L.headerH)+'px');
+  if(L.phone) stage.style.height=Math.round(L.headerH+Math.max.apply(null,CONFIG.figures.map(f=>figureRequired(f,L,CONFIG).required)))+'px';
+  else stage.style.height='';
+  const deps={config:CONFIG, palette:CONFIG.palette, timing:CONFIG.timing, layout:L, dom:browserDom(), fonts:CONFIG.fonts, stageEl:stage};
+  mounted=createScene(deps);
+  render(lastT);
+}
+function render(t){
+  lastT=Math.max(0,Math.min(CONFIG.duration,t)); window.__lastT=lastT;
+  document.getElementById('clock').textContent=lastT.toFixed(2)+'s / '+CONFIG.duration+'s';
+  const st=stateAt(lastT,CONFIG.figures,CONFIG.duration);
+  mounted.forEach((m,i)=>{ const active=i===st.index; m.root.classList.toggle('on',active); if(active&&m.draw) m.draw(st.p); });
+}
+let playing=false, startStamp=0, offset=0, raf=0;
+function tick(now){ if(!playing)return; const t=offset+(now-startStamp)/1000; if(t>=CONFIG.duration){render(CONFIG.duration);playing=false;return;} render(t); raf=requestAnimationFrame(tick); }
+window.T17={ config:CONFIG, render:render, fitReport:function(w){return fitReport(w||stage.clientWidth||960, CONFIG.figures, CONFIG);},
+  validate:function(){return validateConfig(CONFIG);},
+  setTime:function(t){offset=t;render(t);}, get time(){return offset;},
+  play:function(){ if(!playing){playing=true;startStamp=performance.now();raf=requestAnimationFrame(tick);} },
+  pause:function(){ playing=false; offset=window.__lastT||offset; cancelAnimationFrame(raf); },
+  restart:function(){ offset=0; playing=true; startStamp=performance.now(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick); } };
+document.getElementById('play').onclick=()=>{ playing?window.T17.pause():window.T17.play(); };
+document.getElementById('restart').onclick=()=>window.T17.restart();
+window.addEventListener('resize',buildAll);
+buildAll();
+</script></body></html>
+
+
+===== BUILD RECORD (ATTEMPT 3) =====
+# T17 — Fake-newspaper animated dataviz · BUILD RECORD (attempt 3)
+
+Technique: T17 (packet P1, "Look What I Can Do" @ 1:40–2:02) · practice Cycle 012 Wave 11 · Attempt 3 · 2026-11-15
+Artifact dir: `hidden_files/study/recreations/T17-fake-newspaper-dataviz/`
+Consumer: diagram container (DLC sentence diagrams) — a static frame whose internal figures animate in sequence.
+Final source: `recreation.html` · sha256 `b2012a7a9fd8eaef1b6187754f52d233699be0528357fbd29949819a7bf0fc91`
+
+## Construction facts
+
+- One self-contained HTML file. All visuals are DOM/SVG generated in code from a CONFIG
+  object (masthead, date line, clock, price, palette, font stacks, timing parameters,
+  layout parameters, data bounds, type floors, and one data record per figure). No
+  external assets, no embedded media.
+- Figure construction is factory-based: a registry maps each figure type
+  (lineChart · waffle · stackBars · orgChart · counterGraph · correction) to a factory
+  with the signature `factory(mount, figData, deps)`, where
+  `deps = { palette, timing, layout, dom, fonts, config }` (dom = the element/SVG
+  helper set; layout = the computed layout model for the stage width). No factory body
+  references scene-level state; a separate scene-assembly function builds the frame
+  (masthead, rule, metadata line) and mounts every factory with the dependency set.
+  The factories mount into any container element supplied as the mount point, with any
+  palette and figure record supplied through deps.
+- The public interface is unchanged: `window.T17 = { config, render, fitReport,
+  validate, setTime, play, pause, restart }` plus the `time` getter, exactly as the
+  comparison page consumes it. comparison.html is byte-unchanged.
+- Every CONFIG field is consumed: a mutation census over all 240 leaf keys (mutate the
+  key, observe a changed rendered/computed effect across state curves, geometry at two
+  layouts, fit reports, validation outcomes and mounted scene traces) found no
+  unconsumed key. The secondary-text palette entry is consumed by the source lines and
+  the counter sub-label; the warning colour reaches its rule through a palette-driven
+  CSS variable.
+- Layout model and builders share single named values for every gap, margin and
+  line-height the model budgets (figure-block gap, unit gap, row gaps, line heights,
+  type scales and caps, chart heights and width fractions are CONFIG layout entries).
+- Masthead metadata: the layout model measures the three metadata spans at the label
+  size and enumerates the arrangement — one row where the measured widths plus minimum
+  gaps fit the metadata width, two rows (date + clock, then price) where they do not.
+  The header height and the figure offset derive from the enumerated row count
+  (2 rows at 360px and 390px, 1 row at 960px).
+- Fit constraint: phone stage height is capped by a named budget
+  (`layout.phoneStageBudgetPx` = 640); the phone stage grows to content inside that
+  budget and does not scroll. The stack unit height derives from the stack count and
+  the budget that remains after the counter, the figure-block gap, the chart and an
+  arrival reserve are allocated, clamped between a legibility floor (label size + 2)
+  and a named maximum; a count whose derived height would fall below the floor at the
+  phone probe width is rejected by validation. The maximum supported stack count (14)
+  fits the budget together with the two-row masthead and the arrival reserve
+  (608.8px of 640px at 360px).
+- Line chart endpoint labels are anchored inward (first label start-anchored, last
+  label end-anchored at the axis ends); the fit model asserts every label's displayed
+  bounds (anchor ± half the measured width at the named per-character estimator) inside
+  the SVG at 360/390/960, for the default labels and for a longer swapped label set.
+- Waffle summary timing is content-derived: a named reading rate
+  (`timing.readMsPerChar` = 12 milliseconds per character; reading seconds = character
+  count × 12 / 1000) sets the completed-text hold — 89 characters → 1.068s — and the
+  typing duration is what remains between the named typing start and that hold,
+  bounded below by a named minimum typing duration and a named minimum fill duration.
+  A summary too long to type at the minimum duration and still hold is rejected by
+  validation with a named warning.
+- Correction stamp: its entrance scale is capped by its rotated bounding box
+  (width × |cos θ| + height × |sin θ|, θ = the named rotation) against the block width
+  and a named area budget — caps 1.83 at 360px, 1.99 at 390px, 1.91 at 960px — instead
+  of being clipped. The scale curve is a rapid eased approach to an overshoot state,
+  a brief compression, then a settle, all inside the existing stamp allocation; the
+  fit model prices the bounding box at the entrance, overshoot and settle states.
+  The stamp element's display type in the cascade is a transformable type
+  (inline-block). PIXEL-UNVERIFIED for the rendered state.
+- Margin-note timing is distributed inside the animation budget: note starts derive
+  from the note count so the last of any permitted count (1–4) completes inside the
+  animation portion (last completion at normalized 0.925 for four notes) with the
+  hold intact. Validation requires the cliff position to sit below the figure's
+  animation fraction minus a named margin; the boundary pair 0.79 accepted /
+  0.81 rejected is asserted.
+- Stack units arrive by short downward translation from a named offset above their
+  slots over a span-derived duration and settle onto the pile; the fit model reserves
+  the arrival offset inside the figure block.
+- Counter graph: the trace's horizontal progression is driven by the animation
+  progress, so the complete path is drawn at animation completion and the path string
+  at completion is identical to the path string at the end of the hold.
+- Validation covers, beyond the supported data boundaries: non-finite values
+  (windows, points, counter values), absent figure records, absent summary text,
+  single oversized content (stack count, summary length) and the budget checks above.
+  Default data produces zero warnings.
+
+## Per-figure completion / hold timestamps (computed from the state functions)
+
+| Figure | Window start (s) | Completion (s) | Hold after completion (s) |
+|---|---|---|---|
+| FIG. 20 line chart | 0.0 | 3.000 | 0.600 |
+| FIG. 21 waffle | 3.6 | 6.432 | 1.068 |
+| FIG. 22 stack + bars | 7.5 | 10.500 | 0.600 |
+| FIG. 23 org chart | 11.1 | 14.100 | 0.600 |
+| FIG. 24 counter + graph | 14.7 | 18.100 | 0.600 |
+| FIG. 25 correction | 18.7 | 21.900 | 0.600 |
+
+The guarantee is stated per figure: each figure's own sub-animations complete at its
+completion timestamp and the hold that follows is at least the named minimum hold
+(0.6s); the waffle's completed summary holds for its content-derived 1.068s.
+
+## Modelled fit summary
+
+| Width | Stage height | Meta rows | Fit |
+|---|---|---|---|
+| 360 px | 528.8 px | 2 | all six figures inside the 640px budget; FIG.22 source-line bottom at the stage bottom (528.8px), inside |
+| 390 px | 528.8 px | 2 | same |
+| 960 px | 540 px | 1 | all six figures inside the 432.5px content height |
+
+Type floors (CONFIG.typeFloors, px): masthead 20 · figure title 17 · body 12 ·
+label 11 · big counter 20 · handwritten 14 — asserted at every width.
+
+## Own-check evidence (logic harness, node; 84 checks, all PASS)
+
+- Syntax parses; the public interface surface is present and unchanged.
+- Factory mounting: all six factories mount into a foreign container with a foreign
+  palette and foreign font stacks; the mounted trace uses only the injected palette
+  values, and no factory references scene-level state.
+- Retained-mechanism consistency: draw, org-assembly and counter states agree with
+  the previous build's state functions at the sampled checkpoints; the stack is
+  complete at the end of its window.
+- Effect mappings: each correction note maps to its own displayed opacity in order;
+  each stack unit maps to its own arrival transform and opacity, settling at zero
+  offset; the waffle fill maps to its dot count and typed character count.
+- Content-derived summary timing: reading seconds = characters × rate; typing and
+  fill durations at or above their named minima; the hold scales with a longer
+  swapped summary.
+- Stamp: transformable display type in the cascade model; rotated bounding box
+  inside the block at entrance/overshoot/settle at 360/390/960; the scale curve
+  passes through its overshoot and compression states; the notes band starts below
+  the stamp's bounding-box bottom at the capped entrance scale.
+- Fit: fit report passes at 360/390/960; the metadata line enumerates 2 rows at
+  phone widths and 1 at desktop; FIG.22 fits the budget with the wrapped masthead,
+  including at the maximum supported stack count with the arrival reserve; the
+  derived unit height sits within its floor and maximum and is the height the
+  builder uses.
+- Endpoint labels: displayed bounds inside the SVG at all three widths, default and
+  longer swapped labels.
+- Budget: notes of every permitted count complete inside the animation portion;
+  the cliff boundary pair is accepted/rejected as specified.
+- Trace freeze: the counter path at animation completion equals the path at hold
+  end exactly; the path still animates before completion.
+- Consumption census: all 240 CONFIG leaves consumed (see above).
+- Data swaps: waffle total, org nodes 4→6 (sixth present at completion), bars 4→7,
+  counter range, notes 1→4, longer endpoint labels, longer summary (hold scales) —
+  visible/computed output changes in each case.
+- Adversarial validation: non-finite cliff, absent figure record, oversized summary,
+  oversized stack and non-finite points are each rejected with named warnings;
+  defaults produce zero warnings.
+- Purity: source grep for specimen/segment filenames, media tags/extensions and
+  external URLs returns no subject hits (the only URL string is the SVG namespace);
+  the file loads nothing external.
+
+## Named limitation (self-start)
+
+The piece renders its first frame on load but does not start playback on its own:
+playback requires the Play control or an external clock driving `render` (the
+comparison page's slave clock). This is printed as a limitation of the construction,
+not as an exemption from any timing judgment.
+
+PIXEL-UNVERIFIED: a rendered-pixel check was re-attempted with the Chromium build
+present in this environment (`/opt/meta-chromium/chrome --headless=new
+--window-size=390,844 --screenshot`); startup failed with "Hatch WebGL domain policy
+is required for browser startup" and no screenshot was produced. All geometry
+evidence above therefore rests on the deterministic layout model, not on rendered
+pixels.
+
+
+===== OWN-CHECK PACKET (check names + results only) =====
+- PASS: syntax: inline script parses
+- PASS: interface key config:CONFIG
+- PASS: interface key render:render
+- PASS: interface key fitReport:
+- PASS: interface key validate:
+- PASS: interface key setTime:
+- PASS: interface key play:
+- PASS: interface key pause:
+- PASS: interface key restart:
+- PASS: interface preserved: window.T17 assignment present
+- PASS: foreign mount: all six factories mount with foreign palette, no default-palette leak
+- PASS: source scan: factories take deps argument
+- PASS: source scan: no builder reads global CONFIG directly
+- PASS: source scan: zero bare CONFIG references inside factories
+- PASS: correction note i -> opacity: all notes 1 at q=1
+- PASS: correction note 0 partially/fully faded before note 1 completes (ordering)
+- PASS: stack unit i -> arrival transform: visible units have ty in [-14,0], hidden units opacity 0
+- PASS: stack arrivals settle: every ty == 0 at q=stackEnd
+- PASS: waffle filled -> dots + summary chars at p=1
+- PASS: readMsPerChar units/value: 12 ms/char; 89 chars -> 1.068 s
+- PASS: typing duration >= minTypeSec and fill >= minFillSec
+- PASS: completed hold after typing = holdSec (completion at dur-hold)
+- PASS: hold scales with length: 150 chars -> 1.8 s hold, typing still >= minimum
+- PASS: stamp computed display type is transformable (inline-block in cascade)
+- PASS: stamp AABB inside block width @360
+- PASS: stamp AABB height within area budget @360
+- PASS: stamp AABB inside block width @390
+- PASS: stamp AABB height within area budget @390
+- PASS: stamp AABB inside block width @960
+- PASS: stamp AABB height within area budget @960
+- PASS: impact shape: entrance 2.4 -> overshoot 1.1 -> compress 0.93 -> settle 1 (non-linear)
+- PASS: FIG.25 separation: notes band starts below stamp AABB bottom at capped entrance scale (360)
+- PASS: fitReport ok @360
+- PASS: fitReport ok @390
+- PASS: fitReport ok @960
+- PASS: masthead wraps to 2 rows @360
+- PASS: masthead wraps to 2 rows @390
+- PASS: masthead single row @960
+- PASS: single-source gap: builder flex gap string uses CONFIG layout.fig22GapPx
+- PASS: FIG.22 required within stage budget @360 (wrapped masthead)
+- PASS: source line bottom inside stage @360
+- PASS: FIG.22 required within stage budget @390 (wrapped masthead)
+- PASS: source line bottom inside stage @390
+- PASS: max stack 14 + wrapped masthead + arrival reserve fits @360
+- PASS: max stack 14 + wrapped masthead + arrival reserve fits @390
+- PASS: unitH derived from count within [floor,max], builder uses model unitH
+- PASS: endpoint labels displayed bounds inside SVG @360
+- PASS: endpoint labels displayed bounds inside SVG @390
+- PASS: endpoint labels displayed bounds inside SVG @960
+- PASS: swapped longer labels stay inside SVG @360
+- PASS: badge scale literal moved: badgeFrom in CONFIG, builder consumes it
+- PASS: stamp rotation in CONFIG and consumed
+- PASS: sample step in CONFIG and consumed
+- PASS: cliff marker threshold in CONFIG and consumed
+- PASS: warning colour routed via palette CSS var (no hex in .warn rule)
+- PASS: palette.muted consumed (src colour var + counter sub-label)
+- PASS: notes x1 all complete by q=1
+- PASS: notes x2 all complete by q=1
+- PASS: notes x3 all complete by q=1
+- PASS: notes x4 all complete by q=1
+- PASS: cliff boundary pair: 0.79 accepted / 0.81 rejected with named warning
+- PASS: counter path frozen: path at completion == path at hold end
+- PASS: counter path still animates before completion
+- PASS: every figure hold >= minHoldSec
+- PASS: total duration preserved 22.5s, windows unchanged
+- PASS: phoneProbeWidth decides stack-floor validation (18 units: rejected at phone probe, accepted at desktop probe)
+- PASS: Census dedicated: phoneBreakpoint decides phone mode at 500px width
+- PASS: mutation census: every CONFIG leaf consumed (240 leaves)
+- PASS: waffle swap 15->30 changes filled at mid
+- PASS: org nodes 4->6: 6th present at completion
+- PASS: bars 4->7 geometry changes
+- PASS: counter range change changes mid text
+- PASS: V-adversarial: NaN cliff rejected
+- PASS: V-adversarial: null figure group rejected without throwing
+- PASS: V-adversarial: oversized summary rejected with named warning
+- PASS: V-adversarial: oversized stack rejected
+- PASS: V-adversarial: non-finite point rejected
+- PASS: V-adversarial: defaults produce zero warnings
+- PASS: purity grep: 0 specimen/media/external hits
+- PASS: asset inventory: single self-contained file, SVG namespace only external string
+- PASS: self-start limitation check: piece renders t=0 on load, playback requires Play or comparison slave (limitation, not exemption)
+- PASS: hex literals outside CONFIG: none
+(84 checks, all PASS)

@@ -1,0 +1,1151 @@
+CONSUMER + DECISION PRICED: the practice job (Video Study lane), Cycle 029 Wave 28, section 5 Verify for technique T17 attempt 9 — your score is one of five lens scores judged against the BAR (average at least 85 AND no lens below 70) deciding whether technique T17 consolidates in the style library as RECREATED, for its consumer: the diagram container (DLC sentence diagrams). Name what the next attempt must carry if it fails.
+WORKING RECORD: you build from the technique facts + recreation source + score-blind build record + own-check packet in this single stream; your return is filed verbatim under the artifact's codex/attempt-9/ directory and quoted into the artifact's score filing.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. End your return with exactly one line: SCORE: <integer>. Scores are integers from 0 to 100. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: READABILITY only. Score 0-100 the readability of the displayed state at phone widths: type floors, label placement and clearance, glyph bounds, line heights, containment, and whether labels point at what they name. Price the evidence class honestly (logic-level model, no rendered pixels).
+
+===== TECHNIQUE FACTS =====
+TECHNIQUE FACTS (packet P1, frame-evidenced): T17 Fake-newspaper animated dataviz — one static broadsheet (masthead THE DAILY STANDUP) fills the frame for 22.5s with ZERO hard cuts; inside it numbered figures FIG.20-25 arrive in order. FIG.20 line chart draws itself (outlook: so back / meh / doomed, then spikes). FIG.21 waffle grid fills red dot by dot (panicking 0 of 15 -> 15 of 15, one blue dot labeled 'you'); a summary box types out. FIG.22 a stack of Mac minis piles up beside a counter of 10 while a bar chart and donut draw in. FIG.23 org chart assembles node by node (CEO -> CFO, CTO, Head of HR, VP of Vibes + EMPLOYEE OF THE YEAR badge). FIG.24 giant counter starts at 3,412,083,117 and ticks down live, then cliff-dives to 1 as its line graph drops with it. FIG.25 a red CORRECTION box appears and a 'HIRED BY MYSELF' stamp slams in; handwritten margin notes fade in ('checks out', '(Not mine. Rendered.)').
+SPECIMEN BASIS: the recreation is based on the specimen segment of the source reel (packet P1, "Look What I Can Do", 1:40-2:02 within the reel; a local evidence cut spans 1:39.5-2:02.5). Figure windows are the labeled allocation across the 22.5s (FIG.20 0.0-3.3s, FIG.21 3.3-7.8s, FIG.22 7.8-11.4s, FIG.23 11.4-15.0s, FIG.24 15.0-18.7s, FIG.25 18.7-22.5s), not measured per-figure checkpoints.
+VERIFICATION LIMITATIONS: PIXEL-UNVERIFIED — no rendered-pixel verification exists for this build. The environment's Chromium route was attempted and failed at startup ("Hatch WebGL domain policy is required for browser startup"), so no rendered frames of the completed figures at 360px or 390px, no stamp or badge entrance frames, no normal-speed playback observations, and no rendered swap observations were obtained; all geometry and timing evidence is logic-level (deterministic layout model + state-function probes + stub-DOM traces). Price that evidence class honestly.
+
+===== CONSTRUCTION FACTS =====
+# T17 fake-newspaper dataviz — construction facts (neutral)
+
+A single self-contained HTML file recreates a fake-newspaper animated dataviz: a broadsheet masthead, then six figures arriving in sequence on one stage — a line chart with a side card, a waffle chart with a typed summary card, a stacked-bars figure with a bar chart and donut, an org chart with a badge, a counter-and-graph collapse figure, and a correction figure with a stamp and margin notes. All construction is procedural from one configuration object; no specimen media, no external assets. The piece starts playing under its own startup path.
+
+Construction facts a reviewer can verify in the source:
+
+- Validation enumerates its required members by name: every required timing member, every required layout member (including the members of each nested layout group), every required palette and formatting member, the bounds and the type floors. A missing, null, wrongly typed, or non-finite named member is a named error carrying the member's path. Label and point arrays are shape-checked per entry — every entry of the label arrays, the point pairs, the bar values and labels, the node list, and the notes list is checked with the figure and index named in the error. The fit entry point validates before it computes any layout and returns a failure result instead of throwing when a required group or member is absent.
+- One sample-count rule is shared by validation and rendering. The counter renderer's emitted points over a full draw are defined as: the initial point, one point per step sample while k times the step is below 1, and the endpoint sample. A single function computes that count from the step; the validator refuses a step whose count exceeds the named maximum in the timing configuration, and the renderer's loop is bounded by the same maximum. At a step of 1/512 a full draw emits 513 points.
+- The public rebuild entry is transactional. It deep-copies the candidate, validates it, computes its fit report, and builds the complete candidate scene in a detached root that is never attached to the live stage. The live scene is replaced in one commit step only after validation, fit, and construction all succeed; the sizing for the detached build is derived from the candidate configuration's own stage width when no live viewport width exists. A candidate whose fit report fails is refused: the call returns the failure together with the fit report and the live scene stands. A candidate that fails validation returns the named errors. A candidate that throws during construction is discarded; the failure path runs no builder against the live configuration and never reconstructs the live scene. A successful swap renders the current playback position — if a preview frame stands ahead of the playback offset, the preview stands; if the piece is playing, the next animation frame continues from the pre-swap position. The no-argument rebuild form and the window-resize path run the same transactional construction.
+- A complete alternate preset in the same configuration shape — masthead, date line, clock, price, every palette entry, figure titles and sources, chart titles, axis labels, point data, card text, waffle counts and callout text, stack items and labels, org nodes and badge text, counter start and end values with their labels, and the correction, stamp, and notes text — mounts through the public rebuild path, and every one of those fields' rendered effects changes with it.
+- The waffle callout leader is a stepped route: it leaves the label horizontally inside its lane, runs vertically in the gap channel between two dot columns, runs horizontally in the gap channel between two dot rows, and enters its target dot at the dot's bottom edge. Its stroke width and its clearance floor are named configuration keys; the mounted census measures stroke-edge clearance for every leader segment against every non-target dot. The label is plain text with no arrow glyph.
+- The fit report's rows carry, per figure, the required height, the allocated height, the occupied width, the available width, and the figure title's occupied width. Occupied width is modelled per contained element: an unbreakable text token occupies its full modelled width even when its container is narrower, wrapped text occupies its widest line, and the chart title's modelled width consumes the same letter-spacing key the renderer applies.
+- A literal census covers the whole file — stylesheet, builders, geometry model, and state functions. The stage width value occurs exactly once, at its owner key in the configuration; the stylesheet reads it through a variable with no repeated fallback, and no stylesheet variable carries a fallback value. Waffle spacing (dot gap and row gap), the counter path stroke, the axis and connector strokes, and the cliff dash pattern each live at one configuration owner read by both the geometry model and the renderer. Every remaining numeric literal outside the configuration carries a named structural disposition in the build's census output. No color literal stands outside the configuration.
+- Verification is logic-level: a stub-DOM mounted harness, the source-derived geometry model, and state-function probes. PIXEL-UNVERIFIED: no rendered-pixel evidence exists for this build (the environment's Chromium route fails at startup), so rendered playback, entrances, and glyph containment are unassessed.
+
+===== OWN-CHECK PACKET =====
+# T17 — own-check packet (neutral: check names, inputs, results)
+
+Mounted-state harness (stub-DOM, classes: E emitted structure · G source-derived geometry · B browser measurement). All checks below ran on the source in this packet.
+
+## Remount behaviour (public rebuild path, stub stage at 360px unless named)
+- PASS [E] validation failure (a required palette member removed): named errors returned; the mounted roots are the identical objects after the call; the live configuration and the playback position are unchanged
+- PASS [E] construction failure (a candidate whose builder throws after sizing): the candidate construction ran in a detached root; the failure path ran zero builder invocations against the live configuration; the mounted roots are the identical objects after the call
+- PASS [E] fit failure (a figure title of 60 wide glyphs): the call returns not-ok together with the fit report; the live scene stands
+- PASS [E] preview preservation: with a preview frame rendered at 6.5s while the playback offset stands at 5.0s, a successful swap leaves the rendered position at 6.5s
+- PASS [E] playing swap: the animation frame after a successful swap advances the playback position by one second from its pre-swap value (no rewind, no stall)
+- PASS [E] alternate preset swap at 360px and at 390px: commits through the public path; 41 enumerated subject-bearing fields each show a changed rendered effect; no subject string of the shipped preset survives anywhere in the mounted alternate scene; the page background and clock ink commit with the swap; swapping back restores the shipped scene
+- PASS [E] no-argument rebuild: runs the same path, returns the fit report, remounts the scene, preserves the playback position
+- PASS [E] resize path (a direct full rebuild of the standing configuration): preserves the playback position and the figure count
+- PASS [E] candidate width derivation: with no live viewport width, a candidate whose configuration names a stage width of 1024 is sized at 1024 (the fit report's width reads 1024 and the stage width variable reads 1024px)
+
+## Validation
+- PASS [E] the shipped configuration validates with zero errors
+- PASS [E] named cases, 16 of 16: a deleted timing member, a deleted layout member, a deleted nested layout-group member, a deleted formatting member, a deleted bounds member, a deleted type-floor member, a primitive label entry, a label entry missing its value, a null axis-label entry, a string point coordinate, a single-value point entry, a string bar value, a numeric bar label, an empty node entry, a null note entry, a deleted figure id — each yields a named error carrying the field path (and the index, for entries)
+- PASS [G] sample-count rule: step 1/512 emits 513 points; step 0.02 emits 51; step 0.04 emits 26; step 0.03 emits 35; step 0.06 emits 18; step 0.029 emits 36
+- PASS [E] sample boundaries: step 1/512 is refused at a maximum of 512 and accepted at 513; step 0.03 is accepted at a maximum of 35 and step 0.029 is refused at 35
+- PASS [E] the renderer's instrumented emitted count equals the rule's count at steps 0.02, 0.03, and 0.04
+- PASS [E] the step that a window-priced bound once passed at 500 samples over the animation window is refused by name under the full-draw rule (its full-draw count is 651)
+- PASS [E] generated sweep: 324 generated cases (81 configuration fields x 4 mutations: missing, null, wrongly typed, non-finite or empty) — every case yields a named error on its field; through the fit entry point, every missing-field case returns a not-ok result without throwing; through the rebuild path, sampled invalid candidates are refused by name with the live scene untouched
+- PASS [E] valid boundaries accepted: a waffle total equal to its named maximum (60) validates (61 is refused); a figure title of exactly the named maximum length (200) validates
+- PASS [E] the query-string route's supported coercion (a numeric string for a top-level numeric key) is accepted and the result validates
+
+## Mounted census (derived pairs, per figure hold state; handoff midpoints included)
+- PASS [E] waffle leader segments x every non-target dot: 84 pairs per phone width (360 and 390); no segment crosses a dot; minimum stroke-edge clearance 3.0px against a named floor of 2px
+- PASS [E] target attachment: a leader endpoint lies exactly on the target dot's bottom edge (gap 0)
+- PASS [E] label x every dot: minimum clearance 28.8px against a named floor of 8px, at both phone widths
+- PASS [E] label x summary block: clearance 8px at both phone widths
+- PASS [E] org connectors x their anchors: maximum endpoint gap 0; start gap 2px (the named permitted maximum); connector segments cross no non-target node
+- PASS [E] stamp transformed bounds at its entrance state: the projected width stands within the cleared width at both phone widths
+- Coverage counts: emitted-structure assertions and source-derived geometry as listed; browser measurements 0 (PIXEL-UNVERIFIED)
+
+## Fit surface
+- PASS [G] every fit row carries its occupied width, the available width, and the figure title's occupied width
+- PASS [G] a card holding one unbreakable 100-glyph token: occupied 1083 against an available 328 — the row reports width not-ok; the public rebuild refuses that candidate and returns this fit report, live scene preserved
+- PASS [G] a 40-glyph figure title: the row carries its occupied width 598.4 beside the available 328
+- PASS [G] the chart title's spacing key is consumed by the fit model: a 30-glyph chart title's occupied width moves by exactly the spacing model (36) when the key is set to zero, and the spacing is decisive for that title's width verdict at 360px
+- PASS [G] fit at 360, 390, and 960: every figure fits and every occupied width is within the available width for the shipped configuration
+
+## Literal census (whole file)
+- PASS [E] every numeric literal outside the configuration is either absent (single-sourced) or carries a named structural disposition in the census output; zero unlisted literals
+- PASS [E] no color literal outside the configuration
+- PASS [E] the stage width value occurs exactly once in the file, at its owner key
+- PASS [E] spacing and stroke mutations move the geometry model and the mounted scene together (dot gap, row gap, counter stroke), measured across the model/renderer boundary
+
+## Freeze checks on this source (19 of 19)
+- PASS [E] source comments are all neutral (no construction commentary of any kind)
+- PASS [E] the piece is playing under its own startup path after load
+- PASS [E] the only URL strings in the file are the SVG namespace identifier at its two element-creation call sites; no specimen media or external asset references
+
+## Leg 1 — measured fit table (full)
+# T17 — measured fit table, attempt 9 (on the source in this packet)
+
+Model: source-derived geometry (class G) + emitted-structure rows from the mounted-state harness; browser rows PIXEL-UNVERIFIED.
+Source: recreation.html sha256 ae5b68d4f42b30ea425a94f67fa8654cd87a6ef8e1d7e3e462cc530fb70f1729
+
+## width 360 — stageH 553 · headerH 99.2 · contentW 328 · ok true · globalErrors 0
+| figure | required | allocated | fits | widthOk | occupied maxW | available | titleOcc |
+|---|---|---|---|---|---|---|---|
+| fig20 | 309 | 445.8 | true | true | 328 | 328 | 318.9 |
+| fig21 | 274 | 445.8 | true | true | 328 | 328 | 171.4 |
+| fig22 | 445.8 | 445.8 | true | true | 328 | 328 | 137 |
+| fig23 | 277.7 | 445.8 | true | true | 320 | 328 | 305.7 |
+| fig24 | 314.4 | 445.8 | true | true | 328 | 328 | 314.2 |
+| fig25 | 330.8 | 445.8 | true | true | 328 | 328 | 84.7 |
+
+## width 390 — stageH 553 · headerH 99.2 · contentW 358 · ok true · globalErrors 0
+| figure | required | allocated | fits | widthOk | occupied maxW | available | titleOcc |
+|---|---|---|---|---|---|---|---|
+| fig20 | 309 | 445.8 | true | true | 358 | 358 | 353.6 |
+| fig21 | 280 | 445.8 | true | true | 358 | 358 | 171.4 |
+| fig22 | 445.8 | 445.8 | true | true | 358 | 358 | 137 |
+| fig23 | 280.1 | 445.8 | true | true | 320 | 358 | 305.7 |
+| fig24 | 314.4 | 445.8 | true | true | 358 | 358 | 314.2 |
+| fig25 | 342.4 | 445.8 | true | true | 358 | 358 | 84.7 |
+
+## width 960 — stageH 540 · headerH 107.5 · contentW 872 · ok true · globalErrors 0
+| figure | required | allocated | fits | widthOk | occupied maxW | available | titleOcc |
+|---|---|---|---|---|---|---|---|
+| fig20 | 357.6 | 432.5 | true | true | 872 | 872 | 705.6 |
+| fig21 | 316.9 | 432.5 | true | true | 872 | 872 | 302.4 |
+| fig22 | 339.8 | 432.5 | true | true | 588 | 872 | 241.8 |
+| fig23 | 282.5 | 432.5 | true | true | 813.4 | 872 | 539.4 |
+| fig24 | 315.4 | 432.5 | true | true | 872 | 872 | 554.4 |
+| fig25 | 429 | 432.5 | true | true | 680 | 872 | 149.4 |
+
+HIT rows (fits && widthOk): 18 of 18
+
+## Leg 2 — config consumption census (full)
+# T17 — config consumption census, attempt 9 (on the source in this packet)
+
+Leaves walked: 323 · consumed by measured effect mutation: 152 · named-consumer (renderer/content): 171 · unconsumed: 0
+
+Leaf-level table:
+- CONFIG.duration — mutation-consumed
+- CONFIG.masthead — named-consumer (key referenced 7x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.dateLine — mutation-consumed
+- CONFIG.clockStart — mutation-consumed
+- CONFIG.price — mutation-consumed
+- CONFIG.palette.paper — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.ink — named-consumer (key referenced 12x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.red — named-consumer (key referenced 12x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.blue — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.accent — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.muted — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.secondary — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.pageBg — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.cardTint — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.palette.controlInk — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.fonts.serif — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.fonts.sans — named-consumer (key referenced 18x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.fonts.hand — named-consumer (key referenced 16x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.formatting.counterLocale — mutation-consumed
+- CONFIG.formatting.ofWord — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.formatting.stackUnitSymbol — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.formatting.waffleInactiveOpacity — mutation-consumed
+- CONFIG.formatting.nodeSymbol — mutation-consumed
+- CONFIG.formatting.badgeStarSep — mutation-consumed
+- CONFIG.formatting.badgeDashSep — mutation-consumed
+- CONFIG.formatting.ceoSep — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.formatting.badgeHandFont — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.formatting.badgeSansFont — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.formatting.cliffDash — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.minHoldSec — mutation-consumed
+- CONFIG.timing.drawEnd — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.stackEnd — mutation-consumed
+- CONFIG.timing.barsEnd — mutation-consumed
+- CONFIG.timing.ceoAt — mutation-consumed
+- CONFIG.timing.nodeStart — mutation-consumed
+- CONFIG.timing.nodeEnd — mutation-consumed
+- CONFIG.timing.badgeAt — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.badgeFrom — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.badgeDur — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.badgeEasePow — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.connectorDrawSpan — mutation-consumed
+- CONFIG.timing.corrAt — mutation-consumed
+- CONFIG.timing.stampAt — mutation-consumed
+- CONFIG.timing.stampDur — mutation-consumed
+- CONFIG.timing.stampFrom — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.stampRotationDeg — mutation-consumed
+- CONFIG.timing.stampApproach — mutation-consumed
+- CONFIG.timing.stampReboundEnd — mutation-consumed
+- CONFIG.timing.stampOvershoot — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.stampCompress — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.noteStart — mutation-consumed
+- CONFIG.timing.noteFade — mutation-consumed
+- CONFIG.timing.readMsPerChar — mutation-consumed
+- CONFIG.timing.typeMsPerChar — mutation-consumed
+- CONFIG.timing.minTypeSec — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.minFillSec — mutation-consumed
+- CONFIG.timing.fillSec — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.typeStartSec — mutation-consumed
+- CONFIG.timing.sampleStep — mutation-consumed
+- CONFIG.timing.maxSamples — named-consumer (key referenced 10x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.cliffMarkerAt — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.cliffBudgetMargin — mutation-consumed
+- CONFIG.timing.preCliffDropMaxFrac — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.stackArrivalSpan — mutation-consumed
+- CONFIG.timing.stackEasePow — mutation-consumed
+- CONFIG.timing.stampEasePowIn — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.stampEasePowOut — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.animFractionFloor — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.figureTransitionSec — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.transitionOutSpan — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.transitionInStart — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.transitionInSpan — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.transitionFloorOpacity — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.transitionFloorRelease — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.timing.counterHoldSec — mutation-consumed
+- CONFIG.layout.fig22GapPx — mutation-consumed
+- CONFIG.layout.figPadTopPx — mutation-consumed
+- CONFIG.layout.headingMarginTopPx — mutation-consumed
+- CONFIG.layout.headingMarginBottomPx — mutation-consumed
+- CONFIG.layout.srcMarginTopPx — mutation-consumed
+- CONFIG.layout.bottomClearancePx — mutation-consumed
+- CONFIG.layout.cardPaddingPx — mutation-consumed
+- CONFIG.layout.cardBorderPx — mutation-consumed
+- CONFIG.layout.cardRadiusPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.dotBorderPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.stampBorderPx — mutation-consumed
+- CONFIG.layout.stampRadiusPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.stackUnitBorderPx — mutation-consumed
+- CONFIG.layout.stackUnitRadiusPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.stackUnitGapPx — mutation-consumed
+- CONFIG.layout.stackArrivalOffsetPx — mutation-consumed
+- CONFIG.layout.stackUnitMaxH — mutation-consumed
+- CONFIG.layout.phoneStageBudgetPx — mutation-consumed
+- CONFIG.layout.metaPadX — mutation-consumed
+- CONFIG.layout.metaMinGapPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.charWidthBody — mutation-consumed
+- CONFIG.layout.charWidthLabel — mutation-consumed
+- CONFIG.layout.charWidths.space — mutation-consumed
+- CONFIG.layout.charWidths.narrow — mutation-consumed
+- CONFIG.layout.charWidths.wide — mutation-consumed
+- CONFIG.layout.charWidths.upper — mutation-consumed
+- CONFIG.layout.charWidths.digit — mutation-consumed
+- CONFIG.layout.stampCharWidth — mutation-consumed
+- CONFIG.layout.stampPadX — mutation-consumed
+- CONFIG.layout.stampPadY — mutation-consumed
+- CONFIG.layout.stampAreaBudgetPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.stampLetterSpacingEm — mutation-consumed
+- CONFIG.layout.badgeClearancePx — mutation-consumed
+- CONFIG.layout.lineHeights.mast — mutation-consumed
+- CONFIG.layout.lineHeights.label — mutation-consumed
+- CONFIG.layout.lineHeights.body — mutation-consumed
+- CONFIG.layout.lineHeights.title — mutation-consumed
+- CONFIG.layout.lineHeights.stackCounter — mutation-consumed
+- CONFIG.layout.barGeom.slotFrac — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.barGeom.barFrac — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.barGeom.basePad — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.barGeom.topPad — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.barGeom.xPad — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.donut.cxFrac — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.donut.rFrac — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.donut.rMax — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.donut.strokeW — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.waffleGapPx — mutation-consumed
+- CONFIG.layout.waffleRowGapPx — mutation-consumed
+- CONFIG.layout.counterStrokeWidthPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.axisStrokeWidthPx — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.connectorStrokeWidthPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.cliffDashTopPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.cliffDashBottomPadPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.rowGapPx — mutation-consumed
+- CONFIG.layout.counterGapPx — mutation-consumed
+- CONFIG.layout.orgRowGapPx — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.orgRowMarginTop — mutation-consumed
+- CONFIG.layout.badgeMarginTop — mutation-consumed
+- CONFIG.layout.calloutLaneGapPx — mutation-consumed
+- CONFIG.layout.calloutMinClearancePx — named-consumer (key referenced 1x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.calloutShaftStrokeWidthPx — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.calloutShaftEdgeFloorPx — named-consumer (key referenced 1x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.calloutBarbDxPx — mutation-consumed
+- CONFIG.layout.calloutBarbDyPx — mutation-consumed
+- CONFIG.layout.chartTitleLetterSpacingEm — mutation-consumed
+- CONFIG.layout.chartTitleMarginBottomPx — mutation-consumed
+- CONFIG.layout.chartStrokeWidthPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.counterLabelLetterSpacingEm — mutation-consumed
+- CONFIG.layout.counterMarginYPx — mutation-consumed
+- CONFIG.layout.noteLineGapPx — mutation-consumed
+- CONFIG.layout.corrStampMarginTop — mutation-consumed
+- CONFIG.layout.corrNotesMarginTop — mutation-consumed
+- CONFIG.layout.chartPadLeft — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.barLabelDescenderPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.yLabelGapPx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartPadRight — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartPadBottom — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartPadTop — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.typeScale.mast — mutation-consumed
+- CONFIG.layout.typeScale.title — mutation-consumed
+- CONFIG.layout.typeScale.body — mutation-consumed
+- CONFIG.layout.typeScale.label — mutation-consumed
+- CONFIG.layout.typeScale.big — mutation-consumed
+- CONFIG.layout.typeScale.hand — mutation-consumed
+- CONFIG.layout.typeCaps.mast — named-consumer (key referenced 18x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.typeCaps.title — named-consumer (key referenced 26x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.typeCaps.body — named-consumer (key referenced 42x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.typeCaps.label — named-consumer (key referenced 35x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.typeCaps.big — named-consumer (key referenced 8x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.typeCaps.hand — named-consumer (key referenced 16x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartHeights.linePhone — mutation-consumed
+- CONFIG.layout.chartHeights.lineDesktop — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartHeights.stackPhone — mutation-consumed
+- CONFIG.layout.chartHeights.stackDesktop — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartHeights.counterPhone — mutation-consumed
+- CONFIG.layout.chartHeights.counterDesktop — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartWidthFrac.line — named-consumer (key referenced 16x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartWidthFrac.stack — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartWidthFrac.counter — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.chartMaxW — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.waffleGridFrac — mutation-consumed
+- CONFIG.layout.waffleLabelH — mutation-consumed
+- CONFIG.layout.waffleDotMin — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.waffleDotMax — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.nodePadX — mutation-consumed
+- CONFIG.layout.stackColWidthPx — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.phoneProbeWidth — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.connectorHeightPx — mutation-consumed
+- CONFIG.layout.connectorMarginTopPx — mutation-consumed
+- CONFIG.layout.padXPhone — mutation-consumed
+- CONFIG.layout.padXDesktop — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.padTopPhone — mutation-consumed
+- CONFIG.layout.padTopDesktop — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.stageWidthPx — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.stageAspectW — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.stageAspectH — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.fontWeights.normal — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.fontWeights.bold — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.fontWeights.black — named-consumer (key referenced 6x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.counterGeom.x0 — named-consumer (key referenced 20x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.counterGeom.x1Pad — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.counterGeom.y0 — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.counterGeom.y1Pad — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.corrMaxW — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.ceoMaxW — mutation-consumed
+- CONFIG.layout.phoneBreakpoint — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.layout.bigLineH — mutation-consumed
+- CONFIG.layout.transitionRisePx — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxFigures — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxWaffle — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxBars — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxStack — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxNodes — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxNotes — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxPoints — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.cliffMin — mutation-consumed
+- CONFIG.bounds.maxSummaryChars — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxTitleChars — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxLabelChars — named-consumer (key referenced 15x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxCardChars — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxStampChars — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxNoteChars — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxNodeChars — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.bounds.maxCeoChars — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.typeFloors.masthead — mutation-consumed
+- CONFIG.typeFloors.figureTitle — mutation-consumed
+- CONFIG.typeFloors.body — mutation-consumed
+- CONFIG.typeFloors.label — mutation-consumed
+- CONFIG.typeFloors.bigCounter — mutation-consumed
+- CONFIG.typeFloors.hand — mutation-consumed
+- CONFIG.figures[0].id — mutation-consumed
+- CONFIG.figures[0].type — mutation-consumed
+- CONFIG.figures[0].start — mutation-consumed
+- CONFIG.figures[0].dur — mutation-consumed
+- CONFIG.figures[0].num — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].title — named-consumer (key referenced 26x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].source — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].chartTitle — mutation-consumed
+- CONFIG.figures[0].yLabels[0].text — named-consumer (key referenced 42x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].yLabels[0].y — named-consumer (key referenced 17x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].yLabels[1].text — named-consumer (key referenced 42x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].yLabels[1].y — named-consumer (key referenced 17x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].yLabels[2].text — named-consumer (key referenced 42x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].yLabels[2].y — named-consumer (key referenced 17x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].yLabels[2].emphasis — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].xLabels[0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].xLabels[1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].points[0][0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].points[0][1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].points[1][0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].points[1][1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].points[2][0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].points[2][1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[0].cardText — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[1].id — mutation-consumed
+- CONFIG.figures[1].type — mutation-consumed
+- CONFIG.figures[1].start — mutation-consumed
+- CONFIG.figures[1].dur — mutation-consumed
+- CONFIG.figures[1].num — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[1].title — mutation-consumed
+- CONFIG.figures[1].source — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[1].waffleTotal — mutation-consumed
+- CONFIG.figures[1].waffleCols — mutation-consumed
+- CONFIG.figures[1].youIndex — mutation-consumed
+- CONFIG.figures[1].youLabel — mutation-consumed
+- CONFIG.figures[1].waffleLabel — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[1].summaryText — mutation-consumed
+- CONFIG.figures[2].id — mutation-consumed
+- CONFIG.figures[2].type — mutation-consumed
+- CONFIG.figures[2].start — mutation-consumed
+- CONFIG.figures[2].dur — mutation-consumed
+- CONFIG.figures[2].num — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].title — mutation-consumed
+- CONFIG.figures[2].source — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].stackCount — mutation-consumed
+- CONFIG.figures[2].stackLabel — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].bars[0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].bars[1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].bars[2] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].bars[3] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].barLabels[0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].barLabels[1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].barLabels[2] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].barLabels[3] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].donutFraction — named-consumer (key referenced 1x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[2].donutLabel — named-consumer (key referenced 3x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[3].id — mutation-consumed
+- CONFIG.figures[3].type — mutation-consumed
+- CONFIG.figures[3].start — mutation-consumed
+- CONFIG.figures[3].dur — mutation-consumed
+- CONFIG.figures[3].num — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[3].title — mutation-consumed
+- CONFIG.figures[3].source — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[3].ceo — named-consumer (key referenced 10x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[3].ceoSub — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[3].nodes[0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[3].nodes[1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[3].nodes[2] — mutation-consumed
+- CONFIG.figures[3].nodes[3] — mutation-consumed
+- CONFIG.figures[3].badge — mutation-consumed
+- CONFIG.figures[3].badgeName — mutation-consumed
+- CONFIG.figures[3].onlyNote — mutation-consumed
+- CONFIG.figures[4].id — mutation-consumed
+- CONFIG.figures[4].type — mutation-consumed
+- CONFIG.figures[4].start — mutation-consumed
+- CONFIG.figures[4].dur — mutation-consumed
+- CONFIG.figures[4].num — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[4].title — mutation-consumed
+- CONFIG.figures[4].source — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[4].counterStart — mutation-consumed
+- CONFIG.figures[4].counterEnd — named-consumer (key referenced 8x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[4].preCliffDrop — mutation-consumed
+- CONFIG.figures[4].cliffAt — mutation-consumed
+- CONFIG.figures[4].cliffExponent — named-consumer (key referenced 2x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[4].counterLabel — mutation-consumed
+- CONFIG.figures[4].counterSub — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[5].id — mutation-consumed
+- CONFIG.figures[5].type — mutation-consumed
+- CONFIG.figures[5].start — mutation-consumed
+- CONFIG.figures[5].dur — mutation-consumed
+- CONFIG.figures[5].num — named-consumer (key referenced 5x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[5].title — mutation-consumed
+- CONFIG.figures[5].source — named-consumer (key referenced 4x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[5].correction — named-consumer (key referenced 11x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[5].stamp — mutation-consumed
+- CONFIG.figures[5].notes[0] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+- CONFIG.figures[5].notes[1] — named-consumer (key referenced 21262x outside CONFIG; pure-logic snapshot unchanged)
+
+
+===== RECREATION SOURCE =====
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T17 — Fake-newspaper animated dataviz — Recreation</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0}
+#stage{position:relative;width:var(--stagew);max-width:100vw;aspect-ratio:var(--stagear);margin:0 auto;overflow:hidden;font-family:var(--font-serif)}
+#stage.phone{aspect-ratio:auto}
+.mast{text-align:center;padding:var(--padtop) var(--metapad) 0}.mast h1{margin:0;font-size:var(--mast);letter-spacing:.06em;font-weight:var(--fw-normal);line-height:var(--lh-mast)}
+.rule{border-top:3px solid currentColor;border-bottom:1px solid currentColor;height:5px;margin:8px var(--metapad) 0}
+.meta{display:flex;flex-wrap:wrap;justify-content:space-between;padding:5px var(--metapad);font-size:var(--label);line-height:var(--lh-label);letter-spacing:.08em;border-bottom:2px solid currentColor;margin:0 0 4px}
+.fig{position:absolute;left:0;right:0;top:var(--figtop);bottom:0;padding:var(--figpadtop) var(--padx);opacity:0;pointer-events:none}
+.fig.on{opacity:1}
+.fignum{font-family:var(--font-sans);font-size:var(--label);letter-spacing:.12em}
+.fig h2{margin:var(--headmt) 0 var(--headmb);font-size:var(--title);font-weight:var(--fw-normal);line-height:var(--lh-title)}
+.src{font-size:var(--label);line-height:var(--lh-label);font-family:var(--font-sans);margin-top:var(--srcmt);color:var(--secondary)}
+.hand{font-family:var(--font-hand)}
+.card{border:var(--cardborder) solid currentColor;border-radius:var(--cardradius);padding:var(--cardpad);background:var(--card-tint)}
+.dot{border-radius:50%;border:var(--dotborder) solid currentColor;display:inline-block}
+.stamp{display:inline-block;border:var(--stampborder) solid currentColor;border-radius:var(--stampradius);padding:var(--stamppady) var(--stamppadx);font-family:var(--font-sans);font-weight:var(--fw-black);letter-spacing:var(--stamp-ls)}
+.warn{font-family:var(--font-sans);color:var(--warn);border:1.5px dashed currentColor;padding:10px}
+#controls{width:var(--stagew);max-width:100vw;margin:6px auto;text-align:center}button{font-size:16px;padding:8px 16px;margin:0 4px;min-height:44px}
+.sumline{white-space:nowrap}.titleline{white-space:nowrap}
+</style></head><body>
+<div id="stage"></div>
+<div id="controls"><button id="play">Play / Pause</button><button id="restart">Restart</button><span id="clock" style="font-family:monospace"></span></div>
+<script>
+"use strict";
+/* */
+const CONFIG = {
+  duration: 22.5,
+  masthead: "THE DAILY STANDUP",
+  dateLine: "THURSDAY, OCT. 30",
+  clockStart: "4:01 P.M.",
+  price: "PRICE: 1 SUBSCRIPTION",
+  palette: { paper:"#e9e4d8", ink:"#1c1a17", red:"#c1271f", blue:"#2456c8", accent:"#e8a13a", muted:"#77705f", secondary:"#595344", pageBg:"#202020", cardTint:"rgba(255,255,255,0.35)", controlInk:"#ffffff" },
+  fonts: { serif:"Georgia,'Times New Roman',serif", sans:"Arial,sans-serif", hand:"'Comic Sans MS','Segoe Print',cursive" },
+  formatting: { counterLocale:"en-US", ofWord:"of", stackUnitSymbol:"▭", waffleInactiveOpacity:0.18, nodeSymbol:"⬛", badgeStarSep:"  ★ ", badgeDashSep:" — ", ceoSep:" — ", badgeHandFont:"hand", badgeSansFont:"sans", cliffDash:"5 5" },
+  timing: { minHoldSec:0.6, drawEnd:0.92, stackEnd:0.90, barsEnd:0.85, ceoAt:0.05, nodeStart:0.15, nodeEnd:0.72, badgeAt:0.80, badgeFrom:1.6, badgeDur:0.15, badgeEasePow:2, connectorDrawSpan:0.08,
+            corrAt:0.08, stampAt:0.35, stampDur:0.12, stampFrom:2.4, stampRotationDeg:-8, stampApproach:0.5, stampReboundEnd:0.75, stampOvershoot:1.1, stampCompress:0.93,
+            noteStart:0.55, noteFade:0.15, readMsPerChar:20, typeMsPerChar:30, minTypeSec:0.8, minFillSec:0.6, fillSec:1.2, typeStartSec:0.7,
+            sampleStep:0.02, maxSamples:512, cliffMarkerAt:0.5, cliffBudgetMargin:0.05, preCliffDropMaxFrac:0.05, stackArrivalSpan:1.6, stackEasePow:2, stampEasePowIn:3, stampEasePowOut:2, animFractionFloor:0.05, figureTransitionSec:0.45, transitionOutSpan:0.55, transitionInStart:0.45, transitionInSpan:0.55, transitionFloorOpacity:0.35, transitionFloorRelease:0.5, counterHoldSec:0.85 },
+  layout: { fig22GapPx:8, figPadTopPx:6, headingMarginTopPx:3, headingMarginBottomPx:8, srcMarginTopPx:6, bottomClearancePx:8, cardPaddingPx:12, cardBorderPx:1.5, cardRadiusPx:8, dotBorderPx:2, stampBorderPx:4, stampRadiusPx:6, stackUnitBorderPx:2, stackUnitRadiusPx:5, stackUnitGapPx:4, stackArrivalOffsetPx:14, stackUnitMaxH:16, phoneStageBudgetPx:640, metaPadX:28, metaMinGapPx:12,
+            charWidthBody:0.52, charWidthLabel:0.62, charWidths:{space:0.30, narrow:0.34, wide:0.88, upper:0.66, digit:0.56}, stampCharWidth:0.78, stampPadX:28, stampPadY:16, stampAreaBudgetPx:150, stampLetterSpacingEm:0.08, badgeClearancePx:16,
+            lineHeights:{ mast:1.15, label:1.3, body:1.35, title:1.2, stackCounter:1.6 },
+            barGeom:{ slotFrac:0.58, barFrac:0.6, basePad:18, topPad:40, xPad:8 },
+            donut:{ cxFrac:0.82, rFrac:0.24, rMax:52, strokeW:16 },
+            waffleGapPx:8, waffleRowGapPx:6, counterStrokeWidthPx:3, axisStrokeWidthPx:2, connectorStrokeWidthPx:2, cliffDashTopPx:10, cliffDashBottomPadPx:16, rowGapPx:18, counterGapPx:24, orgRowGapPx:10, orgRowMarginTop:18, badgeMarginTop:10, calloutLaneGapPx:6, calloutMinClearancePx:8, calloutShaftStrokeWidthPx:2, calloutShaftEdgeFloorPx:2, calloutBarbDxPx:4, calloutBarbDyPx:4, chartTitleLetterSpacingEm:0.1, chartTitleMarginBottomPx:4, chartStrokeWidthPx:4, counterLabelLetterSpacingEm:0.1, counterMarginYPx:8, noteLineGapPx:4,
+            corrStampMarginTop:16, corrNotesMarginTop:12, chartPadLeft:48, barLabelDescenderPx:6, yLabelGapPx:6, chartPadRight:10, chartPadBottom:22, chartPadTop:18,
+            typeScale:{ mast:0.04375, title:0.03125, body:0.0198, label:0.0146, big:0.0354, hand:0.025 },
+            typeCaps:{ mast:42, title:30, body:19, label:14, big:34, hand:24 },
+            chartHeights:{ linePhone:120, lineDesktop:240, stackPhone:130, stackDesktop:220, counterPhone:120, counterDesktop:220 },
+            chartWidthFrac:{ line:0.50, stack:0.52, counter:0.50 }, chartMaxW:430, waffleGridFrac:0.5, waffleLabelH:1.4,
+            waffleDotMin:12, waffleDotMax:26, nodePadX:34, stackColWidthPx:150, phoneProbeWidth:360, connectorHeightPx:18, connectorMarginTopPx:2,
+            padXPhone:16, padXDesktop:44, padTopPhone:6, padTopDesktop:14, stageWidthPx:960, stageAspectW:16, stageAspectH:9,
+            fontWeights:{ normal:500, bold:700, black:900 },
+            counterGeom:{ x0:30, x1Pad:10, y0:18, y1Pad:26 }, corrMaxW:680, ceoMaxW:320, phoneBreakpoint:520, bigLineH:1.2, transitionRisePx:10 },
+  bounds: { maxFigures:8, maxWaffle:60, maxBars:8, maxStack:14, maxNodes:8, maxNotes:4, maxPoints:8, cliffMin:0.1, maxSummaryChars:400, maxTitleChars:200, maxLabelChars:120, maxCardChars:400, maxStampChars:40, maxNoteChars:120, maxNodeChars:60, maxCeoChars:120 },
+  typeFloors: { masthead:20, figureTitle:17, body:12, label:12, bigCounter:20, hand:14 },
+  figures: [
+    { id:"fig20", type:"lineChart", start:0.0, dur:3.3, num:"FIG. 20", title:"Humanity's outlook, according to my last two posts", source:"Source: @adita_zzz on X",
+      chartTitle:"OUTLOOK", yLabels:[{text:"so back",y:0.78},{text:"meh",y:0.45},{text:"doomed",y:0.15,emphasis:true}], xLabels:["post 1","post 2"],
+      points:[[0.55,0.78],[0.82,0.18],[0.97,0.62]], cardText:"when the robots do it all, we're finally free to grow our tomatoes. voluntarily." },
+    { id:"fig21", type:"waffle", start:3.3, dur:4.5, num:"FIG. 21", title:"Are people panicking?", source:"Source: everyone, apparently",
+      waffleTotal:15, waffleCols:5, youIndex:7, youLabel:"you", waffleLabel:"panicking", summaryText:"Summary: everyone is panicking. You — oddly calm — may be the cause." },
+    { id:"fig22", type:"stackBars", start:7.8, dur:3.6, num:"FIG. 22", title:"Compute, stacked", source:"Source: the desk",
+      stackCount:10, stackLabel:"Mac minis", bars:[0.35,0.55,0.8,1.0], barLabels:["a","b","c","d"], donutFraction:0.72, donutLabel:"72% slop" },
+    { id:"fig23", type:"orgChart", start:11.4, dur:3.6, num:"FIG. 23", title:"Org chart: Agents, Inc. (founded today)", source:"Source: the agents",
+      ceo:"CEO", ceoSub:"an agent", nodes:["CFO","CTO","Head of HR","VP of Vibes"], badge:"EMPLOYEE OF THE YEAR", badgeName:"Adita", onlyNote:"(only employee)" },
+    { id:"fig24", type:"counterGraph", start:15.0, dur:3.7, num:"FIG. 24", title:"Jobs on Earth, before and after my song", source:"Source: my song",
+      counterStart:3412083117, counterEnd:1, preCliffDrop:1800000, cliffAt:0.68, cliffExponent:1.8, counterLabel:"JOBS ON EARTH", counterSub:"and counting" },
+    { id:"fig25", type:"correction", start:18.7, dur:3.8, num:"FIG. 25", title:"Correction", source:"Source: the editor",
+      correction:"CORRECTION: the author was not hired by a company. The author was —", stamp:"HIRED BY MYSELF", notes:["checks out","(Not mine. Rendered.)"] }
+  ]
+};
+function clamp01(v){return v<0?0:v>1?1:v;}
+function lerp(a,b,q){return a+(b-a)*q;}
+function holdSecFor(fig,cfg){const c=cfg||CONFIG; return fig.type==="counterGraph"? c.timing.counterHoldSec : c.timing.minHoldSec;}
+function animFraction(fig,cfg){const c=cfg||CONFIG; return Math.max(c.timing.animFractionFloor,(fig.dur-holdSecFor(fig,cfg))/fig.dur);}
+function animQ(p,fig,cfg){return clamp01(p/animFraction(fig,cfg));}
+function collapseN(p,fig,cfg){
+  const range=fig.counterStart-fig.counterEnd; if(range<=0) return clamp01(p);
+  const a=fig.preCliffDrop/range, end=animFraction(fig,cfg), cliff=fig.cliffAt;
+  if(p<=0) return 0; if(p>=end) return 1;
+  if(p<cliff) return a*(p/cliff);
+  const q=(p-cliff)/(end-cliff); return a+(1-a)*Math.pow(q,fig.cliffExponent);
+}
+function counterValueAt(p,fig,cfg){return fig.counterStart + collapseN(p,fig,cfg)*(fig.counterEnd-fig.counterStart);}
+function counterTextAt(p,fig,cfg){return Math.round(counterValueAt(p,fig,cfg)).toLocaleString((cfg||CONFIG).formatting.counterLocale);}
+function graphYAt(p,fig,geom,cfg){return geom.y0 + collapseN(p,fig,cfg)*(geom.y1-geom.y0);}
+function polylineLength(points,geom){
+  let len=0,px=null,py=null;
+  for(const pt of points){const x=geom.x0+pt[0]*geom.w, y=geom.yBase-pt[1]*geom.h; if(px!==null) len+=Math.hypot(x-px,y-py); px=x; py=y;}
+  return len;
+}
+function lineChartState(fig,q,cfg){const T=(cfg||CONFIG).timing; return {drawQ:clamp01(q/T.drawEnd)};}
+function summaryTiming(fig,cfg){const T=(cfg||CONFIG).timing;
+  const holdSec=Math.max(T.minHoldSec, fig.summaryText.length*T.readMsPerChar/1000);
+  const typeDurSec=fig.summaryText.length*T.typeMsPerChar/1000;
+  return { holdSec:holdSec, readSec:fig.summaryText.length*T.readMsPerChar/1000, typeStartSec:T.typeStartSec,
+           typeDurSec:typeDurSec, fillSec:T.fillSec, completionSec:T.typeStartSec+typeDurSec };}
+function waffleState(fig,p,cfg){const st=summaryTiming(fig,cfg); const tSec=clamp01(p)*fig.dur;
+  const filled=Math.floor(clamp01(tSec/st.fillSec)*fig.waffleTotal);
+  const sq=clamp01((tSec-st.typeStartSec)/st.typeDurSec);
+  const yd={x:(fig.youIndex%fig.waffleCols), y:Math.floor(fig.youIndex/fig.waffleCols)};
+  return {filled:Math.min(fig.waffleTotal,filled), youVisible:filled>fig.youIndex, youDot:yd, summaryChars:Math.floor(sq*fig.summaryText.length), holdSec:st.holdSec};}
+function stackState(fig,q,cfg){const T=(cfg||CONFIG).timing;
+  const count=fig.stackCount, arrivalDur=Math.min((T.stackEnd/count)*T.stackArrivalSpan, T.stackEnd);
+  const starts=[]; for(let i=0;i<count;i++) starts.push(count===1?0:i*(T.stackEnd-arrivalDur)/(count-1));
+  const arrivals=[]; let units=0;
+  for(let i=0;i<count;i++){ const start=starts[i]; const ai=arrivalDur>0?clamp01((q-start)/arrivalDur):(q>=start?1:0);
+    const e=1-Math.pow(1-ai,T.stackEasePow); if(ai>=1) units++;
+    arrivals.push({visible:ai>0, arrival:ai, ty:-( (cfg||CONFIG).layout.stackArrivalOffsetPx )*(1-e), opacity:ai>0?1:0}); }
+  return {units:units, arrivals:arrivals, starts:starts, arrivalDur:arrivalDur, barQ:clamp01(q/T.barsEnd), donutQ:clamp01(q/T.barsEnd)};}
+function nodeThresholds(fig,cfg){const T=(cfg||CONFIG).timing; const out=[]; for(let i=0;i<fig.nodes.length;i++) out.push(T.nodeStart+(i+1)*((T.nodeEnd-T.nodeStart)/fig.nodes.length)); return out;}
+function orgState(fig,q,cfg){const T=(cfg||CONFIG).timing; const th=nodeThresholds(fig,cfg);
+  const badgeQ=clamp01((q-T.badgeAt)/T.badgeDur); const badgeE=1-Math.pow(1-badgeQ,T.badgeEasePow); return {ceo:q>=T.ceoAt, nodes:th.map(t=>q>=t), connectors:th.map(t=>clamp01((q-t)/T.connectorDrawSpan)), badge:q>=T.badgeAt, badgeQ:badgeQ, badgeE:badgeE};}
+function stampScaleAt(sq,T,cap){ const from=(cap!=null?cap:T.stampFrom);
+  if(sq<=0) return from;
+  if(sq<T.stampApproach){ const u=sq/T.stampApproach; const e=1-Math.pow(1-u,T.stampEasePowIn); return lerp(from,T.stampOvershoot,e); }
+  if(sq<T.stampReboundEnd){ const u=(sq-T.stampApproach)/(T.stampReboundEnd-T.stampApproach); return lerp(T.stampOvershoot,T.stampCompress,u); }
+  const u=(sq-T.stampReboundEnd)/(1-T.stampReboundEnd); return lerp(T.stampCompress,1,1-Math.pow(1-u,T.stampEasePowOut));
+}
+function noteStarts(fig,cfg){const T=(cfg||CONFIG).timing; const n=fig.notes.length; if(!n) return [];
+  const step=(1-T.noteStart-T.noteFade)/n; const out=[]; for(let i=0;i<n;i++) out.push(T.noteStart+i*step); return out;}
+function correctionState(fig,q,cfg,cap){const T=(cfg||CONFIG).timing;
+  const sq=clamp01((q-T.stampAt)/T.stampDur); const starts=noteStarts(fig,cfg);
+  return {corr:q>=T.corrAt, stampVisible:q>=T.stampAt, stampScale:stampScaleAt(sq,T,cap), stampSq:sq,
+          notes:fig.notes.map((n,i)=>clamp01((q-starts[i])/T.noteFade)), noteStarts:starts};}
+function barRects(fig,geom,q,cfg){const B=(cfg||CONFIG).layout.barGeom;
+  const n=fig.bars.length, slot=(geom.w*B.slotFrac)/n, bw=slot*B.barFrac, base=geom.h-B.basePad, maxH=geom.h-B.topPad;
+  return fig.bars.map((v,i)=>{const h=v*maxH*q; return {x:B.xPad+i*slot+(slot-bw)/2, y:base-h, w:bw, h, labelX:B.xPad+i*slot+slot/2};});
+}
+function stateAt(t,figures,duration){
+  const tt=Math.max(0,Math.min(duration,t));
+  for(let i=0;i<figures.length;i++){const f=figures[i]; const last=i===figures.length-1;
+    if(tt>=f.start && (tt<f.start+f.dur || (last && tt<=duration))) return {index:i, p:clamp01((tt-f.start)/f.dur)};}
+  let idx=0; figures.forEach((f,i)=>{if(tt>=f.start) idx=i;});
+  return {index:idx, p:clamp01((tt-figures[idx].start)/figures[idx].dur)};
+}
+function smoothstep01(v){const x=clamp01(v); return x*x*(3-2*x);}
+function transitionState(t,figures,cfg){const c=cfg||CONFIG; const T=c.timing.figureTransitionSec, rise=c.layout.transitionRisePx;
+  const st=stateAt(t,figures,c.duration);
+  if(T>0){ for(let i=1;i<figures.length;i++){ const b=figures[i].start;
+    if(t>=b-T/2 && t<=b+T/2){ const s=(t-(b-T/2))/T; const outP=smoothstep01(s/c.timing.transitionOutSpan); const inP=smoothstep01((s-c.timing.transitionInStart)/c.timing.transitionInSpan);
+      const rawOut=1-outP; const rel=c.timing.transitionFloorRelease; const ramp=1-smoothstep01((s-rel)/(1-rel)); const outOpacity=Math.max(rawOut, c.timing.transitionFloorOpacity*ramp);
+      return {index:i, p:clamp01((t-b)/figures[i].dur), prevIndex:i-1, outOpacity:outOpacity, outTy:-rise*outP, outP:(t>=b?1:clamp01((t-figures[i-1].start)/figures[i-1].dur)), inOpacity:inP, inTy:rise*(1-inP), inP:clamp01((t-b)/figures[i].dur), s:s}; } } }
+  return {index:st.index, p:st.p, prevIndex:-1, outOpacity:0, outTy:0, outP:st.p, inOpacity:1, inTy:0, inP:st.p, s:-1};
+}
+function computeLayout(w,cfg){const c=cfg||CONFIG; const F=c.typeFloors, LH=c.layout.lineHeights, TS=c.layout.typeScale, TC=c.layout.typeCaps, phone=w<=c.layout.phoneBreakpoint;
+  const mastPx=Math.max(F.masthead, Math.min(TC.mast, w*TS.mast));
+  const titlePx=Math.max(F.figureTitle, Math.min(TC.title, w*TS.title));
+  const bodyPx=Math.max(F.body, Math.min(TC.body, w*TS.body));
+  const labelPx=Math.max(F.label, Math.min(TC.label, w*TS.label));
+  const bigPx=Math.max(F.bigCounter, Math.min(TC.big, w*TS.big));
+  const handPx=Math.max(F.hand, Math.min(TC.hand, w*TS.hand));
+  const padX=phone?c.layout.padXPhone:c.layout.padXDesktop, padTop=phone?c.layout.padTopPhone:c.layout.padTopDesktop;
+  const contentW=w-2*padX, stageH=phone?null:w*c.layout.stageAspectH/c.layout.stageAspectW;
+  const mastLines=wordWrapLines(c.masthead, contentW, mastPx, c, "body").length;
+  const metaTexts=[c.dateLine,c.clockStart,c.price];
+  const metaWidths=metaTexts.map(t=>textWidth(t,labelPx,c,"label"));
+  const metaAvail=w-2*c.layout.metaPadX;
+  let metaRows=1, rowW=0; metaWidths.forEach(mw=>{ const need=(rowW>0?c.layout.metaMinGapPx:0)+mw; if(rowW>0 && rowW+need>metaAvail){ metaRows++; rowW=mw; } else rowW+=need; });
+  const metaH=metaRows*(labelPx*LH.label+10)+(metaRows-1)*2;
+  const headerH=padTop + mastLines*mastPx*LH.mast + 13 + metaH + 4;
+  const contentH=phone?null:stageH-headerH;
+  const headSrcReserve=labelPx*LH.label + 2*titlePx*LH.title + (c.layout.headingMarginTopPx+c.layout.headingMarginBottomPx) + (labelPx*LH.label+c.layout.srcMarginTopPx);
+  const availBlockH=phone?(c.layout.phoneStageBudgetPx-headerH-c.layout.bottomClearancePx):contentH;
+  return {w, phone, mastPx, titlePx, bodyPx, labelPx, bigPx, handPx, padX, padTop, headerH, contentW, stageH, contentH, metaRows, mastLines, metaWidths, metaAvail, headSrcReserve, availBlockH};
+}
+function charFactor(ch,cfg,kind){const c=cfg||CONFIG; const W=c.layout.charWidths;
+  if(ch===" ") return W.space;
+  if("iljtf.,:;'!|()[]".indexOf(ch)>=0) return W.narrow;
+  if("mwMW@#%".indexOf(ch)>=0) return W.wide;
+  if(ch>="A"&&ch<="Z") return W.upper;
+  if(ch>="0"&&ch<="9") return W.digit;
+  return kind==="label"?c.layout.charWidthLabel:c.layout.charWidthBody;}
+function textWidth(text,fontPx,cfg,kind){let s=0; for(const ch of String(text)) s+=charFactor(ch,cfg,kind); return s*fontPx;}
+function wordWrapLines(text,widthPx,fontPx,cfg,kind){const words=String(text).split(" "); const lines=[]; let cur="";
+  for(const wd of words){ if(cur===""){ cur=wd; continue; }
+    if(textWidth(cur+" "+wd,fontPx,cfg,kind)<=widthPx) cur=cur+" "+wd; else { lines.push(cur); cur=wd; } }
+  if(cur!==""||lines.length===0) lines.push(cur); return lines;}
+function textLines(text,widthPx,fontPx,cfg,kind){return Math.max(1,wordWrapLines(text,widthPx,fontPx,cfg,kind).length);}
+function headingLines(title,L,cfg){return textLines(title, L.contentW, L.titlePx, cfg);}
+function stampMetrics(fig,L,cfg){const c=cfg||CONFIG; const T=c.timing, lay=c.layout;
+  const w=fig.stamp.length*L.bodyPx*lay.stampCharWidth + lay.stampLetterSpacingEm*L.bodyPx*fig.stamp.length + lay.stampPadX + 2*lay.stampBorderPx;
+  const h=L.bodyPx + lay.stampPadY + 2*lay.stampBorderPx;
+  const rad=Math.abs(T.stampRotationDeg)*Math.PI/180, cos=Math.cos(rad), sin=Math.sin(rad);
+  const aabbW1=w*cos+h*sin, aabbH1=w*sin+h*cos;
+  return {w:w, h:h, aabbW1:aabbW1, aabbH1:aabbH1};
+}
+function stampCap(fig,L,cfg){const c=cfg||CONFIG; const m=stampMetrics(fig,L,c);
+  const corrW=Math.min(c.layout.corrMaxW,L.contentW);
+  return Math.min(c.timing.stampFrom, corrW/m.aabbW1, c.layout.stampAreaBudgetPx/m.aabbH1);
+}
+function stampAabbAt(fig,L,scale,cfg){const c=cfg||CONFIG; const m=stampMetrics(fig,L,c); const cap=stampCap(fig,L,c);
+  const aabbW=m.aabbW1*scale, aabbH=m.aabbH1*scale; const offsetX=Math.max(0, m.aabbW1*cap/2 - m.w/2);
+  const cx=offsetX + m.w/2; const corrW=Math.min(c.layout.corrMaxW,L.contentW);
+  return {offsetX:offsetX, aabbW:aabbW, aabbH:aabbH, left:cx-aabbW/2, right:cx+aabbW/2, corrW:corrW};}
+function badgeSegments(fig,cfg){const c=cfg||CONFIG; const F=c.formatting;
+  return [ {text:fig.onlyNote, font:F.badgeHandFont}, {text:F.badgeStarSep+fig.badgeName+F.badgeDashSep+fig.badge, font:F.badgeSansFont} ];}
+function badgeFontPx(seg,L,cfg){const c=cfg||CONFIG; return seg.font===(cfg||CONFIG).formatting.badgeHandFont? L.handPx : L.bodyPx;}
+function badgeTextWidth(fig,L,cfg){const c=cfg||CONFIG; return badgeSegments(fig,c).reduce((s,seg)=>s+textWidth(seg.text, badgeFontPx(seg,L,c), c),0);}
+function badgeMetrics(fig,L,cfg){const c=cfg||CONFIG;
+  const text=fig.onlyNote+c.formatting.badgeStarSep+fig.badgeName+c.formatting.badgeDashSep+fig.badge;
+  const clearedW=L.contentW-c.layout.badgeClearancePx;
+  const lines=wordWrapLines(text, clearedW, L.bodyPx, c);
+  const w=Math.max(badgeTextWidth(fig,L,c), Math.max.apply(null, lines.map(ln=>textWidth(ln, L.bodyPx, c))));
+  const h=lines.length*L.bodyPx*c.layout.lineHeights.body+8;
+  return {text:text, lines:lines.length, w:w, h:h, clearedW:clearedW};}
+function badgeCap(fig,L,cfg){const m=badgeMetrics(fig,L,cfg); return Math.min((cfg||CONFIG).timing.badgeFrom, m.clearedW/Math.max(1,m.w));}
+function badgeAabbAt(fig,L,scale,cfg){const m=badgeMetrics(fig,L,cfg); const cx=L.contentW/2;
+  const aabbW=m.w*scale, aabbH=m.h*scale;
+  return {left:cx-aabbW/2, right:cx+aabbW/2, aabbW:aabbW, aabbH:aabbH, w:m.w, h:m.h};}
+function yAxisPad(fig,L,cfg){const c=cfg||CONFIG; const labs=fig.yLabels||[]; const maxLab=labs.reduce((m2,l2)=>Math.max(m2, textWidth(l2.text, L.labelPx, c, "label")),0); return Math.max(c.layout.chartPadLeft, Math.ceil(maxLab)+c.layout.yLabelGapPx+6);}
+function lineLabelBounds(fig,L,cfg){const c=cfg||CONFIG; const g=figureGeom(fig,L,c);
+  const geom={x0:yAxisPad(fig,L,c), w:g.chartW-yAxisPad(fig,L,c)-c.layout.chartPadRight};
+  const n=fig.xLabels.length;
+  return fig.xLabels.map((lab,i)=>{ const halfW=lab.length*L.labelPx*c.layout.charWidthLabel/2;
+    const cx=geom.x0+geom.w*(n>1?i/(n-1):0);
+    const anchor=i===0?'start':(i===n-1?'end':'middle');
+    const left=anchor==='start'?cx:(anchor==='end'?cx-2*halfW:cx-halfW);
+    const right=anchor==='start'?cx+2*halfW:(anchor==='end'?cx:cx+halfW);
+    return {text:lab, anchor:anchor, cx:cx, halfW:halfW, left:left, right:right, chartW:g.chartW}; });
+}
+function cardInnerW(w,cfg){const c=cfg||CONFIG; return w-2*(c.layout.cardBorderPx+c.layout.cardPaddingPx);}
+function cardPad2(cfg){const c=cfg||CONFIG; return 2*c.layout.cardPaddingPx;}
+function widestTokenW(text,fontPx,cfg,kind){ let m=0; for(const wd of String(text).split(" ")) m=Math.max(m,textWidth(wd,fontPx,cfg,kind)); return m; }
+function elementOccW(text,innerW,fontPx,cfg,kind){ const lines=wordWrapLines(text,innerW,fontPx,cfg,kind); let lineMax=0; lines.forEach(ln=>{ lineMax=Math.max(lineMax,textWidth(ln,fontPx,cfg,kind)); }); return Math.max(lineMax, widestTokenW(text,fontPx,cfg,kind)); }
+function figureGeom(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeights; const cw=L.contentW;
+  if(fig.type==="lineChart"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.line), chartH=L.phone?c.layout.chartHeights.linePhone:c.layout.chartHeights.lineDesktop;
+    const cardW=L.phone?cw:cw-chartW-c.layout.rowGapPx, cardH=textLines(fig.cardText,cardInnerW(cardW,c),L.bodyPx,c)*L.bodyPx*LH.body+cardPad2(c);
+    const titleH=L.labelPx*LH.label+c.layout.chartTitleMarginBottomPx;
+    const chartTitleOcc=textWidth(fig.chartTitle,L.labelPx,c,"label")+fig.chartTitle.length*c.layout.chartTitleLetterSpacingEm*L.labelPx;
+    const cardOcc=Math.max(cardW, elementOccW(fig.cardText,cardInnerW(cardW,c),L.bodyPx,c)+cardPad2(c)+2*c.layout.cardBorderPx);
+    return {chartW,chartH,cardW,cardH,titleH, chartTitleOcc, cardOcc, blockH:L.phone?cardH+c.layout.rowGapPx+titleH+chartH:Math.max(cardH,titleH+chartH), maxW:Math.max(chartTitleOcc, L.phone?Math.max(chartW,cardOcc):cardOcc+c.layout.rowGapPx+chartW)};}
+  if(fig.type==="waffle"){const gap=c.layout.waffleGapPx, dot=Math.max(c.layout.waffleDotMin,Math.min(c.layout.waffleDotMax,Math.floor((cw*c.layout.waffleGridFrac)/fig.waffleCols)-gap));
+    const rows=Math.ceil(fig.waffleTotal/fig.waffleCols), gridW=fig.waffleCols*(dot+gap)-gap, gridH=rows*(dot+gap)-gap;
+    const sumInnerW=cardInnerW(cw,c); const sumH=textLines(fig.summaryText,sumInnerW,L.bodyPx,c)*L.bodyPx*LH.body+cardPad2(c);
+    const laneH=L.handPx*LH.label, laneTop=gridH+c.layout.waffleRowGapPx+L.bodyPx*c.layout.waffleLabelH+c.layout.calloutLaneGapPx;
+    const labW=textWidth(fig.youLabel,L.handPx,c), dotCx=(fig.youIndex%fig.waffleCols)*(dot+gap)+dot/2, dotBottom=Math.floor(fig.youIndex/fig.waffleCols)*(dot+gap)+dot;
+    const labX=Math.max(0,Math.min(dotCx-labW/2, Math.max(0,gridW-labW)));
+    const youCol=fig.youIndex%fig.waffleCols, youRow=Math.floor(fig.youIndex/fig.waffleCols);
+    const gapX=youCol>0? youCol*(dot+gap)-gap/2 : dot+gap/2;
+    const horizY=youRow<rows-1? (youRow+1)*(dot+gap)-gap/2 : gridH+gap/2;
+    const startY=laneTop+laneH, segs=[];
+    if(Math.abs(labX+labW/2-gapX)>0.01) segs.push([labX+labW/2,startY,gapX,startY]);
+    segs.push([gapX,startY,gapX,horizY]);
+    if(Math.abs(gapX-dotCx)>0.01) segs.push([gapX,horizY,dotCx,horizY]);
+    segs.push([dotCx,horizY,dotCx,dotBottom]);
+    const barbs=[[dotCx,dotBottom,dotCx-c.layout.calloutBarbDxPx,dotBottom+c.layout.calloutBarbDyPx],[dotCx,dotBottom,dotCx+c.layout.calloutBarbDxPx,dotBottom+c.layout.calloutBarbDyPx]];
+    const callout={labelX:labX, labelCx:labX+labW/2, labelW:labW, labelH:laneH, tipX:dotCx, tipY:dotBottom, gapX:gapX, horizY:horizY, segments:segs, barbs:barbs};
+    const sumOcc=Math.max(cw, elementOccW(fig.summaryText,sumInnerW,L.bodyPx,c)+cardPad2(c)+2*c.layout.cardBorderPx);
+    return {dot,gap,rows,gridW,gridH,sumH,sumInnerW,laneH,laneTop,callout, sumOcc, blockH:gridH+c.layout.waffleRowGapPx+L.bodyPx*c.layout.waffleLabelH+c.layout.calloutLaneGapPx+laneH+c.layout.waffleGapPx+sumH, maxW:Math.max(gridW,labW,sumOcc)};}
+  if(fig.type==="stackBars"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.stack), chartH=L.phone?c.layout.chartHeights.stackPhone:c.layout.chartHeights.stackDesktop;
+    const gap=c.layout.fig22GapPx, unitGap=c.layout.stackUnitGapPx, arrival=c.layout.stackArrivalOffsetPx;
+    const counterH=L.bodyPx*LH.stackCounter;
+    const stackBudget=L.phone ? (L.availBlockH - L.headSrcReserve) - counterH - gap - chartH - arrival
+                              : (L.availBlockH - L.headSrcReserve) - counterH - arrival;
+    const unitFloor=L.labelPx+2*c.layout.stackUnitBorderPx;
+    const unitHRaw=Math.floor(stackBudget/fig.stackCount)-unitGap;
+    const unitH=Math.min(c.layout.stackUnitMaxH, Math.max(unitFloor, unitHRaw));
+    const stackH=fig.stackCount*(unitH+unitGap)+arrival;
+    const leftOcc=Math.max(L.phone?cw:c.layout.stackColWidthPx, textWidth(fig.stackLabel,L.bodyPx,c), textWidth(String(fig.stackCount),L.bodyPx,c));
+    const chartOcc=Math.max(chartW, textWidth(fig.donutLabel,L.labelPx,c,"label"));
+    return {chartW,chartH,unitH,unitHRaw,unitFloor,unitHOver:unitHRaw<unitFloor,stackH,counterH,stackBudget,arrivalReserve:arrival, blockH:L.phone?counterH+stackH+gap+chartH:Math.max(stackH+counterH,chartH), maxW:L.phone?Math.max(leftOcc,chartOcc):leftOcc+gap+chartOcc};}
+  if(fig.type==="orgChart"){ if(!Array.isArray(fig.nodes)||!fig.nodes.length) return {nodeW:0,perRow:1,rows:0,ceoH:0,nodesH:0,badgeH:0,badgeReserveH:0, blockH:0, maxW:0};
+    const longest=Math.max.apply(null,fig.nodes.map(n=>n.length));
+    const nodeW=Math.max.apply(null, fig.nodes.map(n=>textWidth(c.formatting.nodeSymbol+" "+n, L.labelPx, c, "label")))+c.layout.nodePadX; let perRow=Math.max(1,Math.floor(cw/nodeW)); while(perRow>1 && perRow*nodeW+(perRow-1)*c.layout.orgRowGapPx>cw) perRow--; const rows=Math.ceil(fig.nodes.length/perRow);
+    const ceoH=L.bodyPx*LH.body+cardPad2(c), nodesH=rows*(L.bodyPx*LH.body+10);
+    const bm=badgeMetrics(fig,L,c);
+    const badgeH=bm.h, badgeReserveH=bm.h*badgeCap(fig,L,c);
+    const ceoBoxW=Math.min(c.layout.ceoMaxW,cw);
+    const ceoOcc=Math.max(ceoBoxW, elementOccW(fig.ceo+c.formatting.ceoSep+fig.ceoSub,cardInnerW(ceoBoxW,c),L.bodyPx,c)+cardPad2(c)+2*c.layout.cardBorderPx);
+    return {nodeW,perRow,rows,ceoH,nodesH,badgeH,badgeReserveH, ceoOcc, blockH:ceoH+rows*(c.layout.connectorMarginTopPx+c.layout.connectorHeightPx+c.layout.orgRowMarginTop)+nodesH+c.layout.badgeMarginTop+badgeReserveH, maxW:Math.max(ceoOcc, perRow*nodeW+(perRow-1)*c.layout.orgRowGapPx, textWidth(fig.onlyNote,L.handPx,c)+textWidth(c.formatting.badgeStarSep+fig.badgeName+c.formatting.badgeDashSep+fig.badge,L.bodyPx,c))};}
+  if(fig.type==="counterGraph"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.counter), chartH=L.phone?c.layout.chartHeights.counterPhone:c.layout.chartHeights.counterDesktop;
+    const cardW=L.phone?cw:cw-chartW-c.layout.counterGapPx;
+    const cardH=textLines(fig.counterLabel,cardInnerW(cardW,c),L.labelPx,c)*L.labelPx*LH.label + L.bigPx*c.layout.bigLineH + textLines(fig.counterSub,cardInnerW(cardW,c),L.bodyPx,c)*L.bodyPx*LH.body + cardPad2(c) + 2*c.layout.counterMarginYPx;
+    const labelOcc=textWidth(fig.counterLabel,L.labelPx,c,"label")+fig.counterLabel.length*c.layout.counterLabelLetterSpacingEm*L.labelPx;
+    const cardOcc=Math.max(cardW, Math.max(labelOcc, textWidth(counterTextAt(0,fig,c),L.bigPx,c), elementOccW(fig.counterSub,cardInnerW(cardW,c),L.bodyPx,c))+cardPad2(c)+2*c.layout.cardBorderPx);
+    return {chartW,chartH,cardW,cardH, cardOcc, labelOcc, blockH:L.phone?chartH+c.layout.counterGapPx+cardH:Math.max(chartH,cardH), maxW:Math.max(L.phone?Math.max(chartW,cardOcc):chartW+c.layout.counterGapPx+cardOcc, labelOcc+cardPad2(c), textWidth(counterTextAt(0,fig,c),L.bigPx,c)+cardPad2(c))};}
+  if(fig.type==="correction"){ if(!Array.isArray(fig.notes)||typeof fig.stamp!=="string") return {corrW:0,corrH:0,stampH:0,stampCap:0,stampAabbW:0,stampOffsetX:0,stampAabbLeftCap:0,stampAabbRightCap:0,notesH:0,stampUpReserve:0, blockH:0, maxW:0};
+    const corrW=Math.min(c.layout.corrMaxW,cw);
+    const corrH=textLines(fig.correction,cardInnerW(corrW,c),L.bodyPx,c)*L.bodyPx*LH.body+cardPad2(c);
+    const cap=stampCap(fig,L,c), m=stampMetrics(fig,L,c);
+    const upReserve=Math.max(0, (m.aabbH1 - m.h)*cap/2);
+    const stampH=m.aabbH1*cap, notesH=fig.notes.length*(L.handPx*LH.label+c.layout.noteLineGapPx);
+    const corrOcc=Math.max(corrW, elementOccW(fig.correction,cardInnerW(corrW,c),L.bodyPx,c)+cardPad2(c)+2*c.layout.cardBorderPx);
+    const notesOcc=fig.notes.length?Math.max.apply(null,fig.notes.map(n=>textWidth(n,L.handPx,c))):0;
+    return {corrW,corrH,stampH,stampCap:cap,stampAabbW:m.aabbW1*cap,stampOffsetX:stampAabbAt(fig,L,cap,c).offsetX,stampAabbLeftCap:stampAabbAt(fig,L,cap,c).left,stampAabbRightCap:stampAabbAt(fig,L,cap,c).right,notesH, stampUpReserve:upReserve, blockH:corrH+c.layout.corrStampMarginTop+stampH+upReserve+c.layout.corrNotesMarginTop+notesH, maxW:Math.max(corrOcc,m.aabbW1*cap,notesOcc)};}
+  return {blockH:0,maxW:0};
+}
+function figureRequired(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeights;
+  const g=figureGeom(fig,L,c);
+  const headH=L.labelPx*LH.label + headingLines(fig.title,L,c)*L.titlePx*LH.title + (c.layout.headingMarginTopPx+c.layout.headingMarginBottomPx);
+  const srcH=textLines(fig.source,L.contentW,L.labelPx,c,"label")*L.labelPx*LH.label+c.layout.srcMarginTopPx;
+  const titleOcc=Math.max.apply(null, wordWrapLines(fig.title,L.contentW,L.titlePx,c).map(ln=>textWidth(ln,L.titlePx,c)));
+  return {id:fig.id, required:c.layout.figPadTopPx+headH+g.blockH+srcH, blockH:g.blockH, maxW:Math.max(g.maxW,titleOcc), titleOcc:titleOcc, geom:g, stampUpReserve:g.stampUpReserve||0};
+}
+function fitReport(w,figures,cfg){const c=cfg||CONFIG;
+  const allErrs=validateConfig(c);
+  if(!c||typeof c!=="object"||allErrs.some(e=>/^(timing|layout|formatting|bounds|typeFloors|palette|fonts)\./.test(e)||e.indexOf("group absent")>=0||e==="config absent")){ return {width:w, phone:false, ok:false, errors:allErrs, globalErrors:allErrs, figures:[], stageH:0, headerH:0, contentW:0, fonts:{}, fontsOk:false, budgetOk:false}; }
+  const L=computeLayout(w,c); const badIds={}; const presentIds={}; (figures||[]).forEach(f=>{ if(f&&typeof f==="object"&&typeof f.id==="string") presentIds[f.id]=1; });
+  allErrs.forEach(e=>{ Object.keys(presentIds).forEach(id=>{ if(e.indexOf(id+":")===0) badIds[id]=1; }); });
+  const globalErrs=allErrs.filter(e=>!Object.keys(presentIds).some(id=>e.indexOf(id+":")===0));
+  const figs=figures.map(f=>{ if(!f||typeof f!=="object") return {id:"(absent)", rejected:true, errors:["figure record absent"]};
+    if(badIds[f.id]) return {id:f.id, rejected:true, errors:allErrs.filter(e=>e.indexOf(f.id+":")===0)}; return figureRequired(f,L,c); });
+  const validFigs=figs.filter(f=>!f.rejected);
+  const maxReq=validFigs.length?Math.max.apply(null,validFigs.map(f=>f.required)):0;
+  const allocated=L.phone?maxReq:L.contentH;
+  const stageH=L.phone?L.headerH+maxReq+c.layout.bottomClearancePx:L.stageH;
+  const budgetOk=!L.phone || stageH<=c.layout.phoneStageBudgetPx+0.001;
+  const fontsOk=L.mastPx>=c.typeFloors.masthead && L.titlePx>=c.typeFloors.figureTitle &&
+                L.bodyPx>=c.typeFloors.body && L.labelPx>=c.typeFloors.label && L.bigPx>=c.typeFloors.bigCounter;
+  const rows=figs.map(f=>{ if(f.rejected) return {id:f.id, rejected:true, errors:f.errors, required:null, allocated:Math.round(allocated*10)/10, fits:false, widthOk:false, occupied:null, available:Math.round(L.contentW*10)/10, titleOcc:null};
+    return {id:f.id, required:Math.round(f.required*10)/10, allocated:Math.round(allocated*10)/10, occupied:Math.round(f.maxW*10)/10, available:Math.round(L.contentW*10)/10, titleOcc:Math.round(f.titleOcc*10)/10,
+    fits:f.required<=allocated+0.001, widthOk:f.maxW<=L.contentW+0.001,
+    headingReserve:Math.round(headingLines(figures.find(x=>x&&x.id===f.id).title,L,c)*L.titlePx*c.layout.lineHeights.title*10)/10}; });
+  return {width:w, phone:L.phone, clearancePx:L.phone?c.layout.bottomClearancePx:0, stageH:Math.round(stageH*10)/10, headerH:Math.round(L.headerH*10)/10, metaRows:L.metaRows, budgetOk:budgetOk,
+    contentW:L.contentW, fonts:{masthead:L.mastPx, figureTitle:L.titlePx, body:L.bodyPx, label:L.labelPx, bigCounter:L.bigPx, hand:L.handPx},
+    fontsOk, figures:rows, ok:fontsOk && budgetOk && globalErrs.length===0 && rows.every(r=>r.fits&&r.widthOk), globalErrors:globalErrs};
+}
+const SCHEMA_GROUPS=["palette","fonts","timing","layout","bounds","formatting","typeFloors"];
+function samplePointCount(step){ if(!(step>0)||!isFinite(step)) return Infinity; if(1/step>1000000) return Infinity; let n=1; for(let k=1;k*step<1;k++) n++; return n+1; }
+const TIMING_REQUIRED=["minHoldSec","drawEnd","stackEnd","barsEnd","ceoAt","nodeStart","nodeEnd","badgeAt","badgeFrom","badgeDur","badgeEasePow","connectorDrawSpan","corrAt","stampAt","stampDur","stampFrom","stampRotationDeg","stampApproach","stampReboundEnd","stampOvershoot","stampCompress","noteStart","noteFade","readMsPerChar","typeMsPerChar","minTypeSec","minFillSec","fillSec","typeStartSec","sampleStep","maxSamples","cliffMarkerAt","cliffBudgetMargin","preCliffDropMaxFrac","stackArrivalSpan","stackEasePow","stampEasePowIn","stampEasePowOut","animFractionFloor","figureTransitionSec","transitionOutSpan","transitionInStart","transitionInSpan","transitionFloorOpacity","transitionFloorRelease","counterHoldSec"];
+const LAYOUT_REQUIRED=["fig22GapPx","figPadTopPx","headingMarginTopPx","headingMarginBottomPx","srcMarginTopPx","bottomClearancePx","cardPaddingPx","cardBorderPx","cardRadiusPx","dotBorderPx","stampBorderPx","stampRadiusPx","stackUnitBorderPx","stackUnitRadiusPx","stackUnitGapPx","stackArrivalOffsetPx","stackUnitMaxH","phoneStageBudgetPx","metaPadX","metaMinGapPx","charWidthBody","charWidthLabel","stampCharWidth","stampPadX","stampPadY","stampAreaBudgetPx","stampLetterSpacingEm","badgeClearancePx","waffleGapPx","rowGapPx","counterGapPx","orgRowGapPx","orgRowMarginTop","badgeMarginTop","calloutLaneGapPx","calloutMinClearancePx","chartTitleLetterSpacingEm","chartTitleMarginBottomPx","chartStrokeWidthPx","counterLabelLetterSpacingEm","counterMarginYPx","noteLineGapPx","corrStampMarginTop","corrNotesMarginTop","chartPadLeft","barLabelDescenderPx","yLabelGapPx","chartPadRight","chartPadBottom","chartPadTop","waffleGridFrac","waffleLabelH","waffleDotMin","waffleDotMax","nodePadX","stackColWidthPx","phoneProbeWidth","connectorHeightPx","connectorMarginTopPx","padXPhone","padXDesktop","padTopPhone","padTopDesktop","stageWidthPx","stageAspectW","stageAspectH","corrMaxW","ceoMaxW","phoneBreakpoint","bigLineH","transitionRisePx","calloutShaftStrokeWidthPx","calloutShaftEdgeFloorPx","calloutBarbDxPx","calloutBarbDyPx","waffleRowGapPx","counterStrokeWidthPx","axisStrokeWidthPx","connectorStrokeWidthPx","cliffDashTopPx","cliffDashBottomPadPx","lineHeights","barGeom","donut","charWidths","typeScale","typeCaps","chartHeights","chartWidthFrac","fontWeights","counterGeom"];
+const LAYOUT_GROUPS=[["lineHeights",["mast","label","body","title","stackCounter"]],["barGeom",["slotFrac","barFrac","basePad","topPad","xPad"]],["donut",["cxFrac","rFrac","rMax","strokeW"]],["charWidths",["space","narrow","wide","upper","digit"]],["typeScale",["mast","title","body","label","big","hand"]],["typeCaps",["mast","title","body","label","big","hand"]],["chartHeights",["linePhone","lineDesktop","stackPhone","stackDesktop","counterPhone","counterDesktop"]],["chartWidthFrac",["line","stack","counter"]],["fontWeights",["normal","bold","black"]],["counterGeom",["x0","x1Pad","y0","y1Pad"]]];
+const FORMATTING_REQUIRED=["counterLocale","ofWord","stackUnitSymbol","nodeSymbol","badgeStarSep","badgeDashSep","ceoSep","badgeHandFont","badgeSansFont","cliffDash"];
+const BOUNDS_REQUIRED=["maxFigures","maxWaffle","maxBars","maxStack","maxNodes","maxNotes","maxPoints","cliffMin","maxSummaryChars","maxTitleChars","maxLabelChars","maxCardChars","maxStampChars","maxNoteChars","maxNodeChars","maxCeoChars"];
+const TYPEFLOORS_REQUIRED=["masthead","figureTitle","body","label","bigCounter","hand"];
+function validateConfig(cfg){
+  const errs=[]; if(!cfg||typeof cfg!=="object"){errs.push("config absent"); return errs;}
+  SCHEMA_GROUPS.forEach(g=>{ if(!cfg[g]||typeof cfg[g]!=="object") errs.push(g+" group absent"); });
+  if(errs.length) return errs;
+  const B=cfg.bounds, T=cfg.timing;
+  if(typeof cfg.duration!=="number") errs.push("duration must be a number (not string-typed)");
+  else if(!isFinite(cfg.duration)||cfg.duration<=0||cfg.duration>3600) errs.push("duration must be a positive finite number within 3600");
+  ["masthead","dateLine","clockStart","price"].forEach(k=>{ if(typeof cfg[k]!=="string"||!cfg[k].length) errs.push(k+" must be a non-empty string"); });
+  Object.keys(T).forEach(k=>{ if(typeof T[k]!=="number"||!isFinite(T[k])) errs.push("timing."+k+" must be a finite number"); });
+  if(typeof T.sampleStep==="number"&&!(T.sampleStep>0&&T.sampleStep<=0.5)) errs.push("timing.sampleStep must lie in (0, 0.5]");
+  if(typeof T.sampleStep==="number"&&T.sampleStep>0){ if(typeof T.maxSamples!=="number"||!isFinite(T.maxSamples)||T.maxSamples<1) errs.push("timing.maxSamples must be a positive finite bound"); else { const n=samplePointCount(T.sampleStep); if(n>T.maxSamples) errs.push("timing.sampleStep "+T.sampleStep+" yields "+n+" emitted points over the counter full draw (initial point + step samples + endpoint sample; timing.maxSamples counts emitted points), above the named bound timing.maxSamples "+T.maxSamples); } }
+  ["minHoldSec","readMsPerChar","typeMsPerChar","fillSec","counterHoldSec"].forEach(k=>{ if(typeof T[k]==="number"&&!(T[k]>0)) errs.push("timing."+k+" must be positive"); });
+  ["serif","sans","hand"].forEach(k=>{ if(typeof cfg.fonts[k]!=="string"||!cfg.fonts[k].length) errs.push("fonts."+k+" must be a non-empty string"); });
+  ["paper","ink","red","blue","accent","muted","secondary","pageBg","cardTint","controlInk"].forEach(k=>{ if(typeof cfg.palette[k]!=="string"||!cfg.palette[k].length) errs.push("palette."+k+" is a required palette member and must be a non-empty string"); });
+  TIMING_REQUIRED.forEach(k=>{ if(!(k in T)) errs.push("timing."+k+" is a required timing member and is absent"); });
+  const lay=cfg.layout;
+  LAYOUT_REQUIRED.forEach(k=>{ if(!(k in lay)) errs.push("layout."+k+" is a required layout member and is absent"); else if(LAYOUT_GROUPS.every(([g])=>g!==k)&&(typeof lay[k]!=="number"||!isFinite(lay[k]))) errs.push("layout."+k+" must be a finite number"); });
+  LAYOUT_GROUPS.forEach(([g,ks])=>{ const o=lay[g]; if(!o||typeof o!=="object"){ errs.push("layout."+g+" group absent"); return; } ks.forEach(k=>{ if(!(k in o)) errs.push("layout."+g+"."+k+" is a required layout member and is absent"); else if(typeof o[k]!=="number"||!isFinite(o[k])) errs.push("layout."+g+"."+k+" must be a finite number"); }); });
+  FORMATTING_REQUIRED.forEach(k=>{ if(typeof cfg.formatting[k]!=="string"||!cfg.formatting[k].length) errs.push("formatting."+k+" is a required formatting member and must be a non-empty string"); });
+  if(typeof cfg.formatting.waffleInactiveOpacity!=="number"||!isFinite(cfg.formatting.waffleInactiveOpacity)||cfg.formatting.waffleInactiveOpacity<0||cfg.formatting.waffleInactiveOpacity>1) errs.push("formatting.waffleInactiveOpacity must be a number within 0..1");
+  BOUNDS_REQUIRED.forEach(k=>{ if(typeof B[k]!=="number"||!isFinite(B[k])||B[k]<=0) errs.push("bounds."+k+" must be a positive finite number"); });
+  TYPEFLOORS_REQUIRED.forEach(k=>{ if(typeof cfg.typeFloors[k]!=="number"||!isFinite(cfg.typeFloors[k])||cfg.typeFloors[k]<=0) errs.push("typeFloors."+k+" must be a positive finite number"); });
+  const layoutBad=errs.some(e=>/^(timing|layout|formatting|bounds|typeFloors|palette|fonts)\./.test(e)||e.indexOf("group absent")>=0);
+  Object.keys(cfg.palette).forEach(k=>{ if(typeof cfg.palette[k]!=="string") errs.push("palette."+k+" must be a string"); });
+  (function sweep(o,path){ Object.keys(o).forEach(k=>{ const v=o[k]; if(typeof v==="number"&&!isFinite(v)) errs.push(path+"."+k+" must be finite"); else if(v&&typeof v==="object"&&!Array.isArray(v)) sweep(v,path+"."+k); }); })(cfg.layout,"layout");
+  if(!T||!isFinite(T.minHoldSec)||!isFinite(T.readMsPerChar)||T.readMsPerChar<=0) errs.push("timing values must be finite with a positive reading rate");
+  if(T&&(T.fillSec<T.minFillSec)) errs.push("timing: fill duration below its named minimum");
+  if(!Array.isArray(cfg.figures)||cfg.figures.length<1||cfg.figures.length>B.maxFigures) errs.push("figures count outside supported boundary 1.."+B.maxFigures);
+  const figList=Array.isArray(cfg.figures)?cfg.figures:[];
+  figList.forEach(f=>{
+    if(!f||typeof f!=="object"){errs.push("figure record absent"); return;}
+    if(!isFinite(f.start)||!isFinite(f.dur)) errs.push(f.id+": figure window values must be finite");
+    if(typeof f.start!=="number"||typeof f.dur!=="number") errs.push(f.id+": figure window values must be numbers (not string-typed)");
+    if(!(f.dur>cfg.timing.minHoldSec)) errs.push(f.id+": window must exceed the minimum hold");
+    if(f.type==="waffle"){ if(!Number.isInteger(f.waffleTotal)||f.waffleTotal<=0) errs.push(f.id+": waffleTotal must be a positive integer");
+      if(!Number.isInteger(f.waffleCols)||f.waffleCols<=0) errs.push(f.id+": waffleCols must be a positive integer");
+      if(f.waffleTotal>B.maxWaffle) errs.push(f.id+": waffleTotal "+f.waffleTotal+" exceeds supported boundary "+B.maxWaffle);
+      if(typeof f.summaryText!=="string"||!f.summaryText.length) errs.push(f.id+": summary text absent");
+      else { const st=summaryTiming(f,cfg); if(st.typeDurSec<T.minTypeSec) errs.push(f.id+": summary typing duration below its named minimum"); if(st.completionSec+st.holdSec>f.dur+1e-9) errs.push(f.id+": summary of "+f.summaryText.length+" chars cannot type and still hold for reading inside its window (needs "+(st.completionSec+st.holdSec).toFixed(2)+"s of "+f.dur+"s)"); } }
+    if(f.type==="stackBars"){ if(!Array.isArray(f.bars)||!Array.isArray(f.barLabels)) errs.push(f.id+": bars records absent");
+      if(!Number.isInteger(f.stackCount)||f.stackCount<=0) errs.push(f.id+": stackCount must be a positive integer");
+      if(f.stackCount>1 && !(T.stackArrivalSpan<f.stackCount)) errs.push(f.id+": stackArrivalSpan "+T.stackArrivalSpan+" must be below stackCount "+f.stackCount+" (supported span/count relation)");
+      if((f.bars||[]).length>B.maxBars) errs.push(f.id+": bars "+f.bars.length+" exceeds supported boundary "+B.maxBars);
+      if(f.stackCount>B.maxStack) errs.push(f.id+": stackCount "+f.stackCount+" exceeds supported boundary "+B.maxStack);
+      if((f.bars||[]).length!==(f.barLabels||[]).length) errs.push(f.id+": barLabels length must match bars length");
+      if((f.bars||[]).some(v=>!isFinite(v))) errs.push(f.id+": bar values must be finite");
+      if(!layoutBad){ const L360=computeLayout(cfg.layout.phoneProbeWidth,cfg); const g360=figureGeom(f,L360,cfg);
+      if(g360.unitHOver) errs.push(f.id+": stackCount "+f.stackCount+" cannot hold the unit legibility floor at phone width"); } }
+    if(f.type==="orgChart"){ if(!Array.isArray(f.nodes)||f.nodes.length<1) errs.push(f.id+": nodes must be a non-empty array"); else if(f.nodes.length>B.maxNodes) errs.push(f.id+": nodes "+f.nodes.length+" exceeds supported boundary "+B.maxNodes); }
+    if(f.type==="correction"){ if(!Array.isArray(f.notes)) errs.push(f.id+": notes absent"); else if(f.notes.length>B.maxNotes) errs.push(f.id+": notes "+f.notes.length+" exceeds supported boundary "+B.maxNotes); }
+    if(f.type==="lineChart"){ if(!Array.isArray(f.points)) errs.push(f.id+": points absent"); else if(f.points.length>B.maxPoints) errs.push(f.id+": points "+f.points.length+" exceeds supported boundary "+B.maxPoints);
+      if(Array.isArray(f.points)&&f.points.some(pt=>!pt||!isFinite(pt[0])||!isFinite(pt[1]))) errs.push(f.id+": point coordinates must be finite"); }
+    if(f.type==="counterGraph"){ if(!(f.counterStart>f.counterEnd)) errs.push(f.id+": counterStart must exceed counterEnd");
+      if(!isFinite(f.counterStart)||!isFinite(f.counterEnd)||!isFinite(f.cliffAt)) errs.push(f.id+": counter values must be finite");
+      if(!Number.isSafeInteger(f.counterStart)||!Number.isSafeInteger(f.counterEnd)) errs.push(f.id+": counter values must be safe integers");
+      if(!(f.cliffAt>B.cliffMin)) errs.push(f.id+": cliffAt outside supported boundary "+B.cliffMin+"..animation fraction");
+      else { const lim=animFraction(f,cfg)-T.cliffBudgetMargin; if(!(f.cliffAt<lim)) errs.push(f.id+": cliffAt "+f.cliffAt+" must sit below the animation fraction minus the named margin ("+lim.toFixed(3)+")"); }
+      if(!(f.preCliffDrop>0&&f.preCliffDrop<(f.counterStart-f.counterEnd)*cfg.timing.preCliffDropMaxFrac)) errs.push(f.id+": preCliffDrop outside supported boundary (0, "+(cfg.timing.preCliffDropMaxFrac*100)+"% of counter range)"); }
+  });
+  figList.forEach(f=>{ if(!f||typeof f!=="object") return; const reqStr=(k)=>{ if(typeof f[k]!=="string"||!f[k].length) errs.push(f.id+": "+k+" must be a non-empty string"); };
+    if(f.type==="lineChart"){ if(!Array.isArray(f.xLabels)||!f.xLabels.length) errs.push(f.id+": xLabels must be a non-empty array"); if(!Array.isArray(f.yLabels)) errs.push(f.id+": yLabels absent"); reqStr("cardText"); reqStr("chartTitle"); }
+    if(f.type==="waffle"){ reqStr("youLabel"); reqStr("waffleLabel"); if(!Number.isInteger(f.youIndex)||f.youIndex<0||(Number.isInteger(f.waffleTotal)&&f.youIndex>=f.waffleTotal)) errs.push(f.id+": youIndex must be an integer inside the waffle"); }
+    if(f.type==="stackBars"){ reqStr("stackLabel"); if(Array.isArray(f.bars)&&f.bars.some(v=>typeof v!=="number")) errs.push(f.id+": bar values must be numbers (not string-typed)"); }
+    if(f.type==="orgChart"){ ["ceo","ceoSub","badge","badgeName","onlyNote"].forEach(reqStr); if(Array.isArray(f.nodes)&&f.nodes.some(n=>typeof n!=="string")) errs.push(f.id+": nodes entries must be strings"); }
+    if(f.type==="counterGraph"){ ["counterStart","counterEnd","preCliffDrop","cliffAt","cliffExponent"].forEach(k=>{ if(typeof f[k]!=="number") errs.push(f.id+": "+k+" must be a number (not string-typed)"); }); reqStr("counterLabel"); reqStr("counterSub"); }
+    if(f.type==="correction"){ reqStr("correction"); reqStr("stamp"); if(Array.isArray(f.notes)&&f.notes.some(n=>typeof n!=="string")) errs.push(f.id+": notes entries must be strings"); }
+    ["num","title","source"].forEach(reqStr);
+    if(typeof f.id!=="string"||!f.id.length) errs.push("figure id must be a non-empty string");
+    if(typeof f.type!=="string"||!f.type.length) errs.push(f.id+": figure type must be a non-empty string");
+    if(f.type==="lineChart"){
+      if(Array.isArray(f.yLabels)) f.yLabels.forEach((e,i)=>{ if(!e||typeof e!=="object") errs.push(f.id+": yLabels["+i+"] must be an object carrying text and y"); else { if(typeof e.text!=="string"||!e.text.length) errs.push(f.id+": yLabels["+i+"].text must be a non-empty string"); if(typeof e.y!=="number"||!isFinite(e.y)) errs.push(f.id+": yLabels["+i+"].y must be a finite number"); if("emphasis" in e&&typeof e.emphasis!=="boolean") errs.push(f.id+": yLabels["+i+"].emphasis must be a boolean"); } });
+      if(Array.isArray(f.xLabels)) f.xLabels.forEach((e,i)=>{ if(typeof e!=="string"||!e.length) errs.push(f.id+": xLabels["+i+"] must be a non-empty string"); });
+      if(Array.isArray(f.points)) f.points.forEach((pt,i)=>{ if(!Array.isArray(pt)||pt.length<2||typeof pt[0]!=="number"||typeof pt[1]!=="number"||!isFinite(pt[0])||!isFinite(pt[1])) errs.push(f.id+": points["+i+"] must be a pair of finite numbers"); });
+    }
+    if(f.type==="stackBars"){
+      if(Array.isArray(f.bars)) f.bars.forEach((v,i)=>{ if(typeof v!=="number"||!isFinite(v)) errs.push(f.id+": bars["+i+"] must be a finite number"); });
+      if(Array.isArray(f.barLabels)) f.barLabels.forEach((e,i)=>{ if(typeof e!=="string"||!e.length) errs.push(f.id+": barLabels["+i+"] must be a non-empty string"); });
+    }
+    if(f.type==="orgChart"&&Array.isArray(f.nodes)) f.nodes.forEach((e,i)=>{ if(typeof e!=="string"||!e.length) errs.push(f.id+": nodes["+i+"] must be a non-empty string"); });
+    if(f.type==="correction"&&Array.isArray(f.notes)) f.notes.forEach((e,i)=>{ if(typeof e!=="string"||!e.length) errs.push(f.id+": notes["+i+"] must be a non-empty string"); });
+  });
+  const knownTypes=["lineChart","waffle","stackBars","orgChart","counterGraph","correction"];
+  figList.forEach(f=>{ if(f && knownTypes.indexOf(f.type)<0) errs.push(f.id+": unsupported figure type "+f.type); });
+  const schedFigs=figList;
+  if(schedFigs.length){ const f0=schedFigs[0]; if(!f0||typeof f0!=="object") errs.push("schedule: first figure record absent"); else if(f0.start!==0) errs.push("schedule: first figure "+f0.id+" start "+f0.start+" must be 0"); }
+  for(let si=1;si<schedFigs.length;si++){ const prevF=schedFigs[si-1], curF=schedFigs[si]; if(!prevF||!curF||typeof prevF!=="object"||typeof curF!=="object") continue; if(Math.abs(curF.start-(prevF.start+prevF.dur))>1e-9) errs.push("schedule: figure "+curF.id+" start "+curF.start+" does not equal previous figure end "+(prevF.start+prevF.dur)+" (overlap or gap)"); }
+  if(schedFigs.length){ const lastF=schedFigs[schedFigs.length-1]; if(!lastF||typeof lastF!=="object") errs.push("schedule: last figure record absent"); else if(!isFinite(lastF.start)||!isFinite(lastF.dur)) errs.push("schedule: last figure window values must be finite"); else if(Math.abs(lastF.start+lastF.dur-cfg.duration)>1e-9) errs.push("schedule: last figure end "+(lastF.start+lastF.dur)+" does not equal total duration "+cfg.duration); }
+  figList.forEach(f=>{ if(!f||typeof f!=="object"||layoutBad) return; const L6=computeLayout(cfg.layout.phoneProbeWidth,cfg); const g6=figureGeom(f,L6,cfg);
+    // width overflow is priced by the fit surface (fitReport widthOk + occupied), not by validation: a figure whose content exceeds the phone width is a fit failure with its occupied width on the row, not a shape error.
+    const B6=cfg.bounds;
+    const strFields=[["title",B6.maxTitleChars],["source",B6.maxLabelChars],["cardText",B6.maxCardChars],["summaryText",B6.maxSummaryChars],["counterLabel",B6.maxLabelChars],["counterSub",B6.maxLabelChars],["correction",B6.maxCardChars],["stamp",B6.maxStampChars],["ceo",B6.maxCeoChars],["ceoSub",B6.maxCeoChars],["badge",B6.maxLabelChars],["badgeName",B6.maxLabelChars],["onlyNote",B6.maxNoteChars],["stackLabel",B6.maxLabelChars],["donutLabel",B6.maxLabelChars],["waffleLabel",B6.maxLabelChars],["youLabel",B6.maxLabelChars],["chartTitle",B6.maxLabelChars]];
+    strFields.forEach(([k,lim])=>{ if(typeof f[k]==="string" && f[k].length>lim) errs.push(f.id+": "+k+" length "+f[k].length+" exceeds supported boundary "+lim); });
+    ["xLabels","barLabels"].forEach(k=>{ if(Array.isArray(f[k])) f[k].forEach((s2,i2)=>{ if(typeof s2==="string" && s2.length>B6.maxLabelChars) errs.push(f.id+": "+k+"["+i2+"] length "+s2.length+" exceeds supported boundary "+B6.maxLabelChars); }); });
+    ["yLabels"].forEach(k=>{ if(Array.isArray(f[k])) f[k].forEach((o2,i2)=>{ if(o2 && typeof o2.text==="string" && o2.text.length>B6.maxLabelChars) errs.push(f.id+": "+k+"["+i2+"] length exceeds supported boundary "+B6.maxLabelChars); }); });
+    if(Array.isArray(f.nodes)) f.nodes.forEach((s2,i2)=>{ if(typeof s2==="string" && s2.length>B6.maxNodeChars) errs.push(f.id+": nodes["+i2+"] length "+s2.length+" exceeds supported boundary "+B6.maxNodeChars); });
+    if(Array.isArray(f.notes)) f.notes.forEach((s2,i2)=>{ if(typeof s2==="string" && s2.length>B6.maxNoteChars) errs.push(f.id+": notes["+i2+"] length "+s2.length+" exceeds supported boundary "+B6.maxNoteChars); });
+  });
+  return errs;
+}
+/* */
+
+/* */
+(function(){ const q=new URLSearchParams(location.search); q.forEach((v,k)=>{ if(k.startsWith("palette.")){CONFIG.palette[k.slice(8)]=v;} else if(k in CONFIG && typeof CONFIG[k]!=="object"){ const n=Number(v); CONFIG[k]=isNaN(n)||v.trim()===""?v:n; } }); })();
+
+function browserDom(){
+  function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+  function svgEl(w,h){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 '+w+' '+h);s.setAttribute('width',w);s.setAttribute('height',h);s.style.maxWidth='100%';return s;}
+  function svgNode(tag,attrs){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in attrs)n.setAttribute(k,attrs[k]);return n;}
+  return {el:el, svgEl:svgEl, svgNode:svgNode};
+}
+
+/* */
+const BUILDERS = {
+  lineChart(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.rowGapPx+'px';
+    const card=el('div','card',fig.cardText); card.style.cssText='width:'+g.cardW+'px;font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body;
+    const chartBlock=el('div');
+    const ct=el('div','',fig.chartTitle); ct.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.labelPx+'px;letter-spacing:'+cfg.layout.chartTitleLetterSpacingEm+'em;margin-bottom:'+cfg.layout.chartTitleMarginBottomPx+'px';
+    chartBlock.appendChild(ct);
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const geom={x0:yAxisPad(fig,L,cfg), w:g.chartW-yAxisPad(fig,L,cfg)-cfg.layout.chartPadRight, yBase:g.chartH-cfg.layout.chartPadBottom, h:g.chartH-cfg.layout.chartPadBottom-cfg.layout.chartPadTop};
+    s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:8,x2:geom.x0,y2:geom.yBase,stroke:P.ink,'stroke-width':cfg.layout.axisStrokeWidthPx}));
+    s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:geom.yBase,x2:geom.x0+geom.w,y2:geom.yBase,stroke:P.ink,'stroke-width':cfg.layout.axisStrokeWidthPx}));
+    fig.yLabels.forEach(lab=>{const t=dom.svgNode('text',{x:geom.x0-6,y:geom.yBase-lab.y*geom.h+4,'text-anchor':'end','font-size':L.labelPx,fill:lab.emphasis?P.red:P.ink});t.textContent=lab.text;s.appendChild(t);});
+    const bounds=lineLabelBounds(fig,L,cfg);
+    fig.xLabels.forEach((lab,i)=>{const b=bounds[i];const t=dom.svgNode('text',{x:b.cx,y:g.chartH-4,'text-anchor':b.anchor,'font-size':L.labelPx,fill:P.ink});t.textContent=lab;s.appendChild(t);});
+    const d=fig.points.map((pt,i)=>(i?'L':'M')+(geom.x0+pt[0]*geom.w)+' '+(geom.yBase-pt[1]*geom.h)).join(' ');
+    const path=dom.svgNode('path',{d:d,fill:'none',stroke:P.ink,'stroke-width':cfg.layout.chartStrokeWidthPx});
+    s.appendChild(path); chartBlock.appendChild(s);
+    if(L.phone){wrap.append(chartBlock,card);} else {wrap.append(card,chartBlock);}
+    mount.body.appendChild(wrap);
+    let len=null;
+    return function(p){ const q=animQ(p,fig,cfg); const st=lineChartState(fig,q,cfg);
+      if(len===null){ len=(typeof path.getTotalLength==='function'&&path.getTotalLength()>0)?path.getTotalLength():polylineLength(fig.points,geom);
+        path.style.strokeDasharray=len; }
+      path.style.strokeDashoffset=len*(1-st.drawQ); };
+  },
+  waffle(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const grid=el('div'); grid.style.width=g.gridW+'px'; grid.style.display='flex'; grid.style.flexDirection='column'; grid.style.gap=g.gap+'px';
+    const dots=[]; for(let r=0;r<g.rows;r++){const rowEl=el('div'); rowEl.style.display='flex'; rowEl.style.gap=g.gap+'px'; for(let ci=0;ci<fig.waffleCols && dots.length<fig.waffleTotal;ci++){const d=el('span','dot');d.style.cssText='width:'+g.dot+'px;height:'+g.dot+'px;opacity:'+cfg.formatting.waffleInactiveOpacity;rowEl.appendChild(d);dots.push(d);} grid.appendChild(rowEl);}
+    const cntRow=el('div'); cntRow.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;margin:'+cfg.layout.waffleRowGapPx+'px 0';
+    const cnt=el('span'); cntRow.append(cnt);
+    const lane=el('div'); lane.style.cssText='position:relative;width:'+g.gridW+'px;height:'+g.laneH+'px;margin-top:'+cfg.layout.calloutLaneGapPx+'px';
+    const arrow=dom.svgEl(g.gridW, Math.ceil(g.laneTop+g.laneH)); arrow.style.cssText='position:absolute;left:0;top:-'+g.laneTop+'px;overflow:visible;opacity:0';
+    g.callout.segments.forEach(sg=>{ arrow.appendChild(dom.svgNode('line',{x1:sg[0], y1:sg[1], x2:sg[2], y2:sg[3], stroke:P.blue, 'stroke-width':cfg.layout.calloutShaftStrokeWidthPx})); });
+    g.callout.barbs.forEach(sg=>{ arrow.appendChild(dom.svgNode('line',{x1:sg[0], y1:sg[1], x2:sg[2], y2:sg[3], stroke:P.blue, 'stroke-width':cfg.layout.calloutShaftStrokeWidthPx})); });
+    lane.appendChild(arrow);
+    const you=el('span','hand',fig.youLabel); you.style.cssText='position:absolute;color:'+P.blue+';font-size:'+L.handPx+'px;opacity:0;white-space:nowrap;left:'+g.callout.labelX+'px;top:0px'; lane.appendChild(you);
+    const sum=el('div','card'); sum.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body+';min-height:'+(L.bodyPx*cfg.layout.lineHeights.body+2*cfg.layout.cardPaddingPx)+'px;margin-top:'+cfg.layout.waffleGapPx+'px';
+    const sumLines=wordWrapLines(fig.summaryText, g.sumInnerW, L.bodyPx, cfg);
+    const sumSpans=sumLines.map((ln,li)=>{ const sp=el('span','sumline',''); sum.appendChild(sp); if(li<sumLines.length-1) sum.appendChild(el('br')); return sp; });
+    mount.body.append(grid,cntRow,lane,sum);
+    return function(p){ const st=waffleState(fig,p,cfg);
+      dots.forEach((d,i)=>{ if(i<st.filled){d.style.opacity=1; d.style.background=(i===fig.youIndex?P.blue:P.red);} else {d.style.opacity=cfg.formatting.waffleInactiveOpacity; d.style.background='transparent';} });
+      you.style.opacity=st.youVisible?1:0; arrow.style.opacity=st.youVisible?1:0; you.dataset.dot=st.youDot.x+','+st.youDot.y;
+      cnt.textContent=fig.waffleLabel+' '+st.filled+' '+cfg.formatting.ofWord+' '+fig.waffleTotal;
+      let rem=st.summaryChars; sumSpans.forEach((sp,i)=>{ const ln=sumLines[i]; const take=Math.max(0,Math.min(ln.length, rem)); sp.textContent=ln.slice(0,take); rem-=take+1; }); };
+  },
+  stackBars(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.fig22GapPx+'px';
+    const cnt=el('div'); cnt.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;font-weight:'+cfg.layout.fontWeights.bold+';height:'+g.counterH+'px';
+    const stack=el('div'); stack.style.cssText='width:'+(L.phone?g.chartW:cfg.layout.stackColWidthPx)+'px;display:flex;flex-direction:column-reverse;gap:'+cfg.layout.stackUnitGapPx+'px;padding-top:'+g.arrivalReserve+'px';
+    const units=[]; for(let i=0;i<fig.stackCount;i++){const u=el('div','',cfg.formatting.stackUnitSymbol);u.style.cssText='border:'+cfg.layout.stackUnitBorderPx+'px solid '+P.ink+';border-radius:'+cfg.layout.stackUnitRadiusPx+'px;text-align:center;font-size:'+L.labelPx+'px;line-height:'+(g.unitH-2*cfg.layout.stackUnitBorderPx)+'px;height:'+g.unitH+'px;opacity:0';stack.appendChild(u);units.push(u);}
+    const left=el('div'); left.append(cnt,stack);
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const rects=barRects(fig,{w:g.chartW,h:g.chartH},1,cfg);
+    const barEls=rects.map((r,i)=>{const rect=dom.svgNode('rect',{x:r.x,width:r.w,fill:P.accent});s.appendChild(rect);
+      const t=dom.svgNode('text',{x:r.labelX,y:g.chartH-cfg.layout.barLabelDescenderPx,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink});t.textContent=fig.barLabels[i];s.appendChild(t);return rect;});
+    const dn=cfg.layout.donut;
+    const circ=dom.svgNode('circle',{cx:g.chartW*dn.cxFrac,cy:g.chartH/2,r:Math.min(dn.rMax,g.chartH*dn.rFrac),fill:'none',stroke:P.red,'stroke-width':dn.strokeW,transform:'rotate(-90 '+(g.chartW*dn.cxFrac)+' '+(g.chartH/2)+')'});
+    const C=2*Math.PI*parseFloat(circ.getAttribute('r')); circ.style.strokeDasharray=C; circ.style.strokeDashoffset=C; s.appendChild(circ);
+    const dl=dom.svgNode('text',{x:g.chartW*dn.cxFrac,y:g.chartH/2+6,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink}); dl.textContent=fig.donutLabel; s.appendChild(dl);
+    wrap.append(left,s);
+    mount.body.appendChild(wrap);
+    return function(p){ const st=stackState(fig,animQ(p,fig,cfg),cfg);
+      units.forEach((u,i)=>{const a=st.arrivals[i]; u.style.opacity=a.opacity; u.style.transform='translateY('+a.ty+'px)';});
+      cnt.textContent=st.units+' '+fig.stackLabel;
+      const rr=barRects(fig,{w:g.chartW,h:g.chartH},st.barQ,cfg);
+      barEls.forEach((rect,i)=>{rect.setAttribute('y',rr[i].y);rect.setAttribute('height',rr[i].h);});
+      circ.style.strokeDashoffset=C*(1-fig.donutFraction*st.donutQ); };
+  },
+  orgChart(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const ceo=el('div','card',fig.ceo+cfg.formatting.ceoSep+fig.ceoSub); ceo.style.cssText='width:'+Math.min(cfg.layout.ceoMaxW,L.contentW)+'px;margin:0 auto;text-align:center;font-family:'+deps.fonts.sans+';font-weight:'+cfg.layout.fontWeights.bold+';font-size:'+L.bodyPx+'px;opacity:0';
+    mount.body.appendChild(ceo);
+    const nodes=[], connEls=[];
+    for(let r0=0;r0<g.rows;r0++){ const rowNodes=fig.nodes.slice(r0*g.perRow,(r0+1)*g.perRow);
+      const connSvg=dom.svgEl(L.contentW, cfg.layout.connectorHeightPx+cfg.layout.orgRowMarginTop); connSvg.style.display='block'; connSvg.style.margin=cfg.layout.connectorMarginTopPx+'px auto 0';
+      rowNodes.forEach((n,ci)=>{ const x2=(ci+0.5)*(L.contentW/rowNodes.length); const ln=dom.svgNode('line',{x1:L.contentW/2, y1:0, x2:x2, y2:cfg.layout.connectorHeightPx+cfg.layout.orgRowMarginTop, stroke:P.ink, 'stroke-width':cfg.layout.connectorStrokeWidthPx}); ln.style.opacity=0; connSvg.appendChild(ln); connEls.push(ln); });
+      mount.body.appendChild(connSvg);
+      const row=el('div'); row.style.cssText='display:flex;flex-wrap:wrap;gap:'+cfg.layout.orgRowGapPx+'px;justify-content:space-around;margin-top:0px';
+      rowNodes.forEach(n=>{const d=el('div','',cfg.formatting.nodeSymbol+' '+n);d.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.labelPx+'px;opacity:0;width:'+g.nodeW+'px;text-align:center';row.appendChild(d);nodes.push(d);});
+      mount.body.appendChild(row); }
+    const badge=el('div'); const badgeCapV=badgeCap(fig,L,cfg); badge.style.cssText='text-align:center;margin-top:'+cfg.layout.badgeMarginTop+'px;opacity:0;font-size:'+L.bodyPx+'px';
+    badge.append((()=>{const s=el('span','hand',fig.onlyNote); s.style.fontSize=L.handPx+'px'; return s;})(), (()=>{const s=el('span','',cfg.formatting.badgeStarSep+fig.badgeName+cfg.formatting.badgeDashSep+fig.badge);s.style.cssText='font-family:'+deps.fonts.sans+';font-weight:'+deps.config.layout.fontWeights.bold+';color:'+P.red;return s})());
+    mount.body.appendChild(badge);
+    return function(p){ const st=orgState(fig,animQ(p,fig,cfg),cfg);
+      ceo.style.opacity=st.ceo?1:0; nodes.forEach((d,i)=>d.style.opacity=st.nodes[i]?1:0); connEls.forEach((ln,i)=>{ln.style.opacity=st.connectors[i];});
+      badge.style.opacity=st.badgeQ; badge.style.transform='scale('+lerp(badgeCapV,1,st.badgeE)+')'; };
+  },
+  counterGraph(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.counterGapPx+'px';
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const geom={x0:cfg.layout.counterGeom.x0, x1:g.chartW-cfg.layout.counterGeom.x1Pad, y0:cfg.layout.counterGeom.y0, y1:g.chartH-cfg.layout.counterGeom.y1Pad};
+    const path=dom.svgNode('path',{fill:'none',stroke:P.ink,'stroke-width':cfg.layout.counterStrokeWidthPx}); s.appendChild(path);
+    const cliffX=geom.x0+(geom.x1-geom.x0)*(fig.cliffAt/animFraction(fig,cfg));
+    const dash=dom.svgNode('line',{x1:cliffX,x2:cliffX,y1:cfg.layout.cliffDashTopPx,y2:g.chartH-cfg.layout.cliffDashBottomPadPx,stroke:P.red,'stroke-dasharray':cfg.formatting.cliffDash}); s.appendChild(dash);
+    const card=el('div','card'); card.style.cssText='width:'+g.cardW+'px;font-family:'+deps.fonts.sans;
+    const lab=el('div','',fig.counterLabel); lab.style.cssText='letter-spacing:'+cfg.layout.counterLabelLetterSpacingEm+'em;font-size:'+L.labelPx+'px;opacity:.85';
+    const big=el('div'); big.style.cssText='font-size:'+L.bigPx+'px;font-weight:'+cfg.layout.fontWeights.black+';margin:'+cfg.layout.counterMarginYPx+'px 0';
+    const sub=el('div','',fig.counterSub); sub.style.cssText='font-style:italic;font-family:'+deps.fonts.serif+';font-size:'+L.bodyPx+'px;color:'+P.secondary;
+    card.append(lab,big,sub);
+    wrap.append(s,card); mount.body.appendChild(wrap);
+    return function(p){ const aq=animQ(p,fig,cfg); const af=animFraction(fig,cfg); const T=cfg.timing;
+      big.textContent=counterTextAt(p,fig,cfg);
+      let d='M'+geom.x0+' '+graphYAt(0,fig,geom,cfg);
+      const upto=aq; let emitted=1;
+      for(let k=1;k*T.sampleStep<upto && emitted<T.maxSamples;k++){ const u=k*T.sampleStep; d+=' L'+(geom.x0+(geom.x1-geom.x0)*u)+' '+graphYAt(u*af,fig,geom,cfg); emitted++; }
+      if(upto>0) d+=' L'+(geom.x0+(geom.x1-geom.x0)*upto)+' '+graphYAt(upto*af,fig,geom,cfg);
+      path.setAttribute('d',d); dash.style.opacity=aq>T.cliffMarkerAt?1:0;
+      return d; };
+  },
+  correction(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const corr=el('div','card',fig.correction); corr.style.cssText='border-color:'+P.red+';color:'+P.red+';font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body+';max-width:'+g.corrW+'px;opacity:0'; mount.body.appendChild(corr);
+    const stampWrap=el('div'); stampWrap.style.cssText='margin-top:'+cfg.layout.corrStampMarginTop+'px;min-height:'+(g.stampH+g.stampUpReserve)+'px'; stampWrap.style.paddingTop=g.stampUpReserve+'px';
+    const stamp=el('span','stamp',fig.stamp); stamp.style.marginLeft=g.stampOffsetX+'px'; stamp.style.color=P.red; stamp.style.opacity=0; stamp.style.fontSize=L.bodyPx+'px'; stampWrap.appendChild(stamp);
+    mount.body.appendChild(stampWrap);
+    const notes=el('div'); notes.style.marginTop=cfg.layout.corrNotesMarginTop+'px'; const noteEls=fig.notes.map(n=>{const s=el('div','hand',n);s.style.cssText='font-size:'+L.handPx+'px;color:'+P.blue+';opacity:0';notes.appendChild(s);return s;}); mount.body.appendChild(notes);
+    return function(p){ const st=correctionState(fig,animQ(p,fig,cfg),cfg,g.stampCap);
+      corr.style.opacity=st.corr?1:0;
+      stamp.style.opacity=st.stampVisible?1:0;
+      const scale=st.stampScale;
+      stamp.style.transform='rotate('+cfg.timing.stampRotationDeg+'deg) scale('+scale+')';
+      noteEls.forEach((s,i)=>s.style.opacity=st.notes[i]); };
+  }
+};
+
+/* */
+function createScene(deps){
+  const cfg=deps.config, P=deps.palette, dom=deps.dom, el=dom.el, stageEl=deps.stageEl;
+  const L=deps.layout;
+  stageEl.style.background=P.paper; stageEl.style.color=P.ink;
+  stageEl.style.setProperty('--warn',P.red); stageEl.style.setProperty('--muted',P.muted); stageEl.style.setProperty('--secondary',P.secondary); stageEl.style.setProperty('--srcmt',cfg.layout.srcMarginTopPx+'px');
+  stageEl.style.setProperty('--card-tint',P.cardTint);
+  stageEl.style.setProperty('--font-serif',deps.fonts.serif); stageEl.style.setProperty('--font-sans',deps.fonts.sans); stageEl.style.setProperty('--font-hand',deps.fonts.hand);
+  stageEl.style.setProperty('--metapad',cfg.layout.metaPadX+'px');
+  stageEl.style.setProperty('--lh-mast',cfg.layout.lineHeights.mast); stageEl.style.setProperty('--lh-title',cfg.layout.lineHeights.title);
+  stageEl.style.setProperty('--fw-normal',cfg.layout.fontWeights.normal); stageEl.style.setProperty('--fw-black',cfg.layout.fontWeights.black);
+  const mast=el('div','mast'); mast.appendChild(el('h1','',cfg.masthead)); stageEl.appendChild(mast);
+  stageEl.appendChild(el('div','rule'));
+  const meta=el('div','meta');
+  const dateS=el('span','',cfg.dateLine);
+  const clockS=el('span','',cfg.clockStart); clockS.style.color=P.red;
+  const priceS=el('span','',cfg.price);
+  if(L.metaRows===2){ priceS.style.flexBasis='100%'; priceS.style.textAlign='right'; }
+  meta.style.color=P.muted;
+  meta.append(dateS, clockS, priceS); stageEl.appendChild(meta);
+  const problems=validateConfig(cfg);
+  const globalProblems=problems.filter(x=>!cfg.figures.some(f=>f&&x.indexOf(f.id+':')===0));
+  if(globalProblems.length){ const gw=el('div','warn globalwarn','Validation: '+globalProblems.join('; ')); stageEl.appendChild(gw); }
+  const mounted=[]; const appended=[];
+  try{ cfg.figures.forEach(f=>{
+    if(!f||typeof f!=="object") return;
+    const root=el('section','fig'); root.id=f.id;
+    const num=el('div','fignum',f.num); num.style.color=P.red; root.appendChild(num);
+    const h=el('h2'); wordWrapLines(f.title,L.contentW,L.titlePx,cfg).forEach((ln,li,arr)=>{ h.appendChild(el('span','titleline',ln)); if(li<arr.length-1) h.appendChild(el('br')); });
+    h.style.minHeight=(headingLines(f.title,L,cfg)*L.titlePx*cfg.layout.lineHeights.title)+'px'; root.appendChild(h);
+    const body=el('div'); root.appendChild(body);
+    const srcEl=el('div','src'); wordWrapLines(f.source,L.contentW,L.labelPx,cfg,"label").forEach((ln,li,arr)=>{ srcEl.appendChild(el('span','srcline',ln)); if(li<arr.length-1) srcEl.appendChild(el('br')); }); root.appendChild(srcEl);
+    stageEl.appendChild(root); appended.push(root);
+    const figProblems=problems.filter(x=>x.indexOf(f.id+':')===0);
+    let draw=null;
+    if(figProblems.length){ const warn=el('div','warn','Unsupported data — '+figProblems.join('; ')); body.appendChild(warn); if(window.console) console.warn('T17 validation: '+figProblems.join('; ')); }
+    else if(BUILDERS[f.type]) draw=BUILDERS[f.type]({root:root,body:body},f,deps);
+    mounted.push({fig:f,root:root,draw:draw});
+  });
+  } catch(e){ appended.forEach(r=>r.remove()); throw e; }
+  return mounted;
+}
+
+const stage=document.getElementById('stage');
+document.body.style.background=CONFIG.palette.pageBg;
+document.getElementById('clock').style.color=CONFIG.palette.controlInk;
+let mounted=[], lastT=0;
+function applyStagePresentation(stageEl,cfg,L){
+  stageEl.style.setProperty('--stagew',cfg.layout.stageWidthPx+'px');
+  if(stageEl===stage) document.documentElement.style.setProperty('--stagew',cfg.layout.stageWidthPx+'px');
+  stageEl.classList.toggle('phone',L.phone);
+  stageEl.style.setProperty('--mast',L.mastPx+'px'); stageEl.style.setProperty('--title',L.titlePx+'px');
+  stageEl.style.setProperty('--label',L.labelPx+'px'); stageEl.style.setProperty('--padx',L.padX+'px');
+  stageEl.style.setProperty('--padtop',L.padTop+'px'); stageEl.style.setProperty('--figpadtop',cfg.layout.figPadTopPx+'px'); stageEl.style.setProperty('--headmt',cfg.layout.headingMarginTopPx+'px'); stageEl.style.setProperty('--headmb',cfg.layout.headingMarginBottomPx+'px'); stageEl.style.setProperty('--figtop',Math.round(L.headerH)+'px');
+  stageEl.style.setProperty('--cardpad',cfg.layout.cardPaddingPx+'px'); stageEl.style.setProperty('--cardborder',cfg.layout.cardBorderPx+'px'); stageEl.style.setProperty('--cardradius',cfg.layout.cardRadiusPx+'px');
+  stageEl.style.setProperty('--dotborder',cfg.layout.dotBorderPx+'px'); stageEl.style.setProperty('--stampborder',cfg.layout.stampBorderPx+'px'); stageEl.style.setProperty('--stampradius',cfg.layout.stampRadiusPx+'px'); stageEl.style.setProperty('--stamppadx',(cfg.layout.stampPadX/2)+'px'); stageEl.style.setProperty('--stamppady',(cfg.layout.stampPadY/2)+'px');
+  stageEl.style.setProperty('--stamp-ls',cfg.layout.stampLetterSpacingEm+'em'); stageEl.style.setProperty('--lh-label',cfg.layout.lineHeights.label);
+  stageEl.style.setProperty('--stagear',cfg.layout.stageAspectW+'/'+cfg.layout.stageAspectH);
+  if(L.phone) stageEl.style.height=Math.round(fitReport(L.w,cfg.figures,cfg).stageH)+'px';
+  else stageEl.style.height='';
+}
+const STAGE_VARS=['--warn','--muted','--secondary','--srcmt','--card-tint','--font-serif','--font-sans','--font-hand','--metapad','--lh-mast','--lh-title','--fw-normal','--fw-black'];
+function buildDetached(cfg,W){
+  const L=computeLayout(W,cfg);
+  const holder=document.createElement('div');
+  applyStagePresentation(holder,cfg,L);
+  const deps={config:cfg, palette:cfg.palette, timing:cfg.timing, layout:L, dom:browserDom(), fonts:cfg.fonts, stageEl:holder};
+  const m=createScene(deps);
+  return {L:L, holder:holder, mounted:m};
+}
+function commitBuilt(built,cfg){
+  while(stage.children.length) stage.children[0].remove();
+  applyStagePresentation(stage,cfg,built.L);
+  stage.style.background=built.holder.style.background; stage.style.color=built.holder.style.color;
+  STAGE_VARS.forEach(k=>{ const v=built.holder.style.getPropertyValue(k); if(v) stage.style.setProperty(k,v); });
+  while(built.holder.children.length) stage.appendChild(built.holder.children[0]);
+  document.body.style.background=cfg.palette.pageBg; document.getElementById('clock').style.color=cfg.palette.controlInk;
+  mounted=built.mounted;
+}
+function buildAll(){
+  const W=stage.clientWidth||CONFIG.layout.stageWidthPx;
+  const built=buildDetached(CONFIG,W);
+  commitBuilt(built,CONFIG);
+  render(lastT);
+}
+function render(t){
+  lastT=Math.max(0,Math.min(CONFIG.duration,t)); window.__lastT=lastT;
+  document.getElementById('clock').textContent=lastT.toFixed(2)+'s / '+CONFIG.duration+'s';
+  const tr=transitionState(lastT,CONFIG.figures,CONFIG);
+  mounted.forEach((m,i)=>{ let op=0, ty=0;
+    if(i===tr.index){ op=tr.inOpacity; ty=tr.inTy; if(m.draw) m.draw(tr.inP); }
+    else if(i===tr.prevIndex){ op=tr.outOpacity; ty=tr.outTy; if(m.draw) m.draw(tr.outP); }
+    m.root.classList.toggle('on', op>0);
+    m.root.style.opacity=op;
+    m.root.style.transform=ty?('translateY('+ty+'px)'):'';
+  });
+}
+let playing=false, startStamp=0, offset=0, raf=0;
+function tick(now){ if(!playing)return; const t=offset+(now-startStamp)/1000; if(t>=CONFIG.duration){render(CONFIG.duration);playing=false;return;} render(t); raf=requestAnimationFrame(tick); }
+window.T17={ config:CONFIG, render:render, fitReport:function(w){return fitReport(w||stage.clientWidth||CONFIG.layout.stageWidthPx, CONFIG.figures, CONFIG);},
+  validate:function(){return validateConfig(CONFIG);},
+  setTime:function(t){offset=t;render(t);}, get time(){return offset;}, get playing(){return playing;},
+  play:function(){ if(!playing){playing=true;startStamp=performance.now();raf=requestAnimationFrame(tick);} },
+  pause:function(){ playing=false; offset=window.__lastT||offset; cancelAnimationFrame(raf); },
+  restart:function(){ offset=0; playing=true; startStamp=performance.now(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick); },
+  rebuild:function(next){
+    const candidate=JSON.parse(JSON.stringify(next||CONFIG));
+    const errs=validateConfig(candidate); if(errs.length) return {ok:false, errors:errs};
+    const W=stage.clientWidth||candidate.layout.stageWidthPx;
+    const fit=fitReport(W,candidate.figures,candidate);
+    if(!fit.ok) return {ok:false, fit:fit, errors:["candidate fit check failed"]};
+    let built; try{ built=buildDetached(candidate,W); }catch(e){ return {ok:false, errors:["rebuild construction failed: "+((e&&e.message)||e)]}; }
+    Object.keys(CONFIG).forEach(k=>{ delete CONFIG[k]; }); Object.keys(candidate).forEach(k=>{ CONFIG[k]=candidate[k]; });
+    commitBuilt(built,CONFIG);
+    render(lastT);
+    return {ok:true, fit:fit, errors:[]}; } };
+document.getElementById('play').onclick=()=>{ playing?window.T17.pause():window.T17.play(); };
+document.getElementById('restart').onclick=()=>window.T17.restart();
+window.addEventListener('resize',buildAll);
+buildAll();
+if(window===window.top){ window.T17.play(); }
+</script></body></html>
+

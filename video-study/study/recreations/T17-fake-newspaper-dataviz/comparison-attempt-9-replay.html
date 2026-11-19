@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T17 Comparison</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#111;color:#fff}
+#controls{position:sticky;top:0;background:#222;padding:10px;text-align:center;z-index:5}
+button{font-size:17px;padding:10px 18px;margin:0 5px;min-height:48px}
+.row{display:flex;gap:12px;padding:12px;align-items:start}
+.col{flex:1;min-width:0}.col h2{font-size:15px;margin:0 0 6px}
+video,iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;display:block}
+@media(max-width:700px){.row{flex-direction:column}.col{width:100%}}
+</style></head><body>
+<div id="controls"><button id="play">Play / Pause</button><button id="restart">Restart</button><span id="t"></span></div>
+<div class="row">
+ <div class="col"><h2>ORIGINAL — "Look What I Can Do" @ 1:40–2:02</h2><video id="vid" src="segment.mp4" playsinline preload="auto"></video></div>
+ <div class="col"><h2>RECREATION — T17 Fake-newspaper animated dataviz, parameterized</h2><iframe id="rec" src="recreation-attempt-9.html" title="recreation"></iframe></div>
+</div>
+<script>
+const vid=document.getElementById('vid'), rec=document.getElementById('rec'); let playing=false;
+function slave(){ const w=rec.contentWindow; if(w&&w.T17) w.T17.render(Math.min(22.5, vid.currentTime-0.5<0?vid.currentTime:vid.currentTime)); document.getElementById('t').textContent=vid.currentTime.toFixed(2)+'s'; if(playing) requestAnimationFrame(slave); }
+/* recreation duration 22.5 maps to segment window 99.5-122.0 (23.0s file incl 0.5 handle each side approx): slave recreation clock = video time clamped */
+function syncLoop(){ const w=rec.contentWindow; if(w&&w.T17) w.T17.render(Math.max(0,Math.min(22.5, vid.currentTime))); document.getElementById('t').textContent=vid.currentTime.toFixed(2)+'s / 23.00s'; if(playing) requestAnimationFrame(syncLoop); }
+document.getElementById('play').onclick=async()=>{ if(vid.paused){ await vid.play(); playing=true; requestAnimationFrame(syncLoop);} else { vid.pause(); playing=false; } };
+document.getElementById('restart').onclick=async()=>{ vid.currentTime=0; await vid.play(); playing=true; requestAnimationFrame(syncLoop); };
+vid.addEventListener('ended',()=>playing=false);
+</script></body></html>
