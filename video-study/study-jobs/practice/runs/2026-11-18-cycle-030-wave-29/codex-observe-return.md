@@ -1,0 +1,35 @@
+The eight-item pool and four picks are supported by the on-disk scores. Before Plan, the Observe record needs the missing T17 construction targets, fuller evidence in the feed, and explicit reconciliation of score and register status.
+
+### Pool audit
+
+All eight rows are **IN PROGRESS** in `study/style-library/TECHNIQUES.md`. Each vector below is in motion, timing, purity, reusability, readability order. The average and minimum were recomputed from the governing attempt’s five scores.
+
+| Item | Latest attempt | Lens scores | Recomputed average | Minimum | Last attempt |
+|---|---:|---|---:|---|---|
+| T23 | 14 | 79 · 68 · 72 · 62 · 81 | 362 ÷ 5 = 72.4 | 62 reuse | Nov 18, Cycle 029 |
+| T17 | 9 | 87 · 82 · 84 · 77 · 78 | 408 ÷ 5 = 81.6 | 77 reuse | Nov 18, Cycle 029 |
+| T16 | 9 | 82 · 83 · 100 · 77 · 79 | 421 ÷ 5 = 84.2 | 77 reuse | Nov 18, Cycle 029 |
+| T128 | 2 | 85 · 88 · 92 · 76 · 82 | 423 ÷ 5 = 84.6 | 76 reuse | Nov 17, Cycle 021 |
+| T11 | 5 | 82 · 89 · 100 · 81 · 72 | 424 ÷ 5 = 84.8 | 72 readability | Nov 15, Cycle 011 |
+| T02 | 2 | 88 · 100 · 100 · 68 · 76 | 432 ÷ 5 = 86.4 | 68 reuse | Nov 14, Cycle 003 |
+| T162 | 2 | 86 · 96 · 96 · 93 · 64 | 435 ÷ 5 = 87.0 | 64 readability | Nov 17, Cycle 019 |
+| T129 | 2, clean re-score | 94 · 98 · 100 · 68 · 86 | 446 ÷ 5 = 89.2 | 68 reuse | Nov 16, Cycle 018 |
+
+The source for each row is its governing attempt in `study/recreations/<item>/scores.md`. T128 and T129’s dates are corroborated by their dated practice RUN records. The register’s other scored FAIL row, T20, is superseded by attempt 3, whose `84 + 97 + 100 + 79 + 79` gives **87.8**, minimum **79**. Recreation Cycle 040 Wave 37 filed one PASS, T219, and four NO VERDICT holds, T218/T227/T232/T233. Those outcomes add no practice-eligible item. `T20/scores.md`, attempt 3; practice Cycle 029 `RUN.md` §5 and §9b; recreation Cycle 040 `RUN.md` §§3–5.
+
+### Pick, cure, and instrument audit
+
+- **Picks.** T23 a15 → T17 a10 → T16 a10 → T128 a3 are the four lowest latest averages. The averages are distinct, so the staleness rule does not come into play. `practice/INSTRUCTION.md` §1.
+- **Cures.** T23 retains the five queue positions, with missing qualifications identified below. T17 retains Branch B1 with its three construction targets, but abbreviates R-A10-1 through R-A10-5 enough to lose priced work. T16 preserves R1 at the head and R2 → R4 → R5 → R6 → R8 in filed order. T128 preserves all six positions and the 3460 ms suggestion’s status as a question for Plan against the evidenced 3400 ms hold. No current owner-attributed cure was found in the four governing queues. T16’s historical Owner Cures 1 and 2 appear in attempt 1, while attempt 9 carries R1 and the listed secondary residuals. `T23/scores.md` lines 680–686; `T17/scores.md` lines 474–481; `T16/scores.md` attempt 1 and lines 428 onward; `T128/scores.md` lines 66 onward.
+- **Instrument.** T23 a14→a15, T17 a9→a10, T16 a9→a10, and T128 a2→a3 all use the same five lenses and the same bar, average ≥85 and every lens ≥70. The draft makes no cross-instrument comparison. Governing score tables above; `practice/INSTRUCTION.md` §5.2.
+
+**Limits.** This read-only return uses the on-disk filings to recover evidence missing from the supplied excerpts. It prices the filed cure queues and the register as mounted. Underlying lens returns and render claims were outside this review.
+
+**Body-write: none (read-only run)**
+
+OBSERVE RECORD: CORRECT BEFORE PLAN
+
+1. **Repair the pool table and its feed.** In `RUN.md` §1, print the three missing vectors for T23, T17, and T16 from the table above. Date T02 **2026-11-14, practice Cycle 003 Wave 2**, and replace T11’s “Cycle 011 family” with **practice Cycle 011 Wave 10**. The four pick excerpts omit their governing score tables and, in several cases, their filing headers. Include each pick’s attempt number, dated attempt evidence, five scores, and priced queue in the feed. Keep T11, T02, T162, and T129 explicitly marked as register-only **in the feed**, with each register line cited. The supplied stream omitted T162’s line, which is `TECHNIQUES.md` line 108. `guards/codex-observe.md`, excerpt evidence contract; governing score filings above.
+2. **Print how score and register disagreements were resolved.** In `RUN.md` §1, record that T23 a14’s “stays DESCRIBED” is the already-reconciled filing error and that **IN PROGRESS** governs. The register rows for T23, T17, and T16 still stop at attempts 13, 8, and 8. Their newer scores govern the pool. Also record that T20 and T219 are excluded on filed PASS results while their mounted register rows still show **IN PROGRESS**. T219’s `92 + 100 + 100 + 87 + 84 = 463`, giving **92.6**, minimum **84**. T233 has a filed **NO VERDICT** and still shows **DESCRIBED — OWED** in the register. Its exclusion follows the absence of a scored verdict. Practice Cycle 029 `RUN.md` §9b.8; `TECHNIQUES.md` lines 26, 35–37, 149, 153; `T219/scores.md`, Cycle 040 completion; recreation Cycle 040 `RUN.md` §§3–5.
+3. **Restore T17’s priced targets in filed order.** For **R-A10-1**, name per-figure shape errors, pre-geometry value-domain checks including `counterLocale`, required fields by name including `donutFraction`, returned failure for every public-rebuild throw, and regressions for all three probes. For **R-A10-2**, check every positioned SVG text element’s left and right extents against its own viewport, starting with bar labels. For **R-A10-3**, restore single ownership of letter spacing, counter-label opacity, and header geometry, renderer effect checks including badge-font alignment, and both filed options for the shaft edge floor: consume it in geometry or classify it as check-only. For **R-A10-4**, keep resize/rebuild fit-gate parity and use the candidate’s prospective width. For **R-A10-5**, retain the named line heights, anchor FIG.20’s post labels to the observations they name, and retain the title-margin check at 390 px. Keep all three Branch B1 targets together. Carry D1’s browser glyph bounds, swapped-preset measurements at 360/390 px, and handoff distinguishability as outstanding captures. The source records the ninth attempt as PIXEL-UNVERIFIED, with the tenth upcoming. Label the census-derived sweep as the cycle’s implementation method for the filed validation gaps. `T17/scores.md` lines 474–485.
+4. **Restore the omitted T23 and T128 qualifiers.** For T23 purity, specify that the schema derives kind field sets from the data’s own shape. For T23 readability, carry phone-speed comprehension as PIXEL-UNVERIFIED until a render route exists. Keep the clock-policy dispute explicit and preserve both C-14-04 symptoms, the stale timer and the pre-restoration skip log. Label the census-derived sweep as the cycle’s implementation method for the filed route divergences. For T128’s validator cure, print the two filed ordering constraints, `eyebrowComplete < strikeAt` and `strikeComplete < mainAt`. `T23/scores.md`, C-14-04 and lines 680–686; `T128/scores.md`, priced cure 2.
