@@ -1,0 +1,19 @@
+# CODEX-CONDENSE RUN — recreation Cycle 011 Wave 9 (empty-pool cycle)
+
+Consumer: recreation's §9 Condense for Cycle 011 Wave 9 + the decision priced: whether the cycle's lessons were faithfully encoded into the instruction layer (steps · mechanical guards · Jev definitions · Codex prompts), or whether an amendment/candidate claims a lesson its text does not carry.
+Working record: the cycle's RUN.md (attached in this same stream after this instruction) + INSTRUCTION.md §0 (empty-pool clause, promoted Cycle 010, unchanged this cycle) + guards/ as they stand — the run builds from the cycle record and writes its return into the cycle record's Condense section.
+Body-write: the return must end with a `BODY-WRITE:` line naming what it filed; a read-only run closes with "Body-write: none (read-only run)" and the consumer (the cycle record) persists the return verbatim.
+
+## What this cycle drafted (operative facts, priced from RUN.md attached)
+- NO instruction amendment was promoted this cycle. The Condense claims the §0 empty-pool clause (promoted at Cycle 010 after two demonstrations) already prescribes the form this third demonstration followed, and prints that as the reason.
+- ONE candidate was filed, NOT promoted: "board status is not downstream evidence" — a hand-off's status field (vd-2026-11-15-001 = acted) is the sender-side board's claim, not the receiver-side act; the census corroborated it against the target register + runs/, found no registration, and priced the discrepancy. Candidate form: a §1 census rule (corroborate every board hand-off status against its target surface in the same read; a mismatch prints as a discrepancy). Promotion condition printed: a second instance or HQ pricing.
+- Two jev-plan-exit gaps disposed: G-A (a P-label citation slip in §2, corrected in §9 with the fired text standing) · G-B (per-item instruments enumerated NOT-DEMANDED-BY-FORM in §5's own text).
+- A deviation D1 was recorded: the seat filed the codex-observe return while the jev-observe-exit judge was running (judge priced it as gap G4); the Condense records the cure as "priced, not yet encoded" — a sequencing note for the next cycle's Observe, with NO instruction/guard text changed to encode it this cycle.
+- Four-layer account (RUN.md §9): (1) instruction steps — no change, §0 held; (2) mechanical guards — checks establish checked properties only; heartbeat-fusion prevention NOT-YET-AMENDED at lane tooling with reason; (3) Jev definitions — narrow finding for this shape only, jev-prewave UNEXERCISED with obligations carried; (4) Codex prompts — codex-observe Amendment C compliance demonstrated; codex-plan-review + scoring wave UNEXERCISED with obligations carried; codex-observe's own limitation priced (its execution tool failed; the jev judge carried firsthand verification).
+- Cadence: unchanged, no re-price; basis printed (RECREATED 11/48 on evidence; relaxation trigger not met; no per-item cost measured).
+- JUDGMENT LAYER: INCOMPLETE with named remainder.
+
+## Your charge
+Attack: (1) Faithfulness — is "no amendment promoted" honest here, or does the cycle's experience (third empty demonstration · the board-status discrepancy · the D1 filing race) contain a lesson that SHOULD have been encoded and was instead only narrated? Price the D1 "priced, not yet encoded" cure specifically against the AMENDMENT-THEATRE standard in reverse: a lesson named but deliberately left unencoded, with its reason — lawful carry or escape? (2) Four-layer coverage — for each untouched layer, is the no-change a NO-DEFECT proof naming evidence checked, or an escape? (3) Score-evidence binding — every score cited in §9 traces to a filed return path; name any that does not. (4) Cadence honesty — does the no-re-price cite this cycle's measured facts? Return ONE verdict (FAITHFUL / REVISE with named re-encodings), priced legs, and end with the BODY-WRITE line.
+
+The full RUN.md follows in this stream.

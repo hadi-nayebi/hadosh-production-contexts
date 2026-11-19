@@ -1,0 +1,22 @@
+# jev-observe-exit return — Cycle 009 Wave 7 (filed verbatim)
+
+_Firing form: fresh judge agent executing guards/jev-observe-exit.md §2+§3 on the fed Observe record (RUN.md §1 + codex-observe-return.md), 2026-11-14. Verdict advisory per the 2026-11-14 ~20:55 EST ruling._
+
+**Verdict (wave as a whole, 0 items): ADVANCE-WITH-GAPS**
+
+**Dimension scores:**
+- queue-state-priced: **1.0** — Four sources read this cycle and cited: QUEUE.md RECREATION QUEUE rows #1–#26 (every row attempted); TECHNIQUES.md + INDEX.md register at Cycle-007 (OWED only for T38/T43/T45, all attempted in Wave 6; register lag priced); intake census (exactly 2 packets, digestion runs topping at Cycle-005, no new techniques since Wave 6); mechanical artifact census (26 directories, T01–T23 + T38/T43/T45, every one holding scores.md, matching 26 attempt-1 rows in verdict-history.md). Ownership split priced under Amendment A3 §3: the 18 remaining IN PROGRESS techniques are practice's re-attempt pool, this job takes none — re-attempt misrouting avoided, no REATTEMPT-MISROUTED item in the wave.
+- prior-scores-read: **N/A-BY-EMPTY-POOL** — Wave manifest is 0 items; there is no wave item (and no item family sibling) whose filed scores or cure list a Plan must cite. The census's scores.md presence check is queue-state evidence, not per-item score reading, and no per-item evidence is invented.
+- mechanics-seen: **N/A-BY-EMPTY-POOL** — No technique was taken, so there is no packet technique section, evidence frames, or source segment for a wave item whose mechanics and sub-beat timings Observe had to see firsthand; this cycle's Observe product is a pool census, not a build record.
+- variables-extracted: **N/A-BY-EMPTY-POOL** — With no technique in the wave there is no §1.3 variable list to extract and no Plan parameter table for it to bind.
+- guidance-carried: **N/A-BY-EMPTY-POOL** — No item means no technique family attaches, so no standing family guidance (particle-field flow-field / Owner Cures 1–2, typography precedent, or other) was owed in working memory; the §5 GUIDANCE-DROPPED floor triggers only on a particle-field or typography item, and none is present.
+- consumer-named: **1.0** — The finding's consumers are named specifically, not "production generally": HQ (cadence/pool state for the lane), source-scouting/video-digestion (the return address — new first attempts exist only when digestion lands new techniques), and style-library (register lag + footer arithmetic named for its next cycle).
+
+**Named gaps with Plan-phase cures:**
+1. QUEUE.md footer arithmetic defect — footer claims 25 total / P1's 22 while its own rows enumerate 26 (P1 #1–#23 = 23 + P2 #24–#26 = 3). Plan cure: the seat corrects the footer at this cycle's close, as charged in §1, and verifies the correction; the defect is cosmetic to the pool verdict since every enumerated row is attempted either way.
+2. Catalogue register lag — TECHNIQUES.md/INDEX.md still print T38/T43/T45 as DESCRIBED-OWED and RECREATED 6, against filed evidence of RECREATED 8 of 48. Plan cure: carry the lag as a filed notice to the named style-library consumer (tier moves are that job's act, not this seat's); this wave's Plan relies on QUEUE.md + verdict-history.md + the artifact census, with the historical register explicitly distinguished from current attempt coverage.
+3. Codex audit binding/capture limitation — the fed audit excerpts carried no binding census for the other 23 attempts and the return's preamble above finding 1 was not retained (printed as a capture limitation in the filing note). Plan cure: Plan does not claim Codex independently confirmed the empty pool; it carries the seat's 26/26 binding census with its stated limitation (T11/T22/T38 hold additional interim/attempt-2 returns, so per-attempt binding rests on Waves 1–6 seat verifications plus the census) and the Condense amendment that cycle-level codex-observe packets must carry the binding census.
+
+**Codex set-aside pricing:** FAITHFUL and advisory-compliant — the POOL-EMPTY-NOT-CONFIRMED set-aside is recorded explicitly in the consumption note with the verdict named, the grounding 26/26 binding census and its limitation stated, the miss owned as the seat's own feeding gap (excerpts fed, not the census), and the teaching amendment charged to Condense; it is not a silent override.
+
+BODY-WRITE: none (read-only run) — the consumer persists this return verbatim in the run directory.

@@ -1,0 +1,17 @@
+# CODEX-CONDENSE RUN — recreation Cycle 009 Wave 7
+
+Consumer: recreation's §9 Condense for Cycle 009 + the decision priced: whether the cycle's lessons were faithfully encoded into the instruction layer (steps · mechanical guards · Jev definitions · Codex prompts), or whether an amendment claims a lesson its text does not carry.
+Working record: the cycle's RUN.md (runs/2026-11-14-cycle-009-wave-7/RUN.md, fed after this instruction) + INSTRUCTION.md as amended + guards/ as amended + verdict-history.md — the run builds from the cycle record and the amended files, and writes its return into the cycle record's Condense section.
+Body-write: the return must end with a `BODY-WRITE:` line naming what it filed; a read-only run closes with "Body-write: none (read-only run)" and the consumer persists the return verbatim in the run directory.
+
+## Amendment diffs drafted this Condense (attack these)
+- **Amendment A (guards/codex-scoring-wave.md, landed at Execute under Wave-6's charge):** Feeding contract changed — OLD fed list "(recreation.html · build record · scores.md prior state · the technique's packet section)" replaced by the score-blind ALLOWED PACKET (lens instruction · neutral technique facts · recreation.html · score-blind build record; "scores.md is NEVER fed to a lens"); two contract lines ADDED (identical-hash binding with in-cycle re-fire + interim preservation, founding instance Wave-6 T38; every-firing preservation duty generalized from practice A-C003-1); Demonstration state updated (five-lens demonstrated Waves 1–6); the two 2026-11-14 divergence notices DELETED and replaced by an Adoption record stating the divergence is CLOSED on those three rules with history carried in Wave-6 RUN.md + the adoption record.
+- **Amendment B (guards/codex-observe.md, landed this Condense):** Feeding contract gains a "Cycle-level form" bullet: zero-item waves fire the audit once on the pool record; the packet MUST carry the seat's binding census; an excerpts-only NOT-CONFIRMED is priced as the feeder's defect. Demonstration section gains the Cycle-009 first-firing update; the old BUILT-NOT-FIRED text is retained with a superseded-by-ruling note.
+- **Candidate (NOT landed):** an INSTRUCTION §0 empty-pool clause — filed as candidate in RUN.md §9 with the promotion rule (a second empty firing demonstrating the same shape promotes it). Candidate guard v3.1 (from Waves 5–6) carried unpromoted, reason printed (no HQ pricing in record; not exercised this wave).
+
+## Attack, in the definition's order
+1. Faithfulness of each amendment: does the amended text actually encode the lesson such that a cold builder following only the text behaves differently? Classify any AMENDMENT-THEATRE.
+2. Four-layer coverage: for each untouched layer in RUN.md §9's four-layer field, is the no-change a NO-DEFECT proof naming evidence, or an escape?
+3. Score-evidence binding: every lesson citing a lens score cites the filed return — this cycle cites no new lens scores (no builds); price whether any claim in the Condense rests on the seat's summary rather than a filed return (the binding census and the Codex/Jev returns are the cited evidence).
+4. Wave re-pricing honesty: the Condense's CADENCE JUDGMENT recommends HQ pause-or-keep and changes no schedule — price whether it cites this cycle's measured state (pool empty across two firings; RECREATED 8/48) or expectation.
+Return: per-amendment verdicts, the four-layer finding, a closing verdict (ACCEPT or REVISE with the named amendment to re-encode), and the BODY-WRITE line.

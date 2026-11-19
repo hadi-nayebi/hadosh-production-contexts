@@ -1,0 +1,25 @@
+# CODEX-OBSERVE RUN — recreation Cycle 010 Wave 8 (cycle-level form, second firing)
+
+Consumer: recreation's §1 Observe for Cycle 010 Wave 8 + the decision priced: whether the pool record Observe priced (QUEUE.md recreation section · style-library TECHNIQUES.md register + INDEX.md at Cycle-008 · verdict-history.md · artifact binding census · board hand-off vd-2026-11-14-002) is complete and internally consistent enough to conclude the first-attempt OWED pool is empty for a second consecutive wave, AND whether the Packet #3 intake changes that conclusion or only its upstream explanation. What named gaps must Observe carry?
+Working record: the wave's RUN.md (runs/2026-11-15-cycle-010-wave-8/RUN.md) + this run directory — the run builds from the filed record below and writes its return to the wave record.
+Body-write: the return must end with a `BODY-WRITE:` line naming what it filed; a read-only run closes with "Body-write: none (read-only run)" and the consumer (the wave's Observe record) persists the return verbatim in this run directory.
+
+## Adaptation (named in RUN.md)
+The call is defined per item; this cycle has zero wave items, so the audit fires ONCE in its cycle-level form (guards/codex-observe.md, Cycle-009 amendment) on the POOL record. The packet below carries the seat's BINDING CENSUS (per-directory codex/ return counts + binding basis), as that amendment requires. You remain free to return NOT-CONFIRMED whenever the supplied evidence is insufficient; the census requirement binds the feeder, never your verdict.
+
+## Audit, in order
+1. Do QUEUE.md's recreation rows (#1–#26, all attempted), TECHNIQUES.md's register (DESCRIBED-OWED group EMPTY; tiers DESCRIBED 22 / IN PROGRESS 18 / RECREATED 8), verdict-history.md (26 attempt-1 rows + 1 no-verdict line), and the artifact census (26 directories, scores.md in all, codex/ ≥6 returns in all) AGREE that every OWED technique has a filed attempt 1? Name every disagreement with both citations.
+2. Packet #3 (Epochs in Ink o1FsB1nyEWI, built 2026-11-14 23:59 EST) carries 25 techniques P3-T01..T25 in its digest.md. Its style-library hand-off vd-2026-11-14-002 (status: sent, unacted) names motion-graphics candidates for recreation classification: T05 ballot-arc board, T06 map-as-table, T08/T09 card system, T11 column cards, T16 calendar props, T18 money stacks, T20 ladder card, T23 ballot handover. The digest's own ◆ marks are T05/T06/T08/T09/T11/T15/T16/T18/T20/T23 — the hand-off omits T15. Price: (a) does an unregistered, unclassified packet technique constitute an OWED first attempt this job may take this wave, under a queue that takes items from the RECREATION QUEUE section in order and a register that does not yet contain these techniques? (b) Is the T15 omission a pool-record defect, a hand-off defect for style-library's registration pass, or both?
+3. School of Motion specimen: digestion Cycle-006 stands at Observe only; its packet directory has no digest.md. Does it contribute any recreation intake this wave?
+4. Cycle 009 (Wave 7) concluded empty-pool with the register lagging (Cycle-007 state). This cycle reads the register at Cycle-008 (lag cured, RECREATED 8 agreeing seat census vs register). Does any Cycle-009 conclusion need revising in light of the cured register?
+
+## Filed record supplied (seat's census, this cycle)
+- QUEUE recreation rows: 26 techniques, statuses: RECREATED (this job) T22/T08/T04/T45; all other 22 rows IN PROGRESS with "attempt 2 routes to practice". Footer: first-attempt queue CLEAR, confirmed empty Wave 7, "all 26 OWED techniques attempted (P1's 23 + P2's 3)".
+- TECHNIQUES.md header: "Techniques catalogued: 48 (P1's 25 · P2's 23 as T26–T48)"; tiers line: "DESCRIBED 22 · IN PROGRESS 18 · RECREATED 8"; obligation line: DESCRIBED-OWED group EMPTY, all 26 OWED attempted.
+- INDEX.md state at Cycle-008: catalogued packets 2 · in flight 0 · techniques 48 — DESCRIBED 22 (OWED 0) · IN PROGRESS 18 · RECREATED 8.
+- Artifact census: 26 directories (T01–T23, T38, T43, T45), scores.md present in 26/26, codex/ return counts: T01 12, T02 12, T03 12, T04 11, T05 12, T06 12, T07 11, T08 11, T09 12, T10 11, T11 12, T12 12, T13 12, T14 11, T15 10, T16 14, T17 12, T18 12, T19 7, T20 6, T21 12, T22 14, T23 13, T38 8, T43 7, T45 6. Binding basis: each attempt's scores.md was recomputed against its filed lens returns at its own wave's Verify.
+- Practice PASSes on file (re-attempts, practice's record): T01, T12, T09, T21 → catalogue RECREATED 8 of 48 (4 recreation + 4 practice).
+- Packet #3 hand-off vd-2026-11-14-002: status sent; adoption of Packet #3 by video-digestion still owed (its next act); style-library has run no cycle since 22:56 EST Cycle-008, i.e. none since the hand-off landed at 23:59 EST.
+- Digests directory: 4 entries — P1 (catalogued), P2 (catalogued), Packet #3 (built, unadopted, unregistered), SoM (in flight, no digest.md).
+
+Return ONE audit verdict (CONFIRMED / CONFIRMED-WITH-GAPS / NOT-CONFIRMED) + priced findings per audit leg + the BODY-WRITE line.

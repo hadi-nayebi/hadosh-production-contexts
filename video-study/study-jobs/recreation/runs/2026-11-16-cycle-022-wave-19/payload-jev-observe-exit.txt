@@ -1,0 +1,343 @@
+You are the Jev judge for this call. Follow the guard definition below exactly; return one verdict per item with dimension scores, primary classification where a return applies, and end with a BODY-WRITE: line.
+
+# Jev call — jev-observe-exit (recreation)
+
+_Per-call definition from jev-call-template.md. Built 2026-11-14 (phase-guard augmentation). The judgment: a recreation wave may not enter Plan on a catalogue summary alone — Observe must have priced the queue, read the prior scores where they exist, seen the evidence frames, and carried the standing construction guidance into working memory._
+
+## 1. What it judges
+- Deliverable: the wave's Observe working memory — RUN.md gate-out block (§1: mechanics summary + sub-beat timings + variable list + named consumer) for each item in the wave (up to 5 owed items).
+- Call point: recreation INSTRUCTION §1, at the gate out of Observe, before §2 Plan opens for any item in the wave. The verdict is advisory per item: applied, a RETURN-TO-OBSERVE item is held out of the wave's Plan (the wave proceeds with its advancing items; a held item never holds the wave hostage — same rule as jev-prewave §5); set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this Observe record can support a Plan for THIS recreation wave, item by item. Price, in order:
+(1) QUEUE STATE PRICED — does the record state the recreation queue's current position (../QUEUE.md read this cycle), each item's queue number and OWED status, and the ownership split (Amendment A3 §3: this job owns FIRST attempts; an already-scored technique belongs to practice — a wave item that is a re-attempt is a routing defect, named)? T15 is the standing example: attempt 1 scored FAIL 78.5 on 2026-11-13, so T15 attempt 2 is practice's charge, never this job's wave item.
+(2) PRIOR SCORES READ — for any item whose technique already has a scores.md or a verdict-history line (a techniques' family sibling counts: e.g. T16 shares T15's particle machinery), does the record cite the actual filed scores and cure list, or does it plan from the catalogue description alone? Planning that ignores a filed failure is the defect this leg exists to catch.
+(3) MECHANICS SEEN, NOT SUMMARIZED — does the record carry the packet section's mechanics + sub-beat timings from firsthand viewing of the evidence frames and the source segment in motion (§1.1–1.2), with timings in seconds — or only a restatement of the TECHNIQUES.md one-liner? A mechanic the builder has not seen is a guess (§1.1).
+(4) VARIABLES EXTRACTED — is the §1.3 variable list complete for this technique (text content, phrase count, timing/durations, palette, scale, direction, density — plus technique-specific variables), so Plan's parameter table has something to bind? A variable missing here becomes a hardcoded accident in Execute (§1.3).
+(5) CONSTRUCTION GUIDANCE CARRIED — where the technique's family has standing guidance, is it IN the working memory, named? For particle-field techniques: the flow-field model (Amendment A5 §4: one constant flow field, borrowing with low-amplitude jitter, never-borrowed reserve fraction, release with velocity continuity) AND Owner Cure 1 (foreground/background intensity separation riding the borrow flag) AND Owner Cure 2 (strict phrase sequencing / phase exclusivity). For typography techniques: the typography construction precedent (Amendment A1 §2: runtime sampling of config-rendered text). Guidance that exists in INSTRUCTION but is absent from the wave's working memory is scored as absent.
+(6) CONSUMER NAMED — §1.4: which production surface lifts this machinery (container type + owning lane), named per item, not "production generally."
+(7) CODEX/OWNER INPUTS — were any Codex calls fired in this Observe (e.g. a record audit of a prior attempt's codex/ returns) with receipts filed, or is the absence printed? Does the wave need owner-only information (it almost never does — recreation prices from packets and filed scores); if claimed, is it routed as a named gap rather than silently assumed?
+Score 0–1 per dimension (§4), classify defects from the taxonomy, return one verdict per item.
+
+## 3. Context contract (masked view)
+- FED: RUN.md Observe gate-out blocks · ../QUEUE.md recreation-queue section (current) · each item's packet digest.md technique section + TECHNIQUES.md entry · prior scores.md + verdict-history.md lines for the item and its named family siblings · INSTRUCTION Amendments A1/A3/A5 guidance lines relevant to the item's family · any Observe-phase Codex receipts filed this cycle.
+- NEVER FED: the builder's confidence prose · HQ's supervision faces · scores from attempts not yet filed (unfiled scores do not exist).
+- Ceiling: ≤32k tokens; packet sections enter as the technique's section only, never the whole digest; evidence frames are referenced by path/timestamp, never fed as images (text-only judge).
+
+## 4. Output space
+- Verdict classes (per item): **ADVANCE · ADVANCE-WITH-GAPS · RETURN-TO-OBSERVE**.
+- Dimensions (0–1): queue-state-priced · prior-scores-read · mechanics-seen · variables-extracted · guidance-carried · consumer-named. (1.0 = evidenced in the record with citations; 0.5 = asserted without citation; 0.0 = absent.)
+- Rejection taxonomy (one primary per returned item): QUEUE-STALE (queue position/status not read this cycle) · REATTEMPT-MISROUTED (scored technique in a first-attempt wave) · SCORES-UNREAD (prior scores/cures exist, uncited) · MECHANICS-UNSEEN (no firsthand sub-beat record) · VARIABLES-THIN (variable list cannot bind a parameter table) · GUIDANCE-DROPPED (standing family guidance absent from working memory) · CONSUMER-VAGUE.
+- Accepted profiles travel: cited in RUN.md at the Plan gate; ADVANCE-WITH-GAPS items carry their gap list into §2 as named Plan charges.
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → RETURN-TO-OBSERVE for that item. GUIDANCE-DROPPED on a particle-field or typography item → RETURN-TO-OBSERVE at any other score (T15 attempt 1's founding lesson: the frozen-flow defect and both owner catches were guidance-shaped failures discovered only after the wave was spent).
+- ADVANCE-WITH-GAPS requires every gap named with its Plan-phase cure; an unnamed gap is a RETURN.
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + primary classification + disposition land in RUN.md either way.
+
+## Call command
+- Defined prompt + context assembly per §3, executed through the fleet's sealed decision-model route named in guards.md when bound. Binding the exact runner command here is the first firing's own first step. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.**
+
+## 6. Firing record and improvement
+- Exemplars: (a) T15 Cycle-002's Observe record reconstructed from its RUN.md (must ADVANCE — mechanics, timings and consumer were recorded before building). (b) A constructed record proposing T15 as a wave item for attempt 2 (must RETURN-TO-OBSERVE as REATTEMPT-MISROUTED). (c) A constructed particle-technique record with no flow-field / Owner Cure 1 / Owner Cure 2 lines (must RETURN as GUIDANCE-DROPPED). (d) A constructed record whose variable list names only "text and color" for a timed multi-phrase technique (must RETURN as VARIABLES-THIN).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all four must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it. First expected amendment pressure: whether family-sibling scores (leg 2) should be mandatory for all items or only same-machinery families — priced from the first waves' returns.
+
+
+===== RECORD UNDER JUDGMENT: RUN.md §1 Observe =====
+## §1 — Observe
+
+**Wave manifest: 5 items** — queue #65–#69, all Packet #7 (Honda "Keep Up", ManvsMachine / Wieden+Kennedy London; digested via YouTube mirror iO7BmPoL6a4, canonical Vimeo 120043113 blocked 401 — packet prints version UNIDENTIFIED-by-design; archived source `hidden_files/study/video-digests/2026-11-16-vimeo-honda-keep-up/source.mp4`, 60.014 s ffprobe). Consumer (all): DLC assembler / Academy word-animation surfaces — the RSVP family is the word-animation container's tempo machinery: T132 the serial-presentation engine itself, T133 the opening task-contract sting, T134 the tempo-ramp schedule, T135 the punctuation-dwell schedule, T137 the in-stream emphasis device.
+
+### Pool census (fresh this run, 2026-11-16 12:20 EST)
+1. QUEUE.md RECREATION QUEUE: rows #1–#64 all attempted through Wave 18; the Packet #6 pool is CLOSED and the footer prints the queue CLEAR with Packet #7 registration pending. Rows #65–#71 are not yet entered in QUEUE.md — entered at this wave's close from the register (Wave-10/14/16 precedent).
+2. Catalogue register (TECHNIQUES.md, style-library Cycle-014 state): 144 techniques · RECREATED 42 · IN PROGRESS 22 · DESCRIBED 80, of which **7 OWED (queue #65–#71, all Packet #7)** and 73 NOT OWED (priced in the register). OWED set: T132 #65 · T133 #66 · T134 #67 · T135 #68 · T137 #69 · T139 #70 · T140 #71.
+3. Artifact census (binding, this run): `hidden_files/study/recreations/` holds 69 technique directories; none exists for T132/T133/T134/T135/T137 — all five are DESCRIBED+OWED+unattempted. Every existing directory carries a scores.md (census: 0 missing).
+4. Ownership split (A3 §3): all five are first attempts → this job. The 22 IN PROGRESS techniques are practice's re-attempt pool, not this wave's.
+5. Prior/family scores read (§1 resource 3): the RSVP family's filed neighbours — T110 countdown pre-announcement PASS 85.4 (timing 76 was its minimum; census-granularity anchor lesson, Cycle-019 Condense candidate 1) · T03 live-typed lyric FAIL 79.2 a1 (accumulating trail — the opposite retention behaviour to T132, printed in the packet's confusables) · T22 interrupted-stream slam PASS 88.2 · T08 full-screen text slam PASS 88.6 (emphasis hit inside a persisting composition — confusable for T132/T137, distinction carried). No item in this wave has a prior attempt.
+6. Upstream intake priced: Packet #8 (Kurzgesagt, adopted WITH GAPS 2026-11-16, video-digestion Cycle-014) is NOT yet registered by style-library — no OWED rows exist from it; registration is style-library's next act and is not this wave's pool. Digestion queue head is now row #4 (nez&pez SixMap).
+
+### §1b — Per-item mechanics (packet §3 + TECHNIQUES entry + onset-table, read this run)
+
+**T132 — Serial presentation (RSVP replacement) · P7 T01 · #65 · window 3.00–38.04 (138 word onsets)**
+Mechanics: one word at a time replaces the last by hard cut at a fixed centre position over a continuous moving landscape plate; nothing accumulates, nothing can be re-read; dwell is the only variable. Still compositions replaced by cut — no motion within a composition (Brownie serial presentation, not kinetic typography proper). Sub-beats (segment 3.00–17.00, onset-table rows 8–57): "Limits." dwells 1.16 s (the opener's held first word) → sentence 2 at ~250 wpm (internal 0.24 s, final "them." 0.76 s) → sentence 3 at ~300–375 wpm (internal 0.16–0.20 s, final "do." 0.72 s) → sentence 4 internal 0.16 s, final "go." 0.56 s → sentence 5 at 375–500 wpm internal 0.12–0.16 s. Variables: word list (content) · per-word dwell table · centre anchor position · word font size/color · landscape plate palette + pan speed · cycle duration. Guidance: A1 §2 runtime text sampling does NOT apply (DOM text rendered by the browser engine; the lawful construction is config-driven DOM text — Cycle-020 §2b disposition, restated per A8); A5 flow-field does not apply (no particle field); Owner Cure 2's phase exclusivity applies in its serial form: exactly one word owns the stage at any instant, enforced by a single-slot phase machine, never by overlapping timers.
+
+**T133 — Countdown pre-announcement with scaling numerals · P7 T02 · #66 · window 0.40–3.00**
+Mechanics: three red numerals — "3" at 0.40 · "2" at 1.20 · "1" at 2.00 · first word at 3.00 — each dwelling ~0.8–1.0 s and growing in scale across its dwell (detector fired three scale states for "3": 0.40/0.52/0.64); the film's one fluid-motion element, spent on the task contract; numeral size teaches the centre anchor before the first word arrives, on zero comprehension load. Sub-beats (segment 0.00–14.00): numerals at 400/1200/2000 ms segment-relative (0.40 s handles inside the window), scale growth continuous within each dwell, hard cut between numerals, first word "Limits." lands at 3000 ms at the same centre anchor and holds 1.16 s, then the stream begins. Variables: numeral sequence · numeral color · per-numeral onset + dwell · scale start/end factors · first-word text + onset · centre anchor · plate palette. Guidance: as T132 (DOM text; single-slot phase machine — numeral phases and word phase are exclusive).
+
+**T134 — Sentence-band acceleration (stepwise ramp) · P7 T03 · #67 · window 4.16–37.88**
+Mechanics: the ramp is not smooth and not monotonic — rate is roughly constant within a sentence (dwells cluster at the 0.16 s metronome) and steps between sentences: sentence averages climb 174 → 269 → 375 → 455 wpm with deliberate drops (125 wpm recovery sentence at 21.00, T138 — a sibling technique, not this item's mechanic; this item's segment closes before it). Sub-beats (segment 4.16–18.16): sentence bands priced from onset-table sentence averages in-window: S2 ≈250 wpm · S3 ≈320 wpm · S4 375 wpm · S5 ≈455 wpm peak sentence (16.8–18.4 clip is the 455 wpm sentence, just past this segment's close — the in-segment peak band is S5's ~420–455 approach). Variables: sentence list · per-sentence rate (wpm) table · within-sentence dwell derivation (60/wpm) · sentence-final multiplier (carried from T135's 3× — named here as a shared schedule constant, this item's own claim is the band step) · plate palette + pan speed (pan may track band — a construction choice priced in Plan, not assumed). Guidance: as T132; A7 schedule basis required in Plan.
+
+**T135 — Sentence-final dwell weighting (punctuation as timing) · P7 T04 · #68 · window throughout (measured: 14 sentence-final vs 117 internal words)**
+Mechanics: sentence-final words dwell a median 0.48 s against the internal median 0.16 s — a 3× hold at every full stop/question mark; the punctuation mark is the score's bar line, the only place the viewer breathes; comprehension is assembled during the holds. Sub-beats (segment 3.00–17.00, same window as T132 by design — the two items share a window and differ in claim): internal dwells cluster 0.16–0.24 s; finals: "them." 0.76 · "do." 0.72 · "go." 0.56 · "that." 0.32 (the measured set is not a constant — the recreation's claim is the weighting RULE: dwell derived from a base metronome × a final-word multiplier, with the multiplier as the priced variable; the packet's medians 0.16/0.48 set the default multiplier 3.0). Variables: word list · base dwell (metronome) · final multiplier · final-detection punctuation set · word size/color · plate palette. Guidance: as T132; the detection rule (terminal '.'/'?' in the word token) must be CONFIG-visible, not buried in code literals.
+
+**T137 — Case emphasis inside a level stream · P7 T06 · #69 · window 14.40 "really" → 14.60 "REALLY" → 14.92 "push."**
+Mechanics: within one sentence ("I mean really REALLY push."), the repeated word returns in full capitals at the same size and position — emphasis carried by case alone, the stream's only typographic event besides the countdown's scale; at 250+ wpm case is the one change readable in a single fixation. Sub-beats (segment 13.36–27.36): stream at 250–300 wpm into the target sentence — "I" 13.92 (0.24) · "mean" 14.16 (0.24) · "really" 14.40 (0.20, lowercase) · "REALLY" 14.60 (0.32, full capitals, same size/position/color) · "push." 14.92 (0.44, sentence-final hold) — then the stream continues level ("You" 15.36 at 0.76 opener dwell of the next sentence, then 375 wpm band). Variables: word list · emphasis index set (which tokens render in full capitals) · dwell table · word size/color (invariant across the emphasis event — the invariance is the technique) · plate palette. Guidance: as T132; the emphasis must be a CONFIG index set applied by a case transform — a second hardcoded capital string in the word list with no transform named would price as a copy, not the device (Plan prices this).
+
+### Gate calls for this cycle
+codex-observe per item (§1 step 1) · jev-observe-exit at this gate · jev-plan-exit + codex-plan-review per item at §2 gate · A6 legs per item pre-wave · jev-prewave per item · five-lens scoring wave per item · codex-condense at §9. An unfired prescribed call prints this cycle INCOMPLETE.
+
+
+
+===== QUEUE RECREATION SECTION (head + status summary) =====
+## RECREATION QUEUE (owner: recreation job — head = next build)
+
+_Priority law: owner-named first, then production-adjacent (word animation · transitions · openings). Every entry carries its reason; not every described technique owes a recreation — the not-queued list below prices the exclusions in the open._
+
+_Obligation (owner's refinement, 2026-11-13): UNIVERSAL for motion graphics — every technique classified OWED below MUST be recreated; the queue orders the work and sets its pace, it does not exempt. First attempts: recreation job. Re-attempts of scored recreations: practice job (lowest score first)._
+
+| # | Technique | Packet | Reason for this position | Status |
+|---|---|---|---|---|
+| 1 | T15 — Particle typography (form · hold · dissolve) | P1 @ 1:25–1:40 | Owner-named example of the recreation law; the vanishing-words device | IN PROGRESS — attempt 1 FAIL (avg 78.5) 2026-11-13; **attempt 2 routes to the practice job** (lowest-scored rule), cures priced in its scores.md |
+| 2 | T03 — Live-typed lyric text | P1 @ 0:21–0:35 | Word animation's core lawful form; every language short can use it | IN PROGRESS — attempt 1 FAIL (avg 79.2, min 55) 2026-11-14 wave-1; attempt 2 routes to practice |
+| 3 | T22 — Interrupted stream → text slam | P1 @ 2:32–2:37 | Word animation + transition, cheap build, high reuse | RECREATED — attempt 1 PASS (avg 88.2, min 78) 2026-11-14 wave-1; tier move is style-library's act |
+| 4 | T08 — Full-screen text slam | P1 @ 0:42, 2:37 | Transition staple; LOW cost | RECREATED — attempt 1 PASS (avg 88.6, min 78) 2026-11-14 wave-1; tier move is style-library's act |
+| 5 | T01 — Typewriter terminal dialogue | P1 @ 0:00–0:14 | Openings: cold-open-in-a-familiar-UI pattern | IN PROGRESS — attempt 1 FAIL (avg 73.8, min 55) 2026-11-14 wave-1; attempt 2 routes to practice |
+| 6 | T12 — Marker highlight sweep | P1 @ 1:05–1:14 | Word-focus device keyed to spoken onsets | IN PROGRESS — attempt 1 FAIL (avg 75.4, min 62) 2026-11-14 wave-1; attempt 2 routes to practice |
+| 7 | T17 — Fake-newspaper animated dataviz | P1 @ 1:40–2:02 | Diagram container; maps 1:1 onto sentence diagrams | IN PROGRESS — attempt 1 FAIL (avg 67.6, min 28) 2026-11-14 wave-2; attempt 2 routes to practice |
+| 8 | T02 — Counting list + giant numeral | P1 @ 0:14–0:21 | Vocabulary progress visual; LOW cost, pure config | IN PROGRESS — attempt 1 FAIL (avg 75.8, min 48) 2026-11-14 wave-2; attempt 2 routes to practice |
+| 9 | T13 — Typing comment stack | P1 @ 1:08–1:20 | Word-animation family; same typing machinery as T03/T01 | IN PROGRESS — attempt 1 FAIL (avg 76.8, min 64) 2026-11-14 wave-2; attempt 2 routes to practice |
+| 10 | T06 — Multiplying tile wall | P1 @ 0:31–0:53 | Transitions; accumulation visual | IN PROGRESS — attempt 1 FAIL (avg 74.4, min 62) 2026-11-14 wave-2; attempt 2 routes to practice |
+| 11 | T16 — Particle document flip | P1 @ 1:35–1:40 | Shares T15's particle machinery — cheap once T15 passes | IN PROGRESS — attempt 1 FAIL (avg 74.4, min 52) 20
+
+===== TECHNIQUES ENTRIES =====
+### T132 — Serial presentation (RSVP replacement) (P7 T01) ◆ — OWED #65
+- Mechanics: one word at a time replaces the last by hard cut at a fixed centre position over a continuous moving landscape plate; nothing accumulates, nothing can be re-read; dwell is the only variable. In Brownie's temporal-typography taxonomy this is serial presentation — still compositions replaced by cut, no motion within a composition — not kinetic typography proper; removing saccades and regressions makes reading speed a property of the film, not the viewer.
+- Feeds: word animation — P7 @ 03.00–38.04 (the whole manifesto; 138 word onsets) — ev/3.0-limits.jpg, ev/7.84-do-period.jpg · onset-table.csv (all 138 word rows) · transcript.txt
+
+### T133 — Countdown pre-announcement with scaling numerals (P7 T02) ◆ — OWED #66
+- Mechanics: three red numerals ("3" 0.40 · "2" 1.20 · "1" 2.00 · first word 3.00), each dwelling ~0.8–1.0 s and growing in scale across its dwell — the film's one fluid-motion element, spent entirely on the task contract: the numerals' size teaches the centre anchor before the first word arrives, on zero comprehension load.
+- Feeds: opening · word animation — P7 @ 00.40–03.00 — ev/0.4-countdown-3.jpg (scale states: frames/onset-001.jpg · onset-002.jpg · onset-003.jpg) · onset-table.csv rows 1–7
+
+### T134 — Sentence-band acceleration (the stepwise ramp) (P7 T03) ◆ — OWED #67
+- Mechanics: the ramp is not smooth and not monotonic — rate is roughly constant within a sentence (dwells cluste
+### T133 — Countdown pre-announcement with scaling numerals (P7 T02) ◆ — OWED #66
+- Mechanics: three red numerals ("3" 0.40 · "2" 1.20 · "1" 2.00 · first word 3.00), each dwelling ~0.8–1.0 s and growing in scale across its dwell — the film's one fluid-motion element, spent entirely on the task contract: the numerals' size teaches the centre anchor before the first word arrives, on zero comprehension load.
+- Feeds: opening · word animation — P7 @ 00.40–03.00 — ev/0.4-countdown-3.jpg (scale states: frames/onset-001.jpg · onset-002.jpg · onset-003.jpg) · onset-table.csv rows 1–7
+
+### T134 — Sentence-band acceleration (the stepwise ramp) (P7 T03) ◆ — OWED #67
+- Mechanics: the ramp is not smooth and not monotonic — rate is roughly constant within a sentence (dwells cluster at the 0.16 s metronome) and steps between sentences: sentence averages climb 174 → 269 → 375 → 455 wpm with deliberate drops (a 125 wpm recovery sentence at 21.00, T138). The acceleration the viewer feels is a staircase whose steps are sentence boundaries; each sentence is a level cleared or failed as a unit.
+- Feeds: word animation — P7 @ 04.16–37.88 — onset-table.csv (the named data record for this rate claim) · clips/16.8-acceleration-run.mp4 (16.8–18.4 s: the 455 wpm sentence)
+
+### T135 — Sentence-final dwell weighting (punctuation as timing) (P7 T04) ◆ — OWED #68
+- Mechanics: sentence-final words dwell a median 0.48 s against the internal median 0.16 s — a 3× hold at every full stop/question mark, measured
+### T134 — Sentence-band acceleration (the stepwise ramp) (P7 T03) ◆ — OWED #67
+- Mechanics: the ramp is not smooth and not monotonic — rate is roughly constant within a sentence (dwells cluster at the 0.16 s metronome) and steps between sentences: sentence averages climb 174 → 269 → 375 → 455 wpm with deliberate drops (a 125 wpm recovery sentence at 21.00, T138). The acceleration the viewer feels is a staircase whose steps are sentence boundaries; each sentence is a level cleared or failed as a unit.
+- Feeds: word animation — P7 @ 04.16–37.88 — onset-table.csv (the named data record for this rate claim) · clips/16.8-acceleration-run.mp4 (16.8–18.4 s: the 455 wpm sentence)
+
+### T135 — Sentence-final dwell weighting (punctuation as timing) (P7 T04) ◆ — OWED #68
+- Mechanics: sentence-final words dwell a median 0.48 s against the internal median 0.16 s — a 3× hold at every full stop/question mark, measured across all 14 sentence-final words vs 117 internal words. The punctuation mark is the score's bar line, the only place the viewer breathes; comprehension is assembled during the holds.
+- Feeds: word animation — P7 @ throughout — onset-table.csv (dwell column; sentence-final rows end "." or "?") · ev/7.84-do-period.jpg
+
+### T136 — Uniform dwell grid (NO length weighting) — a negative finding (P7 T05)
+- Mechanics: median dwell is 0.16 s in every word-length band (1–2 letters n=29 · 3–4 letters n=64 · 5+ letters n=38, flash-adjacent and terminal dwells excluded) — dwell does NOT 
+### T135 — Sentence-final dwell weighting (punctuation as timing) (P7 T04) ◆ — OWED #68
+- Mechanics: sentence-final words dwell a median 0.48 s against the internal median 0.16 s — a 3× hold at every full stop/question mark, measured across all 14 sentence-final words vs 117 internal words. The punctuation mark is the score's bar line, the only place the viewer breathes; comprehension is assembled during the holds.
+- Feeds: word animation — P7 @ throughout — onset-table.csv (dwell column; sentence-final rows end "." or "?") · ev/7.84-do-period.jpg
+
+### T136 — Uniform dwell grid (NO length weighting) — a negative finding (P7 T05)
+- Mechanics: median dwell is 0.16 s in every word-length band (1–2 letters n=29 · 3–4 letters n=64 · 5+ letters n=38, flash-adjacent and terminal dwells excluded) — dwell does NOT grow with word length, contra the Spritz reference implementation. "furthest" and "I" get the same time; the film's clock is a metronome and only punctuation (T135) bends it. Catalogued as a negative finding: a consumer copying "RSVP" from the best-known implementation would build length weighting in — this specimen proves the device works without it.
+- Feeds: word animation — P7 @ throughout — onset-table.csv + production-record.md (the grouped-median computation; the ≥30%-difference promotion rule measured ≈0% → null, printed in the packet)
+
+### T137 — Case emphasis inside a level stream (P7 T06) ◆ — OWED #69
+- Mechanics: within one sentence ("I mean really REALLY push."),
+### T137 — Case emphasis inside a level stream (P7 T06) ◆ — OWED #69
+- Mechanics: within one sentence ("I mean really REALLY push."), the repeated word returns in full capitals at the same size and position — emphasis carried by case alone, the stream's only typographic event besides the countdown's scale. At 250+ wpm there is no time for a size or colour event to register; case is the one change readable in a single fixation.
+- Feeds: word animation — P7 @ 14.40 "really" → 14.60 "REALLY" → 14.92 "push." — ev/14.6-REALLY.jpg · frames/onset-055.jpg ("really", the before state)
+
+### T138 — The recovery sentence (a priced pace drop) (P7 T07)
+- Mechanics: after two sentences above 420 wpm, the rate collapses to conversational for exactly one sentence — "It feels pretty good, right?", 125 wpm average, the film's slowest sentence after the opener — the sentence that names the viewer's feeling — then steps back to 424 wpm. The drop is the reward and the proof at once. (Classified not owed — a pacing structure, precedent T126; its lesson registers as AS-56.)
+- Feeds: word animation — P7 @ 21.00–23.40 — onset-table.csv (sentence 13 row group) · ev/21.68-good-comma.jpg
+
+### T139 — Product flash at a phrase boundary (stream resumes across the flash) (P7 T08) ◆ — OWED #70
+- Mechanics: photographic product passes interrupt the word stream for 0.3–1.9 s (HR-V 26.36–27.68 · red Jazz 29.28–29.56 · Civic Type R 30.72–31.88 · HondaJet 33.64–33.88 · NSX 36.24–36.60). Measured rhythm: RESUME — t
+
+===== OBSERVE-PHASE CODEX RECEIPTS (codex-observe x5, answers) =====
+
+--- codex-observe return (T132-serial-presentation) ---
+**CONFIRMED-WITH-GAPS — supplied excerpts only.** T132’s packet and register agree sufficiently to guide Observe, but the prior-score bindings and archived segment remain unverified. Local inspection and filing were unavailable because the execution tool failed to start.
+
+1. **Packet consistency: confirmed.** Digest T01 and TECHNIQUES T132 agree on replacement by hard cut, a fixed centre anchor, continuous landscape background, no accumulated text, 138 word onsets, and the 3.00–38.04 window. Both identify the same evidence frames, onset table, and transcript.
+
+2. **Window distinction: needs explicit handling.** RUN §1b introduces a **3.00–17.00 excerpt**, while the packet describes **3.00–38.04**. These are compatible if the former is the intended recreation segment. Observe must preserve that distinction and verify the excerpt’s claimed onset-table rows 8–57 firsthand.
+
+3. **Mechanics qualification: required.** “Dwell is the only variable” describes the source’s word-presentation timing. RUN’s font, colour, anchor, and plate controls are recreation parameters; their inclusion does not establish that those properties vary in the source.
+
+4. **Prior-attempt audit: not confirmed.** The supplied record declares no previous T132 attempt and no verdict-history line. The sibling claims—T110 85.4, T03 79.2, T22 88.2, T08 88.6—lack their filed returns, component scores, lens counts, and verdict-history excerpts. Their arithmetic and binding cannot be audited. Treat them as supplied, unverified claims.
+
+5. **Segment facts: plausible, not independently checked.** The stated 60.014-second source duration contains the claimed window, whose duration is **35.04 seconds**. Neither the ffprobe receipt nor the archived video was inspected. Observe must verify source identity, boundary frames, onset count, dwell measurements, and centre anchoring from the actual evidence before adopting them as measured facts.
+
+**Disposition:** Proceed with Observe while carrying these named gaps. This return does not judge the Observe working memory.
+
+BODY-WRITE: none (read-only run). Consumer: the wave’s Observe record must persist this return verbatim in RUN.md; no file was written by this run.
+tokens used
+15,427
+**CONFIRMED-WITH-GAPS — supplied excerpts only.** T132’s packet and register agree sufficiently to guide Observe, but the prior-score bindings and archived segment remain unverified. Local inspection and filing were unavailable because the execution tool failed to start.
+
+1. **Packet consistency: confirmed.** Digest T01 and TECHNIQUES T132 agree on replacement by hard cut, a fixed centre anchor, continuous landscape background, no accumulated text, 138 word onsets, and the 3.00–38.04 window. Both identify the same evidence frames, onset table, and transcript.
+
+2. **Window distinction: needs explicit handling.** RUN §1b introduces a **3.00–17.00 excerpt**, while the packet describes **3.00–38.04**. These are compatible if the former is the intended recreation segment. Observe must preserve that distinction and verify the excerpt’s claimed onset-table rows 8–57 firsthand.
+
+3. **Mechanics qualification: required.** “Dwell is the only variable” describes the source’s word-presentation timing. RUN’s font, colour, anchor, and plate controls are recreation parameters; their inclusion does not establish that those properties vary in the source.
+
+4. **Prior-attempt audit: not confirmed.** The supplied record declares no previous T132 attempt and no verdict-history line. The sibling claims—T110 85.4, T03 79.2, T22 88.2, T08 88.6—lack their filed returns, component scores, lens counts, and verdict-history excerpts. Their arithmetic and binding cannot be audited. Treat them as supplied, unverified claims.
+
+5. **Segment facts: plausible, not independently checked.** The stated 60.014-second source duration contains the claimed window, whose duration is **35.04 seconds**. Neither the ffprobe receipt nor the archived video was inspected. Observe must verify source identity, boundary frames, onset count, dwell measurements, and centre anchoring from the actual evidence before adopting them as measured facts.
+
+**Disposition:** Proceed with Observe while carrying these named gaps. This return does not judge the Observe working memory.
+
+BODY-WRITE: none (read-only run). Consumer: the wave’s Observe record must persist this return verbatim in RUN.md; no file was written by this run.
+
+--- codex-observe return (T133-countdown-scaling-numerals) ---
+**CONFIRMED-WITH-GAPS — the supplied excerpts agree on T133’s core timing and mechanic. Source verification and prior-family score binding remain incomplete.** This verdict audits the supplied text; filesystem access failed, so no files or media were independently inspected.
+
+1. **Packet/register agreement.** Digest T02 and TECHNIQUES T133 both specify red numerals at 0.40, 1.20, and 2.00 s, followed by the first word at 3.00 s. The implied dwells are **0.80, 0.80, and 1.00 s**, totaling **2.60 s**, consistent with the stated 0.40–3.00 window. Both cite the same evidence image, three onset frames, and CSV rows 1–7.
+
+2. **Scale evidence needs firsthand checking.** The packet reports three scale states for “3”; RUN §1b adds their times, **0.40/0.52/0.64**, and asserts continuous growth within *every* numeral dwell. Three sampled states for one numeral do not establish continuity or growth for “2” and “1.” Observe must inspect all three dwells and determine the actual scale progression.
+
+3. **RUN adds unverified source claims.** Hard cuts between numerals, “Limits.” as the first word, its 1.16 s hold, and an identical centre anchor are not established by the supplied packet/register excerpts. Check these against the source. The **0.00–14.00** segment is broader context, distinct from the technique’s **0.40–3.00** window; its 0.40 s leading handle precedes that window.
+
+4. **Prior-attempt audit is incomplete.** T133’s first-attempt status and absent verdict-history entry are reported, but the underlying census was not inspected. Family claims—T110 PASS 85.4 (timing 76), T03 FAIL 79.2, T22 PASS 88.2, T08 PASS 88.6—have no supplied returns or component scores. **Lens count: unknown for all four.** Their arithmetic, verdict criteria, and binding to filed returns cannot be checked; treat these claims as unbound within this evidence packet.
+
+5. **Segment facts are reported, not independently verified.** The claimed 60.014 s source duration accommodates the technique window and proposed context segment. Observe must verify the archived file’s duration, timestamp alignment, numeral boundaries, and first-word onset. No ffprobe receipt or source frames were supplied.
+
+**Consumer:** T133’s wave Observe record should preserve this return and close these gaps before adopting the stronger RUN claims as source facts.
+
+BODY-WRITE: none (read-only run); consumer must persist this return verbatim in RUN.md’s Observe section.
+tokens used
+13,640
+**CONFIRMED-WITH-GAPS — the supplied excerpts agree on T133’s core timing and mechanic. Source verification and prior-family score binding remain incomplete.** This verdict audits the supplied text; filesystem access failed, so no files or media were independently inspected.
+
+1. **Packet/register agreement.** Digest T02 and TECHNIQUES T133 both specify red numerals at 0.40, 1.20, and 2.00 s, followed by the first word at 3.00 s. The implied dwells are **0.80, 0.80, and 1.00 s**, totaling **2.60 s**, consistent with the stated 0.40–3.00 window. Both cite the same evidence image, three onset frames, and CSV rows 1–7.
+
+2. **Scale evidence needs firsthand checking.** The packet reports three scale states for “3”; RUN §1b adds their times, **0.40/0.52/0.64**, and asserts continuous growth within *every* numeral dwell. Three sampled states for one numeral do not establish continuity or growth for “2” and “1.” Observe must inspect all three dwells and determine the actual scale progression.
+
+3. **RUN adds unverified source claims.** Hard cuts between numerals, “Limits.” as the first word, its 1.16 s hold, and an identical centre anchor are not established by the supplied packet/register excerpts. Check these against the source. The **0.00–14.00** segment is broader context, distinct from the technique’s **0.40–3.00** window; its 0.40 s leading handle precedes that window.
+
+4. **Prior-attempt audit is incomplete.** T133’s first-attempt status and absent verdict-history entry are reported, but the underlying census was not inspected. Family claims—T110 PASS 85.4 (timing 76), T03 FAIL 79.2, T22 PASS 88.2, T08 PASS 88.6—have no supplied returns or component scores. **Lens count: unknown for all four.** Their arithmetic, verdict criteria, and binding to filed returns cannot be checked; treat these claims as unbound within this evidence packet.
+
+5. **Segment facts are reported, not independently verified.** The claimed 60.014 s source duration accommodates the technique window and proposed context segment. Observe must verify the archived file’s duration, timestamp alignment, numeral boundaries, and first-word onset. No ffprobe receipt or source frames were supplied.
+
+**Consumer:** T133’s wave Observe record should preserve this return and close these gaps before adopting the stronger RUN claims as source facts.
+
+BODY-WRITE: none (read-only run); consumer must persist this return verbatim in RUN.md’s Observe section.
+
+--- codex-observe return (T134-sentence-band-acceleration) ---
+**CONFIRMED-WITH-GAPS — the supplied excerpts support provisional Observe work; they do not verify the rate schedule or bind the sibling scores.**
+
+1. **Packet and register agree.** Digest T03 and TECHNIQUES T134 both describe sentence-boundary steps, a nonmonotonic ramp, rates of 174 → 269 → 375 → 455 wpm, and a 125 wpm recovery at 21.00. Both name onset-table.csv and the 16.8–18.4 clip. Neither supplies the underlying onset rows or evidence frames here.
+
+2. **The wave record introduces unresolved rate differences.** RUN §1b gives S2 ≈250, S3 ≈320, S4 375, and S5 ≈455, versus the packet’s 174 → 269 → 375 → 455. These may describe different sentence selections or measurement conventions, but no mapping establishes that. Observe must identify each sentence’s tokens, start/end onsets, word count, duration, and rate calculation.
+
+3. **The selected segment truncates the claimed peak sentence.** The full technique window is 4.16–37.88 (**33.72 s**); RUN’s selected segment is 4.16–18.16 (**14.00 s**). The cited peak clip spans 16.8–18.4, extending **0.24 s beyond** the selected close. RUN’s “~420–455 approach” is unsupported by the supplied table excerpts and sits uneasily with the claim of roughly constant rate within each sentence. Observe must resolve the actual sentence boundary and what the selected segment demonstrates.
+
+4. **The timing construction needs a defined denominator.** RUN proposes within-sentence dwell = 60/wpm plus a final multiplier of 3. Applying that multiplier increases sentence duration, so the resulting sentence-average rate falls below the input wpm. Observe must distinguish internal cadence from whole-sentence average before Plan uses these values. T135 supports a median ratio of 3; its listed final dwells demonstrate variation, not a constant multiplier in the source.
+
+5. **Prior-attempt binding remains incomplete.** The supplied census reports no earlier T134 directory or verdict-history entry; nothing supplied contradicts that. The four sibling scores are **unbound in this feeding packet**: their filed returns, lens counts, component scores, and verdict-history lines are absent. Arithmetic cannot be recomputed. T110’s timing 76 alone cannot establish its aggregate 85.4.
+
+6. **Source duration is reported, not independently verified here.** The reported 60.014 s duration accommodates both windows. It does not establish their content or sentence boundaries. Observe must inspect the archived source and onset-table.csv firsthand.
+
+**Consumer:** T134’s wave Observe record. Persist this return in RUN.md before the corresponding Observe-exit review.
+
+BODY-WRITE: none (read-only run).
+tokens used
+13,413
+**CONFIRMED-WITH-GAPS — the supplied excerpts support provisional Observe work; they do not verify the rate schedule or bind the sibling scores.**
+
+1. **Packet and register agree.** Digest T03 and TECHNIQUES T134 both describe sentence-boundary steps, a nonmonotonic ramp, rates of 174 → 269 → 375 → 455 wpm, and a 125 wpm recovery at 21.00. Both name onset-table.csv and the 16.8–18.4 clip. Neither supplies the underlying onset rows or evidence frames here.
+
+2. **The wave record introduces unresolved rate differences.** RUN §1b gives S2 ≈250, S3 ≈320, S4 375, and S5 ≈455, versus the packet’s 174 → 269 → 375 → 455. These may describe different sentence selections or measurement conventions, but no mapping establishes that. Observe must identify each sentence’s tokens, start/end onsets, word count, duration, and rate calculation.
+
+3. **The selected segment truncates the claimed peak sentence.** The full technique window is 4.16–37.88 (**33.72 s**); RUN’s selected segment is 4.16–18.16 (**14.00 s**). The cited peak clip spans 16.8–18.4, extending **0.24 s beyond** the selected close. RUN’s “~420–455 approach” is unsupported by the supplied table excerpts and sits uneasily with the claim of roughly constant rate within each sentence. Observe must resolve the actual sentence boundary and what the selected segment demonstrates.
+
+4. **The timing construction needs a defined denominator.** RUN proposes within-sentence dwell = 60/wpm plus a final multiplier of 3. Applying that multiplier increases sentence duration, so the resulting sentence-average rate falls below the input wpm. Observe must distinguish internal cadence from whole-sentence average before Plan uses these values. T135 supports a median ratio of 3; its listed final dwells demonstrate variation, not a constant multiplier in the source.
+
+5. **Prior-attempt binding remains incomplete.** The supplied census reports no earlier T134 directory or verdict-history entry; nothing supplied contradicts that. The four sibling scores are **unbound in this feeding packet**: their filed returns, lens counts, component scores, and verdict-history lines are absent. Arithmetic cannot be recomputed. T110’s timing 76 alone cannot establish its aggregate 85.4.
+
+6. **Source duration is reported, not independently verified here.** The reported 60.014 s duration accommodates both windows. It does not establish their content or sentence boundaries. Observe must inspect the archived source and onset-table.csv firsthand.
+
+**Consumer:** T134’s wave Observe record. Persist this return in RUN.md before the corresponding Observe-exit review.
+
+BODY-WRITE: none (read-only run).
+
+--- codex-observe return (T135-sentence-final-dwell-weighting) ---
+**CONFIRMED-WITH-GAPS — the supplied excerpts agree on T135’s central claim, but do not independently establish the measurements or prior-family scores.** Observe can proceed with the following gaps explicitly open.
+
+1. **Median weighting is supported consistently; a universal multiplier is not.** Digest T04 and TECHNIQUES T135 both report 14 final words, 117 internal words, and medians of 0.48/0.16 s. The ratio is correctly **3.0×**. However, “a 3× hold at every full stop/question mark” overstates a median relationship. RUN §1b itself lists final dwells of 0.76, 0.72, 0.56, and 0.32 s. Observe must distinguish the source’s variable final holds from the recreation’s proposed constant-multiplier model.
+
+2. **The underlying evidence remains unchecked.** Neither `onset-table.csv` nor `ev/7.84-do-period.jpg` was supplied for inspection. Observe must recompute the counts and medians, inspect the cited frame, and establish how dwell boundaries were measured. A still frame alone cannot establish hold duration.
+
+3. **The adjacent length-band census needs reconciliation.** TECHNIQUES T136 gives band counts totaling **131** (29 + 64 + 38), while T135’s final/internal counts also total **131** (14 + 117). T136 says terminal and flash-adjacent dwells were excluded. Observe must clarify whether its band counts describe the population before exclusions or the actual measured subsets; the excerpt does not resolve this.
+
+4. **Prior-attempt binding is incomplete.** The supplied census states that T135 has no prior directory, attempt, or verdict-history line; those statements agree. Family claims—T110 85.4, T03 79.2, T22 88.2, T08 88.6—have no accompanying returns, component scores, lens counts, or verdict-history excerpts. Their arithmetic and bindings therefore remain **unverified**, rather than established family baselines.
+
+5. **The selected segment is specified but not independently checked.** TECHNIQUES says “throughout”; RUN §1b selects **3.00–17.00 s**, a **14.00 s** excerpt within the reported 60.014 s source duration. These are compatible as whole-source scope and recreation selection. Observe must verify the archived media and onset rows firsthand, including whether words crossing either cut boundary lose part of their dwell. The whole-source medians must remain distinguished from measurements of this excerpt.
+
+The configurable punctuation detector is an explicit recreation requirement in RUN §1b. Its fidelity to the source still depends on inspecting the actual tokens and boundary rules.
+
+Local file access failed because the execution host was unavailable; no filesystem or media verification was completed, and no return was filed. The wave’s Observe consumer should persist this return verbatim in RUN.md before its exit judge starts.
+
+BODY-WRITE: none (read-only run); consumer: the wave’s Observe record in RUN.md.
+tokens used
+15,371
+**CONFIRMED-WITH-GAPS — the supplied excerpts agree on T135’s central claim, but do not independently establish the measurements or prior-family scores.** Observe can proceed with the following gaps explicitly open.
+
+1. **Median weighting is supported consistently; a universal multiplier is not.** Digest T04 and TECHNIQUES T135 both report 14 final words, 117 internal words, and medians of 0.48/0.16 s. The ratio is correctly **3.0×**. However, “a 3× hold at every full stop/question mark” overstates a median relationship. RUN §1b itself lists final dwells of 0.76, 0.72, 0.56, and 0.32 s. Observe must distinguish the source’s variable final holds from the recreation’s proposed constant-multiplier model.
+
+2. **The underlying evidence remains unchecked.** Neither `onset-table.csv` nor `ev/7.84-do-period.jpg` was supplied for inspection. Observe must recompute the counts and medians, inspect the cited frame, and establish how dwell boundaries were measured. A still frame alone cannot establish hold duration.
+
+3. **The adjacent length-band census needs reconciliation.** TECHNIQUES T136 gives band counts totaling **131** (29 + 64 + 38), while T135’s final/internal counts also total **131** (14 + 117). T136 says terminal and flash-adjacent dwells were excluded. Observe must clarify whether its band counts describe the population before exclusions or the actual measured subsets; the excerpt does not resolve this.
+
+4. **Prior-attempt binding is incomplete.** The supplied census states that T135 has no prior directory, attempt, or verdict-history line; those statements agree. Family claims—T110 85.4, T03 79.2, T22 88.2, T08 88.6—have no accompanying returns, component scores, lens counts, or verdict-history excerpts. Their arithmetic and bindings therefore remain **unverified**, rather than established family baselines.
+
+5. **The selected segment is specified but not independently checked.** TECHNIQUES says “throughout”; RUN §1b selects **3.00–17.00 s**, a **14.00 s** excerpt within the reported 60.014 s source duration. These are compatible as whole-source scope and recreation selection. Observe must verify the archived media and onset rows firsthand, including whether words crossing either cut boundary lose part of their dwell. The whole-source medians must remain distinguished from measurements of this excerpt.
+
+The configurable punctuation detector is an explicit recreation requirement in RUN §1b. Its fidelity to the source still depends on inspecting the actual tokens and boundary rules.
+
+Local file access failed because the execution host was unavailable; no filesystem or media verification was completed, and no return was filed. The wave’s Observe consumer should persist this return verbatim in RUN.md before its exit judge starts.
+
+BODY-WRITE: none (read-only run); consumer: the wave’s Observe record in RUN.md.
+
+--- codex-observe return (T137-case-emphasis-stream) ---
+**CONFIRMED-WITH-GAPS — T137’s supplied packet is internally consistent enough to guide Observe. Source verification and family-score binding remain open.**
+
+The digest and TECHNIQUES entry agree on the sentence, case-only mechanism, timestamps, and both evidence paths. RUN §1b preserves those claims and adds a coherent dwell table:
+
+- “really”: 14.40–14.60 = **0.20 s**
+- “REALLY”: 14.60–14.92 = **0.32 s**
+- “push.”: 14.92–15.36 = **0.44 s**
+
+Observe must close these gaps firsthand:
+
+1. **Visual invariance is asserted, not demonstrated here.** Inspect the named frames and source sequence for unchanged font size, anchor, weight, and color. Capitalization can change glyph bounds without changing font size; distinguish those properties.
+2. **The explanatory claim exceeds the supplied evidence.** “No time for a size or colour event” and “case is the one change readable in a single fixation” are perceptual interpretations, not established segment facts. The unequal dwells also mean the event is not temporally invariant: uppercase receives **60% longer** than lowercase.
+3. **Family scores are unbound within this feed.** T110 **85.4**, T03 **79.2**, T22 **88.2**, and T08 **88.6** are supplied without their scores.md rows, filed returns, or verdict-history entries. **Lens count: unspecified for all four.** Arithmetic and PASS/FAIL classifications cannot be independently recomputed. T110’s timing score of 76 supplies only one component.
+4. **First-attempt status is reported, not independently established.** The supplied census says no T137 directory existed before this wave and no verdict-history line exists; underlying census evidence is absent.
+5. **Segment facts are numerically plausible but not verified.** The claimed 60.014 s archive contains the proposed 13.36–27.36 segment (**14.00 s**), but no ffprobe receipt, onset table, or source frames were supplied. Verify archive identity, duration, and token boundaries before cutting. The broad segment also reaches the separately identified T139 product flash beginning at 26.36; distinguish that surrounding material from T137’s target event.
+
+No packet-to-register contradiction is visible. The CONFIG case-transform requirement is implementation guidance, not source evidence. This review does not judge the Observe working memory.
+
+BODY-WRITE: none (read-only run). Consumer: the wave’s Observe record must persist this return verbatim in RUN.md §1.
+tokens used
+15,052
+**CONFIRMED-WITH-GAPS — T137’s supplied packet is internally consistent enough to guide Observe. Source verification and family-score binding remain open.**
+
+The digest and TECHNIQUES entry agree on the sentence, case-only mechanism, timestamps, and both evidence paths. RUN §1b preserves those claims and adds a coherent dwell table:
+
+- “really”: 14.40–14.60 = **0.20 s**
+- “REALLY”: 14.60–14.92 = **0.32 s**
+- “push.”: 14.92–15.36 = **0.44 s**
+
+Observe must close these gaps firsthand:
+
+1. **Visual invariance is asserted, not demonstrated here.** Inspect the named frames and source sequence for unchanged font size, anchor, weight, and color. Capitalization can change glyph bounds without changing font size; distinguish those properties.
+2. **The explanatory claim exceeds the supplied evidence.** “No time for a size or colour event” and “case is the one change readable in a single fixation” are perceptual interpretations, not established segment facts. The unequal dwells also mean the event is not temporally invariant: uppercase receives **60% longer** than lowercase.
+3. **Family scores are unbound within this feed.** T110 **85.4**, T03 **79.2**, T22 **88.2**, and T08 **88.6** are supplied without their scores.md rows, filed returns, or verdict-history entries. **Lens count: unspecified for all four.** Arithmetic and PASS/FAIL classifications cannot be independently recomputed. T110’s timing score of 76 supplies only one component.
+4. **First-attempt status is reported, not independently established.** The supplied census says no T137 directory existed before this wave and no verdict-history line exists; underlying census evidence is absent.
+5. **Segment facts are numerically plausible but not verified.** The claimed 60.014 s archive contains the proposed 13.36–27.36 segment (**14.00 s**), but no ffprobe receipt, onset table, or source frames were supplied. Verify archive identity, duration, and token boundaries before cutting. The broad segment also reaches the separately identified T139 product flash beginning at 26.36; distinguish that surrounding material from T137’s target event.
+
+No packet-to-register contradiction is visible. The CONFIG case-transform requirement is implementation guidance, not source evidence. This review does not judge the Observe working memory.
+
+BODY-WRITE: none (read-only run). Consumer: the wave’s Observe record must persist this return verbatim in RUN.md §1.
