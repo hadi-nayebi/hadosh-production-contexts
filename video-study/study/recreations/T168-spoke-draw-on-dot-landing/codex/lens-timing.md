@@ -1,0 +1,238 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T168-spoke-draw-on-dot-landing
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e812-cea1-75d2-a7db-bb6b15528b1d
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream.
+
+CONSUMER: recreation job INSTRUCTION §5 Verify, item T168 attempt 1 — the five-lens Codex scoring wave. DECISION PRICED: this lens's score feeds the mechanical consolidation (PASS requires five-lens average >= 85 AND minimum lens >= 70) that decides whether T168 moves to RECREATED tier, and its priced findings become the cure list if it fails. WORKING RECORD: hidden_files/study/recreations/T168-spoke-draw-on-dot-landing/codex/ + scores.md. BODY-WRITE: your return is filed verbatim as codex/lens-timing.md in the item's artifact directory; end with "SCORE: <integer 0-100>" on its own line and a "BODY-WRITE:" line naming that filing.
+BUILD UNDER JUDGMENT: recreation.html SHA-256 267628f24bdb9bb28f2d6aa812674bc09d30c5994d98116a64a776173d80e5d2 (identical in all five lens payloads).
+
+LENS: timing/tempo match. Judge ONLY timing against the packet §4 burst table under the named allocation: starts 400/1120/1720/2160/2600 (source segment-relative starts under one constant -100 ms offset), durations preserved exactly 480/400/280/280/240, derived holds 240/200/160/160 equal to source holds, S5 ending 2840, end hold to cycleMs 4200. Use the census-anchor mapping in the neutral facts: source mid-draw (line ~33%, no dot, segment-relative 660 ms) must correspond to allocation S1 p=0.333 at t=560, and the dot must materialise only at p=1. A schedule silently re-based without the named offset, or durations altered, is the defect class you own.
+
+NEUTRAL FACTS (packet mechanics + build facts, no scores):
+- Packet §T03 mechanics: each satellite arrives the same way — a thin white line (1-2 px) extends from the hub toward the satellite's position over the burst (0.16-0.48 s), and the satellite dot (radius ~21 px) materialises at the line's end as the draw completes. Mid-draw frames show the line present with no dot yet. No arrowheads — the line is a relationship, not a flow. Easing UNMEASURED in the specimen; the build supplies "linear" and names it supplied.
+- Packet §4 burst table (source): B02 1.44-1.92 dur 0.48 · B03 2.16-2.56 dur 0.40 · B04 2.76-3.04 dur 0.28 · B05 3.20-3.48 dur 0.28 · B06 3.64-3.88 dur 0.24; holds between bursts 0.24/0.20/0.16/0.16 s.
+- Schedule basis: t=0 allocation — allocation starts = source segment-relative starts under one constant -100 ms offset (segment start = source 0.94 s): 400/1120/1720/2160/2600 ms; durations preserved exactly (480/400/280/280/240); holds derived (next start - start - dur) = 240/200/160/160, equal to source holds; S5 ends 2840; end hold 2840-4200; cycleMs 4200.
+- Census mapping by phase: source mid-draw state (line ~33% at segment-relative 660 ms, NO dot) maps to allocation S1 p=0.333 at t=560; the dot materialises only at p=1 (t=880 for S1).
+- Hub: centre (482,484), r 32, full-size from t=0. Satellites (positions-final.json census): S1 (632,440) · S2 (574,255) · S3 (331,510) · S4 (683,340) · S5 (463,265), all r 21. Spoke width 1.5, colour #ffffff. Palette field #000000, ink #ffffff.
+- Construction: one self-contained HTML file, CONFIG at top, SVG below; line endpoint is a pure function of time; satellite circle present only at draw completion; deterministic stateAt(ms) exposed; no external assets; the footer/name ticker is a different technique (T170) and is excluded by design.
+- Swap proof (builder's own check, recorded): satellite table replaced by 3 census positions, timingScale 1->0.5 halved S1's window (start 200, dur 240), spoke colour -> #57c7e8; all asserted in state.
+
+=== FULL recreation.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T168 — Spoke draw-on with dot landing, parameterized</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  .stage{width:min(100vw,100vh);aspect-ratio:1/1;}
+  svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div class="stage" id="stageBox">
+<svg id="scene" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hub and spoke draw-on diagram">
+  <rect id="field" x="0" y="0"></rect>
+  <g id="spokes"></g>
+  <g id="dots"></g>
+  <circle id="hubDot"></circle>
+</svg>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  stage: { w: 1080, h: 1080 },
+  hub: { cx: 482, cy: 484, r: 32, colour: "#ffffff" },
+  satellites: [
+    { x: 632, y: 440, r: 21, drawStartMs: 400, drawDurMs: 480 },
+    { x: 574, y: 255, r: 21, drawStartMs: 1120, drawDurMs: 400 },
+    { x: 331, y: 510, r: 21, drawStartMs: 1720, drawDurMs: 280 },
+    { x: 683, y: 340, r: 21, drawStartMs: 2160, drawDurMs: 280 },
+    { x: 463, y: 265, r: 21, drawStartMs: 2600, drawDurMs: 240 }
+  ],
+  spoke: { w: 1.5, colour: "#ffffff", easing: "linear" },
+  timingScale: { default: 1 },
+  palette: { field: "#000000", ink: "#ffffff" },
+  cycleMs: 4200
+};
+
+function timingScaleValue(cfg) {
+  const c = cfg || CONFIG;
+  if (typeof c.timingScale === "number") return c.timingScale;
+  if (c.timingScale && typeof c.timingScale.default === "number") return c.timingScale.default;
+  return 1;
+}
+function scaledSatellites(cfg) {
+  const c = cfg || CONFIG;
+  const ts = timingScaleValue(c);
+  return c.satellites.map(function (s) {
+    return { x: s.x, y: s.y, r: s.r, drawStartMs: s.drawStartMs * ts, drawDurMs: s.drawDurMs * ts };
+  });
+}
+function applyEasing(p, easing) {
+  if (easing === "easeOutCubic") { const q = 1 - p; return 1 - q * q * q; }
+  if (easing === "easeInOutQuad") return p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  return p;
+}
+function fractionAt(ms, start, dur, easing) {
+  if (ms < start) return 0;
+  if (dur <= 0) return 1;
+  const p = (ms - start) / dur;
+  if (p >= 1) return 1;
+  return applyEasing(p, easing);
+}
+function stateAt(ms, cfg) {
+  const c = cfg || CONFIG;
+  const sats = scaledSatellites(c);
+  const per = sats.map(function (s) {
+    const f = fractionAt(ms, s.drawStartMs, s.drawDurMs, c.spoke.easing);
+    return { lineFraction: f, dotPresent: f >= 1, x: s.x, y: s.y, r: s.r, drawStartMs: s.drawStartMs, drawDurMs: s.drawDurMs };
+  });
+  let landed = 0;
+  per.forEach(function (p) { if (p.dotPresent) landed += 1; });
+  const s1 = per.length > 0 ? per[0] : { lineFraction: 0, dotPresent: false };
+  return {
+    ms: ms,
+    landed: landed,
+    satellites: per,
+    s1: { lineFraction: s1.lineFraction, dotPresent: s1.dotPresent },
+    s1dot: s1.dotPresent,
+    hub: { cx: c.hub.cx, cy: c.hub.cy, r: c.hub.r, present: true },
+    spokeColour: c.spoke.colour,
+    spokeW: c.spoke.w,
+    timingScale: timingScaleValue(c),
+    cycleMs: c.cycleMs
+  };
+}
+
+let lineEls = [];
+let dotEls = [];
+function buildScene() {
+  if (typeof document === "undefined") return;
+  const spokesG = document.getElementById("spokes");
+  const dotsG = document.getElementById("dots");
+  const hubEl = document.getElementById("hubDot");
+  const fieldEl = document.getElementById("field");
+  const sceneEl = document.getElementById("scene");
+  const stageEl = document.getElementById("stageBox");
+  if (!spokesG || !dotsG || !hubEl) return;
+  const svgNS = "http://www.w3.org/2000/svg";
+  while (spokesG.firstChild) spokesG.removeChild(spokesG.firstChild);
+  while (dotsG.firstChild) dotsG.removeChild(dotsG.firstChild);
+  lineEls = []; dotEls = [];
+  if (sceneEl) sceneEl.setAttribute("viewBox", "0 0 " + CONFIG.stage.w + " " + CONFIG.stage.h);
+  if (document.body) document.body.style.background = CONFIG.palette.field;
+  if (stageEl) stageEl.style.background = CONFIG.palette.field;
+  if (fieldEl) {
+    fieldEl.setAttribute("width", String(CONFIG.stage.w));
+    fieldEl.setAttribute("height", String(CONFIG.stage.h));
+    fieldEl.setAttribute("fill", CONFIG.palette.field);
+  }
+  hubEl.setAttribute("cx", String(CONFIG.hub.cx));
+  hubEl.setAttribute("cy", String(CONFIG.hub.cy));
+  hubEl.setAttribute("r", String(CONFIG.hub.r));
+  hubEl.setAttribute("fill", CONFIG.hub.colour);
+  CONFIG.satellites.forEach(function (s) {
+    const ln = document.createElementNS(svgNS, "line");
+    ln.setAttribute("x1", String(CONFIG.hub.cx));
+    ln.setAttribute("y1", String(CONFIG.hub.cy));
+    ln.setAttribute("x2", String(CONFIG.hub.cx));
+    ln.setAttribute("y2", String(CONFIG.hub.cy));
+    ln.setAttribute("stroke", CONFIG.spoke.colour);
+    ln.setAttribute("stroke-width", String(CONFIG.spoke.w));
+    spokesG.appendChild(ln);
+    lineEls.push(ln);
+    const dot = document.createElementNS(svgNS, "circle");
+    dot.setAttribute("cx", String(s.x));
+    dot.setAttribute("cy", String(s.y));
+    dot.setAttribute("r", String(s.r));
+    dot.setAttribute("fill", CONFIG.palette.ink);
+    dot.setAttribute("visibility", "hidden");
+    dotsG.appendChild(dot);
+    dotEls.push(dot);
+  });
+}
+function render(ms) {
+  const st = stateAt(ms);
+  st.satellites.forEach(function (p, i) {
+    const ln = lineEls[i]; const dot = dotEls[i];
+    if (ln) {
+      ln.setAttribute("x2", String(CONFIG.hub.cx + (p.x - CONFIG.hub.cx) * p.lineFraction));
+      ln.setAttribute("y2", String(CONFIG.hub.cy + (p.y - CONFIG.hub.cy) * p.lineFraction));
+      ln.setAttribute("visibility", p.lineFraction > 0 ? "visible" : "hidden");
+    }
+    if (dot) dot.setAttribute("visibility", p.dotPresent ? "visible" : "hidden");
+  });
+  return st;
+}
+let startStamp = null;
+function tick(ts) {
+  if (startStamp === null) startStamp = ts;
+  const elapsed = (ts - startStamp) % CONFIG.cycleMs;
+  render(elapsed);
+  if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(tick);
+}
+function __seek(ms) { return render(ms); }
+
+if (typeof window !== "undefined") {
+  window.__config = CONFIG;
+  window.__seek = __seek;
+  window.stateAt = stateAt;
+  window.scaledSatellites = scaledSatellites;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, stateAt: stateAt, scaledSatellites: scaledSatellites, __seek: __seek };
+}
+if (typeof document !== "undefined") {
+  buildScene();
+  render(0);
+  if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(tick);
+}
+</script>
+</body>
+</html>
+
+=== BUILD-RECORD SUMMARY ===
+SCORE-BLIND BUILD-RECORD SUMMARY:
+Segment cut 0.94-2.42 s from the archived source (window 1.44-1.92), re-encoded h264, ffprobe duration 1.48 s — evidence only, comparison side only. Recreation: CONFIG-driven SVG phase machine per the facts above; comparison.html slaves the recreation to the segment with recreationMs = videoMs - 100 during playback, then free-runs it to 4200 ms. Own checks (raw output filed in build-record.md): swap test PASS (values above), purity grep 0 hits, node --check PASS, count assertion 5 vs 5 MATCH, zero-state probes PASS (landed 0 at 399; S1 fraction 0.333 with no dot at 560; dot absent at 879, present at 880), schedule invariant holds under timingScale 1 and 0.5. A6 legs: fit-table HITs 0 (no subject text in this item), config-census HITs 0. jev-prewave: FIRE-WAVE; its one non-blocking qualification (easing key declared but not dispatched) was cured before this wave — the easing key now selects the interpolation in the filed build.
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 98136 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Skipped project instructions in environment `local` starting at `/home/hatch/workspace/AGENTS.md` because the 32768-byte budget was exhausted. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+PASS — timing matches the named allocation exactly; no timing findings.
+
+- **Starts and offset:** `CONFIG.satellites` specifies 400/1120/1720/2160/2600 ms. Packet §4 starts, relative to source 0.94 s, are 500/1220/1820/2260/2700 ms; subtracting 100 ms gives every configured start.
+- **Durations and holds:** configured durations are 480/400/280/280/240 ms, matching §4 exactly. Computed endings are 880/1520/2000/2440/2840 ms. Next-start minus preceding-end yields 240/200/160/160 ms, preserving all four source holds.
+- **Census anchor and landing:** `fractionAt` gives S1 `(560−400)/480 = 1/3`; `stateAt` therefore keeps its dot absent. `dotPresent: f >= 1` makes the dot appear at 880 ms, exactly at completion. `render` applies that visibility directly.
+- **End hold and cycle:** S5 completes at 2840 ms. All completed states persist until `tick` wraps at 4200 ms, giving a computed 1360 ms end hold.
+
+Limits: supplied-text review only; no runtime or source footage inspected, and the stated SHA was not independently verified. Specimen easing is unmeasured, so linear interpolation earns no claim of measured easing fidelity. No cure required within this lens.
+
+SCORE: 100
+BODY-WRITE: Consumer files this return verbatim as `codex/lens-timing.md`; no direct write (read-only review).
+tokens used
+17,325
+PASS — timing matches the named allocation exactly; no timing findings.
+
+- **Starts and offset:** `CONFIG.satellites` specifies 400/1120/1720/2160/2600 ms. Packet §4 starts, relative to source 0.94 s, are 500/1220/1820/2260/2700 ms; subtracting 100 ms gives every configured start.
+- **Durations and holds:** configured durations are 480/400/280/280/240 ms, matching §4 exactly. Computed endings are 880/1520/2000/2440/2840 ms. Next-start minus preceding-end yields 240/200/160/160 ms, preserving all four source holds.
+- **Census anchor and landing:** `fractionAt` gives S1 `(560−400)/480 = 1/3`; `stateAt` therefore keeps its dot absent. `dotPresent: f >= 1` makes the dot appear at 880 ms, exactly at completion. `render` applies that visibility directly.
+- **End hold and cycle:** S5 completes at 2840 ms. All completed states persist until `tick` wraps at 4200 ms, giving a computed 1360 ms end hold.
+
+Limits: supplied-text review only; no runtime or source footage inspected, and the stated SHA was not independently verified. Specimen easing is unmeasured, so linear interpolation earns no claim of measured easing fidelity. No cure required within this lens.
+
+SCORE: 100
+BODY-WRITE: Consumer files this return verbatim as `codex/lens-timing.md`; no direct write (read-only review).

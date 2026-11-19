@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T167 Hub growth — comparison</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;color:#fff;font-family:Arial,Helvetica,sans-serif;}
+  .wrap{display:flex;gap:12px;padding:12px;box-sizing:border-box;}
+  .side{flex:1;min-width:0;}
+  .label{font-size:15px;margin:0 0 8px 0;line-height:1.3;}
+  video,iframe{width:100%;aspect-ratio:1/1;display:block;background:#000;border:0;}
+  .controls{display:flex;gap:10px;padding:0 12px 14px 12px;flex-wrap:wrap;}
+  button{min-height:44px;min-width:88px;font-size:16px;padding:10px 16px;cursor:pointer;}
+  @media (max-width:640px){.wrap{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div class="controls">
+  <button id="btnPlay" type="button">Play</button>
+  <button id="btnPause" type="button">Pause</button>
+  <button id="btnRestart" type="button">Restart</button>
+</div>
+<div class="wrap">
+  <div class="side">
+    <p class="label">ORIGINAL — SixMap (nez&amp;pez) @ 0.36–1.12</p>
+    <video id="orig" src="segment.mp4" muted loop playsinline></video>
+  </div>
+  <div class="side">
+    <p class="label">RECREATION — T167 Hub growth, parameterized</p>
+    <iframe id="rec" src="recreation.html" title="T167 recreation"></iframe>
+  </div>
+</div>
+<script>
+"use strict";
+const video = document.getElementById("orig");
+const frame = document.getElementById("rec");
+let rafId = 0;
+function recSeek(ms) {
+  try {
+    const w = frame.contentWindow;
+    if (w && typeof w.__seek === "function") w.__seek(ms);
+  } catch (e) {}
+}
+function sync() {
+  recSeek(video.currentTime * 1000);
+  rafId = requestAnimationFrame(sync);
+}
+function startSync() { cancelAnimationFrame(rafId); rafId = requestAnimationFrame(sync); }
+document.getElementById("btnPlay").addEventListener("click", function () { video.play(); startSync(); });
+document.getElementById("btnPause").addEventListener("click", function () { video.pause(); cancelAnimationFrame(rafId); recSeek(video.currentTime * 1000); });
+document.getElementById("btnRestart").addEventListener("click", function () { video.currentTime = 0; recSeek(0); video.play(); startSync(); });
+video.addEventListener("seeked", function () { recSeek(video.currentTime * 1000); });
+frame.addEventListener("load", function () { recSeek(video.currentTime * 1000); });
+</script>
+</body>
+</html>

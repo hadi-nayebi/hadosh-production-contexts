@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T168 comparison — Spoke draw-on with dot landing</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;color:#fff;font-family:Arial,Helvetica,sans-serif;}
+  .wrap{max-width:1100px;margin:0 auto;padding:12px;}
+  .face{font-size:15px;line-height:1.45;margin:8px 0 12px 0;}
+  .panels{display:flex;gap:12px;align-items:flex-start;}
+  .panel{flex:1 1 0;min-width:0;}
+  .panel h2{font-size:15px;margin:0 0 8px 0;font-weight:bold;}
+  video,iframe{display:block;width:100%;aspect-ratio:1/1;background:#000;border:0;}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;}
+  button{min-height:44px;min-width:44px;padding:10px 18px;font-size:16px;cursor:pointer;}
+  .status{font-size:14px;min-height:20px;}
+  @media (max-width:640px){ .panels{flex-direction:column;} .panel{width:100%;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="face">segment excerpt 1.48 s (first burst) vs allocation cycle 4.20 s (five bursts) — offset −100 ms, durations preserved</p>
+  <div class="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+  <p class="status" id="status">Ready.</p>
+  <div class="panels">
+    <div class="panel">
+      <h2>ORIGINAL — SixMap (nez&amp;pez) @ 1.44–1.92</h2>
+      <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+    </div>
+    <div class="panel">
+      <h2>RECREATION — T168 Spoke draw-on with dot landing, parameterized</h2>
+      <iframe id="rec" src="recreation.html" title="T168 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+var video = document.getElementById("orig");
+var frame = document.getElementById("rec");
+var statusEl = document.getElementById("status");
+var playing = false;
+var freeRunStart = null;
+var rafId = null;
+function recSeek(ms) {
+  try {
+    var w = frame.contentWindow;
+    if (w && typeof w.__seek === "function") w.__seek(ms);
+  } catch (e) { /* iframe not ready yet */ }
+}
+function loop() {
+  if (!playing) return;
+  if (!video.ended && video.duration > 0) {
+    var videoMs = video.currentTime * 1000;
+    var recMs = videoMs - 100;
+    if (recMs < 0) recMs = 0;
+    recSeek(recMs);
+    if (freeRunStart === null && video.ended) freeRunStart = performance.now();
+    statusEl.textContent = "Segment playing — recreation at " + Math.round(recMs) + " ms (video " + Math.round(videoMs) + " ms, offset -100 ms).";
+  } else {
+    if (freeRunStart === null) freeRunStart = performance.now();
+    var elapsed = performance.now() - freeRunStart;
+    var base = 1380;
+    var total = base + elapsed;
+    if (total >= 4200) { total = 4200; playing = false; statusEl.textContent = "Recreation cycle complete at 4200 ms."; recSeek(4200); return; }
+    recSeek(total);
+    statusEl.textContent = "Segment ended — recreation free-running at " + Math.round(total) + " ms of 4200 ms.";
+  }
+  rafId = requestAnimationFrame(loop);
+}
+document.getElementById("btnPlay").addEventListener("click", function () {
+  playing = true; freeRunStart = null;
+  var p = video.play(); if (p && p.catch) p.catch(function(){});
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(loop);
+});
+document.getElementById("btnPause").addEventListener("click", function () {
+  playing = false; video.pause();
+  if (rafId) cancelAnimationFrame(rafId);
+  statusEl.textContent = "Paused.";
+});
+document.getElementById("btnRestart").addEventListener("click", function () {
+  freeRunStart = null; playing = true;
+  video.currentTime = 0;
+  var p = video.play(); if (p && p.catch) p.catch(function(){});
+  recSeek(0);
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(loop);
+  statusEl.textContent = "Restarted.";
+});
+frame.addEventListener("load", function () { recSeek(0); });
+</script>
+</body>
+</html>

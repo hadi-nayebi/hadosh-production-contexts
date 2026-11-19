@@ -1,0 +1,73 @@
+T17 attempt 9 — Stage 1 (K1 remount contract) checks
+Paired sources: CP0 (attempt-8) sha256 63e602939c61ad7e2aaa24396486bb26f2d302e4cf08839a43f33738af33a74d -> CP1 candidate sha256 ab9ebaa3477de5dddcf1d73ac2835e5cf147d51b832eaefe1cbfeb83e4356ba5
+CP1 binds the attempt-8 validator and fit model (unchanged in this stage); the remount construction is the only change.
+K1 contract: candidate built offstage in a detached root; swap commits only after validation AND fit both pass; fit failure returns {ok:false, fit:<report>} and does not commit; the failure path discards the candidate and never rebuilds the live scene; a successful swap renders the current playback position and never rewinds; the no-argument rebuild and the resize/buildAll path run the same transactional construction.
+
+PASS [E] validation-failure rebuild returns named errors — errors=palette.red is a required palette member and must be a non-empty string
+PASS [E] live mounted roots identical and still mounted after validation failure — 
+PASS [E] live CONFIG and playback position unchanged after validation failure — lastT=2
+PASS [E] construction-failure rebuild returns ok:false — errors=rebuild construction failed: Cannot read properties of null (reading 'text')
+PASS [E] candidate construction ran offstage (builder invocations against the candidate config) — candCalls=1
+PASS [E] failure path ran zero builder invocations against the live config (rollback never reconstructs) — liveCalls=0
+PASS [E] live mounted roots identical after construction failure — 
+PASS [E] fit-failure swap returns {ok:false, fit:<report>} and does not commit — fit.ok=false
+PASS [E] live scene preserved on fit failure — 
+PASS [E] successful swap renders the current preview position 6.5, not the offset 5.0 — lastT=6.5
+PASS [E] playing swap: next animation frame advances playback by one second (no rewind, no stall; the scene auto-plays from load, so the probe timeline starts at load) — before=6 after=7
+PASS [E] DLC preset swap commits at 360 via the public rebuild path — ok=true errors=
+PASS [E] every enumerated subject-bearing field's rendered effect changes (41 fields; table in this file) — 
+PASS [E] no specimen string from the default preset survives in the mounted DLC scene — survivors=
+PASS [E] page chrome (background, clock ink) commits with the swap — bg=#101418
+PASS [E] swap back to the default preset restores the default scene — ok=true
+PASS [E] DLC preset swap commits at 390 with full field replacement — ok=true
+PASS [E] no-argument rebuild runs the transactional path, returns the fit report, preserves playback position — lastT=3.3
+PASS [E] no-argument rebuild actually remounts the scene — 
+PASS [E] resize/buildAll path preserves playback position and figure count — lastT=3.3
+PASS [E] detached candidate sized from the candidate config's own stage width (1024) when no live width exists — fit.width=1024
+SUMMARY section=s1 pass=21 fail=0
+
+DLC preset field-effect table (mounted candidate, 360px):
+  field masthead: rendered effect CHANGED
+  field dateLine: rendered effect CHANGED
+  field clockStart: rendered effect CHANGED
+  field price: rendered effect CHANGED
+  field palette.paper: rendered effect CHANGED
+  field palette.ink: rendered effect CHANGED
+  field palette.red: rendered effect CHANGED
+  field palette.blue: rendered effect CHANGED
+  field palette.accent: rendered effect CHANGED
+  field formatting.stackUnitSymbol: rendered effect CHANGED
+  field formatting.nodeSymbol: rendered effect CHANGED
+  field fig20.title: rendered effect CHANGED
+  field fig20.source: rendered effect CHANGED
+  field fig20.chartTitle: rendered effect CHANGED
+  field fig20.yLabels: rendered effect CHANGED
+  field fig20.xLabels: rendered effect CHANGED
+  field fig20.cardText: rendered effect CHANGED
+  field fig21.title: rendered effect CHANGED
+  field fig21.source: rendered effect CHANGED
+  field fig21.youLabel: rendered effect CHANGED
+  field fig21.waffleLabel: rendered effect CHANGED
+  field fig21.summaryText: rendered effect CHANGED
+  field fig22.title: rendered effect CHANGED
+  field fig22.source: rendered effect CHANGED
+  field fig22.stackLabel: rendered effect CHANGED
+  field fig22.barLabels: rendered effect CHANGED
+  field fig22.donutLabel: rendered effect CHANGED
+  field fig23.title: rendered effect CHANGED
+  field fig23.source: rendered effect CHANGED
+  field fig23.ceo: rendered effect CHANGED
+  field fig23.nodes: rendered effect CHANGED
+  field fig23.badge: rendered effect CHANGED
+  field fig23.badgeName: rendered effect CHANGED
+  field fig23.onlyNote: rendered effect CHANGED
+  field fig24.title: rendered effect CHANGED
+  field fig24.source: rendered effect CHANGED
+  field fig24.counterLabel: rendered effect CHANGED
+  field fig24.counterSub: rendered effect CHANGED
+  field fig25.correction: rendered effect CHANGED
+  field fig25.stamp: rendered effect CHANGED
+  field fig25.notes: rendered effect CHANGED
+
+Paired comparison CP0 -> CP1 (identical inputs): dismantle-first probe CP0 FAIL (original roots dismantled) -> CP1 PASS (roots identical); rewind probe CP0 lastT 6.5 -> 5.0 FAIL -> CP1 lastT 6.5 PASS; fit-failure probe CP0 {ok:true} while fit ok:false FAIL -> CP1 {ok:false, fit} PASS. Hashes: CP0 63e602939c61ad7e2aaa24396486bb26f2d302e4cf08839a43f33738af33a74d · CP1 ab9ebaa3477de5dddcf1d73ac2835e5cf147d51b832eaefe1cbfeb83e4356ba5
+Stage 1 result: pass=21 fail=0

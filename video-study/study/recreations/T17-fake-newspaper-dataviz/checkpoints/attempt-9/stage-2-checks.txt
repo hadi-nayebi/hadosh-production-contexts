@@ -1,0 +1,49 @@
+T17 attempt 9 — Stage 2 (K2 validation completeness, second pass) checks
+Paired sources: CP1 sha256 ab9ebaa3477de5dddcf1d73ac2835e5cf147d51b832eaefe1cbfeb83e4356ba5 -> CP2 candidate sha256 f688fce1d3afda94d55e396897932031da3af37239f6837a5d032c4ef4928fe3
+Sample-count rule (one rule, shared): timing.maxSamples counts the points the counter renderer emits over a full draw — the initial point, one point per step sample while k*sampleStep < 1, and the endpoint sample. samplePointCount(step) = 2 + #{k>=1 : k*step < 1}; the renderer loop is bounded by the same count and by timing.maxSamples. At sampleStep=1/512 a full draw emits 513 points.
+
+PASS [E] CP2 defaults validate clean under the enumerated validator — errors=
+PASS [E] paired: deleting timing.drawEnd — CP1 no named error -> CP2 named error — 
+PASS [E] paired: null yLabels entry — CP1 no named error -> CP2 named error naming figure + index — 
+PASS [E] paired: fitReport with a deleted layout group — CP1 throws -> CP2 returns {ok:false} with named errors, no layout computation — errors=layout group absent
+PASS [E] paired: the ~649-iteration step — CP1 passes the old window-priced bound -> CP2 rejects by name under the full-draw rule — count=651
+PASS [G] samplePointCount(1/512) = 513 (initial point counts) — 
+PASS [G] exact divisors: step 0.02 -> 51 points, step 0.04 -> 26 points — 
+PASS [G] adjacent non-divisors: step 0.03 -> 35 points, step 0.06 -> 18 points — 
+PASS [E] boundary: step 1/512 (513 points) refused at maxSamples 512 — 
+PASS [E] boundary: step 1/512 accepted at maxSamples 513 (count == bound) — 
+PASS [E] boundary: step 0.03 (35 points) accepted at maxSamples 35 — 
+PASS [E] boundary+1: step 0.029 (36 points) refused at maxSamples 35 — count=36
+PASS [E] renderer emits exactly the validator's count at step 0.02 — emitted=51 rule=51
+PASS [E] renderer emits exactly the validator's count at step 0.03 — emitted=35 rule=35
+PASS [E] renderer emits exactly the validator's count at step 0.04 — emitted=26 rule=26
+PASS [E] named case: timing member deleted (stackEnd) — needle=timing.stackEnd
+PASS [E] named case: layout member deleted (chartPadLeft) — needle=layout.chartPadLeft
+PASS [E] named case: layout group member deleted (lineHeights.title) — needle=layout.lineHeights.title
+PASS [E] named case: formatting member deleted (ofWord) — needle=formatting.ofWord
+PASS [E] named case: bounds member deleted (maxWaffle) — needle=bounds.maxWaffle
+PASS [E] named case: typeFloors member deleted (hand) — needle=typeFloors.hand
+PASS [E] named case: yLabels entry primitive — needle=yLabels[1]
+PASS [E] named case: yLabels entry missing y — needle=yLabels[0].y
+PASS [E] named case: xLabels entry null — needle=xLabels[0]
+PASS [E] named case: points entry string coordinate — needle=points[1]
+PASS [E] named case: points entry single value — needle=points[2]
+PASS [E] named case: bars entry string — needle=bars[0]
+PASS [E] named case: barLabels entry number — needle=barLabels[0]
+PASS [E] named case: nodes entry empty — needle=nodes[2]
+PASS [E] named case: notes entry null — needle=notes[0]
+PASS [E] named case: figure id deleted — needle=figure id
+PASS [E] valid boundary accepted: waffleTotal == maxWaffle (60) — 
+PASS [E] boundary+1 refused: waffleTotal 61 — 
+PASS [E] valid boundary accepted: title length == maxTitleChars (200) — 
+PASS [E] supported coercion: the query route coerces the numeric string '22.5' to a number and the result validates — duration=22.5
+PASS [E] generative sweep: 324 generated cases (81 fields x 4 mutations) — every case yields a named error on its field; the fitReport route returns {ok:false} without throwing on every missing-field case — failures=
+PASS [E] sweep rebuild route: sampled invalid candidates refused by name through the public rebuild path, live scene untouched — 
+PASS [E] cross-stage retest: the Stage-1 construction-failure input is now refused at validation, by name, before any build — errors=fig20: yLabels[0] must be an object carrying text and y
+PASS [E] cross-stage retest: fit-failure swap still reported, not committed, under the new validator — 
+PASS [E] cross-stage retest: the DLC preset still commits under the stricter validator — errors=
+SUMMARY section=s2 pass=40 fail=0
+
+Generative sweep enumeration: fields=81 (timing 46 · palette 10 · formatting 9 · layout sampled 16) x mutations=4 (missing · null · wrong-typed · non-finite/empty) = 324 direct-route cases, plus the fitReport route on every missing-field case and the rebuild route on a 3-field sample. Expected behaviour per case: a named error carrying the field path, no throw, no NaN reaching a state function (validation returns before any state function runs on an invalid config). Valid-boundary and coercion expectations are the separate asserted cases above (count == bound accepted, bound+1 refused, length == bound accepted, the query route's numeric coercion accepted). A green named-case corpus alone supports no class-closure claim.
+Paired hashes: CP1 ab9ebaa3477de5dddcf1d73ac2835e5cf147d51b832eaefe1cbfeb83e4356ba5 · CP2 f688fce1d3afda94d55e396897932031da3af37239f6837a5d032c4ef4928fe3
+Stage 2 result: pass=40 fail=0

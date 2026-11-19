@@ -1,0 +1,71 @@
+PASS pure logic extracts and evaluates
+PASS defaults validate clean
+PASS inline script parses
+PASS purity: no external assets / specimen media in source
+PASS cliff marker formula is cliffAt/animFraction (A-C012-2 corrected)
+PASS cliff marker fraction at defaults = cliffAt/animFraction ~0.812 :: frac=0.8116129032258065 af=0.8378378378378378
+PASS CONFIG timing.figureTransitionSec present :: T=0.45
+PASS CONFIG layout.transitionRisePx present :: rise=10
+PASS transition: no single-step hard swap at boundary (incoming never fully opaque while outgoing fully transparent mid-transition)
+PASS transition: incoming opacity monotonic through second half
+PASS transition: no sampled blank frame (at least one panel partially visible at every sample)
+PASS transition midpoint: both panels partially visible (overlap sliver) :: in=0.023 out=0.023
+PASS outside transition: exactly one figure fully opaque
+PASS transition: incoming mechanism progress is 0 at boundary (mechanism starts at boundary, panel fades straddle it) :: inP=0
+PASS transition: outgoing displays completed state (p=1) in second half
+PASS DOM render: no hard swap across boundary samples
+PASS DOM render: no blank figure area across boundary samples
+PASS DOM render: masthead mounted and untouched by transitions
+PASS stack: first unit arrival == 0 at q=0 :: a0=0
+PASS stack: first unit start == 0 :: s0=0
+PASS stack: last unit settles exactly at stackEnd :: last=0.9
+PASS stack: displayed count == physically settled count immediately before AND at every threshold (counts 10/14/1/2)
+PASS stack: one-unit path defined (no division by count-1)
+PASS stack: barQ/donutQ derive from barsEnd (unchanged by arrival remap)
+PASS stack: arrival span relation defined (arrivalDur <= stackEnd at defaults) :: ad=0.144
+PASS summary text is the shortened 68-char string :: len=68 text=Summary: everyone is panicking. You — oddly calm — may be the cause.
+PASS summary: typeDur = len*typeMsPerChar = 2.04s :: typeDur=2.04
+PASS summary: typing rate ~33 chars/s :: 33.3
+PASS summary: completion at 2.74s into window :: completion=2.74
+PASS summary: read floor hold = 1.36s :: hold=1.36
+PASS summary: effective hold (window - completion) = 1.76s >= floor :: eff=1.7599999999999998
+PASS schedule: six starts/durations match the reallocated table (total 22.5) :: 0/3.3 3.3/4.5 7.8/3.6 11.4/3.6 15/3.7 18.7/3.8
+PASS FIG.20 dependent: line completion 2.483s + effective hold 0.592s under 3.3s window :: done=2.484
+PASS FIG.24 dependent: collapse completion 3.100s + effective hold 0.375s under 3.7s window :: done=3.100
+PASS FIG.21 dependent: summary effective (fully opaque) hold 1.535s :: eff=1.535
+PASS FIG.25 dependent: window start unchanged at 18.7
+PASS validation: over-long summary rejected by window-fit rule (named error) :: fig21: summary of 300 chars cannot type and still hold for reading inside its window (needs 15.70s of 4.5s)
+PASS badge metrics exist (text width incl. separators, height) :: w=293.8 h=24.2
+PASS badge AABB inside content width along the fitted entrance curve (cap 1.117) @360 :: cap=1.117
+PASS badge transformed bounds RESERVED in org figure height (reserve >= max transformed height) :: reserve=27.0 need=27.0
+PASS counter subtext consumes palette.secondary (not muted)
+PASS fit model: textLines uses word boundaries (wordWrapLines exists)
+PASS word wrap: no line exceeds container width by modelled width :: aaaa bbbb|cccc dddd|eeee ffff|gggg hhhh
+PASS word wrap: single oversized token occupies its own line (overflow visible, not split mid-word) :: supercalifragilisticexpialidociouslongword|ok
+PASS summary modelled lines >= 2 for 68-char summary at 360 (word model)
+PASS renderer-consumed: every source line carries model line spans :: srcs=6
+PASS renderer-consumed: every figure title carries model line spans :: titles=6
+PASS renderer-consumed: summary line spans == wordWrapLines model lines :: spans=2 joined=Summary: everyone is panicking. You — oddly calm — may be the cause.
+PASS masthead height derived from actual masthead string (longer masthead -> taller header) :: h=122.2 vs 99.2 lines=2
+PASS fit ok @360 after stage 4 :: stageH=553
+PASS fit ok @960 after stage 4 :: stageH=540
+TOTAL 51 PASS 51 FAIL 0
+
+A-C012-1 BASIS TABLE (expanded per plan-review finding 7 — re-printed from the built models at checkpoint 4; unit -> consuming box/coordinate space -> rendered consequence at 360px)
+stage width -> #stage border box (max-width 100vw) -> all figure geometry derives from contentW = stage - 2*padX = 328px at 360
+masthead content width -> header content box (stage width; mast is full-width, text centred) -> masthead wraps by wordWrapLines over 328px; header height carries mastLines (1 at defaults)
+metadata flex wrapping -> .meta flex row over metaAvail = stage - 2*metaPadX = 304px -> greedy row packing by modelled span widths + metaMinGapPx; 2 rows at 360/390, 1 at 960
+font-size basis -> typeScale * stage width, floored by typeFloors, capped by typeCaps -> mast 20 / title 17 / body 12 / label 12 / big 20 / hand 14 at 360
+line-height basis -> layout.lineHeights unitless multipliers on each element's own font box -> reserves use the same multipliers in model and CSS vars (--lh-*)
+em letter-spacing -> relative to each element's own font size (masthead .06em, fignum .12em, meta .08em) -> spacing scales with the floored sizes; modelled text widths exclude letter-spacing (named residual, priced in the fit leg)
+title box -> h2 block over contentW, min-height from headingLines (word model) -> titles render as model line spans; reserve equals displayed lines
+source-line box -> .src block over contentW -> reserve = textLines(source) lines (word model, label kind); renders as model line spans
+card borders -> .card border-box: declared width loses 2*cardBorderPx (1.5) + 2*cardPaddingPx (12) = 27px -> cardInnerW = cardW - 27 used for every card text wrap (line card, summary, counter card, correction)
+chart/SVG geometry -> SVG viewBox in figure content box; chartPadLeft/Right/Top/Bottom CONFIG -> polyline length measured from the same points the path draws
+dot geometry -> waffle dot = floor(contentW*waffleGridFrac/cols) - waffleGapPx, clamped [waffleDotMin, waffleDotMax] -> builder rows and model grid dims share the pitch formula
+org symbol width -> node text = nodeSymbol + space + label, width via textWidth(label kind) + nodePadX -> nodeW includes the symbol glyph (stage-5 assertion)
+badge border box -> badge ink box (word-model text width x badge height), transform-origin at its centre -> entrance scale capped by badgeCap = min(badgeFrom, contentW/inkW) = 1.117 at 360; AABB reserved in figure height
+rotated stamp border box -> stamp box from stampMetrics (text width + stampPadX/Y), rotation -8deg about centre -> stampAabbAt positions the AABB inside the correction block (attempt-4 model, unregressed)
+notes + vertical spacing -> hand font box per note + corrStampMarginTop/corrNotesMarginTop CONFIG -> notes band sits below the stamp AABB band in model and builder alike
+transition rise -> figure content box -> incoming figure rises from +10px inside its content box; asserted in stage-1 boundary samples
+stack arrival offset -> FIG.22 figure content box (post-padding) -> arrival translate inside the reserved arrival band (stackArrivalOffsetPx), recomputed under the stage-2 ladder

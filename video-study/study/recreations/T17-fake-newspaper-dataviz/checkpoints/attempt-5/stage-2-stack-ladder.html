@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T17 — Fake-newspaper animated dataviz — Recreation</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0}
+#stage{position:relative;width:960px;max-width:100vw;aspect-ratio:16/9;margin:0 auto;overflow:hidden;font-family:var(--font-serif)}
+#stage.phone{aspect-ratio:auto}
+.mast{text-align:center;padding:var(--padtop,14px) var(--metapad) 0}.mast h1{margin:0;font-size:var(--mast,42px);letter-spacing:.06em;font-weight:var(--fw-normal);line-height:var(--lh-mast)}
+.rule{border-top:3px solid currentColor;border-bottom:1px solid currentColor;height:5px;margin:8px var(--metapad) 0}
+.meta{display:flex;flex-wrap:wrap;justify-content:space-between;padding:5px var(--metapad);font-size:var(--label,12px);letter-spacing:.08em;border-bottom:2px solid currentColor;margin:0 0 4px}
+.fig{position:absolute;left:0;right:0;top:var(--figtop,118px);bottom:0;padding:var(--figpadtop,6px) var(--padx,44px);opacity:0;pointer-events:none}
+.fig.on{opacity:1}
+.fignum{font-family:var(--font-sans);font-size:var(--label,14px);letter-spacing:.12em}
+.fig h2{margin:var(--headmt,3px) 0 var(--headmb,8px);font-size:var(--title,30px);font-weight:var(--fw-normal);line-height:var(--lh-title)}
+.src{font-size:var(--label,12px);font-family:var(--font-sans);margin-top:var(--srcmt,6px);color:var(--secondary)}
+.hand{font-family:var(--font-hand)}
+.card{border:1.5px solid currentColor;border-radius:8px;padding:12px;background:var(--card-tint)}
+.dot{border-radius:50%;border:2px solid currentColor;display:inline-block}
+.stamp{display:inline-block;border:4px solid currentColor;border-radius:6px;padding:8px 14px;font-family:var(--font-sans);font-weight:var(--fw-black);letter-spacing:.08em}
+.warn{font-family:var(--font-sans);color:var(--warn);border:1.5px dashed currentColor;padding:10px}
+#controls{width:960px;max-width:100vw;margin:6px auto;text-align:center}button{font-size:16px;padding:8px 16px;margin:0 4px;min-height:44px}
+</style></head><body>
+<div id="stage"></div>
+<div id="controls"><button id="play">Play / Pause</button><button id="restart">Restart</button><span id="clock" style="font-family:monospace"></span></div>
+<script>
+"use strict";
+/* Pure logic: data, timing states, layout model, validation. No DOM access in this section. */
+const CONFIG = {
+  duration: 22.5,
+  masthead: "THE DAILY STANDUP",
+  dateLine: "THURSDAY, OCT. 30",
+  clockStart: "4:01 P.M.",
+  price: "PRICE: 1 SUBSCRIPTION",
+  palette: { paper:"#e9e4d8", ink:"#1c1a17", red:"#c1271f", blue:"#2456c8", accent:"#e8a13a", muted:"#77705f", secondary:"#595344", pageBg:"#202020", cardTint:"rgba(255,255,255,0.35)", controlInk:"#ffffff" },
+  fonts: { serif:"Georgia,'Times New Roman',serif", sans:"Arial,sans-serif", hand:"'Comic Sans MS','Segoe Print',cursive" },
+  formatting: { counterLocale:"en-US", ofWord:"of", nodeSymbol:"⬛", badgeStarSep:"  ★ ", badgeDashSep:" — ", ceoSep:" — " },
+  timing: { minHoldSec:0.6, drawEnd:0.92, stackEnd:0.90, barsEnd:0.85, ceoAt:0.05, nodeStart:0.15, nodeEnd:0.72, badgeAt:0.80, badgeFrom:1.6, badgeDur:0.15, badgeEasePow:2,
+            corrAt:0.08, stampAt:0.35, stampDur:0.12, stampFrom:2.4, stampRotationDeg:-8, stampApproach:0.5, stampReboundEnd:0.75, stampOvershoot:1.1, stampCompress:0.93,
+            noteStart:0.55, noteFade:0.15, readMsPerChar:20, minTypeSec:0.8, minFillSec:0.6, fillSec:1.2, typeStartSec:0.7,
+            sampleStep:0.02, cliffMarkerAt:0.5, cliffBudgetMargin:0.05, stackArrivalSpan:1.6, stackEasePow:2, stampEasePowIn:3, stampEasePowOut:2, animFractionFloor:0.05, figureTransitionSec:0.45 },
+  layout: { fig22GapPx:8, figPadTopPx:6, headingMarginTopPx:3, headingMarginBottomPx:8, srcMarginTopPx:6, bottomClearancePx:8, stackUnitGapPx:4, stackArrivalOffsetPx:14, stackUnitMaxH:16, phoneStageBudgetPx:640, metaPadX:28, metaMinGapPx:12,
+            charWidthBody:0.52, charWidthLabel:0.62, stampCharWidth:0.78, stampPadX:36, stampPadY:24, stampAreaBudgetPx:150,
+            lineHeights:{ mast:1.15, label:1.3, body:1.35, title:1.2, stackCounter:1.6 },
+            barGeom:{ slotFrac:0.58, barFrac:0.6, basePad:18, topPad:40, xPad:8 },
+            donut:{ cxFrac:0.82, rFrac:0.24, rMax:52, strokeW:16 },
+            waffleGapPx:8, rowGapPx:18, counterGapPx:24, orgRowGapPx:10, orgRowMarginTop:18, badgeMarginTop:10,
+            corrStampMarginTop:16, corrNotesMarginTop:12, chartPadLeft:48, chartPadRight:10, chartPadBottom:22, chartPadTop:18,
+            typeScale:{ mast:0.04375, title:0.03125, body:0.0198, label:0.0146, big:0.0354, hand:0.025 },
+            typeCaps:{ mast:42, title:30, body:19, label:14, big:34, hand:24 },
+            chartHeights:{ linePhone:120, lineDesktop:240, stackPhone:130, stackDesktop:220, counterPhone:120, counterDesktop:220 },
+            chartWidthFrac:{ line:0.50, stack:0.52, counter:0.50 }, chartMaxW:430, waffleGridFrac:0.5, waffleLabelH:1.4,
+            waffleDotMin:12, waffleDotMax:26, nodePadX:34, stackColWidthPx:150, phoneProbeWidth:360,
+            padXPhone:16, padXDesktop:44, padTopPhone:6, padTopDesktop:14,
+            fontWeights:{ normal:500, bold:700, black:900 },
+            counterGeom:{ x0:30, x1Pad:10, y0:18, y1Pad:26 }, corrMaxW:680, ceoMaxW:320, phoneBreakpoint:520, bigLineH:1.2, transitionRisePx:10 },
+  bounds: { maxFigures:8, maxWaffle:60, maxBars:8, maxStack:14, maxNodes:8, maxNotes:4, maxPoints:8, cliffMin:0.1 },
+  typeFloors: { masthead:20, figureTitle:17, body:12, label:12, bigCounter:20, hand:14 },
+  figures: [
+    { id:"fig20", type:"lineChart", start:0.0, dur:3.6, num:"FIG. 20", title:"Humanity's outlook, according to my last two posts", source:"Source: @adita_zzz on X",
+      chartTitle:"OUTLOOK", yLabels:[{text:"so back",y:0.78},{text:"meh",y:0.45},{text:"doomed",y:0.15,emphasis:true}], xLabels:["post 1","post 2"],
+      points:[[0.55,0.78],[0.82,0.18],[0.97,0.62]], cardText:"when the robots do it all, we're finally free to grow our tomatoes. voluntarily." },
+    { id:"fig21", type:"waffle", start:3.6, dur:3.9, num:"FIG. 21", title:"Are people panicking?", source:"Source: everyone, apparently",
+      waffleTotal:15, waffleCols:5, youIndex:7, youLabel:"you →", waffleLabel:"panicking", summaryText:"Summary: everyone is panicking. One person — you — is oddly calm, and possibly the cause." },
+    { id:"fig22", type:"stackBars", start:7.5, dur:3.6, num:"FIG. 22", title:"Compute, stacked", source:"Source: the desk",
+      stackCount:10, stackLabel:"Mac minis", bars:[0.35,0.55,0.8,1.0], barLabels:["a","b","c","d"], donutFraction:0.72, donutLabel:"72% slop" },
+    { id:"fig23", type:"orgChart", start:11.1, dur:3.6, num:"FIG. 23", title:"Org chart: Agents, Inc. (founded today)", source:"Source: the agents",
+      ceo:"CEO", ceoSub:"an agent", nodes:["CFO","CTO","Head of HR","VP of Vibes"], badge:"EMPLOYEE OF THE YEAR", badgeName:"Adita", onlyNote:"(only employee)" },
+    { id:"fig24", type:"counterGraph", start:14.7, dur:4.0, num:"FIG. 24", title:"Jobs on Earth, before and after my song", source:"Source: my song",
+      counterStart:3412083117, counterEnd:1, preCliffDrop:1800000, cliffAt:0.68, cliffExponent:1.8, counterLabel:"JOBS ON EARTH", counterSub:"and counting" },
+    { id:"fig25", type:"correction", start:18.7, dur:3.8, num:"FIG. 25", title:"Correction", source:"Source: the editor",
+      correction:"CORRECTION: the author was not hired by a company. The author was —", stamp:"HIRED BY MYSELF", notes:["checks out","(Not mine. Rendered.)"] }
+  ]
+};
+function clamp01(v){return v<0?0:v>1?1:v;}
+function lerp(a,b,q){return a+(b-a)*q;}
+function animFraction(fig,cfg){const c=cfg||CONFIG; return Math.max(c.timing.animFractionFloor,(fig.dur-c.timing.minHoldSec)/fig.dur);}
+function animQ(p,fig,cfg){return clamp01(p/animFraction(fig,cfg));}
+function collapseN(p,fig,cfg){
+  const range=fig.counterStart-fig.counterEnd; if(range<=0) return clamp01(p);
+  const a=fig.preCliffDrop/range, end=animFraction(fig,cfg), cliff=fig.cliffAt;
+  if(p<=0) return 0; if(p>=end) return 1;
+  if(p<cliff) return a*(p/cliff);
+  const q=(p-cliff)/(end-cliff); return a+(1-a)*Math.pow(q,fig.cliffExponent);
+}
+function counterValueAt(p,fig,cfg){return fig.counterStart + collapseN(p,fig,cfg)*(fig.counterEnd-fig.counterStart);}
+function counterTextAt(p,fig,cfg){return Math.round(counterValueAt(p,fig,cfg)).toLocaleString((cfg||CONFIG).formatting.counterLocale);}
+function graphYAt(p,fig,geom,cfg){return geom.y0 + collapseN(p,fig,cfg)*(geom.y1-geom.y0);}
+function polylineLength(points,geom){
+  let len=0,px=null,py=null;
+  for(const pt of points){const x=geom.x0+pt[0]*geom.w, y=geom.yBase-pt[1]*geom.h; if(px!==null) len+=Math.hypot(x-px,y-py); px=x; py=y;}
+  return len;
+}
+function lineChartState(fig,q,cfg){const T=(cfg||CONFIG).timing; return {drawQ:clamp01(q/T.drawEnd)};}
+function summaryTiming(fig,cfg){const T=(cfg||CONFIG).timing;
+  const holdSec=Math.max(T.minHoldSec, fig.summaryText.length*T.readMsPerChar/1000);
+  return { holdSec:holdSec, readSec:fig.summaryText.length*T.readMsPerChar/1000, typeStartSec:T.typeStartSec,
+           typeDurSec:fig.dur-T.typeStartSec-holdSec, fillSec:T.fillSec, completionSec:T.typeStartSec+(fig.dur-T.typeStartSec-holdSec) };}
+function waffleState(fig,p,cfg){const st=summaryTiming(fig,cfg); const tSec=clamp01(p)*fig.dur;
+  const filled=Math.floor(clamp01(tSec/st.fillSec)*fig.waffleTotal);
+  const sq=clamp01((tSec-st.typeStartSec)/st.typeDurSec);
+  return {filled:Math.min(fig.waffleTotal,filled), youVisible:filled>fig.youIndex, summaryChars:Math.floor(sq*fig.summaryText.length), holdSec:st.holdSec};}
+function stackState(fig,q,cfg){const T=(cfg||CONFIG).timing;
+  const count=fig.stackCount, arrivalDur=(T.stackEnd/count)*T.stackArrivalSpan;
+  const starts=[]; for(let i=0;i<count;i++) starts.push(count===1?0:i*(T.stackEnd-arrivalDur)/(count-1));
+  const arrivals=[]; let units=0;
+  for(let i=0;i<count;i++){ const start=starts[i]; const ai=arrivalDur>0?clamp01((q-start)/arrivalDur):(q>=start?1:0);
+    const e=1-Math.pow(1-ai,T.stackEasePow); if(ai>=1) units++;
+    arrivals.push({visible:ai>0, arrival:ai, ty:-( (cfg||CONFIG).layout.stackArrivalOffsetPx )*(1-e), opacity:ai>0?1:0}); }
+  return {units:units, arrivals:arrivals, starts:starts, arrivalDur:arrivalDur, barQ:clamp01(q/T.barsEnd), donutQ:clamp01(q/T.barsEnd)};}
+function nodeThresholds(fig,cfg){const T=(cfg||CONFIG).timing; const out=[]; for(let i=0;i<fig.nodes.length;i++) out.push(T.nodeStart+(i+1)*((T.nodeEnd-T.nodeStart)/fig.nodes.length)); return out;}
+function orgState(fig,q,cfg){const T=(cfg||CONFIG).timing; const th=nodeThresholds(fig,cfg);
+  const badgeQ=clamp01((q-T.badgeAt)/T.badgeDur); const badgeE=1-Math.pow(1-badgeQ,T.badgeEasePow); return {ceo:q>=T.ceoAt, nodes:th.map(t=>q>=t), badge:q>=T.badgeAt, badgeQ:badgeQ, badgeE:badgeE};}
+function stampScaleAt(sq,T,cap){ const from=(cap!=null?cap:T.stampFrom);
+  if(sq<=0) return from;
+  if(sq<T.stampApproach){ const u=sq/T.stampApproach; const e=1-Math.pow(1-u,T.stampEasePowIn); return lerp(from,T.stampOvershoot,e); }
+  if(sq<T.stampReboundEnd){ const u=(sq-T.stampApproach)/(T.stampReboundEnd-T.stampApproach); return lerp(T.stampOvershoot,T.stampCompress,u); }
+  const u=(sq-T.stampReboundEnd)/(1-T.stampReboundEnd); return lerp(T.stampCompress,1,1-Math.pow(1-u,T.stampEasePowOut));
+}
+function noteStarts(fig,cfg){const T=(cfg||CONFIG).timing; const n=fig.notes.length; if(!n) return [];
+  const step=(1-T.noteStart-T.noteFade)/n; const out=[]; for(let i=0;i<n;i++) out.push(T.noteStart+i*step); return out;}
+function correctionState(fig,q,cfg,cap){const T=(cfg||CONFIG).timing;
+  const sq=clamp01((q-T.stampAt)/T.stampDur); const starts=noteStarts(fig,cfg);
+  return {corr:q>=T.corrAt, stampVisible:q>=T.stampAt, stampScale:stampScaleAt(sq,T,cap), stampSq:sq,
+          notes:fig.notes.map((n,i)=>clamp01((q-starts[i])/T.noteFade)), noteStarts:starts};}
+function barRects(fig,geom,q,cfg){const B=(cfg||CONFIG).layout.barGeom;
+  const n=fig.bars.length, slot=(geom.w*B.slotFrac)/n, bw=slot*B.barFrac, base=geom.h-B.basePad, maxH=geom.h-B.topPad;
+  return fig.bars.map((v,i)=>{const h=v*maxH*q; return {x:B.xPad+i*slot+(slot-bw)/2, y:base-h, w:bw, h, labelX:B.xPad+i*slot+slot/2};});
+}
+function stateAt(t,figures,duration){
+  const tt=Math.max(0,Math.min(duration,t));
+  for(let i=0;i<figures.length;i++){const f=figures[i]; const last=i===figures.length-1;
+    if(tt>=f.start && (tt<f.start+f.dur || (last && tt<=duration))) return {index:i, p:clamp01((tt-f.start)/f.dur)};}
+  let idx=0; figures.forEach((f,i)=>{if(tt>=f.start) idx=i;});
+  return {index:idx, p:clamp01((tt-figures[idx].start)/figures[idx].dur)};
+}
+function smoothstep01(v){const x=clamp01(v); return x*x*(3-2*x);}
+function transitionState(t,figures,cfg){const c=cfg||CONFIG; const T=c.timing.figureTransitionSec, rise=c.layout.transitionRisePx;
+  const st=stateAt(t,figures,c.duration);
+  if(T>0){ for(let i=1;i<figures.length;i++){ const b=figures[i].start;
+    if(t>=b-T/2 && t<=b+T/2){ const s=(t-(b-T/2))/T; const outP=smoothstep01(s/0.55); const inP=smoothstep01((s-0.45)/0.55);
+      return {index:i, p:clamp01((t-b)/figures[i].dur), prevIndex:i-1, outOpacity:1-outP, outTy:-rise*outP, outP:(t>=b?1:clamp01((t-figures[i-1].start)/figures[i-1].dur)), inOpacity:inP, inTy:rise*(1-inP), inP:clamp01((t-b)/figures[i].dur), s:s}; } } }
+  return {index:st.index, p:st.p, prevIndex:-1, outOpacity:0, outTy:0, outP:st.p, inOpacity:1, inTy:0, inP:st.p, s:-1};
+}
+function computeLayout(w,cfg){const c=cfg||CONFIG; const F=c.typeFloors, LH=c.layout.lineHeights, TS=c.layout.typeScale, TC=c.layout.typeCaps, phone=w<=c.layout.phoneBreakpoint;
+  const mastPx=Math.max(F.masthead, Math.min(TC.mast, w*TS.mast));
+  const titlePx=Math.max(F.figureTitle, Math.min(TC.title, w*TS.title));
+  const bodyPx=Math.max(F.body, Math.min(TC.body, w*TS.body));
+  const labelPx=Math.max(F.label, Math.min(TC.label, w*TS.label));
+  const bigPx=Math.max(F.bigCounter, Math.min(TC.big, w*TS.big));
+  const handPx=Math.max(F.hand, Math.min(TC.hand, w*TS.hand));
+  const padX=phone?c.layout.padXPhone:c.layout.padXDesktop, padTop=phone?c.layout.padTopPhone:c.layout.padTopDesktop;
+  const metaTexts=[c.dateLine,c.clockStart,c.price];
+  const metaWidths=metaTexts.map(t=>t.length*labelPx*c.layout.charWidthLabel);
+  const metaAvail=w-2*c.layout.metaPadX;
+  const metaRows=(metaWidths.reduce((a,b)=>a+b,0)+2*c.layout.metaMinGapPx<=metaAvail)?1:2;
+  const metaH=metaRows*(labelPx*LH.label+10)+(metaRows-1)*2;
+  const headerH=padTop + mastPx*LH.mast + 13 + metaH + 4;
+  const contentW=w-2*padX, stageH=phone?null:w*9/16;
+  const contentH=phone?null:stageH-headerH;
+  const headSrcReserve=labelPx*LH.label + 2*titlePx*LH.title + (c.layout.headingMarginTopPx+c.layout.headingMarginBottomPx) + (labelPx*LH.label+c.layout.srcMarginTopPx);
+  const availBlockH=phone?(c.layout.phoneStageBudgetPx-headerH-c.layout.bottomClearancePx):contentH;
+  return {w, phone, mastPx, titlePx, bodyPx, labelPx, bigPx, handPx, padX, padTop, headerH, contentW, stageH, contentH, metaRows, metaWidths, metaAvail, headSrcReserve, availBlockH};
+}
+function charsPerLine(widthPx,fontPx,cfg){const c=cfg||CONFIG; return Math.max(1,Math.floor(widthPx/(fontPx*c.layout.charWidthBody)));}
+function textLines(text,widthPx,fontPx,cfg){return Math.max(1,Math.ceil(text.length/charsPerLine(widthPx,fontPx,cfg)));}
+function headingLines(title,L,cfg){return textLines(title, L.contentW, L.titlePx, cfg);}
+function stampMetrics(fig,L,cfg){const c=cfg||CONFIG; const T=c.timing, lay=c.layout;
+  const w=fig.stamp.length*L.bodyPx*lay.stampCharWidth + lay.stampPadX;
+  const h=L.bodyPx + lay.stampPadY;
+  const rad=Math.abs(T.stampRotationDeg)*Math.PI/180, cos=Math.cos(rad), sin=Math.sin(rad);
+  const aabbW1=w*cos+h*sin, aabbH1=w*sin+h*cos;
+  return {w:w, h:h, aabbW1:aabbW1, aabbH1:aabbH1};
+}
+function stampCap(fig,L,cfg){const c=cfg||CONFIG; const m=stampMetrics(fig,L,c);
+  const corrW=Math.min(c.layout.corrMaxW,L.contentW);
+  return Math.min(c.timing.stampFrom, corrW/m.aabbW1, c.layout.stampAreaBudgetPx/m.aabbH1);
+}
+function stampAabbAt(fig,L,scale,cfg){const c=cfg||CONFIG; const m=stampMetrics(fig,L,c); const cap=stampCap(fig,L,c);
+  const aabbW=m.aabbW1*scale, aabbH=m.aabbH1*scale; const offsetX=Math.max(0, m.aabbW1*cap/2 - m.w/2);
+  const cx=offsetX + m.w/2; const corrW=Math.min(c.layout.corrMaxW,L.contentW);
+  return {offsetX:offsetX, aabbW:aabbW, aabbH:aabbH, left:cx-aabbW/2, right:cx+aabbW/2, corrW:corrW};}
+function lineLabelBounds(fig,L,cfg){const c=cfg||CONFIG; const g=figureGeom(fig,L,c);
+  const geom={x0:c.layout.chartPadLeft, w:g.chartW-c.layout.chartPadLeft-c.layout.chartPadRight};
+  const n=fig.xLabels.length;
+  return fig.xLabels.map((lab,i)=>{ const halfW=lab.length*L.labelPx*c.layout.charWidthLabel/2;
+    const cx=geom.x0+geom.w*(n>1?i/(n-1):0);
+    const anchor=i===0?'start':(i===n-1?'end':'middle');
+    const left=anchor==='start'?cx:(anchor==='end'?cx-2*halfW:cx-halfW);
+    const right=anchor==='start'?cx+2*halfW:(anchor==='end'?cx:cx+halfW);
+    return {text:lab, anchor:anchor, cx:cx, halfW:halfW, left:left, right:right, chartW:g.chartW}; });
+}
+function figureGeom(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeights; const cw=L.contentW;
+  if(fig.type==="lineChart"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.line), chartH=L.phone?c.layout.chartHeights.linePhone:c.layout.chartHeights.lineDesktop;
+    const cardW=L.phone?cw:cw-chartW-c.layout.rowGapPx, cardH=textLines(fig.cardText,cardW-24,L.bodyPx,c)*L.bodyPx*LH.body+24;
+    const titleH=L.labelPx*LH.label+4;
+    return {chartW,chartH,cardW,cardH,titleH, blockH:L.phone?cardH+c.layout.rowGapPx+titleH+chartH:Math.max(cardH,titleH+chartH), maxW:cw};}
+  if(fig.type==="waffle"){const gap=c.layout.waffleGapPx, dot=Math.max(c.layout.waffleDotMin,Math.min(c.layout.waffleDotMax,Math.floor((cw*c.layout.waffleGridFrac)/fig.waffleCols)-gap));
+    const rows=Math.ceil(fig.waffleTotal/fig.waffleCols), gridW=fig.waffleCols*(dot+gap)-gap, gridH=rows*(dot+gap)-gap;
+    const sumH=textLines(fig.summaryText,cw-24,L.bodyPx,c)*L.bodyPx*LH.body+24;
+    return {dot,gap,rows,gridW,gridH,sumH, blockH:gridH+6+L.bodyPx*c.layout.waffleLabelH+8+sumH, maxW:cw};}
+  if(fig.type==="stackBars"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.stack), chartH=L.phone?c.layout.chartHeights.stackPhone:c.layout.chartHeights.stackDesktop;
+    const gap=c.layout.fig22GapPx, unitGap=c.layout.stackUnitGapPx, arrival=c.layout.stackArrivalOffsetPx;
+    const counterH=L.bodyPx*LH.stackCounter;
+    const stackBudget=L.phone ? (L.availBlockH - L.headSrcReserve) - counterH - gap - chartH - arrival
+                              : (L.availBlockH - L.headSrcReserve) - counterH - arrival;
+    const unitFloor=L.labelPx+2;
+    const unitHRaw=Math.floor(stackBudget/fig.stackCount)-unitGap;
+    const unitH=Math.min(c.layout.stackUnitMaxH, Math.max(unitFloor, unitHRaw));
+    const stackH=fig.stackCount*(unitH+unitGap)+arrival;
+    return {chartW,chartH,unitH,unitHRaw,unitFloor,unitHOver:unitHRaw<unitFloor,stackH,counterH,stackBudget,arrivalReserve:arrival, blockH:L.phone?counterH+stackH+gap+chartH:Math.max(stackH+counterH,chartH), maxW:cw};}
+  if(fig.type==="orgChart"){const longest=Math.max.apply(null,fig.nodes.map(n=>n.length));
+    const nodeW=longest*L.labelPx*c.layout.charWidthLabel+c.layout.nodePadX; let perRow=Math.max(1,Math.floor(cw/nodeW)); while(perRow>1 && perRow*nodeW+(perRow-1)*c.layout.orgRowGapPx>cw) perRow--; const rows=Math.ceil(fig.nodes.length/perRow);
+    const ceoH=L.bodyPx*LH.body+24, nodesH=rows*(L.bodyPx*LH.body+10);
+    const badgeText=fig.onlyNote+c.formatting.badgeStarSep+fig.badgeName+c.formatting.badgeDashSep+fig.badge;
+    const badgeH=textLines(badgeText,cw,L.bodyPx,c)*L.bodyPx*LH.body+8;
+    return {nodeW,perRow,rows,ceoH,nodesH,badgeH, blockH:ceoH+c.layout.orgRowMarginTop+nodesH+c.layout.badgeMarginTop+badgeH, maxW:cw};}
+  if(fig.type==="counterGraph"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.counter), chartH=L.phone?c.layout.chartHeights.counterPhone:c.layout.chartHeights.counterDesktop;
+    const cardW=L.phone?cw:cw-chartW-c.layout.counterGapPx;
+    const cardH=textLines(fig.counterLabel,cardW-24,L.labelPx,c)*L.labelPx*LH.label + L.bigPx*c.layout.bigLineH + textLines(fig.counterSub,cardW-24,L.bodyPx,c)*L.bodyPx*LH.body + 24;
+    return {chartW,chartH,cardW,cardH, blockH:L.phone?chartH+c.layout.counterGapPx+cardH:Math.max(chartH,cardH), maxW:cw};}
+  if(fig.type==="correction"){const corrW=Math.min(c.layout.corrMaxW,cw);
+    const corrH=textLines(fig.correction,corrW-24,L.bodyPx,c)*L.bodyPx*LH.body+24;
+    const cap=stampCap(fig,L,c), m=stampMetrics(fig,L,c);
+    const stampH=m.aabbH1*cap, notesH=fig.notes.length*(L.handPx*LH.label+4);
+    return {corrW,corrH,stampH,stampCap:cap,stampAabbW:m.aabbW1*cap,stampOffsetX:stampAabbAt(fig,L,cap,c).offsetX,stampAabbLeftCap:stampAabbAt(fig,L,cap,c).left,stampAabbRightCap:stampAabbAt(fig,L,cap,c).right,notesH, blockH:corrH+c.layout.corrStampMarginTop+stampH+c.layout.corrNotesMarginTop+notesH, maxW:corrW};}
+  return {blockH:0,maxW:0};
+}
+function figureRequired(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeights;
+  const g=figureGeom(fig,L,c);
+  const headH=L.labelPx*LH.label + headingLines(fig.title,L,c)*L.titlePx*LH.title + (c.layout.headingMarginTopPx+c.layout.headingMarginBottomPx);
+  const srcH=L.labelPx*LH.label+c.layout.srcMarginTopPx;
+  return {id:fig.id, required:c.layout.figPadTopPx+headH+g.blockH+srcH, blockH:g.blockH, maxW:g.maxW, geom:g};
+}
+function fitReport(w,figures,cfg){const c=cfg||CONFIG;
+  const L=computeLayout(w,c), figs=figures.map(f=>figureRequired(f,L,c));
+  const maxReq=Math.max.apply(null,figs.map(f=>f.required));
+  const allocated=L.phone?maxReq:L.contentH;
+  const stageH=L.phone?L.headerH+maxReq+c.layout.bottomClearancePx:L.stageH;
+  const budgetOk=!L.phone || stageH<=c.layout.phoneStageBudgetPx+0.001;
+  const fontsOk=L.mastPx>=c.typeFloors.masthead && L.titlePx>=c.typeFloors.figureTitle &&
+                L.bodyPx>=c.typeFloors.body && L.labelPx>=c.typeFloors.label && L.bigPx>=c.typeFloors.bigCounter;
+  const rows=figs.map(f=>({id:f.id, required:Math.round(f.required*10)/10, allocated:Math.round(allocated*10)/10,
+    fits:f.required<=allocated+0.001, widthOk:f.maxW<=L.contentW+0.001,
+    headingReserve:Math.round(headingLines(figures.find(x=>x.id===f.id).title,L,c)*L.titlePx*c.layout.lineHeights.title*10)/10}));
+  return {width:w, phone:L.phone, clearancePx:L.phone?c.layout.bottomClearancePx:0, stageH:Math.round(stageH*10)/10, headerH:Math.round(L.headerH*10)/10, metaRows:L.metaRows, budgetOk:budgetOk,
+    contentW:L.contentW, fonts:{masthead:L.mastPx, figureTitle:L.titlePx, body:L.bodyPx, label:L.labelPx, bigCounter:L.bigPx, hand:L.handPx},
+    fontsOk, figures:rows, ok:fontsOk && budgetOk && rows.every(r=>r.fits&&r.widthOk)};
+}
+function validateConfig(cfg){
+  const errs=[]; if(!cfg||typeof cfg!=="object"){errs.push("config absent"); return errs;}
+  const B=cfg.bounds, T=cfg.timing;
+  if(!isFinite(cfg.duration)||cfg.duration<=0) errs.push("duration must be a positive finite number");
+  if(!T||!isFinite(T.minHoldSec)||!isFinite(T.readMsPerChar)||T.readMsPerChar<=0) errs.push("timing values must be finite with a positive reading rate");
+  if(T&&(T.fillSec<T.minFillSec)) errs.push("timing: fill duration below its named minimum");
+  if(!Array.isArray(cfg.figures)||cfg.figures.length<1||cfg.figures.length>B.maxFigures) errs.push("figures count outside supported boundary 1.."+B.maxFigures);
+  (cfg.figures||[]).forEach(f=>{
+    if(!f||typeof f!=="object"){errs.push("figure record absent"); return;}
+    if(!isFinite(f.start)||!isFinite(f.dur)) errs.push(f.id+": figure window values must be finite");
+    if(!(f.dur>cfg.timing.minHoldSec)) errs.push(f.id+": window must exceed the minimum hold");
+    if(f.type==="waffle"){ if(f.waffleTotal>B.maxWaffle) errs.push(f.id+": waffleTotal "+f.waffleTotal+" exceeds supported boundary "+B.maxWaffle);
+      if(typeof f.summaryText!=="string"||!f.summaryText.length) errs.push(f.id+": summary text absent");
+      else { const st=summaryTiming(f,cfg); if(st.typeDurSec<T.minTypeSec) errs.push(f.id+": summary of "+f.summaryText.length+" chars cannot type in at least "+T.minTypeSec+"s and still hold for reading inside its window"); } }
+    if(f.type==="stackBars"){ if(f.bars.length>B.maxBars) errs.push(f.id+": bars "+f.bars.length+" exceeds supported boundary "+B.maxBars);
+      if(f.stackCount>B.maxStack) errs.push(f.id+": stackCount "+f.stackCount+" exceeds supported boundary "+B.maxStack);
+      if(f.bars.length!==f.barLabels.length) errs.push(f.id+": barLabels length must match bars length");
+      if(f.bars.some(v=>!isFinite(v))) errs.push(f.id+": bar values must be finite");
+      const L360=computeLayout(cfg.layout.phoneProbeWidth,cfg); const g360=figureGeom(f,L360,cfg);
+      if(g360.unitHOver) errs.push(f.id+": stackCount "+f.stackCount+" cannot hold the unit legibility floor at phone width"); }
+    if(f.type==="orgChart"&&f.nodes.length>B.maxNodes) errs.push(f.id+": nodes "+f.nodes.length+" exceeds supported boundary "+B.maxNodes);
+    if(f.type==="correction"&&f.notes.length>B.maxNotes) errs.push(f.id+": notes "+f.notes.length+" exceeds supported boundary "+B.maxNotes);
+    if(f.type==="lineChart"){ if(f.points.length>B.maxPoints) errs.push(f.id+": points "+f.points.length+" exceeds supported boundary "+B.maxPoints);
+      if(f.points.some(pt=>!pt||!isFinite(pt[0])||!isFinite(pt[1]))) errs.push(f.id+": point coordinates must be finite"); }
+    if(f.type==="counterGraph"){ if(!(f.counterStart>f.counterEnd)) errs.push(f.id+": counterStart must exceed counterEnd");
+      if(!isFinite(f.counterStart)||!isFinite(f.counterEnd)||!isFinite(f.cliffAt)) errs.push(f.id+": counter values must be finite");
+      if(!(f.cliffAt>B.cliffMin)) errs.push(f.id+": cliffAt outside supported boundary "+B.cliffMin+"..animation fraction");
+      else { const lim=animFraction(f,cfg)-T.cliffBudgetMargin; if(!(f.cliffAt<lim)) errs.push(f.id+": cliffAt "+f.cliffAt+" must sit below the animation fraction minus the named margin ("+lim.toFixed(3)+")"); }
+      if(!(f.preCliffDrop>0&&f.preCliffDrop<(f.counterStart-f.counterEnd)*0.05)) errs.push(f.id+": preCliffDrop outside supported boundary (0, 5% of counter range)"); }
+  });
+  const knownTypes=["lineChart","waffle","stackBars","orgChart","counterGraph","correction"];
+  (cfg.figures||[]).forEach(f=>{ if(f && knownTypes.indexOf(f.type)<0) errs.push(f.id+": unsupported figure type "+f.type); });
+  const schedFigs=cfg.figures||[];
+  for(let si=1;si<schedFigs.length;si++){ const prevF=schedFigs[si-1], curF=schedFigs[si]; if(Math.abs(curF.start-(prevF.start+prevF.dur))>1e-9) errs.push("schedule: figure "+curF.id+" start "+curF.start+" does not equal previous figure end "+(prevF.start+prevF.dur)+" (overlap or gap)"); }
+  if(schedFigs.length){ const lastF=schedFigs[schedFigs.length-1]; if(Math.abs(lastF.start+lastF.dur-cfg.duration)>1e-9) errs.push("schedule: last figure end "+(lastF.start+lastF.dur)+" does not equal total duration "+cfg.duration); }
+  return errs;
+}
+/* End of the pure-logic section. */
+
+/* URL overrides for swap testing: top-level scalars and palette keys. */
+(function(){ const q=new URLSearchParams(location.search); q.forEach((v,k)=>{ if(k.startsWith("palette.")){CONFIG.palette[k.slice(8)]=v;} else if(k in CONFIG && typeof CONFIG[k]!=="object"){ const n=Number(v); CONFIG[k]=isNaN(n)||v.trim()===""?v:n; } }); })();
+
+function browserDom(){
+  function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+  function svgEl(w,h){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 '+w+' '+h);s.setAttribute('width',w);s.setAttribute('height',h);s.style.maxWidth='100%';return s;}
+  function svgNode(tag,attrs){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in attrs)n.setAttribute(k,attrs[k]);return n;}
+  return {el:el, svgEl:svgEl, svgNode:svgNode};
+}
+
+/* Figure factories. Each factory takes a mount point, its figure data record and an
+   injected dependency set { palette, timing, layout, dom, fonts, config } and returns a
+   progress renderer. No factory reads scene-level state. */
+const BUILDERS = {
+  lineChart(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.rowGapPx+'px';
+    const card=el('div','card',fig.cardText); card.style.cssText='width:'+g.cardW+'px;font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body;
+    const chartBlock=el('div');
+    const ct=el('div','',fig.chartTitle); ct.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.labelPx+'px;letter-spacing:.1em;margin-bottom:4px';
+    chartBlock.appendChild(ct);
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const geom={x0:cfg.layout.chartPadLeft, w:g.chartW-cfg.layout.chartPadLeft-cfg.layout.chartPadRight, yBase:g.chartH-cfg.layout.chartPadBottom, h:g.chartH-cfg.layout.chartPadBottom-cfg.layout.chartPadTop};
+    s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:8,x2:geom.x0,y2:geom.yBase,stroke:P.ink,'stroke-width':2}));
+    s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:geom.yBase,x2:geom.x0+geom.w,y2:geom.yBase,stroke:P.ink,'stroke-width':2}));
+    fig.yLabels.forEach(lab=>{const t=dom.svgNode('text',{x:geom.x0-6,y:geom.yBase-lab.y*geom.h+4,'text-anchor':'end','font-size':L.labelPx,fill:lab.emphasis?P.red:P.ink});t.textContent=lab.text;s.appendChild(t);});
+    const bounds=lineLabelBounds(fig,L,cfg);
+    fig.xLabels.forEach((lab,i)=>{const b=bounds[i];const t=dom.svgNode('text',{x:b.cx,y:g.chartH-4,'text-anchor':b.anchor,'font-size':L.labelPx,fill:P.ink});t.textContent=lab;s.appendChild(t);});
+    const d=fig.points.map((pt,i)=>(i?'L':'M')+(geom.x0+pt[0]*geom.w)+' '+(geom.yBase-pt[1]*geom.h)).join(' ');
+    const path=dom.svgNode('path',{d:d,fill:'none',stroke:P.ink,'stroke-width':4});
+    s.appendChild(path); chartBlock.appendChild(s);
+    if(L.phone){wrap.append(chartBlock,card);} else {wrap.append(card,chartBlock);}
+    mount.body.appendChild(wrap);
+    let len=null;
+    return function(p){ const q=animQ(p,fig,cfg); const st=lineChartState(fig,q,cfg);
+      if(len===null){ len=(typeof path.getTotalLength==='function'&&path.getTotalLength()>0)?path.getTotalLength():polylineLength(fig.points,geom);
+        path.style.strokeDasharray=len; }
+      path.style.strokeDashoffset=len*(1-st.drawQ); };
+  },
+  waffle(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const grid=el('div'); grid.style.width=g.gridW+'px'; grid.style.display='flex'; grid.style.flexDirection='column'; grid.style.gap=g.gap+'px';
+    const dots=[]; for(let r=0;r<g.rows;r++){const rowEl=el('div'); rowEl.style.display='flex'; rowEl.style.gap=g.gap+'px'; for(let ci=0;ci<fig.waffleCols && dots.length<fig.waffleTotal;ci++){const d=el('span','dot');d.style.cssText='width:'+g.dot+'px;height:'+g.dot+'px;opacity:.18';rowEl.appendChild(d);dots.push(d);} grid.appendChild(rowEl);}
+    const cntRow=el('div'); cntRow.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;margin:6px 0';
+    const cnt=el('span'); const you=el('span','hand',' '+fig.youLabel); you.style.color=P.blue; you.style.fontSize=L.handPx+'px'; you.style.opacity=0;
+    cntRow.append(cnt,you);
+    const sum=el('div','card',''); sum.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body+';min-height:'+(L.bodyPx*cfg.layout.lineHeights.body+24)+'px;margin-top:8px';
+    mount.body.append(grid,cntRow,sum);
+    return function(p){ const st=waffleState(fig,p,cfg);
+      dots.forEach((d,i)=>{ if(i<st.filled){d.style.opacity=1; d.style.background=(i===fig.youIndex?P.blue:P.red);} else {d.style.opacity=.18; d.style.background='transparent';} });
+      you.style.opacity=st.youVisible?1:0;
+      cnt.textContent=fig.waffleLabel+' '+st.filled+' '+cfg.formatting.ofWord+' '+fig.waffleTotal;
+      sum.textContent=fig.summaryText.slice(0,st.summaryChars); };
+  },
+  stackBars(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.fig22GapPx+'px';
+    const cnt=el('div'); cnt.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;font-weight:'+cfg.layout.fontWeights.bold+';height:'+g.counterH+'px';
+    const stack=el('div'); stack.style.cssText='width:'+(L.phone?g.chartW:cfg.layout.stackColWidthPx)+'px;display:flex;flex-direction:column-reverse;gap:'+cfg.layout.stackUnitGapPx+'px;padding-top:'+g.arrivalReserve+'px';
+    const units=[]; for(let i=0;i<fig.stackCount;i++){const u=el('div','','▭');u.style.cssText='border:2px solid '+P.ink+';border-radius:5px;text-align:center;font-size:'+L.labelPx+'px;height:'+g.unitH+'px;opacity:0';stack.appendChild(u);units.push(u);}
+    const left=el('div'); left.append(cnt,stack);
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const rects=barRects(fig,{w:g.chartW,h:g.chartH},1,cfg);
+    const barEls=rects.map((r,i)=>{const rect=dom.svgNode('rect',{x:r.x,width:r.w,fill:P.accent});s.appendChild(rect);
+      const t=dom.svgNode('text',{x:r.labelX,y:g.chartH-2,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink});t.textContent=fig.barLabels[i];s.appendChild(t);return rect;});
+    const dn=cfg.layout.donut;
+    const circ=dom.svgNode('circle',{cx:g.chartW*dn.cxFrac,cy:g.chartH/2,r:Math.min(dn.rMax,g.chartH*dn.rFrac),fill:'none',stroke:P.red,'stroke-width':dn.strokeW,transform:'rotate(-90 '+(g.chartW*dn.cxFrac)+' '+(g.chartH/2)+')'});
+    const C=2*Math.PI*parseFloat(circ.getAttribute('r')); circ.style.strokeDasharray=C; circ.style.strokeDashoffset=C; s.appendChild(circ);
+    const dl=dom.svgNode('text',{x:g.chartW*dn.cxFrac,y:g.chartH/2+6,'text-anchor':'middle','font-size':L.labelPx,fill:P.ink}); dl.textContent=fig.donutLabel; s.appendChild(dl);
+    wrap.append(left,s);
+    mount.body.appendChild(wrap);
+    return function(p){ const st=stackState(fig,animQ(p,fig,cfg),cfg);
+      units.forEach((u,i)=>{const a=st.arrivals[i]; u.style.opacity=a.opacity; u.style.transform='translateY('+a.ty+'px)';});
+      cnt.textContent=st.units+' '+fig.stackLabel;
+      const rr=barRects(fig,{w:g.chartW,h:g.chartH},st.barQ,cfg);
+      barEls.forEach((rect,i)=>{rect.setAttribute('y',rr[i].y);rect.setAttribute('height',rr[i].h);});
+      circ.style.strokeDashoffset=C*(1-fig.donutFraction*st.donutQ); };
+  },
+  orgChart(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const ceo=el('div','card',fig.ceo+cfg.formatting.ceoSep+fig.ceoSub); ceo.style.cssText='width:'+Math.min(cfg.layout.ceoMaxW,L.contentW)+'px;margin:0 auto;text-align:center;font-family:'+deps.fonts.sans+';font-weight:'+cfg.layout.fontWeights.bold+';font-size:'+L.bodyPx+'px;opacity:0';
+    mount.body.appendChild(ceo);
+    const row=el('div'); row.style.cssText='display:flex;flex-wrap:wrap;gap:'+cfg.layout.orgRowGapPx+'px;justify-content:space-around;margin-top:'+cfg.layout.orgRowMarginTop+'px';
+    const nodes=fig.nodes.map(n=>{const d=el('div','',cfg.formatting.nodeSymbol+' '+n);d.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.labelPx+'px;opacity:0;width:'+g.nodeW+'px;text-align:center';row.appendChild(d);return d;});
+    mount.body.appendChild(row);
+    const badge=el('div'); badge.style.cssText='text-align:center;margin-top:'+cfg.layout.badgeMarginTop+'px;opacity:0;font-size:'+L.bodyPx+'px';
+    badge.append(el('span','hand',fig.onlyNote), (()=>{const s=el('span','',cfg.formatting.badgeStarSep+fig.badgeName+cfg.formatting.badgeDashSep+fig.badge);s.style.cssText='font-family:'+deps.fonts.sans+';font-weight:'+deps.config.layout.fontWeights.bold+';color:'+P.red;return s})());
+    mount.body.appendChild(badge);
+    return function(p){ const st=orgState(fig,animQ(p,fig,cfg),cfg);
+      ceo.style.opacity=st.ceo?1:0; nodes.forEach((d,i)=>d.style.opacity=st.nodes[i]?1:0);
+      badge.style.opacity=st.badgeQ; badge.style.transform='scale('+lerp(cfg.timing.badgeFrom,1,st.badgeE)+')'; };
+  },
+  counterGraph(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.counterGapPx+'px';
+    const s=dom.svgEl(g.chartW,g.chartH);
+    const geom={x0:cfg.layout.counterGeom.x0, x1:g.chartW-cfg.layout.counterGeom.x1Pad, y0:cfg.layout.counterGeom.y0, y1:g.chartH-cfg.layout.counterGeom.y1Pad};
+    const path=dom.svgNode('path',{fill:'none',stroke:P.ink,'stroke-width':3}); s.appendChild(path);
+    const cliffX=geom.x0+(geom.x1-geom.x0)*(fig.cliffAt/animFraction(fig,cfg));
+    const dash=dom.svgNode('line',{x1:cliffX,x2:cliffX,y1:10,y2:g.chartH-16,stroke:P.red,'stroke-dasharray':'5 5'}); s.appendChild(dash);
+    const card=el('div','card'); card.style.cssText='width:'+g.cardW+'px;font-family:'+deps.fonts.sans;
+    const lab=el('div','',fig.counterLabel); lab.style.cssText='letter-spacing:.1em;font-size:'+L.labelPx+'px;opacity:.85';
+    const big=el('div'); big.style.cssText='font-size:'+L.bigPx+'px;font-weight:'+cfg.layout.fontWeights.black+';margin:8px 0';
+    const sub=el('div','',fig.counterSub); sub.style.cssText='font-style:italic;font-family:'+deps.fonts.serif+';font-size:'+L.bodyPx+'px;color:'+P.muted;
+    card.append(lab,big,sub);
+    wrap.append(s,card); mount.body.appendChild(wrap);
+    return function(p){ const aq=animQ(p,fig,cfg); const af=animFraction(fig,cfg); const T=cfg.timing;
+      big.textContent=counterTextAt(p,fig,cfg);
+      let d='M'+geom.x0+' '+graphYAt(0,fig,geom,cfg);
+      const upto=Math.max(T.sampleStep,aq);
+      for(let u=T.sampleStep;u<=upto;u+=T.sampleStep) d+=' L'+(geom.x0+(geom.x1-geom.x0)*u)+' '+graphYAt(u*af,fig,geom,cfg);
+      d+=' L'+(geom.x0+(geom.x1-geom.x0)*upto)+' '+graphYAt(upto*af,fig,geom,cfg);
+      path.setAttribute('d',d); dash.style.opacity=aq>T.cliffMarkerAt?1:0;
+      return d; };
+  },
+  correction(mount,fig,deps){
+    const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
+    const g=figureGeom(fig,L,cfg);
+    const corr=el('div','card',fig.correction); corr.style.cssText='border-color:'+P.red+';color:'+P.red+';font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.body+';max-width:'+g.corrW+'px;opacity:0'; mount.body.appendChild(corr);
+    const stampWrap=el('div'); stampWrap.style.cssText='margin-top:'+cfg.layout.corrStampMarginTop+'px;min-height:'+g.stampH+'px';
+    const stamp=el('span','stamp',fig.stamp); stamp.style.marginLeft=g.stampOffsetX+'px'; stamp.style.color=P.red; stamp.style.opacity=0; stamp.style.fontSize=L.bodyPx+'px'; stampWrap.appendChild(stamp);
+    mount.body.appendChild(stampWrap);
+    const notes=el('div'); notes.style.marginTop=cfg.layout.corrNotesMarginTop+'px'; const noteEls=fig.notes.map(n=>{const s=el('div','hand',n);s.style.cssText='font-size:'+L.handPx+'px;color:'+P.blue+';opacity:0';notes.appendChild(s);return s;}); mount.body.appendChild(notes);
+    return function(p){ const st=correctionState(fig,animQ(p,fig,cfg),cfg,g.stampCap);
+      corr.style.opacity=st.corr?1:0;
+      stamp.style.opacity=st.stampVisible?1:0;
+      const scale=st.stampScale;
+      stamp.style.transform='rotate('+cfg.timing.stampRotationDeg+'deg) scale('+scale+')';
+      noteEls.forEach((s,i)=>s.style.opacity=st.notes[i]); };
+  }
+};
+
+/* Scene assembly: builds the broadsheet frame and mounts every figure factory with
+   the injected dependency set. Returns the mounted renderers. */
+function createScene(deps){
+  const cfg=deps.config, P=deps.palette, dom=deps.dom, el=dom.el, stageEl=deps.stageEl;
+  const L=deps.layout;
+  stageEl.style.background=P.paper; stageEl.style.color=P.ink;
+  stageEl.style.setProperty('--warn',P.red); stageEl.style.setProperty('--muted',P.muted); stageEl.style.setProperty('--secondary',P.secondary); stageEl.style.setProperty('--srcmt',cfg.layout.srcMarginTopPx+'px');
+  stageEl.style.setProperty('--card-tint',P.cardTint);
+  stageEl.style.setProperty('--font-serif',deps.fonts.serif); stageEl.style.setProperty('--font-sans',deps.fonts.sans); stageEl.style.setProperty('--font-hand',deps.fonts.hand);
+  stageEl.style.setProperty('--metapad',cfg.layout.metaPadX+'px');
+  stageEl.style.setProperty('--lh-mast',cfg.layout.lineHeights.mast); stageEl.style.setProperty('--lh-title',cfg.layout.lineHeights.title);
+  stageEl.style.setProperty('--fw-normal',cfg.layout.fontWeights.normal); stageEl.style.setProperty('--fw-black',cfg.layout.fontWeights.black);
+  const mast=el('div','mast'); mast.appendChild(el('h1','',cfg.masthead)); stageEl.appendChild(mast);
+  stageEl.appendChild(el('div','rule'));
+  const meta=el('div','meta');
+  const dateS=el('span','',cfg.dateLine);
+  const clockS=el('span','',cfg.clockStart); clockS.style.color=P.red;
+  const priceS=el('span','',cfg.price);
+  if(L.metaRows===2){ priceS.style.flexBasis='100%'; priceS.style.textAlign='right'; }
+  meta.append(dateS, clockS, priceS); stageEl.appendChild(meta);
+  const problems=validateConfig(cfg);
+  const globalProblems=problems.filter(x=>!cfg.figures.some(f=>x.indexOf(f.id+':')===0));
+  if(globalProblems.length){ const gw=el('div','warn globalwarn','Validation: '+globalProblems.join('; ')); stageEl.appendChild(gw); }
+  const mounted=[];
+  cfg.figures.forEach(f=>{
+    const root=el('section','fig'); root.id=f.id;
+    const num=el('div','fignum',f.num); num.style.color=P.red; root.appendChild(num);
+    const h=el('h2','',f.title); h.style.minHeight=(headingLines(f.title,L,cfg)*L.titlePx*cfg.layout.lineHeights.title)+'px'; root.appendChild(h);
+    const body=el('div'); root.appendChild(body);
+    root.appendChild(el('div','src',f.source));
+    stageEl.appendChild(root);
+    const figProblems=problems.filter(x=>x.indexOf(f.id+':')===0);
+    let draw=null;
+    if(figProblems.length){ const warn=el('div','warn','Unsupported data — '+figProblems.join('; ')); body.appendChild(warn); if(window.console) console.warn('T17 validation: '+figProblems.join('; ')); }
+    else if(BUILDERS[f.type]) draw=BUILDERS[f.type]({root:root,body:body},f,deps);
+    mounted.push({fig:f,root:root,draw:draw});
+  });
+  return mounted;
+}
+
+const stage=document.getElementById('stage');
+document.body.style.background=CONFIG.palette.pageBg;
+document.getElementById('clock').style.color=CONFIG.palette.controlInk;
+let mounted=[], lastT=0;
+function buildAll(){
+  mounted.forEach(m=>m.root.remove()); mounted=[];
+  const mastOld=stage.querySelectorAll('.mast,.rule,.meta,.globalwarn'); mastOld.forEach(n=>n.remove());
+  const w=stage.clientWidth||960, L=computeLayout(w,CONFIG);
+  stage.classList.toggle('phone',L.phone);
+  stage.style.setProperty('--mast',L.mastPx+'px'); stage.style.setProperty('--title',L.titlePx+'px');
+  stage.style.setProperty('--label',L.labelPx+'px'); stage.style.setProperty('--padx',L.padX+'px');
+  stage.style.setProperty('--padtop',L.padTop+'px'); stage.style.setProperty('--figpadtop',CONFIG.layout.figPadTopPx+'px'); stage.style.setProperty('--headmt',CONFIG.layout.headingMarginTopPx+'px'); stage.style.setProperty('--headmb',CONFIG.layout.headingMarginBottomPx+'px'); stage.style.setProperty('--figtop',Math.round(L.headerH)+'px');
+  if(L.phone) stage.style.height=Math.round(L.headerH+Math.max.apply(null,CONFIG.figures.map(f=>figureRequired(f,L,CONFIG).required))+CONFIG.layout.bottomClearancePx)+'px';
+  else stage.style.height='';
+  const deps={config:CONFIG, palette:CONFIG.palette, timing:CONFIG.timing, layout:L, dom:browserDom(), fonts:CONFIG.fonts, stageEl:stage};
+  mounted=createScene(deps);
+  render(lastT);
+}
+function render(t){
+  lastT=Math.max(0,Math.min(CONFIG.duration,t)); window.__lastT=lastT;
+  document.getElementById('clock').textContent=lastT.toFixed(2)+'s / '+CONFIG.duration+'s';
+  const tr=transitionState(lastT,CONFIG.figures,CONFIG);
+  mounted.forEach((m,i)=>{ let op=0, ty=0;
+    if(i===tr.index){ op=tr.inOpacity; ty=tr.inTy; if(m.draw) m.draw(tr.inP); }
+    else if(i===tr.prevIndex){ op=tr.outOpacity; ty=tr.outTy; if(m.draw) m.draw(tr.outP); }
+    m.root.classList.toggle('on', op>0);
+    m.root.style.opacity=op;
+    m.root.style.transform=ty?('translateY('+ty+'px)'):'';
+  });
+}
+let playing=false, startStamp=0, offset=0, raf=0;
+function tick(now){ if(!playing)return; const t=offset+(now-startStamp)/1000; if(t>=CONFIG.duration){render(CONFIG.duration);playing=false;return;} render(t); raf=requestAnimationFrame(tick); }
+window.T17={ config:CONFIG, render:render, fitReport:function(w){return fitReport(w||stage.clientWidth||960, CONFIG.figures, CONFIG);},
+  validate:function(){return validateConfig(CONFIG);},
+  setTime:function(t){offset=t;render(t);}, get time(){return offset;},
+  play:function(){ if(!playing){playing=true;startStamp=performance.now();raf=requestAnimationFrame(tick);} },
+  pause:function(){ playing=false; offset=window.__lastT||offset; cancelAnimationFrame(raf); },
+  restart:function(){ offset=0; playing=true; startStamp=performance.now(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick); } };
+document.getElementById('play').onclick=()=>{ playing?window.T17.pause():window.T17.play(); };
+document.getElementById('restart').onclick=()=>window.T17.restart();
+window.addEventListener('resize',buildAll);
+buildAll();
+</script></body></html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T168 — Spoke draw-on with dot landing, parameterized</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  .stage{width:min(100vw,100vh);aspect-ratio:1/1;}
+  svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div class="stage" id="stageBox">
+<svg id="scene" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hub and spoke draw-on diagram">
+  <rect id="field" x="0" y="0"></rect>
+  <g id="spokes"></g>
+  <g id="dots"></g>
+  <circle id="hubDot"></circle>
+</svg>
+</div>
+<script>
+"use strict";
+const CONFIG = {
+  stage: { w: 1080, h: 1080 },
+  hub: { cx: 482, cy: 484, r: 32, colour: "#ffffff" },
+  satellites: [
+    { x: 632, y: 440, r: 21, drawStartMs: 400, drawDurMs: 480 },
+    { x: 574, y: 255, r: 21, drawStartMs: 1120, drawDurMs: 400 },
+    { x: 331, y: 510, r: 21, drawStartMs: 1720, drawDurMs: 280 },
+    { x: 683, y: 340, r: 21, drawStartMs: 2160, drawDurMs: 280 },
+    { x: 463, y: 265, r: 21, drawStartMs: 2600, drawDurMs: 240 }
+  ],
+  spoke: { w: 1.5, colour: "#ffffff", easing: "linear" },
+  timingScale: { default: 1 },
+  palette: { field: "#000000", ink: "#ffffff" },
+  cycleMs: 4200
+};
+
+function timingScaleValue(cfg) {
+  const c = cfg || CONFIG;
+  if (typeof c.timingScale === "number") return c.timingScale;
+  if (c.timingScale && typeof c.timingScale.default === "number") return c.timingScale.default;
+  return 1;
+}
+function scaledSatellites(cfg) {
+  const c = cfg || CONFIG;
+  const ts = timingScaleValue(c);
+  return c.satellites.map(function (s) {
+    return { x: s.x, y: s.y, r: s.r, drawStartMs: s.drawStartMs * ts, drawDurMs: s.drawDurMs * ts };
+  });
+}
+function applyEasing(p, easing) {
+  if (easing === "easeOutCubic") { const q = 1 - p; return 1 - q * q * q; }
+  if (easing === "easeInOutQuad") return p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  return p;
+}
+function fractionAt(ms, start, dur, easing) {
+  if (ms < start) return 0;
+  if (dur <= 0) return 1;
+  const p = (ms - start) / dur;
+  if (p >= 1) return 1;
+  return applyEasing(p, easing);
+}
+function stateAt(ms, cfg) {
+  const c = cfg || CONFIG;
+  const sats = scaledSatellites(c);
+  const per = sats.map(function (s) {
+    const f = fractionAt(ms, s.drawStartMs, s.drawDurMs, c.spoke.easing);
+    return { lineFraction: f, dotPresent: f >= 1, x: s.x, y: s.y, r: s.r, drawStartMs: s.drawStartMs, drawDurMs: s.drawDurMs };
+  });
+  let landed = 0;
+  per.forEach(function (p) { if (p.dotPresent) landed += 1; });
+  const s1 = per.length > 0 ? per[0] : { lineFraction: 0, dotPresent: false };
+  return {
+    ms: ms,
+    landed: landed,
+    satellites: per,
+    s1: { lineFraction: s1.lineFraction, dotPresent: s1.dotPresent },
+    s1dot: s1.dotPresent,
+    hub: { cx: c.hub.cx, cy: c.hub.cy, r: c.hub.r, present: true },
+    spokeColour: c.spoke.colour,
+    spokeW: c.spoke.w,
+    timingScale: timingScaleValue(c),
+    cycleMs: c.cycleMs
+  };
+}
+
+let lineEls = [];
+let dotEls = [];
+function buildScene() {
+  if (typeof document === "undefined") return;
+  const spokesG = document.getElementById("spokes");
+  const dotsG = document.getElementById("dots");
+  const hubEl = document.getElementById("hubDot");
+  const fieldEl = document.getElementById("field");
+  const sceneEl = document.getElementById("scene");
+  const stageEl = document.getElementById("stageBox");
+  if (!spokesG || !dotsG || !hubEl) return;
+  const svgNS = "http://www.w3.org/2000/svg";
+  while (spokesG.firstChild) spokesG.removeChild(spokesG.firstChild);
+  while (dotsG.firstChild) dotsG.removeChild(dotsG.firstChild);
+  lineEls = []; dotEls = [];
+  if (sceneEl) sceneEl.setAttribute("viewBox", "0 0 " + CONFIG.stage.w + " " + CONFIG.stage.h);
+  if (document.body) document.body.style.background = CONFIG.palette.field;
+  if (stageEl) stageEl.style.background = CONFIG.palette.field;
+  if (fieldEl) {
+    fieldEl.setAttribute("width", String(CONFIG.stage.w));
+    fieldEl.setAttribute("height", String(CONFIG.stage.h));
+    fieldEl.setAttribute("fill", CONFIG.palette.field);
+  }
+  hubEl.setAttribute("cx", String(CONFIG.hub.cx));
+  hubEl.setAttribute("cy", String(CONFIG.hub.cy));
+  hubEl.setAttribute("r", String(CONFIG.hub.r));
+  hubEl.setAttribute("fill", CONFIG.hub.colour);
+  CONFIG.satellites.forEach(function (s) {
+    const ln = document.createElementNS(svgNS, "line");
+    ln.setAttribute("x1", String(CONFIG.hub.cx));
+    ln.setAttribute("y1", String(CONFIG.hub.cy));
+    ln.setAttribute("x2", String(CONFIG.hub.cx));
+    ln.setAttribute("y2", String(CONFIG.hub.cy));
+    ln.setAttribute("stroke", CONFIG.spoke.colour);
+    ln.setAttribute("stroke-width", String(CONFIG.spoke.w));
+    spokesG.appendChild(ln);
+    lineEls.push(ln);
+    const dot = document.createElementNS(svgNS, "circle");
+    dot.setAttribute("cx", String(s.x));
+    dot.setAttribute("cy", String(s.y));
+    dot.setAttribute("r", String(s.r));
+    dot.setAttribute("fill", CONFIG.palette.ink);
+    dot.setAttribute("visibility", "hidden");
+    dotsG.appendChild(dot);
+    dotEls.push(dot);
+  });
+}
+function render(ms) {
+  const st = stateAt(ms);
+  st.satellites.forEach(function (p, i) {
+    const ln = lineEls[i]; const dot = dotEls[i];
+    if (ln) {
+      ln.setAttribute("x2", String(CONFIG.hub.cx + (p.x - CONFIG.hub.cx) * p.lineFraction));
+      ln.setAttribute("y2", String(CONFIG.hub.cy + (p.y - CONFIG.hub.cy) * p.lineFraction));
+      ln.setAttribute("visibility", p.lineFraction > 0 ? "visible" : "hidden");
+    }
+    if (dot) dot.setAttribute("visibility", p.dotPresent ? "visible" : "hidden");
+  });
+  return st;
+}
+let startStamp = null;
+function tick(ts) {
+  if (startStamp === null) startStamp = ts;
+  const elapsed = (ts - startStamp) % CONFIG.cycleMs;
+  render(elapsed);
+  if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(tick);
+}
+function __seek(ms) { return render(ms); }
+
+if (typeof window !== "undefined") {
+  window.__config = CONFIG;
+  window.__seek = __seek;
+  window.stateAt = stateAt;
+  window.scaledSatellites = scaledSatellites;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CONFIG: CONFIG, stateAt: stateAt, scaledSatellites: scaledSatellites, __seek: __seek };
+}
+if (typeof document !== "undefined") {
+  buildScene();
+  render(0);
+  if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(tick);
+}
+</script>
+</body>
+</html>

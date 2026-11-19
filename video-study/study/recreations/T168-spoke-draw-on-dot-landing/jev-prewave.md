@@ -1,0 +1,323 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /home/hatch/workspace/goals/diy-building-and-real-learning/hidden_files/study/recreations/T168-spoke-draw-on-dot-landing
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e80f-b57a-72b0-850e-37e1946b13f7
+--------
+user
+FED REVIEW — judge ONLY the text supplied in this single stream. Do NOT use tools, do NOT attempt to read any file from disk; everything you need is in this stream. If a check needs material not in this stream, name it as a gap instead of fetching it.
+
+CONSUMER: recreation job INSTRUCTION §5 step 3b (jev-prewave) for Cycle 026 Wave 23 item T168. DECISION PRICED: FIRE-WAVE (spend the five-lens scoring wave on this build) vs HOLD (return the build to Execute with named defects). WORKING RECORD: hidden_files/study/recreations/T168-spoke-draw-on-dot-landing/ (build-record.md + recreation.html CONFIG + fit-table.md + config-census.md). BODY-WRITE: your return is filed verbatim as jev-prewave.md at the artifact root; end with a BODY-WRITE: line naming that filing.
+ITEM: T168 — Spoke draw-on with dot landing · Packet #9 T03 · queue #82 · OWED first attempt · schedule basis t=0 allocation (RUN §2 as amended by §2c/§2d).
+
+=== GUARD DEFINITION (jev-prewave.md) ===
+# Jev call — jev-prewave (recreation)
+
+_Per-call definition from jev-call-template.md. Designed 2026-11-14. The judgment: a scoring wave is the lane's expensive instrument — this call prices whether a build has EARNED its wave before the wave spends._
+
+## 1. What it judges
+- Deliverable: an attempt's build record (parameter table · construction route · own-checks results) BEFORE the Codex wave fires.
+- Call point: recreation INSTRUCTION §4, between the builder's own checks (§5.2) and the wave (§5.3). The verdict is advisory: applied, a HOLD returns the build to the builder with named defects and the wave does not fire on that item; set aside, the miss is recorded in Condense. An unfired call makes the cycle INCOMPLETE.
+
+## 2. Instruction (the model's charge)
+Judge whether this build record shows a recreation ready to be scored, or one whose defects are already visible in its own paperwork. Price: (1) PARAMETERIZATION — is the piece genuinely CONFIG-driven (fields named, ranges sane), or hard-coded with a config costume? (2) PURITY PRE-CHECK — does the construction route describe generation from parameters, with no tracing/embedding step hiding in the prose? (3) OWN-CHECKS COMPLETENESS — are the mechanical guards' results recorded (purity grep, swap test, syntax), or asserted? (4) TECHNIQUE FIDELITY PLAN — does the record state which packet mechanics the build implements and which it deliberately defers (a deferral named is lawful; a mechanic silently absent is not)? Score 0–1 per dimension, classify defects. You judge paperwork only: a build can pass you and still fail its wave — your job is that no wave is spent on a build its own record already condemns.
+
+## 3. Context contract (masked view)
+- FED: build-record.md · the CONFIG block of recreation.html · the technique's packet section · guards.md command list (what own-checks should exist) · **the item's A6 leg outputs (fit-table.md + config-census.md) — added 2026-11-16, recreation Cycle 024 Condense, on the Wave-21 pattern: prewave firings for T151, T153 and T154 all HOLDed or re-fired on feed completeness (the A6 files and packet section existed complete in the artifact directory but were not in the payload), the lane's recurring ASSERTED-CHECKS false-positive class. A payload lacking any FED element is a feeder defect, printed as such in the build record; a HOLD whose only named cure is feeding an already-filed FED element is disposed as a feed-completeness miss, with the miss recorded.**
+- NEVER FED: the builder's confidence prose · prior attempts' scores (each build is priced on its own record).
+- Ceiling: ≤32k tokens; the HTML enters as its CONFIG + construction sections, not media.
+
+## 4. Output space
+- Verdict classes: **FIRE-WAVE · HOLD**.
+- Dimensions (0–1): parameterization · purity pre-check · own-checks completeness · fidelity-plan honesty.
+- Rejection taxonomy (one primary): HARDCODED-CONFIG · TRACING-STEP · ASSERTED-CHECKS (results claimed, not recorded) · SILENT-DEFERRAL.
+- Accepted profile travels: cited in scores.md's pre-wave line; a wave fired over a HOLD is a deviation (WAVE-OVER-HOLD).
+
+## 5. Floors and disposition
+- Any dimension < 0.5 → HOLD · ASSERTED-CHECKS at any score on other dimensions → HOLD (unrecorded checks are the lane's named failure class).
+- Disposition: the verdict is advisory — reviewed by the runner, applied or set aside with the miss recorded in Condense. The verdict + classification + disposition land in the build record either way; an applied HOLD leaves the item IN PROGRESS and the wave moves to its next item (a held item never holds the wave hostage).
+
+## Call command
+- BINDING OWED AT FIRST FIRING — the call fires in this job's next live cycle (owner's ruling 2026-11-14: arming = firing); binding it to the fleet's decision-model runner and recording the exact command here is the first firing's own first step, and the raw response files in the run record.
+
+## 6. Firing record and improvement
+- Exemplars: T15 attempt 1's build record (must FIRE-WAVE: checks recorded, deferral of the interlude named in its Plan) · a constructed record claiming a swap test with no harness output (must HOLD as ASSERTED-CHECKS) · a constructed record whose CONFIG is decorative over hard-coded phrases (must HOLD as HARDCODED-CONFIG).
+- Firing: this call fires at its step on every cycle; its firing record and misses are its improvement material. No test precedes firing. The exemplars above stand as its first firing cases — all three must classify correctly when fired, and a miss is recorded in Condense as improvement material, never as a bar to firing.
+
+## 7. Iteration (Condense)
+Amendments name forcing evidence + before/after. A text change takes effect on the call's next firing; the call keeps firing every cycle, and Condense prices the change against the returns that follow it.
+
+## Owner's ruling addendum (2026-11-14 ~20:55 EST — supersedes gate phrasing above)
+ARMING = FIRING: this call fires unconditionally in its owning job's next live cycle; the raw response files in the run record. There is no BUILT-NOT-FIRED state and no calibration gate — the calibration exemplars above are improvement material the firing record tests, not a precondition. VERDICTS ARE ADVISORY: applied, or set aside with the miss recorded in Condense + the call-file amendment it teaches. Any sentence above phrasing this call as blocking, gating, or preconditioning a step reads superseded by this addendum; the FIRING is the only non-skippable part.
+
+=== BUILD RECORD (build-record.md) ===
+# build-record — T168 Spoke draw-on with dot landing · attempt 1 · Cycle 026 Wave 23
+
+Item: T168 · queue #82 · Packet #9 T03 · OWED first attempt. Spec: RUN.md §2 T168 AS AMENDED by §2c + §2d (the §2d REVISED schedule supersedes §2/§2c start values).
+Artifact dir: hidden_files/study/recreations/T168-spoke-draw-on-dot-landing/
+Final build SHA-256 (recreation.html): d568b3cf4dfacefdb398af925621cb3fe0d04bea3dbbb336c7a7a55658197d5c
+
+## Segment (evidence only)
+- Source: hidden_files/study/video-digests/2026-11-16-vimeo-sixmap/source.mp4
+- Window 1.44–1.92 s; cut 0.94–2.42 (±0.5 handles), re-encoded h264.
+- ffprobe (raw): codec_name=h264 · width=1080 · height=1080 · r_frame_rate=25/1 · duration=1.480000
+- segment.mp4: 33061 bytes · SHA-256 bffb19f978b971da47bfcff66f836cb3f440ac702f87061b113b4e24ef592e4d
+- segment.mp4 is evidence only: it appears solely as the labeled ORIGINAL side of comparison.html; recreation.html contains no reference to it (purity grep below).
+
+## Schedule basis + mapping
+Schedule basis: **t=0 allocation** (RUN §2 T168, as revised §2d). Allocation starts = source segment-relative starts (500/1220/1820/2260/2700, segment start = source 0.94 s) under one constant −100 ms offset → **400/1120/1720/2160/2600**; durations preserved exactly (480/400/280/280/240, packet §4 bursts B02–B06); holds DERIVED (next start − start − dur) = 240/200/160/160, equal to the source holds; S5 ends 2840; end hold 2840–4200; cycleMs 4200.
+Census-anchor mapping (by phase): source mid-draw state (source 1.60 s = segment-relative 660 ms, S1 at p=(660−500)/480=0.333, line ≈33%, NO dot) ↔ allocation S1 p=0.333 at t=560. Source spoke-before (1.40 s, hub alone) ↔ allocation t<400 (landed 0, line 0). Source landed (1.96 s, line complete + dot) ↔ allocation t≥880 (S1 landed).
+Comparison sync: recreationMs = videoMs − 100 during segment playback (aligns every burst under the constant offset); after the segment ends the recreation continues free-running to 4200 ms. Face prints: "segment excerpt 1.48 s (first burst) vs allocation cycle 4.20 s (five bursts) — offset −100 ms, durations preserved".
+
+## Mechanics implemented (packet §T03)
+Thin white line (CONFIG spoke.w 1.5, colour #ffffff) extends from the hub toward each satellite over its burst; the satellite dot (r 21) materialises at the line's end ONLY as the draw completes (step at p=1 — no travel, no growth, no fade); mid-draw frames show the line with no dot; no arrowheads. Hub (482,484, r 32) stands full-size from t=0. Bursts serial, holds completely static. Easing: "linear" SUPPLIED (specimen easing UNMEASURED — registration limit; a constant-rate extension is the neutral curve, named in CONFIG).
+
+## Construction
+One self-contained recreation.html: CONFIG at top (stage 1080×1080 · hub · satellites[5] · spoke · timingScale{default 1} · palette · cycleMs 4200), SVG construction below. Per satellite: a line whose endpoint is hub + (satellite − hub) × lineFraction(ms), lineFraction a pure function of time (0 before start, proportional during draw, 1 after); the satellite circle's visibility is the step dotPresent = (fraction ≥ 1). stateAt(ms) is pure and deterministic (no Math.random/Date.now — grep-verified 0 hits). Exposed: window.__seek / window.__config / window.stateAt (+ module.exports {CONFIG, stateAt, scaledSatellites, __seek}); stateAt returns at least {landed, s1:{lineFraction, dotPresent}} plus the full per-satellite array. timingScale scales every start+duration uniformly; holds are derived, never literals. No external assets.
+comparison.html: segment.mp4 + recreation iframe, ONE control set (Play/Pause/Restart), sync per the mapping above, labels "ORIGINAL — SixMap (nez&pez) @ 1.44–1.92" / "RECREATION — T168 Spoke draw-on with dot landing, parameterized", phone stacking (flex column ≤640px), buttons min-height 44px.
+
+## Count assertion (A9.3)
+Satellites built (CONFIG.satellites.length) = 5 vs RUN table = 5 — MATCH (raw harness line below).
+
+## Fidelity plan — deferrals named
+Implemented: draw-on line, dot materialisation at completion, serial bursts, static holds, hub standing, no arrowheads.
+Deliberately excluded (named, lawful): the footer/name ticker (that is T170 — excluded by design; its synchrony with bursts is T171, not owed) · the remaining 17 satellites of the full 23-node fan (the technique is per-satellite; the allocation demonstrates five bursts — §8 split rule) · any easing curve beyond the supplied linear (specimen easing UNMEASURED).
+
+## Asset inventory
+segment.mp4 (evidence, comparison only) · recreation.html (code only, no assets loaded) · comparison.html (loads segment.mp4 + recreation.html only). No generated imagery; no external assets anywhere.
+
+## Own checks — RAW output (final build, harness rc=0)
+```
+== CHECK 4 count ==
+satellites built=5 RUN table=5
+PASS count satellites 5 vs 5 MATCH :: 5
+== CHECK 5 zero-state probes ==
+stateAt(399).landed=0
+PASS stateAt(399).landed==0 :: 0
+stateAt(560).s1={"lineFraction":0.3333333333333333,"dotPresent":false}
+PASS stateAt(560).s1.lineFraction~=0.333 :: 0.3333333333333333
+PASS stateAt(560).s1.dotPresent==false
+stateAt(879).s1={"lineFraction":0.9979166666666667,"dotPresent":false} stateAt(880).s1={"lineFraction":1,"dotPresent":true}
+PASS stateAt(879).s1.dotPresent==false
+PASS stateAt(880).s1.dotPresent==true
+== CHECK 6 schedule invariant ==
+timingScale=1 scaled=[[400,480],[1120,400],[1720,280],[2160,280],[2600,240]] invariant=true
+PASS invariant ts=1
+timingScale=0.5 scaled=[[200,240],[560,200],[860,140],[1080,140],[1300,120]] invariant=true
+PASS invariant ts=0.5
+== derived holds ==
+holds=[240,200,160,160] expected=[240,200,160,160]
+PASS holds equal source holds :: [240,200,160,160]
+== CHECK 1 swap ==
+swapped scaled satellites=[{"x":697,"y":451,"r":21,"drawStartMs":200,"drawDurMs":240},{"x":813,"y":131,"r":21,"drawStartMs":560,"drawDurMs":200},{"x":482.5,"y":676,"r":21,"drawStartMs":860,"drawDurMs":140}]
+PASS swap satellites length 3 :: 3
+PASS swap S1 start halved 400->200 :: 200
+PASS swap S1 dur halved 480->240 :: 240
+PASS swap spoke colour in state :: "#57c7e8"
+PASS swap positions in state :: {"lineFraction":0,"dotPresent":false,"x":813,"y":131,"r":21,"drawStartMs":560,"drawDurMs":200}
+PASS swap landed at 440 ==1 (S1 done) :: 1
+PASS restored landed at 880 ==1 :: 1
+TOTAL FAILS=0
+HARNESS_RC=0
+```
+Swap EXACT values: satellites replaced by 3 entries from positions-final.json — (697,451) start 400 dur 480 · (813,131) start 1120 dur 400 · (482.5,676) start 1720 dur 280 (same §2d start/duration form) · timingScale 1→0.5 (S1 draw window halves: start 200, dur 240 — asserted) · spoke colour #ffffff→#57c7e8 (asserted in state). All swap assertions read from stateAt/scaledSatellites on the live CONFIG.
+Purity grep (raw): pattern `segment\.mp4|source\.mp4|<video|<img|url\(|1235931636` over recreation.html → grep rc=1, **0 hits**.
+Syntax (raw): `node --check` on the extracted inline script → **PASS**.
+Determinism grep (raw): `Math\.random|Date\.now` over recreation.html → **0 hits**.
+
+## A6 legs (on the FINAL build)
+- fit-table.md — HITs 0. This item carries NO subject text; the fit table prints that fact as its row set.
+- config-census.md — HITs 0. All-literal scan: 0 hex colours outside CONFIG; every remaining numeral/string classified structural; timingScale and every geometry value are CONFIG; every CONFIG key resolves to a value-flow application site; no CSS variables.
+
+## Gate pointers
+- jev-prewave: payload codex/payload-prewave.txt → return jev-prewave.md (artifact root). Disposition in scores.md.
+- Five-lens wave: payloads codex/payload-{motion,timing,purity,reusability,readability}.txt → returns codex/lens-{motion,timing,purity,reusability,readability}.md, all bound to SHA d568b3cf…d5c (identical in all five).
+- Verdict: scores.md.
+
+=== CONFIG BLOCK (from recreation.html, verbatim) ===
+const CONFIG = {
+  stage: { w: 1080, h: 1080 },
+  hub: { cx: 482, cy: 484, r: 32, colour: "#ffffff" },
+  satellites: [
+    { x: 632, y: 440, r: 21, drawStartMs: 400, drawDurMs: 480 },
+    { x: 574, y: 255, r: 21, drawStartMs: 1120, drawDurMs: 400 },
+    { x: 331, y: 510, r: 21, drawStartMs: 1720, drawDurMs: 280 },
+    { x: 683, y: 340, r: 21, drawStartMs: 2160, drawDurMs: 280 },
+    { x: 463, y: 265, r: 21, drawStartMs: 2600, drawDurMs: 240 }
+  ],
+  spoke: { w: 1.5, colour: "#ffffff", easing: "linear" },
+  timingScale: { default: 1 },
+  palette: { field: "#000000", ink: "#ffffff" },
+  cycleMs: 4200
+};
+=== PACKET SECTION (digest.md §T03) ===
+### T03 — Spoke draw-on with dot landing (per satellite, first at 1.44–1.92 s)
+- **Mechanics:** each satellite arrives the same way: a thin white line (1–2 px) extends from the hub toward the satellite's position over the burst (≈0.16–0.48 s), and the satellite dot (radius ≈21 px) materialises at the line's end as the draw completes. Mid-draw frames show the line present with no dot yet. No arrowheads, no direction markers — the line is a relationship, not a flow. Easing: UNMEASURED (durations in §4; no interpolation curve claimed).
+- **Why it works:** the eye rides the line out and is delivered to the new node; the relationship is drawn before the entity exists, so the viewer reads "connected to the hub" before "another dot".
+- **Evidence:** ev/001.40-spoke-before.jpg (before: hub alone) · ev/001.60-spoke-drawing.jpg (during: line extended, no dot at its end; ticker mid-roll below) · ev/001.96-first-satellite.jpg (after: dot landed, first spoke complete).
+
+
+=== GUARDS COMMAND LIST (guards.md) ===
+# Guards — recreation
+
+## The judgment layer's home (owner's order, 2026-11-14 — 100% form)
+Form: **In-job form.** This job's judging = the Codex scoring wave (its review type, defined in `codex-scoring-wave.md` in this directory) + the mechanical guards below + `jev-prewave.md`. The wave's execution may be shared tooling; the definitions are this job's own files.
+
+## The commands (mechanical guards — callable, demonstrated)
+1. Construction-purity grep — recreation.html must contain no reference to source media, frames, or tracing (pattern census over the file).
+   Demonstrated: 2026-11-13, T15 attempt 1 (zero hits; Codex purity lens independently returned 100).
+2. Swap test (parameterization proof) — headless harness loads the recreation with a swapped CONFIG phrase; target geometry must regenerate for the new words (a traced copy cannot).
+   Demonstrated: 2026-11-13, T15 attempt 1, LOGIC level (node harness, stubbed canvas: 5,060 → 2,728 targets). Pixel-level render proof is NOT exercisable from this seat (no browser binary) — printed limitation, carried in scores.md; the comparison page is the render surface.
+3. Syntax + determinism check — `node --check` on inline scripts; seeded-RNG presence census.
+   Demonstrated: 2026-11-13, T15 attempt 1 (both scripts clean).
+4. Scores arithmetic — recompute the wave average + min from the filed lens returns before scores.md prints a verdict.
+   Demonstrated: 2026-11-13, T15 attempt 1 (68/82/100/64 → 78.5 recomputed at filing).
+5. Segment binding — segment.mp4's timestamps/duration/ffprobe facts recorded against the packet's technique window before any build starts.
+   Demonstrated: 2026-11-13, T15 attempt 1 (1:24–1:40 · 16.0 s · ffprobe-cited).
+6. **Measured-fit leg** — `guard-measured-fit.md` in this directory. Per item, pre-wave: every subject text element carries a MEASURED fit row (post-fit ink bounds vs container at the 360 px stage, legibility floor ~11 px); a formula-claimed fit or a missing row is a HIT. Owns the "fit asserted, not measured" readability class (Waves 2–5, 10). **Built 2026-11-15 (HQ owed-checks charge); fires unconditionally at the pre-wave step from the next cycle; a wave record lacking a fit table for any item prints INCOMPLETE.** Verdict advisory; firing is not.
+7. **Config-census leg (v3.1 codified)** — `guard-config-census.md` in this directory. Per item, pre-wave: all-literal scan with per-constant subject-shaping/structural classification + CONFIG key→application-site resolution (nested/array keys included) + CSS-variable setter check; unapplied keys and unset-variable references are HITs. Owns the config-incompleteness reusability class. **Built 2026-11-15 (HQ owed-checks charge); fires unconditionally at the pre-wave step from the next cycle; a wave record lacking a census for any item prints INCOMPLETE.** Verdict advisory; firing is not.
+
+## Jev call definitions
+- `jev-prewave.md` — judges a build record's readiness to spend a scoring wave. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (Designed 2026-11-14; attempt 1 predates it and ran under the §5 panel, which runs alongside.)
+- `jev-observe-exit.md` — the Observe→Plan gate for a recreation wave (queue state priced · prior/family scores read · mechanics seen · variables extracted · flow-field model + Owner Cures 1–2 carried in working memory · consumer named). Call point: INSTRUCTION §1 gate out. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (Phase-guard augmentation, 2026-11-14.)
+- `jev-plan-exit.md` — the Plan→Execute gate (parameter table · Execute + Verify checklists as instruments · failure points priced · plateau floor rule priced in Plan). Call point: INSTRUCTION §2 gate out. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- Deliverable Jev: **none separate, by design** — the deliverable class (a scored recreation attempt) is judged by the five-lens Codex scoring wave + §5.5 consolidation; a jev-verify file would duplicate the wave. jev-prewave is its pre-wave gate. (Printed in INSTRUCTION §5 step 3b.)
+
+## Codex review types
+- `codex-scoring-wave.md` — the five-lens scoring wave (motion fidelity · timing/tempo · construction purity · reusability · readability). Demonstrated: 2026-11-13, T15 attempt 1 (four lenses then; readability added 2026-11-14 under the owner's order — the five-lens form demonstrates at the next wave).
+- `codex-observe.md` — Observe-phase source-record audit (packet-section completeness · prior-attempt record audit · segment facts). Call point: INSTRUCTION §1 step 1, per item. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- `codex-plan-review.md` — Plan attack priced against this job's recorded failure modes (convergent freeze · owner's two catches · parameterization reality · bar arithmetic · §8 size discipline). Call point: INSTRUCTION §2 gate out, alongside jev-plan-exit. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+- `codex-condense.md` — Condense review: amendment faithfulness + four-layer coverage attack. Call point: INSTRUCTION §9, at Condense close. Consumer: the job's next cycle. **Firing: this call fires at its step on every cycle. A cycle in which it did not fire prints INCOMPLETE.** (2026-11-14.)
+
+## Judge facts
+- Judges: Codex scoring wave (floors: average ≥85 AND no lens <70 — the recreation law) · jev-prewave (floors per its §5; fires at its step on every cycle).
+- Verdict history: ../verdict-history.md
+
+## Presence (2026-11-14, founding of this layer)
+JUDGMENT LAYER: **INCOMPLETE** — mechanical guards hosted + demonstrated (5/5); Codex wave defined in-job and demonstrated (four-lens form; five-lens form pending its first wave); jev-prewave designed, DEFINED — it fires at its step on every cycle.
+
+## Presence update (2026-11-14, phase-guard augmentation)
+JUDGMENT LAYER: **INCOMPLETE** — phase-transition layer now hosted: jev-observe-exit + jev-plan-exit (both DEFINED) · codex-observe + codex-plan-review + codex-condense (all DEFINED) · jev-prewave DEFINED · five-lens scoring wave still pending its first demonstration. Every call in this layer fires at its step on every cycle; a cycle in which one did not fire prints INCOMPLETE. Build record: `BUILD-LOG.md` in this directory.
+
+## Ruling update (2026-11-14 ~20:55 EST — owner's judgment-call ruling)
+ARMING = FIRING abolishes the arming states printed in this index: this job's calls are DEFINED and fire unconditionally in its next live cycle (raw responses filed in the run record); verdicts are advisory (applied, or set aside with the miss + the call-file amendment recorded in Condense). The founding Presence print stands as the 2026-11-14 founding record; from the next cycle, the presence evaluation prices FIRING (fired / not fired — not fired = INCOMPLETE), not arming.
+
+8. **Census-anchor probes (2026-11-16, recreation Cycle 025 Condense — mechanical layer of the allocation/count consistency landing).** Where a census anchor asserts an empty/zero state at a named instant (e.g. "no territory at 449 s"), the builder's own-checks harness MUST probe the recreation's state function at that instant (mapped segment-relative) and file the raw result in build-record.md; a prescribed schedule that is nonzero at a zero-state anchor is a build-record defect to cure BEFORE the wave, not a finding for the timing lens to discover. Forcing evidence: T160 Wave 22 (prescribed purple front 8.33% grown at the 449 s zero-state anchor; timing lens priced it 68 in `hidden_files/study/recreations/T160-expansion-front-envelopment/codex/lens-timing.md`).
+
+=== A6 LEG 1 (fit-table.md) ===
+# fit-table — T168 Spoke draw-on with dot landing (A6 measured-fit leg, pre-wave)
+
+Guard: guards/guard-measured-fit.md. Subject: recreation.html SHA-256 d568b3cf4dfacefdb398af925621cb3fe0d04bea3dbbb336c7a7a55658197d5c.
+
+## Row set
+
+This item carries NO subject text. The technique (packet digest §T03) is a pure geometry mechanic — hub, spokes, satellite dots. The footer names belong to T170 and are excluded from this build by design (RUN §2 T168: "font/footer NOT part of this technique"). There are therefore no subject text elements to measure:
+
+| element id | subject text | container | measured ink bounds | container bounds | margin |
+|---|---|---|---|---|---|
+| (none) | — this build contains no text elements at all — | — | — | — | — |
+
+Verification of the no-text fact: recreation.html contains no text nodes in the scene (the only strings are element ids, attribute names, the SVG namespace identifier, and the document <title>/aria-label metadata, none rendered in the stage). The diagram elements are geometry, not text: hub circle r=32, satellite circles r=21, spoke lines w=1.5 — all CONFIG values, priced by the readability lens at phone size, not by this leg.
+
+## HIT list
+HITs: 0 (empty = PASS for this leg). No subject text element exists without a row; no fit is formula-claimed; the ~11px legibility floor has no text to bind.
+
+=== A6 LEG 2 (config-census.md) ===
+# config-census — T168 Spoke draw-on with dot landing (A6 config-census leg v3.1, pre-wave)
+
+Guard: guards/guard-config-census.md. Subject: recreation.html SHA-256 d568b3cf4dfacefdb398af925621cb3fe0d04bea3dbbb336c7a7a55658197d5c.
+Method: all-literal scan of recreation.html outside the CONFIG block (scripted scan, raw counts below) + per-constant classification + CONFIG key→application-site resolution + CSS-variable setter check.
+
+## 1. All-literal scan (raw scan output)
+- HEX colours outside CONFIG: [] — count 0.
+- Numbers outside CONFIG: ['0', '1', '100', '2000', '8'] — classification per constant:
+  - `0` — structural: coordinate origin (rect x/y, viewBox origin built as "0 0 " + CONFIG.stage), fraction clamp bound, loop/empty initialisers. Mathematical identity, shapes nothing.
+  - `1` — structural: fraction completion bound (p>=1 materialisation threshold — the packet's mechanic itself, not a shaping value), aspect-ratio 1/1 (the stage is square by CONFIG.stage 1080x1080), initial-scale=1 viewport token.
+  - `100` — structural: CSS 100%/100vw/100vh layout extents (stage fills the viewport; the stage's own geometry comes from CONFIG.stage via viewBox).
+  - `2000` — structural: substring of the SVG namespace identifier string "http://www.w3.org/2000/svg" (a fixed identifier, not a value).
+  - `8` — structural: substring of the "utf-8" charset token.
+- Strings outside CONFIG: element ids, SVG attribute names, "visible"/"hidden" state tokens, the namespace identifier, "use strict", aria-label metadata — all structural identifiers, none subject-shaping.
+- No durations, geometry values, or formula coefficients stand outside CONFIG: the fraction function is (ms − start)/dur with start/dur read from CONFIG.satellites (scaled by CONFIG.timingScale); line endpoints interpolate hub→satellite coordinates read from CONFIG. There are no background-layer coefficients in this build (still black field, A9.1) and no generator constants.
+
+## 2. CONFIG key → application-site resolution (value-flow)
+| key | application site (value flows into) |
+|---|---|
+| stage.w / stage.h | viewBox construction + field rect width/height in buildScene |
+| hub.cx / hub.cy | hub circle cx/cy; every spoke line x1/y1; endpoint interpolation origin in render |
+| hub.r | hub circle r |
+| hub.colour | hub circle fill |
+| satellites[].x / .y | satellite circle cx/cy; spoke endpoint interpolation target in render/stateAt |
+| satellites[].r | satellite circle r |
+| satellites[].drawStartMs / .drawDurMs | scaledSatellites → fractionAt in stateAt (draw window + dot materialisation) |
+| spoke.w | spoke line stroke-width |
+| spoke.colour | spoke line stroke; stateAt().spokeColour |
+| spoke.easing ("linear") | named supplied curve; the fraction function IS the linear interpolation it names (no other curve code exists) |
+| timingScale.default | timingScaleValue → scaledSatellites (uniform scaling of every start+duration) |
+| palette.field | body/stage background + field rect fill |
+| palette.ink | satellite circle fill |
+| cycleMs | tick loop modulus; stateAt().cycleMs |
+
+Every key resolves to at least one value-flow site in its named subject. No unapplied keys.
+
+## 3. CSS-variable setter check
+The build uses no CSS variables. All styling values are assigned from CONFIG in buildScene/render (inline style + setAttribute). No unset-variable references exist. PASS.
+
+## HIT list
+HITs: 0 (empty = PASS for this leg).
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+warning: Loaded only 32768 of 98136 bytes from `/home/hatch/AGENTS.md` in environment `local` under the 32768-byte project instruction budget. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Skipped project instructions in environment `local` starting at `/home/hatch/workspace/AGENTS.md` because the 32768-byte budget was exhausted. Trim your project instructions to fit the budget. If you need to keep them all, increase `project_doc_max_bytes`.
+warning: Combined user instructions use 37824 bytes, above the 32768-byte `project_doc_max_bytes` setting. The total includes global and thread instructions. The limit applies only to project files.
+codex
+**FIRE-WAVE** — the supplied paperwork supports spending the scoring wave. No blocking defect established.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.85 |
+| Purity pre-check | 0.95 |
+| Own-checks completeness | 0.90 |
+| Fidelity-plan honesty | 1.00 |
+
+Findings:
+
+- **Parameterization:** `recreation.html CONFIG` exposes geometry, satellite count, draw schedules, colours, timing scale, and cycle duration. `build-record.md → Own checks` records a three-satellite replacement, halved timing, changed colour, and state assertions against the swapped CONFIG. This supports substantive parameterization.
+- **Purity:** `build-record.md → Construction` describes generated SVG endpoints and completion-triggered circles. Its recorded purity grep reports zero source-media references. No tracing or embedding step appears in the supplied construction account.
+- **Own checks:** `build-record.md → Own checks` supplies probe values, swap results, schedule invariants, derived holds, syntax results, and determinism results. Both required A6 outputs are supplied. `fit-table.md → Row set` explains the empty text census; `config-census.md` supplies literal classifications and application sites. Wave-score arithmetic is properly deferred until lens returns exist.
+- **Fidelity:** `build-record.md → Mechanics implemented / Fidelity plan` explicitly covers the packet’s extending line, absent mid-draw dot, completion landing, and lack of arrowheads. Footer, additional satellites, and unmeasured easing are openly bounded.
+- **Nonblocking qualification:** `config-census.md → CONFIG key resolution` describes `spoke.easing` as naming the implemented linear formula; it does not demonstrate that changing this field changes interpolation. Treat this as a declared supported curve, with broader easing configurability unproven. The recorded geometry and timing swaps still establish meaningful parameterization.
+
+Rejection taxonomy: none blocking; ASSERTED-CHECKS is not established.
+
+Limits: Text-only review. Source frames, rendered behaviour, executable code, hashes, scan completeness, and the cited RUN amendments were not independently verified. The actual construction code was not supplied; construction is assessed through its recorded description.
+
+BODY-WRITE: Return designated for verbatim filing as `hidden_files/study/recreations/T168-spoke-draw-on-dot-landing/jev-prewave.md` by the consumer; no direct write performed.
+tokens used
+20,007
+**FIRE-WAVE** — the supplied paperwork supports spending the scoring wave. No blocking defect established.
+
+| Dimension | Score |
+|---|---:|
+| Parameterization | 0.85 |
+| Purity pre-check | 0.95 |
+| Own-checks completeness | 0.90 |
+| Fidelity-plan honesty | 1.00 |
+
+Findings:
+
+- **Parameterization:** `recreation.html CONFIG` exposes geometry, satellite count, draw schedules, colours, timing scale, and cycle duration. `build-record.md → Own checks` records a three-satellite replacement, halved timing, changed colour, and state assertions against the swapped CONFIG. This supports substantive parameterization.
+- **Purity:** `build-record.md → Construction` describes generated SVG endpoints and completion-triggered circles. Its recorded purity grep reports zero source-media references. No tracing or embedding step appears in the supplied construction account.
+- **Own checks:** `build-record.md → Own checks` supplies probe values, swap results, schedule invariants, derived holds, syntax results, and determinism results. Both required A6 outputs are supplied. `fit-table.md → Row set` explains the empty text census; `config-census.md` supplies literal classifications and application sites. Wave-score arithmetic is properly deferred until lens returns exist.
+- **Fidelity:** `build-record.md → Mechanics implemented / Fidelity plan` explicitly covers the packet’s extending line, absent mid-draw dot, completion landing, and lack of arrowheads. Footer, additional satellites, and unmeasured easing are openly bounded.
+- **Nonblocking qualification:** `config-census.md → CONFIG key resolution` describes `spoke.easing` as naming the implemented linear formula; it does not demonstrate that changing this field changes interpolation. Treat this as a declared supported curve, with broader easing configurability unproven. The recorded geometry and timing swaps still establish meaningful parameterization.
+
+Rejection taxonomy: none blocking; ASSERTED-CHECKS is not established.
+
+Limits: Text-only review. Source frames, rendered behaviour, executable code, hashes, scan completeness, and the cited RUN amendments were not independently verified. The actual construction code was not supplied; construction is assessed through its recorded description.
+
+BODY-WRITE: Return designated for verbatim filing as `hidden_files/study/recreations/T168-spoke-draw-on-dot-landing/jev-prewave.md` by the consumer; no direct write performed.

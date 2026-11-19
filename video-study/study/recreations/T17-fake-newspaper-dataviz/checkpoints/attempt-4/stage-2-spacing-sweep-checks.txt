@@ -1,0 +1,46 @@
+STAGE 2 - C2 every-figure spacing sweep (A-C012-1) + secondary text + org perRow re-derivation + badge keys pre-introduced
+PASS CSS-parse: every declaration parses :: 76 declarations, bad: 
+PASS CSS .fig padding-top from single-source var
+PASS CSS h2 margins from single-source vars
+PASS CSS .src: opacity removed, secondary colour
+BASIS TABLE (A-C012-1) at 360px:
+  figure top padding -> layout.figPadTopPx = 6px -> figure content starts figPadTopPx below the figure top; figureRequired includes it
+  heading margins -> layout.headingMarginTopPx+BottomPx = 11px -> headH reserves the rendered 11px total
+  FIG.20 phone row gap -> layout.rowGapPx = 18px -> model blockH and builder flex gap identical
+  FIG.24 phone gap -> layout.counterGapPx = 24px -> model blockH and builder flex gap identical
+  FIG.22 gap -> layout.fig22GapPx = 8px -> unregressed single-source gap
+  source-line margin -> layout.srcMarginTopPx = 6px -> srcH reserves the rendered margin
+  bottom clearance -> layout.bottomClearancePx = 8px -> stage height = header + max required + clearance
+PASS FIG.20 phone blockH uses rowGapPx 18 (not 8) :: blockH=214
+PASS FIG.24 phone blockH uses counterGapPx 24 (not 8) :: blockH=223.8
+PASS builder gaps consume same keys
+fit @360: stageH=553 headerH=99.2 metaRows=2 label=12 ok=true clearancePx=8
+PASS fit ok @360
+PASS stageH <= 640 @360 :: stageH=553
+fit @390: stageH=553 headerH=99.2 metaRows=2 label=12 ok=true clearancePx=8
+PASS fit ok @390
+PASS stageH <= 640 @390 :: stageH=553
+fit @960: stageH=540 headerH=107.5 metaRows=1 label=14 ok=true clearancePx=0
+PASS fit ok @960
+max-stack(14) recomputed stageH @360 = 619
+PASS max-stack recomputed total <= 640 :: stageH=619
+PASS max-stack validates clean (unit floor holds)
+PASS FIG.22 unit floor = labelPx+2 = 14 at 360 :: unitFloor=14
+PASS binding figure clearance > 0 (no exact-bottom) :: clearance=8
+PASS label floor 12 in CONFIG
+PASS meta rows 2 @360/390, 1 @960 at 12px floor
+org nodes=4 nodeW=115.8 perRow=2 rows=2
+PASS org perRow maximal-with-gap nodes=4
+org nodes=6 nodeW=115.8 perRow=2 rows=3
+PASS org perRow maximal-with-gap nodes=6
+org nodes=8 nodeW=115.8 perRow=2 rows=4
+PASS org perRow maximal-with-gap nodes=8
+PASS org builder consumes orgRowGapPx + model nodeW
+PASS palette.secondary contrast on paper >= 4.5:1 :: ratio=6.03 secondary=#595344
+PASS secondary consumed via CSS var setter
+PASS timing.badgeDur = 0.15 (q units)
+PASS timing.badgeEasePow = 2
+PASS badge key mutation probe: cloned CONFIG carries mutated value, defaults validate clean
+PASS defaults validate clean after stage 2
+STAGE2 ALL PASS
+Notes: 536.8/616.8 were prior attempt-3 heights + clearance only and are NOT quoted as results; the recomputed totals above are this stage's results. Badge keys badgeDur/badgeEasePow are CONFIG-only at this stage (consumer lands stage 5); mutation probe filed above.

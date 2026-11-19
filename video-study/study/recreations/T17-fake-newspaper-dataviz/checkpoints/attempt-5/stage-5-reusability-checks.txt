@@ -1,0 +1,73 @@
+PASS pure logic extracts and evaluates
+PASS defaults validate clean
+PASS inline script parses
+PASS purity: no external assets / specimen media in source
+PASS cliff marker formula is cliffAt/animFraction (A-C012-2 corrected)
+PASS cliff marker fraction at defaults = cliffAt/animFraction ~0.812 :: frac=0.8116129032258065 af=0.8378378378378378
+PASS CONFIG timing.figureTransitionSec present :: T=0.45
+PASS CONFIG layout.transitionRisePx present :: rise=10
+PASS transition: no single-step hard swap at boundary (incoming never fully opaque while outgoing fully transparent mid-transition)
+PASS transition: incoming opacity monotonic through second half
+PASS transition: no sampled blank frame (at least one panel partially visible at every sample)
+PASS transition midpoint: both panels partially visible (overlap sliver) :: in=0.023 out=0.023
+PASS outside transition: exactly one figure fully opaque
+PASS transition: incoming mechanism progress is 0 at boundary (mechanism starts at boundary, panel fades straddle it) :: inP=0
+PASS transition: outgoing displays completed state (p=1) in second half
+PASS DOM render: no hard swap across boundary samples
+PASS DOM render: no blank figure area across boundary samples
+PASS DOM render: masthead mounted and untouched by transitions
+PASS stack: first unit arrival == 0 at q=0 :: a0=0
+PASS stack: first unit start == 0 :: s0=0
+PASS stack: last unit settles exactly at stackEnd :: last=0.9
+PASS stack: displayed count == physically settled count immediately before AND at every threshold (counts 10/14/1/2)
+PASS stack: one-unit path defined (no division by count-1)
+PASS stack: barQ/donutQ derive from barsEnd (unchanged by arrival remap)
+PASS stack: arrival span relation defined (arrivalDur <= stackEnd at defaults) :: ad=0.144
+PASS summary text is the shortened 68-char string :: len=68 text=Summary: everyone is panicking. You — oddly calm — may be the cause.
+PASS summary: typeDur = len*typeMsPerChar = 2.04s :: typeDur=2.04
+PASS summary: typing rate ~33 chars/s :: 33.3
+PASS summary: completion at 2.74s into window :: completion=2.74
+PASS summary: read floor hold = 1.36s :: hold=1.36
+PASS summary: effective hold (window - completion) = 1.76s >= floor :: eff=1.7599999999999998
+PASS schedule: six starts/durations match the reallocated table (total 22.5) :: 0/3.3 3.3/4.5 7.8/3.6 11.4/3.6 15/3.7 18.7/3.8
+PASS FIG.20 dependent: line completion 2.483s + effective hold 0.592s under 3.3s window :: done=2.484
+PASS FIG.24 dependent: collapse completion 3.100s + effective hold 0.375s under 3.7s window :: done=3.100
+PASS FIG.21 dependent: summary effective (fully opaque) hold 1.535s :: eff=1.535
+PASS FIG.25 dependent: window start unchanged at 18.7
+PASS validation: over-long summary rejected by window-fit rule (named error) :: fig21: summary of 300 chars cannot type and still hold for reading inside its window (needs 15.70s of 4.5s)
+PASS badge metrics exist (text width incl. separators, height) :: w=293.8 h=24.2
+PASS badge AABB inside content width along the fitted entrance curve (cap 1.117) @360 :: cap=1.117
+PASS badge transformed bounds RESERVED in org figure height (reserve >= max transformed height) :: reserve=27.0 need=27.0
+PASS counter subtext consumes palette.secondary (not muted)
+PASS fit model: textLines uses word boundaries (wordWrapLines exists)
+PASS word wrap: no line exceeds container width by modelled width :: aaaa bbbb|cccc dddd|eeee ffff|gggg hhhh
+PASS word wrap: single oversized token occupies its own line (overflow visible, not split mid-word) :: supercalifragilisticexpialidociouslongword|ok
+PASS summary modelled lines >= 2 for 68-char summary at 360 (word model)
+PASS renderer-consumed: every source line carries model line spans :: srcs=6
+PASS renderer-consumed: every figure title carries model line spans :: titles=6
+PASS renderer-consumed: summary line spans == wordWrapLines model lines :: spans=2 joined=Summary: everyone is panicking. You — oddly calm — may be the cause.
+PASS masthead height derived from actual masthead string (longer masthead -> taller header) :: h=122.2 vs 99.2 lines=2
+PASS fit ok @360 after stage 4 :: stageH=553
+PASS fit ok @960 after stage 4 :: stageH=540
+PASS stack unit symbol consumed from CONFIG formatting
+PASS waffle inactive opacity consumed from CONFIG formatting
+PASS card padding single-source key consumed by model + CSS var
+PASS card inner width accounts borders + padding (border-box accounting) :: inner=301
+PASS org node sizing includes node symbol glyph width :: nodeW=113.9 need>=79.9
+PASS validation: first figure start != 0 rejected (named) :: schedule: first figure fig20 start 0.5 must be 0;schedule: figure fig21 start 3.3 does not equal previous figure end 3.8 (overlap or gap)
+PASS validation: non-integer waffleCols rejected
+PASS validation: zero waffleTotal rejected
+PASS validation: non-integer stackCount rejected
+PASS validation: empty org nodes rejected (named, no throw)
+PASS validation: null org nodes rejected without throwing
+PASS validation: string-typed numeric start rejected (type independent of edited value) :: fig20: figure window values must be numbers (not string-typed);schedule: first figure fig20 start 0 must be 0
+PASS validation: 400-digit magnitude input rejected without throwing
+PASS validation: absent timing group routes to named error without throwing
+PASS validation: arrival span >= stackCount relation rejected :: fig22: stackArrivalSpan 99 must be below stackCount 10 (supported span/count relation)
+PASS validation: unsafe-integer counter rejected :: fig24: counter values must be safe integers
+PASS override parser still present for query-string path
+PASS CSS-parse leg: stylesheet declarations parse (76 declarations)
+PASS literal census: no stack symbol / summary string / stamp text literals in builder section
+TOTAL 70 PASS 70 FAIL 0
+
+BUILDER vs CSS VALUE COMPARISON (checkpoint 5, plan-review finding 7): shared geometry now resolves from CONFIG layout keys on both sides — .card padding/border/radius, .dot border, .stamp border/radius/padding are CSS variables set in buildAll from cardPaddingPx/cardBorderPx/cardRadiusPx/dotBorderPx/stampBorderPx/stampRadiusPx/stampPadCssX/stampPadCssY; the fit model consumes the same keys (cardInnerW = declared width - 2*border - 2*padding = -27px). Stamp model pads corrected to the CSS values (stampPadX 36->28, stampPadY 24->16 = 2*14 / 2*8). Remaining builder-side chrome literals (axis offsets, text baseline nudges, control sizes) are inventoried per-literal in the build record's literal census, classified structural page-frame chrome, none content-carrying.
