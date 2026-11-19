@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T91 comparison — Q&A quote cards</title>
+<style>
+  body{margin:0;background:#0b1526;color:#f5f2e6;font-family:Georgia,'Times New Roman',serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:12px;}
+  .cols{display:flex;gap:12px;align-items:flex-start;}
+  .col{flex:1;min-width:0;}
+  .lab{font-size:14px;letter-spacing:.06em;margin:6px 0;}
+  video{width:100%;background:#000;display:block;}
+  iframe{width:360px;max-width:100%;height:540px;border:0;display:block;background:#1d3f8f;}
+  .controls{display:flex;gap:10px;margin:12px 0;}
+  button{min-height:48px;min-width:88px;font-size:16px;padding:10px 16px;cursor:pointer;}
+  @media (max-width:520px){ .cols{flex-direction:column;} .col{width:100%;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="controls">
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <div class="lab">ORIGINAL — The Good Takeoff @ 498–512s</div>
+      <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+    </div>
+    <div class="col">
+      <div class="lab">RECREATION — T91 Q&A quote cards, parameterized</div>
+      <iframe id="rec" src="recreation.html" title="T91 recreation"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+var orig = document.getElementById("orig");
+var rec = document.getElementById("rec");
+function send(msg){ try { rec.contentWindow.postMessage({t91: msg}, "*"); } catch(e){} }
+document.getElementById("btnPlay").addEventListener("click", function(){ orig.play(); send("play"); });
+document.getElementById("btnPause").addEventListener("click", function(){ orig.pause(); send("pause"); });
+document.getElementById("btnRestart").addEventListener("click", function(){ orig.currentTime = 0; orig.play(); send("restart"); });
+orig.addEventListener("ended", function(){ send("pause"); });
+</script>
+</body>
+</html>

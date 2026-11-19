@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T91 — Q&A quote cards (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #hud{position:absolute;}
+  #card{position:absolute;box-sizing:border-box;}
+  #tag{position:absolute;display:inline-block;}
+  #mark{position:absolute;}
+  #quote{position:absolute;}
+  #attr{position:absolute;}
+  #attrBar{position:absolute;left:0;top:0;}
+  #attrText{position:absolute;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="hud">
+    <div id="hudLine"></div>
+    <div id="hudClock"></div>
+  </div>
+  <div id="card">
+    <div id="tag"></div>
+    <div id="mark"></div>
+    <div id="quote"></div>
+    <div id="attr">
+      <div id="attrBar"></div>
+      <div id="attrText">
+        <div id="speaker"></div>
+        <div id="role"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / font / geometry value lives here ============ */
+const CONFIG = {
+  hud: {year: 2037, dayLine: "A POSSIBLE TUESDAY", clock: "19:00"},
+  cards: [
+    {quote: "Every AI can do both. It is a power-enhancing technology.", speaker: "Bruce Schneier", role: "SECURITY TECHNOLOGIST, HARVARD KENNEDY SCHOOL", year: 2026},
+    {quote: "I'm here with my son, and I'd love you to tutor him on this math problem, but don't give him the answer.", speaker: "Sal Khan", role: "FOUNDER, KHAN ACADEMY", year: 2024},
+    {quote: "A doctor, a lawyer — someone whose loyalty is to you.", speaker: "Tim Berners-Lee", role: "INVENTOR OF THE WEB", year: 2026}
+  ],
+  palette: {bg: "#1d3f8f", card: "#101f3a", ink: "#f5f2e6", accent: "#e8c86a", edge: "#9db1d6", chip: "#0a1730", page: "#0b1526"},
+  labels: {tag: "QUOTE", mark: "“"},
+  cardMs: 4200,
+  enterMs: 450,
+  endHoldMs: 1400,
+  type: {font: "Georgia, 'Times New Roman', serif",
+         quotePx: 24, speakerPx: 20, rolePx: 15, tagPx: 12, markPx: 46, hudLinePx: 15, hudClockPx: 34,
+         quoteLineHeight: 1.32, roleLineHeight: 1.3, speakerLineHeight: 1.15, hudClockLineHeight: 1.1,
+         quoteStyle: "italic", markStyle: "normal", markLineHeight: 1,
+         tagSpacingEm: 0.32, roleSpacingEm: 0.14, hudLineSpacingEm: 0.18},
+  stage: {width: 360},
+  geom: {
+    stageH: 540,
+    hudX: 16, hudY: 14, hudClockGap: 2,
+    cardX: 16, cardY: 96, cardW: 328, cardH: 412, cardPad: 20, borderW: 1,
+    tagX: 14, tagY: 12, tagPadX: 8, tagPadY: 4,
+    markX: 18, markY: 52,
+    quoteX: 52, quoteY: 64, quoteW: 256,
+    attrX: 20, attrBottom: 18, attrBarW: 3, attrTextX: 14, attrGap: 3, attrH: 92,
+    risePx: 12
+  }
+};
+/* ============ override (?cfg= JSON, deep merge; arrays merge per-index) — the swap-test surface ============ */
+function deepMerge(base, over){
+  if (Array.isArray(over)){
+    if (!Array.isArray(base)) return over.slice();
+    const merged = base.map(function(b, i){ return i < over.length ? deepMerge(b, over[i]) : b; });
+    for (let i = base.length; i < over.length; i++) merged.push(over[i]);
+    return merged;
+  }
+  if (over && typeof over === "object"){
+    const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
+    for (const k of Object.keys(over)) out[k] = deepMerge(base ? base[k] : undefined, over[k]);
+    return out;
+  }
+  return over;
+}
+let CFG = CONFIG;
+try {
+  const raw = new URLSearchParams(location.search).get("cfg");
+  if (raw) CFG = deepMerge(CONFIG, JSON.parse(raw));
+} catch(e) { CFG = CONFIG; }
+
+/* ============ phase machine — one card owns the stage (Cure 2: phase exclusivity).
+   u = t mod total; idx = min(last, floor(u / cardMs)); entrance progress runs from the
+   slot's own start; at each boundary the whole content swaps and entrance state resets
+   before paint (codex-plan-review cure 2, applied verbatim in form). ============ */
+function cycleMs(cfg){ return cfg.cards.length * cfg.cardMs + cfg.endHoldMs; }
+function stateAt(cfg, t){
+  const total = cycleMs(cfg);
+  const u = ((t % total) + total) % total;
+  const slotsEnd = cfg.cards.length * cfg.cardMs;
+  if (u >= slotsEnd) return {idx: cfg.cards.length - 1, phase: "endhold", p: 1};
+  const idx = Math.min(cfg.cards.length - 1, Math.floor(u / cfg.cardMs));
+  const local = u - idx * cfg.cardMs;
+  if (local < cfg.enterMs) return {idx: idx, phase: "enter", p: local / cfg.enterMs};
+  return {idx: idx, phase: "hold", p: 1};
+}
+
+/* ============ DOM construction (browser only) ============ */
+if (typeof document !== "undefined"){
+  const g = CFG.geom, pal = CFG.palette, ty = CFG.type;
+  document.documentElement.style.background = pal.page;
+  document.body.style.background = pal.page;
+  const stage = document.getElementById("stage");
+  stage.style.width = CFG.stage.width + "px";
+  stage.style.height = g.stageH + "px";
+  stage.style.background = pal.bg;
+  stage.style.fontFamily = ty.font;
+
+  const hud = document.getElementById("hud");
+  hud.style.left = g.hudX + "px"; hud.style.top = g.hudY + "px";
+  const hudLine = document.getElementById("hudLine");
+  hudLine.textContent = CFG.hud.year + " · " + CFG.hud.dayLine;
+  hudLine.style.color = pal.ink; hudLine.style.fontSize = ty.hudLinePx + "px"; hudLine.style.letterSpacing = ty.hudLineSpacingEm + "em";
+  const hudClock = document.getElementById("hudClock");
+  hudClock.textContent = CFG.hud.clock;
+  hudClock.style.color = pal.ink; hudClock.style.fontSize = ty.hudClockPx + "px"; hudClock.style.marginTop = g.hudClockGap + "px"; hudClock.style.lineHeight = String(ty.hudClockLineHeight);
+
+  const card = document.getElementById("card");
+  card.style.left = g.cardX + "px"; card.style.top = g.cardY + "px";
+  card.style.width = g.cardW + "px"; card.style.height = g.cardH + "px";
+  card.style.background = pal.card;
+  card.style.border = g.borderW + "px solid " + pal.edge;
+
+  const tag = document.getElementById("tag");
+  tag.textContent = CFG.labels.tag;
+  tag.style.left = g.tagX + "px"; tag.style.top = g.tagY + "px";
+  tag.style.padding = g.tagPadY + "px " + g.tagPadX + "px";
+  tag.style.background = pal.chip; tag.style.color = pal.ink;
+  tag.style.fontSize = ty.tagPx + "px"; tag.style.letterSpacing = ty.tagSpacingEm + "em";
+
+  const mark = document.getElementById("mark");
+  mark.textContent = CFG.labels.mark;
+  mark.style.left = g.markX + "px"; mark.style.top = g.markY + "px";
+  mark.style.color = pal.accent; mark.style.fontSize = ty.markPx + "px"; mark.style.lineHeight = String(ty.markLineHeight); mark.style.fontStyle = ty.markStyle;
+
+  const quote = document.getElementById("quote");
+  quote.style.left = g.quoteX + "px"; quote.style.top = g.quoteY + "px"; quote.style.width = g.quoteW + "px";
+  quote.style.color = pal.ink; quote.style.fontSize = ty.quotePx + "px"; quote.style.lineHeight = String(ty.quoteLineHeight); quote.style.fontStyle = ty.quoteStyle;
+
+  const attr = document.getElementById("attr");
+  attr.style.left = g.attrX + "px"; attr.style.bottom = g.attrBottom + "px";
+  attr.style.width = (g.cardW - g.attrX - g.cardPad) + "px";
+  const attrBar = document.getElementById("attrBar");
+  attrBar.style.width = g.attrBarW + "px"; attrBar.style.height = "100%"; attrBar.style.background = pal.accent;
+  const attrText = document.getElementById("attrText");
+  attrText.style.left = g.attrTextX + "px"; attrText.style.top = "0";
+  attrText.style.width = (g.cardW - g.attrX - g.cardPad - g.attrTextX) + "px";
+  const speaker = document.getElementById("speaker");
+  speaker.style.color = pal.ink; speaker.style.fontSize = ty.speakerPx + "px"; speaker.style.lineHeight = String(ty.speakerLineHeight);
+  const role = document.getElementById("role");
+  role.style.color = pal.accent; role.style.fontSize = ty.rolePx + "px";
+  role.style.marginTop = g.attrGap + "px"; role.style.letterSpacing = ty.roleSpacingEm + "em"; role.style.lineHeight = String(ty.roleLineHeight);
+  attr.style.height = g.attrH + "px";
+
+  let shownIdx = -1;
+  function showCard(i){
+    const c = CFG.cards[i];
+    quote.textContent = c.quote;
+    speaker.textContent = c.speaker;
+    role.textContent = c.role + " · " + c.year;
+    shownIdx = i;
+  }
+
+  /* clock: shared start timestamp, pausable via postMessage from comparison.html */
+  let startStamp = performance.now(), pausedAt = null, pauseAccum = 0;
+  function nowMs(){
+    const n = pausedAt !== null ? pausedAt : performance.now();
+    return n - startStamp - pauseAccum;
+  }
+  function frame(){
+    const st = stateAt(CFG, nowMs());
+    if (st.idx !== shownIdx) showCard(st.idx);
+    if (st.phase === "enter"){
+      card.style.opacity = String(st.p);
+      card.style.transform = "translateY(" + ((1 - st.p) * g.risePx) + "px)";
+    } else {
+      card.style.opacity = "1";
+      card.style.transform = "translateY(0px)";
+    }
+    requestAnimationFrame(frame);
+  }
+  showCard(0);
+  requestAnimationFrame(frame);
+
+  window.addEventListener("message", function(ev){
+    if (!ev.data || ev.data.t91 === undefined) return;
+    if (ev.data.t91 === "pause" && pausedAt === null) pausedAt = performance.now();
+    if (ev.data.t91 === "play" && pausedAt !== null){ pauseAccum += performance.now() - pausedAt; pausedAt = null; }
+    if (ev.data.t91 === "restart"){ startStamp = performance.now(); pauseAccum = 0; pausedAt = null; shownIdx = -1; }
+  });
+  window.__t91 = {CFG: CFG, cycleMs: cycleMs(CFG), stateAt: function(t){ return stateAt(CFG, t); }};
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = {CONFIG: CONFIG, deepMerge: deepMerge, cycleMs: cycleMs, stateAt: stateAt, CFG: CFG};
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+REUSABILITY: 76/100 — clears the 70 lens floor, but safe production reuse needs fixes. Overall average is not assessed in this single-lens review.
+
+1. **List replacement is explicit, but malformed timing is silently repaired.** Source `resolveConfig()` supports wholesale replacement through `cardsReplace` or `schedule.replaceCards` with `cards`; empty replacements correctly fail `validateConfig()`. However, replacement timing derivation uses `typeof value !== "number"`, so supplied strings or nulls are treated as omitted values and replaced with defaults. Unknown card keys in `cardsReplace` also escape the warning scan, which inspects only `over.cards`. Derive timings only when keys are absent, and scan the actual replacement list.
+
+2. **Validation does not consistently stop malformed supplies.** In `validateConfig()`, string-valued type settings are checked only when their supplied value is already a string. Thus `type.font: null` or `type.quoteStyle: 123` passes without an actionable error. Whitespace-only quote, speaker, and role strings also pass `str()`. Validate each named field against its expected type and require trimmed content. The own-check numeric/group sweeps do not establish these cases.
+
+3. **The quote and attribution fit contract is substantially reusable.** `fitCard()` implements bounded, floor-clamped shrinking, quote width/height rejection, one-line speaker enforcement, role-line limits, and attribution-height rejection. Errors identify card indices and usually the offending token or dimension. Own-check V9 supports these paths. Longer attributions reject rather than shrink, which is a clear, deterministic policy.
+
+4. **Per-card timing exists, but new-content reading safety is incomplete.** Sequence mode consumes each card’s `slotMs` and `revealSpanMs`; specimen mode intentionally uses its separate schedule fields. Sequence validation checks total token reading time against the entire slot, including its exit, and does not validate reading time remaining after each line appears. Specimen validation checks minimum hold without applying the configured reading rate. The packet’s per-line checks cover the supplied texts, not arbitrary replacements. Validate reading availability against actual fitted lines and their reveal times in both modes.
+
+5. **Narrower geometry derives coherently, but browser error handling breaks the contract.** `effectiveGeom()` scales horizontal geometry, and `recomputeAt()` rejects widths below `stage.minWidth`. However, browser startup never calls that minimum-width check. During resize, `relayout()` hides the card on failure, but the continuing `frame()` loop subsequently sets its display back to `block` during an active slot. Resize failures also do not update `window.__t91.errors`. Gate animation rendering on layout validity, apply the same check at startup, and synchronize the error mirror. Own-check V10’s helper checks and listener-wiring assertion do not prove this browser lifecycle.
+
+Limits: Source inspection and supplied check results only; no independent execution or pixel/font verification. Other lenses and the overall average are not assessed.
+
+Body-write: none (read-only run)
+SCORE: 76

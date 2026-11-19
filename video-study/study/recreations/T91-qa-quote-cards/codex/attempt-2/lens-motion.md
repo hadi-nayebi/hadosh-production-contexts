@@ -1,0 +1,7 @@
+The default specimen mode closely follows the evidenced motion: the card and attribution are settled at t=0, the measured four-line layout reveals 1/2/4 lines at 0/2/8 seconds, and the attribution stays fixed. The whole-card fade runs from 10–10.6 seconds, within the observed exit bracket, followed by a card-free interval through 14 seconds. The HUD remains static, with no competing motion.
+
+The main weakness is that the observed line anchors depend on wrapping. At 320px, the five-line layout reaches five lines at eight seconds rather than four. Also, the build spreads only the verified 22-word sentence across the reveal, whereas the specimen has about 39 words visible by eight seconds. This reproduces line-count milestones at 360px more closely than the specimen’s actual text-growth density.
+
+The sequence mode preserves unified card motion and attribution presence; its rise/fade entrance and reveal overlap are disclosed allocations. The legacy uniform mode meets its separate claim, but adds no evidence of specimen motion fidelity. Neither the allocated entrance nor exit shape warrants observational credit or a mismatch penalty. Browser playback and rendered-font wrapping remain unverified, limiting confidence in the final visible movement.
+
+SCORE: 87

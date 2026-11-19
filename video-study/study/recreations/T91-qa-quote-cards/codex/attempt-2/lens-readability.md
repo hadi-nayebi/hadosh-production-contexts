@@ -1,0 +1,11 @@
+Readability is strong on the supplied metric basis, with meaningful limits on visual certainty and the legacy mode.
+
+- **Phone typography:** quotes remain 24px at both widths, with 31.68px line spacing; speakers are 20px and roles 15px. These are credible phone sizes. The 12px tag is secondary. Actual glyph ink heights are not supplied, so nominal font sizes do not establish their rendered legibility.
+- **Fit and clearance:** the reported 360px wraps are 3/3/4 lines; at 320px they are 4/3/5. The longest quote occupies 158.4px of the 226px quote zone, leaving 67.6px before the attribution reservation. The worst attribution uses all 104px reserved height, leaving little tolerance for font differences.
+- **Reading time:** specimen mode provides 10 seconds before fading for 28 tokens, or 168 wpm. Sequence mode provides approximately 162–169 wpm including attribution. Those are comfortable aggregate budgets. Progressive reveal makes those averages incomplete evidence, though: the final line arrives at 8 seconds, leaving only 2 seconds in specimen mode and 2.4 seconds in sequence mode before fading. That supports continuous reading better than a late glance.
+- **Uniform mode:** its legacy label accurately describes its claim, but its readability remains weaker. Excluding entrance, Schneier and Berners-Lee require approximately 288 and 272 wpm; Sal Khan requires approximately 326 wpm even including the final hold. Full-load reading is rushed.
+- **Contrast and verification:** the configured cream text and gold attribution against dark navy provide strong color contrast. GEORGIA-UNVERIFIED and PIXEL-UNVERIFIED still prevent confirming actual ink heights, browser wrapping, attribution clearance, and perceived phone readability. The logic checks support the layout; they do not replace that visual evidence.
+
+The primary modes have a credible readable construction. Uniform timing and the missing rendered-font evidence prevent a higher confidence score. This return records those findings for the permanent scores record; no separate artifact was modified.
+
+SCORE: 82

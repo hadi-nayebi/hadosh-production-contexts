@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T91 — Q&A quote cards (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #hud{position:absolute;}
+  #card{position:absolute;box-sizing:border-box;}
+  #tag{position:absolute;display:inline-block;}
+  #mark{position:absolute;}
+  #quote{position:absolute;}
+  #attr{position:absolute;}
+  #attrBar{position:absolute;left:0;top:0;}
+  #attrText{position:absolute;}
+  #err{position:absolute;left:0;top:0;right:0;display:none;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="hud">
+    <div id="hudLine"></div>
+    <div id="hudClock"></div>
+  </div>
+  <div id="card">
+    <div id="tag"></div>
+    <div id="mark"></div>
+    <div id="quote"></div>
+    <div id="attr">
+      <div id="attrBar"></div>
+      <div id="attrText">
+        <div id="speaker"></div>
+        <div id="role"></div>
+      </div>
+    </div>
+  </div>
+  <div id="err"></div>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / font / geometry value lives here ============ */
+const CONFIG = {
+  hud: {year: 2037, dayLine: "A POSSIBLE TUESDAY", clock: "19:00"},
+  cards: [
+    {quote: "Every AI can do both. It is a power-enhancing technology.", speaker: "Bruce Schneier", role: "SECURITY TECHNOLOGIST, HARVARD KENNEDY SCHOOL", year: 2026, slotMs: 7000, revealSpanMs: 4000},
+    {quote: "A doctor, a lawyer — someone whose loyalty is to you.", speaker: "Tim Berners-Lee", role: "INVENTOR OF THE WEB", year: 2026, slotMs: 6500, revealSpanMs: 3500},
+    {quote: "I'm here with my son, and I'd love you to tutor him on this math problem, but don't give him the answer.", speaker: "Sal Khan", role: "FOUNDER, KHAN ACADEMY", year: 2024, slotMs: 11000, revealSpanMs: 8000}
+  ],
+  palette: {bg: "#1d3f8f", card: "#101f3a", ink: "#f5f2e6", accent: "#e8c86a", edge: "#9db1d6", chip: "#0a1730", page: "#0b1526"},
+  labels: {tag: "QUOTE", mark: "“", sep: " · "},
+  cardMs: 4200,
+  enterMs: 450,
+  endHoldMs: 1400,
+  schedule: {
+    mode: "specimen",
+    specimenCard: 2,
+    specimenRevealMs: 8000,
+    specimenHoldMs: 2000,
+    specimenExitMs: 600,
+    specimenFreeMs: 3400,
+    exitMs: 600,
+    seqFreeMs: 2000,
+    minHoldMs: 1500,
+    minHoldFloorMs: 2000,
+    secondLineMs: 2000,
+    secondLineFrac: 0.25,
+    replaceCards: false
+  },
+  fit: {floorPx: 20, stepPx: 1},
+  type: {font: "Georgia, 'Times New Roman', serif",
+         quotePx: 24, speakerPx: 20, rolePx: 15, tagPx: 12, markPx: 46, hudLinePx: 15, hudClockPx: 34,
+         quoteLineHeight: 1.32, roleLineHeight: 1.3, speakerLineHeight: 1.15, hudClockLineHeight: 1.1,
+         quoteStyle: "italic", markStyle: "normal", markLineHeight: 1,
+         tagSpacingEm: 0.32, roleSpacingEm: 0.14, hudLineSpacingEm: 0.18},
+  stage: {width: 360},
+  geom: {
+    stageH: 540,
+    hudX: 16, hudY: 14, hudClockGap: 2,
+    cardX: 16, cardY: 96, cardW: 328, cardH: 412, cardPad: 20, borderW: 1,
+    tagX: 14, tagY: 12, tagPadX: 8, tagPadY: 4,
+    markX: 18, markY: 52,
+    quoteX: 52, quoteY: 64, quoteW: 256,
+    attrX: 20, attrBottom: 18, attrBarW: 3, attrTextX: 14, attrGap: 3, attrH: 104,
+    risePx: 12, errPad: 16
+  }
+};
+const TOP_KEYS = ["hud","cards","palette","labels","cardMs","enterMs","endHoldMs","schedule","fit","type","stage","geom"];
+
+/* ============ override (?cfg= JSON) — per-index patch by default; wholesale list
+   replacement when the override carries cardsReplace, or schedule.replaceCards
+   together with a cards array. ============ */
+function deepMerge(base, over){
+  if (Array.isArray(over)){
+    if (!Array.isArray(base)) return over.slice();
+    const merged = base.map(function(b, i){ return i < over.length ? deepMerge(b, over[i]) : b; });
+    for (let i = base.length; i < over.length; i++) merged.push(over[i]);
+    return merged;
+  }
+  if (over && typeof over === "object"){
+    const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
+    for (const k of Object.keys(over)) out[k] = deepMerge(base ? base[k] : undefined, over[k]);
+    return out;
+  }
+  return over;
+}
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function resolveConfig(raw){
+  if (raw === null || raw === undefined || raw === "") return {cfg: clone(CONFIG), errors: [], warnings: [], parseError: null};
+  let over;
+  try { over = JSON.parse(raw); }
+  catch(e){ return {cfg: null, errors: ["cfg: malformed JSON (" + e.message + ") — expected a JSON object of CONFIG overrides"], warnings: [], parseError: String(e.message)}; }
+  if (!over || typeof over !== "object" || Array.isArray(over))
+    return {cfg: null, errors: ["cfg: expected a JSON object of CONFIG overrides"], warnings: [], parseError: null};
+  const warnings = [];
+  for (const k of Object.keys(over)) if (TOP_KEYS.indexOf(k) < 0 && k !== "cardsReplace") warnings.push("unknown top-level key: " + k);
+  let cfg;
+  if (Object.prototype.hasOwnProperty.call(over, "cardsReplace")){
+    const rest = Object.assign({}, over); const repl = rest.cardsReplace; delete rest.cardsReplace;
+    cfg = deepMerge(clone(CONFIG), rest);
+    cfg.cards = clone(repl);
+  } else if (over.schedule && over.schedule.replaceCards === true && Array.isArray(over.cards)){
+    const rest = Object.assign({}, over); const repl = rest.cards; delete rest.cards;
+    cfg = deepMerge(clone(CONFIG), rest);
+    cfg.cards = clone(repl);
+  } else {
+    cfg = deepMerge(clone(CONFIG), over);
+  }
+  return {cfg: cfg, errors: [], warnings: warnings, parseError: null};
+}
+
+/* ============ schedule resolution — one derivation per mode.
+   Modes: "specimen" (one evidenced card, settled at t=0), "sequence" (all cards,
+   per-card slots in list order), "uniform" (legacy equal slots + end hold;
+   mode rule: uniform is exempt from the reveal / minimum-hold / exit constraints
+   that bind the other modes, and reproduces the equal-slot table exactly). ============ */
+function tokenCount(card){
+  const q = String(card.quote || "").trim().split(/\s+/).filter(Boolean).length;
+  const a = (String(card.speaker || "").trim().split(/\s+/).filter(Boolean).length)
+          + (String(card.role || "").trim().split(/\s+/).filter(Boolean).length) + 1;
+  return q + a;
+}
+function resolveSchedule(cfg){
+  const s = cfg.schedule, mode = s.mode;
+  if (mode === "specimen"){
+    const idx = s.specimenCard;
+    const slotMs = s.specimenRevealMs + s.specimenHoldMs + s.specimenExitMs;
+    return {mode: mode, slots: [{idx: idx, start: 0, slotMs: slotMs, enterMs: 0, exitMs: s.specimenExitMs, revealSpanMs: s.specimenRevealMs}],
+            freeMs: s.specimenFreeMs, freeStart: slotMs, cycleMs: slotMs + s.specimenFreeMs};
+  }
+  if (mode === "sequence"){
+    let start = 0;
+    const slots = cfg.cards.map(function(c, i){
+      const slot = {idx: i, start: start, slotMs: c.slotMs, enterMs: cfg.enterMs, exitMs: s.exitMs, revealSpanMs: c.revealSpanMs};
+      start += c.slotMs; return slot;
+    });
+    return {mode: mode, slots: slots, freeMs: s.seqFreeMs, freeStart: start, cycleMs: start + s.seqFreeMs};
+  }
+  let start = 0;
+  const slots = cfg.cards.map(function(c, i){
+    const slot = {idx: i, start: start, slotMs: cfg.cardMs, enterMs: cfg.enterMs, exitMs: 0, revealSpanMs: 0};
+    start += cfg.cardMs; return slot;
+  });
+  return {mode: mode, slots: slots, freeMs: cfg.endHoldMs, freeStart: start, cycleMs: start + cfg.endHoldMs};
+}
+function cycleMs(cfg){ return resolveSchedule(cfg).cycleMs; }
+
+/* ============ line-growth reveal — stage times for a wrapped line count.
+   1 line: [0]. 2 lines: [0, span] (the second line is the final line; the final
+   anchor governs). 3+ lines: first at 0, second at min(2000, span/4), last at
+   span, interior lines evenly between the second and last anchors. ============ */
+function revealTimes(cfg, spanMs, n){
+  if (n <= 1) return [0];
+  if (n === 2) return [0, spanMs];
+  const t2 = Math.min(cfg.schedule.secondLineMs, spanMs * cfg.schedule.secondLineFrac);
+  const out = [0, t2];
+  for (let k = 3; k < n; k++) out.push(t2 + (spanMs - t2) * (k - 2) / (n - 2));
+  out.push(spanMs);
+  return out;
+}
+function visibleLineCount(cfg, spanMs, n, local){
+  if (!spanMs || spanMs <= 0) return n;
+  const times = revealTimes(cfg, spanMs, n);
+  let v = 0;
+  for (let i = 0; i < times.length; i++) if (local >= times[i]) v = i + 1;
+  return Math.max(1, v);
+}
+
+/* ============ phase machine — exactly one card, or the named card-free phase,
+   owns every instant. Reveal clock starts at the slot's own start. ============ */
+function stateAt(cfg, t, lineCounts){
+  const sch = resolveSchedule(cfg);
+  const total = sch.cycleMs;
+  const u = ((t % total) + total) % total;
+  if (u >= sch.freeStart){
+    if (sch.mode === "uniform") return {idx: cfg.cards.length - 1, phase: "endhold", p: 1, visibleLines: lineCounts ? lineCounts[cfg.cards.length - 1] : 0, slotStart: sch.slots[sch.slots.length - 1].start};
+    return {idx: -1, phase: "cardfree", p: 1, visibleLines: 0, slotStart: sch.freeStart};
+  }
+  for (let i = 0; i < sch.slots.length; i++){
+    const sl = sch.slots[i];
+    if (u >= sl.start && u < sl.start + sl.slotMs){
+      const local = u - sl.start;
+      const n = lineCounts ? lineCounts[sl.idx] : 0;
+      if (sl.exitMs > 0 && local >= sl.slotMs - sl.exitMs)
+        return {idx: sl.idx, phase: "exit", p: (local - (sl.slotMs - sl.exitMs)) / sl.exitMs, visibleLines: n, slotStart: sl.start};
+      if (sl.enterMs > 0 && local < sl.enterMs)
+        return {idx: sl.idx, phase: "enter", p: local / sl.enterMs, visibleLines: visibleLineCount(cfg, sl.revealSpanMs, n, local), slotStart: sl.start};
+      return {idx: sl.idx, phase: "hold", p: 1, visibleLines: visibleLineCount(cfg, sl.revealSpanMs, n, local), slotStart: sl.start};
+    }
+  }
+  return {idx: -1, phase: "cardfree", p: 1, visibleLines: 0, slotStart: sch.freeStart};
+}
+
+/* ============ viewport-derived geometry — effective stage width is the smaller
+   of the configured stage width and the viewport width; one scale factor scales
+   every horizontal geometry value; fonts never scale. ============ */
+const H_KEYS = ["hudX","cardX","cardW","cardPad","tagX","tagPadX","markX","quoteX","quoteW","attrX","attrTextX"];
+function effectiveGeom(cfg, viewportW){
+  const effW = Math.min(cfg.stage.width, viewportW || cfg.stage.width);
+  const s = effW / cfg.stage.width;
+  const g = Object.assign({}, cfg.geom);
+  for (const k of H_KEYS) g[k] = cfg.geom[k] * s;
+  return {geom: g, scale: s, effW: effW};
+}
+function quoteZoneDepth(g){ return g.cardH - g.attrBottom - g.attrH - g.quoteY; }
+function attrTextWidth(g){ return g.cardW - g.attrX - g.cardPad - g.attrTextX; }
+
+/* ============ text wrapping on an injected metric basis — the browser supplies
+   canvas measurements in the rendered font; other callers supply their own
+   measurer in the same font. measure(text, px, kind) returns width in px. ============ */
+function wrapText(text, maxW, px, measure, kind){
+  const words = String(text).split(/\s+/).filter(Boolean);
+  const lines = []; let cur = "";
+  for (const w of words){
+    const trial = cur ? cur + " " + w : w;
+    if (cur && measure(trial, px, kind) > maxW){ lines.push(cur); cur = w; }
+    else cur = trial;
+  }
+  if (cur) lines.push(cur);
+  return lines.length ? lines : [""];
+}
+
+/* ============ fit contract — deterministic and ordered: shrink the quote size
+   in fixed steps down to the floor until the quote fits its zone; if it still
+   does not fit at the floor, reject naming the card and the overflow in px. ============ */
+function fitCard(cfg, g, card, measure){
+  const ty = cfg.type;
+  const zone = quoteZoneDepth(g);
+  let px = ty.quotePx;
+  let lines = wrapText(card.quote, g.quoteW, px, measure, "quote");
+  let blockH = lines.length * px * ty.quoteLineHeight;
+  while (blockH > zone && px > cfg.fit.floorPx){
+    px -= cfg.fit.stepPx;
+    lines = wrapText(card.quote, g.quoteW, px, measure, "quote");
+    blockH = lines.length * px * ty.quoteLineHeight;
+  }
+  if (blockH > zone) return {ok: false, cardQuote: card.quote, px: px, lines: lines.length, blockH: blockH, zone: zone, overflowPx: Math.round((blockH - zone) * 10) / 10};
+  const spkLines = wrapText(card.speaker, attrTextWidth(g), ty.speakerPx, measure, "speaker");
+  const roleText = card.role + cfg.labels.sep + card.year;
+  const roleLines = wrapText(roleText, attrTextWidth(g), ty.rolePx, measure, "role");
+  const attrH = ty.speakerPx * ty.speakerLineHeight + g.attrGap + roleLines.length * ty.rolePx * ty.roleLineHeight;
+  if (spkLines.length !== 1) return {ok: false, cardQuote: card.quote, px: px, lines: lines.length, blockH: blockH, zone: zone, overflowPx: 0, attrFail: "speaker wraps to " + spkLines.length + " lines (expected exactly 1)"};
+  if (roleLines.length > 4) return {ok: false, cardQuote: card.quote, px: px, lines: lines.length, blockH: blockH, zone: zone, overflowPx: 0, attrFail: "role wraps to " + roleLines.length + " lines (maximum 4)"};
+  if (attrH > g.attrH) return {ok: false, cardQuote: card.quote, px: px, lines: lines.length, blockH: blockH, zone: zone, overflowPx: Math.round((attrH - g.attrH) * 10) / 10, attrFail: "attribution block " + attrH.toFixed(1) + "px exceeds reserved " + g.attrH + "px"};
+  return {ok: true, px: px, lines: lines.length, blockH: blockH, zone: zone, spkLines: spkLines.length, roleLines: roleLines.length, attrH: attrH};
+}
+
+/* ============ validation — runs before first paint. Any violation renders the
+   error state instead of the schedule. Mode rule: the uniform mode is validated
+   on its own legacy terms (finite positive timings, well-formed cards) and is
+   exempt from the reveal / minimum-hold / exit constraints of the other modes. ============ */
+function isHex(v){ return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v); }
+function validateConfig(cfg){
+  const errors = [];
+  if (!cfg || typeof cfg !== "object") return ["config: expected an object"];
+  if (!Array.isArray(cfg.cards) || cfg.cards.length === 0) errors.push("cards: expected a non-empty array of cards");
+  else cfg.cards.forEach(function(c, i){
+    if (!c || typeof c !== "object"){ errors.push("cards[" + i + "]: expected an object"); return; }
+    if (typeof c.quote !== "string" || !c.quote) errors.push("cards[" + i + "].quote: expected a non-empty string");
+    if (typeof c.speaker !== "string" || !c.speaker) errors.push("cards[" + i + "].speaker: expected a non-empty string");
+    if (typeof c.role !== "string" || !c.role) errors.push("cards[" + i + "].role: expected a non-empty string");
+    if (!Number.isInteger(c.year)) errors.push("cards[" + i + "].year: expected an integer");
+  });
+  const nums = [["cardMs", cfg.cardMs], ["enterMs", cfg.enterMs], ["endHoldMs", cfg.endHoldMs]];
+  for (const pair of nums) if (!(typeof pair[1] === "number" && isFinite(pair[1]) && pair[1] > 0)) errors.push(pair[0] + ": expected a finite number > 0");
+  if (cfg.palette) for (const k of Object.keys(cfg.palette)) if (!isHex(cfg.palette[k])) errors.push("palette." + k + ": expected a #rrggbb hex color");
+  if (cfg.geom) for (const k of Object.keys(cfg.geom)) if (!(typeof cfg.geom[k] === "number" && isFinite(cfg.geom[k]) && cfg.geom[k] > 0)) errors.push("geom." + k + ": expected a finite number > 0");
+  const s = cfg.schedule || {};
+  if (["specimen","sequence","uniform"].indexOf(s.mode) < 0) errors.push("schedule.mode: expected one of specimen, sequence, uniform");
+  if (errors.length) return errors;
+  if (s.mode === "uniform") return errors;
+  if (s.mode === "specimen"){
+    if (!(Number.isInteger(s.specimenCard) && s.specimenCard >= 0 && s.specimenCard < cfg.cards.length)) errors.push("schedule.specimenCard: expected an integer index into cards");
+    if (!(s.specimenExitMs > 0)) errors.push("schedule.specimenExitMs: expected a finite number > 0");
+    const need = s.specimenRevealMs + s.minHoldFloorMs + s.specimenExitMs;
+    const have = s.specimenRevealMs + s.specimenHoldMs + s.specimenExitMs;
+    if (have < need) errors.push("schedule: specimen hold " + s.specimenHoldMs + "ms is below the minimum full hold " + s.minHoldFloorMs + "ms after the reveal completes");
+    return errors;
+  }
+  const maxTok = Math.max.apply(null, cfg.cards.map(tokenCount));
+  cfg.cards.forEach(function(c, i){
+    if (!(typeof c.slotMs === "number" && isFinite(c.slotMs) && c.slotMs > 0)) errors.push("cards[" + i + "].slotMs: expected a finite number > 0");
+    if (!(typeof c.revealSpanMs === "number" && isFinite(c.revealSpanMs) && c.revealSpanMs >= 0)) errors.push("cards[" + i + "].revealSpanMs: expected a finite number >= 0");
+    if (cfg.enterMs >= c.slotMs) errors.push("enterMs (" + cfg.enterMs + ") must be < cards[" + i + "].slotMs (" + c.slotMs + ")");
+    if (s.exitMs >= c.slotMs) errors.push("schedule.exitMs (" + s.exitMs + ") must be < cards[" + i + "].slotMs (" + c.slotMs + ")");
+    const minHold = tokenCount(c) === maxTok ? s.minHoldFloorMs : s.minHoldMs;
+    if (c.revealSpanMs + minHold + s.exitMs > c.slotMs)
+      errors.push("cards[" + i + "]: reveal " + c.revealSpanMs + " + minimum hold " + minHold + " + exit " + s.exitMs + " exceeds slotMs " + c.slotMs);
+  });
+  return errors;
+}
+
+/* ============ startup resolution (browser path also used by the harness) ============ */
+let RESOLVED = resolveConfig(null);
+let CFG = RESOLVED.cfg;
+if (typeof location !== "undefined"){
+  const raw = new URLSearchParams(location.search).get("cfg");
+  if (raw) RESOLVED = resolveConfig(raw);
+  CFG = RESOLVED.cfg;
+}
+
+/* ============ DOM construction (browser only) ============ */
+if (typeof document !== "undefined"){
+  const errors = RESOLVED.errors.concat(CFG ? validateConfig(CFG) : []);
+  window.__t91 = {errors: errors, warnings: RESOLVED.warnings};
+  const stage = document.getElementById("stage");
+  if (errors.length || !CFG){
+    stage.style.width = CONFIG.stage.width + "px";
+    stage.style.height = CONFIG.geom.stageH + "px";
+    stage.style.background = CONFIG.palette.card;
+    stage.style.fontFamily = CONFIG.type.font;
+    document.getElementById("hud").style.display = "none";
+    document.getElementById("card").style.display = "none";
+    const err = document.getElementById("err");
+    err.style.padding = CONFIG.geom.errPad + "px";
+    err.style.display = "block";
+    err.style.color = CONFIG.palette.ink;
+    err.style.fontSize = CONFIG.type.rolePx + "px";
+    err.textContent = "Configuration error — " + errors.join("; ");
+    window.__t91.CFG = CFG;
+  } else {
+    const vw = (typeof window !== "undefined" && window.innerWidth) ? window.innerWidth : CFG.stage.width;
+    const eff = effectiveGeom(CFG, vw);
+    const g = eff.geom, pal = CFG.palette, ty = CFG.type;
+    document.documentElement.style.background = pal.page;
+    document.body.style.background = pal.page;
+    stage.style.width = eff.effW + "px";
+    stage.style.height = g.stageH + "px";
+    stage.style.background = pal.bg;
+    stage.style.fontFamily = ty.font;
+
+    const hud = document.getElementById("hud");
+    hud.style.left = g.hudX + "px"; hud.style.top = g.hudY + "px";
+    const hudLine = document.getElementById("hudLine");
+    hudLine.textContent = CFG.hud.year + CFG.labels.sep + CFG.hud.dayLine;
+    hudLine.style.color = pal.ink; hudLine.style.fontSize = ty.hudLinePx + "px"; hudLine.style.letterSpacing = ty.hudLineSpacingEm + "em";
+    const hudClock = document.getElementById("hudClock");
+    hudClock.textContent = CFG.hud.clock;
+    hudClock.style.color = pal.ink; hudClock.style.fontSize = ty.hudClockPx + "px"; hudClock.style.marginTop = g.hudClockGap + "px"; hudClock.style.lineHeight = String(ty.hudClockLineHeight);
+
+    const card = document.getElementById("card");
+    card.style.left = g.cardX + "px"; card.style.top = g.cardY + "px";
+    card.style.width = g.cardW + "px"; card.style.height = g.cardH + "px";
+    card.style.background = pal.card;
+    card.style.border = CFG.geom.borderW + "px solid " + pal.edge;
+
+    const tag = document.getElementById("tag");
+    tag.textContent = CFG.labels.tag;
+    tag.style.left = g.tagX + "px"; tag.style.top = g.tagY + "px";
+    tag.style.padding = g.tagPadY + "px " + g.tagPadX + "px";
+    tag.style.background = pal.chip; tag.style.color = pal.ink;
+    tag.style.fontSize = ty.tagPx + "px"; tag.style.letterSpacing = ty.tagSpacingEm + "em";
+
+    const mark = document.getElementById("mark");
+    mark.textContent = CFG.labels.mark;
+    mark.style.left = g.markX + "px"; mark.style.top = g.markY + "px";
+    mark.style.color = pal.accent; mark.style.fontSize = ty.markPx + "px"; mark.style.lineHeight = String(ty.markLineHeight); mark.style.fontStyle = ty.markStyle;
+
+    const quote = document.getElementById("quote");
+    quote.style.left = g.quoteX + "px"; quote.style.top = g.quoteY + "px"; quote.style.width = g.quoteW + "px";
+    quote.style.color = pal.ink; quote.style.lineHeight = String(ty.quoteLineHeight); quote.style.fontStyle = ty.quoteStyle;
+
+    const attr = document.getElementById("attr");
+    attr.style.left = g.attrX + "px"; attr.style.bottom = g.attrBottom + "px";
+    attr.style.width = (g.cardW - g.attrX - g.cardPad) + "px";
+    const attrBar = document.getElementById("attrBar");
+    attrBar.style.width = g.attrBarW + "px"; attrBar.style.height = "100%"; attrBar.style.background = pal.accent;
+    const attrText = document.getElementById("attrText");
+    attrText.style.left = g.attrTextX + "px"; attrText.style.top = "0";
+    attrText.style.width = attrTextWidth(g) + "px";
+    const speaker = document.getElementById("speaker");
+    speaker.style.color = pal.ink; speaker.style.fontSize = ty.speakerPx + "px"; speaker.style.lineHeight = String(ty.speakerLineHeight);
+    const role = document.getElementById("role");
+    role.style.color = pal.accent; role.style.fontSize = ty.rolePx + "px";
+    role.style.marginTop = g.attrGap + "px"; role.style.letterSpacing = ty.roleSpacingEm + "em"; role.style.lineHeight = String(ty.roleLineHeight);
+    attr.style.height = g.attrH + "px";
+
+    /* line layout on the rendered font's own metric basis (canvas, same font string) */
+    const canvas = document.createElement("canvas").getContext("2d");
+    function measure(text, px, kind){
+      const style = kind === "quote" ? ty.quoteStyle : "normal";
+      canvas.font = style + " " + px + "px " + ty.font;
+      let w = canvas.measureText(text).width;
+      if (kind === "role") w += text.length * ty.roleSpacingEm * px;
+      return w;
+    }
+    const fitErrors = [];
+    const fitted = CFG.cards.map(function(c, i){
+      const f = fitCard(CFG, g, c, measure);
+      if (!f.ok) fitErrors.push("cards[" + i + "]: text does not fit at the " + CFG.fit.floorPx + "px floor — overflow " + f.overflowPx + "px" + (f.attrFail ? " (" + f.attrFail + ")" : ""));
+      return f;
+    });
+    if (fitErrors.length){
+      window.__t91.errors = errors.concat(fitErrors);
+      document.getElementById("hud").style.display = "none";
+      card.style.display = "none";
+      const err2 = document.getElementById("err");
+      err2.style.padding = g.errPad + "px";
+      err2.style.display = "block"; err2.style.color = pal.ink; err2.style.fontSize = ty.rolePx + "px";
+      err2.textContent = "Configuration error — " + fitErrors.join("; ");
+    } else {
+      const lineCounts = fitted.map(function(f){ return f.lines; });
+      let shownIdx = -2, shownLines = -1;
+      function showCard(i, visLines){
+        const c = CFG.cards[i], f = fitted[i];
+        quote.style.fontSize = f.px + "px";
+        quote.innerHTML = "";
+        const lines = wrapText(c.quote, g.quoteW, f.px, measure, "quote");
+        lines.forEach(function(ln, li){
+          const d = document.createElement("div");
+          d.textContent = ln;
+          d.style.visibility = li < visLines ? "visible" : "hidden";
+          quote.appendChild(d);
+        });
+        speaker.textContent = c.speaker;
+        role.textContent = c.role + CFG.labels.sep + c.year;
+        shownIdx = i; shownLines = visLines;
+      }
+      let startStamp = performance.now(), pausedAt = null, pauseAccum = 0;
+      function nowMs(){
+        const n = pausedAt !== null ? pausedAt : performance.now();
+        return n - startStamp - pauseAccum;
+      }
+      function frame(){
+        const st = stateAt(CFG, nowMs(), lineCounts);
+        if (st.idx < 0){ card.style.display = "none"; shownIdx = -2; }
+        else {
+          card.style.display = "block";
+          if (st.idx !== shownIdx || st.visibleLines !== shownLines) showCard(st.idx, st.visibleLines);
+          if (st.phase === "enter"){ card.style.opacity = String(st.p); card.style.transform = "translateY(" + ((1 - st.p) * g.risePx) + "px)"; }
+          else if (st.phase === "exit"){ card.style.opacity = String(1 - st.p); card.style.transform = "translateY(0px)"; }
+          else { card.style.opacity = "1"; card.style.transform = "translateY(0px)"; }
+        }
+        requestAnimationFrame(frame);
+      }
+      showCard(stateAt(CFG, 0, lineCounts).idx < 0 ? CFG.schedule.specimenCard : stateAt(CFG, 0, lineCounts).idx, stateAt(CFG, 0, lineCounts).visibleLines || 1);
+      requestAnimationFrame(frame);
+      window.addEventListener("message", function(ev){
+        if (!ev.data || ev.data.t91 === undefined) return;
+        if (ev.data.t91 === "pause" && pausedAt === null) pausedAt = performance.now();
+        if (ev.data.t91 === "play" && pausedAt !== null){ pauseAccum += performance.now() - pausedAt; pausedAt = null; }
+        if (ev.data.t91 === "restart"){ startStamp = performance.now(); pauseAccum = 0; pausedAt = null; shownIdx = -2; }
+      });
+      window.__t91.CFG = CFG;
+      window.__t91.cycleMs = cycleMs(CFG);
+      window.__t91.stateAt = function(t){ return stateAt(CFG, t, lineCounts); };
+      window.__t91.lineCounts = lineCounts;
+    }
+  }
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = {CONFIG: CONFIG, deepMerge: deepMerge, resolveConfig: resolveConfig, resolveSchedule: resolveSchedule, cycleMs: cycleMs, stateAt: stateAt, revealTimes: revealTimes, visibleLineCount: visibleLineCount, effectiveGeom: effectiveGeom, quoteZoneDepth: quoteZoneDepth, attrTextWidth: attrTextWidth, wrapText: wrapText, fitCard: fitCard, validateConfig: validateConfig, tokenCount: tokenCount, CFG: CFG};
+}
+</script>
+</body>
+</html>

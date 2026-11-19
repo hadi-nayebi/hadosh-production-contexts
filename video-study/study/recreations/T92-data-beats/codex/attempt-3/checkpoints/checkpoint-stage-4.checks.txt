@@ -1,0 +1,24 @@
+S4 own-check output — T92 attempt 3 (C4: general layout-bounds validation + C5: fit model inner width 289)
+
+C4 STEP-TOP RESOLUTION (evidence-first, per plan §2 C4 — recorded in full):
+- Displayed-state model bound (the property C4 checks): ink top = beamY - (stepCount-1)*stepRise - stepMarkGap - markPx = 64 - 48 - 4 - 15 = -3 on the attempt-2 geometry -> the check as specified files a problem on the default build.
+- Actual ink bound, measured this stage (PIL, DejaVu Serif stand-in at markPx 15): the "?" glyph's ink extends 11 px above its baseline (drawn with anchor=baseline: ink bbox top 9 at baseline 20). Highest step: baseline = 16 - 4 = 12, actual ink top = 12 - 11 = +1 (no cropping in the stand-in font, margin 1 px). The true font (Georgia) is not measurable in this seat, so the stand-in bound does not clear the model bound.
+- Resolution taken (plan option ii): the geometry is CURED in CONFIG — geom.beamY 64 -> 68 — so ink containment holds under BOTH bounds: model ink top = 68 - 48 - 4 - 15 = +1 >= 0; actual stand-in ink top = (68 - 48 - 4) - 11 = +5. The check itself is NOT weakened (no baseline-only substitution). Every affected chart element rechecked under the cured geometry: bar tops 68 - 64 = 4 >= 0 (max bar h 64 <= beamY 68); negative hang 37.4 <= 190 - (68 + 3 + 0) = 119; numeral baseline 68 + 3 + 37.4 + 10 + 46*0.8 = 155.2 <= 190; step rects sy >= 20 > 0; steps right edge unchanged 276 <= 300.
+- Bounds check 6 (card/chart clearance by canvas measure in the browser path): UNVERIFIED-in-page — no canvas measurement is implemented in-page; the check is carried by the fit leg's wrapped model (beat-1 card bottom 320.6 <= chartY 332; beat-0 card bottom 268.6 <= stageH 540), printed here as the split the plan prescribes.
+
+C4 BOUNDS (validate() gains checks 1-5; dependency guards: a bounds check runs only on structures that passed C3 validation):
+PASS bounds: default config clean under combined C3+C4 validator
+PASS bounds arithmetic: series right 134 <= 294; steps right 276 <= 300 (start 164); step ink top (model) +1 >= 0; unit row 170 <= 360; stage containment chart 330<=360, 522<=540, card 340<=360
+PASS bounds violations file named problems (10/10): series width / steps extent / step ink top / bar height > beamY / positive hang / negative hang / unit row / chart right edge / chart bottom / card right edge
+PASS reveal finite-but-invalid set (5/5): start < 0 / start > 1 / span = 0 / span < 0 / start+span > 1
+PASS dependency guards (2/2): non-array bars + wide gap -> C3 problem only, no bounds problem, no throw; non-array beats -> problem, no throw
+
+COMBINED-VALIDATOR RE-RUN (mandatory S4 probe — every S3 adversarial case through the combined C3+C4 validator AND the browser diagnostic path):
+PASS validation set re-run: 24/24 (attempt-2 classes + C3 extension + diagnostic leg)
+PASS bounds set: 31/31 (incl. 5 combined diagnostic-path cases: named problem, zero throws, zero construction each)
+PASS regression: HUD probe 18/18; browser-path probe 12/12 — with one case revised at this stage, recorded honestly: the differing-bar-count case now runs 3 vs 4 bars under a step-geometry override, because the S2-era 5-bar synthetic at default geometry is lawfully rejected by the new steps-extent bound (steps right edge would be 364 > 300 — the chart genuinely overflows its SVG); the rejection is the bound working as specified, verified above as a named-problem case, not a silent pass.
+
+C5 FIT BASIS: the PIL stand-in method reproduces every attempt-2 filed width exactly (max delta 0.0 px across 15 rows). Re-measured at inner width 289 (= 320 - 2*14 - 3, border-box): all single-line rows fit; binding row beat-0 source ink 277.3, margin 11.7; beat-1 source margin 13.0; wrap states unchanged (claims 2 / 4 / 2 lines); card model unchanged (beat-1 bottom 320.6, clearance 11.4); source at 18 px measures 294.3 > 289 (still fails, by more). HIT list EMPTY for measured rows. The full fit table files as the A-C008 leg on the final candidate (step 10).
+
+Checkpoint: checkpoint-stage-4.html sha256 bfea416b49f0dca74db065ccf62f268f5b25d362f00943af045284fff320f70d, inode differs from working file (asserted at filing).
+PIXEL-UNVERIFIED: logic-level checks only.
