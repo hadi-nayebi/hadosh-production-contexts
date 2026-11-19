@@ -1,0 +1,290 @@
+# Codex scoring wave — lens run (practice re-score), T109 attempt 2
+Standing header: (1) Consumer: practice job's Verify (the bar: five-lens average >= 85 AND no lens < 70) + the artifact's scores filing; the decision priced is whether this build passes the bar on THIS lens and what a next attempt would need to change. (2) Working record: the artifact directory hidden_files/study/recreations/T109-element-morph/ (codex/attempt-2/ returns). (3) BODY-WRITE: your return is filed verbatim by the seat to the lens return path for this run; name that filing in a `BODY-WRITE:` line. Scores are integers from 0 to 100. Your return must end with `SCORE: <integer>`.
+Binding: recreation.html SHA-256 = 29de77e18ca45eac75ecc70fd6ba331ffa42e88f61319f145629271f8a83a87d (identical for all five lens runs of this wave).
+Score-blind packet: you see no prior score and no other lens's return.
+Assessment basis: the HTML supplied in this stream IS the complete artifact under review, bound by the sha above; assess it from the stream alone — do not seek, require, or attempt any on-disk copy.
+Schedule basis: t=0 allocation (named in the build record) — the morph lifecycle is re-based to build zero inside a 14 s cycle; price timing against that named basis and the measured census the record carries, not against segment anchoring.
+
+NEUTRAL TECHNIQUE FACTS (Packet #5, School of Motion, digest T11 + register T109): Element morph / scene morph, ≈53–59 s in an 81 s film. Mechanics: one scene's elements deform continuously into the next scene's — shapes stretch, re-color and re-settle rather than being cut or faded; identity is preserved through change. The article prices morphing as the most awe-inspiring and most complicated of the six transitions, prevalent in logo animation. Evidence: ev/55.0-scene-morph.jpg (pre-morph countdown state) · clips/52-scene-morph.mp4 (motion binding). Measured census carried in the build record: countdown over the completed webpage scene, selection outline around the top card, then element-wise collapse/deformation to black and the logo triangle cluster. Packet bad B3: the morph demo is the least legible of the six — fast and dark.
+
+YOUR LENS: motion fidelity — does the recreation's movement equal the technique's described movement? Price: element-wise continuous interpolation per the CONFIG correspondence entries (each element deforming/collapsing on its own trajectory), the staged destination reveal (clearance, then a lone triangle, then the cluster), the field colour-interpolation, triangles growing geometrically from the centroid, NO whole-scene opacity crossfade anywhere, phase exclusivity outside the morph, the settle interval moving triangles alone, and the return retracing each element's forward trajectory.
+
+=== SCORE-BLIND BUILD RECORD ===
+# T109 — Element morph / scene morph · build record (score-blind copy)
+
+Artifact dir: `hidden_files/study/recreations/T109-element-morph/` · Packet #5 (School of Motion "Six Essential Motion Design Transitions"), technique: element morph / scene morph @ ≈53–59 s · Segment 47–61 s.
+Consumer: TRANSITION surface (DLC assembler transition container).
+Schedule basis: **t=0 allocation** — the morph lifecycle is re-based to build zero inside a 14 s cycle; measured source offsets (countdown ≈52.5–55.5 s · outline ≈54.5 s · morph proper ≈55.5–57.5 s) are the allocation source. Segment census (segment t = source t − 47.0 s): at segment t 8.50 the field is fully black and the webpage elements are gone; at segment t 9.25 a single triangle drifts on black; at segment t 10.50 the full triangle cluster is assembled.
+Final build: recreation.html sha256 29de77e18ca45eac75ecc70fd6ba331ffa42e88f61319f145629271f8a83a87d · PIXEL-UNVERIFIED (no browser binary in this seat; verification is logic-level via a node harness with a DOM stub + the comparison page as render surface).
+
+## Construction
+
+One self-contained HTML file; all values in a single CONFIG object at the top of the script. DOM primitives (a search bar with a title, three cards, a selection outline, a countdown line, three triangles) are composed from CONFIG geometry; no external assets, no specimen media, no traced contours.
+
+Behaviour dispatch: a behaviours table keyed by the CONFIG correspondence entries' mode values (deform-to-cluster · collapse-to-point · collapse-down · color-interpolate). Each render step iterates the correspondence entries, resolves each entry's source element and destination (a triangle-cluster target, a palette target, or none), and applies that entry's own stagger. Changing an entry's mode or destination in CONFIG redirects the rendered behaviour without code edits.
+
+Trajectories: collapsing elements follow one piecewise trajectory per element covering a preparation interval (the final countdown step) and the morph interval: a CONFIG prep fraction of the collapse completes by morph onset, with the element's stagger applied proportionally in both pieces, and the collapse completes inside the first stage of the morph interval. Collapsing "down" elements derive their top edge from a centre trajectory (the centre travels by the CONFIG sink distance), so centres only move downward. The destination reveal is staged inside the morph interval by CONFIG fractions: a clearance stage (webpage elements reach their terminal state, no triangle visible), then a lone first triangle, then the remaining triangles join and the cluster completes at morph end. The top card deforms (position, size, radius, colour) to the cluster bounding box across the clearance stage and yields to the triangles. The field colour-interpolates to black on its own correspondence entry (its stagger is independent). The settle interval moves triangles alone (a decaying scale overshoot). The return phase evaluates the same forward trajectories at mirrored time over the full preparation+morph span, so the return retraces the forward path element by element.
+
+Schedule (t=0 allocation): holdA 2400 · countdown 3 × 1000 · morph 2000 · settle 900 · holdB 2600 · return 600 · residual 2500 · cycle 14000 (CONFIG cycleMs; the phase sum is validated against it — an over-budget configuration is a named validation problem and the piece renders an invalid state instead of truncating; scene-kind values are likewise validated against a supported set).
+
+Phases are explicit and non-overlapping; the countdown and the selection outline exist only inside the countdown interval (the outline only in its final step); no whole-scene opacity is interpolated anywhere — the only opacities are per-element collapse/yield terms.
+
+## Own checks (logic level; PIXEL-UNVERIFIED)
+
+A node harness (DOM stub) runs assertion suites against the rendered state the script computes. All suites pass:
+
+- Dispatch/consumption: every one of the 95 CONFIG leaves is consumed by a rendered or validated effect, mutation-tested where behavioural — including mapping-change legs (a correspondence mode change redirects an element's rendered collapse; a destination change holds the field at its source colour; a non-zero field stagger delays the field's interpolation), a countdown-joiner mutation changing the rendered string, and an over-budget cycle configuration producing a named validation problem.
+- Trajectory: continuity at both joins of the piecewise trajectory for every collapsing element (join value equals the prep fraction exactly), terminal state at morph end, settle-interval purity (non-triangle elements static across the settle), forward/return mirror equality at sampled times including samples inside the preparation interval, centre monotonicity and exact sink travel for the downward-collapsing elements.
+- Staged reveal, in order: no triangle visible at any sampled point of the clearance stage; clearance complete at the clearance boundary while the first triangle is still at size zero; exactly one visible triangle at three sampled interior points of the lone-triangle stage; the remaining triangles at size zero before the cluster onset and growing after it; all three at full size at morph end; a reveal-fraction mutation delays the cluster as prescribed.
+- Geometry/readability models: title ink height ≈11.5 px at the configured size against a ~11 px floor, title ink width inside its container for the default and a swapped title (single-line, no wrap state reachable); displayed-bounds disjointness for the countdown against the lowest card at every countdown step and for the search bar against the top card; destination cluster bounds inside the stage at the destination hold. Measured-fit leg: 0 hits. Config-census leg: 0 hits (literal scan outside CONFIG finds only named structural constants: clamp bounds, halving/smoothstep coefficients, hex slice offsets, hex radix; the source carries no comments).
+- Swap test: a different scene title, a different morph duration, and a different field colour each change the rendered state as prescribed.
+- Self-start: the piece reaches its scheduled phases under its own animation-frame startup path with no external caller; purity grep finds no external asset, media reference, or whole-scene opacity term.
+
+
+=== FULL recreation.html (sha256 29de77e18ca45eac75ecc70fd6ba331ffa42e88f61319f145629271f8a83a87d) ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T109 — Element morph / scene morph · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .abs{position:absolute;box-sizing:border-box;}
+  .txt{position:absolute;box-sizing:border-box;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  sceneA: {kind:"webpage", title:"Motion Design Training", geometry:{searchBar:{x:180,y:30,w:200,h:22}, cardTop:{x:180,y:66,w:170,h:44}, cardMid:{x:180,y:122,w:170,h:36}, cardLow:{x:180,y:166,w:170,h:30}}},
+  sceneB: {kind:"logoMark", triangles:[{color:"#e8443a",cx:158,cy:92,s:26},{color:"#3ac95c",cx:180,cy:84,s:26},{color:"#3a6fe8",cx:202,cy:92,s:26}], triClip:"polygon(50% 0%, 100% 100%, 0% 100%)"},
+  correspondence: [
+    {a:"cardTop", b:"triangleCluster", mode:"deform-to-cluster", stagger:0},
+    {a:"searchBar", b:"none", mode:"collapse-to-point", stagger:0},
+    {a:"cardMid", b:"none", mode:"collapse-down", stagger:120},
+    {a:"cardLow", b:"none", mode:"collapse-down", stagger:240},
+    {a:"field", b:"fieldBlack", mode:"color-interpolate", stagger:0}
+  ],
+  countdown: {label:"Scene morph", steps:[3,2,1], stepMs:1000, joiner:" in "},
+  holdAMs: 2400, morphMs: 2000, settleMs: 900, holdBMs: 2600, loopFadeMs: 600, cycleMs: 14000,
+  ease: "smoothstep",
+  palette: {field:"#57c8b4", black:"#0a0a0a", ink:"#ffffff", cardA:"#3b4a6b", cardB:"#8a93a6", accent:"#ffd23c"},
+  outline: {color:"#e8443a", width:2, inset:6},
+  morph: {clusterW:72, clusterH:52, centroidX:180, centroidY:90, sinkPx:10, radiusMax:24, yieldStart:0.9, settleAmp:0.06, titlePadX:8, countTopOffset:34, prepFraction:0.35, reveal:{clearanceEnd:0.30, firstTriangleOnset:0.30, clusterOnset:0.55}},
+  stage: {width:360, height:224},
+  type: {font:"Arial, Helvetica, sans-serif", titleSize:16, countSize:22, titleWeight:400, countWeight:700}
+};
+const SUPPORTED_KINDS = ["webpage", "logoMark"];
+function validateConfig(cfg){
+  const problems = [];
+  if (SUPPORTED_KINDS.indexOf(cfg.sceneA.kind) < 0) problems.push("sceneA.kind unsupported: " + cfg.sceneA.kind);
+  if (SUPPORTED_KINDS.indexOf(cfg.sceneB.kind) < 0) problems.push("sceneB.kind unsupported: " + cfg.sceneB.kind);
+  const sum = cfg.holdAMs + cfg.countdown.steps.length * cfg.countdown.stepMs + cfg.morphMs + cfg.settleMs + cfg.holdBMs + cfg.loopFadeMs;
+  if (sum > cfg.cycleMs) problems.push("phase sum " + sum + " exceeds cycleMs " + cfg.cycleMs);
+  cfg.correspondence.forEach(function(en){
+    if (en.stagger >= cfg.morphMs) problems.push("stagger >= morphMs for " + en.a);
+    if (en.mode.indexOf("collapse") === 0){
+      const f = cfg.morph.prepFraction;
+      if (en.stagger * f >= cfg.countdown.stepMs) problems.push("stagger*prepFraction >= stepMs for " + en.a);
+      if (en.stagger * (1 - f) >= cfg.morphMs * cfg.morph.reveal.clearanceEnd) problems.push("stagger*(1-prepFraction) >= clearance span for " + en.a);
+    }
+  });
+  return problems;
+}
+const VALIDATION = validateConfig(CONFIG);
+const RESIDUAL = CONFIG.cycleMs - (CONFIG.holdAMs + CONFIG.countdown.steps.length * CONFIG.countdown.stepMs + CONFIG.morphMs + CONFIG.settleMs + CONFIG.holdBMs + CONFIG.loopFadeMs);
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+stage.style.fontFamily = CONFIG.type.font;
+function el(cls, parent){ const d = document.createElement("div"); d.className = cls; parent.appendChild(d); return d; }
+function box(parent, cx, cy, w, h, bg){
+  const d = el("abs", parent);
+  d.style.left = (cx - w/2) + "px"; d.style.top = (cy - h/2) + "px";
+  d.style.width = w + "px"; d.style.height = h + "px";
+  if (bg) d.style.background = bg;
+  return d;
+}
+function hexRgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function mix(a, b, p){
+  const A = hexRgb(a), B = hexRgb(b);
+  return "rgb(" + Math.round(A[0]+(B[0]-A[0])*p) + "," + Math.round(A[1]+(B[1]-A[1])*p) + "," + Math.round(A[2]+(B[2]-A[2])*p) + ")";
+}
+function easeFn(name, x){ if (name === "smoothstep") return x * x * (3 - 2 * x); return x; }
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+const G = CONFIG.sceneA.geometry, P = CONFIG.palette, TY = CONFIG.type;
+const field = box(stage, CONFIG.stage.width/2, CONFIG.stage.height/2, CONFIG.stage.width, CONFIG.stage.height, P.field);
+const searchBar = box(field, G.searchBar.x, G.searchBar.y, G.searchBar.w, G.searchBar.h, P.accent);
+searchBar.style.borderRadius = (G.searchBar.h/2) + "px";
+const titleTxt = el("txt", searchBar);
+titleTxt.textContent = CONFIG.sceneA.title;
+titleTxt.style.left = CONFIG.morph.titlePadX + "px"; titleTxt.style.top = "0px";
+titleTxt.style.fontSize = TY.titleSize + "px"; titleTxt.style.fontWeight = String(TY.titleWeight);
+titleTxt.style.lineHeight = G.searchBar.h + "px"; titleTxt.style.color = P.black;
+titleTxt.style.fontFamily = TY.font;
+const cardTop = box(field, G.cardTop.x, G.cardTop.y, G.cardTop.w, G.cardTop.h, P.cardA);
+const cardMid = box(field, G.cardMid.x, G.cardMid.y, G.cardMid.w, G.cardMid.h, P.cardB);
+const cardLow = box(field, G.cardLow.x, G.cardLow.y, G.cardLow.w, G.cardLow.h, P.cardB);
+const outline = el("abs", field);
+outline.style.border = CONFIG.outline.width + "px solid " + CONFIG.outline.color;
+outline.style.left = (G.cardTop.x - G.cardTop.w/2 - CONFIG.outline.inset) + "px";
+outline.style.top = (G.cardTop.y - G.cardTop.h/2 - CONFIG.outline.inset) + "px";
+outline.style.width = (G.cardTop.w + CONFIG.outline.inset*2) + "px";
+outline.style.height = (G.cardTop.h + CONFIG.outline.inset*2) + "px";
+outline.style.opacity = "0";
+const tris = CONFIG.sceneB.triangles.map(function(t){
+  const d = box(field, t.cx, t.cy, t.s, t.s, t.color);
+  d.style.clipPath = CONFIG.sceneB.triClip;
+  d.style.opacity = "0";
+  return d;
+});
+const centroid = {x:CONFIG.morph.centroidX, y:CONFIG.morph.centroidY};
+const countTxt = el("txt", field);
+countTxt.style.left = "0px"; countTxt.style.width = CONFIG.stage.width + "px";
+countTxt.style.textAlign = "center"; countTxt.style.top = (CONFIG.stage.height - CONFIG.morph.countTopOffset) + "px";
+countTxt.style.fontSize = TY.countSize + "px"; countTxt.style.fontWeight = String(TY.countWeight);
+countTxt.style.color = P.ink; countTxt.style.fontFamily = TY.font;
+countTxt.style.opacity = "0";
+const C0 = CONFIG.holdAMs;
+const C1 = C0 + CONFIG.countdown.steps.length * CONFIG.countdown.stepMs;
+const C2 = C1 + CONFIG.morphMs;
+const C3 = C2 + CONFIG.settleMs;
+const C4 = C3 + CONFIG.holdBMs;
+const C5 = C4 + CONFIG.loopFadeMs;
+const CYCLE = CONFIG.cycleMs;
+function staggerOf(key){
+  for (let i = 0; i < CONFIG.correspondence.length; i++) if (CONFIG.correspondence[i].a === key) return CONFIG.correspondence[i].stagger;
+  return 0;
+}
+const P0 = C1 - CONFIG.countdown.stepMs;
+const P1 = C1;
+const P2 = C2;
+function trajQ(t, s){
+  const f = CONFIG.morph.prepFraction, stepMs = CONFIG.countdown.stepMs;
+  const span = CONFIG.morphMs * CONFIG.morph.reveal.clearanceEnd;
+  if (t < P0) return 0;
+  if (t < P1) return f * clamp01((t - P0 - s * f) / (stepMs - s * f));
+  if (t <= P2) return f + (1 - f) * clamp01((t - P1 - s * (1 - f)) / (span - s * (1 - f)));
+  return 1;
+}
+function morphP(t, s){
+  if (t < C1) return 0;
+  if (t >= C2) return 1;
+  return easeFn(CONFIG.ease, clamp01((t - C1 - s) / (CONFIG.morphMs - s)));
+}
+function progressFor(t, key){
+  return morphP(t, staggerOf(key));
+}
+function topP(t, s){
+  if (t < C1) return 0;
+  if (t >= C2) return 1;
+  const raw = clamp01((t - C1 - s) / (CONFIG.morphMs - s));
+  return easeFn(CONFIG.ease, clamp01(raw / CONFIG.morph.reveal.clearanceEnd));
+}
+function triGrowth(t, i){
+  if (t < C1) return 0;
+  if (t >= C2) return 1;
+  const mp = clamp01((t - C1) / CONFIG.morphMs), R = CONFIG.morph.reveal;
+  if (i === 0) return clamp01((mp - R.firstTriangleOnset) / (1 - R.firstTriangleOnset));
+  return clamp01((mp - R.clusterOnset) / (1 - R.clusterOnset));
+}
+const ELS = {cardTop: cardTop, searchBar: searchBar, cardMid: cardMid, cardLow: cardLow, field: field};
+const GEOS = {cardTop: G.cardTop, searchBar: G.searchBar, cardMid: G.cardMid, cardLow: G.cardLow};
+const BEHAVIOURS = {
+  "deform-to-cluster": function(entry, tF){
+    const p = topP(tF, entry.stagger), g = GEOS[entry.a], d = ELS[entry.a];
+    let tw = g.w, th = g.h, tx = g.x, ty = g.y;
+    if (entry.b === "triangleCluster"){ tw = CONFIG.morph.clusterW; th = CONFIG.morph.clusterH; tx = centroid.x; ty = centroid.y; }
+    const cW = g.w + (tw - g.w) * p, cH = g.h + (th - g.h) * p;
+    const cX = g.x + (tx - g.x) * p, cY = g.y + (ty - g.y) * p;
+    d.style.left = (cX - cW/2) + "px"; d.style.top = (cY - cH/2) + "px";
+    d.style.width = cW + "px"; d.style.height = cH + "px";
+    d.style.borderRadius = (p * CONFIG.morph.radiusMax) + "px";
+    d.style.background = mix(P.cardA, P.black, p);
+    d.style.opacity = String(p < CONFIG.morph.yieldStart ? 1 : 1 - (p - CONFIG.morph.yieldStart) / (1 - CONFIG.morph.yieldStart));
+  },
+  "collapse-to-point": function(entry, tF){
+    const q = trajQ(tF, entry.stagger), g = GEOS[entry.a], d = ELS[entry.a];
+    const w = g.w * (1 - q), h = g.h * (1 - q);
+    d.style.left = (g.x - w/2) + "px"; d.style.top = (g.y - h/2) + "px";
+    d.style.width = w + "px"; d.style.height = h + "px";
+    d.style.opacity = String(1 - q);
+    if (entry.a === "searchBar") titleTxt.style.opacity = String(1 - q);
+  },
+  "collapse-down": function(entry, tF){
+    const q = trajQ(tF, entry.stagger), g = GEOS[entry.a], d = ELS[entry.a];
+    const centre = g.y + CONFIG.morph.sinkPx * q;
+    const h = g.h * (1 - q);
+    d.style.width = g.w + "px";
+    d.style.left = (g.x - g.w/2) + "px";
+    d.style.height = h + "px";
+    d.style.top = (centre - h/2) + "px";
+    d.style.opacity = String(1 - q);
+  },
+  "color-interpolate": function(entry, tF){
+    const p = morphP(tF, entry.stagger);
+    const target = entry.b === "fieldBlack" ? P.black : P.field;
+    field.style.background = mix(P.field, target, p);
+  }
+};
+function render(t){
+  t = ((t % CYCLE) + CYCLE) % CYCLE;
+  if (VALIDATION.length > 0){ window.__state = {p: 0, phase: "invalid", problems: VALIDATION}; return window.__state; }
+  let tF = t;
+  if (t >= C4 && t < C5){
+    const rp = easeFn(CONFIG.ease, clamp01((t - C4) / CONFIG.loopFadeMs));
+    tF = P0 + (1 - rp) * (P2 - P0);
+  } else if (t >= C5) tF = 0;
+  CONFIG.correspondence.forEach(function(entry){
+    const fn = BEHAVIOURS[entry.mode];
+    if (fn) fn(entry, tF);
+  });
+  const p = topP(tF, staggerOf("cardTop"));
+  if (t >= C0 && t < C1){
+    const idx = Math.floor((t - C0) / CONFIG.countdown.stepMs);
+    countTxt.textContent = CONFIG.countdown.label + CONFIG.countdown.joiner + CONFIG.countdown.steps[idx];
+    countTxt.style.opacity = "1";
+    outline.style.opacity = (idx === CONFIG.countdown.steps.length - 1) ? "1" : "0";
+  } else { countTxt.style.opacity = "0"; outline.style.opacity = "0"; }
+  let settle = 0;
+  if (t >= C2 && t < C3) settle = Math.sin((t - C2) / CONFIG.settleMs * Math.PI) * CONFIG.morph.settleAmp * (1 - (t - C2) / CONFIG.settleMs);
+  tris.forEach(function(d, i){
+    const tt = CONFIG.sceneB.triangles[i];
+    const g = triGrowth(tF, i);
+    const s = tt.s * g * (1 + settle);
+    const cx = centroid.x + (tt.cx - centroid.x) * g, cy = centroid.y + (tt.cy - centroid.y) * g;
+    d.style.left = (cx - s/2) + "px"; d.style.top = (cy - s/2) + "px";
+    d.style.width = s + "px"; d.style.height = s + "px";
+    d.style.opacity = String(g > 0 ? 1 : 0);
+  });
+  window.__state = {p: p, phase: t < C0 ? "holdA" : t < C1 ? "countdown" : t < C2 ? "morph" : t < C3 ? "settle" : t < C4 ? "holdB" : t < C5 ? "return" : "residualA"};
+  return window.__state;
+}
+window.__render = render;
+window.__config = CONFIG;
+window.__validation = VALIDATION;
+window.__residual = RESIDUAL;
+window.__trajQ = trajQ;
+window.__morphP = morphP;
+window.__topP = topP;
+window.__triGrowth = triGrowth;
+window.__bounds = {P0: P0, P1: P1, P2: P2, C0: C0, C1: C1, C2: C2, C3: C3, C4: C4, C5: C5};
+window.__els = {searchBar: searchBar, cardTop: cardTop, cardMid: cardMid, cardLow: cardLow, tris: tris, countTxt: countTxt, titleTxt: titleTxt, field: field};
+render(0);
+if (typeof requestAnimationFrame === "function"){
+  const t0 = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+  const tick = function(){
+    const now = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+    render(now - t0);
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+</script>
+</body>
+</html>
+

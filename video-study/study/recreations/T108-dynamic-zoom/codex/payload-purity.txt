@@ -1,0 +1,273 @@
+# Codex scoring wave — lens run (recreation §5), attempt 1
+Standing header: (1) Consumer: recreation job's §5 Verify (tier recommendation: RECREATED requires five-lens average >=85 AND no lens <70) + the cycle's Condense cure list; the decision priced is whether this attempt is RECREATED-tier on THIS lens and what the next attempt must cure. (2) Working record: the artifact directory hidden_files/study/recreations/T108-dynamic-zoom/ (codex/ returns + scores.md). (3) Your return must end with `SCORE: <integer 0-100>` and a `BODY-WRITE:` line naming what it filed (read-only run: "BODY-WRITE: none (read-only run)").
+Binding: recreation.html SHA-256 = c5104034613cb38566ebba95d515402be2e1dfc410e78e689430e2fd0aa855ed (identical for all five lens runs of this wave).
+Score-blind packet: you see no prior score and no other lens's return.
+
+NEUTRAL TECHNIQUE FACTS (Packet #5, School of Motion, digest T10 + register T108): Dynamic / infinite zoom, approx 45-52 s teaching span in an 81 s film. Mechanics: the camera follows the cursor into the laptop screen and through it into the webpage scene — a continuous scale move with no cut; the incoming scene is a sub-frame of the outgoing one, so the zoom reveals it as something that was inside all along. Why it works: scale replaces the cut as the continuity device, and the cursor gives the viewer a guide to follow. Builder's foreground 0.25 s census of the 43-57 s segment (in the build record): the move is two-stage but continuous — approach (laptop small/distant on pink, cursor approaching, source ~50.4 s) pushing to a close laptop framing (cursor on the teal screen, ~51.0 s), then through the screen (~51.25 s: teal fills frame, webpage search pill a dot at centre) to the arrived webpage (pill full width by ~52 s, settled full frame by ~53 s). Measured screenRect at source 51.0 s by pixel scan: stage terms {x:82, y:43, w:177, h:113} on a 360x203 stage; derived endScale 2.034. Schedule basis: t=0 allocation (printed in the build record).
+
+YOUR LENS: construction purity — parameterized construction vs tracing/embedding (a refusal-class judgment). Price: whether every visual element is generated in code from CONFIG (DOM construction, no external assets), whether the inner scene is genuinely nested from t=0 rather than composited from specimen material, the recorded purity grep (0 hits), and whether any step in the construction route traces, embeds, or copies the original's media or frames.
+Score ONLY this lens, 0-100, with priced findings. Judge the recreation source + the score-blind build record + fit table below.
+
+===== recreation.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T108 — Dynamic / infinite zoom · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;font-family:Arial,sans-serif;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
+  .laptop{position:absolute;box-sizing:border-box;}
+  .base{position:absolute;box-sizing:border-box;display:flex;align-items:center;justify-content:center;}
+  .screen{position:absolute;overflow:hidden;box-sizing:border-box;}
+  .content{position:absolute;left:0;top:0;transform-origin:0 0;display:flex;flex-direction:column;align-items:center;}
+  .ptitle{box-sizing:border-box;text-align:center;}
+  .pill{box-sizing:border-box;display:flex;align-items:center;justify-content:center;}
+  .row{box-sizing:border-box;display:flex;align-items:center;}
+  .cursor{position:absolute;box-sizing:border-box;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  outer: {label:"Laptop"},
+  inner: {title:"Webpage", lines:["Motion Design Training","Result one","Result two"]},
+  screenRect: {x:82, y:43, w:177, h:113},
+  startScale: 0.65,
+  zoomMs: 2600,
+  holdBeforeMs: 1400,
+  holdAfterMs: 3200,
+  cycleMs: 14000,
+  ease: "easeInOutCubic-single",
+  loopFadeMs: 500,
+  cursor: {x:112, y:100, w:15, h:20, fadeFrom:0.55, fadeTo:0.85, color:"#ffffff"},
+  laptop: {bezel:12, baseH:12, radius:6, labelSize:7},
+  innerLayout: {titleSize:9, pillTextSize:6.5, lineSize:6.5, pillW:118, pillH:13, rowW:130, rowH:11, gap:5, titleWeight:700, pillRadius:7, rowRadius:3, rowPad:6},
+  palette: {field:"#e75480", body:"#3b4a6b", screen:"#7fe7d2", ink:"#22304a", pill:"#ffc93c", row:"#ffffff"},
+  type: {font:"Arial, Helvetica, sans-serif"},
+  stage: {width:360, height:203}
+};
+
+/* ---------- derived geometry (recomputed from CONFIG on every load) ---------- */
+const endScale = CONFIG.stage.width / CONFIG.screenRect.w;
+const screenCx = CONFIG.screenRect.x + CONFIG.screenRect.w/2;
+const screenCy = CONFIG.screenRect.y + CONFIG.screenRect.h/2;
+const stageCx = CONFIG.stage.width/2, stageCy = CONFIG.stage.height/2;
+const visibleW = CONFIG.screenRect.w;                       /* endScale is width-derived */
+const visibleH = CONFIG.stage.height / endScale;
+const visTop = (CONFIG.screenRect.h - visibleH)/2;          /* visible window, screen-local */
+const naturalH = CONFIG.innerLayout.titleSize*1.3 + CONFIG.innerLayout.pillH + 2*CONFIG.innerLayout.rowH + 3*CONFIG.innerLayout.gap;
+const naturalW = Math.max(CONFIG.innerLayout.pillW, CONFIG.innerLayout.rowW);
+const fitScale = Math.min(1, visibleH/naturalH, visibleW/naturalW);
+
+/* ---------- construction (reads ONLY CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+stage.style.background = CONFIG.palette.field;
+document.body.style.fontFamily = CONFIG.type.font;
+
+const world = document.createElement("div");
+world.id = "world";
+world.style.width = CONFIG.stage.width + "px";
+world.style.height = CONFIG.stage.height + "px";
+world.style.background = CONFIG.palette.field;
+stage.appendChild(world);
+
+function el(cls, parent){ const d=document.createElement("div"); d.className=cls; parent.appendChild(d); return d; }
+
+/* laptop body + base (outer scene) */
+const bz = CONFIG.laptop.bezel;
+const laptop = el("laptop", world);
+laptop.style.left = (CONFIG.screenRect.x-bz)+"px";
+laptop.style.top = (CONFIG.screenRect.y-bz)+"px";
+laptop.style.width = (CONFIG.screenRect.w+2*bz)+"px";
+laptop.style.height = (CONFIG.screenRect.h+bz+CONFIG.laptop.baseH)+"px";
+laptop.style.background = CONFIG.palette.body;
+laptop.style.borderRadius = CONFIG.laptop.radius+"px";
+const base = el("base", laptop);
+base.style.left = "0px";
+base.style.top = (CONFIG.screenRect.h+bz)+"px";
+base.style.width = (CONFIG.screenRect.w+2*bz)+"px";
+base.style.height = CONFIG.laptop.baseH+"px";
+base.style.color = CONFIG.palette.screen;
+base.style.fontSize = CONFIG.laptop.labelSize+"px";
+base.textContent = CONFIG.outer.label;
+
+/* screen + NESTED inner scene — in the DOM from t=0, never swapped in */
+const screen = el("screen", world);
+screen.style.left = CONFIG.screenRect.x+"px";
+screen.style.top = CONFIG.screenRect.y+"px";
+screen.style.width = CONFIG.screenRect.w+"px";
+screen.style.height = CONFIG.screenRect.h+"px";
+screen.style.background = CONFIG.palette.screen;
+
+const content = el("content", screen);
+content.style.width = CONFIG.screenRect.w+"px";
+content.style.height = CONFIG.screenRect.h+"px";
+content.style.justifyContent = "center";
+content.style.gap = (CONFIG.innerLayout.gap*fitScale)+"px";
+content.style.transform = "scale("+fitScale+")";
+/* centre the fitted content group on the visible window's centre */
+content.style.left = ((CONFIG.screenRect.w - CONFIG.screenRect.w*fitScale)/2)+"px";
+content.style.top = ((visTop + visibleH/2) - (CONFIG.screenRect.h*fitScale)/2)+"px";
+
+const ptitle = el("ptitle", content);
+ptitle.textContent = CONFIG.inner.title;
+ptitle.style.fontSize = CONFIG.innerLayout.titleSize+"px";
+ptitle.style.fontWeight = CONFIG.innerLayout.titleWeight;
+ptitle.style.color = CONFIG.palette.ink;
+const pill = el("pill", content);
+pill.style.width = CONFIG.innerLayout.pillW+"px";
+pill.style.height = CONFIG.innerLayout.pillH+"px";
+pill.style.background = CONFIG.palette.pill;
+pill.style.borderRadius = CONFIG.innerLayout.pillRadius+"px";
+pill.style.color = CONFIG.palette.ink;
+pill.style.fontSize = CONFIG.innerLayout.pillTextSize+"px";
+pill.textContent = CONFIG.inner.lines[0];
+CONFIG.inner.lines.slice(1).forEach(function(txt){
+  const r = el("row", content);
+  r.style.width = CONFIG.innerLayout.rowW+"px";
+  r.style.height = CONFIG.innerLayout.rowH+"px";
+  r.style.background = CONFIG.palette.row;
+  r.style.borderRadius = CONFIG.innerLayout.rowRadius+"px";
+  r.style.color = CONFIG.palette.ink;
+  r.style.fontSize = CONFIG.innerLayout.lineSize+"px";
+  r.style.paddingLeft = CONFIG.innerLayout.rowPad+"px";
+  r.textContent = txt;
+});
+
+/* cursor — a world element over the screen; the guide the camera follows in */
+const cursor = el("cursor", world);
+cursor.style.left = CONFIG.cursor.x+"px";
+cursor.style.top = CONFIG.cursor.y+"px";
+cursor.style.width = CONFIG.cursor.w+"px";
+cursor.style.height = CONFIG.cursor.h+"px";
+cursor.style.background = CONFIG.cursor.color;
+cursor.style.clipPath = "polygon(0 0, 100% 62%, 58% 68%, 78% 100%, 58% 100%, 40% 72%, 0 100%)";
+
+/* ---------- camera: ONE transform, ONE ease, single clock ---------- */
+function easeInOutCubic(u){ return u<0.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2; }
+const EASES = {"easeInOutCubic-single": easeInOutCubic};
+function pose(tms){
+  const t = ((tms % CONFIG.cycleMs) + CONFIG.cycleMs) % CONFIG.cycleMs;
+  /* half-open phase intervals: [0,holdBefore) distant hold · [holdBefore,+zoom) zoom · [+zoom,+holdAfter) arrived hold · [+holdAfter,cycle) extended arrived hold (same end pose; the seam reset lives in the loop fade, opacity 0) */
+  const zoomEnd = CONFIG.holdBeforeMs + CONFIG.zoomMs;
+  const arrivedEnd = zoomEnd + CONFIG.holdAfterMs;
+  let u;
+  if (t < CONFIG.holdBeforeMs) u = 0;
+  else if (t < zoomEnd) u = EASES[CONFIG.ease]((t - CONFIG.holdBeforeMs)/CONFIG.zoomMs);
+  else if (t < arrivedEnd) u = 1;
+  else u = 1;
+  const s = CONFIG.startScale + (endScale - CONFIG.startScale)*u;
+  const tx = stageCx - screenCx*s;
+  const ty = stageCy - screenCy*s;
+  const edge = Math.min(t, CONFIG.cycleMs - t);
+  const opacity = edge < CONFIG.loopFadeMs ? edge/CONFIG.loopFadeMs : 1;
+  let cursorOpacity;
+  if (u <= CONFIG.cursor.fadeFrom) cursorOpacity = 1;
+  else if (u >= CONFIG.cursor.fadeTo) cursorOpacity = 0;
+  else cursorOpacity = 1 - (u - CONFIG.cursor.fadeFrom)/(CONFIG.cursor.fadeTo - CONFIG.cursor.fadeFrom);
+  return {s:s, tx:tx, ty:ty, u:u, opacity:opacity, cursorOpacity:cursorOpacity};
+}
+function render(tms){
+  const p = pose(tms);
+  world.style.transform = "translate("+p.tx+"px,"+p.ty+"px) scale("+p.s+")";
+  world.style.opacity = String(p.opacity);
+  cursor.style.opacity = String(p.cursorOpacity);
+}
+window.__render = render;
+window.__pose = pose;
+window.__config = CONFIG;
+window.__layout = {endScale:endScale, visibleW:visibleW, visibleH:visibleH, visTop:visTop, fitScale:fitScale, naturalH:naturalH};
+let start = null;
+function frame(ts){
+  if (start === null) start = ts;
+  render(ts - start);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
+
+
+===== score-blind build record =====
+# T108 — Dynamic / infinite zoom · build record (attempt 1, recreation Cycle 018 Wave 15 RE-TAKE)
+
+Artifact dir: `hidden_files/study/recreations/T108-dynamic-zoom/` · Queue #55 · Packet #5 (School of Motion "Six Essential Motion Design Transitions", YxQ7JqVmqgY), technique P5-T10 @ ≈45–52 s · Segment 43–57 s.
+Consumer: **TRANSITION** (DLC assembler transition container + production transition vocabulary; also feeds DIAGRAM).
+Schedule basis (Amendment A7): **`t=0 allocation`** — the zoom lifecycle is re-based to build zero inside the 14 s cycle (distant hold → zoom → arrived hold), named allocation, never presented as measured.
+Final build: recreation.html sha256 c5104034613cb38566ebba95d515402be2e1dfc410e78e689430e2fd0aa855ed · PIXEL-UNVERIFIED (no browser binary in this seat; verification is logic-level via the node harness + the comparison page as render surface).
+Family law: sibling T101 (timeline dive, PASS 85.2) binds this build — its three cures are applied by construction: inner text sized to the HOLD-VISIBLE window · ONE tangent-continuous ease for the whole zoom · loop fade reaching ZERO opacity (verified in §5).
+
+## 1. Observe gate-out
+Mechanics: the camera follows the cursor into the laptop screen and through it into the webpage scene — a continuous scale move with no cut; the incoming scene is a sub-frame of the outgoing one, so the zoom reveals it as something that was inside all along.
+Evidence viewed firsthand by the builder: RUN §1b seat census sheet + the builder's own 0.25 s segment census + packet clip frames (§3).
+Variables (all CONFIG-bound): outer{label} · inner{title,lines[]} · screenRect{x,y,w,h} · startScale (builder-added, §4) · zoomMs · holdBeforeMs · holdAfterMs · cycleMs · ease · loopFadeMs · cursor{x,y,w,h,fadeFrom,fadeTo,color} · laptop{bezel,baseH,radius,labelSize} · innerLayout{titleSize,pillTextSize,lineSize,pillW,pillH,rowW,rowH,gap,titleWeight,pillRadius,rowRadius,rowPad} · palette{field,body,screen,ink,pill,row} · type{font} · stage{width,height}. endScale is DERIVED (stage.width/screenRect.w), never a CONFIG literal.
+
+## 2. Guard dispositions
+- **codex-observe** (fired FIRST, one stream): CONFIRMED-WITH-GAPS — verbatim at codex/codex-observe.md. Dispositions: G1 evidence-time conflict (digest captions vs seat census) → closed firsthand in §3: ev/48.0-dynamic-zoom.jpg is a BLANK PINK field frame (not "the zoom in progress") and ev/50.5-zoom-webpage.jpg shows the laptop at source 50.5 s pre-zoom (not "the arrived webpage") — the filenames' timestamps are accurate, the digest's content captions are not; the seat census + this census govern · G2 T101 binding unverified by auditor → T101 scores.md + verdict-history line read firsthand by the builder (83/80/96/76/91 = 426/5 = 85.2, min 76, five lenses, returns on file — recomputed ✓) · G3 clip in/out unspecified → clip frames aligned in §3 (clip ≈ source 46.0–52.5, ±0.5 s) · G4 build parameters provisional → screenRect measured + endScale re-derived in §3; zoomMs priced in §3/§4.
+- **codex-plan-review** (one stream): REVISE — verbatim at codex/codex-plan-review.md. Points applied as construction requirements: (1) pose continuity verified across phase boundaries (harness: scale/translate jumps 0.000 at both boundaries, §5) · (2) contrast recorded at default (ink #22304a on screen #7fe7d2 = **8.97:1**, on pill #ffc93c = 8.60:1, on row #ffffff = 13.21:1 — all ≥ 4.5:1, Owner Cure 1); the palette swap leg changes palette.field only, which carries no text · phase exclusivity implemented as one pose function with explicit half-open phase intervals · (3) swap fixture reconciled BOTH ways (§5: the §2 exact pair 120→96 run on a Plan-default fixture AND the measured-baseline pair 177→96 on the final build — both re-derive endScale to 3.75); stage/startScale/extended-hold/cursor-fade/loop timing all CONFIG-bound or derived in print (extended hold = cycleMs − (holdBeforeMs+zoomMs+holdAfterMs) = 6800 ms, computed in the phase table §4); inner layout RECOMPUTED from the current visible window on every load (fitScale re-derives: at swap width 96 it measures 0.738, §5) · screen-geometry semantics: the end pose maps the screen CENTRE to the stage centre, so the visible window is always centred on the rect whatever its x/w · (4) loop fully allocated (§4 phase table: fade-in [0,500) · seam reset at opacity exactly 0 · fade-out [13500,14000)); zoomMs rationale retained and the departure priced (§3: camera-only motion ≈1.1 s; full transition span incl. webpage settle ≈2.6 s — the allocation maps the span onto the single move) · (5) numeric lens predictions filed (§7) · (6) size discipline held: no typing animation, no result-card choreography — the pill/rows are static nested content, the camera is the whole technique.
+
+## 3. Segment + measured frames (Execute step 3 — foreground, landed, viewed)
+Source: `hidden_files/study/video-digests/2026-11-14-som-six-transitions/source.mp4` — ffprobe: h264 1280×720, 30 fps, duration 80.994 s.
+Segment cut: ffmpeg `-ss 43 -t 14`, re-encoded libx264/yuv420p + aac → segment.mp4, ffprobe **duration 14.000 s**, size 791 325 bytes.
+Census: 25 frames at 0.25 s steps across segment t 6.00–12.00 (frames/census/), 14 packet-clip frames at 0.5 s steps (frames/clip/), pixel scan of the source 51.0 s frame. Measured sub-beats (segment t = source t − 43):
+
+| Seg t | Source t | Measured state |
+|---|---|---|
+| 7.50 | 50.50 | Laptop SMALL/distant on pink (body ≈40 % of scene width), cursor approaching from the right, countdown "Dynamic zoom in 1" |
+| 7.75 | 50.75 | Laptop larger — camera already pushing in; cursor entering the screen area |
+| 8.00 | 51.00 | Laptop CLOSE; white cursor ON the teal screen; countdown label still up |
+| 8.25 | 51.25 | Camera INSIDE the screen: teal fills the frame, cursor small, search pill a yellow dot at page centre, countdown ghosting out |
+| 8.50–9.00 | 51.50–52.00 | Pill grows to full width; "Motion Design Training" types in; cursor small above the pill |
+| 9.50–9.75 | 52.50–52.75 | Arrived webpage state holds (pill mid-frame); next technique's countdown fades in |
+| 10.00 | 53.00 | Webpage full frame (pill at top + first result card) — the settle completes |
+
+**Measured screenRect (the §2b charge):** pixel scan of the source 51.0 s frame — teal screen bounds x 290–920, y 152–552 of 1280×720 (trapezoid bounding box) → stage terms (×360/1280, ×203/720): **screenRect {x:82, y:43, w:177, h:113}**; **endScale re-derived = 360/177 = 2.034** (replaces the Plan default w:120 → 3.0). Zoom duration: camera motion ≈50.4–51.5 s (≈1.1 s); full transition span (distant framing → webpage settled) ≈50.4–53.0 s ≈ **2.6 s** — CONFIG zoomMs 2600 stands as the span-priced allocation under the named t=0 basis.
+**Packet-clip line (charged by §2b):** the clip (48.0-dynamic-zoom.mp4, 6.533 s; frames align it to ≈ source 46.0–52.5) showed in continuous motion what the census stills could not: the distant and close laptop framings are ONE uninterrupted push with no cut between them — the two-stage shape (approach + entry) is a single move, which is why the build uses one ease for both stages.
+**Evidence-label finding (codex-observe G1, closed):** ev/48.0-dynamic-zoom.jpg = blank pink field frame; ev/50.5-zoom-webpage.jpg = the pre-zoom laptop at 50.5 s (identical to census s_7.50). Digest captions for both are inaccurate; their timestamps are accurate.
+
+## 4. Construction
+DOM, one self-contained file, CONFIG at top, logic reads only CONFIG. World (stage-sized) holds: pink field · laptop body + base (label = outer.label) · screen div at the measured screenRect with the INNER SCENE NESTED INSIDE IT FROM t=0 (title · search pill carrying lines[0] · result rows lines[1..]) · cursor element over the screen. Camera = ONE transform (translate+scale, origin 0 0) on the world, driven by ONE easeInOutCubic progress (selected by CONFIG ease name) over zoomMs, single JS clock; the pose maps the screen centre to the stage centre at every progress value, interpolating scale startScale 0.65 → endScale 2.034 — the single ease carries BOTH census stages (approach + entry), no piecewise kink (T101 cure 2). Inner layout is computed from the CURRENT visible window on load (visibleW = screenRect.w · visibleH = stage.height/endScale = 99.8 local px · fitScale = min(1, visibleH/naturalH, visibleW/naturalW) = 1 here) and centred on the window, so no inner text crops at end scale (T101 cure 1). Cursor opacity fades 1→0 across zoom progress 0.55–0.85 (the guide is left behind at the screen-plane crossing; the small cursor seen inside the specimen afterwards is page-space). Phase table (half-open, one pose function owns the stage — Owner Cure 2): [0,1400) distant hold · [1400,4000) zoom · [4000,7200) arrived hold (holdAfterMs) · [7200,14000) extended arrived hold · loop fade: opacity ramps 0→1 over [0,500) and 1→0 over [13500,14000), reaching **ZERO at the seam** where the pose resets invisibly (T101 cure 3). `window.__render(t)` exposes the clock for the comparison's synchronized control; `__pose`/`__layout` expose the proof surface for the harness.
+Owner Cure 1 (contrast): ink on screen 8.97:1 · on pill 8.60:1 · on row 13.21:1 — all ≥ 4.5:1. Recorded in §2.
+
+## 5. Own checks (recorded, not asserted)
+- **Mechanism proof (final build, node harness on the extracted script):** single-clock sampling at 16 ms steps across the zoom — scale **monotonic** ✓ · max step **0.02535 ≤ the ease's max step bound 0.02555** ((endScale−startScale)·3·16/zoomMs) ✓ · phase-boundary jumps: scale 0.000 at zoom start and zoom end, translate 0.000 ✓ · end pose maps screen centre → **(180, 101.5) = stage centre exactly** ✓ · loop opacity at t=0 is **0** (ZERO reached), 1 at 500 ms, pose(14000) == pose(0) ✓ · cursor opacity 1 at hold → 0 at zoom end ✓ · **DOM census: inner scene present at construction (t=0)** — texts ["Laptop","Webpage","Motion Design Training","Result one","Result two"] all in the tree before any render call ✓ (nested, never swapped in).
+- **Swap test (§2 EXACT values + measured-baseline pair, scratch copies, harness-verified):** words — inner.title "Webpage"→"Dashboard" (title node = "Dashboard" ✓) · timing — zoomMs 2600→3200 ✓ · palette — palette.field "#e75480"→"#3f7fbf" ✓ · geometry (§2 fixture, Plan-default rect) — screenRect.w 120→96: endScale **3.0 → 3.75** ✓ · geometry (final build) — screenRect.w 177→96: endScale **2.034 → 3.75** ✓, fitScale re-derives 1 → **0.738** (layout responds to the new visible window: visibleH 99.8 → 54.1), scale still monotonic, max step 0.0568 ≤ bound 0.0572 ✓.
+- **Purity grep** over recreation.html, pattern `segment\.mp4|source\.mp4|video-digests|ev/|\.jpg|\.png|<video|<img`: **0 hits**. Asset inventory: recreation.html loads NO external assets — all elements are DOM generated from CONFIG in code. segment.mp4 appears only in comparison.html as the labeled ORIGINAL.
+- **node --check** on the extracted inline script: OK. Cycle arithmetic: holdBefore 1400 + zoom 2600 + holdAfter 3200 + extended hold 6800 = **14 000 ms exactly** = segment 14.000 s ✓.
+- **Comparison check:** labels exact per charge (`ORIGINAL — School of Motion @ 43–57 s` · `RECREATION — Dynamic / infinite zoom, parameterized`) · one control set drives both (video currentTime slaves the recreation via __render) · durations matched · phone stacking via flex-wrap with controls above the panels, reachable.
+
+## 6. A6 legs
+- guard-measured-fit → fit-table.md: **2 HITs carried** — HIT-1 inner text below the legibility floor in the DISTANT state only (reading state = hold, all elements ≥ 11.8 px ink; T101 brand precedent) · HIT-2 outer device label "Laptop" (a device tag, listed for completeness). Hold state: 0 HITs. First-pass row size (11.0, at floor) cured to 6.5 px (11.9) pre-wave.
+- guard-config-census → config-census.md: **0 HITs** on the final build (two first-pass hits — unapplied holdAfterMs, descriptive-only ease label — cured pre-wave and re-verified by harness).
+
+
+
+===== fit table (A6 measured-fit leg, final build) =====
+# T108 — guard-measured-fit output (A6 leg 1, FINAL build, pre-wave)
+
+Method: font-metric geometry measurement (Liberation Sans — metric-compatible with the CONFIG Arial stack — advance widths + cap-height ink bounds via PIL ImageFont at 200 px, scaled) at the 360 px stage. Two states measured per element: the DISTANT state (camera start pose, scale = CONFIG startScale 0.65) and the HOLD state (camera end pose, endScale = 360/177 = 2.034) — the hold is the inner scene's reading state, where the camera reveals the full screenRect width (visible local width 177 px) and 203/2.034 = **99.8 of 113 local px of height**; the content group is centred on that visible window and fitScale (= 1 on this build) is re-derived from it on every load, so nothing crops at end scale (T101 cure 1).
+
+| Element | Container | Ink width (local) | Visible width at hold | Margin at hold | Ink height: distant / hold (stage px) |
+|---|---|---|---|---|---|
+| inner.title "Webpage" @9 px bold | screen 177×113 | 39.8 px | 177 px | 137.2 px | 5.3 / **16.5** |
+| pill text "Motion Design Training" @6.5 px | pill 118×13 | 66.5 px | 118 px | 51.5 px | 3.8 / **11.8** |
+| row "Result one" @6.5 px | row 130×11 (124 usable) | 31.1 px | 124 px | 92.9 px | 3.8 / **11.9** |
+| row "Result two" @6.5 px | row 130×11 (124 usable) | 30.4 px | 124 px | 93.6 px | 3.8 / **11.9** |
+| swap title "Dashboard" @9 px bold | screen | 47.0 px | 177 px | 130.0 px | 5.3 / 16.5 |
+| outer.label "Laptop" @7 px | laptop base 201×12 | 21.4 px | 201 px | 179.6 px | 4.1 / (off-frame at hold) |
+
+Hierarchy: title/pill ink-height ratio = 8.1/5.8 = 1.40 (local), identical at hold — measured size hierarchy, not hue-only. ✓
+Legibility floor (~11 px ink height): every inner-scene element clears it in its reading state (hold: 16.5 / 11.8 / 11.9 / 11.9). First-pass rows @6 px measured 11.0 — at the floor — and were cured pre-wave to 6.5 px (11.9) before this table was filed.
+
+HIT list: **2 HITs carried** —
+- HIT-1: inner-scene text in the DISTANT state measures 3.8–5.3 px ink height, below the floor. Disposition (T101 brand precedent): the distant state is the approach framing (1.4 s hold + the zoom's first half); the inner scene's reading state is the hold, where every element clears the floor. In the specimen the screen at the equivalent framing is blank teal — the build's inner content is present-but-unread there, which is the nested-DOM price of the no-swap mechanism, printed rather than hidden.
+- HIT-2: outer.label "Laptop" @7 px measures 4.1 px ink height in its only visible state (distant) and is off-frame at hold. Disposition: it is a device tag on the laptop base (CONFIG outer.label's application site), not subject reading text; it is listed here because the leg counts every text element. The lens wave prices it with this table in the packet.
+

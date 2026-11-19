@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T108 comparison — Dynamic / infinite zoom</title>
+<style>
+  body{margin:0;padding:12px;background:#10141f;color:#e8e6da;font-family:Verdana,Geneva,sans-serif;}
+  h1{font-size:15px;margin:0 0 10px;}
+  .wrap{display:flex;gap:14px;flex-wrap:wrap;}
+  figure{margin:0;width:360px;max-width:100%;}
+  figcaption{font-size:12px;margin:0 0 6px;color:#e8c86a;}
+  video,iframe{width:100%;border:0;border-radius:8px;background:#000;display:block;}
+  video{aspect-ratio:16/9;}
+  iframe{height:203px;}
+  .controls{margin:14px 0;}
+  button{font-size:15px;padding:12px 20px;margin-right:8px;border-radius:8px;border:1px solid #e8c86a;background:#1a2a4a;color:#f5f2e6;cursor:pointer;}
+</style>
+</head>
+<body>
+<h1>T108 — Dynamic / infinite zoom · comparison</h1>
+<div class="controls">
+  <button id="playBtn" type="button">Play both</button>
+  <button id="restartBtn" type="button">Restart both</button>
+</div>
+<div class="wrap">
+  <figure>
+    <figcaption>ORIGINAL — School of Motion @ 43–57 s</figcaption>
+    <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+  </figure>
+  <figure>
+    <figcaption>RECREATION — Dynamic / infinite zoom, parameterized</figcaption>
+    <iframe id="rec" src="recreation.html" title="T108 recreation"></iframe>
+  </figure>
+</div>
+<script>
+'use strict';
+var orig = document.getElementById('orig');
+var rec = document.getElementById('rec');
+var raf = null;
+function drive(){
+  var w = rec.contentWindow;
+  if (w && typeof w.__render === 'function' && !orig.paused){
+    w.__render(orig.currentTime * 1000);
+  }
+  raf = requestAnimationFrame(drive);
+}
+document.getElementById('playBtn').addEventListener('click', function(){
+  if (orig.paused){ orig.play(); drive(); this.textContent = 'Pause both'; }
+  else { orig.pause(); if (raf) cancelAnimationFrame(raf); this.textContent = 'Play both'; }
+});
+document.getElementById('restartBtn').addEventListener('click', function(){
+  orig.currentTime = 0;
+  var w = rec.contentWindow;
+  if (w && typeof w.__render === 'function') w.__render(0);
+  orig.play(); drive();
+  document.getElementById('playBtn').textContent = 'Pause both';
+});
+orig.addEventListener('ended', function(){
+  if (raf) cancelAnimationFrame(raf);
+  document.getElementById('playBtn').textContent = 'Play both';
+});
+</script>
+</body>
+</html>

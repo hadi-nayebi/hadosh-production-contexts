@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T109 — Element morph / scene morph · recreation</title>
+<style>
+  html,body{margin:0;padding:0;background:#111;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  .abs{position:absolute;box-sizing:border-box;}
+  .txt{position:absolute;box-sizing:border-box;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const CONFIG = {
+  sceneA: {kind:"webpage", title:"Motion Design Training", geometry:{searchBar:{x:180,y:34,w:150,h:14}, cardTop:{x:180,y:66,w:170,h:44}, cardMid:{x:180,y:122,w:170,h:36}, cardLow:{x:180,y:166,w:170,h:30}}},
+  sceneB: {kind:"logoMark", triangles:[{color:"#e8443a",cx:158,cy:92,s:26},{color:"#3ac95c",cx:180,cy:84,s:26},{color:"#3a6fe8",cx:202,cy:92,s:26}], triClip:"polygon(50% 0%, 100% 100%, 0% 100%)"},
+  correspondence: [
+    {a:"cardTop", b:"triangleCluster", mode:"deform-to-cluster", stagger:0},
+    {a:"searchBar", b:"none", mode:"collapse-to-point", stagger:0},
+    {a:"cardMid", b:"none", mode:"collapse-down", stagger:120},
+    {a:"cardLow", b:"none", mode:"collapse-down", stagger:240},
+    {a:"field", b:"fieldBlack", mode:"color-interpolate", stagger:0}
+  ],
+  countdown: {label:"Scene morph", steps:[3,2,1], stepMs:1000},
+  holdAMs: 2400, morphMs: 1600, settleMs: 900, holdBMs: 2600, loopFadeMs: 600,
+  ease: "smoothstep",
+  palette: {field:"#57c8b4", black:"#0a0a0a", ink:"#ffffff", cardA:"#3b4a6b", cardB:"#8a93a6", accent:"#ffd23c"},
+  outline: {color:"#e8443a", width:2, inset:6},
+  morph: {clusterW:72, clusterH:52, centroidX:180, centroidY:90, sinkPx:10, radiusMax:24, yieldStart:0.9, settleAmp:0.06, titlePadX:8, countTopOffset:34},
+  stage: {width:360, height:203},
+  type: {font:"Arial, Helvetica, sans-serif", titleSize:11, countSize:22, titleWeight:400, countWeight:700}
+};
+
+/* ---------- helpers (all values from CONFIG) ---------- */
+const stage = document.getElementById("stage");
+stage.style.width = CONFIG.stage.width + "px";
+stage.style.height = CONFIG.stage.height + "px";
+stage.style.fontFamily = CONFIG.type.font;
+function el(cls, parent){ const d = document.createElement("div"); d.className = cls; parent.appendChild(d); return d; }
+function box(parent, cx, cy, w, h, bg){
+  const d = el("abs", parent);
+  d.style.left = (cx - w/2) + "px"; d.style.top = (cy - h/2) + "px";
+  d.style.width = w + "px"; d.style.height = h + "px";
+  if (bg) d.style.background = bg;
+  return d;
+}
+function hexRgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function mix(a, b, p){
+  const A = hexRgb(a), B = hexRgb(b);
+  return "rgb(" + Math.round(A[0]+(B[0]-A[0])*p) + "," + Math.round(A[1]+(B[1]-A[1])*p) + "," + Math.round(A[2]+(B[2]-A[2])*p) + ")";
+}
+function easeFn(name, x){
+  if (name === "smoothstep") return x * x * (3 - 2 * x);
+  return x;
+}
+function clamp01(x){ return x < 0 ? 0 : (x > 1 ? 1 : x); }
+
+const G = CONFIG.sceneA.geometry, P = CONFIG.palette, TY = CONFIG.type;
+const field = box(stage, CONFIG.stage.width/2, CONFIG.stage.height/2, CONFIG.stage.width, CONFIG.stage.height, P.field);
+
+/* Scene A elements (geometry x,y are CENTRES per RUN §2 table) */
+const searchBar = box(field, G.searchBar.x, G.searchBar.y, G.searchBar.w, G.searchBar.h, P.accent);
+searchBar.style.borderRadius = (G.searchBar.h/2) + "px";
+const titleTxt = el("txt", searchBar);
+titleTxt.textContent = CONFIG.sceneA.title;
+titleTxt.style.left = CONFIG.morph.titlePadX + "px"; titleTxt.style.top = "0px";
+titleTxt.style.fontSize = TY.titleSize + "px"; titleTxt.style.fontWeight = String(TY.titleWeight);
+titleTxt.style.lineHeight = G.searchBar.h + "px"; titleTxt.style.color = P.black;
+titleTxt.style.fontFamily = TY.font;
+const cardTop = box(field, G.cardTop.x, G.cardTop.y, G.cardTop.w, G.cardTop.h, P.cardA);
+const cardMid = box(field, G.cardMid.x, G.cardMid.y, G.cardMid.w, G.cardMid.h, P.cardB);
+const cardLow = box(field, G.cardLow.x, G.cardLow.y, G.cardLow.w, G.cardLow.h, P.cardB);
+const outline = el("abs", field);
+outline.style.border = CONFIG.outline.width + "px solid " + CONFIG.outline.color;
+outline.style.left = (G.cardTop.x - G.cardTop.w/2 - CONFIG.outline.inset) + "px";
+outline.style.top = (G.cardTop.y - G.cardTop.h/2 - CONFIG.outline.inset) + "px";
+outline.style.width = (G.cardTop.w + CONFIG.outline.inset*2) + "px";
+outline.style.height = (G.cardTop.h + CONFIG.outline.inset*2) + "px";
+outline.style.opacity = "0";
+
+/* Scene B: triangle cluster (grows geometrically from the cluster centroid) */
+const tris = CONFIG.sceneB.triangles.map(function(t){
+  const d = box(field, t.cx, t.cy, t.s, t.s, t.color);
+  d.style.clipPath = CONFIG.sceneB.triClip;
+  d.style.opacity = "0";
+  return d;
+});
+const centroid = {x:CONFIG.morph.centroidX, y:CONFIG.morph.centroidY};
+
+/* Countdown lower-third (subject text of the device, DOM template text) */
+const countTxt = el("txt", field);
+countTxt.style.left = "0px"; countTxt.style.width = CONFIG.stage.width + "px";
+countTxt.style.textAlign = "center"; countTxt.style.top = (CONFIG.stage.height - CONFIG.morph.countTopOffset) + "px";
+countTxt.style.fontSize = TY.countSize + "px"; countTxt.style.fontWeight = String(TY.countWeight);
+countTxt.style.color = P.ink; countTxt.style.fontFamily = TY.font;
+countTxt.style.opacity = "0";
+
+/* ---------- ONE clock, explicit non-overlapping phases ---------- */
+const C0 = CONFIG.holdAMs;                                   /* holdA ends */
+const C1 = C0 + CONFIG.countdown.steps.length * CONFIG.countdown.stepMs; /* countdown ends / morph starts */
+const C2 = C1 + CONFIG.morphMs;                               /* morph ends */
+const C3 = C2 + CONFIG.settleMs;                              /* settle ends */
+const C4 = C3 + CONFIG.holdBMs;                               /* holdB ends */
+const C5 = C4 + CONFIG.loopFadeMs;                            /* return ends */
+const CYCLE = 14000;
+function staggerOf(key){
+  for (let i = 0; i < CONFIG.correspondence.length; i++) if (CONFIG.correspondence[i].a === key) return CONFIG.correspondence[i].stagger;
+  return 0;
+}
+function localP(t, key){
+  const start = C1 + staggerOf(key);
+  return easeFn(CONFIG.ease, clamp01((t - start) / CONFIG.morphMs));
+}
+function render(t){
+  t = ((t % CYCLE) + CYCLE) % CYCLE;
+  let p = 0; /* morph progress for field/cardTop/triangles */
+  if (t < C1) p = 0;
+  else if (t < C2) p = localP(t, "cardTop");
+  else p = 1;
+  if (t >= C4 && t < C5) p = 1 - easeFn(CONFIG.ease, (t - C4) / CONFIG.loopFadeMs); /* return = reverse interpolation */
+  if (t >= C5) p = 0;
+
+  /* field: color-interpolate (correspondence: field -> fieldBlack) */
+  field.style.background = mix(P.field, P.black, p);
+
+  /* countdown: discrete steps during [C0,C1); removed at morph start */
+  if (t >= C0 && t < C1){
+    const idx = Math.floor((t - C0) / CONFIG.countdown.stepMs);
+    countTxt.textContent = CONFIG.countdown.label + " in " + CONFIG.countdown.steps[idx];
+    countTxt.style.opacity = "1";
+    outline.style.opacity = (idx === CONFIG.countdown.steps.length - 1) ? "1" : "0";
+  } else { countTxt.style.opacity = "0"; outline.style.opacity = "0"; }
+
+  /* searchBar: collapse-to-point toward its own centre */
+  const ps = (t < C1) ? 0 : (t >= C4 && t < C5 ? 1 - easeFn(CONFIG.ease,(t-C4)/CONFIG.loopFadeMs) : (t >= C5 ? 0 : localP(t, "searchBar")));
+  const sbW = G.searchBar.w * (1 - ps), sbH = G.searchBar.h * (1 - ps);
+  searchBar.style.left = (G.searchBar.x - sbW/2) + "px"; searchBar.style.top = (G.searchBar.y - sbH/2) + "px";
+  searchBar.style.width = sbW + "px"; searchBar.style.height = sbH + "px";
+  searchBar.style.opacity = String(1 - ps);
+  titleTxt.style.opacity = String(1 - ps);
+
+  /* cardTop: deform-to-cluster — geometry + radius + colour interpolate to the cluster bbox, then yields to the grown triangles */
+  const bw = CONFIG.morph.clusterW, bh = CONFIG.morph.clusterH;
+  const cW = G.cardTop.w + (bw - G.cardTop.w) * p, cH = G.cardTop.h + (bh - G.cardTop.h) * p;
+  const cX = G.cardTop.x + (centroid.x - G.cardTop.x) * p, cY = G.cardTop.y + (centroid.y - G.cardTop.y) * p;
+  cardTop.style.left = (cX - cW/2) + "px"; cardTop.style.top = (cY - cH/2) + "px";
+  cardTop.style.width = cW + "px"; cardTop.style.height = cH + "px";
+  cardTop.style.borderRadius = (p * CONFIG.morph.radiusMax) + "px";
+  cardTop.style.background = mix(P.cardA, P.black, p);
+  cardTop.style.opacity = String(p < CONFIG.morph.yieldStart ? 1 : 1 - (p - CONFIG.morph.yieldStart) / (1 - CONFIG.morph.yieldStart));
+
+  /* cardMid / cardLow: collapse-down (height -> 0, centre sinks), staggered */
+  [["cardMid", cardMid, G.cardMid], ["cardLow", cardLow, G.cardLow]].forEach(function(pair){
+    let q;
+    if (t < C1) q = 0; else if (t >= C4 && t < C5) q = 1 - easeFn(CONFIG.ease,(t-C4)/CONFIG.loopFadeMs); else if (t >= C5) q = 0; else q = localP(t, pair[0]);
+    const gg = pair[2];
+    pair[1].style.height = (gg.h * (1 - q)) + "px";
+    pair[1].style.top = (gg.y - gg.h/2 + q * CONFIG.morph.sinkPx) + "px";
+    pair[1].style.opacity = String(1 - q);
+  });
+
+  /* triangles: scale grows from centroid to CONFIG cx,cy on the same eased p; settle adds a small overshoot decay */
+  let settle = 0;
+  if (t >= C2 && t < C3) settle = Math.sin((t - C2) / CONFIG.settleMs * Math.PI) * CONFIG.morph.settleAmp * (1 - (t - C2) / CONFIG.settleMs);
+  tris.forEach(function(d, i){
+    const tt = CONFIG.sceneB.triangles[i];
+    const s = tt.s * p * (1 + settle);
+    const cx = centroid.x + (tt.cx - centroid.x) * p, cy = centroid.y + (tt.cy - centroid.y) * p;
+    d.style.left = (cx - s/2) + "px"; d.style.top = (cy - s/2) + "px";
+    d.style.width = s + "px"; d.style.height = s + "px";
+    d.style.opacity = String(p > 0 ? 1 : 0);
+  });
+
+  window.__state = {p: p, phase: t < C0 ? "holdA" : t < C1 ? "countdown" : t < C2 ? "morph" : t < C3 ? "settle" : t < C4 ? "holdB" : t < C5 ? "return" : "residualA"};
+  return window.__state;
+}
+window.__render = render;
+window.__els = {searchBar: searchBar, cardTop: cardTop, cardMid: cardMid, cardLow: cardLow, tris: tris, countTxt: countTxt, titleTxt: titleTxt, field: field};
+render(0);
+if (typeof requestAnimationFrame === "function"){
+  const t0 = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+  const tick = function(){
+    const now = (typeof performance !== "undefined" && performance.now) ? performance.now() : 0;
+    render(now - t0);
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+</script>
+</body>
+</html>
