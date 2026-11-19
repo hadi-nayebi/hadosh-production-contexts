@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T13 — Comparison: Typing comment stack</title>
+<style>
+  html,body{margin:0;padding:0;background:#0b0d10;color:#eef1f5;font-family:"Segoe UI",system-ui,Arial,sans-serif;}
+  #wrap{max-width:1600px;margin:0 auto;padding:14px;}
+  #panes{display:flex;gap:14px;align-items:flex-start;}
+  .pane{flex:1 1 0;min-width:0;}
+  .label{font-size:15px;font-weight:700;margin:0 0 8px;}
+  .label small{display:block;font-weight:500;opacity:.75;margin-top:2px;}
+  video,iframe{width:100%;aspect-ratio:1916/1078;display:block;border:0;background:#000;}
+  #controls{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap;}
+  button{font-size:17px;padding:12px 22px;border-radius:8px;border:1px solid #5b8def;background:#161a21;color:#eef1f5;cursor:pointer;min-height:48px;}
+  button:active{background:#5b8def;}
+  #clock{font-size:15px;opacity:.8;}
+  @media (max-width:700px){ #panes{flex-direction:column;} .pane{width:100%;} }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="panes">
+    <div class="pane">
+      <p class="label">ORIGINAL — "Look What I Can Do" @ 1:08–1:20<small>segment.mp4, 1:07.5–1:20.5 with handles</small></p>
+      <video id="orig" src="segment.mp4" preload="auto" playsinline></video>
+    </div>
+    <div class="pane">
+      <p class="label">RECREATION — T13 Typing comment stack, parameterized<small>recreation.html — config-driven, slaved to the original's clock (offset 500 ms handle)</small></p>
+      <iframe id="rec" src="recreation.html" title="T13 recreation"></iframe>
+    </div>
+  </div>
+  <div id="controls">
+    <button id="playBtn" type="button">▶ Play both</button>
+    <button id="pauseBtn" type="button">⏸ Pause both</button>
+    <button id="restartBtn" type="button">↺ Restart both</button>
+    <span id="clock">t = 0.0 s / 13.0 s</span>
+  </div>
+</div>
+<script>
+"use strict";
+/* ONE synchronized control set: the video is the master clock; the
+   recreation's performance time is set to (video time - 500 ms handle)
+   on every timeupdate / rAF tick, so both sides stay in sync. */
+var HANDLE_MS = 500;
+var video = document.getElementById("orig");
+var rec = document.getElementById("rec");
+var clock = document.getElementById("clock");
+function recApi(){ try { return rec.contentWindow && rec.contentWindow.T13; } catch(e){ return null; } }
+function sync(){
+  var api = recApi();
+  if (api) api.setTime(video.currentTime * 1000 - HANDLE_MS);
+  clock.textContent = "t = " + video.currentTime.toFixed(1) + " s / " + (video.duration ? video.duration.toFixed(1) : "13.0") + " s";
+}
+video.addEventListener("timeupdate", sync);
+video.addEventListener("seeked", sync);
+video.addEventListener("loadedmetadata", sync);
+(function tick(){ sync(); requestAnimationFrame(tick); })();
+document.getElementById("playBtn").addEventListener("click", function(){
+  video.play(); var api = recApi(); if (api) api.play();
+});
+document.getElementById("pauseBtn").addEventListener("click", function(){
+  video.pause(); var api = recApi(); if (api) api.pause();
+});
+document.getElementById("restartBtn").addEventListener("click", function(){
+  video.currentTime = 0; var api = recApi(); if (api) { api.restart(); api.setTime(-HANDLE_MS); }
+  video.play(); if (api) api.play(); sync();
+});
+rec.addEventListener("load", sync);
+</script>
+</body>
+</html>

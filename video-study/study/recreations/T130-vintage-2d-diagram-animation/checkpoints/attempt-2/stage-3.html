@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T130 vintage 2D diagram animation — recreation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#171310;display:flex;align-items:center;justify-content:center;min-height:100vh}
+#stage{position:relative;overflow:hidden}
+#diagram{position:absolute;inset:0}
+.hdr{position:absolute;left:0;right:0;text-align:center;font-weight:700;letter-spacing:2px}
+.date{position:absolute;left:0;right:0;text-align:center;letter-spacing:3px}
+</style></head><body>
+<div id="stage"></div>
+<script>
+const CONFIG={
+ stage:{w:360,h:203},
+ headerText:"SARAJEVO",
+ dateText:"28 JUNE 1914",
+ paper:"#e9dec3",
+ ink:"#4a3b28",
+ road:"#cbbd97",
+ river:"#b9c4bd",
+ backdrop:"#241f16",
+ buildingCount:9,
+ buildingHeights:[0.9,1.0,0.7,1.1,0.85,1.0,0.75,0.95,0.8],
+ crowdCount:14,
+ carColor:"#26221c",
+ car:{startFrac:1.10,stopFrac:0.41},
+ figure:{xFrac:0.30,color:"#26221c"},
+ irisMs:500,
+ irisAtMs:4250,
+ driveMs:3000,
+ driveAtMs:6500,
+ shotAtMs:10500,
+ shotCount:2,
+ puff:{color:"#f7f2df",ms:650,fadeMs:450,spacingPx:16,staggerMs:250,strokeWidth:1.4,baseR:4},
+ cycleMs:14000,
+ font:"Georgia, 'Times New Roman', serif",
+ header:{top:8,fontPx:18,dateTop:30,dateFontPx:12},
+ geom:{buildingTop:52,buildingBase:118,buildingW:30,crowdY:126,roadY:138,roadH:26,riverY:170,riverH:20,carW:64,carH:22,figureH:30,puffR:11,irisCxFrac:0.5,irisCyFrac:0.46,irisMaxR:260,routeY:151}
+};
+// Timing and geometry relationships are checked before the scene is built; an invalid combination is recorded and the shipped values stay in force.
+const rejectedOverrides=[];
+function validateConfig(c){const errs=[];const W=c.stage.w;const nums=[c.irisAtMs,c.irisMs,c.driveAtMs,c.driveMs,c.shotAtMs,c.cycleMs,c.puff.ms,c.puff.fadeMs,c.puff.staggerMs];if(nums.some(v=>!isFinite(v)||v<=0))errs.push('timing values must be finite and positive');if(c.irisAtMs+c.irisMs>c.driveAtMs)errs.push('iris completes after drive start');if(c.driveAtMs+c.driveMs>c.shotAtMs)errs.push('car stops after shots');const lastEnd=c.shotAtMs+(c.shotCount-1)*c.puff.staggerMs+c.puff.ms+c.puff.fadeMs;if(lastEnd>c.cycleMs)errs.push('last puff ends after cycle end');if(c.car.startFrac*W-c.geom.carW/2<W)errs.push('car not fully offstage at start');const stopC=c.car.stopFrac*W,figX=c.figure.xFrac*W,gap=(stopC-c.geom.carW/2)-figX;if(Math.abs(stopC-figX)>44)errs.push('car stops too far from figure');if(gap<-4||gap>12)errs.push('car front edge gap out of range');return errs;}
+function mergedConfig(base,patch){const out=JSON.parse(JSON.stringify(base));for(const k in patch){if(patch[k]&&typeof patch[k]==='object'&&out[k]&&typeof out[k]==='object')Object.assign(out[k],patch[k]);else out[k]=patch[k];}return out;}
+const shippedErrors=validateConfig(CONFIG);if(shippedErrors.length)rejectedOverrides.push({source:'shipped values',errors:shippedErrors});
+const stage=document.getElementById('stage');
+stage.style.width=CONFIG.stage.w+'px';stage.style.height=CONFIG.stage.h+'px';
+stage.style.background=CONFIG.backdrop;stage.style.fontFamily=CONFIG.font;
+const diagram=document.createElement('div');diagram.id='diagram';diagram.style.background=CONFIG.paper;stage.appendChild(diagram);
+const hdr=document.createElement('div');hdr.className='hdr';hdr.style.top=CONFIG.header.top+'px';hdr.style.fontSize=CONFIG.header.fontPx+'px';hdr.style.color=CONFIG.ink;hdr.textContent=CONFIG.headerText;diagram.appendChild(hdr);
+const date=document.createElement('div');date.className='date';date.style.top=CONFIG.header.dateTop+'px';date.style.fontSize=CONFIG.header.dateFontPx+'px';date.style.color=CONFIG.ink;date.textContent=CONFIG.dateText;diagram.appendChild(date);
+const NS='http://www.w3.org/2000/svg';
+const svg=document.createElementNS(NS,'svg');svg.setAttribute('width',CONFIG.stage.w);svg.setAttribute('height',CONFIG.stage.h);svg.style.position='absolute';svg.style.left='0';svg.style.top='0';diagram.appendChild(svg);
+function el(name,attrs){const e=document.createElementNS(NS,name);for(const k in attrs)e.setAttribute(k,attrs[k]);svg.appendChild(e);return e;}
+const G=CONFIG.geom,W=CONFIG.stage.w;
+// building blocks row (facades, heights from CONFIG pattern)
+const baseH=G.buildingBase-G.buildingTop;
+for(let i=0;i<CONFIG.buildingCount;i++){
+ const f=CONFIG.buildingHeights[i%CONFIG.buildingHeights.length];
+ const h=baseH*f,x=8+i*((W-16-G.buildingW)/(Math.max(1,CONFIG.buildingCount-1))),y=G.buildingBase-h;
+ el('rect',{x:x,y:y,width:G.buildingW,height:h,fill:'none',stroke:CONFIG.ink,'stroke-width':1.4});
+ for(let r=0;r<3;r++)for(let c=0;c<2;c++){el('rect',{x:x+6+c*11,y:y+8+r*13,width:6,height:8,fill:'none',stroke:CONFIG.ink,'stroke-width':0.8});}
+}
+// crowd dots row (deterministic placement from index)
+for(let i=0;i<CONFIG.crowdCount;i++){
+ const x=14+i*((W-28)/Math.max(1,CONFIG.crowdCount-1)),y=G.crowdY+(((i*37)%9)-4);
+ el('circle',{cx:x,cy:y,r:3,fill:CONFIG.ink});
+ el('line',{x1:x,y1:y+3,x2:x,y2:y+10,stroke:CONFIG.ink,'stroke-width':2});
+}
+// road + river bands
+el('rect',{x:0,y:G.roadY,width:W,height:G.roadH,fill:CONFIG.road});
+el('rect',{x:0,y:G.riverY,width:W,height:G.riverH,fill:CONFIG.river});
+el('path',{d:'M0 '+(G.riverY+10)+' q 15 -6 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0',fill:'none',stroke:CONFIG.ink,'stroke-width':1});
+// route line along the road (drawn route, catalogue mechanic)
+el('line',{x1:CONFIG.car.startFrac*W,y1:G.routeY,x2:CONFIG.car.stopFrac*W,y2:G.routeY,stroke:CONFIG.ink,'stroke-width':1.2,'stroke-dasharray':'5 4'});
+// standing figure (sidewalk row, above the road)
+const figX=CONFIG.figure.xFrac*W,figBase=G.roadY-2;
+el('circle',{cx:figX,cy:figBase-G.figureH+4,r:4,fill:CONFIG.figure.color});
+el('rect',{x:figX-2.5,y:figBase-G.figureH+8,width:5,height:G.figureH-8,fill:CONFIG.figure.color});
+// car silhouette (SVG group: body path + wheels)
+const carG=document.createElementNS(NS,'g');svg.appendChild(carG);
+const body=document.createElementNS(NS,'path');
+const carPts=[[-0.5,0],[-0.47,-0.36],[-0.25,-0.45],[-0.16,-0.82],[0.19,-0.82],[0.31,-0.45],[0.47,-0.36],[0.5,0]];
+body.setAttribute('d',carPts.map((q,i)=>(i?'L':'M')+(q[0]*G.carW)+' '+(q[1]*G.carH)).join(' ')+' Z');body.setAttribute('fill',CONFIG.carColor);carG.appendChild(body);
+[-0.28,0.28].forEach(fx=>{const wh=document.createElementNS(NS,'circle');wh.setAttribute('cx',fx*G.carW);wh.setAttribute('cy',G.carH*0.05);wh.setAttribute('r',G.carH*0.23);wh.setAttribute('fill',CONFIG.carColor);carG.appendChild(wh);});
+// shot puffs: exactly shotCount slots, visibility derived solely from cycle time
+const pairX=(figX+ (CONFIG.car.stopFrac*W - G.carW/2))/2;
+const puffs=[];
+for(let i=0;i<CONFIG.shotCount;i++){
+ const p=el('circle',{cx:pairX+(i-(CONFIG.shotCount-1)/2)*CONFIG.puff.spacingPx,cy:G.roadY-8,r:CONFIG.puff.baseR,fill:CONFIG.puff.color,stroke:CONFIG.ink,'stroke-width':CONFIG.puff.strokeWidth,opacity:0});puffs.push(p);
+}
+// phase machine: CLOSED -> IRIS -> DRIVE -> STOPPED -> SHOTS -> HOLD (deterministic in t)
+function phase(t){
+ if(t<CONFIG.irisAtMs)return 'CLOSED';
+ if(t<CONFIG.irisAtMs+CONFIG.irisMs)return 'IRIS';
+ if(t<CONFIG.driveAtMs+CONFIG.driveMs)return 'DRIVE';
+ if(t<CONFIG.shotAtMs)return 'STOPPED';
+ if(t<CONFIG.shotAtMs+(CONFIG.shotCount-1)*CONFIG.puff.staggerMs+CONFIG.puff.ms+CONFIG.puff.fadeMs)return 'SHOTS';
+ return 'HOLD';
+}
+function clamp01(v){return v<0?0:(v>1?1:v);}
+let start=performance.now();
+function tick(now){
+ const t=(now-start)%CONFIG.cycleMs;
+ const ph=phase(t);
+ const ip=clamp01((t-CONFIG.irisAtMs)/CONFIG.irisMs);
+ const r=ip*G.irisMaxR;
+ diagram.style.clipPath='circle('+r+'px at '+(G.irisCxFrac*W)+'px '+(G.irisCyFrac*CONFIG.stage.h)+'px)';
+ const dp=clamp01((t-CONFIG.driveAtMs)/CONFIG.driveMs);
+ const cx=(CONFIG.car.startFrac+(CONFIG.car.stopFrac-CONFIG.car.startFrac)*dp)*W;
+ carG.setAttribute('transform','translate('+cx+' '+(G.routeY-6)+')');
+ puffs.forEach((p,i)=>{const onset=CONFIG.shotAtMs+i*CONFIG.puff.staggerMs;const local=clamp01((t-onset)/CONFIG.puff.ms);const fade=clamp01((t-onset-CONFIG.puff.ms)/CONFIG.puff.fadeMs);const active=t>=onset&&t<onset+CONFIG.puff.ms+CONFIG.puff.fadeMs;const op=!active?0:(fade>0?0.95*(1-fade):0.95);p.setAttribute('r',CONFIG.puff.baseR+local*(G.puffR-CONFIG.puff.baseR));p.setAttribute('opacity',op);});
+ requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+window.__T130={CONFIG,rejectedOverrides,validateConfig,tryOverrides(patch){const cand=mergedConfig(CONFIG,patch);const errs=validateConfig(cand);if(errs.length){rejectedOverrides.push({patch:JSON.stringify(patch),errors:errs});return false;}for(const k in cand)CONFIG[k]=cand[k];return true;},seek(ms){start=performance.now()-ms;}};
+</script></body></html>

@@ -1,0 +1,8 @@
+Opening matches the evidence: card 1 is complete, card 2 shows “Chief Executive,” and Comments starts at 4. The remaining typing spans are 660/1880/1960/1200/968ms, with strict separation between cards. The paired long lines share a coherent rate; the slower fifth card provides useful emphasis before the finale.
+
+The landing holds—720/700/700/752ms—remain close to a uniform cadence. Their explanations establish broad roles, but do not justify the precise differences. Automatically deriving “slowest” and “longest hold” confirms numerical relationships; it does not establish why those allocations serve the performance. The 2000ms ending is independently configured, yet the record explicitly re-prices intermediate holds to preserve exact instants and the 12000ms total. Arithmetic balancing therefore remains visible despite the improved construction.
+
+Replacement text changes total duration through grapheme counts and retained rates, without squeezing later beats. However, content-specific tempo decisions remain attached to card positions: a replacement fifth card inherits the slowest rate and longest intermediate hold regardless of its dramatic role. Progression is structurally followable; perceived pacing remains unverified without playback.
+
+BODY-WRITE: Require semantic reasons for each hold and the ending budget before window fitting; replacement content must re-price beat roles, not merely regenerate descriptions of inherited rates.
+SCORE: 82

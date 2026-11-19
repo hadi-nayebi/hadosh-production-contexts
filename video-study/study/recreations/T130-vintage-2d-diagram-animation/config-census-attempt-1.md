@@ -1,0 +1,15 @@
+# config-census — T130 (guard-config-census v3.1, pre-wave, final build SHA ac2a25585dc1b46f0174130cf6e7f21ef7eefc8aa64f6ec1aa4802b67d658b89)
+
+## All-literal scan (outside CONFIG)
+- Page chrome: body background #171310 in CSS (presentation outside the stage; does not shape the subject — structural, noted). Stage backdrop, paper, ink, road, river all read from CONFIG.
+- Subject geometry literals in the SVG builders, classified as DECLARED INVARIANTS (plan-review disposition: core geometry may remain invariant if declared): building window grid offsets (6/11/8/13 px steps inside geom.buildingW) · car silhouette path coordinates and wheel offsets (±18, r 5) scaled to geom.carW/carH · crowd dot radius 3 and body drop (+3/+10) · figure head radius 4 and body width 5 (figure height is CONFIG geom.figureH) · river wave path step (30 px period). Changing any of these changes fine detail, not the technique's variables (§1.3 census: text, palette, counts, heights, car travel/duration, stop position, puff count/timing, iris duration — all CONFIG-bound).
+- Structural: stroke widths (1.4 facade · 0.8 windows · 2 crowd body · 1 river · 1.2 route · 0.7 puff) as line rules · loop indices and clamp arithmetic · puff phase coefficients (1.3/0.15 stagger, 0.6 fade) as phase arithmetic · opacity states 0/0.95.
+- Font stack: CONFIG.font applied via stage.style.fontFamily — subject-shaping and CONFIG-bound ✓.
+
+## Key → application site resolution
+stage.w/h → stage + SVG size · headerText → DOM header text · dateText → DOM date text · paper → diagram background · ink → header/date color, building/crowd/river/route strokes and fills · road → road band fill · river → river band fill · backdrop → stage background · buildingCount → facade loop bound · buildingHeights → facade height factor (pattern repeats/truncates) · crowdCount → crowd loop bound · carColor → car body + wheels fill · car.startFrac/stopFrac → route line ends + car centre interpolation · figure.xFrac → figure cx · figure.color → figure head/body fill · irisMs → iris progress divisor + phase boundary · irisAtMs → phase resolver + iris progress · driveMs → drive progress divisor + stop time (driveAtMs+driveMs) · driveAtMs → phase resolver + drive progress · shotAtMs → phase resolver + puff progress · shotCount → puff slot creation count · puff.color → puff fill · puff.ms → SHOTS phase length + puff progress divisor · cycleMs → tick modulo · font → fontFamily · header.top/fontPx/dateTop/dateFontPx → header/date style · geom.buildingTop/buildingBase/buildingW → facade geometry · geom.crowdY → crowd row · geom.roadY/roadH → road band · geom.riverY/riverH → river band · geom.carW/carH → car scale declaration · geom.figureH → figure height · geom.puffR → puff max radius · geom.irisCxFrac/irisCyFrac/irisMaxR → clip-path circle · geom.routeY → route line + car baseline.
+
+## CSS-variable setter check
+No CSS variables are used in recreation.html — no unset-variable reference can exist. PASS (n/a by construction).
+
+HIT list: EMPTY.

@@ -1,0 +1,1264 @@
+CONSUMER + DECISION PRICED: practice job (Video Study lane), INSTRUCTION section 5 Verify — your score is one of five independent lens scores for technique T13; the seat prices from the five returns whether this build passes the practice bar and beats its predecessor. The delta arithmetic is the seat's, not yours: judge only the build in front of you.
+WORKING RECORD: the score-blind build record for this build (build-record-attempt5.md, included below); your return is filed verbatim at hidden_files/study/recreations/T13-typing-comment-stack/codex/attempt-5/lens-motion.md.
+Scores are integers from 0 to 100.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. End your return with exactly one line: SCORE: <integer>. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: MOTION FIDELITY only. Score 0-100 how faithfully the recreation's motion reproduces the technique's motion: cards appearing and stacking downward, live grapheme-by-grapheme typing with caret, each card landing before the next begins, the stack growth as the progress visual, and the state of the performance at the window's opening relative to the evidence frame. Judge: is typing genuinely incremental from configured text? Is strict sequencing guaranteed by the schedule derivation or merely hoped for? Does the active card read as "being typed now" (caret, partial text)? Does replay reproduce a clean, deterministic run? Is there motion the specimen does not have, or motion it has that is missing (price what the source shows and name the uncertainty)? Other lenses own timing totals, purity, reuse, readability.
+
+TECHNIQUE FACTS (packet digest + frame-by-frame observation of the full specimen segment): T13 Typing comment stack, specimen "Look What I Can Do" @ 1:08-1:20 (a 12s performance inside a 13s segment). At the right of a white post card, dark comment cards stack downward; each commenter's absurd job title types itself out live, one card at a time: "I'm a Senior Slopcore Architect" (Slopcore yellow-highlighted), "Chief Executive of What's Next", "VP of Things That Look Complete - 100% complete", "Director of the Missing Feet - feet.png not found", "Head of Vibes and Synergy", "Chief of Artificial Me". Typing supplies the rhythm: each title builds and lands before the next tops it; the stack's growth down the frame is the progress visual. Strict sequencing is part of the technique: one card's typing completes and lands before the next card begins. The packet digest worked from ONE evidence frame (t=1:08, window start), which shows card 1 complete and card 2 mid-typing ("Chief Executive" typed). A later frame-by-frame observation of the whole segment, including consecutive frames around typing and landing events, adds: the word currently being typed carries a white-to-blue vertical gradient while card backgrounds never change colour (the digest's single-frame reading of a pale-blue card tint resolves to this gradient); the caret is a thin vertical bar at the typing frontier; cards fade in while their first graphemes already type; the comments header count increments by one at each landing (4 at the window's opening, one card having landed before it, rising to 9); the marked phrases are card 1 "Slopcore", card 2 "What's", card 3 "Look" and "Complete", card 5 "Vibes" and "Synergy", card 6 "Artificial"; a red RECEIPT stamp sits on the post card in a free zone clear of the body text; landed cards gain small per-card status furniture (pills, a changing timestamp, chips); the camera pans continuously, and near the end a profile card slides in — a scene transition beyond the six-card stack. Per-card timings are NOT measurable checkpoints from frames; any schedule in a build is a labeled allocation and should be priced as one.
+
+===== RECREATION SOURCE (recreation.html) =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T13 — Typing comment stack (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#000;}
+  body{display:flex;align-items:flex-start;justify-content:center;}
+  #stage{position:relative;width:100%;overflow:hidden;container-type:inline-size;box-sizing:border-box;}
+  #stage.narrow{display:flex;flex-direction:column;padding:var(--stagePad);box-sizing:border-box;}
+  #postCol{position:absolute;left:var(--postLeft);top:var(--postTop);width:var(--postWidth);}
+  #stage.narrow #postCol{position:static;width:100%;margin-bottom:var(--postGap);}
+  #postCard{position:relative;border-radius:var(--postRadius);padding:var(--postPadY) var(--postPadX);box-shadow:0 var(--postShadowY) var(--postShadowBlur) var(--postShadowColor);}
+  #postHead{display:flex;align-items:center;gap:var(--headGap);font-size:var(--postHeadFont);font-weight:var(--headWeight);line-height:var(--headLineHeight);}
+  #postHead .handle{font-weight:var(--handleWeight);opacity:var(--postHandleOpacity);}
+  #postHead .x{margin-left:auto;font-weight:var(--closeWeight);font-size:var(--postHeadFont);}
+  #postBody{margin-top:var(--bodyMargin);font-size:var(--postBodyFont);line-height:var(--postBodyLineHeight);font-weight:var(--bodyWeight);}
+  mark{padding:var(--markPadY) var(--markPadX);border-radius:var(--markRadius);}
+  #stamp{position:absolute;right:var(--stampRight);top:var(--stampTop);border:var(--stampBorder) solid;border-radius:var(--stampRadius);padding:var(--stampPadY) var(--stampPadX);font-size:var(--stampFont);font-weight:var(--stampWeight);letter-spacing:var(--stampLetterSpacing);transform:rotate(var(--stampRotate));opacity:var(--stampOpacity);}
+  #postFoot{margin-top:var(--postFootMargin);font-size:var(--postFootFont);line-height:var(--footLineHeight);display:flex;gap:var(--footGap);align-items:center;}
+  #postFoot span{font-weight:var(--footWeight);}
+  #commentsCol{position:absolute;left:var(--commentsLeft);right:var(--commentsRight);top:var(--commentsTop);bottom:var(--commentsBottom);display:flex;flex-direction:column;}
+  #stage.narrow #commentsCol{position:static;width:100%;}
+  #commentsHead{display:flex;align-items:baseline;font-size:var(--commentsHeadFont);font-weight:var(--headWeight);line-height:var(--headLineHeight);margin-bottom:var(--commentsHeadMargin);}
+  #commentsHead .sort{margin-left:auto;font-size:var(--sortFont);font-weight:var(--sortWeight);opacity:var(--sortOpacity);}
+  #stack{display:flex;flex-direction:column;}
+  .card{border-radius:var(--cardRadius);padding:var(--cardPadY) var(--cardPadX);box-sizing:border-box;overflow:hidden;border-left-style:solid;}
+  .cardHead{display:flex;align-items:center;gap:var(--headGap);font-size:var(--cardHeadFont);line-height:var(--headLineHeight);}
+  .when{font-weight:var(--timeWeight);}
+  .avatar{flex:0 0 auto;width:var(--avatarSize);height:var(--avatarSize);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--avatarFont);font-weight:var(--avatarWeight);}
+  .cHandle{font-weight:var(--headWeight);}
+  .badge{border-radius:var(--badgeRadius);padding:var(--badgePadY) var(--badgePadX);font-size:var(--badgeFont);font-weight:var(--badgeWeight);}
+  .cardTitle{margin-top:var(--titleMargin);font-size:var(--titleFont);line-height:var(--titleLineHeight);font-weight:var(--titleWeight);overflow-wrap:break-word;max-height:var(--titleMaxH);}
+  .caret{display:inline-block;width:var(--caretWidth);height:var(--caretHeight);margin-left:var(--caretMarginLeft);vertical-align:var(--caretValign);}
+  .cardTitle .fresh{background:linear-gradient(180deg,#ffffff 20%,var(--freshBlue));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cardFoot{margin-top:var(--footMargin);font-size:var(--cardFootFont);line-height:var(--footLineHeight);display:flex;gap:var(--cardFootGap);}
+  .cardFoot span{font-weight:var(--footWeight);}
+  #validationBanner{display:none;position:absolute;left:var(--bannerLeft);top:var(--bannerTop);z-index:9;background:var(--bannerBg);color:var(--bannerInk);font-size:var(--bannerFont);padding:var(--bannerPad);border-radius:var(--bannerRadius);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="validationBanner"></div>
+  <div id="postCol"><div id="postCard">
+    <div id="postHead"><span id="postAuthor"></span><span class="handle" id="postHandle"></span><span class="x" id="postClose"></span></div>
+    <div id="postBody"></div>
+    <div id="stamp"></div>
+    <div id="postFoot"></div>
+  </div></div>
+  <div id="commentsCol">
+    <div id="commentsHead"><span id="commentsTitle"></span><span class="sort" id="sortLabel"></span></div>
+    <div id="stack"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* T13 — Typing comment stack. ALL content/timing/palette/geometry from CONFIG.
+   Construction: DOM post card (static anchor) + comment cards stacking downward.
+   Opening state: the performance window opens mid-sequence — card 1 is already
+   complete and card 2 already shows the configured initial prefix at t=0.
+   Schedule: strictly sequential, derived from the per-card beat table.
+   Rendering is a pure function of performance time t (ms): entrance progress,
+   landing colour interpolation and caret phase are all computed from t in
+   render(t); the file contains no CSS transition and no CSS animation, so a
+   sampled state at time t fully determines the displayed state, across
+   restart and reverse seeking alike.
+   Fitting: titles and chrome rows are fitted by runtime canvas measurement
+   when a canvas 2d context is available; otherwise a per-character-class
+   ESTIMATE table is used. The estimate is NOT a measurement and carries NO
+   upper-bound guarantee: on the estimate path an element is accepted only
+   when its estimated width is at most 90% of its available bound; inside
+   the top band the fit is rejected as uncertain (fail-closed).
+   Invalid-input policy (the only one): a malformed or out-of-range URL
+   override value is DISCARDED before effective-config validation and
+   recorded in window.T13.overrideOutcomes; it never freezes playback.
+   Playback freezes only when the EFFECTIVE config fails a named validation
+   check (window.T13.validationErrors).
+   Grapheme support boundary: the no-Intl.Segmenter fallback preserves base +
+   combining marks (Mn/Me/Mc), variation selectors, emoji modifiers, ZWJ
+   sequences, regional-indicator pairs and keycap sequences as one cluster.
+   Clusters requiring full UAX #29 extended rules beyond those classes
+   (e.g. Indic conjunct stacks beyond Mc/Mn attachment) are outside the
+   named boundary and are not claimed.
+   URL overrides (swap test): ?titles=A|B|C  ?charMs=N  ?accent=HEX
+   ?cardBg=HEX  ?gapCqw=N (unit: cqw; 0 is a lawful value) */
+const CONFIG = {
+  opening: {
+    offsetMs: 2250,
+    prefixGraphemes: 15,
+    firstCardLanded: true,
+    secondCardPrefix: "Chief Executive"
+  },
+  finalHoldMs: 2000,
+  entranceOverlapMs: 80,
+  landMs: 120,
+  caretBlinkMs: 1000,
+  caretDuty: 0.55,
+  estimateEm: { narrow: 0.30, wide: 0.92, cjk: 1.0, upperDigit: 0.62, base: 0.55 },
+  phoneMinSupportingPx: 12,
+  stageMaxWidthPx: 1916,
+  addedCardBeat: { appearMs: 170, charMs: 38 },
+  maxCards: 8,
+  maxTitleLines: 2,
+  narrowBreakpointPx: 640,
+  narrowStageAspect: [360, 820],
+  wideStageAspect: [1916, 1078],
+  catalogueWindowMs: 12000,
+  intermediateHoldMs: 460,
+  post: {
+    author: "aditazzz",
+    handle: "@aditazzz · 10/27/26",
+    closeMark: "✕",
+    bodyBefore: "Currently upskilling to transition to a ",
+    bodyHighlight: "Principal Slopcore Architect",
+    bodyAfter: " role. Trying to stay ahead of the curve. Follow along and support my professional development.",
+    stampText: "RECEIPT",
+    actions: ["↩", "🔁", "♥ 5", "📊 169", "🔖", "↗"]
+  },
+  commentsTitle: "Comments",
+  commentsBaseCount: 3,
+  sortLabel: "Sort by: Top",
+  cardFooter: { mark: "♡", label: "Reply" },
+  cards: [
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 340,
+      text: "I'm a Senior Slopcore Architect", highlight: "Slopcore" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 200,
+      text: "Chief Executive of What's Next", highlight: "What's" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 265,
+      text: "VP of Things That Look Complete - 100% complete", highlight: ["Look", "Complete"] },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 150,
+      text: "Director of the Missing Feet - feet.png not found", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 25,
+      text: "Head of Vibes and Synergy", highlight: ["Vibes", "Synergy"] },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 300,
+      text: "Chief of Artificial Me", highlight: "Artificial" }
+  ],
+  beats: [
+    { appearMs: 160, charMs: 33, holdAfterMs: 367, reason: "pre-window card; complete before the window opens" },
+    { appearMs: 160, charMs: 44, holdAfterMs: 720, reason: "finishing a half-typed line; the remaining graphemes type at a measured pace and its landing hold sets the in-window rhythm" },
+    { appearMs: 180, charMs: 40, holdAfterMs: 700, reason: "longest setup line; a steady rate keeps the gag moving" },
+    { appearMs: 180, charMs: 40, holdAfterMs: 700, reason: "paired with the previous long line at the same rate so the two longest lines read as one run" },
+    { appearMs: 200, charMs: 48, holdAfterMs: 752, reason: "short punch line typed slowest per grapheme so it lands; the longest intermediate hold is the pause before the final card" },
+    { appearMs: 220, charMs: 44, holdAfterMs: 0, reason: "final card; its landing hold is the ending beat (finalHoldMs), not a per-card hold" }
+  ],
+  cardTemplate: { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 210, highlight: "" },
+  layout: {
+    wide: {
+      postLeft: "1.2%", postTop: "16%", postWidth: "37%",
+      commentsLeft: "40.5%", commentsRight: "1.2%", commentsTop: "2.5%", commentsBottom: "2%",
+      postRadius: "1cqw", postPadY: "1.6cqw", postPadX: "1.8cqw",
+      postHeadFont: "1.55cqw", postBodyFont: "1.95cqw", postFootFont: "1.5cqw", stampFont: "2cqw",
+      commentsHeadFont: "1.9cqw", sortFont: "1.45cqw", commentsHeadMargin: "1cqw",
+      cardRadius: "0.9cqw", cardPadY: "0.55cqw", cardPadX: "1.2cqw", cardBorderCqw: 0.35,
+      headGap: "0.65cqw", avatarSize: "2.1cqw", avatarFont: "0.95cqw",
+      cardHeadFont: "1.25cqw", badgeFont: "1.1cqw",
+      titleFont: "1.85cqw", titleMargin: "0.25cqw",
+      cardFootFont: "1.15cqw", footMargin: "0.15cqw", footGap: "1.6cqw", bodyMargin: "1cqw",
+      stackGapCqw: 0.8, stagePad: "0px", postGap: "0px",
+      stampRight: "6%", stampTop: "70%", stampBorder: "0.32cqw", stampRadius: "0.5cqw", postFootMargin: "5.6cqw",
+      stampPadY: "0.15cqw", stampPadX: "0.9cqw", stampLetterSpacing: "0.18cqw", stampRotate: "-9deg", stampOpacity: "0.92",
+      postShadowY: "0.4cqw", postShadowBlur: "1.6cqw", postShadowColor: "rgba(0,0,0,.55)",
+      markPadY: "0px", markPadX: "0.25cqw", markRadius: "0.2cqw",
+      badgeRadius: "1cqw", badgePadY: "0.08cqw", badgePadX: "0.7cqw",
+      caretWidth: "0.14cqw", caretHeight: "1.85cqw", caretMarginLeft: "0.15cqw", caretValign: "-0.3cqw",
+      entranceDy: "1.2cqw", cardFootGap: "2.2cqw",
+      bannerLeft: "2%", bannerTop: "2%", bannerFont: "14px", bannerPad: "8px 12px", bannerRadius: "6px",
+      postHandleOpacity: "0.75", sortOpacity: "0.85",
+      titleLineHeight: 1.25, postBodyLineHeight: 1.32, headLineHeight: 1.2, footLineHeight: 1.2,
+      titleWeight: 700, bodyWeight: 600, headWeight: 700, handleWeight: 500, closeWeight: 400,
+      timeWeight: 400, sortWeight: 500, footWeight: 400, stampWeight: 800, avatarWeight: 800, badgeWeight: 700
+    },
+    narrow: {
+      postLeft: "0px", postTop: "0px", postWidth: "100%",
+      commentsLeft: "0px", commentsRight: "0px", commentsTop: "0px", commentsBottom: "0px",
+      postRadius: "2.5cqw", postPadY: "2.8cqw", postPadX: "3.3cqw",
+      postHeadFont: "3.61cqw", postBodyFont: "4cqw", postFootFont: "3.61cqw", stampFont: "4.5cqw",
+      commentsHeadFont: "4.2cqw", sortFont: "3.61cqw", commentsHeadMargin: "2.2cqw",
+      cardRadius: "2.5cqw", cardPadY: "1.94cqw", cardPadX: "3.33cqw", cardBorderCqw: 0.83,
+      headGap: "1.8cqw", avatarSize: "6.67cqw", avatarFont: "3.61cqw",
+      cardHeadFont: "3.61cqw", badgeFont: "3.61cqw",
+      titleFont: "4.15cqw", titleMargin: "0.83cqw",
+      cardFootFont: "3.61cqw", footMargin: "0.83cqw", footGap: "3cqw", bodyMargin: "1.7cqw",
+      stackGapCqw: 2.22, stagePad: "2.8cqw", postGap: "3.3cqw",
+      stampRight: "6%", stampTop: "62%", stampBorder: "0.83cqw", stampRadius: "1.2cqw", postFootMargin: "12.9cqw",
+      stampPadY: "0.4cqw", stampPadX: "2.2cqw", stampLetterSpacing: "0.42cqw", stampRotate: "-9deg", stampOpacity: "0.92",
+      postShadowY: "1cqw", postShadowBlur: "4cqw", postShadowColor: "rgba(0,0,0,.55)",
+      markPadY: "0px", markPadX: "0.6cqw", markRadius: "0.5cqw",
+      badgeRadius: "2.5cqw", badgePadY: "0.2cqw", badgePadX: "1.8cqw",
+      caretWidth: "0.42cqw", caretHeight: "3.89cqw", caretMarginLeft: "0.18cqw", caretValign: "-0.7cqw",
+      entranceDy: "2.8cqw", cardFootGap: "3cqw",
+      bannerLeft: "2%", bannerTop: "2%", bannerFont: "14px", bannerPad: "8px 12px", bannerRadius: "6px",
+      postHandleOpacity: "0.75", sortOpacity: "0.85",
+      titleLineHeight: 1.25, postBodyLineHeight: 1.32, headLineHeight: 1.2, footLineHeight: 1.2,
+      titleWeight: 700, bodyWeight: 600, headWeight: 700, handleWeight: 500, closeWeight: 400,
+      timeWeight: 400, sortWeight: 500, footWeight: 400, stampWeight: 800, avatarWeight: 800, badgeWeight: 700
+    }
+  },
+  palette: {
+    bg: "#050607",
+    postBg: "#ffffff",
+    postInk: "#101216",
+    cardBg: "#161a21",
+    cardInk: "#eef1f5",
+    accent: "#5b8def",
+    badgeBg: "#2456a6",
+    badgeInk: "#ffffff",
+    avatarInk: "#ffffff",
+    avatarSat: 65, avatarLightA: 55, avatarLightB: 38, avatarHueSpan: 60,
+    highlightBg: "#ffd83d",
+    highlightInk: "#101216",
+    stampInk: "#d43a2f",
+    caret: "#5b8def",
+    bannerBg: "#7a1020",
+    bannerInk: "#ffffff"
+  },
+  fontFamily: '"Segoe UI", system-ui, -apple-system, Arial, sans-serif'
+};
+
+const OVERRIDE_OUTCOMES = [];
+let SPECIMEN_CONFIG = true;
+function parseStrictNum(raw){
+  if (raw === null || raw === undefined) return null;
+  const s = String(raw).trim();
+  if (s === "") return null;
+  const v = Number(s);
+  return isFinite(v) ? v : null;
+}
+function segmentGraphemes(text){
+  if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+    const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    return Array.from(seg.segment(text), function(s){ return s.segment; });
+  }
+  return segmentClustersFallback(text);
+}
+function segmentClustersFallback(text){
+  const cps = Array.from(text);
+  const clusters = [];
+  let cur = null;
+  function isAttach(cp){
+    return /[\p{Mn}\p{Me}\p{Mc}]|[\uFE00-\uFE0F]|[\u{1F3FB}-\u{1F3FF}]|\u20E3/u.test(cp);
+  }
+  function isRI(cp){ const n = cp.codePointAt(0); return n >= 0x1F1E6 && n <= 0x1F1FF; }
+  for (let i = 0; i < cps.length; i++) {
+    const cp = cps[i];
+    if (cur === null) { cur = cp; continue; }
+    if (isAttach(cp)) { cur += cp; continue; }
+    if (cp === "\u200D") { cur += cp; if (i + 1 < cps.length) { cur += cps[i + 1]; i++; } continue; }
+    if (isRI(cp)) {
+      const prev = Array.from(cur);
+      if (prev.length === 1 && isRI(prev[0])) { cur += cp; continue; }
+    }
+    clusters.push(cur); cur = cp;
+  }
+  if (cur !== null) clusters.push(cur);
+  return clusters;
+}
+function graphemeRangeOf(haystack, needle){
+  if (!needle) return null;
+  const h = segmentGraphemes(haystack), n = segmentGraphemes(needle);
+  for (let i = 0; i + n.length <= h.length; i++) {
+    let ok = true;
+    for (let j = 0; j < n.length; j++) if (h[i + j] !== n[j]) { ok = false; break; }
+    if (ok) return { start: i, end: i + n.length };
+  }
+  return null;
+}
+function normalizeBeats(){
+  const origLen = CONFIG.beats.length;
+  while (CONFIG.beats.length < CONFIG.cards.length) {
+    const isFinal = CONFIG.beats.length === CONFIG.cards.length - 1;
+    CONFIG.beats.push({ appearMs: CONFIG.addedCardBeat.appearMs, charMs: CONFIG.addedCardBeat.charMs, holdAfterMs: isFinal ? 0 : CONFIG.intermediateHoldMs,
+      reason: isFinal ? "added card: true final card; its landing hold is the priced ending beat (finalHoldMs)"
+                      : "added card: intermediate landing hold priced from the intermediate-hold token" });
+  }
+  if (CONFIG.cards.length > origLen && CONFIG.beats[CONFIG.cards.length - 1]) {
+    CONFIG.beats[CONFIG.cards.length - 1].holdAfterMs = 0;
+  }
+  CONFIG.beats.forEach(function(b, i){
+    if (i < CONFIG.cards.length - 1 && !(b.holdAfterMs > 0)) b.holdAfterMs = CONFIG.intermediateHoldMs;
+  });
+}
+/* Beat reasons are derived from measured facts at load — grapheme counts on
+   the canonical sequence, per-card rates and holds — never stored claims, so a
+   replaced or added card re-prices every claim it carries. */
+function deriveReason(i){
+  const cards = CONFIG.cards, beats = CONFIG.beats, n = cards.length;
+  const counts = cards.map(function(c){ return segmentGraphemes(canonicalText(c.text)).length; });
+  const parts = [];
+  const openingApplies = n >= 2 && CONFIG.opening.firstCardLanded && CONFIG.opening.secondCardPrefix;
+  if (i === 0 && openingApplies) parts.push("pre-window card; complete before the window opens");
+  else if (i === 1 && openingApplies) parts.push("finishing a half-typed line; the remaining graphemes type at a measured pace and its landing hold sets the in-window rhythm");
+  if (i === n - 1 && n > 1) parts.push("final card; its landing hold is the ending beat (finalHoldMs), not a per-card hold");
+  let argmax = 0; counts.forEach(function(c, j){ if (c > counts[argmax]) argmax = j; });
+  const order = counts.map(function(c, j){ return j; }).sort(function(a, b){ return counts[b] - counts[a]; });
+  const top1 = order[0], top2 = order.length > 1 ? order[1] : -1;
+  if (i === argmax && (top2 < 0 || counts[i] > counts[top2])) parts.push("the longest line (" + counts[i] + " graphemes)");
+  if (top2 >= 0 && beats[top1].charMs === beats[top2].charMs && (i === top1 || i === top2)) {
+    if (i === Math.min(top1, top2) && i !== argmax) parts.push("the first of the paired long lines; the pair types at one rate so the two read as one run");
+    if (i === Math.max(top1, top2)) parts.push("paired at the previous line's rate so the two longest lines read as one run");
+  }
+  let slow = 0; beats.forEach(function(b, j){ if (b.charMs > beats[slow].charMs) slow = j; });
+  if (i === slow && beats.every(function(b, j){ return j === i || b.charMs < beats[i].charMs; })) parts.push("typed slowest per grapheme so it lands");
+  let holdMax = -1; beats.forEach(function(b, j){ if (j < n - 1 && (holdMax < 0 || b.holdAfterMs > beats[holdMax].holdAfterMs)) holdMax = j; });
+  if (i === holdMax && i < n - 1 && beats.every(function(b, j){ return j >= n - 1 || j === i || b.holdAfterMs < beats[i].holdAfterMs; })) parts.push("the longest intermediate hold is the pause before the final card");
+  if (!parts.length) parts.push("intermediate card; its rate and hold are priced from the beat tokens");
+  return parts.join("; ");
+}
+function isHexColor(v){ return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v); }
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("titles")) {
+    SPECIMEN_CONFIG = false;
+    const ts = q.get("titles").split("|");
+    CONFIG.cards = ts.map(function(t){
+      return Object.assign({}, CONFIG.cardTemplate, { text: t });
+    });
+    if (CONFIG.cards.length >= 2) {
+      CONFIG.opening.secondCardPrefix = segmentGraphemes(canonicalText(CONFIG.cards[1].text)).slice(0, CONFIG.opening.prefixGraphemes).join("");
+    }
+  }
+  normalizeBeats();
+  if (q.get("charMs") !== null) {
+    const v = parseStrictNum(q.get("charMs"));
+    if (v !== null && v > 0 && v <= 1000) { SPECIMEN_CONFIG = false; CONFIG.beats.forEach(function(b){ b.charMs = v; }); }
+    else OVERRIDE_OUTCOMES.push({ key: "charMs", outcome: "rejected-discarded", value: q.get("charMs") });
+  }
+  if (q.get("accent")) {
+    if (isHexColor(q.get("accent"))) { SPECIMEN_CONFIG = false; CONFIG.palette.accent = q.get("accent"); }
+    else OVERRIDE_OUTCOMES.push({ key: "accent", outcome: "rejected-discarded", value: q.get("accent") });
+  }
+  if (q.get("cardBg")) {
+    if (isHexColor(q.get("cardBg"))) { SPECIMEN_CONFIG = false; CONFIG.palette.cardBg = q.get("cardBg"); }
+    else OVERRIDE_OUTCOMES.push({ key: "cardBg", outcome: "rejected-discarded", value: q.get("cardBg") });
+  }
+  if (q.has("gapCqw")) {
+    const v = parseStrictNum(q.get("gapCqw"));
+    if (v !== null && v >= 0 && v <= 20) { CONFIG.layout.wide.stackGapCqw = v; CONFIG.layout.narrow.stackGapCqw = v; }
+    else OVERRIDE_OUTCOMES.push({ key: "gapCqw", outcome: "rejected-discarded", value: q.get("gapCqw") });
+  }
+  CONFIG.beats.forEach(function(b, i){ b.reason = deriveReason(i); });
+})();
+
+/* --- Fitting: canvas measurement when available, ESTIMATE table otherwise --- */
+let FIT_PATH = "estimate";
+let FONT_UNCERTAIN = false;
+let _ctx = null;
+try {
+  if (typeof document !== "undefined" && document.createElement) {
+    const cv = document.createElement("canvas");
+    if (cv && typeof cv.getContext === "function") { _ctx = cv.getContext("2d"); if (_ctx) FIT_PATH = "canvas"; }
+  }
+} catch (e) { _ctx = null; FIT_PATH = "estimate"; }
+function estimateCharEm(ch){
+  const E = CONFIG.estimateEm;
+  if ("iljtf.,:;'!| ".indexOf(ch) >= 0) return E.narrow;
+  if ("mwMW@#%".indexOf(ch) >= 0) return E.wide;
+  const n = ch.codePointAt(0);
+  if (n >= 0x2E80) return E.cjk;
+  if (/[A-Z0-9]/.test(ch)) return E.upperDigit;
+  return E.base;
+}
+function estimateWidthPx(text, sizePx){
+  let em = 0;
+  Array.from(text).forEach(function(ch){ em += estimateCharEm(ch); });
+  return em * sizePx;
+}
+function fontLoaded(fontStr){
+  try {
+    if (typeof document !== "undefined" && document.fonts && typeof document.fonts.check === "function") {
+      return document.fonts.check(fontStr);
+    }
+  } catch (e) { return true; }
+  return true;
+}
+function measureWidthPx(text, weight, sizePx, letterSpacingPx){
+  const fontStr = weight + " " + sizePx + "px " + CONFIG.fontFamily;
+  let w;
+  if (FIT_PATH === "canvas" && _ctx) {
+    if (!fontLoaded(fontStr)) FONT_UNCERTAIN = true;
+    _ctx.font = fontStr;
+    w = _ctx.measureText(text).width;
+  } else {
+    w = estimateWidthPx(text, sizePx);
+  }
+  const g = segmentGraphemes(text).length;
+  if (letterSpacingPx && g > 1) w += letterSpacingPx * (g - 1);
+  return Math.ceil(w * 100) / 100;
+}
+/* Wrap simulation: CSS white-space normal collapsing + overflow-wrap
+   break-word long-word breaking. Mark padding charged per occupied fragment. */
+function fitLines(text, availPx, weight, sizePx, markRange, markPadPx){
+  const norm = canonicalText(text);
+  const words = norm === "" ? [] : norm.split(" ");
+  const graphemes = segmentGraphemes(norm);
+  let gi = 0;
+  const wordInfos = words.map(function(wd){
+    const g = segmentGraphemes(wd);
+    const info = { text: wd, width: measureWidthPx(wd, weight, sizePx, 0), start: gi, end: gi + g.length, gcount: g.length };
+    gi += g.length + 1;
+    return info;
+  });
+  const spaceW = measureWidthPx(" ", weight, sizePx, 0);
+  const effAvail = availPx - 1;
+  let lines = 1, curW = 0, curMark = false;
+  const lineWidths = [];
+  const markRanges = !markRange ? [] : (Array.isArray(markRange) ? markRange : [markRange]);
+  function markOn(a, b){ return markRanges.some(function(r){ return b > r.start && a < r.end; }); }
+  function markCharge(){ return curMark ? 2 * markPadPx : 0; }
+  function closeLine(){ lineWidths.push(curW + markCharge() + 1); lines = lineWidths.length; curW = 0; curMark = false; }
+  wordInfos.forEach(function(wd, wi){
+    const wdMark = markOn(wd.start, wd.end);
+    const sep = (curW > 0) ? spaceW : 0;
+    const prospective = curW + sep + wd.width + ((curMark || wdMark) ? 2 * markPadPx : 0) - markCharge();
+    if (curW > 0 && prospective > effAvail && wd.width + (wdMark ? 2 * markPadPx : 0) <= effAvail) { closeLine(); }
+    if (wd.width > effAvail) {
+      if (curW > 0) closeLine();
+      const gs = segmentGraphemes(wd.text);
+      gs.forEach(function(gch, k){
+        const gw = measureWidthPx(gch, weight, sizePx, 0);
+        const gMark = markOn(wd.start + k, wd.start + k + 1);
+        if (curW > 0 && curW + gw + ((curMark || gMark) ? 2 * markPadPx : 0) - markCharge() > effAvail) closeLine();
+        curW += gw;
+        if (gMark) curMark = true;
+      });
+    } else {
+      curW += ((curW > 0) ? spaceW : 0) + wd.width;
+      if (wdMark) curMark = true;
+    }
+    if (wi === wordInfos.length - 1) lineWidths.push(curW + markCharge() + 1);
+  });
+  if (!wordInfos.length) lineWidths.push(0);
+  const maxW = Math.max.apply(null, lineWidths);
+  const lastW = lineWidths.length ? lineWidths[lineWidths.length - 1] - 1 : 0;
+  const uncertain = (FIT_PATH === "estimate" || FONT_UNCERTAIN) && maxW > 0.9 * availPx;
+  return { lines: lineWidths.length, maxWidthPx: maxW, lastLineWidthPx: lastW, lineWidthsPx: lineWidths.map(function(w){ return Math.max(0, w - 1); }), uncertain: uncertain, path: FIT_PATH };
+}
+/* The canonical sequence: the one character sequence fitting, counting, marking
+   and playback all consume. CSS white-space collapsing folds runs of tab,
+   newline, form feed, carriage return and space to one space and trims the
+   ends; a nonbreaking space is never collapsed and never trimmed. */
+function canonicalText(s){ return String(s).replace(/[\t\n\f\r ]+/g, " ").replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, ""); }
+function normalizeWs(s){ return canonicalText(s); }
+function markRangeFor(text, highlight){
+  if (!highlight) return null;
+  return graphemeRangeOf(canonicalText(text), canonicalText(highlight));
+}
+function markRangesFor(text, highlight){
+  if (!highlight) return [];
+  const hs = Array.isArray(highlight) ? highlight : [highlight];
+  const ct = canonicalText(text);
+  return hs.map(function(h){ return graphemeRangeOf(ct, canonicalText(h)); }).filter(Boolean);
+}
+function parseUnitToken(token){
+  if (typeof token === "number") return { value: token, unit: "cqw" };
+  const parts = String(token).trim().split(/\s+/).map(function(p){
+    const mm = p.match(/^(-?[\d.]+)([a-z%]*)$/);
+    return mm ? { value: parseFloat(mm[1]), unit: mm[2] || "" } : { value: 0, unit: "" };
+  });
+  return parts.length === 1 ? parts[0] : { components: parts };
+}
+function lenPx(token, cqwPx, refPx){
+  const t = parseUnitToken(token);
+  const one = function(c){
+    if (c.unit === "cqw") return c.value * cqwPx;
+    if (c.unit === "px") return c.value;
+    if (c.unit === "%") return c.value * (refPx || 0) / 100;
+    throw new Error("T13_UNIT_UNSUPPORTED:" + token);
+  };
+  return t.components ? one(t.components[0]) : one(t);
+}
+function cqwOf(token){ const t = parseUnitToken(token); return t.components ? t.components[0].value : t.value; }
+function scaledToken(token, factor){
+  const t = parseUnitToken(token);
+  if (t.components) return t.components.map(function(c){ return (c.value * factor) + c.unit; }).join(" ");
+  return (t.value * factor) + t.unit;
+}
+function modelFor(mode, stageWidthPx){
+  const L = CONFIG.layout[mode];
+  /* Unit basis: the stage is the query container. Its own padding token resolves in
+     the stage's own unit context (no ancestor query container exists, so the basis is
+     the full stage width); every descendant unit resolves against the stage's
+     content box. The model carries both bases explicitly. */
+  const selfCqwPx = stageWidthPx / 100;
+  const padPx = lenPx(L.stagePad, selfCqwPx, stageWidthPx);
+  const contentPx = stageWidthPx - 2 * padPx;
+  const cqwPx = contentPx / 100;
+  const ref = stageWidthPx;
+  const titleFontPx = lenPx(L.titleFont, cqwPx, ref);
+  const headFontPx = lenPx(L.cardHeadFont, cqwPx, ref);
+  const commentsWidthPx = mode === "wide"
+    ? stageWidthPx - lenPx(L.commentsLeft, cqwPx, ref) - lenPx(L.commentsRight, cqwPx, ref)
+    : contentPx;
+  const innerPx = commentsWidthPx - 2 * lenPx(L.cardPadX, cqwPx, ref) - L.cardBorderCqw * cqwPx;
+  const gapPx = lenPx(L.headGap, cqwPx, ref);
+  const markPadPx = lenPx(L.markPadX, cqwPx, ref);
+  const caretPx = lenPx(L.caretWidth, cqwPx, ref) + lenPx(L.caretMarginLeft, cqwPx, ref);
+  const titles = CONFIG.cards.map(function(c){
+    const mr = markRangesFor(c.text, c.highlight);
+    const full = fitLines(c.text, innerPx, L.titleWeight, titleFontPx, mr, markPadPx);
+    const gs = segmentGraphemes(canonicalText(c.text));
+    let pLines = 0, pWorst = 0, pUnc = false, pOverflow = false;
+    for (let k = 0; k <= gs.length; k++) {
+      const pre = gs.slice(0, k).join("");
+      const pmr = mr.map(function(r){ return { start: r.start, end: Math.min(r.end, k) }; }).filter(function(r){ return r.end > r.start; });
+      const pf = fitLines(pre, innerPx, L.titleWeight, titleFontPx, pmr.length ? pmr : null, markPadPx);
+      if (pf.lines > pLines) pLines = pf.lines;
+      const caretRight = pf.lastLineWidthPx + caretPx;
+      if (caretRight > innerPx) {
+        if (pf.lines >= CONFIG.maxTitleLines) pOverflow = true;
+        if (caretRight > pWorst) pWorst = caretRight;
+      } else {
+        if (caretRight > pWorst) pWorst = caretRight;
+        if ((FIT_PATH === "estimate" || FONT_UNCERTAIN) && pf.lines >= CONFIG.maxTitleLines && caretRight > 0.9 * innerPx) pUnc = true;
+      }
+    }
+    return { lines: full.lines, maxWidthPx: full.maxWidthPx, uncertain: full.uncertain, path: full.path,
+      prefixLines: pLines, prefixWorstPx: pWorst, prefixUncertain: pUnc, prefixOverflow: pOverflow, caretPx: caretPx };
+  });
+  const headers = CONFIG.cards.map(function(c){
+    const hw = lenPx(L.avatarSize, cqwPx, ref) + gapPx * 3
+      + measureWidthPx(c.handle, L.headWeight, headFontPx, 0)
+      + measureWidthPx(c.badge, L.badgeWeight, lenPx(L.badgeFont, cqwPx, ref), 0) + 2 * lenPx(L.badgePadX, cqwPx, ref)
+      + measureWidthPx(c.when, L.timeWeight, headFontPx, 0);
+    return { widthPx: hw, fits: hw <= innerPx, uncertain: (FIT_PATH === "estimate" || FONT_UNCERTAIN) && hw > 0.9 * innerPx };
+  });
+  const headerHeightPx = Math.max(lenPx(L.avatarSize, cqwPx, ref),
+    headFontPx * L.headLineHeight,
+    lenPx(L.badgeFont, cqwPx, ref) * L.headLineHeight + 2 * lenPx(L.badgePadY, cqwPx, ref));
+  function cardHeightCqw(ti){
+    return (2 * lenPx(L.cardPadY, cqwPx, ref) + headerHeightPx + lenPx(L.titleMargin, cqwPx, ref)
+      + titles[ti].lines * titleFontPx * L.titleLineHeight + lenPx(L.footMargin, cqwPx, ref) + lenPx(L.cardFootFont, cqwPx, ref) * L.footLineHeight) / cqwPx;
+  }
+  const postWidthPx = mode === "wide" ? lenPx(L.postWidth, cqwPx, ref) : contentPx;
+  const postInnerPx = postWidthPx - 2 * lenPx(L.postPadX, cqwPx, ref);
+  const postFull = CONFIG.post.bodyBefore + CONFIG.post.bodyHighlight + CONFIG.post.bodyAfter;
+  const postMark = markRangeFor(postFull, CONFIG.post.bodyHighlight);
+  const postBodyFit = fitLines(postFull, postInnerPx, L.bodyWeight, lenPx(L.postBodyFont, cqwPx, ref), postMark, markPadPx);
+  const postBodyPess = (FIT_PATH === "estimate" || FONT_UNCERTAIN)
+    ? fitLines(postFull, postInnerPx * 0.9, L.bodyWeight, lenPx(L.postBodyFont, cqwPx, ref), postMark, markPadPx) : postBodyFit;
+  const postBody = { lines: postBodyFit.lines, maxWidthPx: postBodyFit.maxWidthPx, lineWidthsPx: postBodyFit.lineWidthsPx, uncertain: false, pessimisticLines: postBodyPess.lines };
+  const postHeightCqw = (2 * lenPx(L.postPadY, cqwPx, ref) + lenPx(L.postHeadFont, cqwPx, ref) * L.headLineHeight + lenPx(L.bodyMargin, cqwPx, ref)
+    + postBody.lines * lenPx(L.postBodyFont, cqwPx, ref) * L.postBodyLineHeight + lenPx(L.postFootMargin, cqwPx, ref) + lenPx(L.postFootFont, cqwPx, ref) * L.footLineHeight) / cqwPx;
+  const headCqw = (lenPx(L.commentsHeadFont, cqwPx, ref) * L.headLineHeight + lenPx(L.commentsHeadMargin, cqwPx, ref)) / cqwPx;
+  let stackCqw = headCqw;
+  CONFIG.cards.forEach(function(c, i){ stackCqw += cardHeightCqw(i) + (i ? L.stackGapCqw : 0); });
+  const aspect = mode === "wide" ? CONFIG.wideStageAspect : CONFIG.narrowStageAspect;
+  const stageHeightPx = stageWidthPx * aspect[1] / aspect[0];
+  const postHeightPx = postHeightCqw * cqwPx;
+  const availPx = mode === "wide"
+    ? stageHeightPx - lenPx(L.commentsTop, cqwPx, stageHeightPx) - lenPx(L.commentsBottom, cqwPx, stageHeightPx)
+    : (stageHeightPx - 2 * padPx) - postHeightPx - lenPx(L.postGap, cqwPx, ref);
+  const availCqw = availPx / cqwPx;
+  function surf(widthPx, boundPx){ return { widthPx: widthPx, fits: widthPx <= boundPx, uncertain: (FIT_PATH === "estimate" || FONT_UNCERTAIN) && widthPx > 0.9 * boundPx }; }
+  const postHeadFontPx = lenPx(L.postHeadFont, cqwPx, ref);
+  const chrome = {};
+  chrome.postHead = surf(measureWidthPx(CONFIG.post.author, L.headWeight, postHeadFontPx, 0) + gapPx
+    + measureWidthPx(CONFIG.post.handle, L.handleWeight, postHeadFontPx, 0) + gapPx
+    + measureWidthPx(CONFIG.post.closeMark, L.closeWeight, postHeadFontPx, 0), postInnerPx);
+  chrome.commentsHead = surf(measureWidthPx(CONFIG.commentsTitle + " " + (CONFIG.commentsBaseCount + CONFIG.cards.length), L.headWeight, lenPx(L.commentsHeadFont, cqwPx, ref), 0)
+    + measureWidthPx(CONFIG.sortLabel, L.sortWeight, lenPx(L.sortFont, cqwPx, ref), 0), commentsWidthPx);
+  chrome.cardFoot = surf(measureWidthPx(CONFIG.cardFooter.mark, L.footWeight, lenPx(L.cardFootFont, cqwPx, ref), 0)
+    + lenPx(L.cardFootGap, cqwPx, ref) + measureWidthPx(CONFIG.cardFooter.label, L.footWeight, lenPx(L.cardFootFont, cqwPx, ref), 0), innerPx);
+  let pfW = 0;
+  CONFIG.post.actions.forEach(function(a, ai){ pfW += measureWidthPx(a, L.footWeight, lenPx(L.postFootFont, cqwPx, ref), 0) + (ai ? lenPx(L.footGap, cqwPx, ref) : 0); });
+  chrome.postFoot = surf(pfW, postInnerPx);
+  const stampFontPx = lenPx(L.stampFont, cqwPx, ref);
+  const stampW = measureWidthPx(CONFIG.post.stampText, L.stampWeight, stampFontPx, lenPx(L.stampLetterSpacing, cqwPx, ref))
+    + 2 * lenPx(L.stampPadX, cqwPx, ref) + 2 * lenPx(L.stampBorder, cqwPx, ref);
+  const stampH = stampFontPx * L.headLineHeight + 2 * lenPx(L.stampPadY, cqwPx, ref) + 2 * lenPx(L.stampBorder, cqwPx, ref);
+  const rotRad = Math.abs(cqwOf(L.stampRotate)) * Math.PI / 180;
+  const stampRW = stampW * Math.cos(rotRad) + stampH * Math.sin(rotRad);
+  const stampRH = stampW * Math.sin(rotRad) + stampH * Math.cos(rotRad);
+  chrome.stamp = surf(stampRW, postInnerPx);
+  chrome.stamp.rotatedWidthPx = stampRW;
+  const bodyLineHPx = lenPx(L.postBodyFont, cqwPx, ref) * L.postBodyLineHeight;
+  const bodyTopPx = lenPx(L.postPadY, cqwPx, ref) + postHeadFontPx * L.headLineHeight + lenPx(L.bodyMargin, cqwPx, ref);
+  const stampCx = postWidthPx - lenPx(L.stampRight, cqwPx, postWidthPx) - stampW / 2;
+  const stampCy = lenPx(L.stampTop, cqwPx, postHeightPx) + stampH / 2;
+  const stampRect = { left: stampCx - stampRW / 2, top: stampCy - stampRH / 2, right: stampCx + stampRW / 2, bottom: stampCy + stampRH / 2 };
+  function rectsHit(a, b){ return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
+  chrome.stamp.rect = stampRect;
+  chrome.stamp.contained = stampRect.left >= 0 && stampRect.top >= 0 && stampRect.right <= postWidthPx && stampRect.bottom <= postHeightPx;
+  chrome.stamp.overlapsBodyInk = postBody.lineWidthsPx.some(function(w, li){
+    return rectsHit(stampRect, { left: lenPx(L.postPadX, cqwPx, ref), right: lenPx(L.postPadX, cqwPx, ref) + w, top: bodyTopPx + li * bodyLineHPx, bottom: bodyTopPx + (li + 1) * bodyLineHPx });
+  });
+  const footTopPx = bodyTopPx + postBody.lines * bodyLineHPx + lenPx(L.postFootMargin, cqwPx, ref);
+  chrome.stamp.overlapsFoot = rectsHit(stampRect, { left: lenPx(L.postPadX, cqwPx, ref), right: postWidthPx - lenPx(L.postPadX, cqwPx, ref), top: footTopPx, bottom: footTopPx + lenPx(L.postFootFont, cqwPx, ref) * L.footLineHeight });
+  chrome.avatarInitials = CONFIG.cards.map(function(c){
+    return surf(measureWidthPx(c.initials, L.avatarWeight, lenPx(L.avatarFont, cqwPx, ref), 0), lenPx(L.avatarSize, cqwPx, ref) * 0.92);
+  });
+  const supportingPx = Math.min(headFontPx, lenPx(L.badgeFont, cqwPx, ref), lenPx(L.avatarFont, cqwPx, ref),
+    lenPx(L.cardFootFont, cqwPx, ref), lenPx(L.sortFont, cqwPx, ref), lenPx(L.postFootFont, cqwPx, ref), postHeadFontPx);
+  return { titleFontPx: titleFontPx, headFontPx: headFontPx,
+    footFontPx: lenPx(L.cardFootFont, cqwPx, ref), innerPx: innerPx, postInnerPx: postInnerPx,
+    titles: titles, headers: headers, chrome: chrome, postBody: postBody, supportingPx: supportingPx,
+    postBodyLines: postBody.lines,
+    basis: { cqwPx: cqwPx, contentPx: contentPx, padPx: padPx, selfCqwPx: selfCqwPx },
+    headCqw: headCqw, postHeightPx: postHeightPx, headerHeightPx: headerHeightPx,
+    postBodyTopPx: bodyTopPx, bodyLineHPx: bodyLineHPx, stampHPx: stampH,
+    postHeightCqw: postHeightCqw, stackCqw: stackCqw, availCqw: availCqw, fitPath: FIT_PATH };
+}
+function validateConfig(){
+  const errors = [];
+  if (!CONFIG || !Array.isArray(CONFIG.cards) || !Array.isArray(CONFIG.beats) || !CONFIG.layout || !CONFIG.layout.wide || !CONFIG.layout.narrow || !CONFIG.palette || !CONFIG.post) {
+    errors.push("T13_CONFIG_INVALID");
+    return errors;
+  }
+  if (CONFIG.cards.length > CONFIG.maxCards) errors.push("T13_CARD_COUNT_UNSUPPORTED");
+  if (CONFIG.beats.length < CONFIG.cards.length) errors.push("T13_BEAT_TABLE_MISMATCH");
+  CONFIG.beats.forEach(function(b){ if (!b || !(b.charMs > 0) || !isFinite(b.charMs) || !(b.appearMs >= 0) || !isFinite(b.appearMs) || !(b.holdAfterMs >= 0) || !isFinite(b.holdAfterMs)) errors.push("T13_BEAT_INVALID"); });
+  ["landMs", "caretBlinkMs", "finalHoldMs"].forEach(function(k){
+    const v = CONFIG[k];
+    if (!(typeof v === "number" && isFinite(v) && v > 0 && v <= CONFIG.catalogueWindowMs)) errors.push("T13_DURATION_INVALID:" + k);
+  });
+  CONFIG.beats.forEach(function(b, i){
+    if (b && i < CONFIG.cards.length - 1 && isFinite(b.holdAfterMs) && b.holdAfterMs < CONFIG.landMs) errors.push("T13_HOLD_LT_LAND:" + i);
+  });
+  if (CONFIG.cards.length >= 2 && CONFIG.opening.firstCardLanded) {
+    const g = segmentGraphemes(canonicalText(CONFIG.cards[1].text)), p = segmentGraphemes(canonicalText(CONFIG.opening.secondCardPrefix));
+    let ok = p.length <= g.length;
+    for (let i = 0; ok && i < p.length; i++) if (g[i] !== p[i]) ok = false;
+    if (!ok) errors.push("T13_PREFIX_MISMATCH");
+  }
+  const widthRuns = [{ mode: "wide", w: CONFIG.wideStageAspect[0] }, { mode: "narrow", w: CONFIG.narrowStageAspect[0] }, { mode: "narrow", w: 390 }];
+  try {
+    if (typeof document !== "undefined" && document.getElementById) {
+      const stageEl = document.getElementById("stage");
+      const rw = stageEl && stageEl.clientWidth;
+      if (rw > 0 && !widthRuns.some(function(r){ return r.w === rw; })) widthRuns.push({ mode: rw <= CONFIG.narrowBreakpointPx ? "narrow" : "wide", w: rw });
+    }
+  } catch (e) { /* the runtime width is additive only */ }
+  widthRuns.forEach(function(run){
+    const mode = run.mode;
+    let m;
+    try { m = modelFor(mode, run.w); } catch (e) {
+      if (e && String(e.message).indexOf("T13_UNIT_UNSUPPORTED") === 0) { errors.push(e.message); return; }
+      throw e;
+    }
+    m.titles.forEach(function(t){
+      if (t.lines > CONFIG.maxTitleLines) errors.push("T13_TITLE_UNSUPPORTED:" + mode);
+      else if (t.uncertain) errors.push("T13_FIT_UNCERTAIN:" + mode);
+      if (t.maxWidthPx > m.innerPx) errors.push("T13_TITLE_TOO_WIDE:" + mode);
+      if (t.prefixLines > CONFIG.maxTitleLines) errors.push("T13_TITLE_UNSUPPORTED:caret:" + mode);
+      if (t.prefixOverflow) errors.push("T13_TITLE_TOO_WIDE:caret:" + mode);
+      else if (t.prefixUncertain) errors.push("T13_FIT_UNCERTAIN:caret:" + mode);
+    });
+    m.headers.forEach(function(h){
+      if (!h.fits) errors.push("T13_CHROME_OVERFLOW:" + mode);
+      else if (h.uncertain) errors.push("T13_FIT_UNCERTAIN:chrome:" + mode);
+    });
+    ["postHead", "commentsHead", "cardFoot", "postFoot", "stamp"].forEach(function(s){
+      const c = m.chrome[s];
+      if (!c.fits) errors.push("T13_CHROME_OVERFLOW:" + s + ":" + mode);
+      else if (c.uncertain) errors.push("T13_FIT_UNCERTAIN:" + s + ":" + mode);
+    });
+    m.chrome.avatarInitials.forEach(function(a){
+      if (!a.fits) errors.push("T13_CHROME_OVERFLOW:avatarInitials:" + mode);
+      else if (a.uncertain) errors.push("T13_FIT_UNCERTAIN:avatarInitials:" + mode);
+    });
+    if (!m.chrome.stamp.contained) errors.push("T13_STAMP_CONTAINMENT:" + mode);
+    if (m.chrome.stamp.overlapsBodyInk) errors.push("T13_STAMP_OVERLAP:" + mode);
+    if (m.chrome.stamp.overlapsFoot) errors.push("T13_STAMP_OVERLAP:foot:" + mode);
+    if (m.postBody.maxWidthPx > m.postInnerPx + 1) errors.push("T13_CHROME_OVERFLOW:postBody:" + mode);
+    if (m.postBody.pessimisticLines > m.postBody.lines + 1) errors.push("T13_FIT_UNCERTAIN:postBody:" + mode);
+    if (mode === "narrow" && m.supportingPx < CONFIG.phoneMinSupportingPx) errors.push("T13_FONT_FLOOR:" + mode);
+    if (m.stackCqw > m.availCqw) errors.push("T13_STACK_OVERFLOW:" + mode);
+  });
+  return errors.filter(function(e, i){ return errors.indexOf(e) === i; });
+}
+const VALIDATION_ERRORS = validateConfig();
+const FROZEN = VALIDATION_ERRORS.length > 0;
+
+/* --- Sequential schedule derivation (strict sequencing by construction) --- */
+function buildScheduleFor(cards, beats, opening, finalHoldMs){
+  const sched = [];
+  let t = 0;
+  const openingApplies = cards.length >= 2 && opening.firstCardLanded && opening.secondCardPrefix;
+  cards.forEach(function(c, i){
+    const b = beats[i];
+    const n = segmentGraphemes(canonicalText(c.text)).length;
+    if (i === 0 && openingApplies) {
+      sched.push({ appearStart: -opening.offsetMs, typeStart: -opening.offsetMs, typeEnd: -opening.offsetMs, count: n, preLanded: true });
+      return;
+    }
+    if (i === 1 && openingApplies) {
+      const pre = segmentGraphemes(canonicalText(opening.secondCardPrefix)).length;
+      const typeEnd = (n - pre) * b.charMs;
+      sched.push({ appearStart: -opening.offsetMs, typeStart: -pre * b.charMs, typeEnd: typeEnd, count: n, preTyped: pre });
+      t = typeEnd + b.holdAfterMs;
+      return;
+    }
+    const appearStart = t;
+    const typeStart = appearStart + Math.max(0, b.appearMs - (CONFIG.entranceOverlapMs || 0));
+    const typeEnd = typeStart + n * b.charMs;
+    sched.push({ appearStart: appearStart, typeStart: typeStart, typeEnd: typeEnd, count: n });
+    t = typeEnd + b.holdAfterMs;
+  });
+  const lastEnd = sched.length ? sched[sched.length - 1].typeEnd : 0;
+  return { cards: sched, endMs: lastEnd + finalHoldMs };
+}
+const SCHEDULE = buildScheduleFor(CONFIG.cards, CONFIG.beats, CONFIG.opening, CONFIG.finalHoldMs);
+const WINDOW_ACCOUNTING = {
+  endingBudgetMs: CONFIG.finalHoldMs,
+  catalogueWindowMs: CONFIG.catalogueWindowMs,
+  openingOffsetMs: CONFIG.opening.offsetMs,
+  performanceMs: SCHEDULE.endMs,
+  residualMs: CONFIG.catalogueWindowMs - SCHEDULE.endMs,
+  specimenIdentity: SPECIMEN_CONFIG,
+  identityHolds: SPECIMEN_CONFIG && (SCHEDULE.endMs === CONFIG.catalogueWindowMs)
+};
+function caretOpacityAt(t){
+  const ph = ((t % CONFIG.caretBlinkMs) + CONFIG.caretBlinkMs) % CONFIG.caretBlinkMs;
+  return ph < CONFIG.caretBlinkMs * CONFIG.caretDuty ? 1 : 0;
+}
+function landingProgressAt(t, typeEnd){
+  if (t <= typeEnd) return 0;
+  return Math.min(1, (t - typeEnd) / CONFIG.landMs);
+}
+
+/* --- DOM construction (all from CONFIG) --- */
+const P = CONFIG.palette;
+const stage = document.getElementById("stage");
+stage.style.background = P.bg;
+stage.style.fontFamily = CONFIG.fontFamily;
+let cardEls = [];
+function applyLayout(){
+  const narrow = stage.clientWidth > 0 && stage.clientWidth <= CONFIG.narrowBreakpointPx;
+  const L = CONFIG.layout[narrow ? "narrow" : "wide"];
+  stage.classList.toggle("narrow", narrow);
+  stage.style.aspectRatio = (narrow ? CONFIG.narrowStageAspect : CONFIG.wideStageAspect).join(" / ");
+  Object.keys(L).forEach(function(k){
+    stage.style.setProperty("--" + k, String(L[k]));
+  });
+  stage.style.maxWidth = CONFIG.stageMaxWidthPx + "px";
+  stage.style.setProperty("--bannerBg", P.bannerBg);
+  stage.style.setProperty("--bannerInk", P.bannerInk);
+  stage.style.setProperty("--freshBlue", P.accent);
+  stage.style.setProperty("--stackGap", L.stackGapCqw + "cqw");
+  stage.style.setProperty("--titleMaxH", scaledToken(L.titleFont, CONFIG.maxTitleLines * L.titleLineHeight));
+  cardEls.forEach(function(ce){
+    ce.el.style.borderLeftWidth = L.cardBorderCqw + "cqw";
+  });
+  return narrow;
+}
+const postCard = document.getElementById("postCard");
+postCard.style.background = P.postBg; postCard.style.color = P.postInk;
+document.getElementById("postAuthor").textContent = CONFIG.post.author;
+document.getElementById("postHandle").textContent = CONFIG.post.handle;
+document.getElementById("postClose").textContent = CONFIG.post.closeMark;
+(function buildPostBody(){
+  const body = document.getElementById("postBody");
+  body.appendChild(document.createTextNode(CONFIG.post.bodyBefore));
+  const m = document.createElement("mark"); m.textContent = CONFIG.post.bodyHighlight;
+  m.style.background = P.highlightBg; m.style.color = P.highlightInk;
+  body.appendChild(m);
+  body.appendChild(document.createTextNode(CONFIG.post.bodyAfter));
+})();
+const stamp = document.getElementById("stamp");
+stamp.textContent = CONFIG.post.stampText;
+stamp.style.color = P.stampInk; stamp.style.borderColor = P.stampInk;
+const postFoot = document.getElementById("postFoot");
+CONFIG.post.actions.forEach(function(a){
+  const s = document.createElement("span"); s.textContent = a; postFoot.appendChild(s);
+});
+document.getElementById("commentsTitle").textContent = CONFIG.commentsTitle + " " + CONFIG.commentsBaseCount;
+document.getElementById("commentsTitle").style.color = P.cardInk;
+document.getElementById("sortLabel").textContent = CONFIG.sortLabel;
+document.getElementById("sortLabel").style.color = P.cardInk;
+if (FROZEN) {
+  const banner = document.getElementById("validationBanner");
+  banner.textContent = VALIDATION_ERRORS.join(" · ");
+  banner.style.display = "block";
+  if (typeof console !== "undefined") console.error(VALIDATION_ERRORS.join(" · "));
+}
+
+const stack = document.getElementById("stack");
+if (!FROZEN) {
+  cardEls = CONFIG.cards.map(function(c, i){
+    const el = document.createElement("div");
+    el.className = "card";
+    el.style.color = P.cardInk;
+    el.style.background = P.cardBg;
+    el.style.borderLeftColor = P.accent;
+    el.style.marginTop = i ? "var(--stackGap)" : "0px";
+    const head = document.createElement("div"); head.className = "cardHead";
+    const av = document.createElement("span"); av.className = "avatar";
+    av.textContent = c.initials; av.style.color = P.avatarInk;
+    av.style.background = "linear-gradient(135deg, hsl(" + c.avatarHue + "," + P.avatarSat + "%," + P.avatarLightA + "%), hsl(" + ((c.avatarHue + P.avatarHueSpan) % 360) + "," + P.avatarSat + "%," + P.avatarLightB + "%))";
+    const hd = document.createElement("span"); hd.className = "cHandle"; hd.textContent = c.handle;
+    const bd = document.createElement("span"); bd.className = "badge"; bd.textContent = c.badge; bd.style.background = P.badgeBg; bd.style.color = P.badgeInk;
+    const wh = document.createElement("span"); wh.className = "when"; wh.textContent = c.when;
+    head.appendChild(av); head.appendChild(hd); head.appendChild(bd); head.appendChild(wh);
+    const title = document.createElement("div"); title.className = "cardTitle";
+    const caret = document.createElement("span");
+    caret.className = "caret"; caret.style.background = P.caret; caret.style.display = "none";
+    const foot = document.createElement("div"); foot.className = "cardFoot";
+    const fh = document.createElement("span"); fh.textContent = CONFIG.cardFooter.mark;
+    const fr = document.createElement("span"); fr.textContent = CONFIG.cardFooter.label;
+    foot.appendChild(fh); foot.appendChild(fr);
+    el.appendChild(head); el.appendChild(title); el.appendChild(foot);
+    stack.appendChild(el);
+    return { el: el, title: title, caret: caret, graphemes: segmentGraphemes(canonicalText(c.text)),
+      hlRange: graphemeRangeOf(canonicalText(c.text), c.highlight ? canonicalText(c.highlight) : c.highlight),
+      hlRanges: markRangesFor(c.text, c.highlight), shown: -1, freshKey: "" };
+  });
+}
+
+/* The word at the typing frontier carries a white-to-accent gradient while it
+   is being typed and through the landing beat that follows; every other
+   grapheme renders plain. Card surfaces never change colour. */
+function freshRangeFor(ce, s, typed, t){
+  if (!typed) return null;
+  if (t >= s.typeEnd && landingProgressAt(t, s.typeEnd) >= 1) return null;
+  const g = ce.graphemes;
+  let start = typed - 1;
+  while (start > 0 && g[start - 1] !== " ") start--;
+  return { start: start, end: typed };
+}
+function renderTitle(ce, c, typedCount, freshRange){
+  ce.title.textContent = "";
+  const shown = ce.graphemes.slice(0, typedCount);
+  function kindAt(idx){
+    let k = null;
+    ce.hlRanges.forEach(function(r){ if (idx >= r.start && idx < r.end && !k) k = "mark"; });
+    if (freshRange && idx >= freshRange.start && idx < freshRange.end) k = "fresh";
+    return k;
+  }
+  let runStart = 0;
+  function flush(end){
+    if (end <= runStart) return;
+    const text = shown.slice(runStart, end).join("");
+    const k = kindAt(runStart);
+    if (k === "mark") {
+      const m = document.createElement("mark"); m.textContent = text;
+      m.style.background = P.highlightBg; m.style.color = P.highlightInk;
+      ce.title.appendChild(m);
+    } else if (k === "fresh") {
+      const sp = document.createElement("span"); sp.className = "fresh"; sp.textContent = text;
+      ce.title.appendChild(sp);
+    } else {
+      ce.title.appendChild(document.createTextNode(text));
+    }
+    runStart = end;
+  }
+  for (let idx = 1; idx <= shown.length; idx++) {
+    if (idx === shown.length || kindAt(idx) !== kindAt(runStart)) flush(idx);
+  }
+  ce.title.appendChild(ce.caret);
+}
+
+function render(t){
+  if (FROZEN || RUNTIME_ERRORS.length) return;
+  const L = CONFIG.layout[(stage.clientWidth > 0 && stage.clientWidth <= CONFIG.narrowBreakpointPx) ? "narrow" : "wide"];
+  const landedCount = SCHEDULE.cards.filter(function(s){ return t >= s.typeEnd; }).length;
+  const headLabel = CONFIG.commentsTitle + " " + (CONFIG.commentsBaseCount + landedCount);
+  const headEl = document.getElementById("commentsTitle");
+  if (headEl.textContent !== headLabel) headEl.textContent = headLabel;
+  CONFIG.cards.forEach(function(c, i){
+    const s = SCHEDULE.cards[i];
+    const ce = cardEls[i];
+    const b = CONFIG.beats[i];
+    if (t < s.appearStart) {
+      ce.el.style.opacity = "0";
+      ce.el.style.transform = "translateY(" + L.entranceDy + ")";
+      if (ce.shown !== -1) { ce.title.textContent = ""; ce.shown = -1; ce.freshKey = ""; }
+      ce.caret.style.display = "none";
+      return;
+    }
+    const p = b.appearMs > 0 ? Math.min(1, Math.max(0, (t - s.appearStart) / b.appearMs)) : 1;
+    ce.el.style.opacity = String(p);
+    ce.el.style.transform = "translateY(" + scaledToken(L.entranceDy, 1 - p) + ")";
+    let typed = 0;
+    if (t >= s.typeEnd) typed = s.count;
+    else if (s.preTyped) typed = Math.min(s.count, s.preTyped + Math.floor(Math.max(0, t) / b.charMs));
+    else if (t > s.typeStart) typed = Math.min(s.count, Math.floor((t - s.typeStart) / b.charMs));
+    else typed = s.preTyped || 0;
+    const landed = t >= s.typeEnd;
+    const fr = freshRangeFor(ce, s, typed, t);
+    const fkey = fr ? fr.start + "-" + fr.end : "none";
+    if (typed !== ce.shown || fkey !== ce.freshKey) {
+      ce.shown = typed;
+      ce.freshKey = fkey;
+      renderTitle(ce, c, typed, fr);
+    }
+    if (landed) {
+      ce.caret.style.display = "none";
+      ce.el.classList.add("landed");
+    } else {
+      ce.el.classList.remove("landed");
+      ce.caret.style.display = "inline-block";
+      ce.caret.style.opacity = String(caretOpacityAt(t));
+    }
+  });
+}
+
+/* --- Clock: free-running, externally slaveable for comparison.html --- */
+let playing = !FROZEN, basePerf = 0, baseStamp = performance.now();
+function perfNow(){
+  let t = playing ? basePerf + (performance.now() - baseStamp) : basePerf;
+  if (t > SCHEDULE.endMs) { t = SCHEDULE.endMs; if (playing) { playing = false; basePerf = t; } }
+  return t;
+}
+let RUNTIME_ERRORS = [];
+function revalidateRuntime(){
+  RUNTIME_ERRORS = validateConfig();
+  const banner = document.getElementById("validationBanner");
+  if (RUNTIME_ERRORS.length) { banner.textContent = RUNTIME_ERRORS.join(" · "); banner.style.display = "block"; }
+  else if (!FROZEN) { banner.style.display = "none"; }
+  return RUNTIME_ERRORS;
+}
+applyLayout();
+if (typeof window !== "undefined" && window.addEventListener) window.addEventListener("resize", function(){ applyLayout(); revalidateRuntime(); });
+if (!FROZEN) (function loop(){ render(perfNow()); requestAnimationFrame(loop); })();
+window.T13 = {
+  scheduleEndMs: SCHEDULE.endMs,
+  openingOffsetMs: CONFIG.opening.offsetMs,
+  validationErrors: VALIDATION_ERRORS,
+  overrideOutcomes: OVERRIDE_OUTCOMES,
+  windowAccounting: WINDOW_ACCOUNTING,
+  frozen: FROZEN,
+  runtimeValidationErrors: function(){ return RUNTIME_ERRORS; },
+  modelFor: modelFor,
+  graphemes: segmentGraphemes,
+  graphemeRangeOf: graphemeRangeOf,
+  config: CONFIG,
+  setTime: function(ms){
+    if (FROZEN) return;
+    basePerf = Math.max(0, Math.min(ms, SCHEDULE.endMs)); baseStamp = performance.now(); render(basePerf);
+  },
+  play: function(){ if (FROZEN) return; if (!playing) { playing = true; baseStamp = performance.now(); } },
+  pause: function(){ if (FROZEN) return; if (playing) { basePerf = perfNow(); playing = false; } },
+  restart: function(){
+    if (FROZEN) return;
+    basePerf = 0; baseStamp = performance.now(); playing = true;
+    cardEls.forEach(function(ce){ ce.shown = -1; });
+    render(0);
+  },
+  isPlaying: function(){ return playing; },
+  testing: {
+    buildScheduleFor: buildScheduleFor,
+    validateConfig: validateConfig,
+    fitLines: fitLines,
+    caretOpacityAt: caretOpacityAt,
+    landingProgressAt: landingProgressAt,
+    estimateWidthPx: estimateWidthPx,
+    parseUnitToken: parseUnitToken,
+    lenPx: lenPx,
+    scaledToken: scaledToken,
+    markRangeFor: markRangeFor,
+    markRangesFor: markRangesFor,
+    canonicalText: canonicalText,
+    normalizeWs: normalizeWs,
+    isHexColor: isHexColor,
+    revalidateRuntime: revalidateRuntime,
+    fitPath: function(){ return FIT_PATH; },
+    cardEls: function(){ return cardEls; },
+    applyLayout: applyLayout,
+    render: render
+  }
+};
+</script>
+</body>
+</html>
+
+===== BUILD RECORD (build-record-attempt5.md) =====
+# T13 — build record (fifth build)
+
+Source: `recreation-attempt-5-frozen.html`, sha256 `2712dc5ed115a1a34c4817d64d155c89b4b7cb6b4559ff71d611e17dc6f5389d`.
+Preservation: the previous build's source and comparison page were verified as content copies (distinct inodes) matching the carried baseline hashes before any edit; the working file started from that verified copy.
+PIXEL-UNVERIFIED: no pixel render route exists in this seat (a headless-browser probe was attempted and the browser is blocked by platform policy in this environment). Every geometry and behaviour claim below is bound to the source's own displayed-state model and to frame observations of the specimen segment, never to rendered pixels of this build.
+
+## Unit basis (model basis = render basis)
+
+| Unit as used | Basis box | Rendered consequence at a 360px stage |
+|---|---|---|
+| descendant `cqw` (all card/post/comments geometry) | stage content box, 339.84px | 1cqw = 3.3984px; supporting text 12.27px; title 14.10px |
+| stage's own padding `cqw` | full stage width, 360px (no ancestor query container exists) | padding 10.08px per side |
+| `%` position tokens (stamp) | post-card padding box | stamp top 62% of the modelled post height |
+| `px` tokens | absolute | unchanged at every width |
+
+The model carries both bases explicitly and derives every descendant size from the content box, which is the box the browser's container units resolve against.
+
+## Displayed-state model
+
+Every displayed state is a pure function of time and configuration: card opacity/transform from the appear instant and entrance duration; typed grapheme count from the type instant and per-card rate; the frontier gradient from the typed count and the landing window; the caret from the typing state and the blink phase; the comments header count from the number of landed cards; the stamp and all chrome from layout tokens. The schedule is derived, never stored: appear/type/end instants follow from counts, rates, holds, the entrance-overlap token and the ending budget.
+
+## What changed in this build, with baseline-vs-after diagnostics
+
+Attribution: **BUNDLED** — the changes below landed as one staged build with a checkpoint per stage; no single change is isolated as the cause of any quality movement.
+
+1. **Unit derivation made explicit and corrected.** Baseline: descendant sizes were modelled against the full stage width while the browser resolves them against the content box, so modelled sizes ran large (supporting text modelled 12.02px at a 360px stage while rendering smaller). After: the model derives the stage's own padding on the full-width basis, subtracts it, and resolves every descendant unit on the content box. Joint-fit diagnostic at 360px: padding 10.08px/side, content 339.84px, supporting text 12.27px (floor 12px, clears), title 14.10px, card inner width 314.4px, stack 159.1 of 182.1 available. One token was re-priced under the corrected basis: the narrow title size 3.89 → 4.15cqw, because at the corrected basis the 49-grapheme title sat at 94.8% of a single line (inside the estimate-uncertainty band); it now takes two lines with its widest line at 278.4 of 314.4px.
+2. **Consumption checks typed by key kind.** Baseline: consumption was asserted uniformly, which left stylesheet-only tokens unverifiable in a script environment. After: geometry tokens are tested by dual consumption (model + stylesheet variable), timing and content keys are tested by their displayed effects (a rate change moves a type end; a text change moves the derived count 31 → 30), and two negative controls prove the harness detects a removed stylesheet rule (timestamp weight rule; post-footer line-height rule).
+3. **Unsupported units fail loudly; validation covers the used widths.** Baseline: an unsupported unit in a size token silently priced as the raw number, and validation modelled two widths. After: the size resolver throws on any unsupported unit and validation surfaces it as an error; validation models 360px, 390px, 1916px and the live runtime width, and re-runs on resize, freezing the frame loop while any error stands.
+4. **Stamp geometry is modelled, not eyeballed.** Baseline: the stamp's position token (44%) placed its rotated rectangle over body text ink in the model, and a solver scan over every top percentage at the original geometry found **no** placement that is both contained and clear of body ink and the footer. After: the post carries a dedicated footer margin that opens a free band under the body text (the specimen's post is visibly airy at the same place), and the stamp sits in that band — top 62% narrow / 70% wide — contained, clear of every body line's ink and of the footer, asserted per width in validation.
+5. **One canonical character sequence.** Baseline: whitespace folding also folded nonbreaking spaces, so fitting, counting and playback could disagree with CSS rendering on such text. After: a single canonical sequence (CSS-collapsible runs fold to one space, ends trim, nonbreaking spaces survive) feeds fitting, schedule counts, mark ranges and playback graphemes. Specimen counts unchanged: 31/30/47/49/25/22 graphemes, opening prefix 15.
+6. **Ending budget is an input; beat reasons are derived.** Baseline: the ending hold was the residual that made the total fit (1972ms), and stored beat explanations carried a longest-line claim on a 47-grapheme card while a 49-grapheme card exists. After: the ending budget is an independent 2000ms input; the beats are priced so the final card completes typing at exactly 10000ms and the performance ends at exactly 12000ms with residual 0. Every beat explanation is generated at load from measured facts (grapheme counts, rates, holds), so replaced or added cards re-derive their own claims; the longest-line claim sits on the 49-grapheme card, the paired-lines claim on the 47-grapheme card before it.
+7. **Frame-evidenced surface corrections (premise amendments).** The specimen segment was re-observed frame by frame, including consecutive-frame sequences around typing and landing events, before this stage was built. The observations contradicted three standing premises, and the build follows the observations:
+   - **PA-1 — typing indication.** No card background ever changes colour in the segment; the word currently being typed carries a white-to-blue vertical gradient. The build renders exactly that: the frontier word (the trailing word of the typed portion) is a gradient span while typing and through the landing beat (the landing duration now prices this settle), and the card surface and border are constant. The previous background-tint and landing-interpolation tokens and their interpolation helpers are removed entirely.
+   - **PA-2 — caret.** The caret in the frames is a thin vertical bar at the frontier, accent-coloured. Width tokens re-priced (wide 0.5 → 0.14cqw, narrow 0.7 → 0.42cqw, narrow margin 0.4 → 0.18cqw so the modelled caret extent stays under 0.15 of the title size); caret colour now the accent.
+   - **PA-3 — entrance overlap.** Cards fade in while their first graphemes already type (one card is at roughly half opacity with two graphemes shown). A new overlap token (80ms) starts typing that long before each entrance fade completes; the intermediate holds were re-priced (720/700/700/752ms) so every derived instant is unchanged in total: appearances 1380/4060/6820/8892, typing starts 1480/4160/6940/9032, final completion 10000, end 12000.
+   - **PA-4 — comments count.** The header count in the segment increments by one at each landing, starting at 4 with one card pre-landed: count = landed + 3. The header label is now derived at render time from a base-count token (3) plus the landed count; the fit model prices the worst case (all cards landed).
+   - **PA-5 — highlighted phrases.** Frame observation prices the marked phrases per card: card 2 "What's", card 3 "Look" and "Complete", card 5 "Vibes" and "Synergy", card 6 "Artificial" (card 1's "Slopcore" already stood; card 4 none). Highlights are now a string-or-list value; fitting charges mark padding per range and playback renders one mark element per range.
+   - **PA-7 — stamp placement** is item 4 above: solved from the model, not from a percentage guess.
+
+## Deferred, with reasons (priced again at filing)
+
+- The specimen's continuous camera pan and the late scene transition to a profile card: a scene-level rebuild, not a token change; not attempted in this build.
+- Per-card landed furniture visible in the segment (status pills, a changing timestamp, small bars and chips) and photographic avatars: landed furniture is a per-card content system of its own; photographic avatars would break the build's no-external-media property and are not substituted.
+
+## Checkpoint ledger (staged, create-once, content copies with distinct inodes)
+
+| Stage | Source sha256 | Own-check output |
+|---|---|---|
+| 1 — unit basis | `72298564a3a720869b9bc35f4d894e7a20cc646ecbc42ffcc63d7d4b6050a600` | feasibility/basis sections 14/14 |
+| 2 — consumption typing | `5431ffa7f2ea63a2c8910077cb1c1906c40f0f4ea1af42dc48a35f0ca41b0e9f` | basis + consumption 31/31 |
+| 3 — units, widths, stamp | `fa04c2958e02fde286314da1ceedca1391a6fdf364835e40f70582d41804e8df` | 62 + 5 purity, all pass |
+| 4 — canonical sequence, budget, derived reasons | `f59f457824f8aa431667547352fd0c594afe19fc34b70f37ea855b58e967c` | 105 pass, 1 fail (highlight ranges, owned by stage 5) |
+| 5 — frame-evidenced surface, frozen | `2712dc5ed115a1a34c4817d64d155c89b4b7cb6b4559ff71d611e17dc6f5389d` | full suite 122/122 |
+
+Feasibility was proven before building: the previous build's checking instrument passes 79/79 on the previous source, and the corrected-basis joint fit and the ending-budget schedule were recomputed by hand from the tokens before any edit (filed with the run's feasibility note).
+
+## Own checks bound to this source
+
+Full suite 122 checks, all passing: basis/feasibility 14, displayed states 12, consumption 17, unit completeness 19, widths/runtime/stamp 12, canonical sequence 8, timing 11, frame-evidenced motion surface 12, counts/swap/segmentation 8, comparison compatibility 4, purity/stylesheet 5. Measured-fit leg: 0 hits. Config-census leg: 0 hits. PIXEL-UNVERIFIED stands.
+
+===== OWN-CHECK PACKET =====
+PASS F1 grapheme counts 31,30,47,49,25,22 :: 31,30,47,49,25,22
+PASS F2 basis: narrow cqw basis is the content box (339.84px at 360) :: {"cqwPx":3.3983999999999996,"contentPx":339.84,"padPx":10.08,"selfCqwPx":3.6}
+PASS F3 basis: the stage's own padding token resolves on the full width (10.08px at 360) :: 10.08
+PASS F4 basis: wide mode content box equals full width (padding token is 0px) :: {"cqwPx":19.16,"contentPx":1916,"padPx":0,"selfCqwPx":19.16}
+PASS F5 basis table consequence: supporting rows at 360 render 12.27px on the corrected basis :: 12.268
+PASS F6 supporting at 390 clears on the corrected basis :: 13.291
+PASS F7 title at 360 on the corrected basis is 14.10px (token re-priced at Stage 1: the corrected basis had moved the longest title into the estimate-uncertainty band as a single line) :: 14.103
+PASS F8 narrow inner width on the corrected basis is 314.4px :: 314.4
+PASS F9 narrow stack fits at final tokens :: 159.09<=182.07
+PASS F10 wide stack fits at final tokens :: 51.04<=53.73
+PASS F11 stack fits at 390 too :: 159.09<=182.07
+PASS F12 all chrome surfaces fit at 360/390/1916
+PASS F13 every title prefix fits both modes (text-only charge when no caret is displayed is priced in R section)
+PASS F14 negative control: corrected model does not report the retired full-width figure :: 12.268
+PASS D1 no validation errors (default) :: []
+PASS D2 not frozen
+PASS D3 six cards constructed
+PASS D4 card2 exact prefix at t=0 :: Chief Executive
+PASS D5 card3 hidden at t=0
+PASS D6 header count at t=0 is base + 1 landed (Comments 4) :: Comments 4
+PASS D7 intermediate: card3 shows exactly 10 graphemes :: VP of Thin
+PASS D8 final: full titles displayed
+PASS D10 restart reproduces intermediate state
+PASS D11 reverse seek reproduces opening state :: Chief Executive
+PASS D12 self-start: playing at load on a fresh instance
+PASS D13 self-start: load render shows card2 prefix without external call
+PASS K1 every CONFIG leaf key is referenced outside the CONFIG block :: []
+PASS K2 headLineHeight consumed by post/comments/card header rules :: ["#postHead","#commentsHead",".cardHead"]
+PASS K3 timeWeight consumed by the timestamp rule :: [".when"]
+PASS K4 footWeight consumed by post-footer and card-footer span rules :: ["#postFoot span",".cardFoot span"]
+PASS K5 footLineHeight consumed by post footer and card footer rules :: ["#postFoot",".cardFoot"]
+PASS K6 headLineHeight mutation moves modelled post height + comments-head height :: 169.9->179.7
+PASS K7 footLineHeight mutation moves modelled stack height :: 159.09->176.42
+PASS K8 layout tokens assigned as CSS variables at layout
+PASS K9 negative control: removing the timestamp rule is detected
+PASS K10 negative control: removing the post-footer line-height is detected
+PASS K11 timing key (charMs) mutation moves its card's type end
+PASS K12 content key mutation changes the derived schedule count :: 31->30
+PASS K13 stage max width applied from CONFIG :: 1916px
+PASS K14 banner colours are palette-driven vars
+PASS K15 stylesheet carries no stage max-width literal
+PASS K16 box model: stage border-box in source (both rules)
+PASS K17 retired accounting token has no binding anywhere
+PASS U1 parse px token
+PASS U2 parse composite token per component
+PASS U3 font token 20px models as 20px (not cqw) :: 20
+PASS U4 font token 5% models against its named reference :: 18
+PASS U5 scaled token keeps its unit :: 5px
+PASS U6 title backstop for a 20px title font is denominated in px :: 50px
+PASS U7 title backstop for the cqw title font is denominated in cqw :: 4.625cqw
+PASS U8.0 unsupported/empty unit "3em" fails named :: ["T13_UNIT_UNSUPPORTED:3em"]
+PASS U8.1 unsupported/empty unit "2rem" fails named :: ["T13_UNIT_UNSUPPORTED:2rem"]
+PASS U8.2 unsupported/empty unit "4vw" fails named :: ["T13_UNIT_UNSUPPORTED:4vw"]
+PASS U8.3 unsupported/empty unit "12" fails named :: ["T13_UNIT_UNSUPPORTED:12"]
+PASS U9 restored config validates clean after unit mutations :: []
+PASS U10 hold below landing freezes named :: ["T13_HOLD_LT_LAND:2"]
+PASS U11 landMs=0 invalid named
+PASS U12 finalHoldMs non-finite invalid named
+PASS U13 caretBlinkMs above window invalid named
+PASS U14 NaN beat rate invalid
+PASS U15 null card group: named error, no throw :: ["T13_CONFIG_INVALID"]
+T13_FIT_UNCERTAIN:wide · T13_FIT_UNCERTAIN:narrow
+PASS U16 single oversized word: named freeze, never silent clip :: ["T13_FIT_UNCERTAIN:wide","T13_FIT_UNCERTAIN:narrow"]
+PASS R1 validation covers the supported-width set (360/390/1916 model without error) :: []
+PASS R2 runtime width 500 is modelled at load (narrow, no error) :: []
+PASS R3 runtime width 800 is modelled at load (wide, no error) :: []
+PASS R4 tallest-header: enlarged badge padding raises the modelled header height :: 22.67->35.11
+PASS R5 header height equals the tallest component (avatar at default tokens) :: 22.67
+PASS R6.0 stamp contained + no body-ink/footer overlap at narrow@360 :: {"left":222.41409524421286,"top":98.00868997963804,"right":320.9508007557871,"bottom":139.33610976436196}
+PASS R6.1 stamp contained + no body-ink/footer overlap at narrow@390 :: {"left":240.9535724020821,"top":106.17647189743715,"right":347.6967315979179,"bottom":150.9470611585629}
+PASS R6.2 stamp contained + no body-ink/footer overlap at wide@1916 :: {"left":429.05792434878686,"top":335.2478070675141,"right":669.9512756512131,"bottom":435.022512932486}
+PASS R7 stamp dragged onto body ink fails named (overlap) :: ["T13_STAMP_OVERLAP:narrow"]
+PASS R8 stamp pushed out of the card fails named (containment) :: ["T13_STAMP_CONTAINMENT:narrow"]
+PASS R9 resize path: revalidation at load width is clean
+PASS R10 resize into an unsupported fit surfaces named errors + banner :: ["T13_TITLE_UNSUPPORTED:narrow","T13_TITLE_UNSUPPORTED:caret:narrow","T13_FIT_UNCERTAIN:caret:narrow"]
+PASS W1 canonical sequence collapses CSS whitespace runs to one space :: "Head of  Vibes and Synergy"
+PASS W2 canonical sequence preserves nonbreaking spaces (CSS does not collapse them) :: "Head of  Vibes and Synergy"
+PASS W3 canonical sequence trims leading/trailing collapsible space
+PASS W4 marked range computed on the canonical sequence :: [{"start":5,"end":14}]
+PASS W5 fitting consumes the same canonical sequence :: {"lines":1,"max":180.32999999999998}
+PASS W6 playback graphemes equal the canonical sequence (sequence-equal, not count-equal) :: ["A  B","Two Words","Three"]
+PASS W7 schedule counts derive from the canonical sequence :: 9
+PASS W8 default cards carry the frame-evidenced marked ranges :: [1,1,2,0,2,1]
+PASS T1 ending budget is an independent input (finalHoldMs === 2000) :: 2000
+PASS T2 schedule end is exactly 12000 (independent equality) :: 12000
+PASS T3 accounting exposes the budget as an input, residual 0 :: {"endingBudgetMs":2000,"catalogueWindowMs":12000,"openingOffsetMs":2250,"performanceMs":12000,"residualMs":0,"specimenIdentity":true,"identityHolds":true}
+PASS T4 final card completes typing at 10000 (budget follows from beats, not the reverse) :: 10000
+PASS T5 derived instants match the token derivation :: [[-2250,-2250,-2250],[-2250,-660,660],[1380,1480,3360],[4060,4160,6120],[6820,6940,8140],[8892,9032,10000]]
+PASS T6 longest-line claim sits only on the true longest card (49 graphemes) :: the first of the paired long lines; the pair types at one rate so the two read as one run || the longest line (49 graphemes); paired at the previous line's rate so the two longest lines read as one run
+PASS T7 card3 reason names it the first of the paired long lines :: the first of the paired long lines; the pair types at one rate so the two read as one run
+PASS T8 slowest-per-grapheme claim sits on the slowest card :: typed slowest per grapheme so it lands; the longest intermediate hold is the pause before the final card
+PASS T9 largest intermediate hold claim sits on card5 :: typed slowest per grapheme so it lands; the longest intermediate hold is the pause before the final card
+PASS T10 replacement reasons re-derive: longest claim moves to the replacement argmax :: pre-window card; complete before the window opens || finishing a half-typed line; the remaining graphemes type at a measured pace and its landing hold sets the in-window rhythm; the longest line (36 graphemes) || intermediate card; its rate and hold are priced from the beat tokens || intermediate card; its rate and hold are priced from the beat tokens || typed slowest per grapheme so it lands; the longest intermediate hold is the pause before the final card || final card; its landing hold is the ending beat (finalHoldMs), not a per-card hold
+PASS T11 replacement schedule still ends at its derived total with the same budget input :: 7648
+PASS M1 at t=0 the active card's trailing word carries the fresh gradient span :: ["Executive"]
+PASS M2 at t=0 no card background changes for typing (constant card background) :: #161a21
+PASS M3 mid-typing: only the current word is fresh (card3, 2 graphemes) :: ["VP"]
+PASS M4 settle: the final word stays fresh inside the landing duration :: ["complete"]
+PASS M5 settle complete: no fresh span after the landing duration
+PASS M6 caret is a thin bar: narrow caret width below 0.15 of the title size :: 2.0390399999999995
+PASS M7 caret displayed while typing (frame-evidenced thin bar)
+PASS M8 header count is base + landed at the final state (Comments 9)
+PASS M9 header count increments at a landing (Comments 5 after card2)
+PASS M10 typing begins before the entrance fade completes (overlap token consumed) :: [1380,1480]
+PASS M11 entrance fade is a t-function: mid-entrance opacity strictly between 0 and 1
+PASS M12 retired tint/landing colour tokens have no binding anywhere
+T13_STACK_OVERFLOW:wide
+T13_STACK_OVERFLOW:wide · T13_STACK_OVERFLOW:narrow
+PASS S1 counts 1-8: positive totals, strictly sequential
+T13_FIT_UNCERTAIN:wide · T13_TITLE_UNSUPPORTED:narrow · T13_TITLE_UNSUPPORTED:caret:narrow · T13_FIT_UNCERTAIN:caret:narrow
+PASS S2 overlong title freezes with zero cards + banner
+PASS S3 swap: valid, sequential, all type fully
+PASS S4 fallback clusters preserved
+PASS S5 shorthand accent rejected + recorded, default kept :: [{"key":"accent","outcome":"rejected-discarded","value":"#fff"}]
+T13_STACK_OVERFLOW:wide
+PASS S6 rate override reaches added beats (7 titles) :: [25,25,25,25,25,25,25]
+PASS S7 gap 0 lawful
+PASS S8 trailing-junk rate discarded + recorded
+PASS X1 comparison handle is 500ms
+PASS X2 comparison slaves recreation to video minus handle
+PASS X3 recreation end maps inside the segment (500 + 12000 <= 13000)
+PASS X4 interface names unchanged
+PASS P1 purity grep 0 hits (feet.png is subject text only) :: []
+PASS P2 no CSS transition/animation properties
+PASS P3 source comments carry no scoring labels
+PASS P4 stylesheet parse: every declaration parses with sane property/value :: []
+PASS P5 stylesheet parse prices the four re-priced consumer rules
+=== TOTAL: 122 PASS, 0 FAIL ===
+# T13 attempt 5 — measured-fit leg (guard-measured-fit form)
+
+Source bound: `recreation-attempt-5-frozen.html` sha256 `2712dc5ed115a1a34c4817d64d155c89b4b7cb6b4559ff71d611e17dc6f5389d`.
+Method: source-bound displayed-state model (the build's own geometry model, run at Execute in the instrument environment, ESTIMATE path). PIXEL-UNVERIFIED: no render route exists in this seat; rows are modelled measurements from the source's tokens, not rendered pixels — printed as the leg's scope limit, not as rendered evidence.
+
+## Unit basis (model basis = render basis)
+
+| Unit as used | Basis box | Rendered consequence |
+|---|---|---|
+| descendant `cqw` (all card/post/comments geometry) | stage content box | 1cqw = 3.3984px at 360px stage width; 3.6816px at 390px; 19.16px at 1916px |
+| stage's own padding `cqw` | full stage width (no ancestor query container) | pad 10.08px/side at 360px; 10.92px at 390px; wide stage padding token is 0 |
+| `%` position tokens (stamp top/right) | post-card padding box | stamp top 62% narrow / 70% wide of the modelled post height |
+| `px` tokens | absolute | unchanged at every width |
+
+## Rows — narrow @360px (card inner 314.4px, post inner 317.4px)
+
+| Element | Container bound | Modelled width / state | Margin | Verdict |
+|---|---|---|---|---|
+| Title card 1 (31 gr) | 314.4 | 219.5 max line, 1 line; worst caret-right 220.6 | 93.8 | fits |
+| Title card 2 (30 gr) | 314.4 | 203.7, 1 line; caret-right 204.7 | 109.7 | fits |
+| Title card 3 (47 gr) | 314.4 | 276.9, 2 lines; caret-right worst 318.5 is a lawful wrap state (caret wraps within the 2-line bound); no overflow prefix | — | fits |
+| Title card 4 (49 gr) | 314.4 | 278.4, 2 lines; caret-right worst 311.2 | 3.2 | fits |
+| Title card 5 (25 gr) | 314.4 | 180.9, 1 line; caret-right 181.9 | 132.5 | fits |
+| Title card 6 (22 gr) | 314.4 | 140.7, 1 line; caret-right 141.7 | 172.7 | fits |
+| Every grapheme prefix, all cards | 314.4 | prefix lines ≤2, no prefix overflow, no prefix uncertainty | — | fits |
+| Card header rows ×6 | 314.4 | 192.6 max | 121.8 | fits |
+| Post header row | 317.4 | 199.2 | 118.2 | fits |
+| Comments header row (worst-case count label) | 339.8 (column) | 154.4 | 185.4 | fits |
+| Card footer | 314.4 | 48.5 | 265.9 | fits |
+| Post footer (all actions jointly) | 317.4 | 145.8 | 171.6 | fits |
+| Stamp (rotated bounds) | post card 317.4 wide, 169.9 high | 98.5 wide; contained; no body-ink overlap; no footer overlap | — | fits |
+| Avatar initials ×6 | disc allowance | 15.2 each, all fit | — | fits |
+| Post body | 317.4 | 4 lines, max line 309.1 | 8.3 | fits |
+| Stack height | 182.1 cqw available | 159.1 cqw | 23.0 cqw | fits |
+| Supporting type floor | 12px floor (configured) | smallest supporting row 12.27px | +0.27 | clears strictly |
+
+## Rows — narrow @390px (card inner 340.6px, post inner 343.9px)
+
+| Element | Modelled | Verdict |
+|---|---|---|
+| Titles ×6 | max lines 237.7 / 220.6 / 299.9 / 301.5 / 195.8 / 152.3; lines 1/1/2/2/1/1; caret-right worst 345.0 is a lawful wrap state on card 3; no overflow prefix | fits |
+| Card header rows ×6 | 208.7 max | fits |
+| Post header / comments header / card foot / post foot | 215.8 / 167.2 / 52.5 / 158.0 | fits |
+| Stamp (rotated bounds) | 106.7 wide; contained; no body-ink or footer overlap | fits |
+| Post body | 4 lines, max line 334.7 of 343.9 | fits |
+| Stack height | 159.1 ≤ 182.1 cqw | fits |
+| Supporting type | smallest 13.29px | clears |
+
+## Rows — wide @1916px (card inner 1064.3px, post inner 639.9px)
+
+| Element | Modelled | Verdict |
+|---|---|---|
+| Titles ×6 | 1 line each; max lines 549.4 / 509.7 / 855.7 / 797.2 / 452.3 / 351.3; caret-right worst ≤860.3 | fits |
+| Card header rows ×6 | 366.0 max | fits |
+| Post header / comments header / card foot / post foot / stamp | 477.5 / 373.5 / 110.9 / 375.5 / 240.9 (rotated, contained, no body-ink or footer overlap) | fits |
+| Post body | 5 lines, max line 636.8 of 639.9 | fits |
+| Stack height | 51.0 ≤ 53.7 cqw | fits |
+| Supporting type | smallest 18.20px | clears |
+
+## HIT list
+
+**HITS: 0** — every modelled row fits its bound on the corrected unit basis at 360px, 390px and 1916px, on the frozen attempt-5 source. PIXEL-UNVERIFIED stands: these are modelled measurements, not rendered pixels.
+# T13 attempt 5 — config-census leg (guard-config-census form)
+
+Source bound: `recreation-attempt-5-frozen.html` sha256 `2712dc5ed115a1a34c4817d64d155c89b4b7cb6b4559ff71d611e17dc6f5389d`.
+Instrument: `t13-verify-attempt5.js` — 122 PASS, 0 FAIL on the frozen source; the consumption section (K) carries 17 checks including two negative controls.
+
+## 1. Consumption by key type (displayed-effect criterion)
+
+A key counts as consumed only when changing it changes a displayed state — a rendered style, a modelled geometry value the validation binds, or a derived schedule instant. Checks are typed by the kind of key:
+
+| Key type | Test form | Result |
+|---|---|---|
+| Layout geometry tokens (both modes) | assigned as CSS variables at layout; model reads the same tokens (dual consumption) | consumed |
+| Line-height / weight tokens (head, foot, time, card foot) | stylesheet rules reference the variables (5 rules priced); removing the timestamp rule or the post-footer line-height rule is detected by negative controls K9/K10 | consumed, controls live |
+| Timing keys (beats, charMs, finalHoldMs, entranceOverlapMs) | exempt from the computed-style test by type; consumed by the schedule derivation — mutating charMs moves its card's type end (K11); the ending budget is an independent input and the schedule end is an independent equality (12000) | consumed |
+| Content keys (card texts, highlights, prefix) | exempt from the computed-style test by type; mutating a card text changes the derived schedule count (K12: 31 → 30) and the fitted title set; highlights drive modelled mark ranges and rendered mark spans | consumed |
+| Palette keys | inline styles and CSS variables at build/layout (card surface, accent, banner, caret, fresh-gradient stop) | consumed |
+| Every CONFIG leaf key | walked mechanically (K1): **unconsumed keys: 0** | — |
+
+## 2. All-literal scan (outside the CONFIG block)
+
+- Colours outside CONFIG: stylesheet carries `#000` (page backdrop outside the stage surface — structural) and `#ffffff` inside the fresh-gradient rule (the gradient's fixed light stop; the dark stop is the accent variable). No other colour literal stands in the stylesheet or script.
+- Durations outside CONFIG: none — every duration is a beat value, a configured token, or derived from them.
+- Geometry outside CONFIG: the stylesheet's `100%` (stage width), `50%` (avatar roundness), z-index `9`, flex `0 0 auto`, and the gradient's `180deg`/`20%` stops (a fixed two-stop gradient identity) — structural, classified here.
+- Retired colour-interpolation tokens have no binding anywhere in the source (suite M12 asserts absence); the interpolation helpers were removed with them.
+- Numeric constants in script, classified: channel/bit arithmetic removed with the interpolation helpers · 100 (cqw basis) · 180/360 (gradient/hue identities) · loop indices and 0/1/2/3 arithmetic identities · grapheme script threshold 0x2E80 (estimate-table class boundary, a property of Unicode) · policy constants named in place (estimate acceptance band 0.9, avatar disc allowance 0.92, per-line epsilon 1px, override acceptance bounds).
+
+## 3. CSS-variable setter check
+
+`applyLayout()` assigns every key of the active mode's layout set as a CSS variable, plus the palette banner colours, the accent (fresh-gradient stop) and the derived stack-gap / title-max-height variables. No variable is referenced by the stylesheet without a setter: **setter gaps: 0**.
+
+## 4. Displayed-state census
+
+Displayed states are functions of the schedule and the configuration only: card visibility/opacity from appear instants, typed grapheme counts from type instants, the frontier gradient from the typed count and the landing window, the caret from the typing state and blink phase, the comments count label from the number of landed cards, the stamp and chrome from layout tokens. The suite's displayed-state section (D, 12 checks) binds each to its source quantity, including restart reproduction and self-start.
+
+## HIT list
+
+**HITS: 0** — no subject-shaping literal stands outside CONFIG unclassified, no CONFIG key is unapplied under the displayed-effect criterion, and no CSS variable lacks a setter, on the frozen attempt-5 source.

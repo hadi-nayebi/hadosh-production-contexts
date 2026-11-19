@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T13 — Typing comment stack (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#000;}
+  body{display:flex;align-items:flex-start;justify-content:center;}
+  #stage{position:relative;width:100%;overflow:hidden;container-type:inline-size;box-sizing:border-box;}
+  #stage.narrow{display:flex;flex-direction:column;padding:var(--stagePad);box-sizing:border-box;}
+  #postCol{position:absolute;left:var(--postLeft);top:var(--postTop);width:var(--postWidth);}
+  #stage.narrow #postCol{position:static;width:100%;margin-bottom:var(--postGap);}
+  #postCard{position:relative;border-radius:var(--postRadius);padding:var(--postPadY) var(--postPadX);box-shadow:0 var(--postShadowY) var(--postShadowBlur) var(--postShadowColor);}
+  #postHead{display:flex;align-items:center;gap:var(--headGap);font-size:var(--postHeadFont);font-weight:var(--headWeight);}
+  #postHead .handle{font-weight:var(--handleWeight);opacity:var(--postHandleOpacity);}
+  #postHead .x{margin-left:auto;font-weight:var(--closeWeight);font-size:var(--postHeadFont);}
+  #postBody{margin-top:var(--bodyMargin);font-size:var(--postBodyFont);line-height:var(--postBodyLineHeight);font-weight:var(--bodyWeight);}
+  mark{padding:var(--markPadY) var(--markPadX);border-radius:var(--markRadius);}
+  #stamp{position:absolute;right:var(--stampRight);top:var(--stampTop);border:var(--stampBorder) solid;border-radius:var(--stampRadius);padding:var(--stampPadY) var(--stampPadX);font-size:var(--stampFont);font-weight:var(--stampWeight);letter-spacing:var(--stampLetterSpacing);transform:rotate(var(--stampRotate));opacity:var(--stampOpacity);}
+  #postFoot{margin-top:var(--footMargin);font-size:var(--postFootFont);display:flex;gap:var(--footGap);align-items:center;}
+  #commentsCol{position:absolute;left:var(--commentsLeft);right:var(--commentsRight);top:var(--commentsTop);bottom:var(--commentsBottom);display:flex;flex-direction:column;}
+  #stage.narrow #commentsCol{position:static;width:100%;}
+  #commentsHead{display:flex;align-items:baseline;font-size:var(--commentsHeadFont);font-weight:var(--headWeight);margin-bottom:var(--commentsHeadMargin);}
+  #commentsHead .sort{margin-left:auto;font-size:var(--sortFont);font-weight:var(--sortWeight);opacity:var(--sortOpacity);}
+  #stack{display:flex;flex-direction:column;}
+  .card{border-radius:var(--cardRadius);padding:var(--cardPadY) var(--cardPadX);box-sizing:border-box;overflow:hidden;border-left-style:solid;}
+  .cardHead{display:flex;align-items:center;gap:var(--headGap);font-size:var(--cardHeadFont);}
+  .avatar{flex:0 0 auto;width:var(--avatarSize);height:var(--avatarSize);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--avatarFont);font-weight:var(--avatarWeight);}
+  .cHandle{font-weight:var(--headWeight);}
+  .badge{border-radius:var(--badgeRadius);padding:var(--badgePadY) var(--badgePadX);font-size:var(--badgeFont);font-weight:var(--badgeWeight);}
+  .cardTitle{margin-top:var(--titleMargin);font-size:var(--titleFont);line-height:var(--titleLineHeight);font-weight:var(--titleWeight);overflow-wrap:break-word;max-height:var(--titleMaxH);}
+  .caret{display:inline-block;width:var(--caretWidth);height:var(--caretHeight);margin-left:var(--caretMarginLeft);vertical-align:var(--caretValign);}
+  .cardFoot{margin-top:var(--footMargin);font-size:var(--cardFootFont);line-height:var(--footLineHeight);display:flex;gap:var(--cardFootGap);}
+  #validationBanner{display:none;position:absolute;left:var(--bannerLeft);top:var(--bannerTop);z-index:9;background:var(--bannerBg);color:var(--bannerInk);font-size:var(--bannerFont);padding:var(--bannerPad);border-radius:var(--bannerRadius);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="validationBanner"></div>
+  <div id="postCol"><div id="postCard">
+    <div id="postHead"><span id="postAuthor"></span><span class="handle" id="postHandle"></span><span class="x" id="postClose"></span></div>
+    <div id="postBody"></div>
+    <div id="stamp"></div>
+    <div id="postFoot"></div>
+  </div></div>
+  <div id="commentsCol">
+    <div id="commentsHead"><span id="commentsTitle"></span><span class="sort" id="sortLabel"></span></div>
+    <div id="stack"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* T13 — Typing comment stack. ALL content/timing/palette/geometry from CONFIG.
+   Construction: DOM post card (static anchor) + comment cards stacking downward.
+   Opening state: the performance window opens mid-sequence — card 1 is already
+   complete and card 2 already shows the configured initial prefix at t=0.
+   Schedule: strictly sequential, derived from the per-card beat table.
+   Rendering is a pure function of performance time t (ms): entrance progress,
+   landing colour interpolation and caret phase are all computed from t in
+   render(t); the file contains no CSS transition and no CSS animation, so a
+   sampled state at time t fully determines the displayed state, across
+   restart and reverse seeking alike.
+   Fitting: titles and chrome rows are fitted by runtime canvas measurement
+   when a canvas 2d context is available; otherwise a per-character-class
+   ESTIMATE table is used. The estimate is NOT a measurement and carries NO
+   upper-bound guarantee: on the estimate path an element is accepted only
+   when its estimated width is at most 90% of its available bound; inside
+   the top band the fit is rejected as uncertain (fail-closed).
+   Invalid-input policy (the only one): a malformed or out-of-range URL
+   override value is DISCARDED before effective-config validation and
+   recorded in window.T13.overrideOutcomes; it never freezes playback.
+   Playback freezes only when the EFFECTIVE config fails a named validation
+   check (window.T13.validationErrors).
+   Grapheme support boundary: the no-Intl.Segmenter fallback preserves base +
+   combining marks (Mn/Me/Mc), variation selectors, emoji modifiers, ZWJ
+   sequences, regional-indicator pairs and keycap sequences as one cluster.
+   Clusters requiring full UAX #29 extended rules beyond those classes
+   (e.g. Indic conjunct stacks beyond Mc/Mn attachment) are outside the
+   named boundary and are not claimed.
+   URL overrides (swap test): ?titles=A|B|C  ?charMs=N  ?accent=HEX
+   ?cardBg=HEX  ?gapCqw=N (unit: cqw; 0 is a lawful value) */
+const CONFIG = {
+  opening: {
+    offsetMs: 2250,
+    prefixGraphemes: 15,
+    firstCardLanded: true,
+    secondCardPrefix: "Chief Executive"
+  },
+  finalHoldMs: 1972,
+  landMs: 120,
+  caretBlinkMs: 1000,
+  caretDuty: 0.55,
+  estimateEm: { narrow: 0.30, wide: 0.92, cjk: 1.0, upperDigit: 0.62, base: 0.55 },
+  phoneMinSupportingPx: 12,
+  stageMaxWidthPx: 1916,
+  addedCardBeat: { appearMs: 170, charMs: 38 },
+  maxCards: 8,
+  maxTitleLines: 2,
+  narrowBreakpointPx: 640,
+  narrowStageAspect: [360, 820],
+  wideStageAspect: [1916, 1078],
+  catalogueWindowMs: 12000,
+  intermediateHoldMs: 460,
+  post: {
+    author: "aditazzz",
+    handle: "@aditazzz · 10/27/26",
+    closeMark: "✕",
+    bodyBefore: "Currently upskilling to transition to a ",
+    bodyHighlight: "Principal Slopcore Architect",
+    bodyAfter: " role. Trying to stay ahead of the curve. Follow along and support my professional development.",
+    stampText: "RECEIPT",
+    actions: ["↩", "🔁", "♥ 5", "📊 169", "🔖", "↗"]
+  },
+  commentsTitle: "Comments 4",
+  sortLabel: "Sort by: Top",
+  cardFooter: { mark: "♡", label: "Reply" },
+  cards: [
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 340,
+      text: "I'm a Senior Slopcore Architect", highlight: "Slopcore" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 200,
+      text: "Chief Executive of What's Next", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 265,
+      text: "VP of Things That Look Complete - 100% complete", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 150,
+      text: "Director of the Missing Feet - feet.png not found", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 25,
+      text: "Head of Vibes and Synergy", highlight: "" },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 300,
+      text: "Chief of Artificial Me", highlight: "" }
+  ],
+  beats: [
+    { appearMs: 160, charMs: 33, holdAfterMs: 367, reason: "pre-window card; complete before the window opens" },
+    { appearMs: 160, charMs: 44, holdAfterMs: 640, reason: "finishing a half-typed line; the remaining graphemes type at a measured pace and its landing hold sets the in-window rhythm" },
+    { appearMs: 180, charMs: 40, holdAfterMs: 620, reason: "longest setup line; a steady rate keeps the gag moving" },
+    { appearMs: 180, charMs: 40, holdAfterMs: 620, reason: "paired with the previous long line at the same rate so the two longest lines read as one run" },
+    { appearMs: 200, charMs: 48, holdAfterMs: 700, reason: "short punch line typed slowest per grapheme so it lands; the longest intermediate hold is the pause before the final card" },
+    { appearMs: 220, charMs: 44, holdAfterMs: 0, reason: "final card; its landing hold is the ending beat (finalHoldMs), not a per-card hold" }
+  ],
+  cardTemplate: { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 210, highlight: "" },
+  layout: {
+    wide: {
+      postLeft: "1.2%", postTop: "16%", postWidth: "37%",
+      commentsLeft: "40.5%", commentsRight: "1.2%", commentsTop: "2.5%", commentsBottom: "2%",
+      postRadius: "1cqw", postPadY: "1.6cqw", postPadX: "1.8cqw",
+      postHeadFont: "1.55cqw", postBodyFont: "1.95cqw", postFootFont: "1.5cqw", stampFont: "2cqw",
+      commentsHeadFont: "1.9cqw", sortFont: "1.45cqw", commentsHeadMargin: "1cqw",
+      cardRadius: "0.9cqw", cardPadY: "0.55cqw", cardPadX: "1.2cqw", cardBorderCqw: 0.35,
+      headGap: "0.65cqw", avatarSize: "2.1cqw", avatarFont: "0.95cqw",
+      cardHeadFont: "1.25cqw", badgeFont: "1.1cqw",
+      titleFont: "1.85cqw", titleMargin: "0.25cqw",
+      cardFootFont: "1.15cqw", footMargin: "0.15cqw", footGap: "1.6cqw", bodyMargin: "1cqw",
+      stackGapCqw: 0.8, stagePad: "0px", postGap: "0px",
+      stampRight: "6%", stampTop: "44%", stampBorder: "0.32cqw", stampRadius: "0.5cqw",
+      stampPadY: "0.15cqw", stampPadX: "0.9cqw", stampLetterSpacing: "0.18cqw", stampRotate: "-9deg", stampOpacity: "0.92",
+      postShadowY: "0.4cqw", postShadowBlur: "1.6cqw", postShadowColor: "rgba(0,0,0,.55)",
+      markPadY: "0px", markPadX: "0.25cqw", markRadius: "0.2cqw",
+      badgeRadius: "1cqw", badgePadY: "0.08cqw", badgePadX: "0.7cqw",
+      caretWidth: "0.5cqw", caretHeight: "1.85cqw", caretMarginLeft: "0.15cqw", caretValign: "-0.3cqw",
+      entranceDy: "1.2cqw", cardFootGap: "2.2cqw",
+      bannerLeft: "2%", bannerTop: "2%", bannerFont: "14px", bannerPad: "8px 12px", bannerRadius: "6px",
+      postHandleOpacity: "0.75", sortOpacity: "0.85",
+      titleLineHeight: 1.25, postBodyLineHeight: 1.32, headLineHeight: 1.2, footLineHeight: 1.2,
+      titleWeight: 700, bodyWeight: 600, headWeight: 700, handleWeight: 500, closeWeight: 400,
+      timeWeight: 400, sortWeight: 500, footWeight: 400, stampWeight: 800, avatarWeight: 800, badgeWeight: 700
+    },
+    narrow: {
+      postLeft: "0px", postTop: "0px", postWidth: "100%",
+      commentsLeft: "0px", commentsRight: "0px", commentsTop: "0px", commentsBottom: "0px",
+      postRadius: "2.5cqw", postPadY: "2.8cqw", postPadX: "3.3cqw",
+      postHeadFont: "3.4cqw", postBodyFont: "4cqw", postFootFont: "3.34cqw", stampFont: "4.5cqw",
+      commentsHeadFont: "4.2cqw", sortFont: "3.34cqw", commentsHeadMargin: "2.2cqw",
+      cardRadius: "2.5cqw", cardPadY: "1.94cqw", cardPadX: "3.33cqw", cardBorderCqw: 0.83,
+      headGap: "1.8cqw", avatarSize: "6.67cqw", avatarFont: "3.34cqw",
+      cardHeadFont: "3.34cqw", badgeFont: "3.34cqw",
+      titleFont: "3.89cqw", titleMargin: "0.83cqw",
+      cardFootFont: "3.34cqw", footMargin: "0.83cqw", footGap: "3cqw", bodyMargin: "1.7cqw",
+      stackGapCqw: 2.22, stagePad: "2.8cqw", postGap: "3.3cqw",
+      stampRight: "6%", stampTop: "44%", stampBorder: "0.83cqw", stampRadius: "1.2cqw",
+      stampPadY: "0.4cqw", stampPadX: "2.2cqw", stampLetterSpacing: "0.42cqw", stampRotate: "-9deg", stampOpacity: "0.92",
+      postShadowY: "1cqw", postShadowBlur: "4cqw", postShadowColor: "rgba(0,0,0,.55)",
+      markPadY: "0px", markPadX: "0.6cqw", markRadius: "0.5cqw",
+      badgeRadius: "2.5cqw", badgePadY: "0.2cqw", badgePadX: "1.8cqw",
+      caretWidth: "0.7cqw", caretHeight: "3.89cqw", caretMarginLeft: "0.4cqw", caretValign: "-0.7cqw",
+      entranceDy: "2.8cqw", cardFootGap: "3cqw",
+      bannerLeft: "2%", bannerTop: "2%", bannerFont: "14px", bannerPad: "8px 12px", bannerRadius: "6px",
+      postHandleOpacity: "0.75", sortOpacity: "0.85",
+      titleLineHeight: 1.25, postBodyLineHeight: 1.32, headLineHeight: 1.2, footLineHeight: 1.2,
+      titleWeight: 700, bodyWeight: 600, headWeight: 700, handleWeight: 500, closeWeight: 400,
+      timeWeight: 400, sortWeight: 500, footWeight: 400, stampWeight: 800, avatarWeight: 800, badgeWeight: 700
+    }
+  },
+  palette: {
+    bg: "#050607",
+    postBg: "#ffffff",
+    postInk: "#101216",
+    cardBg: "#161a21",
+    cardBgTyping: "#22344e",
+    cardBgLanded: "#1e2a24",
+    cardBorderLanded: "#4caf7d",
+    cardInk: "#eef1f5",
+    accent: "#5b8def",
+    badgeBg: "#2456a6",
+    badgeInk: "#ffffff",
+    avatarInk: "#ffffff",
+    avatarSat: 65, avatarLightA: 55, avatarLightB: 38, avatarHueSpan: 60,
+    highlightBg: "#ffd83d",
+    highlightInk: "#101216",
+    stampInk: "#d43a2f",
+    caret: "#eef1f5",
+    bannerBg: "#7a1020",
+    bannerInk: "#ffffff"
+  },
+  fontFamily: '"Segoe UI", system-ui, -apple-system, Arial, sans-serif'
+};
+
+const OVERRIDE_OUTCOMES = [];
+let SPECIMEN_CONFIG = true;
+function parseStrictNum(raw){
+  if (raw === null || raw === undefined) return null;
+  const s = String(raw).trim();
+  if (s === "") return null;
+  const v = Number(s);
+  return isFinite(v) ? v : null;
+}
+function segmentGraphemes(text){
+  if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+    const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    return Array.from(seg.segment(text), function(s){ return s.segment; });
+  }
+  return segmentClustersFallback(text);
+}
+function segmentClustersFallback(text){
+  const cps = Array.from(text);
+  const clusters = [];
+  let cur = null;
+  function isAttach(cp){
+    return /[\p{Mn}\p{Me}\p{Mc}]|[\uFE00-\uFE0F]|[\u{1F3FB}-\u{1F3FF}]|\u20E3/u.test(cp);
+  }
+  function isRI(cp){ const n = cp.codePointAt(0); return n >= 0x1F1E6 && n <= 0x1F1FF; }
+  for (let i = 0; i < cps.length; i++) {
+    const cp = cps[i];
+    if (cur === null) { cur = cp; continue; }
+    if (isAttach(cp)) { cur += cp; continue; }
+    if (cp === "\u200D") { cur += cp; if (i + 1 < cps.length) { cur += cps[i + 1]; i++; } continue; }
+    if (isRI(cp)) {
+      const prev = Array.from(cur);
+      if (prev.length === 1 && isRI(prev[0])) { cur += cp; continue; }
+    }
+    clusters.push(cur); cur = cp;
+  }
+  if (cur !== null) clusters.push(cur);
+  return clusters;
+}
+function graphemeRangeOf(haystack, needle){
+  if (!needle) return null;
+  const h = segmentGraphemes(haystack), n = segmentGraphemes(needle);
+  for (let i = 0; i + n.length <= h.length; i++) {
+    let ok = true;
+    for (let j = 0; j < n.length; j++) if (h[i + j] !== n[j]) { ok = false; break; }
+    if (ok) return { start: i, end: i + n.length };
+  }
+  return null;
+}
+function normalizeBeats(){
+  const origLen = CONFIG.beats.length;
+  while (CONFIG.beats.length < CONFIG.cards.length) {
+    const isFinal = CONFIG.beats.length === CONFIG.cards.length - 1;
+    CONFIG.beats.push({ appearMs: CONFIG.addedCardBeat.appearMs, charMs: CONFIG.addedCardBeat.charMs, holdAfterMs: isFinal ? 0 : CONFIG.intermediateHoldMs,
+      reason: isFinal ? "added card: true final card; its landing hold is the priced ending beat (finalHoldMs)"
+                      : "added card: intermediate landing hold priced from the intermediate-hold token" });
+  }
+  if (CONFIG.cards.length > origLen && CONFIG.beats[CONFIG.cards.length - 1]) {
+    CONFIG.beats[CONFIG.cards.length - 1].holdAfterMs = 0;
+  }
+  CONFIG.beats.forEach(function(b, i){
+    if (i < CONFIG.cards.length - 1 && !(b.holdAfterMs > 0)) b.holdAfterMs = CONFIG.intermediateHoldMs;
+  });
+}
+function isHexColor(v){ return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v); }
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("titles")) {
+    SPECIMEN_CONFIG = false;
+    const ts = q.get("titles").split("|");
+    CONFIG.cards = ts.map(function(t){
+      return Object.assign({}, CONFIG.cardTemplate, { text: t });
+    });
+    if (CONFIG.cards.length >= 2) {
+      CONFIG.opening.secondCardPrefix = segmentGraphemes(CONFIG.cards[1].text).slice(0, CONFIG.opening.prefixGraphemes).join("");
+    }
+  }
+  normalizeBeats();
+  if (q.get("charMs") !== null) {
+    const v = parseStrictNum(q.get("charMs"));
+    if (v !== null && v > 0 && v <= 1000) { SPECIMEN_CONFIG = false; CONFIG.beats.forEach(function(b){ b.charMs = v; }); }
+    else OVERRIDE_OUTCOMES.push({ key: "charMs", outcome: "rejected-discarded", value: q.get("charMs") });
+  }
+  if (q.get("accent")) {
+    if (isHexColor(q.get("accent"))) { SPECIMEN_CONFIG = false; CONFIG.palette.accent = q.get("accent"); }
+    else OVERRIDE_OUTCOMES.push({ key: "accent", outcome: "rejected-discarded", value: q.get("accent") });
+  }
+  if (q.get("cardBg")) {
+    if (isHexColor(q.get("cardBg"))) { SPECIMEN_CONFIG = false; CONFIG.palette.cardBg = q.get("cardBg"); }
+    else OVERRIDE_OUTCOMES.push({ key: "cardBg", outcome: "rejected-discarded", value: q.get("cardBg") });
+  }
+  if (q.has("gapCqw")) {
+    const v = parseStrictNum(q.get("gapCqw"));
+    if (v !== null && v >= 0 && v <= 20) { CONFIG.layout.wide.stackGapCqw = v; CONFIG.layout.narrow.stackGapCqw = v; }
+    else OVERRIDE_OUTCOMES.push({ key: "gapCqw", outcome: "rejected-discarded", value: q.get("gapCqw") });
+  }
+})();
+
+/* --- Fitting: canvas measurement when available, ESTIMATE table otherwise --- */
+let FIT_PATH = "estimate";
+let FONT_UNCERTAIN = false;
+let _ctx = null;
+try {
+  if (typeof document !== "undefined" && document.createElement) {
+    const cv = document.createElement("canvas");
+    if (cv && typeof cv.getContext === "function") { _ctx = cv.getContext("2d"); if (_ctx) FIT_PATH = "canvas"; }
+  }
+} catch (e) { _ctx = null; FIT_PATH = "estimate"; }
+function estimateCharEm(ch){
+  const E = CONFIG.estimateEm;
+  if ("iljtf.,:;'!| ".indexOf(ch) >= 0) return E.narrow;
+  if ("mwMW@#%".indexOf(ch) >= 0) return E.wide;
+  const n = ch.codePointAt(0);
+  if (n >= 0x2E80) return E.cjk;
+  if (/[A-Z0-9]/.test(ch)) return E.upperDigit;
+  return E.base;
+}
+function estimateWidthPx(text, sizePx){
+  let em = 0;
+  Array.from(text).forEach(function(ch){ em += estimateCharEm(ch); });
+  return em * sizePx;
+}
+function fontLoaded(fontStr){
+  try {
+    if (typeof document !== "undefined" && document.fonts && typeof document.fonts.check === "function") {
+      return document.fonts.check(fontStr);
+    }
+  } catch (e) { return true; }
+  return true;
+}
+function measureWidthPx(text, weight, sizePx, letterSpacingPx){
+  const fontStr = weight + " " + sizePx + "px " + CONFIG.fontFamily;
+  let w;
+  if (FIT_PATH === "canvas" && _ctx) {
+    if (!fontLoaded(fontStr)) FONT_UNCERTAIN = true;
+    _ctx.font = fontStr;
+    w = _ctx.measureText(text).width;
+  } else {
+    w = estimateWidthPx(text, sizePx);
+  }
+  const g = segmentGraphemes(text).length;
+  if (letterSpacingPx && g > 1) w += letterSpacingPx * (g - 1);
+  return Math.ceil(w * 100) / 100;
+}
+/* Wrap simulation: CSS white-space normal collapsing + overflow-wrap
+   break-word long-word breaking. Mark padding charged per occupied fragment. */
+function fitLines(text, availPx, weight, sizePx, markRange, markPadPx){
+  const norm = String(text).replace(/\s+/g, " ").replace(/^ | $/g, "");
+  const words = norm === "" ? [] : norm.split(" ");
+  const graphemes = segmentGraphemes(norm);
+  let gi = 0;
+  const wordInfos = words.map(function(wd){
+    const g = segmentGraphemes(wd);
+    const info = { text: wd, width: measureWidthPx(wd, weight, sizePx, 0), start: gi, end: gi + g.length, gcount: g.length };
+    gi += g.length + 1;
+    return info;
+  });
+  const spaceW = measureWidthPx(" ", weight, sizePx, 0);
+  const effAvail = availPx - 1;
+  let lines = 1, curW = 0, curMark = false;
+  const lineWidths = [];
+  function markOn(a, b){ return !!(markRange && b > markRange.start && a < markRange.end); }
+  function markCharge(){ return curMark ? 2 * markPadPx : 0; }
+  function closeLine(){ lineWidths.push(curW + markCharge() + 1); lines = lineWidths.length; curW = 0; curMark = false; }
+  wordInfos.forEach(function(wd, wi){
+    const wdMark = markOn(wd.start, wd.end);
+    const sep = (curW > 0) ? spaceW : 0;
+    const prospective = curW + sep + wd.width + ((curMark || wdMark) ? 2 * markPadPx : 0) - markCharge();
+    if (curW > 0 && prospective > effAvail && wd.width + (wdMark ? 2 * markPadPx : 0) <= effAvail) { closeLine(); }
+    if (wd.width > effAvail) {
+      if (curW > 0) closeLine();
+      const gs = segmentGraphemes(wd.text);
+      gs.forEach(function(gch, k){
+        const gw = measureWidthPx(gch, weight, sizePx, 0);
+        const gMark = markOn(wd.start + k, wd.start + k + 1);
+        if (curW > 0 && curW + gw + ((curMark || gMark) ? 2 * markPadPx : 0) - markCharge() > effAvail) closeLine();
+        curW += gw;
+        if (gMark) curMark = true;
+      });
+    } else {
+      curW += ((curW > 0) ? spaceW : 0) + wd.width;
+      if (wdMark) curMark = true;
+    }
+    if (wi === wordInfos.length - 1) lineWidths.push(curW + markCharge() + 1);
+  });
+  if (!wordInfos.length) lineWidths.push(0);
+  const maxW = Math.max.apply(null, lineWidths);
+  const lastW = lineWidths.length ? lineWidths[lineWidths.length - 1] - 1 : 0;
+  const uncertain = (FIT_PATH === "estimate" || FONT_UNCERTAIN) && maxW > 0.9 * availPx;
+  return { lines: lineWidths.length, maxWidthPx: maxW, lastLineWidthPx: lastW, uncertain: uncertain, path: FIT_PATH };
+}
+function normalizeWs(s){ return String(s).replace(/\s+/g, " ").replace(/^ | $/g, ""); }
+function markRangeFor(text, highlight){
+  if (!highlight) return null;
+  return graphemeRangeOf(normalizeWs(text), normalizeWs(highlight));
+}
+function parseUnitToken(token){
+  if (typeof token === "number") return { value: token, unit: "cqw" };
+  const parts = String(token).trim().split(/\s+/).map(function(p){
+    const mm = p.match(/^(-?[\d.]+)([a-z%]*)$/);
+    return mm ? { value: parseFloat(mm[1]), unit: mm[2] || "" } : { value: 0, unit: "" };
+  });
+  return parts.length === 1 ? parts[0] : { components: parts };
+}
+function lenPx(token, cqwPx, refPx){
+  const t = parseUnitToken(token);
+  const one = function(c){
+    if (c.unit === "cqw") return c.value * cqwPx;
+    if (c.unit === "px" || c.unit === "") return c.value;
+    if (c.unit === "%") return c.value * (refPx || 0) / 100;
+    return c.value;
+  };
+  return t.components ? one(t.components[0]) : one(t);
+}
+function cqwOf(token){ const t = parseUnitToken(token); return t.components ? t.components[0].value : t.value; }
+function scaledToken(token, factor){
+  const t = parseUnitToken(token);
+  if (t.components) return t.components.map(function(c){ return (c.value * factor) + c.unit; }).join(" ");
+  return (t.value * factor) + t.unit;
+}
+function modelFor(mode, stageWidthPx){
+  const L = CONFIG.layout[mode];
+  const cqwPx = stageWidthPx / 100;
+  const ref = stageWidthPx;
+  const titleFontPx = lenPx(L.titleFont, cqwPx, ref);
+  const headFontPx = lenPx(L.cardHeadFont, cqwPx, ref);
+  const commentsWidthPx = mode === "wide"
+    ? stageWidthPx - lenPx(L.commentsLeft, cqwPx, ref) - lenPx(L.commentsRight, cqwPx, ref)
+    : stageWidthPx - 2 * lenPx(L.stagePad, cqwPx, ref);
+  const innerPx = commentsWidthPx - 2 * lenPx(L.cardPadX, cqwPx, ref) - L.cardBorderCqw * cqwPx;
+  const gapPx = lenPx(L.headGap, cqwPx, ref);
+  const markPadPx = lenPx(L.markPadX, cqwPx, ref);
+  const caretPx = lenPx(L.caretWidth, cqwPx, ref) + lenPx(L.caretMarginLeft, cqwPx, ref);
+  const titles = CONFIG.cards.map(function(c){
+    const mr = markRangeFor(c.text, c.highlight);
+    const full = fitLines(c.text, innerPx, L.titleWeight, titleFontPx, mr, markPadPx);
+    const gs = segmentGraphemes(normalizeWs(c.text));
+    let pLines = 0, pWorst = 0, pUnc = false, pOverflow = false;
+    for (let k = 0; k <= gs.length; k++) {
+      const pre = gs.slice(0, k).join("");
+      const pmr = mr ? { start: mr.start, end: Math.min(mr.end, k) } : null;
+      const pf = fitLines(pre, innerPx, L.titleWeight, titleFontPx, (pmr && pmr.end > pmr.start) ? pmr : null, markPadPx);
+      if (pf.lines > pLines) pLines = pf.lines;
+      const caretRight = pf.lastLineWidthPx + caretPx;
+      if (caretRight > innerPx) {
+        if (pf.lines >= CONFIG.maxTitleLines) pOverflow = true;
+        if (caretRight > pWorst) pWorst = caretRight;
+      } else {
+        if (caretRight > pWorst) pWorst = caretRight;
+        if ((FIT_PATH === "estimate" || FONT_UNCERTAIN) && pf.lines >= CONFIG.maxTitleLines && caretRight > 0.9 * innerPx) pUnc = true;
+      }
+    }
+    return { lines: full.lines, maxWidthPx: full.maxWidthPx, uncertain: full.uncertain, path: full.path,
+      prefixLines: pLines, prefixWorstPx: pWorst, prefixUncertain: pUnc, prefixOverflow: pOverflow, caretPx: caretPx };
+  });
+  const headers = CONFIG.cards.map(function(c){
+    const hw = lenPx(L.avatarSize, cqwPx, ref) + gapPx * 3
+      + measureWidthPx(c.handle, L.headWeight, headFontPx, 0)
+      + measureWidthPx(c.badge, L.badgeWeight, lenPx(L.badgeFont, cqwPx, ref), 0) + 2 * lenPx(L.badgePadX, cqwPx, ref)
+      + measureWidthPx(c.when, L.timeWeight, headFontPx, 0);
+    return { widthPx: hw, fits: hw <= innerPx, uncertain: (FIT_PATH === "estimate" || FONT_UNCERTAIN) && hw > 0.9 * innerPx };
+  });
+  function cardHeightCqw(ti){
+    return (2 * lenPx(L.cardPadY, cqwPx, ref) + lenPx(L.avatarSize, cqwPx, ref) + lenPx(L.titleMargin, cqwPx, ref)
+      + titles[ti].lines * titleFontPx * L.titleLineHeight + lenPx(L.footMargin, cqwPx, ref) + lenPx(L.cardFootFont, cqwPx, ref) * L.footLineHeight) / cqwPx;
+  }
+  const postWidthPx = mode === "wide" ? lenPx(L.postWidth, cqwPx, ref) : stageWidthPx - 2 * lenPx(L.stagePad, cqwPx, ref);
+  const postInnerPx = postWidthPx - 2 * lenPx(L.postPadX, cqwPx, ref);
+  const postFull = CONFIG.post.bodyBefore + CONFIG.post.bodyHighlight + CONFIG.post.bodyAfter;
+  const postMark = markRangeFor(postFull, CONFIG.post.bodyHighlight);
+  const postBodyFit = fitLines(postFull, postInnerPx, L.bodyWeight, lenPx(L.postBodyFont, cqwPx, ref), postMark, markPadPx);
+  const postBodyPess = (FIT_PATH === "estimate" || FONT_UNCERTAIN)
+    ? fitLines(postFull, postInnerPx * 0.9, L.bodyWeight, lenPx(L.postBodyFont, cqwPx, ref), postMark, markPadPx) : postBodyFit;
+  const postBody = { lines: postBodyFit.lines, maxWidthPx: postBodyFit.maxWidthPx, uncertain: false, pessimisticLines: postBodyPess.lines };
+  const postHeightCqw = (2 * lenPx(L.postPadY, cqwPx, ref) + lenPx(L.postHeadFont, cqwPx, ref) * L.headLineHeight + lenPx(L.bodyMargin, cqwPx, ref)
+    + postBody.lines * lenPx(L.postBodyFont, cqwPx, ref) * L.postBodyLineHeight + lenPx(L.footMargin, cqwPx, ref) + lenPx(L.postFootFont, cqwPx, ref) * L.footLineHeight) / cqwPx;
+  const headCqw = (lenPx(L.commentsHeadFont, cqwPx, ref) * L.headLineHeight + lenPx(L.commentsHeadMargin, cqwPx, ref)) / cqwPx;
+  let stackCqw = headCqw;
+  CONFIG.cards.forEach(function(c, i){ stackCqw += cardHeightCqw(i) + (i ? L.stackGapCqw : 0); });
+  const stageHeightCqw = mode === "wide"
+    ? 100 * CONFIG.wideStageAspect[1] / CONFIG.wideStageAspect[0]
+    : 100 * CONFIG.narrowStageAspect[1] / CONFIG.narrowStageAspect[0];
+  const availCqw = mode === "wide"
+    ? stageHeightCqw * (100 - cqwOf(L.commentsTop) - cqwOf(L.commentsBottom)) / 100
+    : stageHeightCqw - 2 * (lenPx(L.stagePad, cqwPx, ref) / cqwPx) - postHeightCqw - (lenPx(L.postGap, cqwPx, ref) / cqwPx);
+  function surf(widthPx, boundPx){ return { widthPx: widthPx, fits: widthPx <= boundPx, uncertain: (FIT_PATH === "estimate" || FONT_UNCERTAIN) && widthPx > 0.9 * boundPx }; }
+  const postHeadFontPx = lenPx(L.postHeadFont, cqwPx, ref);
+  const chrome = {};
+  chrome.postHead = surf(measureWidthPx(CONFIG.post.author, L.headWeight, postHeadFontPx, 0) + gapPx
+    + measureWidthPx(CONFIG.post.handle, L.handleWeight, postHeadFontPx, 0) + gapPx
+    + measureWidthPx(CONFIG.post.closeMark, L.closeWeight, postHeadFontPx, 0), postInnerPx);
+  chrome.commentsHead = surf(measureWidthPx(CONFIG.commentsTitle, L.headWeight, lenPx(L.commentsHeadFont, cqwPx, ref), 0)
+    + measureWidthPx(CONFIG.sortLabel, L.sortWeight, lenPx(L.sortFont, cqwPx, ref), 0), commentsWidthPx);
+  chrome.cardFoot = surf(measureWidthPx(CONFIG.cardFooter.mark, L.footWeight, lenPx(L.cardFootFont, cqwPx, ref), 0)
+    + lenPx(L.cardFootGap, cqwPx, ref) + measureWidthPx(CONFIG.cardFooter.label, L.footWeight, lenPx(L.cardFootFont, cqwPx, ref), 0), innerPx);
+  let pfW = 0;
+  CONFIG.post.actions.forEach(function(a, ai){ pfW += measureWidthPx(a, L.footWeight, lenPx(L.postFootFont, cqwPx, ref), 0) + (ai ? lenPx(L.footGap, cqwPx, ref) : 0); });
+  chrome.postFoot = surf(pfW, postInnerPx);
+  const stampFontPx = lenPx(L.stampFont, cqwPx, ref);
+  const stampW = measureWidthPx(CONFIG.post.stampText, L.stampWeight, stampFontPx, lenPx(L.stampLetterSpacing, cqwPx, ref))
+    + 2 * lenPx(L.stampPadX, cqwPx, ref) + 2 * lenPx(L.stampBorder, cqwPx, ref);
+  const stampH = stampFontPx * L.headLineHeight + 2 * lenPx(L.stampPadY, cqwPx, ref) + 2 * lenPx(L.stampBorder, cqwPx, ref);
+  const rotRad = Math.abs(cqwOf(L.stampRotate)) * Math.PI / 180;
+  const stampRW = stampW * Math.cos(rotRad) + stampH * Math.sin(rotRad);
+  chrome.stamp = surf(stampRW, postInnerPx);
+  chrome.stamp.rotatedWidthPx = stampRW;
+  chrome.avatarInitials = CONFIG.cards.map(function(c){
+    return surf(measureWidthPx(c.initials, L.avatarWeight, lenPx(L.avatarFont, cqwPx, ref), 0), lenPx(L.avatarSize, cqwPx, ref) * 0.92);
+  });
+  const supportingPx = Math.min(headFontPx, lenPx(L.badgeFont, cqwPx, ref), lenPx(L.avatarFont, cqwPx, ref),
+    lenPx(L.cardFootFont, cqwPx, ref), lenPx(L.sortFont, cqwPx, ref), lenPx(L.postFootFont, cqwPx, ref), postHeadFontPx);
+  return { titleFontPx: titleFontPx, headFontPx: headFontPx,
+    footFontPx: lenPx(L.cardFootFont, cqwPx, ref), innerPx: innerPx, postInnerPx: postInnerPx,
+    titles: titles, headers: headers, chrome: chrome, postBody: postBody, supportingPx: supportingPx,
+    postBodyLines: postBody.lines,
+    postHeightCqw: postHeightCqw, stackCqw: stackCqw, availCqw: availCqw, fitPath: FIT_PATH };
+}
+function validateConfig(){
+  const errors = [];
+  if (!CONFIG || !Array.isArray(CONFIG.cards) || !Array.isArray(CONFIG.beats) || !CONFIG.layout || !CONFIG.layout.wide || !CONFIG.layout.narrow || !CONFIG.palette || !CONFIG.post) {
+    errors.push("T13_CONFIG_INVALID");
+    return errors;
+  }
+  if (CONFIG.cards.length > CONFIG.maxCards) errors.push("T13_CARD_COUNT_UNSUPPORTED");
+  if (CONFIG.beats.length < CONFIG.cards.length) errors.push("T13_BEAT_TABLE_MISMATCH");
+  CONFIG.beats.forEach(function(b){ if (!b || !(b.charMs > 0) || !isFinite(b.charMs) || !(b.appearMs >= 0) || !isFinite(b.appearMs) || !(b.holdAfterMs >= 0) || !isFinite(b.holdAfterMs)) errors.push("T13_BEAT_INVALID"); });
+  ["landMs", "caretBlinkMs", "finalHoldMs"].forEach(function(k){
+    const v = CONFIG[k];
+    if (!(typeof v === "number" && isFinite(v) && v > 0 && v <= CONFIG.catalogueWindowMs)) errors.push("T13_DURATION_INVALID:" + k);
+  });
+  CONFIG.beats.forEach(function(b, i){
+    if (b && i < CONFIG.cards.length - 1 && isFinite(b.holdAfterMs) && b.holdAfterMs < CONFIG.landMs) errors.push("T13_HOLD_LT_LAND:" + i);
+  });
+  if (CONFIG.cards.length >= 2 && CONFIG.opening.firstCardLanded) {
+    const g = segmentGraphemes(CONFIG.cards[1].text), p = segmentGraphemes(CONFIG.opening.secondCardPrefix);
+    let ok = p.length <= g.length;
+    for (let i = 0; ok && i < p.length; i++) if (g[i] !== p[i]) ok = false;
+    if (!ok) errors.push("T13_PREFIX_MISMATCH");
+  }
+  ["wide", "narrow"].forEach(function(mode){
+    const m = modelFor(mode, mode === "wide" ? CONFIG.wideStageAspect[0] : CONFIG.narrowStageAspect[0]);
+    m.titles.forEach(function(t){
+      if (t.lines > CONFIG.maxTitleLines) errors.push("T13_TITLE_UNSUPPORTED:" + mode);
+      else if (t.uncertain) errors.push("T13_FIT_UNCERTAIN:" + mode);
+      if (t.maxWidthPx > m.innerPx) errors.push("T13_TITLE_TOO_WIDE:" + mode);
+      if (t.prefixLines > CONFIG.maxTitleLines) errors.push("T13_TITLE_UNSUPPORTED:caret:" + mode);
+      if (t.prefixOverflow) errors.push("T13_TITLE_TOO_WIDE:caret:" + mode);
+      else if (t.prefixUncertain) errors.push("T13_FIT_UNCERTAIN:caret:" + mode);
+    });
+    m.headers.forEach(function(h){
+      if (!h.fits) errors.push("T13_CHROME_OVERFLOW:" + mode);
+      else if (h.uncertain) errors.push("T13_FIT_UNCERTAIN:chrome:" + mode);
+    });
+    ["postHead", "commentsHead", "cardFoot", "postFoot", "stamp"].forEach(function(s){
+      const c = m.chrome[s];
+      if (!c.fits) errors.push("T13_CHROME_OVERFLOW:" + s + ":" + mode);
+      else if (c.uncertain) errors.push("T13_FIT_UNCERTAIN:" + s + ":" + mode);
+    });
+    m.chrome.avatarInitials.forEach(function(a){
+      if (!a.fits) errors.push("T13_CHROME_OVERFLOW:avatarInitials:" + mode);
+      else if (a.uncertain) errors.push("T13_FIT_UNCERTAIN:avatarInitials:" + mode);
+    });
+    if (m.postBody.maxWidthPx > m.postInnerPx + 1) errors.push("T13_CHROME_OVERFLOW:postBody:" + mode);
+    if (m.postBody.pessimisticLines > m.postBody.lines + 1) errors.push("T13_FIT_UNCERTAIN:postBody:" + mode);
+    if (mode === "narrow" && m.supportingPx < CONFIG.phoneMinSupportingPx) errors.push("T13_FONT_FLOOR:" + mode);
+    if (m.stackCqw > m.availCqw) errors.push("T13_STACK_OVERFLOW:" + mode);
+  });
+  return errors;
+}
+const VALIDATION_ERRORS = validateConfig();
+const FROZEN = VALIDATION_ERRORS.length > 0;
+
+/* --- Sequential schedule derivation (strict sequencing by construction) --- */
+function buildScheduleFor(cards, beats, opening, finalHoldMs){
+  const sched = [];
+  let t = 0;
+  const openingApplies = cards.length >= 2 && opening.firstCardLanded && opening.secondCardPrefix;
+  cards.forEach(function(c, i){
+    const b = beats[i];
+    const n = segmentGraphemes(c.text).length;
+    if (i === 0 && openingApplies) {
+      sched.push({ appearStart: -opening.offsetMs, typeStart: -opening.offsetMs, typeEnd: -opening.offsetMs, count: n, preLanded: true });
+      return;
+    }
+    if (i === 1 && openingApplies) {
+      const pre = segmentGraphemes(opening.secondCardPrefix).length;
+      const typeEnd = (n - pre) * b.charMs;
+      sched.push({ appearStart: -opening.offsetMs, typeStart: -pre * b.charMs, typeEnd: typeEnd, count: n, preTyped: pre });
+      t = typeEnd + b.holdAfterMs;
+      return;
+    }
+    const appearStart = t;
+    const typeStart = appearStart + b.appearMs;
+    const typeEnd = typeStart + n * b.charMs;
+    sched.push({ appearStart: appearStart, typeStart: typeStart, typeEnd: typeEnd, count: n });
+    t = typeEnd + b.holdAfterMs;
+  });
+  const lastEnd = sched.length ? sched[sched.length - 1].typeEnd : 0;
+  return { cards: sched, endMs: lastEnd + finalHoldMs };
+}
+const SCHEDULE = buildScheduleFor(CONFIG.cards, CONFIG.beats, CONFIG.opening, CONFIG.finalHoldMs);
+const WINDOW_ACCOUNTING = {
+  catalogueWindowMs: CONFIG.catalogueWindowMs,
+  openingOffsetMs: CONFIG.opening.offsetMs,
+  performanceMs: SCHEDULE.endMs,
+  residualMs: CONFIG.catalogueWindowMs - SCHEDULE.endMs,
+  specimenIdentity: SPECIMEN_CONFIG,
+  identityHolds: SPECIMEN_CONFIG && (SCHEDULE.endMs === CONFIG.catalogueWindowMs)
+};
+function caretOpacityAt(t){
+  const ph = ((t % CONFIG.caretBlinkMs) + CONFIG.caretBlinkMs) % CONFIG.caretBlinkMs;
+  return ph < CONFIG.caretBlinkMs * CONFIG.caretDuty ? 1 : 0;
+}
+function landingProgressAt(t, typeEnd){
+  if (t <= typeEnd) return 0;
+  return Math.min(1, (t - typeEnd) / CONFIG.landMs);
+}
+function hexRgb(hex){
+  if (!isHexColor(hex)) return [0, 0, 0];
+  const n = parseInt(hex.slice(1), 16);
+  return [n >> 16 & 255, n >> 8 & 255, n & 255];
+}
+function colorLerp(a, b, p){
+  const A = hexRgb(a), B = hexRgb(b);
+  const c = A.map(function(v, i){ return Math.round(v + (B[i] - v) * p); });
+  return "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
+}
+
+/* --- DOM construction (all from CONFIG) --- */
+const P = CONFIG.palette;
+const stage = document.getElementById("stage");
+stage.style.background = P.bg;
+stage.style.fontFamily = CONFIG.fontFamily;
+let cardEls = [];
+function applyLayout(){
+  const narrow = stage.clientWidth > 0 && stage.clientWidth <= CONFIG.narrowBreakpointPx;
+  const L = CONFIG.layout[narrow ? "narrow" : "wide"];
+  stage.classList.toggle("narrow", narrow);
+  stage.style.aspectRatio = (narrow ? CONFIG.narrowStageAspect : CONFIG.wideStageAspect).join(" / ");
+  Object.keys(L).forEach(function(k){
+    stage.style.setProperty("--" + k, String(L[k]));
+  });
+  stage.style.maxWidth = CONFIG.stageMaxWidthPx + "px";
+  stage.style.setProperty("--bannerBg", P.bannerBg);
+  stage.style.setProperty("--bannerInk", P.bannerInk);
+  stage.style.setProperty("--stackGap", L.stackGapCqw + "cqw");
+  stage.style.setProperty("--titleMaxH", (CONFIG.maxTitleLines * cqwOf(L.titleFont) * L.titleLineHeight) + "cqw");
+  cardEls.forEach(function(ce){
+    ce.el.style.borderLeftWidth = L.cardBorderCqw + "cqw";
+  });
+  return narrow;
+}
+const postCard = document.getElementById("postCard");
+postCard.style.background = P.postBg; postCard.style.color = P.postInk;
+document.getElementById("postAuthor").textContent = CONFIG.post.author;
+document.getElementById("postHandle").textContent = CONFIG.post.handle;
+document.getElementById("postClose").textContent = CONFIG.post.closeMark;
+(function buildPostBody(){
+  const body = document.getElementById("postBody");
+  body.appendChild(document.createTextNode(CONFIG.post.bodyBefore));
+  const m = document.createElement("mark"); m.textContent = CONFIG.post.bodyHighlight;
+  m.style.background = P.highlightBg; m.style.color = P.highlightInk;
+  body.appendChild(m);
+  body.appendChild(document.createTextNode(CONFIG.post.bodyAfter));
+})();
+const stamp = document.getElementById("stamp");
+stamp.textContent = CONFIG.post.stampText;
+stamp.style.color = P.stampInk; stamp.style.borderColor = P.stampInk;
+const postFoot = document.getElementById("postFoot");
+CONFIG.post.actions.forEach(function(a){
+  const s = document.createElement("span"); s.textContent = a; postFoot.appendChild(s);
+});
+document.getElementById("commentsTitle").textContent = CONFIG.commentsTitle;
+document.getElementById("commentsTitle").style.color = P.cardInk;
+document.getElementById("sortLabel").textContent = CONFIG.sortLabel;
+document.getElementById("sortLabel").style.color = P.cardInk;
+if (FROZEN) {
+  const banner = document.getElementById("validationBanner");
+  banner.textContent = VALIDATION_ERRORS.join(" · ");
+  banner.style.display = "block";
+  if (typeof console !== "undefined") console.error(VALIDATION_ERRORS.join(" · "));
+}
+
+const stack = document.getElementById("stack");
+if (!FROZEN) {
+  cardEls = CONFIG.cards.map(function(c, i){
+    const el = document.createElement("div");
+    el.className = "card";
+    el.style.color = P.cardInk;
+    el.style.background = P.cardBg;
+    el.style.borderLeftColor = P.accent;
+    el.style.marginTop = i ? "var(--stackGap)" : "0px";
+    const head = document.createElement("div"); head.className = "cardHead";
+    const av = document.createElement("span"); av.className = "avatar";
+    av.textContent = c.initials; av.style.color = P.avatarInk;
+    av.style.background = "linear-gradient(135deg, hsl(" + c.avatarHue + "," + P.avatarSat + "%," + P.avatarLightA + "%), hsl(" + ((c.avatarHue + P.avatarHueSpan) % 360) + "," + P.avatarSat + "%," + P.avatarLightB + "%))";
+    const hd = document.createElement("span"); hd.className = "cHandle"; hd.textContent = c.handle;
+    const bd = document.createElement("span"); bd.className = "badge"; bd.textContent = c.badge; bd.style.background = P.badgeBg; bd.style.color = P.badgeInk;
+    const wh = document.createElement("span"); wh.className = "when"; wh.textContent = c.when;
+    head.appendChild(av); head.appendChild(hd); head.appendChild(bd); head.appendChild(wh);
+    const title = document.createElement("div"); title.className = "cardTitle";
+    const caret = document.createElement("span");
+    caret.className = "caret"; caret.style.background = P.caret; caret.style.display = "none";
+    const foot = document.createElement("div"); foot.className = "cardFoot";
+    const fh = document.createElement("span"); fh.textContent = CONFIG.cardFooter.mark;
+    const fr = document.createElement("span"); fr.textContent = CONFIG.cardFooter.label;
+    foot.appendChild(fh); foot.appendChild(fr);
+    el.appendChild(head); el.appendChild(title); el.appendChild(foot);
+    stack.appendChild(el);
+    return { el: el, title: title, caret: caret, graphemes: segmentGraphemes(c.text),
+      hlRange: graphemeRangeOf(c.text, c.highlight), shown: -1 };
+  });
+}
+
+function renderTitle(ce, c, typedCount){
+  ce.title.textContent = "";
+  const shown = ce.graphemes.slice(0, typedCount);
+  const r = ce.hlRange;
+  const hlShown = r ? Math.max(0, Math.min(typedCount, r.end) - r.start) : 0;
+  if (r && typedCount > r.start && hlShown > 0) {
+    const before = shown.slice(0, r.start).join("");
+    const hl = shown.slice(r.start, r.start + hlShown).join("");
+    const after = shown.slice(r.start + hlShown).join("");
+    if (before) ce.title.appendChild(document.createTextNode(before));
+    const m = document.createElement("mark"); m.textContent = hl;
+    m.style.background = P.highlightBg; m.style.color = P.highlightInk;
+    ce.title.appendChild(m);
+    if (after) ce.title.appendChild(document.createTextNode(after));
+  } else if (shown.length) {
+    ce.title.appendChild(document.createTextNode(shown.join("")));
+  }
+  ce.title.appendChild(ce.caret);
+}
+
+function cardColorsAt(i, t){
+  const s = SCHEDULE.cards[i];
+  if (t >= s.typeEnd) {
+    const q = landingProgressAt(t, s.typeEnd);
+    const fromBg = s.preLanded ? P.cardBg : P.cardBgTyping;
+    return { bg: colorLerp(fromBg, P.cardBgLanded, q), border: colorLerp(P.accent, P.cardBorderLanded, q), q: q };
+  }
+  if (t >= s.typeStart || s.preTyped) return { bg: P.cardBgTyping, border: P.accent, q: 0 };
+  return { bg: P.cardBg, border: P.accent, q: 0 };
+}
+
+function render(t){
+  if (FROZEN) return;
+  const L = CONFIG.layout[(stage.clientWidth > 0 && stage.clientWidth <= CONFIG.narrowBreakpointPx) ? "narrow" : "wide"];
+  CONFIG.cards.forEach(function(c, i){
+    const s = SCHEDULE.cards[i];
+    const ce = cardEls[i];
+    const b = CONFIG.beats[i];
+    if (t < s.appearStart) {
+      ce.el.style.opacity = "0";
+      ce.el.style.transform = "translateY(" + L.entranceDy + ")";
+      if (ce.shown !== -1) { ce.title.textContent = ""; ce.shown = -1; }
+      ce.caret.style.display = "none";
+      return;
+    }
+    const p = b.appearMs > 0 ? Math.min(1, Math.max(0, (t - s.appearStart) / b.appearMs)) : 1;
+    ce.el.style.opacity = String(p);
+    ce.el.style.transform = "translateY(" + scaledToken(L.entranceDy, 1 - p) + ")";
+    let typed = 0;
+    if (t >= s.typeEnd) typed = s.count;
+    else if (s.preTyped) typed = Math.min(s.count, s.preTyped + Math.floor(Math.max(0, t) / b.charMs));
+    else if (t > s.typeStart) typed = Math.min(s.count, Math.floor((t - s.typeStart) / b.charMs));
+    else typed = s.preTyped || 0;
+    const landed = t >= s.typeEnd;
+    if (typed !== ce.shown) {
+      ce.shown = typed;
+      renderTitle(ce, c, typed);
+    }
+    const cols = cardColorsAt(i, t);
+    ce.el.style.background = cols.bg;
+    ce.el.style.borderLeftColor = cols.border;
+    if (landed) {
+      ce.caret.style.display = "none";
+      ce.el.classList.add("landed");
+    } else {
+      ce.el.classList.remove("landed");
+      ce.caret.style.display = "inline-block";
+      ce.caret.style.opacity = String(caretOpacityAt(t));
+    }
+  });
+}
+
+/* --- Clock: free-running, externally slaveable for comparison.html --- */
+let playing = !FROZEN, basePerf = 0, baseStamp = performance.now();
+function perfNow(){
+  let t = playing ? basePerf + (performance.now() - baseStamp) : basePerf;
+  if (t > SCHEDULE.endMs) { t = SCHEDULE.endMs; if (playing) { playing = false; basePerf = t; } }
+  return t;
+}
+applyLayout();
+if (typeof window !== "undefined" && window.addEventListener) window.addEventListener("resize", applyLayout);
+if (!FROZEN) (function loop(){ render(perfNow()); requestAnimationFrame(loop); })();
+window.T13 = {
+  scheduleEndMs: SCHEDULE.endMs,
+  openingOffsetMs: CONFIG.opening.offsetMs,
+  validationErrors: VALIDATION_ERRORS,
+  overrideOutcomes: OVERRIDE_OUTCOMES,
+  windowAccounting: WINDOW_ACCOUNTING,
+  frozen: FROZEN,
+  modelFor: modelFor,
+  graphemes: segmentGraphemes,
+  graphemeRangeOf: graphemeRangeOf,
+  config: CONFIG,
+  setTime: function(ms){
+    if (FROZEN) return;
+    basePerf = Math.max(0, Math.min(ms, SCHEDULE.endMs)); baseStamp = performance.now(); render(basePerf);
+  },
+  play: function(){ if (FROZEN) return; if (!playing) { playing = true; baseStamp = performance.now(); } },
+  pause: function(){ if (FROZEN) return; if (playing) { basePerf = perfNow(); playing = false; } },
+  restart: function(){
+    if (FROZEN) return;
+    basePerf = 0; baseStamp = performance.now(); playing = true;
+    cardEls.forEach(function(ce){ ce.shown = -1; });
+    render(0);
+  },
+  isPlaying: function(){ return playing; },
+  testing: {
+    buildScheduleFor: buildScheduleFor,
+    validateConfig: validateConfig,
+    fitLines: fitLines,
+    caretOpacityAt: caretOpacityAt,
+    landingProgressAt: landingProgressAt,
+    cardColorsAt: cardColorsAt,
+    colorLerp: colorLerp,
+    estimateWidthPx: estimateWidthPx,
+    parseUnitToken: parseUnitToken,
+    lenPx: lenPx,
+    scaledToken: scaledToken,
+    markRangeFor: markRangeFor,
+    normalizeWs: normalizeWs,
+    isHexColor: isHexColor,
+    fitPath: function(){ return FIT_PATH; },
+    cardEls: function(){ return cardEls; },
+    applyLayout: applyLayout,
+    render: render
+  }
+};
+</script>
+</body>
+</html>

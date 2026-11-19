@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T13 — Typing comment stack (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#000;}
+  body{display:flex;align-items:center;justify-content:center;}
+  #stage{position:relative;width:100%;max-width:1916px;aspect-ratio:1916/1078;overflow:hidden;container-type:inline-size;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;}
+  /* ---- post card (static anchor, left) ---- */
+  #postCol{position:absolute;left:1.2%;top:16%;width:37%;}
+  #postCard{position:relative;border-radius:1cqw;padding:1.6cqw 1.8cqw;box-shadow:0 0.4cqw 1.6cqw rgba(0,0,0,.55);}
+  #postHead{display:flex;align-items:center;gap:.7cqw;font-size:1.55cqw;font-weight:700;}
+  #postHead .handle{font-weight:500;opacity:.75;}
+  #postHead .x{margin-left:auto;font-weight:400;font-size:1.7cqw;}
+  #postBody{margin-top:1cqw;font-size:1.95cqw;line-height:1.32;font-weight:600;}
+  mark{padding:0 .25cqw;border-radius:.2cqw;}
+  #stamp{position:absolute;right:6%;top:44%;border:.32cqw solid;border-radius:.5cqw;padding:.15cqw .9cqw;font-size:2cqw;font-weight:800;letter-spacing:.18cqw;transform:rotate(-9deg);opacity:.92;}
+  #postFoot{margin-top:1.2cqw;font-size:1.5cqw;display:flex;gap:1.6cqw;align-items:center;}
+  /* ---- comments column (right) ---- */
+  #commentsCol{position:absolute;left:40.5%;right:1.2%;top:2.5%;bottom:2%;display:flex;flex-direction:column;}
+  #commentsHead{display:flex;align-items:baseline;font-size:1.9cqw;font-weight:700;margin-bottom:1cqw;}
+  #commentsHead .sort{margin-left:auto;font-size:1.45cqw;font-weight:500;opacity:.85;}
+  #stack{display:flex;flex-direction:column;}
+  .card{border-radius:.9cqw;padding:.55cqw 1.2cqw;box-sizing:border-box;overflow:hidden;opacity:0;transform:translateY(1.2cqw);}
+  .card.on{opacity:1;transform:translateY(0);transition:opacity .16s linear,transform .16s ease-out;}
+  .card.landed{transition:transform .12s ease-out;}
+  .cardHead{display:flex;align-items:center;gap:.65cqw;font-size:1.25cqw;}
+  .avatar{flex:0 0 auto;width:2.1cqw;height:2.1cqw;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95cqw;font-weight:800;color:#fff;}
+  .cHandle{font-weight:700;}
+  .badge{border-radius:1cqw;padding:.08cqw .7cqw;font-size:1.1cqw;font-weight:700;color:#fff;}
+  .when{opacity:.65;}
+  .cardTitle{margin-top:.25cqw;font-size:1.85cqw;line-height:1.15;font-weight:700;white-space:nowrap;overflow:hidden;}
+  .caret{display:inline-block;width:.5cqw;height:1.6cqw;margin-left:.15cqw;vertical-align:-0.3cqw;animation:blink 1s steps(1) infinite;}
+  @keyframes blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+  .cardFoot{margin-top:.15cqw;font-size:1.15cqw;line-height:1.2;opacity:.75;display:flex;gap:2.2cqw;}
+  .heart{font-size:1.3cqw;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="postCol"><div id="postCard">
+    <div id="postHead"><span id="postAuthor"></span><span class="handle" id="postHandle"></span><span class="x">✕</span></div>
+    <div id="postBody"></div>
+    <div id="stamp"></div>
+    <div id="postFoot"><span>↩</span><span>🔁</span><span id="postLikes"></span><span id="postViews"></span><span>🔖</span><span>↗</span></div>
+  </div></div>
+  <div id="commentsCol">
+    <div id="commentsHead"><span id="commentsTitle"></span><span class="sort" id="sortLabel"></span></div>
+    <div id="stack"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* T13 — Typing comment stack. ALL content/timing/palette from CONFIG.
+   Construction: DOM post card (static anchor) + comment cards stacking
+   downward. STRICT SEQUENCING (Owner Cure 2): the schedule is derived
+   sequentially — card N+1's appear time is card N's typing-complete time
+   plus card N's holdAfterMs. Overlapping lifecycles are impossible by
+   construction, not by discipline.
+   Timing model: LABELED ALLOCATION (not measured checkpoints). The only
+   frame checkpoint is the window-start evidence frame (card 1 complete,
+   card 2 mid-typing) — see build-record.md. Per-card typing duration =
+   typed grapheme count x that card's charMs; appear + hold are per-card
+   config values; the allocation sums to performanceMs (12s window).
+   Rendering is a pure function of performance time t (ms), so the
+   comparison page can slave this clock to the segment video.
+   URL overrides (swap test): ?titles=A|B|C  ?charMs=N  ?accent=HEX
+   ?cardBg=HEX  ?gapPx=N */
+const CONFIG = {
+  performanceMs: 12000,
+  startDelayMs: 400,
+  finalHoldMs: 2139,
+  post: {
+    author: "aditazzz ✓",
+    handle: "@adi… · 10/27/26",
+    bodyBefore: "Currently upskilling to transition to a ",
+    bodyHighlight: "Principal Slopcore Architect",
+    bodyAfter: " role. Trying to stay ahead of the curve. Follow along and support my professional development.",
+    stampText: "RECEIPT",
+    likes: "♥ 5",
+    views: "📊 169"
+  },
+  commentsTitle: "Comments 4",
+  sortLabel: "Sort by: Top",
+  cards: [
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 340,
+      text: "I'm a Senior Slopcore Architect", highlight: "Slopcore",
+      appearMs: 160, charMs: 33, holdAfterMs: 367 },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 200,
+      text: "Chief Executive of What's Next", highlight: "",
+      appearMs: 160, charMs: 33, holdAfterMs: 350 },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 265,
+      text: "VP of Things That Look Complete - 100% complete", highlight: "",
+      appearMs: 160, charMs: 33, holdAfterMs: 349 },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 150,
+      text: "Director of the Missing Feet - feet.png not found", highlight: "",
+      appearMs: 160, charMs: 33, holdAfterMs: 353 },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 25,
+      text: "Head of Vibes and Synergy", highlight: "",
+      appearMs: 160, charMs: 33, holdAfterMs: 350 },
+    { handle: "@aditazzz", badge: "Creator", when: "· now", initials: "AD", avatarHue: 300,
+      text: "Chief of Artificial Me", highlight: "",
+      appearMs: 160, charMs: 33, holdAfterMs: 0 }
+  ],
+  stackGapCqw: 0.8,
+  cardHeightCqw: 7.3,
+  palette: {
+    bg: "#050607",
+    postBg: "#ffffff",
+    postInk: "#101216",
+    cardBg: "#161a21",
+    cardInk: "#eef1f5",
+    accent: "#5b8def",
+    badgeBg: "#5b8def",
+    highlightBg: "#ffd83d",
+    highlightInk: "#101216",
+    stampInk: "#d43a2f",
+    caret: "#eef1f5"
+  },
+  fontFamily: '"Segoe UI", system-ui, -apple-system, Arial, sans-serif'
+};
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("titles")) {
+    const ts = q.get("titles").split("|");
+    CONFIG.cards = ts.map(function(t,i){
+      const base = CONFIG.cards[i % CONFIG.cards.length];
+      return Object.assign({}, base, { text: t, highlight: "" });
+    });
+  }
+  if (q.get("charMs")) { const v = parseFloat(q.get("charMs")); if (v > 0) CONFIG.cards.forEach(function(c){ c.charMs = v; }); }
+  if (q.get("accent")) CONFIG.palette.accent = CONFIG.palette.badgeBg = q.get("accent");
+  if (q.get("cardBg")) CONFIG.palette.cardBg = q.get("cardBg");
+  if (q.get("gapPx")) CONFIG.stackGapCqw = parseFloat(q.get("gapPx")) || CONFIG.stackGapCqw;
+})();
+
+function segmentGraphemes(text){
+  if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+    const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    return Array.from(seg.segment(text), function(s){ return s.segment; });
+  }
+  return Array.from(text);
+}
+
+/* --- Sequential schedule derivation (strict sequencing by construction) --- */
+function buildSchedule(){
+  const sched = [];
+  let t = CONFIG.startDelayMs;
+  CONFIG.cards.forEach(function(c){
+    const n = segmentGraphemes(c.text).length;
+    const appearStart = t;
+    const typeStart = appearStart + c.appearMs;
+    const typeEnd = typeStart + n * c.charMs;
+    sched.push({ appearStart: appearStart, typeStart: typeStart, typeEnd: typeEnd, count: n });
+    t = typeEnd + c.holdAfterMs;
+  });
+  return { cards: sched, endMs: t + CONFIG.finalHoldMs };
+}
+const SCHEDULE = buildSchedule();
+
+/* --- DOM construction (all from CONFIG) --- */
+const P = CONFIG.palette;
+const stage = document.getElementById("stage");
+stage.style.background = P.bg;
+stage.style.fontFamily = CONFIG.fontFamily;
+const postCard = document.getElementById("postCard");
+postCard.style.background = P.postBg; postCard.style.color = P.postInk;
+document.getElementById("postAuthor").textContent = CONFIG.post.author;
+document.getElementById("postHandle").textContent = CONFIG.post.handle;
+const pb = document.getElementById("postBody");
+pb.appendChild(document.createTextNode(CONFIG.post.bodyBefore));
+const mk = document.createElement("mark");
+mk.textContent = CONFIG.post.bodyHighlight;
+mk.style.background = P.highlightBg; mk.style.color = P.highlightInk;
+pb.appendChild(mk);
+pb.appendChild(document.createTextNode(CONFIG.post.bodyAfter));
+const stamp = document.getElementById("stamp");
+stamp.textContent = CONFIG.post.stampText; stamp.style.color = P.stampInk; stamp.style.borderColor = P.stampInk;
+document.getElementById("postLikes").textContent = CONFIG.post.likes;
+document.getElementById("postViews").textContent = CONFIG.post.views;
+document.getElementById("commentsTitle").textContent = CONFIG.commentsTitle;
+document.getElementById("commentsTitle").style.color = P.cardInk;
+document.getElementById("sortLabel").textContent = CONFIG.sortLabel;
+document.getElementById("sortLabel").style.color = P.cardInk;
+
+const stack = document.getElementById("stack");
+stack.style.gap = CONFIG.stackGapCqw + "cqw";
+const cardEls = CONFIG.cards.map(function(c){
+  const el = document.createElement("div");
+  el.className = "card";
+  el.style.background = P.cardBg; el.style.color = P.cardInk;
+  el.style.height = CONFIG.cardHeightCqw + "cqw";
+  el.style.borderLeft = "0.35cqw solid " + P.accent;
+  const head = document.createElement("div"); head.className = "cardHead";
+  const av = document.createElement("span"); av.className = "avatar";
+  av.textContent = c.initials;
+  av.style.background = "linear-gradient(135deg, hsl(" + c.avatarHue + ",65%,55%), hsl(" + ((c.avatarHue + 60) % 360) + ",65%,38%))";
+  const hd = document.createElement("span"); hd.className = "cHandle"; hd.textContent = c.handle;
+  const bd = document.createElement("span"); bd.className = "badge"; bd.textContent = c.badge; bd.style.background = P.badgeBg;
+  const wh = document.createElement("span"); wh.className = "when"; wh.textContent = c.when;
+  head.appendChild(av); head.appendChild(hd); head.appendChild(bd); head.appendChild(wh);
+  const title = document.createElement("div"); title.className = "cardTitle";
+  const foot = document.createElement("div"); foot.className = "cardFoot";
+  foot.innerHTML = '<span class="heart">♡</span><span>Reply</span>';
+  el.appendChild(head); el.appendChild(title); el.appendChild(foot);
+  stack.appendChild(el);
+  return { el: el, title: title, graphemes: segmentGraphemes(c.text), shown: -1, state: "" };
+});
+
+function renderTitle(ce, c, typedCount){
+  const shownText = ce.graphemes.slice(0, typedCount).join("");
+  ce.title.textContent = "";
+  const hl = c.highlight;
+  const idx = hl ? c.text.indexOf(hl) : -1;
+  if (idx >= 0 && typedCount > idx) {
+    const prefix = shownText;
+    const b = prefix.slice(0, idx);
+    const h = prefix.slice(idx, idx + hl.length);
+    const a = prefix.slice(idx + hl.length);
+    ce.title.appendChild(document.createTextNode(b));
+    if (h) { const m = document.createElement("mark"); m.textContent = h; m.style.background = P.highlightBg; m.style.color = P.highlightInk; ce.title.appendChild(m); }
+    if (a) ce.title.appendChild(document.createTextNode(a));
+  } else {
+    ce.title.appendChild(document.createTextNode(shownText));
+  }
+  const caret = document.createElement("span");
+  caret.className = "caret"; caret.style.background = P.caret;
+  ce.title.appendChild(caret);
+  return caret;
+}
+
+function render(t){
+  CONFIG.cards.forEach(function(c, i){
+    const s = SCHEDULE.cards[i];
+    const ce = cardEls[i];
+    if (t < s.appearStart) {
+      if (ce.state !== "off") { ce.el.classList.remove("on","landed"); ce.state = "off"; ce.shown = -1; }
+      return;
+    }
+    if (ce.state === "off") { ce.el.classList.add("on"); ce.state = "on"; }
+    let typed = 0;
+    if (t >= s.typeEnd) typed = s.count;
+    else if (t > s.typeStart) typed = Math.min(s.count, Math.floor((t - s.typeStart) / c.charMs));
+    const landed = t >= s.typeEnd;
+    if (typed !== ce.shown || landed !== ce.landedFlag) {
+      ce.shown = typed; ce.landedFlag = landed;
+      const caret = renderTitle(ce, c, typed);
+      if (landed) { caret.style.display = "none"; ce.el.classList.add("landed"); }
+    }
+  });
+}
+
+/* --- Clock: free-running, externally slaveable for comparison.html --- */
+let playing = true, basePerf = 0, baseStamp = performance.now();
+function perfNow(){
+  let t = playing ? basePerf + (performance.now() - baseStamp) : basePerf;
+  if (t > SCHEDULE.endMs) { t = SCHEDULE.endMs; if (playing) { playing = false; basePerf = t; } }
+  return t;
+}
+(function loop(){ render(perfNow()); requestAnimationFrame(loop); })();
+window.T13 = {
+  scheduleEndMs: SCHEDULE.endMs,
+  setTime: function(ms){ basePerf = Math.max(0, Math.min(ms, SCHEDULE.endMs)); baseStamp = performance.now(); render(basePerf); },
+  play: function(){ if (!playing) { playing = true; baseStamp = performance.now(); } },
+  pause: function(){ if (playing) { basePerf = perfNow(); playing = false; } },
+  restart: function(){ basePerf = 0; baseStamp = performance.now(); playing = true; cardEls.forEach(function(ce){ ce.shown = -1; ce.state = ""; ce.landedFlag = false; }); },
+  isPlaying: function(){ return playing; }
+};
+</script>
+</body>
+</html>
