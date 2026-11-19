@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T218 — comparison</title>
+<style>
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:#e9e6de; color:#1a1a1a; }
+  main { max-width:1060px; margin:0 auto; padding:12px; }
+  .pair { display:flex; gap:12px; align-items:flex-start; }
+  .side { flex:1 1 0; min-width:0; }
+  .side h2 { font-size:15px; margin:4px 0 6px; }
+  video, iframe { width:100%; aspect-ratio: 640/400; border:0; display:block; background:#f4f1ea; }
+  video { aspect-ratio: 16/9; }
+  .controls { display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap; position:sticky; top:0; background:#e9e6de; z-index:2; }
+  button { font-size:16px; padding:10px 18px; min-height:44px; cursor:pointer; }
+  #clock { font-variant-numeric: tabular-nums; }
+  .note { font-size:13px; max-width:70ch; }
+  @media (max-width:560px){ .pair { flex-direction:column; } .side { width:100%; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <button id="restart" type="button">Restart</button>
+    <span id="clock">0.0s</span>
+  </div>
+  <div class="pair">
+    <div class="side">
+      <h2>ORIGINAL — Vox Electoral College @ 4:31–5:05</h2>
+      <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+    </div>
+    <div class="side">
+      <h2>RECREATION — T218 North/South population tiles, parameterized</h2>
+      <iframe id="rec" src="recreation.html" title="T218 recreation"></iframe>
+    </div>
+  </div>
+  <p class="note">Sync: one control set drives both sides. The recreation uses a t=0 allocation (its zero = source 277.0 s, the tile lifecycle); through the original's map lead-in (before 277 s) and the three-fifths tail (after 298 s) the recreation holds its zero / final state — those spans are named deferrals of this technique (map lead-in; T219's banner), priced in the item's Plan.</p>
+</main>
+<script id="comparison-script">
+"use strict";
+/* Sync: sourceMs = 270500 + video.currentTime*1000 (segment cut at 270.5 s, 0.5 s handle);
+   buildMs = clamp(sourceMs - 277000, 0, durationMs), durationMs DERIVED from recreation.html's CONFIG. */
+const HANDLE_OFFSET_S = 0.5;
+const SOURCE_ZERO_MS = 277000;
+const video = document.getElementById("orig");
+const rec = document.getElementById("rec");
+let durationMs = 21000;
+fetch("recreation.html").then(r => r.text()).then(txt => {
+  const m = txt.match(/<script id="t218-config">([\s\S]*?)<\/script>/);
+  const lm = txt.match(/<script id="t218-logic">([\s\S]*?)<\/script>/);
+  if (m && lm){
+    const cfg = new Function(m[1] + "\n" + lm[1].replace(/"use strict";/, "") + "\nreturn CONFIG;")();
+    durationMs = (cfg.tEnslavedLabelOutMs + cfg.enslavedLabelOutDurMs) + cfg.holdMs;
+  }
+}).catch(() => {});
+function buildMs(){ const sourceMs = (HANDLE_OFFSET_S + video.currentTime) * 1000 + 270000; return Math.max(0, Math.min(durationMs, sourceMs - SOURCE_ZERO_MS)); }
+function sync(){
+  const w = rec.contentWindow;
+  if (w && w.__T218) w.__T218.render(buildMs());
+  document.getElementById("clock").textContent = (buildMs() / 1000).toFixed(1) + "s";
+}
+video.addEventListener("timeupdate", sync);
+video.addEventListener("seeked", sync);
+rec.addEventListener("load", sync);
+document.getElementById("play").addEventListener("click", () => { video.play(); });
+document.getElementById("pause").addEventListener("click", () => { video.pause(); sync(); });
+document.getElementById("restart").addEventListener("click", () => { video.currentTime = 0; video.play(); sync(); });
+</script>
+</body>
+</html>

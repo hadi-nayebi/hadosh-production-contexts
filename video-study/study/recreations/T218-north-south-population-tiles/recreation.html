@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T218 — North/South population tiles — recreation</title>
+<style>
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:#e9e6de; color:#1a1a1a; }
+  main { max-width:680px; margin:0 auto; padding:12px; }
+  svg { width:100%; height:auto; display:block; }
+  .controls { display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap; }
+  button { font-size:16px; padding:10px 18px; min-height:44px; cursor:pointer; }
+  #clock { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+  <svg id="scene" role="img" aria-label="North South population tiles recreation"></svg>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <button id="restart" type="button">Restart</button>
+    <span id="clock">0.0s</span>
+  </div>
+</main>
+<script id="t218-config">
+"use strict";
+const CONFIG = {
+  "stageW": 640, "stageH": 400, "headerY": 18,
+  "campTitleFontPx": 30, "campSubFontPx": 24, "centreLabelFontPx": 23, "centreSubFontPx": 22, "enslavedLabelFontPx": 22,
+  "tileLabelScale": 0.22, "tileLabelMinPx": 26, "tileLabelMaxPx": 32, "labelLineHeight": 1.15, "labelHaloPx": 3,
+  "tinyFraction": 0.18, "smallFraction": 0.5, "appearStartOpacity": 0.55,
+  "arrowWidthPx": 3.5, "arrowHeadPx": 9, "arrowHeadSpread": 0.42, "arrowLiftPx": 18, "arrowApex": [0.50, 0.27], "enslavedArrowApex": [0.64, 0.27],
+  "freeArrowTargets": ["North Carolina", "New York"], "enslavedArrowTarget": "North Carolina",
+  "tAppearMs": 0, "appearDurMs": 1500, "headerDurMs": 800,
+  "tFreeMs": 3000, "freeDurMs": 2000,
+  "tArrowsMs": 3000, "arrowsDurMs": 1000,
+  "tFreeLabelMs": 3500, "freeLabelDurMs": 1500,
+  "tFreeLabelOutMs": 10000, "freeLabelOutDurMs": 1000,
+  "tEnslavedMs": 14000, "enslavedDurMs": 1000,
+  "tEnslavedLabelMs": 15000, "enslavedLabelDurMs": 1000,
+  "tEnslavedLabelOutMs": 17500, "enslavedLabelOutDurMs": 1000,
+  "holdMs": 2500,
+  "easeAppear": "easeInOut", "easeFree": "easeInOut", "easeLabel": "easeInOut", "easeEnslaved": "easeInOut",
+  "palette": {"ground": "#f4f1ea", "tileStart": "#4a4a4a", "tile": "#56706b", "enslaved": "#c85a2e", "ink": "#333333", "labelInk": "#2f2f2f", "arrowFree": "#6fa8a0", "arrowDark": "#2f2f2f", "tileLabel": "#ffffff"},
+  "fontFamily": "Georgia, 'Times New Roman', serif",
+  "campSouthTitle": "South", "campSouthSub": "Pro-slavery", "campNorthTitle": "North", "campNorthSub": "Anti-slavery",
+  "campSouthX": 160, "campNorthX": 490,
+  "freeLabelLine1": "Free people population", "freeLabelLine2": "(mostly white)", "freeLabelX": 320, "freeLabelY": 92,
+  "enslavedLabelText": "Enslaved people", "enslavedLabelX": 415, "enslavedLabelY": 92,
+  "tiles": [
+    {"label":"Virginia","camp":"south","cx":100,"cy":165,"freeW":140,"freeH":135,"enslavedPx":15},
+    {"label":"North Carolina","camp":"south","cx":240,"cy":144,"freeW":118,"freeH":118,"enslavedPx":11},
+    {"label":"South Carolina","camp":"south","cx":240,"cy":252,"freeW":84,"freeH":84,"enslavedPx":8},
+    {"label":"Delaware","camp":"south","cx":62,"cy":262,"freeW":44,"freeH":44,"enslavedPx":3},
+    {"label":"Maryland","camp":"south","cx":140,"cy":282,"freeW":96,"freeH":96,"enslavedPx":8},
+    {"label":"Georgia","camp":"south","cx":62,"cy":330,"freeW":58,"freeH":58,"enslavedPx":4},
+    {"label":"New Jersey","camp":"south","cx":232,"cy":338,"freeW":84,"freeH":84,"enslavedPx":3},
+    {"label":"New York","camp":"north","cx":428,"cy":168,"freeW":124,"freeH":120,"enslavedPx":0},
+    {"label":"Pennsylvania","camp":"north","cx":566,"cy":145,"freeW":144,"freeH":138,"enslavedPx":0,"labelFontPx":24},
+    {"label":"Connecticut","camp":"north","cx":380,"cy":278,"freeW":88,"freeH":94,"enslavedPx":0},
+    {"label":"Massachusetts","camp":"north","cx":562,"cy":275,"freeW":132,"freeH":120,"enslavedPx":0,"labelFontPx":24},
+    {"label":"New Hampshire","camp":"north","cx":462,"cy":345,"freeW":66,"freeH":84,"enslavedPx":0}
+  ]
+};
+</script>
+<script id="t218-logic">
+"use strict";
+/* ---------- pure logic: CONFIG derivations, validation, stateAt (no DOM) ---------- */
+const EASINGS = { easeInOut: p => p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2, linear: p => p };
+function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+function easeOf(cfg, key){ return EASINGS[cfg[key]] || EASINGS.easeInOut; }
+function lerp(a, b, p){ return a + (b - a) * p; }
+function hexRgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function lerpColor(h1, h2, p){ const a = hexRgb(h1), b = hexRgb(h2); return "rgb(" + a.map((v,i) => Math.round(lerp(v, b[i], p))).join(",") + ")"; }
+function tileFontPx(cfg, tile){ if (tile.labelFontPx) return tile.labelFontPx; return Math.max(cfg.tileLabelMinPx, Math.min(cfg.tileLabelMaxPx, tile.freeW * cfg.tileLabelScale)); }
+function labelLines(label){ const w = label.split(" "); if (w.length < 2) return [label]; const mid = Math.ceil(w.length/2); return [w.slice(0,mid).join(" "), w.slice(mid).join(" ")]; }
+function phaseRaw(cfg, startKey, durKey, t){ return clamp01((t - cfg[startKey]) / cfg[durKey]); }
+function tileRect(tile, scale){ const w = tile.freeW * scale, h = tile.freeH * scale; return { x: tile.cx - w/2, y: tile.cy - h/2, w: w, h: h }; }
+function resolveTarget(cfg, label){
+  let t = cfg.tiles.find(x => x.label === label);
+  if (t) return t;
+  const camp = (label === cfg.enslavedArrowTarget || label === cfg.freeArrowTargets[0]) ? "south" : "north";
+  return cfg.tiles.find(x => x.camp === camp) || cfg.tiles[0];
+}
+function derive(cfg){
+  const completeAtMs = cfg.tEnslavedLabelOutMs + cfg.enslavedLabelOutDurMs;
+  return { completeAtMs: completeAtMs, durationMs: completeAtMs + cfg.holdMs,
+    freeEndMs: cfg.tFreeMs + cfg.freeDurMs, arrowsEndMs: cfg.tArrowsMs + cfg.arrowsDurMs,
+    appearEndMs: cfg.tAppearMs + cfg.appearDurMs, labelOutEndMs: cfg.tFreeLabelOutMs + cfg.freeLabelOutDurMs,
+    framesEndMs: cfg.tEnslavedMs + cfg.enslavedDurMs, enslavedLabelEndMs: cfg.tEnslavedLabelMs + cfg.enslavedLabelDurMs };
+}
+function validateConfig(cfg){
+  const errors = [];
+  const d = derive(cfg);
+  const durKeys = ["appearDurMs","headerDurMs","freeDurMs","arrowsDurMs","freeLabelDurMs","freeLabelOutDurMs","enslavedDurMs","enslavedLabelDurMs","enslavedLabelOutDurMs","holdMs"];
+  for (const k of durKeys){ if (!(cfg[k] > 0) || !isFinite(cfg[k])) errors.push("duration " + k + " must be positive finite"); }
+  if (cfg.tFreeMs < d.appearEndMs) errors.push("phase order: free start " + cfg.tFreeMs + " before appear end " + d.appearEndMs);
+  if (cfg.tArrowsMs < cfg.tFreeMs) errors.push("phase order: arrows start " + cfg.tArrowsMs + " before free start " + cfg.tFreeMs);
+  if (d.arrowsEndMs > d.freeEndMs) errors.push("phase order: arrows end " + d.arrowsEndMs + " after free end " + d.freeEndMs);
+  if (cfg.tFreeLabelMs < cfg.tFreeMs) errors.push("phase order: free label start " + cfg.tFreeLabelMs + " before free start " + cfg.tFreeMs);
+  if (cfg.tFreeLabelMs + cfg.freeLabelDurMs > d.freeEndMs) errors.push("phase order: free label end " + (cfg.tFreeLabelMs + cfg.freeLabelDurMs) + " after free end " + d.freeEndMs);
+  if (cfg.tFreeLabelOutMs < d.freeEndMs) errors.push("phase order: label-out start " + cfg.tFreeLabelOutMs + " before free end " + d.freeEndMs);
+  if (cfg.tEnslavedMs < d.labelOutEndMs) errors.push("phase order: enslaved start " + cfg.tEnslavedMs + " before label-out end " + d.labelOutEndMs);
+  if (cfg.tEnslavedLabelMs < d.framesEndMs) errors.push("phase order: enslaved label start " + cfg.tEnslavedLabelMs + " before frames end " + d.framesEndMs);
+  if (cfg.tEnslavedLabelOutMs < d.enslavedLabelEndMs) errors.push("phase order: enslaved label-out start " + cfg.tEnslavedLabelOutMs + " before enslaved label end " + d.enslavedLabelEndMs);
+  if (!(cfg.tileLabelMinPx >= 20)) errors.push("tileLabelMinPx below fit floor form (20)");
+  return errors;
+}
+function stateAt(cfg, t){
+  const eA = easeOf(cfg, "easeAppear"), eF = easeOf(cfg, "easeFree"), eL = easeOf(cfg, "easeLabel"), eE = easeOf(cfg, "easeEnslaved");
+  const appearRaw = phaseRaw(cfg, "tAppearMs", "appearDurMs", t), appearP = eA(appearRaw);
+  const freeRaw = phaseRaw(cfg, "tFreeMs", "freeDurMs", t), freeP = eF(freeRaw);
+  const arrowsRaw = phaseRaw(cfg, "tArrowsMs", "arrowsDurMs", t), arrowsP = eL(arrowsRaw);
+  const labelRaw = phaseRaw(cfg, "tFreeLabelMs", "freeLabelDurMs", t), labelP = eL(labelRaw);
+  const labelOutRaw = phaseRaw(cfg, "tFreeLabelOutMs", "freeLabelOutDurMs", t), labelOutP = eL(labelOutRaw);
+  const ensRaw = phaseRaw(cfg, "tEnslavedMs", "enslavedDurMs", t), ensP = eE(ensRaw);
+  const ensLabelRaw = phaseRaw(cfg, "tEnslavedLabelMs", "enslavedLabelDurMs", t), ensLabelP = eL(ensLabelRaw);
+  const ensLabelOutRaw = phaseRaw(cfg, "tEnslavedLabelOutMs", "enslavedLabelOutDurMs", t), ensLabelOutP = eL(ensLabelOutRaw);
+  const headerP = clamp01(t / cfg.headerDurMs);
+  const tiles = cfg.tiles.map(tile => {
+    let scale, opacity;
+    if (t < cfg.tFreeMs){ scale = lerp(cfg.tinyFraction, cfg.smallFraction, appearP); opacity = lerp(cfg.appearStartOpacity, 1, appearP); }
+    else { scale = lerp(cfg.smallFraction, 1, freeP); opacity = 1; }
+    const r = tileRect(tile, scale);
+    return { label: tile.label, camp: tile.camp, scale: scale, opacity: opacity,
+      x: r.x, y: r.y, w: r.w, h: r.h, fillMix: freeP, framePx: (tile.camp === "south" ? tile.enslavedPx : 0) * ensP,
+      fontPx: tileFontPx(cfg, tile) * scale };
+  });
+  const arrowFor = (apexFrac, targetLabel) => {
+    const target = resolveTarget(cfg, targetLabel);
+    const st = tiles[cfg.tiles.indexOf(target)];
+    return { x1: apexFrac[0] * cfg.stageW, y1: apexFrac[1] * cfg.stageH, x2: st.x + st.w/2, y2: st.y, target: target.label };
+  };
+  return {
+    tiles: tiles, headerP: headerP,
+    freeRaw: freeRaw, freeP: freeP, arrowsRaw: arrowsRaw, arrowsP: arrowsP,
+    freeLabelP: labelP, freeLabelOpacity: labelP * (1 - labelOutP), freeArrowOpacity: arrowsP * (1 - labelOutP),
+    enslavedRaw: ensRaw, enslavedP: ensP,
+    enslavedLabelP: ensLabelP, enslavedLabelOpacity: ensLabelP * (1 - ensLabelOutP),
+    freeArrows: cfg.freeArrowTargets.map(l => arrowFor(cfg.arrowApex, l)),
+    enslavedArrow: arrowFor(cfg.enslavedArrowApex, cfg.enslavedArrowTarget)
+  };
+}
+</script>
+<script id="t218-render">
+"use strict";
+/* ---------- renderer: DOM built once from CONFIG, updated from stateAt ---------- */
+const svg = document.getElementById("scene");
+const NS = "http://www.w3.org/2000/svg";
+function el(name, attrs){ const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+svg.setAttribute("viewBox", "0 0 " + CONFIG.stageW + " " + CONFIG.stageH);
+svg.appendChild(el("rect", { x: 0, y: 0, width: CONFIG.stageW, height: CONFIG.stageH, fill: CONFIG.palette.ground }));
+const headerGroups = [];
+function makeHeader(x, title, sub){
+  const g = el("g", {});
+  const t1 = el("text", { x: x, y: CONFIG.headerY + CONFIG.campTitleFontPx, "text-anchor": "middle", "font-family": CONFIG.fontFamily, "font-size": CONFIG.campTitleFontPx, fill: CONFIG.palette.ink });
+  t1.textContent = title;
+  const t2 = el("text", { x: x, y: CONFIG.headerY + CONFIG.campTitleFontPx + CONFIG.campSubFontPx + 4, "text-anchor": "middle", "font-family": CONFIG.fontFamily, "font-size": CONFIG.campSubFontPx, fill: CONFIG.palette.ink });
+  t2.textContent = sub;
+  g.appendChild(t1); g.appendChild(t2); svg.appendChild(g); headerGroups.push(g);
+}
+makeHeader(CONFIG.campSouthX, CONFIG.campSouthTitle, CONFIG.campSouthSub);
+makeHeader(CONFIG.campNorthX, CONFIG.campNorthTitle, CONFIG.campNorthSub);
+const tileNodes = CONFIG.tiles.map(tile => {
+  const frame = el("rect", { fill: CONFIG.palette.enslaved });
+  const rect = el("rect", {});
+  const text = el("text", { "text-anchor": "middle", "font-family": CONFIG.fontFamily, fill: CONFIG.palette.tileLabel,
+    stroke: CONFIG.palette.tile, "paint-order": "stroke", "stroke-width": CONFIG.labelHaloPx });
+  labelLines(tile.label).forEach((line, i) => {
+    const ts = el("tspan", { x: tile.cx, dy: i === 0 ? 0 : CONFIG.labelLineHeight + "em" });
+    ts.textContent = line; text.appendChild(ts);
+  });
+  svg.appendChild(frame); svg.appendChild(rect); svg.appendChild(text);
+  return { frame: frame, rect: rect, text: text, tile: tile };
+});
+function makeLabelGroup(x, y, lines, fontPx, subPx){
+  const g = el("g", {});
+  lines.forEach((line, i) => {
+    const t = el("text", { x: x, y: y + i * (fontPx + 4), "text-anchor": "middle", "font-family": CONFIG.fontFamily, "font-size": i === 0 ? fontPx : subPx, fill: CONFIG.palette.labelInk });
+    t.textContent = line; g.appendChild(t);
+  });
+  svg.appendChild(g); return g;
+}
+const freeLabelG = makeLabelGroup(CONFIG.freeLabelX, CONFIG.freeLabelY, [CONFIG.freeLabelLine1, CONFIG.freeLabelLine2], CONFIG.centreLabelFontPx, CONFIG.centreSubFontPx);
+const enslavedLabelG = makeLabelGroup(CONFIG.enslavedLabelX, CONFIG.enslavedLabelY, [CONFIG.enslavedLabelText], CONFIG.enslavedLabelFontPx, CONFIG.enslavedLabelFontPx);
+function makeArrow(color){
+  const p = el("path", { fill: "none", stroke: color, "stroke-width": CONFIG.arrowWidthPx, pathLength: 100 });
+  const head = el("path", { fill: color });
+  svg.appendChild(p); svg.appendChild(head);
+  return { path: p, head: head };
+}
+const freeArrowNodes = CONFIG.freeArrowTargets.map(() => makeArrow(CONFIG.palette.arrowFree));
+const enslavedArrowNode = makeArrow(CONFIG.palette.arrowDark);
+function setArrow(node, a, progress){
+  const mx = (a.x1 + a.x2)/2, my = Math.min(a.y1, a.y2) - CONFIG.arrowLiftPx;
+  node.path.setAttribute("d", "M " + a.x1 + " " + a.y1 + " Q " + mx + " " + my + " " + a.x2 + " " + a.y2);
+  node.path.setAttribute("stroke-dasharray", "100");
+  node.path.setAttribute("stroke-dashoffset", String(100 * (1 - progress)));
+  const ang = Math.atan2(a.y2 - my, a.x2 - mx);
+  const s = CONFIG.arrowHeadPx;
+  node.head.setAttribute("d", "M " + a.x2 + " " + a.y2 + " L " + (a.x2 - s * Math.cos(ang - CONFIG.arrowHeadSpread)) + " " + (a.y2 - s * Math.sin(ang - CONFIG.arrowHeadSpread)) + " L " + (a.x2 - s * Math.cos(ang + CONFIG.arrowHeadSpread)) + " " + (a.y2 - s * Math.sin(ang + CONFIG.arrowHeadSpread)) + " Z");
+  node.head.setAttribute("opacity", progress >= 1 ? 1 : 0);
+}
+function render(t){
+  const st = stateAt(CONFIG, t);
+  headerGroups.forEach(g => g.setAttribute("opacity", st.headerP));
+  tileNodes.forEach((n, i) => {
+    const s = st.tiles[i];
+    n.frame.setAttribute("x", s.x - s.framePx); n.frame.setAttribute("y", s.y - s.framePx);
+    n.frame.setAttribute("width", s.w + 2 * s.framePx); n.frame.setAttribute("height", s.h + 2 * s.framePx);
+    n.frame.setAttribute("opacity", s.framePx > 0 ? s.opacity : 0);
+    n.rect.setAttribute("x", s.x); n.rect.setAttribute("y", s.y);
+    n.rect.setAttribute("width", s.w); n.rect.setAttribute("height", s.h);
+    n.rect.setAttribute("fill", lerpColor(CONFIG.palette.tileStart, CONFIG.palette.tile, s.fillMix));
+    n.rect.setAttribute("opacity", s.opacity);
+    n.text.setAttribute("font-size", s.fontPx);
+    const lines = labelLines(n.tile.label);
+    const y0 = n.tile.cy - ((lines.length - 1) * s.fontPx * CONFIG.labelLineHeight) / 2 + s.fontPx * 0.35;
+    n.text.setAttribute("y", y0);
+    n.text.querySelectorAll("tspan").forEach(ts => ts.setAttribute("x", n.tile.cx));
+    n.text.setAttribute("opacity", s.opacity);
+  });
+  freeLabelG.setAttribute("opacity", st.freeLabelOpacity);
+  enslavedLabelG.setAttribute("opacity", st.enslavedLabelOpacity);
+  freeArrowNodes.forEach((n, i) => { setArrow(n, st.freeArrows[i], st.arrowsP); n.path.setAttribute("opacity", st.freeArrowOpacity); n.head.setAttribute("opacity", st.arrowsP >= 1 ? st.freeArrowOpacity : 0); });
+  setArrow(enslavedArrowNode, st.enslavedArrow, st.enslavedLabelP);
+  enslavedArrowNode.path.setAttribute("opacity", st.enslavedLabelOpacity);
+  enslavedArrowNode.head.setAttribute("opacity", st.enslavedLabelOpacity >= 1 ? 1 : 0);
+  document.getElementById("clock").textContent = (t / 1000).toFixed(1) + "s";
+}
+let playing = false, startStamp = 0, startMs = 0;
+function tick(now){
+  if (!playing) return;
+  const t = startMs + (now - startStamp);
+  const d = derive(CONFIG);
+  if (t >= d.durationMs){ render(d.durationMs); playing = false; document.getElementById("play").textContent = "Play"; return; }
+  render(t); requestAnimationFrame(tick);
+}
+document.getElementById("play").addEventListener("click", () => { if (playing) return; playing = true; startStamp = performance.now(); startMs = 0; requestAnimationFrame(tick); });
+document.getElementById("pause").addEventListener("click", () => { playing = false; });
+document.getElementById("restart").addEventListener("click", () => { playing = true; startStamp = performance.now(); startMs = 0; requestAnimationFrame(tick); });
+render(0);
+window.__T218 = { CONFIG, stateAt, derive, validateConfig, render };
+</script>
+</body>
+</html>

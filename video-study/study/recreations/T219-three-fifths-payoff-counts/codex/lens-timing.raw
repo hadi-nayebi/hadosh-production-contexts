@@ -1,0 +1,12 @@
+**Verdict — T219 attempt 1 matches the prescribed timing schedule across the 26,000 ms window, with the named portrait-coda departure.**
+
+- **Icon and tiles.** Build 0 maps to source 305.0 s. The icon and banner are present at CP0, and the icon exit ends at 1,800 ms as Pennsylvania’s tile begins. Virginia starts 500 ms later. The corrected CP1 receipt confirms that at 2,000 ms the icon is gone, Pennsylvania is entering, and Virginia is absent. Both tiles are nearly settled at 4,000 ms and complete at 4,900 ms. (`recreation.html`, `t219-config` and `stateAt`; harness v3 `CP0`, `P1`, `TILE-EARLY`, `TILE-MID`, `P2`.)
+- **Rows, frame, and tag.** The free rows run from 5,000 to 5,600 ms, with the same state at the 7,050 ms hold probe. Virginia’s frame runs from 8,500 to 9,500 ms and reaches half progress at 9,000 ms. The tag is still absent at 11,000 ms, fades in from 12,500 to 13,000 ms, and is complete before the squares begin. (`recreation.html`, `t219-config` and `stateAt`; harness v3 `FREE-DONE`, `MID-HOLD`, `P3`, `FRAME-DONE`, `TAG-ZERO`, `TAG-DONE`.)
+- **Counts and hold.** The square fades begin at 15,000 ms, corresponding to source 320.0 s. CP8 at 16,000 ms shows the stagger in progress and the numerals fully visible. The last Virginia square reaches full opacity at `15,000 + 20 × 55 + 400 = 16,500 ms`, inside the source bracket from CP8 at 16,000 ms to CP9 at 18,000 ms. The build’s separate 17,000 ms probe confirms 21 Virginia squares and 15 Pennsylvania squares, matching the completed scoreboard cited at source 322 s. The 20,000 ms probe matches that completed state, and the schedule holds it through the deferred portrait coda at 22,000–24,000 ms to the T220 boundary at 26,000 ms. (`digest.md` §T18; `recreation.html`, `derive` and `stateAt`; harness v3 `P4`, `COUNTS`, `HOLD-LATE`; corrected A13, CP11–CP13.)
+
+**Condense** — No timing change is indicated. In the receipt index, label 17,000 ms as the build completion probe associated with CP9, and keep 18,000 ms as the source census checkpoint.
+
+**Limits** — The review used the supplied source, census mapping, and receipts for the declared SHA-256 `877ba1e2b3d22f320c88e4ee5abb9de60cb7d45e9a0e039d9f00a56c17ccba91`. Source frames, rendered playback, and the hash were unverified independently.
+
+SCORE: 100  
+BODY-WRITE: Read-only return for `codex/lens-timing.md`, recording the timing score and the CP9 receipt-label clarification for Condense.

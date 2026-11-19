@@ -1,0 +1,30 @@
+# T227 — scores · Cycle 039 Wave 36 · FIRST ATTEMPT
+
+- **Item:** T227 — Substitution-at-action: the halving that reveals flesh · queue #102 · Packet #13 (PES "Fresh Guacamole").
+- **Final build:** recreation.html sha256 `63d7fab9446eaa17bb9d237bfaca5afd7beb37dfa1598e1b16afa30af3fa7ad4` · 12,096 B.
+- **Verdict: NO VERDICT** — the two-HOLD stop (INSTRUCTION Amendment A12.3). The five-lens scoring wave was NOT fired on this build. The item stays IN PROGRESS, mid-attempt; its completion (cure below → fresh own-checks + A6 legs → ONE jev-prewave completion re-fire → on FIRE-WAVE the five-lens wave bound to that build) is the next recreation cycle's first charge in completion form (§0 A8 + A12.3). It does NOT route to practice unscored (A3 §3).
+
+## Prewave line (jev-prewave, both firings on the final build)
+- **Firing 1: HOLD — primary ASSERTED-CHECKS** (parameterization 0.90 · purity pre-check 1.00 · own-checks completeness 0.40 · fidelity-plan honesty 1.00). Return: `codex/jev-prewave.md`. Three receipt-form defects, all cured in one cure round (build unchanged; cure receipts in build-record §2b: P7 CONFIG-expression + swapped receipts · FULL C@1000–C@5000 state objects · fixed-instant disposition note).
+- **Firing 2: HOLD — primary ASSERTED-CHECKS** (parameterization 0.90 · purity pre-check 1.00 · own-checks completeness 0.45 · fidelity-plan honesty 1.00). Return: `codex/jev-prewave-refire.md`. The P7 and full-state cures were accepted; one receipt-form defect remains (below).
+
+## Own-checks + A6 summary (final build)
+- Own checks: harness 19/19 PASS (A11 assertions CP0, P1–P7, C@1000/2000/3000/4000/5000 + swaps: content/identities with stub-DOM rendered fills, timing with moved instants, palette with rendered capture, two phase-order negative tests) + cure round P7/full-state receipts. Purity grep 0 hits · node --check rc=0 ×4 · RNG absent.
+- A6 legs: fit-table.md 0 HITs (no subject text in the recreation, grep-verified; comparison labels PIL-measured) · config-census.md 0 HITs on the final build (two pre-cure HITs cured in the build: easeSaw siteless · palette.skin siteless).
+- Segment: segment.mp4, 6.000 s, h264 1920×1080 + AAC, sha256 48f898ab5f753551e9b1b2fdd08a6fb139d53546c2412d08f18d3ab78507331b, covers source 8.5–14.5 s ⊇ window 9–14 s.
+- Phase A gates: codex-observe CONFIRMED-WITH-GAPS · jev-observe-exit ADVANCE-WITH-GAPS (queue 1.0 · prior 0.5 · mechanics 0.5 · variables 1.0 · guidance 1.0 · consumer 1.0) · codex-plan-review REVISE (applied in full) · jev-plan-exit REVISE/UNBOUND-SCHEDULE (parameter 0.60 · construction 0.90 · execute 0.85 · verify 0.70 · failure 0.85 · plateau 1.00; applied in full) — returns in the wave run dir.
+- **PIXEL-UNVERIFIED** — no browser binary in this seat; the comparison page is the render surface and browser playback was not exercisable.
+
+## Priced cure list (completion cycle's charge, A12.3)
+1. **Swapped phase-relative receipts (firing-2 defect, sole remaining):** file the evaluated CONFIG expressions, moved instants, and raw assertion results for P2, P4, and P6 under the filed timing swap (tSawMs 900→600): P2 expression `tSawMs + sawDurMs/2` → 2200→1900 ms with its raw result (sawP 0.5, flesh 0, step 2 under the swapped CONFIG) · P4 expression `tSawMs + sawDurMs` (sawEndMs) → 3500→3200 ms with its raw result (sawP 1, flesh 1) · P6 expression `completeAtMs + holdMs/2` → 4600→4300 ms with its raw hold-identity result vs the swapped P5. The completion harness prints all three alongside the already-filed P1/P3/P7 swapped receipts, so every phase-relative probe carries a default + swapped receipt pair.
+
+## Completion — Cycle 040 Wave 37 (A12.3)
+- **Build:** recreation.html sha256 `63d7fab9446eaa17bb9d237bfaca5afd7beb37dfa1598e1b16afa30af3fa7ad4` · 12,096 B — UNCHANGED (the cure was a receipt cure; no build change).
+- **Cure applied:** the sole priced cure (item 1 above) was filed in full — completion harness prints P2-SWAPPED@1900 (expr `tSawMs + sawDurMs/2` = 600 + 2600/2; sawP 0.5, flesh 0, step 2) · P4-SWAPPED@3200 (expr `tSawMs + sawDurMs`; sawP 1, flesh 1) · P6-SWAPPED@4300 (expr `completeAtMs + holdMs/2` = 3900 + 800/2; priced-fields-equal=true vs swapped P5@3900) alongside the already-filed P1/P3/P7 swapped receipts (build-record §7). Fresh own-checks: harness 22/22 PASS · purity grep 0 hits · node --check rc=0 ×4 · RNG absent · stub-DOM rendered capture PASS. A6 legs refiled on the final build: fit-table.md 0 HITs · config-census.md 0 HITs. A13 receipt index reconciled in build-record §8 (prior assertion set inherited whole, A13.2).
+- **Prewave completion re-fire (exactly once): HOLD — primary ASSERTED-CHECKS** (parameterization 0.90 · purity pre-check 1.00 · own-checks completeness 0.45 · fidelity-plan honesty 1.00). Return: `codex/jev-prewave-completion-cycle040.md`. The swapped P2/P4/P6 receipts were accepted as filed; the HOLD rests on new receipt-form findings (cure list below).
+- **Verdict: NO VERDICT** — the five-lens scoring wave was NOT fired. The item stays IN PROGRESS, mid-attempt; it does NOT route to practice unscored (A3 §3). Next re-fire **PENDING AUTHORIZATION** (HQ).
+
+### Priced cure list (next authorized re-fire's charge)
+1. **Full-state equality receipts:** file RAW full-state equality results (complete stateAt objects compared field-for-field, result printed) for P6 vs P5 under BOTH configurations (default P6@4600 vs P5@4200 · swapped P6@4300 vs swapped P5@3900) and for C@5000 vs default P5 — replacing the priced-fields equality summary the judge priced as insufficient against Plan §2.3's full-state requirement.
+2. **P7 within-step equality probes:** add CONFIG-relative P7 probes demonstrating within-step equality (two probes inside one step carrying equal stepped bladeTravelP) AND the boundary jump, under BOTH configurations (default + tSawMs 900→600 swapped), each with its CONFIG expression and raw result.
+3. **A13 reconciliation:** reconcile the new receipts (items 1–2) in the build-record's RECEIPT INDEX before the next payload is assembled.

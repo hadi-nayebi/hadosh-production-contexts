@@ -1,0 +1,31 @@
+**Readability verdict — the T23 map needs revision before it can be lifted as-is.** The shipped source model drops every chapter title at 240 px and still drops chapter 07 at 337 px. The first two appearances encode completion and the upcoming target separately. The final appearance gives its completed target no distinct visible cue before the dive.
+
+**Tabs at phone widths.** I executed the shipped label policy at each integer stage width from 240 to 360 px. At 240–309 px, all 12 tabs are number-only. The panel interior at 240 px is 58.67 × 35.01 px, and the 65% height budget allows 22.76 px for a tab. Two lines at the 11 px floor require 32.5 px including padding and border. At 310–337 px, only 07 remains number-only. At 338–360 px, the model preserves all 12 titles. These outcomes apply to completed, upcoming, and target panels alike. (`recreation.html:32–49, 185–207, 996–1093, 1552–1576`)
+
+| Panel | 240 px model, all at 11 px | 360 px model |
+|---|---|---|
+| 01 | 01 | 01 · THE / TERMINAL |
+| 02 | 02 | 02 · THE WALL |
+| 03 | 03 | 03 · SHIP IT |
+| 04 | 04 | 04 · THE / COMMENTS |
+| 05 | 05 | 05 · IN / THE WALLS |
+| 06 | 06 | 06 · THE SWARM |
+| 07 | 07 | 07 · THE / DAILY STANDUP |
+| 08 | 08 | 08 · THE / KEYNOTE |
+| 09 | 09 | 09 · THE / SEERESS |
+| 10 | 10 | 10 · I KNEW IT |
+| 11 | 11 | 11 · PLEASE / HOLD |
+| 12 | 12 | 12 · USAGE / LIMIT |
+
+**Measured tab refinement can discard a title and cannot recover one preemptively dropped by the model.** The model shrinks the assembled label in 0.5 px steps, then chooses the word split that minimizes the longest line by character count. The live tab and the DOM retry carry number and title separately through `splitTwoLinesNT`. `resolvedArtRect` still calls the assembled-text form, `splitTwoLines`, which splits at the first separator. The DOM checks scroll width, line count, and tab height. It shrinks the current mode, tries the selected split if single-line still fails at the floor, and replaces a failing title with the number. It never retries a different split or restores a model-dropped title. A block span counts as one line even when `pre-line` wraps its text internally, so an actual extra line can pass the line-count check if the height still fits. Range counting remains the fallback for spanless content. At 360 px, the full-title table is therefore a model result, with 07’s `DAILY STANDUP` especially exposed to font-width variation. (`recreation.html:1023–1093, 1133–1137, 1557–1562, 1604–1650`; `build-record-attempt10.md:40–45`)
+
+**The masthead has a workable default wrap path and two refinement gaps.** The 51-character masthead starts at 11 px at both widths because the normal and absolute floors coincide. With padding and reserve included, the model estimates that a single line needs 346.16 px of stage width. Default `break-word` produces two modeled lines in a 26 px band at 240 px and one in an 18 px band at 360 px. If measured horizontal overflow remains, the DOM shrinks toward the absolute floor and then enables wrapping with a 1.15 line height and grows the stage. That branch also enables ordinary word wrapping under configured `normal`, contrary to the model’s one-line decision. Conversely, a header already in wrap mode can exceed its modeled height without triggering the growth check once horizontal overflow has cleared. The hidden overflow can then clip a line. The masthead stays at its layout scale during the approach. (`recreation.html:11, 31, 146–164, 182–191, 987–1000, 1100–1116, 1461–1505, 1717–1722`; `build-record-attempt10.md:53–63`)
+
+**Progress has two art-independent completion cues, but the final target has zero dedicated visible cues.** A completed panel has a yellow tab, a 5 px accent bar in flow below the miniature, and a cream face tint. The tab and bar sit outside the SVG. The miniature can cover the face tint. An ordinary upcoming panel has a muted tab and an empty art area with a faint ghost number. Under the shipped `mark` setting, the upcoming target has two dedicated marks, an orange tab and a red inset outline, plus its miniature. The tab stays outside the art. The inset outline shares the panel interior with its contents and lacks a separately reserved strip. The first grid shows 01–04 complete and 05 next. The second shows 01–08 complete and 09 next. The final grid shows all 12 complete. Panel 12 carries the same visible completion treatment as its peers, so the viewer can read that the series is complete but cannot identify the dive destination from the static grid. At 240 px, the first two targets can be located by their marks and numbers, with their titles absent. (`recreation.html:46–59, 89–99, 1236–1253, 1518–1589`; `build-record-attempt10.md:59–63`)
+
+**Small miniatures get a limited detail pass.** Below the 30 px art-height threshold, the renderer removes text primitives smaller than 14 SVG units, doubles graph edge width, and multiplies graph node radius by 1.6. At 240 px every rendered miniature enters that branch because the model leaves 16.26 px after the tab. At 360 px the eight modeled two-line tabs leave 22.53–26.28 px and trigger it wherever art is present. The four single-line tabs leave 39.80–42.07 px. The renderer chooses detail before DOM tab refinement and before accounting for the completed panel’s 5 px bar. A measured change in tab mode can therefore leave the wrong detail treatment for the available height. The rule removes some miniature lettering and leaves other fine primitives in place, so miniature detail cannot be relied on to recover a missing tab title. (`recreation.html:177–181, 1133–1144, 1369–1391, 1540–1542, 1579–1589, 1659–1671`)
+
+**Limits.** The artifact SHA-256 matched the supplied hash. The width sweep and dimensions are source-model results. Final browser line breaks, clipping, outline visibility, and at-a-glance recognition remain pixel-unverified, consistent with the build record. (`build-record-attempt10.md:3–6, 65–74`)
+
+SCORE: 60
+BODY-WRITE: Read-only verdict for §5 Verify recording the measured-width limits of the source model, the title-loss ranges, the missing visible cue on the completed target, and the header and miniature refinement findings for the next attempt.

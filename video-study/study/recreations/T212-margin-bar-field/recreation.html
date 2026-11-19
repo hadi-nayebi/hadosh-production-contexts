@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T212 — Margin bar field — recreation</title>
+<style>
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:#e9e6de; color:#1a1a1a; }
+  main { max-width:680px; margin:0 auto; padding:12px; }
+  svg { width:100%; height:auto; display:block; }
+  .controls { display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap; }
+  button { font-size:16px; padding:10px 18px; min-height:44px; cursor:pointer; }
+  #clock { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+  <svg id="scene" role="img" aria-label="Margin bar field recreation"></svg>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <button id="restart" type="button">Restart</button>
+    <span id="clock">0.0s</span>
+  </div>
+</main>
+<script id="t212-config">
+"use strict";
+const CONFIG = {
+  "stageW": 640, "stageH": 480, "fieldX": 32, "fieldTop": 28, "fieldH": 230,
+  "gapRatio": 0.28, "linePresent": true, "majorityLineFraction": 0.55, "majorityLineWidthPx": 3,
+  "stripFraction": 0.26, "labelFontPx": 28, "labelMinPx": 28, "labelAngleDeg": -55,
+  "dotRadiusPx": 2.6, "dotPitchPx": 7, "dotsPerUnit": 0.24, "arcWidthPx": 5,
+  "arcPaths": [[[0.02,0.98],[0.25,0.72],[0.55,0.62],[0.78,0.60]], [[0.04,0.30],[0.30,0.16],[0.62,0.13],[0.90,0.22]]],
+  "tGrowMs": 0, "growDurMs": 500, "growStaggerMs": 8,
+  "tArcMs": 5000, "arcDurMs": 1100, "arcGapMs": 200,
+  "tFlattenMs": 8000, "flattenDurMs": 1500, "flattenStaggerMs": 8,
+  "tShrinkMs": 10300, "shrinkDurMs": 800,
+  "tDotsMs": 11300, "dotsDurMs": 1700, "dotsStaggerMs": 16,
+  "holdMs": 1000,
+  "easeGrow": "easeInOut", "easeArc": "easeInOut", "easeFlatten": "easeInOut", "easeShrink": "easeInOut", "easeDots": "easeInOut",
+  "palette": {"ground": "#f4f1ea", "dem": "#55779e", "rep": "#cf4453", "other": "#c9c9c7", "ink": "#1a1a1a", "arc": "#f2d024"},
+  "fontFamily": "Georgia, 'Times New Roman', serif",
+  "states": [
+    {"label":"Alabama","dem":34,"rep":62,"loserUnits":12},{"label":"Alaska","dem":36,"rep":51,"loserUnits":2},
+    {"label":"Arizona","dem":45,"rep":49,"loserUnits":17},{"label":"Arkansas","dem":33,"rep":60,"loserUnits":7},
+    {"label":"California","dem":61,"rep":31,"loserUnits":100},{"label":"Colorado","dem":48,"rep":43,"loserUnits":14},
+    {"label":"Connecticut","dem":54,"rep":40,"loserUnits":9},{"label":"Delaware","dem":53,"rep":41,"loserUnits":3},
+    {"label":"Florida","dem":47,"rep":49,"loserUnits":60},{"label":"Georgia","dem":45,"rep":50,"loserUnits":25},
+    {"label":"Hawaii","dem":62,"rep":30,"loserUnits":3},{"label":"Idaho","dem":27,"rep":59,"loserUnits":4},
+    {"label":"Illinois","dem":55,"rep":38,"loserUnits":28},{"label":"Indiana","dem":37,"rep":57,"loserUnits":16},
+    {"label":"Iowa","dem":41,"rep":51,"loserUnits":9},{"label":"Kansas","dem":36,"rep":56,"loserUnits":7},
+    {"label":"Kentucky","dem":32,"rep":62,"loserUnits":10},{"label":"Louisiana","dem":38,"rep":58,"loserUnits":11},
+    {"label":"Maine","dem":47,"rep":44,"loserUnits":4},{"label":"Maryland","dem":60,"rep":33,"loserUnits":16},
+    {"label":"Massachusetts","dem":60,"rep":32,"loserUnits":19},{"label":"Michigan","dem":47,"rep":45,"loserUnits":24},
+    {"label":"Minnesota","dem":46,"rep":45,"loserUnits":14},{"label":"Mississippi","dem":40,"rep":57,"loserUnits":7},
+    {"label":"Missouri","dem":38,"rep":56,"loserUnits":15},{"label":"Montana","dem":35,"rep":56,"loserUnits":3},
+    {"label":"Nebraska","dem":33,"rep":58,"loserUnits":5},{"label":"Nevada","dem":47,"rep":45,"loserUnits":8},
+    {"label":"New Hampshire","dem":47,"rep":46,"loserUnits":4},{"label":"New Jersey","dem":55,"rep":41,"loserUnits":22},
+    {"label":"New Mexico","dem":48,"rep":40,"loserUnits":5},{"label":"New York","dem":59,"rep":36,"loserUnits":62},
+    {"label":"North Carolina","dem":46,"rep":49,"loserUnits":27},{"label":"North Dakota","dem":27,"rep":63,"loserUnits":2},
+    {"label":"Ohio","dem":43,"rep":51,"loserUnits":30},{"label":"Oklahoma","dem":28,"rep":65,"loserUnits":9},
+    {"label":"Oregon","dem":50,"rep":39,"loserUnits":10},{"label":"Pennsylvania","dem":47,"rep":48,"loserUnits":34},
+    {"label":"Rhode Island","dem":54,"rep":38,"loserUnits":3},{"label":"South Carolina","dem":40,"rep":54,"loserUnits":11},
+    {"label":"South Dakota","dem":31,"rep":61,"loserUnits":3},{"label":"Tennessee","dem":34,"rep":60,"loserUnits":15},
+    {"label":"Texas","dem":43,"rep":52,"loserUnits":66},{"label":"Utah","dem":27,"rep":45,"loserUnits":8},
+    {"label":"Vermont","dem":56,"rep":29,"loserUnits":2},{"label":"Virginia","dem":49,"rep":44,"loserUnits":21},
+    {"label":"Washington","dem":52,"rep":36,"loserUnits":20},{"label":"West Virginia","dem":26,"rep":68,"loserUnits":4},
+    {"label":"Wisconsin","dem":46,"rep":47,"loserUnits":15},{"label":"Wyoming","dem":21,"rep":67,"loserUnits":1}
+  ]
+};
+</script>
+<script id="t212-logic">
+"use strict";
+/* ---------- pure logic: CONFIG derivations, validation, stateAt (no DOM) ---------- */
+const EASINGS = { easeInOut: p => p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2, linear: p => p };
+function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+function easeOf(cfg, key){ return EASINGS[cfg[key]] || EASINGS.easeInOut; }
+function winnerOf(s){ return s.dem >= s.rep ? "dem" : "rep"; }
+function greyOf(s){ return 100 - s.dem - s.rep; }
+function dotCountOf(cfg, s){ return Math.round(s.loserUnits * cfg.dotsPerUnit); }
+function growthEndMs(cfg){ return cfg.tGrowMs + cfg.growDurMs + cfg.growStaggerMs * (cfg.states.length - 1); }
+function arcEndMs(cfg){ return cfg.tArcMs + 2 * cfg.arcDurMs + cfg.arcGapMs; }
+function flattenEndMs(cfg){ return cfg.tFlattenMs + cfg.flattenDurMs + cfg.flattenStaggerMs * (cfg.states.length - 1); }
+function shrinkEndMs(cfg){ return cfg.tShrinkMs + cfg.shrinkDurMs; }
+function dotsEndMs(cfg){ return cfg.tDotsMs + cfg.dotsDurMs + cfg.dotsStaggerMs * (cfg.states.length - 1); }
+function derive(cfg){
+  const fieldW = cfg.stageW - 2 * cfg.fieldX;
+  const pitch = fieldW / cfg.states.length;
+  const completeAtMs = Math.max(growthEndMs(cfg), arcEndMs(cfg), flattenEndMs(cfg), shrinkEndMs(cfg), dotsEndMs(cfg));
+  let maxDots = 0; for (const s of cfg.states) maxDots = Math.max(maxDots, dotCountOf(cfg, s));
+  const maxDotSpanPx = maxDots === 0 ? 0 : (maxDots - 1) * cfg.dotPitchPx + 2 * cfg.dotRadiusPx;
+  const headroomPx = cfg.fieldH * (1 - cfg.stripFraction) - 4;
+  return { fieldW, pitch, barW: pitch * (1 - cfg.gapRatio), gapPx: pitch * cfg.gapRatio,
+    baseline: cfg.fieldTop + cfg.fieldH, completeAtMs, durationMs: completeAtMs + cfg.holdMs,
+    maxDots, maxDotSpanPx, headroomPx };
+}
+function validateConfig(cfg){
+  const errors = [];
+  const nums = ["stageW","stageH","fieldX","fieldTop","fieldH","gapRatio","majorityLineFraction","majorityLineWidthPx",
+    "stripFraction","labelFontPx","labelMinPx","dotRadiusPx","dotPitchPx","dotsPerUnit","arcWidthPx",
+    "tGrowMs","growDurMs","growStaggerMs","tArcMs","arcDurMs","arcGapMs","tFlattenMs","flattenDurMs","flattenStaggerMs",
+    "tShrinkMs","shrinkDurMs","tDotsMs","dotsDurMs","dotsStaggerMs","holdMs"];
+  for (const k of nums){ if (!Number.isFinite(cfg[k])) errors.push(k + " not finite"); }
+  if (Number.isFinite(cfg.labelFontPx) && Number.isFinite(cfg.labelMinPx) && cfg.labelFontPx < cfg.labelMinPx)
+    errors.push("labelFontPx below labelMinPx floor");
+  if (!Array.isArray(cfg.states) || cfg.states.length === 0) errors.push("states missing");
+  for (const s of (cfg.states || [])){
+    if (!Number.isFinite(s.dem) || !Number.isFinite(s.rep) || !Number.isFinite(s.loserUnits))
+      errors.push(s.label + " numeric field not finite");
+    if (s.dem + s.rep > 100) errors.push(s.label + " shares exceed 100");
+    if (greyOf(s) < 0) errors.push(s.label + " negative grey share");
+  }
+  if (Array.isArray(cfg.states) && cfg.states.length){
+    if (cfg.tArcMs < growthEndMs(cfg)) errors.push("phase order: arcs start " + cfg.tArcMs + " before growth end " + growthEndMs(cfg));
+    if (cfg.tFlattenMs < arcEndMs(cfg)) errors.push("phase order: flatten starts " + cfg.tFlattenMs + " before arc end " + arcEndMs(cfg));
+    if (cfg.tShrinkMs < flattenEndMs(cfg)) errors.push("phase order: shrink starts " + cfg.tShrinkMs + " before flatten end " + flattenEndMs(cfg));
+    if (cfg.tDotsMs < shrinkEndMs(cfg)) errors.push("phase order: dots start " + cfg.tDotsMs + " before shrink end " + shrinkEndMs(cfg));
+    const d = derive(cfg);
+    if (d.maxDotSpanPx > d.headroomPx) errors.push("dot span " + d.maxDotSpanPx + " exceeds headroom " + d.headroomPx);
+  }
+  return { ok: errors.length === 0, errors };
+}
+function stateAt(cfg, t){
+  const d = derive(cfg);
+  const bars = [];
+  let flatSum = 0;
+  for (let i = 0; i < cfg.states.length; i++){
+    const s = cfg.states[i];
+    const growP = easeOf(cfg, "easeGrow")(cfg.growDurMs === 0 ? (t >= cfg.tGrowMs + i * cfg.growStaggerMs ? 1 : 0)
+      : clamp01((t - (cfg.tGrowMs + i * cfg.growStaggerMs)) / cfg.growDurMs));
+    const fP = easeOf(cfg, "easeFlatten")(cfg.flattenDurMs === 0 ? (t >= cfg.tFlattenMs + i * cfg.flattenStaggerMs ? 1 : 0)
+      : clamp01((t - (cfg.tFlattenMs + i * cfg.flattenStaggerMs)) / cfg.flattenDurMs));
+    flatSum += fP;
+    const w = winnerOf(s);
+    let demF = (s.dem / 100) * (1 - fP), greyF = (greyOf(s) / 100) * (1 - fP), repF = (s.rep / 100) * (1 - fP);
+    if (w === "dem") demF += fP; else repF += fP;
+    const dotP = easeOf(cfg, "easeDots")(cfg.dotsDurMs === 0 ? (t >= cfg.tDotsMs + i * cfg.dotsStaggerMs ? 1 : 0)
+      : clamp01((t - (cfg.tDotsMs + i * cfg.dotsStaggerMs)) / cfg.dotsDurMs));
+    bars.push({ label: s.label, winner: w, growP, flattenP: fP,
+      demF: demF * growP, greyF: greyF * growP, repF: repF * growP,
+      dotFull: dotCountOf(cfg, s), dotsVisible: dotP * dotCountOf(cfg, s), dotP });
+  }
+  const shrinkP = easeOf(cfg, "easeShrink")(cfg.shrinkDurMs === 0 ? (t >= cfg.tShrinkMs ? 1 : 0)
+    : clamp01((t - cfg.tShrinkMs) / cfg.shrinkDurMs));
+  const fieldScale = 1 - shrinkP * (1 - cfg.stripFraction);
+  const arc1P = easeOf(cfg, "easeArc")(cfg.arcDurMs === 0 ? (t >= cfg.tArcMs ? 1 : 0) : clamp01((t - cfg.tArcMs) / cfg.arcDurMs));
+  const arc2Start = cfg.tArcMs + cfg.arcDurMs + cfg.arcGapMs;
+  const arc2P = easeOf(cfg, "easeArc")(cfg.arcDurMs === 0 ? (t >= arc2Start ? 1 : 0) : clamp01((t - arc2Start) / cfg.arcDurMs));
+  const flatAvg = cfg.states.length ? flatSum / cfg.states.length : 0;
+  return { t, bars, fieldScale, shrinkP, arc1P, arc2P,
+    lineOpacity: cfg.linePresent ? 1 - flatAvg : 0, labelOpacity: 1 - flatAvg,
+    completeAtMs: d.completeAtMs, durationMs: d.durationMs };
+}
+</script>
+<script id="t212-render">
+"use strict";
+/* ---------- renderer: DOM built from CONFIG, driven by stateAt ---------- */
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("scene");
+const D = derive(CONFIG);
+svg.setAttribute("viewBox", "0 0 " + CONFIG.stageW + " " + CONFIG.stageH);
+function el(name, attrs){ const e = document.createElementNS(svgNS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+const ground = el("rect", { x: 0, y: 0, width: CONFIG.stageW, height: CONFIG.stageH, fill: CONFIG.palette.ground });
+svg.appendChild(ground);
+const barEls = [], dotEls = [], labelEls = [];
+for (let i = 0; i < CONFIG.states.length; i++){
+  const s = CONFIG.states[i];
+  const cx = CONFIG.fieldX + i * D.pitch + D.pitch / 2;
+  const x = CONFIG.fieldX + i * D.pitch + D.gapPx / 2;
+  const g = el("g", {});
+  const repR = el("rect", { x, width: D.barW, fill: CONFIG.palette.rep });
+  const greyR = el("rect", { x, width: D.barW, fill: CONFIG.palette.other });
+  const demR = el("rect", { x, width: D.barW, fill: CONFIG.palette.dem });
+  g.appendChild(repR); g.appendChild(greyR); g.appendChild(demR); svg.appendChild(g);
+  const dg = el("g", {});
+  const dots = [];
+  for (let k = 0; k < dotCountOf(CONFIG, s); k++){
+    const c = el("circle", { cx, r: CONFIG.dotRadiusPx, fill: winnerOf(s) === "dem" ? CONFIG.palette.dem : CONFIG.palette.rep });
+    dg.appendChild(c); dots.push(c);
+  }
+  svg.appendChild(dg);
+  const lab = el("text", { x: cx, y: D.baseline + 10, "text-anchor": "end",
+    transform: "rotate(" + CONFIG.labelAngleDeg + " " + cx + " " + (D.baseline + 10) + ")",
+    "font-size": CONFIG.labelFontPx, "font-family": CONFIG.fontFamily, fill: CONFIG.palette.ink });
+  lab.textContent = s.label; svg.appendChild(lab);
+  barEls.push({ demR, greyR, repR }); dotEls.push(dots); labelEls.push(lab);
+}
+const arcEls = CONFIG.arcPaths.map(pts => {
+  const path = pts.map((p, j) => (j === 0 ? "M" : "L") + (CONFIG.fieldX + p[0] * D.fieldW) + " " + (CONFIG.fieldTop + p[1] * CONFIG.fieldH)).join(" ");
+  const e = el("path", { d: path, fill: "none", stroke: CONFIG.palette.arc, "stroke-width": CONFIG.arcWidthPx,
+    pathLength: 100, "stroke-dasharray": 100, "stroke-dashoffset": 100, "stroke-linecap": "round" });
+  svg.appendChild(e); return e;
+});
+const lineEl = el("line", { x1: CONFIG.fieldX - 6, x2: CONFIG.fieldX + D.fieldW + 6,
+  y1: D.baseline - CONFIG.majorityLineFraction * CONFIG.fieldH, y2: D.baseline - CONFIG.majorityLineFraction * CONFIG.fieldH,
+  stroke: CONFIG.palette.ink, "stroke-width": CONFIG.majorityLineWidthPx });
+svg.appendChild(lineEl);
+function render(t){
+  const st = stateAt(CONFIG, t);
+  const totalH = CONFIG.fieldH * st.fieldScale;
+  const barTop = D.baseline - totalH;
+  for (let i = 0; i < st.bars.length; i++){
+    const b = st.bars[i], els = barEls[i];
+    const demH = b.demF * totalH, greyH = b.greyF * totalH, repH = b.repF * totalH;
+    els.demR.setAttribute("y", D.baseline - demH); els.demR.setAttribute("height", Math.max(0, demH));
+    els.greyR.setAttribute("y", D.baseline - demH - greyH); els.greyR.setAttribute("height", Math.max(0, greyH));
+    els.repR.setAttribute("y", D.baseline - demH - greyH - repH); els.repR.setAttribute("height", Math.max(0, repH));
+    const dots = dotEls[i];
+    for (let k = 0; k < dots.length; k++){
+      const c = dots[k];
+      if (k < Math.floor(b.dotsVisible)){ c.setAttribute("cy", barTop - CONFIG.dotRadiusPx - k * CONFIG.dotPitchPx); c.setAttribute("opacity", 1); }
+      else if (k === Math.floor(b.dotsVisible) && b.dotsVisible > k){ c.setAttribute("cy", barTop - CONFIG.dotRadiusPx - k * CONFIG.dotPitchPx); c.setAttribute("opacity", b.dotsVisible - k); }
+      else c.setAttribute("opacity", 0);
+    }
+    labelEls[i].setAttribute("opacity", st.labelOpacity);
+  }
+  arcEls[0].setAttribute("stroke-dashoffset", 100 * (1 - st.arc1P));
+  if (arcEls[1]) arcEls[1].setAttribute("stroke-dashoffset", 100 * (1 - st.arc2P));
+  lineEl.setAttribute("opacity", st.lineOpacity);
+  document.getElementById("clock").textContent = (t / 1000).toFixed(1) + "s";
+}
+let startStamp = null, pausedAt = 0, playing = false;
+function frame(now){
+  if (!playing) return;
+  if (startStamp === null) startStamp = now - pausedAt;
+  const t = Math.min(now - startStamp, D.durationMs);
+  pausedAt = t; render(t);
+  if (t < D.durationMs) requestAnimationFrame(frame); else playing = false;
+}
+document.getElementById("play").addEventListener("click", () => { if (!playing){ playing = true; startStamp = null; requestAnimationFrame(frame); } });
+document.getElementById("pause").addEventListener("click", () => { playing = false; });
+document.getElementById("restart").addEventListener("click", () => { pausedAt = 0; playing = true; startStamp = null; requestAnimationFrame(frame); });
+render(0);
+window.__T212 = { CONFIG, stateAt, derive, validateConfig };
+</script>
+</body>
+</html>

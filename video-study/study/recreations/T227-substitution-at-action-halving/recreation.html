@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T227 — Substitution-at-action halving — recreation</title>
+<style>
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:#e9e6de; color:#1a1a1a; }
+  main { max-width:680px; margin:0 auto; padding:12px; }
+  svg { width:100%; height:auto; display:block; }
+  .controls { display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap; }
+  button { font-size:16px; padding:10px 18px; min-height:44px; cursor:pointer; }
+  #clock { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+  <svg id="scene" role="img" aria-label="Substitution-at-action halving recreation"></svg>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <button id="restart" type="button">Restart</button>
+    <span id="clock">0.0s</span>
+  </div>
+</main>
+<script id="t227-config">
+"use strict";
+const CONFIG = {
+  "stageW": 640, "stageH": 400, "objCX": 300, "objCY": 205, "objW": 190, "objH": 230,
+  "objTiltDeg": -78, "tiltDurMs": 400, "segCols": 4, "segRows": 5, "segGroovePx": 5,
+  "headPresent": true, "headH": 52,
+  "bladeLen": 300, "bladeW": 64, "bladeAngleDeg": 0, "bladeTravelPx": 150, "sawSteps": 5, "strokeAmpPx": 14,
+  "handW": 150, "handH": 110, "handHolder": {"x": 205, "y": 300}, "handGuide": {"x": 430, "y": 120},
+  "plankCount": 5, "skinRimPx": 6, "fleshMaxWPx": 46,
+  "tPresentMs": 0, "presentDurMs": 900, "tSawMs": 900, "sawDurMs": 2600, "fleshOnsetFrac": 0.62,
+  "partGapMs": 0, "partDurMs": 700, "seamWPx": 7, "holdMs": 800,
+  "easeSaw": "stepped", "easePart": "easeInOut",
+  "palette": {"board": "#8a5a33", "plank": "#6e4525", "shell": "#44543c", "shellLight": "#5c7050", "shellDark": "#2e3a28", "head": "#6b6f66", "lever": "#7d8178", "pin": "#8f938a", "blade": "#b9bcbe", "bladeEdge": "#e8eaea", "hand": "#d9a184", "flesh": "#7ec850", "fleshLight": "#a8e063", "skin": "#3d5a2a"},
+  "outer": {"name": "grenade", "shellKey": "shell"},
+  "inner": {"name": "avocado", "fleshKey": "flesh"}
+};
+</script>
+<script id="t227-logic">
+"use strict";
+/* ---------- pure logic: CONFIG derivations, validation, stateAt (no DOM) ---------- */
+const EASINGS = { easeInOut: p => p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2, linear: p => p, stepped: p => p };
+function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+function easeOf(cfg, key){ return EASINGS[cfg[key]] || EASINGS.easeInOut; }
+function sawEndMs(cfg){ return cfg.tSawMs + cfg.sawDurMs; }
+function partStartMs(cfg){ return sawEndMs(cfg) + cfg.partGapMs; }
+function derive(cfg){
+  const completeAtMs = partStartMs(cfg) + cfg.partDurMs;
+  return { sawEndMs: sawEndMs(cfg), partStartMs: partStartMs(cfg),
+    fleshOnsetMs: cfg.tSawMs + cfg.fleshOnsetFrac * cfg.sawDurMs,
+    completeAtMs, durationMs: completeAtMs + cfg.holdMs };
+}
+function validateConfig(cfg){
+  const errors = [];
+  const nums = ["stageW","stageH","objCX","objCY","objW","objH","objTiltDeg","tiltDurMs","segCols","segRows","segGroovePx",
+    "headH","bladeLen","bladeW","bladeAngleDeg","bladeTravelPx","sawSteps","strokeAmpPx","handW","handH",
+    "plankCount","skinRimPx","fleshMaxWPx","tPresentMs","presentDurMs","tSawMs","sawDurMs","fleshOnsetFrac",
+    "partGapMs","partDurMs","seamWPx","holdMs"];
+  for (const k of nums){ if (!Number.isFinite(cfg[k])) errors.push(k + " not finite"); }
+  if (!(cfg.fleshOnsetFrac > 0 && cfg.fleshOnsetFrac < 1)) errors.push("fleshOnsetFrac outside (0,1)");
+  if (cfg.partGapMs < 0) errors.push("phase order: part starts before saw end (partGapMs negative)");
+  if (cfg.tSawMs < cfg.tPresentMs + cfg.presentDurMs) errors.push("phase order: saw starts before present end");
+  if (cfg.sawSteps < 1) errors.push("sawSteps below 1");
+  if (cfg.segCols < 1 || cfg.segRows < 1) errors.push("segmentation grid below 1");
+  if (!cfg.outer || !cfg.outer.name || !cfg.palette[cfg.outer.shellKey]) errors.push("outer identity unbound");
+  if (!cfg.inner || !cfg.inner.name || !cfg.palette[cfg.inner.fleshKey]) errors.push("inner identity unbound");
+  if (!cfg.handHolder || !Number.isFinite(cfg.handHolder.x) || !Number.isFinite(cfg.handHolder.y)) errors.push("handHolder unbound");
+  if (!cfg.handGuide || !Number.isFinite(cfg.handGuide.x) || !Number.isFinite(cfg.handGuide.y)) errors.push("handGuide unbound");
+  return { ok: errors.length === 0, errors };
+}
+function stateAt(cfg, t){
+  const d = derive(cfg);
+  const sawP = clamp01((t - cfg.tSawMs) / cfg.sawDurMs);
+  const stepFloat = sawP * cfg.sawSteps;
+  const sawStep = sawP >= 1 ? cfg.sawSteps : Math.floor(stepFloat);
+  const steppedP = sawP >= 1 ? 1 : Math.floor(stepFloat) / cfg.sawSteps;
+  const stepFrac = stepFloat - Math.floor(stepFloat);
+  const strokePx = (stepFrac < 0.5 ? stepFrac * 2 : 2 - stepFrac * 2) * cfg.strokeAmpPx - cfg.strokeAmpPx / 2;
+  const fleshFraction = sawP <= cfg.fleshOnsetFrac ? 0 : clamp01((sawP - cfg.fleshOnsetFrac) / (1 - cfg.fleshOnsetFrac));
+  const partP = easeOf(cfg, "easePart")(clamp01((t - d.partStartMs) / cfg.partDurMs));
+  const tiltDeg = cfg.objTiltDeg * clamp01((t - cfg.tSawMs) / cfg.tiltDurMs);
+  const bladeP = t < d.partStartMs ? 1 : 1 - partP;
+  return { t, sawP, sawStep, bladeTravelP: cfg.easeSaw === "stepped" ? steppedP : sawP, strokePx,
+    bladeEngaged: (t >= cfg.tSawMs && t < d.partStartMs) ? 1 : 0,
+    bladeP, tiltDeg, fleshFraction, partP,
+    seamVisible: partP, separationPx: 0,
+    fleshWPx: fleshFraction * cfg.fleshMaxWPx,
+    guidePresent: t < d.partStartMs ? 1 : 1 - partP,
+    outerName: cfg.outer.name, innerName: cfg.inner.name,
+    shellFill: cfg.palette[cfg.outer.shellKey], fleshFill: cfg.palette[cfg.inner.fleshKey],
+    completeAtMs: d.completeAtMs, durationMs: d.durationMs };
+}
+</script>
+<script id="t227-render">
+"use strict";
+/* ---------- renderer: SVG built from CONFIG, driven by stateAt ---------- */
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("scene");
+const D = derive(CONFIG);
+svg.setAttribute("viewBox", "0 0 " + CONFIG.stageW + " " + CONFIG.stageH);
+function el(name, attrs){ const e = document.createElementNS(svgNS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+const P = CONFIG.palette;
+svg.appendChild(el("rect", { x: 0, y: 0, width: CONFIG.stageW, height: CONFIG.stageH, fill: P.board }));
+for (let i = 1; i < CONFIG.plankCount; i++){
+  const y = i * CONFIG.stageH / CONFIG.plankCount;
+  svg.appendChild(el("line", { x1: 0, x2: CONFIG.stageW, y1: y, y2: y, stroke: P.plank, "stroke-width": 3 }));
+}
+/* flesh extrusion (behind blade, above shell): two blobs either side of the cut line */
+const fleshL = el("ellipse", { fill: P[CONFIG.inner.fleshKey], opacity: 0 });
+const fleshR = el("ellipse", { fill: P[CONFIG.inner.fleshKey], opacity: 0 });
+/* object group: two shell halves + head */
+const objG = el("g", {});
+const rx = CONFIG.objW / 2, ry = CONFIG.objH / 2;
+const halfTop = el("path", { fill: P[CONFIG.outer.shellKey] });
+const halfBot = el("path", { fill: P[CONFIG.outer.shellKey] });
+halfTop.setAttribute("d", "M " + (-rx) + " 0 A " + rx + " " + ry + " 0 0 1 " + rx + " 0 Z");
+halfBot.setAttribute("d", "M " + (-rx) + " 0 A " + rx + " " + ry + " 0 0 0 " + rx + " 0 Z");
+objG.appendChild(halfTop); objG.appendChild(halfBot);
+const clipId = "t227-clip";
+const clip = el("clipPath", { id: clipId });
+const clipEllipse = el("ellipse", { cx: 0, cy: 0, rx, ry });
+clip.appendChild(clipEllipse); objG.appendChild(clip);
+const gridG = el("g", { "clip-path": "url(#" + clipId + ")" });
+for (let c = 1; c < CONFIG.segCols; c++){
+  const x = -rx + c * CONFIG.objW / CONFIG.segCols;
+  gridG.appendChild(el("line", { x1: x, x2: x, y1: -ry, y2: ry, stroke: P.shellDark, "stroke-width": CONFIG.segGroovePx }));
+}
+for (let r = 1; r < CONFIG.segRows; r++){
+  const y = -ry + r * CONFIG.objH / CONFIG.segRows;
+  gridG.appendChild(el("line", { x1: -rx, x2: rx, y1: y, y2: y, stroke: P.shellDark, "stroke-width": CONFIG.segGroovePx }));
+}
+const sheen = el("ellipse", { cx: -rx / 3, cy: -ry / 3, rx: rx / 2, ry: ry / 2, fill: P.shellLight, opacity: 0.35 });
+gridG.appendChild(sheen);
+objG.appendChild(gridG);
+let headG = null;
+if (CONFIG.headPresent){
+  headG = el("g", {});
+  headG.appendChild(el("rect", { x: -16, y: -ry - CONFIG.headH + 14, width: 32, height: CONFIG.headH, fill: P.head }));
+  headG.appendChild(el("rect", { x: -26, y: -ry - CONFIG.headH + 2, width: 52, height: 16, fill: P.lever }));
+  headG.appendChild(el("circle", { cx: 34, cy: -ry - CONFIG.headH + 26, r: 13, fill: "none", stroke: P.pin, "stroke-width": 5 }));
+  objG.appendChild(headG);
+}
+const rimEl = el("ellipse", { cx: 0, cy: 0, rx: rx - 2, ry: 2, fill: P.skin, opacity: 0 });
+objG.appendChild(rimEl);
+const seamEl = el("ellipse", { cx: 0, cy: 0, rx: rx - CONFIG.skinRimPx, ry: 2, fill: P.fleshLight, opacity: 0 });
+objG.appendChild(seamEl);
+svg.appendChild(objG);
+/* blade (above flesh, occludes its centre) */
+const bladeG = el("g", {});
+const bladePath = el("path", { fill: P.blade, stroke: P.bladeEdge, "stroke-width": 2 });
+bladePath.setAttribute("d", "M 0 " + (-CONFIG.bladeLen / 2) + " L " + (CONFIG.bladeW / 2) + " " + (-CONFIG.bladeLen / 6) + " L " + (CONFIG.bladeW / 2) + " " + (CONFIG.bladeLen / 2) + " L " + (-CONFIG.bladeW / 2) + " " + (CONFIG.bladeLen / 2) + " L " + (-CONFIG.bladeW / 2) + " " + (-CONFIG.bladeLen / 6) + " Z");
+bladeG.appendChild(bladePath);
+svg.appendChild(fleshL); svg.appendChild(fleshR);
+svg.appendChild(bladeG);
+/* hands-as-shapes (above all: the cover) */
+function handShape(pos){
+  const g = el("g", {});
+  g.appendChild(el("rect", { x: pos.x - CONFIG.handW / 2, y: pos.y - CONFIG.handH / 2, width: CONFIG.handW, height: CONFIG.handH, rx: CONFIG.handH / 2, fill: P.hand }));
+  return g;
+}
+const holderEl = handShape(CONFIG.handHolder);
+const guideEl = handShape(CONFIG.handGuide);
+svg.appendChild(holderEl); svg.appendChild(guideEl);
+function render(t){
+  const st = stateAt(CONFIG, t);
+  objG.setAttribute("transform", "translate(" + CONFIG.objCX + " " + CONFIG.objCY + ") rotate(" + st.tiltDeg + ")");
+  const cutX = CONFIG.objCX + (1 - st.bladeTravelP) * CONFIG.bladeTravelPx / 3 + st.strokePx;
+  const lift = (1 - st.bladeP) * (CONFIG.bladeLen / 2 + 80);
+  bladeG.setAttribute("transform", "translate(" + cutX + " " + (CONFIG.objCY - lift) + ") rotate(" + CONFIG.bladeAngleDeg + ")");
+  bladeG.setAttribute("opacity", st.bladeP <= 0 ? 0 : 1);
+  const fw = st.fleshWPx;
+  for (const [e, side] of [[fleshL, -1], [fleshR, 1]]){
+    e.setAttribute("cx", cutX + side * (CONFIG.bladeW / 2 + fw / 2));
+    e.setAttribute("cy", CONFIG.objCY);
+    e.setAttribute("rx", Math.max(0.1, fw));
+    e.setAttribute("ry", Math.max(0.1, CONFIG.objH / 4 * st.fleshFraction));
+    e.setAttribute("opacity", st.fleshFraction > 0 && st.bladeP > 0 ? 1 : 0);
+  }
+  rimEl.setAttribute("ry", Math.max(0.1, (CONFIG.seamWPx / 2 + CONFIG.skinRimPx) * st.seamVisible + 0.1));
+  rimEl.setAttribute("opacity", st.seamVisible);
+  seamEl.setAttribute("ry", Math.max(0.1, CONFIG.seamWPx / 2 * st.seamVisible + 0.1));
+  seamEl.setAttribute("opacity", st.seamVisible);
+  guideEl.setAttribute("opacity", st.guidePresent);
+  document.getElementById("clock").textContent = (t / 1000).toFixed(1) + "s";
+}
+let startStamp = null, pausedAt = 0, playing = false;
+function frame(now){
+  if (!playing) return;
+  if (startStamp === null) startStamp = now - pausedAt;
+  const t = Math.min(now - startStamp, D.durationMs);
+  pausedAt = t; render(t);
+  if (t < D.durationMs) requestAnimationFrame(frame); else playing = false;
+}
+document.getElementById("play").addEventListener("click", () => { if (!playing){ playing = true; startStamp = null; requestAnimationFrame(frame); } });
+document.getElementById("pause").addEventListener("click", () => { playing = false; });
+document.getElementById("restart").addEventListener("click", () => { pausedAt = 0; playing = true; startStamp = null; requestAnimationFrame(frame); });
+render(0);
+window.__T227 = { CONFIG, stateAt, derive, validateConfig };
+</script>
+</body>
+</html>

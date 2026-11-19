@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T219 — Three-fifths payoff counts — recreation</title>
+<style>
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:#e9e6de; color:#2b2b2b; }
+  main { max-width:1000px; margin:0 auto; padding:12px; }
+  svg { width:100%; height:auto; display:block; }
+  .controls { display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap; }
+  button { font-size:16px; padding:10px 18px; min-height:44px; cursor:pointer; }
+  #clock { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+  <svg id="scene" role="img" aria-label="Three-fifths payoff counts recreation"></svg>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <button id="restart" type="button">Restart</button>
+    <span id="clock">0.0s</span>
+  </div>
+</main>
+<script id="t219-config">
+"use strict";
+const CONFIG = {
+  "stageW": 960, "stageH": 660, "tileW": 300, "tileH": 260, "tileY": 130, "tileGapPx": 190,
+  "frameWidthPx": 20, "tagAngleDeg": -4, "tagFontPx": 40, "tagWPx": 392, "tagHPx": 44, "tagOffsetXPx": -10, "tagOffsetYPx": -12,
+  "nameFontPx": 42, "rowLabelFontPx": 34, "rowNumFontPx": 48, "numeralFontPx": 52,
+  "squareSizePx": 16, "squarePitchPx": 22, "gridCols": 5, "fillOrder": "row-major", "gridOffsetPx": 16, "gridTopOffsetPx": 10, "numeralOffsetPx": 18,
+  "iconPresent": true, "iconFraction": 0.6, "iconTopPx": 120, "iconHPx": 300, "iconHeadRPx": 36,
+  "bannerWPx": 480, "bannerHPx": 46, "bannerGapPx": 30, "bannerFontPx": 42,
+  "rowsTopOffsetPx": 48, "rowNumGapPx": 44, "rowBlockGapPx": 92,
+  "tileMinScale": 0.4,
+  "tIconMs": 0, "iconHoldMs": 1200, "iconOutDurMs": 600,
+  "tTilesMs": 1800, "tileDurMs": 2600, "tileStaggerMs": 500,
+  "tFreeMs": 5000, "freeDurMs": 600,
+  "tFrameMs": 8500, "frameDurMs": 1000,
+  "tTagMs": 12500, "tagDurMs": 500,
+  "tSquaresMs": 15000, "squareFadeMs": 400, "squareStaggerMs": 55,
+  "holdMs": 9500,
+  "easeTile": "easeOut", "easeIcon": "easeInOut", "easeFade": "easeInOut", "easeFrame": "easeInOut", "easeSquares": "easeInOut",
+  "palette": {"ground": "#f4f1ea", "tile": "#46585c", "tileName": "#dfe9e6", "silhouette": "#3a4c50", "frame": "#c96f4a", "tagBg": "#c4453c", "tagAlt": "#2f6f79", "bannerBg": "#c4453c", "bannerAlt": "#2f6f79", "tagText": "#ffffff", "iconTop": "#d2691e", "iconBottom": "#33484d", "square": "#141414", "ink": "#2b2b2b", "muted": "#6d6d6d"},
+  "fontFamily": "Georgia, 'Times New Roman', serif",
+  "clauseText": "Three-fifths clause", "enslavedLabel": "Enslaved people:", "freeLabel": "Free people:",
+  "states": [
+    {"label": "Virginia", "enslaved": 347000, "free": 539000, "electors": 21, "tagged": true, "enterIdx": 1, "silhouette": [[0.08,0.62],[0.30,0.55],[0.52,0.38],[0.66,0.30],[0.78,0.42],[0.92,0.58],[0.88,0.66],[0.40,0.68],[0.12,0.68]]},
+    {"label": "Pennsylvania", "enslaved": 1700, "free": 601000, "electors": 15, "tagged": false, "enterIdx": 0, "silhouette": [[0.18,0.28],[0.30,0.22],[0.32,0.38],[0.80,0.38],[0.90,0.52],[0.84,0.68],[0.20,0.68]]}
+  ]
+};
+</script>
+<script id="t219-logic">
+"use strict";
+function clamp01(x){ return x<0?0:(x>1?1:x); }
+const EASES = {
+  "linear": function(p){ return p; },
+  "easeInOut": function(p){ return p*p*(3-2*p); },
+  "easeOut": function(p){ return 1-Math.pow(1-p,3); }
+};
+function ease(name,p){ const f=EASES[name]||EASES.easeInOut; return f(clamp01(p)); }
+function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+function derive(cfg){
+  const maxEnter = Math.max.apply(null, cfg.states.map(function(s){ return s.enterIdx; }));
+  const iconExitEnd = cfg.tIconMs + cfg.iconHoldMs + cfg.iconOutDurMs;
+  const lastTileEnd = cfg.tTilesMs + maxEnter*cfg.tileStaggerMs + cfg.tileDurMs;
+  const freeEnd = cfg.tFreeMs + cfg.freeDurMs;
+  const frameEnd = cfg.tFrameMs + cfg.frameDurMs;
+  const tagEnd = cfg.tTagMs + cfg.tagDurMs;
+  const maxElectors = Math.max.apply(null, cfg.states.map(function(s){ return s.electors; }));
+  const completeAtMs = cfg.tSquaresMs + (maxElectors-1)*cfg.squareStaggerMs + cfg.squareFadeMs;
+  return { maxEnter:maxEnter, iconExitEnd:iconExitEnd, lastTileEnd:lastTileEnd, freeEnd:freeEnd, frameEnd:frameEnd, tagEnd:tagEnd, completeAtMs:completeAtMs, durationMs: completeAtMs + cfg.holdMs };
+}
+function validateConfig(cfg){
+  const errors=[]; const d=derive(cfg);
+  if(!(cfg.states.length>=1)) errors.push("states empty");
+  cfg.states.forEach(function(s,i){ if(!(s.electors>0)) errors.push("state "+i+" electors"); if(typeof s.tagged!=="boolean") errors.push("state "+i+" tagged"); if(typeof s.enterIdx!=="number") errors.push("state "+i+" enterIdx"); });
+  if(cfg.tTilesMs < d.iconExitEnd) errors.push("phase order: tiles start "+cfg.tTilesMs+" before icon exit end "+d.iconExitEnd);
+  if(cfg.tFreeMs < d.lastTileEnd) errors.push("phase order: free start "+cfg.tFreeMs+" before last tile end "+d.lastTileEnd);
+  if(cfg.tFrameMs < d.freeEnd) errors.push("phase order: frame start "+cfg.tFrameMs+" before free end "+d.freeEnd);
+  if(cfg.tTagMs < d.frameEnd) errors.push("phase order: tag start "+cfg.tTagMs+" before frame end "+d.frameEnd);
+  if(cfg.tSquaresMs < d.tagEnd) errors.push("phase order: squares start "+cfg.tSquaresMs+" before tag end "+d.tagEnd);
+  if(cfg.fillOrder!=="row-major") errors.push("fillOrder unsupported: "+cfg.fillOrder);
+  return { ok: errors.length===0, errors:errors };
+}
+function stateAt(cfg, t){
+  const d=derive(cfg); const P=cfg.palette;
+  const iconP = cfg.iconPresent ? 1 - ease(cfg.easeIcon, (t-(cfg.tIconMs+cfg.iconHoldMs))/cfg.iconOutDurMs) : 0;
+  const freeP = ease(cfg.easeFade, (t-cfg.tFreeMs)/cfg.freeDurMs);
+  const frameP = ease(cfg.easeFrame, (t-cfg.tFrameMs)/cfg.frameDurMs);
+  const tagP = ease(cfg.easeFade, (t-cfg.tTagMs)/cfg.tagDurMs);
+  const numeralP = ease(cfg.easeSquares, (t-cfg.tSquaresMs)/cfg.squareFadeMs);
+  const states = cfg.states.map(function(s, idx){
+    const tileP = ease(cfg.easeTile, (t-(cfg.tTilesMs + s.enterIdx*cfg.tileStaggerMs))/cfg.tileDurMs);
+    const tileScale = cfg.tileMinScale + (1-cfg.tileMinScale)*tileP;
+    const tileCX = cfg.states.length===1 ? cfg.stageW/2 : cfg.stageW/2 + (idx===0 ? -cfg.tileGapPx : cfg.tileGapPx);
+    const squares=[]; let visSum=0, full=0;
+    for(let i=0;i<s.electors;i++){
+      const o = ease(cfg.easeSquares, (t-(cfg.tSquaresMs + i*cfg.squareStaggerMs))/cfg.squareFadeMs);
+      squares.push(o); visSum+=o; if(o>=0.999) full++;
+    }
+    return { label:s.label, enslaved:s.enslaved, free:s.free, electors:s.electors, tagged:s.tagged, enterIdx:s.enterIdx,
+      enslavedText:fmt(s.enslaved), freeText:fmt(s.free), numeralText:String(s.electors),
+      tileP:tileP, tileScale:tileScale, tileCX:tileCX,
+      frameP: s.tagged?frameP:0, tagP: s.tagged?tagP:0,
+      squares:squares, squaresVisible:visSum, squaresFull:full };
+  });
+  return { t:t, iconP:iconP, bannerP:iconP, freeP:freeP, frameP:frameP, tagP:tagP, numeralP:numeralP,
+    states:states, completeAtMs:d.completeAtMs, durationMs:d.durationMs,
+    frameFill:P.frame, enslavedNumFill:P.frame, squareFill:P.square };
+}
+if (typeof window!=="undefined") window.__T219 = { CONFIG:CONFIG, stateAt:stateAt, derive:derive, validateConfig:validateConfig, fmt:fmt };
+</script>
+<script id="t219-render">
+"use strict";
+(function(){
+  const svg=document.getElementById("scene"); const clock=document.getElementById("clock");
+  const NS="http://www.w3.org/2000/svg"; const cfg=CONFIG; const P=cfg.palette;
+  svg.setAttribute("viewBox","0 0 "+cfg.stageW+" "+cfg.stageH);
+  function el(name,attrs,parent){ const e=document.createElementNS(NS,name); for(const k in attrs) e.setAttribute(k,attrs[k]); (parent||svg).appendChild(e); return e; }
+  function txt(x,y,str,size,fill,anchor,parent,bold){ const e=el("text",{x:x,y:y,"font-size":size,fill:fill,"text-anchor":anchor||"middle","font-family":cfg.fontFamily},parent); if(bold) e.setAttribute("font-weight","bold"); e.textContent=str; return e; }
+  function render(t){
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    const st=stateAt(cfg,t);
+    el("rect",{x:0,y:0,width:cfg.stageW,height:cfg.stageH,fill:P.ground});
+    if(st.iconP>0){
+      const g=el("g",{opacity:st.iconP});
+      const cx=cfg.stageW/2, top=cfg.iconTopPx, H=cfg.iconHPx, r=cfg.iconHeadRPx;
+      const splitY=top+H*(1-cfg.iconFraction), halfW=H*0.13;
+      el("circle",{cx:cx,cy:top+r,r:r,fill:P.iconTop},g);
+      const bodyTop=top+2*r+6;
+      const body="M "+(cx-halfW)+" "+bodyTop+" L "+(cx+halfW)+" "+bodyTop+" L "+(cx+halfW*0.5)+" "+(top+H)+" L "+(cx+halfW*0.16)+" "+(top+H)+" L "+(cx-halfW*0.08)+" "+(bodyTop+H*0.34)+" L "+(cx-halfW*0.32)+" "+(top+H)+" L "+(cx-halfW*0.8)+" "+(top+H)+" Z";
+      el("path",{d:body,fill:P.iconBottom},g);
+      const topPath="M "+(cx-halfW)+" "+bodyTop+" L "+(cx+halfW)+" "+bodyTop+" L "+(cx+halfW*0.84)+" "+splitY+" L "+(cx-halfW*1.16)+" "+(splitY+H*0.04)+" Z";
+      el("path",{d:topPath,fill:P.iconTop},g);
+      const bw=cfg.bannerWPx, bx=cx-bw/2, by=top+H+cfg.bannerGapPx;
+      el("rect",{x:bx,y:by,width:bw/2,height:cfg.bannerHPx,fill:P.bannerAlt},g);
+      el("rect",{x:bx+bw/2,y:by,width:bw/2,height:cfg.bannerHPx,fill:P.bannerBg},g);
+      txt(cx,by+cfg.bannerHPx*0.72,cfg.clauseText,cfg.bannerFontPx,P.tagText,"middle",g);
+    }
+    st.states.forEach(function(s,idx){
+      if(s.tileP<=0) return;
+      const tw=cfg.tileW*s.tileScale, th=cfg.tileH*s.tileScale;
+      const tx=s.tileCX-tw/2, ty=cfg.tileY+(cfg.tileH-th)/2;
+      const g=el("g",{});
+      if(s.tagged && s.frameP>0){
+        const fw=cfg.frameWidthPx*s.frameP;
+        el("rect",{x:tx-fw,y:ty-fw,width:tw+2*fw,height:th+2*fw,fill:P.frame},g);
+      }
+      el("rect",{x:tx,y:ty,width:tw,height:th,fill:P.tile},g);
+      const src=cfg.states[idx];
+      if(src.silhouette){
+        const pts=src.silhouette.map(function(p){ return (tx+p[0]*tw)+","+(ty+p[1]*th); }).join(" ");
+        el("polygon",{points:pts,fill:P.silhouette},g);
+      }
+      txt(s.tileCX, ty+th/2+cfg.nameFontPx*0.36, s.label, cfg.nameFontPx*s.tileScale, P.tileName, "middle", g);
+      if(s.tagged && s.tagP>0){
+        const ax=tx-cfg.frameWidthPx+cfg.tagOffsetXPx, ay=ty-cfg.frameWidthPx+cfg.tagOffsetYPx;
+        const tg=el("g",{opacity:s.tagP, transform:"rotate("+cfg.tagAngleDeg+" "+ax+" "+ay+")"},g);
+        el("rect",{x:ax,y:ay,width:cfg.tagWPx/2,height:cfg.tagHPx,fill:P.tagAlt},tg);
+        el("rect",{x:ax+cfg.tagWPx/2,y:ay,width:cfg.tagWPx/2,height:cfg.tagHPx,fill:P.tagBg},tg);
+        txt(ax+cfg.tagWPx/2, ay+cfg.tagHPx*0.72, cfg.clauseText, cfg.tagFontPx, P.tagText, "middle", tg);
+      }
+      const rowsY = cfg.tileY + cfg.tileH + cfg.rowsTopOffsetPx;
+      if(st.freeP>0){
+        const fg=el("g",{opacity:st.freeP},g);
+        txt(s.tileCX, rowsY+cfg.rowBlockGapPx, cfg.freeLabel, cfg.rowLabelFontPx, P.muted, "middle", fg);
+        txt(s.tileCX, rowsY+cfg.rowBlockGapPx+cfg.rowNumGapPx, s.freeText, cfg.rowNumFontPx, P.ink, "middle", fg, true);
+      }
+      if(st.frameP>0){
+        const eg=el("g",{opacity:st.frameP},g);
+        txt(s.tileCX, rowsY, cfg.enslavedLabel, cfg.rowLabelFontPx, P.muted, "middle", eg);
+        txt(s.tileCX, rowsY+cfg.rowNumGapPx, s.enslavedText, cfg.rowNumFontPx, P.frame, "middle", eg, true);
+      }
+      const side = s.tileCX < cfg.stageW/2 ? -1 : 1;
+      const gridW = cfg.gridCols*cfg.squarePitchPx - (cfg.squarePitchPx-cfg.squareSizePx);
+      const gx = side<0 ? tx - cfg.gridOffsetPx - gridW : tx + tw + cfg.gridOffsetPx;
+      const gy = cfg.tileY + cfg.gridTopOffsetPx;
+      if(st.numeralP>0) txt(gx+gridW/2, gy-cfg.numeralOffsetPx, s.numeralText, cfg.numeralFontPx, P.ink, "middle", el("g",{opacity:st.numeralP},g), true);
+      s.squares.forEach(function(o,i){
+        if(o<=0) return;
+        const col=i%cfg.gridCols, row=Math.floor(i/cfg.gridCols);
+        el("rect",{x:gx+col*cfg.squarePitchPx, y:gy+row*cfg.squarePitchPx, width:cfg.squareSizePx, height:cfg.squareSizePx, fill:P.square, opacity:o},g);
+      });
+    });
+    clock.textContent=(t/1000).toFixed(1)+"s";
+  }
+  let start=null, pausedAt=0, playing=false;
+  function frame(ts){ if(!playing) return; if(start===null) start=ts-pausedAt; const t=ts-start; if(t>=derive(cfg).durationMs){ render(derive(cfg).durationMs); playing=false; return; } render(t); requestAnimationFrame(frame); }
+  document.getElementById("play").addEventListener("click",function(){ if(playing) return; playing=true; start=null; requestAnimationFrame(frame); });
+  document.getElementById("pause").addEventListener("click",function(){ playing=false; });
+  document.getElementById("restart").addEventListener("click",function(){ pausedAt=0; start=null; playing=true; requestAnimationFrame(frame); });
+  render(0);
+})();
+</script>
+</body>
+</html>

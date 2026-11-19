@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T22 — Interrupted stream → text slam (parameterized recreation)</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#000}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden;font-family:'Courier New',monospace}
+  #terminal{position:absolute;inset:0;padding:6% 7%;display:flex;flex-direction:column;justify-content:center;gap:.55em;font-size:clamp(15px,3.4vw,34px);line-height:1.35}
+  .line{white-space:pre-wrap;word-break:break-word}
+  .prompt{font-weight:bold;margin-right:.6em}
+  #cursor{display:inline-block;width:.62em;height:1.05em;vertical-align:-.15em;margin-left:2px}
+  #interrupt{margin-top:.9em;font-size:max(.52em,12px);opacity:0;letter-spacing:.02em}
+  #slam{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:4%}
+  #slamText{font-weight:900;line-height:.95;letter-spacing:.01em;max-width:100%}
+</style></head><body>
+<div id="stage">
+  <div id="terminal"></div>
+  <div id="slam"><div id="slamText"></div></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every variable of the technique lives here ===== */
+const CONFIG = {
+  contextLines: [
+    {speaker:"user", text:"Claude?"},
+    {speaker:"ai",   text:"Yes?"},
+    {speaker:"user", text:"Do you think I'm talented?"}
+  ],
+  replyText: "You are extraordinarily talented beyond measure",
+  typeMs: 100,
+  interruptAtChar: 22,
+  interruptAtFraction: null,
+  interruptLabel: "Interrupted by user",
+  interruptHoldMs: 450,
+  slamText: "I KNEW IT!",
+  slamBg: "#000000",
+  slamColor: "#ffffff",
+  slamFont: "'Arial Black', Arial, sans-serif",
+  bg: "#0a0f0a",
+  userColor: "#e8e8e8",
+  aiColor: "#e8a33d",
+  promptColor: "#4caf50",
+  interruptColor: "#9a9a9a",
+  cursorColor: "#e8a33d",
+  startDelayMs: 400,
+  holdMs: 2200
+};
+/* URL overrides for the swap test: ?slamText=...&typeMs=...&slamColor=... etc. */
+(function applyUrlOverrides(){
+  const q = new URLSearchParams(location.search);
+  for (const k of Object.keys(CONFIG)) {
+    if (!q.has(k)) continue;
+    const v = q.get(k);
+    if (typeof CONFIG[k] === "number") {
+      const n = Number(v);
+      if (Number.isFinite(n) && n >= 0) CONFIG[k] = n; /* invalid numbers keep the default */
+    } else if (CONFIG[k] === null) {
+      const n = Number(v);
+      if (v !== "null" && Number.isFinite(n) && n >= 0 && n <= 1) CONFIG[k] = n;
+    } else if (typeof CONFIG[k] === "string") {
+      CONFIG[k] = v;
+    }
+  }
+  if (q.has("contextLines")) { try { const p = JSON.parse(q.get("contextLines")); if (Array.isArray(p)) CONFIG.contextLines = p; } catch(e){} }
+})();
+
+const stage = document.getElementById("stage");
+const terminal = document.getElementById("terminal");
+const slam = document.getElementById("slam");
+const slamTextEl = document.getElementById("slamText");
+let timers = [];
+function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+function speakerColor(s){ return s === "ai" ? CONFIG.aiColor : CONFIG.userColor; }
+function speakerPrompt(s){ return s === "ai" ? "\u25CF " : "\u276F "; }
+function promptColor(s){ return s === "ai" ? CONFIG.aiColor : CONFIG.promptColor; }
+
+function buildTerminal(){
+  terminal.innerHTML = "";
+  for (const ln of CONFIG.contextLines) {
+    const d = document.createElement("div"); d.className = "line";
+    const p = document.createElement("span"); p.className = "prompt";
+    p.textContent = speakerPrompt(ln.speaker); p.style.color = promptColor(ln.speaker);
+    const t = document.createElement("span"); t.textContent = ln.text; t.style.color = speakerColor(ln.speaker);
+    d.appendChild(p); d.appendChild(t); terminal.appendChild(d);
+  }
+  const reply = document.createElement("div"); reply.className = "line"; reply.id = "replyLine";
+  const p = document.createElement("span"); p.className = "prompt";
+  p.textContent = speakerPrompt("ai"); p.style.color = promptColor("ai");
+  const t = document.createElement("span"); t.id = "replyText"; t.style.color = CONFIG.aiColor;
+  const cur = document.createElement("span"); cur.id = "cursor"; cur.style.background = CONFIG.cursorColor;
+  reply.appendChild(p); reply.appendChild(t); reply.appendChild(cur); terminal.appendChild(reply);
+  const note = document.createElement("div"); note.id = "interrupt";
+  note.textContent = CONFIG.interruptLabel; note.style.color = CONFIG.interruptColor;
+  terminal.appendChild(note);
+}
+
+function fitSlam(){
+  slamTextEl.style.fontFamily = CONFIG.slamFont;
+  slamTextEl.style.color = CONFIG.slamColor;
+  slamTextEl.textContent = CONFIG.slamText;
+  let size = Math.min(stage.clientWidth, stage.clientHeight) * 0.34;
+  slamTextEl.style.fontSize = size + "px";
+  let guard = 0;
+  while (guard++ < 300 && size > 6 && (slamTextEl.scrollWidth > slam.clientWidth - 8 || slamTextEl.scrollHeight > slam.clientHeight - 8)) {
+    size *= 0.94; slamTextEl.style.fontSize = size + "px";
+  }
+}
+
+function play(){
+  clearAll();
+  stage.style.background = CONFIG.bg;
+  terminal.style.display = "flex"; slam.style.display = "none";
+  buildTerminal();
+  const replyEl = document.getElementById("replyText");
+  const cursorEl = document.getElementById("cursor");
+  const noteEl = document.getElementById("interrupt");
+  const rawCut = (CONFIG.interruptAtFraction != null)
+    ? Math.floor(CONFIG.replyText.length * CONFIG.interruptAtFraction)
+    : CONFIG.interruptAtChar;
+  const cutAt = Math.max(0, Math.min(Math.floor(rawCut) || 0, CONFIG.replyText.length));
+  let i = 0;
+  later(function typeStep(){
+    if (i < cutAt) {
+      i++; replyEl.textContent = CONFIG.replyText.slice(0, i);
+      later(typeStep, CONFIG.typeMs);
+    } else {
+      /* CUT mid-word: typing stops, cursor stays frozen at the cut (as in ev frames), marker appears */
+      noteEl.style.opacity = "1";
+      later(function doSlam(){
+        /* HARD CUT — terminal replaced, no transition */
+        terminal.style.display = "none";
+        slam.style.background = CONFIG.slamBg;
+        slam.style.display = "flex";
+        fitSlam();
+        later(function(){ play(); }, CONFIG.holdMs);
+      }, CONFIG.interruptHoldMs);
+    }
+  }, CONFIG.startDelayMs);
+}
+window.addEventListener("resize", function(){ if (slam.style.display === "flex") fitSlam(); });
+window.T22 = { CONFIG, play };
+play();
+</script></body></html>

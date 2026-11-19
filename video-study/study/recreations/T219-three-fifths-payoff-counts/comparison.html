@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T219 — comparison</title>
+<style>
+  body { margin:0; font-family: Georgia, 'Times New Roman', serif; background:#e9e6de; color:#2b2b2b; }
+  main { max-width:1000px; margin:0 auto; padding:12px; }
+  .pair { display:flex; gap:12px; align-items:flex-start; }
+  figure { flex:1; margin:0; }
+  figcaption { font-size:15px; padding:6px 0; }
+  video, iframe { width:100%; aspect-ratio: 640/440; border:0; display:block; background:#f4f1ea; }
+  video { aspect-ratio: 16/9; }
+  .controls { display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap; position:sticky; bottom:0; background:#e9e6de; }
+  button { font-size:16px; padding:10px 18px; min-height:44px; cursor:pointer; }
+  @media (max-width:560px){ .pair { flex-direction:column; } figure { width:100%; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <button id="restart" type="button">Restart</button>
+    <span id="clock">0.0s</span>
+  </div>
+  <div class="pair">
+    <figure>
+      <figcaption>ORIGINAL — Vox Electoral College @ 5:05–5:31</figcaption>
+      <video id="orig" src="segment.mp4" preload="metadata" playsinline></video>
+    </figure>
+    <figure>
+      <figcaption>RECREATION — T219 three-fifths payoff counts, parameterized</figcaption>
+      <iframe id="rec" src="recreation.html" title="T219 recreation"></iframe>
+    </figure>
+  </div>
+</main>
+<script>
+"use strict";
+/* Synchronized control: one control set drives both sides.
+   segment.mp4 carries 0.5 s handles on both sides of the 305-331 s window,
+   so buildMs = (video.currentTime - HANDLE_OFFSET_S) * 1000, clamped to [0, derive(CONFIG).durationMs] read live from the recreation (26000 ms at the default CONFIG). */
+const HANDLE_OFFSET_S = 0.5;
+const video = document.getElementById("orig");
+const rec = document.getElementById("rec");
+function durMs(){ const w = rec.contentWindow; return (w && w.__T219) ? w.__T219.derive(w.__T219.CONFIG).durationMs : 26000; }
+function buildMs(){ return Math.max(0, Math.min(durMs(), (video.currentTime - HANDLE_OFFSET_S) * 1000)); }
+function sync(){ document.getElementById("clock").textContent = (buildMs() / 1000).toFixed(1) + "s"; }
+video.addEventListener("timeupdate", sync);
+document.getElementById("play").addEventListener("click", () => { video.play(); const b = rec.contentDocument && rec.contentDocument.getElementById("play"); if (b) b.click(); });
+document.getElementById("pause").addEventListener("click", () => { video.pause(); const b = rec.contentDocument && rec.contentDocument.getElementById("pause"); if (b) b.click(); });
+document.getElementById("restart").addEventListener("click", () => { video.currentTime = 0; video.play(); const b = rec.contentDocument && rec.contentDocument.getElementById("restart"); if (b) b.click(); });
+</script>
+</body>
+</html>
