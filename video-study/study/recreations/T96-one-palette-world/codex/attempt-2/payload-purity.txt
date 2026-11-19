@@ -1,0 +1,222 @@
+Standing header: (1) Consumer: practice job §5 Verify — decision priced: whether this re-attempt passes the five-lens bar (average ≥ 85 AND no lens < 70) and what the next attempt must cure if it does not. (2) Working record: this artifact's codex/attempt-2/ directory + scores.md. (3) Scores are integers from 0 to 100. Your return must end with `SCORE: <integer>` and a `BODY-WRITE:` line naming what your return writes into the record.
+
+LENS INSTRUCTION: Judge ONLY construction purity: parameterized code construction vs tracing/embedding (refusal-class). Any specimen media or traced frame = low score.
+
+=== NEUTRAL TECHNIQUE FACTS ===
+Technique facts (neutral): P4-T23 — the whole film day is drawn in ONE blue register (flat code-built illustration, deep blues, warm amber lights; daytime never bright); the SINGLE palette break is a dusk passage (orange sky, buildings stay blue) at the structural turn between exhibits and dinner; the HUD clock register persists across scenes.
+Segment measured sequence (sky-pixel sampling at 0.5 s steps over the 14.000 s segment, warmth = R-B at frame top-center): blue register from 0 to ~4.5 s (warmth ≈ -100 to -60) · the sky warms gradually from ~4.5 s to ~6 s (warmth -36 -> -3 -> +16 across samples — progressive, not a hard swap) · the dusk palette stands from ~6 s through the last warm sample at 12.5 s (warmth +29 to +55 at every sample; buildings remain blue; sun low; HUD still 16:00) · at 13.0 s the frame is the dinner interior in deep blue with HUD 19:00 — the blue return and the scene cut are the same event. The true return instant lies in the uncertainty interval [12.5 s, 13.0 s] at this sampling resolution; the recreation binds the return to the dinner cut at 13.0 s. The dinner scene occupies [13.0 s, 14.0 s] of the segment.
+Allocation disclosures: the recreation's 4-scene order (kitchen / street / exhibits / dinner) is a labeled allocation — no segment evidence covers the kitchen or street scenes; the kitchen (1500 ms), street (1500 ms), exhibits blue lead (1500 ms before the warm-up), dinner (500 ms) and end-hold (500 ms) durations fill around the measured anchors (warm-up start 4.5 s, dusk start 6.0 s, dinner cut 13.0 s, cycle 14.0 s), which are bound at their segment-local times.
+Recreation: per-scene durations in CONFIG; turn anchors warmStartMs 4500 / duskStartMs 6000; the return is derived as the return scene's start; cycle derived as the sum of scene durations + endHoldMs = 14000 ms. Build SHA-256: 38ffd531648ff0b155947401a776f15de86fe31844b90032127b9d192c9f625f (identical for all five lens runs). PIXEL-UNVERIFIED: judge from source.
+
+=== SCORE-BLIND BUILD RECORD ===
+# T96 — One-palette world · build record (score-blind packet)
+
+Artifact: recreation.html · Technique P4-T23 (packet #4, "A Day in 2037 With Superintelligence", The Good Takeoff) · Segment: a 14.000 s cut of the source film.
+Build SHA-256: 38ffd531648ff0b155947401a776f15de86fe31844b90032127b9d192c9f625f (identical for all five lens runs).
+PIXEL-UNVERIFIED: no browser binary in this seat; evidence is a logic-level node harness over the source + font-metric geometry. Judge from source.
+
+## Construction
+One self-contained HTML file; DOM/SVG; a CONFIG block at the top of the script carries every shaping value; a single phase resolver returns exactly one state per instant (half-open intervals). Scenes are code-drawn generic silhouettes (a seeded skyline generator plus minimal per-scene furniture) — no specimen media, no traced paths, no external assets; the only URL in the file is the SVG xmlns namespace identifier.
+Schedule: per-scene durations in CONFIG (scenes[].ms = 1500 / 1500 / 10000 / 500); the cycle is derived as the sum of scene durations + endHoldMs (500) = 14000 ms. Turn anchors in CONFIG: warmStartMs 4500, duskStartMs 6000; the return instant is derived as the start of the return scene (13000), so the blue register returns together with the final scene by construction. The resolver returns paletteMode blue / warming / dusk plus a warm progress value: during warming the sky color is a continuous per-frame interpolation between the register sky and the dusk sky, and the sun disc's opacity follows the same progress; buildings, lit windows, ground, furniture and HUD keep the register palette in every mode. HUD clock follows the scene (16:00 through the exhibits scene including the turn; 19:00 from the final scene).
+Text backing: the HUD header sits on a backing plate (267 px wide) in the warming and dusk modes; the scene label sits on a backing plate (136 px) over the ground strip in every mode. Scene identity is an explicit renderer-type key separate from the display name. At startup the configuration is validated (non-empty scenes, positive durations, ordered turn anchors inside the turn scene's span, return scene immediately after the turn scene, plate geometry inside the stage); a violation renders an explicit error state naming the offending key. Configured text is escaped before entering the SVG markup. The piece self-starts: its own animation loop runs the cycle and wraps without any external caller; render(tMs) is also seekable and pure.
+
+## Own-check results (node harness, all passing)
+- Phase-to-effect mappings at named instants across the cycle, including warm-up midpoints: sky warmth strictly monotonic across the warm-up samples; sun opacity 0.25 / 0.5 / 1.0 across the same span; the final scene, blue register and its clock arrive in the same state at the return instant; no state combines the exhibits scene with the blue register at or after the dusk start.
+- Configuration consumption: 101 configuration leaves each verified by mutation — changing any single leaf changes the rendered or computed output; zero unconsumed leaves.
+- Swap behaviour: alternate values for clocks, labels, year, both palettes and font render as configured, and the cycle re-derives from changed per-scene durations; a complete alternate palette system (register sky #173f2a, building #1f5c33, ink #eef7e0, amber #ffd23f; dusk sky #7a4fd0, sun #ffe9a8) swapped wholesale drives every layer in all three modes with no default-register color remaining; a reordered scene list with new names and explicit types renders the reordered world; three invalid configurations each produce the explicit named error state.
+- Literal scan: zero color literals and zero unlisted numeric literals outside the CONFIG block (remaining numeric tokens are generator mathematics, string-parse constants, loop indices and clamps).
+- Displayed-state model: header glyph box inside its plate in the dusk state; scene-label glyph box fully inside its plate and fully over the ground strip; the HUD plate and the sun disc's bound box are disjoint; at a 480 px stage width both plates still cover their text and the plate still clears the sun; renamed scene labels still fit their plate.
+- Purity scan: zero matches for specimen-media or external-asset patterns.
+- Measured text fit: header line ink ≈242–257 px at 16 px against its 267 px plate; clock ink ≈75 px at 30 px; scene label ink ≈113 px at 17 px against its 136 px plate; break label ink ≈45 px at 17 px; all subject-text ink heights ≥ 11 px at the 360 px stage. Blue-mode building/sky relative-luminance separation ≈10.7 (of 255), computed from the configuration hexes.
+
+=== recreation.html (full source) ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T96 — One-palette world (recreation)</title>
+<!--
+  T96 — One-palette world with a single dusk break. Parameterized recreation.
+  Technique: the WHOLE world (sky + buildings + amber lights + HUD) holds ONE
+  blue register across a sequence of scenes; at the structural turn the sky
+  warms gradually into a dusk palette and the dusk stands, while buildings,
+  lights and HUD keep the blue register; the blue register returns together
+  with the final scene. Phase machine: per-scene durations in CONFIG
+  (scenes[].ms); the turn anchors (turn.warmStartMs, turn.duskStartMs) are
+  CONFIG values on the cycle timeline and the return coincides with the
+  return scene's start by construction; cycle = sum of scene durations +
+  endHoldMs. ONE phase resolver returns exactly one {sceneIndex,
+  paletteMode, warm, localTime, endHold} state from t (half-open intervals) —
+  phase exclusivity by construction. During the warm-up span the sky color
+  is a continuous interpolation between the two register skies and the sun
+  disc fades in on the same progress value. Intensity separation: amber
+  lights render at intensity.lights, scene fields dimmer at intensity.field.
+  Scenes are code-drawn generic silhouettes (kitchen / street / skyline /
+  dinner interior) generated from CONFIG geom — NOT traced. The scene ORDER
+  is a labeled ALLOCATION. Seekable: render(tMs) pure. No captions, no
+  specimen media. PIXEL-UNVERIFIED.
+-->
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #stage svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+'use strict';
+/* ================= CONFIG (specimen values are the defaults) ================= */
+const CONFIG = {
+  scenes: [
+    { name: "kitchen", type: "kitchen", clock: "06:15", ms: 1500 },
+    { name: "street", type: "street", clock: "12:00", ms: 1500 },
+    { name: "exhibits", type: "skyline", clock: "16:00", ms: 10000 },
+    { name: "dinner", type: "dinner", clock: "19:00", ms: 500 }
+  ],
+  palette: { sky: "#1d3f8f", building: "#274b8f", ink: "#f5f2e6", amber: "#f0c93f" },
+  breakPalette: { sky: "#e8955a", sun: "#f7d774" },
+  turn: { warmStartMs: 4500, duskStartMs: 6000, atScene: 2, returnScene: 3, label: "DUSK" },
+  endHoldMs: 500,
+  hud: { year: 2037, dayLine: "A POSSIBLE TUESDAY" },
+  type: { font: "Georgia, 'Times New Roman', serif" },
+  stage: { width: 360 },
+  intensity: { lights: 1, field: 0.85, label: 1, plate: 0.62 },
+  geom: {
+    stageH: 240, groundH: 22, plateW: 267, plateH: 62, plateX: 4, plateY: 4, labelPlateW: 120, labelPlateH: 26, scenePlateW: 136,
+    seed: 7, buildings: 9, bWMin: 26, bWVar: 30, bHMin: 46, bHVar: 96, bJitter: 8,
+    winW: 5, winH: 7, winGapX: 11, winGapY: 13, winLitRatio: 0.42,
+    sunX: 302, sunY: 44, sunR: 17, moonX: 316, moonY: 30, moonR: 10,
+    hudX: 10, hudY: 8, yearPx: 16, clockPx: 30, yearSpacingPx: 1, clockGapPx: 4,
+    labelPx: 17, labelY: 206, scenePx: 17, sceneY: 234,
+    counterH: 10, counterY: 168, tableH: 8, tableY: 176,
+    lampW: 4, lampH: 34, silW: 26, silH: 52, silY: 150,
+    seedOff: { kitchen: 11, street: 23, skyline: 37 },
+    kitchen: { winX: 40, winUp: 26, winW: 34, winH: 26 },
+    street: { lamp1X: 30, lamp2X: 290, lampHeadR: 5 },
+    dinner: { frameX: 24, frameY: 52, frameW: 312, frameH: 140, win1X: 70, win2X: 244, winY: 96, winW: 46, winH: 34 }
+  }
+};
+/* ================= CONFIG end ================= */
+function deepMerge(base, over){
+  if (Array.isArray(over)) return over.slice();
+  if (over && typeof over === 'object'){
+    const out = {};
+    for (const k of Object.keys(base)) out[k] = deepMerge(base[k], over[k]);
+    for (const k of Object.keys(over)) if (!(k in out)) out[k] = over[k];
+    return out;
+  }
+  return over === undefined ? base : over;
+}
+let CFG = CONFIG;
+try { const q = new URLSearchParams(location.search).get('cfg'); if (q) CFG = deepMerge(CONFIG, JSON.parse(q)); } catch (e) {}
+if (typeof window !== 'undefined') window.__CFG = CFG;
+function sceneStart(i){ let s = 0; for (let k = 0; k < i; k++) s += CFG.scenes[k].ms; return s; }
+const cycleMs = sceneStart(CFG.scenes.length) + CFG.endHoldMs;
+function rng(seed){ let s = seed >>> 0; return function(){ s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function hexRgb(h){ return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+function lerpColor(a, b, f){
+  const A = hexRgb(a), B = hexRgb(b);
+  return 'rgb(' + Math.round(A[0] + (B[0] - A[0]) * f) + ',' + Math.round(A[1] + (B[1] - A[1]) * f) + ',' + Math.round(A[2] + (B[2] - A[2]) * f) + ')';
+}
+/* ONE phase resolver — half-open intervals, exactly one state per t. */
+function phaseAt(t){
+  const tt = ((t % cycleMs) + cycleMs) % cycleMs;
+  const scenesMs = sceneStart(CFG.scenes.length);
+  const last = CFG.scenes.length - 1;
+  if (tt >= scenesMs) return { sceneIndex: last, paletteMode: "blue", warm: 0, localTime: tt - scenesMs, endHold: true };
+  let idx = 0, acc = 0;
+  while (tt >= acc + CFG.scenes[idx].ms){ acc += CFG.scenes[idx].ms; idx++; }
+  const local = tt - acc;
+  const returnStart = sceneStart(CFG.turn.returnScene);
+  let mode = "blue", warm = 0;
+  if (tt >= CFG.turn.warmStartMs && tt < CFG.turn.duskStartMs){ mode = "warming"; warm = (tt - CFG.turn.warmStartMs) / (CFG.turn.duskStartMs - CFG.turn.warmStartMs); }
+  else if (tt >= CFG.turn.duskStartMs && tt < returnStart){ mode = "dusk"; warm = 1; }
+  return { sceneIndex: idx, paletteMode: mode, warm: warm, localTime: local, endHold: false };
+}
+function skyline(g, P, seedOff){
+  const rand = rng(g.seed + seedOff); let s = '';
+  for (let i = 0; i < g.buildings; i++){
+    const bw = g.bWMin + rand() * g.bWVar, bh = g.bHMin + rand() * g.bHVar;
+    const bx = (CFG.stage.width / g.buildings) * i + rand() * g.bJitter, by = g.stageH - g.groundH - bh;
+    s += '<rect x="' + bx.toFixed(1) + '" y="' + by + '" width="' + bw.toFixed(1) + '" height="' + bh + '" fill="' + P.building + '" opacity="' + CFG.intensity.field + '"/>';
+    for (let wy = by + g.winGapY; wy < g.stageH - g.groundH - g.winH; wy += g.winGapY){
+      for (let wx = bx + g.winGapX / 2; wx < bx + bw - g.winW; wx += g.winGapX){
+        if (rand() < g.winLitRatio) s += '<rect x="' + wx.toFixed(1) + '" y="' + wy + '" width="' + g.winW + '" height="' + g.winH + '" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/>';
+      }
+    }
+  }
+  return s;
+}
+function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function lamp(x, g, P){
+  return '<rect x="' + x + '" y="' + (g.stageH - g.groundH - g.lampH) + '" width="' + g.lampW + '" height="' + g.lampH + '" fill="' + P.ink + '"/><circle cx="' + (x + g.lampW / 2) + '" cy="' + (g.stageH - g.groundH - g.lampH) + '" r="' + g.street.lampHeadR + '" fill="' + P.amber + '"/>';
+}
+function sceneBody(type, g, P){
+  if (type === "kitchen") return skyline(g, P, g.seedOff.kitchen) + '<rect x="0" y="' + g.counterY + '" width="' + CFG.stage.width + '" height="' + g.counterH + '" fill="' + P.building + '"/><rect x="' + g.kitchen.winX + '" y="' + (g.counterY - g.kitchen.winUp) + '" width="' + g.kitchen.winW + '" height="' + g.kitchen.winH + '" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/>';
+  if (type === "street") return skyline(g, P, g.seedOff.street) + lamp(g.street.lamp1X, g, P) + lamp(g.street.lamp2X, g, P);
+  if (type === "dinner") return '<rect x="' + g.dinner.frameX + '" y="' + g.dinner.frameY + '" width="' + g.dinner.frameW + '" height="' + g.dinner.frameH + '" fill="' + P.building + '" opacity="' + CFG.intensity.field + '"/><rect x="0" y="' + g.tableY + '" width="' + CFG.stage.width + '" height="' + g.tableH + '" fill="' + P.building + '"/><rect x="' + g.dinner.win1X + '" y="' + g.dinner.winY + '" width="' + g.dinner.winW + '" height="' + g.dinner.winH + '" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/><rect x="' + g.dinner.win2X + '" y="' + g.dinner.winY + '" width="' + g.dinner.winW + '" height="' + g.dinner.winH + '" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/><rect x="' + (CFG.stage.width / 2 - g.silW / 2) + '" y="' + g.silY + '" width="' + g.silW + '" height="' + g.silH + '" fill="' + P.building + '"/>';
+  return skyline(g, P, g.seedOff.skyline); /* skyline register: the default renderer for any other scene type */
+}
+function validateConfig(c){
+  const errs = [];
+  if (!Array.isArray(c.scenes) || c.scenes.length === 0){ errs.push('scenes: must be a non-empty list'); return errs; }
+  c.scenes.forEach((s, i) => { if (!(typeof s.ms === 'number' && s.ms > 0)) errs.push('scenes[' + i + '].ms: must be a positive number'); });
+  const starts = []; let acc = 0;
+  for (const s of c.scenes){ starts.push(acc); acc += (typeof s.ms === 'number' ? s.ms : 0); }
+  const t = c.turn || {};
+  if (!(Number.isInteger(t.atScene) && t.atScene >= 0 && t.atScene < c.scenes.length)) errs.push('turn.atScene: must be a valid scene index');
+  if (t.returnScene !== t.atScene + 1 || !(t.returnScene < c.scenes.length)) errs.push('turn.returnScene: must equal turn.atScene + 1 and be a valid scene index');
+  if (errs.length === 0){
+    if (!(t.warmStartMs >= starts[t.atScene])) errs.push('turn.warmStartMs: must not precede the turn scene start');
+    if (!(t.warmStartMs < t.duskStartMs)) errs.push('turn.duskStartMs: must be greater than turn.warmStartMs');
+    if (!(t.duskStartMs < starts[t.returnScene])) errs.push('turn.duskStartMs: must precede the return scene start');
+  }
+  const g = c.geom;
+  if (!(g.plateX >= 0 && g.plateX + g.plateW <= c.stage.width && g.plateY >= 0 && g.plateY + g.plateH <= g.stageH)) errs.push('geom.plateW/plateH: HUD plate must fit inside the stage');
+  if (!(g.scenePlateW <= c.stage.width)) errs.push('geom.scenePlateW: scene plate must fit inside the stage');
+  return errs;
+}
+function buildScene(){
+  const g = CFG.geom;
+  const errs = validateConfig(CFG);
+  window.__configErrors = errs;
+  if (errs.length){
+    document.getElementById('stage').innerHTML = '<div style="color:#f5f2e6;background:#7a1f1f;font-family:monospace;padding:8px;">' + esc('CONFIG error: ' + errs.join('; ')) + '</div>';
+    window.__render = function(){ return null; };
+    window.__phaseAt = phaseAt; window.__cycleMs = cycleMs;
+    return;
+  }
+  document.getElementById('stage').style.cssText = 'width:' + CFG.stage.width + 'px;height:' + g.stageH + 'px;font-family:' + CFG.type.font + ';';
+  window.__render = function(t){
+    const ph = phaseAt(t), P = CFG.palette, scene = CFG.scenes[ph.sceneIndex];
+    const sky = ph.paletteMode === "blue" ? P.sky : lerpColor(P.sky, CFG.breakPalette.sky, ph.warm);
+    let s = '<svg viewBox="0 0 ' + CFG.stage.width + ' ' + g.stageH + '" xmlns="http://www.w3.org/2000/svg">';
+    s += '<rect width="' + CFG.stage.width + '" height="' + g.stageH + '" fill="' + sky + '"/>';
+    s += ph.paletteMode === "blue"
+      ? '<circle cx="' + g.moonX + '" cy="' + g.moonY + '" r="' + g.moonR + '" fill="' + P.ink + '" opacity="' + CFG.intensity.field + '"/>'
+      : '<circle cx="' + g.sunX + '" cy="' + g.sunY + '" r="' + g.sunR + '" fill="' + CFG.breakPalette.sun + '" opacity="' + ph.warm + '"/>';
+    s += sceneBody(scene.type, g, P);
+    s += '<rect y="' + (g.stageH - g.groundH) + '" width="' + CFG.stage.width + '" height="' + g.groundH + '" fill="' + P.building + '"/>';
+    if (ph.paletteMode === "dusk") s += '<rect x="' + (CFG.stage.width / 2 - g.labelPlateW / 2) + '" y="' + (g.labelY - g.labelPx - 4) + '" width="' + g.labelPlateW + '" height="' + g.labelPlateH + '" fill="' + P.building + '" opacity="' + CFG.intensity.plate + '"/><text x="' + (CFG.stage.width / 2) + '" y="' + g.labelY + '" font-size="' + g.labelPx + '" fill="' + P.ink + '" text-anchor="middle" opacity="' + CFG.intensity.label + '" font-family="' + CFG.type.font + '">' + esc(CFG.turn.label) + '</text>';
+    if (ph.paletteMode !== "blue") s += '<rect x="' + g.plateX + '" y="' + g.plateY + '" width="' + g.plateW + '" height="' + g.plateH + '" fill="' + P.building + '" opacity="' + CFG.intensity.plate + '"/>';
+    s += '<rect x="' + (CFG.stage.width / 2 - g.scenePlateW / 2) + '" y="' + (g.stageH - g.groundH) + '" width="' + g.scenePlateW + '" height="' + g.groundH + '" fill="' + P.building + '" opacity="' + CFG.intensity.plate + '"/>';
+    s += '<text x="' + (CFG.stage.width / 2) + '" y="' + g.sceneY + '" font-size="' + g.scenePx + '" fill="' + P.ink + '" text-anchor="middle" font-family="' + CFG.type.font + '">' + esc(scene.name) + ' · ' + esc(scene.clock) + '</text>';
+    s += '<g font-family="' + CFG.type.font + '" fill="' + P.ink + '"><text x="' + g.hudX + '" y="' + (g.hudY + g.yearPx) + '" font-size="' + g.yearPx + '" letter-spacing="' + g.yearSpacingPx + '">' + CFG.hud.year + ' · ' + esc(CFG.hud.dayLine) + '</text><text x="' + g.hudX + '" y="' + (g.hudY + g.yearPx + g.clockPx + g.clockGapPx) + '" font-size="' + g.clockPx + '">' + esc(scene.clock) + '</text></g>';
+    s += '</svg>';
+    document.getElementById('stage').innerHTML = s;
+    return ph;
+  };
+  window.__phaseAt = phaseAt; window.__cycleMs = cycleMs;
+  window.__render(0);
+}
+buildScene();
+if (typeof module !== 'undefined') module.exports = { phaseAt: phaseAt, cycleMs: cycleMs, validateConfig: validateConfig, esc: esc, CFG: CFG };
+else {
+  const t0 = Date.now();
+  (function loop(){ window.__render(Date.now() - t0); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>

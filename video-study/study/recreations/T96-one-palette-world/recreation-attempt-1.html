@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T96 — One-palette world (recreation)</title>
+<!--
+  T96 — One-palette world with a single dusk break. Parameterized recreation.
+  Technique: the WHOLE world (sky + buildings + amber lights + HUD) holds ONE
+  blue register across a sequence of scenes; exactly ONE scene-slot (the
+  structural turn, scenes[break.atScene]) carries the dusk breakPalette for
+  breakMs inside its slot, then blue returns for the rest of the slot.
+  Phase machine (RUN §2b.4, PINNED): scenes cycle scenes.length x sceneMs;
+  the break REPLACES scene index break.atScene's sky/sun palette for breakMs
+  starting at geom.breakOffsetMs inside that slot (buildings/lights/HUD keep
+  the blue register during the break — as in the measured dusk frame, where
+  the buildings stay blue under the orange sky); endHoldMs holds the last
+  scene; cycle = scenes.length*sceneMs + endHoldMs = exactly 14000 ms.
+  ONE phase resolver returns exactly one {sceneIndex, paletteMode, localTime,
+  endHold} state from t (half-open intervals) — phase exclusivity by
+  construction (Owner Cure 2 translated). Intensity separation (Cure 1):
+  amber lights render at intensity.lights, scene fields dimmer.
+  Scenes are code-drawn generic silhouettes (kitchen / street / skyline /
+  dinner interior) generated from CONFIG geom — NOT traced. The scene ORDER
+  is a labeled ALLOCATION; the break's existence + return is segment-anchored
+  (measured: sky warms ~4.5 s, dusk stands ~6-12.5 s, blue dinner at ~13 s in
+  the 294-308 s segment; the recreation compresses that passage into the
+  pinned 1200 ms break inside one slot — an intentional abstraction of the
+  whole-film system into the 14 s window, recorded in build-record).
+  Seekable: render(tMs) pure. No captions, no specimen media. PIXEL-UNVERIFIED.
+-->
+<style>
+  html,body{margin:0;padding:0;}
+  #stage{position:relative;margin:0 auto;overflow:hidden;}
+  #stage svg{display:block;width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+'use strict';
+/* ================= CONFIG (specimen values are the defaults) ================= */
+const CONFIG = {
+  scenes: [
+    { name: "kitchen", clock: "06:15" },
+    { name: "street", clock: "12:00" },
+    { name: "exhibits", clock: "16:00" },
+    { name: "dinner", clock: "19:00" }
+  ],
+  palette: { sky: "#1d3f8f", building: "#274b8f", ink: "#f5f2e6", amber: "#f0c93f" },
+  breakPalette: { sky: "#e8955a", sun: "#f7d774" },
+  break: { atScene: 2, label: "DUSK", offsetMs: 0 },
+  sceneMs: 3200,
+  breakMs: 1200,
+  endHoldMs: 1200,
+  hud: { year: 2037, dayLine: "A POSSIBLE TUESDAY" },
+  type: { font: "Georgia, 'Times New Roman', serif" },
+  stage: { width: 360 },
+  intensity: { lights: 1, field: 0.85, label: 1, plate: 0.62 },
+  geom: {
+    stageH: 240, groundH: 22, plateW: 218, plateH: 62, plateX: 4, plateY: 4, labelPlateW: 120, labelPlateH: 26,
+    seed: 7, buildings: 9, bWMin: 26, bWVar: 30, bHMin: 46, bHVar: 96, bJitter: 8,
+    winW: 5, winH: 7, winGapX: 11, winGapY: 13, winLitRatio: 0.42,
+    sunX: 302, sunY: 44, sunR: 17, moonX: 316, moonY: 30, moonR: 10,
+    hudX: 10, hudY: 8, yearPx: 16, clockPx: 30, yearSpacingPx: 1, clockGapPx: 4,
+    labelPx: 17, labelY: 206, scenePx: 17, sceneY: 224,
+    counterW: 120, counterH: 10, counterY: 168, tableW: 130, tableH: 8, tableY: 176,
+    lampW: 4, lampH: 34, silW: 26, silH: 52, silY: 150
+  }
+};
+/* ================= CONFIG end ================= */
+function deepMerge(base, over){
+  if (Array.isArray(over)) return over.slice();
+  if (over && typeof over === 'object'){
+    const out = {};
+    for (const k of Object.keys(base)) out[k] = deepMerge(base[k], over[k]);
+    for (const k of Object.keys(over)) if (!(k in out)) out[k] = over[k];
+    return out;
+  }
+  return over === undefined ? base : over;
+}
+let CFG = CONFIG;
+try { const q = new URLSearchParams(location.search).get('cfg'); if (q) CFG = deepMerge(CONFIG, JSON.parse(q)); } catch (e) {}
+const cycleMs = CFG.scenes.length * CFG.sceneMs + CFG.endHoldMs;
+function rng(seed){ let s = seed >>> 0; return function(){ s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+/* ONE phase resolver — half-open intervals, exactly one state per t. */
+function phaseAt(t){
+  const tt = ((t % cycleMs) + cycleMs) % cycleMs;
+  const scenesMs = CFG.scenes.length * CFG.sceneMs;
+  if (tt >= scenesMs) return { sceneIndex: CFG.scenes.length - 1, paletteMode: "blue", localTime: tt - scenesMs, endHold: true };
+  const idx = Math.floor(tt / CFG.sceneMs), local = tt - idx * CFG.sceneMs;
+  const inBreak = idx === CFG.break.atScene && local >= CFG.break.offsetMs && local < CFG.break.offsetMs + CFG.breakMs;
+  return { sceneIndex: idx, paletteMode: inBreak ? "dusk" : "blue", localTime: local, endHold: false };
+}
+function skyline(g, P, seedOff){
+  const rand = rng(g.seed + seedOff); let s = '';
+  for (let i = 0; i < g.buildings; i++){
+    const bw = g.bWMin + rand() * g.bWVar, bh = g.bHMin + rand() * g.bHVar;
+    const bx = (CFG.stage.width / g.buildings) * i + rand() * g.bJitter, by = g.stageH - g.groundH - bh;
+    s += '<rect x="' + bx.toFixed(1) + '" y="' + by + '" width="' + bw.toFixed(1) + '" height="' + bh + '" fill="' + P.building + '" opacity="' + CFG.intensity.field + '"/>';
+    for (let wy = by + g.winGapY; wy < g.stageH - g.groundH - g.winH; wy += g.winGapY){
+      for (let wx = bx + g.winGapX / 2; wx < bx + bw - g.winW; wx += g.winGapX){
+        if (rand() < g.winLitRatio) s += '<rect x="' + wx.toFixed(1) + '" y="' + wy + '" width="' + g.winW + '" height="' + g.winH + '" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/>';
+      }
+    }
+  }
+  return s;
+}
+function sceneBody(name, g, P){
+  if (name === "kitchen") return skyline(g, P, 11) + '<rect x="0" y="' + g.counterY + '" width="' + CFG.stage.width + '" height="' + g.counterH + '" fill="' + P.building + '"/><rect x="40" y="' + (g.counterY - 26) + '" width="34" height="26" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/>';
+  if (name === "street") return skyline(g, P, 23) + '<rect x="30" y="' + (g.stageH - g.groundH - g.lampH) + '" width="' + g.lampW + '" height="' + g.lampH + '" fill="' + P.ink + '"/><circle cx="32" cy="' + (g.stageH - g.groundH - g.lampH) + '" r="5" fill="' + P.amber + '"/><rect x="290" y="' + (g.stageH - g.groundH - g.lampH) + '" width="' + g.lampW + '" height="' + g.lampH + '" fill="' + P.ink + '"/><circle cx="292" cy="' + (g.stageH - g.groundH - g.lampH) + '" r="5" fill="' + P.amber + '"/>';
+  if (name === "dinner") return '<rect x="24" y="52" width="312" height="140" fill="' + P.building + '" opacity="' + CFG.intensity.field + '"/><rect x="0" y="' + g.tableY + '" width="' + CFG.stage.width + '" height="' + g.tableH + '" fill="' + P.building + '"/><rect x="70" y="96" width="46" height="34" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/><rect x="244" y="96" width="46" height="34" fill="' + P.amber + '" opacity="' + CFG.intensity.lights + '"/><rect x="' + (180 - g.silW / 2) + '" y="' + g.silY + '" width="' + g.silW + '" height="' + g.silH + '" fill="' + P.building + '"/>';
+  return skyline(g, P, 37); /* exhibits + any CONFIG-named scene: the skyline register */
+}
+function buildScene(){
+  const g = CFG.geom;
+  document.getElementById('stage').style.cssText = 'width:' + CFG.stage.width + 'px;height:' + g.stageH + 'px;font-family:' + CFG.type.font + ';';
+  window.__render = function(t){
+    const ph = phaseAt(t), P = CFG.palette, scene = CFG.scenes[ph.sceneIndex];
+    const sky = ph.paletteMode === "dusk" ? CFG.breakPalette.sky : P.sky;
+    const sunFill = ph.paletteMode === "dusk" ? CFG.breakPalette.sun : P.amber;
+    let s = '<svg viewBox="0 0 ' + CFG.stage.width + ' ' + g.stageH + '" xmlns="http://www.w3.org/2000/svg">';
+    s += '<rect width="' + CFG.stage.width + '" height="' + g.stageH + '" fill="' + sky + '"/>';
+    s += ph.paletteMode === "dusk"
+      ? '<circle cx="' + g.sunX + '" cy="' + g.sunY + '" r="' + g.sunR + '" fill="' + sunFill + '"/>'
+      : '<circle cx="' + g.moonX + '" cy="' + g.moonY + '" r="' + g.moonR + '" fill="' + P.ink + '" opacity="' + CFG.intensity.field + '"/>';
+    s += sceneBody(scene.name, g, P);
+    s += '<rect y="' + (g.stageH - g.groundH) + '" width="' + CFG.stage.width + '" height="' + g.groundH + '" fill="' + P.building + '"/>';
+    if (ph.paletteMode === "dusk") s += '<rect x="' + (CFG.stage.width / 2 - g.labelPlateW / 2) + '" y="' + (g.labelY - g.labelPx - 4) + '" width="' + g.labelPlateW + '" height="' + g.labelPlateH + '" fill="' + P.building + '" opacity="' + CFG.intensity.plate + '"/><text x="' + (CFG.stage.width / 2) + '" y="' + g.labelY + '" font-size="' + g.labelPx + '" fill="' + P.ink + '" text-anchor="middle" opacity="' + CFG.intensity.label + '" font-family="' + CFG.type.font + '">' + CFG.break.label + '</text>';
+    if (ph.paletteMode === "dusk") s += '<rect x="' + g.plateX + '" y="' + g.plateY + '" width="' + g.plateW + '" height="' + g.plateH + '" fill="' + P.building + '" opacity="' + CFG.intensity.plate + '"/>';
+    s += '<text x="' + (CFG.stage.width / 2) + '" y="' + g.sceneY + '" font-size="' + g.scenePx + '" fill="' + P.ink + '" text-anchor="middle" font-family="' + CFG.type.font + '">' + scene.name + ' · ' + scene.clock + '</text>';
+    s += '<g font-family="' + CFG.type.font + '" fill="' + P.ink + '"><text x="' + g.hudX + '" y="' + (g.hudY + g.yearPx) + '" font-size="' + g.yearPx + '" letter-spacing="' + g.yearSpacingPx + '">' + CFG.hud.year + ' · ' + CFG.hud.dayLine + '</text><text x="' + g.hudX + '" y="' + (g.hudY + g.yearPx + g.clockPx + g.clockGapPx) + '" font-size="' + g.clockPx + '">' + scene.clock + '</text></g>';
+    s += '</svg>';
+    document.getElementById('stage').innerHTML = s;
+    return ph;
+  };
+  window.__phaseAt = phaseAt; window.__cycleMs = cycleMs;
+  window.__render(0);
+}
+buildScene();
+if (typeof module !== 'undefined') module.exports = { phaseAt: phaseAt, cycleMs: cycleMs };
+else {
+  const t0 = Date.now();
+  (function loop(){ window.__render(Date.now() - t0); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>

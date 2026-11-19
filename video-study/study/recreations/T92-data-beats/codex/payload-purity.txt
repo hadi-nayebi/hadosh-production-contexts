@@ -1,0 +1,415 @@
+# Codex scoring wave - lens: purity - T92 Data beats, attempt 1, Cycle 015 Wave 13 (final build)
+
+## Standing header
+1. Consumer: recreation job's §5 Verify (tier recommendation: RECREATED requires five-lens average >= 85 AND no lens < 70) + the cycle's Condense (cure list). The decision priced: this lens's score for attempt 1 and exactly what a next attempt must cure.
+2. Working record: the item's artifact directory hidden_files/study/recreations/T92-data-beats/ (codex/ returns + scores.md) - this run builds from the payload below and its return files verbatim at codex/lens-purity.md.
+3. Body-write: the return must end with "SCORE: <integer 0-100>" on its own line and a "BODY-WRITE:" line naming what it filed; a read-only run closes "Body-write: none (read-only run)" and the consumer persists the return verbatim.
+
+## Lens instruction
+CONSTRUCTION PURITY - parameterized construction vs tracing/embedding (a refusal-class judgment). Price: whether every visual is generated from CONFIG-driven code, whether any specimen media, frame, or traced redraw is embedded or referenced, and whether the parameter surface honestly covers what the code draws (literals, derivation, generator geometry, chart series data).
+
+## Binding
+This payload binds recreation.html SHA-256: 64e8d4a8ce2f11451f70d9a48de66932ea0a76e5d1fa4083b1ea2bb50512ac03
+All five lens payloads of this attempt carry the identical hash.
+
+NEUTRAL TECHNIQUE FACTS (catalogue):
+- Mechanics: the hardest numbers are spoken as dialogue and shown as graphics - a failure rate exchanged line by line ("about one in five - One in five? - One in five."), backed by a status card; and a learning study whose -17% chart is drawn on screen. Data beats carried inside the conversation, not over it.
+- The chart is the receipt; the dialogue is the audit. A statistic that survives a follow-up question is worth more than a citation.
+- Windows: 6:29-6:39 and 8:01-8:12 in a 620 s film; the recreation's segment is 389-403 s (14 s).
+- Transfer: put load-bearing numbers in a form that must justify them - the number as a designed graphic with its evidence card (status, place/year, claim, source) and its chart.
+
+SCORE-BLIND BUILD RECORD (no scores, no guard verdicts):
+Technique: T92 data beats inside the dialogue (Packet #4, The Good Takeoff). The dinner's two hardest numbers are spoken as dialogue AND shown as graphics: (1) "about one in five of their findings didn't hold up" backed by an ALREADY MEASURED card; (2) the learning study with the -17% chart drawn on screen.
+Measured from the segment (389-403 s, builder frames): Act-1 card is ABSENT at seg 0-3 s (HUD 2037, wall-projection scene); at seg 4 s the HUD year has flipped to 2025 and the card's border stands drawn without text; at seg 5-10 s the card stands settled: "ALREADY MEASURED / USA - 2025 / AI research system: about 1 in 5 claims did not hold up / KOSMOS - ARXIV 2511.02824" (bounds approx x 70-795, y 195-445 of 1920x1080; gold left border; status/place small caps; claim large white serif; source small gold caps); at seg 11 s the card is gone and the HUD reads 2037 again. Act-2 form is evidenced by a still frame: card "ALREADY TESTED / TURKEY - 2025 / Plain chatbot: exam scores 17% lower without it - tutor with guardrails: no such drop / BASTANI ET AL. - PNAS 2025" over a balance-beam chart: bars above the beam, one bar hanging below it, a large "-17%" numeral under the beam, question-mark steps rising to the right; HUD 2025.
+Build: one self-contained HTML file, DOM/SVG construction. CONFIG at top binds: hud {sceneYear 2037, evidenceYear 2025, dayLine, clock}, beats as a union schema - card-kind {status, place, year, claim, source, value, units{total,marked}, slotMs, leadMs, clearMs} and chart-kind {status, place, year, claim, source, value, bars[{h,fillKey}], slotMs, leadMs, clearMs} - palette {bg, card, ink, accent, bar}, enterMs 500, endHoldMs 1000, type {font Georgia stack, sizes, spacings, line height, status weight}, stage {width 360}, geom {stage height, HUD position, card geometry, value/unit-row geometry, full chart geometry including mark text and the border-share of the enter phase, scene generator geometry}. A phase machine derives the single active beat from one cycle clock over per-beat slots: Act 1 slot 10000 ms - lead 3500 (scene only, HUD at sceneYear) -> enter 500 (border-first: the card frame stands over the first 40% of the enter, then its text; countable units land with per-unit progress in count order) -> hold -> clear 500 (card fades out); Act 2 slot 3000 ms - enter 500 (the chart DRAWS ON in groups: beam, bars grow from the beam, hanging bar drops, question steps/marks stagger in, numeral last) -> hold; endHold 1000 holds Act 2 settled; cycle = 10000 + 3000 + 1000 = 14000 ms, looping. One beat owns the stage at any instant; card content swaps whole at slot boundaries. The HUD year derives from the current phase every frame: scene year during lead/clear, evidence year while a beat's card stands (enter/hold/endhold). The chart's hanging-bar height derives from the beat's parsed percent value times a CONFIG scale (geom.pxPerPercent 2.2): -17% -> 37.4 px; a -25% override -> 55.0 px (chart height 190 px, no clipping). The displayed value is authoritative for the unit row: a fraction in the value re-derives the units (units{} is a fallback only). A validate() pass runs after any override (beat kinds, slot arithmetic, percent form). The simplified scene (flat code-drawn blocks with windows) sits in a separate container dimmed to 0.5; the card, numeral, unit row, and chart are outside it at full intensity. The value numeral is the largest type on each beat (46 px configured; measured ink 35 px vs claim ink 19 px).
+Schedule basis: two-act (named in the record): Act 1 sits at its measured segment anchors inside the loop (lead to ~3.5 s, border at ~3.5-4 s, settled ~4-9.5 s, cleared by 10 s, HUD restored); Act 2's FORM is frame-evidenced while its schedule is a labeled allocation model - a 3 s demonstration interval plus the end-hold, placed after Act 1's measured window. The unit row on the card beat is a labeled allocation (a countable form of "1 in 5"); the specimen card carries no unit row. No specimen media, no traced artwork; the original appears only in the separate comparison page.
+
+## recreation.html (full source)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T92 — Data beats (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;background:#0b1526;}
+  #stage{position:relative;overflow:hidden;margin:0 auto;}
+  #scene{position:absolute;inset:0;}
+  .blk{position:absolute;}
+  .win{position:absolute;}
+  #hud{position:absolute;}
+  #card{position:absolute;box-sizing:border-box;}
+  #valueRow{position:absolute;text-align:center;}
+  #units{position:absolute;display:flex;justify-content:center;}
+  .unit{box-sizing:border-box;}
+  #chart{position:absolute;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="scene"></div>
+  <div id="hud">
+    <div id="hudLine"><span id="hudYear"></span><span id="hudDay"></span></div>
+    <div id="hudClock"></div>
+  </div>
+  <div id="card">
+    <div id="cardStatus"></div>
+    <div id="cardPlace"></div>
+    <div id="cardClaim"></div>
+    <div id="cardRule"></div>
+    <div id="cardSource"></div>
+  </div>
+  <div id="valueRow"></div>
+  <div id="units"></div>
+  <svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<script>
+"use strict";
+/* ============ CONFIG — every content / timing / palette / font / geometry value lives here ============ */
+const CONFIG = {
+  hud: {sceneYear:2037, evidenceYear:2025, dayLine:"A POSSIBLE TUESDAY", clock:"19:00"},
+  beats: [
+    {kind:"card", status:"ALREADY MEASURED", place:"USA", year:2025,
+     claim:"AI research system: about 1 in 5 claims did not hold up",
+     source:"KOSMOS · ARXIV 2511.02824", value:"1 in 5", units:{total:5, marked:1},
+     slotMs:10000, leadMs:3500, clearMs:500},
+    {kind:"chart", status:"ALREADY TESTED", place:"TURKEY", year:2025,
+     claim:"Plain chatbot: exam scores 17% lower without it · tutor with guardrails: no such drop",
+     source:"BASTANI ET AL. · PNAS 2025", value:"-17%",
+     bars:[{h:52, fillKey:"bar"},{h:64, fillKey:"accent"},{h:64, fillKey:"accent"}],
+     slotMs:3000, leadMs:0, clearMs:0}
+  ],
+  palette: {bg:"#16294f", card:"#13294d", ink:"#f5f2e6", accent:"#e8c86a", bar:"#a9c2e8"},
+  enterMs: 500,
+  endHoldMs: 1000,
+  type: {font:"Georgia, 'Times New Roman', serif",
+         hudYearPx:26, hudDayPx:13, clockPx:30,
+         statusPx:15, placePx:15, claimPx:20, sourcePx:15, valuePx:46,
+         statusSpacingEm:0.14, placeSpacingEm:0.12, sourceSpacingEm:0.04, hudDaySpacingEm:0.12,
+         claimLineHeight:1.3, statusWeight:"bold"},
+  stage: {width:360},
+  geom: {
+    stageH:540,
+    hudX:16, hudY:12, hudDayGapPx:8,
+    cardX:20, cardY:92, cardW:320, cardPad:14, borderW:3, risePx:12,
+    gapAfterStatus:3, gapBeforeClaim:10, gapBeforeRule:12, gapBeforeSource:7, ruleH:1, ruleOpacity:0.45,
+    valueY:316, unitY:386, unitSize:26, unitGap:10, unitBorderW:2,
+    chartX:30, chartY:312, chartW:300, chartH:190, chartInsetX:6, markText:"?", enterBorderShare:0.4,
+    beamY:64, beamH:3, barW:30, barGap:14, barInsetX:10, stepStartGap:16,
+    pxPerPercent:2.2, hangGap:0,
+    stepW:22, stepBarH:2, stepRise:16, stepDx:30, stepMarkGap:4, markPx:15, stepCount:4,
+    numeralX:66, numeralGap:10, numeralBaseRatio:0.8,
+    sceneDim:0.5, sceneBlock:"#274b8f", sceneWin:"#e8c86a", sceneWinOpacity:0.45,
+    blocks:[[0,452,86,88],[92,430,74,110],[252,444,108,96],[172,470,72,70]],
+    winW:12, winH:16, winGapX:22, winGapY:32, winCols:3, winRows:2, winOffX:9, winOffY:10, winInset:5
+  }
+};
+/* ============ override (?cfg= JSON, deep merge) — the swap-test surface ============ */
+function deepMerge(base, over){
+  if (Array.isArray(over)){
+    if (!Array.isArray(base)) return over.slice();
+    const merged = base.map(function(b, i){ return i < over.length ? deepMerge(b, over[i]) : b; });
+    for (let i = base.length; i < over.length; i++) merged.push(over[i]);
+    return merged;
+  }
+  if (over && typeof over === "object"){
+    const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
+    for (const k of Object.keys(over)) out[k] = deepMerge(base ? base[k] : undefined, over[k]);
+    return out;
+  }
+  return over;
+}
+let CFG = CONFIG;
+try {
+  const raw = new URLSearchParams(location.search).get("cfg");
+  if (raw) CFG = deepMerge(CONFIG, JSON.parse(raw));
+} catch(e) { CFG = CONFIG; }
+
+/* ============ value derivation — chart geometry derives from the beat's value ============ */
+function parsePercent(v){ const m = /(-?\d+(?:\.\d+)?)\s*%/.exec(String(v)); return m ? parseFloat(m[1]) : 0; }
+function deriveUnits(beat){
+  /* the displayed value is AUTHORITATIVE: a fraction in value re-derives the units;
+     beat.units is only the fallback for a non-fraction value */
+  const m = /(\d+)\s*in\s*(\d+)/.exec(String(beat.value));
+  if (m) return {marked: parseInt(m[1],10), total: parseInt(m[2],10)};
+  if (beat.units) return beat.units;
+  return {marked:0, total:0};
+}
+function hangHeight(cfg, beat){ return Math.abs(parsePercent(beat.value)) * cfg.geom.pxPerPercent; }
+
+/* ============ validation — schema checked AFTER override ============ */
+function validate(cfg){
+  const problems = [];
+  if (!cfg.beats.length) problems.push("beats must be non-empty");
+  cfg.beats.forEach(function(b, i){
+    if (b.kind !== "card" && b.kind !== "chart") problems.push("beats["+i+"].kind unknown: "+b.kind);
+    if (!(b.slotMs > 0)) problems.push("beats["+i+"].slotMs must be > 0");
+    if ((b.leadMs||0) + cfg.enterMs + (b.clearMs||0) > b.slotMs) problems.push("beats["+i+"] lead+enter+clear exceeds slotMs");
+    if (b.kind === "chart" && !/(-?\d+(\.\d+)?)\s*%/.test(String(b.value))) problems.push("beats["+i+"] chart value must be a signed percent");
+  });
+  if (!(cfg.enterMs > 0)) problems.push("enterMs must be > 0");
+  if (!(cfg.endHoldMs >= 0)) problems.push("endHoldMs must be >= 0");
+  return problems;
+}
+const PROBLEMS = validate(CFG);
+
+/* ============ phase machine — one beat owns the stage (Cure 2: phase exclusivity) ============ */
+function cycleMs(cfg){ return cfg.beats.reduce(function(s,b){ return s + b.slotMs; }, 0) + cfg.endHoldMs; }
+function stateAt(cfg, t){
+  const total = cycleMs(cfg);
+  const tt = ((t % total) + total) % total;
+  let acc = 0;
+  for (let i = 0; i < cfg.beats.length; i++){
+    const b = cfg.beats[i], slot = b.slotMs;
+    if (tt < acc + slot){
+      const local = tt - acc;
+      const lead = b.leadMs || 0, clear = b.clearMs || 0;
+      if (local < lead) return {idx: i, phase:"lead", p: local / Math.max(lead,1)};
+      if (local < lead + cfg.enterMs) return {idx: i, phase:"enter", p: (local - lead) / cfg.enterMs};
+      if (local >= slot - clear && clear > 0) return {idx: i, phase:"clear", p: (local - (slot - clear)) / clear};
+      return {idx: i, phase:"hold", p:1};
+    }
+    acc += slot;
+  }
+  return {idx: cfg.beats.length - 1, phase:"endhold", p:1};
+}
+
+/* ============ DOM construction (browser only) ============ */
+if (typeof document !== "undefined"){
+  const g = CFG.geom, pal = CFG.palette, ty = CFG.type;
+  const stage = document.getElementById("stage");
+  stage.style.width = CFG.stage.width + "px";
+  stage.style.height = g.stageH + "px";
+  stage.style.background = pal.bg;
+  stage.style.fontFamily = ty.font;
+
+  /* simplified scene — separate dimmed sibling (plan-review cure 1: the card/numeral/chart
+     are NOT descendants of #scene, so the dim never touches them — Cure 1 intensity separation) */
+  const scene = document.getElementById("scene");
+  scene.style.opacity = String(g.sceneDim);
+  g.blocks.forEach(function(b){
+    const blk = document.createElement("div");
+    blk.className = "blk";
+    blk.style.left = b[0] + "px"; blk.style.top = b[1] + "px";
+    blk.style.width = b[2] + "px"; blk.style.height = b[3] + "px";
+    blk.style.background = g.sceneBlock;
+    scene.appendChild(blk);
+    for (let r = 0; r < g.winRows; r++){
+      for (let c = 0; c < g.winCols; c++){
+        const wx = g.winOffX + c * g.winGapX, wy = g.winOffY + r * g.winGapY;
+        if (wx + g.winW > b[2] - g.winInset || wy + g.winH > b[3] - g.winInset) continue;
+        const win = document.createElement("div");
+        win.className = "win";
+        win.style.left = wx + "px"; win.style.top = wy + "px";
+        win.style.width = g.winW + "px"; win.style.height = g.winH + "px";
+        win.style.background = g.sceneWin;
+        win.style.opacity = String(g.sceneWinOpacity);
+        blk.appendChild(win);
+      }
+    }
+  });
+
+  /* HUD — year register flips sceneYear -> evidenceYear when a beat's card stands (measured) */
+  const hud = document.getElementById("hud");
+  hud.style.left = g.hudX + "px"; hud.style.top = g.hudY + "px"; hud.style.color = pal.ink;
+  const hudYear = document.getElementById("hudYear");
+  hudYear.style.fontSize = ty.hudYearPx + "px";
+  const hudDay = document.getElementById("hudDay");
+  hudDay.textContent = " · " + CFG.hud.dayLine;
+  hudDay.style.fontSize = ty.hudDayPx + "px"; hudDay.style.letterSpacing = ty.hudDaySpacingEm + "em";
+  hudDay.style.marginLeft = g.hudDayGapPx + "px"; hudDay.style.color = pal.accent;
+  const hudClock = document.getElementById("hudClock");
+  hudClock.textContent = CFG.hud.clock;
+  hudClock.style.fontSize = ty.clockPx + "px";
+
+  /* the one card design — single node, content swapped whole at beat boundaries */
+  const card = document.getElementById("card");
+  card.style.left = g.cardX + "px"; card.style.top = g.cardY + "px";
+  card.style.width = g.cardW + "px"; card.style.padding = g.cardPad + "px";
+  card.style.background = pal.card; card.style.borderLeft = g.borderW + "px solid " + pal.accent;
+  card.style.color = pal.ink;
+  const elStatus = document.getElementById("cardStatus");
+  const elPlace = document.getElementById("cardPlace");
+  const elClaim = document.getElementById("cardClaim");
+  const elRule = document.getElementById("cardRule");
+  const elSource = document.getElementById("cardSource");
+  elStatus.style.color = pal.accent; elStatus.style.fontSize = ty.statusPx + "px"; elStatus.style.letterSpacing = ty.statusSpacingEm + "em"; elStatus.style.fontWeight = ty.statusWeight;
+  elPlace.style.color = pal.ink; elPlace.style.fontSize = ty.placePx + "px"; elPlace.style.marginTop = g.gapAfterStatus + "px"; elPlace.style.letterSpacing = ty.placeSpacingEm + "em";
+  elClaim.style.color = pal.ink; elClaim.style.fontSize = ty.claimPx + "px"; elClaim.style.marginTop = g.gapBeforeClaim + "px"; elClaim.style.lineHeight = String(ty.claimLineHeight);
+  elRule.style.background = pal.accent; elRule.style.opacity = String(g.ruleOpacity); elRule.style.marginTop = g.gapBeforeRule + "px"; elRule.style.height = g.ruleH + "px";
+  elSource.style.color = pal.accent; elSource.style.fontSize = ty.sourcePx + "px"; elSource.style.marginTop = g.gapBeforeSource + "px"; elSource.style.letterSpacing = ty.sourceSpacingEm + "em";
+
+  /* the beat's value numeral — the largest type on the stage (T45: the numeral IS the beat) */
+  const valueRow = document.getElementById("valueRow");
+  valueRow.style.top = g.valueY + "px"; valueRow.style.left = "0"; valueRow.style.width = CFG.stage.width + "px";
+  valueRow.style.fontSize = ty.valuePx + "px"; valueRow.style.color = pal.ink;
+
+  /* unit row (card beat) — discrete units landing in count order from CONFIG (T53) */
+  const unitsEl = document.getElementById("units");
+  unitsEl.style.top = g.unitY + "px"; unitsEl.style.left = "0"; unitsEl.style.width = CFG.stage.width + "px";
+  unitsEl.style.gap = g.unitGap + "px";
+
+  /* beam chart (chart beat) — SVG, geometry derived from CONFIG + the beat's value */
+  const chart = document.getElementById("chart");
+  chart.style.left = g.chartX + "px"; chart.style.top = g.chartY + "px";
+  chart.setAttribute("width", g.chartW); chart.setAttribute("height", g.chartH);
+  chart.setAttribute("viewBox", "0 0 " + g.chartW + " " + g.chartH);
+  const SVGNS = "http://www.w3.org/2000/svg";
+  function rect(x,y,w,h,fill){ const r = document.createElementNS(SVGNS,"rect"); r.setAttribute("x",x); r.setAttribute("y",y); r.setAttribute("width",w); r.setAttribute("height",h); r.setAttribute("fill",fill); chart.appendChild(r); return r; }
+  function text(x,y,str,size,fill,anchor){ const t = document.createElementNS(SVGNS,"text"); t.setAttribute("x",x); t.setAttribute("y",y); t.setAttribute("font-size",size); t.setAttribute("fill",fill); t.setAttribute("text-anchor",anchor||"middle"); t.setAttribute("font-family", ty.font); t.textContent = str; chart.appendChild(t); return t; }
+  let chartParts = null;
+  function buildChart(beat){
+    while (chart.firstChild) chart.removeChild(chart.firstChild);
+    const x0 = g.chartInsetX, bw = g.barW, gap = g.barGap;
+    const beam = rect(x0, g.beamY, g.chartW - 2 * g.chartInsetX, g.beamH, pal.accent);
+    const series = beat.bars || [];
+    const bars = series.map(function(s, i){
+      return rect(x0 + g.barInsetX + (bw + gap) * i, g.beamY - s.h, bw, s.h, pal[s.fillKey] || pal.bar);
+    });
+    const hang = rect(x0 + g.barInsetX, g.beamY + g.beamH + g.hangGap, bw, hangHeight(CFG, beat), pal.bar);
+    const steps = [];
+    const marks = [];
+    for (let i = 0; i < g.stepCount; i++){
+      const sx = x0 + g.barInsetX + (bw + gap) * series.length + g.stepStartGap + i * g.stepDx;
+      const sy = g.beamY - i * g.stepRise;
+      steps.push(rect(sx, sy, g.stepW, g.stepBarH, pal.ink));
+      marks.push(text(sx + g.stepW / 2, sy - g.stepMarkGap, g.markText, g.markPx, pal.ink));
+    }
+    const num = text(g.numeralX, g.beamY + g.beamH + hangHeight(CFG, beat) + g.numeralGap + ty.valuePx * g.numeralBaseRatio, beat.value, ty.valuePx, pal.ink);
+    chartParts = {beam:beam, bars:bars, hang:hang, steps:steps, marks:marks, num:num};
+    return chartParts;
+  }
+  /* chart draw-on: sub-progress per element group during the enter phase */
+  function drawChart(p){
+    if (!chartParts) return;
+    const seg = function(a,b){ return Math.min(1, Math.max(0, (p - a) / (b - a))); };
+    chartParts.beam.setAttribute("opacity", String(seg(0, 0.25)));
+    chartParts.bars.forEach(function(r, i){
+      const k = seg(0.2 + i * 0.1, 0.55 + i * 0.1);
+      const h = parseFloat(r.getAttribute("height")), y = parseFloat(r.getAttribute("y"));
+      r.setAttribute("transform", "translate(0 " + (y + h) + ") scale(1 " + k + ") translate(0 " + (-(y + h)) + ")");
+      r.setAttribute("opacity", String(k));
+    });
+    const hk = seg(0.5, 0.8);
+    const hh = parseFloat(chartParts.hang.getAttribute("height")), hy = parseFloat(chartParts.hang.getAttribute("y"));
+    chartParts.hang.setAttribute("transform", "translate(0 " + hy + ") scale(1 " + hk + ") translate(0 " + (-hy) + ")");
+    chartParts.hang.setAttribute("opacity", String(hk));
+    chartParts.steps.forEach(function(r, i){ r.setAttribute("opacity", String(seg(0.6 + i * 0.08, 0.9))); });
+    chartParts.marks.forEach(function(r, i){ r.setAttribute("opacity", String(seg(0.6 + i * 0.08, 0.9))); });
+    chartParts.num.setAttribute("opacity", String(seg(0.8, 1)));
+  }
+
+  let shownIdx = -1;
+  function showBeat(i){
+    const b = CFG.beats[i];
+    elStatus.textContent = b.status;
+    elPlace.textContent = (b.place ? b.place + " · " : "") + (b.year ? b.year : "");
+    elPlace.style.display = (b.place || b.year) ? "block" : "none";
+    elClaim.textContent = b.claim;
+    elSource.textContent = b.source || "";
+    elRule.style.display = b.source ? "block" : "none";
+    elSource.style.display = b.source ? "block" : "none";
+    hudYear.textContent = String(CFG.hud.evidenceYear);
+    if (b.kind === "chart"){
+      valueRow.style.display = "none";
+      unitsEl.style.display = "none";
+      chart.style.display = "block";
+      buildChart(b);
+    } else {
+      chart.style.display = "none";
+      valueRow.style.display = "block";
+      valueRow.textContent = b.value;
+      unitsEl.style.display = "flex";
+      unitsEl.innerHTML = "";
+      const u = deriveUnits(b);
+      for (let k = 0; k < u.total; k++){
+        const d = document.createElement("div");
+        d.className = "unit";
+        d.style.width = g.unitSize + "px"; d.style.height = g.unitSize + "px";
+        if (k < u.marked){
+          d.style.background = "transparent";
+          d.style.border = g.unitBorderW + "px solid " + pal.accent;
+        } else {
+          d.style.background = pal.bar;
+          d.style.border = g.unitBorderW + "px solid " + pal.bar;
+        }
+        unitsEl.appendChild(d);
+      }
+    }
+    shownIdx = i;
+  }
+
+  /* clock: shared start timestamp, pausable via postMessage from comparison.html */
+  let startStamp = performance.now(), pausedAt = null, pauseAccum = 0;
+  function nowMs(){
+    const n = pausedAt !== null ? pausedAt : performance.now();
+    return n - startStamp - pauseAccum;
+  }
+  const cardTextEls = [elStatus, elPlace, elClaim, elRule, elSource];
+  function setCardTextOpacity(o){ cardTextEls.forEach(function(e){ e.style.opacity = String(o); }); }
+  function frame(){
+    const st = stateAt(CFG, nowMs());
+    if (st.idx !== shownIdx) showBeat(st.idx);
+    const beat = CFG.beats[st.idx];
+    /* HUD year derives from the CURRENT PHASE every frame (wave cure, convergent):
+       scene year during lead/clear, evidence year while a beat's card stands */
+    hudYear.textContent = String((st.phase === "lead" || st.phase === "clear") ? CFG.hud.sceneYear : CFG.hud.evidenceYear);
+    if (st.phase === "lead"){
+      card.style.opacity = "0"; setCardTextOpacity(0);
+      valueRow.style.opacity = "0"; unitsEl.style.opacity = "0"; chart.style.opacity = "0";
+    } else if (st.phase === "enter"){
+      /* border-first build (measured at seg t=4): the frame stands before its text */
+      const bp = Math.min(1, st.p / g.enterBorderShare);
+      const tp = Math.max(0, (st.p - g.enterBorderShare) / (1 - g.enterBorderShare));
+      card.style.opacity = String(bp);
+      card.style.transform = "translateY(" + ((1 - bp) * g.risePx) + "px)";
+      setCardTextOpacity(tp);
+      if (beat.kind === "chart"){
+        chart.style.opacity = "1";
+        drawChart(st.p);
+        valueRow.style.opacity = "0"; unitsEl.style.opacity = "0";
+      } else {
+        chart.style.opacity = "0";
+        valueRow.style.opacity = String(tp);
+        const u = deriveUnits(beat);
+        unitsEl.style.opacity = "1";
+        Array.prototype.forEach.call(unitsEl.children, function(d, k){
+          const kp = Math.min(1, Math.max(0, tp * (u.total + 1) - k));
+          d.style.opacity = String(kp);
+          d.style.transform = "translateY(" + ((1 - kp) * g.risePx) + "px)";
+        });
+      }
+    } else if (st.phase === "clear"){
+      const o = String(1 - st.p);
+      card.style.opacity = o; setCardTextOpacity(1 - st.p);
+      valueRow.style.opacity = beat.kind === "chart" ? "0" : o;
+      unitsEl.style.opacity = beat.kind === "chart" ? "0" : o;
+      chart.style.opacity = beat.kind === "chart" ? o : "0";
+    } else {
+      card.style.opacity = "1"; card.style.transform = "translateY(0px)"; setCardTextOpacity(1);
+      chart.style.opacity = beat.kind === "chart" ? "1" : "0";
+      if (beat.kind === "chart") drawChart(1);
+      valueRow.style.opacity = beat.kind === "chart" ? "0" : "1";
+      unitsEl.style.opacity = beat.kind === "chart" ? "0" : "1";
+      Array.prototype.forEach.call(unitsEl.children, function(d){ d.style.opacity = "1"; d.style.transform = "translateY(0px)"; });
+    }
+    requestAnimationFrame(frame);
+  }
+  showBeat(0);
+  requestAnimationFrame(frame);
+
+  window.addEventListener("message", function(ev){
+    if (!ev.data || ev.data.t92 === undefined) return;
+    if (ev.data.t92 === "pause" && pausedAt === null) pausedAt = performance.now();
+    if (ev.data.t92 === "play" && pausedAt !== null){ pauseAccum += performance.now() - pausedAt; pausedAt = null; }
+    if (ev.data.t92 === "restart"){ startStamp = performance.now(); pauseAccum = 0; pausedAt = null; shownIdx = -1; }
+  });
+  window.__t92 = {CFG: CFG, PROBLEMS: PROBLEMS, cycleMs: cycleMs(CFG), stateAt: function(t){ return stateAt(CFG, t); }, hangHeight: function(b){ return hangHeight(CFG, b); }};
+}
+if (typeof module !== "undefined" && module.exports){
+  module.exports = {CONFIG: CONFIG, deepMerge: deepMerge, parsePercent: parsePercent, deriveUnits: deriveUnits, hangHeight: hangHeight, cycleMs: cycleMs, stateAt: stateAt, validate: validate, CFG: CFG, PROBLEMS: PROBLEMS};
+}
+</script>
+</body>
+</html>
+
