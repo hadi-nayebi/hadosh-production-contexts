@@ -1,0 +1,15 @@
+Review limited to the supplied stream; referenced files, source, and prior returns were not independently checked.
+
+Body-write: consumer to persist this return verbatim at `runs/2026-11-17-cycle-019-wave-18/codex-plan-review-T162-return.md`; no direct write performed.
+
+PLAN: REVISE BEFORE GATE
+
+1. **[§9.7 payload manifest; §10/F1 — anchor/evidence attack]** The exact allowlist permits only “neutral recreation source + neutral own-check packet,” while §2 and F1 require the census evidence and allocation-not-measured dispute in every lens stream. Neither permitted component explicitly includes that evidence. Add a neutral specimen-basis packet to the allowlist and require the manifest to verify its inclusion. Include the 2000/7000 census anchors, time mapping, and distinction between observed census and allocated intermediate onsets; exclude prior verdicts, scores, and cure commentary.
+
+2. **[§4/D3; §10(b) — interaction attack]** D3 incorrectly says attempt 1’s bubble “outlive[d] the crowd’s completion.” The supplied schedule places full completion at **11300 ms**, after the bubble’s **9000–9400 ms** exit. Attempt 2 instead completes the crowd at **6950 ms**, creating a newly exposed bubble-over-settled-crowd interval. Remove the false precedent and reassess that interaction explicitly. Retaining the bubble timing is defensible, but its previous pass does not establish that this new relationship passed.
+
+3. **[§2 dispute-risk price; §11 stuck-lens hypothesis — failure-point evaluation]** The adverse timing arithmetic lacks a consistent baseline. The stated aim is ≥88; applying the proposed −5…−10 deduction to 88 yields **78–83**, not 85–90. State the baseline and recompute the scenario. Using the other aims, their sum is **86 + 95 + 92 + 85 = 358**; timing 78–83 produces averages **87.2–88.2**. This supports conditional resilience, not a guaranteed PASS, because the other aims remain forecasts.
+
+4. **[R-OBS-2 — explicit assessment]** **Yes: the plan binds the full-strength cure.** §§2–3 and the staged checks require second onset **2200 > 2000 ms**, last onset **6450 ≤ 6500 ms**, `enterMs = 500`, final completion **6950 ≤ 7000 ms**, and settled hold **7000–12000 ms**. C3 binds twinkle continuity through ten periods per cycle and formula-level verification; C4 binds pin-head enlargement **13→16** with glyph-size and containment checks. These are planned construction commitments; perceptual readability remains explicitly pixel-unverified.
+
+5. **[§§5–6, §§9–11 — remaining guard attacks]** No additional findings on preservation, split, or outcome branches. Preservation precedes mutation; checkpoints isolate construction stages while lens attribution remains BUNDLED; deferrals are explicit; the non-beating WHY and PASS hand-off are scaffolded. C1/C2 score movement must remain jointly attributed unless independent evidence supports finer attribution.

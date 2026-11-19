@@ -1,0 +1,21 @@
+CONDENSE: REGRADE BEFORE CLOSE
+
+1. **Divergence notice missing.** `guards/codex-rescore-wave.md`, “Firing-form amendment,” adds A-C021-1/A-C021-2. Recreation’s `../recreation/guards/codex-scoring-wave.md` contains no corresponding Cycle-021 notice. `guards/guards.md`, opening section, requires divergence printed in both. **Cure:** record these changes as practice-only divergence in both files; adoption remains recreation’s decision.
+
+2. **The Jev layer remains unreviewed to the required standard.** RUN.md §9 acknowledges missing dimension profiles but attributes the deferral to unbound transport. Yet `jev-observe-exit.md` §§4–5 and `jev-plan-exit.md` §§4–5 require classifications and dimension profiles; these can accompany explicitly labelled seat judgings without transport binding. Neither amendment nor evidenced NO-DEFECT closes this layer. **Cure:** separate the transport gap from the local filing defect; supply supported profiles or retain the missing assessments explicitly as NOT ASSESSED, with a local procedural amendment.
+
+3. **Mechanical-guard NO-DEFECT exceeds E7’s scope.** RUN.md §9 cites E7 for all three guards. E7 supplies new-attempt averages and a preservation summary; it does not show guard 1’s prior-return recomputation, per-lens deltas, and scale validation. All averages beating their predecessors checks only guard 3’s no-WHY-owed path. **Cure:** cite the missing verification receipts or narrow NO-DEFECT to the checks actually evidenced. The blocking branch remains untested.
+
+4. **A-C021-1’s corroboration conflates clean scoring with the proposed cwd construction.** E4 supports T03’s empty-directory refusal and successful retry with allowlisted copies. E2 supports contamination from a shared directory. However, T92 `scores.md`, Attempt 3, says every governing session assessed payload-only and read no files; that does not establish the claimed “same discipline” of populated per-lens directories. **Cure:** retain CANDIDATE; cite cwd inventories for the claimed T92/T128 applications or remove them as corroboration. A populated cwd is a proposed safeguard, not proof of exclusive read access.
+
+5. **The firing census is internally inconsistent.** RUN.md §5 names three non-governing T23 timing runs, one T03 NOT ASSESSED run, and one lost T92 motion run: **3 + 1 + 1 = 5**. It additionally names T03’s launch failure, while §9 and INSTRUCTION’s wave-size note still report five total and classify three as “not-assessed/launch.” **Cure:** distinguish completed sessions from launch failures and print consistent totals. Do not merge the launch failure into the five-session census.
+
+6. **The census-guard hand-off is not evidenced as delivered.** INSTRUCTION’s Cycle-021 census note names recreation as consumer, but RUN.md §5 records board receipts only for T92/T03 tier hand-offs. A local note plus T128’s scores filing does not demonstrate that the guard-home proposal travelled, as A-C008 requires. **Cure:** attach the proposal receipt or label it pending. The proposal should state the reusable rule: test each accepted CONFIG key for an observable effect; remove or reject keys without one.
+
+7. **Prompt NO-DEFECT claims need narrower evidence.** RUN.md §9 cites actionable plan findings and compliance with A-C011-5 as clearance for `codex-plan-review` and `codex-condense`. Those observations support usefulness and amendment-before-firing order; they do not check the complete feeding contracts. This feed lacks the required before excerpts and complete attempt delta sections. **Cure:** provide those inputs and record the contract checks, or narrow the clearance and leave feeding completeness open.
+
+No twice-movement promotion violation was found: A-C021-1/2/3 remain CANDIDATE, and A-C006-1’s application is explicitly bundled with no regrade sought. The supplied vectors independently yield 79.8, 90.2, 84.6, and 89.0; all beat their stated baselines, so no new floor-rule WHY is owed.
+
+**Limits:** No renders, raw session histories, baseline hashes, or board receipts were independently verified. Findings use the supplied stream and inspected on-disk passages; historical before states were unavailable in the feed.
+
+**Body-write: none (read-only run)**

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T132 recreation</title>
+<style>
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;width:100vw;height:56.25vw;max-height:100vh;overflow:hidden}
+#plate{position:absolute;inset:0}
+#word{position:absolute;left:0;right:0;text-align:center;transform-origin:center center;font-weight:700;white-space:nowrap}
+</style></head><body>
+<div id="stage"><svg id="plate" viewBox="0 0 720 405" preserveAspectRatio="none" width="100%" height="100%">
+<rect id="sky" x="0" y="0" width="720" height="405"/>
+<g id="pan">
+<path id="far" d=""/>
+<path id="near" d=""/>
+</g><circle id="sun"/><rect id="ground" x="0" width="720"/>
+</svg><div id="word"></div></div>
+<script>
+var CONFIG = {
+ "mode": "table",
+ "dwellScale": 1,
+ "words": [
+  {
+   "t": "Limits.",
+   "dwellMs": 1160
+  },
+  {
+   "t": "We",
+   "dwellMs": 240
+  },
+  {
+   "t": "have",
+   "dwellMs": 240
+  },
+  {
+   "t": "all",
+   "dwellMs": 240
+  },
+  {
+   "t": "got",
+   "dwellMs": 240
+  },
+  {
+   "t": "them.",
+   "dwellMs": 760
+  },
+  {
+   "t": "That",
+   "dwellMs": 160
+  },
+  {
+   "t": "voice",
+   "dwellMs": 200
+  },
+  {
+   "t": "that",
+   "dwellMs": 160
+  },
+  {
+   "t": "tells",
+   "dwellMs": 200
+  },
+  {
+   "t": "you",
+   "dwellMs": 200
+  },
+  {
+   "t": "that",
+   "dwellMs": 160
+  },
+  {
+   "t": "you've",
+   "dwellMs": 200
+  },
+  {
+   "t": "done",
+   "dwellMs": 160
+  },
+  {
+   "t": "all",
+   "dwellMs": 200
+  },
+  {
+   "t": "you",
+   "dwellMs": 160
+  },
+  {
+   "t": "could",
+   "dwellMs": 160
+  },
+  {
+   "t": "do.",
+   "dwellMs": 720
+  },
+  {
+   "t": "This",
+   "dwellMs": 160
+  },
+  {
+   "t": "is",
+   "dwellMs": 160
+  },
+  {
+   "t": "the",
+   "dwellMs": 160
+  },
+  {
+   "t": "furthest",
+   "dwellMs": 160
+  },
+  {
+   "t": "I",
+   "dwellMs": 160
+  },
+  {
+   "t": "can",
+   "dwellMs": 160
+  },
+  {
+   "t": "go.",
+   "dwellMs": 560
+  },
+  {
+   "t": "I",
+   "dwellMs": 120
+  },
+  {
+   "t": "will",
+   "dwellMs": 160
+  },
+  {
+   "t": "not",
+   "dwellMs": 120
+  },
+  {
+   "t": "be",
+   "dwellMs": 120
+  },
+  {
+   "t": "able",
+   "dwellMs": 160
+  },
+  {
+   "t": "to",
+   "dwellMs": 160
+  },
+  {
+   "t": "top",
+   "dwellMs": 120
+  },
+  {
+   "t": "that.",
+   "dwellMs": 320
+  },
+  {
+   "t": "I",
+   "dwellMs": 160
+  },
+  {
+   "t": "have",
+   "dwellMs": 160
+  },
+  {
+   "t": "given",
+   "dwellMs": 160
+  },
+  {
+   "t": "my",
+   "dwellMs": 160
+  },
+  {
+   "t": "best.",
+   "dwellMs": 480
+  },
+  {
+   "t": "But",
+   "dwellMs": 160
+  },
+  {
+   "t": "when",
+   "dwellMs": 160
+  },
+  {
+   "t": "you",
+   "dwellMs": 160
+  },
+  {
+   "t": "force",
+   "dwellMs": 160
+  },
+  {
+   "t": "yourself",
+   "dwellMs": 160
+  },
+  {
+   "t": "to",
+   "dwellMs": 160
+  },
+  {
+   "t": "push.",
+   "dwellMs": 480
+  },
+  {
+   "t": "I",
+   "dwellMs": 240
+  },
+  {
+   "t": "mean",
+   "dwellMs": 240
+  },
+  {
+   "t": "really",
+   "dwellMs": 200
+  },
+  {
+   "t": "REALLY",
+   "dwellMs": 320
+  },
+  {
+   "t": "push.",
+   "dwellMs": 440
+  },
+  {
+   "t": "You",
+   "dwellMs": 760
+  },
+  {
+   "kind": "transition",
+   "dwellMs": 160
+  },
+  {
+   "t": "can",
+   "dwellMs": 160
+  },
+  {
+   "t": "surprise",
+   "dwellMs": 160
+  },
+  {
+   "t": "yourself.",
+   "dwellMs": 200
+  },
+  {
+   "t": "Suddenly",
+   "dwellMs": 120
+  },
+  {
+   "t": "you",
+   "dwellMs": 120
+  }
+ ],
+ "fontPx": 40,
+ "fontWeight": 700,
+ "numeralFontPx": 110,
+ "numeralColor": "#e63329",
+ "wordColor": "#e63329",
+ "anchorYFrac": 0.44,
+ "fontFamily": "Arial, Helvetica, sans-serif",
+ "plate": {
+  "sky": "#a9c6d4",
+  "far": "#a7b8ba",
+  "near": "#efe9dc",
+  "panPxPerSec": 18,
+  "tilePx": 240,
+  "farTile": [[0, 250], [60, 210], [120, 238], [180, 200]],
+  "nearTile": [[0, 300], [80, 272], [160, 296], [200, 268]],
+  "sun": {
+   "cx": 590,
+   "cy": 86,
+   "r": 30
+  },
+  "groundY": 330,
+  "groundH": 75
+ },
+};
+
+var REJECTED=[];
+function isPosFinite(v){ return typeof v==="number" && isFinite(v) && v>0; }
+function validateSchedule(cfg){
+  var errs=[];
+  if(!cfg || typeof cfg!=="object") errs.push("config-not-object");
+  if(errs.length) return {ok:false, errors:errs, derivedCycleMs:0};
+  if(cfg.mode!=="table" && cfg.mode!=="derived" && cfg.mode!=="bands" && cfg.mode!=="countdown") errs.push("mode-unknown");
+  if(cfg.dwellScale!==undefined && !isPosFinite(cfg.dwellScale)) errs.push("dwellScale-invalid");
+  if(cfg.mode==="table" || !cfg.mode){
+    if(!Array.isArray(cfg.words) || cfg.words.length===0) errs.push("words-empty");
+    else for(var i=0;i<cfg.words.length;i++){ var w=cfg.words[i];
+      if(!w || typeof w!=="object") { errs.push("word-entry-invalid"); continue; }
+      if(w.kind==="transition"){ if(!isPosFinite(w.dwellMs)) errs.push("transition-dwell-invalid"); }
+      else { if(typeof w.t!=="string" || !w.t) errs.push("word-text-invalid"); if(!isPosFinite(w.dwellMs)) errs.push("word-dwell-invalid"); }
+    }
+  }
+  var derived=0;
+  if(cfg.mode==="table" || !cfg.mode){
+    var sc=cfg.dwellScale||1;
+    if(Array.isArray(cfg.words)) for(var j=0;j<cfg.words.length;j++){ if(cfg.words[j] && isPosFinite(cfg.words[j].dwellMs)) derived+=Math.round(cfg.words[j].dwellMs*sc); }
+  }
+  if(cfg.cycleMs!==undefined && cfg.mode==="table"){
+    if(!isPosFinite(cfg.cycleMs)) errs.push("cycleMs-invalid");
+    else if(cfg.cycleMs!==derived) errs.push("cycleMs-unequal-override");
+  }
+  return {ok:errs.length===0, errors:errs, derivedCycleMs:derived};
+}
+function buildTimeline(cfg){
+  var v=validateSchedule(cfg);
+  if(!v.ok){ REJECTED.push({errors:v.errors.slice()}); return null; }
+  var tl=[];
+  if(cfg.mode==='countdown'){
+    for(var i=0;i<cfg.numerals.length;i++){
+      var tap=(cfg.numeralScaleTaper? cfg.numeralScaleTaper[i] : 1); tl.push({kind:'numeral', text:cfg.numerals[i], onsetMs:cfg.numeralOnsetsMs[i], dwellMs:cfg.numeralDwellsMs[i], scaleFrom:cfg.scaleFrom*tap, scaleTo:cfg.scaleTo*tap});
+    }
+    var t=cfg.firstWord.atMs;
+    tl.push({kind:'word', text:cfg.firstWord.t, onsetMs:t, dwellMs:cfg.firstWord.dwellMs, scaleFrom:1, scaleTo:1}); t+=cfg.firstWord.dwellMs;
+    for(var j=0;j<cfg.thenWords.length;j++){ tl.push({kind:'word', text:cfg.thenWords[j].t, onsetMs:t, dwellMs:cfg.thenWords[j].dwellMs, scaleFrom:1, scaleTo:1}); t+=cfg.thenWords[j].dwellMs; }
+  } else if(cfg.mode==='bands'){
+    var tt=0;
+    for(var s=0;s<cfg.sentences.length;s++){
+      var span=cfg.sentences[s].words.length*60000/cfg.sentences[s].wpm;
+      var dwell=span/(cfg.sentences[s].words.length-1+cfg.finalMultiplier);
+      var ws=cfg.sentences[s].words;
+      for(var k=0;k<ws.length;k++){
+        var d=(k===ws.length-1)? dwell*cfg.finalMultiplier : dwell;
+        tl.push({kind:'word', text:ws[k], onsetMs:Math.round(tt), dwellMs:Math.round(d), scaleFrom:1, scaleTo:1}); tt+=d;
+      }
+    }
+  } else if(cfg.mode==='derived'){
+    var t2=0, sc2=cfg.dwellScale||1;
+    for(var m=0;m<cfg.words.length;m++){
+      var tok=cfg.words[m], fin=false;
+      for(var f=0;f<cfg.finalMarks.length;f++){ if(tok.endsWith(cfg.finalMarks[f])) fin=true; }
+      var dd=Math.round((fin? cfg.baseDwellMs*cfg.finalMultiplier : cfg.baseDwellMs)*sc2);
+      tl.push({kind:'word', text:tok, onsetMs:t2, dwellMs:dd, scaleFrom:1, scaleTo:1}); t2+=dd;
+    }
+  } else {
+    var t3=0, sc3=cfg.dwellScale||1;
+    for(var n=0;n<cfg.words.length;n++){
+      var e=cfg.words[n];
+      if(e.kind==='transition'){ var dt=Math.round(e.dwellMs*sc3); tl.push({kind:'transition', text:'', onsetMs:t3, dwellMs:dt, scaleFrom:1, scaleTo:1}); t3+=dt; }
+      else { var txt=e.t; if(cfg.emphasisIndices && cfg.emphasisIndices.indexOf(n)>=0) txt=txt.toUpperCase(); var dw=Math.round(e.dwellMs*sc3); tl.push({kind:'word', text:txt, onsetMs:t3, dwellMs:dw, scaleFrom:1, scaleTo:1}); t3+=dw; }
+    }
+  }
+  return tl;
+}
+function derivedCycleMs(tl){ if(!tl||!tl.length) return 0; var last=tl[tl.length-1]; return last.onsetMs+last.dwellMs; }
+
+function tilePathTop(tile, tilePx, w, h){
+    var ptsOut=[], firstY=tile[0][1];
+    for(var x0=0;x0<w+tilePx;x0+=tilePx){
+      for(var q=0;q<tile.length;q++){ ptsOut.push((x0+tile[q][0])+' '+tile[q][1]); }
+      ptsOut.push((x0+tilePx)+' '+firstY);
+    }
+    return 'M'+ptsOut.join(' L')+' L'+(w+tilePx)+' '+h+' L0 '+h+' Z';
+  }
+(function(){
+  var cfg=CONFIG, tl=buildTimeline(cfg), word=document.getElementById('word'), pan=document.getElementById('pan');
+  document.getElementById('sky').setAttribute('fill', cfg.plate.sky);
+  document.getElementById('far').setAttribute('fill', cfg.plate.far);
+  document.getElementById('near').setAttribute('fill', cfg.plate.near);
+  document.getElementById('ground').setAttribute('fill', cfg.plate.near);
+  document.getElementById('sun').setAttribute('fill', cfg.plate.sky);
+  function tilePath(tile, tilePx, w, h){
+    var ptsOut=[], firstY=tile[0][1];
+    for(var x0=0;x0<w+tilePx;x0+=tilePx){
+      for(var q=0;q<tile.length;q++){ ptsOut.push((x0+tile[q][0])+' '+tile[q][1]); }
+      ptsOut.push((x0+tilePx)+' '+firstY);
+    }
+    return 'M'+ptsOut.join(' L')+' L'+(w+tilePx)+' '+h+' L0 '+h+' Z';
+  }
+  document.getElementById('far').setAttribute('d', tilePath(cfg.plate.farTile, cfg.plate.tilePx, 720, 405));
+  document.getElementById('near').setAttribute('d', tilePath(cfg.plate.nearTile, cfg.plate.tilePx, 720, 405));
+  var sun=document.getElementById('sun'); sun.setAttribute('cx',cfg.plate.sun.cx); sun.setAttribute('cy',cfg.plate.sun.cy); sun.setAttribute('r',cfg.plate.sun.r);
+  var gr=document.getElementById('ground'); gr.setAttribute('y',cfg.plate.groundY); gr.setAttribute('height',cfg.plate.groundH);
+  word.style.top = Math.round(cfg.anchorYFrac*100)+'%';
+  word.style.fontFamily = cfg.fontFamily;
+  word.style.fontWeight = cfg.fontWeight;
+  var offset=0, start=performance.now(), lastKey='';
+  function frame(now){
+    var el=offset+(now-start), cycMs=derivedCycleMs(tl), cyc=((el%cycMs)+cycMs)%cycMs, cur=null;
+    for(var i=0;i<tl.length;i++){ if(cyc>=tl[i].onsetMs && cyc<tl[i].onsetMs+tl[i].dwellMs){cur=tl[i];break;} }
+    var panX=-(((el/1000)*cfg.plate.panPxPerSec)%cfg.plate.tilePx);
+    pan.setAttribute('transform','translate('+panX+' 0)');
+    if(cur && cur.kind==='transition'){ word.style.display='none'; word.setAttribute('data-phase','transition'); lastKey=''; } else if(cur){
+      var key=cur.kind+cur.text+cur.onsetMs;
+      if(key!==lastKey){ word.textContent=cur.text; lastKey=key; }
+      var isNum=cur.kind==='numeral';
+      word.style.fontSize=(isNum? cfg.numeralFontPx : cfg.fontPx)+'px';
+      word.style.color=isNum? cfg.numeralColor : cfg.wordColor;
+      var pr=(cyc-cur.onsetMs)/cur.dwellMs;
+      if(cfg.scaleEasing==='smooth') pr=pr*pr*(3-2*pr);
+      var sc=cur.scaleFrom+(cur.scaleTo-cur.scaleFrom)*pr;
+      word.style.transform='scale('+sc+')';
+      word.style.display='block'; word.setAttribute('data-phase',cur.kind);
+    } else { word.style.display='none'; word.setAttribute('data-phase','none'); lastKey=''; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__T132={seek:function(ms){offset=ms; start=performance.now();}};
+})();
+if(typeof module!=="undefined"){ module.exports={buildTimeline:buildTimeline, CONFIG:CONFIG, validateSchedule:validateSchedule, derivedCycleMs:derivedCycleMs, REJECTED:REJECTED, tilePath:tilePathTop}; }
+</script></body></html>

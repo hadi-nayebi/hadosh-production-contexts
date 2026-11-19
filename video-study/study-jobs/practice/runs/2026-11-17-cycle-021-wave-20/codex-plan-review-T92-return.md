@@ -1,0 +1,17 @@
+PLAN: REVISE BEFORE GATE
+
+1. **[C4; Execute §3.6; failure points §5(b)] The step-top resolution permits weakening the property being checked.** C4 computes an estimated ink top of −3, then permits replacing ink containment with “baseline ≥ 0,” explicitly allowing cropping. A baseline inside the SVG does not establish that the mark fits. Amend the plan to distinguish baseline containment from ink containment; either verify actual ink bounds, cure the geometry and recheck affected chart elements, or retain ink containment as UNVERIFIED with its consequence. Default validation passing cannot itself select the weaker rule.
+
+2. **[C3/C4 interaction; Execute §3.5–6] The new bounds validator needs explicit dependency guards.** C3 deliberately accepts malformed inputs into validation to diagnose them; C4 then computes bounds from those same structures. For example, missing geometry or non-array bars must not reach dependent extent calculations. Amend S4 to rerun **every S3 adversarial case through the combined validator and browser diagnostic path**, asserting named problems, zero throws, and zero scene construction. Also test finite but invalid reveal spans: C3 specifies finite spans and `start+span ≤ 1`, without specifying the permitted lower bound or zero-span behavior.
+
+3. **[Verify §4.4–5; WHY §6] The equality branch is inconsistent.** Verify step 4 uses `avg < prior avg`; step 5 and §6 use “does not beat.” An average equal to the prior average is non-beating. Replace the trigger with `new average ≤ prior average`, computed from unrounded sums, and apply it consistently to WHY filing and `jev-plateau`. Keep an improving-but-below-bar result distinct from a non-beating result.
+
+4. **[Attribution §5(a); WHY §6] Checkpoints establish construction effects, not isolated score movement.** Section 5 correctly limits attribution to stage granularity, but §6 permits the score-attribution label ISOLATED without defining evidence sufficient for it. S4 also combines C4 and C5. Amend the scaffold to record effect verification separately from score attribution; default score attribution to BUNDLED, allow a quoted return to narrow a named mechanism, and prohibit assigning an isolated numerical delta from checkpoints alone.
+
+5. **[Verify §4.9 — PASS hand-off] The hand-off lacks its required evidence pointer.** “File the PASS to the style-library board” names the action but not the receipt’s contents. Require the T92 attempt-3 `scores.md` section pointer, scored build hash, five filed-return pointers, computed average/minimum, and a board receipt recorded in RUN.md. This makes the passing branch executable without inventing its evidence package at close.
+
+6. **[§0; Observe delta target; failure-point evaluation] The target remains average-only.** Section 0 gives +2.8 overall and says motion/reusability are expected to rise, but supplies no per-lens movement targets. The on-disk `jev-observe-exit.md` §2.5 explicitly rejects an average-only target. Add seat-only targets tied to C1–C6, including retained timing and conditional readability expectations; keep those forecasts outside lens payloads.
+
+**Limits:** This assesses the plan, supplied cure inventory, and on-disk Observe profile. Combined disk reads were truncated; the supplied complete plan and scores text supported this review. Underlying returns, frames, and measurements were not independently verified. No coming build was assessed.
+
+**Body-write: none (read-only run)**

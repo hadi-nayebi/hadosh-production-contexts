@@ -1,0 +1,13 @@
+PLAN: REVISE BEFORE GATE
+
+1. **[§6 Stages 1–3; §8 steps 3–7 — dependency order]** Stage 2 requires “derived fillComplete = 12600,” but deriving `fillComplete` is assigned to Stage 3; until then, the stated attempt-1 threshold remains 13600. Stage 1 likewise invokes C4’s cfg-passed easing before C4 is implemented. Move these prerequisite changes into their first consuming stages, identify the C4 sub-cures landed there, and update the checkpoints accordingly. Otherwise, the prescribed execution cannot pass its gates in order.
+
+2. **[§3 C4; §6 Stage 3; §9 item 4(a) — geometry interaction]** C1 derives travel 195 and exit ≈19690 ms from the existing rocket’s lowest point, while later C4 changes tip/flame geometry and introduces configurable proportions. The plan does not bind those defaults to preserve the assumed 42 px extent. Require Stage 3 to recompute the lowest displayed rocket point from its actual geometry, re-derive travel if necessary, and repeat the C1 visibility/exit probes before filing its checkpoint. The final suite could catch this regression, but the current Stage-3 gate does not.
+
+3. **[§3 C6; §6 Stage 4; §11 C6 slot — inadequate cure instrument]** C6 promises contrasting rows with consistent visible spacing and, if needed, ≥1.5 px phone-scale strokes. Its acceptance checks establish only unequal colour strings and two markup lines. Those checks permit nearly identical colours, overlapping rows, or hairline strokes. Add numerical colour-contrast, displayed row-spacing, and phone-scale stroke-width checks with explicit thresholds. Preserve PIXEL-UNVERIFIED; these remain model checks.
+
+4. **[§6 attribution rule; §11 cure outcomes and plateau evidence — unsupported causal inference]** The checkpoint probes can establish that individual construction properties changed, but only the final combined source receives lens scores. Consequently, §11’s demand to identify “which cure’s construction change failed to move” a stuck lens cannot generally be met. Revise the scaffold to distinguish verified cure implementation, final lens movement, and causal hypotheses. Mark score attribution BUNDLED across all contributing cures unless separately scored variants supply isolation; do not infer cure-specific score effects from checkpoint existence.
+
+Limits: Supplied text only. The separately required scores.md inventory and jev-observe-exit profile were not supplied independently, so their completeness and agreement with the plan are NOT ASSESSED.
+
+Body-write: none performed (fed, read-only review). Consumer-designated verbatim filing: `runs/2026-11-17-cycle-019-wave-18/codex-plan-review-T156-return.md`.

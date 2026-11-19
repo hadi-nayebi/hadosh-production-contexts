@@ -1,0 +1,15 @@
+PLAN: REVISE BEFORE GATE
+
+1. **[C-O1 / C-H2 / V2 / V6 — recognition arithmetic]** The outer candles’ claimed visible height uses their **full** 21.87% span, including the occluded portion. Visible span is 38 − 22.13 = **15.87%**. At the stated deepest scene height, that is **4.51 px**, or **4.24 px at opening**, below C-H2’s ≥5 px threshold. At 390 px, opening remains approximately **4.59 px**. Revise the geometry or the recognition claim before gate; derive recognition dimensions from the *visible remainder*, including stage clipping.
+
+2. **[§(d)(a)/(h) / Stage 1 / V7 — attribution]** Running the new model on old geometry isolates a measurement change; it cannot attribute a later readability score change to individual cures. Requiring it to reproduce the prior lens’s approximate 0.7 px also risks calibrating the instrument to the answer. File separate geometry-only and model-only probes against independently derived box arithmetic. Keep subsequent score movement labelled **BUNDLED** unless independent scoring evidence separates it. C-H2 adds verification, not a construction improvement.
+
+3. **[C-V1(i) / V8 — validation interactions]** “Every other numeric CONFIG scalar the repair path consumes” must be finite and >0 leaves the validation domain ambiguous. Zero is already valid for flicker amplitude and potentially opening checkpoints; other fields require integer, bounded, or relational constraints. Add a field-specific validation table covering valid zeroes, fallback provenance, and dependent constraints. Verify one rejected field preserves unrelated valid edits.
+
+4. **[Execute 8–9 / V5 / V9–V10 — payload order and anchors]** The wave precedes the build record that supplies the literal whitelist and timing-basis explanation. This permits scoring before those inputs are final. File the neutral construction facts and whitelist before payload assembly; append scoring outcomes afterward. The both-bases packet must omit prior verdicts such as “credited allocation,” predicted deductions, and the earlier timing lens’s endorsement. Scan and hash the **exact delivered payload**, then bind returns to that payload and source.
+
+5. **[Execute 1 / V7 / V10–V11 — evidence preservation]** Preservation is strongest for attempt-2 HTML, but weaker for checkpoint outputs, prior returns, and reused `fit-table.md` / `config-census.md` paths. Add attempt-specific, create-once destinations for all evidence and capture a pre-edit manifest of prior attempts and returns. Assert destination absence before writing and verify the manifest after execution. Preserve every firing separately; select the final five-return set explicitly without overwriting or averaging interim runs.
+
+The non-beating WHY and passing hand-off branches are scaffolded adequately.
+
+**Body-write status:** No file was written. The execution tool failed to start (`codex-code-mode-host` missing), so I could not inspect the working records or file the required verbatim return. This review is based on the supplied plan; its filing obligation remains incomplete.

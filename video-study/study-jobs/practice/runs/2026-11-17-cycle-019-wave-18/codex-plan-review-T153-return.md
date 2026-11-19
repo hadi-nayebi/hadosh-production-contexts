@@ -1,0 +1,17 @@
+Review scope: supplied text only; no tools used. The cure’s checkpoint arithmetic is coherent, but the plan needs revisions before gate.
+
+1. **[§2.3; §9.10; §10.9 — Anchor attack]** The mandatory both-bases statement contains “(timing 45)” and evaluative language (“satisfied neither census checkpoint”), yet §10.9 includes that statement in every payload while excluding prior scores and cure commentary. The payload cannot satisfy both instructions. Replace the scoring packet’s statement with neutral schedules, census states, and the unresolved completion/hold question. Keep prior scores and the previous reviewer’s conclusions in the seat record only.
+
+2. **[§9.6; §10.8–10; §12 — Branch and sequencing attack]** Execute step 6 requires Verify items 1–8 before scoring, but item 8 needs the five filed SCORE lines. Move delta arithmetic after the wave. Also, §2.4 explicitly anticipates timing 55–69 producing an improved average but failing the floor; §10.10 and §12 trigger WHY only when average ≤81.6. Extend the scaffold to every non-PASS outcome, distinguishing improvement below the floor from a non-beating result; state the applicable `jev-plateau` trigger separately. Correct the scaffold references: §9.10 points to §11, and §2.4 points to §9; the scaffold is §12.
+
+3. **[§6 Stage 1; §9.2–3; §11(a) — Attribution attack]** Stage 1 permits rows 2–8 either to use Stage 2’s phase values or remain at unspecified “derivation defaults.” That allows Stage 2’s change to occur before its checkpoint, or leaves the intermediate construction undefined. Specify one exact Stage 1 schedule and the precise Stage 2 delta. The checkpoints can then establish construction effects; they cannot establish which stage caused a later lens-score movement without separate scoring. Keep score attribution **BUNDLED**, while reporting independently verified checkpoint effects.
+
+4. **[§5.1–4; §9.1–5; §10.7 — Evidence-destruction attack]** The preservation inventory includes `scores.md` and all prior payloads/returns, but the content-copy step protects only five working artifacts. Later steps modify `scores.md`. A baseline hash detects destruction; it does not preserve the original text. Add a create-once snapshot of the complete prior evidence set before mutation, including `scores.md`, and explicitly protect existing `codex/` files from writes. Move post-first-overwrite verification directly after that overwrite; Execute currently delays it until after all three construction stages.
+
+5. **[§10.10 — PASS hand-off]** “Tier hand-off to style-library’s board on PASS only” names a branch but leaves its execution unspecified. Name the destination record, the tier update, the required `scores.md` Attempt 2 pointer and scored-source binding, and the read-back that proves the hand-off landed.
+
+Limits: underlying source, cure inventory, filed lens returns, and Observe-exit profile were not independently supplied; their completeness and quoted contents remain unverified. No independent split violation is established by this stream.
+
+Body-write: none by this reviewer (read-only run). Consumer-designated verbatim filing: `runs/2026-11-17-cycle-019-wave-18/codex-plan-review-T153-return.md`.
+
+PLAN: REVISE BEFORE GATE

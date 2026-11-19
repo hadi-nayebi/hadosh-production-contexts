@@ -1,0 +1,9 @@
+# Payload manifest — T23 attempt 6 re-scoring wave (A-C010-1c)
+
+Final source sha256 (binds all five payloads + returns): `3b6010fc2edd216ddef04551e3bce0bd613f88cda245bb124ed06c9c556bac53`
+
+Allowlist per payload (ONE stream, FED route only): (1) the lens instruction with standing header (consumer + decision priced · working record · BODY-WRITE line; scale line "Scores are integers from 0 to 100"; bar stated as average >= 85 AND no lens < 70 in the guard header only — no prior scores); (2) neutral technique facts (the specimen record incl. both evidence bases for the rhythm window, A-C010-3); (3) the score-blind build record `build-record-attempt6.md`; (4) the full final `recreation.html`.
+Exclusions (verified absent): RUN.md · scores.md · prior lens returns · prior scores/averages/deltas · target/aim vectors · cure-to-lens commentary. The build record's mechanism comparisons against the prior layout (art heights) are mechanism evidence, carry no scores, and stand as filed.
+Anchor scan (A-C005-2 + A-C008-4, incl. source comments, filenames, labels): numeric scan for prior-score patterns — 0 hits (hex colour literals only); qualitative scan for verdict/target/pass-fail anchors — 0 hits beyond the template's BODY-WRITE instruction line and mechanism uses of "target" (dive target). Source comments carry no cure codes or amendment labels (Stage-5 scan).
+Firing route: `cat <payload> | ~/workspace/codex-local/node_modules/.bin/codex exec - -s read-only -o <create-once return path>` from a cwd OUTSIDE the artifact directory, no --add-dir. Returns: `codex/attempt-6/lens-<lens>.md` in the artifact directory, create-once, preserved before any re-fire.
+Session read scope (A-C019-2): printed per lens in the wave filing in scores.md from each return's own session evidence; the FED route feeds the full packet in one stream, so no file reads are required of the lens sessions.

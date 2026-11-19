@@ -1,0 +1,22 @@
+CONDENSE: REGRADE BEFORE CLOSE
+
+1. **The anchored-score disposition overclaims what arithmetic establishes.** INSTRUCTION.md, Cycle-018 “Seat-tasking defect,” retains three affected waves because reviewers judged the source and the anchor appeared “in the header’s decision line only.” Actual `instr-motion.txt` headers for T130 attempt 2, T129 attempt 2, and T91 attempt 3 explicitly name prior averages. T91’s `codex/attempt-3/lens-reusability.md` even opens “Does not beat 82.4,” demonstrating that the anchor entered its framing. Recomputing scores cannot establish independence from that anchor. **Cure:** distinguish numerically correct scores from score-blind assessment; retain the returns as contaminated evidence and either obtain clean independent re-scores or explicitly record why the advisory findings are retained despite unresolved anchoring. Remove the implication that header placement neutralizes contamination.
+
+2. **The Jev-layer NO-DEFECT finding fails against its definitions.** RUN.md §9.6 cites the phase judgings as evidence, but:
+   - §1’s Observe profile omits `routed-needs`, required by `jev-observe-exit.md` §4.
+   - Its record-depth justification says full records were **charged to Execute agents**, which does not establish the pre-Plan reading required by that definition’s §2.3.
+   - §2 supplies a Plan verdict and narrative, without the seven-dimension profile required by `jev-plan-exit.md` §§4–5.
+
+   **Cure:** replace the blanket NO-DEFECT claim with these procedural gaps; complete the profiles where contemporaneous evidence supports them and label retrospective reconstruction explicitly. An untriggered plateau call supports non-applicability, not a demonstrated defect-free definition.
+
+3. **The Codex layer is enumerated but not fully reviewed.** RUN.md §9.6 establishes a useful detection by codex-observe and describes consumed plan reviews and re-firings. It does not provide a bounded NO-DEFECT finding for codex-condense itself. Its wave assessment also omits the score-blind feeding breach identified in finding 1, despite `codex-rescore-wave.md` expressly excluding prior-score anchors. **Cure:** assess all four prompts by name, separating prompt defects, feeding defects, and untested behavior. Layer 4 remains partially unreviewed; layer 3’s clearance is unsupported as detailed above. Layer 1 was amended, and layer 2 received an explicit, bounded review.
+
+4. **The evidence excerpts contain two concrete errors.** `condense-evidence-excerpts.md`, “Lens movements,” attributes T91’s 78 to attempt 2; the filed 78 is in **attempt 3**, while attempt 2 was 62. RUN.md §9.6 says “two 0-byte” returns but names three: T123 timing, T123 purity, and T129 motion (**2 + 1 = 3**). **Cure:** correct the attempt identifier and empty-return count in the evidence and Condense text.
+
+5. **The procedural amendments warrant different evidence labels.** A-C018-3 remains appropriately **CANDIDATE**: `codex-observe-return.md`, correction 1, directly supports its forcing defect, with **20 + 1 + 1 = 22**. A-C018-2 is likewise candidate-grade, but the supplied excerpts do not establish its three historical misreport instances or their claimed costs; those remain **UNVERIFIED in this review**. The skeleton consumer is explicitly HQ-directed and RUN.md §2 reports one successful execution; that supports adoption and a reported execution, without proving refusal or recovery behavior. No new two-movement construction-note promotion appears in the Cycle-018 amendments.
+
+6. **Arithmetic supports the no-WHY decision, within the anchoring limitation.** Extracted final return scores give T130, T123, and T129 sums of **451**, hence **451/5 = 90.2**; T91 totals **440**, hence **88.0**. Against the filed prior averages, deltas are **+11.0, +9.2, +9.2, +5.6**. Thus no non-beating WHY is owed on those filed scores. No new construction-rule hand-off or Cycle-018 shared-wave amendment is identified; the listed PASS hand-offs do not themselves demonstrate either.
+
+**Limits:** Reviewed on-disk RUN.md, amended instruction text, guard definitions, evidence excerpts, score-result sections, final-return score lines, selected substantive lens returns, and sampled payload headers. Historical misreport receipts, skeleton execution chronology, preservation measurements, board hand-offs, and amended-file before/after history were not independently verified. Some broad reads were output-truncated; no complete-file certification is claimed for those reads.
+
+**Body-write: none (read-only run)**

@@ -1,0 +1,19 @@
+PLAN: REVISE BEFORE GATE
+
+1. **[C11 · E2/E6 · FP3] The proposed font tokens fail the declared floor.** At 360 px, `3.33cqw = 11.988px`, below the strict 12 px minimum. Rounding the report does not satisfy validation. Use a token that clears the floor, then repeat joint-fit checks. FP3 must preserve the adopted floor; its “floor as printed limitation” branch would reverse this decision.
+
+2. **[§6 · E3–E6 · V11] Checkpoints preserve bundles but do not establish per-cure attribution.** Stage 2 combines units, chrome fitting, and title fitting; Stage 4 combines font size, box sizing, and caret fitting. Add a cure-indexed, seat-only ledger recording each cure’s triggering case, baseline failure, post-change result, and checkpoint. Keep lens-score movements **BUNDLED** unless independent evidence supports narrower attribution; an isolated checkpoint alone does not establish a cure’s contribution to the final score.
+
+3. **[C2/C5/C6/C9/C12 · E4/E6 · V3] Fitting interactions lack a final integrated gate.** Unit interpretation, font weights, line heights, border-box widths, whitespace normalization, and caret reservation all change fitting assumptions. Full-title-plus-caret is not automatically the widest reachable *wrapped* state. Require every reachable grapheme prefix under the final tokens, in both modes, with caret and highlight bounds included. Re-run all chrome and stack fitting after Stage 4.
+
+4. **[V6 · C8 · FP5] The 7–8-title tests have contradictory expected outcomes.** Prior evidence says these counts freeze for stack overflow, while V6 calls them supported and requires full playback. Separate rate-propagation assertions from layout acceptance. Either provide a lawful fitting configuration for playback tests or explicitly expect the named overflow freeze while independently checking every expanded beat’s rate.
+
+5. **[C10 · E9 · D4] Comparison compatibility is broader than unchanged API names.** The historical comparison uses a clock offset; this plan defines recreation `t=0` as the evidenced opening frame. Require explicit video-time-to-recreation-time assertions at opening, intermediate beats, and 12,000 ms. Preserve ORIGINAL bytes independently of any necessary clock-adapter change.
+
+6. **[§4/§5 · V8/V11] Completing the scaffold “in place” can destroy Plan evidence.** Preserve the exact pre-drafted scaffold before filling it, or append a separate completed WHY referencing the unchanged scaffold. Extend create-once collision handling to final returns, payloads, and attempt-4 records: a conflicting destination must stop the write, never permit replacement or re-averaging.
+
+7. **[V11 · §5] The passing branch has no executable hand-off.** Add the three explicit outcomes: non-beating → completed WHY and jev-plateau; beating below bar → continued IN PROGRESS; passing → style-library hand-off with the final `scores.md` pointer and recorded receipt. Passing requires both average ≥85 and every lens ≥70.
+
+8. **[§5 · stuck-lens hypotheses] The proposed hypothesis tests do not distinguish causes.** Reusability ≥70 does not falsify a completeness-defect explanation; it may show the cures worked. Timing <78 does not distinguish cadence from evidence limitations or other changes. Define observable outcomes from return wording and cure checks, permit an inconclusive result, and separate construction closure from score movement.
+
+9. **[Feeding contract · review record] The supplied stream lacks the item’s jev-observe-exit profile.** Plan references to Observe corrections do not substitute for that required input. Supply the profile before gate clearance. This review covers the supplied plan and cure inventory only. **Body-write: none completed**—the execution tool failed to start, so this return could not be filed in the run directory.

@@ -1,0 +1,40 @@
+PASS E dwellMs override -> timeline effect
+PASS E diveMs override -> timeline effect
+PASS E holdZoomMs/loopPauseMs overrides -> timeline effect
+PASS E minStepMs override -> capped scheduler effect
+PASS E artDefaults fill -> rendered default effect
+PASS E headerAbsoluteMinPx -> floor effect
+PASS E maxTabHeightFraction -> band cap effect
+PASS K dwellMs consumed
+PASS K diveMs consumed
+PASS K holdZoomMs consumed
+PASS K loopPauseMs consumed
+PASS K minStepMs consumed
+PASS K artDefaults.fill consumed
+PASS K headerAbsoluteMinPx consumed
+PASS K maxTabHeightFraction consumed (band)
+PASS S target miniature through dwell/dive/hold at new durations (semantic, plan-stated)
+PASS S completed counts unchanged 4/8/12, illustrated 5/9/12
+PASS S no displayed dark frame between dive end and next dwell at defaults (logical model)
+PASS S hold pinned to endpoint at diveMs=0
+PASS S wrapped-state enumeration: tabs lines<=2 and px>=11 at {240,360,520,960}
+PASS S occlusion pair enumeration (tab/art, header/grid, art/art) all disjoint — table in build record
+PASS S (tab, miniature) visible fraction = 1.0 SCOPED to tab/art overlap only
+PASS S art dimensions + content bounds subset of art region, every panel x width
+PASS S dive coverage vs post-band art rectangles at 360/960
+PASS S settle integrality analogue: at dwell settle the miniature is wholly inside its art region, unobstructed by the tab, every panel x width
+NOT-VERIFIED DOM-measured: C8 rendered clientHeight agreement | C9(i) rendered header containment (Range/scroll) | rendered occlusion | rendered 360px frames + glance pass
+PROBE C1 cycle total ms: before=5850 stage=2190 final=2190
+PROBE C2 schedulerDelay(300 remaining, minStep 500): before=500 stage=300 final=300
+PROBE C3 exact-case exit satisfies its own inner-dimension contract at all priced widths: before=false stage=n/a (stage>=2) final=true
+PROBE C4 panels at maxPanels=32+panelCount=32: before=12 stage=32 final=32
+PROBE C5 grouped stroke forwarded: before=false stage=true final=true
+PROBE C6 parseEasing(Infinity-y) is null: before=false stage=true final=true
+PROBE C7 separator verbatim: before="/" stage=" / " final=" / "
+PROBE C8 DOM test subtracts borders (source-text mechanism probe): before=true stage=n/a (stage>=4) final=false
+PROBE C9 tab overlay family (CSS .tab position:absolute): before=true stage=n/a (stage>=4) final=false
+PASS P per-cure probes: C1/C2/C3/C4/C5/C6/C7/C8/C9 moved before->final in the cured direction, no cross-stage regression on final
+PASS U purity: no specimen media / external refs in source
+PASS U registry kinds unchanged in class vs attempt 5
+PASS T self-start: DOM block auto-plays and the timeline wraps at 2190 under its own path
+TOTAL: 29 pass / 0 fail

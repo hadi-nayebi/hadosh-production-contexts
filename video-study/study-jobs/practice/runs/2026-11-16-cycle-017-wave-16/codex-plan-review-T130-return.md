@@ -1,0 +1,15 @@
+1. **[C2 · E2 · V6] The fade-boundary test contradicts the construction.** SHOTS ends at the last puff’s **fade end**, when its opacity should reach zero. V6 requires it to be “fading (not absent)” across that boundary. Test continuity at each puff’s expansion→fade transition, positive opacity immediately before its fade end, and zero afterward. Require no discontinuity at SHOTS→HOLD; remove the positive-opacity requirement there.
+
+2. **[C1/C3/C9 · E6 · V4/V6] Geometry swaps lack a defined acceptance policy.** Fixed `startFrac:1.10` stops guaranteeing offstage placement when carW exceeds 72 at W=360. Fixed stopFrac likewise cannot guarantee adjacency for arbitrary car widths. Specify supported ranges and either derive positions from applied dimensions or atomically reject incompatible overrides. Define the edge-gap assertion with explicit signed bounds; “gap ≤12” alone admits arbitrarily deep overlap.
+
+3. **[§6(a) · V11 · §7 WHY] The WHY scaffold overclaims cure attribution.** Family checkpoints support family-level observations; they cannot assign a final lens-score movement separately to C1/C3/C9 or C2/C4/C12. Replace binary “moved / did not move” slots with separate fields for **construction check**, **lens passage**, and **attribution: isolated / bundled / unresolved**. Require per-cure before/after probes for mechanical effects. Keep score movements bundled unless an actual isolated comparison supports them.
+
+4. **[§3.1/§3.3 · E0] Preservation needs reconciliation with the already-appended scaffold.** The supplied scores.md already contains the Attempt-2 scaffold, while Execute must validate its prior-evidence baseline before mutation. State whether that baseline includes the append. If it predates it, preserve the baseline-matching Attempt-1 bytes and record the append separately; do not refresh the baseline to erase the discrepancy. Extend ORIGINAL preservation to any referenced dependencies, unless its self-containment is verified.
+
+5. **[C8 · E3/E6 · V8] Atomic rejection lacks a construction-time contract.** With reload-only CONFIG semantics, identify what “timeline unchanged” means when invalid settings are supplied before construction. Specify the candidate-validation/commit boundary, retained valid configuration or startup fallback, and observable rejection record. Test that invalid candidates change neither committed settings nor derived geometry/timing.
+
+6. **[V12/V13 · §6(d)] The lens payload contract needs explicit context boundaries.** Supply neutral reference evidence, its time origin, and the scoring rubric needed to judge timing/fidelity independently. Exclude prior scores and targets from the **entire lens invocation**, including tasking and inherited context—not merely the assembled payload file.
+
+**Body-write:** No file was written: the execution tool failed to start. This return remains unfiled and must be saved verbatim as `codex-plan-review-T130-return.md` in the cycle run directory, then consumed through plan amendments or printed rejection reasons before plan-exit.
+
+PLAN: REVISE BEFORE GATE

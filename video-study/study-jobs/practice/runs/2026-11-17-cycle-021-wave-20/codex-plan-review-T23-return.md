@@ -1,0 +1,20 @@
+PLAN: REVISE BEFORE GATE
+
+1. **[EVIDENCE-DESTRUCTION — plan-T23.md §§6–7; Execute 5–9] Stage-output paths collide with preserved evidence.** §6 inventories attempt-6 `own-checks-stage0.txt` … `own-checks-stage5.txt`; §7 assigns attempt 7 the same unqualified stage-output names. These files already exist in T23’s artifact directory. Following those paths either overwrites evidence or fails create-once.
+   **Amendment:** give every new stage output an explicit attempt-7 path, update all consumers, and assert destination nonexistence before writing. Keep the existing files immutable.
+
+2. **[INTERACTION — §4 C1; Verify 6; §11(b)] Endpoint presentation has no timing-accounting policy.** C1 delays reset until after an endpoint frame, including late callbacks, while Verify 6 requires the unchanged 2,190 ms cycle. The plan does not decide whether presentation extends the cycle or consumes the following dwell, nor what happens when lateness crosses several appearances. Either implementation can pass the endpoint assertion while changing tempo or collapsing reading time.
+   **Amendment:** specify deadline, catch-up, and cycle-wrap behavior. Test repeated cycles, multi-phase lateness, and competing `tick`/`camTick` callbacks; record actual presented intervals separately from nominal durations.
+
+3. **[INSTRUMENT-SPECIFICITY — §4 C1; §5; Verify 3(a); §11 H3] “Committed” transforms are still being called painted frames.** A modelled frame cadence can establish engine ordering, but a DOM write or animation callback does not itself establish that the browser painted before another callback reset it. The plan acknowledges missing pixels yet permits this model to substantiate the unconditional “endpoint is the handoff frame” claim.
+   **Amendment:** test the actual production transition code with an explicit frame-boundary harness covering both callback orders, cancellation, pause/resume, and resize. Label that evidence **presentation-order model**. Without browser evidence, retain painted-frame presentation as NOT VERIFIED and qualify the handoff wording accordingly.
+
+4. **[INTERACTION — §4 C7 checks; §4 C6; Execute 7; §11(b)] The default-rendering regression assertion conflicts with planned changes.** C7 requires default rendering byte-identical to attempt 6 except camera behavior. C6 explicitly permits default panel-07 sizing or arrangement to change; C3 can also change emitted attributes. Moreover, C7’s configurable line/fallback policy interacts with C6’s estimator and C5’s resolved art rectangle without a named combined probe.
+   **Amendment:** replace whole-render byte identity with scoped invariants for unchanged content and styling. Enumerate intentional differences, then test line/fallback-policy changes together with corrected spacing, tab-band height, resolved art bounds, and endpoint coverage.
+
+5. **[ATTRIBUTION — §7 attribution rule; Verify 3A; §11(a); §13] Mechanism probes cannot isolate numerical score movement.** Before/stage/final effect probes can demonstrate that a cure works and survives later edits. With only the final combined source scored, they cannot establish how many lens points that cure caused. The exception allowing narrower score attribution from those probes leaves that inference open.
+   **Amendment:** keep numerical score deltas BUNDLED for this wave. Permit cure-specific mechanism outcomes and quoted lens observations separately; any causal numerical attribution needs a score-blind controlled comparison.
+
+Limits: Reviewed the on-disk plan, RUN.md Observe profile, complete scores.md, and relevant guards. No coming recreation was inspected or executed. The non-beating WHY scaffold and PASS tier hand-off are present; no additional silent-drop or rebuild-from-scratch split finding is established.
+
+**Body-write: none (read-only run)**
