@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T02 — Counting list + giant numeral (parameterized recreation)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #000; }
+  body { display: flex; align-items: center; justify-content: center; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  #stage { position: relative; width: min(100vw, 177.78vh); aspect-ratio: 16/9; overflow: hidden; }
+  #prompt { position: absolute; top: 6%; left: 4%; font-size: 3.4vmin; font-weight: 700; white-space: nowrap; }
+  #prompt .chev { margin-right: 1.2vmin; opacity: .85; }
+  #listWrap { position: absolute; top: 17%; left: 4%; width: 56%; bottom: 16%; overflow: hidden; }
+  #list { display: flex; flex-direction: column; justify-content: flex-start; }
+  .line { display: flex; gap: 1.4vmin; align-items: baseline; font-size: 2.9vmin; line-height: 1.62; white-space: nowrap; }
+  .line .check { font-weight: 700; }
+  #numeralCol { position: absolute; top: 0; right: 0; width: 38%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #numeral { font-family: "Arial Black", Arial, Helvetica, sans-serif; font-weight: 900; line-height: .95; letter-spacing: -0.02em; will-change: transform; }
+  #numeralLabel { margin-top: 2.2vmin; font-size: 3vmin; font-weight: 700; }
+  #caption { position: absolute; left: 0; right: 0; bottom: 4.5%; text-align: center; font-size: 3.6vmin; font-weight: 700; opacity: 0; }
+  #caption .zero { font-size: 1.25em; }
+  #controls { position: absolute; right: 2%; bottom: 2%; display: flex; gap: 8px; }
+  #controls button { font: 600 13px/1 system-ui, sans-serif; padding: 9px 13px; border-radius: 6px; border: 1px solid #555; background: #1c1c1c; color: #eee; cursor: pointer; min-height: 40px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="prompt"><span class="chev">&gt;</span><span id="promptText"></span></div>
+  <div id="listWrap"><div id="list"></div></div>
+  <div id="numeralCol"><div id="numeral">0</div><div id="numeralLabel"></div></div>
+  <div id="caption"></div>
+  <div id="controls">
+    <button id="btnPlay" type="button">Pause</button>
+    <button id="btnRestart" type="button">Restart</button>
+  </div>
+</div>
+
+<script>
+/* ================= CONFIG — every variable of the technique lives here ================= */
+const CONFIG = {
+  directoryCommand: "ls ~/Original\\ Music",   // the fake listing command (subject text)
+  lines: [                                      // the listing lines, in reveal order (39)
+    "A/B Testimonial/","Almost Famous Build/","Blame the Intern/","Cache Money/",
+    "Cherry Pick Serenade/","Commit Early Commit Often/","Dark Mode Lullaby/",
+    "Deployed on a Friday (Fable)/","Eleven Kept Going/","Fangs for Asking/",
+    "Get Off War Thunder/","Git Blame/","Git Blame (Country)/","Graceful Shutdown/",
+    "Great Idea, Ted/","Hard Launch/","I have a blocker. (Take It Offline)/","LGTM/",
+    "Merge Conflict/","Mirror, Mirror, Look at Us/","Null Pointer Lullaby/",
+    "One More Hotfix/","Pipeline Dreams/","Quick Sync Serenade/",
+    "Ragnarök or Reach for Mars/","Rate Limited/","Snowflake Undrop/","Spinning Cursor/",
+    "TED Talk/","TED Talk (Charts)/","TED Talk (Screenlife)/","TED Talk (Shadow Play)/",
+    "TED Talk (Stepping Back)/","Take It Offline/","Tech Debt/","The Promptress/",
+    "Thirsty (The Data Center Next Door)/","Undo Everything/","Works on My Machine/"
+  ],
+  finalCount: 39,                               // must equal lines.length (validated at load)
+  /* TIMING LAW — checkpoint-priced schedule (measured from evidence frames, NOT one global cadence):
+     counter 20 at ~3 s into the window (evidence frame t17, source 0:17), 37 at ~6 s (frame t20, source 0:20),
+     final 39 + caption at window end (~7 s). Lines reveal evenly BETWEEN checkpoints;
+     the numeral is the revealed-line count, so numeral and list are in sync by construction. */
+  checkpoints: [ {timeMs: 0, count: 0}, {timeMs: 3000, count: 20}, {timeMs: 6000, count: 37}, {timeMs: 7000, count: 39} ],
+  captionAtMs: 7000,                            // landing beat: caption appears with the final count
+  captionText: "39 projects - 0 video editors", // the punchline caption (subject text); the "0" is accented
+  totalDurationMs: 8000,                        // window length incl. caption hold
+  visibleLines: 13,                             // listing viewport height in lines (frames show ~13)
+  numeralColor: "#f59e2c",                      // giant numeral orange (frame-sampled hue family)
+  numeralLabel: "projects",                     // word under the numeral
+  numeralSizeVmin: 34,                          // numeral font size in vmin
+  pulseScale: 1.055,                            // numeral pop on each increment
+  pulseMs: 130,
+  palette: { bg: "#050505", text: "#d9d9d9", check: "#43b581", prompt: "#e8e8e8", caption: "#ffffff", zero: "#f59e2c" },
+  promptTypeMs: 260                             // command line types in over this span at t=0
+};
+/* URL overrides for the swap test / production reuse: ?color=%23ffcc00&speed=1.25&caption=...&lines=A/|B/ */
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("color")) CONFIG.numeralColor = q.get("color");
+  if (q.get("caption")) CONFIG.captionText = q.get("caption");
+  if (q.get("lines")) CONFIG.lines = q.get("lines").split("|");
+  if (q.get("speed")) CONFIG._speed = Math.max(0.1, parseFloat(q.get("speed")) || 1);
+  if (q.get("checkpoint2")) { const v = parseInt(q.get("checkpoint2"), 10); if (!isNaN(v)) CONFIG.checkpoints[1].timeMs = v; }
+})();
+if (CONFIG.finalCount !== CONFIG.lines.length) CONFIG.finalCount = CONFIG.lines.length;
+
+/* ================= SCHEDULE (pure; delimited for the logic-level swap test) ================= */
+// SCHEDULE-BEGIN
+function lineTimeMs(index, checkpoints) {           // reveal time of 0-based line index
+  for (let s = 0; s < checkpoints.length - 1; s++) {
+    const a = checkpoints[s], b = checkpoints[s + 1];
+    if (index < b.count) {
+      const span = b.count - a.count, dt = b.timeMs - a.timeMs;
+      return a.timeMs + (index - a.count + 1) * (dt / span);
+    }
+  }
+  return Infinity;   // beyond the final checkpoint count: never reveals
+}
+function countAtMs(t, checkpoints) {                 // numeral value at time t = lines revealed
+  let c = 0;
+  for (let i = 0; i < 10000; i++) { if (lineTimeMs(i, checkpoints) <= t) c = i + 1; else break; }
+  return c;
+}
+// SCHEDULE-END
+
+/* ================= BUILD ================= */
+const stage = document.getElementById("stage");
+stage.style.background = CONFIG.palette.bg;
+const promptEl = document.getElementById("prompt");
+promptEl.style.color = CONFIG.palette.prompt;
+document.getElementById("promptText").textContent = "";
+const listEl = document.getElementById("list");
+const numeralEl = document.getElementById("numeral");
+numeralEl.style.color = CONFIG.numeralColor;
+numeralEl.style.fontSize = CONFIG.numeralSizeVmin + "vmin";
+const labelEl = document.getElementById("numeralLabel");
+labelEl.textContent = CONFIG.numeralLabel;
+labelEl.style.color = CONFIG.palette.text;
+const captionEl = document.getElementById("caption");
+captionEl.style.color = CONFIG.palette.caption;
+captionEl.innerHTML = CONFIG.captionText.replace("0", '<span class="zero" style="color:' + CONFIG.palette.zero + '">0</span>');
+
+const lineEls = CONFIG.lines.map(txt => {
+  const d = document.createElement("div");
+  d.className = "line"; d.style.color = CONFIG.palette.text; d.style.visibility = "hidden";
+  const c = document.createElement("span"); c.className = "check"; c.textContent = "✓"; c.style.color = CONFIG.palette.check;
+  const s = document.createElement("span"); s.textContent = txt;
+  d.appendChild(c); d.appendChild(s); listEl.appendChild(d); return d;
+});
+
+/* ================= CLOCK (drivable by comparison.html via postMessage / window.T02) ================= */
+const speed = CONFIG._speed || 1;
+let playing = true, baseElapsed = 0, startStamp = performance.now(), lastCount = -1, pulseUntil = 0;
+function elapsedMs() { return playing ? baseElapsed + (performance.now() - startStamp) * speed : baseElapsed; }
+function render(now) {
+  const t = Math.min(elapsedMs(), CONFIG.totalDurationMs);
+  // prompt typing
+  const ptxt = CONFIG.directoryCommand;
+  const pn = Math.min(ptxt.length, Math.floor((t / CONFIG.promptTypeMs) * ptxt.length) + (t > 0 ? 1 : 0));
+  document.getElementById("promptText").textContent = ptxt.slice(0, pn);
+  // lines + scroll window (last visibleLines stay in view, as in the frames)
+  let shown = 0;
+  lineEls.forEach((el, i) => { const on = lineTimeMs(i, CONFIG.checkpoints) <= t; el.style.visibility = on ? "visible" : "hidden"; if (on) shown = i + 1; });
+  const firstVisible = Math.max(0, shown - CONFIG.visibleLines);
+  lineEls.forEach((el, i) => { el.style.display = i < firstVisible ? "none" : "flex"; });
+  // numeral = revealed count (sync by construction), with an increment pulse
+  if (shown !== lastCount) { lastCount = shown; numeralEl.textContent = shown; pulseUntil = now + CONFIG.pulseMs; }
+  const p = now < pulseUntil ? 1 + (CONFIG.pulseScale - 1) * (1 - (pulseUntil - now) / CONFIG.pulseMs) : 1;
+  numeralEl.style.transform = "scale(" + p.toFixed(3) + ")";
+  // landing caption
+  captionEl.style.opacity = t >= CONFIG.captionAtMs ? "1" : "0";
+  if (t < CONFIG.totalDurationMs || playing) requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+function play() { if (!playing) { playing = true; startStamp = performance.now(); requestAnimationFrame(render); } document.getElementById("btnPlay").textContent = "Pause"; }
+function pause() { if (playing) { baseElapsed = elapsedMs(); playing = false; } document.getElementById("btnPlay").textContent = "Play"; }
+function restart() { baseElapsed = 0; lastCount = -1; playing = true; startStamp = performance.now(); requestAnimationFrame(render); document.getElementById("btnPlay").textContent = "Pause"; }
+function seek(ms) { baseElapsed = ms; lastCount = -1; if (playing) startStamp = performance.now(); requestAnimationFrame(render); }
+document.getElementById("btnPlay").addEventListener("click", () => playing ? pause() : play());
+document.getElementById("btnRestart").addEventListener("click", restart);
+window.T02 = { play, pause, restart, seek, elapsedMs };
+window.addEventListener("message", e => {
+  const m = e.data || {};
+  if (m.cmd === "play") play(); else if (m.cmd === "pause") pause();
+  else if (m.cmd === "restart") restart(); else if (m.cmd === "seek") seek(m.ms || 0);
+});
+</script>
+</body>
+</html>

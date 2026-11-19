@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T05 — Pop-in Collage Grid · recreation</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#050607}
+  #stage{position:relative;width:100%;height:100%;min-height:180px;overflow:hidden}
+  .panel{position:absolute;box-sizing:border-box;border:1px solid #232a26;border-radius:3px;
+         overflow:hidden;opacity:0;transform:scale(.82);visibility:hidden}
+  .panel.on{visibility:visible;opacity:1;transform:scale(1);
+            transition:transform .18s cubic-bezier(.2,1.6,.4,1),opacity .12s ease-out}
+  .plabel{position:absolute;top:2px;left:5px;right:14px;font:10px/1.3 "Courier New",monospace;
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:3}
+  .pcheck{position:absolute;top:2px;right:5px;font:9px/1.3 monospace;color:#7d8a80;z-index:3}
+  .panel canvas,.panel svg{position:absolute;inset:0;width:100%;height:100%}
+  #lyrics{position:absolute;left:3.5%;bottom:6%;width:44%;z-index:5;
+          font-family:"Courier New",monospace;font-weight:700;color:#e8e6df}
+  .lrow{white-space:nowrap}
+  .lprompt{color:#69b96f;margin-right:.45em}
+  .cursor{display:inline-block;width:.55em;height:1em;vertical-align:-.12em;margin-left:2px}
+  #brand{position:absolute;top:2.5%;left:3.5%;right:3.5%;display:flex;justify-content:space-between;
+         font:10px/1.3 "Courier New",monospace;color:#5d6660;z-index:5;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="brand"><span id="brandL"></span><span id="brandR"></span></div>
+  <div id="grid"></div>
+  <div id="lyrics"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — every variable of the technique lives here; logic below reads only CONFIG =====
+   Computed fit (phone-first): stage is 16:9. At 360px wide the stage is 360x202.5px.
+   Grid occupies x 40.5%..97%, y 22%..62% of stage => 203x81px for 3 cols x 2 rows,
+   each panel ~64x38px with 5px gaps — labels at 10px specimen-scaled to 7px minimum via
+   stage-scale factor (stageW/960 clamped .55..1) so nothing clips at 360px. Lyrics occupy
+   left/bottom zone x 3.5%..47.5%, never under the grid. All sizes derive from stage size
+   in layout(); no fixed pixel panel sizes. */
+const CONFIG = {
+  durationMs: 12000,
+  bg: "#050607",
+  panelBg: "#101216",
+  panelBorder: "#232a26",
+  textColor: "#e8e6df",
+  mutedColor: "#8b928c",
+  accentOrange: "#e8a04c",
+  accentGreen: "#79c96f",
+  spiralColor: "#d9b45c",
+  brandLeft: "maker@studio  ~/look-what-i-can-do",
+  brandRight: "verse 1",
+  popScaleFrom: 0.82,
+  popMs: 180,
+  gridLeftPct: 40.5, gridTopPct: 22, gridWidthPct: 56.5, gridHeightPct: 40,
+  gridCols: 3, gridRows: 2, gridGapPx: 5,
+  panels: [
+    {label:"agent-1 look_what_i_can_do.wav", type:"waveform", popAtMs:200},
+    {label:"agent-2 beat.mid",               type:"sequencer", popAtMs:1300},
+    {label:"agent-1.1 asking_for_a_frien...",type:"scene",     popAtMs:2400},
+    {label:"agent-1.2 omg_in_the_walls.mp4", type:"room",      popAtMs:3500},
+    {label:"agent-2.1 the_promptress.mp4",   type:"planet",    popAtMs:4600},
+    {label:"agent-3 golden_ratio.card",      type:"spiral",    popAtMs:5700}
+  ],
+  lyricLines: [
+    {text:"I made a song, I made a beat",   startMs:300},
+    {text:"I made a movie in my seat",      startMs:2600},
+    {text:"I made a ghost, I made a witch", startMs:4900},
+    {text:"A Viking shooting Mars a pitch", startMs:7200}
+  ],
+  lyricCharMs: 42,
+  lyricFontPxAt960: 17,
+  seed: 7
+};
+/* URL overrides: ?labels=A|B|C|D|E|F&lyrics=X|Y&pop2=900&accentOrange=%23ff00aa&bg=%23000000&durationMs=12000 */
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  if (q.get("labels")) { const v=q.get("labels").split("|"); CONFIG.panels.forEach((p,i)=>{ if(v[i]) p.label=v[i]; }); }
+  if (q.get("lyrics")) { const v=q.get("lyrics").split("|"); CONFIG.lyricLines.forEach((l,i)=>{ if(v[i]!==undefined) l.text=v[i]; }); }
+  if (q.get("accentOrange")) CONFIG.accentOrange=q.get("accentOrange");
+  if (q.get("accentGreen")) CONFIG.accentGreen=q.get("accentGreen");
+  if (q.get("bg")) CONFIG.bg=q.get("bg");
+  if (q.get("durationMs")) CONFIG.durationMs=Math.max(2000,parseInt(q.get("durationMs"),10)||CONFIG.durationMs);
+  for (let i=0;i<CONFIG.panels.length;i++){ const v=q.get("pop"+i); if(v!==null) CONFIG.panels[i].popAtMs=Math.max(0,parseInt(v,10)||0); }
+})();
+
+const stage=document.getElementById("stage"), grid=document.getElementById("grid"),
+      lyricsEl=document.getElementById("lyrics");
+document.getElementById("brandL").textContent=CONFIG.brandLeft;
+document.getElementById("brandR").textContent=CONFIG.brandRight;
+stage.style.background=CONFIG.bg;
+
+/* deterministic seeded rng */
+function rng(seed){ let s=seed>>>0; return function(){ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
+
+/* ---- code-drawn panel contents (canvas / SVG only; no external or specimen media) ---- */
+function drawWave(cv,p){
+  const c=cv.getContext("2d"), W=cv.width,H=cv.height, r=rng(CONFIG.seed*10+1);
+  c.fillStyle=CONFIG.panelBg; c.fillRect(0,0,W,H);
+  const n=44, bw=W/n, mid=H*0.58;
+  for(let i=0;i<n;i++){ const h=(0.25+0.75*Math.abs(Math.sin(i*0.55)*0.6+r()*0.55))*(H*0.36);
+    c.fillStyle= i<n*0.52 ? CONFIG.accentOrange : "#9a9a94"; c.fillRect(i*bw+1,mid-h,bw-2,h* (i%2?1:0.82)); }
+  c.fillStyle=CONFIG.accentGreen; c.fillRect(W*0.52,8,2,H-14);
+}
+function drawSeq(cv,p){
+  const c=cv.getContext("2d"), W=cv.width,H=cv.height, r=rng(CONFIG.seed*10+2);
+  c.fillStyle=CONFIG.panelBg; c.fillRect(0,0,W,H);
+  c.strokeStyle="#2a2f2c"; for(let y=0;y<6;y++){ c.beginPath(); c.moveTo(6,16+y*(H-22)/5); c.lineTo(W-6,16+y*(H-22)/5); c.stroke(); }
+  for(let i=0;i<14;i++){ if(r()>0.45){ const x=8+r()*(W-22), y=18+Math.floor(r()*5)*(H-22)/5;
+    c.fillStyle=CONFIG.accentGreen; c.globalAlpha=0.55+r()*0.45; c.fillRect(x,y-4,9,8);} }
+  c.globalAlpha=1; c.fillStyle=CONFIG.accentOrange; c.fillRect(14,10,2,H-16);
+}
+function svgWrap(inner,bg){ return '<svg viewBox="0 0 160 96" preserveAspectRatio="none" aria-hidden="true"><rect width="160" height="96" fill="'+bg+'"/>'+inner+'</svg>'; }
+function contentHTML(p){
+  if(p.type==="scene") return svgWrap('<rect x="58" y="8" width="44" height="88" fill="#7a2d20"/><circle cx="42" cy="46" r="17" fill="#e07b39"/><path d="M28 34 L52 30 L46 46 L30 48 Z" fill="#f4f1e6"/><ellipse cx="118" cy="62" rx="22" ry="26" fill="#cfc9bb"/><circle cx="118" cy="28" r="11" fill="#ded8ca"/>',"#1b1512");
+  if(p.type==="room") return svgWrap('<rect width="160" height="96" fill="#24302c"/><rect x="18" y="18" width="62" height="42" fill="#31423c"/><rect x="96" y="34" width="30" height="24" fill="#0c0f0e"/><rect x="24" y="24" width="50" height="3" fill="#7f9a8d"/><rect x="24" y="32" width="42" height="3" fill="#5f7a6e"/>',CONFIG.panelBg);
+  if(p.type==="planet") return svgWrap('<rect width="160" height="96" fill="#191919"/><ellipse cx="86" cy="50" rx="34" ry="24" fill="#b9b4a8"/><ellipse cx="70" cy="42" rx="12" ry="8" fill="#8f8a7f"/><path d="M20 84 L34 58 L40 84 Z" fill="#060606"/><circle cx="132" cy="20" r="3" fill="#e8e6df"/>',CONFIG.panelBg);
+  if(p.type==="spiral"){ let rects="",x=8,y=14,s=68; const seq=[[1,0],[0,1],[-1,0],[0,-1]];
+    for(let i=0;i<7;i++){ rects+='<rect x="'+x+'" y="'+y+'" width="'+s+'" height="'+s+'" fill="none" stroke="'+CONFIG.spiralColor+'" stroke-width="1.4"/>'; const ns=s*0.618; if(seq[i%4][0]===1)x+=s-ns; if(seq[i%4][1]===1)y+=s-ns; if(seq[i%4][0]===-1)x+=0; if(seq[i%4][1]===-1)y+=0; s=ns; }
+    return svgWrap(rects+'<path d="M8 82 A68 68 0 0 1 76 14" fill="none" stroke="'+CONFIG.accentOrange+'" stroke-width="2"/>',"#14120c"); }
+  return "";
+}
+/* build panels */
+const panelEls=CONFIG.panels.map(function(p,i){
+  const d=document.createElement("div"); d.className="panel"; d.style.background=CONFIG.panelBg;
+  d.style.borderColor=CONFIG.panelBorder; d.style.transitionDuration=CONFIG.popMs+"ms";
+  d.style.transform="scale("+CONFIG.popScaleFrom+")";
+  const lab=document.createElement("div"); lab.className="plabel"; lab.style.color=CONFIG.accentOrange; lab.textContent=p.label;
+  const chk=document.createElement("div"); chk.className="pcheck"; chk.textContent="✓";
+  d.appendChild(lab); d.appendChild(chk);
+  if(p.type==="waveform"||p.type==="sequencer"){ const cv=document.createElement("canvas"); cv.width=320; cv.height=180; d.appendChild(cv); p._cv=cv; }
+  else { const holder=document.createElement("div"); holder.innerHTML=contentHTML(p); const sv=holder.firstChild; if(sv){sv.style.position="absolute";} d.appendChild(holder); }
+  grid.appendChild(d); return d;
+});
+const lyricRows=CONFIG.lyricLines.map(function(l){
+  const row=document.createElement("div"); row.className="lrow"; row.style.display="none";
+  row.innerHTML='<span class="lprompt">›</span><span class="lt"></span><span class="cursor"></span>';
+  lyricsEl.appendChild(row); return row;
+});
+function layout(){
+  const W=stage.clientWidth||960, H=stage.clientHeight||540, sc=Math.min(1,Math.max(0.55,W/960));
+  const gx=W*CONFIG.gridLeftPct/100, gy=H*CONFIG.gridTopPct/100,
+        gw=W*CONFIG.gridWidthPct/100, gh=H*CONFIG.gridHeightPct/100, gap=CONFIG.gridGapPx;
+  const pw=(gw-gap*(CONFIG.gridCols-1))/CONFIG.gridCols, ph=(gh-gap*(CONFIG.gridRows-1))/CONFIG.gridRows;
+  panelEls.forEach(function(d,i){ const col=i%CONFIG.gridCols, row=Math.floor(i/CONFIG.gridCols);
+    d.style.left=(gx+col*(pw+gap))+"px"; d.style.top=(gy+row*(ph+gap))+"px";
+    d.style.width=pw+"px"; d.style.height=ph+"px";
+    d.querySelector(".plabel").style.fontSize=Math.max(7,10*sc)+"px"; });
+  lyricsEl.style.fontSize=Math.max(9,CONFIG.lyricFontPxAt960*sc)+"px";
+  lyricsEl.style.lineHeight="1.65";
+  document.getElementById("brand").style.fontSize=Math.max(7,10*sc)+"px";
+  panelEls.forEach(function(d,i){ const p=CONFIG.panels[i]; if(p._cv){ if(p.type==="waveform")drawWave(p._cv,p); else drawSeq(p._cv,p); } });
+}
+/* clock: elapsed driven, seekable (comparison slaves it to video currentTime) */
+let playing=false, baseElapsed=0, baseStamp=0, raf=null;
+function elapsed(){ return playing ? baseElapsed+(performance.now()-baseStamp) : baseElapsed; }
+function render(){
+  const t=elapsed()%CONFIG.durationMs;
+  CONFIG.panels.forEach(function(p,i){ panelEls[i].classList.toggle("on", t>=p.popAtMs); });
+  let active=-1;
+  CONFIG.lyricLines.forEach(function(l,i){
+    const row=lyricRows[i], txt=row.querySelector(".lt"), cur=row.querySelector(".cursor");
+    if(t<l.startMs){ row.style.display="none"; txt.textContent=""; return; }
+    row.style.display="block";
+    const n=Math.min(l.text.length, Math.floor((t-l.startMs)/CONFIG.lyricCharMs));
+    txt.textContent=l.text.slice(0,n); txt.style.color=CONFIG.textColor;
+    const isActive=(n<l.text.length);
+    cur.style.background=isActive?CONFIG.accentGreen:"transparent";
+    if(isActive) active=i;
+  });
+  lyricRows.forEach(function(r,i){ r.querySelector(".cursor").style.background=(i===active)?CONFIG.accentGreen:"transparent"; });
+}
+function tick(){ render(); if(playing) raf=requestAnimationFrame(tick); }
+function play(){ if(playing)return; playing=true; baseStamp=performance.now(); tick(); }
+function pause(){ if(!playing)return; baseElapsed=elapsed(); playing=false; if(raf)cancelAnimationFrame(raf); render(); }
+function restart(){ baseElapsed=0; baseStamp=performance.now(); if(!playing){playing=true; tick();} render(); }
+function seek(ms){ baseElapsed=Math.max(0,ms); baseStamp=performance.now(); render(); }
+window.addEventListener("resize",layout);
+window.addEventListener("message",function(e){ if(!e.data||typeof e.data!=="object")return;
+  if(e.data.cmd==="play")play(); if(e.data.cmd==="pause")pause(); if(e.data.cmd==="restart")restart();
+  if(e.data.cmd==="seek"&&typeof e.data.ms==="number")seek(e.data.ms); });
+layout(); restart();
+</script>
+</body>
+</html>

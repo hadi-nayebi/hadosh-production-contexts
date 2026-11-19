@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T05 — Pop-in Collage Grid · side-by-side</title>
+<style>
+  body{margin:0;background:#101216;color:#e8ecf2;font-family:Arial,Helvetica,sans-serif;padding:16px}
+  h1{font-size:19px;margin:0 0 4px}
+  .sub{color:#9fb0c3;font-size:13px;margin-bottom:14px;max-width:900px;line-height:1.45}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .panel{flex:1 1 420px;min-width:300px}
+  .tag{font-size:12px;letter-spacing:.1em;font-weight:700;margin-bottom:6px}
+  .tag small{display:block;letter-spacing:0;font-weight:400;color:#9fb0c3;margin-top:2px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #2a2f38}
+  video,iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .controls{margin:16px 0;display:flex;gap:10px;flex-wrap:wrap}
+  button{background:#1d2733;color:#e8ecf2;border:1px solid #3a4656;border-radius:8px;padding:12px 20px;font-size:15px;cursor:pointer;min-height:48px}
+  button:active{background:#2a3646}
+  .note{color:#9fb0c3;font-size:13px;line-height:1.5;max-width:900px}
+  code{color:#ffd75e}
+  @media (max-width:640px){ .row{flex-direction:column} .panel{min-width:0} }
+</style>
+</head>
+<body>
+<h1>T05 — Pop-in collage grid</h1>
+<div class="sub">Video Study packet P1, “Look What I Can Do” (@aditazzz.music) @ 0:24–0:35.
+Left: the original segment, cut from the archived source — evidence only.
+Right: the parameterized recreation — rectangular panels pop into a loose grid one at a time
+over a dark field, discovered panel by panel (never an empty grid), while lyric lines type below.
+One control set drives both; the recreation clock is slaved to the video's currentTime.</div>
+
+<div class="controls">
+  <button id="btnPlay">▶ Play both</button>
+  <button id="btnPause">❚❚ Pause both</button>
+  <button id="btnRestart">↺ Restart both</button>
+  <button id="btnSwap">Swap test — different panels</button>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <div class="tag">ORIGINAL — “Look What I Can Do” (P1) @ 0:24–0:35<small>segment.mp4 · specimen window 0:23.5–0:35.5 · muted</small></div>
+    <div class="frame"><video id="vid" src="segment.mp4" muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="panel">
+    <div class="tag">RECREATION — T05 Pop-in collage grid, parameterized<small>recreation.html · CONFIG: panel labels/types, pop timings, palette, lyric text, scale · all contents code-drawn</small></div>
+    <div class="frame"><iframe id="rec" src="recreation.html" title="T05 recreation"></iframe></div>
+  </div>
+</div>
+
+<p class="note">Sync method: Play/Pause/Restart act on the video and post the matching command to the
+recreation in the same click; additionally a 200 ms sync interval posts <code>seek</code> with the video's
+<code>currentTime × 1000</code>, so the recreation's pop schedule stays slaved to the original's clock
+(segment and recreation are both 12 s). The Swap test button reloads the recreation with
+<code>?labels=alpha.wav|beta.mid|gamma_scene|delta_room|epsilon_moon|zeta_spiral&amp;lyrics=We built a tool, we built a stage|We built a map in a single page&amp;pop2=900&amp;accentOrange=%23ff5fa2</code> —
+if the renamed panels still pop in sequence, the earlier panel arrives earlier, and the new lyric words type,
+the build is the technique, not a copy of the specimen. At phone width the two sides stack vertically
+with the controls above them, still reachable.</p>
+
+<script>
+const vid=document.getElementById("vid"), rec=document.getElementById("rec");
+function cmd(c,ms){ if(rec.contentWindow) rec.contentWindow.postMessage(ms===undefined?{cmd:c}:{cmd:c,ms:ms},"*"); }
+document.getElementById("btnPlay").addEventListener("click",function(){ vid.play(); cmd("play"); });
+document.getElementById("btnPause").addEventListener("click",function(){ vid.pause(); cmd("pause"); });
+document.getElementById("btnRestart").addEventListener("click",function(){ vid.currentTime=0; vid.play(); cmd("restart"); });
+document.getElementById("btnSwap").addEventListener("click",function(){
+  rec.src="recreation.html?labels=alpha.wav|beta.mid|gamma_scene|delta_room|epsilon_moon|zeta_spiral&lyrics=We built a tool, we built a stage|We built a map in a single page&pop2=900&accentOrange=%23ff5fa2";
+  vid.currentTime=0; vid.play();
+});
+setInterval(function(){ if(!vid.paused) cmd("seek", vid.currentTime*1000); },200);
+</script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+CONSUMER + DECISION PRICED: the practice job (Video Study lane), Cycle 004 Wave 3, §5 Verify — your score is one of five lens scores for this build of technique T05; the consumer decides from the five scores whether this build is fit to consolidate as a reusable technique in the style library, and what its construction still lacks if it is not.
+WORKING RECORD: you build from the technique facts + build record + recreation source below; your return is filed verbatim in the artifact's codex filing for this scoring round and quoted into the artifact's scores.md; the working record you write to is the artifact's build-record-attempt2.md + scores.md.
+BODY-WRITE REQUIREMENT: your return must name what it writes into the body — one line beginning "BODY-WRITE:" stating the finding that should change the practice job's instruction or this build. End your return with exactly one line: SCORE: <integer 0-100>. A return with no SCORE or no BODY-WRITE line is incomplete.
+
+YOUR LENS: REUSABILITY / PARAMETERIZATION only. Score 0-100: can a production container (transition / diagram) lift this machinery by changing the configuration object alone? Judge against the build record's stated configuration scope: is every value inside that scope actually read from the configuration object, and is the scope itself complete for reuse (schedule, pop motion, geometry, typography, layout, palette, design spaces)? Panel types: extensible through the renderer registry, and what happens for an unknown type? Validation: are malformed values (colors, arrival times, durations, panel counts beyond grid capacity, over-wide labels or lyric lines) caught with named warnings and safe fallbacks, or do they pass silently? Runtime state kept out of the declarative panel objects? URL overrides: coverage and validation. Consumer fit for transitions and diagram containers.
+
+TECHNIQUE FACTS (packet P1, frame-evidenced): T05 Pop-in collage grid — over a dark field, rectangular panels (waveform, sequencer, 3D-scene stills, a golden-spiral card) pop into a loose grid ONE AT A TIME, each arrival a small reveal on the beat, while a lyric line keeps typing below and lyric lines accumulate. The grid is NEVER shown empty first — no skeleton, no placeholders — it is discovered panel by panel. Evidence: the segment runs 0:23.5–0:35.5; at the segment start two panels (waveform + sequencer) are already present; a frame at 0:27 shows 5 panels in a loose 3-over-2 grid on the right of frame, each with a small orange monospace label + check at top; panels hold static once arrived; by 0:31 the grid is denser. This build: 6 code-drawn panels (canvas waveform + sequencer, vector scene/room/planet/spiral); the two segment-start panels are the initial state at recreation t=0; animated arrivals at 1200/2300/3400/5600 ms over a 12000 ms loop; each arrival is a scale (configured start value → 1) + opacity reveal whose durations and easings are configuration values; the final 300 ms of the loop fades the arrived panels and the cycle returns to the initial two-panel state; 4 lyric lines type at 42 ms/char from 0/2300/4600/6900 ms and accumulate; panel display labels are short with the identifying word first, on a dark strip over the artwork.
+
+===== BUILD RECORD =====
+
+# T05 — Pop-in Collage Grid · BUILD RECORD (filing of 2026-11-14)
+
+Technique: T05 (packet P1, "Look What I Can Do") · Artifact dir: `hidden_files/study/recreations/T05-pop-in-collage-grid/`
+Consumer: transitions · diagram containers — a loose collage grid that assembles panel-by-panel can open a diagram container or bridge two containers by accumulating evidence panels instead of cutting to a finished layout.
+Final source: `recreation.html` · sha256 `7a4b25f1a6f0705931b0cebe87f3c690f5e2a1b8025e3491a51bb3e9b6ac182f`
+
+## Construction form
+
+Targeted rework of the retained construction: DOM loose grid, code-drawn panel contents (canvas + inline vector shapes), one elapsed-time clock with seek, and a declarative configuration object read by all logic. No from-scratch rebuild; the grid, clock, and rendering architecture are unchanged in kind.
+
+## Schedule — source time → recreation time
+
+The evidence segment runs 0:23.5–0:35.5 (12 s); recreation time 0 = source 0:23.5.
+
+| Panel | Source state | Recreation time | State kind |
+|---|---|---|---|
+| waveform | visible at segment start (frame at 0:23 shows it present) | 0 ms | initial state — rendered arrived at load, not an animated arrival |
+| sequencer | visible at segment start (frame at 0:23 shows it present) | 0 ms | initial state — rendered arrived at load, not an animated arrival |
+| scene | present by source 0:27 (frame shows 5 panels) | 1200 ms | animated arrival |
+| room | present by source 0:27 | 2300 ms | animated arrival |
+| planet | present by source 0:27 | 3400 ms | animated arrival |
+| spiral | grid denser by source 0:31 | 5600 ms | animated arrival |
+
+Arrival spacing after t=0 is 1100 ms between the three arrivals that complete the five-panel state at recreation 3500 ms (= source 0:27), matching the evidenced count at that moment. No arrivals were invented for the remaining window: after 5600 ms the completed grid holds while the typed lines finish (last line completes ≈8160 ms), and the loop boundary (below) closes the cycle.
+
+Loop boundary: the final 300 ms of each 12000 ms cycle fades all arrived panels together (a per-panel opacity variable driven from the configuration value `resetFadeMs`); at wrap the state returns to the two initial panels — the field is never empty at any point of the cycle.
+
+## Configuration surface — exact scope
+
+The configuration object declares: loop length and reset fade; the full drawing palette (field, panel chrome, accents, label strip, and every per-type drawing color); brand line text, position, size and minimum; pop start scale, transform duration, opacity duration, and both easing curves; grid position, size, columns, rows, gap, border width and radius; panel list (display label, type, arrival time, initial flag); label typography (reference size, minimum, padding, line height); check-mark text, typography, and position; canvas design space (320×180) and vector design space (160×96); lyric lines, per-line start times, character interval, layout (left, bottom, width, line height), typography (reference size, minimum), prompt text and color, cursor dimensions; and the deterministic seed. The secondary color (`mutedColor`) is consumed by two rendered elements: the brand line and each panel's check mark. Runtime canvas element references live in a separate array outside the panel objects. Per-type vector shape coordinates inside the drawing routines are authored code; every color those routines use is read from the configuration surface. URL overrides cover labels, lyric text, per-panel arrival times and types, three palette entries, loop length, and seed — each validated (see Check V1).
+
+## Named floors, margins, and tolerances (fixed before scoring)
+
+- Panel label size at a 360 px stage: ≥ 8 px (modelled 8.25 px).
+- Lyric size at a 360 px stage: ≥ 9 px (modelled 9.35 px).
+- Grid-to-lyric clearance at a 360 px stage: ≥ 10 px (modelled 11.2 px).
+- Label strip occupancy: ≤ 40% of panel height (modelled 33.8%).
+- Longest supported display label must fit the label strip width under the modelled monospace advance of 0.6 em (longest label 10 characters → 49.5 px modelled vs 49.6 px available).
+- Arrival completion: transform duration 180 ms and opacity duration 120 ms, both shorter than the minimum arrival interval of 1100 ms; completion is asserted at every arrival and at the loop boundary.
+- Containment: every panel rectangle inside the stage at 360×202.5 (rightmost edge modelled 352.8 px).
+
+## Diagnostic ledger (per check: variables changed · controls held · expected effect · measured result)
+
+Checks ran first in isolation against the construction, then again as one integrated regression on the final frozen source (identical result: 38 of 38 assertions passed, DOM-stub harness executing the real script).
+
+| Check | Changed variables | Controls held | Expected effect | Measured result |
+|---|---|---|---|---|
+| P1 arrival scale/opacity mapping | start-scale delivery (custom property from configuration; class rule consumes it), both transition tracks and easings declared in configuration | schedule, geometry, labels | off-state scale = configured start value; on-state scale = 1; opacity 0 → 1; transition string carries both configured tracks | PASS — property value 0.82 on the stage; class rules resolve off = var, on = 1; no inline transform assignment exists in the source; transition reads "transform 180 ms cubic-bezier(.2,1.6,.4,1), opacity 120 ms ease-out" |
+| C1 declarative coverage | transition tracks, easings, lyric layout, typography, cursor, check styling, brand styling, design spaces, drawing colors moved into the configuration object | behavior timings and geometry values | all named presentation values read from the configuration object | PASS — source inspection: the values named in the scope statement appear only in the configuration object; drawing routines read palette keys |
+| C2 secondary color wiring | brand line color and check-mark color read the secondary color key | all other colors | both rendered elements carry the configured secondary color | PASS — brand element color and check element color both equal the configured value in the stub render |
+| T1 arrival schedule states | initial state (two panels at t=0), arrival times 1200/2300/3400/5600 | pop durations, geometry | state counts: t=0 → 2; t=3500 → 5; t=5600 → 6; no arrival before its time | PASS — sampled states match at 0 / 1199 / 1200 / 3500 / 5600 ms |
+| T2 loop boundary states | reset fade window 300 ms in configuration | schedule | fade variable 0.5 at 11850 ms, ≈0 at 11999 ms; at wrap exactly the two initial panels are on with fade 1 | PASS — all three boundary samples match |
+| R1 phone geometry | grid position/size (left 38%, top 20%, width 60%, height 38%, gap 4), short display labels (identifying word first), dark label strip | panel count, schedule | containment, label fit, strip occupancy, clearance, and both type floors hold at 360×202.5 under the longest supported labels | PASS — right edge 352.8 px; label 8.25 px; longest label 49.5 ≤ 49.6 px; strip 33.8%; clearance 11.2 px; lyric 9.35 px |
+| V1 input validation | validation rules with named warnings: panel capacity, unknown type (configuration and URL), malformed color (configuration and URL), malformed arrival value, short duration, stranded content, label width, lyric width, geometry sanity | default configuration | each invalid case produces its named warning and a safe fallback; the default configuration produces no warnings | PASS — 9 cases: BAD_POP_URL, UNKNOWN_PANEL_TYPE_URL, BAD_COLOR_URL, BAD_DURATION + DURATION_STRANDS_CONTENT, LABEL_TOO_WIDE, LYRIC_TOO_WIDE, PANEL_OVERFLOW with the rendered set capped at capacity, UNKNOWN_PANEL_TYPE with fallback rendering; default case warning list empty |
+| V2 renderer registry | panel types resolve through a registry object; unknown types fall back to a registered pattern renderer | panel list | an unknown type renders visible content, never a blank panel | PASS — fallback vector content present in the panel for the unknown-type case |
+| V3 alternate compositions | swap case (labels, lyric text, one arrival time, one palette entry, one panel type via URL) and a 2-column × 3-row configuration | technique mechanics | swapped values change behavior measurably; the alternate composition stays contained and completes its schedule | PASS — arrival at the swapped time observed at t=1000; swapped label/palette/lyric present; 2×3 composition: 6 panels, all rectangles inside the stage, all arrived by 5600 ms, no warnings |
+
+## Own-check summary
+
+- Effect mappings (Check P1, T1, T2): asserted as state mappings, not counts alone — PASS.
+- Containment and legibility (Check R1): source-bound geometry model at 360×202.5 — PASS on all named floors.
+- Swap tests (Check V3): logic level, node DOM-stub harness running the real script — PASS.
+- Purity grep: patterns for specimen file names, media elements, and external URLs — 0 hits.
+- Syntax: the inline script parses cleanly under node's parser.
+- PIXEL-UNVERIFIED: no browser binary exists in this session (checked: no chromium/chrome/headless shell on PATH, no browser cache) — rendered-pixel claims (actual font metrics, rendered contrast, visible pop) are NOT verified by the modelled checks above and are carried as unverified.
+
+
+===== RECREATION SOURCE =====
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T05 — Pop-in Collage Grid · recreation</title>
+<style>
+  html,body{margin:0;padding:0;height:100%}
+  #stage{position:relative;width:100%;height:100%;min-height:180px;overflow:hidden}
+  .panel{position:absolute;box-sizing:border-box;overflow:hidden;opacity:0;visibility:hidden;
+         transform:scale(var(--popFrom,.82))}
+  .panel.on{visibility:visible;opacity:var(--fade,1);transform:scale(1)}
+  .plabel{position:absolute;top:0;left:0;right:0;font-family:"Courier New",monospace;
+          white-space:nowrap;overflow:hidden;z-index:3}
+  .pcheck{position:absolute;top:0;font-family:monospace;z-index:4}
+  .panel canvas,.panel svg{position:absolute;inset:0;width:100%;height:100%}
+  #lyrics{position:absolute;z-index:5;font-family:"Courier New",monospace;font-weight:700}
+  .lrow{white-space:nowrap}
+  .cursor{display:inline-block;vertical-align:-.12em;margin-left:2px}
+  #brand{position:absolute;display:flex;justify-content:space-between;
+         font-family:"Courier New",monospace;z-index:5;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="brand"><span id="brandL"></span><span id="brandR"></span></div>
+  <div id="grid"></div>
+  <div id="lyrics"></div>
+</div>
+<script>
+"use strict";
+/* ===== CONFIG — the declarative surface of the technique =====
+   Scope of this surface: schedule (panel arrival times, line start times, loop
+   length, reset fade), pop motion (start scale, transform duration, opacity
+   duration, both easing curves), grid geometry, lyric layout, typography
+   (sizes at the 960px reference width plus per-role minimum sizes), label
+   strip, cursor, check mark, brand line, canvas and vector design spaces,
+   the full drawing palette, and the deterministic seed.
+   Per-type vector shape coordinates inside the drawing routines are authored
+   code; every color those routines use is read from this surface. */
+const CONFIG = {
+  durationMs: 12000,
+  resetFadeMs: 300,
+  bg: "#050607",
+  panelBg: "#101216",
+  panelBorder: "#232a26",
+  textColor: "#e8e6df",
+  mutedColor: "#8b928c",
+  accentOrange: "#e8a04c",
+  accentGreen: "#79c96f",
+  spiralColor: "#d9b45c",
+  labelStripBg: "rgba(5,6,7,0.85)",
+  waveUnplayed: "#9a9a94",
+  seqGridColor: "#2a2f2c",
+  sceneBg: "#1b1512",
+  shapeDoor: "#7a2d20",
+  shapeFigure: "#e07b39",
+  shapePaper: "#f4f1e6",
+  shapeStone: "#cfc9bb",
+  shapeStoneLight: "#ded8ca",
+  roomBg: "#24302c",
+  roomPanel: "#31423c",
+  roomScreen: "#0c0f0e",
+  roomLine1: "#7f9a8d",
+  roomLine2: "#5f7a6e",
+  planetBg: "#191919",
+  planetBody: "#b9b4a8",
+  planetShade: "#8f8a7f",
+  peakColor: "#060606",
+  starColor: "#e8e6df",
+  spiralBg: "#14120c",
+  brandLeft: "maker@studio  ~/look-what-i-can-do",
+  brandRight: "verse 1",
+  brandFontPxAt960: 10,
+  brandMinPx: 7,
+  brandLeftPct: 3.5,
+  brandTopPct: 2.5,
+  popScaleFrom: 0.82,
+  popMs: 180,
+  fadeMs: 120,
+  popEasing: "cubic-bezier(.2,1.6,.4,1)",
+  fadeEasing: "ease-out",
+  gridLeftPct: 38, gridTopPct: 20, gridWidthPct: 60, gridHeightPct: 38,
+  gridCols: 3, gridRows: 2, gridGapPx: 4,
+  panelBorderWidthPx: 1,
+  panelRadiusPx: 3,
+  labelFontPxAt960: 15,
+  labelMinPx: 8,
+  labelPadLeftPx: 4,
+  labelPadYPx: 1,
+  labelLineHeight: 1.25,
+  checkFontPxAt960: 14,
+  checkMinPx: 7,
+  checkRightPx: 4,
+  checkText: "✓",
+  canvasWidth: 320,
+  canvasHeight: 180,
+  svgWidth: 160,
+  svgHeight: 96,
+  panels: [
+    {label:"waveform",   type:"waveform",  popAtMs:0,    initial:true},
+    {label:"sequencer",  type:"sequencer", popAtMs:0,    initial:true},
+    {label:"scene ask",  type:"scene",     popAtMs:1200},
+    {label:"room walls", type:"room",      popAtMs:2300},
+    {label:"planet pro", type:"planet",    popAtMs:3400},
+    {label:"spiral",     type:"spiral",    popAtMs:5600}
+  ],
+  lyricLines: [
+    {text:"I made a song, I made a beat",   startMs:0},
+    {text:"I made a movie in my seat",      startMs:2300},
+    {text:"I made a ghost, I made a witch", startMs:4600},
+    {text:"A Viking shooting Mars a pitch", startMs:6900}
+  ],
+  lyricCharMs: 42,
+  lyricFontPxAt960: 17,
+  lyricMinPx: 9,
+  lyricLeftPct: 3.5,
+  lyricBottomPct: 6,
+  lyricWidthPct: 52,
+  lyricLineHeight: 1.65,
+  promptText: "›",
+  promptColor: "#69b96f",
+  cursorWidthEm: 0.55,
+  cursorHeightEm: 1.0,
+  seed: 7
+};
+const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+/* ---- drawing routines (colors read from CONFIG; coordinates authored) ---- */
+function rng(seed){ let s=seed>>>0; return function(){ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
+function drawWave(cv){
+  const c=cv.getContext("2d"), W=cv.width,H=cv.height, r=rng(CONFIG.seed*10+1);
+  c.fillStyle=CONFIG.panelBg; c.fillRect(0,0,W,H);
+  const n=44, bw=W/n, mid=H*0.58;
+  for(let i=0;i<n;i++){ const h=(0.25+0.75*Math.abs(Math.sin(i*0.55)*0.6+r()*0.55))*(H*0.36);
+    c.fillStyle= i<n*0.52 ? CONFIG.accentOrange : CONFIG.waveUnplayed; c.fillRect(i*bw+1,mid-h,bw-2,h*(i%2?1:0.82)); }
+  c.fillStyle=CONFIG.accentGreen; c.fillRect(W*0.52,8,2,H-14);
+}
+function drawSeq(cv){
+  const c=cv.getContext("2d"), W=cv.width,H=cv.height, r=rng(CONFIG.seed*10+2);
+  c.fillStyle=CONFIG.panelBg; c.fillRect(0,0,W,H);
+  c.strokeStyle=CONFIG.seqGridColor; for(let y=0;y<6;y++){ c.beginPath(); c.moveTo(6,16+y*(H-22)/5); c.lineTo(W-6,16+y*(H-22)/5); c.stroke(); }
+  for(let i=0;i<14;i++){ if(r()>0.45){ const x=8+r()*(W-22), y=18+Math.floor(r()*5)*(H-22)/5;
+    c.fillStyle=CONFIG.accentGreen; c.globalAlpha=0.55+r()*0.45; c.fillRect(x,y-4,9,8);} }
+  c.globalAlpha=1; c.fillStyle=CONFIG.accentOrange; c.fillRect(14,10,2,H-16);
+}
+function svgWrap(inner,bg){ return '<svg viewBox="0 0 '+CONFIG.svgWidth+' '+CONFIG.svgHeight+'" preserveAspectRatio="none" aria-hidden="true"><rect width="'+CONFIG.svgWidth+'" height="'+CONFIG.svgHeight+'" fill="'+bg+'"/>'+inner+'</svg>'; }
+function sceneSVG(){ return svgWrap('<rect x="58" y="8" width="44" height="88" fill="'+CONFIG.shapeDoor+'"/><circle cx="42" cy="46" r="17" fill="'+CONFIG.shapeFigure+'"/><path d="M28 34 L52 30 L46 46 L30 48 Z" fill="'+CONFIG.shapePaper+'"/><ellipse cx="118" cy="62" rx="22" ry="26" fill="'+CONFIG.shapeStone+'"/><circle cx="118" cy="28" r="11" fill="'+CONFIG.shapeStoneLight+'"/>',CONFIG.sceneBg); }
+function roomSVG(){ return svgWrap('<rect x="18" y="18" width="62" height="42" fill="'+CONFIG.roomPanel+'"/><rect x="96" y="34" width="30" height="24" fill="'+CONFIG.roomScreen+'"/><rect x="24" y="24" width="50" height="3" fill="'+CONFIG.roomLine1+'"/><rect x="24" y="32" width="42" height="3" fill="'+CONFIG.roomLine2+'"/>',CONFIG.roomBg); }
+function planetSVG(){ return svgWrap('<ellipse cx="86" cy="50" rx="34" ry="24" fill="'+CONFIG.planetBody+'"/><ellipse cx="70" cy="42" rx="12" ry="8" fill="'+CONFIG.planetShade+'"/><path d="M20 84 L34 58 L40 84 Z" fill="'+CONFIG.peakColor+'"/><circle cx="132" cy="20" r="3" fill="'+CONFIG.starColor+'"/>',CONFIG.planetBg); }
+function spiralSVG(){ let rects="",x=8,y=14,s=68; const seq=[[1,0],[0,1],[-1,0],[0,-1]];
+  for(let i=0;i<7;i++){ rects+='<rect x="'+x+'" y="'+y+'" width="'+s+'" height="'+s+'" fill="none" stroke="'+CONFIG.spiralColor+'" stroke-width="1.4"/>'; const ns=s*0.618; if(seq[i%4][0]===1)x+=s-ns; if(seq[i%4][1]===1)y+=s-ns; s=ns; }
+  return svgWrap(rects+'<path d="M8 82 A68 68 0 0 1 76 14" fill="none" stroke="'+CONFIG.accentOrange+'" stroke-width="2"/>',CONFIG.spiralBg); }
+function patternSVG(){ let lines=""; for(let i=0;i<8;i++){ lines+='<line x1="'+(i*24-40)+'" y1="96" x2="'+(i*24+40)+'" y2="0" stroke="'+CONFIG.mutedColor+'" stroke-width="3"/>'; } return svgWrap(lines,CONFIG.panelBg); }
+/* ---- renderer registry: panel types resolve here; new types register here ---- */
+const RENDERERS = {
+  waveform:  {kind:"canvas", draw:drawWave},
+  sequencer: {kind:"canvas", draw:drawSeq},
+  scene:     {kind:"svg", svg:sceneSVG},
+  room:      {kind:"svg", svg:roomSVG},
+  planet:    {kind:"svg", svg:planetSVG},
+  spiral:    {kind:"svg", svg:spiralSVG},
+  pattern:   {kind:"svg", svg:patternSVG}
+};
+/* ---- validation: every rule names its warning; invalid input never passes silently ---- */
+const COLOR_KEYS = ["bg","panelBg","panelBorder","textColor","mutedColor","accentOrange","accentGreen","spiralColor","waveUnplayed","seqGridColor","sceneBg","shapeDoor","shapeFigure","shapePaper","shapeStone","shapeStoneLight","roomBg","roomPanel","roomScreen","roomLine1","roomLine2","planetBg","planetBody","planetShade","peakColor","starColor","spiralBg","promptColor"];
+function isColor(v){ return typeof v==="string" && (/^#[0-9a-fA-F]{6}$/.test(v) || /^rgba\(\d{1,3},\d{1,3},\d{1,3},(0|1|0?\.\d+)\)$/.test(v)); }
+function validateConfig(){
+  const w=[];
+  COLOR_KEYS.forEach(function(k){ if(!isColor(CONFIG[k])){ w.push("BAD_COLOR:"+k); CONFIG[k]=DEFAULTS[k]; } });
+  if(!isColor(CONFIG.labelStripBg)){ w.push("BAD_COLOR:labelStripBg"); CONFIG.labelStripBg=DEFAULTS.labelStripBg; }
+  if(!(CONFIG.gridCols>=1) || !(CONFIG.gridRows>=1) || !(CONFIG.gridGapPx>=0) || !(CONFIG.gridWidthPct>0) || !(CONFIG.gridHeightPct>0)){
+    w.push("BAD_GEOMETRY"); CONFIG.gridCols=DEFAULTS.gridCols; CONFIG.gridRows=DEFAULTS.gridRows; CONFIG.gridGapPx=DEFAULTS.gridGapPx; CONFIG.gridWidthPct=DEFAULTS.gridWidthPct; CONFIG.gridHeightPct=DEFAULTS.gridHeightPct; }
+  if(CONFIG.durationMs<2000){ w.push("BAD_DURATION"); CONFIG.durationMs=2000; }
+  const cap=CONFIG.gridCols*CONFIG.gridRows;
+  if(CONFIG.panels.length>cap) w.push("PANEL_OVERFLOW:"+CONFIG.panels.length+">"+cap);
+  CONFIG.panels.forEach(function(p,i){
+    if(!RENDERERS[p.type]) w.push("UNKNOWN_PANEL_TYPE:"+i+":"+p.type);
+    if(typeof p.popAtMs!=="number" || !(p.popAtMs>=0)){ w.push("BAD_POP_VALUE:"+i); p.popAtMs=DEFAULTS.panels[i]?DEFAULTS.panels[i].popAtMs:0; }
+    else if(p.popAtMs+CONFIG.popMs>CONFIG.durationMs) w.push("DURATION_STRANDS_CONTENT:"+i);
+  });
+  /* modelled fit at the 360px reference stage (monospace advance = 0.6em) */
+  const sc360=Math.min(1, Math.max(0.55, 360/960));
+  const pw360=(360*CONFIG.gridWidthPct/100-CONFIG.gridGapPx*(CONFIG.gridCols-1))/CONFIG.gridCols;
+  const labelPx=Math.max(CONFIG.labelMinPx, CONFIG.labelFontPxAt960*sc360);
+  const labelAvail=pw360-CONFIG.labelPadLeftPx-CONFIG.checkRightPx-Math.max(CONFIG.checkMinPx, CONFIG.checkFontPxAt960*sc360)-4;
+  CONFIG.panels.forEach(function(p,i){ if(p.label.length*0.6*labelPx>labelAvail) w.push("LABEL_TOO_WIDE:"+i); });
+  const lyricPx=Math.max(CONFIG.lyricMinPx, CONFIG.lyricFontPxAt960*sc360);
+  const lyricAvail=360*CONFIG.lyricWidthPct/100;
+  CONFIG.lyricLines.forEach(function(l,i){ if(l.text.length*0.6*lyricPx>lyricAvail) w.push("LYRIC_TOO_WIDE:"+i); });
+  return w;
+}
+/* URL overrides: ?labels=A|B&lyrics=X|Y&pop2=900&type2=scene&accentOrange=%23ff00aa&bg=%23000000&durationMs=12000&seed=3 */
+const OVERRIDE_WARNINGS=[];
+(function applyOverrides(){
+  const q = new URLSearchParams(window.location.search);
+  if (q.get("labels")) { const v=q.get("labels").split("|"); CONFIG.panels.forEach((p,i)=>{ if(v[i]) p.label=v[i]; }); }
+  if (q.get("lyrics")) { const v=q.get("lyrics").split("|"); CONFIG.lyricLines.forEach((l,i)=>{ if(v[i]!==undefined) l.text=v[i]; }); }
+  ["accentOrange","accentGreen","bg"].forEach(function(k){ const v=q.get(k); if(v!==null){ if(isColor(v)) CONFIG[k]=v; else OVERRIDE_WARNINGS.push("BAD_COLOR_URL:"+k); } });
+  if (q.get("durationMs")) { const v=q.get("durationMs"); if(/^\d+$/.test(v)) CONFIG.durationMs=parseInt(v,10); else OVERRIDE_WARNINGS.push("BAD_DURATION_URL"); }
+  if (q.get("seed")) { const v=q.get("seed"); if(/^\d+$/.test(v)) CONFIG.seed=parseInt(v,10); else OVERRIDE_WARNINGS.push("BAD_SEED_URL"); }
+  for (let i=0;i<CONFIG.panels.length;i++){
+    const v=q.get("pop"+i); if(v!==null){ if(/^\d+$/.test(v)) CONFIG.panels[i].popAtMs=parseInt(v,10); else OVERRIDE_WARNINGS.push("BAD_POP_URL:"+i); }
+    const ty=q.get("type"+i); if(ty!==null){ if(RENDERERS[ty]) CONFIG.panels[i].type=ty; else OVERRIDE_WARNINGS.push("UNKNOWN_PANEL_TYPE_URL:"+i); }
+  }
+})();
+const VALIDATION_WARNINGS = OVERRIDE_WARNINGS.concat(validateConfig());
+window.T05_WARNINGS = VALIDATION_WARNINGS;
+VALIDATION_WARNINGS.forEach(function(x){ console.warn("T05 config: "+x); });
+
+const stage=document.getElementById("stage"), grid=document.getElementById("grid"),
+      lyricsEl=document.getElementById("lyrics"), brandEl=document.getElementById("brand");
+document.getElementById("brandL").textContent=CONFIG.brandLeft;
+document.getElementById("brandR").textContent=CONFIG.brandRight;
+stage.style.background=CONFIG.bg;
+stage.style.setProperty("--popFrom", CONFIG.popScaleFrom);
+brandEl.style.left=CONFIG.brandLeftPct+"%"; brandEl.style.right=CONFIG.brandLeftPct+"%";
+brandEl.style.top=CONFIG.brandTopPct+"%"; brandEl.style.color=CONFIG.mutedColor;
+lyricsEl.style.left=CONFIG.lyricLeftPct+"%"; lyricsEl.style.bottom=CONFIG.lyricBottomPct+"%";
+lyricsEl.style.width=CONFIG.lyricWidthPct+"%"; lyricsEl.style.color=CONFIG.textColor;
+
+/* build panels (rendered set is capped by the grid capacity) */
+const capPanels = CONFIG.gridCols*CONFIG.gridRows;
+const activePanels = CONFIG.panels.slice(0,capPanels);
+const canvasEls = [];
+const panelEls = activePanels.map(function(p,i){
+  const d=document.createElement("div"); d.className="panel"; d.style.background=CONFIG.panelBg;
+  d.style.border=CONFIG.panelBorderWidthPx+"px solid "+CONFIG.panelBorder;
+  d.style.borderRadius=CONFIG.panelRadiusPx+"px";
+  d.style.transition="transform "+CONFIG.popMs+"ms "+CONFIG.popEasing+", opacity "+CONFIG.fadeMs+"ms "+CONFIG.fadeEasing;
+  const lab=document.createElement("div"); lab.className="plabel"; lab.style.color=CONFIG.accentOrange;
+  lab.style.background=CONFIG.labelStripBg; lab.style.paddingLeft=CONFIG.labelPadLeftPx+"px";
+  lab.style.paddingTop=CONFIG.labelPadYPx+"px"; lab.style.paddingBottom=CONFIG.labelPadYPx+"px";
+  lab.style.lineHeight=String(CONFIG.labelLineHeight); lab.textContent=p.label;
+  const chk=document.createElement("div"); chk.className="pcheck"; chk.style.color=CONFIG.mutedColor;
+  chk.style.right=CONFIG.checkRightPx+"px"; chk.style.top=CONFIG.labelPadYPx+"px"; chk.textContent=CONFIG.checkText;
+  d.appendChild(lab); d.appendChild(chk);
+  const renderer = RENDERERS[p.type] || RENDERERS.pattern;
+  if(renderer.kind==="canvas"){ const cv=document.createElement("canvas"); cv.width=CONFIG.canvasWidth; cv.height=CONFIG.canvasHeight; d.appendChild(cv); canvasEls[i]=cv; }
+  else { const holder=document.createElement("div"); holder.innerHTML=renderer.svg(); const sv=holder.firstChild; if(sv){ sv.style.position="absolute"; } d.appendChild(holder); }
+  grid.appendChild(d); return d;
+});
+const lyricRows=CONFIG.lyricLines.map(function(l){
+  const row=document.createElement("div"); row.className="lrow"; row.style.display="none";
+  const pr=document.createElement("span"); pr.className="lprompt"; pr.style.color=CONFIG.promptColor;
+  pr.style.marginRight="0.45em"; pr.textContent=CONFIG.promptText;
+  const tx=document.createElement("span"); tx.className="lt";
+  const cur=document.createElement("span"); cur.className="cursor";
+  cur.style.width=CONFIG.cursorWidthEm+"em"; cur.style.height=CONFIG.cursorHeightEm+"em";
+  row.appendChild(pr); row.appendChild(tx); row.appendChild(cur);
+  lyricsEl.appendChild(row); return row;
+});
+function scaleFor(W){ return Math.min(1, Math.max(0.55, W/960)); }
+function layout(){
+  const W=stage.clientWidth||960, H=stage.clientHeight||540, sc=scaleFor(W);
+  const gx=W*CONFIG.gridLeftPct/100, gy=H*CONFIG.gridTopPct/100,
+        gw=W*CONFIG.gridWidthPct/100, gh=H*CONFIG.gridHeightPct/100, gap=CONFIG.gridGapPx;
+  const pw=(gw-gap*(CONFIG.gridCols-1))/CONFIG.gridCols, ph=(gh-gap*(CONFIG.gridRows-1))/CONFIG.gridRows;
+  panelEls.forEach(function(d,i){ const col=i%CONFIG.gridCols, row=Math.floor(i/CONFIG.gridCols);
+    d.style.left=(gx+col*(pw+gap))+"px"; d.style.top=(gy+row*(ph+gap))+"px";
+    d.style.width=pw+"px"; d.style.height=ph+"px";
+    d.querySelector(".plabel").style.fontSize=Math.max(CONFIG.labelMinPx, CONFIG.labelFontPxAt960*sc)+"px";
+    d.querySelector(".pcheck").style.fontSize=Math.max(CONFIG.checkMinPx, CONFIG.checkFontPxAt960*sc)+"px"; });
+  lyricsEl.style.fontSize=Math.max(CONFIG.lyricMinPx, CONFIG.lyricFontPxAt960*sc)+"px";
+  lyricsEl.style.lineHeight=String(CONFIG.lyricLineHeight);
+  brandEl.style.fontSize=Math.max(CONFIG.brandMinPx, CONFIG.brandFontPxAt960*sc)+"px";
+  panelEls.forEach(function(d,i){ const cv=canvasEls[i]; if(cv){ RENDERERS[activePanels[i].type].draw(cv); } });
+}
+/* clock: elapsed driven, seekable (comparison slaves it to video currentTime) */
+let playing=false, baseElapsed=0, baseStamp=0, raf=null;
+function elapsed(){ return playing ? baseElapsed+(performance.now()-baseStamp) : baseElapsed; }
+function render(){
+  const t=elapsed()%CONFIG.durationMs;
+  const fade = t > CONFIG.durationMs-CONFIG.resetFadeMs ? Math.max(0,(CONFIG.durationMs-t)/CONFIG.resetFadeMs) : 1;
+  activePanels.forEach(function(p,i){
+    panelEls[i].classList.toggle("on", t>=p.popAtMs);
+    panelEls[i].style.setProperty("--fade", String(fade));
+  });
+  let active=-1;
+  CONFIG.lyricLines.forEach(function(l,i){
+    const row=lyricRows[i], txt=row.querySelector(".lt"), cur=row.querySelector(".cursor");
+    if(t<l.startMs){ row.style.display="none"; txt.textContent=""; return; }
+    row.style.display="block";
+    const n=Math.min(l.text.length, Math.floor((t-l.startMs)/CONFIG.lyricCharMs));
+    txt.textContent=l.text.slice(0,n);
+    const isActive=(n<l.text.length);
+    cur.style.background=isActive?CONFIG.accentGreen:"transparent";
+    if(isActive) active=i;
+  });
+  lyricRows.forEach(function(r,i){ r.querySelector(".cursor").style.background=(i===active)?CONFIG.accentGreen:"transparent"; });
+}
+function tick(){ render(); if(playing) raf=requestAnimationFrame(tick); }
+function play(){ if(playing)return; playing=true; baseStamp=performance.now(); tick(); }
+function pause(){ if(!playing)return; baseElapsed=elapsed(); playing=false; if(raf)cancelAnimationFrame(raf); render(); }
+function restart(){ baseElapsed=0; baseStamp=performance.now(); if(!playing){playing=true; tick();} render(); }
+function seek(ms){ baseElapsed=Math.max(0,ms); baseStamp=performance.now(); render(); }
+window.addEventListener("resize",layout);
+window.addEventListener("message",function(e){ if(!e.data||typeof e.data!=="object")return;
+  if(e.data.cmd==="play")play(); if(e.data.cmd==="pause")pause(); if(e.data.cmd==="restart")restart();
+  if(e.data.cmd==="seek"&&typeof e.data.ms==="number")seek(e.data.ms); });
+layout(); restart();
+</script>
+</body>
+</html>
+

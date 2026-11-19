@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T03 — Live-typed lyric text (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;}
+  body{display:flex;align-items:flex-end;box-sizing:border-box;padding:6vh 5vw;}
+  #stage{width:100%;}
+  .line{white-space:pre-wrap;word-break:break-word;line-height:1.5;min-height:1.5em;}
+  .prompt{margin-right:.6ch;}
+  .cursor{display:inline-block;width:.62ch;margin-left:1px;animation:blink 1s steps(1) infinite;}
+  @keyframes blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+</style>
+</head>
+<body>
+<div id="stage" aria-live="off"></div>
+<script>
+"use strict";
+/* T03 — Live-typed lyric text. All content/timing/palette from CONFIG.
+   URL overrides for the swap test: ?line=TEXT ?charMs=N ?accent=HEX */
+const CONFIG = {
+  lines: [
+    "I made a song, I made a beat",
+    "I wrote the words, I feel the heat",
+    "I made a song, I made a beat"
+  ],
+  charMs: 65,
+  linePauseMs: 700,
+  startDelayMs: 400,
+  prompt: ">",
+  bg: "#060807",
+  ink: "#e8ece7",
+  accent: "#7ac74f",
+  cursorColor: "#9aa79b",
+  fontFamily: 'ui-monospace, "SF Mono", Menlo, Consolas, monospace',
+  fontSizePx: 30
+};
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("line")) CONFIG.lines = [q.get("line")].concat(CONFIG.lines.slice(1));
+  if (q.get("charMs")) CONFIG.charMs = Math.max(5, parseInt(q.get("charMs"),10) || CONFIG.charMs);
+  if (q.get("accent")) CONFIG.accent = q.get("accent");
+})();
+
+const stage = document.getElementById("stage");
+document.body.style.background = CONFIG.bg;
+stage.style.color = CONFIG.ink;
+stage.style.fontFamily = CONFIG.fontFamily;
+stage.style.fontSize = Math.min(CONFIG.fontSizePx, Math.max(16, window.innerWidth * 0.055)) + "px";
+
+let timer = null, startedAt = 0, playing = false;
+
+/* Pure sequencing model (also exercised by the logic-level swap test):
+   returns the ordered event list for the whole performance. */
+function buildTimeline(cfg){
+  const events = [];
+  let t = cfg.startDelayMs;
+  cfg.lines.forEach(function(text, li){
+    for (let ci = 0; ci <= text.length; ci++){
+      events.push({ t: t, line: li, shown: text.slice(0, ci), done: false });
+      t += cfg.charMs;
+    }
+    events.push({ t: t, line: li, shown: text, done: true });
+    t += cfg.linePauseMs;
+  });
+  return { events: events, totalMs: t };
+}
+
+function render(cfg, elapsed){
+  const tl = buildTimeline(cfg);
+  stage.innerHTML = "";
+  let current = null;
+  tl.events.forEach(function(ev){
+    if (ev.t > elapsed) return;
+    current = ev;
+  });
+  const upto = current ? current.line : -1;
+  for (let li = 0; li <= Math.max(upto, 0) && li < cfg.lines.length; li++){
+    const div = document.createElement("div");
+    div.className = "line";
+    const p = document.createElement("span");
+    p.className = "prompt"; p.style.color = cfg.accent; p.textContent = cfg.prompt;
+    div.appendChild(p);
+    const txt = document.createElement("span");
+    if (current && li === current.line) txt.textContent = current.shown;
+    else if (current && li < current.line) txt.textContent = cfg.lines[li];
+    else txt.textContent = "";
+    div.appendChild(txt);
+    if (current && li === current.line){
+      const cur = document.createElement("span");
+      cur.className = "cursor"; cur.style.background = cfg.cursorColor; cur.textContent = "\u00A0";
+      div.appendChild(cur);
+    }
+    stage.appendChild(div);
+  }
+  return tl.totalMs;
+}
+
+function tick(){
+  const elapsed = performance.now() - startedAt;
+  const total = render(CONFIG, elapsed);
+  if (elapsed < total){ timer = requestAnimationFrame(tick); }
+  else { playing = false; }
+}
+function play(){
+  if (playing) return;
+  playing = true; startedAt = performance.now();
+  timer = requestAnimationFrame(tick);
+}
+function pause(){
+  playing = false;
+  if (timer) cancelAnimationFrame(timer);
+  render(CONFIG, 0);
+}
+function restart(){ pause(); play(); }
+
+window.addEventListener("message", function(e){
+  if (e.data === "play") play();
+  if (e.data === "pause") pause();
+  if (e.data === "restart") restart();
+});
+render(CONFIG, 0);
+play();
+</script>
+</body>
+</html>

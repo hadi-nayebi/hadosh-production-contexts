@@ -1,0 +1,976 @@
+STANDING HEADER — Codex review run, practice job re-score wave.
+(1) CONSUMER + DECISION: consumer is practice INSTRUCTION §5 (the re-score wave for technique T03, attempt 3); this run prices the TIMING lens only — its score feeds the attempt-3 tier decision. The bar for the attempt is: average ≥85 AND no lens <70, across five lenses. Scores are integers from 0 to 100.
+(2) WORKING RECORD: this run builds from and writes to the artifact directory hidden_files/study/recreations/T03-live-typed-lyric-text/ — its codex/attempt-3/ folder (returns) and scores.md. Your full return is filed verbatim at codex/attempt-3/lens-timing.md.
+(3) BODY-WRITE REQUIREMENT: your return MUST end with a line "BODY-WRITE: <what this return writes into the body — the codex/attempt-3/lens-timing.md filing and the scores.md attempt-3 timing entry>" and, on the line before it, "SCORE: <integer 0-100>". A return without those two lines is incomplete.
+
+TECHNIQUE T03 — Live-typed lyric text. Catalogue mechanics: "sung text types in time with the vocal as depicted content (the song being written), never a caption plate." Specimen window P1 @ 0:21-0:35 (14 s). The typing cadence must feel synced to a sung vocal: steady per-unit interval, a hold when a line completes, then the next line; final line holds to the window's end. The build record carries a source checkpoint table for the window: it states what the record supports (window bounds, line order, one early frame) and what it cannot support (no timed transcript or vocal anchors exist), and derives a per-line schedule by proportional allocation over grapheme counts, with a separate fallback allocation for swapped text.
+
+YOUR LENS — TIMING/TEMPO MATCH ONLY: judge the temporal design against the specimen window: per-unit cadence plausibility vs sung delivery, line-pause proportion, start delay, total performance duration vs the 14 s window (does it finish early and idle, overrun, or fit?), cursor blink tempo during holds, and the honesty/fit of the schedule derivation given the stated evidence limits. Do NOT score motion form, purity, parameterization, or legibility — other lenses own those.
+
+Below is the recreation's full source (recreation.html), followed by its build record (build-record-attempt3.md) with the checkpoint table and diagnostic results, and its own-check packet. Return: priced findings for the timing lens, then SCORE and BODY-WRITE lines as specified. Score timing only, 0-100.
+
+==== recreation.html ====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T03 — Live-typed lyric text (parameterized recreation)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;}
+  body{display:flex;align-items:flex-end;box-sizing:border-box;}
+  #stage{width:100%;position:relative;}
+  .line{white-space:pre-wrap;word-break:break-word;box-sizing:border-box;position:relative;}
+  .cursor{position:absolute;}
+  @keyframes blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+</style>
+</head>
+<body>
+<div id="stage" aria-live="off"></div>
+<script>
+"use strict";
+/* T03 — Live-typed lyric text. All content/timing/palette from CONFIG.
+   Timing has two layers:
+   (a) SPECIMEN schedule — per-line start offsets/durations derived from the
+       source checkpoint table recorded with this recreation; used only when
+       CONFIG.lines exactly match the specimen lines.
+   (b) FALLBACK policy — for any swapped text, per-line durations are derived
+       from line count, grapheme counts, and CONFIG.windowMs. The fallback is
+       an allocation policy, never specimen evidence.
+   Typing reveals complete grapheme clusters: the full text of every line
+   is laid out once as one span per cluster, and revealing toggles span
+   visibility only, so word wrap is computed on the complete text and a
+   partially revealed word can never change rows. One persistent cursor
+   element is created once; it sits outside the text flow and is
+   positioned at the revealed grapheme boundary of the active line.
+   URL overrides: ?lines=A|B ?line=TEXT ?charMs=N ?accent=HEX
+   ?maxVisibleLines=N. The charMs override sets the per-cluster typing
+   interval directly: derived schedules (specimen and fallback) rescale
+   around it, preserving the start delay and the inter-line pauses; if
+   the rescaled performance runs past the window, the schedule records
+   the overrun instead of clamping it. An authored schedule
+   (CONFIG.lineSchedule) is used exactly as given and is never rescaled. */
+const SPECIMEN_LINES = [
+  "I made a song, I made a beat",
+  "I wrote the words, I feel the heat",
+  "I made a song, I made a beat"
+];
+const CONFIG = {
+  lines: SPECIMEN_LINES.slice(),
+  windowMs: 14000,
+  startDelayMs: 300,
+  linePauseMs: 900,
+  finalHoldMs: 470,
+  specimenSchedule: [
+    { startMs: 300,  durationMs: 3556 },
+    { startMs: 4756, durationMs: 4318 },
+    { startMs: 9974, durationMs: 3556 }
+  ],
+  maxVisibleLines: 3,
+  charMs: null,
+  lineSchedule: null,
+  prompt: ">",
+  bg: "#060807",
+  ink: "#e8ece7",
+  accent: "#7ac74f",
+  cursorColor: "#9aa79b",
+  fontFamily: 'ui-monospace, "SF Mono", Menlo, Consolas, monospace',
+  fontSizePx: 30,
+  fontMinPx: 16,
+  fontVwFactor: 0.055,
+  lineHeight: 1.5,
+  promptGapCh: 0.6,
+  cursorWidthCh: 0.62,
+  cursorBlinkMs: 1000,
+  stagePadding: "6vh 5vw"
+};
+(function applyOverrides(){
+  const q = new URLSearchParams(location.search);
+  if (q.get("lines")) CONFIG.lines = q.get("lines").split("|");
+  else if (q.get("line")) CONFIG.lines = [q.get("line")].concat(CONFIG.lines.slice(1));
+  if (q.get("accent")) CONFIG.accent = q.get("accent");
+  if (q.get("charMs")){
+    const cm = parseFloat(q.get("charMs"));
+    if (isFinite(cm) && cm > 0) CONFIG.charMs = Math.min(1000, Math.max(10, cm));
+  }
+  if (q.get("maxVisibleLines")){
+    const mv = parseInt(q.get("maxVisibleLines"), 10);
+    if (isFinite(mv)) CONFIG.maxVisibleLines = Math.max(1, mv);
+  }
+})();
+
+/* --- Grapheme segmentation: complete clusters only --- */
+function segmentGraphemes(text){
+  if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function"){
+    const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    return Array.from(seg.segment(text), function(s){ return s.segment; });
+  }
+  /* Documented fallback (no Intl.Segmenter): code points merged with
+     combining marks, variation selectors, skin-tone modifiers, ZWJ
+     sequences, and regional-indicator pairs. Approximation: it does not
+     implement every UAX #29 rule (e.g. some Indic conjuncts). */
+  const cps = Array.from(text);
+  const out = [];
+  let joinNext = false;
+  for (let i = 0; i < cps.length; i++){
+    const cp = cps[i];
+    const code = cp.codePointAt(0);
+    const isExtender = /[\p{M}\uFE00-\uFE0F]/u.test(cp) ||
+      (code >= 0x1F3FB && code <= 0x1F3FF) || code === 0x20E3;
+    const isZWJ = code === 0x200D;
+    const isRI = code >= 0x1F1E6 && code <= 0x1F1FF;
+    if (out.length && (isExtender || isZWJ || joinNext ||
+        (isRI && Array.from(out[out.length-1]).length % 2 === 1 &&
+         (()=>{ const p=Array.from(out[out.length-1]); const c=p[p.length-1].codePointAt(0); return c>=0x1F1E6&&c<=0x1F1FF; })()))){
+      out[out.length-1] += cp;
+    } else {
+      out.push(cp);
+    }
+    joinNext = isZWJ;
+  }
+  return out;
+}
+
+/* --- Schedule derivation ---
+   One validation order governs every mode: configuration values are
+   validated/defaulted first, then exactly one mode is selected
+   (authored schedule, then specimen match, then the fallback
+   allocation), then the base schedule for that mode is built and
+   checked for containment inside the window, then an explicit
+   per-cluster interval override may rescale a derived schedule, and
+   any overrun past the window is recorded rather than clamped. A
+   derived schedule's base always ends inside the window: when the
+   inter-line pauses alone would exhaust the typing span, the
+   effective pause is compressed so pauses take at most a quarter of
+   the span and a positive typing budget remains. Authored timings are
+   used exactly as given; the interval override never rescales them. */
+function isSpecimen(lines){
+  return lines.length === SPECIMEN_LINES.length &&
+    lines.every(function(l, i){ return l === SPECIMEN_LINES[i]; });
+}
+function deriveSchedule(cfg){
+  const diagnostics = [];
+  const clusters = cfg.lines.map(segmentGraphemes);
+  const n = cfg.lines.length;
+  /* (1) value validation / defaulting */
+  let windowMs = cfg.windowMs;
+  if (typeof windowMs !== "number" || !isFinite(windowMs) || windowMs <= 0){
+    windowMs = 14000; diagnostics.push("windowMsDefaulted");
+  }
+  let startDelayMs = cfg.startDelayMs;
+  if (typeof startDelayMs !== "number" || !isFinite(startDelayMs)){
+    startDelayMs = 300; diagnostics.push("startDelayMsDefaulted");
+  }
+  if (startDelayMs < 0) startDelayMs = 0;
+  let linePauseMs = cfg.linePauseMs;
+  if (typeof linePauseMs !== "number" || isNaN(linePauseMs)){
+    linePauseMs = 900; diagnostics.push("linePauseMsDefaulted");
+  }
+  if (linePauseMs < 0) linePauseMs = 0;
+  let finalHoldMs = cfg.finalHoldMs;
+  if (typeof finalHoldMs !== "number" || !isFinite(finalHoldMs)){
+    finalHoldMs = 470; diagnostics.push("finalHoldMsDefaulted");
+  }
+  if (finalHoldMs < 0) finalHoldMs = 0;
+  const base = { clusters: clusters, totalMs: windowMs, overflow: false,
+    overrun: false, degenerate: false, charMsIgnoredAuthored: false,
+    diagnostics: diagnostics,
+    effectivePauseMs: (n > 1 && isFinite(linePauseMs)) ? linePauseMs : 0,
+    effectiveStartMs: startDelayMs };
+  if (n === 0){
+    return Object.assign(base, { mode: "fallback", lines: [] });
+  }
+  /* Per-cluster interval override: valid only as a finite number > 0,
+     clamped to [10, 1000]; anything else is ignored and the schedule
+     is identical to the no-override schedule. */
+  const charMsPresent = cfg.charMs !== null && cfg.charMs !== undefined;
+  const charMsValid = typeof cfg.charMs === "number" && isFinite(cfg.charMs) && cfg.charMs > 0;
+  const charMs = charMsValid ? Math.min(1000, Math.max(10, cfg.charMs)) : null;
+  /* Authored schedule: a content-independent per-line schedule, used
+     exactly as given when it is valid for the current line count
+     (finite, monotonic starts, every end inside the window). An
+     invalid one falls back with a diagnostic. */
+  if (cfg.lineSchedule){
+    let authoredOk = Array.isArray(cfg.lineSchedule) &&
+      cfg.lineSchedule.length === n &&
+      cfg.lineSchedule.every(function(s, i){
+        if (!s || !isFinite(s.startMs) || !isFinite(s.durationMs) || s.durationMs < 0) return false;
+        if (s.startMs + s.durationMs > windowMs) return false;
+        if (i > 0 && s.startMs < cfg.lineSchedule[i - 1].startMs) return false;
+        return true;
+      });
+    if (authoredOk){
+      base.charMsIgnoredAuthored = charMsPresent;
+      return Object.assign(base, { mode: "authored",
+        lines: cfg.lineSchedule.map(function(s){
+          return { startMs: s.startMs, durationMs: s.durationMs }; }) });
+    }
+    diagnostics.push("lineScheduleInvalidFallback");
+  }
+  /* Rescaling step for derived schedules: durations rescale around the
+     override interval, starts recompute sequentially preserving the
+     first start and the base inter-line pauses. */
+  function finish(result){
+    if (result.degenerate || !charMsValid) return result;
+    const totalClusters = clusters.reduce(function(a, c){ return a + c.length; }, 0);
+    if (totalClusters === 0 || result.lines.length === 0) return result;
+    const gaps = [];
+    for (let i = 1; i < result.lines.length; i++){
+      gaps.push(result.lines[i].startMs -
+        (result.lines[i - 1].startMs + result.lines[i - 1].durationMs));
+    }
+    let newLines;
+    if (result.mode === "fallback"){
+      newLines = result.lines.map(function(l, i){
+        return { startMs: 0, durationMs: Math.round(clusters[i].length * charMs) };
+      });
+    } else {
+      const baseDur = result.lines.reduce(function(a, l){ return a + l.durationMs; }, 0);
+      const scale = charMs / (baseDur / totalClusters);
+      newLines = result.lines.map(function(l){
+        return { startMs: 0, durationMs: Math.round(l.durationMs * scale) };
+      });
+    }
+    let t = result.lines[0].startMs;
+    newLines.forEach(function(l, i){
+      l.startMs = t;
+      t += l.durationMs + (i < gaps.length ? gaps[i] : 0);
+    });
+    result.lines = newLines;
+    const lastL = newLines[newLines.length - 1];
+    const end = lastL.startMs + lastL.durationMs;
+    if (end > windowMs){
+      result.overrun = true;
+      result.totalMs = end + finalHoldMs;
+    }
+    return result;
+  }
+  /* (2)+(3)+(4) specimen base schedule: validated for finiteness,
+     monotonic non-overlap and containment; an invalid table falls back
+     to the allocation with a diagnostic, never to a silent bad schedule. */
+  let specimenOk = false;
+  if (isSpecimen(cfg.lines) && cfg.specimenSchedule &&
+      cfg.specimenSchedule.length === n){
+    specimenOk = cfg.specimenSchedule.every(function(s, i){
+      if (!isFinite(s.startMs) || !isFinite(s.durationMs) || s.durationMs < 0) return false;
+      if (s.startMs + s.durationMs > windowMs) return false;
+      if (i > 0){
+        const p = cfg.specimenSchedule[i - 1];
+        if (s.startMs < p.startMs || s.startMs < p.startMs + p.durationMs) return false;
+      }
+      return true;
+    });
+  }
+  if (specimenOk){
+    return finish(Object.assign(base, { mode: "specimen",
+      lines: cfg.specimenSchedule.map(function(s){
+        return { startMs: s.startMs, durationMs: s.durationMs }; }) }));
+  }
+  if (isSpecimen(cfg.lines) && cfg.specimenSchedule){
+    diagnostics.push("specimenScheduleInvalidFallback");
+  }
+  /* Fallback allocation: typing budget = window minus start delay,
+     inter-line pauses, and the final-hold reserve; allocated per line
+     in proportion to grapheme-cluster count, with the rounding residual
+     on the last line that carries clusters, so the final line ends at
+     windowMs - finalHoldMs exactly. An empty-text line takes a zero
+     duration at its sequential start and keeps its pause slot. */
+  const span = windowMs - startDelayMs - finalHoldMs;
+  const effectiveStartMs = Math.min(startDelayMs, Math.max(0, windowMs - finalHoldMs));
+  base.effectiveStartMs = effectiveStartMs;
+  if (span <= 0){
+    /* Degenerate window: no typing span remains. Every line takes a
+       zero duration at the effective start, the schedule is flagged,
+       and the state model reveals nothing for it. */
+    base.degenerate = true; base.overflow = true;
+    return finish(Object.assign(base, { mode: "fallback",
+      lines: clusters.map(function(){
+        return { startMs: effectiveStartMs, durationMs: 0 }; }) }));
+  }
+  const pausesCount = Math.max(0, n - 1);
+  let effectivePauseMs = linePauseMs;
+  let overflow = false;
+  if (pausesCount > 0 && pausesCount * linePauseMs >= span){
+    effectivePauseMs = Math.min(linePauseMs,
+      Math.floor(0.25 * Math.max(0, span) / pausesCount));
+    overflow = true;
+  }
+  base.effectivePauseMs = effectivePauseMs; base.overflow = overflow;
+  const budget = span - pausesCount * effectivePauseMs;
+  const weights = clusters.map(function(c){ return c.length; });
+  const totalW = weights.reduce(function(a, b){ return a + b; }, 0);
+  let lastWeighted = -1;
+  weights.forEach(function(w, i){ if (w > 0) lastWeighted = i; });
+  let t = effectiveStartMs, allocated = 0;
+  const lines = clusters.map(function(c, i){
+    let dur = 0;
+    if (totalW > 0 && weights[i] > 0){
+      dur = (i === lastWeighted) ? budget - allocated
+        : Math.round(budget * weights[i] / totalW);
+      allocated += dur;
+    }
+    const s = { startMs: t, durationMs: dur };
+    t += dur + effectivePauseMs;
+    return s;
+  });
+  return finish(Object.assign(base, { mode: "fallback", lines: lines }));
+}
+
+/* Pure state model: state at elapsed ms depends only on elapsed. */
+function stateAt(sched, elapsed){
+  if (sched.degenerate){
+    return sched.lines.map(function(){
+      return { shown: 0, active: false, done: false }; });
+  }
+  return sched.lines.map(function(ls, li){
+    const count = sched.clusters[li].length;
+    if (elapsed < ls.startMs) return { shown: 0, active: false, done: false };
+    if (ls.durationMs <= 0 || elapsed >= ls.startMs + ls.durationMs)
+      return { shown: count, active: elapsed < ls.startMs + ls.durationMs + 1, done: true };
+    const shown = Math.min(count, Math.floor((elapsed - ls.startMs) / ls.durationMs * count));
+    return { shown: shown, active: true, done: false };
+  });
+}
+function activeLineAt(sched, elapsed){
+  if (sched.degenerate) return -1;
+  let active = -1;
+  sched.lines.forEach(function(ls, li){
+    if (elapsed >= ls.startMs) active = li;
+  });
+  return active;
+}
+
+/* --- Visible-window model (pure) ---
+   The visible set is an active-anchored window: a line is displayed
+   exactly when trimStart <= li <= active; before the first line starts
+   only line 0's slot stands (empty). Future lines are not displayed, so
+   they contribute no prompt and no height on stage. A line's prompt is
+   visible exactly when the line has activated (li <= active); its
+   layout width is retained either way, so activation never shifts the
+   line. The window slides only when the active line changes. */
+function visibleWindow(active, n, maxVisible){
+  const mv = Math.max(1, Math.floor(maxVisible) || 1);
+  const high = active < 0 ? 0 : active;
+  const trimStart = Math.max(0, high - mv + 1);
+  const displayed = [];
+  for (let li = 0; li < n; li++) displayed.push(li >= trimStart && li <= high);
+  return { trimStart: trimStart, high: high, displayed: displayed };
+}
+function promptVisibleAt(li, active){ return li <= active; }
+/* The stage's reserved height is the largest total of any sliding
+   window of per-line measured heights. */
+function maxWindowHeightFor(heights, maxVisible){
+  const mv = Math.max(1, Math.floor(maxVisible) || 1);
+  let best = 0;
+  for (let s = 0; s < heights.length; s++){
+    let sum = 0;
+    for (let i = s; i < Math.min(heights.length, s + mv); i++) sum += heights[i];
+    if (sum > best) best = sum;
+  }
+  return best;
+}
+/* Model tops of the displayed lines, stacked from the stage top in
+   measured-height order. */
+function modelTopsFor(heights, displayed){
+  const tops = [];
+  let y = 0;
+  for (let li = 0; li < heights.length; li++){
+    tops.push(displayed[li] ? y : null);
+    if (displayed[li]) y += heights[li];
+  }
+  return tops;
+}
+
+/* --- Cursor boundary model (pure) ---
+   The cursor sits at the revealed grapheme boundary of the active
+   line: immediately after the last revealed cluster, or at the
+   prompt's right edge when nothing of the line is revealed yet.
+   Metrics are per-span right edges and tops measured against the line
+   box, so a boundary that falls on a continuation row carries that
+   row's top. */
+function cursorPosFor(metrics, promptMetric, shown){
+  if (shown > 0){
+    const b = metrics[shown - 1];
+    return { left: b.right, top: b.top };
+  }
+  return { left: promptMetric.right, top: promptMetric.top };
+}
+
+/* --- DOM built once --- */
+const stage = document.getElementById("stage");
+document.body.style.background = CONFIG.bg;
+document.body.style.padding = CONFIG.stagePadding;
+stage.style.color = CONFIG.ink;
+stage.style.fontFamily = CONFIG.fontFamily;
+stage.style.fontSize = Math.min(CONFIG.fontSizePx, Math.max(CONFIG.fontMinPx, window.innerWidth * CONFIG.fontVwFactor)) + "px";
+
+const SCHED = deriveSchedule(CONFIG);
+stage.dataset.scheduleOverflow = SCHED.overflow ? "true" : "false";
+stage.dataset.scheduleOverrun = SCHED.overrun ? "true" : "false";
+const lineEls = [], promptEls = [], spanEls = [];
+const cursorEl = document.createElement("span");   /* created ONCE */
+cursorEl.className = "cursor";
+cursorEl.style.background = CONFIG.cursorColor;
+cursorEl.style.width = CONFIG.cursorWidthCh + "ch";
+cursorEl.style.animation = "blink " + CONFIG.cursorBlinkMs + "ms steps(1) infinite";
+cursorEl.style.height = "1em";
+cursorEl.style.display = "none";
+let cursorHome = -1;
+
+CONFIG.lines.forEach(function(text, li){
+  const div = document.createElement("div");
+  div.className = "line";
+  div.style.lineHeight = CONFIG.lineHeight;
+  const p = document.createElement("span");
+  p.className = "prompt"; p.style.color = CONFIG.accent; p.textContent = CONFIG.prompt;
+  p.style.marginRight = CONFIG.promptGapCh + "ch";
+  p.style.visibility = "hidden";
+  div.appendChild(p);
+  promptEls.push(p);
+  const spans = SCHED.clusters[li].map(function(cluster){
+    const sp = document.createElement("span");
+    sp.textContent = cluster;
+    sp.style.visibility = "hidden";
+    div.appendChild(sp);
+    return sp;
+  });
+  stage.appendChild(div);
+  lineEls.push(div); spanEls.push(spans);
+});
+
+/* Unified layout measurement: one off-screen measurement pass supplies
+   every height the stage relies on. Each line is laid out in a
+   measurement stage sharing the live stage's width, font size,
+   line-height and wrapping (no element in it is display:none), its
+   full-layout height is recorded, and the live stage's reserved height
+   is the largest total of any visible window of those heights. Future
+   lines are display:none on the live stage and supply nothing there. */
+let probeHeights = [];
+function measureLayout(){
+  const probe = document.createElement("div");
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText = "visibility:hidden;position:absolute;left:-10000px;top:0;pointer-events:none;" +
+    "white-space:pre-wrap;word-break:break-word;box-sizing:border-box;" +
+    "line-height:" + CONFIG.lineHeight + ";" +
+    "font-family:" + CONFIG.fontFamily + ";font-size:" + stage.style.fontSize + ";" +
+    "width:" + stage.clientWidth + "px;";
+  document.body.appendChild(probe);
+  probeHeights = CONFIG.lines.map(function(text){
+    probe.textContent = "";
+    const p = document.createElement("span");
+    p.style.marginRight = CONFIG.promptGapCh + "ch"; p.textContent = CONFIG.prompt;
+    probe.appendChild(p);
+    probe.appendChild(document.createTextNode(text));
+    return probe.offsetHeight;
+  });
+  probe.remove();
+  stage.style.minHeight =
+    maxWindowHeightFor(probeHeights, CONFIG.maxVisibleLines) + "px";
+}
+measureLayout();
+
+let currentElapsed = 0;
+/* One invalidation handler governs font and resize: the clamped font
+   size is recomputed first, then the measurement pass re-runs, the
+   reserved height resets, and the frame re-renders under the new
+   metrics. A stale measurement is never reused after either event. */
+function relayout(){
+  stage.style.fontSize = Math.min(CONFIG.fontSizePx, Math.max(CONFIG.fontMinPx, window.innerWidth * CONFIG.fontVwFactor)) + "px";
+  measureLayout();
+  render(currentElapsed);
+}
+window.addEventListener("resize", relayout);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+
+function render(elapsed){
+  currentElapsed = elapsed;
+  const st = stateAt(SCHED, elapsed);
+  const active = activeLineAt(SCHED, elapsed);
+  const win = visibleWindow(active, SCHED.lines.length, CONFIG.maxVisibleLines);
+  lineEls.forEach(function(div, li){
+    div.style.display = win.displayed[li] ? "" : "none";
+    promptEls[li].style.visibility = promptVisibleAt(li, active) ? "visible" : "hidden";
+  });
+  st.forEach(function(s, li){
+    const spans = spanEls[li];
+    for (let i = 0; i < spans.length; i++){
+      const v = i < s.shown ? "visible" : "hidden";
+      if (spans[i].style.visibility !== v) spans[i].style.visibility = v;
+    }
+  });
+  if (active >= 0){
+    if (cursorHome !== active){
+      lineEls[active].appendChild(cursorEl);  /* same node, moved at boundary */
+      cursorHome = active;
+    }
+    cursorEl.style.display = "";
+    const lineRect = lineEls[active].getBoundingClientRect();
+    const metrics = spanEls[active].map(function(sp){
+      const r = sp.getBoundingClientRect();
+      return { right: r.right - lineRect.left, top: r.top - lineRect.top };
+    });
+    const pr = promptEls[active].getBoundingClientRect();
+    const pos = cursorPosFor(metrics,
+      { right: pr.right - lineRect.left, top: pr.top - lineRect.top },
+      st[active].shown);
+    cursorEl.style.left = pos.left + "px";
+    cursorEl.style.top = pos.top + "px";
+  }
+  if (active < 0 && cursorHome !== -1){
+    cursorEl.remove(); cursorHome = -1;
+  }
+  return SCHED.totalMs;
+}
+
+let timer = null, startedAt = 0, pausedElapsed = 0, playing = false;
+function tick(){
+  const elapsed = performance.now() - startedAt;
+  const total = render(elapsed);
+  if (elapsed < total){ timer = requestAnimationFrame(tick); }
+  else { playing = false; render(total); }
+}
+function play(){
+  if (playing) return;
+  playing = true; startedAt = performance.now() - pausedElapsed;
+  timer = requestAnimationFrame(tick);
+}
+function pause(){
+  if (!playing) return;
+  pausedElapsed = performance.now() - startedAt;
+  playing = false;
+  if (timer) cancelAnimationFrame(timer);
+}
+function restart(){ playing = false; if (timer) cancelAnimationFrame(timer); pausedElapsed = 0; play(); }
+
+window.addEventListener("message", function(e){
+  if (e.data === "play") play();
+  if (e.data === "pause") pause();
+  if (e.data === "restart") restart();
+});
+render(0);
+play();
+</script>
+</body>
+</html>
+
+==== build record ====
+# T03 — Live-typed lyric text · build record · attempt 3 · 2026-11-17
+
+Item: T03, Packet P1 @ 0:21–0:35.
+This record is SCORE-BLIND by construction: construction facts, the
+source checkpoint table, the window contract, and diagnostic results
+only. Final source: recreation.html, sha256
+1f182eac11d6afb4a02570526d4b0a26fcd96fdcda08381a298f0d12abff8b96.
+
+## Construction facts
+- Single self-contained HTML file; DOM typing; all content, timing,
+  palette and presentation values come from CONFIG at the top of the
+  script (23 keys; every key is consumed at a named application site —
+  the census leg filed beside this record carries the full table). No
+  external assets, no specimen media; specimen words appear only as
+  CONFIG data.
+- Typing unit is the grapheme cluster: `segmentGraphemes()` uses
+  `Intl.Segmenter` with granularity "grapheme" where available;
+  otherwise a documented fallback merges code points with combining
+  marks, variation selectors, skin-tone modifiers, ZWJ sequences, and
+  regional-indicator pairs (the fallback does not implement every
+  UAX #29 rule, e.g. some Indic conjuncts — limitation recorded here).
+- Reveal construction: the full text of every line is laid out once at
+  build time as one span per grapheme cluster, all spans present in
+  the DOM from the first frame; per-frame updates toggle only span
+  visibility (shown ⇔ index < the state model's count for that line).
+  Word wrap is therefore computed on the complete text at build time,
+  and a partially revealed word cannot change rows as clusters arrive.
+  Span concatenation equals the full line text at every elapsed time.
+- Cursor: ONE cursor element is created once, never rebuilt; it is
+  positioned outside the text flow (absolute positioning inside its
+  line, which is relatively positioned), so it adds zero width and
+  zero height and cannot affect wrapping. Per frame its left/top are
+  set from the measured boundary of the revealed text: the boundary is
+  the last revealed grapheme span (left = that span's right edge
+  against the line box, top = that span's top, both from runtime
+  rectangles). Boundary states: nothing revealed → the prompt span's
+  right edge on the first row; partial word → immediately after the
+  last revealed cluster, before the unrevealed remainder of the same
+  word; wrapped row → the boundary span's own row top; completed →
+  after the final cluster, where the cursor holds until the next line
+  activates. Its blink animation is never restarted by frame rendering.
+  The stage is never rebuilt (no innerHTML writes anywhere in the
+  file).
+- Visible window: a line is displayed exactly when it lies inside the
+  active-anchored window (window start ≤ line ≤ active line); before
+  the first line starts, only line 0's slot stands, empty. Future
+  lines are not displayed, so they show no prompt and reserve no
+  height on stage. A line's prompt keeps its layout width at all times
+  and becomes visible exactly when its line activates, so activation
+  never shifts the line. The window slides only when the active line
+  changes.
+- Layout measurement: one off-screen measurement pass supplies every
+  height the stage relies on. Each line is laid out in a measurement
+  stage sharing the live stage's width, font size, line-height and
+  wrapping (no element in it is hidden with display:none); each line's
+  full-layout height is recorded, and the live stage's reserved height
+  is the largest total of any visible window of those heights. The
+  measured per-line heights are the same heights the displayed lines
+  occupy when live. One invalidation handler governs font and resize:
+  the clamped font size is recomputed first, then the measurement pass
+  re-runs, the reserved height resets, and the frame re-renders; it
+  fires on window resize and when document fonts finish loading. A
+  stale measurement is never reused after either event.
+- Sequencing is a pure function of elapsed time (`stateAt(sched,
+  elapsed)`): the same elapsed always yields the same shown counts, on
+  seek or on continuous play. Playback self-starts inside the file and
+  also answers the comparison page's play/pause/restart messages; that
+  interface is unchanged from the previous build, and comparison.html
+  is not changed by this build (its ORIGINAL side is untouched).
+
+## Schedule construction (one contract for every mode)
+Validation order is fixed: (1) configuration values are
+validated/defaulted; (2) exactly one mode is selected — a valid
+authored schedule first, then an exact specimen match, then the
+fallback allocation; modes never blend; (3) the base schedule for the
+selected mode is built; (4) the base is checked for containment inside
+the window; (5) an explicit per-cluster interval override may rescale
+a derived (specimen/fallback) schedule; (6) any overrun is recorded on
+the schedule, never silently clamped.
+- Value policies: a window that is not a finite positive number falls
+  back to the 14,000 ms default (diagnostic recorded); start delay
+  non-finite → 300, negative → 0; line pause NaN → 900, negative → 0,
+  infinite → treated as budget-exhausting (the containment policy
+  below caps it); final hold non-finite → 470, negative → 0. An empty
+  line list yields an empty schedule with the window as its total. A
+  line with empty text takes a zero duration at its sequential start
+  and keeps its pause slot. A single line takes the full typing span
+  as its duration and fits the window exactly, whatever its cluster
+  count.
+- Degenerate window: when the window leaves no typing span (final
+  hold < window ≤ start delay + final hold), every line takes a zero
+  duration at the effective start (max(0, window − final hold)), the
+  schedule is flagged overflow + degenerate, nothing is revealed at
+  any elapsed time, and no value in the schedule is NaN.
+- Containment: a derived schedule's base always ends inside the
+  window. The fallback's final line ends at windowMs − finalHoldMs
+  exactly, by construction (durations allocated in proportion to
+  cluster counts, rounding residual on the last cluster-carrying
+  line). When the inter-line pauses alone would exhaust the typing
+  span, the effective pause compresses to at most a quarter of the
+  span, leaving a positive typing budget; schedules whose pauses fit
+  are never compressed (the six-line default keeps its 900 ms pauses;
+  the 17-line default case compresses to an effective pause of
+  206 ms). The schedule carries {overflow, effectivePauseMs,
+  effectiveStartMs} and the stage element exposes the overflow state
+  as a data attribute.
+- Authored schedule: CONFIG.lineSchedule (per-line start/duration,
+  independent of the line texts) is used exactly as given when valid
+  for the current line count (finite, monotonic starts, every end
+  inside the window); an invalid one falls back to the next mode with
+  a diagnostic. Authored timings are never rescaled.
+- Interval override: CONFIG.charMs / ?charMs=N sets the per-cluster
+  typing interval directly (finite, > 0, clamped to [10, 1000];
+  invalid or absent → ignored, schedule identical to the
+  no-override schedule). In the fallback mode each line's duration
+  becomes its cluster count × the interval; in the specimen mode all
+  durations scale by interval ÷ the derived per-cluster interval.
+  Starts recompute sequentially, preserving the first start and the
+  base inter-line pauses. If the rescaled end passes the window, the
+  schedule's total becomes the rescaled end + the final hold and the
+  overrun flag is set — explicit, never clamped. When an authored
+  schedule and the override are both present, the authored schedule
+  stands and the schedule records charMsIgnoredAuthored: true.
+
+## Source checkpoint table (specimen window P1 @ 0:21–0:35, 14.0 s)
+Evidence the record actually carries:
+- The catalogue establishes the window bounds (0:21–0:35) and that the
+  window spans the three configured lyric lines in order, typed
+  char-by-char with accumulation.
+- One evidence frame (ev/t23.jpg, ≈0:23, i.e. ≈2 s into the window on
+  the 20.5 s cut offset) shows line 1 with the block cursor at its
+  head. A single still cannot separate "line just completed" from
+  "final cluster just revealed", so the frame anchors only that line 1
+  is the active line early in the window.
+- The record carries NO timed transcript, ASR alignment, or vocal-beat
+  anchors. Per-line start/end times in the specimen are therefore NOT
+  derivable from the record; any per-line boundary below is an
+  allocation model, not a measurement. Uncertainty on each
+  intermediate boundary is large (±3 s class — bounded only by the
+  window ends).
+
+Derived specimen schedule (allocation model): typing budget = window
+14 000 ms − start delay 300 ms − inter-line pauses 2 × 900 ms − final
+hold 470 ms = 11 430 ms, allocated per line in proportion to
+grapheme-cluster count (28 / 34 / 28 = 90 clusters; ≈127 ms per
+cluster):
+
+| Line | Clusters | Start (ms into window) | End (ms) | Basis |
+|---|---|---|---|---|
+| 1 "I made a song, I made a beat" | 28 | 300 | 3 856 | proportional allocation |
+| 2 "I wrote the words, I feel the heat" | 34 | 4 756 | 9 074 | proportional allocation |
+| 3 "I made a song, I made a beat" | 28 | 9 974 | 13 530 | proportional allocation |
+| final hold | — | 13 530 | 14 000 | window remainder only (470 ms) |
+
+Typing spans 13 530 of the 14 000 ms window; the final hold is exactly
+the window remainder, with the full text and the blinking cursor held.
+Internal consistency of the model is asserted by the own-check suite:
+first reveal at ≈427 ms (300 + one ≈127 ms interval), pauses total
+1 800 ms = 12.9% of the window, completion at 13 530 ms.
+
+## Literal whitelist (per literal, outside CONFIG data)
+Hex colors outside CONFIG data: none. Numeric literals outside CONFIG
+data: 0, 1, 2 (structural indices/bounds) · blink keyframe percentages
+55 / 56 / 100 (animation shape; the period is a CONFIG key) ·
+validation bounds 10 / 1000 (interval-override clamp; 10 also serves
+as a parse radix) · validation default mirrors 14000 / 300 / 900 / 470
+(used only when the matching CONFIG value is invalid; each mirrors
+that key's CONFIG default) · 0.25 (the containment policy's pause
+share cap) · 10000 (the measurement stage's off-screen offset) ·
+comment labels: the technique identifier in the header comment, the
+UAX #29 specification reference, and the step numbers of the
+validation-order enumeration in a comment. Unicode code-point ranges
+in the segmentation fallback are segmentation data constants.
+SPECIMEN_LINES is CONFIG data (it feeds CONFIG.lines), not a logic
+literal.
+
+## Diagnostics (own checks, before the wave)
+- Node logic suite (functions extracted verbatim from the built file;
+  full packet filed as own-check-packet-attempt3.txt): 135 checks,
+  135 PASS, 0 FAIL — schedule validation and containment (including
+  the 17-line case: compression engaged, effective pause 206 ms, last
+  end exactly 13 530 ms; the degenerate window shape; empty content;
+  single and oversized single lines; empty-text lines; invalid
+  specimen table falling back with a diagnostic), the visible-window
+  model (sweep: displayed count never exceeds the configured maximum,
+  no future line displayed, prompt visibility exactly at activation,
+  specimen progression 1→2→3, window constant within each line's
+  span, boundary shifts equal to the departed slot's measured height),
+  the interval override as an effect mapping (specimen durations
+  double at a 254 ms interval and halve at 63.5 ms; invalid values
+  leave the schedule identical; clamps at 10 and 1000 ms), the
+  authored schedule (exact use, length/non-finite/monotonic/end
+  rejections with diagnostics, authored standing over the override
+  with the ignore flag recorded), the cursor boundary model (all four
+  states, including a boundary on a continuation row), span
+  concatenation identity and visible-count equality with the state
+  model on specimen and swapped lines, grapheme cases (decomposed
+  accent, ZWJ family, flag pair — primary segmenter and fallback
+  segmenter each 3/3), state determinism, and the checkpoint-table
+  regression (starts 300/4 756/9 974, ends 3 856/9 074/13 530).
+- Per-key CONFIG consumption census: 23/23 keys asserted consumed
+  (key → the computed/rendered effect it drives), and the literal
+  census above passes against the whitelist.
+- Source census, new terms for this build's reveal construction:
+  exactly 1 cursor element creation; 0 innerHTML writes; grapheme
+  span count = total cluster count (90 for the specimen lines);
+  per-frame path touches span visibility, line display and prompt
+  visibility at window boundaries, and the cursor's left/top only.
+- Purity grep on recreation.html
+  (segment.mp4|source.mp4|<video|<img>|.jpg|.png|.mp4): 0 hits.
+  Asset inventory: code only.
+- Syntax: extracted script passes node --check.
+- PIXEL-UNVERIFIED: headless render attempted with
+  /opt/meta-chromium/chrome (private debugging port 9417, dump-dom);
+  launch failed before any page load — exit 13, stderr: "Hatch WebGL
+  domain policy is required for browser startup"; dumped DOM = 0
+  bytes. Geometry claims therefore rest on the deterministic logic
+  tests and the measurement construction, not on rendered pixels.
+  Coordinates asserted by the checks are layout-model values, never
+  measured pixels. This is a named limitation, not a pass.
+- comparison.html: NOT changed — its interface to the recreation is
+  the iframe + postMessage controls, which are unchanged. The
+  comparison's ORIGINAL side is untouched.
+
+## Preservation and staged checkpoints
+- The previous build's source is preserved verbatim at
+  recreation-attempt-2.html (content copy, independent inode; sha256
+  c0aee98c1dacf24c989d5dc31aa8fa382209aeeb633e1ab3dd46e7f3e34bc66c,
+  equal to the pre-build working file). The complete prior evidence
+  set (28 files) was inventoried and hashed before any mutation
+  (evidence-inventory-attempt3.txt); a census immediately after the
+  first overwrite found every prior file byte-identical except the
+  working file itself, whose change is this build.
+- The build proceeded in five stages, each closed by a create-once
+  checkpoint (source content copy + that stage's check output, inode
+  independent of the working file): stage A (schedule validation and
+  containment) sha256 bf7466cdd12f7828acab59d19f5f7cb390e01b9b698e9ae737e1fb14c88ebd55 ·
+  stage B (visible window and measurement) sha256
+  617cf80202ee74fa29855d87d05ba19503ed7982e3d710a182e72684e3b54c91 ·
+  stage C (interval override and authored schedule) sha256
+  b3c791dff56b418df80540ec111a46efd6547d562f0b9703812f5f4bbb5ddf8a ·
+  stage D (span reveal and boundary cursor) sha256
+  b7d19bb1c292946dadf6c1315f2dd593cbf5986eceed5cb3c493b84e79226626 ·
+  stage E (presentation values into CONFIG; final source) sha256
+  1f182eac11d6afb4a02570526d4b0a26fcd96fdcda08381a298f0d12abff8b96.
+  Any score movement files as BUNDLED across the stages unless a
+  stage's own checks isolate the mechanism.
+- Direction (RTL) layout mirroring is not implemented in this build;
+  grapheme segmentation and the visible-window policy are this build's
+  multilingual provisions. Visibility-hidden unrevealed spans remain
+  selectable in the DOM; that is a presentation note, recorded here.
+
+==== own-check packet ====
+PASS specimen mode
+PASS specimen starts 300/4756/9974
+PASS specimen ends 3856/9074/13530
+PASS specimen totalMs 14000
+PASS specimen no overflow/overrun
+PASS 17-line mode fallback
+PASS 17-line compression engaged (overflow)
+PASS 17-line effectivePauseMs 206
+PASS 17-line all starts<ends<=13530
+PASS 17-line last end exactly 13530
+PASS 17-line finite
+PASS 6-line effectivePauseMs 900 (no compression)
+PASS 6-line last end exactly 13530
+PASS windowMs NaN -> default schedule identical
+PASS windowMs Infinity -> default schedule identical
+PASS windowMs -5 -> default schedule identical
+PASS windowMs 0 -> default schedule identical
+PASS linePauseMs Infinity -> compression cap 661
+PASS linePauseMs NaN -> 900
+PASS linePauseMs negative -> 0 pauses, fits
+PASS startDelayMs NaN -> 300
+PASS startDelayMs Infinity -> 300
+PASS startDelayMs negative -> 0
+PASS finalHoldMs NaN -> 470 (last end 13530)
+PASS finalHoldMs negative -> 0 (last end 14000)
+PASS degenerate window 700: flagged
+PASS degenerate: all durations 0, starts at effectiveStart 230
+PASS degenerate: finite, no NaN
+PASS degenerate: stateAt counts all 0 at 0/350/699
+PASS n=0 empty schedule
+PASS n=1 duration = full span 13230, end 13530
+PASS oversized single line fits exactly, no overflow flag
+PASS empty-text line duration 0 at sequential start
+PASS empty-text schedule last end 13530
+PASS specimen table ending past window -> fallback + diagnostic
+STAGE-A SUMMARY pass=35 fail=0
+stageA rc=0
+PASS 6-line sweep: displayed <=3, none above active, exact window set
+PASS prompt visibility iff li<=active across sweep
+PASS pre-start: only line 0 displayed, no prompt visible
+PASS specimen displayed progression 1,1,1,1,2,2,3,3
+PASS maxVisibleLines=1: only active line displayed
+PASS maxVisibleLines>=count: all started lines displayed
+PASS maxVisibleLines=0 clamped to 1 by the model
+PASS maxWindowHeightFor windows max
+PASS boundary slide: line1 top 10->0? model tops before
+PASS boundary slide: surviving line tops shift by departed height only
+PASS displayed set constant within each line's typing span
+STAGE-B SUMMARY pass=11 fail=0
+stageB rc=0
+PASS specimen charMs=254 line durations 7112/8636/7112
+PASS specimen charMs=254 starts 300/8312/17848
+PASS specimen charMs=254 overrun: totalMs = end + 470 = 25430
+PASS specimen charMs=63.5 durations halved 1778/2159/1778
+PASS specimen charMs=63.5 fits: totalMs 14000, no overrun
+PASS charMs 0 ignored: schedule identical
+PASS charMs -5 ignored: schedule identical
+PASS charMs NaN ignored: schedule identical
+PASS charMs abc ignored: schedule identical
+PASS charMs=5 clamped to 10: line1 duration 280
+PASS charMs=5000 clamped to 1000: line1 duration 27992
+PASS fallback charMs=100 durations = clusters x 100
+PASS fallback charMs=100 starts preserve delay + pauses
+PASS fallback charMs=100 fits window, no overrun
+PASS authored mode with swapped lines
+PASS authored timings used exactly
+PASS authored + charMs: schedule identical to authored-only
+PASS authored + charMs: charMsIgnoredAuthored set
+PASS authored length mismatch -> fallback + diagnostic
+PASS authored end past window -> not authored, diagnostic, specimen by precedence
+PASS authored non-monotonic -> not authored + diagnostic
+PASS authored non-finite -> not authored
+PASS default specimen schedule unchanged
+STAGE-C SUMMARY pass=23 fail=0
+stageC rc=0
+PASS visible-span count equals stateAt shown at every sampled elapsed
+PASS span concatenation identity: full line text at every line
+PASS total grapheme spans for specimen = 90
+PASS swap span concatenation identity
+PASS cursor beginning: prompt right edge, first row
+PASS cursor partial-word: right edge of last revealed cluster, same row
+PASS cursor wrapped-row: top is the continuation row's top
+PASS cursor completed: right edge of the final cluster
+PASS exactly 1 cursor element creation
+PASS 0 innerHTML writes
+PASS cursor is out of flow (position:absolute in its class rule)
+PASS no trailing spacer construction remains
+PASS per-frame path toggles span visibility (render uses style.visibility on spans)
+PASS grapheme spans built once per cluster from the schedule clusters
+STAGE-D SUMMARY pass=14 fail=0
+stageD rc=0
+CONFIG keys (23): lines, windowMs, startDelayMs, linePauseMs, finalHoldMs, specimenSchedule, maxVisibleLines, charMs, lineSchedule, prompt, bg, ink, accent, cursorColor, fontFamily, fontSizePx, fontMinPx, fontVwFactor, lineHeight, promptGapCh, cursorWidthCh, cursorBlinkMs, stagePadding
+PASS key lines consumed: schedule clusters follow lines
+PASS key windowMs consumed: totalMs follows windowMs
+PASS key startDelayMs consumed: first start follows it
+PASS key linePauseMs consumed: gap follows it
+PASS key finalHoldMs consumed: last end = window - hold
+PASS key specimenSchedule consumed: specimen mode uses its table
+PASS key maxVisibleLines consumed: window size follows it
+PASS key charMs consumed: durations rescale
+PASS key lineSchedule consumed: authored mode
+PASS key lines application sites >= 1
+PASS key windowMs consumed via cfg.* in schedule derivation
+PASS key startDelayMs consumed via cfg.* in schedule derivation
+PASS key linePauseMs consumed via cfg.* in schedule derivation
+PASS key finalHoldMs consumed via cfg.* in schedule derivation
+PASS key specimenSchedule consumed via cfg.* in schedule derivation
+PASS key maxVisibleLines application sites >= 1
+PASS key charMs consumed via cfg.* in schedule derivation
+PASS key lineSchedule consumed via cfg.* in schedule derivation
+PASS key prompt application sites >= 2
+PASS key bg application sites >= 1
+PASS key ink application sites >= 1
+PASS key accent application sites >= 1
+PASS key cursorColor application sites >= 1
+PASS key fontFamily application sites >= 2
+PASS key fontSizePx application sites >= 2
+PASS key fontMinPx application sites >= 2
+PASS key fontVwFactor application sites >= 2
+PASS key lineHeight application sites >= 2
+PASS key promptGapCh application sites >= 2
+PASS key cursorWidthCh application sites >= 1
+PASS key cursorBlinkMs application sites >= 1
+PASS key stagePadding application sites >= 1
+PASS no hex colors outside CONFIG data
+LITERALS outside CONFIG data:
+  0 x66 -> structural (index/zero bound)
+  0.25 x1 -> overflow policy constant (pause share cap)
+  03 x1 -> technique identifier in the header comment (label, not a logic literal)
+  1 x32 -> structural (index/step count/unit)
+  10 x4 -> validation bound / radix (override clamp lower bound; parse radix)
+  100 x3 -> blink keyframe percentage (animation shape)
+  1000 x3 -> validation bound (override clamp upper bound)
+  10000 x1 -> measurement-stage off-screen offset (structural placement)
+  14000 x1 -> validation default mirror of the windowMs CONFIG default
+  2 x2 -> structural (index)
+  29 x1 -> specification reference in a comment (UAX #29, segmentation rules)
+  3 x1 -> step number in a comment enumeration (validation order)
+  300 x1 -> validation default mirror of the startDelayMs CONFIG default
+  4 x1 -> step number in a comment enumeration (validation order)
+  470 x1 -> validation default mirror of the finalHoldMs CONFIG default
+  55 x1 -> blink keyframe percentage (animation shape)
+  56 x1 -> blink keyframe percentage (animation shape)
+  900 x1 -> validation default mirror of the linePauseMs CONFIG default
+PASS every numeric literal outside CONFIG data is whitelisted
+STAGE-E SUMMARY pass=34 fail=0
+stageE rc=0
+PASS first reveal at 427ms (shown 0 at 426, 1 at 427)
+PASS pauses total 1800ms = 12.9% of window
+PASS completion 13530, final hold exactly 470
+PASS stateAt determinism (same elapsed, same state)
+PASS per-line not-started / partial / complete states
+PASS decomposed accent (e + U+0301) is 1 cluster
+PASS ZWJ family emoji is 1 cluster
+PASS flag pair is 1 cluster
+PASS no intermediate state splits a cluster (sweep)
+PASS fallback segmenter: decomposed accent 1 cluster
+PASS fallback segmenter: ZWJ family 1 cluster
+PASS fallback segmenter: flag pair 1 cluster
+PASS French/Spanish swap: fallback mode, both lines complete in window
+PASS 6-line swap fits window exactly
+PASS 17-line adversarial swap contained (overflow guard)
+PASS authored swap uses authored timings exactly
+PASS authored swap with interval override: authored stands, override recorded ignored
+PASS active line progression -1/0/1/2 across the window
+FINAL-REGRESSION SUMMARY pass=18 fail=0
+final rc=0

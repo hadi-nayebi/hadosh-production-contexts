@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T02 — Comparison: original vs recreation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #111; color: #eee; font-family: system-ui, sans-serif; padding: 14px; }
+  h1 { font-size: 17px; margin-bottom: 10px; }
+  #controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  #controls button { font: 600 14px/1 system-ui, sans-serif; padding: 11px 16px; min-height: 44px; border-radius: 6px; border: 1px solid #666; background: #222; color: #eee; cursor: pointer; }
+  #grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px) { #grid { grid-template-columns: 1fr; } }
+  .side label { display: block; font-size: 13px; font-weight: 700; letter-spacing: .04em; margin-bottom: 6px; color: #ffb84d; }
+  .frame { width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid #444; }
+  video.frame, iframe.frame { display: block; }
+  iframe.frame { border: 1px solid #444; }
+</style>
+</head>
+<body>
+<h1>T02 — Counting list + giant numeral</h1>
+<div id="controls">
+  <button id="btnPlay" type="button">Play both</button>
+  <button id="btnPause" type="button">Pause both</button>
+  <button id="btnRestart" type="button">Restart both</button>
+</div>
+<div id="grid">
+  <div class="side">
+    <label>ORIGINAL — “Look What I Can Do” @ 0:14–0:21</label>
+    <video id="orig" class="frame" src="segment.mp4" playsinline preload="auto"></video>
+  </div>
+  <div class="side">
+    <label>RECREATION — T02 Counting list + giant numeral, parameterized</label>
+    <iframe id="rec" class="frame" src="recreation.html" title="T02 recreation"></iframe>
+  </div>
+</div>
+<script>
+  const orig = document.getElementById("orig");
+  const rec = document.getElementById("rec");
+  function send(cmd, ms) { rec.contentWindow && rec.contentWindow.postMessage({ cmd, ms }, "*"); }
+  function playBoth() { orig.play(); send("play"); }
+  function pauseBoth() { orig.pause(); send("pause"); }
+  function restartBoth() { orig.currentTime = 0; orig.play(); send("restart"); }
+  document.getElementById("btnPlay").addEventListener("click", playBoth);
+  document.getElementById("btnPause").addEventListener("click", pauseBoth);
+  document.getElementById("btnRestart").addEventListener("click", restartBoth);
+  /* Sync: the recreation's clock is slaved to the video's currentTime (drift correction 4×/s).
+     The segment window starts 0.5 s before the catalogue window (13.5 vs 14), so the
+     recreation is offset by -500 ms relative to the video clock. */
+  setInterval(() => {
+    if (!orig.paused && !orig.ended) send("seek", Math.max(0, (orig.currentTime - 0.5) * 1000));
+  }, 250);
+  orig.addEventListener("pause", () => send("pause"));
+  orig.addEventListener("ended", () => send("pause"));
+</script>
+</body>
+</html>

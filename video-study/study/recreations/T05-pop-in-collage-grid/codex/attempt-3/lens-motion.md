@@ -1,0 +1,6 @@
+Motion fidelity is strong on source inspection. The initial pair appears before first paint; subsequent panels arrive individually at 1200, 2300, 3400, and 5600 ms. The pop mechanism is functional: hidden panels resolve to `scale(0.82)` and opacity 0; `.panel.on` targets `scale(1)` and opacity 1, with explicit 180 ms transform and 120 ms opacity transitions. Arrived panels hold fixed positions, independent of accumulating lyrics.
+
+The boundary preserves the initial pair and deliberately fades the other panels and lyrics. One weakness remains: each frame changes the fade target while a 120 ms opacity transition keeps chasing it. Displayed opacity can therefore lag the clock and leave a residual disappearance at wrap. The final arrival also leaves over six seconds without further discovery, weakening the panel-by-panel rhythm across the full loop. Actual visible interpolation remains browser-unverified.
+
+BODY-WRITE: Record the functional scale-pop mechanism, but require browser verification of the boundary and use direct clock-driven reset opacity without a competing CSS opacity transition to guarantee a completed fade before wrap.
+SCORE: 91
