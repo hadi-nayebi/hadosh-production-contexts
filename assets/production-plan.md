@@ -1,7 +1,7 @@
 # Quadrillion — complete four-part production plan
 
 **Version:** 1.1.0  
-**State:** planned — provisional timing — not accepted or verified as produced  
+**State:** visual draft implemented and sampled — provisional timing — final audiovisual acceptance open  
 **Provisional duration:** 143 seconds
 
 Fresh narration is absent. The 143-second allocation and all interval times are provisional editorial targets. Preserve the exact 25 lines; record one consistent fresh performance, align actual word and clause anchors, then revise timing rather than forcing or substituting the older recording.
@@ -15,6 +15,18 @@ All times below are provisional editorial allocations. The fresh narration will 
 **Visual rule:** ink, ivory, cobalt and amber; cinematic 2D composition; restrained functional labels; no narration captions. The main film opens directly in the viewport. Pause freezes the same scene/audio clock and reveals controls. Landscape and portrait are deliberately composed, not one layout merely reduced.
 
 **Continuity:** the exact opening sentence is “The river overflowed its banks.” It returns in the prediction and attention demonstration. The word/flock motif performs the scale explanation, then retires when concrete task operations begin. All visual and code assets are created anew.
+
+## Actual-frame visual record
+
+These boards use frames from the implemented HTML. They illustrate the current visual draft; they do not replace the timed specification or prove smooth motion, synchronized narration or final acceptance.
+
+![Opening: void, sentence, pullback, murmuration and title](review/opening-storyboard.png)
+
+![One frame from each of the four developed parts](review/four-parts-storyboard.png)
+
+See the [quality scorecard](quality-scorecard.md) for the ten-dimension, four-part acceptance matrix and the [production review](production-review.md) for findings, corrections and verification limits.
+
+The [narration and sound plan](narration-and-sound-plan.md) covers all 85 intervals with proposed performance and sound cues. The [recording script](narration-script.txt) contains the exact retained narration.
 
 ## Four-part route
 
@@ -1637,11 +1649,11 @@ Public provenance: [earlier transcript source](https://github.com/hadi-nayebi/ha
 
 ### Google I/O 2026 — company-reported processing
 
-[Primary source](https://blog.google/intl/en-africa/products/explore-get-answers/sundar-pichai-io-2026/?hl=en-GB)
+[Primary source](https://blog.google/innovation-and-ai/sundar-pichai-io-2026/)
 
 **Used for:** Reported monthly processing and dated 2024/2026 endpoints. Earlier source record gives 9.7 trillion in 2024 and more than 3,200 trillion in 2026.
 
-**Verification state:** Carried from transcript research; must be re-opened and verified before the final factual release review. No fresh verification is claimed by this plan.
+**Verification state:** Verified against Google’s 19 May 2026 I/O account on 19 November 2026: 9.7 trillion monthly tokens in 2024 and over 3.2 quadrillion in 2026 across its AI surfaces. The film displays the rounded reference quantity and retains company/date scope.
 
 **Boundary:** Processed tokens are not unique generated text, measured useful work, or a global industry total.
 
@@ -1651,7 +1663,7 @@ Public provenance: [earlier transcript source](https://github.com/hadi-nayebi/ha
 
 **Used for:** The approximately 300-trillion-token central estimate of effective usable human-generated public text.
 
-**Verification state:** Carried source, pending fresh source check for the final artifact.
+**Verification state:** Verified against the primary Epoch AI paper on 19 November 2026: approximately 300 trillion effective tokens of usable public human-generated text, with quality and repetition adjustment and substantial uncertainty.
 
 **Boundary:** An estimated stock, not all human writing, all knowledge, annual output or cognition. 3,200/300 = 10⅔ is arithmetic on reference quantities, not an exact empirical productivity ratio.
 
@@ -1661,9 +1673,19 @@ Public provenance: [earlier transcript source](https://github.com/hadi-nayebi/ha
 
 **Used for:** The 2017 Transformer architectural milestone.
 
-**Verification state:** Primary source identified; final review must verify the exact claims carried by the visual.
+**Verification state:** Verified against the 2017 primary paper on 19 November 2026. The visual treats the Transformer as an architectural milestone; it does not treat earlier attention research, all AI or agentic tool execution as inventions of this paper.
 
 **Boundary:** The paper did not invent all attention, language modeling or AI. A model architecture, a trained model and a surrounding agentic system are distinct.
+
+### US National Weather Service — Flood hazards
+
+[Primary source](https://www.weather.gov/safety/flood-hazards)
+
+**Used for:** The illustrative search answer about water exceeding a river channel’s carrying capacity.
+
+**Verification state:** Verified primary source on 19 November 2026. This is a drawn explanatory example, not a live search result.
+
+**Boundary:** No measured model result or live retrieval is claimed.
 
 ## Review gates
 
@@ -1673,7 +1695,7 @@ All four parts and all 25 exact transcript lines are present. Parts own the corr
 
 **Evidence required:** Structural check of the plan and a complete continuous playback after implementation.
 
-**Current state:** Plan structure checked; produced-film playback not yet reviewed.
+**Current state:** Four parts, 25 exact lines and 85 contiguous intervals checked. The complete visual run reached 143s without a renderer error; this does not establish smooth motion or final audiovisual acceptance.
 
 ### R2-opening
 
@@ -1681,7 +1703,7 @@ True void before 0.15s; exact concrete sentence; overlapping retreat and acceler
 
 **Evidence required:** First frame, sentence frame, word-to-dot frame, flock frame, first-readable-claim timestamp and continuous opening playback.
 
-**Current state:** Planned, not observed.
+**Current state:** Actual opening frames reviewed from the void through the complete title at 2.000s. See review/opening-storyboard.png. Continuous motion and final voice alignment remain open.
 
 ### R3-medium
 
@@ -1689,7 +1711,7 @@ Ink/ivory/cobalt/amber cinematic 2D geometry. Only functional labels, quantities
 
 **Evidence required:** Source provenance check plus actual playing/paused frames.
 
-**Current state:** Planned, not observed.
+**Current state:** New self-contained renderer inspected. Actual play/pause behavior and full-viewport entry verified; controls hide during playback. Fresh narration is still absent.
 
 ### R4-responsive
 
@@ -1697,7 +1719,7 @@ Primary 16:9 composition and deliberately rearranged portrait staging. Compariso
 
 **Evidence required:** Complete playback and key frames at intended landscape and portrait sizes.
 
-**Current state:** Planned, not observed.
+**Current state:** 85 desktop interval samples and 25 portrait passage samples inspected, followed by targeted corrections and rechecks. Complete portrait motion acceptance remains open.
 
 ### R5-claims
 
@@ -1705,7 +1727,7 @@ Verify material statistics against primary sources; retain company attribution, 
 
 **Evidence required:** Source notes tied to the actual final words, labels and visual implications.
 
-**Current state:** Pending fresh source verification and produced-film review.
+**Current state:** Primary Google, Epoch AI and Transformer sources verified on 19 November 2026. Source and visual-meaning boundaries are recorded in production-review.md; final audiovisual inference review remains open.
 
 ### R6-narration
 
@@ -1713,7 +1735,7 @@ One fresh natural performance of the supplied wording. No old recording substitu
 
 **Evidence required:** Full audio listen, exact transcript comparison, measured timing map and continuous audiovisual playback.
 
-**Current state:** Fresh narration absent; synchronization not verified.
+**Current state:** Fresh narration and sound are absent; final timing and audio synchronization are not verified.
 
 ### R7-perception
 
@@ -1721,7 +1743,7 @@ Each beat has one clear attention target, an explanatory action and an earned ne
 
 **Evidence required:** Independent cold-viewer and pacing review of the whole produced film, with concrete findings and corrected intervals.
 
-**Current state:** Planned, not observed.
+**Current state:** Independent actual-frame review found and rechecked layout, continuity and explanation defects. Complete final audiovisual pacing and cold-viewer review remain open.
 
 ### R8-delivery
 
@@ -1729,7 +1751,7 @@ Review requirements, common sense/usability and critical accuracy/behavior as di
 
 **Evidence required:** Dated findings on actual files and playback; no self-assigned score substitutes for evidence.
 
-**Current state:** Plan self-review complete; final production gates not run.
+**Current state:** Requirements, usability and critical-verification passes recorded in production-review.md with corrections and retests. Final audiovisual and comparative acceptance remain open.
 
 ## Ten dimensions of production quality
 
@@ -1859,15 +1881,17 @@ All four parts, 25 prose lines and every recorded interval receive a finished vi
 
 **Completion rule:** every dimension must be supported by actual evidence across all four parts. Compare the new film with the current version directly. Keep planned, implemented, observed and accepted distinct; do not invent a numerical improvement factor or call the competition target achieved from intention, file coverage or one polished segment.
 
-## Plan self-review receipt
+## Original plan self-review receipt
+
+This receipt describes the planning stage. Current implementation findings and limits are recorded in [production-review.md](production-review.md).
 
 **Requirements:** checked 4 parts, 25 verbatim narration lines, all requested opening stages, complete interval coverage, maximum two-second intervals, named motion beats and the fresh-narration/no-reuse boundaries.
 
 **Common sense and usability:** kept one causal action per interval, made holds explicit, carried objects between adjacent passages, retired the flock when examples become concrete, and made responsive composition and restrained text part of the acceptance conditions.
 
-**Critical verification:** preserved company-report and estimate qualifiers, exact common-unit arithmetic, stock/flow and metaphor boundaries, training/use separation, external tool execution and honest acceptance states. Sources have not been freshly reverified here, audio is absent, and no rendered-film check is claimed.
+**Critical verification:** preserved company-report and estimate qualifiers, exact common-unit arithmetic, stock/flow and metaphor boundaries, training/use separation, external tool execution and honest acceptance states. At the planning stage, sources had not been freshly reverified and no rendered-film check was claimed. Source verification and visual review have since been recorded above; fresh audio remains absent.
 
-**Remaining dependencies:** fresh narration and alignment; current primary-source verification; implementation of every interval; actual landscape/portrait playback; independent story, pacing and accuracy review. These are production dependencies, not new approval questions.
+**Remaining dependencies:** fresh narration, sound and alignment; reliable continuous motion review at intended desktop and portrait sizes; final story, pacing, meaning and baseline comparison. These are production dependencies, not new approval questions.
 
 ## Narration and timing architecture
 
