@@ -64,3 +64,159 @@ Numeral pulse (convergent, motion+readability) → "Scale behaviour" diagnostics
 1. **Reusability 68 — the blocking lens.** (a) Recovery is detection-deep only: the count-normalization path preserves invalid anchor TIMES (reordered/negative/non-finite/duplicate times survive rejection, malformed tables can throw, and the derived table is never re-validated) — attempt 3 validates times as well as counts and validates the effective table after recovery. (b) Short-list timing policy: a 1-line derivation completes at 3000 ms while the caption waits at 7000 ms — attempt 3 names and tests the short-list policy (1-line case included) instead of only the 2/50 cases. (c) Duration policy: a valid table can end after totalDurationMs and rendering clamps before completion — attempt 3 validates the schedule against the duration or rescales timings with it, explicitly. (d) Strict numeric parsing: `parseFloat("2junk")` → 2 and `parseInt("3500junk")` → 3500 are accepted today; the checkpoint-time override also assumes ≥3 anchors — attempt 3 parses strictly and guards the anchor count. (e) Remaining presentation literals → CONFIG: stage aspect/width constraint, outer background, font weights, numeral line-height/letter-spacing, chevron opacity, label spacing factor, button weight/line-height, and the glyph-metric constants inside the fit formula. (f) Runtime-sequence evidence: repeated seek/restart command sequences and paused-resize window recompute are asserted only at construction level today — attempt 3 exercises them (the paused-resize path currently derives geometry without re-rendering the visible window).
 2. **Readability 76:** complete titles at the 11 px floor (the deferred horizontal cure, bound to the same geometry re-pricing as the 13-row deferral: a wider effective column or a different stage allocation, never a smaller font); audit every title against the fit formula, not only the longest; rendered phone-size frames once a render route exists (PIXEL-UNVERIFIED stands until then); 11 px itself was noted by the lens as small for first-time reading — attempt 3 re-prices the floor against any new geometry.
 3. **Motion 88:** restore the evidenced 13-row retention window — the same deferred geometry; if attempt 3's re-pricing cannot seat 13 rows at the floor either, the deferral re-files with its new arithmetic rather than expiring silently.
+
+## Attempt 3 — 2026-11-19 (practice Cycle-031 Wave 30)
+
+| Lens | Score | Return |
+|---|---|---|
+| Motion fidelity | 94 | codex/attempt-3/lens-motion-attempt3-run1.md |
+| Timing / tempo match | 98 | codex/attempt-3/lens-timing-attempt3-run1.md |
+| Construction purity | 100 | codex/attempt-3/lens-purity-attempt3-run1.md |
+| Reusability / parameterization | 76 | codex/attempt-3/lens-reusability-attempt3-run2.md |
+| Readability | 84 | codex/attempt-3/lens-readability-attempt3-run1.md |
+
+**Arithmetic (mechanical guard 1, recomputed from the filed returns of
+both attempts; every filed SCORE scale-validated as a single integer
+0–100):** (94 + 98 + 100 + 76 + 84) / 5 = 452 / 5 = **90.4 average** ·
+minimum lens **76**.
+**Delta vs attempt 2:** 90.4 − 86.4 = **+4.0** (signed, one decimal).
+Per lens: motion 88 → 94 (+6) · timing 100 → 98 (−2) · purity 100 →
+100 (0) · reusability 68 → 76 (+8) · readability 76 → 84 (+8).
+**Bar:** average ≥ 85 AND no lens under 70.
+**VERDICT: PASS** — both terms pass (90.4 ≥ 85; minimum 76 ≥ 70).
+Tier consequence: **RECREATED** — the tier move itself is the
+style-library job's act on this evidence; the hand-off pointer is this
+Attempt 3 entry (scores.md, Attempt 3) plus build-record-attempt3.md.
+All five filed returns judge the identical final source:
+recreation.html sha256 `0e54046f9b06a836e6909c662bb4ebec6d6212d35f670ec348780bd35e8d6b2d`
+(payload manifest: codex/attempt-3/manifest-attempt3.md, filed before
+firing; the reusability run1 firing was terminated with no return —
+preserved as lens-reusability-attempt3-run1-FAILED.md — and re-fired
+as run2 on a byte-identical payload copy; every filed return is
+sha-identical to its workspace-scratch original).
+
+**WHY determination (floor rule, plan §0 amendment):** the attempt
+BEATS the prior average (90.4 > 86.4), so no WHY is owed — the WHY
+duty is owed iff the new average is ≤ 86.4, independent of the tier
+verdict, and that condition does not hold. The jev-plateau call point
+(§5.4) therefore does not fire this attempt; its non-firing is this
+determination, not an omission. The class-bound plateau tests below
+fire per class regardless of the average and are filed in full.
+
+### Class-bound plateau tests (A-C029-2 — each with evidence + disposition slots)
+
+1. **Recovery-validation class** (primary lens: reusability).
+   Evidence slot: S1 checkpoint (30/30, incl. R-1) + the sweep's
+   recovery axis on the final source (28/28) + the reusability
+   return's validation/recovery passage. Disposition: **NOT FIRED** —
+   leg (a) in attempt 2's own terms (invalid anchor times surviving ·
+   malformed tables throwing · effective table unvalidated): all
+   three terms are cured and none is priced against this attempt;
+   leg (b): the class's primary lens rose 68 → 76 and the return
+   gives no class-attributed deduction figure (attribution limit
+   recorded, per the scaffold's rule). The return DOES price new
+   siblings in the wider recovery family — they are filed as priced
+   gaps below, not as this class firing.
+2. **Short-list/duration policy class** (reusability). Evidence slot:
+   S2a + S2b checkpoints + R-2/R-3 sweep cases + the return's schedule
+   portability passage (it credits anchor-preserving derivation:
+   terminal count first appears at the 7000 ms anchor for 1/2/3/50
+   lines; a fractional anchor override survives a list swap).
+   Disposition: **NOT FIRED** — completion == final anchor for every
+   tested count; no tested schedule ends after its duration. The
+   return's duration counterexample (mutually inconsistent edited
+   defaults) is a defaults-intake sibling, filed below.
+3. **Strict-parsing class** (reusability). Evidence slot: S3
+   checkpoint (18/18) + the return's validation passage ("The query
+   route checks numeric syntax and neighboring anchor bounds" — no
+   junk-suffixed or truncated acceptance priced on any route).
+   Disposition: **NOT FIRED**.
+4. **CONFIG-literal class** (reusability). Evidence slot: S4
+   checkpoint (31/31) + config-census-attempt-3.md (70/70 keys
+   consumed) + the return's configuration passage. Disposition:
+   **NOT FIRED** on the filed list — every filed-list literal is in
+   CONFIG with a consumed effect. Residue priced by the return,
+   filed as gaps below: the speed ceiling and the scale precision
+   (whitelisted in this build's census as structural constants — the
+   classification disagreement is printed, not hidden) and
+   CSS-resident alignment/centering properties (a new sibling
+   surface, not on the filed list).
+5. **Runtime-sequence class** (reusability). Evidence slot: S6
+   checkpoint's three probes (sequence suite 12/12 · paused-resize
+   before/after · endpoint clamping) + the return's clock passage
+   (it credits synchronous paused seeks and resize recompute at the
+   current elapsed time). Disposition: **NOT FIRED** — neither of
+   attempt 2's terms (construction-only evidence · paused-resize not
+   re-rendering) is priced against this attempt. Two new siblings in
+   the family are filed as gaps below (pause does not render the
+   captured instant synchronously; the exposed schedule is a live
+   reference).
+6. **Horizontal-fit class** (readability). Evidence slot: S5a probe +
+   fit-table-attempt-3.md (39/39 titles fit at both widths, worst
+   margin +2.85 px) + the readability return (it confirms all 39 fit
+   at both widths; the 40-char synthetic clips — the filed
+   expected-overflow control, not a default title). Disposition:
+   **NOT FIRED**.
+7. **Retention-window class** (motion). Evidence slot: S5c probe +
+   S5 assembled checks (windows 8–20 at 3000 ms, 25–37 at 6000 ms
+   under full load) + the motion return (it confirms rows 8–20 and
+   25–37 at the evidenced checkpoints). Disposition: **NOT FIRED** —
+   Route D bound at S0 (Route C falsified on displayed text bounds;
+   Route E's deferral arithmetic stands unused, not expired).
+8. **Floor / visible-legibility class** (readability). Evidence slot:
+   S5d floor print (effective ceiling 11.13 px horizontal-bound;
+   11 px = largest whole-pixel floor) + fit-table displayed-bounds
+   leg + the readability return's type passage (type at/just above
+   the floor; no default title priced illegible at the floor; the
+   residual it names is rendered-frame verification, which stands as
+   PIXEL-UNVERIFIED for the whole attempt). Disposition: **NOT
+   FIRED**.
+
+### Priced gaps (what a future attempt must cure — from the attempt-3 returns)
+1. **Reusability 76 — intake/defaults siblings (the blocking residue).**
+   (a) The trusted-basis capture copies the CONFIG anchor table
+   before any validation, so a null or missing CONFIG table (direct-
+   edit route) throws at intake, before recovery can run — intake
+   must be shape-guarded so recovery is total on every route.
+   (b) The captured "defaults" (anchor basis, default duration,
+   default caption point) are read from the editable CONFIG itself,
+   so a direct edit that makes the defaults mutually inconsistent
+   (e.g. a 6000 ms default duration against the 7000 ms default final
+   anchor) is not jointly rejected — the validated specimen defaults
+   must be independent of the edited values, and the returned tuple
+   needs a final validation pass. (c) The derivation function called
+   directly with a zero line count emits −1 intermediate counts (the
+   resolver's own path guards this; the function itself does not).
+   (d) `pause()` captures the elapsed instant without rendering it
+   synchronously. (e) The exposed `checkpoints` value is the live
+   schedule array by reference — callers can bypass validation;
+   expose a copy. (f) `finalCount` reads as an independent setting
+   while the list owns the count. (g) Classification residue: the
+   speed ceiling (10) and scale precision (4) sit in logic under this
+   build's structural whitelist, and numeral alignment / caption
+   centering sit in CSS — the return prices all four as
+   configuration surface.
+2. **Readability 84:** title margins are thin (+2.85/+3.19 px) and
+   the fit claim is model-bound — a rendered phone-size check at
+   360/390 px is the named next evidence (PIXEL-UNVERIFIED stands
+   lane-wide until a render route exists); per-title reading windows
+   (1.00–3.76 s, median 2.19 s) are priced as scannable rather than
+   leisurely, a property of the evidenced cadence itself.
+3. **Timing 98 / Motion 94:** both residuals are the same limit —
+   browser paint and wall-clock cadence are unverified (the returns
+   credit the source schedule and retention in full and deduct only
+   for the missing rendered check). No construction change is priced
+   by either return against the default schedule or the retention
+   window.
+
+### Preservation census (post-filing)
+recreation-attempt-1.html + recreation-attempt-2.html (content copy,
+sha 11b02a33…354757) byte-identical to baseline ✓ · build records,
+comparison.html and segment.mp4 (the comparison's ORIGINAL asset)
+byte-identical ✓ · all attempt-1/attempt-2 codex files byte-identical
+✓ · scores.md prior content remains an exact prefix of this file
+(append-only; verified by length + prefix hash after filing) ·
+comparison.html UNCHANGED this attempt (interface unchanged: same
+window.T02 commands, anchors, durations) · staged checkpoints filed
+create-once under checkpoints-attempt-3/ (S0, S1, S2a, S2b, S3, S4,
+S5a–S5d probes, S5, S6 — each a content copy with its check output).

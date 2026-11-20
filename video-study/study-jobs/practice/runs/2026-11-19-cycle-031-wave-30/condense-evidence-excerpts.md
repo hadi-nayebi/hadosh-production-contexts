@@ -1,0 +1,18 @@
+# Cycle-031 Condense — evidence excerpts (lens-return passages each lesson cites)
+
+## T23 a16 reusability (58) — data-group counterexamples
+can produce different results or fail at startup.** In direct `CONFIG` probes, `artRegistry: null` threw at `Object.keys`, and `panels: null` threw at `.map`, both before the group recovery guards. Direct `layout: null` and `palette: null` recovered with warnings. The URL accepts individual `cfg:group.field` overrides and has no equivalent whole-group null operation. Malformed appearance data also differs: changing the first `
+.** In direct `CONFIG` probes, `artRegistry: null` threw at `Object.keys`, and `panels: null` threw at `.map`, both before the group recovery guards. Direct `layout: null` and `palette: null` recovered with warnings. The URL accepts individual `cfg:group.field` overrides and has no equivalent whole-group null operation. Malformed appearance data also differs: changing the first `dive` to `"bad"` in `CONFIG` dropped that appear
+
+## T02 a3 reusability (76) — direct-edit siblings
+
+
+## T11 a6 readability (78) — arch credit
+readability.txt:31) - **Arch and reviewers.** The opening widens from a pointed apex toward the base, giving the silhouette two recognizable legs. At 6.4 px, the shading glyphs are likely to blend at phone size, so recognition depends on the opening and outline. Reviewers have distinct parts in source, but their 9 px heads and 2 px arms and bodies make them easier to read as a group than as individual figures. The fullest row 
+payload-readability.txt:31) - **Arch and reviewers.** The opening widens from a pointed apex toward the base, giving the silhouette two recognizable legs. At 6.4 px, the shading glyphs are likely to blend at phone size, so recognition depends on the opening and outline. Reviewers have distinct parts in source, but their 9 px heads and 2 px arms and bodies make them easier to read as a group than as individual figures. The full
+, this raises an overlap risk because `.main` can shrink while the preformatted arch retains its line height. [Figure and arch layout](payload-readability.txt:63) · [Opening geometry](payload-readability.txt:314) - **Settled stamp.** The centered 34 px, weight-900 `LGTM` with a 4 px green border has a strong reading profile at full scale. The two full-opacity holds are 502 ms and 250 ms, computed from the ends of the slams and
+
+## T17 a11 purity (86) — generation scope residue
+ession case that rejects URL-bearing and declaration-bearing overrides. - **The literal census misses controls that shape the figures.** `BUILDERS.lineChart` sets the axis start at `y1:8` and uses fixed `+4` and `-4` label offsets. `BUILDERS.stackBars` sets the donut label baseline at `g.chartH/2+6`. `figureGeom()` adds a fixed `10` per org-chart row to its height estimate. These values affect placement or fit. The next attemp
+## T02 a3 reusability (76) — intake/recovery passage (seat-added)
+"In direct probes the recovery branch returns without a final validation pass (Config intake · Schedule recovery, payload-bound citations in the return); regression cases named for empty lists combined with short durations and malformed source defaults; pause() captures elapsed time but leaves the DOM at the previous frame until another render; the public checkpoints array exposes the live schedule by reference. SCORE: 76." — the builder's filing names the two direct-edit siblings precisely (intake copy before validation can throw on a null CONFIG table; captured defaults follow edits to the CONFIG defaults, so mutually inconsistent edited defaults are not jointly rejected).

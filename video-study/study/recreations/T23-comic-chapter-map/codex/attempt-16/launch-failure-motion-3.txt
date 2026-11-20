@@ -1,0 +1,5 @@
+LAUNCH FAILURE — T23 attempt 16, motion lens, firing run 3.
+Form as fired: run 2's form plus a minimal CODEX_HOME (auth.json + config.toml only, no plugin cache) at ~/workspace/.scratch/cycle-031/codex-home.
+Result: exit code 101 after ~2 s; no return. Session id 01a1f2ba-8bf8-7cf3-a680-2f15f23520cb.
+Diagnosis across runs 1-3: every failed firing's captured output saturates at the same ~64 KB ceiling — Codex echoes the entire fed payload (~240 KB) to stderr as its session transcript, and the exec capture truncates at that ceiling with the process dying mid-echo (the echo stops at the same byte region in all three runs; two minimal-prompt machinery checks with small stderr completed cleanly). The cure is at the shell layer, not the payload: stderr is redirected to a session log file inside the firing command, so the capture carries only the small stdout return. Run 4 fires in that form.
+Preserved as instr-motion-run3.txt + this note.

@@ -1,0 +1,12 @@
+**Verdict — T17 attempt 11 is self-contained as shipped. Its public configuration path does not preserve asset independence, and several figure geometry values remain outside `CONFIG`.**
+
+**Findings**
+
+- **Standalone source and subject isolation.** The supplied HTML contains its CSS, JavaScript and generated SVG. `browserDom()` uses the SVG namespace URI to create elements. The masthead, Mac minis label, Adita badge and correction copy all come from `CONFIG` figure or header fields. The Freeze suite reports that specimen strings were absent from the mounted alternate preset. That result supports subject replacement in the stub, alongside the source evidence that the builders read their copy from configuration.
+- **The public swap can admit external assets through style values.** `validateConfig()` checks fonts and core palette values as nonempty strings. `stageVarEmission()` sends `palette.cardTint` into `.card`’s `background` shorthand, which accepts URL images. Several builders also interpolate font or palette strings into `style.cssText`, allowing a string with a declaration separator to introduce another CSS property. The startup query parser exposes palette overrides as well. The Freeze suite’s URL scan checks the shipped source. The next attempt should enforce asset-free color and font-family values at both configuration entry points, apply them through individual CSS properties, and carry a regression case that rejects URL-bearing and declaration-bearing overrides.
+- **The literal census misses controls that shape the figures.** `BUILDERS.lineChart` sets the axis start at `y1:8` and uses fixed `+4` and `-4` label offsets. `BUILDERS.stackBars` sets the donut label baseline at `g.chartH/2+6`. `figureGeom()` adds a fixed `10` per org-chart row to its height estimate. These values affect placement or fit. The next attempt should give each a named configuration value or derive it from shared chart or type metrics, then probe the affected placement and fit.
+
+**Limits —** Source review establishes which values reach the CSS sinks and which geometry values are fixed. The alternate-preset and swap findings are stub-level. A live browser request, real-DOM rollback and rendered output remain unverified. No RECREATED cutoff was supplied, so the score applies to purity alone.
+
+BODY-WRITE: Carry asset-free configuration ingestion and shared, named figure geometry into the next attempt, with probes for rejected style values and configurable placement.
+SCORE: 86

@@ -36,8 +36,8 @@ const CONFIG = {
   fonts: { serif:"Georgia,'Times New Roman',serif", sans:"Arial,sans-serif", hand:"'Comic Sans MS','Segoe Print',cursive" },
   formatting: { counterLocale:"en-US", ofWord:"of", stackUnitSymbol:"▭", waffleInactiveOpacity:0.18, nodeSymbol:"⬛", badgeStarSep:"  ★ ", badgeDashSep:" — ", ceoSep:" — ", badgeHandFont:"hand", badgeSansFont:"sans", cliffDash:"5 5", counterLabelOpacity:0.85 },
   timing: { minHoldSec:0.6, drawEnd:0.92, stackEnd:0.90, barsEnd:0.85, ceoAt:0.05, nodeStart:0.15, nodeEnd:0.72, badgeAt:0.80, badgeFrom:1.6, badgeDur:0.15, badgeEasePow:2, connectorDrawSpan:0.08,
-            corrAt:0.08, stampAt:0.35, stampDur:0.12, stampFrom:2.4, stampRotationDeg:-8, stampApproach:0.5, stampReboundEnd:0.75, stampOvershoot:1.1, stampCompress:0.93,
-            noteStart:0.55, noteFade:0.15, readMsPerChar:20, typeMsPerChar:26, minTypeSec:0.8, minFillSec:0.6, fillSec:1.2, typeStartSec:0.7,
+            corrAt:0.08, stampAt:0.50, stampDur:0.12, stampFrom:2.4, stampRotationDeg:-8, stampApproach:0.5, stampReboundEnd:0.75, stampOvershoot:1.1, stampCompress:0.93,
+            noteStart:0.65, noteFade:0.15, readMsPerChar:20, typeMsPerChar:26, minTypeSec:0.8, minFillSec:0.6, fillSec:1.2, typeStartSec:0.95,
             sampleStep:0.02, maxSamples:512, cliffMarkerAt:0.5, cliffBudgetMargin:0.05, preCliffDropMaxFrac:0.05, stackArrivalSpan:1.6, stackEasePow:2, stampEasePowIn:3, stampEasePowOut:2, animFractionFloor:0.05, figureTransitionSec:0.45, transitionOutSpan:0.55, transitionInStart:0.45, transitionInSpan:0.55, transitionFloorOpacity:0.35, transitionFloorRelease:0.5, transitionInFloorOpacity:0.35, openingDwellSec:0.3, counterHoldSec:0.85 },
   layout: { fig22GapPx:8, figPadTopPx:6, headingMarginTopPx:3, headingMarginBottomPx:8, srcMarginTopPx:6, bottomClearancePx:8, cardPaddingPx:12, cardBorderPx:1.5, cardRadiusPx:8, dotBorderPx:2, stampBorderPx:4, stampRadiusPx:6, stackUnitBorderPx:2, stackUnitRadiusPx:5, stackUnitGapPx:4, stackArrivalOffsetPx:14, stackUnitMaxH:16, phoneStageBudgetPx:640, metaPadX:28, metaMinGapPx:12, headerRuleMarginTopPx:8, headerRuleBoxPx:5, headerRuleBorderTopPx:3, headerRuleBorderBottomPx:1, metaPadYPx:5, metaBorderPx:2, headerAfterMetaPx:4, titleMarginMinPx:1,
             charWidthBody:0.52, charWidthLabel:0.62, charWidths:{space:0.30, narrow:0.34, wide:0.88, upper:0.66, digit:0.56}, stampCharWidth:0.78, stampPadX:28, stampPadY:16, stampAreaBudgetPx:150, stampLetterSpacingEm:0.08, badgeClearancePx:16,
@@ -97,9 +97,9 @@ function summaryTiming(fig,cfg){const T=(cfg||CONFIG).timing;
   const holdSec=Math.max(T.minHoldSec, fig.summaryText.length*T.readMsPerChar/1000);
   const typeDurSec=fig.summaryText.length*T.typeMsPerChar/1000;
   return { holdSec:holdSec, readSec:fig.summaryText.length*T.readMsPerChar/1000, typeStartSec:T.typeStartSec,
-           typeDurSec:typeDurSec, fillSec:T.fillSec, completionSec:T.typeStartSec+typeDurSec };}
+           typeDurSec:typeDurSec, fillSec:T.fillSec, fillStartSec:T.figureTransitionSec/2, completionSec:T.typeStartSec+typeDurSec };}
 function waffleState(fig,p,cfg){const st=summaryTiming(fig,cfg); const tSec=clamp01(p)*fig.dur;
-  const filled=Math.floor(clamp01(tSec/st.fillSec)*fig.waffleTotal);
+  const filled=Math.floor(clamp01((tSec-st.fillStartSec)/st.fillSec)*fig.waffleTotal);
   const sq=clamp01((tSec-st.typeStartSec)/st.typeDurSec);
   const yd={x:(fig.youIndex%fig.waffleCols), y:Math.floor(fig.youIndex/fig.waffleCols)};
   return {filled:Math.min(fig.waffleTotal,filled), youVisible:filled>fig.youIndex, youDot:yd, summaryChars:Math.floor(sq*fig.summaryText.length), holdSec:st.holdSec};}
@@ -228,6 +228,13 @@ function cardInnerW(w,cfg){const c=cfg||CONFIG; return w-2*(c.layout.cardBorderP
 function cardPad2(cfg){const c=cfg||CONFIG; return 2*c.layout.cardPaddingPx;}
 function widestTokenW(text,fontPx,cfg,kind){ let m=0; for(const wd of String(text).split(" ")) m=Math.max(m,textWidth(wd,fontPx,cfg,kind)); return m; }
 function elementOccW(text,innerW,fontPx,cfg,kind){ const lines=wordWrapLines(text,innerW,fontPx,cfg,kind); let lineMax=0; lines.forEach(ln=>{ lineMax=Math.max(lineMax,textWidth(ln,fontPx,cfg,kind)); }); return Math.max(lineMax, widestTokenW(text,fontPx,cfg,kind)); }
+function flexCenters(contentW,count,itemW,gapPx){
+  if(count<1) return [];
+  const free=contentW-count*itemW-(count-1)*gapPx;
+  const around=free/count, edge=around/2, out=[];
+  for(let i=0;i<count;i++) out.push(edge+itemW/2+i*(itemW+gapPx+around));
+  return out;
+}
 function figureGeom(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeights; const cw=L.contentW;
   if(fig.type==="lineChart"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.line), chartH=L.phone?c.layout.chartHeights.linePhone:c.layout.chartHeights.lineDesktop;
     const cardW=L.phone?cw:cw-chartW-c.layout.rowGapPx, cardH=textLines(fig.cardText,cardInnerW(cardW,c),L.bodyPx,c)*L.bodyPx*LH.body+cardPad2(c);
@@ -264,7 +271,8 @@ function figureGeom(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeight
     const stackH=fig.stackCount*(unitH+unitGap)+arrival;
     const leftOcc=Math.max(L.phone?cw:c.layout.stackColWidthPx, textWidth(fig.stackLabel,L.bodyPx,c), textWidth(String(fig.stackCount),L.bodyPx,c));
     const chartOcc=Math.max(chartW, textWidth(fig.donutLabel,L.labelPx,c,"label"));
-    return {chartW,chartH,unitH,unitHRaw,unitFloor,unitHOver:unitHRaw<unitFloor,stackH,counterH,stackBudget,arrivalReserve:arrival, blockH:L.phone?counterH+stackH+gap+chartH:Math.max(stackH+counterH,chartH), maxW:L.phone?Math.max(leftOcc,chartOcc):leftOcc+gap+chartOcc};}
+    const donutR=Math.min(c.layout.donut.rMax,chartH*c.layout.donut.rFrac), donutInnerDiam=2*donutR-c.layout.donut.strokeW, donutLabelW=textWidth(fig.donutLabel,L.labelPx,c,"label");
+    return {chartW,chartH,donutInnerDiam:donutInnerDiam,donutLabelW:donutLabelW,donutLabelOverflowRisk:donutLabelW>donutInnerDiam,unitH,unitHRaw,unitFloor,unitHOver:unitHRaw<unitFloor,stackH,counterH,stackBudget,arrivalReserve:arrival, blockH:L.phone?counterH+stackH+gap+chartH:Math.max(stackH+counterH,chartH), maxW:L.phone?Math.max(leftOcc,chartOcc):leftOcc+gap+chartOcc};}
   if(fig.type==="orgChart"){ if(!Array.isArray(fig.nodes)||!fig.nodes.length) return {nodeW:0,perRow:1,rows:0,ceoH:0,nodesH:0,badgeH:0,badgeReserveH:0, blockH:0, maxW:0};
     const longest=Math.max.apply(null,fig.nodes.map(n=>n.length));
     const nodeW=Math.max.apply(null, fig.nodes.map(n=>textWidth(c.formatting.nodeSymbol+" "+n, L.labelPx, c, "label")))+c.layout.nodePadX; let perRow=Math.max(1,Math.floor(cw/nodeW)); while(perRow>1 && perRow*nodeW+(perRow-1)*c.layout.orgRowGapPx>cw) perRow--; const rows=Math.ceil(fig.nodes.length/perRow);
@@ -273,7 +281,8 @@ function figureGeom(fig,L,cfg){const c=cfg||CONFIG; const LH=c.layout.lineHeight
     const badgeH=bm.h, badgeReserveH=bm.h*badgeCap(fig,L,c);
     const ceoBoxW=Math.min(c.layout.ceoMaxW,cw);
     const ceoOcc=Math.max(ceoBoxW, elementOccW(fig.ceo+c.formatting.ceoSep+fig.ceoSub,cardInnerW(ceoBoxW,c),L.bodyPx,c)+cardPad2(c)+2*c.layout.cardBorderPx);
-    return {nodeW,perRow,rows,ceoH,nodesH,badgeH,badgeReserveH, ceoOcc, blockH:ceoH+rows*(c.layout.connectorMarginTopPx+c.layout.connectorHeightPx+c.layout.orgRowMarginTop)+nodesH+c.layout.badgeMarginTop+badgeReserveH, maxW:Math.max(ceoOcc, perRow*nodeW+(perRow-1)*c.layout.orgRowGapPx, textWidth(fig.onlyNote,L.handPx,c)+textWidth(c.formatting.badgeStarSep+fig.badgeName+c.formatting.badgeDashSep+fig.badge,L.bodyPx,c))};}
+    const rowCenters=[]; for(let r0=0;r0<rows;r0++){ const cnt=Math.min(perRow, fig.nodes.length-r0*perRow); rowCenters.push(flexCenters(cw,cnt,nodeW,c.layout.orgRowGapPx)); }
+    return {nodeW,perRow,rows,rowCenters,ceoH,nodesH,badgeH,badgeReserveH, ceoOcc, blockH:ceoH+rows*(c.layout.connectorMarginTopPx+c.layout.connectorHeightPx+c.layout.orgRowMarginTop)+nodesH+c.layout.badgeMarginTop+badgeReserveH, maxW:Math.max(ceoOcc, perRow*nodeW+(perRow-1)*c.layout.orgRowGapPx, textWidth(fig.onlyNote,L.handPx,c)+textWidth(c.formatting.badgeStarSep+fig.badgeName+c.formatting.badgeDashSep+fig.badge,L.bodyPx,c))};}
   if(fig.type==="counterGraph"){const chartW=L.phone?cw:Math.min(c.layout.chartMaxW,cw*c.layout.chartWidthFrac.counter), chartH=L.phone?c.layout.chartHeights.counterPhone:c.layout.chartHeights.counterDesktop;
     const cardW=L.phone?cw:cw-chartW-c.layout.counterGapPx;
     const cardH=textLines(fig.counterLabel,cardInnerW(cardW,c),L.labelPx,c)*L.labelPx*LH.label + L.bigPx*c.layout.bigLineH + textLines(fig.counterSub,cardInnerW(cardW,c),L.bodyPx,c)*L.bodyPx*LH.body + cardPad2(c) + 2*c.layout.counterMarginYPx;
@@ -331,11 +340,13 @@ function fitReport(w,figures,cfg){const c=cfg||CONFIG;
   const fontsOk=L.mastPx>=c.typeFloors.masthead && L.titlePx>=c.typeFloors.figureTitle &&
                 L.bodyPx>=c.typeFloors.body && L.labelPx>=c.typeFloors.label && L.bigPx>=c.typeFloors.bigCounter;
   const rows=figs.map(f=>{ if(f.rejected) return {id:f.id, rejected:true, errors:f.errors, required:null, allocated:Math.round(allocated*10)/10, fits:false, widthOk:false, occupied:null, available:Math.round(L.contentW*10)/10, titleOcc:null};
-    const pt=positionedText(figures.find(x=>x&&x.id===f.id),L,c); const ptOk=pt.every(e=>e.ok);
+    const srcFig=figures.find(x=>x&&x.id===f.id);
+    if(!srcFig) return {id:f.id, rejected:true, errors:["figure record could not be resolved by id"], required:null, allocated:Math.round(allocated*10)/10, fits:false, widthOk:false, occupied:null, available:Math.round(L.contentW*10)/10, titleOcc:null};
+    const pt=positionedText(srcFig,L,c); const ptOk=pt.every(e=>e.ok);
     return {id:f.id, required:Math.round(f.required*10)/10, allocated:Math.round(allocated*10)/10, occupied:Math.round(f.maxW*10)/10, available:Math.round(L.contentW*10)/10, titleOcc:Math.round(f.titleOcc*10)/10,
-    posText:pt, posTextOk:ptOk, marginPx:Math.round((L.contentW-f.titleOcc)*10)/10, titleMarginOk:(figures.find(x=>x&&x.id===f.id).type!=='lineChart')||((L.contentW-f.titleOcc)>=c.layout.titleMarginMinPx-0.001),
-    fits:f.required<=allocated+0.001, widthOk:f.maxW<=L.contentW+0.001&&ptOk&&((figures.find(x=>x&&x.id===f.id).type!=='lineChart')||((L.contentW-f.titleOcc)>=c.layout.titleMarginMinPx-0.001)),
-    headingReserve:Math.round(headingLines(figures.find(x=>x&&x.id===f.id).title,L,c)*L.titlePx*c.layout.lineHeights.title*10)/10}; });
+    posText:pt, posTextOk:ptOk, marginPx:Math.round((L.contentW-f.titleOcc)*10)/10, titleMarginOk:(srcFig.type!=='lineChart')||((L.contentW-f.titleOcc)>=c.layout.titleMarginMinPx-0.001),
+    fits:f.required<=allocated+0.001, widthOk:f.maxW<=L.contentW+0.001&&ptOk&&((srcFig.type!=='lineChart')||((L.contentW-f.titleOcc)>=c.layout.titleMarginMinPx-0.001)),
+    headingReserve:Math.round(headingLines(srcFig.title,L,c)*L.titlePx*c.layout.lineHeights.title*10)/10}; });
   return {width:w, phone:L.phone, clearancePx:L.phone?c.layout.bottomClearancePx:0, stageH:Math.round(stageH*10)/10, headerH:Math.round(L.headerH*10)/10, metaRows:L.metaRows, budgetOk:budgetOk,
     contentW:L.contentW, fonts:{masthead:L.mastPx, figureTitle:L.titlePx, body:L.bodyPx, label:L.labelPx, bigCounter:L.bigPx, hand:L.handPx},
     fontsOk, figures:rows, ok:fontsOk && budgetOk && globalErrs.length===0 && rows.every(r=>r.fits&&r.widthOk), globalErrors:globalErrs};
@@ -357,7 +368,9 @@ function figShapeChecks(f,errs){
   const req=FIG_REQUIRED_FIELDS[f.type]||[];
   req.forEach(k=>{ if(!(k in f)||f[k]===undefined||f[k]===null){ errs.push(f.id+": "+k+" is a required field and is absent"); bad=true; } });
   if(bad) return true;
+  if(Array.isArray(f.bars)&&f.bars.length===0){ errs.push(f.id+": bars must name at least one bar (an empty array draws nothing)"); bad=true; }
   if(Array.isArray(f.bars)) f.bars.forEach((v,i)=>{ if(typeof v!=="number"||!isFinite(v)||v<0||v>1){ errs.push(f.id+": bars["+i+"] must be a finite number in 0..1"); bad=true; } });
+  if(Array.isArray(f.points)&&f.points.length===0){ errs.push(f.id+": points must name at least one point (an empty array draws nothing)"); bad=true; }
   if(Array.isArray(f.points)) f.points.forEach((pt,i)=>{ if(!Array.isArray(pt)||pt.length<2||typeof pt[0]!=="number"||typeof pt[1]!=="number"||!isFinite(pt[0])||!isFinite(pt[1])||pt[0]<0||pt[0]>1||pt[1]<0||pt[1]>1){ errs.push(f.id+": points["+i+"] must be a [x,y] pair of finite numbers in 0..1"); bad=true; } });
   if(Array.isArray(f.yLabels)) f.yLabels.forEach((o,i)=>{ if(!o||typeof o!=="object"||typeof o.y!=="number"||!isFinite(o.y)||o.y<0||o.y>1){ errs.push(f.id+": yLabels["+i+"].y must be a finite number in 0..1"); bad=true; } });
   if("donutFraction" in f && (typeof f.donutFraction!=="number"||!isFinite(f.donutFraction)||f.donutFraction<0||f.donutFraction>1)){ errs.push(f.id+": donutFraction must be a finite number in 0..1"); bad=true; }
@@ -367,6 +380,25 @@ function figShapeChecks(f,errs){
   if("counterStart" in f && (typeof f.counterStart!=="number"||!isFinite(f.counterStart))){ errs.push(f.id+": counterStart must be a finite number"); bad=true; }
   if("counterEnd" in f && (typeof f.counterEnd!=="number"||!isFinite(f.counterEnd))){ errs.push(f.id+": counterEnd must be a finite number"); bad=true; }
   return bad;
+}
+const RENDERER_READS={lineChart:[["chartTitle","string"],["cardText","string"],["xLabels","array"],["yLabels","array"],["points","points"],["postLabelMeaning","string-optional"]],waffle:[["waffleTotal","positive-integer"],["waffleCols","positive-integer"],["youIndex","index"],["youLabel","string"],["waffleLabel","string"],["summaryText","string"]],stackBars:[["stackCount","positive-integer"],["stackLabel","string"],["bars","fractions"],["barLabels","array"],["donutFraction","fraction"],["donutLabel","string"]],orgChart:[["ceo","string"],["ceoSub","string"],["nodes","array"],["badge","string"],["badgeName","string"],["onlyNote","string"]],counterGraph:[["counterStart","number"],["counterEnd","number"],["preCliffDrop","number"],["cliffAt","fraction"],["cliffExponent","positive"],["counterLabel","string"],["counterSub","string"]],correction:[["correction","string"],["stamp","string"],["notes","array"]]};
+function deriveSchema(){
+  const perType={};
+  Object.keys(RENDERER_READS).forEach(t=>{ perType[t]=RENDERER_READS[t].map(([field,kind])=>({field:field,kind:kind,required:kind!=="string-optional"})); });
+  return { perType:perType,
+    timingDomains:[["drawEnd",0,1,true,false],["stackEnd",0,1,true,false],["barsEnd",0,1,true,false],["ceoAt",0,1,false,true],["nodeStart",0,1,false,true],["nodeEnd",0,1,false,true],["corrAt",0,1,false,true],["stampAt",0,1,false,true],["noteStart",0,1,false,true],["cliffMarkerAt",0,1,true,true],["animFractionFloor",0,1,true,true],["preCliffDropMaxFrac",0,1,true,true],["stampCompress",0,1,true,false],["transitionFloorOpacity",0,1,false,false],["transitionInFloorOpacity",0,1,false,false],["transitionFloorRelease",0,1,false,false],["transitionInStart",0,1,false,false],["badgeDur",0,null,true,false],["connectorDrawSpan",0,null,true,false],["stampDur",0,null,true,false],["noteFade",0,null,true,false],["figureTransitionSec",0,null,true,false],["transitionOutSpan",0,null,true,false],["transitionInSpan",0,null,true,false],["stackArrivalSpan",0,null,true,false],["badgeFrom",0,null,true,false],["stampFrom",0,null,true,false],["stampOvershoot",0,null,true,false],["badgeEasePow",0,null,true,false],["stackEasePow",0,null,true,false],["stampEasePowIn",0,null,true,false],["stampEasePowOut",0,null,true,false],["minTypeSec",0,null,false,false],["minFillSec",0,null,false,false],["typeStartSec",0,null,false,false],["openingDwellSec",0,null,false,false],["stampApproach",0,1,true,true],["stampReboundEnd",0,1,true,true]] };
+}
+function schemaFieldChecks(f,errs){
+  const sch=deriveSchema().perType[f.type]; if(!sch) return;
+  sch.forEach(({field,kind,required})=>{
+    if(!(field in f)||f[field]===undefined||f[field]===null){ if(required) errs.push(f.id+": "+field+" is read by its renderer and is absent"); return; }
+    const v=f[field];
+    if(kind==="fraction"&&(typeof v!=="number"||!isFinite(v)||v<0||v>1)) errs.push(f.id+": "+field+" must be a finite fraction within 0..1");
+    if(kind==="positive"&&(typeof v!=="number"||!isFinite(v)||!(v>0))) errs.push(f.id+": "+field+" must be a positive finite number");
+    if(kind==="positive-integer"&&(!Number.isInteger(v)||v<=0)) errs.push(f.id+": "+field+" must be a positive integer");
+    if(kind==="array"&&!Array.isArray(v)) errs.push(f.id+": "+field+" must be an array");
+    if(kind==="fractions"&&(!Array.isArray(v)||v.some(x=>typeof x!=="number"||!isFinite(x)||x<0||x>1))) errs.push(f.id+": "+field+" must be an array of finite fractions within 0..1");
+  });
 }
 function validateConfig(cfg){
   const errs=[]; if(!cfg||typeof cfg!=="object"){errs.push("config absent"); return errs;}
@@ -384,11 +416,16 @@ function validateConfig(cfg){
   if(typeof cfg.formatting.counterLocale!=="string"||!cfg.formatting.counterLocale.length) errs.push("formatting.counterLocale must be a non-empty string"); else { try{ new Intl.NumberFormat(cfg.formatting.counterLocale); }catch(e){ errs.push("formatting.counterLocale \""+cfg.formatting.counterLocale+"\" is not a valid locale: "+((e&&e.message)||e)); } }
   ["paper","ink","red","blue","accent","muted","secondary","pageBg","cardTint","controlInk"].forEach(k=>{ if(typeof cfg.palette[k]!=="string"||!cfg.palette[k].length) errs.push("palette."+k+" is a required palette member and must be a non-empty string"); });
   TIMING_REQUIRED.forEach(k=>{ if(!(k in T)) errs.push("timing."+k+" is a required timing member and is absent"); });
+  deriveSchema().timingDomains.forEach(([k,lo,hi,loEx,hiEx])=>{ const v=T[k]; if(typeof v!=="number"||!isFinite(v)) return;
+    if((loEx?!(v>lo):!(v>=lo))||(hi!==null&&(hiEx?!(v<hi):!(v<=hi)))) errs.push("timing."+k+" "+v+" lies outside the domain its consumers require ("+(loEx?">":">=")+" "+lo+(hi!==null?(" and "+(hiEx?"<":"<=")+" "+hi):"")+")"); });
+  if(typeof T.nodeStart==="number"&&typeof T.nodeEnd==="number"&&!(T.nodeStart<T.nodeEnd)) errs.push("timing.nodeStart must precede timing.nodeEnd (the node thresholds are derived in that order)");
+  if(typeof T.stampApproach==="number"&&typeof T.stampReboundEnd==="number"&&!(T.stampApproach<T.stampReboundEnd)) errs.push("timing.stampApproach must precede timing.stampReboundEnd (the stamp scale is derived in that order)");
   const lay=cfg.layout;
   LAYOUT_REQUIRED.forEach(k=>{ if(!(k in lay)) errs.push("layout."+k+" is a required layout member and is absent"); else if(LAYOUT_GROUPS.every(([g])=>g!==k)&&(typeof lay[k]!=="number"||!isFinite(lay[k]))) errs.push("layout."+k+" must be a finite number"); });
   LAYOUT_GROUPS.forEach(([g,ks])=>{ const o=lay[g]; if(!o||typeof o!=="object"){ errs.push("layout."+g+" group absent"); return; } ks.forEach(k=>{ if(!(k in o)) errs.push("layout."+g+"."+k+" is a required layout member and is absent"); else if(typeof o[k]!=="number"||!isFinite(o[k])) errs.push("layout."+g+"."+k+" must be a finite number"); }); });
   FORMATTING_REQUIRED.forEach(k=>{ if(typeof cfg.formatting[k]!=="string"||!cfg.formatting[k].length) errs.push("formatting."+k+" is a required formatting member and must be a non-empty string"); });
   if(typeof cfg.formatting.waffleInactiveOpacity!=="number"||!isFinite(cfg.formatting.waffleInactiveOpacity)||cfg.formatting.waffleInactiveOpacity<0||cfg.formatting.waffleInactiveOpacity>1) errs.push("formatting.waffleInactiveOpacity must be a number within 0..1");
+  if(typeof cfg.formatting.counterLabelOpacity!=="number"||!isFinite(cfg.formatting.counterLabelOpacity)||cfg.formatting.counterLabelOpacity<0||cfg.formatting.counterLabelOpacity>1) errs.push("formatting.counterLabelOpacity must be a number within 0..1");
   BOUNDS_REQUIRED.forEach(k=>{ if(typeof B[k]!=="number"||!isFinite(B[k])||B[k]<=0) errs.push("bounds."+k+" must be a positive finite number"); });
   TYPEFLOORS_REQUIRED.forEach(k=>{ if(typeof cfg.typeFloors[k]!=="number"||!isFinite(cfg.typeFloors[k])||cfg.typeFloors[k]<=0) errs.push("typeFloors."+k+" must be a positive finite number"); });
   const layoutBad=errs.some(e=>/^(timing|layout|formatting|bounds|typeFloors|palette|fonts)\./.test(e)||e.indexOf("group absent")>=0);
@@ -405,7 +442,8 @@ function validateConfig(cfg){
     if(!isFinite(f.start)||!isFinite(f.dur)) errs.push(f.id+": figure window values must be finite");
     if(typeof f.start!=="number"||typeof f.dur!=="number") errs.push(f.id+": figure window values must be numbers (not string-typed)");
     if(!(f.dur>cfg.timing.minHoldSec)) errs.push(f.id+": window must exceed the minimum hold");
-    if(f.type==="waffle"){ if(!Number.isInteger(f.waffleTotal)||f.waffleTotal<=0) errs.push(f.id+": waffleTotal must be a positive integer");
+    if(f.type==="waffle"){ if(cfg.layout&&typeof cfg.layout.calloutMinClearancePx==="number"&&typeof cfg.layout.calloutLaneGapPx==="number"&&typeof cfg.layout.waffleRowGapPx==="number"&&(cfg.layout.calloutLaneGapPx+cfg.layout.waffleRowGapPx)<cfg.layout.calloutMinClearancePx) errs.push(f.id+": callout clearance "+(cfg.layout.calloutLaneGapPx+cfg.layout.waffleRowGapPx)+"px is below the named minimum layout.calloutMinClearancePx "+cfg.layout.calloutMinClearancePx+"px");
+      if(!Number.isInteger(f.waffleTotal)||f.waffleTotal<=0) errs.push(f.id+": waffleTotal must be a positive integer");
       if(!Number.isInteger(f.waffleCols)||f.waffleCols<=0) errs.push(f.id+": waffleCols must be a positive integer");
       if(f.waffleTotal>B.maxWaffle) errs.push(f.id+": waffleTotal "+f.waffleTotal+" exceeds supported boundary "+B.maxWaffle);
       if(typeof f.summaryText!=="string"||!f.summaryText.length) errs.push(f.id+": summary text absent");
@@ -430,7 +468,7 @@ function validateConfig(cfg){
       else { const lim=animFraction(f,cfg)-T.cliffBudgetMargin; if(!(f.cliffAt<lim)) errs.push(f.id+": cliffAt "+f.cliffAt+" must sit below the animation fraction minus the named margin ("+lim.toFixed(3)+")"); }
       if(!(f.preCliffDrop>0&&f.preCliffDrop<(f.counterStart-f.counterEnd)*cfg.timing.preCliffDropMaxFrac)) errs.push(f.id+": preCliffDrop outside supported boundary (0, "+(cfg.timing.preCliffDropMaxFrac*100)+"% of counter range)"); }
   });
-  figList.forEach(f=>{ if(!f||typeof f!=="object") return; const reqStr=(k)=>{ if(typeof f[k]!=="string"||!f[k].length) errs.push(f.id+": "+k+" must be a non-empty string"); };
+  figList.forEach(f=>{ if(!f||typeof f!=="object") return; schemaFieldChecks(f,errs); const reqStr=(k)=>{ if(typeof f[k]!=="string"||!f[k].length) errs.push(f.id+": "+k+" must be a non-empty string"); };
     if(f.type==="lineChart"){ if(!Array.isArray(f.xLabels)||!f.xLabels.length) errs.push(f.id+": xLabels must be a non-empty array"); if(!Array.isArray(f.yLabels)) errs.push(f.id+": yLabels absent"); reqStr("cardText"); reqStr("chartTitle"); }
     if(f.type==="waffle"){ reqStr("youLabel"); reqStr("waffleLabel"); if(!Number.isInteger(f.youIndex)||f.youIndex<0||(Number.isInteger(f.waffleTotal)&&f.youIndex>=f.waffleTotal)) errs.push(f.id+": youIndex must be an integer inside the waffle"); }
     if(f.type==="stackBars"){ reqStr("stackLabel"); if(Array.isArray(f.bars)&&f.bars.some(v=>typeof v!=="number")) errs.push(f.id+": bar values must be numbers (not string-typed)"); }
@@ -496,7 +534,7 @@ const BUILDERS = {
     const geom={x0:yAxisPad(fig,L,cfg), w:g.chartW-yAxisPad(fig,L,cfg)-cfg.layout.chartPadRight, yBase:g.chartH-cfg.layout.chartPadBottom, h:g.chartH-cfg.layout.chartPadBottom-cfg.layout.chartPadTop};
     s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:8,x2:geom.x0,y2:geom.yBase,stroke:P.ink,'stroke-width':cfg.layout.axisStrokeWidthPx}));
     s.appendChild(dom.svgNode('line',{x1:geom.x0,y1:geom.yBase,x2:geom.x0+geom.w,y2:geom.yBase,stroke:P.ink,'stroke-width':cfg.layout.axisStrokeWidthPx}));
-    fig.yLabels.forEach(lab=>{const t=dom.svgNode('text',{x:geom.x0-6,y:geom.yBase-lab.y*geom.h+4,'text-anchor':'end','font-size':L.labelPx,fill:lab.emphasis?P.red:P.ink});t.textContent=lab.text;s.appendChild(t);});
+    fig.yLabels.forEach(lab=>{const t=dom.svgNode('text',{x:geom.x0-cfg.layout.yLabelGapPx,y:geom.yBase-lab.y*geom.h+4,'text-anchor':'end','font-size':L.labelPx,fill:lab.emphasis?P.red:P.ink});t.textContent=lab.text;s.appendChild(t);});
     const bounds=lineLabelBounds(fig,L,cfg);
     fig.xLabels.forEach((lab,i)=>{const b=bounds[i];const t=dom.svgNode('text',{x:b.cx,y:g.chartH-4,'text-anchor':b.anchor,'font-size':L.labelPx,fill:P.ink});t.textContent=lab;s.appendChild(t);});
     const d=fig.points.map((pt,i)=>(i?'L':'M')+(geom.x0+pt[0]*geom.w)+' '+(geom.yBase-pt[1]*geom.h)).join(' ');
@@ -537,7 +575,7 @@ const BUILDERS = {
     const P=deps.palette, L=deps.layout, dom=deps.dom, cfg=deps.config, el=dom.el;
     const g=figureGeom(fig,L,cfg);
     const wrap=el('div'); wrap.style.display='flex'; wrap.style.flexDirection=L.phone?'column':'row'; wrap.style.gap=cfg.layout.fig22GapPx+'px';
-    const cnt=el('div'); cnt.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;font-weight:'+cfg.layout.fontWeights.bold+';height:'+g.counterH+'px';
+    const cnt=el('div'); cnt.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.bodyPx+'px;line-height:'+cfg.layout.lineHeights.stackCounter+';font-weight:'+cfg.layout.fontWeights.bold+';height:'+g.counterH+'px';
     const stack=el('div'); stack.style.cssText='width:'+(L.phone?g.chartW:cfg.layout.stackColWidthPx)+'px;display:flex;flex-direction:column-reverse;gap:'+cfg.layout.stackUnitGapPx+'px;padding-top:'+g.arrivalReserve+'px';
     const units=[]; for(let i=0;i<fig.stackCount;i++){const u=el('div','',cfg.formatting.stackUnitSymbol);u.style.cssText='border:'+cfg.layout.stackUnitBorderPx+'px solid '+P.ink+';border-radius:'+cfg.layout.stackUnitRadiusPx+'px;text-align:center;font-size:'+L.labelPx+'px;line-height:'+(g.unitH-2*cfg.layout.stackUnitBorderPx)+'px;height:'+g.unitH+'px;opacity:0';stack.appendChild(u);units.push(u);}
     const left=el('div'); left.append(cnt,stack);
@@ -563,10 +601,10 @@ const BUILDERS = {
     const g=figureGeom(fig,L,cfg);
     const ceo=el('div','card',fig.ceo+cfg.formatting.ceoSep+fig.ceoSub); ceo.style.cssText='width:'+Math.min(cfg.layout.ceoMaxW,L.contentW)+'px;margin:0 auto;text-align:center;font-family:'+deps.fonts.sans+';font-weight:'+cfg.layout.fontWeights.bold+';font-size:'+L.bodyPx+'px;opacity:0';
     mount.body.appendChild(ceo);
-    const nodes=[], connEls=[];
+    const nodes=[], connEls=[], connLens=[];
     for(let r0=0;r0<g.rows;r0++){ const rowNodes=fig.nodes.slice(r0*g.perRow,(r0+1)*g.perRow);
       const connSvg=dom.svgEl(L.contentW, cfg.layout.connectorHeightPx+cfg.layout.orgRowMarginTop); connSvg.style.display='block'; connSvg.style.margin=cfg.layout.connectorMarginTopPx+'px auto 0';
-      rowNodes.forEach((n,ci)=>{ const x2=(ci+0.5)*(L.contentW/rowNodes.length); const ln=dom.svgNode('line',{x1:L.contentW/2, y1:0, x2:x2, y2:cfg.layout.connectorHeightPx+cfg.layout.orgRowMarginTop, stroke:P.ink, 'stroke-width':cfg.layout.connectorStrokeWidthPx}); ln.style.opacity=0; connSvg.appendChild(ln); connEls.push(ln); });
+      rowNodes.forEach((n,ci)=>{ const x2=g.rowCenters[r0][ci]; const ln=dom.svgNode('line',{x1:L.contentW/2, y1:0, x2:x2, y2:cfg.layout.connectorHeightPx+cfg.layout.orgRowMarginTop, stroke:P.ink, 'stroke-width':cfg.layout.connectorStrokeWidthPx}); ln.style.opacity=0; const lnLen=Math.hypot(x2-L.contentW/2, cfg.layout.connectorHeightPx+cfg.layout.orgRowMarginTop); ln.style.strokeDasharray=lnLen; ln.style.strokeDashoffset=lnLen; connSvg.appendChild(ln); connEls.push(ln); connLens.push(lnLen); });
       mount.body.appendChild(connSvg);
       const row=el('div'); row.style.cssText='display:flex;flex-wrap:wrap;gap:'+cfg.layout.orgRowGapPx+'px;justify-content:space-around;margin-top:0px';
       rowNodes.forEach(n=>{const d=el('div','',cfg.formatting.nodeSymbol+' '+n);d.style.cssText='font-family:'+deps.fonts.sans+';font-size:'+L.labelPx+'px;opacity:0;width:'+g.nodeW+'px;text-align:center';row.appendChild(d);nodes.push(d);});
@@ -575,7 +613,7 @@ const BUILDERS = {
     badge.append((()=>{const s=el('span','hand',fig.onlyNote); s.style.fontSize=L.handPx+'px'; s.style.fontFamily=deps.fonts[cfg.formatting.badgeHandFont]; return s;})(), (()=>{const s=el('span','',cfg.formatting.badgeStarSep+fig.badgeName+cfg.formatting.badgeDashSep+fig.badge);s.style.cssText='font-family:'+deps.fonts[cfg.formatting.badgeSansFont]+';font-weight:'+deps.config.layout.fontWeights.bold+';color:'+P.red;return s})());
     mount.body.appendChild(badge);
     return function(p){ const st=orgState(fig,animQ(p,fig,cfg),cfg);
-      ceo.style.opacity=st.ceo?1:0; nodes.forEach((d,i)=>d.style.opacity=st.nodes[i]?1:0); connEls.forEach((ln,i)=>{ln.style.opacity=st.connectors[i];});
+      ceo.style.opacity=st.ceo?1:0; nodes.forEach((d,i)=>d.style.opacity=st.nodes[i]?1:0); connEls.forEach((ln,i)=>{ const cq=st.connectors[i]; ln.style.opacity=cq>0?1:0; ln.style.strokeDashoffset=connLens[i]*(1-cq); });
       badge.style.opacity=st.badgeQ; badge.style.transform='scale('+lerp(badgeCapV,1,st.badgeE)+')'; };
   },
   counterGraph(mount,fig,deps){
@@ -624,15 +662,7 @@ function createScene(deps){
   const cfg=deps.config, P=deps.palette, dom=deps.dom, el=dom.el, stageEl=deps.stageEl;
   const L=deps.layout;
   stageEl.style.background=P.paper; stageEl.style.color=P.ink;
-  stageEl.style.setProperty('--warn',P.red); stageEl.style.setProperty('--muted',P.muted); stageEl.style.setProperty('--secondary',P.secondary); stageEl.style.setProperty('--srcmt',cfg.layout.srcMarginTopPx+'px');
-  stageEl.style.setProperty('--card-tint',P.cardTint);
-  stageEl.style.setProperty('--font-serif',deps.fonts.serif); stageEl.style.setProperty('--font-sans',deps.fonts.sans); stageEl.style.setProperty('--font-hand',deps.fonts.hand);
-  stageEl.style.setProperty('--metapad',cfg.layout.metaPadX+'px');
-  stageEl.style.setProperty('--ls-mast',cfg.layout.letterSpacingEm.mast+'em'); stageEl.style.setProperty('--ls-meta',cfg.layout.letterSpacingEm.meta+'em'); stageEl.style.setProperty('--ls-fignum',cfg.layout.letterSpacingEm.figNum+'em');
-  stageEl.style.setProperty('--rulemt',cfg.layout.headerRuleMarginTopPx+'px'); stageEl.style.setProperty('--ruleh',cfg.layout.headerRuleBoxPx+'px'); stageEl.style.setProperty('--rulebt',cfg.layout.headerRuleBorderTopPx+'px'); stageEl.style.setProperty('--rulebb',cfg.layout.headerRuleBorderBottomPx+'px');
-  stageEl.style.setProperty('--metapy',cfg.layout.metaPadYPx+'px'); stageEl.style.setProperty('--metabb',cfg.layout.metaBorderPx+'px'); stageEl.style.setProperty('--headmeta',cfg.layout.headerAfterMetaPx+'px');
-  stageEl.style.setProperty('--lh-mast',cfg.layout.lineHeights.mast); stageEl.style.setProperty('--lh-title',cfg.layout.lineHeights.title);
-  stageEl.style.setProperty('--fw-normal',cfg.layout.fontWeights.normal); stageEl.style.setProperty('--fw-black',cfg.layout.fontWeights.black);
+  applyEmittedVars(stageEl,cfg,L);
   const mast=el('div','mast'); mast.appendChild(el('h1','',cfg.masthead)); stageEl.appendChild(mast);
   stageEl.appendChild(el('div','rule'));
   const meta=el('div','meta');
@@ -669,21 +699,33 @@ const stage=document.getElementById('stage');
 document.body.style.background=CONFIG.palette.pageBg;
 document.getElementById('clock').style.color=CONFIG.palette.controlInk;
 let mounted=[], lastT=0;
+function stageVarEmission(cfg,L){
+  const lay=cfg.layout, P=cfg.palette, F=cfg.fonts;
+  return [
+    ['--warn',P.red],['--muted',P.muted],['--secondary',P.secondary],['--srcmt',lay.srcMarginTopPx+'px'],['--card-tint',P.cardTint],
+    ['--font-serif',F.serif],['--font-sans',F.sans],['--font-hand',F.hand],
+    ['--metapad',lay.metaPadX+'px'],['--ls-mast',lay.letterSpacingEm.mast+'em'],['--ls-meta',lay.letterSpacingEm.meta+'em'],['--ls-fignum',lay.letterSpacingEm.figNum+'em'],
+    ['--rulemt',lay.headerRuleMarginTopPx+'px'],['--ruleh',lay.headerRuleBoxPx+'px'],['--rulebt',lay.headerRuleBorderTopPx+'px'],['--rulebb',lay.headerRuleBorderBottomPx+'px'],
+    ['--metapy',lay.metaPadYPx+'px'],['--metabb',lay.metaBorderPx+'px'],['--headmeta',lay.headerAfterMetaPx+'px'],
+    ['--lh-mast',String(lay.lineHeights.mast)],['--lh-title',String(lay.lineHeights.title)],['--fw-normal',String(lay.fontWeights.normal)],['--fw-black',String(lay.fontWeights.black)],
+    ['--stagew',lay.stageWidthPx+'px'],['--mast',L.mastPx+'px'],['--title',L.titlePx+'px'],['--label',L.labelPx+'px'],['--padx',L.padX+'px'],['--padtop',L.padTop+'px'],
+    ['--figpadtop',lay.figPadTopPx+'px'],['--headmt',lay.headingMarginTopPx+'px'],['--headmb',lay.headingMarginBottomPx+'px'],['--figtop',Math.round(L.headerH)+'px'],
+    ['--cardpad',lay.cardPaddingPx+'px'],['--cardborder',lay.cardBorderPx+'px'],['--cardradius',lay.cardRadiusPx+'px'],['--dotborder',lay.dotBorderPx+'px'],
+    ['--stampborder',lay.stampBorderPx+'px'],['--stampradius',lay.stampRadiusPx+'px'],['--stamppadx',(lay.stampPadX/2)+'px'],['--stamppady',(lay.stampPadY/2)+'px'],
+    ['--stamp-ls',lay.stampLetterSpacingEm+'em'],['--lh-label',String(lay.lineHeights.label)],['--stagear',lay.stageAspectW+'/'+lay.stageAspectH]
+  ];
+}
+function applyEmittedVars(el,cfg,L){ stageVarEmission(cfg,L).forEach(([k,v])=>el.style.setProperty(k,v)); }
 function applyStagePresentation(stageEl,cfg,L){
+  applyEmittedVars(stageEl,cfg,L);
   stageEl.style.setProperty('--stagew',cfg.layout.stageWidthPx+'px');
   if(stageEl===stage) document.documentElement.style.setProperty('--stagew',cfg.layout.stageWidthPx+'px');
   stageEl.classList.toggle('phone',L.phone);
-  stageEl.style.setProperty('--mast',L.mastPx+'px'); stageEl.style.setProperty('--title',L.titlePx+'px');
-  stageEl.style.setProperty('--label',L.labelPx+'px'); stageEl.style.setProperty('--padx',L.padX+'px');
-  stageEl.style.setProperty('--padtop',L.padTop+'px'); stageEl.style.setProperty('--figpadtop',cfg.layout.figPadTopPx+'px'); stageEl.style.setProperty('--headmt',cfg.layout.headingMarginTopPx+'px'); stageEl.style.setProperty('--headmb',cfg.layout.headingMarginBottomPx+'px'); stageEl.style.setProperty('--figtop',Math.round(L.headerH)+'px');
-  stageEl.style.setProperty('--cardpad',cfg.layout.cardPaddingPx+'px'); stageEl.style.setProperty('--cardborder',cfg.layout.cardBorderPx+'px'); stageEl.style.setProperty('--cardradius',cfg.layout.cardRadiusPx+'px');
-  stageEl.style.setProperty('--dotborder',cfg.layout.dotBorderPx+'px'); stageEl.style.setProperty('--stampborder',cfg.layout.stampBorderPx+'px'); stageEl.style.setProperty('--stampradius',cfg.layout.stampRadiusPx+'px'); stageEl.style.setProperty('--stamppadx',(cfg.layout.stampPadX/2)+'px'); stageEl.style.setProperty('--stamppady',(cfg.layout.stampPadY/2)+'px');
-  stageEl.style.setProperty('--stamp-ls',cfg.layout.stampLetterSpacingEm+'em'); stageEl.style.setProperty('--lh-label',cfg.layout.lineHeights.label);
-  stageEl.style.setProperty('--stagear',cfg.layout.stageAspectW+'/'+cfg.layout.stageAspectH);
   if(L.phone) stageEl.style.height=Math.round(fitReport(L.w,cfg.figures,cfg).stageH)+'px';
   else stageEl.style.height='';
 }
-const STAGE_VARS=['--warn','--muted','--secondary','--srcmt','--card-tint','--font-serif','--font-sans','--font-hand','--metapad','--lh-mast','--lh-title','--fw-normal','--fw-black','--ls-mast','--ls-meta','--ls-fignum','--rulemt','--ruleh','--rulebt','--rulebb','--metapy','--metabb','--headmeta'];
+const STAGE_VARS=stageVarEmission(CONFIG,computeLayout(CONFIG.layout.stageWidthPx,CONFIG)).map(e=>e[0]);
+const PRESENTATION_VARS=STAGE_VARS.slice();
 function buildDetached(cfg,W){
   const L=computeLayout(W,cfg);
   const holder=document.createElement('div');
@@ -701,11 +743,21 @@ function commitBuilt(built,cfg){
   document.body.style.background=cfg.palette.pageBg; document.getElementById('clock').style.color=cfg.palette.controlInk;
   mounted=built.mounted;
 }
+function fitFailureMessages(fit,W){
+  const parts=[];
+  (fit.globalErrors||[]).forEach(e=>parts.push(e));
+  (fit.figures||[]).forEach(r=>{ if(r.rejected){ parts.push(r.id+': '+(r.errors||[]).join('; ')); return; }
+    if(!r.fits) parts.push(r.id+': required '+r.required+'px exceeds allocated '+r.allocated+'px');
+    if(!r.widthOk) parts.push(r.id+': occupied '+r.occupied+'px exceeds available '+r.available+'px or positioned text overflows'); });
+  if(!fit.fontsOk) parts.push('type floors not met at width '+W);
+  if(!fit.budgetOk) parts.push('stage height '+fit.stageH+'px exceeds the phone stage budget at width '+W);
+  return parts.length?parts:["fit check failed at width "+W];
+}
 function buildAll(){
   const W=stage.clientWidth||CONFIG.layout.stageWidthPx;
   const errs=validateConfig(CONFIG);
   const fit=errs.length?null:fitReport(W,CONFIG.figures,CONFIG);
-  if(errs.length||!fit||!fit.ok){ const msg=(errs.length?errs:["fit check failed at width "+W]).join('; '); window.__lastGateError=msg; if(window.console) console.warn('T17 resize gate: '+msg); const gw=document.createElement('div'); gw.className='warn globalwarn'; gw.textContent='Validation: '+msg; stage.appendChild(gw); return; }
+  if(errs.length||!fit||!fit.ok){ const msg=(errs.length?errs:fitFailureMessages(fit,W)).join('; '); window.__lastGateError=msg; if(window.console) console.warn('T17 resize gate: '+msg); const gw=document.createElement('div'); gw.className='warn globalwarn'; gw.textContent='Validation: '+msg; stage.appendChild(gw); return; }
   window.__lastGateError=null;
   const built=buildDetached(CONFIG,W);
   commitBuilt(built,CONFIG);
@@ -735,20 +787,36 @@ window.T17={ config:CONFIG, render:render, fitReport:function(w){return fitRepor
     let candidate; try{ candidate=JSON.parse(JSON.stringify(next||CONFIG)); }catch(e){ return {ok:false, errors:["rebuild candidate cloning failed: "+((e&&e.message)||e)]}; }
     let errs; try{ errs=validateConfig(candidate); }catch(e){ return {ok:false, errors:["rebuild validation failed: "+((e&&e.message)||e)]}; }
     if(errs.length) return {ok:false, errors:errs};
-    const W=(candidate.layout&&candidate.layout.stageWidthPx&&candidate.layout.stageWidthPx!==CONFIG.layout.stageWidthPx)?candidate.layout.stageWidthPx:(stage.clientWidth||candidate.layout.stageWidthPx);
+    const baseW=(candidate.layout&&candidate.layout.stageWidthPx&&candidate.layout.stageWidthPx!==CONFIG.layout.stageWidthPx)?candidate.layout.stageWidthPx:(stage.clientWidth||candidate.layout.stageWidthPx);
+    const mountedW=stage.clientWidth||baseW;
+    const W=Math.min(baseW,mountedW);
     let fit; try{ fit=fitReport(W,candidate.figures,candidate); }catch(e){ return {ok:false, errors:["rebuild fit evaluation failed: "+((e&&e.message)||e)]}; }
-    if(!fit.ok) return {ok:false, fit:fit, errors:["candidate fit check failed"]};
+    if(!fit.ok) return {ok:false, fit:fit, errors:fitFailureMessages(fit,W)};
     let built; try{ built=buildDetached(candidate,W); }catch(e){ return {ok:false, errors:["rebuild construction failed: "+((e&&e.message)||e)]}; }
-    const snapChildren=stage.children.slice(); const snapConfig=JSON.parse(JSON.stringify(CONFIG)); const snapMounted=mounted; const snapT=lastT; const snapOffset=offset; const snapPlaying=playing;
+    let snap;
+    try{
+      snap={ children:null, config:JSON.parse(JSON.stringify(CONFIG)), mounted:mounted, lastT:lastT, offset:offset, playing:playing, complete:false,
+        stageClass:stage.className, stageHeight:stage.style.height||"", stageBg:stage.style.background||"", stageColor:stage.style.color||"",
+        vars:{}, docStagew:document.documentElement.style.getPropertyValue('--stagew'),
+        bodyBg:document.body.style.background||"", clockColor:document.getElementById('clock').style.color||"" };
+      PRESENTATION_VARS.forEach(k=>{ snap.vars[k]=stage.style.getPropertyValue(k); });
+      snap.children=Array.from(stage.children);
+      snap.complete = snap.children.length===stage.children.length && Object.keys(snap.vars).length===PRESENTATION_VARS.length;
+    }catch(e){ return {ok:false, errors:["rebuild snapshot failed before any publication write; the live scene was not touched: "+((e&&e.message)||e)]}; }
+    if(!snap.complete) return {ok:false, errors:["rebuild snapshot incomplete; publication not attempted and the live scene was not touched"]};
     try{
       Object.keys(CONFIG).forEach(k=>{ delete CONFIG[k]; }); Object.keys(candidate).forEach(k=>{ CONFIG[k]=candidate[k]; });
       commitBuilt(built,CONFIG);
       render(lastT);
     }catch(e){
-      Object.keys(CONFIG).forEach(k=>{ delete CONFIG[k]; }); Object.keys(snapConfig).forEach(k=>{ CONFIG[k]=snapConfig[k]; });
+      Object.keys(CONFIG).forEach(k=>{ delete CONFIG[k]; }); Object.keys(snap.config).forEach(k=>{ CONFIG[k]=snap.config[k]; });
       while(stage.children.length) stage.children[0].remove();
-      snapChildren.forEach(ch=>stage.appendChild(ch));
-      mounted=snapMounted; lastT=snapT; offset=snapOffset; playing=snapPlaying;
+      snap.children.forEach(ch=>stage.appendChild(ch));
+      stage.className=snap.stageClass; stage.style.height=snap.stageHeight; stage.style.background=snap.stageBg; stage.style.color=snap.stageColor;
+      PRESENTATION_VARS.forEach(k=>{ const v=snap.vars[k]; if(v) stage.style.setProperty(k,v); else stage.style.removeProperty(k); });
+      if(snap.docStagew) document.documentElement.style.setProperty('--stagew',snap.docStagew); else document.documentElement.style.removeProperty('--stagew');
+      document.body.style.background=snap.bodyBg; document.getElementById('clock').style.color=snap.clockColor;
+      mounted=snap.mounted; lastT=snap.lastT; offset=snap.offset; playing=snap.playing;
       try{ render(lastT); }catch(e2){}
       return {ok:false, errors:["rebuild publication failed and the prior scene was restored: "+((e&&e.message)||e)]};
     }

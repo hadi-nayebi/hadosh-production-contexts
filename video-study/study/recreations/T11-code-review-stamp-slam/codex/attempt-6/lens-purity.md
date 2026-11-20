@@ -1,0 +1,10 @@
+T11 attempt 6 earns full marks for construction purity. The supplied HTML builds the recreation entirely with DOM, CSS, and JavaScript.
+
+- `archCell` computes the crown, pointed opening, and shading from coordinates and configuration values. `drawArch` emits text glyphs for those cells. `drawReviewers` builds each figure from styled spans for the head, arms, body, and legs. These construction paths contain no imported artwork or stored trace. [Arch geometry](/home/hatch/workspace/.scratch/cycle-031/T11-a6-purity/payload-purity.txt:314) · [Arch and figure rendering](/home/hatch/workspace/.scratch/cycle-031/T11-a6-purity/payload-purity.txt:469)
+- The card, counter, checks, and stamp are interface elements. JavaScript drives the motion through CSS transforms, blur, and opacity. The source contains no caption or subtitle layer. [Stage markup](/home/hatch/workspace/.scratch/cycle-031/T11-a6-purity/payload-purity.txt:78) · [Render loop](/home/hatch/workspace/.scratch/cycle-031/T11-a6-purity/payload-purity.txt:507)
+- The source audit found no embedded media, external asset references, or network calls. Font stacks use local and generic families. The `.mp4` strings are PR titles rendered as text, and the override parser reads the page’s query string locally. [Card data](/home/hatch/workspace/.scratch/cycle-031/T11-a6-purity/payload-purity.txt:97) · [Override parsing](/home/hatch/workspace/.scratch/cycle-031/T11-a6-purity/payload-purity.txt:408) · [Title rendering](/home/hatch/workspace/.scratch/cycle-031/T11-a6-purity/payload-purity.txt:511)
+
+Limits — The review used the HTML source embedded in the on-disk payload. Browser playback and independent artwork provenance were outside the available evidence.
+
+SCORE: 100
+BODY-WRITE: none (read-only run). Findings for filing are procedural arch and reviewers, code-driven interface and animation, and no source evidence of specimen media, traced assets, external resources, network dependencies, or a caption layer.

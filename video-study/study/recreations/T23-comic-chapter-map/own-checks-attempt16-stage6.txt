@@ -1,0 +1,107 @@
+T23 ATTEMPT 16 — STAGE 6 CHECKS (C-16-06: literals and bounds become named
+CONFIG policy; dead and write-only state removed; the test-export block
+leaves the artifact)
+Checkpoint: checkpoint-attempt16-stage6.html
+sha256 6a17dacf3b9418f8135df20fccb70512a61a6186d44584cf62a813bb8c465dc4
+(content copy of the working candidate, distinct inode; this checkpoint is
+NEVER edited after filing — the freeze order's step 10)
+
+LITERAL MIGRATIONS (each with a consumption probe, stage6-probes.js 10/10):
+- validPrim stroke cap 40 -> ceilings.primStrokeWidthMax (40): a path prim
+  with strokeWidth 30 binds at the default; the same candidate under
+  ?cfg:ceilings.primStrokeWidthMax=20 is rejected whole and the specimen
+  entry retained, one warning.
+- validPrim text cap 200 -> ceilings.primTextSizeMax (200): text size 150
+  binds at the default; under primTextSizeMax=100 the candidate is rejected
+  whole, specimen retained, one warning.
+- validPrim graph edge cap 40 -> ceilings.primEdgeWidthMax (40): edgeWidth
+  30 binds at the default; under primEdgeWidthMax=20 rejected whole,
+  specimen retained, one warning.
+- transformAt warp floor -0.95 -> layout.diveWarpFloor (-0.95, numGuard
+  -1..0): with approachFromScale 0.99 (the natural warp coefficient ~ -1,
+  so the floor binds), the clamped dive fraction at p=0.5 is 0.3214 at
+  floor -0.95 and 0.3597 at floor -0.5 — consumed.
+- The three 0.5 shrink fallbacks (labelPolicy, headerFitPx, DOM tab
+  refinement) -> labels.shrinkStepFallbackPx (0.5, numGuard 0.05..5): with
+  shrinkStepPx forced to 0 post-resolution, labelPolicy's landing is
+  px 11.5 at fallback 0.5 and px 11.75 at fallback 0.25 — consumed.
+- primSVG graph node-radius literal 4 -> CONFIG.detail.fallbackNodeRadius
+  (the key already existed; panelArtSVG already injected it into the defs,
+  so the literal was the last-resort fallback only). No literal remains.
+- Header floor: layout.headerAbsoluteMinPx REMOVED from CONFIG, schema,
+  the recovery literal and its numGuard line; the floor now stands as
+  limits.headerAbsoluteMinPx (11), validated by the limits integer loop;
+  its readers (headerFitPx, the DOM header refinement pair) read
+  cfg.limits.headerAbsoluteMinPx. Probe: the long header at avail 100
+  floors at px 11 by default and at px 20 under
+  ?cfg:limits.headerAbsoluteMinPx=20 — consumed.
+- cutLog bound: presentEndpoint now bounds cutLog by
+  ceilings.maxCutLogEntries (256) with the same shift form the
+  presentation logs use. Probe: a runtime resolved with
+  ?cfg:ceilings.maxCutLogEntries=3 holds exactly 3 cut records after
+  5000 ms of running.
+
+NEW KEYS, ALL IN CONFIG + SCHEMA + RECOVERY LITERAL TOGETHER:
+ceilings.primStrokeWidthMax, ceilings.primTextSizeMax,
+ceilings.primEdgeWidthMax, ceilings.maxCutLogEntries (ceilings integer
+loop extended to name them), limits.headerAbsoluteMinPx (limits integer
+loop extended), layout.diveWarpFloor, labels.shrinkStepFallbackPx.
+The recovery literal was REGENERATED from the edited CONFIG text as a
+frozen literal and verified: 615 leaves, deep-equal to the schema-derived
+baseline. Leaf delta vs the Stage-5 close (609), by name: +4 ceilings,
++1 limits.headerAbsoluteMinPx, +1 layout.diveWarpFloor,
++1 labels.shrinkStepFallbackPx, -1 layout.headerAbsoluteMinPx = 615.
+
+DEAD / WRITE-ONLY STATE REMOVED (census-confirmed at Stage 0):
+- forceFilledIdx: panelState's fourth parameter, the render computation
+  and both call-site arguments removed; the stale comment claiming the
+  parameter was "retained for call compatibility" corrected in the same
+  stage. panelState is called with three arguments everywhere, including
+  the harness.
+- lastDrawnProgress: declaration share and both assignments removed;
+  lastDrawnElapsed (which pause() reads) untouched.
+- lastAppliedKey: declaration share, the applyStep assignment and the
+  restart reset removed; lastAppliedAbsIdx (read by the skip logic)
+  untouched.
+- The test-export block (module.exports, ~35 names) removed from the
+  artifact; the harness carries its own export capture and the whole
+  suite runs unchanged without it.
+Post-removal census: 0 occurrences of forceFilledIdx, lastDrawnProgress,
+lastAppliedKey, module.exports, fallbackMode in the candidate; the -0.95
+value occurs only as CONFIG data (layout.diveWarpFloor) and inside the
+recovery literal's data.
+
+GENERATIVE SWEEP AFTER STAGE 6: 449 PASS / 0 FAIL. Delta vs Stage 2's
+425, by name: scalar cases 408 -> 432 (+24: the new integer-validated
+fields' case sets — four ceilings keys, limits.headerAbsoluteMinPx, and
+the group-loop extensions), whole-group/recovery/derivation legs
+unchanged. Filed in full at the final census.
+
+STAGE-4 JOIN RATES RE-MEASURED AFTER THE -0.95 MIGRATION (stage4-measure
+on this candidate, beside Stage 4's values — identical, as required: the
+migration moved the floor's home, not its value):
+defaults app0/1/2: approach-terminal 0.000902/ms vs dive-initial
+0.000911/ms, delta 0.000009 (0.9%); tx delta 0.0016-0.0028. Unequal pair
+(200/500): delta 0.000005 (0.3%). Entry pose (pr=0) scale 0.8980,
+preserved exactly. No rate changed; the stage does not fail.
+
+REGRESSIONS ON THIS CANDIDATE: sweep 449/449; Stage-1 probes outgoing
+13/13 (the probe's leaf expectation is stage-scoped — 610 at Stages 1-4,
+609 at Stage 5, 615 here — and is passed as an environment parameter);
+Stage-3 outgoing 13/13; Stage-4 outgoing all PASS (its 4 FAILs are the
+incoming Stage-3-checkpoint defect reproductions); Stage-5 outgoing all
+PASS (its 2 FAILs are the incoming Stage-4-checkpoint reproductions);
+Stage-6 probes 10/10; default resolve 0 warnings; specimen bindings
+unchanged.
+
+PROCESS RECORD (printed, not hidden): the first Stage-6 literal
+regeneration used a greedy regex that swallowed file content in the
+WORKING CANDIDATE ONLY; the candidate was restored from the filed
+Stage-5 checkpoint (sha e719aaaf...), the Stage-6 edits re-applied, and
+the literal regenerated with a line-anchored replacement. No preserved
+copy or checkpoint was ever touched; the Stage-5 checkpoint's sha was
+re-verified before the restore. A second defect in the same pass: the
+edit script's layout-removal deleted the just-inserted limits line
+(first-occurrence replacement); corrected with context-anchored edits
+and re-verified by the baseline-vs-CONFIG tree diff (single remaining
+diff before the fix, zero after).

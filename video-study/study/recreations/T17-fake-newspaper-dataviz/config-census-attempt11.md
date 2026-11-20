@@ -1,8 +1,8 @@
 # Config census leg — T17 attempt 11 (against the attempt's own CONFIG)
 
-Leaves walked: 338 · mutation-consumed: 191 · named-consumer: 143 · validation-bound: 2 · reference-only: 2
+Leaves walked: 338 · mutation-consumed: 192 · named-consumer: 143 · validation-bound: 3 · reference-only: 0
 
-HIT count (leaves consumed by no effect and named by no consumer): 2
+HIT count (leaves consumed by no effect and named by no consumer): 0
 
 | leaf | value | consumed effect mapping |
 |---|---|---|
@@ -155,7 +155,7 @@ HIT count (leaves consumed by no effect and named by no consumer): 2
 | layout.orgRowMarginTop | 18 | mutation-consumed |
 | layout.badgeMarginTop | 10 | mutation-consumed |
 | layout.calloutLaneGapPx | 6 | mutation-consumed |
-| layout.calloutMinClearancePx | 8 | reference-only |
+| layout.calloutMinClearancePx | 8 | validation-bound (enforced at Stage 6 against the derived callout lane clearance; not a rendering consumer) |
 | layout.calloutShaftStrokeWidthPx | 2 | named-consumer (read site in source; mutation below this instrument's resolution) |
 | layout.calloutShaftEdgeFloorPx | 2 | mutation-consumed |
 | layout.calloutBarbDxPx | 4 | named-consumer (read site in source; mutation below this instrument's resolution) |
@@ -266,7 +266,7 @@ HIT count (leaves consumed by no effect and named by no consumer): 2
 | figures[0].points[0][0] | 0.55 | mutation-consumed |
 | figures[0].points[0][1] | 0.78 | mutation-consumed |
 | figures[0].points[1][0] | 0.82 | mutation-consumed |
-| figures[0].points[1][1] | 0.18 | reference-only |
+| figures[0].points[1][1] | 0.18 | mutation-consumed |
 | figures[0].points[2][0] | 0.97 | mutation-consumed |
 | figures[0].points[2][1] | 0.62 | mutation-consumed |
 | figures[0].postLabelMeaning | "endpoint-first-last" | named-consumer (read site in source; mutation below this instrument's resolution) |

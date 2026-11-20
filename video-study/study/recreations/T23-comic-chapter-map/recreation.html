@@ -73,6 +73,10 @@ const CONFIG = {
   },
   ceilings: {
     maxGridCells: 96,
+    primStrokeWidthMax: 40,
+    primTextSizeMax: 200,
+    primEdgeWidthMax: 40,
+    maxCutLogEntries: 256,
     maxCirclesRowCount: 24,
     maxGraphNodes: 24,
     maxGraphEdges: 64
@@ -87,6 +91,7 @@ const CONFIG = {
     maxGapPx: 40,
     maxBorderPx: 12,
     minNarrowBreakpointPx: 200,
+    headerAbsoluteMinPx: 11,
     maxNarrowBreakpointPx: 2000,
     borderClampStep: 1,
     headerRefineMaxIterations: 200,
@@ -183,7 +188,6 @@ const CONFIG = {
     minPanelPx: 48,
     warnFontPx: 12,
     headerReservePx: 16,
-    headerAbsoluteMinPx: 11,
     minStagePx: 240,
     minInnerWPx: 24,
     minInnerHPx: 12,
@@ -195,6 +199,7 @@ const CONFIG = {
     tabAnchor: "top-left",
     pauseOpacity: 0,
     approachEntryProgress: 0.25,
+    diveWarpFloor: -0.95,
     gapClampStepPx: 5,
     warnPadding: "4px 8px",
     warnZIndex: 9,
@@ -227,6 +232,7 @@ const CONFIG = {
     chromePx: 14,
     separator: " · ",
     shrinkStepPx: 0.5,
+    shrinkStepFallbackPx: 0.5,
     maxTabHeightFraction: 0.65,
     numberPadWidth: 2,
     generatedTitlePrefix: "CHAPTER ",
@@ -234,7 +240,6 @@ const CONFIG = {
     maxLines: 2,
     maxLinesPhone: 3,
     maxTabHeightFractionPhone: 0.75,
-    fallbackMode: "single-line"
   },
   /* Art registry: every miniature is data — a list of drawing primitives
      (rect / circle / line / polygon / path / text / grid / graph /
@@ -340,7 +345,34 @@ function deepFreeze(o) { if (o && typeof o === "object") { Object.keys(o).forEac
    default (0 / "" / false / empty), never to a specimen value;
    range enforcement stays in the validator that consumes the
    snapshot, and recovery candidates are re-validated there. */
-const CONFIG_SCHEMA = {"headerText":"string","panels":[{"n":"string","title":"string","art":"string"}],"appearances":[{"filled":"number","dive":"number"}],"approachMs":"number","approachFromScale":"number","diveMs":"number","holdZoomMs":"number","loopPauseMs":"number","progress":{"forceFillTarget":"string","targetOutlinePx":"number","targetMarkStripPx":"number"},"handoff":{"holdOnComplete":"boolean"},"cut":{"mode":"string","clockPolicy":"string"},"caps":{"approachMs":"number","diveMs":"number","holdZoomMs":"number","loopPauseMs":"number"},"ceilings":{"maxGridCells":"number","maxCirclesRowCount":"number","maxGraphNodes":"number","maxGraphEdges":"number"},"limits":{"maxPanels":"number","maxCols":"number","headerMaxChars":"number","titleMaxChars":"number","numberMaxChars":"number","clampMaxIterations":"number","maxGapPx":"number","maxBorderPx":"number","minNarrowBreakpointPx":"number","maxNarrowBreakpointPx":"number","borderClampStep":"number","headerRefineMaxIterations":"number","diveScaleMin":"number","diveScaleMax":"number","panelAspectMin":"number","panelAspectMax":"number","approachFromScaleMin":"number","approachFromScaleMax":"number","targetOutlineMaxPx":"number","targetMarkStripMaxPx":"number"},"diveScale":"number","colsWide":"number","colsNarrow":"number","colsMicro":"number","narrowBreakpointPx":"number","panelAspect":"number","gapPx":"number","borderPx":"number","palette":{"paper":"string","ink":"string","tab":"string","tabDim":"string","empty":"string","accent":"string","tabTarget":"string","completedBg":"string","dark":"string","panelBg":"string","art01":"string","art02":"string","art03":"string","art04":"string","art05":"string","art06":"string","art07":"string","art08":"string","art09":"string","art10":"string","art11":"string","art12":"string","art13":"string","art14":"string","art15":"string","art16":"string","art17":"string","art18":"string","art19":"string","art20":"string","art21":"string","art22":"string","art23":"string","art24":"string","art25":"string","art26":"string","art27":"string","art28":"string","art29":"string","art30":"string","art31":"string","art32":"string","art33":"string","art34":"string","art35":"string","art36":"string","art37":"string","art38":"string","art39":"string","art40":"string","art41":"string"},"fontFamily":"string","layout":{"stageMaxPx":"number","stageBottomPadPx":"number","headerHeightFactor":"number","headerMinPx":"number","headerFontFactor":"number","headerMinFontPx":"number","headerPaddingPx":"number","tabBorderPx":"number","tabPaddingYPx":"number","phoneTabPadYPx":"number","tabPaddingLeftPx":"number","tabPaddingRightPx":"number","ghostFontFactor":"number","ghostOpacity":"number","diveEasing":"string","approachEasing":"string","diveCoverMargin":"number","fallbackStagePx":"number","minPanelPx":"number","warnFontPx":"number","headerReservePx":"number","headerAbsoluteMinPx":"number","minStagePx":"number","minInnerWPx":"number","minInnerHPx":"number","paddingPx":"number","tabOverlapPx":"number","narrowColsBreakpointPx":"number","panelAspectPhone":"number","phoneRegimeMaxPx":"number","tabAnchor":"string","pauseOpacity":"number","approachEntryProgress":"number","gapClampStepPx":"number","warnPadding":"string","warnZIndex":"number","cutZIndex":"number","primDefaultStrokeWidth":"number","primDefaultTextWeight":"string","doneBarHeightPx":"number"},"artViewBox":{"x":"number","y":"number","w":"number","h":"number","preserveAspectRatio":"string"},"artDetailMinPx":"number","detail":{"textCutoffUnits":"number","graphEdgeMultiplier":"number","graphNodeMultiplier":"number","fallbackEdgeWidth":"number","fallbackNodeRadius":"number"},"headerBreak":"string","fallbackArtKind":"string","artDefaults":{"fill":"string","stroke":"string"},"typography":{"headerWeight":"number","headerLetterSpacingEm":"number","tabWeight":"number","tabLetterSpacingEm":"number","tabLineHeight":"number","tabCompactLineHeight":"number","headerWrapLineHeight":"number","ghostWeight":"number"},"labels":{"baseFactor":"number","maxPx":"number","minPx":"number","glyphEm":"number","chromePx":"number","separator":"string","shrinkStepPx":"number","maxTabHeightFraction":"number","numberPadWidth":"number","generatedTitlePrefix":"string","titleCase":"string","maxLines":"number","maxLinesPhone":"number","maxTabHeightFractionPhone":"number","fallbackMode":"string"},"artRegistry":{"terminal":{"primitives":[{"t":"string","x":"number","y":"number","w":"number","h":"number","fill":"string"}]},"tiles":{"primitives":"array"},"ship":{"primitives":"array"},"comments":{"primitives":"array"},"walls":{"primitives":"array"},"swarm":{"primitives":"array"},"paper":{"primitives":"array"},"keynote":{"primitives":"array"},"seeress":{"primitives":"array"},"slam":{"primitives":"array"},"tower":{"primitives":"array"},"receipt":{"primitives":"array"}}};
+const CONFIG_SCHEMA = {"headerText":"string","panels":[{"n":"string","title":"string","art":"string"}],"appearances":[{"filled":"number","dive":"number"}],"approachMs":"number","approachFromScale":"number","diveMs":"number","holdZoomMs":"number","loopPauseMs":"number","progress":{"forceFillTarget":"string","targetOutlinePx":"number","targetMarkStripPx":"number"},"handoff":{"holdOnComplete":"boolean"},"cut":{"mode":"string","clockPolicy":"string"},"caps":{"approachMs":"number","diveMs":"number","holdZoomMs":"number","loopPauseMs":"number"},"ceilings":{"maxGridCells":"number","maxCirclesRowCount":"number","maxGraphNodes":"number","maxGraphEdges":"number","primStrokeWidthMax":"number","primTextSizeMax":"number","primEdgeWidthMax":"number","maxCutLogEntries":"number"},"limits":{"maxPanels":"number","maxCols":"number","headerMaxChars":"number","titleMaxChars":"number","numberMaxChars":"number","clampMaxIterations":"number","maxGapPx":"number","maxBorderPx":"number","minNarrowBreakpointPx":"number","maxNarrowBreakpointPx":"number","headerAbsoluteMinPx":"number","borderClampStep":"number","headerRefineMaxIterations":"number","diveScaleMin":"number","diveScaleMax":"number","panelAspectMin":"number","panelAspectMax":"number","approachFromScaleMin":"number","approachFromScaleMax":"number","targetOutlineMaxPx":"number","targetMarkStripMaxPx":"number"},"diveScale":"number","colsWide":"number","colsNarrow":"number","colsMicro":"number","narrowBreakpointPx":"number","panelAspect":"number","gapPx":"number","borderPx":"number","palette":{"paper":"string","ink":"string","tab":"string","tabDim":"string","empty":"string","accent":"string","tabTarget":"string","completedBg":"string","dark":"string","panelBg":"string","art01":"string","art02":"string","art03":"string","art04":"string","art05":"string","art06":"string","art07":"string","art08":"string","art09":"string","art10":"string","art11":"string","art12":"string","art13":"string","art14":"string","art15":"string","art16":"string","art17":"string","art18":"string","art19":"string","art20":"string","art21":"string","art22":"string","art23":"string","art24":"string","art25":"string","art26":"string","art27":"string","art28":"string","art29":"string","art30":"string","art31":"string","art32":"string","art33":"string","art34":"string","art35":"string","art36":"string","art37":"string","art38":"string","art39":"string","art40":"string","art41":"string"},"fontFamily":"string","layout":{"stageMaxPx":"number","stageBottomPadPx":"number","headerHeightFactor":"number","headerMinPx":"number","headerFontFactor":"number","headerMinFontPx":"number","headerPaddingPx":"number","tabBorderPx":"number","tabPaddingYPx":"number","phoneTabPadYPx":"number","tabPaddingLeftPx":"number","tabPaddingRightPx":"number","ghostFontFactor":"number","ghostOpacity":"number","diveEasing":"string","approachEasing":"string","diveCoverMargin":"number","fallbackStagePx":"number","minPanelPx":"number","warnFontPx":"number","headerReservePx":"number","minStagePx":"number","minInnerWPx":"number","minInnerHPx":"number","paddingPx":"number","tabOverlapPx":"number","narrowColsBreakpointPx":"number","panelAspectPhone":"number","phoneRegimeMaxPx":"number","tabAnchor":"string","pauseOpacity":"number","approachEntryProgress":"number","diveWarpFloor":"number","gapClampStepPx":"number","warnPadding":"string","warnZIndex":"number","cutZIndex":"number","primDefaultStrokeWidth":"number","primDefaultTextWeight":"string","doneBarHeightPx":"number"},"artViewBox":{"x":"number","y":"number","w":"number","h":"number","preserveAspectRatio":"string"},"artDetailMinPx":"number","detail":{"textCutoffUnits":"number","graphEdgeMultiplier":"number","graphNodeMultiplier":"number","fallbackEdgeWidth":"number","fallbackNodeRadius":"number"},"headerBreak":"string","fallbackArtKind":"string","artDefaults":{"fill":"string","stroke":"string"},"typography":{"headerWeight":"number","headerLetterSpacingEm":"number","tabWeight":"number","tabLetterSpacingEm":"number","tabLineHeight":"number","tabCompactLineHeight":"number","headerWrapLineHeight":"number","ghostWeight":"number"},"labels":{"baseFactor":"number","maxPx":"number","minPx":"number","glyphEm":"number","chromePx":"number","separator":"string","shrinkStepPx":"number","shrinkStepFallbackPx":"number","maxTabHeightFraction":"number","numberPadWidth":"number","generatedTitlePrefix":"string","titleCase":"string","maxLines":"number","maxLinesPhone":"number","maxTabHeightFractionPhone":"number"},"artRegistry":{"terminal":{"primitives":[{"t":"string","x":"number","y":"number","w":"number","h":"number","fill":"string"}]},"tiles":{"primitives":"array"},"ship":{"primitives":"array"},"comments":{"primitives":"array"},"walls":{"primitives":"array"},"swarm":{"primitives":"array"},"paper":{"primitives":"array"},"keynote":{"primitives":"array"},"seeress":{"primitives":"array"},"slam":{"primitives":"array"},"tower":{"primitives":"array"},"receipt":{"primitives":"array"}}};
+/* The primitive-kind list has ONE home: the registry validator and
+   the renderer both consume this list, and the own-check suite
+   asserts the renderer's per-kind branches and the validator's
+   per-kind cases name exactly these kinds. */
+/* PRIM_KINDS is DERIVED from the contract below: the contract is the
+   single membership source — a kind added to the contract alone is a
+   member everywhere (validator, renderer, baseline derivation). */
+/* Per-kind field contract: the ONE table naming the fields each kind
+   carries. The validator's per-kind cases and the renderer's per-kind
+   branches both answer to this table (the own-check suite asserts the
+   three name exactly the same kinds and that a grid primitive's stroke
+   is validated as paint and rendered as paint — one contract, both
+   consumers). detail.fallbackNodeRadius is reachable under this
+   contract: a graph primitive without nodeR renders at the fallback
+   radius in panelArtSVG. */
+const KIND_FIELD_CONTRACT = Object.freeze({
+  rect: { required: ["x", "y", "w", "h"], numeric: ["x", "y", "w", "h"], optional: ["rx", "fill", "stroke", "strokeWidth", "opacity", "transform"] },
+  circle: { required: ["cx", "cy", "r"], numeric: ["cx", "cy", "r"], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] },
+  line: { required: ["x1", "y1", "x2", "y2"], numeric: ["x1", "y1", "x2", "y2"], optional: ["stroke", "strokeWidth", "opacity", "transform"] },
+  polygon: { required: ["points"], numeric: [], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] },
+  path: { required: ["d"], numeric: [], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] },
+  text: { required: ["x", "y", "size"], numeric: ["x", "y", "size"], optional: ["anchor", "weight", "content", "segments", "fill", "stroke", "strokeWidth", "opacity", "transform"] },
+  grid: { required: ["x", "y", "cols", "rows", "cellW", "cellH", "gapX", "gapY", "fills"], numeric: ["x", "y", "cellW", "cellH", "gapX", "gapY"], optional: ["stroke", "strokeWidth", "opacity", "transform"] },
+  graph: { required: ["nodes", "edges"], numeric: [], optional: ["nodeR", "edgeWidth", "edgeStroke", "nodeFill", "stroke", "strokeWidth", "opacity", "transform"] },
+  circlesRow: { required: ["cx0", "cy", "dx", "r", "count"], numeric: ["cx0", "cy", "dx", "r"], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] }
+});
+const PRIM_KINDS = Object.freeze(Object.keys(KIND_FIELD_CONTRACT));
 function deriveByDataShape(v) {
   /* a value derived from its OWN shape: the field set is whatever the
      configured value actually carries, type-normalized per field */
@@ -389,31 +421,26 @@ function deriveBaselineValue(v, sch) {
 }
 const CANONICAL_BASELINE = deepFreeze(deriveBaselineValue(CONFIG, CONFIG_SCHEMA));
 const TRUSTED_DEFAULTS = CANONICAL_BASELINE;
+
+/* RECOVERY_DEFAULTS — the candidate-independent recovery source.
+   A frozen literal of the shipped specimen defaults, written into
+   this file as data: it is NOT derived from CONFIG, from the schema,
+   or from any candidate, so no edit to the editable object and no
+   route input can move it. The single recovery rule reads its
+   fallback values ONLY from here: an out-of-range scalar is rejected
+   to the last valid value (the prior resolved value; at first
+   resolution, this literal), and a whole group that is absent,
+   null, or malformed recovers from this literal with a named
+   warning. TRUSTED_DEFAULTS (the derived baseline) remains the
+   SCHEMA — the trusted shape for field existence and coercion —
+   and is never a recovery value source. */
+const RECOVERY_DEFAULTS = deepFreeze({"headerText":"ADITAZZZ — A COMIC OF EVERYTHING WE MADE — ISSUE #1","panels":[{"n":"01","title":"THE TERMINAL","art":"terminal"},{"n":"02","title":"THE WALL","art":"tiles"},{"n":"03","title":"SHIP IT","art":"ship"},{"n":"04","title":"THE COMMENTS","art":"comments"},{"n":"05","title":"IN THE WALLS","art":"walls"},{"n":"06","title":"THE SWARM","art":"swarm"},{"n":"07","title":"THE DAILY STANDUP","art":"paper"},{"n":"08","title":"THE KEYNOTE","art":"keynote"},{"n":"09","title":"THE SEERESS","art":"seeress"},{"n":"10","title":"I KNEW IT","art":"slam"},{"n":"11","title":"PLEASE HOLD","art":"tower"},{"n":"12","title":"USAGE LIMIT","art":"receipt"}],"appearances":[{"filled":4,"dive":4},{"filled":8,"dive":8},{"filled":12,"dive":11}],"approachMs":365,"approachFromScale":0.88,"diveMs":335,"holdZoomMs":0,"loopPauseMs":0,"progress":{"forceFillTarget":"mark","targetOutlinePx":3,"targetMarkStripPx":4},"handoff":{"holdOnComplete":false},"cut":{"mode":"signal","clockPolicy":"fixed-deadline"},"caps":{"approachMs":60000,"diveMs":10000,"holdZoomMs":60000,"loopPauseMs":60000},"ceilings":{"maxGridCells":96,"primStrokeWidthMax":40,"primTextSizeMax":200,"primEdgeWidthMax":40,"maxCutLogEntries":256,"maxCirclesRowCount":24,"maxGraphNodes":24,"maxGraphEdges":64},"limits":{"maxPanels":24,"maxCols":6,"headerMaxChars":120,"titleMaxChars":60,"numberMaxChars":8,"clampMaxIterations":300,"maxGapPx":40,"maxBorderPx":12,"minNarrowBreakpointPx":200,"headerAbsoluteMinPx":11,"maxNarrowBreakpointPx":2000,"borderClampStep":1,"headerRefineMaxIterations":200,"diveScaleMin":1,"diveScaleMax":12,"panelAspectMin":0.5,"panelAspectMax":3,"approachFromScaleMin":0.1,"approachFromScaleMax":1,"targetOutlineMaxPx":12,"targetMarkStripMaxPx":40},"diveScale":3.1,"colsWide":4,"colsNarrow":3,"colsMicro":2,"narrowBreakpointPx":520,"panelAspect":1.55,"gapPx":10,"borderPx":4,"palette":{"paper":"#e9e5d6","ink":"#141414","tab":"#ffd21f","tabDim":"#b9b091","empty":"#d9d3bf","accent":"#e2483d","tabTarget":"#ff9f1c","completedBg":"#f3ecd2","dark":"#20201c","panelBg":"#ffffff","art01":"#0d0f0e","art02":"#0e1420","art03":"#101018","art04":"#101408","art05":"#101418","art06":"#12160f","art07":"#14100c","art08":"#17122b","art09":"#171a21","art10":"#191410","art11":"#1b2030","art12":"#222222","art13":"#232a26","art14":"#233118","art15":"#26232b","art16":"#26282e","art17":"#2a1440","art18":"#2b2b2b","art19":"#31405e","art20":"#3c3c3c","art21":"#3f7d55","art22":"#4a554e","art23":"#555555","art24":"#57e389","art25":"#5b2a86","art26":"#5ee7e0","art27":"#5f7fa6","art28":"#6fb7ff","art29":"#777777","art30":"#7ac74f","art31":"#8a8f98","art32":"#9fb0c3","art33":"#c9a227","art34":"#cfe4ff","art35":"#e8b23a","art36":"#e8ddc8","art37":"#efe9dc","art38":"#f2f2ee","art39":"#f4f1e8","art40":"#ffb84d","art41":"#ffe9a3"},"fontFamily":"\"Arial Narrow\", Arial, Helvetica, sans-serif","layout":{"stageMaxPx":960,"stageBottomPadPx":6,"headerHeightFactor":0.034,"headerMinPx":18,"headerFontFactor":0.021,"headerMinFontPx":11,"headerPaddingPx":8,"tabBorderPx":3,"tabPaddingYPx":1,"phoneTabPadYPx":0,"tabPaddingLeftPx":5,"tabPaddingRightPx":6,"ghostFontFactor":0.3,"ghostOpacity":0.16,"diveEasing":"cubic-bezier(.55,.35,.65,.7)","approachEasing":"cubic-bezier(.5,.3,.8,.45)","diveCoverMargin":1.03,"fallbackStagePx":360,"minPanelPx":48,"warnFontPx":12,"headerReservePx":16,"minStagePx":240,"minInnerWPx":24,"minInnerHPx":12,"paddingPx":10,"tabOverlapPx":0,"narrowColsBreakpointPx":280,"panelAspectPhone":1.15,"phoneRegimeMaxPx":360,"tabAnchor":"top-left","pauseOpacity":0,"approachEntryProgress":0.25,"diveWarpFloor":-0.95,"gapClampStepPx":5,"warnPadding":"4px 8px","warnZIndex":9,"cutZIndex":10,"primDefaultStrokeWidth":1,"primDefaultTextWeight":"normal","doneBarHeightPx":5},"artViewBox":{"x":0,"y":0,"w":160,"h":100,"preserveAspectRatio":"none"},"artDetailMinPx":30,"detail":{"textCutoffUnits":14,"graphEdgeMultiplier":2,"graphNodeMultiplier":1.6,"fallbackEdgeWidth":1,"fallbackNodeRadius":4},"headerBreak":"break-word","fallbackArtKind":"tiles","artDefaults":{"fill":"$ink","stroke":"$ink"},"typography":{"headerWeight":700,"headerLetterSpacingEm":0.04,"tabWeight":900,"tabLetterSpacingEm":0.02,"tabLineHeight":1.25,"tabCompactLineHeight":1.02,"headerWrapLineHeight":1.15,"ghostWeight":900},"labels":{"baseFactor":0.14,"maxPx":18,"minPx":11,"glyphEm":0.52,"chromePx":14,"separator":" · ","shrinkStepPx":0.5,"shrinkStepFallbackPx":0.5,"maxTabHeightFraction":0.65,"numberPadWidth":2,"generatedTitlePrefix":"CHAPTER ","titleCase":"preserve","maxLines":2,"maxLinesPhone":3,"maxTabHeightFractionPhone":0.75},"artRegistry":{"terminal":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art05"},{"t":"rect","x":10,"y":10,"w":86,"h":6,"fill":"$art24"},{"t":"rect","x":10,"y":24,"w":120,"h":6,"fill":"$art21"},{"t":"rect","x":10,"y":38,"w":64,"h":6,"fill":"$art24"},{"t":"rect","x":10,"y":56,"w":14,"h":10,"fill":"$art24"}]},"tiles":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art11"},{"t":"grid","x":8,"y":8,"cols":6,"rows":4,"cellW":20,"cellH":17,"gapX":5,"gapY":5,"fills":["$art28","$art19","$art19"]}]},"ship":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art06"},{"t":"path","d":"M45 88 L45 45 A35 30 0 0 1 115 45 L115 88 Z","fill":"$art14","stroke":"$art30","strokeWidth":2},{"t":"circlesRow","cx0":30,"cy":93,"dx":20,"count":6,"r":4,"fill":"$art32"},{"t":"rect","x":58,"y":8,"w":44,"h":12,"fill":"$art30"},{"t":"text","x":80,"y":18,"size":9,"anchor":"middle","fill":"$art04","weight":"bold","content":"SHIPPED"}]},"comments":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art09"},{"t":"rect","x":14,"y":12,"w":132,"h":76,"rx":6,"fill":"$art38"},{"t":"rect","x":24,"y":24,"w":90,"h":7,"fill":"$art12"},{"t":"rect","x":24,"y":38,"w":112,"h":7,"fill":"$art33"},{"t":"rect","x":24,"y":52,"w":70,"h":7,"fill":"$art23"},{"t":"path","d":"M34 78 c-6-8 6-14 10-6 c4-8 16-2 10 6 l-10 8 z","fill":"$accent"}]},"walls":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art13"},{"t":"rect","x":42,"y":24,"w":76,"h":50,"fill":"$art01","stroke":"$art22","strokeWidth":2},{"t":"rect","x":52,"y":36,"w":56,"h":6,"fill":"$art35"},{"t":"rect","x":52,"y":48,"w":42,"h":6,"fill":"$art35"},{"t":"rect","x":70,"y":74,"w":20,"h":8,"fill":"$art22"}]},"swarm":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art02"},{"t":"graph","nodes":[[80,16],[44,44],[116,44],[24,78],[64,78],[96,78],[136,78]],"edges":[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]],"edgeStroke":"$art27","edgeWidth":1.5,"nodeFill":"$art34","nodeR":4}]},"paper":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art37"},{"t":"rect","x":14,"y":10,"w":132,"h":5,"fill":"$ink"},{"t":"text","x":16,"y":42,"size":21,"fill":"$ink","weight":"900","segments":[{"t":"$0 ×3 = ","fill":"$ink"},{"t":"$0","fill":"$accent"}]},{"t":"rect","x":98,"y":56,"w":48,"h":32,"fill":"$art25"},{"t":"circle","cx":110,"cy":82,"r":6,"fill":"$art12"},{"t":"circle","cx":134,"cy":82,"r":6,"fill":"$art12"}]},"keynote":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art10"},{"t":"polygon","points":"66,8 94,8 118,88 42,88","fill":"$art35","opacity":0.85},{"t":"circle","cx":80,"cy":34,"r":7,"fill":"$art07"},{"t":"rect","x":76,"y":41,"w":8,"h":24,"fill":"$art07"},{"t":"rect","x":60,"y":48,"w":16,"h":5,"fill":"$art07","transform":"rotate(-24 68 50)"}]},"seeress":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art15"},{"t":"circle","cx":112,"cy":42,"r":19,"fill":"$art36","stroke":"$ink","strokeWidth":2},{"t":"circle","cx":105,"cy":40,"r":3,"fill":"$ink"},{"t":"circle","cx":119,"cy":40,"r":3,"fill":"$ink"},{"t":"path","d":"M103 52 q9 6 18 0","fill":"none","stroke":"$ink","strokeWidth":2},{"t":"rect","x":30,"y":52,"w":5,"h":26,"fill":"$art36"},{"t":"rect","x":46,"y":58,"w":5,"h":20,"fill":"$art36"},{"t":"circle","cx":32,"cy":49,"r":3,"fill":"$art40"},{"t":"circle","cx":48,"cy":55,"r":3,"fill":"$art40"}]},"slam":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art18"},{"t":"text","x":80,"y":62,"size":24,"anchor":"middle","fill":"$art38","weight":"900","content":"I KNEW IT!"},{"t":"rect","x":18,"y":14,"w":70,"h":5,"fill":"$art31"},{"t":"rect","x":18,"y":25,"w":52,"h":5,"fill":"$art31"}]},"tower":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art17"},{"t":"rect","x":58,"y":10,"w":44,"h":84,"fill":"$art03","stroke":"$art26","strokeWidth":2},{"t":"grid","x":66,"y":18,"cols":3,"rows":5,"cellW":7,"cellH":9,"gapX":4,"gapY":6,"fills":["$art41","$art26"]},{"t":"rect","x":14,"y":52,"w":26,"h":42,"fill":"$art08"},{"t":"rect","x":120,"y":44,"w":28,"h":50,"fill":"$art08"}]},"receipt":{"primitives":[{"t":"rect","x":0,"y":0,"w":160,"h":100,"fill":"$art20"},{"t":"polygon","points":"48,6 118,6 112,94 54,94","fill":"$art39"},{"t":"rect","x":62,"y":46,"w":42,"h":34,"rx":4,"fill":"$art16"},{"t":"rect","x":60,"y":16,"w":46,"h":5,"fill":"$ink"},{"t":"rect","x":60,"y":27,"w":34,"h":5,"fill":"$art29"}]}}});
 deepFreeze(CONFIG);
-/* The primitive-kind list has ONE home: the registry validator and
-   the renderer both consume this list, and the own-check suite
-   asserts the renderer's per-kind branches and the validator's
-   per-kind cases name exactly these kinds. */
-const PRIM_KINDS = Object.freeze(["rect", "circle", "line", "polygon", "path", "text", "grid", "graph", "circlesRow"]);
-/* Per-kind field contract: the ONE table naming the fields each kind
-   carries. The validator's per-kind cases and the renderer's per-kind
-   branches both answer to this table (the own-check suite asserts the
-   three name exactly the same kinds and that a grid primitive's stroke
-   is validated as paint and rendered as paint — one contract, both
-   consumers). detail.fallbackNodeRadius is reachable under this
-   contract: a graph primitive without nodeR renders at the fallback
-   radius in panelArtSVG. */
-const KIND_FIELD_CONTRACT = Object.freeze({
-  rect: { required: ["x", "y", "w", "h"], numeric: ["x", "y", "w", "h"], optional: ["rx", "fill", "stroke", "strokeWidth", "opacity", "transform"] },
-  circle: { required: ["cx", "cy", "r"], numeric: ["cx", "cy", "r"], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] },
-  line: { required: ["x1", "y1", "x2", "y2"], numeric: ["x1", "y1", "x2", "y2"], optional: ["stroke", "strokeWidth", "opacity", "transform"] },
-  polygon: { required: ["points"], numeric: [], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] },
-  path: { required: ["d"], numeric: [], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] },
-  text: { required: ["x", "y", "size"], numeric: ["x", "y", "size"], optional: ["anchor", "weight", "content", "segments", "fill", "stroke", "strokeWidth", "opacity", "transform"] },
-  grid: { required: ["x", "y", "cols", "rows", "cellW", "cellH", "gapX", "gapY", "fills"], numeric: ["x", "y", "cellW", "cellH", "gapX", "gapY"], optional: ["stroke", "strokeWidth", "opacity", "transform"] },
-  graph: { required: ["nodes", "edges"], numeric: [], optional: ["nodeR", "edgeWidth", "edgeStroke", "nodeFill", "stroke", "strokeWidth", "opacity", "transform"] },
-  circlesRow: { required: ["cx0", "cy", "dx", "r", "count"], numeric: ["cx0", "cy", "dx", "r"], optional: ["fill", "stroke", "strokeWidth", "opacity", "transform"] }
-});
+
+/* ONE integer-field roster, consumed by BOTH intake routes (the
+   validator's typed candidate parser and the URL scalar dispatch):
+   a field's parse type has one definition, never two lists. */
+const INT_FIELD_ROSTER = Object.freeze(["approachMs", "diveMs", "holdZoomMs", "loopPauseMs", "colsWide", "colsNarrow", "colsMicro", "narrowBreakpointPx", "gapPx", "borderPx"]);
 function validateInto(cfg, warnings, priorRegistry, opts) {
   const finalPass = !opts || opts.finalPass !== false;
   const W = function (m) { warnings.push(m); };
@@ -425,10 +452,10 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
      an integer-string coerces identically on both routes. This pass
      runs BEFORE the generic numeric coercion below, which would
      otherwise silently coerce "1.0" to 1 on the direct route only. */
-  ["approachMs", "diveMs", "holdZoomMs", "loopPauseMs", "colsWide", "colsNarrow", "colsMicro", "narrowBreakpointPx", "gapPx", "borderPx"].forEach(function (k) {
+  INT_FIELD_ROSTER.forEach(function (k) {
     if (typeof cfg[k] === "string") {
       const v = strictInt(cfg[k]);
-      if (v === null) { W(k + ": malformed value '" + cfg[k] + "' discarded, default restored (shared typed candidate parser)"); cfg[k] = TRUSTED_DEFAULTS[k]; }
+      if (v === null) { W(k + ": malformed value '" + cfg[k] + "' discarded, default restored (shared typed candidate parser)"); cfg[k] = RECOVERY_DEFAULTS[k]; }
       else cfg[k] = v;
     }
   });
@@ -438,12 +465,69 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
      bounds and clamped into them when neither source lands inside —
      a reset result outside the active bounds is never committed. */
   const resetScalar = function (key, lo, hi) {
+    /* one recovery rule for out-of-range scalars: reject to the last
+       valid value (the prior resolved value when it satisfies the
+       active bounds; at first resolution the trusted default when it
+       satisfies them). A value is NEVER clamped into the bounds —
+       clamping manufactures a value no route supplied. When neither
+       source satisfies the active bounds, the prior value is retained
+       and the joint bound-pair check at the end of this pass prices
+       the pair; with no prior on record the default is retained
+       under the same check. */
     const pv = priorRoot ? priorRoot[key] : undefined;
-    let cand = (typeof pv === "number" && isFinite(pv) && pv >= lo && pv <= hi) ? pv : TRUSTED_DEFAULTS[key];
-    if (typeof cand !== "number" || !isFinite(cand)) cand = lo;
-    if (cand < lo) cand = lo;
-    if (cand > hi) cand = hi;
-    return cand;
+    if (typeof pv === "number" && isFinite(pv) && pv >= lo && pv <= hi) return pv;
+    const dv = RECOVERY_DEFAULTS[key];
+    if (typeof dv === "number" && isFinite(dv) && dv >= lo && dv <= hi) return dv;
+    if (typeof pv === "number" && isFinite(pv)) return pv;
+    return dv;
+  };
+  /* prior-path lookup: the prior resolved value for the exact field
+     a guard is deciding (root fields read the prior root; group fields
+     read the prior group of the same name) */
+  const priorOf = function (obj, key) {
+    if (!priorRoot) return undefined;
+    if (obj === cfg) return priorRoot[key];
+    const groups = ["layout", "labels", "typography", "caps", "ceilings", "limits", "progress", "detail", "artViewBox", "handoff", "cut", "artDefaults"];
+    for (let gi = 0; gi < groups.length; gi++) { if (obj === cfg[groups[gi]]) return priorRoot[groups[gi]] ? priorRoot[groups[gi]][key] : undefined; }
+    return undefined;
+  };
+  /* the recovery source lookup: the RECOVERY_DEFAULTS value for the
+     exact field a guard is deciding (same path discipline as priorOf) */
+  const recoveryOf = function (obj, key) {
+    if (obj === cfg) return RECOVERY_DEFAULTS[key];
+    const groups = ["layout", "labels", "typography", "caps", "ceilings", "limits", "progress", "detail", "artViewBox", "handoff", "cut", "artDefaults"];
+    for (let gi = 0; gi < groups.length; gi++) { if (obj === cfg[groups[gi]]) return RECOVERY_DEFAULTS[groups[gi]] ? RECOVERY_DEFAULTS[groups[gi]][key] : undefined; }
+    return undefined;
+  };
+  /* THE single recovery rule for an out-of-range scalar: the last
+     valid value — the prior resolved value when it satisfies the
+     active bounds; at first resolution (or when the prior does not
+     satisfy them) the RECOVERY_DEFAULTS value when IT satisfies
+     them; otherwise the prior value, retained for the pair-level
+     checks to price — never a clamp, never a second source */
+  const recoverPath = function (obj, key, lo, hi) {
+    const pv = priorOf(obj, key);
+    if (typeof pv === "number" && isFinite(pv) && pv >= lo && pv <= hi) return pv;
+    const rv = recoveryOf(obj, key);
+    if (typeof rv === "number" && isFinite(rv) && rv >= lo && rv <= hi) return rv;
+    if (typeof pv === "number" && isFinite(pv)) return pv;
+    return rv;
+  };
+  /* restored-default revalidation: a reset/restore candidate is
+     re-checked against the ACTIVE bounds before it commits. When the
+     default itself violates the active bounds, the restore is
+     REJECTED and the prior value is RETAINED, with the active bound
+     named in the warning — a reset to a different bound-satisfying
+     value is not an alternative outcome. */
+  const revalidateRestore = function (obj, key, lo, hi, def, label) {
+    const pv = priorOf(obj, key);
+    if (typeof def === "number" && isFinite(def) && def >= lo && def <= hi) return def;
+    if (typeof pv === "number" && isFinite(pv)) {
+      W(label + ": restored default " + def + " rejected against the active bound [" + lo + ", " + hi + "], prior value " + pv + " retained (restored-default revalidation)");
+      return pv;
+    }
+    W(label + ": restored default " + def + " rejected against the active bound [" + lo + ", " + hi + "], no prior value on record — the candidate value is retained and named, never silently clamped");
+    return obj[key];
   };
   const clampInt = function (obj, key, lo, hi) {
     const v = strictInt(obj[key]);
@@ -469,7 +553,7 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
         else if (dv && typeof dv === "object" && ov && typeof ov === "object") coerceDeep(ov, dv);
       });
     };
-    coerceDeep(cfg, TRUSTED_DEFAULTS);
+    coerceDeep(cfg, RECOVERY_DEFAULTS);
     if (Array.isArray(cfg.appearances)) cfg.appearances.forEach(function (a) {
       if (!a || typeof a !== "object") return;
       if (typeof a.filled === "string") { const v = strictInt(a.filled); if (v !== null) a.filled = v; }
@@ -477,9 +561,9 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     });
   })();
   /* null/absent groups reset before any group is read */
-  if (!cfg.labels || typeof cfg.labels !== "object") { W("labels: malformed, reset to default"); cfg.labels = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.labels)); }
-  if (!cfg.typography || typeof cfg.typography !== "object") { W("typography: malformed, reset to default"); cfg.typography = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.typography)); }
-  if (!cfg.layout || typeof cfg.layout !== "object") { W("layout: malformed, reset to default"); cfg.layout = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.layout)); }
+  if (!cfg.labels || typeof cfg.labels !== "object") { W("labels: malformed, reset to default"); cfg.labels = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.labels)); }
+  if (!cfg.typography || typeof cfg.typography !== "object") { W("typography: malformed, reset to default"); cfg.typography = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.typography)); }
+  if (!cfg.layout || typeof cfg.layout !== "object") { W("layout: malformed, reset to default"); cfg.layout = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.layout)); }
   /* direct-edit route parity: string-typed numeric values in the
      layout group coerce through the same strict parser the URL route
      uses, so a direct edit and a URL override cannot diverge */
@@ -490,13 +574,27 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     if (a && typeof a.filled === "string") { const v = strictInt(a.filled); if (v !== null) a.filled = v; }
     if (a && typeof a.dive === "string") { const v = strictInt(a.dive); if (v !== null) a.dive = v; }
   });
-  if (!cfg.artViewBox || typeof cfg.artViewBox !== "object") { W("artViewBox: malformed, reset to default"); cfg.artViewBox = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.artViewBox)); }
-  if (!cfg.detail || typeof cfg.detail !== "object") { W("detail: malformed, reset to default"); cfg.detail = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.detail)); }
-  if (!cfg.palette || typeof cfg.palette !== "object") { W("palette: malformed, reset to default"); cfg.palette = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.palette)); }
-  if (!cfg.limits || typeof cfg.limits !== "object") { W("limits: malformed, reset to default"); cfg.limits = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.limits)); }
-  ["maxPanels", "maxCols", "headerMaxChars", "titleMaxChars", "numberMaxChars", "clampMaxIterations", "borderClampStep", "headerRefineMaxIterations", "maxGapPx", "maxBorderPx", "minNarrowBreakpointPx", "maxNarrowBreakpointPx"].forEach(function (k) {
-    if (!Number.isInteger(cfg.limits[k]) || cfg.limits[k] < 1 || cfg.limits[k] > 100000) { W("limits." + k + ": invalid, reset to default"); cfg.limits[k] = TRUSTED_DEFAULTS.limits[k]; }
+  if (!cfg.artViewBox || typeof cfg.artViewBox !== "object") { W("artViewBox: malformed, reset to default"); cfg.artViewBox = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.artViewBox)); }
+  if (!cfg.detail || typeof cfg.detail !== "object") { W("detail: malformed, reset to default"); cfg.detail = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.detail)); }
+  if (!cfg.palette || typeof cfg.palette !== "object") { W("palette: malformed, reset to default"); cfg.palette = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.palette)); }
+  if (!cfg.limits || typeof cfg.limits !== "object") { W("limits: malformed, reset to default"); cfg.limits = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.limits)); }
+  ["maxPanels", "maxCols", "headerMaxChars", "titleMaxChars", "numberMaxChars", "clampMaxIterations", "borderClampStep", "headerRefineMaxIterations", "maxGapPx", "maxBorderPx", "minNarrowBreakpointPx", "maxNarrowBreakpointPx", "headerAbsoluteMinPx"].forEach(function (k) {
+    if (!Number.isInteger(cfg.limits[k]) || cfg.limits[k] < 1 || cfg.limits[k] > 100000) { W("limits." + k + ": invalid, reset to default"); cfg.limits[k] = RECOVERY_DEFAULTS.limits[k]; }
   });
+  /* coupled bound pair: an inverted narrow-breakpoint range commits
+     NEITHER side — the prior bounds stand together, one pair-warning */
+  if (typeof cfg.limits.minNarrowBreakpointPx === "number" && typeof cfg.limits.maxNarrowBreakpointPx === "number" &&
+      cfg.limits.minNarrowBreakpointPx > cfg.limits.maxNarrowBreakpointPx) {
+    const pMin = priorRoot && priorRoot.limits ? priorRoot.limits.minNarrowBreakpointPx : undefined;
+    const pMax = priorRoot && priorRoot.limits ? priorRoot.limits.maxNarrowBreakpointPx : undefined;
+    if (typeof pMin === "number" && typeof pMax === "number" && pMin <= pMax) {
+      W("limits narrow breakpoint range inverted (" + cfg.limits.minNarrowBreakpointPx + " > " + cfg.limits.maxNarrowBreakpointPx + "): pair rejected, prior bounds retained (pair-warning)");
+      cfg.limits.minNarrowBreakpointPx = pMin; cfg.limits.maxNarrowBreakpointPx = pMax;
+    } else {
+      W("limits narrow breakpoint range inverted (" + cfg.limits.minNarrowBreakpointPx + " > " + cfg.limits.maxNarrowBreakpointPx + "): pair rejected, recovery bounds retained (pair-warning)");
+      cfg.limits.minNarrowBreakpointPx = RECOVERY_DEFAULTS.limits.minNarrowBreakpointPx; cfg.limits.maxNarrowBreakpointPx = RECOVERY_DEFAULTS.limits.maxNarrowBreakpointPx;
+    }
+  }
   /* route parity for direct edits: a string-typed value standing where
      the shipped default is numeric coerces through the same strict
      parser the URL route uses, in every group — a direct edit and a
@@ -510,8 +608,8 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
         }
       });
     };
-    coerce(cfg, TRUSTED_DEFAULTS);
-    ["layout", "labels", "typography", "caps", "ceilings", "limits", "progress", "detail", "artViewBox", "handoff", "cut", "artDefaults"].forEach(function (g) { coerce(cfg[g], TRUSTED_DEFAULTS[g]); });
+    coerce(cfg, RECOVERY_DEFAULTS);
+    ["layout", "labels", "typography", "caps", "ceilings", "limits", "progress", "detail", "artViewBox", "handoff", "cut", "artDefaults"].forEach(function (g) { coerce(cfg[g], RECOVERY_DEFAULTS[g]); });
   })();
   /* unknown direct fields are named and removed, never silently kept:
      the editable surface is exactly the shipped field set */
@@ -529,9 +627,9 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
   })();
   /* duration caps are CONFIG tokens, consumed here — no duration
      ceiling lives as a literal in the validation body */
-  if (!cfg.caps || typeof cfg.caps !== "object") { W("caps: malformed, reset to default"); cfg.caps = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.caps)); }
+  if (!cfg.caps || typeof cfg.caps !== "object") { W("caps: malformed, reset to default"); cfg.caps = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.caps)); }
   ["approachMs", "diveMs", "holdZoomMs", "loopPauseMs"].forEach(function (k) {
-    if (!Number.isInteger(cfg.caps[k]) || cfg.caps[k] < 1 || cfg.caps[k] > 3600000) { W("caps." + k + ": invalid, reset to default"); cfg.caps[k] = TRUSTED_DEFAULTS.caps[k]; }
+    if (!Number.isInteger(cfg.caps[k]) || cfg.caps[k] < 1 || cfg.caps[k] > 3600000) { W("caps." + k + ": invalid, reset to default"); cfg.caps[k] = RECOVERY_DEFAULTS.caps[k]; }
   });
   (function () {
     const limGuard = function (key, lo, hi, def) {
@@ -539,7 +637,7 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
       if (v === null || v < lo || v > hi) { W("limits." + key + ": invalid, reset to default"); cfg.limits[key] = def; }
       else cfg.limits[key] = v;
     };
-    const limDef = function (key, def) { return TRUSTED_DEFAULTS.limits && TRUSTED_DEFAULTS.limits[key] !== undefined ? TRUSTED_DEFAULTS.limits[key] : def; };
+    const limDef = function (key, def) { return RECOVERY_DEFAULTS.limits && RECOVERY_DEFAULTS.limits[key] !== undefined ? RECOVERY_DEFAULTS.limits[key] : def; };
     limGuard("diveScaleMin", 0.1, 100, limDef("diveScaleMin", 1)); limGuard("diveScaleMax", 0.1, 1000, limDef("diveScaleMax", 12));
     limGuard("panelAspectMin", 0.05, 100, limDef("panelAspectMin", 0.5)); limGuard("panelAspectMax", 0.05, 100, limDef("panelAspectMax", 3));
     limGuard("approachFromScaleMin", 0, 1, limDef("approachFromScaleMin", 0.1)); limGuard("approachFromScaleMax", 0, 1, limDef("approachFromScaleMax", 1));
@@ -551,7 +649,13 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
   clampInt(cfg, "approachMs", 0, cfg.caps.approachMs); clampInt(cfg, "diveMs", 0, cfg.caps.diveMs);
   clampInt(cfg, "holdZoomMs", 0, cfg.caps.holdZoomMs); clampInt(cfg, "loopPauseMs", 0, cfg.caps.loopPauseMs);
   clampInt(cfg, "colsWide", 1, cfg.limits.maxCols); clampInt(cfg, "colsNarrow", 1, cfg.limits.maxCols); clampInt(cfg, "colsMicro", 1, cfg.limits.maxCols);
-  clampInt(cfg, "narrowBreakpointPx", cfg.limits.minNarrowBreakpointPx, cfg.limits.maxNarrowBreakpointPx);
+  /* the active bounds for evaluating a candidate are the bounds in
+     force BEFORE the candidate — the prior limits when a prior is on
+     record; a tighter bound inside the same candidate becomes active
+     only if the whole candidate commits (priced by the pair check) */
+  const nbLo = priorRoot && priorRoot.limits ? priorRoot.limits.minNarrowBreakpointPx : cfg.limits.minNarrowBreakpointPx;
+  const nbHi = priorRoot && priorRoot.limits ? priorRoot.limits.maxNarrowBreakpointPx : cfg.limits.maxNarrowBreakpointPx;
+  clampInt(cfg, "narrowBreakpointPx", nbLo, nbHi);
   clampInt(cfg, "gapPx", 0, cfg.limits.maxGapPx); clampInt(cfg, "borderPx", 0, cfg.limits.maxBorderPx);
   const ds = strictNum(cfg.diveScale);
   if (ds === null || ds < cfg.limits.diveScaleMin || ds > cfg.limits.diveScaleMax) { W("diveScale: invalid, prior working value or default restored (re-checked against active bounds)"); cfg.diveScale = resetScalar("diveScale", cfg.limits.diveScaleMin, cfg.limits.diveScaleMax); }
@@ -559,30 +663,34 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
   if (pa === null || pa < cfg.limits.panelAspectMin || pa > cfg.limits.panelAspectMax) { W("panelAspect: invalid, prior working value or default restored (re-checked against active bounds)"); cfg.panelAspect = resetScalar("panelAspect", cfg.limits.panelAspectMin, cfg.limits.panelAspectMax); }
   const afs = strictNum(cfg.approachFromScale);
   if (afs === null || afs < cfg.limits.approachFromScaleMin || afs > cfg.limits.approachFromScaleMax) { W("approachFromScale: invalid, prior working value or default restored (re-checked against active bounds)"); cfg.approachFromScale = resetScalar("approachFromScale", cfg.limits.approachFromScaleMin, cfg.limits.approachFromScaleMax); }
-  if (typeof cfg.headerText !== "string" || !cfg.headerText.trim()) { W("headerText: empty, reset to default"); cfg.headerText = TRUSTED_DEFAULTS.headerText; }
+  if (typeof cfg.headerText !== "string" || !cfg.headerText.trim()) { W("headerText: empty, reset to default"); cfg.headerText = RECOVERY_DEFAULTS.headerText; }
   if (cfg.headerText.length > cfg.limits.headerMaxChars) W("headerText: truncated to " + cfg.limits.headerMaxChars + " characters");
   cfg.headerText = cfg.headerText.slice(0, cfg.limits.headerMaxChars);
   Object.keys(cfg.palette).forEach(function (k) {
     if (!isColor(cfg.palette[k])) {
-      if (TRUSTED_DEFAULTS.palette && TRUSTED_DEFAULTS.palette[k] !== undefined) { W("palette." + k + ": invalid color, reset to default"); cfg.palette[k] = TRUSTED_DEFAULTS.palette[k]; }
+      if (RECOVERY_DEFAULTS.palette && RECOVERY_DEFAULTS.palette[k] !== undefined) { W("palette." + k + ": invalid color, reset to default"); cfg.palette[k] = RECOVERY_DEFAULTS.palette[k]; }
       else { W("palette." + k + ": invalid color and no default value exists, key removed rather than left undefined"); delete cfg.palette[k]; }
     }
     else cfg.palette[k] = String(cfg.palette[k]).trim();
   });
   /* the progress/ceilings groups are validated BEFORE the registry
      cleaning below, because the primitive schema consumes cfg.ceilings */
-  if (!cfg.progress || typeof cfg.progress !== "object") { W("progress: malformed, reset to default"); cfg.progress = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.progress)); }
+  if (!cfg.progress || typeof cfg.progress !== "object") { W("progress: malformed, reset to default"); cfg.progress = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.progress)); }
   if (typeof cfg.progress.forceFillTarget === "string") cfg.progress.forceFillTarget = cfg.progress.forceFillTarget.trim();
-  if (["mark", "fill"].indexOf(cfg.progress.forceFillTarget) === -1) { W("progress.forceFillTarget: invalid, reset to default"); cfg.progress.forceFillTarget = TRUSTED_DEFAULTS.progress.forceFillTarget; }
+  if (["mark", "fill"].indexOf(cfg.progress.forceFillTarget) === -1) { W("progress.forceFillTarget: invalid, reset to default"); cfg.progress.forceFillTarget = RECOVERY_DEFAULTS.progress.forceFillTarget; }
   const earlyGuard = function (obj, key, lo, hi, def) {
     const v = strictNum(obj[key]);
-    if (v === null || v < lo || v > hi) { W(key + ": out of range, reset to default"); obj[key] = def; }
+    if (v === null || v < lo || v > hi) {
+      const r = recoverPath(obj, key, lo, hi);
+      if (typeof r === "number" && isFinite(r) && r >= lo && r <= hi) { W(key + ": out of range against the active bounds [" + lo + ", " + hi + "], rejected to the last valid value " + r + " (single recovery rule)"); obj[key] = r; }
+      else obj[key] = revalidateRestore(obj, key, lo, hi, typeof r === "number" && isFinite(r) ? r : def, key);
+    }
   };
-  earlyGuard(cfg.progress, "targetOutlinePx", 0, cfg.limits.targetOutlineMaxPx, TRUSTED_DEFAULTS.progress.targetOutlinePx);
+  earlyGuard(cfg.progress, "targetOutlinePx", 0, cfg.limits.targetOutlineMaxPx, RECOVERY_DEFAULTS.progress.targetOutlinePx);
   /* the mark strip passes the same field validation on restore as
      on intake: range-checked with a warning on rejection, never
      silently accepted at any magnitude or sign */
-  earlyGuard(cfg.progress, "targetMarkStripPx", 0, cfg.limits.targetMarkStripMaxPx, TRUSTED_DEFAULTS.progress.targetMarkStripPx !== undefined ? TRUSTED_DEFAULTS.progress.targetMarkStripPx : 4);
+  earlyGuard(cfg.progress, "targetMarkStripPx", 0, cfg.limits.targetMarkStripMaxPx, RECOVERY_DEFAULTS.progress.targetMarkStripPx !== undefined ? RECOVERY_DEFAULTS.progress.targetMarkStripPx : 4);
   /* commit-or-retain: every restore result is RE-CHECKED against the
      ACTIVE constraints before it commits. A restored candidate that
      still violates the active maximum is never committed with a
@@ -600,40 +708,40 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
       else { W("progress." + vk + ": restored candidate violates the active limits." + lk + ", clamped to the active maximum (commit-or-retain)"); cfg.progress[vk] = cfg.limits[lk]; }
     }
   });
-  if (!cfg.handoff || typeof cfg.handoff !== "object") { W("handoff: malformed, reset to default"); cfg.handoff = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.handoff)); }
-  if (typeof cfg.handoff.holdOnComplete !== "boolean") { W("handoff.holdOnComplete: invalid, reset to default"); cfg.handoff.holdOnComplete = TRUSTED_DEFAULTS.handoff.holdOnComplete; }
-  if (!cfg.cut || typeof cfg.cut !== "object") { W("cut: malformed, reset to default"); cfg.cut = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.cut)); }
+  if (!cfg.handoff || typeof cfg.handoff !== "object") { W("handoff: malformed, reset to default"); cfg.handoff = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.handoff)); }
+  if (typeof cfg.handoff.holdOnComplete !== "boolean") { W("handoff.holdOnComplete: invalid, reset to default"); cfg.handoff.holdOnComplete = RECOVERY_DEFAULTS.handoff.holdOnComplete; }
+  if (!cfg.cut || typeof cfg.cut !== "object") { W("cut: malformed, reset to default"); cfg.cut = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.cut)); }
   if (typeof cfg.cut.mode === "string") cfg.cut.mode = cfg.cut.mode.trim();
-  if (["signal", "hold"].indexOf(cfg.cut.mode) === -1) { W("cut.mode: invalid, reset to default"); cfg.cut.mode = TRUSTED_DEFAULTS.cut.mode; }
+  if (["signal", "hold"].indexOf(cfg.cut.mode) === -1) { W("cut.mode: invalid, reset to default"); cfg.cut.mode = RECOVERY_DEFAULTS.cut.mode; }
   if (typeof cfg.cut.clockPolicy === "string") cfg.cut.clockPolicy = cfg.cut.clockPolicy.trim();
-  if (["fixed-deadline", "shift"].indexOf(cfg.cut.clockPolicy) === -1) { W("cut.clockPolicy: invalid, reset to default"); cfg.cut.clockPolicy = TRUSTED_DEFAULTS.cut.clockPolicy; }
-  if (!cfg.ceilings || typeof cfg.ceilings !== "object") { W("ceilings: malformed, reset to default"); cfg.ceilings = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.ceilings)); }
-  ["maxGridCells", "maxCirclesRowCount", "maxGraphNodes", "maxGraphEdges"].forEach(function (k) {
-    if (!Number.isInteger(cfg.ceilings[k]) || cfg.ceilings[k] < 1 || cfg.ceilings[k] > 10000) { W("ceilings." + k + ": invalid, reset to default"); cfg.ceilings[k] = TRUSTED_DEFAULTS.ceilings[k]; }
+  if (["fixed-deadline", "shift"].indexOf(cfg.cut.clockPolicy) === -1) { W("cut.clockPolicy: invalid, reset to default"); cfg.cut.clockPolicy = RECOVERY_DEFAULTS.cut.clockPolicy; }
+  if (!cfg.ceilings || typeof cfg.ceilings !== "object") { W("ceilings: malformed, reset to default"); cfg.ceilings = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.ceilings)); }
+  ["maxGridCells", "maxCirclesRowCount", "maxGraphNodes", "maxGraphEdges", "primStrokeWidthMax", "primTextSizeMax", "primEdgeWidthMax", "maxCutLogEntries"].forEach(function (k) {
+    if (!Number.isInteger(cfg.ceilings[k]) || cfg.ceilings[k] < 1 || cfg.ceilings[k] > 10000) { W("ceilings." + k + ": invalid, reset to default"); cfg.ceilings[k] = RECOVERY_DEFAULTS.ceilings[k]; }
   });
-  earlyGuard(cfg.layout, "minStagePx", 120, 2000, TRUSTED_DEFAULTS.layout.minStagePx);
-  if (typeof cfg.layout.stageMaxPx === "number" && cfg.layout.stageMaxPx < cfg.layout.minStagePx) { W("layout.stageMaxPx below layout.minStagePx: joint width limits contradictory, both reset to defaults"); cfg.layout.stageMaxPx = TRUSTED_DEFAULTS.layout.stageMaxPx; cfg.layout.minStagePx = TRUSTED_DEFAULTS.layout.minStagePx; }
-  earlyGuard(cfg.layout, "minInnerWPx", 1, 200, TRUSTED_DEFAULTS.layout.minInnerWPx);
-  earlyGuard(cfg.layout, "minInnerHPx", 1, 200, TRUSTED_DEFAULTS.layout.minInnerHPx);
-  earlyGuard(cfg.layout, "gapClampStepPx", 1, 40, TRUSTED_DEFAULTS.layout.gapClampStepPx);
-  earlyGuard(cfg.layout, "warnZIndex", 0, 99, TRUSTED_DEFAULTS.layout.warnZIndex);
-  earlyGuard(cfg.layout, "cutZIndex", 0, 99, TRUSTED_DEFAULTS.layout.cutZIndex !== undefined ? TRUSTED_DEFAULTS.layout.cutZIndex : 10);
-  earlyGuard(cfg.layout, "primDefaultStrokeWidth", 0.1, 40, TRUSTED_DEFAULTS.layout.primDefaultStrokeWidth);
-  earlyGuard(cfg.layout, "doneBarHeightPx", 0, 40, TRUSTED_DEFAULTS.layout.doneBarHeightPx);
-  if (typeof cfg.layout.warnPadding !== "string" || !/^\d+px \d+px$/.test(cfg.layout.warnPadding)) { W("layout.warnPadding: invalid, reset to default"); cfg.layout.warnPadding = TRUSTED_DEFAULTS.layout.warnPadding; }
-  if (typeof cfg.layout.primDefaultTextWeight !== "string" || !/^(normal|bold|bolder|lighter|[1-9]00)$/.test(cfg.layout.primDefaultTextWeight)) { W("layout.primDefaultTextWeight: invalid, reset to default"); cfg.layout.primDefaultTextWeight = TRUSTED_DEFAULTS.layout.primDefaultTextWeight; }
-  earlyGuard(cfg.typography, "headerWrapLineHeight", 1, 2, TRUSTED_DEFAULTS.typography.headerWrapLineHeight);
+  earlyGuard(cfg.layout, "minStagePx", 120, 2000, RECOVERY_DEFAULTS.layout.minStagePx);
+  if (typeof cfg.layout.stageMaxPx === "number" && cfg.layout.stageMaxPx < cfg.layout.minStagePx) { W("layout.stageMaxPx below layout.minStagePx: joint width limits contradictory, both reset to defaults"); cfg.layout.stageMaxPx = RECOVERY_DEFAULTS.layout.stageMaxPx; cfg.layout.minStagePx = RECOVERY_DEFAULTS.layout.minStagePx; }
+  earlyGuard(cfg.layout, "minInnerWPx", 1, 200, RECOVERY_DEFAULTS.layout.minInnerWPx);
+  earlyGuard(cfg.layout, "minInnerHPx", 1, 200, RECOVERY_DEFAULTS.layout.minInnerHPx);
+  earlyGuard(cfg.layout, "gapClampStepPx", 1, 40, RECOVERY_DEFAULTS.layout.gapClampStepPx);
+  earlyGuard(cfg.layout, "warnZIndex", 0, 99, RECOVERY_DEFAULTS.layout.warnZIndex);
+  earlyGuard(cfg.layout, "cutZIndex", 0, 99, RECOVERY_DEFAULTS.layout.cutZIndex !== undefined ? RECOVERY_DEFAULTS.layout.cutZIndex : 10);
+  earlyGuard(cfg.layout, "primDefaultStrokeWidth", 0.1, 40, RECOVERY_DEFAULTS.layout.primDefaultStrokeWidth);
+  earlyGuard(cfg.layout, "doneBarHeightPx", 0, 40, RECOVERY_DEFAULTS.layout.doneBarHeightPx);
+  if (typeof cfg.layout.warnPadding !== "string" || !/^\d+px \d+px$/.test(cfg.layout.warnPadding)) { W("layout.warnPadding: invalid, reset to default"); cfg.layout.warnPadding = RECOVERY_DEFAULTS.layout.warnPadding; }
+  if (typeof cfg.layout.primDefaultTextWeight !== "string" || !/^(normal|bold|bolder|lighter|[1-9]00)$/.test(cfg.layout.primDefaultTextWeight)) { W("layout.primDefaultTextWeight: invalid, reset to default"); cfg.layout.primDefaultTextWeight = RECOVERY_DEFAULTS.layout.primDefaultTextWeight; }
+  earlyGuard(cfg.typography, "headerWrapLineHeight", 1, 2, RECOVERY_DEFAULTS.typography.headerWrapLineHeight);
   /* generation dependencies are validated HERE, before the registry
      cleaning and the panel pass below consume them (and before
      resolveConfig generates any panel from them): pad width, generated
      title prefix, separator, and the label-policy group */
   if (!Number.isInteger(cfg.labels.numberPadWidth) || cfg.labels.numberPadWidth < 1 || cfg.labels.numberPadWidth > 4) {
-    W("labels.numberPadWidth: out of range, reset to default"); cfg.labels.numberPadWidth = TRUSTED_DEFAULTS.labels.numberPadWidth; }
+    W("labels.numberPadWidth: out of range, reset to default"); cfg.labels.numberPadWidth = RECOVERY_DEFAULTS.labels.numberPadWidth; }
   if (typeof cfg.labels.generatedTitlePrefix !== "string" || !cfg.labels.generatedTitlePrefix || cfg.labels.generatedTitlePrefix.length > 200) {
-    W("labels.generatedTitlePrefix: invalid or overlong, reset to default"); cfg.labels.generatedTitlePrefix = TRUSTED_DEFAULTS.labels.generatedTitlePrefix; }
-  if (typeof cfg.labels.separator !== "string" || !cfg.labels.separator.trim()) { W("labels.separator: invalid, reset"); cfg.labels.separator = TRUSTED_DEFAULTS.labels.separator; }
+    W("labels.generatedTitlePrefix: invalid or overlong, reset to default"); cfg.labels.generatedTitlePrefix = RECOVERY_DEFAULTS.labels.generatedTitlePrefix; }
+  if (typeof cfg.labels.separator !== "string" || !cfg.labels.separator.trim()) { W("labels.separator: invalid, reset"); cfg.labels.separator = RECOVERY_DEFAULTS.labels.separator; }
   if (typeof cfg.labels.titleCase === "string") cfg.labels.titleCase = cfg.labels.titleCase.trim();
-  if (["upper", "preserve"].indexOf(cfg.labels.titleCase) === -1) { W("labels.titleCase: invalid, reset to default"); cfg.labels.titleCase = TRUSTED_DEFAULTS.labels.titleCase; }
+  if (["upper", "preserve"].indexOf(cfg.labels.titleCase) === -1) { W("labels.titleCase: invalid, reset to default"); cfg.labels.titleCase = RECOVERY_DEFAULTS.labels.titleCase; }
   /* capability honesty: the implemented layout construction is the
      two-line split (labelPolicy + the DOM refinement's measured line
      ceiling); the exposed surface is therefore 1-2 lines. Values 3-4
@@ -641,11 +749,9 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
      to the two-line construction. (The restriction branch is taken
      because no render route exists in this environment, so no
      N-line construction is claimed unrendered.) */
-  if (!Number.isInteger(cfg.labels.maxLines) || cfg.labels.maxLines < 1 || cfg.labels.maxLines > 2) { W("labels.maxLines: out of range — implemented capability is 1-2 lines, reset to default"); cfg.labels.maxLines = TRUSTED_DEFAULTS.labels.maxLines; }
-  if (typeof cfg.labels.fallbackMode === "string") cfg.labels.fallbackMode = cfg.labels.fallbackMode.trim();
-  if (["number-only", "single-line"].indexOf(cfg.labels.fallbackMode) === -1) { W("labels.fallbackMode: invalid, reset to default"); cfg.labels.fallbackMode = TRUSTED_DEFAULTS.labels.fallbackMode; }
+  if (!Number.isInteger(cfg.labels.maxLines) || cfg.labels.maxLines < 1 || cfg.labels.maxLines > 2) { W("labels.maxLines: out of range — implemented capability is 1-2 lines, reset to default"); cfg.labels.maxLines = RECOVERY_DEFAULTS.labels.maxLines; }
   if (typeof cfg.artViewBox.preserveAspectRatio === "string") cfg.artViewBox.preserveAspectRatio = cfg.artViewBox.preserveAspectRatio.trim();
-  if (typeof cfg.artViewBox.preserveAspectRatio !== "string" || ["none", "xMidYMid meet", "xMidYMid slice"].indexOf(cfg.artViewBox.preserveAspectRatio) === -1) { W("artViewBox.preserveAspectRatio: invalid, reset to default"); cfg.artViewBox.preserveAspectRatio = TRUSTED_DEFAULTS.artViewBox.preserveAspectRatio; }
+  if (typeof cfg.artViewBox.preserveAspectRatio !== "string" || ["none", "xMidYMid meet", "xMidYMid slice"].indexOf(cfg.artViewBox.preserveAspectRatio) === -1) { W("artViewBox.preserveAspectRatio: invalid, reset to default"); cfg.artViewBox.preserveAspectRatio = RECOVERY_DEFAULTS.artViewBox.preserveAspectRatio; }
   /* registry primitive-field schema validation (runs BEFORE panel art
      references and the fallback kind are resolved, so both resolve
      against the cleaned registry) */
@@ -733,7 +839,7 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     /* optional-field validation: a present-but-invalid optional
        field invalidates the primitive — silent acceptance is how bad
        data reached the renderer in earlier builds */
-    if (pr.strokeWidth !== undefined && !(isNum(pr.strokeWidth) && pr.strokeWidth > 0 && pr.strokeWidth <= 40)) return false;
+    if (pr.strokeWidth !== undefined && !(isNum(pr.strokeWidth) && pr.strokeWidth > 0 && pr.strokeWidth <= cfg.ceilings.primStrokeWidthMax)) return false;
     if (pr.opacity !== undefined && !(isNum(pr.opacity) && pr.opacity >= 0 && pr.opacity <= 1)) return false;
     if (pr.fill !== undefined && !paintOk(pr.fill)) return false;
     if (pr.stroke !== undefined && !paintOk(pr.stroke)) return false;
@@ -746,7 +852,7 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     if (pr.t === "polygon") return pointsOk(pr.points);
     if (pr.t === "path") return pathDataOk(pr.d);
     if (pr.t === "text") {
-      if (!numFields(pr, ct.numeric) || pr.size <= 0 || pr.size > 200) return false;
+      if (!numFields(pr, ct.numeric) || pr.size <= 0 || pr.size > cfg.ceilings.primTextSizeMax) return false;
       if (pr.weight !== undefined && !(typeof pr.weight === "string" || typeof pr.weight === "number")) return false;
       if (pr.weight !== undefined && !/^(normal|bold|bolder|lighter|[1-9]00)$/.test(String(pr.weight))) return false;
       if (pr.segments !== undefined && pr.content !== undefined) return false;
@@ -765,7 +871,7 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
       if (!pr.edges.every(function (e) { return Array.isArray(e) && e.length === 2 &&
         Number.isInteger(e[0]) && Number.isInteger(e[1]) && e[0] >= 0 && e[1] >= 0 &&
         e[0] < pr.nodes.length && e[1] < pr.nodes.length; })) return false;
-      if (pr.edgeWidth !== undefined && !(isNum(pr.edgeWidth) && pr.edgeWidth > 0 && pr.edgeWidth <= 40)) return false;
+      if (pr.edgeWidth !== undefined && !(isNum(pr.edgeWidth) && pr.edgeWidth > 0 && pr.edgeWidth <= cfg.ceilings.primEdgeWidthMax)) return false;
       if (pr.edgeStroke !== undefined && !paintOk(pr.edgeStroke)) return false;
       if (pr.nodeFill !== undefined && !paintOk(pr.nodeFill)) return false;
       /* nodeR is OPTIONAL under the contract: a graph without it is
@@ -775,9 +881,13 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     }
     if (pr.t === "circlesRow") return numFields(pr, ct.numeric) && pr.r > 0 &&
       Number.isInteger(pr.count) && pr.count >= 1 && pr.count <= cfg.ceilings.maxCirclesRowCount;
-    return false;
+    /* a kind the contract alone carries (no kind-specific semantic
+       branch registered here) is decided by the contract checks
+       above: required fields present, numeric fields finite, no
+       field outside the contract — the contract is the dispatch */
+    return numFields(pr, ct.numeric);
   };
-  if (!cfg.artRegistry || typeof cfg.artRegistry !== "object") { W("artRegistry: malformed, reset to default"); cfg.artRegistry = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.artRegistry)); }
+  if (!cfg.artRegistry || typeof cfg.artRegistry !== "object") { W("artRegistry: malformed, reset to default"); cfg.artRegistry = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.artRegistry)); }
   Object.keys(cfg.artRegistry).forEach(function (k) {
     const e = cfg.artRegistry[k];
     if (!e || !Array.isArray(e.primitives)) {
@@ -787,7 +897,7 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
          re-validates — the kind and its panel bindings are never
          deleted by a candidate that was never valid */
       const priorM = priorRegistry && Object.prototype.hasOwnProperty.call(priorRegistry, k) ? JSON.parse(JSON.stringify(priorRegistry[k])) : null;
-      const stockM = Object.prototype.hasOwnProperty.call(TRUSTED_DEFAULTS.artRegistry, k) ? JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.artRegistry[k])) : null;
+      const stockM = Object.prototype.hasOwnProperty.call(TRUSTED_DEFAULTS.artRegistry, k) ? JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.artRegistry[k])) : null;
       const passesM = function (eM) { return !!eM && Array.isArray(eM.primitives) && eM.primitives.length > 0 && eM.primitives.every(function (pr) { return validPrim(pr); }); };
       if (priorM && passesM(priorM)) { W("artRegistry." + k + ": malformed entry form (no primitives list), prior working entry restored (re-validated)"); cfg.artRegistry[k] = priorM; }
       else if (stockM && passesM(stockM)) { W("artRegistry." + k + ": malformed entry form (no primitives list), default entry restored (re-validated)"); cfg.artRegistry[k] = stockM; }
@@ -798,9 +908,12 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
        a partial miniature — any invalid primitive rejects the whole
        entry; a shipped kind restores from the canonical baseline (so
        its panels keep their binding), a supplied kind is removed */
+    const entryJsonBefore = JSON.stringify(e);
+    const droppedPrims = [];
+    const isStanding = !!(priorRegistry && Object.prototype.hasOwnProperty.call(priorRegistry, k) && priorRegistry[k] && JSON.stringify(priorRegistry[k]) === entryJsonBefore);
     let dropped = 0;
     e.primitives = e.primitives.filter(function (pr) {
-      if (!validPrim(pr)) { dropped++; return false; }
+      if (!validPrim(pr)) { dropped++; droppedPrims.push(pr); return false; }
       return true;
     });
     if (dropped > 0) {
@@ -813,15 +926,30 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
          REFUSED atomically — the prior working entry and its panel
          and fallback bindings stand as one unit. */
       const priorE = priorRegistry && Object.prototype.hasOwnProperty.call(priorRegistry, k) ? JSON.parse(JSON.stringify(priorRegistry[k])) : null;
-      const stockE = Object.prototype.hasOwnProperty.call(TRUSTED_DEFAULTS.artRegistry, k) ? JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.artRegistry[k])) : null;
+      const stockE = Object.prototype.hasOwnProperty.call(TRUSTED_DEFAULTS.artRegistry, k) ? JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.artRegistry[k])) : null;
       const entryPasses = function (e) { return !!e && Array.isArray(e.primitives) && e.primitives.length > 0 && e.primitives.every(function (pr) { return validPrim(pr); }); };
+      if (isStanding && priorE && droppedPrims.length > 0) {
+        /* ceiling-only failure test: the dropped prims are re-priced
+           under the PRIOR ceilings; if every one passes there, the
+           failure is the tightening itself, and a tightening does not
+           amputate a committed entry */
+        const ceilNow = cfg.ceilings;
+        cfg.ceilings = (opts && opts.prior && opts.prior.ceilings) || RECOVERY_DEFAULTS.ceilings;
+        const ceilingOnly = droppedPrims.every(function (pr) { return validPrim(pr); });
+        cfg.ceilings = ceilNow;
+        if (ceilingOnly) {
+          W("artRegistry." + k + ": committed entry retained in full — the tightened ceiling prices replacement candidates, it does not amputate committed art (" + dropped + " prim(s) lawful under the prior ceilings)");
+          cfg.artRegistry[k] = priorE;
+          return;
+        }
+      }
       if (priorE && entryPasses(priorE)) {
         W("artRegistry." + k + ": entry rejected atomically (" + dropped + " invalid), prior working entry restored (re-validated)");
         cfg.artRegistry[k] = priorE;
       } else if (stockE && entryPasses(stockE)) {
         W("artRegistry." + k + ": entry rejected atomically (" + dropped + " invalid), default restored (re-validated against the active palette and ceilings)");
         cfg.artRegistry[k] = stockE;
-      } else if (priorE) {
+      } else if (priorE && !isStanding) {
         W("artRegistry." + k + ": entry rejected atomically (" + dropped + " invalid); neither the prior entry nor the default satisfies the active palette and ceilings — replacement REFUSED atomically, prior working entry stands");
         cfg.artRegistry[k] = priorE;
       } else {
@@ -832,7 +960,7 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     }
     if (e.primitives.length === 0) {
       const priorE0 = priorRegistry && Object.prototype.hasOwnProperty.call(priorRegistry, k) ? JSON.parse(JSON.stringify(priorRegistry[k])) : null;
-      const stockE0 = Object.prototype.hasOwnProperty.call(TRUSTED_DEFAULTS.artRegistry, k) ? JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.artRegistry[k])) : null;
+      const stockE0 = Object.prototype.hasOwnProperty.call(TRUSTED_DEFAULTS.artRegistry, k) ? JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.artRegistry[k])) : null;
       const passes0 = function (e0) { return !!e0 && Array.isArray(e0.primitives) && e0.primitives.length > 0 && e0.primitives.every(function (pr) { return validPrim(pr); }); };
       if (priorE0 && passes0(priorE0)) { W("artRegistry." + k + ": empty primitive list, prior working entry restored (re-validated)"); cfg.artRegistry[k] = priorE0; }
       else if (stockE0 && passes0(stockE0)) { W("artRegistry." + k + ": empty primitive list, default entry restored (re-validated)"); cfg.artRegistry[k] = stockE0; }
@@ -846,8 +974,8 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
        the active palette and ceilings — a default entry that cannot
        pass is not installed */
     const restoredReg = {};
-    Object.keys(TRUSTED_DEFAULTS.artRegistry).forEach(function (k) {
-      const e = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.artRegistry[k]));
+    Object.keys(RECOVERY_DEFAULTS.artRegistry).forEach(function (k) {
+      const e = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.artRegistry[k]));
       if (e && Array.isArray(e.primitives) && e.primitives.length > 0 && e.primitives.every(function (pr) { return validPrim(pr); })) restoredReg[k] = e;
     });
     if (Object.keys(restoredReg).length > 0) {
@@ -859,18 +987,18 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     }
   }
   /* fallback art kind resolves from the RESOLVED config's registry */
-  if (!cfg.artDefaults || typeof cfg.artDefaults !== "object") { W("artDefaults: malformed, reset to default"); cfg.artDefaults = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.artDefaults)); }
+  if (!cfg.artDefaults || typeof cfg.artDefaults !== "object") { W("artDefaults: malformed, reset to default"); cfg.artDefaults = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.artDefaults)); }
   ["fill", "stroke"].forEach(function (k) {
     const v = cfg.artDefaults[k];
-    if (typeof v !== "string" || !paintOk(v)) { W("artDefaults." + k + ": invalid, reset to default"); cfg.artDefaults[k] = TRUSTED_DEFAULTS.artDefaults[k]; }
+    if (typeof v !== "string" || !paintOk(v)) { W("artDefaults." + k + ": invalid, reset to default"); cfg.artDefaults[k] = RECOVERY_DEFAULTS.artDefaults[k]; }
   });
   if (finalPass && !Object.prototype.hasOwnProperty.call(cfg.artRegistry, cfg.fallbackArtKind)) {
-  const fb = Object.prototype.hasOwnProperty.call(cfg.artRegistry, TRUSTED_DEFAULTS.fallbackArtKind)
-      ? TRUSTED_DEFAULTS.fallbackArtKind : Object.keys(cfg.artRegistry)[0];
+  const fb = Object.prototype.hasOwnProperty.call(cfg.artRegistry, RECOVERY_DEFAULTS.fallbackArtKind)
+      ? RECOVERY_DEFAULTS.fallbackArtKind : Object.keys(cfg.artRegistry)[0];
     if (fb !== undefined) { W("fallbackArtKind: '" + cfg.fallbackArtKind + "' not in registry, reset to '" + fb + "'"); cfg.fallbackArtKind = fb; }
     else { W("fallbackArtKind: no lawful kind remains in the resolved registry"); cfg.fallbackArtKind = ""; }
   }
-  if (!Array.isArray(cfg.panels) || cfg.panels.length === 0) { W("panels: empty, reset to default"); cfg.panels = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.panels)); }
+  if (!Array.isArray(cfg.panels) || cfg.panels.length === 0) { W("panels: empty, reset to default"); cfg.panels = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.panels)); }
   if (cfg.panels.length > cfg.limits.maxPanels) { W("panels: truncated to " + cfg.limits.maxPanels); cfg.panels = cfg.panels.slice(0, cfg.limits.maxPanels); }
   cfg.panels.forEach(function (p, i) {
     if (!finalPass) return; /* the preliminary pass validates scalar/group state only: panel content is normalized on the FINAL pass, after every route (panels / panelsJson / panelCount) has landed, so an early truncation or case pass can never discard what a late route supplies */
@@ -886,10 +1014,19 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
     const has = Object.prototype.hasOwnProperty.call(cfg.artRegistry, p.art);
     const entry = has ? cfg.artRegistry[p.art] : null;
     if ((!entry || !Array.isArray(entry.primitives)) && finalPass) {
-      const priorPanelB = TRUSTED_DEFAULTS.panels && TRUSTED_DEFAULTS.panels[i];
-      const priorKindB = priorPanelB && typeof priorPanelB.art === "string" ? priorPanelB.art : null;
-      if (priorKindB && priorKindB !== p.art && Object.prototype.hasOwnProperty.call(cfg.artRegistry, priorKindB)) {
-        W("panels[" + i + "].art: unknown or malformed kind '" + p.art + "' disposed as a candidate, prior binding '" + priorKindB + "' stands");
+      /* candidate disposition for a panel binding: the rejected kind
+         is disposed as a CANDIDATE and the binding that stood before
+         it is retained — priced in order: the prior resolution's
+         binding for this panel, then the binding the panels route
+         assigned in this resolution (the snapshot), then the
+         recovery specimen's binding. One shared recovery routine
+         serves every replacement surface. */
+      const priorResB = opts && opts.prior && opts.prior.panels && opts.prior.panels[i] && typeof opts.prior.panels[i].art === "string" ? opts.prior.panels[i].art : null;
+      const snapB = opts && opts.panelBindings && typeof opts.panelBindings[i] === "string" ? opts.panelBindings[i] : null;
+      const recB = RECOVERY_DEFAULTS.panels && RECOVERY_DEFAULTS.panels[i] && typeof RECOVERY_DEFAULTS.panels[i].art === "string" ? RECOVERY_DEFAULTS.panels[i].art : null;
+      const priorKindB = [priorResB, snapB, recB].filter(function (k) { return k && k !== p.art && Object.prototype.hasOwnProperty.call(cfg.artRegistry, k); })[0] || null;
+      if (priorKindB) {
+        W("panels[" + i + "].art: unknown or malformed kind '" + p.art + "' rejected as a candidate, prior binding '" + priorKindB + "' retained (CANDIDATE-REJECTED-RETAINED)");
         p.art = priorKindB;
       } else { W("panels[" + i + "].art: unknown or malformed kind '" + p.art + "', fallback '" + cfg.fallbackArtKind + "'"); p.art = cfg.fallbackArtKind; }
     }
@@ -897,36 +1034,41 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
   /* terminating-range audit: EVERY numeric nested field */
   const numGuard = function (obj, key, lo, hi, def) {
     const v = strictNum(obj[key]);
-    if (v === null || v < lo || v > hi) { W(key + ": out of range, reset to default"); obj[key] = def; }
+    if (v === null || v < lo || v > hi) {
+      const r = recoverPath(obj, key, lo, hi);
+      if (typeof r === "number" && isFinite(r) && r >= lo && r <= hi) { W(key + ": out of range against the active bounds [" + lo + ", " + hi + "], rejected to the last valid value " + r + " (single recovery rule)"); obj[key] = r; }
+      else obj[key] = revalidateRestore(obj, key, lo, hi, typeof r === "number" && isFinite(r) ? r : def, key);
+    }
   };
-  numGuard(cfg.layout, "stageMaxPx", 200, 4000, TRUSTED_DEFAULTS.layout.stageMaxPx);
-  numGuard(cfg.layout, "stageBottomPadPx", 0, 100, TRUSTED_DEFAULTS.layout.stageBottomPadPx);
-  numGuard(cfg.layout, "headerHeightFactor", 0.005, 0.3, TRUSTED_DEFAULTS.layout.headerHeightFactor);
-  numGuard(cfg.layout, "headerMinPx", 8, 120, TRUSTED_DEFAULTS.layout.headerMinPx);
-  numGuard(cfg.layout, "headerFontFactor", 0.005, 0.2, TRUSTED_DEFAULTS.layout.headerFontFactor);
-  numGuard(cfg.layout, "headerMinFontPx", 6, 24, TRUSTED_DEFAULTS.layout.headerMinFontPx);
-  numGuard(cfg.layout, "headerPaddingPx", 0, 60, TRUSTED_DEFAULTS.layout.headerPaddingPx);
-  numGuard(cfg.layout, "headerReservePx", 0, 100, TRUSTED_DEFAULTS.layout.headerReservePx);
-  numGuard(cfg.layout, "headerAbsoluteMinPx", 11, 24, TRUSTED_DEFAULTS.layout.headerAbsoluteMinPx);
-  numGuard(cfg.layout, "tabBorderPx", 0, 12, TRUSTED_DEFAULTS.layout.tabBorderPx);
-  numGuard(cfg.layout, "tabPaddingYPx", 0, 30, TRUSTED_DEFAULTS.layout.tabPaddingYPx);
-  numGuard(cfg.layout, "phoneTabPadYPx", 0, 30, TRUSTED_DEFAULTS.layout.phoneTabPadYPx !== undefined ? TRUSTED_DEFAULTS.layout.phoneTabPadYPx : 0);
-  numGuard(cfg.layout, "tabPaddingLeftPx", 0, 40, TRUSTED_DEFAULTS.layout.tabPaddingLeftPx);
-  numGuard(cfg.layout, "tabPaddingRightPx", 0, 40, TRUSTED_DEFAULTS.layout.tabPaddingRightPx);
-  numGuard(cfg.layout, "ghostOpacity", 0, 1, TRUSTED_DEFAULTS.layout.ghostOpacity);
-  numGuard(cfg.layout, "ghostFontFactor", 0.05, 1, TRUSTED_DEFAULTS.layout.ghostFontFactor);
-  numGuard(cfg.layout, "diveCoverMargin", 1, 2, TRUSTED_DEFAULTS.layout.diveCoverMargin);
-  numGuard(cfg.layout, "fallbackStagePx", 200, 2000, TRUSTED_DEFAULTS.layout.fallbackStagePx);
-  numGuard(cfg.layout, "minPanelPx", 10, 200, TRUSTED_DEFAULTS.layout.minPanelPx);
-  numGuard(cfg.layout, "paddingPx", 0, 100, TRUSTED_DEFAULTS.layout.paddingPx);
-  numGuard(cfg.layout, "tabOverlapPx", 0, 60, TRUSTED_DEFAULTS.layout.tabOverlapPx);
-  numGuard(cfg.layout, "narrowColsBreakpointPx", cfg.limits.minNarrowBreakpointPx, cfg.limits.maxNarrowBreakpointPx, TRUSTED_DEFAULTS.layout.narrowColsBreakpointPx !== undefined ? TRUSTED_DEFAULTS.layout.narrowColsBreakpointPx : 280);
-  numGuard(cfg.layout, "panelAspectPhone", 0.5, 3, TRUSTED_DEFAULTS.layout.panelAspectPhone);
-  numGuard(cfg.layout, "phoneRegimeMaxPx", 240, 2000, TRUSTED_DEFAULTS.layout.phoneRegimeMaxPx);
-  numGuard(cfg.typography, "tabCompactLineHeight", 0.8, 2, TRUSTED_DEFAULTS.typography.tabCompactLineHeight);
-  numGuard(cfg.labels, "maxLinesPhone", 1, 3, TRUSTED_DEFAULTS.labels.maxLinesPhone);
-  if (!Number.isInteger(cfg.labels.maxLinesPhone)) { W("labels.maxLinesPhone: fractional line count " + cfg.labels.maxLinesPhone + " rejected — the splitter implements whole-line choices, reset to default"); cfg.labels.maxLinesPhone = TRUSTED_DEFAULTS.labels.maxLinesPhone; }
-  numGuard(cfg.labels, "maxTabHeightFractionPhone", 0.3, 1, TRUSTED_DEFAULTS.labels.maxTabHeightFractionPhone);
+  numGuard(cfg.layout, "stageMaxPx", 200, 4000, RECOVERY_DEFAULTS.layout.stageMaxPx);
+  numGuard(cfg.layout, "stageBottomPadPx", 0, 100, RECOVERY_DEFAULTS.layout.stageBottomPadPx);
+  numGuard(cfg.layout, "headerHeightFactor", 0.005, 0.3, RECOVERY_DEFAULTS.layout.headerHeightFactor);
+  numGuard(cfg.layout, "headerMinPx", 8, 120, RECOVERY_DEFAULTS.layout.headerMinPx);
+  numGuard(cfg.layout, "headerFontFactor", 0.005, 0.2, RECOVERY_DEFAULTS.layout.headerFontFactor);
+  numGuard(cfg.layout, "headerMinFontPx", 6, 24, RECOVERY_DEFAULTS.layout.headerMinFontPx);
+  numGuard(cfg.layout, "headerPaddingPx", 0, 60, RECOVERY_DEFAULTS.layout.headerPaddingPx);
+  numGuard(cfg.layout, "headerReservePx", 0, 100, RECOVERY_DEFAULTS.layout.headerReservePx);
+  numGuard(cfg.layout, "diveWarpFloor", -1, 0, RECOVERY_DEFAULTS.layout.diveWarpFloor);
+  numGuard(cfg.labels, "shrinkStepFallbackPx", 0.05, 5, RECOVERY_DEFAULTS.labels.shrinkStepFallbackPx);
+  numGuard(cfg.layout, "tabBorderPx", 0, 12, RECOVERY_DEFAULTS.layout.tabBorderPx);
+  numGuard(cfg.layout, "tabPaddingYPx", 0, 30, RECOVERY_DEFAULTS.layout.tabPaddingYPx);
+  numGuard(cfg.layout, "phoneTabPadYPx", 0, 30, RECOVERY_DEFAULTS.layout.phoneTabPadYPx !== undefined ? RECOVERY_DEFAULTS.layout.phoneTabPadYPx : 0);
+  numGuard(cfg.layout, "tabPaddingLeftPx", 0, 40, RECOVERY_DEFAULTS.layout.tabPaddingLeftPx);
+  numGuard(cfg.layout, "tabPaddingRightPx", 0, 40, RECOVERY_DEFAULTS.layout.tabPaddingRightPx);
+  numGuard(cfg.layout, "ghostOpacity", 0, 1, RECOVERY_DEFAULTS.layout.ghostOpacity);
+  numGuard(cfg.layout, "ghostFontFactor", 0.05, 1, RECOVERY_DEFAULTS.layout.ghostFontFactor);
+  numGuard(cfg.layout, "diveCoverMargin", 1, 2, RECOVERY_DEFAULTS.layout.diveCoverMargin);
+  numGuard(cfg.layout, "fallbackStagePx", 200, 2000, RECOVERY_DEFAULTS.layout.fallbackStagePx);
+  numGuard(cfg.layout, "minPanelPx", 10, 200, RECOVERY_DEFAULTS.layout.minPanelPx);
+  numGuard(cfg.layout, "paddingPx", 0, 100, RECOVERY_DEFAULTS.layout.paddingPx);
+  numGuard(cfg.layout, "tabOverlapPx", 0, 60, RECOVERY_DEFAULTS.layout.tabOverlapPx);
+  numGuard(cfg.layout, "narrowColsBreakpointPx", nbLo, nbHi, RECOVERY_DEFAULTS.layout.narrowColsBreakpointPx !== undefined ? RECOVERY_DEFAULTS.layout.narrowColsBreakpointPx : 280);
+  numGuard(cfg.layout, "panelAspectPhone", 0.5, 3, RECOVERY_DEFAULTS.layout.panelAspectPhone);
+  numGuard(cfg.layout, "phoneRegimeMaxPx", 240, 2000, RECOVERY_DEFAULTS.layout.phoneRegimeMaxPx);
+  numGuard(cfg.typography, "tabCompactLineHeight", 0.8, 2, RECOVERY_DEFAULTS.typography.tabCompactLineHeight);
+  numGuard(cfg.labels, "maxLinesPhone", 1, 3, RECOVERY_DEFAULTS.labels.maxLinesPhone);
+  if (!Number.isInteger(cfg.labels.maxLinesPhone)) { W("labels.maxLinesPhone: fractional line count " + cfg.labels.maxLinesPhone + " rejected — the splitter implements whole-line choices, reset to default"); cfg.labels.maxLinesPhone = RECOVERY_DEFAULTS.labels.maxLinesPhone; }
+  numGuard(cfg.labels, "maxTabHeightFractionPhone", 0.3, 1, RECOVERY_DEFAULTS.labels.maxTabHeightFractionPhone);
   /* the overlap may not meet or exceed the tab band it overlaps into:
      priced against the smallest band at the fallback stage width, an
      overlap that would swallow the band (and clip the tab against the
@@ -941,56 +1083,56 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
       const polF = labelPolicy(cfg, p.n, p.title, innerWF, labelBasePx(cfg, innerWF), innerHF);
       minBand = Math.min(minBand, tabBandHeightPx(cfg, polF));
     });
-    if (isFinite(minBand) && cfg.layout.tabOverlapPx >= minBand) { W("layout.tabOverlapPx: overlap " + cfg.layout.tabOverlapPx + "px meets/exceeds the smallest tab band " + minBand.toFixed(1) + "px, reset to default"); cfg.layout.tabOverlapPx = TRUSTED_DEFAULTS.layout.tabOverlapPx; }
+    if (isFinite(minBand) && cfg.layout.tabOverlapPx >= minBand) { W("layout.tabOverlapPx: overlap " + cfg.layout.tabOverlapPx + "px meets/exceeds the smallest tab band " + minBand.toFixed(1) + "px, reset to default"); cfg.layout.tabOverlapPx = RECOVERY_DEFAULTS.layout.tabOverlapPx; }
   })();
-  numGuard(cfg.layout, "pauseOpacity", 0, 1, TRUSTED_DEFAULTS.layout.pauseOpacity);
-  numGuard(cfg.layout, "approachEntryProgress", 0, 0.9, TRUSTED_DEFAULTS.layout.approachEntryProgress !== undefined ? TRUSTED_DEFAULTS.layout.approachEntryProgress : 0.18);
+  numGuard(cfg.layout, "pauseOpacity", 0, 1, RECOVERY_DEFAULTS.layout.pauseOpacity);
+  numGuard(cfg.layout, "approachEntryProgress", 0, 0.9, RECOVERY_DEFAULTS.layout.approachEntryProgress !== undefined ? RECOVERY_DEFAULTS.layout.approachEntryProgress : 0.18);
   if (typeof cfg.layout.tabAnchor === "string") cfg.layout.tabAnchor = cfg.layout.tabAnchor.trim();
-  if (["top-left", "top-right"].indexOf(cfg.layout.tabAnchor) === -1) { W("layout.tabAnchor: invalid, reset to default"); cfg.layout.tabAnchor = TRUSTED_DEFAULTS.layout.tabAnchor; }
-  numGuard(cfg.layout, "warnFontPx", 8, 24, TRUSTED_DEFAULTS.layout.warnFontPx);
-  numGuard(cfg.labels, "minPx", 6, 24, TRUSTED_DEFAULTS.labels.minPx);
-  numGuard(cfg.labels, "maxPx", 8, 40, TRUSTED_DEFAULTS.labels.maxPx);
-  numGuard(cfg.labels, "baseFactor", 0.05, 0.4, TRUSTED_DEFAULTS.labels.baseFactor);
-  numGuard(cfg.labels, "glyphEm", 0.3, 0.9, TRUSTED_DEFAULTS.labels.glyphEm);
-  numGuard(cfg.labels, "chromePx", 0, 60, TRUSTED_DEFAULTS.labels.chromePx);
+  if (["top-left", "top-right"].indexOf(cfg.layout.tabAnchor) === -1) { W("layout.tabAnchor: invalid, reset to default"); cfg.layout.tabAnchor = RECOVERY_DEFAULTS.layout.tabAnchor; }
+  numGuard(cfg.layout, "warnFontPx", 8, 24, RECOVERY_DEFAULTS.layout.warnFontPx);
+  numGuard(cfg.labels, "minPx", 6, 24, RECOVERY_DEFAULTS.labels.minPx);
+  numGuard(cfg.labels, "maxPx", 8, 40, RECOVERY_DEFAULTS.labels.maxPx);
+  numGuard(cfg.labels, "baseFactor", 0.05, 0.4, RECOVERY_DEFAULTS.labels.baseFactor);
+  numGuard(cfg.labels, "glyphEm", 0.3, 0.9, RECOVERY_DEFAULTS.labels.glyphEm);
+  numGuard(cfg.labels, "chromePx", 0, 60, RECOVERY_DEFAULTS.labels.chromePx);
   /* strictly positive shrink step: a zero/negative step would loop the
      shrink helpers forever — this guard is what makes them terminate */
-  numGuard(cfg.labels, "shrinkStepPx", 0.05, 5, Math.max(0.05, TRUSTED_DEFAULTS.labels.shrinkStepPx));
-  numGuard(cfg.labels, "maxTabHeightFraction", 0.1, 1, TRUSTED_DEFAULTS.labels.maxTabHeightFraction);
-  numGuard(cfg.typography, "headerWeight", 100, 900, TRUSTED_DEFAULTS.typography.headerWeight);
-  numGuard(cfg.typography, "headerLetterSpacingEm", 0, 1, TRUSTED_DEFAULTS.typography.headerLetterSpacingEm);
-  numGuard(cfg.typography, "tabWeight", 100, 900, TRUSTED_DEFAULTS.typography.tabWeight);
-  numGuard(cfg.typography, "tabLetterSpacingEm", 0, 1, TRUSTED_DEFAULTS.typography.tabLetterSpacingEm);
-  numGuard(cfg.typography, "tabLineHeight", 1, 2, TRUSTED_DEFAULTS.typography.tabLineHeight);
-  numGuard(cfg.typography, "ghostWeight", 100, 900, TRUSTED_DEFAULTS.typography.ghostWeight);
-  numGuard(cfg.artViewBox, "w", 20, 1000, TRUSTED_DEFAULTS.artViewBox.w);
-  numGuard(cfg.artViewBox, "h", 20, 1000, TRUSTED_DEFAULTS.artViewBox.h);
-  numGuard(cfg.artViewBox, "x", -1000, 1000, TRUSTED_DEFAULTS.artViewBox.x);
-  numGuard(cfg.artViewBox, "y", -1000, 1000, TRUSTED_DEFAULTS.artViewBox.y);
-  numGuard(cfg, "artDetailMinPx", 4, 200, TRUSTED_DEFAULTS.artDetailMinPx);
-  numGuard(cfg.detail, "textCutoffUnits", 1, 100, TRUSTED_DEFAULTS.detail.textCutoffUnits);
-  numGuard(cfg.detail, "graphEdgeMultiplier", 0.1, 10, TRUSTED_DEFAULTS.detail.graphEdgeMultiplier);
-  numGuard(cfg.detail, "graphNodeMultiplier", 0.1, 10, TRUSTED_DEFAULTS.detail.graphNodeMultiplier);
-  numGuard(cfg.detail, "fallbackEdgeWidth", 0.1, 40, TRUSTED_DEFAULTS.detail.fallbackEdgeWidth);
-  numGuard(cfg.detail, "fallbackNodeRadius", 0.1, 100, TRUSTED_DEFAULTS.detail.fallbackNodeRadius);
+  numGuard(cfg.labels, "shrinkStepPx", 0.05, 5, Math.max(0.05, RECOVERY_DEFAULTS.labels.shrinkStepPx));
+  numGuard(cfg.labels, "maxTabHeightFraction", 0.1, 1, RECOVERY_DEFAULTS.labels.maxTabHeightFraction);
+  numGuard(cfg.typography, "headerWeight", 100, 900, RECOVERY_DEFAULTS.typography.headerWeight);
+  numGuard(cfg.typography, "headerLetterSpacingEm", 0, 1, RECOVERY_DEFAULTS.typography.headerLetterSpacingEm);
+  numGuard(cfg.typography, "tabWeight", 100, 900, RECOVERY_DEFAULTS.typography.tabWeight);
+  numGuard(cfg.typography, "tabLetterSpacingEm", 0, 1, RECOVERY_DEFAULTS.typography.tabLetterSpacingEm);
+  numGuard(cfg.typography, "tabLineHeight", 1, 2, RECOVERY_DEFAULTS.typography.tabLineHeight);
+  numGuard(cfg.typography, "ghostWeight", 100, 900, RECOVERY_DEFAULTS.typography.ghostWeight);
+  numGuard(cfg.artViewBox, "w", 20, 1000, RECOVERY_DEFAULTS.artViewBox.w);
+  numGuard(cfg.artViewBox, "h", 20, 1000, RECOVERY_DEFAULTS.artViewBox.h);
+  numGuard(cfg.artViewBox, "x", -1000, 1000, RECOVERY_DEFAULTS.artViewBox.x);
+  numGuard(cfg.artViewBox, "y", -1000, 1000, RECOVERY_DEFAULTS.artViewBox.y);
+  numGuard(cfg, "artDetailMinPx", 4, 200, RECOVERY_DEFAULTS.artDetailMinPx);
+  numGuard(cfg.detail, "textCutoffUnits", 1, 100, RECOVERY_DEFAULTS.detail.textCutoffUnits);
+  numGuard(cfg.detail, "graphEdgeMultiplier", 0.1, 10, RECOVERY_DEFAULTS.detail.graphEdgeMultiplier);
+  numGuard(cfg.detail, "graphNodeMultiplier", 0.1, 10, RECOVERY_DEFAULTS.detail.graphNodeMultiplier);
+  numGuard(cfg.detail, "fallbackEdgeWidth", 0.1, 40, RECOVERY_DEFAULTS.detail.fallbackEdgeWidth);
+  numGuard(cfg.detail, "fallbackNodeRadius", 0.1, 100, RECOVERY_DEFAULTS.detail.fallbackNodeRadius);
   if (typeof cfg.headerBreak === "string") cfg.headerBreak = cfg.headerBreak.trim();
-  if (["break-word", "normal"].indexOf(cfg.headerBreak) === -1) { W("headerBreak: invalid, reset to default"); cfg.headerBreak = TRUSTED_DEFAULTS.headerBreak; }
-  if (cfg.labels.maxPx < cfg.labels.minPx) { W("labels.maxPx: below minPx, raised to fit"); cfg.labels.maxPx = Math.max(TRUSTED_DEFAULTS.labels.maxPx, cfg.labels.minPx); }
+  if (["break-word", "normal"].indexOf(cfg.headerBreak) === -1) { W("headerBreak: invalid, reset to default"); cfg.headerBreak = RECOVERY_DEFAULTS.headerBreak; }
+  if (cfg.labels.maxPx < cfg.labels.minPx) { W("labels.maxPx: below minPx, raised to fit"); cfg.labels.maxPx = Math.max(RECOVERY_DEFAULTS.labels.maxPx, cfg.labels.minPx); }
   const easingStr = typeof cfg.layout.diveEasing === "string" ? cfg.layout.diveEasing.trim() : "";
   /* validation consumes the SAME single easing parse the camera
      consumes (parseEasing, hoisted): a string that validates is a
      string that evaluates as itself — no second, stricter pattern
      downstream can silently substitute a different curve */
   const parsedEz = parseEasing(easingStr);
-  if (!parsedEz || parsedEz.type === "step-start" || parsedEz.type === "step-end") { W("diveEasing: invalid or step easing (a step turns continuous dive motion into a jump), reset"); cfg.layout.diveEasing = TRUSTED_DEFAULTS.layout.diveEasing; }
-  else if (parsedEz.type === "bezier" && (parsedEz.y1 < 0 || parsedEz.y1 > 1 || parsedEz.y2 < 0 || parsedEz.y2 > 1)) { W("diveEasing: unsafe interpolation range, reset"); cfg.layout.diveEasing = TRUSTED_DEFAULTS.layout.diveEasing; }
+  if (!parsedEz || parsedEz.type === "step-start" || parsedEz.type === "step-end") { W("diveEasing: invalid or step easing (a step turns continuous dive motion into a jump), reset"); cfg.layout.diveEasing = RECOVERY_DEFAULTS.layout.diveEasing; }
+  else if (parsedEz.type === "bezier" && (parsedEz.y1 < 0 || parsedEz.y1 > 1 || parsedEz.y2 < 0 || parsedEz.y2 > 1)) { W("diveEasing: unsafe interpolation range, reset"); cfg.layout.diveEasing = RECOVERY_DEFAULTS.layout.diveEasing; }
   else cfg.layout.diveEasing = easingStr;
   const approachEasingStr = typeof cfg.layout.approachEasing === "string" ? cfg.layout.approachEasing.trim() : "";
   const parsedAE = parseEasing(approachEasingStr);
-  if (!parsedAE || parsedAE.type === "step-start" || parsedAE.type === "step-end") { W("approachEasing: invalid or step easing (a step turns continuous approach motion into a jump), reset"); cfg.layout.approachEasing = TRUSTED_DEFAULTS.layout.approachEasing; }
-  else if (parsedAE.type === "bezier" && (parsedAE.y1 < 0 || parsedAE.y1 > 1 || parsedAE.y2 < 0 || parsedAE.y2 > 1)) { W("approachEasing: unsafe interpolation range, reset"); cfg.layout.approachEasing = TRUSTED_DEFAULTS.layout.approachEasing; }
+  if (!parsedAE || parsedAE.type === "step-start" || parsedAE.type === "step-end") { W("approachEasing: invalid or step easing (a step turns continuous approach motion into a jump), reset"); cfg.layout.approachEasing = RECOVERY_DEFAULTS.layout.approachEasing; }
+  else if (parsedAE.type === "bezier" && (parsedAE.y1 < 0 || parsedAE.y1 > 1 || parsedAE.y2 < 0 || parsedAE.y2 > 1)) { W("approachEasing: unsafe interpolation range, reset"); cfg.layout.approachEasing = RECOVERY_DEFAULTS.layout.approachEasing; }
   else cfg.layout.approachEasing = approachEasingStr;
-  if (typeof cfg.fontFamily !== "string" || !cfg.fontFamily.trim() || !/[A-Za-z]/.test(cfg.fontFamily)) { W("fontFamily: invalid (no ASCII letter), reset"); cfg.fontFamily = TRUSTED_DEFAULTS.fontFamily; }
+  if (typeof cfg.fontFamily !== "string" || !cfg.fontFamily.trim() || !/[A-Za-z]/.test(cfg.fontFamily)) { W("fontFamily: invalid (no ASCII letter), reset"); cfg.fontFamily = RECOVERY_DEFAULTS.fontFamily; }
   /* appearances: validate, and RE-validate restored defaults against
      the CURRENT panel count (a restore is not exempt from the range) */
   const fixAppearances = function () {
@@ -1000,14 +1142,14 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
       const f = strictInt(a.filled), d = strictInt(a.dive);
       if (f === null || d === null) { W("appearances[" + i + "]: non-integer filled/dive, entry dropped"); return false; }
       a.filled = f; a.dive = d;
-      if (finalPass && (f < 0 || f > cfg.panels.length)) { const defA = TRUSTED_DEFAULTS.appearances[i]; a.filled = defA ? Math.min(defA.filled, cfg.panels.length) : 0; W("appearances[" + i + "].filled: out of range " + f + ", reset to default " + a.filled); }
-      if (finalPass && (d < 0 || d > cfg.panels.length - 1)) { const defD = TRUSTED_DEFAULTS.appearances[i]; a.dive = defD ? Math.min(defD.dive, cfg.panels.length - 1) : 0; W("appearances[" + i + "].dive: out of range " + d + ", reset to default " + a.dive); }
+      if (finalPass && (f < 0 || f > cfg.panels.length)) { const defA = RECOVERY_DEFAULTS.appearances[i]; a.filled = defA ? Math.min(defA.filled, cfg.panels.length) : 0; W("appearances[" + i + "].filled: out of range " + f + ", reset to default " + a.filled); }
+      if (finalPass && (d < 0 || d > cfg.panels.length - 1)) { const defD = RECOVERY_DEFAULTS.appearances[i]; a.dive = defD ? Math.min(defD.dive, cfg.panels.length - 1) : 0; W("appearances[" + i + "].dive: out of range " + d + ", reset to default " + a.dive); }
       return true;
     });
   };
-  if (!Array.isArray(cfg.appearances) || cfg.appearances.length === 0) { W("appearances: empty, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.appearances)); }
+  if (!Array.isArray(cfg.appearances) || cfg.appearances.length === 0) { W("appearances: empty, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.appearances)); }
   fixAppearances();
-  if (cfg.appearances.length === 0) { W("appearances: all invalid, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.appearances)); fixAppearances(); }
+  if (cfg.appearances.length === 0) { W("appearances: all invalid, reset to default"); cfg.appearances = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.appearances)); fixAppearances(); }
   /* relational geometry safe fallback: individually valid columns /
      gap / border can combine into non-positive inner panel dimensions
      at phone width — CLAMP the combination to a feasible one (never
@@ -1068,9 +1210,9 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
          gaps, borders, panel aspect, narrow breakpoint) as one state,
          then RE-CHECKS feasibility over the restored state */
       W("geometry: combination infeasible at a priced width, joint geometry state restored and re-checked");
-      cfg.colsNarrow = TRUSTED_DEFAULTS.colsNarrow; cfg.colsWide = TRUSTED_DEFAULTS.colsWide;
-      cfg.gapPx = TRUSTED_DEFAULTS.gapPx; cfg.borderPx = TRUSTED_DEFAULTS.borderPx;
-      cfg.panelAspect = TRUSTED_DEFAULTS.panelAspect; cfg.narrowBreakpointPx = TRUSTED_DEFAULTS.narrowBreakpointPx;
+      cfg.colsNarrow = RECOVERY_DEFAULTS.colsNarrow; cfg.colsWide = RECOVERY_DEFAULTS.colsWide;
+      cfg.gapPx = RECOVERY_DEFAULTS.gapPx; cfg.borderPx = RECOVERY_DEFAULTS.borderPx;
+      cfg.panelAspect = RECOVERY_DEFAULTS.panelAspect; cfg.narrowBreakpointPx = RECOVERY_DEFAULTS.narrowBreakpointPx;
       regimes = buildRegimes();
     }
     if (regimes.some(function (r) { return !feasibleFor(r); })) {
@@ -1078,12 +1220,12 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
          (including the inner-dimension thresholds and minimum stage)
          restores to defaults and is re-checked a final time */
       W("geometry: restored joint state still infeasible, full geometry group restored to defaults and re-checked");
-      cfg.colsNarrow = TRUSTED_DEFAULTS.colsNarrow; cfg.colsWide = TRUSTED_DEFAULTS.colsWide;
-      cfg.gapPx = TRUSTED_DEFAULTS.gapPx; cfg.borderPx = TRUSTED_DEFAULTS.borderPx;
-      cfg.panelAspect = TRUSTED_DEFAULTS.panelAspect; cfg.narrowBreakpointPx = TRUSTED_DEFAULTS.narrowBreakpointPx;
-      cfg.layout.minInnerWPx = TRUSTED_DEFAULTS.layout.minInnerWPx;
-      cfg.layout.minInnerHPx = TRUSTED_DEFAULTS.layout.minInnerHPx;
-      cfg.layout.minStagePx = TRUSTED_DEFAULTS.layout.minStagePx;
+      cfg.colsNarrow = RECOVERY_DEFAULTS.colsNarrow; cfg.colsWide = RECOVERY_DEFAULTS.colsWide;
+      cfg.gapPx = RECOVERY_DEFAULTS.gapPx; cfg.borderPx = RECOVERY_DEFAULTS.borderPx;
+      cfg.panelAspect = RECOVERY_DEFAULTS.panelAspect; cfg.narrowBreakpointPx = RECOVERY_DEFAULTS.narrowBreakpointPx;
+      cfg.layout.minInnerWPx = RECOVERY_DEFAULTS.layout.minInnerWPx;
+      cfg.layout.minInnerHPx = RECOVERY_DEFAULTS.layout.minInnerHPx;
+      cfg.layout.minStagePx = RECOVERY_DEFAULTS.layout.minStagePx;
       regimes = buildRegimes();
     }
     if (regimes.some(function (r) { return !feasibleFor(r); })) {
@@ -1105,6 +1247,38 @@ function validateInto(cfg, warnings, priorRegistry, opts) {
   }
   if (cfg.handoff && cfg.handoff.holdOnComplete && !(cfg.diveMs > 0)) { W("handoff.holdOnComplete: no selectable dive phase, boundary disengaged"); cfg.handoff.holdOnComplete = false; }
   if (cfg.cut && cfg.cut.mode === "hold" && !(cfg.diveMs > 0)) { W("cut.mode hold: no selectable dive phase, reset to signal"); cfg.cut.mode = "signal"; }
+  /* joint bound-pair check: the
+     narrow-breakpoint value and its limits are priced as ONE pair
+     against the PRE-candidate bounds. A candidate-supplied value that
+     satisfies the pre-candidate bounds commits; a tightening carried
+     in the same candidate is then rejected if it would orphan the
+     committed (or retained) value — prior bounds stand with it, one
+     pair-warning. A restored default that violates the active bounds
+     has already been rejected by revalidateRestore above; this check
+     is the pair-level backstop for every route. */
+  if (finalPass) {
+    const pairCheck = function (getV, setV, priorV, label) {
+      const min = cfg.limits.minNarrowBreakpointPx, max = cfg.limits.maxNarrowBreakpointPx;
+      const v = getV();
+      if (typeof v !== "number" || (v >= min && v <= max)) return;
+      const pMin = priorRoot && priorRoot.limits ? priorRoot.limits.minNarrowBreakpointPx : RECOVERY_DEFAULTS.limits.minNarrowBreakpointPx;
+      const pMax = priorRoot && priorRoot.limits ? priorRoot.limits.maxNarrowBreakpointPx : RECOVERY_DEFAULTS.limits.maxNarrowBreakpointPx;
+      const limitsChanged = min !== pMin || max !== pMax;
+      const valueChanged = typeof priorV === "number" && v !== priorV;
+      if (limitsChanged && valueChanged && v >= pMin && v <= pMax) {
+        W(label + ": candidate value " + v + " commits under the pre-candidate bounds [" + pMin + ", " + pMax + "]; the same candidate's tightening to [" + min + ", " + max + "] would orphan it and is rejected — prior bounds stand (pair-warning)");
+        cfg.limits.minNarrowBreakpointPx = pMin; cfg.limits.maxNarrowBreakpointPx = pMax;
+      } else if (limitsChanged || valueChanged) {
+        W(label + ": value " + v + " violates the active bounds [" + min + ", " + max + "] — pair rejected, prior value " + priorV + " and prior bounds [" + pMin + ", " + pMax + "] stand (pair-warning)");
+        if (typeof priorV === "number") setV(priorV);
+        cfg.limits.minNarrowBreakpointPx = pMin; cfg.limits.maxNarrowBreakpointPx = pMax;
+      }
+    };
+    pairCheck(function () { return cfg.narrowBreakpointPx; }, function (x) { cfg.narrowBreakpointPx = x; },
+      priorRoot ? priorRoot.narrowBreakpointPx : undefined, "narrowBreakpointPx x limits");
+    pairCheck(function () { return cfg.layout.narrowColsBreakpointPx; }, function (x) { cfg.layout.narrowColsBreakpointPx = x; },
+      priorRoot && priorRoot.layout ? priorRoot.layout.narrowColsBreakpointPx : undefined, "layout.narrowColsBreakpointPx x limits");
+  }
   return cfg;
 }
 function resolveConfig(search) {
@@ -1121,20 +1295,34 @@ function resolveConfig(search) {
   const priorSnapshot = JSON.parse(JSON.stringify(validatedPriorSrc));
   const warnings = [];
   const registryPrior = {};
+  /* the registry prior is noted BEFORE the preliminary validation
+     pass: a candidate (or a direct edit) that tightens a ceiling in
+     the same resolution the pass cleans against is priced against
+     the entries that stood before the pass ran — candidate-validate-
+     before-replace starts from a prior noted before ANY pass, never
+     from a state a preliminary pass already removed entries from */
+  Object.keys(cfg.artRegistry).forEach(function (k) { registryPrior[k] = JSON.parse(JSON.stringify(cfg.artRegistry[k])); });
+  /* panel binding records: panelBindingsS = the bindings standing
+     after the panels route (initially the resolved state the routes
+     start from); panelsJsonAssigned = the bindings panelsJson last
+     assigned per panel. The final binding pass prices both against
+     the final registry. */
+  let panelBindingsS = cfg.panels.map(function (p) { return p && typeof p.art === "string" ? p.art : null; });
+  const panelsJsonAssigned = {};
   let mapDeferred = {};
   let registryStagedOk = false;
   const stagedCandidates = {};
-  if (!cfg.palette || typeof cfg.palette !== "object") { warnings.push("palette: malformed group, defaults restored before validation"); cfg.palette = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS.palette)); }
+  if (!cfg.palette || typeof cfg.palette !== "object") { warnings.push("palette: malformed group, defaults restored before validation"); cfg.palette = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS.palette)); }
   /* whole-group null/absent on the direct (edited-CONFIG) route: EVERY
      group resolves to its trusted-default group with a named warning
      BEFORE any route code reads it — the palette guard's form, extended
      to all groups the census enumerates, so a null group can neither
      throw a route reader nor resolve to an empty mode */
   ["layout", "labels", "typography", "caps", "ceilings", "limits", "progress", "detail", "artViewBox", "handoff", "cut", "artDefaults", "artRegistry"].forEach(function (g) {
-    if (!cfg[g] || typeof cfg[g] !== "object" || Array.isArray(cfg[g])) { warnings.push(g + ": malformed group, defaults restored before validation"); cfg[g] = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS[g])); }
+    if (!cfg[g] || typeof cfg[g] !== "object" || Array.isArray(cfg[g])) { warnings.push(g + ": malformed group, defaults restored before validation"); cfg[g] = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS[g])); }
   });
   ["panels", "appearances"].forEach(function (g) {
-    if (!Array.isArray(cfg[g])) { warnings.push(g + ": malformed group, defaults restored before validation"); cfg[g] = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS[g])); }
+    if (!Array.isArray(cfg[g])) { warnings.push(g + ": malformed group, defaults restored before validation"); cfg[g] = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS[g])); }
   });
   if (search) {
     const q = new URLSearchParams(search);
@@ -1153,7 +1341,7 @@ function resolveConfig(search) {
        fields parse as numbers — one definition, two consumers, so a
        value the validator permits can never be rejected by the
        parser (or the reverse) */
-    const numKeys = ["approachMs","diveMs","holdZoomMs","loopPauseMs","colsWide","colsNarrow","colsMicro","narrowBreakpointPx","gapPx","borderPx"];
+    const numKeys = INT_FIELD_ROSTER;
     numKeys.forEach(function (k) {
       if (q.get(k) !== null) {
         const v = strictInt(q.get(k));
@@ -1188,7 +1376,7 @@ function resolveConfig(search) {
         warnings.push(key + ": unknown configuration path ignored"); return;
       }
       let group = cfg[path[0]]; const field = path[1];
-      if (!group || typeof group !== "object") { cfg[path[0]] = JSON.parse(JSON.stringify(TRUSTED_DEFAULTS[path[0]])); group = cfg[path[0]]; warnings.push(key + ": route target group was malformed, defaults restored before the override landed"); }
+      if (!group || typeof group !== "object") { cfg[path[0]] = JSON.parse(JSON.stringify(RECOVERY_DEFAULTS[path[0]])); group = cfg[path[0]]; warnings.push(key + ": route target group was malformed, defaults restored before the override landed"); }
       /* field existence and type derive from the SCHEMA (the trusted
          shape), never from the edited object: a key deleted from the
          editable object is still a known field when the schema
@@ -1235,7 +1423,7 @@ function resolveConfig(search) {
        ceilings) and allocation limits are therefore never read
        unvalidated. Route-supplied data parsed after this pass (panels,
        registry) is validated by the final pass below before use. */
-    validateInto(cfg, warnings, undefined, { finalPass: false, prior: priorSnapshot });
+    validateInto(cfg, warnings, registryPrior, { finalPass: false, prior: priorSnapshot });
     if (q.get("panelCount") !== null) {
       const n = strictInt(q.get("panelCount"));
       if (n === null || n < 1 || n > cfg.limits.maxPanels) warnings.push("panelCount: malformed/out-of-range override ignored");
@@ -1257,6 +1445,9 @@ function resolveConfig(search) {
         else if (parts.length > 1) warnings.push("panels[" + i + "]: blank art slot ignored, art unchanged");
       });
     }
+    /* refresh the binding snapshot now that the panels route has
+       landed, BEFORE panelsJson is read */
+    panelBindingsS = cfg.panels.map(function (p) { return p && typeof p.art === "string" ? p.art : null; });
     /* structured panels route: ?panelsJson=<JSON array> — each entry is
        a title string or a {title, art, n} object, carried as ONE JSON
        structure, so a title may contain ANY character (including the
@@ -1274,7 +1465,7 @@ function resolveConfig(search) {
         Object.keys(e).forEach(function (k) { if (["title","art","n"].indexOf(k) === -1) warnings.push("panelsJson[" + i + "]: unknown key '" + k + "' ignored"); });
         if (typeof e.title === "string" && e.title.trim()) cfg.panels[i].title = e.title; /* FREE-TEXT field: stored verbatim, never trimmed or split */
         else if (e.title !== undefined) warnings.push("panelsJson[" + i + "]: blank title slot ignored");
-        if (typeof e.art === "string" && e.art.trim()) cfg.panels[i].art = e.art.trim();
+        if (typeof e.art === "string" && e.art.trim()) { cfg.panels[i].art = e.art.trim(); panelsJsonAssigned[i] = cfg.panels[i].art; }
         else if (e.art !== undefined) warnings.push("panelsJson[" + i + "]: blank art slot ignored, art unchanged");
         if (typeof e.n === "string" && e.n.trim()) cfg.panels[i].n = e.n.trim();
         else if (e.n !== undefined) warnings.push("panelsJson[" + i + "]: blank number slot ignored");
@@ -1299,15 +1490,21 @@ function resolveConfig(search) {
     }
     if (q.get("appearances") !== null && !q.get("appearances").trim()) warnings.push("appearances: empty override ignored");
     if (q.get("appearances")) {
+      /* the appearances token is ONE candidate: any malformed pair
+         rejects the whole token and the prior sequence is retained
+         in full — a partial list never commits */
       const list = [];
+      let malformedPair = null;
       q.get("appearances").split(",").forEach(function (pair) {
         const kv = pair.split(":");
         if (kv.length > 2) warnings.push("appearances: extra fields in '" + pair + "' ignored");
         const f = strictInt(kv[0]), d = strictInt(kv[1]);
-        if (f === null || d === null) warnings.push("appearances: malformed entry '" + pair + "' dropped");
+        if (f === null || d === null) { if (malformedPair === null) malformedPair = pair; }
         else list.push({ filled: f, dive: d });
       });
-      if (list.length) cfg.appearances = list;
+      if (malformedPair !== null) {
+        warnings.push("appearances: malformed entry '" + malformedPair + "' — whole candidate rejected, prior appearance sequence retained (" + cfg.appearances.length + " appearances) (CANDIDATE-REJECTED-RETAINED)");
+      } else if (list.length) cfg.appearances = list;
     }
     if (q.get("filled") !== null) {
       const f = strictInt(q.get("filled"));
@@ -1324,7 +1521,7 @@ function resolveConfig(search) {
        printed in comparison.html. */
     const noteRegistryPrior = function (kind) {
       if (!Object.prototype.hasOwnProperty.call(registryPrior, kind))
-        registryPrior[kind] = Object.prototype.hasOwnProperty.call(cfg.artRegistry, kind) ? cfg.artRegistry[kind] : null;
+        registryPrior[kind] = Object.prototype.hasOwnProperty.call(cfg.artRegistry, kind) ? JSON.parse(JSON.stringify(cfg.artRegistry[kind])) : null;
     };
     if (q.get("registry") !== null) {
       const raw = q.get("registry");
@@ -1402,7 +1599,7 @@ function resolveConfig(search) {
      any dependent was inspected): dependents — appearances, panel
      bindings, the fallback binding — validate against the resolved
      count and registry only. */
-  validateInto(cfg, warnings, registryPrior, { prior: priorSnapshot });
+  validateInto(cfg, warnings, registryPrior, { prior: priorSnapshot, panelBindings: panelBindingsS });
   /* coupled commit rule: a value/limit pair commits ATOMICALLY. If a
      route-tightened limit leaves the committed value violating it —
      whether the value arrived in the same request (malformed or
@@ -1424,7 +1621,7 @@ function resolveConfig(search) {
         warnings.push("coupled commit: " + pr.name + " pair rejected atomically — prior value and prior limit both stand");
       }
     });
-    if (rejected) validateInto(cfg, warnings, registryPrior, { prior: priorSnapshot });
+    if (rejected) validateInto(cfg, warnings, registryPrior, { prior: priorSnapshot, panelBindings: panelBindingsS });
   })();
   /* deferred map candidates: installed only where the staged
      single-kind candidate failed validation — the resolved entry no
@@ -1442,7 +1639,7 @@ function resolveConfig(search) {
     cfg.artRegistry[kind] = mapDeferred[kind];
     warnings.push("registryMap: deferred candidate for kind '" + kind + "' installed after the staged candidate failed validation, under the printed precedence");
   });
-  if (Object.keys(mapDeferred).length) validateInto(cfg, warnings, registryPrior, { prior: priorSnapshot });
+  if (Object.keys(mapDeferred).length) validateInto(cfg, warnings, registryPrior, { prior: priorSnapshot, panelBindings: panelBindingsS });
   /* registry validate-before-commit: a route-supplied replacement
      that validated to nothing restores the entry it replaced, with a
      named warning — a bad replacement never silently deletes art */
@@ -1450,6 +1647,22 @@ function resolveConfig(search) {
     if (registryPrior[kind] && !Object.prototype.hasOwnProperty.call(cfg.artRegistry, kind)) {
       cfg.artRegistry[kind] = registryPrior[kind];
       warnings.push("registry: replacement for kind '" + kind + "' validated to nothing, prior entry restored");
+    }
+  });
+  /* final binding pass: runs after deferred registry installation,
+     so a binding whose kind only exists once the deferred candidates
+     land is priced against the FINAL registry. Per panel, the last
+     route assignment that resolves in the final registry stands:
+     a panelsJson assignment first, then the panels-route snapshot;
+     a rejected assignment never reaches this pass as a binding. */
+  cfg.panels.forEach(function (p, i) {
+    if (!p || typeof p !== "object") return;
+    const jB = typeof panelsJsonAssigned[i] === "string" && Object.prototype.hasOwnProperty.call(cfg.artRegistry, panelsJsonAssigned[i]) ? panelsJsonAssigned[i] : null;
+    const sB = typeof panelBindingsS[i] === "string" && Object.prototype.hasOwnProperty.call(cfg.artRegistry, panelBindingsS[i]) ? panelBindingsS[i] : null;
+    const want = jB || sB;
+    if (want && p.art !== want) {
+      warnings.push("panels[" + i + "].art: final binding pass restored the route-assigned binding '" + want + "' (the intermediate binding '" + p.art + "' was resolved before the final registry stood)");
+      p.art = want;
     }
   });
   cfg._warnings = warnings;
@@ -1579,7 +1792,7 @@ function labelPolicy(cfg, numOrText, titleOrAvail, availPx, basePx, panelInnerH)
   else { text = String(numOrText); availPx2 = titleOrAvail; basePx2 = availPx; panelInnerH = basePx; }
   availPx = availPx2; basePx = basePx2;
   const minPx = cfg.labels.minPx;
-  const step = cfg.labels.shrinkStepPx > 0 ? cfg.labels.shrinkStepPx : 0.5;
+  const step = cfg.labels.shrinkStepPx > 0 ? cfg.labels.shrinkStepPx : cfg.labels.shrinkStepFallbackPx;
   /* every decrement is CLAMPED at the floor: the size can land exactly
      on minPx but never undershoot it */
   let px = Math.max(minPx, basePx);
@@ -1638,8 +1851,8 @@ function labelPolicy(cfg, numOrText, titleOrAvail, availPx, basePx, panelInnerH)
    never ignored. The available width carries a named reserve. */
 function headerFitPx(cfg, text, availPx, basePx) {
   const minPx = cfg.layout.headerMinFontPx;
-  const absMinPx = cfg.layout.headerAbsoluteMinPx;
-  const step = cfg.labels.shrinkStepPx > 0 ? cfg.labels.shrinkStepPx : 0.5;
+  const absMinPx = cfg.limits.headerAbsoluteMinPx;
+  const step = cfg.labels.shrinkStepPx > 0 ? cfg.labels.shrinkStepPx : cfg.labels.shrinkStepFallbackPx;
   const avail = Math.max(0, availPx - cfg.layout.headerReservePx);
   const est = function (p) { return text.length * (cfg.labels.glyphEm + cfg.typography.headerLetterSpacingEm) * p + cfg.layout.headerPaddingPx * 2; };
   let px = Math.max(minPx, basePx);
@@ -1820,7 +2033,7 @@ function transformAt(cfg, endpoint, p) {
     const m = k * easingSlopeAt(cfg.layout.approachEasing, true) * cfg.diveMs / cfg.approachMs;
     if (base0 > 1e-6 && isFinite(m) && m > 0) {
       let a = m / base0 - 1;
-      if (a < -0.95) a = -0.95;
+      if (a < cfg.layout.diveWarpFloor) a = cfg.layout.diveWarpFloor;
       f = Math.max(0, Math.min(1, q + a * q * (1 - q) * (1 - q)));
     }
   }
@@ -1832,15 +2045,14 @@ function transformCss(tr) {
 }
 
 /* ================= timeline (deadline-based, derived cycle) =========== */
-function panelState(cfg, appearanceIdx, panelIdx, forceFilledIdx) {
+function panelState(cfg, appearanceIdx, panelIdx) {
   const a = cfg.appearances[appearanceIdx % cfg.appearances.length];
   const completed = panelIdx < a.filled;
   const isTarget = panelIdx === a.dive;
   /* completed membership and target membership are INDEPENDENT:
      the target may already be completed (final appearance: filled 12,
-     dive 11) — that overlap is its own state, not "upcoming". The
-     force-fill parameter is retained for call compatibility; the fill
-     behaviour now comes from CONFIG.progress.forceFillTarget.
+     dive 11) — that overlap is its own state, not "upcoming". The fill
+     behaviour comes from CONFIG.progress.forceFillTarget.
      A dive target ALWAYS renders its miniature — the camera dives
      into the chapter's scene, never into a blank panel. Under "mark"
      the upcoming target carries its distinct mark and is NOT counted
@@ -1957,11 +2169,32 @@ function primSVG(p, palette, defs) {
     for (let i = 0; i < p.count; i++)
       s += '<circle cx="' + (p.cx0 + i * p.dx) + '" cy="' + p.cy + '" r="' + p.r + '" fill="' + FD(p.fill) + '"/>';
     return wrapGroup(p, s, palette); }
+  if (!Object.prototype.hasOwnProperty.call({rect:1,circle:1,line:1,polygon:1,path:1,text:1,grid:1,graph:1,circlesRow:1}, p.t)) {
+    /* a contract-only kind renders through the generic shape its
+       contract requires: a points kind renders as a polygon, an
+       x/y/w/h kind as a rect — no second membership list gates it */
+    const ctG = KIND_FIELD_CONTRACT[p.t];
+    if (ctG && ctG.required.indexOf("points") >= 0) return '<polygon points="' + escAttr(p.points) + '" fill="' + FD(p.fill) + '"' +
+      ' stroke="' + SD(p.stroke) + '" stroke-width="' + SW(p) + '"' +
+      (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+      (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") + "/>";
+    if (ctG && ctG.required.indexOf("x") >= 0 && ctG.required.indexOf("w") >= 0) return '<rect x="' + p.x + '" y="' + p.y + '" width="' + p.w + '" height="' + p.h + '"' +
+      (p.rx ? ' rx="' + p.rx + '"' : "") + ' fill="' + FD(p.fill) + '"' +
+      ' stroke="' + SD(p.stroke) + '" stroke-width="' + SW(p) + '"' +
+      (p.opacity !== undefined ? ' opacity="' + p.opacity + '"' : "") +
+      (p.transform ? ' transform="' + escAttr(p.transform) + '"' : "") + "/>";
+    return "";
+  }
   if (p.t === "graph") { let s = "";
     p.edges.forEach(function (e) {
+      /* an edge with no stroke of its own inherits the graph group's
+         stroke: the edge omits its stroke attribute and the wrapping
+         group carries it — an unnamed edge never renders at a
+         hardcoded default color while its group names another */
+      const edgeStrokeAttr = p.edgeStroke !== undefined ? ' stroke="' + SD(p.edgeStroke) + '"' : (p.stroke !== undefined ? "" : ' stroke="' + SD(undefined) + '"');
       s += '<line x1="' + p.nodes[e[0]][0] + '" y1="' + p.nodes[e[0]][1] + '" x2="' + p.nodes[e[1]][0] +
-           '" y2="' + p.nodes[e[1]][1] + '" stroke="' + SD(p.edgeStroke) + '" stroke-width="' + (p.edgeWidth !== undefined ? p.edgeWidth : D.strokeWidth) + '"/>'; });
-    p.nodes.forEach(function (n) { s += '<circle cx="' + n[0] + '" cy="' + n[1] + '" r="' + (p.nodeR !== undefined ? p.nodeR : (D.fallbackNodeRadius !== undefined ? D.fallbackNodeRadius : 4)) + '" fill="' + FD(p.nodeFill) + '"/>'; });
+           '" y2="' + p.nodes[e[1]][1] + '"' + edgeStrokeAttr + ' stroke-width="' + (p.edgeWidth !== undefined ? p.edgeWidth : D.strokeWidth) + '"/>'; });
+    p.nodes.forEach(function (n) { s += '<circle cx="' + n[0] + '" cy="' + n[1] + '" r="' + (p.nodeR !== undefined ? p.nodeR : (D.fallbackNodeRadius !== undefined ? D.fallbackNodeRadius : CONFIG.detail.fallbackNodeRadius)) + '" fill="' + FD(p.nodeFill) + '"/>'; });
     return wrapGroup(p, s, palette); }
   return "";
 }
@@ -1989,20 +2222,6 @@ function panelArtSVG(panel, palette, filled, registry, viewBox, fallbackKind, de
   const primDefs = Object.assign({}, defs || {}, { fallbackNodeRadius: det.fallbackNodeRadius });
   return '<svg viewBox="' + (vb.x || 0) + " " + (vb.y || 0) + " " + vb.w + " " + vb.h + '" preserveAspectRatio="' + (vb.preserveAspectRatio || CONFIG.artViewBox.preserveAspectRatio) + '" aria-hidden="true">' +
          prims.map(function (p) { return primSVG(p, palette, primDefs); }).join("") + "</svg>";
-}
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = { CONFIG: CONFIG, TRUSTED_DEFAULTS: TRUSTED_DEFAULTS, PRIM_KINDS: PRIM_KINDS, resolveConfig: resolveConfig, validateInto: validateInto,
-                     panelState: panelState, buildTimeline: buildTimeline, stateAt: stateAt,
-                     schedulerDelay: schedulerDelay, phaseAt: phaseAt, labelBasePx: labelBasePx, labelPolicy: labelPolicy,
-                     headerFitPx: headerFitPx, computeLayout: computeLayout, panelRect: panelRect,
-                     diveTransform: diveTransform, coversViewport: coversViewport,
-                     splitTwoLines: splitTwoLines, splitTwoLinesNT: splitTwoLinesNT, splitLinesNT: splitLinesNT, estWidth: estWidth,
-                     panelArtSVG: panelArtSVG, strictInt: strictInt, isColor: isColor,
-                     easingFraction: easingFraction, parseEasing: parseEasing, escAttr: escAttr, diveProgress: diveProgress,
-                     transformAt: transformAt, transformCss: transformCss, approachTransformAt: approachTransformAt,
-                     headerHeightFor: headerHeightFor, artRectFor: artRectFor, tabBandHeightPx: tabBandHeightPx,
-                     resolvedArtRect: resolvedArtRect, resolvedGeometry: resolvedGeometry, endpointFromResolved: endpointFromResolved, primSVG: primSVG,
-                     effectiveBandPx: effectiveBandPx };
 }
 
 /* ================= DOM build + deadline sequence engine =============== */
@@ -2088,8 +2307,8 @@ if (typeof document !== "undefined") {
        measured content height, and the stage height grows with it —
        the grid below is in flow, so the grown height propagates */
     let measuredPx = hf.px, mGuard = 0;
-    while (mGuard++ < cfg.limits.headerRefineMaxIterations && headerEl.scrollWidth > headerEl.clientWidth && measuredPx > cfg.layout.headerAbsoluteMinPx) {
-      measuredPx = Math.max(cfg.layout.headerAbsoluteMinPx, measuredPx - cfg.labels.shrinkStepPx);
+    while (mGuard++ < cfg.limits.headerRefineMaxIterations && headerEl.scrollWidth > headerEl.clientWidth && measuredPx > cfg.limits.headerAbsoluteMinPx) {
+      measuredPx = Math.max(cfg.limits.headerAbsoluteMinPx, measuredPx - cfg.labels.shrinkStepPx);
       headerEl.style.fontSize = measuredPx + "px";
     }
     if (headerEl.scrollWidth > headerEl.clientWidth && cfg.headerBreak !== "normal") {
@@ -2132,10 +2351,9 @@ if (typeof document !== "undefined") {
   function render() {
     const lay = layout();
     const panelEls = [];
-    const forceFilledIdx = cfg.appearances[appIdx % cfg.appearances.length].dive;
     gridEl.innerHTML = "";
     cfg.panels.forEach(function (p, i) {
-      const st = panelState(cfg, appIdx, i, forceFilledIdx);
+      const st = panelState(cfg, appIdx, i);
       const d = document.createElement("div");
       d.className = "panel";
       d.style.aspectRatio = String(lay.aspect || cfg.panelAspect);
@@ -2239,7 +2457,7 @@ if (typeof document !== "undefined") {
        number-only, every decrement clamped at the floor. */
     const tabEls = gridEl.querySelectorAll(".tab");
     tabEls.forEach(function (tab, i) {
-      const step = cfg.labels.shrinkStepPx > 0 ? cfg.labels.shrinkStepPx : 0.5, floor = cfg.labels.minPx;
+      const step = cfg.labels.shrinkStepPx > 0 ? cfg.labels.shrinkStepPx : cfg.labels.shrinkStepFallbackPx, floor = cfg.labels.minPx;
       const panelEl = tab.parentElement;
       const countLines = function () {
         /* the line count is the RENDERED line count: for each block
@@ -2282,15 +2500,19 @@ if (typeof document !== "undefined") {
          to the record's named fallback class (below). It never
          derives a different split, a different fallback, or a
          different budget. */
-      /* ordered fallback — the SAME order the model policy uses,
-         consumed here with measured widths: (1) a measured-split
-         retry (an alternate split from the shared splitter, applied
-         and re-measured, never merely asserted); (2) single-line at
-         the floor with the full text, re-measured; (3) number-only as
-         the last resort under BOTH fallback settings (the default
-         setting previously stopped at single-line and could leave a
-         title clipped at the floor). A step is accepted only when
-         the measured violation clears. */
+      /* THE shared ordered fallback — one policy, consumed by this
+         refinement from ANY failed measured state, in the model's
+         own order: single-line, then the two-line split, then the
+         three-line split (where the regime's line budget allows),
+         then number-only. Each arrangement is applied and
+         RE-MEASURED; the first that clears the violation stands,
+         and every arrangement measured is recorded in the tab's try
+         record. The mode the model record arrived in does not gate
+         the order: a state that fails is priced against the whole
+         sequence, never against a mode-keyed subset of it. The
+         number-only state is itself containment-checked: if even it
+         violates, the overflow is REPORTED on the tab's record
+         (dataset.overflow), never silently clipped. */
       const applyLines = function (lines, mode) {
         tab.textContent = "";
         lines.forEach(function (ln) { const sp = document.createElement("span"); sp.textContent = ln; sp.style.display = "block"; tab.appendChild(sp); });
@@ -2298,18 +2520,32 @@ if (typeof document !== "undefined") {
         tab.style.whiteSpace = (mode === "two-line" || mode === "multi-line") ? "pre-line" : "nowrap";
         tab.style.fontSize = floor + "px"; px = floor;
       };
-      if (violates() && tab.dataset.mode === "two-line") {
-        const alt = splitLinesNT(cfg, tab.dataset.number, tab.dataset.title, lay.phoneRegime ? cfg.labels.maxLinesPhone : cfg.labels.maxLines);
-        if (alt.length > 2) { applyLines(alt, "multi-line"); tab.dataset.fallback = "measured-split-retry"; }
-      }
-      if (violates() && tab.dataset.mode !== "single" && tab.dataset.mode !== "number-only") {
-        applyLines([tab.dataset.text], "single"); tab.dataset.fallback = "single-line";
-      }
-      if (violates() && tab.dataset.mode !== "number-only") {
-        tab.textContent = cfg.panels[i].n;
-        tab.dataset.mode = "number-only"; tab.dataset.fallback = "number-only";
-        tab.style.whiteSpace = "nowrap";
-        tab.style.fontSize = floor + "px";
+      if (violates()) {
+        const maxL = lay.phoneRegime ? cfg.labels.maxLinesPhone : cfg.labels.maxLines;
+        const tries = [];
+        const steps = [{ name: "single-line", lines: [tab.dataset.text], mode: "single" }];
+        const two = splitLinesNT(cfg, tab.dataset.number, tab.dataset.title, 2);
+        if (two.length === 2) steps.push({ name: "two-line", lines: two, mode: "two-line" });
+        if (maxL >= 3) { const three = splitLinesNT(cfg, tab.dataset.number, tab.dataset.title, 3); if (three.length === 3) steps.push({ name: "three-line", lines: three, mode: "multi-line" }); }
+        for (let si = 0; si < steps.length; si++) {
+          if (tab.dataset.mode === steps[si].mode) continue;
+          applyLines(steps[si].lines, steps[si].mode);
+          tries.push(steps[si].name);
+          tab.dataset.fallback = steps[si].name;
+          if (!violates()) break;
+        }
+        if (violates() && tab.dataset.mode !== "number-only") {
+          tab.textContent = cfg.panels[i].n;
+          tab.dataset.mode = "number-only"; tab.dataset.fallback = "number-only";
+          tab.style.whiteSpace = "nowrap";
+          tab.style.fontSize = floor + "px";
+          tries.push("number-only");
+        }
+        /* the containment check prices the number-only state itself,
+           however it was arrived in: a number-only tab that still
+           violates is reported, never silently clipped */
+        if (violates() && tab.dataset.mode === "number-only") tab.dataset.overflow = "number-only-overflow";
+        if (tries.length) tab.dataset.fallbackTries = tries.join(",");
       }
       tab.dataset.px = tab.style.fontSize;
       tab.dataset.lines = String(countLines());
@@ -2353,7 +2589,7 @@ if (typeof document !== "undefined") {
       if (!panelEl) return;
       const artEl = panelEl.querySelector(".art");
       if (!artEl) return;
-      const stI = panelState(cfg, appIdx, i, forceFilledIdx);
+      const stI = panelState(cfg, appIdx, i);
       const builtFull = resolvedArtRect(cfg, layG, i, appIdx).detailFull;
       if (rec.detailFull === builtFull) return;
       artEl.innerHTML = panelArtSVG(cfg.panels[i], cfg.palette, stI.filled, cfg.artRegistry, cfg.artViewBox, cfg.fallbackArtKind, { strokeWidth: cfg.layout.primDefaultStrokeWidth, textWeight: cfg.layout.primDefaultTextWeight, defaultFill: cfg.artDefaults.fill, defaultStroke: cfg.artDefaults.stroke }, { artH: rec.h, threshold: cfg.artDetailMinPx, detailCfg: cfg.detail });
@@ -2370,7 +2606,7 @@ if (typeof document !== "undefined") {
     return lay;
   }
   let camAnim = null;
-  let lastDrawnElapsed = 0, lastDrawnProgress = 0;
+  let lastDrawnElapsed = 0;
   function diveEndpoint(panelIdx) {
     const w = effectiveStageW();
     const lay = computeLayout(cfg, w);
@@ -2398,7 +2634,6 @@ if (typeof document !== "undefined") {
       const phS = phaseAt(cfg, currentElapsed());
       lastDrawnElapsed = phS.cycleIndex * tl.totalMs + phS.step.startMs + inPhaseMs;
     }
-    lastDrawnProgress = p;
     return tr;
   }
   function stopCam() { if (camAnim && camAnim.raf) cancelAnimationFrame(camAnim.raf); camAnim = null; }
@@ -2428,14 +2663,31 @@ if (typeof document !== "undefined") {
      wrapper from identity). */
   function cameraPoseAt(cfg2, pr, endpoint) {
     const k = typeof cfg2.layout.approachEntryProgress === "number" ? cfg2.layout.approachEntryProgress : 0;
-    return approachTransformAt(cfg2, k + (1 - k) * Math.max(0, Math.min(1, pr)), endpoint);
+    const p = Math.max(0, Math.min(1, pr));
+    /* slope-corrected entry remap: the live approach is the
+       composition approachTransformAt ∘ remap, and the dive's warp
+       was priced against the approach's terminal slope — a LINEAR
+       remap r(p) = k + (1-k)p has terminal slope (1-k), so the
+       composed live terminal rate fell short of the dive's initial
+       rate by exactly that factor (the measured join kink). The
+       remap therefore carries the correction itself:
+       r(p) = k + (1-k)p - k·p(1-p)·phi keeps r(0) = k (the credited
+       entry pose is untouched) and r(1) = 1, and its terminal slope
+       r'(1) = (1-k) + k·phi is exactly 1 at phi = 1 (k <= 0.5), so
+       the composed terminal rates — scale and translation alike —
+       equal the dive's initial rates. For k > 0.5, phi = (1-k)/k
+       keeps the remap monotone (r'(0) = 0) with the correction
+       partial; the shipped k = 0.25 takes the full correction. */
+    const phi = k <= 0.5 ? 1 : (1 - k) / k;
+    const r = k + (1 - k) * p - k * p * (1 - p) * phi;
+    return approachTransformAt(cfg2, Math.max(0, Math.min(1, r)), endpoint);
   }
   /* Approach entry is a single named act, in this order, on EVERY
      appearance (including cycle wrap): (1) reset the wrapper transform
      to identity, (2) release/hide any cut overlay, (3) apply the
      approach pose. The reset lives in the entry path itself — never in
      a conditional pause/hold branch — so it fires at every rhythm. */
-  function enterApproach(step) {
+  function enterApproach(step, capturedInPhaseMs) {
     zoomwrap.style.transition = "none";
     zoomwrap.style.transform = "none";
     zoomwrap.style.opacity = "1";
@@ -2443,17 +2695,26 @@ if (typeof document !== "undefined") {
     if (cutEl.style.display !== "none") { cutEl.style.display = "none"; }
     if (cutEl.dataset.target !== undefined) delete cutEl.dataset.target;
     render();
-    startApproach(step);
+    startApproach(step, capturedInPhaseMs);
   }
-  function startApproach(step) {
+  function startApproach(step, capturedInPhaseMs) {
     if (approachAnim && approachAnim.raf) cancelAnimationFrame(approachAnim.raf);
     const anim = { appearance: step.appearance, raf: 0 };
     approachAnim = anim;
+    let firstFrame = true;
     const stepFn = function () {
       if (!playing || approachAnim !== anim) return;
       const ph = phaseAt(cfg, currentElapsed());
       if (ph.step.phase === "approach" && ph.step.appearance === step.appearance) {
-        const pr = cfg.approachMs > 0 ? ph.inPhaseMs / cfg.approachMs : 1;
+        /* the FIRST posed sample after (re-)entry is evaluated at
+           the CAPTURED in-phase value — the elapsed applyStep read
+           BEFORE its render rebuild — never at a post-rebuild
+           re-read: a slow rebuild cannot advance the resumed pose
+           (the dive's captured-elapsed discipline, extended to the
+           approach, its last unpriced span) */
+        const pr = firstFrame && typeof capturedInPhaseMs === "number" ? capturedInPhaseMs / cfg.approachMs :
+          (cfg.approachMs > 0 ? ph.inPhaseMs / cfg.approachMs : 1);
+        firstFrame = false;
         const tr = cameraPoseAt(cfg, pr, diveEndpoint(step.dive));
         /* the approach pose applies to the page WRAPPER (masthead +
            grid together) — one camera for the whole page, the same
@@ -2464,7 +2725,6 @@ if (typeof document !== "undefined") {
         /* the shared drawn-pose record: the elapsed value this pose
            was SAMPLED at, never the time after the write */
         lastDrawnElapsed = ph.cycleIndex * tl.totalMs + ph.step.startMs + ph.inPhaseMs;
-        lastDrawnProgress = pr;
         anim.raf = requestAnimationFrame(stepFn);
       } else { approachAnim = null; }
     };
@@ -2501,7 +2761,7 @@ if (typeof document !== "undefined") {
      deadline: bookkeeping, skip accounting and endpoint claiming
      reconcile against the applied phase at flush, so a phase that
      was observed but never applied can never escape the skip log */
-  let lastAppliedAbsIdx = -1, lastAppliedKey = null;
+  let lastAppliedAbsIdx = -1;
   /* the APPLIED dive's own identity (step + the cycle it was applied
      in), captured at dive entry: endpoint claims are keyed to THIS
      record, never to whichever cycle the observing clock happens to
@@ -2556,11 +2816,19 @@ if (typeof document !== "undefined") {
     const endMs = typeof tlStep.startMs === "number" && typeof tlStep.dur === "number" ?
       cycleIdx * tl.totalMs + tlStep.startMs + tlStep.dur : null;
     const tr = applyCamera(step.dive, cfg.diveMs, endMs !== null ? endMs : undefined);
+    /* the claim's own time, recorded beside the scheduled end on
+       BOTH records: the cut signal's lateness is a measured field of
+       the cut record, not a reconstruction */
+    const claimElapsedMs = currentElapsed();
+    const signalLatenessMs = endMs !== null ? Math.round((claimElapsedMs - endMs) * 1000) / 1000 : null;
     presentedLog.push({ type: "present-endpoint", key: key, appearance: step.appearance, cycle: cycleIdx,
-      transform: transformCss(tr), deferred: true, scheduledEndElapsedMs: endMs });
+      transform: transformCss(tr), deferred: true, scheduledEndElapsedMs: endMs,
+      claimElapsedMs: claimElapsedMs, signalLatenessMs: signalLatenessMs });
     lastPresented = { step: tlStep, cycleIdx: cycleIdx, key: key, scheduledEndElapsedMs: endMs };
-    const cutEntry = { type: "chapter-cut", key: key, appearance: step.appearance, target: step.dive, cycle: cycleIdx };
+    const cutEntry = { type: "chapter-cut", key: key, appearance: step.appearance, target: step.dive, cycle: cycleIdx,
+      signalLatenessMs: signalLatenessMs, claimElapsedMs: claimElapsedMs };
     cutLog.push(cutEntry);
+    while (cutLog.length > cfg.ceilings.maxCutLogEntries) cutLog.shift(); /* the cut log is bounded by the CONFIG ceiling, like the presentation logs */
     cutCallbacks.forEach(function (cb) { try { cb(cutEntry); } catch (e) {} });
     /* the cut signal above fires in every mode. The overlay is a
        separate decision, priced here BEFORE anything mounts: it
@@ -2572,7 +2840,14 @@ if (typeof document !== "undefined") {
     const overlayMounts = cfg.cut.mode === "hold" ||
       (cfg.handoff && cfg.handoff.holdOnComplete && step.appearance === cfg.appearances.length - 1);
     if (overlayMounts) {
-      cutEl.innerHTML = panelArtSVG(cfg.panels[step.dive], cfg.palette, true, cfg.artRegistry, cfg.artViewBox, cfg.fallbackArtKind, { strokeWidth: cfg.layout.primDefaultStrokeWidth, textWeight: cfg.layout.primDefaultTextWeight, defaultFill: cfg.artDefaults.fill, defaultStroke: cfg.artDefaults.stroke }, { artH: resolvedArtRect(cfg, computeLayout(cfg, effectiveStageW()), step.dive, step.appearance).h, threshold: cfg.artDetailMinPx, detailCfg: cfg.detail });
+      /* the overlay's detail tier consumes the SAME resolved art
+         height the grid consumed — the final record's, when it
+         stands for this stage width — never a fresh model
+         computation that can disagree with the grid's tier at a
+         regime boundary */
+      const overlayArtH = (lastResolved && lastResolved.stageW === effectiveStageW() && lastResolved.panels[step.dive]) ?
+        lastResolved.panels[step.dive].h : resolvedArtRect(cfg, computeLayout(cfg, effectiveStageW()), step.dive, step.appearance).h;
+      cutEl.innerHTML = panelArtSVG(cfg.panels[step.dive], cfg.palette, true, cfg.artRegistry, cfg.artViewBox, cfg.fallbackArtKind, { strokeWidth: cfg.layout.primDefaultStrokeWidth, textWeight: cfg.layout.primDefaultTextWeight, defaultFill: cfg.artDefaults.fill, defaultStroke: cfg.artDefaults.stroke }, { artH: overlayArtH, threshold: cfg.artDetailMinPx, detailCfg: cfg.detail });
       cutEl.style.display = "block";
       cutEl.style.background = cfg.palette.dark;
       cutEl.style.zIndex = String(cfg.layout.cutZIndex);
@@ -2734,12 +3009,11 @@ if (typeof document !== "undefined") {
        re-derivation and its skip records */
     const schedCycle = lastCycleIdx;
     activeStep = s;
-    lastAppliedKey = schedCycle + ":" + s.appearance + ":" + s.phase;
     lastAppliedAbsIdx = absIndexOf({ step: s, cycleIndex: schedCycle });
     if (s.phase === "approach") {
       stopCam();
       appIdx = s.appearance; frozenTransform = null;
-      enterApproach(s);
+      enterApproach(s, capturedElapsed - (schedCycle * tl.totalMs + s.startMs));
       /* post-render identity check (the dive's check, generalized to
          the approach): a phase that expired during its entry render
          rebuild is reconciled through the same single path instead of
@@ -2908,7 +3182,7 @@ if (typeof document !== "undefined") {
     pendingApply = null; lastPresented = null; heldComplete = null;
     cutEl.style.display = "none";
     lastAbsIdx = -1; lastCycleIdx = 0; activeStep = null;
-    lastAppliedAbsIdx = -1; lastAppliedKey = null;
+    lastAppliedAbsIdx = -1;
     appliedDiveRecord = null; reconciledUpToAbs = -1;
     frozenTransform = null; pausedElapsed = 0; appIdx = 0; lastKey = null;
     stopCam();
@@ -2956,7 +3230,21 @@ if (typeof document !== "undefined") {
        progress against the recomputed endpoint — the progress fraction
        is preserved, the endpoint moves; no snap. The
        running rAF loop keeps evaluating at that progress. */
-    if (activeStep && activeStep.phase === "dive") {
+    if (activeStep && activeStep.phase === "approach") {
+      /* a resize during approach — playing or paused — re-poses from
+         the SAME progress against the recomputed endpoint: the
+         progress fraction is preserved, the endpoint moves; the
+         paused case has no running frame loop to do this, so the
+         handler is its only re-pose */
+      const phR = phaseAt(cfg, currentElapsed());
+      if (phR.step && phR.step.phase === "approach" && phR.step.appearance === activeStep.appearance) {
+        const prR = cfg.approachMs > 0 ? phR.inPhaseMs / cfg.approachMs : 1;
+        const trR = cameraPoseAt(cfg, prR, diveEndpoint(activeStep.dive));
+        zoomwrap.style.transform = transformCss(trR);
+        zoomwrap.style.transformOrigin = "0 0";
+        zoomwrap.dataset.approachProgress = String(prR);
+      }
+    } else if (activeStep && activeStep.phase === "dive") {
       const ph = phaseAt(cfg, currentElapsed());
       applyCamera(activeStep.dive, ph.inPhaseMs);
     } else if (activeStep && activeStep.phase === "hold") {

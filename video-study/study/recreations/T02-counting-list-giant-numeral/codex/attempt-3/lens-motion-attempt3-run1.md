@@ -1,0 +1,10 @@
+**Motion fidelity — the default source matches the evidenced count, list retention, and caption timing. Browser playback remains unverified.**
+
+- **Line arrivals and numeral steps.** In `recreation.html`, `renderAt` uses one `countAtMs` result to reveal checked rows and set the numeral. Executing the source functions returned 0, 20, 37, and 39 at 0, 3,000, 6,000, and 7,000 ms, respectively, matching the technique anchors and `R-1.effective-default`. `lineTimeMs` spaces arrivals evenly within each interval. The supplied evidence establishes the anchors, while the exact cadence between them remains unverified.
+- **List retention.** `renderAt` retains the latest 13 rows when `deriveLayout` has room. At counts 20 and 37, `shown − 13` yields rows 8–20 and 25–37, respectively, matching `S5.retention-20` and `S5.retention-37`. Executing the layout function confirmed 13 rows at 360 and 390 px and 8 at 240 px, consistent with `S6.resize-pair-differs`.
+- **Caption and scale.** `renderAt` switches caption opacity on at 7,000 ms. The count function returned 38 immediately before that point and 39 at both 7,000 and 8,000 ms, so the last row, numeral 39, and caption land in the same update. `CONFIG.pulseScale` is `1.0`, so the optional pulse produces no scale motion. The technique facts provide no evidence for a numeral pulse.
+
+**Limits** — The packet’s pixel and DOM-shim limits apply. The source checks establish the timing and visibility rules. Painted retention, frame-by-frame cadence, and the caption landing in browser playback are unverified. Source and packet references are in `payload.txt`.
+
+BODY-WRITE: none (read-only run). For the build record, retain the default scale of 1.0 and require a browser playback check of the 13-row checkpoints and the final count with the caption before marking rendered motion verified.
+SCORE: 94

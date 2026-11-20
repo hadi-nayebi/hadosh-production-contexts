@@ -1,0 +1,10 @@
+Construction purity passes at 100/100.
+
+- The HTML extracted from `payload.txt:21–408` matches the declared SHA-256. It contains inline CSS and JavaScript, uses local font stacks, and has no external asset references or embedded specimen media. The stage is built from HTML elements and CSS, with no traced image or vector layer evident in the source. [payload.txt](/home/hatch/workspace/.scratch/cycle-031/T02/lens-purity/payload.txt:21)
+- Default and URL-supplied rows use `textContent`. Both caption branches use `createTextNode`, including the text inside the accent span. The prompt, labels, and changing numeral also use `textContent`. The color override is restricted to hex values, and speed and checkpoint overrides feed numeric logic. Programmatic calls and comparison-page messages dispatch playback controls through the same render path. [Overrides](/home/hatch/workspace/.scratch/cycle-031/T02/lens-purity/payload.txt:261) · [DOM construction](/home/hatch/workspace/.scratch/cycle-031/T02/lens-purity/payload.txt:281) · [Playback path](/home/hatch/workspace/.scratch/cycle-031/T02/lens-purity/payload.txt:374)
+
+Limits — This review verified the source embedded in the working packet. `CANNOT READ recreation.html` as a standalone copy in the run directory (`No such file or directory`). The packet’s purity checks list identifiers without observed values and document DOM-shim and pixel-verification limits. The score rests on direct source inspection. [Verification limits](/home/hatch/workspace/.scratch/cycle-031/T02/lens-purity/payload.txt:414) · [Purity checks](/home/hatch/workspace/.scratch/cycle-031/T02/lens-purity/payload.txt:603)
+
+BODY-WRITE: none (read-only run). Record the verified source hash and the literal-text paths for list rows and both caption branches in the build record. No construction-purity change is warranted.
+
+SCORE: 100
