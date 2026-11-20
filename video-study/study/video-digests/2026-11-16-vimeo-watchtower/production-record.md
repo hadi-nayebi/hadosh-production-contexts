@@ -1,0 +1,22 @@
+# Production record — Packet #10, Watchtower of Turkey (Cycle-016)
+
+- Archive: source.mp4 via player-embed route (yt-dlp, exit 0), 124,588,071 B. probe.json binds duration 212.68 s · 1920×1080 · 25 fps · H.264 + AAC stereo · 4,686,404 bps.
+- Length tier (Amendment A3): 3.54 min → full census tier (1 fps + evidence set). Transcript length-immune form applied to the audio census.
+- Cut censuses (counting unit: distinct pts_time values, A9 clause 1): scene-select @0.35 → 123 boundaries; @0.20 → 309 candidate boundaries. Instrument pricing (A8 clause 2): the specimen's plates move continuously and many cuts are motion-carried — @0.35 yield (123) is implausibly below the visible change rate and @0.20 over-fires inside pans/motion; both print as candidate detections (codex-plan-review Finding 3 cure, P-C3). The packet asserts the density SHAPE (both thresholds agree) and brackets the shot count (124–310); it does not assert an exact count. The queue's ~280 stands UNVERIFIED inside the bracket.
+- Frame census: 213 frames at 1 fps (frames/f001–f213; count corrected from 214 at the jev-packet re-firing — the first count included the directory's AGENTS.md). Evidence frames: 20 in ev/, each label verified by eye at extraction or at the §5 sample; two labels were cured at extraction (poster frame re-extracted at 20.5 s after a 30.5 s mislabel; tower-arch and foreground-pass filenames corrected to what the frames show).
+- Audio census: loudnorm/volumedetect — mean −11.5 dB, max 0.0 dB; silencedetect (−35 dB, ≥1.5 s): ZERO gaps. ASR (faster-whisper small, local, VAD): exactly ONE speech segment, 11.5–32.2 s, language en (prob 0.97); wording garbled → printed UNVERIFIED in the packet (paraphrase marking). A sealed-runner tail probe on a 20–60 s sample returned a 4-word hallucination-form transcript ("Thank you for watching!") on music — recorded here as an ASR-on-music artifact, NOT as speech evidence; the VAD census above is the binding record.
+- Clip table (final, Amendment A6 — every motion/timing-claiming entry ruled):
+  - T01 fade reveal — NO-CLIP: before/after stills pair carries the reveal states.
+  - T02 voiceover — NO-CLIP: evidence form is the ASR data record (A4 clause 3).
+  - T03 poster insert — NO-CLIP: spatial/graphic claim, stills carry it.
+  - T04 portrait holds — NO-CLIP: duration claim bound to census boundary timestamps (28.84/36.44), stated in the entry.
+  - T05 match on action — CLIP: clips/081-match-action-1.4s.mp4 (81.2 s, 1.4 s).
+  - T06 arch framing — NO-CLIP: framing claim, still carries it.
+  - T07 occluded landing — CLIP: clips/100-occlusion-pass-3.5s.mp4 (100.0 s, 3.5 s).
+  - T08 performance cutting — CLIP: carried in clips/135-sound-bridge-2.5s.mp4 (134.5 s, 2.5 s).
+  - T09 foreground pass — NO-CLIP (narrowed): the entry claims the pass's mid-coverage state only, which the still shows; the hidden-cut claim is explicitly unmade in the entry, so no temporal claim stands unruled.
+  - T10 rhythmic insert montage — CLIP: clips/189-rhythmic-montage-1.6s.mp4 (188.8 s, 1.6 s).
+  - T11 sound bridge — CLIP (AV excerpt): clips/135-sound-bridge-2.5s.mp4 + the loudness/silence data record.
+  - T12 end card — NO-CLIP: the two states (over-shot / on-black) are stills claims, both cited.
+- External prior art: PROVISIONAL (codex-observe P-A6) — no external creator/style source was verified this cycle; the lane record is the priced basis.
+- Deviations: D-CO1 (codex-observe first firing NOT ASSESSED — tool-host failure; second firing completed the call) · D1 (access via embed route; counts/dates NOT DISPLAYED) — both carried in RUN.md's deviation register.
