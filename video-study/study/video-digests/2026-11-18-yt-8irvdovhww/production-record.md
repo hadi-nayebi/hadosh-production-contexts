@@ -1,0 +1,25 @@
+# Production record — Packet #16 (video-digestion Cycle-024)
+
+- Specimen: QUEUE row #10 — Nexus of Time, "24 Hours in 2050: When AI Does It All, What Do Humans Do?" (YouTube 8iR-VDovhWw, 609.881 s).
+- Tier (A3): >5 min — BEAT-LEVEL evidence: scene-change segmentation attempted (detector under-fired, below); evidence frames at every section boundary + every cited technique moment; sparse net 1 frame/10 s (61 frames, frames/net000–net600.jpg) as safety net; plus a 1 fps sampled-playback pass (610 frames, frames1/, from the work copy) feeding the frame-difference beat census. Full timestamped transcript at any length (A3 cl.1): transcript.txt, 126 sentences.
+- Counters (A9): narration words — ONE counter, whitespace tokens of the word-timed auto-caption token stream ("[music]" markers counted as tokens): 1,064 words total; every partition in digest §4 is produced by that same stream, assigned to sections by sentence start. Detector counts — DISTINCT pts_time values (A9 cl.1): 3 @0.35 · 53 @0.20 (scene0.35.json / scene0.20.json). Beat census — mean absolute frame difference at 160×90 grayscale over consecutive 1 fps frames (framediff1fps.json): onset = first second of a run ≥15/255, 3 s minimum grouping gap; 195 onsets. Frame counts — file counts on disk at packet close (recount in the Cycle-024 RUN §5).
+- Detector pricing (A8 cl.2 / A11 cl.1): scene-select yields 3 @0.35 / 53 @0.20 on a film whose 1 fps census shows near-continuous visual change (mean diff 32.2/255) — an instrument failure on a dissolve-carried generated film, not a specimen property. Both totals are reported with thresholds; the true edit count is printed UNVERIFIED in the packet; no external figure was used to calibrate the detector.
+- Clip rulings (A6 / P-C3 — every catalogue entry making a motion/timing claim, ruled entry-by-entry):
+  - T01 question-first cold open — NO-CLIP: the claim is the stillness + the sentence; stills carry it (ev/t005 + transcript timestamp).
+  - T02 kinetic title assembly — CLIP: clips/title-assembly-000-013.mp4 (0–13 s, 13 s) — the assembly timing IS the mechanic.
+  - T03 protagonist continuity — NO-CLIP: a casting claim carried by the cited still set across sections.
+  - T04 beat-per-scene turnover — CLIP (shared with T05): clips/dissolve-park-to-store-219-237.mp4 shows two turnovers in 18 s; the rate claim itself binds to the §4 census (a named data record, A4 cl.3).
+  - T05 dissolve stitching — CLIP: clips/dissolve-park-to-store-219-237.mp4 (219–237 s, 18 s) — a blend cannot be shown by a frame pair.
+  - T06 diegetic UI — NO-CLIP: the interfaces are static displays inside scenes; the cited ev frames show each interface's state; no UI animation is claimed.
+  - T07 verbal clock-stamps — NO-CLIP: a verbal claim, bound to transcript timestamps (A4 cl.3); the no-graphic half binds to the viewed net frames at the stamp times.
+  - T08 domain segmentation — NO-CLIP: a structure claim bound to the §4 table + boundary frames.
+  - T09 enumerated answers — NO-CLIP: a verbal/structural claim bound to transcript timestamps; each answer's emblem is a still (ev/t520 · t532 · t545).
+  - T10 motif literalisation — NO-CLIP: a recognition claim carried by the two cited stills (watermark + hourglass).
+  - T11 systems-ring reveal — CLIP: clips/ring-reveal-498-512.mp4 (498–512 s, 14 s) — the zoom-out reveal is a motion claim; before/during/after stills also cited (ev/t500 · ev/t508).
+  - T12 re-opened coda — NO-CLIP: a verbal claim bound to transcript [10:00.88]/[10:05.48] + ev/t605 (the nebula field it plays over).
+  - T13 texture system — NO-CLIP: a stills claim; three cited frames across sections carry the grammar.
+  - All clips: from work720.mp4 (720p H.264 work copy), no audio, no captions/subtitles added (§6.3). Clips are cited as local evidence; per the lane sync scope they do not travel with the synced packet.
+- Source captions/text disposition (A14 form): the specimen's own on-screen title text (T02) is retained verbatim in its evidence and labelled "Source text — specimen property" on the packet face. The job added no captions to any frame or clip.
+- Transcript route: platform auto-captions (source.en.vtt word-timed + source.en-orig.vtt), no manual track exists, no 429 occurred. Auto-caption artifacts at some joins are disclosed on the packet face; packet quotations are confined to cleanly rendered lines.
+- §5 own-eyes label cures at extraction (A10 cl.1): (1) ev/t010 extracted as the settled title card in fact shows the title MID-ASSEMBLY — cited under that label, settled card cited as frames/net010.jpg. (2) ev/t500 extracted as "day-recap-ring" in fact shows the reclining figure before the ring draws — renamed ev/t500-reclining-woman-night.jpg; the ring's settled state was verified by interval inspection (503 s mid-draw · 508 s settled) and extracted as ev/t508-day-recap-ring.jpg.
+- Archive route: yt-dlp, canonical route, no access failure (media and caption branches both succeeded — Cycle-024 RUN, P-C6).

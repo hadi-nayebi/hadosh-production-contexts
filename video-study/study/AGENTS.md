@@ -1,0 +1,2 @@
+# AGENTS.md — study/ (local working memory)
+Home of the daily craft-study practice: CURRICULUM.md (rotation bound to the ACTIVE production layer) and LEDGER.md (audit trail). Every session must convert — improve/create a skill or enrich the file systems — or record an explicit no-conversion finding with its reason. Study that changes no decision is unconverted and logged as such. Study jobs never push, never render, never act outwardly.
