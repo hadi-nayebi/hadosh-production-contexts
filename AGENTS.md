@@ -15,3 +15,9 @@ Use the original Unit One storyboard and the November asset index. The latest tw
 Each unit, scene, group, item and repeated instance needs its own stable browser div. Keep audio and clips in the same authored time system as the picture. Persistent objects retain their identity across scenes. Compare the moving film at desktop and phone widths, capture and check browser audio against the master, and test a cold open, pause, replay, seeking, asset edits, and independent changes to order and styling. Source review alone establishes no playback result.
 
 The baseline branch, earlier film PR, archived art and other units remain separate. Merge, publication, MP4 and fresh narration require their own authorization.
+
+## Unit data
+
+Coordinates use the reference frame in video.json. A `box` is left, top, width, height. Nested boxes are local to their parent. The `time` interval includes the start and excludes the end. Times can be unit seconds, a cue name, or a pair containing a cue and a seconds offset. Tracks contain time/value pairs with optional easing. The default interpolation is smooth. Use `linear` or `hold` as the third value of the destination key to change that segment. Change sibling order or set wrapper CSS `zIndex` to change overlap. Set `contentCSS` to style the image within its own wrapper.
+
+The shot list identifies the storyboard-to-runtime mapping. Objects continuing across shots live under a persistent scene or group. A scene's references name those objects without remounting them. `stage-camera` applies shared projection tracks to fixed world anchors. A grid declares its instance shape, floor slots, row/column stagger and optional keyed overrides. A seeded field declares its palette, size, trajectories and attraction targets. Its numbered instances and the rack IDs remain inspectable when paused or seeking.
