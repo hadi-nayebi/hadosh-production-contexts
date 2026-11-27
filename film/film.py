@@ -56,14 +56,24 @@ def unpack(dest):
     return manifest
 
 def pack_single(dest,out,manifest):
-    files={}
-    for key in manifest['files']:
-        if key=='index.html':continue
-        f=dest/key
-        files[key]=[mimetypes.guess_type(f.name)[0] or 'application/octet-stream',base64.b64encode(f.read_bytes()).decode('ascii')]
-    html=(dest/'index.html').read_text();marker='<script>\n';point=html.index(marker)
-    block='<script type="application/x-film-files">'+json.dumps(files,separators=(',',':'),ensure_ascii=True)+'</script>\n'
-    with out.open('x',encoding='utf-8') as stream:stream.write(html[:point]+block+html[point:])
+    html=(dest/'index.html').read_bytes()
+    marker=b'<script>\n'
+    before,after=html.split(marker,1)
+    with out.open('wb') as output:
+        output.write(before[:-1]+b'<script type="application/x-film-files">{')
+        first=True
+        for key in sorted(manifest['files']):
+            if key=='index.html':continue
+            if not first:output.write(b',')
+            first=False
+            mime=mimetypes.guess_type(key)[0] or 'application/octet-stream'
+            if key.endswith('.wav'):mime='audio/wav'
+            output.write(json.dumps(key).encode()+b':['+json.dumps(mime).encode()+b',"')
+            output.write(base64.b64encode((dest/key).read_bytes()))
+            output.write(b'"]')
+        output.write(b'}</script>\n'+marker+after)
+    if hashlib.sha256(out.read_bytes()).hexdigest()!=manifest['standaloneSHA256']:
+        raise ValueError('Standalone byte checksum does not match the reviewed film')
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);g=parser.add_mutually_exclusive_group();g.add_argument('--unpack',type=Path);g.add_argument('--standalone',type=Path);parser.add_argument('--port',type=int,default=8000);parser.add_argument('--serve-directory',type=Path);args=parser.parse_args()

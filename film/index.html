@@ -50,7 +50,21 @@ function pathFrom(base, relative) {
   if (path.origin !== 'https://film.local') throw Error('External media path: ' + relative);
   return decodeURIComponent(path.pathname.slice(1));
 }
+let packedDirectory;
 function src(path) {
+  const item=packedDirectory?.[path];
+  if(item){
+    const [mime,b64]=item;
+    const chunks=[];
+    for(let i=0;i<b64.length;i+=65536){
+      const binary=atob(b64.slice(i,i+65536));
+      const bytes=new Uint8Array(binary.length);
+      for(let k=0;k<binary.length;k++)bytes[k]=binary.charCodeAt(k);
+      chunks.push(bytes);
+    }
+    fileURLs.set(path,URL.createObjectURL(new Blob(chunks,{type:mime})));
+    delete packedDirectory[path];
+  }
   return fileURLs.get(path) || new URL(path.split('/').map(encodeURIComponent).join('/'), location.href).href;
 }
 async function json(path) {
@@ -575,10 +589,11 @@ async function buildNode(u, n, parent) {
   let extra = null;
   if (n.type === 'image' || n.type === 'sequence') {
     const imgs = n.frames || [[0, n.asset]];
-    const frames = await Promise.all(imgs.map(async ([when, id]) => [clock(when, u), (await acquire(u, id)).src]));
+    const frames = imgs.map(([when,id]) => [clock(when,u),asset(u,id).path]);
     const im = document.createElement('img');
     im.alt = '';
     im.draggable = false;
+    im.onerror = () => fail(Error('Unreadable image in '+u.id+'/'+n.id));
     Object.assign(im.style, n.contentCSS || {});
     el.append(im);
     let previous = -1;
@@ -586,7 +601,8 @@ async function buildNode(u, n, parent) {
       let j = 0;
       while (j + 1 < frames.length && frames[j + 1][0] <= t) j++;
       if (j !== previous) {
-        im.src = frames[j][1];
+        im.src = src(frames[j][1]);
+        if(j+1<frames.length){const ahead=new Image();ahead.src=src(frames[j+1][1]);}
         previous = j;
       }
     };
@@ -840,13 +856,8 @@ window.filmPlayer = {
 };
 const packed = document.querySelector('script[type="application/x-film-files"]');
 if (packed) {
-  const directory = JSON.parse(packed.textContent);
-  for (const [name, [mime, data]] of Object.entries(directory)) {
-    const bytes = Uint8Array.from(atob(data), s => s.charCodeAt(0));
-    fileURLs.set(name, URL.createObjectURL(new Blob([bytes], {
-      type: mime
-    })));
-  }
+  packedDirectory = JSON.parse(packed.textContent);
+  packed.remove();
   init().catch(fail);
 } else if (location.protocol === 'file:') button('Open project folder', () => document.querySelector('#folder').click());else init().catch(fail);
 </script></body></html>
