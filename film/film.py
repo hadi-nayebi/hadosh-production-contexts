@@ -55,25 +55,31 @@ def unpack(dest):
         if hashlib.sha256((dest/name).read_bytes()).hexdigest()!=sig:raise ValueError('Damaged source: '+name)
     return manifest
 
-def pack_single(dest,out,manifest):
-    html=(dest/'index.html').read_bytes()
-    marker=b'<script>\n'
-    before,after=html.split(marker,1)
+def pack_single(dest,out,manifest,verify=True):
+    from html import escape
+    before, after = (dest/'index.html').read_bytes().split(b'<script>\n', 1)
     with out.open('wb') as output:
-        output.write(before[:-1]+b'<script type="application/x-film-files">{')
-        first=True
+        output.write(before)
         for key in sorted(manifest['files']):
-            if key=='index.html':continue
-            if not first:output.write(b',')
-            first=False
-            mime=mimetypes.guess_type(key)[0] or 'application/octet-stream'
-            if key.endswith('.wav'):mime='audio/wav'
-            output.write(json.dumps(key).encode()+b':['+json.dumps(mime).encode()+b',"')
-            output.write(base64.b64encode((dest/key).read_bytes()))
-            output.write(b'"]')
-        output.write(b'}</script>\n'+marker+after)
-    if hashlib.sha256(out.read_bytes()).hexdigest()!=manifest['standaloneSHA256']:
-        raise ValueError('Standalone byte checksum does not match the reviewed film')
+            if key == 'index.html':
+                continue
+            mime = 'audio/wav' if key.endswith('.wav') else mimetypes.guess_type(key)[0] or 'application/octet-stream'
+            header = f'<script type="application/x-film-part" data-path="{escape(key, quote=True)}" data-mime="{escape(mime, quote=True)}"'.encode()
+            if not (dest/key).stat().st_size:
+                output.write(header + b'></script>\n')
+            with (dest/key).open('rb') as asset:
+                while chunk := asset.read(192 * 1024):
+                    output.write(header + b'>')
+                    output.write(base64.b64encode(chunk))
+                    output.write(b'</script>\n')
+        output.write(b'<script>\n' + after)
+    if verify:
+        with out.open('rb') as built:
+            digest = hashlib.sha256()
+            for block in iter(lambda: built.read(1024 * 1024), b''):
+                digest.update(block)
+            if digest.hexdigest() != manifest['standaloneSHA256']:
+                raise ValueError('Standalone checksum differs from the reviewed film')
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);g=parser.add_mutually_exclusive_group();g.add_argument('--unpack',type=Path);g.add_argument('--standalone',type=Path);parser.add_argument('--port',type=int,default=8000);parser.add_argument('--serve-directory',type=Path);args=parser.parse_args()

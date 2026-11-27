@@ -50,20 +50,44 @@ function pathFrom(base, relative) {
   if (path.origin !== 'https://film.local') throw Error('External media path: ' + relative);
   return decodeURIComponent(path.pathname.slice(1));
 }
-let packedDirectory;
+// Each embedded asset consists of independently decodable parts. A cold open
+// can load a chapter without copying the entire movie into a JSON string.
+const embedded = new Map();
+const legacyTag = document.querySelector('script[type="application/x-film-files"]');
+const legacyAssets = legacyTag ? JSON.parse(legacyTag.textContent) : null;
+legacyTag?.remove();
+for (const part of document.querySelectorAll('script[type="application/x-film-part"]')) {
+  const key = part.dataset.path;
+  if (!embedded.has(key)) embedded.set(key, []);
+  embedded.get(key).push(part);
+}
 function src(path) {
-  const item=packedDirectory?.[path];
-  if(item){
-    const [mime,b64]=item;
-    const chunks=[];
-    for(let i=0;i<b64.length;i+=65536){
-      const binary=atob(b64.slice(i,i+65536));
-      const bytes=new Uint8Array(binary.length);
-      for(let k=0;k<binary.length;k++)bytes[k]=binary.charCodeAt(k);
+  const parts = embedded.get(path);
+  if (!parts && legacyAssets?.[path]) {
+    const [type, data] = legacyAssets[path];
+    const chunks = [];
+    for (let i = 0; i < data.length; i += 65536) {
+      const binary = atob(data.slice(i, i + 65536));
+      const bytes = new Uint8Array(binary.length);
+      for (let k = 0; k < binary.length; k++) bytes[k] = binary.charCodeAt(k);
       chunks.push(bytes);
     }
-    fileURLs.set(path,URL.createObjectURL(new Blob(chunks,{type:mime})));
-    delete packedDirectory[path];
+    fileURLs.set(path, URL.createObjectURL(new Blob(chunks, {type})));
+    delete legacyAssets[path];
+  }
+  if (parts) {
+    const mime = parts[0].dataset.mime;
+    const bytes = parts.map(part => {
+      const text = part.textContent;
+      part.remove();
+      if (Uint8Array.fromBase64) return Uint8Array.fromBase64(text);
+      const binary = atob(text);
+      const data = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) data[i] = binary.charCodeAt(i);
+      return data;
+    });
+    fileURLs.set(path, URL.createObjectURL(new Blob(bytes, {type: mime})));
+    embedded.delete(path);
   }
   return fileURLs.get(path) || new URL(path.split('/').map(encodeURIComponent).join('/'), location.href).href;
 }
@@ -802,6 +826,7 @@ async function init() {
       };
     if (!Number.isFinite(u.duration) || u.duration <= 0) throw Error(u.id + ' invalid duration');
     u.el = make(film, u.id, 'unit');
+    setVisible(u.el, false);
     u.render = await buildNode(u, u.root, u.el);
     for (const ref of u.references) if (!u.ids.has(ref)) throw Error(u.id + ' missing scene reference ' + ref);
     units.push(u);
@@ -854,10 +879,7 @@ window.filmPlayer = {
     return playing;
   }
 };
-const packed = document.querySelector('script[type="application/x-film-files"]');
-if (packed) {
-  packedDirectory = JSON.parse(packed.textContent);
-  packed.remove();
+if (embedded.size || legacyAssets) {
   init().catch(fail);
 } else if (location.protocol === 'file:') button('Open project folder', () => document.querySelector('#folder').click());else init().catch(fail);
 </script></body></html>
