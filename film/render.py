@@ -24,9 +24,39 @@ FPS = 24
 CHUNK = 64
 SEEK = """async t => {
   filmPlayer.seek(t);
-  await Promise.all([...document.querySelectorAll('video')].filter(v => v.seeking)
-    .map(v => new Promise(resolve => v.addEventListener('seeked', resolve, {once:true}))));
+  const videos = [...document.querySelectorAll('video')].filter(v => v.offsetWidth && v.offsetHeight);
+  await Promise.all(videos.map(async v => {
+    if (v.seeking) {
+      await new Promise(ok => {
+        const ready = () => { v.removeEventListener('seeked', ready); ok(); };
+        v.addEventListener('seeked', ready, {once:true});
+        if (!v.seeking) ready();
+      });
+    }
+    if (v.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+      await new Promise(ok => v.addEventListener('loadeddata',ok,{once:true}));
+    }
+    // A cold compositor surface can still be empty after “seeked”. Copy the
+    // actual decoded displayed frame into this chapter's video plane first.
+    // The canvas inherits all scene transforms, masks, opacity, and stacking.
+    let canvas = v.__captureSurface;
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.setAttribute('aria-hidden','true');
+      Object.assign(canvas.style, {position:'absolute',inset:'0',width:'100%',height:'100%',pointerEvents:'none'});
+      v.insertAdjacentElement('afterend',canvas);
+      v.__captureSurface = canvas;
+      v.style.visibility = 'hidden';
+    }
+    if (canvas.width !== v.videoWidth || canvas.height !== v.videoHeight) {
+      canvas.width = v.videoWidth;
+      canvas.height = v.videoHeight;
+    }
+    if (!canvas.width || !canvas.height) throw Error('Video has no decoded picture at '+t);
+    canvas.getContext('2d',{alpha:false}).drawImage(v,0,0);
+  }));
   await Promise.all([...document.images].filter(im => im.src && !im.complete).map(im => im.decode()));
+  await new Promise(ok => requestAnimationFrame(() => requestAnimationFrame(ok)));
 }"""
 
 def probe(path):
