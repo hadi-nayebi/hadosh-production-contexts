@@ -55,15 +55,31 @@ def unpack(dest):
         if hashlib.sha256((dest/name).read_bytes()).hexdigest()!=sig:raise ValueError('Damaged source: '+name)
     return manifest
 
-def pack_single(dest,out,manifest):
-    files={}
-    for key in manifest['files']:
-        if key=='index.html':continue
-        f=dest/key
-        files[key]=[mimetypes.guess_type(f.name)[0] or 'application/octet-stream',base64.b64encode(f.read_bytes()).decode('ascii')]
-    html=(dest/'index.html').read_text();marker='<script>\n';point=html.index(marker)
-    block='<script type="application/x-film-files">'+json.dumps(files,separators=(',',':'),ensure_ascii=True)+'</script>\n'
-    with out.open('x',encoding='utf-8') as stream:stream.write(html[:point]+block+html[point:])
+def pack_single(dest,out,manifest,verify=True):
+    from html import escape
+    before, after = (dest/'index.html').read_bytes().split(b'<script>\n', 1)
+    with out.open('wb') as output:
+        output.write(before)
+        for key in sorted(manifest['files']):
+            if key == 'index.html':
+                continue
+            mime = 'audio/wav' if key.endswith('.wav') else mimetypes.guess_type(key)[0] or 'application/octet-stream'
+            header = f'<script type="application/x-film-part" data-path="{escape(key, quote=True)}" data-mime="{escape(mime, quote=True)}"'.encode()
+            if not (dest/key).stat().st_size:
+                output.write(header + b'></script>\n')
+            with (dest/key).open('rb') as asset:
+                while chunk := asset.read(192 * 1024):
+                    output.write(header + b'>')
+                    output.write(base64.b64encode(chunk))
+                    output.write(b'</script>\n')
+        output.write(b'<script>\n' + after)
+    if verify:
+        with out.open('rb') as built:
+            digest = hashlib.sha256()
+            for block in iter(lambda: built.read(1024 * 1024), b''):
+                digest.update(block)
+            if digest.hexdigest() != manifest['standaloneSHA256']:
+                raise ValueError('Standalone checksum differs from the reviewed film')
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);g=parser.add_mutually_exclusive_group();g.add_argument('--unpack',type=Path);g.add_argument('--standalone',type=Path);parser.add_argument('--port',type=int,default=8000);parser.add_argument('--serve-directory',type=Path);args=parser.parse_args()
