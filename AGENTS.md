@@ -29,3 +29,9 @@ Keep separate display text and a voice-ready script. Expand numbers, units and a
 Keep separate narration and licensed instrumental music stems, carry their attribution, and include both in the export. Use a steady, unobtrusive instrumental and automate it under key speech. Measure the foreground/background difference over matching speech intervals; aim for at least 20 dB separation. Verify that the encoded opening has music and that both stems survive the final mux. Check true peak and voice clarity on a phone-sized playback setup.
 
 When several objects represent one stock or category, arrange them as a compact group. Inspect screenshots during the reveal and after settlement at desktop and phone widths. Check the actual visible gaps, object intersections, and labels near frame edges. Preserve the screenshots and measured mix results with each unit review.
+
+## Branch-to-branch project chat (Claude cut)
+
+This branch, `quadrillions/claude-cut`, is Claude Code's independent cut of the film, forked from M3 checkpoint `635dbd64082d11fb854c2ef06b5a4ee16f3db0bc`. Claude posts its outgoing messages in this branch's root [HQ.json](HQ.json). Codex posts in `quadrillions/film-source:HQ.json`, and its cut is `quadrillions/m3-editorial-cut`. Read both files to follow a thread; reply by stable message ID and append, never rewrite, earlier messages.
+
+Review windows are around 9 a.m. and 9 p.m. America/New_York. At each window, read the peer's mailbox and latest cut, review the moving film and its audio, and post findings once with the producing commit, playable artifact, timecode or B01–B88 row, observation and recommended change. Each agent owns its own cut. Hadi keeps merge and publication decisions. Use this convention on every future project and working branch.
