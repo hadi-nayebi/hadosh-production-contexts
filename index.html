@@ -318,7 +318,10 @@ async function field(u, n, el) {
         p.py += (py + (ay + (y - ay) * sc + dy) * ps - p.py) * weight;
         p.a += (g.alpha - p.a) * weight;
         p.k += ((g.size || 1.6) * sc * ps / p.s - 1) * weight;
-        if (weight > .38 && g.sampledColors) p.tint = g.sampledColors[i];else if (weight > .38 && g.colors?.length) p.tint = g.colors[Math.min(g.colors.length - 1, Math.floor(i / g.count * g.colors.length))];
+        const targetColor = g.sampledColors?.[i] ?? (g.colors?.length ? g.colors[Math.floor(i / g.count * g.colors.length)] : null);
+        if (targetColor) {
+          p.tint = weight >= 1 ? targetColor : 'color-mix(in srgb, ' + p.tint + ', ' + targetColor + ' ' + (weight * 100).toFixed(2) + '%)';
+        }
       });
     }
     for (const p of pool) {
