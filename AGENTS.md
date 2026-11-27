@@ -1,28 +1,31 @@
-# Quadrillion — clean motion-film branch
+# Quadrillions film
 
-## Scope
-This branch owns the new four-part “3.2 Quadrillion Tokens” HTML motion film. Its runtime is one `index.html`; supporting plans, rights notices and any future approved audio live in `assets/`. Opening the entry must present the film at the full available viewport. Controls appear while paused.
+This branch builds the November Unit One film from the supplied Google Drive production batch. Use a cloud workspace and the GitHub connection. Hadi's personal laptop is outside this workflow. Keep remote commands noninteractive and bounded. Record an executable checkpoint on this branch after verifying each major increment so another session can resume.
 
-The source lineage is preserved in Git. The existing `dashboard` branch and its published film are comparison evidence, not implementation dependencies. Do not copy its renderer, media, fonts or narration into this rebuild. The final 25-line transcript is the retained editorial source.
+## Edit and preview
 
-## Controlling creative direction
-Begin in a true void. Reveal “The river overflowed its banks.” as a sentence being extended. Pull back while language appears faster, reduce words into marks, and choreograph one coherent murmuration. A foreground group forms the complete “3.2 quadrillion tokens” claim around two seconds, then settles for reading. The same sentence returns in the attention explanation.
+Open the folder with a loopback web server, for example `python3 -m http.server 8000 --bind 127.0.0.1`, and open `http://127.0.0.1:8000/`. A direct double-click on index.html offers a project-folder chooser in browsers that support directory selection. Select the folder that contains video.json. Tap the play icon for sound. Tap the film to pause, Space to resume, Home to restart and the arrow keys to seek five seconds.
 
-The film contains Scale; Work → Era; Origin; Invitation. Develop all four parts to comparable craft. A highly polished opening does not compensate for a weaker later part. Competition-level work and a major improvement over the baseline are the acceptance objective; an agent’s self-rating is not acceptance.
+Keep the player reusable. The ordered composition lives in video.json. Each unit owns its own runtime JSON, local visual assets and original storyboard. A unit can reference the one shared narration WAV. Edit the JSON or a mounted image to change content, then refresh. Projects with pending units list those entries without a source. Set the review list to the units being previewed or omit it to play every sourced unit in order.
 
-## Recorded production contract
-`assets/production-plan.json` is the structured specification. Its readable counterpart is `assets/production-plan.md`. The plan covers every passage and every interval no longer than two seconds, with finer opening intervals. Preserve intent, before/action/after, continuity, camera and observable pass/fail criteria.
+## Source and playback evidence
 
-Keep the embedded plan in `index.html` byte-equivalent in parsed data to the JSON. The performance timeline maps each passage to immutable animation-time anchors. Narration becomes the master clock when a fresh asset and verified alignment exist. Do not silently reuse old audio, system speech or a placeholder voice. Pending narration means the full film is not finished.
+Use the original Unit One storyboard and the November asset index. The latest two-part production package supplies 63 selected PNG roles and their comparisons. The mounted WebP artwork comes from those PNGs. Its source identity and mounting envelope are recorded in the unit asset declarations. Preserve the published voice master. Apply approved pronunciation and pacing edits to a unit-local narration stem. The seven-second opening may carry instrumental music before narration enters. Keep the entire seventh line and the documented silent boundary before the eighth.
 
-## Craft and evidence
-Evaluate storytelling, pacing, visual coherence, composition, typography, motion quality, explanatory clarity, narration and sound, technical playback, and balanced completeness. Record findings for every part. Keep planned, implemented, observed and accepted distinct.
+Each unit, scene, group, item and repeated instance needs its own stable browser div. Keep audio and clips in the same authored time system as the picture. Persistent objects retain their identity across scenes. Compare the moving film at desktop and phone widths, capture and check browser audio against the master, and test a cold open, pause, replay, seeking, asset edits, and independent changes to order and styling. Source review alone establishes no playback result.
 
-Inspect actual moving playback and representative full-size frames, including portrait layouts, critical boundaries, opening formation and the ending. Test play/pause, seek, restart, keyboard controls and resize. Preserve one animation scheduler; visible opening glyphs and particle masks use the same geometry.
+The baseline branch, earlier film PR, archived art and other units remain separate. Merge, publication, MP4 and fresh narration require their own authorization.
 
-Verify the transcript exactly. Google is the reported scope, not the whole industry. Processing includes repeated passes, not solely unique new text. The public-text number is an estimate of usable stock. Use sourced endpoints and an honest common measure for comparisons. Attention links are illustrative, not measured weights. Tools execute outside the model.
+## Unit data
 
-## Change boundaries
-Use focused commits and a review PR against the clean baseline branch. Do not merge this branch into the shared dashboard: that would replace unrelated project files. Merge, publication and changes to other project lineages require their own authorization. Do not edit `CLAUDE.md` or `.claude/`.
+Coordinates use the reference frame in video.json. A `box` is left, top, width, height. Nested boxes are local to their parent. The `time` interval includes the start and excludes the end. Times can be unit seconds, a cue name, or a pair containing a cue and a seconds offset. Tracks contain time/value pairs with optional easing. The default interpolation is smooth. Use `linear` or `hold` as the third value of the destination key to change that segment. Change sibling order or set wrapper CSS `zIndex` to change overlap. Set `contentCSS` to style the image within its own wrapper.
 
-The current build is a production review, not a finished or award-qualified film. Fresh narration, final timing and perceptual acceptance must be evidenced before changing that status.
+The shot list identifies the storyboard-to-runtime mapping. Objects continuing across shots live under a persistent scene or group. A scene's references name those objects without remounting them. `stage-camera` applies shared projection tracks to fixed world anchors. A grid declares its instance shape, floor slots, row/column stagger and optional keyed overrides. A seeded field declares its palette, size, trajectories and attraction targets. Its numbered instances and the rack IDs remain inspectable when paused or seeking.
+
+## Narration, music and visual grouping for every unit
+
+Keep separate display text and a voice-ready script. Expand numbers, units and abbreviations into their intended spoken forms. For example, display “3.2 quadrillion” and direct the reading as “three point two QUADRILLION tokens.” Give “three” a complete onset and stress “quadrillion.” For the selected engine, use supported emphasis, breaks or pronunciation controls. Test capitals and punctuation on that voice. Audition the actual take and the encoded mix at normal speed, including the first syllable, independently of the visible title. If no listening review is available, record it as pending. Revise and retest unclear takes before calling them approved.
+
+Keep separate narration and licensed instrumental music stems, carry their attribution, and include both in the export. Use a steady, unobtrusive instrumental and automate it under key speech. Measure the foreground/background difference over matching speech intervals; aim for at least 20 dB separation. Verify that the encoded opening has music and that both stems survive the final mux. Check true peak and voice clarity on a phone-sized playback setup.
+
+When several objects represent one stock or category, arrange them as a compact group. Inspect screenshots during the reveal and after settlement at desktop and phone widths. Check the actual visible gaps, object intersections, and labels near frame edges. Preserve the screenshots and measured mix results with each unit review.

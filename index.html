@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Film player</title>
+<style>
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;background:#03060b;color:white;font-family:system-ui,sans-serif;overflow:hidden}
+#screen{position:absolute;inset:0;overflow:hidden;touch-action:manipulation}
+#film{position:absolute;left:50%;top:50%;overflow:hidden;transform-origin:0 0;background:#020409;isolation:isolate}
+.node{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none}
+.node>img{width:100%;height:100%;display:block;object-fit:fill;user-select:none}
+#action{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);appearance:none;cursor:pointer;border:1px solid #e7f2ff85;background:#08121bda;color:#fff;border-radius:50%;width:58px;height:58px;display:grid;place-items:center;box-shadow:0 2px 22px #0007}
+#action[hidden],#message[hidden]{display:none}#action:focus-visible{outline:2px solid #8ee2ff;outline-offset:5px}
+.play{width:0;height:0;border-left:16px solid #f8fbff;border-top:10px solid transparent;border-bottom:10px solid transparent;transform:translateX(2px)}
+#action.named{border-radius:25px;width:auto;height:auto;padding:12px 24px;white-space:nowrap;font:600 15px system-ui}
+#message{position:absolute;left:10%;right:10%;bottom:10%;text-align:center;color:#fff;background:#111b;padding:12px}#folder{display:none}
+</style></head><body><main id="screen" aria-label="Film"><div id="film"></div><button id="action" hidden aria-label="Play"><span class="play"></span></button><input id="folder" type="file" webkitdirectory multiple><output id="message" hidden></output></main>
+<script>
+'use strict';
+
+const film = document.querySelector('#film'),
+  screenEl = document.querySelector('#screen'),
+  action = document.querySelector('#action'),
+  message = document.querySelector('#message');
+const fileURLs = new Map(),
+  mediaCache = new Map(),
+  units = [],
+  audioClips = [];
+let manifest,
+  viewport,
+  elapsed = 0,
+  origin = 0,
+  duration = 0,
+  playing = false,
+  ready = false,
+  frameRequest = 0;
+const clamp = v => Math.max(0, Math.min(1, v));
+const ease = (v, kind = 'smooth') => kind === 'linear' ? v : kind === 'hold' ? v === 1 ? 1 : 0 : v * v * (3 - 2 * v);
+function curve(track, t, fallback = 0) {
+  if (typeof track === 'number') return track;
+  if (!track?.length) return fallback;
+  if (t <= track[0][0]) return track[0][1];
+  for (let i = 1; i < track.length; i++) {
+    const [end, b, mode] = track[i],
+      [start, a] = track[i - 1];
+    if (t <= end) return a + (b - a) * ease(clamp((t - start) / (end - start)), mode);
+  }
+  return track[track.length - 1][1];
+}
+function pathFrom(base, relative) {
+  const path = new URL(relative, new URL(base, 'https://film.local/'));
+  if (path.origin !== 'https://film.local') throw Error('External media path: ' + relative);
+  return decodeURIComponent(path.pathname.slice(1));
+}
+function src(path) {
+  return fileURLs.get(path) || new URL(path.split('/').map(encodeURIComponent).join('/'), location.href).href;
+}
+async function json(path) {
+  const r = await fetch(src(path));
+  if (!r.ok) throw Error(path + ' (' + r.status + ')');
+  return r.json();
+}
+function fail(error) {
+  stop();
+  action.hidden = true;
+  message.hidden = false;
+  message.textContent = String(error.message || error);
+  console.error(error);
+}
+function button(label, fn, icon = false) {
+  action.className = icon ? '' : 'named';
+  action.replaceChildren();
+  if (icon) {
+    const mark = document.createElement('span');
+    mark.className = 'play';
+    action.append(mark);
+  } else action.textContent = label;
+  action.setAttribute('aria-label', label);
+  action.title = label;
+  action.onclick = e => {
+    e.stopPropagation();
+    fn();
+  };
+  action.hidden = false;
+}
+function make(parent, id, klass = '') {
+  const el = document.createElement('div');
+  el.id = id;
+  el.className = 'node ' + klass;
+  parent.append(el);
+  return el;
+}
+function random(seed) {
+  return () => {
+    seed = Math.imul(seed, 1664525) + 1013904223 >>> 0;
+    return seed / 4294967296;
+  };
+}
+function resize() {
+  if (!viewport) return;
+  const [w, h] = viewport,
+    s = Math.min(screenEl.clientWidth / w, screenEl.clientHeight / h);
+  Object.assign(film.style, {
+    width: w + 'px',
+    height: h + 'px',
+    transform: 'scale(' + s + ') translate(-50%,-50%)'
+  });
+}
+new ResizeObserver(resize).observe(screenEl);
+function asset(u, id) {
+  const a = u.assets[id];
+  if (!a) throw Error(u.id + ' missing asset ' + id);
+  return a;
+}
+function acquire(u, id) {
+  const a = asset(u, id);
+  if (!mediaCache.has(a.path)) {
+    const img = new Image();
+    img.src = src(a.path);
+    mediaCache.set(a.path, img.decode().then(() => img).catch(() => {
+      throw Error('Unreadable image ' + a.path);
+    }));
+  }
+  return mediaCache.get(a.path);
+}
+function register(spec, path) {
+  return Object.fromEntries(Object.entries(spec || {}).map(([id, a]) => [id, {
+    ...a,
+    path: pathFrom(path, a.src)
+  }]));
+}
+function clock(value, u, active = new Set()) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  const [key, offset = 0] = Array.isArray(value) ? value : [value, 0];
+  if (!Object.prototype.hasOwnProperty.call(u.cues, key) || active.has(key) || typeof offset !== 'number') throw Error(u.id + ' unresolved/cyclic cue ' + key);
+  return clock(u.cues[key], u, new Set([...active, key])) + offset;
+}
+function track(value, u) {
+  if (value && typeof value === 'object' && !Array.isArray(value) && value.use) {
+    if (!u.tracks || !u.tracks[value.use]) throw Error(u.id + ' missing shared track ' + value.use);
+    return track(u.tracks[value.use], u);
+  }
+  if (!Array.isArray(value)) return value;
+  let prev = -Infinity;
+  return value.map(([when, v, mode]) => {
+    const t = clock(when, u);
+    if (t <= prev) throw Error(u.id + ' keyframes out of order at ' + when);
+    if (!Number.isFinite(v)) throw Error(u.id + ' invalid keyframe value');
+    prev = t;
+    return [t, v, mode];
+  });
+}
+function period(spec, u) {
+  const range = (spec || [0, u.duration]).map(t => clock(t, u));
+  if (range.length !== 2 || range[1] <= range[0]) throw Error(u.id + ' invalid interval ' + JSON.stringify(spec));
+  return range;
+}
+function setVisible(el, on) {
+  if (el._on !== on) {
+    el.style.display = on ? '' : 'none';
+    el._on = on;
+  }
+}
+const lastStyle = (el, k, value) => {
+  if (el._css?.[k] === value) return;
+  (el._css || (el._css = {}))[k] = value;
+  el.style[k] = value;
+};
+function maskPoints(img, count, box, rand, channel) {
+  const canvas = document.createElement('canvas'),
+    w = canvas.width = Math.min(img.naturalWidth, 550),
+    h = canvas.height = Math.max(1, Math.round(w * img.naturalHeight / img.naturalWidth));
+  const ctx = canvas.getContext('2d', {
+    willReadFrequently: true
+  });
+  ctx.drawImage(img, 0, 0, w, h);
+  const data = ctx.getImageData(0, 0, w, h).data,
+    marks = [];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let j = 4 * (y * w + x);
+    if (data[j + 3] > 110 && (!channel || Math.max(data[j], data[j + 1], data[j + 2]) > 80)) marks.push([x, y]);
+  }
+  if (!marks.length) throw Error('Empty attraction mask');
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    const [x, y] = marks[Math.min(marks.length - 1, Math.floor((i + rand()) * marks.length / count))];
+    result.push([box[0] + x / w * box[2], box[1] + y / h * box[3]]);
+  }
+  return result;
+}
+function morton(x, y) {
+  let value = 0;
+  for (let i = 0; i < 10; i++) {
+    value |= (x >> i & 1) << i * 2;
+    value |= (y >> i & 1) << i * 2 + 1;
+  }
+  return value;
+}
+async function field(u, n, el) {
+  const rand = random(n.seed),
+    [w, h] = viewport,
+    pool = [],
+    groups = [];
+  for (let i = 0; i < n.count; i++) {
+    const dot = make(el, el.id + '-' + String(i + 1).padStart(4, '0'), 'particle'),
+      z = Math.pow(rand(), 1.6),
+      x = rand() * w,
+      y = Math.pow(rand(), n.verticalBias || 1) * h;
+    const config = n.overrides?.[i + 1] || {},
+      palette = config.color || n.palette[Math.floor(rand() * n.palette.length)],
+      s = config.radius ?? n.radius[0] + z * n.radius[1];
+    Object.assign(dot.style, {
+      width: s + 'px',
+      height: s + 'px',
+      borderRadius: '50%',
+      background: palette,
+      transformOrigin: '50% 50%'
+    }, n.instanceCSS || {}, config.css || {});
+    pool.push({
+      dot,
+      x: x + (config.dx || 0),
+      y: y + (config.dy || 0),
+      z,
+      s,
+      phase: rand() * 6.283,
+      speed: .28 + rand() * .45,
+      color: palette,
+      alpha: .16 + z * .65
+    });
+  }
+  for (const g of n.targets || []) {
+    const members = pool.slice(g.from, g.from + g.count);
+    if (members.length !== g.count) throw Error(el.id + ' invalid target cohort');
+    let points;
+    if (g.mask) {
+      points = maskPoints(await acquire(u, g.mask), g.count, g.box, rand, true);
+    } else {
+      const shape = g.path,
+        seg = shape.slice(1).map((p, i) => Math.hypot(p[0] - shape[i][0], p[1] - shape[i][1])),
+        len = seg.reduce((a, b) => a + b);
+      points = members.map((_, i) => {
+        let pos = len * i / (members.length - 1),
+          j = 0;
+        while (j < seg.length - 1 && pos > seg[j]) pos -= seg[j++];
+        const a = shape[j],
+          b = shape[j + 1],
+          f = pos / seg[j];
+        return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+      });
+    }
+    if (g.home) {
+      const [hx, hy, hw, hh] = g.home;
+      for (const p of members) {
+        p.x = hx + p.x / w * hw;
+        p.y = hy + p.y / h * hh;
+      }
+    }
+    const order = (x, y) => morton(Math.max(0, Math.min(1023, Math.floor(x / w * 1023))), Math.max(0, Math.min(1023, Math.floor(y / h * 1023))));
+    members.sort((a, b) => order(a.x, a.y) - order(b.x, b.y));
+    points.sort((a, b) => order(...a) - order(...b));
+    let sampledColors = null;
+    if (g.colorsFrom) {
+      const pic = await acquire(u, g.colorsFrom),
+        cv = document.createElement('canvas');
+      cv.width = pic.naturalWidth;
+      cv.height = pic.naturalHeight;
+      const ctx = cv.getContext('2d');
+      ctx.drawImage(pic, 0, 0);
+      const rgba = ctx.getImageData(0, 0, cv.width, cv.height).data;
+      sampledColors = points.map(([x, y]) => {
+        const ux = Math.min(cv.width - 1, Math.max(0, Math.floor((x - g.box[0]) / g.box[2] * cv.width))),
+          uy = Math.min(cv.height - 1, Math.max(0, Math.floor((y - g.box[1]) / g.box[3] * cv.height))),
+          i = 4 * (uy * cv.width + ux);
+        if (rgba[i + 3] > 120) return 'rgb(' + rgba[i] + ',' + rgba[i + 1] + ',' + rgba[i + 2] + ')';
+        const fx = ux / cv.width,
+          fy = uy / cv.height;
+        return fy < .25 ? '#f14934' : fx > .55 ? '#468aff' : fy > .59 ? '#55b96c' : '#f8bc3b';
+      });
+    }
+    groups.push({
+      ...g,
+      sampledColors,
+      weight: track(g.weight, u),
+      project: g.project ? Object.fromEntries(Object.entries(g.project).map(([k, v]) => [k, track(v, u)])) : null,
+      shiftX: track(g.shiftX, u),
+      shiftY: track(g.shiftY, u),
+      scale: track(g.scale, u),
+      members,
+      points
+    });
+  }
+  const base = track(n.opacity, u),
+    zoom = track(n.depthTravel, u),
+    speed = n.drift || [10, 7],
+    bg = track(n.ambient, u);
+  return t => {
+    const opacity = curve(base, t, 1),
+      travel = curve(zoom, t, 0),
+      ambient = curve(bg, t, 1);
+    for (const p of pool) {
+      p.px = p.x + Math.sin(t * p.speed + p.phase) * speed[0] * (.3 + p.z) + (p.x - w / 2) * travel * p.z;
+      p.py = p.y + Math.cos(t * p.speed * .7 + p.phase) * speed[1] * (.3 + p.z) + (p.y - h * .46) * travel * p.z;
+      p.a = p.alpha * opacity * ambient;
+      p.k = 1;
+      p.tint = p.color;
+    }
+    for (const g of groups) {
+      const weight = curve(g.weight, t);
+      if (weight <= 0) continue;
+      const dx = curve(g.shiftX, t),
+        dy = curve(g.shiftY, t),
+        sc = curve(g.scale, t, 1),
+        ax = g.anchor?.[0] || 0,
+        ay = g.anchor?.[1] || 0;
+      const ps = g.project ? curve(g.project.scale, t, 1) : 1,
+        px = g.project ? curve(g.project.x, t) : 0,
+        py = g.project ? curve(g.project.y, t) : 0;
+      g.members.forEach((p, i) => {
+        const [x, y] = g.points[i];
+        p.px += (px + (ax + (x - ax) * sc + dx) * ps - p.px) * weight;
+        p.py += (py + (ay + (y - ay) * sc + dy) * ps - p.py) * weight;
+        p.a += (g.alpha - p.a) * weight;
+        p.k += ((g.size || 1.6) * sc * ps / p.s - 1) * weight;
+        const targetColor = g.sampledColors?.[i] ?? (g.colors?.length ? g.colors[Math.floor(i / g.count * g.colors.length)] : null);
+        if (targetColor) {
+          p.tint = weight >= 1 ? targetColor : 'color-mix(in srgb, ' + p.tint + ', ' + targetColor + ' ' + (weight * 100).toFixed(2) + '%)';
+        }
+      });
+    }
+    for (const p of pool) {
+      lastStyle(p.dot, 'transform', 'translate(' + p.px.toFixed(1) + 'px,' + p.py.toFixed(1) + 'px) scale(' + p.k.toFixed(2) + ')');
+      lastStyle(p.dot, 'opacity', p.a.toFixed(2));
+      lastStyle(p.dot, 'background', p.tint);
+    }
+  };
+}
+async function grid(u, n, el) {
+  const g = n.layout,
+    img = await acquire(u, n.asset),
+    cells = [],
+    count = g.rows * g.columns;
+  const onset = clock(g.start, u),
+    end = clock(g.end, u),
+    span = end - onset;
+  const intervals = (g.pulses || []).map(p => [clock(p[0], u), clock(p[1], u)]);
+  const slit = n.emissionMask ? (await acquire(u, n.emissionMask)).src : null;
+  for (let r = g.rows - 1; r >= 0; r--) for (let c = 0; c < g.columns; c++) {
+    const index = r * g.columns + c,
+      id = n.prefix + String(index + 1).padStart(n.digits || 3, '0'),
+      cfg = n.overrides?.[id] || {};
+    if (u.ids.has(id)) throw Error(u.id + ' duplicate ' + id);
+    u.ids.add(id);
+    const e = make(el, u.id + '--' + id, 'instance');
+    e.dataset.item = id;
+    e.dataset.row = r;
+    e.dataset.column = c;
+    const perspective = g.focus / (g.focus + r * g.depthPitch),
+      width = g.width * perspective,
+      height = g.height * perspective;
+    const center = g.vanishX + (g.centerX + (c - (g.columns - 1) / 2) * g.pitch - g.vanishX) * perspective;
+    const foot = g.horizon + (g.frontY - g.horizon) * perspective,
+      x = center - width / 2,
+      y = foot - height;
+    const delay = g.rowDelay * (g.rows - 1 - r) + g.cellDelay * ((7 * c + 3 * r) % g.columns);
+    const start = onset + span * delay,
+      land = start + span * (g.fallTime + g.variation * ((r + 2 * c) % 6));
+    Object.assign(e.style, {
+      width: width + 'px',
+      height: height + 'px',
+      zIndex: String(g.rows - r)
+    }, n.instanceCSS || {}, cfg.css || {});
+    const art = document.createElement('img');
+    art.src = img.src;
+    art.alt = '';
+    e.append(art);
+    let light = null;
+    if (slit) {
+      light = make(e, e.id + '-emission', 'emission');
+      Object.assign(light.style, {
+        left: '18%',
+        top: '10%',
+        width: '51%',
+        height: '76%',
+        background: '#58ddff',
+        webkitMaskImage: 'url(' + JSON.stringify(slit) + ')',
+        webkitMaskSize: '100% 100%',
+        opacity: '0',
+        mixBlendMode: 'screen'
+      });
+    }
+    if (r === 0 && g.reflection) {
+      const reflection = art.cloneNode();
+      Object.assign(reflection.style, {
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        height: '54%',
+        maxWidth: '100%',
+        transform: 'scaleY(-1)',
+        opacity: '.22',
+        maskImage: 'linear-gradient(to top, black, transparent 90%)'
+      });
+      e.append(reflection);
+    }
+    let wash = null;
+    if (light) {
+      wash = make(e, e.id + '-blade-light', 'emission');
+      Object.assign(wash.style, {
+        left: '17%',
+        top: '14%',
+        width: '45%',
+        height: '65%',
+        background: 'repeating-linear-gradient(0deg,transparent 0 8%,#85f3ff 9% 13%,transparent 14% 18%)',
+        opacity: '0',
+        mixBlendMode: 'screen'
+      });
+    }
+    cells.push({
+      e,
+      light,
+      wash,
+      x: x + (cfg.dx || 0),
+      y: y + (cfg.dy || 0),
+      start,
+      land,
+      r,
+      c,
+      drop: g.drop * perspective * (1 + (r * 3 + c) % 6 * .03),
+      period: g.pulsePeriod || 1
+    });
+  }
+  return t => {
+    for (const cell of cells) {
+      const {
+        e,
+        start,
+        land,
+        x,
+        y,
+        drop,
+        light,
+        r,
+        c
+      } = cell;
+      if (t < start) {
+        setVisible(e, false);
+        continue;
+      }
+      setVisible(e, true);
+      const f = clamp((t - start) / (land - start)),
+        ty = y - drop * (1 - f * f * (3 - 2 * f));
+      lastStyle(e, 'transform', 'translate(' + x.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)');
+      lastStyle(e, 'opacity', Math.min(1, f * 6).toFixed(3));
+      if (light) {
+        let power = 0,
+          phase = 0;
+        for (const [a, b] of intervals) {
+          if (t < a || t >= b) continue;
+          phase = ((t - a) / cell.period - c * .033 - r * .019 + 12) % 1;
+          power = Math.pow(Math.max(0, Math.sin(phase * Math.PI * 2)), 5) * .94 * clamp((t - a) * 5) * clamp((b - t) * 5);
+        }
+        lastStyle(light, 'opacity', power.toFixed(2));
+        lastStyle(light, 'background', phase < .35 ? '#71e4ff' : '#c895ff');
+        lastStyle(cell.wash, 'opacity', power.toFixed(2));
+        lastStyle(cell.wash, 'filter', 'hue-rotate(' + Math.round(c % 4 * 43) + 'deg)');
+        if (intervals.length) lastStyle(e, 'filter', 'brightness(' + ((g.exposure || 1) + power * 1.7).toFixed(2) + ') saturate(1.25)');
+      }
+    }
+  };
+}
+async function buildNode(u, n, parent) {
+  if (!n.id || u.ids.has(n.id)) throw Error(u.id + ' duplicate or missing ID ' + n.id);
+  u.ids.add(n.id);
+  const el = make(parent, u.id + '--' + n.id, n.type || 'group');
+  el.dataset.item = n.id;
+  const bounds = period(n.time, u),
+    [x, y, w, h] = n.box || [0, 0, ...viewport],
+    styles = n.css || {},
+    anchor = n.origin || [0, 0];
+  Object.assign(el.style, {
+    width: w + 'px',
+    height: h + 'px',
+    transformOrigin: anchor[0] * 100 + '% ' + anchor[1] * 100 + '%'
+  }, styles);
+  const tr = Object.fromEntries(Object.entries(n.tracks || {}).map(([key, v]) => [key, track(v, u)]));
+  let extra = null;
+  if (n.type === 'image' || n.type === 'sequence') {
+    const imgs = n.frames || [[0, n.asset]];
+    const frames = await Promise.all(imgs.map(async ([when, id]) => [clock(when, u), (await acquire(u, id)).src]));
+    const im = document.createElement('img');
+    im.alt = '';
+    im.draggable = false;
+    Object.assign(im.style, n.contentCSS || {});
+    el.append(im);
+    let previous = -1;
+    extra = t => {
+      let j = 0;
+      while (j + 1 < frames.length && frames[j + 1][0] <= t) j++;
+      if (j !== previous) {
+        im.src = frames[j][1];
+        previous = j;
+      }
+    };
+  } else if (n.type === 'field') extra = await field(u, n, el);else if (n.type === 'grid') extra = await grid(u, n, el);else if (n.type === 'audio') {
+    const a = asset(u, n.asset),
+      audio = document.createElement('audio');
+    audio.preload = 'auto';
+    audio.src = src(a.path);
+    el.append(audio);
+    const clip = {
+      audio,
+      u,
+      bounds,
+      offset: n.sourceStart || 0,
+      gain: track(n.gain ?? 1, u),
+      mute: !!n.mute
+    };
+    audioClips.push(clip);
+    await new Promise((resolve, reject) => {
+      audio.addEventListener('loadedmetadata', resolve, {
+        once: true
+      });
+      audio.addEventListener('error', () => reject(Error('Unreadable audio ' + a.path)), {
+        once: true
+      });
+      audio.load();
+    });
+    if (clip.offset + bounds[1] - bounds[0] > audio.duration + .01) throw Error(u.id + ' audio range exceeds ' + a.path);
+  }
+  const children = await Promise.all((n.children || []).map(c => buildNode(u, c, el)));
+  if (n.mask) {
+    const img = await acquire(u, n.mask);
+    el.style.webkitMaskImage = 'url(' + JSON.stringify(img.src) + ')';
+    el.style.webkitMaskSize = '100% 100%';
+    el.style.maskImage = el.style.webkitMaskImage;
+    el.style.maskSize = '100% 100%';
+  }
+  if (n.refs) {
+    el.dataset.references = n.refs.join(' ');
+    u.references.push(...n.refs);
+  }
+  return t => {
+    const on = t >= bounds[0] && t < bounds[1];
+    setVisible(el, on);
+    if (!on) return;
+    const v = (key, fallback) => curve(tr[key], t, fallback);
+    if (tr.x !== undefined || tr.y !== undefined || tr.scale !== undefined || tr.angle !== undefined || tr.turn !== undefined || x || y) {
+      lastStyle(el, 'transform', 'translate(' + v('x', x).toFixed(2) + 'px,' + v('y', y).toFixed(2) + 'px) rotate(' + v('angle', 0).toFixed(2) + 'deg) scale(' + v('scale', 1).toFixed(4) + ') rotateY(' + v('turn', 0).toFixed(2) + 'deg)');
+    }
+    if (tr.opacity !== undefined) lastStyle(el, 'opacity', v('opacity', 1).toFixed(3));
+    if (tr.brightness !== undefined) lastStyle(el, 'filter', 'brightness(' + v('brightness', 1).toFixed(2) + ')');
+    if (extra) extra(t);
+    for (const draw of children) draw(t);
+  };
+}
+function syncAudio(time, run, force = false) {
+  for (const c of audioClips) {
+    const t = time - c.u.start,
+      on = t >= c.bounds[0] && t < c.bounds[1];
+    c.audio.volume = clamp(curve(c.gain, t, 1));
+    c.audio.muted = c.mute;
+    if (!on || !run) {
+      if (!c.audio.paused) c.audio.pause();
+      if (!on) continue;
+    }
+    const target = c.offset + t - c.bounds[0];
+    if (force || Math.abs(c.audio.currentTime - target) > .28) c.audio.currentTime = target;
+    if (run && c.audio.paused && !c.pending) {
+      c.pending = true;
+      c.audio.play().catch(e => {
+        if (e.name !== 'AbortError') fail(e);
+      }).finally(() => c.pending = false);
+    }
+  }
+}
+function paint(t) {
+  for (const u of units) {
+    const active = t >= u.start && t < u.start + u.duration;
+    setVisible(u.el, active);
+    if (active) u.render(t - u.start);
+  }
+}
+function seek(t) {
+  elapsed = Math.max(0, Math.min(duration, t));
+  origin = performance.now() - elapsed * 1000;
+  paint(Math.min(elapsed, duration - .001));
+  syncAudio(elapsed, playing, true);
+}
+function stop() {
+  playing = false;
+  cancelAnimationFrame(frameRequest);
+  for (const c of audioClips) c.audio.pause();
+}
+function paused(label) {
+  stop();
+  button(label, start, true);
+}
+function tick(now) {
+  if (!playing) return;
+  elapsed = Math.min(duration, (now - origin) / 1000);
+  for (const c of audioClips) {
+    if (c.mute || c.audio.paused || c.pending || c.audio.readyState < 2) continue;
+    const audioTime = c.u.start + c.bounds[0] + c.audio.currentTime - c.offset;
+    if (elapsed >= c.u.start + c.bounds[0] && elapsed < c.u.start + c.bounds[1] && audioTime <= c.u.start + c.bounds[1]) {
+      elapsed = Math.max(c.u.start + c.bounds[0], audioTime);
+      origin = now - elapsed * 1000;
+      break;
+    }
+  }
+  paint(Math.min(elapsed, duration - .001));
+  syncAudio(elapsed, playing);
+  if (elapsed >= duration) {
+    paused('Replay');
+    return;
+  }
+  frameRequest = requestAnimationFrame(tick);
+}
+async function start() {
+  if (playing || !ready) return;
+  try {
+    action.hidden = true;
+    if (!audioClips.every(c => c.unlocked)) {
+      await Promise.all(audioClips.map(async c => {
+        if (c.unlocked) return;
+        c.audio.muted = true;
+        await c.audio.play();
+        c.audio.pause();
+        c.audio.currentTime = c.offset;
+        c.audio.muted = c.mute;
+        c.unlocked = true;
+      }));
+    }
+    if (elapsed >= duration) elapsed = 0;
+    playing = true;
+    origin = performance.now() - elapsed * 1000;
+    syncAudio(elapsed, true, true);
+    frameRequest = requestAnimationFrame(tick);
+  } catch (e) {
+    fail(e);
+  }
+}
+async function init() {
+  manifest = await json('video.json');
+  viewport = manifest.frame;
+  resize();
+  document.title = manifest.title || 'Film';
+  const global = register(manifest.assets, 'video.json'),
+    entries = manifest.units.filter(e => e.src && (!manifest.review || manifest.review.includes(e.id)));
+  for (const entry of entries) {
+    const data = await json(entry.src),
+      u = {
+        ...data,
+        id: entry.id,
+        ids: new Set(),
+        references: [],
+        start: duration,
+        assets: {
+          ...global,
+          ...register(data.assets, entry.src)
+        }
+      };
+    if (!Number.isFinite(u.duration) || u.duration <= 0) throw Error(u.id + ' invalid duration');
+    u.el = make(film, u.id, 'unit');
+    u.render = await buildNode(u, u.root, u.el);
+    for (const ref of u.references) if (!u.ids.has(ref)) throw Error(u.id + ' missing scene reference ' + ref);
+    units.push(u);
+    duration += u.duration;
+  }
+  if (document.fonts?.ready) await document.fonts.ready;
+  if (!duration) throw Error('No playable units in review range');
+  ready = true;
+  paint(0);
+  button('Play', start, true);
+}
+function loadFolder(list) {
+  for (const f of list) {
+    const name = f.webkitRelativePath.split('/').slice(1).join('/');
+    fileURLs.set(name, URL.createObjectURL(f));
+  }
+  if (!fileURLs.has('video.json')) {
+    button('Choose project folder', () => document.querySelector('#folder').click());
+    return;
+  }
+  action.hidden = true;
+  init().catch(fail);
+}
+document.querySelector('#folder').onchange = e => loadFolder(e.target.files);
+screenEl.onclick = () => {
+  if (playing) paused('Resume');
+};
+document.onkeydown = e => {
+  if (!ready) return;
+  if ([' ', 'k', 'ArrowRight', 'ArrowLeft', 'Home'].includes(e.key)) e.preventDefault();
+  if (e.key === ' ' || e.key === 'k') {
+    if (playing) paused('Resume');else start();
+  } else if (e.key === 'Home') seek(0);else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') seek(elapsed + (e.key === 'ArrowRight' ? 5 : -5));
+};
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && playing) paused('Resume');
+});
+window.filmPlayer = {
+  seek,
+  get time() {
+    return elapsed;
+  },
+  get duration() {
+    return duration;
+  },
+  get ready() {
+    return ready;
+  },
+  get playing() {
+    return playing;
+  }
+};
+const packed = document.querySelector('script[type="application/x-film-files"]');
+if (packed) {
+  const directory = JSON.parse(packed.textContent);
+  for (const [name, [mime, data]] of Object.entries(directory)) {
+    const bytes = Uint8Array.from(atob(data), s => s.charCodeAt(0));
+    fileURLs.set(name, URL.createObjectURL(new Blob([bytes], {
+      type: mime
+    })));
+  }
+  init().catch(fail);
+} else if (location.protocol === 'file:') button('Open project folder', () => document.querySelector('#folder').click());else init().catch(fail);
+</script></body></html>
