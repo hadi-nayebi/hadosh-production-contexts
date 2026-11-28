@@ -31,7 +31,7 @@ function checkTrack(tr, where) {
   if (tr == null || typeof tr === 'number') return;
   if (Array.isArray(tr)) { let last = -Infinity;
     for (const key of tr) { if (!Array.isArray(key)) continue; const t = key[0]; if (typeof t === 'number') { if (t < last) err(where, `track keys out of order at t=${t}`); last = t; }
-      const e = key[2]; if (e && !schema.easings.some(n => e === n || (n === 'steps(n)' && /^steps\(\d+\)$/.test(e)))) err(where, `unknown easing "${e}"`); } }
+      const e = key[2]; if (e && !(e in (video.easings||{})) && !schema.easings.some(n => e === n || (n === "steps(n)" && /^steps\(\d+\)$/.test(e)))) err(where, `unknown easing "${e}"`); } }
   else if (tr.loop) { if (!tr.loop.period || !tr.loop.keys) err(where, 'loop track needs period and keys'); }
 }
 
