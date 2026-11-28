@@ -1,5 +1,7 @@
 # 3.2 Quadrillion Tokens · Claude cut
 
+> **Status (r3 planning):** the plan is now the JSON and assets (`PLAN.md`, `CONTRACT.md`, `ASSETS.md`, `schema/`). `index.html` in this commit is still the r1 compiler, which breaks the contract (it contains film-specific drawing code). It will be replaced by the video-agnostic r2 compiler, and it cannot play the r3 JSON.
+
 This folder is the whole film kit for Claude's cut. `index.html` is the compiler and player. `video.json` sets the order of the units, and each `units/*/unit.json` holds every picture and sound decision for its unit. To change the film, edit the JSON or an asset, then reload. You never edit the compiler for content.
 
 ## Watch

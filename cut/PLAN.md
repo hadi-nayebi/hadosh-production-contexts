@@ -1,4 +1,34 @@
-# 3.2 Quadrillion Tokens — Claude cut · Director's plan (r2)
+# 3.2 Quadrillion Tokens — Claude cut · Director's plan (r3)
+
+## r3: the plan now lives in the JSON and assets
+
+The shot list below (r2) is still the creative source. As of r3, every decision in it is written into the film's own files:
+- `units/*/unit.json`: scenes, nodes, times, positions, tracks, easing, camera, swarm and flow parameters, audio placement and ducking.
+- `units/*/assets/copy.json`: every on-screen string.
+- `units/*/assets/audio-spec.json`: notes, chords, tempo and every effect event.
+- `units/*/assets/svg/*.svg`: every designed object.
+- `ASSETS.md`: the images requested from ChatGPT.
+
+The rules for these files are in `CONTRACT.md` and `schema/film.schema.json`, checked by `tools/validate.mjs`.
+
+**Changes from r2, made while writing the JSON:**
+- **Timing re-anchored** on the delivered re-takes (L01, L04, L07, L20, L22, L23). Unit lengths are now U1 41.4 s, U2 49.4 s, U3 37.4 s, U4 23.6 s, total 151.8 s. Cue tables in each unit list the line and phrase times; word-level cues marked "estimated" are confirmed by listening.
+- **Cold open (1.1–1.3):** per Codex's review, one agent message at a time at the center of the frame, each matched to the clause you hear, parked aside when the dial moves on. The 60 micro-lines and edge ribbons supply the swarm.
+- **Unit 2:** all devices sit above the bus (the design has one port, on the device bottom). Search answers appear as cards below the bus.
+- **Unit 2 globe:** the land map comes from ChatGPT (A5), with a coarse fallback mask drawn by Claude in the branch.
+- **Fallbacks are assets,** never drawing code in the compiler.
+
+**Decisions recorded before building:** about 10,500 values in JSON, plus 36 SVG designs and five specified image requests.
+
+**What remains open (expected under 15%):**
+- How the compiler's generic renderers look in detail: chalk grain, glow falloff, grain shape. Their parameters are fixed in the JSON; the algorithms get approved through style frames.
+- The timbre recipes in `tools/make_audio.py`. The notes and events are fixed in the audio specs.
+- The look of the five ChatGPT images, which is set by the prompts and acceptance criteria.
+
+Anything new found during the build is added to the JSON first.
+
+---
+
 
 Status: for Hadi's review. Nothing in r2 gets built until this plan is approved. Every visual, timing, motion and sound decision is made here. If something isn't in this plan, it doesn't go in the film. If implementation shows something here won't work, I change the plan first, then build.
 

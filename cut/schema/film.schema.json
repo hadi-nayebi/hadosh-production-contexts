@@ -1,0 +1,63 @@
+{
+  "$comment": "Claude cut film contract, machine-checked by tools/validate.mjs. Per node type: required fields, optional fields, and nothing else. Field meanings are in CONTRACT.md. This file is video-agnostic.",
+  "video": {
+    "required": ["title", "frame", "fps", "output", "palette", "fonts", "audioBus", "units"],
+    "optional": ["branch", "background"]
+  },
+  "unit": {
+    "required": ["id", "title", "duration", "copy", "assets", "cues", "camera", "audio", "scenes"],
+    "optional": ["duck"]
+  },
+  "asset": {
+    "required": ["src", "kind"],
+    "optional": ["requestedFrom", "fallback"],
+    "kinds": ["svg", "image", "pattern", "mask", "copy", "audioSpec", "sequence"]
+  },
+  "audioClip": {
+    "required": ["id", "asset", "at", "gain_dB", "bus"],
+    "optional": ["from", "to", "fadeIn", "fadeOut", "filter"],
+    "buses": ["voice", "agents", "music", "fx"]
+  },
+  "duck": {"required": ["bus", "under", "depth_dB", "attack", "release", "threshold_dB"], "optional": []},
+  "scene": {"required": ["id", "time", "nodes"], "optional": ["persist"]},
+  "common": {
+    "required": ["id", "type"],
+    "optional": ["time", "space", "at", "size", "origin", "tracks", "style", "step", "z", "blend"],
+    "notes": "time and space are required on top-level scene nodes; children inherit them when omitted."
+  },
+  "animatable": ["x", "y", "scale", "scaleX", "scaleY", "rotation", "opacity", "blur", "brightness", "fill", "fillOpacity", "stroke", "glow"],
+  "easings": ["linear", "hold", "smooth", "smoother", "in", "out", "inout", "back", "elastic", "spring", "steps(n)"],
+  "types": {
+    "group":        {"required": ["children"], "optional": ["clip", "dissolve"]},
+    "image":        {"required": ["asset"], "optional": ["fit", "crop"]},
+    "svg":          {"required": ["asset", "classStyle"], "optional": ["parts"]},
+    "sequence":     {"required": ["frames", "fps"], "optional": ["loop", "frame"]},
+    "text":         {"required": ["copy", "font", "size", "color", "align"], "optional": ["weight", "reveal", "spacing", "lineHeight", "maxWidth", "valign", "out", "dissolve"]},
+    "shape":        {"required": ["shape"], "optional": ["center", "radius", "rect", "from", "to", "fill", "stroke", "strokeWidth", "dash", "draw", "head", "glow", "halo", "streak", "grain", "ticks", "tickLength", "line", "affects"],
+                     "shapes": ["rect", "ellipse", "ring", "ringTicks", "arc", "dot", "grid"]},
+    "path":         {"required": ["draw", "brush"], "optional": ["source", "points", "curve", "tip", "endsFollow"]},
+    "follow":       {"required": ["path", "progress", "child"], "optional": ["orient", "offset", "wipe"]},
+    "instance":     {"required": ["asset", "count", "size", "layout", "classStyle"], "optional": ["stagger", "birthTimes", "parts"]},
+    "swarm":        {"required": ["seed", "step", "populations", "sources", "phases", "render"], "optional": ["hero", "gates"]},
+    "swarmDensity": {"required": ["of", "radius", "color", "alpha"], "optional": []},
+    "flow":         {"required": ["paths", "routes", "speed", "spacing", "pulse", "wire"], "optional": ["wireDraw"]},
+    "sphere":       {"required": ["mask", "samples", "seed", "center", "radius", "lon", "lat", "point"], "optional": ["lights", "arcs", "arcStyle", "arcPulse", "arcSpeed", "limbGlow", "atmosphere"]},
+    "zoomstack":    {"required": ["zoom", "layers", "handoff"], "optional": ["logZoom", "fade"]}
+  },
+  "swarm": {
+    "population": {"required": ["id", "count", "colors", "weights", "size", "depthBands"], "optional": ["halo", "shape", "shadow", "space", "blend"]},
+    "sourceKinds": ["textPixels", "assetPixels", "edges", "field", "annulus"],
+    "forces": ["flock", "noise", "attract", "seek", "orbit", "contain", "damping", "maxSpeed", "impulse", "wind", "vibrate", "attach", "path"],
+    "seekTargets": ["text", "textChar", "asset", "cluster", "grid", "ring", "line", "point"],
+    "assign": ["angle", "nearest", "orderX", "index"],
+    "delayBy": ["x", "xReverse", "angle", "index", "distance", "radius", "none"]
+  },
+  "reveals": ["none", "words", "chars", "type", "scramble", "counter", "write"],
+  "references": {
+    "colors": "palette token from video.json, or a literal #RRGGBB / #RRGGBBAA",
+    "fonts": "font token from video.json",
+    "copy": "key into the unit copy deck, or [key, index] for list entries",
+    "assets": "id in the unit's assets table",
+    "times": "unit seconds, a cue name, or [cue, offset]"
+  }
+}

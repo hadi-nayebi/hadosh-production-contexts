@@ -181,3 +181,92 @@ Each component is generic code in the compiler. Its specific use is JSON plus as
 - Every asset in the manifest exists at its path, from me or ChatGPT.
 - Style frames rendered from the JSON are approved by Hadi before motion tuning.
 - The full film renders to MP4 from the JSON and assets alone.
+
+## 11. Field reference (r2 JSON, as used by the four units)
+
+`schema/film.schema.json` is the authoritative list of allowed fields, and `tools/validate.mjs` enforces it. Meanings:
+
+**Styling SVG assets.** `classStyle { className: {fill, stroke, strokeWidth, opacity, fillOpacity, dash, fillPattern} }` styles every element of that class in the SVG. Colors are palette tokens. `fillPattern` names a pattern asset. `parts { elementId: {origin, tracks} }` animates one element inside the SVG.
+
+**Tracks.** A track is `[[t, value, ease?], …]` or a loop `{loop: {time: [a, b], period, phase, keys: [[0..1, value, ease?]], pauseWhen?: [a, b]}}`. Loop key times are fractions of the period.
+
+**Text.**
+- `reveal.mode`:
+  - `type` (`cps`, optional `caret {blink, width, until}`)
+  - `words` (`stagger`, `dur`, `rise`, `blur`)
+  - `scramble` (`fromCopy`, `glyphs`, `stagger`, `dur`, `seed`)
+  - `counter` (`from`, `to`, `dur`, `ease`, `format`; or `steps: [[t, n]]`; optional `pop`)
+  - `write`: left-to-right chalk reveal (`cps`, `grain`, `tip`, optional `skipChar`)
+- Layout fields: `valign` (`top` / `middle`), `maxWidth` (wraps), `lineHeight`, `spacing` (em), `out: [a, b]` (fade-out window).
+- `dissolve {by: "swarm:<id>", source}`: the text hides glyph by glyph as that swarm source turns its pixels into particles.
+
+**Shapes.**
+- `rect` / `ellipse` / `ring`: `at`, `size` or `center` + `radius`.
+- `ringTicks`: `center`, `radius`, `ticks`, `tickLength`, `draw` track (0–1), optional `head` and `affects {swarm, flare}`.
+- `arc`: `center`, `radius`, `from` / `to` in radians.
+- `dot`: `radius`, `halo`, `streak` from its own velocity, `grain`.
+- `grid`: `rect`, `step`, `fill`, `line`.
+- `fill` may be `{radial: {center, r0, r1, stops}}`.
+
+**Paths.**
+- `source {asset, element}` or `points` + `curve` (`linear` / `quadratic`).
+- `draw` track (0–1).
+- `brush {width (number or track), color, roughness, grain, substrokes, seed, speed}`.
+- `tip.emitter {rate, life, size, color, alpha, gravity}`.
+- `endsFollow: [startNode, endNode]` keeps the endpoints attached to moving nodes.
+
+**Follow.** `path`, `progress` track, `orient`, `offset`, `child`. Optional `wipe {width, smear}` erases the layers beneath along the travelled path.
+
+**Instance.**
+- `layout`: `grid {origin, cols, rows, step}` or `random {rect, seed}`.
+- `birthTimes` (per index) or `stagger.birth {from, spread | every}`.
+- `stagger.tracks`: per-instance tracks in seconds since that instance's birth. A value `"toward:x"` moves toward that x.
+
+**Swarm.**
+- **Population fields:**
+  - `size`: a number or a `[min, max]` range.
+  - `shape`: `point` or `grain`.
+  - `shadow`, `space`, `blend`.
+- **Source kinds:**
+  - `textPixels`: from a text node or group; `charDelay: typed` releases each glyph `hold` seconds after it was typed; `quota`.
+  - `edges`: ribbons from beyond the frame.
+  - `field`: noise-thresholded scatter in a rectangle.
+  - `annulus`: born in a ring.
+  - `assetPixels`.
+- **Phases** select `members` (`population`, `range`, `hero`, `near`) and combine forces:
+  - `flock`, `noise`, `attract` (point, track or lissajous), `contain`, `damping`, `maxSpeed`.
+  - `seek`: targets `text`, `textChar`, `cluster`, `grid`, `line`, `point`; `assign`; `delayBy`; `arrive`; `consumeAt`.
+  - `orbit`: `center`, `radius` band, `omega`, or `laps {count, start, end}`; `enter` delay.
+  - `impulse`, `wind` (with a moving `front`), `vibrate`.
+  - `attach`: rides a node, with an optional glow and `except` window.
+  - `path`: explicit points and times, or `followPathNode`.
+- **Hero:** `hero` designates one particle and where it is born.
+- **Gates:** `gates` fire `onPass` effects (rim, flash, labels from a copy list).
+- **Render:** `render` sets `streak`, `maxStreak`, `blend`, `breathe`, timed `pulse` and `streakOverride`, and an optional stop-motion `step`.
+
+**Flow.**
+- `paths {asset, elements}`.
+- `routes`: a start path with an `emit` rate track and `branches {at (fraction along the path), path, share, open (time)}`.
+- `speed` track (u/s).
+- `spacing`, `pulse {size, halo, tail, colors, blend}`.
+- `wire {color, litColor, width, glow}`.
+- `wireDraw`: per-path draw-on tracks.
+
+**Sphere.**
+- `mask` (equirectangular asset), `samples`, `seed`.
+- `center`, `radius`, `lon`, `lat` tracks.
+- `point {size, color, alpha, backfaceAlpha}`.
+- `lights {cities, size, color, glow}`.
+- `arcs [{from, to, lift, flow}]`, `arcStyle`, `arcPulse`, `arcSpeed` track.
+- `limbGlow {color, width track, arc}`, `atmosphere`.
+
+**Zoomstack.**
+- `handoff {node, cameraAt}`: from `cameraAt`, the referenced world node is drawn through the zoomstack (frozen camera × zoom), not by its scene.
+- `layers`: `ref` (an existing node) or `node` (defined here), plus:
+  - `unitsPerWorld`: how big one layer unit is in world units.
+  - `anchor`: the layer point that coincides with the zoom center.
+  - `visible [minZoom, maxZoom]`: where the layer is drawn, crossfaded over `fade` (in log-zoom).
+  - `after: "hold"`: keeps the last layer live after the zoom ends.
+- Nodes referenced by a layer are drawn only by the zoomstack during its time window.
+
+**Swarm density.** `swarmDensity {of, radius, color, alpha}` paints a soft glow under dense regions of a swarm.
