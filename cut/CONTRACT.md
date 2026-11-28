@@ -267,6 +267,7 @@ Each component is generic code in the compiler. Its specific use is JSON plus as
   - `anchor`: the layer point that coincides with the zoom center.
   - `visible [minZoom, maxZoom]`: where the layer is drawn, crossfaded over `fade` (in log-zoom).
   - `after: "hold"`: keeps the last layer live after the zoom ends.
+  - `clip {center, radius, edgeShade?}`: draws the layer only inside a circle (layer units; `radius` is a track). `edgeShade {width, alpha, color}` darkens a ramp just inside the edge.
 - Nodes referenced by a layer are drawn only by the zoomstack during its time window.
 
 **Swarm density.** `swarmDensity {of, radius, color, alpha}` paints a soft glow under dense regions of a swarm.

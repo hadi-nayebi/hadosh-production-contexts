@@ -96,6 +96,7 @@ function loopAt(L, t) {
 function track(tr, t, fallback) {
   if (tr == null) return fallback;
   if (typeof tr === 'number' || typeof tr === 'string') return tr;
+  if (Array.isArray(tr) && tr.length && !Array.isArray(tr[0]) && (typeof tr[0] !== 'object' || tr[0] === null)) return tr; // static vector value
   if (!Array.isArray(tr)) { const v = loopAt(tr.loop, t); return v === undefined ? fallback : v; }
   const loops = tr.filter(k => !Array.isArray(k)), keys = tr.filter(k => Array.isArray(k));
   for (const l of loops) { const v = loopAt(l.loop, t); if (v !== undefined) return (keys.length ? keysAt(keys, t) : 0) + v; }
@@ -169,11 +170,15 @@ function prepareNode(u, n, parent, inh) {
 function parseShadow(f) { const m = /drop-shadow\(\s*([-\d.]+)px\s+([-\d.]+)px\s+([-\d.]+)px\s+(rgba?\([^)]*\)|#[0-9a-fA-F]+)\s*\)/.exec(f); return m ? {dx: +m[1], dy: +m[2], blur: +m[3], color: m[4]} : null; }
 
 // time inside a stop-motion subtree is quantized; each node gets its own pose jitter per step
-function nodeTime(n, t) { const s = n._step; return s ? Math.floor(t * s.fps + 1e-6) / s.fps : t; }
+// Stop-motion: poses are quantized to the step rate and sampled at the output frame's centre time, so motion blur
+// never averages two poses (real stop-motion has no blur between poses).
+let FRAME_T = null; // film time of the output frame being rendered (null in live playback)
+function stepTime(n, t) { const base = FRAME_T == null ? t : FRAME_T - n._u.start; return base; }
+function nodeTime(n, t) { const s = n._step; if (!s) return t; const b = stepTime(n, t); return Math.floor(b * s.fps + 1e-6) / s.fps; }
 function localMatrix(n, t) {
   const tt = nodeTime(n, t), tr = n.tracks || {}, m = new DOMMatrix();
   let x = track(tr.x, tt, 0), y = track(tr.y, tt, 0);
-  if (n._step && n._step.jitter) { const k = Math.floor(t * n._step.fps + 1e-6), h = strHash(n.id); x += (hash(h, k, 1) - .5) * 2 * n._step.jitter; y += (hash(h, k, 2) - .5) * 2 * n._step.jitter; }
+  if (n._step && n._step.jitter) { const k = Math.floor(stepTime(n, t) * n._step.fps + 1e-6), h = strHash(n.id); x += (hash(h, k, 1) - .5) * 2 * n._step.jitter; y += (hash(h, k, 2) - .5) * 2 * n._step.jitter; }
   m.translateSelf(x, y);
   const s = track(tr.scale, tt, 1), sx = s * track(tr.scaleX, tt, 1), sy = s * track(tr.scaleY, tt, 1), r = track(tr.rotation, tt, 0);
   if (s !== 1 || sx !== 1 || sy !== 1 || r) {
@@ -204,6 +209,17 @@ function withShadow(g, n, ctx, fn) {
   const k = deviceScale(g); g.shadowOffsetX = s.dx * k; g.shadowOffsetY = s.dy * k; g.shadowBlur = s.blur * k; g.shadowColor = s.color; fn(); g.shadowColor = 'transparent';
 }
 function deviceScale(g) { const m = g.getTransform(); return Math.hypot(m.a, m.b); }
+// Cached soft shadow: the element's shape is blurred once into a small sprite (in the element's local units)
+// and reused every frame, instead of a live shadowBlur. Offsets/blur are artboard units scaled into local units.
+const shadowCache = new Map(); let shadowKeys = 0;
+function shadowSprite(g, n, key, path, box, localScale, ctx) {
+  const s = n._filter; if (!s || !ctx.shadows || !box) return;
+  const bl = s.blur / localScale, pad = bl * 2.5;
+  let c = shadowCache.get(key);
+  if (!c) { c = document.createElement('canvas'); const w = box[2] + pad * 2, h = box[3] + pad * 2; const k = Math.max(.5, Math.min(4, 2 * localScale));
+    c.width = Math.max(2, Math.ceil(w * k)); c.height = Math.max(2, Math.ceil(h * k)); const x = c.getContext('2d'); x.filter = `blur(${bl * k}px)`; x.setTransform(k, 0, 0, k, (pad - box[0]) * k, (pad - box[1]) * k); x.fillStyle = s.color; x.fill(path); c._k = k; c._pad = pad; shadowCache.set(key, c); }
+  const a = g.globalAlpha; g.drawImage(c, box[0] - c._pad + s.dx / localScale, box[1] - c._pad + s.dy / localScale, c.width / c._k, c.height / c._k); g.globalAlpha = a;
+}
 
 // ---------- text ----------
 function textLayout(n) {
@@ -324,7 +340,8 @@ function drawSVGEl(g, n, el, t, ctx, inherited) {
     const a0 = ctx.opacity * op;
     if (st.fill && st.fill !== 'none' && !el.line) { g.globalAlpha = a0 * (st.fillOpacity ?? 1);
       if (st.fillPattern) g.fillStyle = patternFor(g, n, st.fillPattern) || col(st.fill); else g.fillStyle = col(st.fill);
-      withShadow(g, n, ctx, () => g.fill(el.path)); }
+      if (n._filter && ctx.shadows) { const svg = n._u.assets[n.asset]?._svg; const ls = svg && n.size ? n.size[0] / svg.vb[2] : 1; el._sk ??= ++shadowKeys; shadowSprite(g, n, n.id + '|' + el._sk, el.path, el.box, ls, ctx); }
+      g.fill(el.path); }
     if (st.stroke && st.stroke !== 'none') { g.globalAlpha = a0; g.strokeStyle = col(st.stroke); g.lineWidth = st.strokeWidth ?? 1; g.lineCap = 'round'; g.lineJoin = 'round';
       g.setLineDash(st.dash || []); if (st.glow) { g.shadowColor = col(st.stroke); g.shadowBlur = st.glow * deviceScale(g); } g.stroke(el.path); g.shadowBlur = 0; g.setLineDash([]); }
   }
@@ -353,7 +370,8 @@ TYPES.shape = { draw(g, n, t, ctx) {
   const tt = nodeTime(n, t), S = n.shape; g.globalAlpha = ctx.opacity;
   const R = n.radius != null ? track(n.radius, tt, 0) : 0, C = n.center ? (Array.isArray(n.center[0]) ? track(n.center, tt) : n.center) : null;
   if (S === 'rect') { const [x, y] = n.at, [w, h] = n.size; g.beginPath(); n.radius ? g.roundRect(x, y, w, h, n.radius) : g.rect(x, y, w, h);
-    if (n.fill) { g.fillStyle = fillOf(g, n.fill, [x, y, w, h]); withShadow(g, n, ctx, () => g.fill()); } if (n.stroke) { g.strokeStyle = col(n.stroke); g.lineWidth = n.strokeWidth; g.stroke(); } }
+    if (n.fill) { if (n._filter && ctx.shadows) { n._p2d ??= (() => { const p = new Path2D(); n.radius ? p.roundRect(x, y, w, h, n.radius) : p.rect(x, y, w, h); return p; })(); shadowSprite(g, n, n.id + '|rect', n._p2d, [x, y, w, h], 1, ctx); }
+      g.fillStyle = fillOf(g, n.fill, [x, y, w, h]); g.fill(); } if (n.stroke) { g.strokeStyle = col(n.stroke); g.lineWidth = n.strokeWidth; g.stroke(); } }
   else if (S === 'ellipse') { const [rx, ry] = Array.isArray(n.radius) ? n.radius : [R, R]; g.beginPath(); g.ellipse(C[0], C[1], rx, ry, 0, 0, Math.PI * 2); g.fillStyle = fillOf(g, n.fill, [C[0] - rx, C[1] - ry, 2 * rx, 2 * ry]); g.fill(); }
   else if (S === 'ring') { g.beginPath(); g.arc(C[0], C[1], R, 0, Math.PI * 2); g.strokeStyle = col(n.stroke); g.lineWidth = n.strokeWidth; g.stroke(); }
   else if (S === 'arc') { g.beginPath(); g.arc(C[0], C[1], R, n.from, n.to); g.strokeStyle = col(n.stroke); g.lineWidth = n.strokeWidth; g.lineCap = 'round';
@@ -612,7 +630,7 @@ TYPES.swarm = {
     return [sx, sy, alx, aly, cx, cy, ns, na, nc]; },
   draw(g, n, t, ctx) {
     const S = n._sim, R = n.render, u = n._u;
-    const st = R.step ? Math.floor(t * R.step.fps + 1e-6) / R.step.fps : t; this.stateAt(n, st);
+    const st = R.step ? Math.floor(stepTime(n, t) * R.step.fps + 1e-6) / R.step.fps : t; this.stateAt(n, st);
     const cam = ctx.cam || {x: 500, y: 281}, pops = n.populations;
     const effectors = Object.values(u.byId).filter(e => e.affects?.swarm === n.id && live(e, t)).map(e => { const d = clamp(track(e.draw, t, 1)), a = -Math.PI / 2 + d * TAU; return d > 0 && d < 1 ? [e.center[0] + Math.cos(a) * e.radius, e.center[1] + Math.sin(a) * e.radius, e.affects.flare] : null; }).filter(Boolean);
     const pulses = (R.pulse || []).filter(p => t >= p.time[0] && t < p.time[1]); const over = (R.streakOverride || []).filter(o => t >= o.time[0] && t < o.time[1]);
@@ -733,10 +751,14 @@ TYPES.zoomstack = {
       const nd = l.node || u.byId[l.ref]; g.save(); g.setTransform(ctx.frameMatrix);
       if (nd.type === 'sphere') { drawNode(g, nd, t, {...ctx, opacity: ctx.opacity * v, captured: false, sphereScale: Math.max(1, z / zEnd)}); g.restore(); continue; }
       const s = cam.z * z / l.unitsPerWorld; g.translate(A[0], A[1]); g.scale(s, s); g.translate(-l.anchor[0], -l.anchor[1]);
-      const c2 = {...ctx, opacity: ctx.opacity * v, captured: false, cam: {x: cam.x, y: cam.y}};
+      const c2 = {...ctx, opacity: ctx.opacity * v, captured: false, cam: {x: cam.x, y: cam.y}}, C = l.clip, cr = C ? track(C.radius, t, 0) : 0;
+      if (C) { g.beginPath(); g.arc(C.center[0], C.center[1], cr, 0, TAU); g.clip(); g.save(); } // layer shown only inside a circle (layer units)
       if (l.flow) { if (!l._flow) { l._flow = {...l.flow, id: n.id + ':' + i, type: 'flow', _u: u, _time: n._time, routes: l.flow.paths.elements.map(e => ({path: e, emit: [[n._time[0], 6]]})), speed: l.flow.speed, wire: {color: 'none', litColor: 'none', width: 0, glow: 0}, wireDraw: l.flow.paths.elements.map(e => ({path: e, draw: 0}))}; TYPES.flow.mount(l._flow); }
         drawNode(g, nd, t, c2); g.globalAlpha = 1; TYPES.flow.draw(g, l._flow, t, c2); }
       else drawNode(g, nd, t, c2);
+      if (C) { g.restore(); const e = C.edgeShade; // optional shading ramp just inside the clip edge
+        if (e) { const gr = g.createRadialGradient(C.center[0], C.center[1], Math.max(0, cr - e.width), C.center[0], C.center[1], cr); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, col(e.color));
+          g.globalAlpha = c2.opacity * e.alpha; g.fillStyle = gr; g.fillRect(C.center[0] - cr, C.center[1] - cr, 2 * cr, 2 * cr); g.globalAlpha = 1; } }
       g.restore(); }
   }
 };
@@ -773,10 +795,10 @@ function post(g, u, T_) {
 const acc = document.createElement('canvas'), ag = acc.getContext('2d'), work = document.createElement('canvas'), wg = work.getContext('2d');
 function renderOutput(T_) {
   const O = video.output, mb = O.motionBlur || {subframes: 1, shutter: 0}; for (const c of [acc, work, cv]) if (c.width !== O.width) { c.width = O.width; c.height = O.height; }
-  const n = mb.subframes;
+  const n = mb.subframes; FRAME_T = T_;
   for (let j = 0; j < n; j++) { const ts = n === 1 ? T_ : T_ + ((j + .5) / n - .5) * mb.shutter / video.fps; drawFrame(wg, Math.max(0, Math.min(duration - 1e-6, ts)), {post: false});
     ag.globalAlpha = 1 / (j + 1); ag.drawImage(work, 0, 0); }
-  ag.globalAlpha = 1; post(ag, unitAt(T_), T_); return acc;
+  FRAME_T = null; ag.globalAlpha = 1; post(ag, unitAt(T_), T_); return acc;
 }
 
 // ---------- loading ----------
