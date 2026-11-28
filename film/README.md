@@ -1,37 +1,39 @@
-# Quadrillions · L r4 with the radio opening
+# Quadrillions · L radio tight cut
 
-This edition restores the L r4 cut. The first chapter opens with the later receiver sequence. The rack comparison uses the original L rising graph, the two amounts, the numerical multiplier, and the years below their respective racks. Units Two, Three, and Four retain L r4's editable chapters, artwork, audio, and timings.
+The four editable chapters run 2 minutes 36.96 seconds at 24 fps. The two example passages shorten the time between the spoken examples. The blackboard holds a single composition while the original chalk drawings and slate turns play.
 
-## Play and edit
+## Build and play the offline HTML
 
-The following commands run from the repository's `film/` directory. Python 3 is sufficient to build and verify the single-file offline player.
-
-```sh
-python3 film.py --standalone Quadrillions-L-r4-radio.html
-python3 film.py --unpack editable-L-radio
-python3 film.py --serve-directory editable-L-radio --port 8000
-```
-
-Open the HTML locally, or visit the local server to review changes to the unpacked scene tree. Source timing, positions, artwork and audio references are in each chapter's `unit.json`. The manifest verifies every active asset and the built HTML.
-
-## Render from the editable chapters
-
-Install FFmpeg, FFprobe and Chromium, then run the following commands. The renderer captures the authored scene at 24 fps and mixes its 24 kHz stems. The output is 1280 × 720. Browser and codec versions affect compressed bytes.
+Run from the repository's `film/` directory with Python 3.
 
 ```sh
-python3 -m pip install playwright
-python3 -m playwright install chromium
-python3 render.py Quadrillions-L-r4-radio.mp4 --cache render-cache
+python3 film.py --standalone Quadrillions-L-radio-tight.html
+python3 film.py --unpack editable-tight
+python3 film.py --serve-directory editable-tight --port 8000
 ```
 
-The review master carries forward L r4's original encoded picture after the revised opening. To recreate this edit from the checksum-pinned original MP4, use the following command.
+Open the standalone player locally, or visit the local server to work with the editable chapter files. The manifest verifies the active files and the completed standalone export.
+
+## Export the complete editable film
+
+Install FFmpeg, FFprobe and the Python Playwright package with Chromium, then run the following command. `--chromium /path/to/chromium` selects a system Chromium. Browser and codec versions can change encoded bytes.
 
 ```sh
-python3 authoring/m6/build_master.py Quadrillions-V03-L-r4.mp4 Quadrillions-L-r4-radio.mp4 --chromium /path/to/chromium
+python3 render.py Quadrillions-L-radio-tight.mp4 --cache render-cache
 ```
 
-## Sources of the edit
+## Reproduce the reviewed edit from the preceding master
 
-The authoritative L r4 files are the `Quadrillions-V03-L-r4-editable-verified.html` and `Quadrillions-V03-L-r4.mp4`. Their SHA-256 digests are `e97950f47f36584ce0535bf7ffd9a7c6628ac3b46238c1fe9f31f5e3d8a350f8` and `dd9c21a4438eb188f2b3b8275917fb6a2a0911fa7b9e7736b8dd343c7a33e324`, respectively. The receiver donor is production commit `dcd873cfe8aafe3b3294667033d60a68fe7b87dd`. The included `authoring/m6/build_intro.py` recreates the first chapter from the two editable source chapters with NumPy and SciPy. Their active media are included here.
+The review master uses the previous export's picture for the retained frames before the board. Its input is `Quadrillions-L-r4-radio.mp4` with SHA-256 `71172882e44a127a6afd7fc71814a411f450b047e14e948a9be5a4258cfb43ad`. The previous source revision is `ae5b3f9f9ee6b58d4a3c106456a1f4377de9ae14`.
+
+```sh
+python3 film.py --unpack editable-tight
+python3 authoring/m7/render_board.py editable-tight . /path/to/chromium board-cache board.mp4
+python3 authoring/m7/cut_master.py Quadrillions-L-r4-radio.mp4 board.mp4 . editable-tight authoring/m7/edit-map.json mux-cache Quadrillions-L-radio-tight.mp4
+```
+
+`authoring/m7/edit-map.json` records each retained original Unit Two frame and both edits to the audio in 24 fps frame units. To re-author the timing from the preceding editable chapter, run `edit_examples.py` with the previous Unit Two directory and an output directory. It requires NumPy and SciPy. `steady_board.py` recreates the board composition from the previous Unit Four JSON. The finished chapter files and audio are also included in the runtime.
+
+## Credits
 
 The receiver includes an excerpt of [AM Tuning.wav by NobodyYouKnowOf](https://freesound.org/people/NobodyYouKnowOf/sounds/261873/) under CC0. The instrumental track uses an excerpt of *Vibe Ace* by Kevin MacLeod, edited for timing and level, under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
