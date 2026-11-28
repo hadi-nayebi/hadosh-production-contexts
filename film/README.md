@@ -1,38 +1,38 @@
-# Quadrillions · L radio tight cut
+# Quadrillions · Fixed camera cut
 
-The four editable chapters run 2 minutes 36.96 seconds at 24 fps. The two example passages shorten the time between the spoken examples. The blackboard holds a single composition while the original chalk drawings and slate turns play.
+The four editable chapters run 2 minutes 36.96 seconds at 24 fps. The example stage frames the cabinet beside the complete display. The library scene holds the full table while its paper, words, attention arcs and prediction remain animated. The final table pose is also the departing face of the original blackboard turn.
 
 ## Build and play the offline HTML
 
-Run from the repository's `film/` directory with Python 3.
+Run these commands from the repository’s `film/` directory with Python 3.
 
 ```sh
-python3 film.py --standalone Quadrillions-L-radio-tight.html
-python3 film.py --unpack editable-tight
-python3 film.py --serve-directory editable-tight --port 8000
+python3 film.py --standalone Quadrillions-L-radio-fixed-camera.html
+python3 film.py --unpack editable-fixed
+python3 film.py --serve-directory editable-fixed --port 8000
 ```
 
-Open the standalone player locally, or visit the local server to work with the editable chapter files. The manifest verifies the active files and the completed standalone export.
+Open the standalone HTML locally, or use the local server to edit each chapter's scene tree and artwork. The manifest verifies the active files and the compiled standalone export.
 
-## Export the complete editable film
+## Render the film
 
-Install FFmpeg, FFprobe and the Python Playwright package with Chromium, then run the following command. `--chromium /path/to/chromium` selects a system Chromium. Browser and codec versions can change encoded bytes.
+The editable scene renderer requires FFmpeg, FFprobe, Playwright and Chromium.
 
 ```sh
-python3 render.py Quadrillions-L-radio-tight.mp4 --cache render-cache
+python3 -m pip install playwright
+python3 -m playwright install chromium
+python3 render.py Quadrillions-L-radio-fixed-camera.mp4 --cache render-cache
 ```
 
-## Reproduce the reviewed edit from the preceding master
-
-The review master uses the previous export's picture for the retained frames before the board. Its input is `Quadrillions-L-r4-radio.mp4` with SHA-256 `71172882e44a127a6afd7fc71814a411f450b047e14e948a9be5a4258cfb43ad`. The previous source revision is `ae5b3f9f9ee6b58d4a3c106456a1f4377de9ae14`.
+For the reviewed export, the command below renders the fixed camera shots, retains the original infinity movement, reuses the preceding master’s audio packets, and preserves the later blackboard. Supply the previous **L radio tight** MP4. Its SHA-256 is `9a48f891f1732bae3cccc0cdba327188211af403e31bcd0032122528bd85cd36`. Browser and codec versions can affect compressed bytes.
 
 ```sh
-python3 film.py --unpack editable-tight
-python3 authoring/m7/render_board.py editable-tight . /path/to/chromium board-cache board.mp4
-python3 authoring/m7/cut_master.py Quadrillions-L-r4-radio.mp4 board.mp4 . editable-tight authoring/m7/edit-map.json mux-cache Quadrillions-L-radio-tight.mp4
+python3 authoring/m8/build_master.py Quadrillions-L-radio-tight.mp4 Quadrillions-L-radio-fixed-camera.mp4 --chromium /path/to/chromium
 ```
 
-`authoring/m7/edit-map.json` records each retained original Unit Two frame and both edits to the audio in 24 fps frame units. To re-author the timing from the preceding editable chapter, run `edit_examples.py` with the previous Unit Two directory and an output directory. It requires NumPy and SciPy. `steady_board.py` recreates the board composition from the previous Unit Four JSON. The finished chapter files and audio are also included in the runtime.
+## Edit the camera compositions
+
+The previous source revision is `5e8aec9c9d21bebb13e0a8fd806847f8fdd3c526`. The fixed compositions and their new plates are included in the current source. To trace how they were made, see `authoring/m8/lock_frame.py` for the cabinet and display, `fixed_table.py` for the library and table, and `bridge.py` for the departing slate face. The table recomposition uses Pillow, NumPy and SciPy. The previous tight-cut pacing and example frame map are in `authoring/m7/`.
 
 ## Credits
 
