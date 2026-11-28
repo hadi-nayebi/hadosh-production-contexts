@@ -1,31 +1,50 @@
-# 3.2 Quadrillion Tokens · M4
+# 3.2 Quadrillion Tokens · M5
 
-M4 is the 2 minute 19.75 second editorial cut of the 24 fps film. The countdown, the four chapter JSON files, the HTML compiler, two voice/music tracks for each chapter, and the media archives in this folder reproduce the film. Python 3 is the only dependency for unpacking, serving, and compiling the portable edition.
+The four chapters run at 24 fps. Each chapter has an editable scene tree, named artwork and separate audio files. The receiver opens the film. The desk and blackboard use the motion and artwork from the L r4 reference. The transcript is in [authoring/m5/transcript.md](authoring/m5/transcript.md).
 
-Run `python3 film.py` to watch the film locally. For a single offline player, run `python3 film.py --standalone Quadrillions-M4.html`. For the individual runtime assets and editable chapter trees, run `python3 film.py --unpack editable-M4`. The packer compares the standalone SHA-256 with the reviewed edition. The chapter JSON stores layout on a 1,000 × 562.5 artboard and timing in seconds.
+## Play or rebuild the offline HTML
 
-## Render an MP4
+Run these commands in the repository’s `film/` directory with Python 3.
 
-From the `film/` folder, install Python Playwright and its Chromium browser. Make sure `ffmpeg` and `ffprobe` are on your PATH. FFmpeg needs H.264 and AAC encoding support.
+```sh
+python3 film.py --standalone Quadrillions-M5.html
+python3 film.py --unpack editable-M5
+```
+
+The first command checks the resulting HTML against the SHA-256 in `source-manifest.json`. Open it in Chromium and tap Play for sound. Tap the picture to pause, press Space to resume, use the arrow keys to seek five seconds and Home to restart. To work on individual assets and scene tracks, serve the unpacked directory.
+
+```sh
+python3 film.py --serve-directory editable-M5 --port 8000
+```
+
+Open http://127.0.0.1:8000/. Each chapter’s local timing, image placement and media references are in `units/*/unit.json`. The playback order and 1,000 × 562.5 artboard are in `video.json`.
+
+## Render the MP4
+
+The renderer needs Python Playwright, Chromium, FFmpeg with H.264 and AAC support, and FFprobe.
 
 ```sh
 python3 -m pip install playwright
 python3 -m playwright install chromium
-python3 render.py Quadrillions-M4.mp4 --cache render-cache
+python3 render.py Quadrillions-M5.mp4 --cache render-cache
 ```
 
-Run the same render command after an interruption to reuse completed shots. Use `--chromium /path/to/chromium` to select an existing Chromium executable. The renderer uses the chapter timing in the source and combines the narration and music stems with the picture.
+Use `--chromium /path/to/chromium` for a system installation. The renderer captures a 1280 × 720 frame at every authored frame time, combines the full-length PCM stems and checks the final streams. A rerun reuses verified chapter chunks. Browser and codec versions can change encoded MP4 bytes.
 
-The first paragraph uses a robotic voice that recedes as the camera pulls back. A brief radio tuning sound introduces the original narrator on “3.2 quadrillion tokens.” Opening word timings appear in `authoring/m4/opening-cues.json`. The original recording compares the Industrial Revolution’s physical power with cognitive power in one uninterrupted sentence. The illustrated camera passes from the server to the kitchen, city and Earth. Four spoken examples have been removed. The per-frame optical conversion and dialogue timing are in `authoring/m4/camera-map.json` and `authoring/m4/analogy-cues.json`. The bid prices and the 50-token-per-second draft are worked examples. Sources for the data and AI results are listed below.
+## Inputs and credits
 
-- [Alphabet investor presentation, June 2026](https://s206.q4cdn.com/479360582/files/doc_events/2026/Jun/02/Alphabet-Investor-Presentation-June-2026.pdf).
-- [Epoch AI, estimating usable public human-generated text](https://epoch.ai/publications/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data).
-- [DeepMind, Olympiad mathematics](https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/).
-- [DeepMind, AlphaEvolve and data-center scheduling](https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/).
+M5 starts from M4 at commit `a93b66f2da0c43cb3e2c3855541a4b7afca68cc5`. The manifest selects the active media from the parent archives and the M5 media pack. Standalone builds and unpacked projects include the selected members only.
 
-Music is *Vibe Ace* by Kevin MacLeod, a [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) excerpt with fades and level adjustment. The seven takes recorded for the previous cut are documented in `authoring/m3/narration.json`. M4 replaces T5 and T8 with the continuous original comparison.
+The receiver uses *AM Tuning.wav* by NobodyYouKnowOf, released under CC0. The edit uses the original-speed 1.125–2.500 s passage for the station lock. The instrumental track is an excerpt of *Vibe Ace* by Kevin MacLeod under CC BY 3.0, edited for timing and level. [AM recording](https://freesound.org/people/NobodyYouKnowOf/sounds/261873/) · [Music license](https://creativecommons.org/licenses/by/3.0/)
 
+The quantities in Unit One refer to Google’s reported monthly processing and an estimate of usable public human text. [Alphabet investor presentation](https://s206.q4cdn.com/479360582/files/doc_events/2026/Jun/02/Alphabet-Investor-Presentation-June-2026.pdf) · [Epoch AI estimate](https://epoch.ai/publications/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data)
 
-## Re-edit the M4 sequences
+## Re-edit the M5 passages
 
-The opening voice and radio effect can be regenerated with Python, NumPy and SciPy. From the reviewed M3 source at commit `635dbd64082d11fb854c2ef06b5a4ee16f3db0bc`, unpack the film to obtain the original chapter stems. Run `python authoring/m4/author_opening.py INPUT_SPEECH.wav OUTPUT_SPEECH.wav` for chapter one. Chapter two’s `author_analogy.py --help` describes the inputs for restoring its original recording. Each authoring file uses the provided timing map. To regenerate the opening, rack, desk and board camera tracks, run `python authoring/m4/build_picture.py BASE_RUNTIME OUTPUT_RUNTIME` using the unpacked M3 source as the base. Rebuild the Unit Two path using `retime_camera.py --help` and its adjacent motion profile. `compose_unit2.py` takes the original Unit Two JSON, the resulting camera map and the output JSON path. The final scene tracks remain editable in each chapter JSON. Exported previews, review tables and planning materials are kept in the project's shared Google Drive.
+Start with an unpacked copy of the pinned M4 film. The audio builder in `authoring/m5/audio/build_audio.py` takes that film directory and an output directory. It reads the checked voice takes and original-speed AM recording alongside the script. It emits the four chapter stems, the isolated receiver and the analysis mix. The source take and its local voice recipe are in the same folder.
+
+`authoring/m5/opening.py` rebuilds the opening scene and word artwork from M4’s illuminated glyphs. Pass the M4 Unit One directory, an output directory, the received-audio waveform, and `word-onsets.json`. The receiver, music and voice have separate audio nodes in the released chapter JSON.
+
+`authoring/m5/servers.py` rebuilds Unit Two’s rack hold and camera cue from its M4 unit JSON. The 432-frame camera pass is generated by `authoring/m5/camera/camera.py` from M4’s original camera movie and the accompanying storyboard plates.
+
+`authoring/m5/restore_desk_board.py` takes the unpacked M4 film, the verified editable L r4 HTML and an output directory. It restores the earlier desk-paper gesture and board composition. Apply `retime_formed_picture.py` to fit the final Unit Three voice take. The resulting scene and media files are already present in the runtime manifest.

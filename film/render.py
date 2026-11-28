@@ -1,5 +1,5 @@
-"""Render the editable M3 film. Requires Playwright/Chromium, ffmpeg and ffprobe.
-Run: python render.py M3.mp4 --source path/to/M3 --cache path/to/checkpoints
+"""Render the editable Quadrillions film. Requires Playwright/Chromium, ffmpeg and ffprobe.
+Run: python render.py Quadrillions-M5.mp4 --source path/to/film --cache path/to/checkpoints
 """
 import argparse
 import asyncio
@@ -107,10 +107,10 @@ def validate_ids(unit):
         pending.extend(node.get('children', []))
 
 def audio_stems(unit, folder, frame_count):
-    # M3 provides one full-chapter 24 kHz, mono PCM WAV per audio node.
+    # Every audible layer is a full-chapter 24 kHz mono PCM stem.
     tracks = [node for node in unit['root']['children'] if node['type'] == 'audio']
-    if len(tracks) != 2:
-        raise ValueError(f"{unit['id']}: expected speech and music")
+    if not tracks:
+        raise ValueError(f"{unit['id']}: missing audio stems")
     streams = []
     for node in tracks:
         if node.get('gain', 1) != 1 or node.get('offset', 0) != 0 or node['time'] != [0, unit['duration']]:
@@ -120,7 +120,7 @@ def audio_stems(unit, folder, frame_count):
             if reader.getparams()[:4] != (1, 2, 24000, frame_count * 1000):
                 raise ValueError(f'Unexpected stem format or duration in {src}')
             streams.append(array('h', reader.readframes(reader.getnframes())))
-    return array('h', (max(-32768, min(32767, a+b)) for a,b in zip(*streams))).tobytes()
+    return array('h', (max(-32768, min(32767, sum(samples))) for samples in zip(*streams))).tobytes()
 
 async def capture(pw, chromium, url, directory, start, end):
     browser = await pw.chromium.launch(executable_path=chromium, args=[

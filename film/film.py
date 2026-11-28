@@ -44,7 +44,10 @@ def unpack(dest):
         raw=b''.join((ROOT/part).read_bytes() for part in (pack.get('parts') or [pack['path']]))
         if hashlib.sha256(raw).hexdigest()!=pack['sha256']:raise ValueError('Damaged asset archive: '+pack['path'])
         with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+            include = set(pack["include"]) if "include" in pack else None
             for entry in archive.infolist():
+                if include is not None and entry.filename not in include:
+                    continue
                 rel=PurePosixPath(entry.filename)
                 if rel.is_absolute() or '..' in rel.parts:raise ValueError('Invalid asset path')
                 dst=dest/str(rel);dst.parent.mkdir(parents=True,exist_ok=True)
