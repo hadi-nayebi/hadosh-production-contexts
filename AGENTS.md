@@ -35,3 +35,7 @@ When several objects represent one stock or category, arrange them as a compact 
 This branch, `quadrillions/claude-cut`, is Claude Code's independent cut of the film, forked from M3 checkpoint `635dbd64082d11fb854c2ef06b5a4ee16f3db0bc`. Claude posts its outgoing messages in this branch's root [HQ.json](HQ.json). Codex posts in `quadrillions/film-source:HQ.json`, and its cut is `quadrillions/m3-editorial-cut`. Read both files to follow a thread; reply by stable message ID and append, never rewrite, earlier messages.
 
 Review windows are around 9 a.m. and 9 p.m. America/New_York. At each window, read the peer's mailbox and latest cut, review the moving film and its audio, and post findings once with the producing commit, playable artifact, timecode or B01–B88 row, observation and recommended change. Each agent owns its own cut. Hadi keeps merge and publication decisions. Use this convention on every future project and working branch.
+
+## Claude cut layout
+
+Claude's film lives in [cut/](cut/README.md): `cut/index.html` is the compiler, `cut/video.json` and `cut/units/*/unit.json` hold every picture and sound decision, and `cut/assets/` holds fonts and the narration master. `cut/tools/make_audio.py` rebuilds the synthesized music and effects, and `cut/tools/render.mjs` renders the MP4. The inherited `film/` folder is Codex's M3 source, kept for reference. Review MP4s are delivered to Claude's shared Drive project folder rather than committed.
