@@ -1,50 +1,37 @@
-# 3.2 Quadrillion Tokens · M5
+# Quadrillions · L r4 with the radio opening
 
-The four chapters run at 24 fps. Each chapter has an editable scene tree, named artwork and separate audio files. The receiver opens the film. The desk and blackboard use the motion and artwork from the L r4 reference. The transcript is in [authoring/m5/transcript.md](authoring/m5/transcript.md).
+This edition restores the L r4 cut. The first chapter opens with the later receiver sequence. The rack comparison uses the original L rising graph, the two amounts, the numerical multiplier, and the years below their respective racks. Units Two, Three, and Four retain L r4's editable chapters, artwork, audio, and timings.
 
-## Play or rebuild the offline HTML
+## Play and edit
 
-Run these commands in the repository’s `film/` directory with Python 3.
-
-```sh
-python3 film.py --standalone Quadrillions-M5.html
-python3 film.py --unpack editable-M5
-```
-
-The first command checks the resulting HTML against the SHA-256 in `source-manifest.json`. Open it in Chromium and tap Play for sound. Tap the picture to pause, press Space to resume, use the arrow keys to seek five seconds and Home to restart. To work on individual assets and scene tracks, serve the unpacked directory.
+The following commands run from the repository's `film/` directory. Python 3 is sufficient to build and verify the single-file offline player.
 
 ```sh
-python3 film.py --serve-directory editable-M5 --port 8000
+python3 film.py --standalone Quadrillions-L-r4-radio.html
+python3 film.py --unpack editable-L-radio
+python3 film.py --serve-directory editable-L-radio --port 8000
 ```
 
-Open http://127.0.0.1:8000/. Each chapter’s local timing, image placement and media references are in `units/*/unit.json`. The playback order and 1,000 × 562.5 artboard are in `video.json`.
+Open the HTML locally, or visit the local server to review changes to the unpacked scene tree. Source timing, positions, artwork and audio references are in each chapter's `unit.json`. The manifest verifies every active asset and the built HTML.
 
-## Render the MP4
+## Render from the editable chapters
 
-The renderer needs Python Playwright, Chromium, FFmpeg with H.264 and AAC support, and FFprobe.
+Install FFmpeg, FFprobe and Chromium, then run the following commands. The renderer captures the authored scene at 24 fps and mixes its 24 kHz stems. The output is 1280 × 720. Browser and codec versions affect compressed bytes.
 
 ```sh
 python3 -m pip install playwright
 python3 -m playwright install chromium
-python3 render.py Quadrillions-M5.mp4 --cache render-cache
+python3 render.py Quadrillions-L-r4-radio.mp4 --cache render-cache
 ```
 
-Use `--chromium /path/to/chromium` for a system installation. The renderer captures a 1280 × 720 frame at every authored frame time, combines the full-length PCM stems and checks the final streams. A rerun reuses verified chapter chunks. Browser and codec versions can change encoded MP4 bytes.
+The review master carries forward L r4's original encoded picture after the revised opening. To recreate this edit from the checksum-pinned original MP4, use the following command.
 
-## Inputs and credits
+```sh
+python3 authoring/m6/build_master.py Quadrillions-V03-L-r4.mp4 Quadrillions-L-r4-radio.mp4 --chromium /path/to/chromium
+```
 
-M5 starts from M4 at commit `a93b66f2da0c43cb3e2c3855541a4b7afca68cc5`. The manifest selects the active media from the parent archives and the M5 media pack. Standalone builds and unpacked projects include the selected members only.
+## Sources of the edit
 
-The receiver uses *AM Tuning.wav* by NobodyYouKnowOf, released under CC0. The edit uses the original-speed 1.125–2.500 s passage for the station lock. The instrumental track is an excerpt of *Vibe Ace* by Kevin MacLeod under CC BY 3.0, edited for timing and level. [AM recording](https://freesound.org/people/NobodyYouKnowOf/sounds/261873/) · [Music license](https://creativecommons.org/licenses/by/3.0/)
+The authoritative L r4 files are the `Quadrillions-V03-L-r4-editable-verified.html` and `Quadrillions-V03-L-r4.mp4`. Their SHA-256 digests are `e97950f47f36584ce0535bf7ffd9a7c6628ac3b46238c1fe9f31f5e3d8a350f8` and `dd9c21a4438eb188f2b3b8275917fb6a2a0911fa7b9e7736b8dd343c7a33e324`, respectively. The receiver donor is production commit `dcd873cfe8aafe3b3294667033d60a68fe7b87dd`. The included `authoring/m6/build_intro.py` recreates the first chapter from the two editable source chapters with NumPy and SciPy. Their active media are included here.
 
-The quantities in Unit One refer to Google’s reported monthly processing and an estimate of usable public human text. [Alphabet investor presentation](https://s206.q4cdn.com/479360582/files/doc_events/2026/Jun/02/Alphabet-Investor-Presentation-June-2026.pdf) · [Epoch AI estimate](https://epoch.ai/publications/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data)
-
-## Re-edit the M5 passages
-
-Start with an unpacked copy of the pinned M4 film. The audio builder in `authoring/m5/audio/build_audio.py` takes that film directory and an output directory. It reads the checked voice takes and original-speed AM recording alongside the script. It emits the four chapter stems, the isolated receiver and the analysis mix. The source take and its local voice recipe are in the same folder.
-
-`authoring/m5/opening.py` rebuilds the opening scene and word artwork from M4’s illuminated glyphs. Pass the M4 Unit One directory, an output directory, the received-audio waveform, and `word-onsets.json`. The receiver, music and voice have separate audio nodes in the released chapter JSON.
-
-`authoring/m5/servers.py` rebuilds Unit Two’s rack hold and camera cue from its M4 unit JSON. The 432-frame camera pass is generated by `authoring/m5/camera/camera.py` from M4’s original camera movie and the accompanying storyboard plates.
-
-`authoring/m5/restore_desk_board.py` takes the unpacked M4 film, the verified editable L r4 HTML and an output directory. It restores the earlier desk-paper gesture and board composition. Apply `retime_formed_picture.py` to fit the final Unit Three voice take. The resulting scene and media files are already present in the runtime manifest.
+The receiver includes an excerpt of [AM Tuning.wav by NobodyYouKnowOf](https://freesound.org/people/NobodyYouKnowOf/sounds/261873/) under CC0. The instrumental track uses an excerpt of *Vibe Ace* by Kevin MacLeod, edited for timing and level, under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).

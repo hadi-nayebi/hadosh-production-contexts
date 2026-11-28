@@ -610,7 +610,7 @@ async function buildNode(u, n, parent) {
     transformOrigin: anchor[0] * 100 + '% ' + anchor[1] * 100 + '%'
   }, styles);
   const tr = Object.fromEntries(Object.entries(n.tracks || {}).map(([key, v]) => [key, track(v, u)]));
-  let extra = null;
+  let extra = null, releaseImage = null;
   if (n.type === 'image' || n.type === 'sequence') {
     const imgs = n.frames || [[0, n.asset]];
     const frames = imgs.map(([when,id]) => [clock(when,u),asset(u,id).path]);
@@ -621,6 +621,12 @@ async function buildNode(u, n, parent) {
     Object.assign(im.style, n.contentCSS || {});
     el.append(im);
     let previous = -1;
+    releaseImage = () => {
+      if (previous < 0) return;
+      im.removeAttribute('src');
+      previous = -1;
+    };
+    u.releaseImages.push(releaseImage);
     extra = t => {
       let j = 0;
       while (j + 1 < frames.length && frames[j + 1][0] <= t) j++;
@@ -689,8 +695,13 @@ async function buildNode(u, n, parent) {
     el.dataset.references = n.refs.join(' ');
     u.references.push(...n.refs);
   }
-  return t => {
+  const release = () => {
+    releaseImage?.();
+    for (const child of children) child.release();
+  };
+  const render = t => {
     const on = t >= bounds[0] && t < bounds[1];
+    if (!on && el._on === true) release();
     setVisible(el, on);
     if (!on) return;
     const v = (key, fallback) => curve(tr[key], t, fallback);
@@ -705,6 +716,8 @@ async function buildNode(u, n, parent) {
     if (extra) extra(t);
     for (const draw of children) draw(t);
   };
+  render.release = release;
+  return render;
 }
 function syncAudio(time, run, force = false) {
   for (const c of audioClips) {
@@ -729,6 +742,9 @@ function syncAudio(time, run, force = false) {
 function paint(t) {
   for (const u of units) {
     const active = t >= u.start && t < u.start + u.duration;
+    if (!active && u.el._on === true) {
+      for (const release of u.releaseImages) release();
+    }
     setVisible(u.el, active);
     if (active) {
       const localTime = t - u.start;
@@ -760,6 +776,7 @@ function paused(label) {
   stop();
   button(label, start, true);
 }
+let lastPaintedFrame = -1;
 function tick(now) {
   if (!playing) return;
   elapsed = Math.min(duration, (now - origin) / 1000);
@@ -772,7 +789,11 @@ function tick(now) {
       break;
     }
   }
-  paint(Math.min(elapsed, duration - .001));
+  const frame = Math.floor(elapsed * 24);
+  if (frame !== lastPaintedFrame) {
+    paint(Math.min(elapsed, duration - .001));
+    lastPaintedFrame = frame;
+  }
   syncAudio(elapsed, playing);
   if (elapsed >= duration) {
     paused('Replay');
@@ -818,6 +839,7 @@ async function init() {
         id: entry.id,
         ids: new Set(),
         references: [],
+        releaseImages: [],
         start: duration,
         assets: {
           ...global,
@@ -832,6 +854,9 @@ async function init() {
     units.push(u);
     duration += u.duration;
   }
+  // Mask points, grids, and CSS masks have been materialized. Keep their
+  // reusable blob URLs, and allow the temporary decoding images to be freed.
+  mediaCache.clear();
   if (document.fonts?.ready) await document.fonts.ready;
   if (!duration) throw Error('No playable units in review range');
   ready = true;
